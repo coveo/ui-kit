@@ -1,12 +1,13 @@
-import CoveoAnalyticsClient, {ClientOptions, AnalyticsClient} from '../client/analytics';
+import CoveoAnalyticsClient, {ClientOptions, AnalyticsClient, PreparedEvent} from '../client/analytics';
 import {
     SearchEventRequest,
-    ClickEventRequest,
     CustomEventRequest,
     SearchEventResponse,
     AnyEventResponse,
     ClickEventResponse,
     CustomEventResponse,
+    PreparedClickEventRequest,
+    PreparedSearchEventRequest,
 } from '../events';
 import {
     SearchPageEvents,
@@ -64,7 +65,7 @@ export type EventDescription = Pick<SearchEventRequest, 'actionCause' | 'customD
 
 export interface EventBuilder<T extends AnyEventResponse = AnyEventResponse> {
     description: EventDescription;
-    log: () => Promise<T | void>;
+    log(metadata: {searchUID: string}): Promise<T | void>;
 }
 
 export class CoveoSearchPageClient {
@@ -91,192 +92,192 @@ export class CoveoSearchPageClient {
         return this.makeSearchEvent(SearchPageEvents.interfaceLoad);
     }
 
-    public logInterfaceLoad() {
-        return this.makeInterfaceLoad().log();
+    public async logInterfaceLoad() {
+        return (await this.makeInterfaceLoad()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeRecommendationInterfaceLoad() {
         return this.makeSearchEvent(SearchPageEvents.recommendationInterfaceLoad);
     }
 
-    public logRecommendationInterfaceLoad() {
-        return this.makeRecommendationInterfaceLoad().log();
+    public async logRecommendationInterfaceLoad() {
+        return (await this.makeRecommendationInterfaceLoad()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeRecommendation() {
         return this.makeCustomEvent(SearchPageEvents.recommendation);
     }
 
-    public logRecommendation() {
-        return this.makeRecommendation().log();
+    public async logRecommendation() {
+        return (await this.makeRecommendation()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeRecommendationOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
         return this.makeClickEvent(SearchPageEvents.recommendationOpen, info, identifier);
     }
 
-    public logRecommendationOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.makeRecommendationOpen(info, identifier).log();
+    public async logRecommendationOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return (await this.makeRecommendationOpen(info, identifier)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeStaticFilterClearAll(meta: StaticFilterMetadata) {
         return this.makeSearchEvent(SearchPageEvents.staticFilterClearAll, meta);
     }
 
-    public logStaticFilterClearAll(meta: StaticFilterMetadata) {
-        return this.makeStaticFilterClearAll(meta).log();
+    public async logStaticFilterClearAll(meta: StaticFilterMetadata) {
+        return (await this.makeStaticFilterClearAll(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeStaticFilterSelect(meta: StaticFilterToggleValueMetadata) {
         return this.makeSearchEvent(SearchPageEvents.staticFilterSelect, meta);
     }
 
-    public logStaticFilterSelect(meta: StaticFilterToggleValueMetadata) {
-        return this.makeStaticFilterSelect(meta).log();
+    public async logStaticFilterSelect(meta: StaticFilterToggleValueMetadata) {
+        return (await this.makeStaticFilterSelect(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeStaticFilterDeselect(meta: StaticFilterToggleValueMetadata) {
         return this.makeSearchEvent(SearchPageEvents.staticFilterDeselect, meta);
     }
 
-    public logStaticFilterDeselect(meta: StaticFilterToggleValueMetadata) {
-        return this.makeStaticFilterDeselect(meta).log();
+    public async logStaticFilterDeselect(meta: StaticFilterToggleValueMetadata) {
+        return (await this.makeStaticFilterDeselect(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFetchMoreResults() {
         return this.makeCustomEvent(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});
     }
 
-    public logFetchMoreResults() {
-        return this.makeFetchMoreResults().log();
+    public async logFetchMoreResults() {
+        return (await this.makeFetchMoreResults()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeInterfaceChange(metadata: InterfaceChangeMetadata) {
         return this.makeSearchEvent(SearchPageEvents.interfaceChange, metadata);
     }
 
-    public logInterfaceChange(metadata: InterfaceChangeMetadata) {
-        return this.makeInterfaceChange(metadata).log();
+    public async logInterfaceChange(metadata: InterfaceChangeMetadata) {
+        return (await this.makeInterfaceChange(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeDidYouMeanAutomatic() {
         return this.makeSearchEvent(SearchPageEvents.didyoumeanAutomatic);
     }
 
-    public logDidYouMeanAutomatic() {
-        return this.makeDidYouMeanAutomatic().log();
+    public async logDidYouMeanAutomatic() {
+        return (await this.makeDidYouMeanAutomatic()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeDidYouMeanClick() {
         return this.makeSearchEvent(SearchPageEvents.didyoumeanClick);
     }
 
-    public logDidYouMeanClick() {
-        return this.makeDidYouMeanClick().log();
+    public async logDidYouMeanClick() {
+        return (await this.makeDidYouMeanClick()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeResultsSort(metadata: ResultsSortMetadata) {
         return this.makeSearchEvent(SearchPageEvents.resultsSort, metadata);
     }
 
-    public logResultsSort(metadata: ResultsSortMetadata) {
-        return this.makeResultsSort(metadata).log();
+    public async logResultsSort(metadata: ResultsSortMetadata) {
+        return (await this.makeResultsSort(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeSearchboxSubmit() {
         return this.makeSearchEvent(SearchPageEvents.searchboxSubmit);
     }
 
-    public logSearchboxSubmit() {
-        return this.makeSearchboxSubmit().log();
+    public async logSearchboxSubmit() {
+        return (await this.makeSearchboxSubmit()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeSearchboxClear() {
         return this.makeSearchEvent(SearchPageEvents.searchboxClear);
     }
 
-    public logSearchboxClear() {
-        return this.makeSearchboxClear().log();
+    public async logSearchboxClear() {
+        return (await this.makeSearchboxClear()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeSearchboxAsYouType() {
         return this.makeSearchEvent(SearchPageEvents.searchboxAsYouType);
     }
 
-    public logSearchboxAsYouType() {
-        return this.makeSearchboxAsYouType().log();
+    public async logSearchboxAsYouType() {
+        return (await this.makeSearchboxAsYouType()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeBreadcrumbFacet(metadata: FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata) {
         return this.makeSearchEvent(SearchPageEvents.breadcrumbFacet, metadata);
     }
 
-    public logBreadcrumbFacet(metadata: FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata) {
-        return this.makeBreadcrumbFacet(metadata).log();
+    public async logBreadcrumbFacet(metadata: FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata) {
+        return (await this.makeBreadcrumbFacet(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeBreadcrumbResetAll() {
         return this.makeSearchEvent(SearchPageEvents.breadcrumbResetAll);
     }
 
-    public logBreadcrumbResetAll() {
-        return this.makeBreadcrumbResetAll().log();
+    public async logBreadcrumbResetAll() {
+        return (await this.makeBreadcrumbResetAll()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeDocumentQuickview(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
         return this.makeClickEvent(SearchPageEvents.documentQuickview, info, identifier);
     }
 
-    public logDocumentQuickview(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.makeDocumentQuickview(info, identifier).log();
+    public async logDocumentQuickview(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return (await this.makeDocumentQuickview(info, identifier)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
         return this.makeClickEvent(SearchPageEvents.documentOpen, info, identifier);
     }
 
-    public logDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.makeDocumentOpen(info, identifier).log();
+    public async logDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return (await this.makeDocumentOpen(info, identifier)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeOmniboxAnalytics(meta: OmniboxSuggestionsMetadata) {
         return this.makeSearchEvent(SearchPageEvents.omniboxAnalytics, formatOmniboxMetadata(meta));
     }
 
-    public logOmniboxAnalytics(meta: OmniboxSuggestionsMetadata) {
-        return this.makeOmniboxAnalytics(meta).log();
+    public async logOmniboxAnalytics(meta: OmniboxSuggestionsMetadata) {
+        return (await this.makeOmniboxAnalytics(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeOmniboxFromLink(meta: OmniboxSuggestionsMetadata) {
         return this.makeSearchEvent(SearchPageEvents.omniboxFromLink, formatOmniboxMetadata(meta));
     }
 
-    public logOmniboxFromLink(meta: OmniboxSuggestionsMetadata) {
-        return this.makeOmniboxFromLink(meta).log();
+    public async logOmniboxFromLink(meta: OmniboxSuggestionsMetadata) {
+        return (await this.makeOmniboxFromLink(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeSearchFromLink() {
         return this.makeSearchEvent(SearchPageEvents.searchFromLink);
     }
 
-    public logSearchFromLink() {
-        return this.makeSearchFromLink().log();
+    public async logSearchFromLink() {
+        return (await this.makeSearchFromLink()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeTriggerNotify(meta: TriggerNotifyMetadata) {
         return this.makeCustomEvent(SearchPageEvents.triggerNotify, meta);
     }
 
-    public logTriggerNotify(meta: TriggerNotifyMetadata) {
-        return this.makeTriggerNotify(meta).log();
+    public async logTriggerNotify(meta: TriggerNotifyMetadata) {
+        return (await this.makeTriggerNotify(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeTriggerExecute(meta: TriggerExecuteMetadata) {
         return this.makeCustomEvent(SearchPageEvents.triggerExecute, meta);
     }
 
-    public logTriggerExecute(meta: TriggerExecuteMetadata) {
-        return this.makeTriggerExecute(meta).log();
+    public async logTriggerExecute(meta: TriggerExecuteMetadata) {
+        return (await this.makeTriggerExecute(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeTriggerQuery() {
@@ -287,16 +288,16 @@ export class CoveoSearchPageClient {
         );
     }
 
-    public logTriggerQuery() {
-        return this.makeTriggerQuery().log();
+    public async logTriggerQuery() {
+        return (await this.makeTriggerQuery()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeUndoTriggerQuery(meta: UndoTriggerRedirectMetadata) {
         return this.makeSearchEvent(SearchPageEvents.undoTriggerQuery, meta);
     }
 
-    public logUndoTriggerQuery(meta: UndoTriggerRedirectMetadata) {
-        return this.makeUndoTriggerQuery(meta).log();
+    public async logUndoTriggerQuery(meta: UndoTriggerRedirectMetadata) {
+        return (await this.makeUndoTriggerQuery(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeTriggerRedirect(meta: TriggerRedirectMetadata) {
@@ -306,234 +307,239 @@ export class CoveoSearchPageClient {
         });
     }
 
-    public logTriggerRedirect(meta: TriggerRedirectMetadata) {
-        return this.makeTriggerRedirect(meta).log();
+    public async logTriggerRedirect(meta: TriggerRedirectMetadata) {
+        return (await this.makeTriggerRedirect(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makePagerResize(meta: PagerResizeMetadata) {
         return this.makeCustomEvent(SearchPageEvents.pagerResize, meta);
     }
 
-    public logPagerResize(meta: PagerResizeMetadata) {
-        return this.makePagerResize(meta).log();
+    public async logPagerResize(meta: PagerResizeMetadata) {
+        return (await this.makePagerResize(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makePagerNumber(meta: PagerMetadata) {
         return this.makeCustomEvent(SearchPageEvents.pagerNumber, meta);
     }
 
-    public logPagerNumber(meta: PagerMetadata) {
-        return this.makePagerNumber(meta).log();
+    public async logPagerNumber(meta: PagerMetadata) {
+        return (await this.makePagerNumber(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makePagerNext(meta: PagerMetadata) {
         return this.makeCustomEvent(SearchPageEvents.pagerNext, meta);
     }
 
-    public logPagerNext(meta: PagerMetadata) {
-        return this.makePagerNext(meta).log();
+    public async logPagerNext(meta: PagerMetadata) {
+        return (await this.makePagerNext(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makePagerPrevious(meta: PagerMetadata) {
         return this.makeCustomEvent(SearchPageEvents.pagerPrevious, meta);
     }
 
-    public logPagerPrevious(meta: PagerMetadata) {
-        return this.makePagerPrevious(meta).log();
+    public async logPagerPrevious(meta: PagerMetadata) {
+        return (await this.makePagerPrevious(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makePagerScrolling() {
         return this.makeCustomEvent(SearchPageEvents.pagerScrolling);
     }
 
-    public logPagerScrolling() {
-        return this.makePagerScrolling().log();
+    public async logPagerScrolling() {
+        return (await this.makePagerScrolling()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFacetClearAll(meta: FacetBaseMeta) {
         return this.makeSearchEvent(SearchPageEvents.facetClearAll, meta);
     }
 
-    public logFacetClearAll(meta: FacetBaseMeta) {
-        return this.makeFacetClearAll(meta).log();
+    public async logFacetClearAll(meta: FacetBaseMeta) {
+        return (await this.makeFacetClearAll(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFacetSearch(meta: FacetBaseMeta) {
         return this.makeSearchEvent(SearchPageEvents.facetSearch, meta);
     }
 
-    public logFacetSearch(meta: FacetBaseMeta) {
-        return this.makeFacetSearch(meta).log();
+    public async logFacetSearch(meta: FacetBaseMeta) {
+        return (await this.makeFacetSearch(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFacetSelect(meta: FacetMetadata) {
         return this.makeSearchEvent(SearchPageEvents.facetSelect, meta);
     }
 
-    public logFacetSelect(meta: FacetMetadata) {
-        return this.makeFacetSelect(meta).log();
+    public async logFacetSelect(meta: FacetMetadata) {
+        return (await this.makeFacetSelect(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFacetDeselect(meta: FacetMetadata) {
         return this.makeSearchEvent(SearchPageEvents.facetDeselect, meta);
     }
 
-    public logFacetDeselect(meta: FacetMetadata) {
-        return this.makeFacetDeselect(meta).log();
+    public async logFacetDeselect(meta: FacetMetadata) {
+        return (await this.makeFacetDeselect(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFacetExclude(meta: FacetMetadata) {
         return this.makeSearchEvent(SearchPageEvents.facetExclude, meta);
     }
 
-    public logFacetExclude(meta: FacetMetadata) {
-        return this.makeFacetExclude(meta).log();
+    public async logFacetExclude(meta: FacetMetadata) {
+        return (await this.makeFacetExclude(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFacetUnexclude(meta: FacetMetadata) {
         return this.makeSearchEvent(SearchPageEvents.facetUnexclude, meta);
     }
 
-    public logFacetUnexclude(meta: FacetMetadata) {
-        return this.makeFacetUnexclude(meta).log();
+    public async logFacetUnexclude(meta: FacetMetadata) {
+        return (await this.makeFacetUnexclude(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFacetSelectAll(meta: FacetBaseMeta) {
         return this.makeSearchEvent(SearchPageEvents.facetSelectAll, meta);
     }
 
-    public logFacetSelectAll(meta: FacetBaseMeta) {
-        return this.makeFacetSelectAll(meta).log();
+    public async logFacetSelectAll(meta: FacetBaseMeta) {
+        return (await this.makeFacetSelectAll(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFacetUpdateSort(meta: FacetSortMeta) {
         return this.makeSearchEvent(SearchPageEvents.facetUpdateSort, meta);
     }
 
-    public logFacetUpdateSort(meta: FacetSortMeta) {
-        return this.makeFacetUpdateSort(meta).log();
+    public async logFacetUpdateSort(meta: FacetSortMeta) {
+        return (await this.makeFacetUpdateSort(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFacetShowMore(meta: FacetBaseMeta) {
         return this.makeCustomEvent(SearchPageEvents.facetShowMore, meta);
     }
 
-    public logFacetShowMore(meta: FacetBaseMeta) {
-        return this.makeFacetShowMore(meta).log();
+    public async logFacetShowMore(meta: FacetBaseMeta) {
+        return (await this.makeFacetShowMore(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeFacetShowLess(meta: FacetBaseMeta) {
         return this.makeCustomEvent(SearchPageEvents.facetShowLess, meta);
     }
 
-    public logFacetShowLess(meta: FacetBaseMeta) {
-        return this.makeFacetShowLess(meta).log();
+    public async logFacetShowLess(meta: FacetBaseMeta) {
+        return (await this.makeFacetShowLess(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeQueryError(meta: QueryErrorMeta) {
         return this.makeCustomEvent(SearchPageEvents.queryError, meta);
     }
 
-    public logQueryError(meta: QueryErrorMeta) {
-        return this.makeQueryError(meta).log();
+    public async logQueryError(meta: QueryErrorMeta) {
+        return (await this.makeQueryError(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
-    public makeQueryErrorBack(): EventBuilder<SearchEventResponse> {
+    public async makeQueryErrorBack(): Promise<EventBuilder<SearchEventResponse>> {
+        const customEventBuilder = await this.makeCustomEvent(SearchPageEvents.queryErrorBack);
         return {
-            description: this.makeDescription(SearchPageEvents.queryErrorBack),
+            description: customEventBuilder.description,
             log: async () => {
-                await this.logCustomEvent(SearchPageEvents.queryErrorBack);
+                await customEventBuilder.log({searchUID: this.provider.getSearchUID()});
                 return this.logSearchEvent(SearchPageEvents.queryErrorBack);
             },
         };
     }
 
-    public logQueryErrorBack() {
-        return this.makeQueryErrorBack().log();
+    public async logQueryErrorBack() {
+        return (await this.makeQueryErrorBack()).log({searchUID: this.provider.getSearchUID()});
     }
 
-    public makeQueryErrorRetry(): EventBuilder<SearchEventResponse> {
+    public async makeQueryErrorRetry(): Promise<EventBuilder<SearchEventResponse>> {
+        const customEventBuilder = await this.makeCustomEvent(SearchPageEvents.queryErrorRetry);
         return {
-            description: this.makeDescription(SearchPageEvents.queryErrorRetry),
+            description: customEventBuilder.description,
             log: async () => {
-                await this.logCustomEvent(SearchPageEvents.queryErrorRetry);
+                await customEventBuilder.log({searchUID: this.provider.getSearchUID()});
                 return this.logSearchEvent(SearchPageEvents.queryErrorRetry);
             },
         };
     }
 
-    public logQueryErrorRetry() {
-        return this.makeQueryErrorRetry().log();
+    public async logQueryErrorRetry() {
+        return (await this.makeQueryErrorRetry()).log({searchUID: this.provider.getSearchUID()});
     }
 
-    public makeQueryErrorClear(): EventBuilder<SearchEventResponse> {
+    public async makeQueryErrorClear(): Promise<EventBuilder<SearchEventResponse>> {
+        const customEventBuilder = await this.makeCustomEvent(SearchPageEvents.queryErrorClear);
         return {
-            description: this.makeDescription(SearchPageEvents.queryErrorClear),
+            description: customEventBuilder.description,
             log: async () => {
-                await this.logCustomEvent(SearchPageEvents.queryErrorClear);
+                await customEventBuilder.log({searchUID: this.provider.getSearchUID()});
                 return this.logSearchEvent(SearchPageEvents.queryErrorClear);
             },
         };
     }
 
-    public logQueryErrorClear() {
-        return this.makeQueryErrorClear().log();
+    public async logQueryErrorClear() {
+        return (await this.makeQueryErrorClear()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeLikeSmartSnippet() {
         return this.makeCustomEvent(SearchPageEvents.likeSmartSnippet);
     }
 
-    public logLikeSmartSnippet() {
-        return this.makeLikeSmartSnippet().log();
+    public async logLikeSmartSnippet() {
+        return (await this.makeLikeSmartSnippet()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeDislikeSmartSnippet() {
         return this.makeCustomEvent(SearchPageEvents.dislikeSmartSnippet);
     }
 
-    public logDislikeSmartSnippet() {
-        return this.makeDislikeSmartSnippet().log();
+    public async logDislikeSmartSnippet() {
+        return (await this.makeDislikeSmartSnippet()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeExpandSmartSnippet() {
         return this.makeCustomEvent(SearchPageEvents.expandSmartSnippet);
     }
 
-    public logExpandSmartSnippet() {
-        return this.makeExpandSmartSnippet().log();
+    public async logExpandSmartSnippet() {
+        return (await this.makeExpandSmartSnippet()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeCollapseSmartSnippet() {
         return this.makeCustomEvent(SearchPageEvents.collapseSmartSnippet);
     }
 
-    public logCollapseSmartSnippet() {
-        return this.makeCollapseSmartSnippet().log();
+    public async logCollapseSmartSnippet() {
+        return (await this.makeCollapseSmartSnippet()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeOpenSmartSnippetFeedbackModal() {
         return this.makeCustomEvent(SearchPageEvents.openSmartSnippetFeedbackModal);
     }
 
-    public logOpenSmartSnippetFeedbackModal() {
-        return this.makeOpenSmartSnippetFeedbackModal().log();
+    public async logOpenSmartSnippetFeedbackModal() {
+        return (await this.makeOpenSmartSnippetFeedbackModal()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeCloseSmartSnippetFeedbackModal() {
         return this.makeCustomEvent(SearchPageEvents.closeSmartSnippetFeedbackModal);
     }
 
-    public logCloseSmartSnippetFeedbackModal() {
-        return this.makeCloseSmartSnippetFeedbackModal().log();
+    public async logCloseSmartSnippetFeedbackModal() {
+        return (await this.makeCloseSmartSnippetFeedbackModal()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeSmartSnippetFeedbackReason(reason: SmartSnippetFeedbackReason, details?: string) {
         return this.makeCustomEvent(SearchPageEvents.sendSmartSnippetReason, {reason, details});
     }
 
-    public logSmartSnippetFeedbackReason(reason: SmartSnippetFeedbackReason, details?: string) {
-        return this.makeSmartSnippetFeedbackReason(reason, details).log();
+    public async logSmartSnippetFeedbackReason(reason: SmartSnippetFeedbackReason, details?: string) {
+        return (await this.makeSmartSnippetFeedbackReason(reason, details)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
     }
 
     public makeExpandSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier) {
@@ -543,8 +549,8 @@ export class CoveoSearchPageClient {
         );
     }
 
-    public logExpandSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier) {
-        return this.makeExpandSmartSnippetSuggestion(snippet).log();
+    public async logExpandSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier) {
+        return (await this.makeExpandSmartSnippetSuggestion(snippet)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeCollapseSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier) {
@@ -554,8 +560,10 @@ export class CoveoSearchPageClient {
         );
     }
 
-    public logCollapseSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier) {
-        return this.makeCollapseSmartSnippetSuggestion(snippet).log();
+    public async logCollapseSmartSnippetSuggestion(
+        snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier
+    ) {
+        return (await this.makeCollapseSmartSnippetSuggestion(snippet)).log({searchUID: this.provider.getSearchUID()});
     }
 
     /**
@@ -568,8 +576,8 @@ export class CoveoSearchPageClient {
     /**
      * @deprecated
      */
-    public logShowMoreSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta) {
-        return this.makeShowMoreSmartSnippetSuggestion(snippet).log();
+    public async logShowMoreSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta) {
+        return (await this.makeShowMoreSmartSnippetSuggestion(snippet)).log({searchUID: this.provider.getSearchUID()});
     }
 
     /**
@@ -582,16 +590,16 @@ export class CoveoSearchPageClient {
     /**
      * @deprecated
      */
-    public logShowLessSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta) {
-        return this.makeShowLessSmartSnippetSuggestion(snippet).log();
+    public async logShowLessSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta) {
+        return (await this.makeShowLessSmartSnippetSuggestion(snippet)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeOpenSmartSnippetSource(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
         return this.makeClickEvent(SearchPageEvents.openSmartSnippetSource, info, identifier);
     }
 
-    public logOpenSmartSnippetSource(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.makeOpenSmartSnippetSource(info, identifier).log();
+    public async logOpenSmartSnippetSource(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return (await this.makeOpenSmartSnippetSource(info, identifier)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeOpenSmartSnippetSuggestionSource(info: PartialDocumentInformation, snippet: SmartSnippetSuggestionMeta) {
@@ -607,12 +615,17 @@ export class CoveoSearchPageClient {
         return this.makeClickEvent(SearchPageEvents.copyToClipboard, info, identifier);
     }
 
-    public logCopyToClipboard(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.makeCopyToClipboard(info, identifier).log();
+    public async logCopyToClipboard(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return (await this.makeCopyToClipboard(info, identifier)).log({searchUID: this.provider.getSearchUID()});
     }
 
-    public logOpenSmartSnippetSuggestionSource(info: PartialDocumentInformation, snippet: SmartSnippetSuggestionMeta) {
-        return this.makeOpenSmartSnippetSuggestionSource(info, snippet).log();
+    public async logOpenSmartSnippetSuggestionSource(
+        info: PartialDocumentInformation,
+        snippet: SmartSnippetSuggestionMeta
+    ) {
+        return (await this.makeOpenSmartSnippetSuggestionSource(info, snippet)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
     }
 
     public makeOpenSmartSnippetInlineLink(
@@ -627,11 +640,13 @@ export class CoveoSearchPageClient {
         );
     }
 
-    public logOpenSmartSnippetInlineLink(
+    public async logOpenSmartSnippetInlineLink(
         info: PartialDocumentInformation,
         identifierAndLink: DocumentIdentifier & SmartSnippetLinkMeta
     ) {
-        return this.makeOpenSmartSnippetInlineLink(info, identifierAndLink).log();
+        return (await this.makeOpenSmartSnippetInlineLink(info, identifierAndLink)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
     }
 
     public makeOpenSmartSnippetSuggestionInlineLink(
@@ -649,128 +664,161 @@ export class CoveoSearchPageClient {
         );
     }
 
-    public logOpenSmartSnippetSuggestionInlineLink(
+    public async logOpenSmartSnippetSuggestionInlineLink(
         info: PartialDocumentInformation,
         snippetAndLink: SmartSnippetSuggestionMeta & SmartSnippetLinkMeta
     ) {
-        return this.makeOpenSmartSnippetSuggestionInlineLink(info, snippetAndLink).log();
+        return (await this.makeOpenSmartSnippetSuggestionInlineLink(info, snippetAndLink)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
     }
 
     public makeRecentQueryClick() {
         return this.makeSearchEvent(SearchPageEvents.recentQueryClick);
     }
 
-    public logRecentQueryClick() {
-        return this.makeRecentQueryClick().log();
+    public async logRecentQueryClick() {
+        return (await this.makeRecentQueryClick()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeClearRecentQueries() {
         return this.makeCustomEvent(SearchPageEvents.clearRecentQueries);
     }
 
-    public logClearRecentQueries() {
-        return this.makeClearRecentQueries().log();
+    public async logClearRecentQueries() {
+        return (await this.makeClearRecentQueries()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeRecentResultClick(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
         return this.makeCustomEvent(SearchPageEvents.recentResultClick, {info, identifier});
     }
 
-    public logRecentResultClick(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.makeRecentResultClick(info, identifier).log();
+    public async logRecentResultClick(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return (await this.makeRecentResultClick(info, identifier)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeClearRecentResults() {
         return this.makeCustomEvent(SearchPageEvents.clearRecentResults);
     }
 
-    public logClearRecentResults() {
-        return this.makeClearRecentResults().log();
+    public async logClearRecentResults() {
+        return (await this.makeClearRecentResults()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeNoResultsBack() {
         return this.makeSearchEvent(SearchPageEvents.noResultsBack);
     }
 
-    public logNoResultsBack() {
-        return this.makeNoResultsBack().log();
+    public async logNoResultsBack() {
+        return (await this.makeNoResultsBack()).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeShowMoreFoldedResults(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
         return this.makeClickEvent(SearchPageEvents.showMoreFoldedResults, info, identifier);
     }
 
-    public logShowMoreFoldedResults(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.makeShowMoreFoldedResults(info, identifier).log();
+    public async logShowMoreFoldedResults(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return (await this.makeShowMoreFoldedResults(info, identifier)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeShowLessFoldedResults() {
         return this.makeCustomEvent(SearchPageEvents.showLessFoldedResults);
     }
 
-    public logShowLessFoldedResults() {
-        return this.makeShowLessFoldedResults().log();
+    public async logShowLessFoldedResults() {
+        return (await this.makeShowLessFoldedResults()).log({searchUID: this.provider.getSearchUID()});
     }
 
-    public makeCustomEvent(
+    private makeEventDescription(
+        preparedEvent: PreparedEvent<unknown, unknown, AnyEventResponse>,
+        actionCause: SearchPageEvents
+    ): EventDescription {
+        return {actionCause, customData: preparedEvent.payload?.customData};
+    }
+
+    public async makeCustomEvent(
         event: SearchPageEvents,
         metadata?: Record<string, any>,
         eventType: string = CustomEventsTypes[event]!
-    ): EventBuilder<CustomEventResponse> {
+    ): Promise<EventBuilder<CustomEventResponse>> {
+        this.coveoAnalyticsClient.getParameters;
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
+        const request: CustomEventRequest = {
+            ...(await this.getBaseEventRequest(customData)),
+            eventType,
+            eventValue: event,
+        };
+        const preparedEvent = await this.coveoAnalyticsClient.makeCustomEvent(request);
         return {
-            description: this.makeDescription(event, metadata),
-            log: async () => {
-                const payload: CustomEventRequest = {
-                    ...(await this.getBaseCustomEventRequest(customData)),
-                    eventType,
-                    eventValue: event,
-                };
-
-                return this.coveoAnalyticsClient.sendCustomEvent(payload);
-            },
+            description: this.makeEventDescription(preparedEvent, event),
+            log: ({searchUID}) => preparedEvent.log({lastSearchQueryUid: searchUID}),
         };
     }
 
-    public logCustomEvent(
+    public async logCustomEvent(
         event: SearchPageEvents,
         metadata?: Record<string, any>,
         eventType: string = CustomEventsTypes[event]!
     ) {
-        return this.makeCustomEvent(event, metadata, eventType).log();
+        return (await this.makeCustomEvent(event, metadata, eventType)).log({searchUID: this.provider.getSearchUID()});
     }
 
-    public makeCustomEventWithType(eventValue: string, eventType: string, metadata?: Record<string, any>) {
+    public async makeCustomEventWithType(
+        eventValue: string,
+        eventType: string,
+        metadata?: Record<string, any>
+    ): Promise<EventBuilder<CustomEventResponse>> {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
+        const payload: CustomEventRequest = {
+            ...(await this.getBaseEventRequest(customData)),
+            eventType,
+            eventValue,
+        };
+        const preparedEvent = await this.coveoAnalyticsClient.makeCustomEvent(payload);
         return {
-            description: <EventDescription>{actionCause: eventValue, customData},
-            log: async () => {
-                const payload: CustomEventRequest = {
-                    ...(await this.getBaseCustomEventRequest(customData)),
-                    eventType,
-                    eventValue,
-                };
-                return this.coveoAnalyticsClient.sendCustomEvent(payload);
-            },
+            description: this.makeEventDescription(preparedEvent, eventValue as SearchPageEvents),
+            log: ({searchUID}) => preparedEvent.log({lastSearchQueryUid: searchUID}),
         };
     }
 
-    public logCustomEventWithType(eventValue: string, eventType: string, metadata?: Record<string, any>) {
-        return this.makeCustomEventWithType(eventValue, eventType, metadata).log();
+    public async logCustomEventWithType(eventValue: string, eventType: string, metadata?: Record<string, any>) {
+        return (await this.makeCustomEventWithType(eventValue, eventType, metadata)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
     }
 
     public async logSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
-        return this.coveoAnalyticsClient.sendSearchEvent(await this.getBaseSearchEventRequest(event, metadata));
+        return (await this.makeSearchEvent(event, metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 
-    private makeDescription(actionCause: SearchPageEvents, metadata?: Record<string, any>): EventDescription {
-        return {actionCause, customData: {...this.provider.getBaseMetadata(), ...metadata}};
-    }
-
-    public makeSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>): EventBuilder<SearchEventResponse> {
+    public async makeSearchEvent(
+        event: SearchPageEvents,
+        metadata?: Record<string, any>
+    ): Promise<EventBuilder<SearchEventResponse>> {
+        const request = await this.getBaseSearchEventRequest(event, metadata);
+        const preparedEvent = await this.coveoAnalyticsClient.makeSearchEvent(request);
         return {
-            description: this.makeDescription(event, metadata),
-            log: () => this.logSearchEvent(event, metadata),
+            description: this.makeEventDescription(preparedEvent, event),
+            log: ({searchUID}) => preparedEvent.log({searchQueryUid: searchUID}),
+        };
+    }
+
+    public async makeClickEvent(
+        event: SearchPageEvents,
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        metadata?: Record<string, any>
+    ): Promise<EventBuilder<ClickEventResponse>> {
+        const request: PreparedClickEventRequest = {
+            ...info,
+            ...(await this.getBaseEventRequest({...identifier, ...metadata})),
+            queryPipeline: this.provider.getPipeline(),
+            actionCause: event,
+        };
+        const preparedEvent = await this.coveoAnalyticsClient.makeClickEvent(request);
+        return {
+            description: this.makeEventDescription(preparedEvent, event),
+            log: ({searchUID}) => preparedEvent.log({searchQueryUid: searchUID}),
         };
     }
 
@@ -780,46 +828,20 @@ export class CoveoSearchPageClient {
         identifier: DocumentIdentifier,
         metadata?: Record<string, any>
     ) {
-        const payload: ClickEventRequest = {
-            ...info,
-            ...(await this.getBaseEventRequest({...identifier, ...metadata})),
-            searchQueryUid: this.provider.getSearchUID(),
-            queryPipeline: this.provider.getPipeline(),
-            actionCause: event,
-        };
-
-        return this.coveoAnalyticsClient.sendClickEvent(payload);
-    }
-
-    public makeClickEvent(
-        event: SearchPageEvents,
-        info: PartialDocumentInformation,
-        identifier: DocumentIdentifier,
-        metadata?: Record<string, any>
-    ): EventBuilder<ClickEventResponse> {
-        return {
-            description: this.makeDescription(event, {...identifier, ...metadata}),
-            log: () => this.logClickEvent(event, info, identifier, metadata),
-        };
+        return (await this.makeClickEvent(event, info, identifier, metadata)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
     }
 
     private async getBaseSearchEventRequest(
         event: SearchPageEvents,
         metadata?: Record<string, any>
-    ): Promise<SearchEventRequest> {
+    ): Promise<PreparedSearchEventRequest> {
         return {
             ...(await this.getBaseEventRequest(metadata)),
             ...this.provider.getSearchEventRequestPayload(),
-            searchQueryUid: this.provider.getSearchUID(),
             queryPipeline: this.provider.getPipeline(),
             actionCause: event,
-        };
-    }
-
-    private async getBaseCustomEventRequest(metadata?: Record<string, any>) {
-        return {
-            ...(await this.getBaseEventRequest(metadata)),
-            lastSearchQueryUid: this.provider.getSearchUID(),
         };
     }
 

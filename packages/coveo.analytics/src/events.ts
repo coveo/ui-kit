@@ -68,6 +68,8 @@ export interface SearchEventRequest extends EventBaseRequest {
     facetState?: FacetStateRequest[];
 }
 
+export interface PreparedSearchEventRequest extends Omit<SearchEventRequest, 'searchQueryUid'> {}
+
 export interface DocumentInformation {
     documentUri: string;
     documentUriHash: string;
@@ -86,11 +88,15 @@ export interface DocumentInformation {
 
 export interface ClickEventRequest extends EventBaseRequest, DocumentInformation {}
 
+export interface PreparedClickEventRequest extends Omit<ClickEventRequest, 'searchQueryUid'> {}
+
 export interface CustomEventRequest extends EventBaseRequest {
     eventType: string;
     eventValue: string;
     lastSearchQueryUid?: string;
 }
+
+export interface PreparedCustomEventRequest extends Omit<CustomEventRequest, 'lastSearchQueryUid'> {}
 
 export interface ViewEventRequest extends EventBaseRequest {
     location?: string;
@@ -100,6 +106,8 @@ export interface ViewEventRequest extends EventBaseRequest {
     contentIdValue: string;
     contentType?: string;
 }
+
+export interface PreparedViewEventRequest extends ViewEventRequest {}
 
 export interface DefaultEventResponse {
     visitId: string;

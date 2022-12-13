@@ -13,6 +13,10 @@ import {
     VisitResponse,
     IRequestPayload,
     VariableArgumentsPayload,
+    PreparedClickEventRequest,
+    PreparedCustomEventRequest,
+    PreparedViewEventRequest,
+    PreparedSearchEventRequest,
 } from '../events';
 import {IAnalyticsClientOptions, PreprocessAnalyticsRequest, VisitorIdProvider} from './analyticsRequestClient';
 import {hasWindow, hasDocument} from '../detector';
@@ -58,13 +62,34 @@ export type EventTypeConfig = {
     usesMeasurementProtocol?: boolean;
 };
 
+export interface PreparedEvent<TPreparedRequest, TCompleteRequest, TResponse extends AnyEventResponse>
+    extends BufferedRequest {
+    log(remainingPayload: Omit<TCompleteRequest, keyof TPreparedRequest>): Promise<TResponse | void>;
+}
+
 export interface AnalyticsClient {
     getPayload(eventType: string, ...payload: VariableArgumentsPayload): Promise<any>;
     getParameters(eventType: string, ...payload: VariableArgumentsPayload): Promise<any>;
+    makeEvent<TPreparedRequest, TCompleteRequest, TResponse extends AnyEventResponse>(
+        eventType: string,
+        ...payload: VariableArgumentsPayload
+    ): Promise<PreparedEvent<TPreparedRequest, TCompleteRequest, TResponse>>;
     sendEvent(eventType: string, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void>;
+    makeSearchEvent(
+        request: PreparedSearchEventRequest
+    ): Promise<PreparedEvent<PreparedSearchEventRequest, SearchEventRequest, SearchEventResponse>>;
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void>;
+    makeClickEvent(
+        request: PreparedClickEventRequest
+    ): Promise<PreparedEvent<PreparedClickEventRequest, ClickEventRequest, ClickEventResponse>>;
     sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void>;
+    makeCustomEvent(
+        request: PreparedCustomEventRequest
+    ): Promise<PreparedEvent<PreparedCustomEventRequest, CustomEventRequest, CustomEventResponse>>;
     sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void>;
+    makeViewEvent(
+        request: PreparedViewEventRequest
+    ): Promise<PreparedEvent<PreparedViewEventRequest, ViewEventRequest, ViewEventResponse>>;
     sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void>;
     getVisit(): Promise<VisitResponse>;
     getHealth(): Promise<HealthResponse>;
@@ -285,25 +310,34 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return payloadToSend;
     }
 
-    async sendEvent(
+    async makeEvent<TPreparedRequest, TCompleteRequest, TResponse extends AnyEventResponse>(
         eventType: EventType | string,
         ...payload: VariableArgumentsPayload
-    ): Promise<AnyEventResponse | void> {
+    ): Promise<PreparedEvent<TPreparedRequest, TCompleteRequest, TResponse>> {
         const {newEventType: eventTypeToSend = eventType as EventType} = this.eventTypeMapping[eventType] || {};
 
         const parametersToSend = await this.resolveParameters(eventType, ...payload);
         const payloadToSend = await this.resolvePayloadForParameters(eventType, parametersToSend);
 
-        this.bufferedRequests.push({
+        return {
             eventType: eventTypeToSend,
             payload: payloadToSend,
-        });
+            log: async (remainingPayload) => {
+                this.bufferedRequests.push(<BufferedRequest>{
+                    eventType: eventTypeToSend,
+                    payload: {...payloadToSend, ...remainingPayload},
+                });
+                await Promise.all(
+                    this.afterSendHooks.map((hook) => hook(eventType, {...parametersToSend, ...remainingPayload}))
+                );
+                await this.deferExecution();
+                return (await this.sendFromBufferWithFetch()) as TResponse | void;
+            },
+        };
+    }
 
-        await Promise.all(this.afterSendHooks.map((hook) => hook(eventType, parametersToSend)));
-
-        await this.deferExecution();
-
-        return await this.sendFromBufferWithFetch();
+    async sendEvent(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
+        return (await this.makeEvent<any, any, AnyEventResponse>(eventType, ...payload)).log({});
     }
 
     private deferExecution(): Promise<void> {
@@ -328,20 +362,45 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.runtime.client.deleteHttpCookieVisitorId();
     }
 
-    async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void> {
-        return this.sendEvent(EventType.search, request);
+    async makeSearchEvent(request: PreparedSearchEventRequest) {
+        return this.makeEvent<PreparedSearchEventRequest, SearchEventRequest, SearchEventResponse>(
+            EventType.search,
+            request
+        );
     }
 
-    async sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void> {
-        return this.sendEvent(EventType.click, request);
+    async sendSearchEvent({searchQueryUid, ...preparedRequest}: SearchEventRequest) {
+        return (await this.makeSearchEvent(preparedRequest)).log({searchQueryUid});
     }
 
-    async sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void> {
-        return this.sendEvent(EventType.custom, request);
+    async makeClickEvent(request: PreparedClickEventRequest) {
+        return this.makeEvent<PreparedClickEventRequest, ClickEventRequest, ClickEventResponse>(
+            EventType.click,
+            request
+        );
+    }
+
+    async sendClickEvent({searchQueryUid, ...preparedRequest}: ClickEventRequest) {
+        return (await this.makeClickEvent(preparedRequest)).log({searchQueryUid});
+    }
+
+    async makeCustomEvent(request: PreparedCustomEventRequest) {
+        return this.makeEvent<PreparedCustomEventRequest, CustomEventRequest, CustomEventResponse>(
+            EventType.custom,
+            request
+        );
+    }
+
+    async sendCustomEvent({lastSearchQueryUid, ...preparedRequest}: CustomEventRequest) {
+        return (await this.makeCustomEvent(preparedRequest)).log({lastSearchQueryUid});
+    }
+
+    async makeViewEvent(request: PreparedViewEventRequest) {
+        return this.makeEvent<PreparedViewEventRequest, ViewEventRequest, ViewEventResponse>(EventType.view, request);
     }
 
     async sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void> {
-        return this.sendEvent(EventType.view, request);
+        return (await this.makeViewEvent(request)).log({});
     }
 
     async getVisit(): Promise<VisitResponse> {
