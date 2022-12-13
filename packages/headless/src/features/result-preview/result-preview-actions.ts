@@ -81,7 +81,7 @@ export const updateContentURL = createAsyncThunk<
       options.path
     );
 
-    if (contentURL.length > MAX_GET_LENGTH) {
+    if (contentURL?.length > MAX_GET_LENGTH) {
       extra.logger.error(
         `The content URL was truncated as it exceeds the maximum allowed length of ${MAX_GET_LENGTH} characters.`
       );
