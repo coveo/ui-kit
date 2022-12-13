@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.54.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.53.5...@coveo/quantic@1.54.0) (2022-12-12)
+
+### Features
+
+- **quantic:** QuanticResultCopyToClipboard component created ([#2558](https://github.com/coveo/ui-kit/issues/2558)) ([ddedd97](https://github.com/coveo/ui-kit/commit/ddedd978c4e11e8226f3ffe39bcff3dd5f06d6d5))
+
+## [1.53.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.53.4...@coveo/quantic@1.53.5) (2022-12-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [1.53.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.53.3...@coveo/quantic@1.53.4) (2022-12-08)
+
+### Bug Fixes
+
+- **quantic:** styling of the ExampleQuanticRefineToggle fixed ([#2588](https://github.com/coveo/ui-kit/issues/2588)) ([83d11a0](https://github.com/coveo/ui-kit/commit/83d11a0733adc4aa2fcf4fdf786dec09912c12f4))
+- **quantic:** Updated the way of setting an internal property in the Quantic Refine Toggle ([#2587](https://github.com/coveo/ui-kit/issues/2587)) ([b619259](https://github.com/coveo/ui-kit/commit/b61925922b33901ddc7b129b37c7ca542c8ded03))
+
 ## [1.53.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.53.2...@coveo/quantic@1.53.3) (2022-12-01)
 
 **Note:** Version bump only for package @coveo/quantic
