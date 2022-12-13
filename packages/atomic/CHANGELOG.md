@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.126.0...@coveo/atomic@2.0.0) (2022-12-14)
+
+### Bug Fixes
+
+- **headless:** made result template manager throw errors instead of logging errors ([#2518](https://github.com/coveo/ui-kit/issues/2518)) ([5d54709](https://github.com/coveo/ui-kit/commit/5d547095c68615120a4b087b3c993c111b3d6169))
+- **headless:** made trigger notify and execute events plural ([#2533](https://github.com/coveo/ui-kit/issues/2533)) ([dee24ad](https://github.com/coveo/ui-kit/commit/dee24ad9fc911e34111eb994c6b364d72a20b68f))
+- **headless:** modify delimiting character for facet in url manager ([#2545](https://github.com/coveo/ui-kit/issues/2545)) ([9f43709](https://github.com/coveo/ui-kit/commit/9f437099b31c055c5181463eb1954b923a74f023))
+- **atomic,atomic-angular,atomic-react:** add headless to dev dependencies ([#2592](https://github.com/coveo/ui-kit/issues/2592)) ([e4e97ba](https://github.com/coveo/ui-kit/commit/e4e97baadf616dc12bb6e9db89d82e6ac90d951b))
+- **atomic:** adapt ArrayProp for v2 changes (& other small deprecations) ([#2585](https://github.com/coveo/ui-kit/issues/2585)) ([df44cdb](https://github.com/coveo/ui-kit/commit/df44cdb222d2230d1ebdc45b0862ac0f5146cffb))
+- **atomic:** close search layout tag properly ([#2595](https://github.com/coveo/ui-kit/issues/2595)) ([90186b7](https://github.com/coveo/ui-kit/commit/90186b74ec34b626ca5f8c6a4ae82e30c57557a6))
+- **atomic:** made category facet values hierarchical ([#2542](https://github.com/coveo/ui-kit/issues/2542)) ([5204777](https://github.com/coveo/ui-kit/commit/520477706feb7100286e1b801140bedd26d90084))
+- **headless:** add actionCause and customData to missing /v2 calls ([#2572](https://github.com/coveo/ui-kit/issues/2572)) ([130e94c](https://github.com/coveo/ui-kit/commit/130e94cede829f4417f86364de188e418480b083))
+- **atomic:** added warning when declaring a template with section and non-section elements ([#2598](https://github.com/coveo/ui-kit/issues/2598)) ([165ef8e](https://github.com/coveo/ui-kit/commit/165ef8ec48ffda3d1f0c9d2a6370070d392dea3e))
+
+### Features
+
+- **headless:** added platform-specific origins to requests ([#2472](https://github.com/coveo/ui-kit/issues/2472)) ([88d2f11](https://github.com/coveo/ui-kit/commit/88d2f111f0bfd846b93b051b176dfc59a19d1a76))
+- **headless:** added actionCause and customData to /v2 analytics object ([#2490](https://github.com/coveo/ui-kit/issues/2490)) ([2e2963d](https://github.com/coveo/ui-kit/commit/2e2963d287b6524f8f62ec79927d10e0c0190f71))
+- **atomic:** replaced printable uri target attribute with attributes slot ([#2525](https://github.com/coveo/ui-kit/issues/2525)) ([d9a5c2f](https://github.com/coveo/ui-kit/commit/d9a5c2f0608dd006384e5c1de0c17c9bc7498f42))
+- **atomic:** adapt search box + suggestion width in search layout ([#2589](https://github.com/coveo/ui-kit/issues/2589)) ([56ca263](https://github.com/coveo/ui-kit/commit/56ca263f8d52a99157bb3dfa3fdeb3a12ef8d869))
+- **headless:** refactored field suggestion options ([#2581](https://github.com/coveo/ui-kit/issues/2581)) ([4a5577e](https://github.com/coveo/ui-kit/commit/4a5577ec78461a1456c81a43385be34f6546b0fc))
+
 # [1.126.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.125.1...@coveo/atomic@1.126.0) (2022-12-09)
 
 ### Features
