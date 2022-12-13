@@ -1,3 +1,4 @@
+import {getAttachedResultsInitialState} from '../features/attached-results/attached-results-state';
 import {getCaseContextInitialState} from '../features/case-context/case-context-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
 import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-state';
@@ -49,6 +50,7 @@ export function buildMockInsightState(
     staticFilterSet: getStaticFilterSetInitialState(),
     tabSet: getTabSetInitialState(),
     fields: getFieldsInitialState(),
+    attachedResults: getAttachedResultsInitialState(),
     ...config,
   };
 }

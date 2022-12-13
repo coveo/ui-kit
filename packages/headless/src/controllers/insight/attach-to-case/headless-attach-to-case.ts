@@ -58,7 +58,7 @@ const initialStateSchema = new Schema({
         articleVersionNumber: nonEmptyString,
         articlePublishStatus: nonEmptyString,
         uriHash: nonEmptyString,
-        permanentId: requiredNonEmptyString,
+        permanentId: nonEmptyString,
         resultUrl: requiredNonEmptyString,
         source: requiredNonEmptyString,
         title: requiredNonEmptyString,
@@ -97,9 +97,14 @@ export function buildAttachToCase(
     isAttached(result) {
       if (result.raw.permanentid || result.raw.urihash) {
         const isAttached = engine.state.attachedResults.results.some(
-          (attached) =>
-            attached.permanentId === result.raw.permanentid ||
-            attached.uriHash === result.raw.urihash
+          (attached) => {
+            const permanentIdMatches =
+              attached.permanentId &&
+              attached.permanentId === result.raw.permanentid;
+            const uriHashMatches =
+              attached.uriHash && attached.uriHash === result.raw.urihash;
+            return permanentIdMatches || uriHashMatches;
+          }
         );
         return isAttached;
       }

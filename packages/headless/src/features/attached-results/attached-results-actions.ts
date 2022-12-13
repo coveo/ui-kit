@@ -1,9 +1,10 @@
-import {ArrayValue, RecordValue} from '@coveo/bueno';
+import {ArrayValue, RecordValue, SchemaValidationError} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   validatePayload,
   requiredNonEmptyString,
   nonEmptyString,
+  serializeSchemaValidationError,
 } from '../../utils/validate-payload';
 import {AttachedResult} from './attached-results-state';
 
@@ -60,15 +61,31 @@ export const setAttachedResults = createAction(
 export const attachResult = createAction(
   'insight/attachToCase/attach',
   (payload: SetAttachToCaseAttachActionCreatorPayload) =>
-    validatePayload(payload, {
-      result: RequiredAttachedResultRecord,
-    })
+    validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
 export const detachResult = createAction(
   'insight/attachToCase/detach',
   (payload: SetAttachToCaseDetachActionCreatorPayload) =>
-    validatePayload(payload, {
-      result: RequiredAttachedResultRecord,
-    })
+    validatePayloadAndPermanentIdOrUriHash(payload)
 );
+
+const validatePayloadAndPermanentIdOrUriHash = (
+  payload:
+    | SetAttachToCaseAttachActionCreatorPayload
+    | SetAttachToCaseDetachActionCreatorPayload
+) => {
+  if (!payload.result.permanentId && !payload.result.uriHash) {
+    return {
+      payload,
+      error: serializeSchemaValidationError(
+        new SchemaValidationError(
+          'Either permanentId or uriHash is required'
+        ) as Error
+      ),
+    };
+  }
+  return validatePayload(payload, {
+    result: RequiredAttachedResultRecord,
+  });
+};

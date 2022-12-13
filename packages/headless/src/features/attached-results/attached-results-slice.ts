@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {
   setAttachedResults,
@@ -22,7 +23,12 @@ export const attachToCaseReducer = createReducer(
         state['message'] = message;
       })
       .addCase(attachResult, (state, action) => {
-        state.results = [action.payload.result, ...state.results];
+        if (
+          !isNullOrUndefined(action.payload.result.permanentId) ||
+          !isNullOrUndefined(action.payload.result.uriHash)
+        ) {
+          state.results = [action.payload.result, ...state.results];
+        }
       })
       .addCase(detachResult, (state, action) => {
         state.results = state.results.filter((result) => {
