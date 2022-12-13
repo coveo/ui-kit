@@ -147,6 +147,8 @@ export class AtomicCategoryFacet
     'occurrences';
   /**
    * The character that separates values of a multi-value field.
+   *
+   * *Note:* If you use the [example formatting](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet/#usage-notes) for the associated multi-value field, you must set this value to `|` or the facet won't display properly.
    */
   @Prop({reflect: true}) public delimitingCharacter = ';';
   /**

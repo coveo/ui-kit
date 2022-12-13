@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.114.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.113.0...@coveo/headless@1.114.0) (2022-12-13)
+
+### Features
+
+- **headless:** add src to use quickview in iframe ([#2597](https://github.com/coveo/ui-kit/issues/2597)) ([faca366](https://github.com/coveo/ui-kit/commit/faca3665bcf6109ac237db977b8b4918360428bf))
+
 # [1.113.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.112.0...@coveo/headless@1.113.0) (2022-12-09)
 
 ### Features

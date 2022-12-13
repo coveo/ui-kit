@@ -1,10 +1,14 @@
 import {configuration, resultPreview} from '../../../app/reducers';
-import {fetchResultContent} from '../../../features/result-preview/result-preview-actions';
+import {
+  fetchResultContent,
+  updateContentURL,
+} from '../../../features/result-preview/result-preview-actions';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../../test';
+import {buildMockResultPreviewRequest} from '../../../test/mock-result-preview-request-builder';
 import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
 import {
   buildCoreQuickview,
@@ -14,16 +18,23 @@ import {
 
 describe('QuickviewCore', () => {
   let engine: MockSearchEngine;
-  let options: QuickviewOptions;
+  let defaultOptions: QuickviewOptions;
   let quickview: Quickview;
 
-  function initQuickview() {
-    quickview = buildCoreQuickview(engine, {options});
+  const path = '/html';
+
+  function initQuickview(options = defaultOptions) {
+    quickview = buildCoreQuickview(
+      engine,
+      {options},
+      buildMockResultPreviewRequest,
+      path
+    );
   }
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
-    options = {
+    defaultOptions = {
       result: buildMockResult(),
       maximumPreviewSize: 0,
     };
@@ -50,16 +61,37 @@ describe('QuickviewCore', () => {
     const uniqueId = '1';
     const requestedOutputSize = 0;
 
-    beforeEach(() => {
-      options.result = buildMockResult({uniqueId});
-      initQuickview();
+    describe('when #onlyContentURL is true', () => {
+      beforeEach(() => {
+        defaultOptions.result = buildMockResult({uniqueId});
+        initQuickview({...defaultOptions, onlyContentURL: true});
 
-      quickview.fetchResultContent();
+        quickview.fetchResultContent();
+      });
+
+      it('dispatches a #updateContentURL action with the result uniqueId', () => {
+        const action = engine.findAsyncAction(updateContentURL.pending);
+        expect(action?.meta.arg).toEqual({
+          uniqueId,
+          requestedOutputSize,
+          buildResultPreviewRequest: buildMockResultPreviewRequest,
+          path,
+        });
+      });
     });
 
-    it('dispatches a #fetchResultContent action with the result uniqueId', () => {
-      const action = engine.findAsyncAction(fetchResultContent.pending);
-      expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
+    describe('when #onlyContentURL is falsy', () => {
+      beforeEach(() => {
+        defaultOptions.result = buildMockResult({uniqueId});
+        initQuickview();
+
+        quickview.fetchResultContent();
+      });
+
+      it('dispatches a #fetchResultContent action with the result uniqueId', () => {
+        const action = engine.findAsyncAction(fetchResultContent.pending);
+        expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
+      });
     });
   });
 
@@ -72,7 +104,7 @@ describe('QuickviewCore', () => {
       uniqueId,
       content,
     });
-    options.result = buildMockResult({uniqueId});
+    defaultOptions.result = buildMockResult({uniqueId});
     initQuickview();
 
     expect(quickview.state.content).toEqual(content);
@@ -84,7 +116,7 @@ describe('QuickviewCore', () => {
       uniqueId: '1',
       content: '<div></div>',
     });
-    options.result = buildMockResult({uniqueId: '2'});
+    defaultOptions.result = buildMockResult({uniqueId: '2'});
     initQuickview();
 
     expect(quickview.state.content).toEqual('');
@@ -92,7 +124,7 @@ describe('QuickviewCore', () => {
 
   [true, false].forEach((testValue) => {
     it(`when the result #hasHtmlVersion is ${testValue} #state.resultHasPreview should be ${testValue}`, () => {
-      options.result = buildMockResult({hasHtmlVersion: testValue});
+      defaultOptions.result = buildMockResult({hasHtmlVersion: testValue});
       initQuickview();
 
       expect(quickview.state.resultHasPreview).toBe(testValue);
@@ -115,6 +147,6 @@ describe('QuickviewCore', () => {
     engine.state.resultPreview = buildMockResultPreviewState();
     initQuickview();
 
-    expect(options.maximumPreviewSize).toBe(0);
+    expect(defaultOptions.maximumPreviewSize).toBe(0);
   });
 });

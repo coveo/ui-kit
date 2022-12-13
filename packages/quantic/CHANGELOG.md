@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.55.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.54.0...@coveo/quantic@1.55.0) (2022-12-13)
+
+### Features
+
+- **headless:** add src to use quickview in iframe ([#2597](https://github.com/coveo/ui-kit/issues/2597)) ([faca366](https://github.com/coveo/ui-kit/commit/faca3665bcf6109ac237db977b8b4918360428bf))
+
 # [1.54.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.53.5...@coveo/quantic@1.54.0) (2022-12-12)
 
 ### Features
