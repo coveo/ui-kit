@@ -260,7 +260,7 @@ export const makeAnalyticsAction = <EventType extends AnalyticsType>(
         description: builder?.description,
         log: async ({state}) => {
           const response = await builder?.log({
-            searchUID: state.search?.searchResponseId ?? '',
+            searchUID: provider(() => state).getSearchUID(),
           });
           logger.info(
             {client: client.coveoAnalyticsClient, response},
