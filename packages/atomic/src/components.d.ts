@@ -680,7 +680,7 @@ export namespace Components {
     }
     interface AtomicIpxRefineModal {
         /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter": number;
         "isOpen": boolean;
@@ -688,7 +688,7 @@ export namespace Components {
     }
     interface AtomicIpxRefineToggle {
         /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter": number;
     }
@@ -1117,7 +1117,7 @@ export namespace Components {
     }
     interface AtomicRefineModal {
         /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter": number;
         "isOpen": boolean;
@@ -1125,7 +1125,7 @@ export namespace Components {
     }
     interface AtomicRefineToggle {
         /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter": number;
     }
@@ -3264,7 +3264,7 @@ declare namespace LocalJSX {
     }
     interface AtomicIpxRefineModal {
         /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter"?: number;
         "isOpen"?: boolean;
@@ -3272,7 +3272,7 @@ declare namespace LocalJSX {
     }
     interface AtomicIpxRefineToggle {
         /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter"?: number;
     }
@@ -3674,7 +3674,7 @@ declare namespace LocalJSX {
     }
     interface AtomicRefineModal {
         /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter"?: number;
         "isOpen"?: boolean;
@@ -3682,7 +3682,7 @@ declare namespace LocalJSX {
     }
     interface AtomicRefineToggle {
         /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter"?: number;
     }
