@@ -53,6 +53,15 @@ export class AtomicIPXRefineModal implements InitializableComponent {
 
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
+  /**
+   * The number of expanded facets inside the refine modal.
+   * Remaining facets are automatically collapsed.
+   *
+   * Using the value `0` collapses all facets.
+   * Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+   */
+  @Prop({reflect: true}) public collapseFacetsAfter = 0;
+
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
   private facetManager!: FacetManager;
@@ -64,7 +73,8 @@ export class AtomicIPXRefineModal implements InitializableComponent {
         this.host.append(
           getClonedFacetElements(
             this.bindings.store.getFacetElements(),
-            this.facetManager
+            this.facetManager,
+            this.collapseFacetsAfter
           )
         );
       }

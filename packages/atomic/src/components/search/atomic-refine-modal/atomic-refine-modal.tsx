@@ -92,6 +92,16 @@ export class AtomicRefineModal implements InitializableComponent {
   @Prop({mutable: true}) openButton?: HTMLElement;
 
   @Prop({reflect: true, mutable: true}) isOpen = false;
+
+  /**
+   * The number of expanded facets inside the refine modal.
+   * Remaining facets are automatically collapsed.
+   *
+   * Using the value `0` collapses all facets.
+   * Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+   */
+  @Prop({reflect: true}) public collapseFacetsAfter = 0;
+
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
     if (isOpen) {
@@ -102,7 +112,8 @@ export class AtomicRefineModal implements InitializableComponent {
       this.host.append(
         getClonedFacetElements(
           this.bindings.store.getFacetElements(),
-          this.facetManager
+          this.facetManager,
+          this.collapseFacetsAfter
         )
       );
     }
@@ -156,11 +167,11 @@ export class AtomicRefineModal implements InitializableComponent {
             {this.options.map((option) => this.buildOption(option))}
           </select>
           <div
-            part="select-icon"
+            part="select-icon-wrapper"
             class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6"
           >
             <atomic-icon
-              part="select-icon-size" // TODO: in v2, rename to "select-icon", and rename parent.
+              part="select-icon"
               icon={SortIcon}
               class="w-6 h-6"
             ></atomic-icon>
