@@ -2,7 +2,7 @@
   <template if:true={error}>
     <div class="error-message slds-text-color_destructive">{error}</div>
   </template>
-  <template if:false={error}>
+  <template if:true={isVisible}>
     <c-quantic-result-text result={result} field={field} label={label} formatting-function={formattingFunction}></c-quantic-result-text>
   </template>
 </template>

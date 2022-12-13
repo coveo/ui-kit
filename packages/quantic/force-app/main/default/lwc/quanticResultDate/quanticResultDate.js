@@ -1,5 +1,5 @@
 import LOCALE from '@salesforce/i18n/locale';
-import {DateUtils} from 'c/quanticUtils';
+import {getBueno} from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
@@ -35,24 +35,43 @@ export default class QuanticResultDate extends LightningElement {
    * The default format uses the default format for your locale.
    * @api
    * @type {Function}
-   * @param {string} value
+   * @param {number} value
    * @returns {string}
    */
   @api formattingFunction = (value) =>
     new Intl.DateTimeFormat(LOCALE).format(new Date(value));
 
   error;
+  validated = false;
 
   connectedCallback() {
-    if (!this.result || !this.field) {
-      console.error(
-        `The ${this.template.host.localName} requires a result and a date field to be specified.`
-      );
-      this.error = `${this.template.host.localName} Error`;
-    } else if (!DateUtils.isValidTimestamp(this.fieldValue)) {
-      console.error(`Field "${this.field}" does not contain a valid date.`);
-      this.error = `${this.template.host.localName} Error`;
-    }
+    getBueno(this).then(() => {
+      if (!this.result || !this.field || !Bueno.isString(this.field)) {
+        console.error(
+          `The ${this.template.host.localName} requires a result and a date field to be specified.`
+        );
+        this.setError();
+      }
+      if (this.label && !Bueno.isString(this.label)) {
+        console.error(`The "${this.label}" label is not a valid string.`);
+        this.setError();
+      }
+      if (!Bueno.isNumber(this.fieldValue)) {
+        console.error(
+          `The "${this.field}" field value is not a valid timestamp.`
+        );
+        this.setError();
+      }
+      this.validated = true;
+    });
+  }
+
+  setError() {
+    this.error = `${this.template.host.localName} Error`;
+  }
+
+  get isVisible() {
+    return this.validated && !this.error;
   }
 
   /**
@@ -61,6 +80,6 @@ export default class QuanticResultDate extends LightningElement {
    */
   get fieldValue() {
     // @ts-ignore
-    return this.result.raw[this.field];
+    return this.field ? this.result?.raw[this.field] : undefined;
   }
 }
