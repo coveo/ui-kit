@@ -1,3 +1,4 @@
+import {getBueno} from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
@@ -19,7 +20,7 @@ export default class QuanticResultText extends LightningElement {
    * (Optional) The label to display.
    * @api
    * @type {string}
-   * @defaultValue `none`
+   * @defaultValue `undefined`
    */
   @api label;
   /**
@@ -29,22 +30,29 @@ export default class QuanticResultText extends LightningElement {
    */
   @api field;
   /**
-   * A function used to format the displayed value.
+   * The function used to format the displayed value.
    * @api
-   * @type {(result?: string) => string}
-   * @defaultValue `undefined`
+   * @type {Function}
+   * @param {string} value
+   * @returns {string}
    */
   @api formattingFunction;
 
   error;
 
   connectedCallback() {
-    if (!this.result || !this.field) {
-      console.error(
-        `The ${this.template.host.localName} requires a result and a field to be specified.`
-      );
-      this.error = `${this.template.host.localName} Error`;
-    }
+    getBueno(this).then(() => {
+      if (!this.result || !Bueno.isString(this.field)) {
+        console.error(
+          `The ${this.template.host.localName} requires a result and a field to be specified.`
+        );
+        this.error = `${this.template.host.localName} Error`;
+      }
+      if (this.label && !Bueno.isString(this.label)) {
+        console.error(`The "${this.label}" label is not a valid string.`);
+        this.error = `${this.template.host.localName} Error`;
+      }
+    });
   }
 
   /**
@@ -53,7 +61,7 @@ export default class QuanticResultText extends LightningElement {
    */
   get fieldValue() {
     // @ts-ignore
-    return this.result.raw[this.field];
+    return this.result?.raw[this.field];
   }
 
   /**
@@ -61,7 +69,7 @@ export default class QuanticResultText extends LightningElement {
    * @returns {boolean}
    */
   get hasFieldValue() {
-    return !!this.fieldValue.length;
+    return !!this.fieldValue;
   }
 
   /**
