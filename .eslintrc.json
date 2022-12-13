@@ -1,9 +1,5 @@
 {
-  "ignorePatterns": [
-    "node_modules",
-    "stencil-generated",
-    "dist"
-  ],
+  "ignorePatterns": ["node_modules", "stencil-generated", "dist"],
   "env": {
     "jest": true,
     "es6": true
