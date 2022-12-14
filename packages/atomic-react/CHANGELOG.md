@@ -24,6 +24,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **atomic:** replaced printable uri target attribute with attributes slot ([#2525](https://github.com/coveo/ui-kit/issues/2525)) ([d9a5c2f](https://github.com/coveo/ui-kit/commit/d9a5c2f0608dd006384e5c1de0c17c9bc7498f42))
 - **atomic:** adapt search box + suggestion width in search layout ([#2589](https://github.com/coveo/ui-kit/issues/2589)) ([56ca263](https://github.com/coveo/ui-kit/commit/56ca263f8d52a99157bb3dfa3fdeb3a12ef8d869))
 - **headless:** refactored field suggestion options ([#2581](https://github.com/coveo/ui-kit/issues/2581)) ([4a5577e](https://github.com/coveo/ui-kit/commit/4a5577ec78461a1456c81a43385be34f6546b0fc))
+- **headless:** use new preparable analytics ([#2604](https://github.com/coveo/ui-kit/pull/2604)) ([4349fb9](https://github.com/coveo/ui-kit/commit/4349fb9169768b243a5753488a25d34216de1591))
 
 ## [1.27.20](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.27.19...@coveo/atomic-react@1.27.20) (2022-12-09)
 

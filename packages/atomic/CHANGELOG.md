@@ -16,6 +16,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **atomic:** made category facet values hierarchical ([#2542](https://github.com/coveo/ui-kit/issues/2542)) ([5204777](https://github.com/coveo/ui-kit/commit/520477706feb7100286e1b801140bedd26d90084))
 - **headless:** add actionCause and customData to missing /v2 calls ([#2572](https://github.com/coveo/ui-kit/issues/2572)) ([130e94c](https://github.com/coveo/ui-kit/commit/130e94cede829f4417f86364de188e418480b083))
 - **atomic:** added warning when declaring a template with section and non-section elements ([#2598](https://github.com/coveo/ui-kit/issues/2598)) ([165ef8e](https://github.com/coveo/ui-kit/commit/165ef8ec48ffda3d1f0c9d2a6370070d392dea3e))
+- **headless:** use new preparable analytics ([#2604](https://github.com/coveo/ui-kit/pull/2604)) ([4349fb9](https://github.com/coveo/ui-kit/commit/4349fb9169768b243a5753488a25d34216de1591))
 
 ### Features
 

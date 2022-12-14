@@ -11,6 +11,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **headless:** made trigger notify and execute events plural ([#2533](https://github.com/coveo/ui-kit/issues/2533)) ([dee24ad](https://github.com/coveo/ui-kit/commit/dee24ad9fc911e34111eb994c6b364d72a20b68f))
 - **headless:** modify delimiting character for facet in url manager ([#2545](https://github.com/coveo/ui-kit/issues/2545)) ([9f43709](https://github.com/coveo/ui-kit/commit/9f437099b31c055c5181463eb1954b923a74f023))
 - **headless:** add actionCause and customData to missing /v2 calls ([#2572](https://github.com/coveo/ui-kit/issues/2572)) ([130e94c](https://github.com/coveo/ui-kit/commit/130e94cede829f4417f86364de188e418480b083))
+- **headless:** use new preparable analytics ([#2604](https://github.com/coveo/ui-kit/pull/2604)) ([4349fb9](https://github.com/coveo/ui-kit/commit/4349fb9169768b243a5753488a25d34216de1591))
 
 ### Features
 
