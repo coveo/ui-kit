@@ -5,12 +5,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.55.0...@coveo/quantic@2.0.0) (2022-12-14)
 
-### Features
-
-- release v2 ([#2611](https://github.com/coveo/ui-kit/issues/2611)) ([386b7d3](https://github.com/coveo/ui-kit/commit/386b7d3b623871861766c792662a25faf17a15c7))
-
-# [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.55.0...@coveo/quantic@2.0.0) (2022-12-14)
-
 ### Bug Fixes
 
 - **headless:** made result template manager throw errors instead of logging errors ([#2518](https://github.com/coveo/ui-kit/issues/2518)) ([5d54709](https://github.com/coveo/ui-kit/commit/5d547095c68615120a4b087b3c993c111b3d6169))
