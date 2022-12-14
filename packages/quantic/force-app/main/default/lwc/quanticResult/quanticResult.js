@@ -45,8 +45,8 @@ export default class QuanticResult extends LightningElement {
 
   connectedCallback() {
     this.template.addEventListener('haspreview', this.onHasPreview);
-    this.template.addEventListener('mouseenter', this.setHoverState);
-    this.template.host.addEventListener('mouseenter', this.removeHoverState);
+    this.template.host.addEventListener('mouseenter', this.setHoverState);
+    this.template.host.addEventListener('mouseleave', this.removeHoverState);
   }
 
   disconnectedCallback() {
