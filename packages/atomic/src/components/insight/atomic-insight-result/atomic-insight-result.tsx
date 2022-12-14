@@ -1,5 +1,5 @@
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {InsightResult, InsightEngine, InsightInteractiveResult} from '..';
+import {InsightResult, InsightInteractiveResult} from '..';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   ResultLayout,
@@ -37,17 +37,10 @@ export class AtomicInsightResult {
   @Prop() result!: InsightResult;
 
   /**
-   * The headless search engine.
-   * @deprecated This property is currently un-used
-   */
-  @Prop() engine?: InsightEngine;
-
-  /**
    * The InteractiveResult item.
-   * TODO: v2 make required
    * @internal
    */
-  @Prop() interactiveResult?: InsightInteractiveResult;
+  @Prop() interactiveResult!: InsightInteractiveResult;
 
   /**
    * Global Atomic state.
@@ -130,8 +123,8 @@ export class AtomicInsightResult {
 
   public render() {
     return (
-      // deepcode ignore ReactSetInnerHtml: This is not React code
       <Host class={resultComponentClass}>
+        {/* deepcode ignore ReactSetInnerHtml: This is not React code */}
         <div
           class={`result-root ${this.layout
             .getClasses()

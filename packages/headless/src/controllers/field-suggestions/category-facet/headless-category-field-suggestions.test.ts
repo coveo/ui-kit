@@ -38,8 +38,10 @@ describe('categoryFieldSuggestions', () => {
 
   beforeEach(() => {
     options = {
-      facetId,
-      field: 'geography',
+      facet: {
+        facetId,
+        field: 'geography',
+      },
     };
 
     state = createMockState();

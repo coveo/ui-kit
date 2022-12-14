@@ -15,8 +15,8 @@ import {
   createMockState,
   MockSearchEngine,
 } from '../../../../../test';
-import {buildMockNumericFacetRequest} from '../../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {
@@ -49,7 +49,7 @@ describe('numeric filter', () => {
     };
 
     state = createMockState();
-    state.numericFacetSet[facetId] = buildMockNumericFacetRequest();
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice();
 
     initNumericFilter();
   });

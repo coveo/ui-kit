@@ -24,6 +24,7 @@ describe('insight params', () => {
         accessToken: request.accessToken,
         method,
         contentType,
+        origin: 'insightApiFetch',
         url: `${request.url}/rest/organizations/${request.organizationId}/insight/v1/configs/${request.insightId}${path}`,
       });
     });

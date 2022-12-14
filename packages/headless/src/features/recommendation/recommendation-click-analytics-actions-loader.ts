@@ -1,11 +1,6 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
-import {
-  AnalyticsType,
-  AsyncThunkAnalyticsOptions,
-} from '../analytics/analytics-utils';
+import {ClickAction} from '../analytics/analytics-utils';
 import {logRecommendationOpen} from './recommendation-analytics-actions';
 
 /**
@@ -18,13 +13,7 @@ export interface ClickAnalyticsActionCreators {
    * @param recommendation - The selected recommendation.
    * @returns A dispatchable action.
    */
-  logRecommendationOpen(recommendation: Result): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logRecommendationOpen(recommendation: Result): ClickAction;
 }
 
 /**

@@ -1,10 +1,13 @@
 import {CoreEngine} from '../../../app/engine';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
-import {BaseFacetRequest} from '../../../features/facets/facet-api/request';
 import {BaseFacetValue} from '../../../features/facets/facet-api/response';
+import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
+import {AnyFacetSetState} from '../../../features/facets/generic/interfaces/generic-facet-section';
+import {DateRangeRequest} from '../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {NumericRangeRequest} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {
   CategoryFacetSection,
@@ -166,6 +169,18 @@ export interface DeselectableValue {
   deselect(): void;
 }
 
+type InferFacetSliceValueRequestType<T extends AnyFacetSetState> =
+  T[string]['request']['currentValues'][number];
+
+type InferFacetSliceValueType<T extends AnyFacetSetState> =
+  InferFacetSliceValueRequestType<T> extends FacetValueRequest
+    ? FacetValue
+    : InferFacetSliceValueRequestType<T> extends NumericRangeRequest
+    ? NumericFacetValue
+    : InferFacetSliceValueRequestType<T> extends DateRangeRequest
+    ? DateFacetValue
+    : CategoryFacetValue;
+
 /**
  * @internal
  * Get the breadcrumb of the facet selected
@@ -175,7 +190,7 @@ export interface DeselectableValue {
  * @param facetValuesSelector facet selector
  * @returns list breadcrumb of the facet selected
  */
-export const getBreadcrumbs = <T extends BaseFacetValue>(
+export const getBreadcrumbs = <T extends AnyFacetSetState>(
   engine: CoreEngine<
     ConfigurationSection &
       SearchSection &
@@ -184,13 +199,16 @@ export const getBreadcrumbs = <T extends BaseFacetValue>(
       DateFacetSection &
       CategoryFacetSection
   >,
-  facetSet: Record<string, BaseFacetRequest>,
-  executeToggleSelect: (payload: {facetId: string; selection: T}) => void,
-  facetValuesSelector:
-    | ((state: SearchSection & FacetSection, facetId: string) => T[])
-    | ((state: SearchSection & NumericFacetSection, facetId: string) => T[])
-    | ((state: SearchSection & DateFacetSection, facetId: string) => T[])
-) => {
+  facetSet: T,
+  executeToggleSelect: (payload: {
+    facetId: string;
+    selection: InferFacetSliceValueType<T>;
+  }) => void,
+  facetValuesSelector: (
+    state: typeof engine['state'],
+    facetId: string
+  ) => InferFacetSliceValueType<T>[]
+): Breadcrumb<InferFacetSliceValueType<T>>[] => {
   return Object.keys(facetSet)
     .map((facetId) => {
       const values = facetValuesSelector(engine.state, facetId).map(
@@ -202,7 +220,7 @@ export const getBreadcrumbs = <T extends BaseFacetValue>(
 
       return {
         facetId,
-        field: facetSet[facetId].field,
+        field: facetSet[facetId]!.request.field,
         values,
       };
     })

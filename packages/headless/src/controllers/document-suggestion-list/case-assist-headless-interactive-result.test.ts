@@ -1,6 +1,6 @@
 import {Result} from '../../api/search/search/result';
 import {configuration} from '../../app/reducers';
-import {buildDocumentSuggestionOpenThunk} from '../../features/case-assist/case-assist-analytics-actions';
+import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions';
 import {buildMockResult} from '../../test';
 import {
   buildMockCaseAssistEngine,
@@ -23,7 +23,7 @@ describe('InteractiveResult', () => {
 
   function initializeInteractiveResult(delay?: number) {
     const result = (mockResult = buildMockResult(resultStringParams));
-    logDocumentOpenPendingActionType = buildDocumentSuggestionOpenThunk(
+    logDocumentOpenPendingActionType = logDocumentSuggestionOpen(
       mockResult.uniqueId
     ).pending.type;
     interactiveResult = buildCaseAssistInteractiveResult(engine, {
@@ -42,7 +42,7 @@ describe('InteractiveResult', () => {
   function expectLogDocumentActionPending() {
     const action = findLogDocumentAction();
     expect(action).toEqual(
-      buildDocumentSuggestionOpenThunk(mockResult.uniqueId).pending(
+      logDocumentSuggestionOpen(mockResult.uniqueId).pending(
         action!.meta.requestId
       )
     );

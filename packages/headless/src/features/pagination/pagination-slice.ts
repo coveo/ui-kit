@@ -6,7 +6,6 @@ import {
 } from '../facets/category-facet-set/category-facet-set-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
-import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {
   toggleSelectDateFacetValue,
   updateDateFacetValues,
@@ -117,9 +116,6 @@ export const paginationReducer = createReducer(
         handlePaginationReset(state);
       })
       .addCase(toggleSelectNumericFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(deselectAllFacets, (state) => {
         handlePaginationReset(state);
       })
       .addCase(deselectAllBreadcrumbs, (state) => {

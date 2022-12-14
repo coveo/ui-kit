@@ -6,6 +6,7 @@ import {
   MockInsightEngine,
 } from '../../../test/mock-engine';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 import {
   buildSearchParameterManager,
@@ -67,8 +68,10 @@ describe('insight search parameter manager', () => {
       });
 
       engine.state.facetSet = {
-        author: buildMockFacetRequest({
-          currentValues: [facetValue1, facetValue2],
+        author: buildMockFacetSlice({
+          request: buildMockFacetRequest({
+            currentValues: [facetValue1, facetValue2],
+          }),
         }),
       };
 

@@ -78,10 +78,10 @@ export function buildCoreFacetConditionsManager(
   };
 
   const getFacetValuesById = (facetId: string) =>
-    engine.state.facetSet?.[facetId]?.currentValues ??
+    engine.state.facetSet?.[facetId]?.request?.currentValues ??
     engine.state.categoryFacetSet?.[facetId]?.request?.currentValues ??
-    engine.state.numericFacetSet?.[facetId]?.currentValues ??
-    engine.state.dateFacetSet?.[facetId]?.currentValues ??
+    engine.state.numericFacetSet?.[facetId]?.request?.currentValues ??
+    engine.state.dateFacetSet?.[facetId]?.request?.currentValues ??
     null;
 
   const isFacetRegistered = (facetId: string) =>
@@ -125,8 +125,8 @@ export function buildCoreFacetConditionsManager(
   const unfreezeFacetValues = () => {
     if (engine.state.facetSet) {
       Object.entries(engine.state.facetSet).forEach(
-        ([facetId, request]) =>
-          request.freezeCurrentValues &&
+        ([facetId, slice]) =>
+          slice.request.freezeCurrentValues &&
           engine.dispatch(
             updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
           )

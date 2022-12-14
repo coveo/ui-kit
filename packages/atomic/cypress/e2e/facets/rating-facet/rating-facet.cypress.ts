@@ -365,7 +365,7 @@ describe('Rating Facet Test Suites', () => {
             'display-values-as': 'link',
           })
         )
-        .withHash(`nf[${ratingFacetField}]=4..5`)
+        .withHash(`nf-${ratingFacetField}=4..5`)
         .init();
     });
 

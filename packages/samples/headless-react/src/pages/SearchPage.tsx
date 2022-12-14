@@ -368,13 +368,15 @@ export class SearchPage extends Component {
     );
 
     this.fieldSuggestionsAuthor = buildFieldSuggestions(this.engine, {
-      options: {field: 'author', facetId: 'author-2'},
+      options: {facet: {field: 'author', facetId: 'author-2'}},
     });
 
     this.categoryFieldSuggestions = buildCategoryFieldSuggestions(this.engine, {
       options: {
-        field: 'geographicalhierarchy',
-        facetId: 'geographicalhierarchy-3',
+        facet: {
+          field: 'geographicalhierarchy',
+          facetId: 'geographicalhierarchy-3',
+        },
       },
     });
 

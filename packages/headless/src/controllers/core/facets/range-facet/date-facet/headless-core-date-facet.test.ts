@@ -12,8 +12,8 @@ import {
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {SearchAppState} from '../../../../../state/search-app-state';
-import {buildMockDateFacetRequest} from '../../../../../test/mock-date-facet-request';
 import {buildMockDateFacetResponse} from '../../../../../test/mock-date-facet-response';
+import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
 import {
   MockSearchEngine,
@@ -48,7 +48,7 @@ describe('date facet', () => {
     };
 
     state = createMockState();
-    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
+    state.dateFacetSet[facetId] = buildMockDateFacetSlice();
 
     initDateFacet();
   });

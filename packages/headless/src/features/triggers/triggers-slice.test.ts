@@ -102,7 +102,7 @@ describe('trigger slice', () => {
     expect(finalState.query).toEqual('');
   });
 
-  it('when an executeSearch fulfilled is received and the payload does not contain any TriggerExecute objects, it does not update #state.execute', () => {
+  it('when an executeSearch fulfilled is received and the payload does not contain any TriggerExecute objects, it does not update #state.executions', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockNotifyTrigger({content: 'notification'}),
@@ -122,13 +122,10 @@ describe('trigger slice', () => {
     );
     const finalState = triggerReducer(state, action);
 
-    expect(finalState.execute).toEqual({
-      functionName: '',
-      params: [],
-    });
+    expect(finalState.executions).toEqual([]);
   });
 
-  it('when an executeSearch fulfilled is received and the payload contains TriggerExecute objects, it updates #state.execute', () => {
+  it('when an executeSearch fulfilled is received and the payload contains TriggerExecute objects, it updates #state.executions', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockExecuteTrigger({
@@ -150,13 +147,15 @@ describe('trigger slice', () => {
     );
     const finalState = triggerReducer(state, action);
 
-    expect(finalState.execute).toEqual({
-      functionName: 'function',
-      params: ['a1'],
-    });
+    expect(finalState.executions).toEqual([
+      {
+        functionName: 'function',
+        params: ['a1'],
+      },
+    ]);
   });
 
-  it('when an executeSearch fulfilled is received and the payload does not contain any TriggerNotification objects, it does not update #state.notification', () => {
+  it('when an executeSearch fulfilled is received and the payload does not contain any TriggerNotification objects, it does not update #state.notifications', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockQueryTrigger({content: 'query'}),
@@ -176,10 +175,10 @@ describe('trigger slice', () => {
     );
     const finalState = triggerReducer(state, action);
 
-    expect(finalState.notification).toEqual('');
+    expect(finalState.notifications).toEqual([]);
   });
 
-  it('when an executeSearch fulfilled is received and the payload contains TriggerNotification objects, it updates #state.notification', () => {
+  it('when an executeSearch fulfilled is received and the payload contains TriggerNotification objects, it updates #state.notifications', () => {
     const state = getTriggerInitialState();
     const triggers = [buildMockNotifyTrigger({content: 'Hello world'})];
     const response = buildMockSearchResponse({
@@ -196,7 +195,7 @@ describe('trigger slice', () => {
     );
     const finalState = triggerReducer(state, action);
 
-    expect(finalState.notification).toEqual('Hello world');
+    expect(finalState.notifications).toEqual(['Hello world']);
   });
 
   it('when an executeSearch fulfilled is received and the payload contains two of each Trigger objects, it updates all states members', () => {
@@ -245,10 +244,8 @@ describe('trigger slice', () => {
 
     expect(finalState.redirectTo).toEqual(expectedRedirections[0]);
 
-    expect(finalState.execute).toEqual(expectedExecutions[0]);
     expect(finalState.executions).toEqual(expectedExecutions);
 
-    expect(finalState.notification).toEqual(expectedNotifications[0]);
     expect(finalState.notifications).toEqual(expectedNotifications);
   });
 });
