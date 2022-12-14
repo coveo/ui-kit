@@ -116,7 +116,7 @@
     "tailwindcss": "3.0.23"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.0.0-pre.7"
+    "@coveo/headless": "^2.0.0"
   },
   "license": "Apache-2.0",
   "engines": {
