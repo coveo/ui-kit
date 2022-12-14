@@ -5,7 +5,10 @@ import {
   attachResult,
   detachResult,
 } from './attached-results-actions';
-import {getAttachedResultsInitialState} from './attached-results-state';
+import {
+  AttachedResult,
+  getAttachedResultsInitialState,
+} from './attached-results-state';
 
 export const attachedResultsReducer = createReducer(
   getAttachedResultsInitialState(),
@@ -30,16 +33,22 @@ export const attachedResultsReducer = createReducer(
         }
       })
       .addCase(detachResult, (state, action) => {
-        state.results = state.results.filter((result) => {
-          const isPermanentIdEqual =
-            result?.permanentId !== undefined &&
-            result?.permanentId === action.payload?.result?.permanentId;
-          const isUriHashEqual =
-            result?.uriHash !== undefined &&
-            result?.uriHash === action.payload?.result?.uriHash;
-          const isCaseIdEqual = result.caseId === action.payload.result.caseId;
-          return !isCaseIdEqual || (!isPermanentIdEqual && !isUriHashEqual);
-        });
+        state.results = state.results.filter((result) =>
+          attachedResultsMatchIds(result, action.payload.result)
+        );
       });
   }
 );
+
+const attachedResultsMatchIds = (
+  result1: AttachedResult,
+  result2: AttachedResult
+) => {
+  const isPermanentIdEqual =
+    result1?.permanentId !== undefined &&
+    result1?.permanentId === result2?.permanentId;
+  const isUriHashEqual =
+    result1?.uriHash !== undefined && result1?.uriHash === result2?.uriHash;
+  const isCaseIdEqual = result1.caseId === result2.caseId;
+  return !isCaseIdEqual || (!isPermanentIdEqual && !isUriHashEqual);
+};
