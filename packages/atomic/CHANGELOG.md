@@ -5,6 +5,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.126.1...@coveo/atomic@2.0.0) (2022-12-14)
 
+### Features
+
+- release v2 ([#2611](https://github.com/coveo/ui-kit/issues/2611)) ([386b7d3](https://github.com/coveo/ui-kit/commit/386b7d3b623871861766c792662a25faf17a15c7))
+
+# [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.126.1...@coveo/atomic@2.0.0) (2022-12-14)
+
 ### Bug Fixes
 
 - **headless:** made result template manager throw errors instead of logging errors ([#2518](https://github.com/coveo/ui-kit/issues/2518)) ([5d54709](https://github.com/coveo/ui-kit/commit/5d547095c68615120a4b087b3c993c111b3d6169))
@@ -25,6 +31,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **atomic:** replaced printable uri target attribute with attributes slot ([#2525](https://github.com/coveo/ui-kit/issues/2525)) ([d9a5c2f](https://github.com/coveo/ui-kit/commit/d9a5c2f0608dd006384e5c1de0c17c9bc7498f42))
 - **atomic:** adapt search box + suggestion width in search layout ([#2589](https://github.com/coveo/ui-kit/issues/2589)) ([56ca263](https://github.com/coveo/ui-kit/commit/56ca263f8d52a99157bb3dfa3fdeb3a12ef8d869))
 - **headless:** refactored field suggestion options ([#2581](https://github.com/coveo/ui-kit/issues/2581)) ([4a5577e](https://github.com/coveo/ui-kit/commit/4a5577ec78461a1456c81a43385be34f6546b0fc))
+
 ## [1.126.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.126.0...@coveo/atomic@1.126.1) (2022-12-13)
 
 ### Bug Fixes
