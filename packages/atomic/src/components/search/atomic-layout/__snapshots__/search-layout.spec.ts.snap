@@ -5,6 +5,13 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
+    atomic-search-layout#abc atomic-layout-section[section=\\"search\\"] {
+      justify-self: start;
+      width: 80%;
+    }
+  }
+
+@media only screen and (min-width: 1024px) {
       atomic-search-layout#abc {
         grid-template-areas:
         '. .                     atomic-section-search .'
@@ -37,6 +44,13 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
     should match snapshot 1`] = `
 "atomic-search-layout#abc { display: grid }
 
+@media only screen and (min-width: 1024px) {
+    atomic-search-layout#abc atomic-layout-section[section=\\"search\\"] {
+      justify-self: start;
+      width: 80%;
+    }
+  }
+
 atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
       display: none;
     }
@@ -63,6 +77,13 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
+    atomic-search-layout#abc atomic-layout-section[section=\\"search\\"] {
+      justify-self: start;
+      width: 80%;
+    }
+  }
+
+@media only screen and (min-width: 1024px) {
       atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
@@ -72,6 +93,13 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 exports[`Search Layout #buildSearchLayout when the atomic-search-layout has custom breakpoint & min-width, max-width values
     should match snapshot 1`] = `
 "atomic-search-layout#abc { display: grid }
+
+@media only screen and (min-width: 1024px) {
+    atomic-search-layout#abc atomic-layout-section[section=\\"search\\"] {
+      justify-self: start;
+      width: 80%;
+    }
+  }
 
 @media only screen and (min-width: 1024px) {
       atomic-search-layout#abc {

@@ -1,5 +1,6 @@
 import {
   AnalyticsType,
+  InsightAction,
   makeInsightAnalyticsAction,
 } from '../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
@@ -7,7 +8,7 @@ import {LogStaticFilterToggleValueActionCreatorPayload} from './static-filter-se
 
 export const logInsightStaticFilterDeselect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload
-) =>
+): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/staticFilter/deselect',
     AnalyticsType.Search,
@@ -16,4 +17,4 @@ export const logInsightStaticFilterDeselect = (
         ...metadata,
         ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       })
-  )();
+  );

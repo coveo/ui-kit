@@ -1,4 +1,3 @@
-import {isArray} from '@coveo/bueno';
 import {
   CategoryFacet,
   buildCategoryFacet,
@@ -75,18 +74,18 @@ import {CategoryFacetSearchResult} from '../category-facet-search-result/categor
  * @part search-result-path - The search result path.
  * @part search-highlight - The highlighted query inside the facet values.
  *
- * @part parents - The parent values container.
- * @part all-categories-button - The "View all" button displayed first along the parents.
- * @part parent-button - The clickable parent button.
- * @part active-parent - The non-clickable active parent.
+ * @part parents - The container surrounding the whole hierarchy of values.
+ * @part sub-parents - The container surrounding a sub-hierarchy of values.
+ * @part values - The container surrounding either the children of the active value or the values at the base.
+ * @part all-categories-button - The "View all" button displayed first within the parents.
+ * @part parent-button - The clickable parent button displayed first within sub-parents.
+ * @part active-parent - The clickable active parent displayed first within the last sub-parents.
+ * @part value-link - The clickable value displayed first within values.
  * @part back-arrow - The back arrow displayed before the clickable parents.
- *
- * @part values - The facet values child container.
- * @part value-link - The child facet value.
- * @part value-label - The facet value label.
- * @part value-count - The facet value count.
- * @part leaf-value - A facet value with no child value
- * @part node-value - A facet value with children values
+ * @part value-label - The facet value label within a value button.
+ * @part value-count - The facet value count within a value button.
+ * @part leaf-value - A facet value with no child value.
+ * @part node-value - A facet value with child values.
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
@@ -158,12 +157,11 @@ export class AtomicCategoryFacet
    * ```html
    *  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet>
    * ```
-   *
-   * Specifying the property as a comma separated string is deprecated.
    */
-  @ArrayProp({deprecationWarning: true})
+  @ArrayProp()
   @Prop({reflect: true, mutable: true})
-  public basePath?: string | string[];
+  public basePath: string[] | string = '[]';
+
   /**
    * Whether to use basePath as a filter for the results.
    */
@@ -235,7 +233,7 @@ export class AtomicCategoryFacet
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
-      basePath: this.processBasePath(),
+      basePath: [...this.basePath],
       delimitingCharacter: this.delimitingCharacter,
       filterByBasePath: this.filterByBasePath,
       injectionDepth: this.injectionDepth,
@@ -277,22 +275,6 @@ export class AtomicCategoryFacet
     }
 
     return true;
-  }
-
-  private processBasePath() {
-    // @deprecated
-    // TODO, V2:
-    // basePath should only support JSON string representation.
-    // deprecate comma delimited string
-    if (isArray(this.basePath)) {
-      return this.basePath;
-    }
-
-    if (this.basePath) {
-      return this.basePath.split(',').map((value) => value.trim());
-    }
-
-    return undefined;
   }
 
   private get hasParents() {
@@ -360,32 +342,28 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderAllCategories() {
+  private renderAllCategoriesButton() {
     const allCategories = this.bindings.i18n.t('all-categories');
     return (
-      <li key={allCategories}>
-        <Button
-          style="text-neutral"
-          part="all-categories-button"
-          class="parent-button"
-          onClick={() => {
-            this.activeValueFocus.focusAfterSearch();
-            this.facet.deselectAll();
-          }}
-        >
-          <atomic-icon
-            aria-hidden="true"
-            icon={LeftArrow}
-            part="back-arrow"
-            class="back-arrow"
-          ></atomic-icon>
-          <span class="truncate">{allCategories}</span>
-        </Button>
-      </li>
+      <Button
+        style="text-neutral"
+        part="all-categories-button"
+        onClick={() => {
+          this.activeValueFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
+      >
+        <atomic-icon
+          aria-hidden="true"
+          icon={LeftArrow}
+          part="back-arrow"
+        ></atomic-icon>
+        <span class="truncate">{allCategories}</span>
+      </Button>
     );
   }
 
-  private renderParent(facetValue: CategoryFacetValue) {
+  private renderParentButton(facetValue: CategoryFacetValue) {
     const displayValue = getFieldValueCaption(
       this.field,
       facetValue.value,
@@ -397,37 +375,53 @@ export class AtomicCategoryFacet
     });
 
     return (
-      <li key={displayValue}>
-        <Button
-          style="text-neutral"
-          part="parent-button"
-          class="parent-button"
-          ariaPressed="false"
-          onClick={() => {
-            this.activeValueFocus.focusAfterSearch();
-            this.facet.toggleSelect(facetValue);
-          }}
-          ariaLabel={ariaLabel}
-        >
-          <atomic-icon
-            aria-hidden="true"
-            icon={LeftArrow}
-            part="back-arrow"
-            class="back-arrow"
-          ></atomic-icon>
-          <span class="truncate">{displayValue}</span>
-        </Button>
-      </li>
+      <Button
+        style="text-neutral"
+        part="parent-button"
+        ariaPressed="false"
+        onClick={() => {
+          this.activeValueFocus.focusAfterSearch();
+          this.facet.toggleSelect(facetValue);
+        }}
+        ariaLabel={ariaLabel}
+      >
+        <atomic-icon
+          aria-hidden="true"
+          icon={LeftArrow}
+          part="back-arrow"
+          class="back-arrow"
+        ></atomic-icon>
+        <span class="truncate">{displayValue}</span>
+      </Button>
     );
   }
 
-  private renderParents() {
+  private renderValuesTree(parents: CategoryFacetValue[], isRoot: boolean) {
     if (!this.hasParents) {
-      return;
+      return this.renderChildren();
     }
 
-    const nonActiveParents = this.facetState.parents.slice(0, -1);
-    const activeParent = this.facetState.parents.slice(-1)[0];
+    if (isRoot) {
+      return (
+        <li class="contents">
+          {this.renderAllCategoriesButton()}
+          <ul part="sub-parents">{this.renderValuesTree(parents, false)}</ul>
+        </li>
+      );
+    }
+
+    if (parents.length > 1) {
+      return (
+        <li class="contents">
+          {this.renderParentButton(parents[0])}
+          <ul part="sub-parents">
+            {this.renderValuesTree(parents.slice(1), false)}
+          </ul>
+        </li>
+      );
+    }
+
+    const activeParent = parents[0];
     const activeParentDisplayValue = getFieldValueCaption(
       this.field,
       activeParent.value,
@@ -435,33 +429,30 @@ export class AtomicCategoryFacet
     );
 
     return (
-      <ul part="parents" class="mt-3">
-        {this.renderAllCategories()}
-        {nonActiveParents.map((parent) => this.renderParent(parent))}
-        <FacetValueLink
+      <FacetValueLink
+        displayValue={activeParentDisplayValue}
+        numberOfResults={activeParent.numberOfResults}
+        isSelected={true}
+        i18n={this.bindings.i18n}
+        onClick={() => {
+          this.activeValueFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
+        searchQuery={this.facetState.facetSearch.query}
+        part={`active-parent ${this.getIsLeafOrNodePart(activeParent)}`}
+        class="contents"
+        buttonRef={this.activeValueFocus.setTarget}
+        subList={<ul part="values">{this.renderChildren()}</ul>}
+      >
+        <FacetValueLabelHighlight
           displayValue={activeParentDisplayValue}
-          numberOfResults={activeParent.numberOfResults}
           isSelected={true}
-          i18n={this.bindings.i18n}
-          onClick={() => {
-            this.activeValueFocus.focusAfterSearch();
-            this.facet.deselectAll();
-          }}
-          searchQuery={this.facetState.facetSearch.query}
-          part={`active-parent ${this.getIsLeafOrNodePart(activeParent)}`}
-          class="parent-active"
-          buttonRef={this.activeValueFocus.setTarget}
-        >
-          <FacetValueLabelHighlight
-            displayValue={activeParentDisplayValue}
-            isSelected={true}
-          ></FacetValueLabelHighlight>
-        </FacetValueLink>
-      </ul>
+        ></FacetValueLabelHighlight>
+      </FacetValueLink>
     );
   }
 
-  private renderValue(
+  private renderChild(
     facetValue: CategoryFacetValue,
     isShowLessFocusTarget: boolean,
     isShowMoreFocusTarget: boolean
@@ -497,21 +488,13 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderValues() {
+  private renderChildren() {
     if (!this.facetState.values.length) {
       return;
     }
 
-    return (
-      <ul part="values" class={this.hasParents ? 'pl-9' : 'mt-3'}>
-        {this.facetState.values.map((value, i) =>
-          this.renderValue(
-            value,
-            i === 0,
-            i === this.resultIndexToFocusOnShowMore
-          )
-        )}
-      </ul>
+    return this.facetState.values.map((value, i) =>
+      this.renderChild(value, i === 0, i === this.resultIndexToFocusOnShowMore)
     );
   }
 
@@ -612,8 +595,15 @@ export class AtomicCategoryFacet
           ) : (
             <Fragment>
               <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
-                {this.renderParents()}
-                {this.renderValues()}
+                {this.hasParents ? (
+                  <ul part="parents" class="mt-3">
+                    {this.renderValuesTree(this.facetState.parents, true)}
+                  </ul>
+                ) : (
+                  <ul part="values" class="mt-3">
+                    {this.renderChildren()}
+                  </ul>
+                )}
               </FacetValuesGroup>
               {this.renderShowMoreLess()}
             </Fragment>

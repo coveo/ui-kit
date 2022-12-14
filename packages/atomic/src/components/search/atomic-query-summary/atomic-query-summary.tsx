@@ -3,7 +3,7 @@ import {
   QuerySummaryState,
   buildQuerySummary,
 } from '@coveo/headless';
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, State} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -37,12 +37,6 @@ export class AtomicQuerySummary implements InitializableComponent {
   private querySummaryState!: QuerySummaryState;
   @State() public error!: Error;
 
-  /**
-   * Whether to display the duration of the last query execution.
-   * @deprecated Use the `duration` part.
-   */
-  @Prop({reflect: true}) enableDuration = false;
-
   @AriaLiveRegion('query-summary')
   protected ariaMessage!: string;
 
@@ -54,7 +48,6 @@ export class AtomicQuerySummary implements InitializableComponent {
     return (
       <QuerySummaryCommon
         bindings={this.bindings}
-        enableDuration={this.enableDuration}
         querySummaryState={this.querySummaryState}
         setAriaLive={(msg) => (this.ariaMessage = msg)}
       />

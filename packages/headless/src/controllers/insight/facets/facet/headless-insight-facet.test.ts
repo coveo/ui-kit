@@ -18,6 +18,7 @@ import {
 } from '../../../../test/mock-engine';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../../../test/mock-facet-value';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import {buildFacet, Facet, FacetOptions} from './headless-insight-facet';
@@ -35,7 +36,9 @@ describe('InsightFacet', () => {
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId, ...config}),
+    });
     state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 

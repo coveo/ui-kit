@@ -20,6 +20,7 @@ import {
 import i18next, {i18n} from 'i18next';
 import {RecsLogLevel} from '..';
 import {InitializeEvent} from '../../../utils/initialization-utils';
+import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
@@ -98,9 +99,16 @@ export class AtomicRecsInterface
   @Prop({reflect: true}) public language = 'en';
 
   /**
-   * A list of non-default fields to include in the query results, separated by commas.
+   * A list of non-default fields to include in the query results.
+   *
+   * Specify the property as an array using a JSON string representation:
+   * ```html
+   * <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface>
+   * ```
    */
-  @Prop({reflect: true}) public fieldsToInclude = '';
+  @ArrayProp()
+  @Prop({mutable: true})
+  public fieldsToInclude: string[] | string = '[]';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -215,10 +223,7 @@ export class AtomicRecsInterface
 
   public registerFieldsToInclude() {
     const fields = EcommerceDefaultFieldsToInclude.concat(
-      this.fieldsToInclude
-        .split(',')
-        .map((field) => field.trim())
-        .filter((field) => !!field)
+      [...this.fieldsToInclude].filter((field) => !!field)
     );
     this.engine!.dispatch(
       loadFieldActions(this.engine!).registerFieldsToInclude(fields)

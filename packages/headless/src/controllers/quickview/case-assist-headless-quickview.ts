@@ -1,5 +1,6 @@
 import {CaseAssistEngine} from '../../app//case-assist-engine/case-assist-engine';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
+import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
 import {
   buildCoreQuickview,
   QuickviewOptions,
@@ -32,6 +33,13 @@ export function buildCaseAssistQuickview(
       logQuickviewDocumentSuggestionClick(props.options.result.uniqueId)
     );
   };
+  const path = '/html';
 
-  return buildCoreQuickview(engine, props, fetchResultContentCallback);
+  return buildCoreQuickview(
+    engine,
+    props,
+    buildResultPreviewRequest,
+    path,
+    fetchResultContentCallback
+  );
 }

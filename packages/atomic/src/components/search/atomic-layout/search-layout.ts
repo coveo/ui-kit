@@ -17,6 +17,12 @@ export function buildSearchLayout(
   const mediaQuerySelector = `@media ${makeDesktopQuery(mobileBreakpoint)}`;
 
   const display = `${layoutSelector} { display: grid }`;
+  const search = `${mediaQuerySelector} {
+    ${layoutSelector} ${sectionSelector('search')} {
+      justify-self: start;
+      width: 80%;
+    }
+  }`;
 
   const facets = () => {
     const facetsSection = findSection(element, 'facets');
@@ -90,7 +96,7 @@ export function buildSearchLayout(
     }`;
   };
 
-  return [display, facets(), refine(), horizontalFacets()]
+  return [display, search, facets(), refine(), horizontalFacets()]
     .filter((declaration) => declaration !== '')
     .join('\n\n');
 }

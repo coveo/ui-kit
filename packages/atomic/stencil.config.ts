@@ -124,7 +124,7 @@ export const config: Config = {
       '^.+\\.svg$': './svg.transform.js',
     },
     transformIgnorePatterns: [],
-    testPathIgnorePatterns: ['headless', '.snap'],
+    testPathIgnorePatterns: ['.snap'],
     setupFiles: ['jest-localstorage-mock'],
     resetMocks: false,
   },
