@@ -17,7 +17,7 @@ export interface SetAttachedResultsActionCreatorPayload {
   /**
    * A potential error message. null if success
    */
-  message: string;
+  message?: string;
 }
 
 export interface SetAttachToCaseAttachActionCreatorPayload {

@@ -71,7 +71,7 @@ export function buildAttachToCase(
   engine: InsightEngine,
   props: AttachToCaseProps = {}
 ): AttachToCase {
-  if (!loadAttachToCaseReducers(engine)) {
+  if (!loadAttachedResultsReducers(engine)) {
     throw loadReducerError;
   }
 
@@ -121,7 +121,7 @@ export function buildAttachToCase(
   };
 }
 
-function loadAttachToCaseReducers(
+function loadAttachedResultsReducers(
   engine: InsightEngine
 ): engine is InsightEngine<ConfigurationSection & AttachedResultsSection> {
   engine.addReducers({configuration, attachedResults});

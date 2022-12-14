@@ -3,31 +3,20 @@ import {
   attachResult,
   detachResult,
 } from '../../../features/attached-results/attached-results-actions';
-import {AttachedResult} from '../../../features/attached-results/attached-results-state';
 import {InsightAppState} from '../../../state/insight-app-state';
+import {createMockAttachedResult} from '../../../test/mock-attached-results';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
 } from '../../../test/mock-engine';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
+import {buildMockRaw} from '../../../test/mock-raw';
+import {buildMockResult} from '../../../test/mock-result';
 import {
   AttachToCase,
   buildAttachToCase,
   SearchResult,
 } from './headless-attach-to-case';
-
-function createMockAttachedResult(
-  permanentId = 'foo',
-  caseId = '12345'
-): AttachedResult {
-  return {
-    caseId: caseId,
-    permanentId: permanentId,
-    resultUrl: 'foo.com',
-    source: 'bar',
-    title: 'foo',
-  };
-}
 
 describe('insight attach to case', () => {
   let engine: MockInsightEngine;
@@ -64,48 +53,51 @@ describe('insight attach to case', () => {
   });
 
   it('calling #isAttached should return true if the result is attached with the permanentId.', () => {
-    const mockAttachedResult = createMockAttachedResult();
+    const testPermanentId = 'test_permanentid';
+    const mockAttachedResult = createMockAttachedResult({
+      permanentId: testPermanentId,
+      uriHash: undefined,
+    });
     engine.state.attachedResults.results.push(mockAttachedResult);
 
-    const mockSearchResult: SearchResult = {
-      title: '',
-      raw: {
-        permanentid: 'foo',
-        urihash: undefined,
-      },
-    };
+    const mockSearchResult = buildMockResult({
+      raw: buildMockRaw({
+        permanentid: testPermanentId,
+      }),
+    });
     expect(attachToCase.isAttached(mockSearchResult)).toBeTruthy();
   });
 
   it('calling #isAttached should return true if the result is attached with the uriHash.', () => {
-    const mockAttachedResult = createMockAttachedResult();
-    engine.state.attachedResults.results.push({
-      ...mockAttachedResult,
+    const testUriHash = 'test_urihash';
+    const mockAttachedResult = createMockAttachedResult({
+      uriHash: testUriHash,
       permanentId: undefined,
-      uriHash: 'foo',
     });
+    engine.state.attachedResults.results.push(mockAttachedResult);
 
-    const mockSearchResult: SearchResult = {
-      title: '',
-      raw: {
-        permanentid: undefined,
-        urihash: 'foo',
-      },
-    };
+    const mockSearchResult = buildMockResult({
+      raw: buildMockRaw({
+        urihash: testUriHash,
+      }),
+    });
     expect(attachToCase.isAttached(mockSearchResult)).toBeTruthy();
   });
 
   it('calling #isAttached should return false if the result is not attached.', () => {
-    const mockAttachedResult = createMockAttachedResult();
+    const testPermanentId = 'test_permanentId';
+    const otherPermanentId = 'other_permanentId';
+    const mockAttachedResult = createMockAttachedResult({
+      permanentId: testPermanentId,
+      uriHash: undefined,
+    });
     engine.state.attachedResults.results.push(mockAttachedResult);
 
-    const mockSearchResult: SearchResult = {
-      title: '',
-      raw: {
-        permanentid: 'NOT FOO',
-        urihash: undefined,
-      },
-    };
+    const mockSearchResult = buildMockResult({
+      raw: buildMockRaw({
+        permanentid: otherPermanentId,
+      }),
+    });
     expect(attachToCase.isAttached(mockSearchResult)).toBeFalsy();
   });
 

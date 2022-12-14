@@ -7,9 +7,8 @@ import {
 } from './attached-results-actions';
 import {getAttachedResultsInitialState} from './attached-results-state';
 
-export const attachToCaseReducer = createReducer(
+export const attachedResultsReducer = createReducer(
   getAttachedResultsInitialState(),
-
   (builder) => {
     builder
       .addCase(setAttachedResults, (state, action) => {
@@ -27,7 +26,7 @@ export const attachToCaseReducer = createReducer(
           !isNullOrUndefined(action.payload.result.permanentId) ||
           !isNullOrUndefined(action.payload.result.uriHash)
         ) {
-          state.results = [action.payload.result, ...state.results];
+          state.results = [...state.results, action.payload.result];
         }
       })
       .addCase(detachResult, (state, action) => {
