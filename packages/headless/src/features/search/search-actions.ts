@@ -98,7 +98,7 @@ export const executeSearch = createAsyncThunk<
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
   const {description: eventDescription, action: analyticsAction} =
-    searchAction.prepare({
+    await searchAction.prepare({
       getState: () => config.getState(),
       analyticsClientMiddleware,
       preprocessRequest,
@@ -125,7 +125,7 @@ export const fetchPage = createAsyncThunk<
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
   const {description: eventDescription, action: analyticsAction} =
-    searchAction.prepare({
+    await searchAction.prepare({
       getState: () => config.getState(),
       analyticsClientMiddleware,
       preprocessRequest,
@@ -154,7 +154,7 @@ export const fetchMoreResults = createAsyncThunk<
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
   const {description: eventDescription, action: analyticsAction} =
-    logFetchMoreResults().prepare({
+    await logFetchMoreResults().prepare({
       getState: () => config.getState(),
       analyticsClientMiddleware,
       preprocessRequest,
@@ -183,7 +183,7 @@ export const fetchFacetValues = createAsyncThunk<
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
   const {description: eventDescription, action: analyticsAction} =
-    searchAction.prepare({
+    await searchAction.prepare({
       getState: () => config.getState(),
       analyticsClientMiddleware,
       preprocessRequest,
