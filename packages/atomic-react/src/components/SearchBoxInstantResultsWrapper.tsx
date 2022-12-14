@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import type {JSX as AtomicJSX} from '@coveo/atomic';
-import type {FoldedResult, Result} from '@coveo/atomic/headless';
+import type {FoldedResult, Result} from '@coveo/headless';
 import {AtomicSearchBoxInstantResults} from './stencil-generated';
 import {renderToString} from 'react-dom/server';
 import {createRoot} from 'react-dom/client';

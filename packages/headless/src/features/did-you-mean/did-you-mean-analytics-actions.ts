@@ -1,13 +1,19 @@
-import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {
+  AnalyticsType,
+  makeAnalyticsAction,
+  SearchAction,
+} from '../analytics/analytics-utils';
 
-export const logDidYouMeanClick = makeAnalyticsAction(
-  'analytics/didyoumean/click',
-  AnalyticsType.Search,
-  (client) => client.logDidYouMeanClick()
-);
+export const logDidYouMeanClick = (): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/didyoumean/click',
+    AnalyticsType.Search,
+    (client) => client.makeDidYouMeanClick()
+  );
 
-export const logDidYouMeanAutomatic = makeAnalyticsAction(
-  'analytics/didyoumean/automatic',
-  AnalyticsType.Search,
-  (client) => client.logDidYouMeanAutomatic()
-);
+export const logDidYouMeanAutomatic = (): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/didyoumean/automatic',
+    AnalyticsType.Search,
+    (client) => client.makeDidYouMeanAutomatic()
+  );

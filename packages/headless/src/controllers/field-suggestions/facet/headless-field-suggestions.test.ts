@@ -11,6 +11,7 @@ import {
 } from '../../../test';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {
   buildFieldSuggestions,
   FieldSuggestions,
@@ -31,9 +32,8 @@ describe('fieldSuggestions', () => {
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    state.facetSet[facetId] = buildMockFacetRequest({
-      facetId,
-      ...config,
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId, ...config}),
     });
     state.facetSearchSet[facetId] = buildMockFacetSearch({
       initialNumberOfValues: 5,
@@ -42,8 +42,10 @@ describe('fieldSuggestions', () => {
 
   beforeEach(() => {
     options = {
-      facetId,
-      field: 'author',
+      facet: {
+        facetId,
+        field: 'author',
+      },
     };
 
     state = createMockState();

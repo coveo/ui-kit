@@ -35,7 +35,6 @@ import {QuestionAnsweringState} from '../features/question-answering/question-an
 import {RecentQueriesState} from '../features/recent-queries/recent-queries-state';
 import {RecentResultsState} from '../features/recent-results/recent-results-state';
 import {RecommendationState} from '../features/recommendation/recommendation-state';
-import {RedirectionState} from '../features/redirection/redirection-state';
 import {ResultPreviewState} from '../features/result-preview/result-preview-state';
 import {SearchState} from '../features/search/search-state';
 import {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state';
@@ -199,14 +198,6 @@ export interface CategoryFacetSearchSection {
    * The set of category facet searches.
    */
   categoryFacetSearchSet: CategoryFacetSearchSetState;
-}
-
-export interface RedirectionSection {
-  /**
-   * The URL redirection triggered by the preprocessed query.
-   * @deprecated - The `redirection` property will be removed in the future. Please use `standaloneSearchBoxSet` instead.
-   */
-  redirection: RedirectionState;
 }
 
 export interface StandaloneSearchBoxSection {

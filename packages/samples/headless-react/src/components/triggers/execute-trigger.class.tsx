@@ -4,6 +4,7 @@ import {
   ExecuteTriggerState,
   ExecuteTriggerParams,
   Unsubscribe,
+  FunctionExecutionTrigger,
 } from '@coveo/headless';
 import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
@@ -17,15 +18,19 @@ export class ExecuteTrigger extends Component<{}, ExecuteTriggerState> {
 
   componentDidMount() {
     this.controller = buildExecuteTrigger(this.context.engine!);
-    this.unsubscribe = this.controller.subscribe(() => this.executeFunction());
+    this.unsubscribe = this.controller.subscribe(() =>
+      this.controller.state.executions.forEach((execution) =>
+        this.executeFunction(execution)
+      )
+    );
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  private executeFunction = () => {
-    const {functionName, params} = this.controller.state;
+  private executeFunction = (execution: FunctionExecutionTrigger) => {
+    const {functionName, params} = execution;
 
     if (functionName === 'log') {
       this.log(params);

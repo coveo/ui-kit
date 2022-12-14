@@ -397,7 +397,7 @@ describe('quantic-timeframe-facet', () => {
                 {
                   field: 'Date',
                 },
-                'df[Date]=past-1-year..now'
+                'df-Date=past-1-year..now'
               );
 
               Expect.displayLabel(true);
@@ -416,7 +416,7 @@ describe('quantic-timeframe-facet', () => {
                   field: 'Date',
                   withDatePicker: true,
                 },
-                'df[Date_input]=' + validRange.filter
+                'df-Date_input=' + validRange.filter
               );
 
               Expect.displayLabel(true);
@@ -534,7 +534,7 @@ describe('quantic-timeframe-facet', () => {
               {
                 withDatePicker: true,
               },
-              `df[Date_input]=${validRange.filter}`
+              `df-Date_input=${validRange.filter}`
             );
 
             Expect.displayPlaceholder(false);
@@ -546,7 +546,7 @@ describe('quantic-timeframe-facet', () => {
           });
 
           it('should display facet if timeframe is specified', () => {
-            loadFromUrlHashWithNoResults({}, 'df[Date]=past-1-year..now');
+            loadFromUrlHashWithNoResults({}, 'df-Date=past-1-year..now');
 
             Expect.displayPlaceholder(false);
             Expect.displayLabel(true);
