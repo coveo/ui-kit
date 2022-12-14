@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.126.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.126.0...@coveo/atomic@1.126.1) (2022-12-13)
+
+### Bug Fixes
+
+- **atomic:** replace i18n default escape function with dom purify ([#2606](https://github.com/coveo/ui-kit/issues/2606)) ([be66501](https://github.com/coveo/ui-kit/commit/be6650136a65b32ff86d4e8f67c55b8c2325d912))
+
 # [1.126.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.125.1...@coveo/atomic@1.126.0) (2022-12-09)
 
 ### Features

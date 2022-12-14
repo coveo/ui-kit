@@ -8,6 +8,9 @@ export interface InsightIdParam {
 
 export type InsightParam = BaseParam & InsightIdParam;
 
+export const baseInsightUrl = (req: InsightParam, path: string) =>
+  `${req.url}/rest/organizations/${req.organizationId}/insight/v1/configs/${req.insightId}${path}`;
+
 export const baseInsightRequest = (
   req: InsightParam,
   method: HttpMethods,
@@ -16,7 +19,7 @@ export const baseInsightRequest = (
 ) => {
   validateInsightRequestParams(req);
 
-  const baseUrl = `${req.url}/rest/organizations/${req.organizationId}/insight/v1/configs/${req.insightId}${path}`;
+  const baseUrl = baseInsightUrl(req, path);
 
   return {
     accessToken: req.accessToken,
