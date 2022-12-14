@@ -49,13 +49,8 @@ export const triggerReducer = createReducer(
         });
 
         state.redirectTo = redirectTriggers[0] ?? '';
-
         state.query = state.queryModification.newQuery;
-
-        state.execute = executeTriggers[0] ?? {functionName: '', params: []};
         state.executions = executeTriggers;
-
-        state.notification = notifyTriggers[0] ?? '';
         state.notifications = notifyTriggers;
       })
       .addCase(applyQueryTriggerModification, (state, action) => {

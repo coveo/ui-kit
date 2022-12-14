@@ -53,8 +53,8 @@ import {SortDropdownOption} from '../atomic-search-interface/store';
  * @part section-title - The title for each section.
  * @part select-wrapper - The wrapper around the select element, used to position the icon.
  * @part select - The `<select>` element of the drop-down list.
+ * @part select-icon-wrapper - The wrapper around the sort icon that's used to align it.
  * @part select-icon - The select dropdown's sort icon.
- * @part select-icon-size - The element around the sort icon that can be used to resize it.
  * @part filter-section - The section containing facets and the "filters" title.
  * @part filter-clear-all - The button that resets all actively selected facet values.
  * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
@@ -156,11 +156,11 @@ export class AtomicRefineModal implements InitializableComponent {
             {this.options.map((option) => this.buildOption(option))}
           </select>
           <div
-            part="select-icon"
+            part="select-icon-wrapper"
             class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6"
           >
             <atomic-icon
-              part="select-icon-size" // TODO: in v2, rename to "select-icon", and rename parent.
+              part="select-icon"
               icon={SortIcon}
               class="w-6 h-6"
             ></atomic-icon>

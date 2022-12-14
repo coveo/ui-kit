@@ -38,6 +38,7 @@ export default class QuanticResultText extends LightningElement {
    */
   @api formattingFunction;
 
+  /** @type {string} */
   error;
 
   connectedCallback() {
@@ -65,7 +66,7 @@ export default class QuanticResultText extends LightningElement {
   }
 
   /**
-   * Whether the given result has a value for the given field
+   * Whether the given result has a value for the given field.
    * @returns {boolean}
    */
   get hasFieldValue() {

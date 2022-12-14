@@ -2,7 +2,7 @@ import {updateFacetOptions} from '../../../../../features/facet-options/facet-op
 import {updateDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {executeSearch} from '../../../../../features/search/search-actions';
 import {InsightAppState} from '../../../../../state/insight-app-state';
-import {buildMockDateFacetRequest} from '../../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
 import {
   buildMockInsightEngine,
@@ -38,7 +38,7 @@ describe('insight date filter', () => {
     };
 
     state = buildMockInsightState();
-    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
+    state.dateFacetSet[facetId] = buildMockDateFacetSlice();
 
     initDateFilter();
   });

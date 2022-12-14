@@ -8,7 +8,9 @@ import {
 import {Component, ContextType} from 'react';
 import {AppContext} from '../../../context/engine';
 
-interface FieldSuggestionsProps extends FieldSuggestionsOptions {
+type FieldSuggestionsFacetOptions = FieldSuggestionsOptions['facet'];
+
+interface FieldSuggestionsProps extends FieldSuggestionsFacetOptions {
   facetId: string;
 }
 
@@ -24,7 +26,7 @@ export class FieldSuggestions extends Component<
 
   componentDidMount() {
     this.controller = buildFieldSuggestions(this.context.engine!, {
-      options: this.props,
+      options: {facet: this.props},
     });
     this.updateState();
 

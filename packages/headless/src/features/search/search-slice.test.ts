@@ -475,11 +475,12 @@ describe('search-slice', () => {
       const queryCorrections = [{correctedQuery: 'foo', wordCorrections: []}];
       beforeEach(async () => {
         analyticsStateQuerySpy = jest.fn();
-        const mockLogSubmit = makeAnalyticsAction(
-          'analytics/test',
-          AnalyticsType.Search,
-          (_, state) => analyticsStateQuerySpy(state.query?.q)
-        );
+        const mockLogSubmit = () =>
+          makeAnalyticsAction(
+            'analytics/test',
+            AnalyticsType.Search,
+            (_, state) => analyticsStateQuerySpy(state.query?.q)
+          );
 
         const fetched = () => {
           const payload = buildMockSearchResponse({

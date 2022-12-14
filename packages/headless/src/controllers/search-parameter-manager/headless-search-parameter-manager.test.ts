@@ -6,10 +6,13 @@ import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-requ
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
@@ -163,7 +166,9 @@ describe('search parameter manager', () => {
   it is possible to access every relevant search parameter using #state.parameters`, () => {
     const facetValues = [buildMockFacetValueRequest({state: 'selected'})];
     engine.state.facetSet = {
-      author: buildMockFacetRequest({currentValues: facetValues}),
+      author: buildMockFacetSlice({
+        request: buildMockFacetRequest({currentValues: facetValues}),
+      }),
     };
 
     const request = buildMockCategoryFacetRequest({
@@ -175,12 +180,16 @@ describe('search parameter manager', () => {
 
     const numericRanges = [buildMockNumericFacetValue({state: 'selected'})];
     engine.state.numericFacetSet = {
-      size: buildMockNumericFacetRequest({currentValues: numericRanges}),
+      size: buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({currentValues: numericRanges}),
+      }),
     };
 
     const dateRanges = [buildMockDateFacetValue({state: 'selected'})];
     engine.state.dateFacetSet = {
-      created: buildMockDateFacetRequest({currentValues: dateRanges}),
+      created: buildMockDateFacetSlice({
+        request: buildMockDateFacetRequest({currentValues: dateRanges}),
+      }),
     };
 
     const staticFilterValues = [
@@ -247,8 +256,10 @@ describe('search parameter manager', () => {
       });
 
       engine.state.facetSet = {
-        author: buildMockFacetRequest({
-          currentValues: [facetValue1, facetValue2],
+        author: buildMockFacetSlice({
+          request: buildMockFacetRequest({
+            currentValues: [facetValue1, facetValue2],
+          }),
         }),
       };
 

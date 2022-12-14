@@ -848,7 +848,7 @@ describe('Facet Test Suite', () => {
               {
                 field: defaultField,
               },
-              `f[objecttype]=${selectedValue}`
+              `f-objecttype=${selectedValue}`
             );
           }
 
