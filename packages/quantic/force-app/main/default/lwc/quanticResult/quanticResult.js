@@ -90,14 +90,10 @@ export default class QuanticResult extends LightningElement {
   }
 
   setHoverState = () => {
-    if (!this.isHovered) {
-      this.isHovered = true;
-    }
+    this.isHovered = true;
   };
 
   removeHoverState = () => {
-    if (this.isHovered) {
-      this.isHovered = false;
-    }
+    this.isHovered = false;
   };
 }
