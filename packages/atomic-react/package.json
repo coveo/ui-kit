@@ -45,7 +45,7 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.0.0-pre.7",
+    "@coveo/headless": "^2.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   }

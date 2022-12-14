@@ -5,7 +5,7 @@
   "peerDependencies": {
     "@angular/common": "^13.1.0",
     "@angular/core": "^13.1.0",
-    "@coveo/headless": "2.0.0-pre.7"
+    "@coveo/headless": "^2.0.0"
   },
   "dependencies": {
     "@coveo/atomic": "2.0.0",
