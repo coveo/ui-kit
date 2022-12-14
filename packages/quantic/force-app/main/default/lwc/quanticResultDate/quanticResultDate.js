@@ -32,7 +32,7 @@ export default class QuanticResultDate extends LightningElement {
   @api label;
   /**
    * A function used to format the displayed value.
-   * The default format uses the default format for your locale.
+   * By default, the date is formatted using the browser locale.
    * @api
    * @type {Function}
    * @param {number} value
@@ -41,6 +41,7 @@ export default class QuanticResultDate extends LightningElement {
   @api formattingFunction = (value) =>
     new Intl.DateTimeFormat(LOCALE).format(new Date(value));
 
+  /** @type {string} */
   error;
   validated = false;
 

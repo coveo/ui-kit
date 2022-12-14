@@ -77,6 +77,7 @@ describe('c-quantic-result-date', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
+      expect(console.error).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -89,6 +90,7 @@ describe('c-quantic-result-date', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
+      expect(console.error).toHaveBeenCalledTimes(1);
     });
   });
 
