@@ -5,6 +5,7 @@ import {
   kebabToCamel,
   parseAssetURL,
   getUniqueItemsByProperties,
+  aggregate,
 } from './utils';
 
 describe('once', () => {
@@ -125,5 +126,27 @@ describe('getUniqueItemsByProperties', () => {
         getUniqueItemsByProperties(testCase.in, testCase.props as never)
       ).toEqual(testCase.expected)
     );
+  });
+});
+
+describe('aggregate', () => {
+  it('can aggregate based on string keys', () => {
+    const aggregatedValues = aggregate(
+      [
+        {name: 'Apple', category: 'Fruit'},
+        {name: 'Cookie', category: 'Dessert'},
+        {name: 'Watermelon', category: 'Fruit'},
+        {name: 'Carrot', category: 'Vegetable'},
+      ] as const,
+      (value) => value.category
+    );
+    expect(aggregatedValues).toEqual({
+      Fruit: [
+        {name: 'Apple', category: 'Fruit'},
+        {name: 'Watermelon', category: 'Fruit'},
+      ],
+      Dessert: [{name: 'Cookie', category: 'Dessert'}],
+      Vegetable: [{name: 'Carrot', category: 'Vegetable'}],
+    });
   });
 });

@@ -202,7 +202,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
           new TestFixture()
             .with(addTimeFrameWithInputRange())
             .withHash(
-              `df[date_input]=${startDate.replaceAll(
+              `df-date_input=${startDate.replaceAll(
                 '-',
                 '/'
               )}@00:00:00..${endDate.replaceAll('-', '/')}@00:00:00`
@@ -526,7 +526,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
             unitFrames
           )
         )
-        .withHash(`df[${timeframeFacetField}]=past-1-month..now`)
+        .withHash(`df-${timeframeFacetField}=past-1-month..now`)
         .init();
     });
 

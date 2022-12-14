@@ -1,6 +1,9 @@
 import {TestFixture} from '../fixtures/test-fixture';
 import * as CommonAssertions from './common-assertions';
-import {addLoadMoreResults} from './load-more-results-actions';
+import {
+  addLoadMoreResults,
+  pressLoadMoreResults,
+} from './load-more-results-actions';
 import {
   loadMoreResultsComponent,
   LoadMoreResultsSelectors,
@@ -36,14 +39,32 @@ describe('Load More Results Test Suites', () => {
         .should('contain.text', 'Load more results');
     });
 
-    it('should load more results when clicked', () => {
-      LoadMoreResultsSelectors.resultsRecap().should('contain.text', '10');
-      LoadMoreResultsSelectors.button().click();
-      LoadMoreResultsSelectors.resultsRecap().should('contain.text', '20');
-      cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-        const analyticsBody = intercept.request.body;
-        expect(analyticsBody).to.have.property('eventType', 'getMoreResults');
-        expect(analyticsBody).to.have.property('eventValue', 'pagerScrolling');
+    describe('when clicked', () => {
+      beforeEach(() => {
+        pressLoadMoreResults();
+      });
+
+      it('should include analytics in the v2 call', async () => {
+        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+          expect(firstSearch.request.body).to.have.property('analytics');
+          const analyticsBody = firstSearch.request.body.analytics;
+          expect(analyticsBody).to.have.property('eventType', 'getMoreResults');
+          expect(analyticsBody).to.have.property(
+            'eventValue',
+            'pagerScrolling'
+          );
+        });
+      });
+
+      it('should load more results', () => {
+        cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
+          const analyticsBody = intercept.request.body;
+          expect(analyticsBody).to.have.property('eventType', 'getMoreResults');
+          expect(analyticsBody).to.have.property(
+            'eventValue',
+            'pagerScrolling'
+          );
+        });
       });
     });
   });

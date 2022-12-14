@@ -433,7 +433,7 @@ describe('quantic-numeric-facet', () => {
                   field: defaultField,
                   useCase: param.useCase,
                 },
-                `nf[${field}]=${min}..${max}`
+                `nf-${field}=${min}..${max}`
               );
               Expect.numberOfSelectedCheckboxValues(1);
               Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
@@ -444,7 +444,7 @@ describe('quantic-numeric-facet', () => {
             scope('with input', () => {
               loadFromUrlHash(
                 {...customWithInputSettings, useCase: param.useCase},
-                `nf[${field}_input]=${min}..${max}`
+                `nf-${field}_input=${min}..${max}`
               );
 
               Expect.displayFacet(true);

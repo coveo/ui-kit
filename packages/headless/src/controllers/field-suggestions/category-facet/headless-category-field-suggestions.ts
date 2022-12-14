@@ -1,4 +1,4 @@
-import {CoreEngine} from '../../..';
+import {CoreEngine} from '../../../app/engine';
 import {
   categoryFacetSet,
   configuration,
@@ -9,7 +9,6 @@ import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {registerCategoryFacet} from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
-import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
@@ -17,12 +16,12 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
-import {omit} from '../../../utils/utils';
 import {
   buildController,
   Subscribable,
 } from '../../controller/headless-controller';
 import {determineFacetId} from '../../core/facets/_common/facet-id-determinor';
+import {CategoryFacetOptions} from '../../facets/category-facet/headless-category-facet';
 import {buildCategoryFacetSearch} from '../../facets/category-facet/headless-category-facet-search';
 
 export interface CategoryFieldSuggestionsValue {
@@ -119,89 +118,11 @@ export interface CategoryFieldSuggestions extends Subscribable {
   state: CategoryFieldSuggestionsState;
 }
 
-// TODO: In v2, move these options into `FieldSuggestionsOptions` and remove `facetSearch`.
-export interface CategoryFieldSuggestionsFacetSearchOptions {
-  /**
-   * A dictionary that maps field values to field suggestion display names.
-   */
-  captions?: Record<string, string>;
-
-  /**
-   * The maximum number of suggestions to request.
-   *
-   * @defaultValue `10`
-   */
-  numberOfValues?: number;
-
-  /**
-   * The query with which to request field suggestions.
-   */
-  query?: string;
-}
-
 export interface CategoryFieldSuggestionsOptions {
   /**
-   * The field for which you wish to get field suggestions.
+   * The options used to register the category facet used under the hood by the field suggestions controller.
    */
-  field: string;
-
-  /**
-   * The base path shared by all values for the field suggestions.
-   *
-   * @defaultValue `[]`
-   */
-  basePath?: string[];
-
-  /**
-   * The character that specifies the hierarchical dependency.
-   *
-   * @defaultValue `;`
-   */
-  delimitingCharacter?: string;
-
-  /**
-   * A unique identifier for the controller. By default, a random unique identifier is generated.
-   *
-   * If a facet shares the same id, then its values are going to be selectable with `select` and `singleSelect`. However, you must make sure to build the field suggestion controller after the facet controller.
-   */
-  facetId?: string;
-
-  /**
-   * The options related to search.
-   */
-  facetSearch?: CategoryFieldSuggestionsFacetSearchOptions;
-
-  /**
-   * Whether to filter the results using `basePath`.
-   *
-   * @defaultValue `true`
-   */
-  filterByBasePath?: boolean;
-
-  /**
-   * Whether to exclude the parents of folded results when estimating the result count for each field suggestion.
-   *
-   * @defaultValue `true`
-   */
-  filterFacetCount?: boolean;
-
-  /**
-   * @deprecated This option has no effect.
-   */
-  injectionDepth?: number;
-
-  /**
-   * This option has no effect.
-   */
-  numberOfValues?: number;
-
-  /**
-   * The criterion to use to sort returned field suggestions.
-   * Learn more about `sortCriteria` values and the default behavior of specific facets in the [Search API documentation](https://docs.coveo.com/en/1461/#RestFacetRequest-sortCriteria).
-   *
-   * @defaultValue `automatic`
-   */
-  sortCriteria?: CategoryFacetSortCriterion;
+  facet: CategoryFacetOptions;
 }
 
 export interface CategoryFieldSuggestionsProps {
@@ -213,6 +134,10 @@ export interface CategoryFieldSuggestionsProps {
 
 /**
  * Creates a `CategoryFieldSuggestions` controller instance.
+ *
+ * This controller initializes a category facet under the hood, but exposes state and methods that are relevant for suggesting field values based on a query.
+ * It's important not to initialize a category facet with the same `facetId` but different options, because only the options of the controller which is built first will be taken into account.
+ *
  * @param engine The headless engine.
  * @param props The configurable `CategoryFieldSuggestions` controller properties.
  * @returns A `CategoryFieldSuggestions` controller instance.
@@ -224,18 +149,19 @@ export function buildCategoryFieldSuggestions(
   if (!loadCategoryFieldSuggestionsReducers(engine)) {
     throw loadReducerError;
   }
-  const facetId = determineFacetId(engine, props.options);
+  const {facetSearch: facetSearchOptions, ...facetOptions} =
+    props.options.facet;
+  const facetId = determineFacetId(engine, facetOptions);
   engine.dispatch(
     registerCategoryFacet({
       ...defaultCategoryFacetOptions,
-      ...omit('facetSearch', props.options),
-      field: props.options.field,
+      ...facetOptions,
       facetId,
     })
   );
 
   const facetSearch = buildCategoryFacetSearch(engine, {
-    options: {...props.options.facetSearch, facetId},
+    options: {...facetSearchOptions, facetId},
     isForFieldSuggestions: true,
   });
   const controller = buildController(engine);

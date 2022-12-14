@@ -311,7 +311,7 @@ describe('Rating Range Test Suites', () => {
             label: ratingRangeFacetLabel,
           })
         )
-        .withHash(`nf[${ratingRangeFacetField}]=4..5`)
+        .withHash(`nf-${ratingRangeFacetField}=4..5`)
         .init();
     });
 

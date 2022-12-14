@@ -49,9 +49,9 @@ node('heavy && linux && docker') {
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
           sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
           if (isOnReleaseBranch) {
-            sh 'npm run npm:publish:alpha || true'
+            sh 'npm run npm:publish -- release || true'
           } else {
-            sh 'npm run npm:publish || true'
+            sh 'npm run npm:publish -- prerelease || true'
           }
         }
       }

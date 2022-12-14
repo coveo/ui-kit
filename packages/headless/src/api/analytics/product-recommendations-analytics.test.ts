@@ -18,7 +18,7 @@ describe('recommendations analytics', () => {
     ];
     expect(
       new ProductRecommendationAnalyticsProvider(
-        state
+        () => state
       ).getSearchEventRequestPayload()
     ).toMatchObject({
       queryText: '',
@@ -32,7 +32,7 @@ describe('recommendations analytics', () => {
     const state = getBaseState();
     state.productRecommendations!.searchUid = 'the_id';
     expect(
-      new ProductRecommendationAnalyticsProvider(state).getSearchUID()
+      new ProductRecommendationAnalyticsProvider(() => state).getSearchUID()
     ).toEqual('the_id');
   });
 });

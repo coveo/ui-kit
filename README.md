@@ -75,8 +75,7 @@ The following Visual Studio Code extensions are recommended:
 2. Pull changes from `master` into the prerelease branch.
 
 ### Officially releasing (e.g., `2.0.0-pre.15` → `2.0.0`)
-
-1. Create a pull request from the prerelease branch to “master”.
+1. Create a pull request from a copy of the prerelease branch to “master”.
    - Associate with a Jira issue which QA will use to validate.
    - Update the changelogs manually, adding all the changes from the last release to the new release.
    - Update all dependents to use the prerelease version (include the `-pre.` suffix).
