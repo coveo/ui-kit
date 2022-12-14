@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@coveo/headless": "1.113.0",
-    "@coveo/bueno": "0.42.3"
+    "@coveo/bueno": "0.43.0"
   },
   "engines": {
     "node": ">=14.0.0"
