@@ -1,0 +1,55 @@
+@import '../../../global/global.pcss';
+
+atomic-focus-trap {
+  @apply contents;
+}
+
+:host(.open) {
+  [part='backdrop'] {
+    @apply pointer-events-auto;
+    inset: auto 3rem 3.75rem auto;
+  }
+}
+
+:host(.dialog) {
+  [part='container'] {
+    @apply rounded;
+    box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
+  }
+
+  [part='header-wrapper'] {
+    @apply px-6 pt-4;
+    width: 100%;
+    display: grid;
+    background: var(--atomic-neutral-light);
+    padding: 1.5rem 1.5rem 0 1.5rem;
+  }
+
+  [part='header'] {
+    @apply font-bold;
+  }
+
+  [part='body-wrapper'] {
+    @apply p-6;
+  }
+
+  [part='footer-wrapper'] {
+    @apply bg-neutral-light;
+    padding: 1rem 1.125rem;
+    background: var(--atomic-neutral-light);
+  }
+}
+
+[part='backdrop'] {
+  @apply pointer-events-none;
+}
+
+[part='container'] {
+  @apply overflow-hidden flex flex-col justify-between bg-background;
+  grid-area: modal;
+  border-radius: var(--atomic-border-radius);
+  max-height: 50rem;
+  box-sizing: border-box;
+  width: var(--atomic-ipx-width, 31.25rem);
+  height: var(--atomic-ipx-height, 43.75rem);
+}
