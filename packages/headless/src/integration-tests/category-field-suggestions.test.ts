@@ -44,8 +44,10 @@ describe('category field suggestions', () => {
         action: () =>
           (categoryFieldSuggestions = buildCategoryFieldSuggestions(engine, {
             options: {
-              field,
-              facetId: categoryFacet.state.facetId,
+              facet: {
+                field,
+                facetId: categoryFacet.state.facetId,
+              },
             },
           })),
         expectedSubscriberCalls: 2,
@@ -84,7 +86,7 @@ describe('category field suggestions', () => {
       await waitForNextStateChange(engine, {
         action: () =>
           (categoryFieldSuggestions = buildCategoryFieldSuggestions(engine, {
-            options: {field},
+            options: {facet: {field}},
           })),
         expectedSubscriberCalls: 3,
       });
@@ -229,7 +231,7 @@ describe('category field suggestions', () => {
     await waitForNextStateChange(engine, {
       action: () =>
         (categoryFieldSuggestions = buildCategoryFieldSuggestions(engine, {
-          options: {field, basePath},
+          options: {facet: {field, basePath}},
         })),
       expectedSubscriberCalls: 3,
     });

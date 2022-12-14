@@ -13,11 +13,15 @@ import {
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {parseXML} from '../../../../utils/utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {getAttributesFromLinkSlot} from '../../result-link/attributes-slot';
 import {LinkWithResultAnalytics} from '../../result-link/result-link';
 import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
+ *
+ * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to anchor elements, overriding other attributes.
+ * To be used exclusively in anchor elements, such as: `<a slot="attributes" target="_blank" download></a>`.
  */
 @Component({
   tag: 'atomic-result-printable-uri',
@@ -37,22 +41,11 @@ export class AtomicResultPrintableUri {
    */
   @Prop({reflect: true}) maxNumberOfParts = 5;
 
-  /**
-   * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).
-   *
-   * The following keywords have special meanings:
-   *
-   * * _self: the current browsing context. (Default)
-   * * _blank: usually a new tab, but users can configure their browsers to open a new window instead.
-   * * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`.
-   * * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
-   */
-  @Prop({reflect: true}) target = '_self';
-
   @FocusTarget()
   private expandedPartFocus!: FocusTargetController;
 
   private interactiveResult!: InteractiveResult;
+  private linkAttributes?: Attr[];
 
   public connectedCallback() {
     try {
@@ -62,6 +55,8 @@ export class AtomicResultPrintableUri {
     } catch (error) {
       this.error = error as Error;
     }
+    const slotName = 'attributes';
+    this.linkAttributes = getAttributesFromLinkSlot(this.host, slotName);
   }
 
   public initialize() {
@@ -142,12 +137,12 @@ export class AtomicResultPrintableUri {
       <LinkWithResultAnalytics
         href={uri}
         title={typeof content === 'string' ? content : undefined}
-        target={this.target}
         onSelect={() => this.interactiveResult.select()}
         onBeginDelayedSelect={() => this.interactiveResult.beginDelayedSelect()}
         onCancelPendingSelect={() =>
           this.interactiveResult.cancelPendingSelect()
         }
+        attributes={this.linkAttributes}
         ref={shouldSetTarget ? this.expandedPartFocus.setTarget : undefined}
       >
         {content}

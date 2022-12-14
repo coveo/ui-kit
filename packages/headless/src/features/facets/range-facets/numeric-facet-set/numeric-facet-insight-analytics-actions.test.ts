@@ -2,6 +2,7 @@ import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../../../test/mock-engine';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actions';
 
@@ -31,9 +32,11 @@ describe('logBreadcrumbFacet', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         numericFacetSet: {
-          [exampleFacetId]: buildMockNumericFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockNumericFacetSlice({
+            request: buildMockNumericFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: {

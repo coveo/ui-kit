@@ -3,7 +3,11 @@ import {
   requiredEmptyAllowedString,
   validatePayload,
 } from '../../utils/validate-payload';
-import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {
+  AnalyticsType,
+  makeAnalyticsAction,
+  SearchAction,
+} from '../analytics/analytics-utils';
 
 export interface LogUndoTriggerQueryActionCreatorPayload {
   /**
@@ -19,67 +23,71 @@ const logUndoTriggerQueryPayloadDefinition = new RecordValue({
   options: {required: true},
 });
 
-export const logTriggerQuery = makeAnalyticsAction(
-  'analytics/trigger/query',
-  AnalyticsType.Search,
-  (client, state) => {
-    if (state.triggers?.queryModification.newQuery) {
-      return client.logTriggerQuery();
+export const logTriggerQuery = (): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/trigger/query',
+    AnalyticsType.Search,
+    (client, state) => {
+      if (state.triggers?.queryModification.newQuery) {
+        return client.makeTriggerQuery();
+      }
+      return null;
     }
-    return;
-  }
-);
+  );
 
 export const logUndoTriggerQuery = (
   payload: LogUndoTriggerQueryActionCreatorPayload
-) =>
+): SearchAction =>
   makeAnalyticsAction(
     'analytics/trigger/query/undo',
     AnalyticsType.Search,
     (client) => {
       validatePayload(payload, logUndoTriggerQueryPayloadDefinition);
-      client.logUndoTriggerQuery(payload);
+      return client.makeUndoTriggerQuery(payload);
     }
-  )();
+  );
 
-export const logNotifyTrigger = makeAnalyticsAction(
-  'analytics/trigger/notify',
-  AnalyticsType.Search,
-  (client, state) => {
-    if (state.triggers?.notifications.length) {
-      return client.logTriggerNotify({
+export const logNotifyTrigger = (): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/trigger/notify',
+    AnalyticsType.Search,
+    (client, state) => {
+      if (!state.triggers?.notifications.length) {
+        return null;
+      }
+      return client.makeTriggerNotify({
         notifications: state.triggers.notifications,
       });
     }
-    return;
-  }
-);
+  );
 
-export const logTriggerRedirect = makeAnalyticsAction(
-  'analytics/trigger/redirect',
-  AnalyticsType.Search,
-  (client, state) => {
-    if (state.triggers?.redirectTo) {
-      return client.logTriggerRedirect({
-        redirectedTo: state.triggers.redirectTo,
-      });
+export const logTriggerRedirect = (): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/trigger/redirect',
+    AnalyticsType.Search,
+    (client, state) => {
+      if (state.triggers?.redirectTo) {
+        return client.makeTriggerRedirect({
+          redirectedTo: state.triggers.redirectTo,
+        });
+      }
+      return null;
     }
-    return;
-  }
-);
+  );
 
 /**
  * Log trigger execute
  */
-export const logTriggerExecute = makeAnalyticsAction(
-  'analytics/trigger/execute',
-  AnalyticsType.Search,
-  (client, state) => {
-    if (state.triggers?.executions.length) {
-      return client.logTriggerExecute({
+export const logTriggerExecute = (): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/trigger/execute',
+    AnalyticsType.Search,
+    (client, state) => {
+      if (!state.triggers?.executions.length) {
+        return null;
+      }
+      return client.makeTriggerExecute({
         executions: state.triggers.executions,
       });
     }
-    return;
-  }
-);
+  );

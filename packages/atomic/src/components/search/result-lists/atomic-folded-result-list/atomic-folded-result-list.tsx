@@ -75,11 +75,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
   /**
-   * A list of non-default fields to include in the query results, separated by commas.
-   * @deprecated add it to atomic-search-interface instead
-   */
-  @Prop({reflect: true}) public fieldsToInclude = '';
-  /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
   @Prop({reflect: true}) density: ResultDisplayDensity = 'normal';
@@ -134,11 +129,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   public initialize() {
     try {
-      this.bindings.store.addFieldsToInclude(
-        this.fieldsToInclude
-          ? this.fieldsToInclude.split(',').map((field) => field.trim())
-          : []
-      );
       this.foldedResultList = this.initFolding();
       this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     } catch (e) {
@@ -173,9 +163,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.foldedResultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
-      renderResult: (props) => (
-        <atomic-result {...props} engine={this.bindings.engine}></atomic-result>
-      ),
+      renderResult: (props) => <atomic-result {...props}></atomic-result>,
       getInteractiveResult: (result: Result) =>
         buildInteractiveResult(this.bindings.engine, {
           options: {result},
