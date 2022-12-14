@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.27.20...@coveo/atomic-react@2.0.0) (2022-12-14)
+# [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.27.21...@coveo/atomic-react@2.0.0) (2022-12-14)
 
 ### Bug Fixes
 
@@ -25,6 +25,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **atomic:** adapt search box + suggestion width in search layout ([#2589](https://github.com/coveo/ui-kit/issues/2589)) ([56ca263](https://github.com/coveo/ui-kit/commit/56ca263f8d52a99157bb3dfa3fdeb3a12ef8d869))
 - **headless:** refactored field suggestion options ([#2581](https://github.com/coveo/ui-kit/issues/2581)) ([4a5577e](https://github.com/coveo/ui-kit/commit/4a5577ec78461a1456c81a43385be34f6546b0fc))
 - **headless:** use new preparable analytics ([#2604](https://github.com/coveo/ui-kit/pull/2604)) ([4349fb9](https://github.com/coveo/ui-kit/commit/4349fb9169768b243a5753488a25d34216de1591))
+## [1.27.21](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.27.20...@coveo/atomic-react@1.27.21) (2022-12-13)
+
+**Note:** Version bump only for package @coveo/atomic-react
 
 ## [1.27.20](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.27.19...@coveo/atomic-react@1.27.20) (2022-12-09)
 

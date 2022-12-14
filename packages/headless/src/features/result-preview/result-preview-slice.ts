@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {fetchResultContent} from './result-preview-actions';
+import {fetchResultContent, updateContentURL} from './result-preview-actions';
 import {getResultPreviewInitialState} from './result-preview-state';
 
 export const resultPreviewReducer = createReducer(
@@ -15,6 +15,11 @@ export const resultPreviewReducer = createReducer(
         state.content = content;
         state.uniqueId = uniqueId;
         state.isLoading = false;
+      })
+      .addCase(updateContentURL.fulfilled, (state, action) => {
+        const {contentURL} = action.payload;
+
+        state.contentURL = contentURL;
       });
   }
 );
