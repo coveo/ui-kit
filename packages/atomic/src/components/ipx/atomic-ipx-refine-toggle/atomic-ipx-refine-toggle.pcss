@@ -1,20 +1,17 @@
 @import '../../../global/global.pcss';
 
 atomic-icon-button {
-  height: 100%;
+  @apply pl-2	h-full;
+
   &::part(button) {
-    height: 100%;
-    width: auto;
+    @apply h-full w-auto;
   }
+
   &::part(badge) {
-    width: 1.25rem;
-    height: 1.25rem;
-    line-height: 1.25rem;
-    font-size: 0.7rem;
+    @apply w-5 h-5 leading-5 text-xs;
   }
 
   &::part(icon) {
-    width: 1.25rem;
-    height: 1.25rem;
+    @apply w-5 h-5;
   }
 }

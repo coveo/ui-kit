@@ -95,7 +95,8 @@ export class AtomicIPXRefineModal implements InitializableComponent {
 
   public updateDimensions() {
     this.interfaceDimensions = this.bindings.interfaceElement
-      .getElementsByTagName('atomic-ipx-layout')[0]
+      .querySelector('atomic-ipx-modal')!
+      .shadowRoot?.querySelector('article[part="container"]')!
       .getBoundingClientRect();
   }
 

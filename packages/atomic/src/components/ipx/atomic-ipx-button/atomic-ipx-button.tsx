@@ -66,26 +66,18 @@ export class AtomicIPXButton {
     return this.host.shadowRoot!.querySelector('button');
   }
 
-  private get ipxLayout() {
-    return document.querySelector('atomic-ipx-layout')!;
+  private get ipxModal() {
+    return document.querySelector('atomic-ipx-modal')!;
   }
 
   private open() {
-    this.ipxLayout.style.height = `${Math.min(
-      700,
-      document.documentElement.clientHeight
-    )}px`;
-    this.ipxLayout.style.visibility = 'visible';
-    this.ipxLayout.style.pointerEvents = 'initial';
-    this.ipxLayout.style.opacity = '1';
     this.button?.classList.add('btn-open');
+    this.ipxModal.setAttribute('is-open', 'true');
   }
 
   private close() {
-    this.ipxLayout.style.visibility = 'hidden';
-    this.ipxLayout.style.pointerEvents = 'none';
-    this.ipxLayout.style.opacity = '0';
     this.button?.classList.remove('btn-open');
+    this.ipxModal.setAttribute('is-open', 'false');
   }
 
   private getIcon(icon: string) {
