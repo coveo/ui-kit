@@ -2,7 +2,10 @@ import {FunctionalComponent, h} from '@stencil/core';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 import {Button} from '../button';
-import {BaseFacetElement} from '../facets/facet-common';
+import {
+  BaseFacetElement,
+  facetShouldBeInitiallyCollapsed,
+} from '../facets/facet-common';
 import {AnyBindings} from '../interface/bindings';
 import {isRefineModalFacet} from '../interface/store';
 import {FacetManager} from '../types';
@@ -100,7 +103,8 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
 
 export function getClonedFacetElements(
   facetElements: HTMLElement[],
-  facetManager: FacetManager
+  facetManager: FacetManager,
+  collapseFacetsAfter: number
 ): HTMLDivElement {
   const divSlot = document.createElement('div');
   divSlot.setAttribute('slot', 'facets');
@@ -116,9 +120,12 @@ export function getClonedFacetElements(
     .sort(facetElementsPayload)
     .map((f) => f.payload);
 
-  sortedFacetsElements.forEach((facetElement) => {
+  sortedFacetsElements.forEach((facetElement, index) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
-    clone.isCollapsed = true;
+    clone.isCollapsed = facetShouldBeInitiallyCollapsed(
+      index,
+      collapseFacetsAfter
+    );
     clone.classList.remove(popoverClass);
     clone.setAttribute(isRefineModalFacet, '');
     divSlot.append(clone);

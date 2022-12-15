@@ -13,7 +13,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {BaseFacetElement} from '../../common/facets/facet-common';
+import {
+  BaseFacetElement,
+  facetShouldBeInitiallyCollapsed,
+} from '../../common/facets/facet-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -76,7 +79,10 @@ export class AtomicFacetManager implements InitializableComponent {
     }
 
     facets.forEach((facet, index) => {
-      facet.isCollapsed = index + 1 > this.collapseFacetsAfter;
+      facet.isCollapsed = facetShouldBeInitiallyCollapsed(
+        index,
+        this.collapseFacetsAfter
+      );
     });
   }
 

@@ -246,6 +246,13 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   return true;
 }
 
+export function facetShouldBeInitiallyCollapsed(
+  facetIndex: number,
+  collapseFacetsAfter: number
+) {
+  return facetIndex + 1 > collapseFacetsAfter;
+}
+
 interface FacetCommonOptions {
   host: HTMLElement;
   bindings: AnyBindings;

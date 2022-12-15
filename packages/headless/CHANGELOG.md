@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.0.0...@coveo/headless@2.0.1) (2022-12-15)
+
+### Bug Fixes
+
+- fixed v2 dependency linking ([#2614](https://github.com/coveo/ui-kit/issues/2614)) ([e9d8762](https://github.com/coveo/ui-kit/commit/e9d87627d21cf91dc258414f69e4cb5c13de39c3))
+
 # [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.114.0...@coveo/headless@2.0.0) (2022-12-14)
 
 ### Bug Fixes
@@ -18,6 +24,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **headless:** added platform-specific origins to requests ([#2472](https://github.com/coveo/ui-kit/issues/2472)) ([88d2f11](https://github.com/coveo/ui-kit/commit/88d2f111f0bfd846b93b051b176dfc59a19d1a76))
 - **headless:** added actionCause and customData to /v2 analytics object ([#2490](https://github.com/coveo/ui-kit/issues/2490)) ([2e2963d](https://github.com/coveo/ui-kit/commit/2e2963d287b6524f8f62ec79927d10e0c0190f71))
 - **headless:** refactored field suggestion options ([#2581](https://github.com/coveo/ui-kit/issues/2581)) ([4a5577e](https://github.com/coveo/ui-kit/commit/4a5577ec78461a1456c81a43385be34f6546b0fc))
+
 # [1.114.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.113.0...@coveo/headless@1.114.0) (2022-12-13)
 
 ### Features
