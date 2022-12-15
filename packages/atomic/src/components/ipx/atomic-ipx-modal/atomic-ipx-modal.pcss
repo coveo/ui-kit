@@ -18,9 +18,7 @@ atomic-focus-trap {
   }
 
   [part='header-wrapper'] {
-    @apply px-6 pt-4;
-    width: 100%;
-    display: grid;
+    @apply px-6 pt-4 w-full grid;
     background: var(--atomic-neutral-light);
     padding: 1.5rem 1.5rem 0 1.5rem;
   }
@@ -45,11 +43,8 @@ atomic-focus-trap {
 }
 
 [part='container'] {
-  @apply overflow-hidden flex flex-col justify-between bg-background;
+  @apply overflow-hidden flex flex-col justify-between bg-background box-border;
   grid-area: modal;
-  border-radius: var(--atomic-border-radius);
-  max-height: 50rem;
-  box-sizing: border-box;
   width: var(--atomic-ipx-width, 31.25rem);
   height: var(--atomic-ipx-height, 43.75rem);
 }
