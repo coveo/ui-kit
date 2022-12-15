@@ -78,7 +78,11 @@ export default class QuanticResultMultiValueText extends LightningElement {
     this.error = `${this.template.host.localName} Error`;
   }
 
-  get isVisible() {
+  /**
+   * Whether the field value can be displayed.
+   * @returns {boolean}
+   */
+  get isValid() {
     return this.validated && !this.error;
   }
 
@@ -105,6 +109,10 @@ export default class QuanticResultMultiValueText extends LightningElement {
       : [value];
   }
 
+  /**
+   * The value to display.
+   * @returns {string | undefined}
+   */
   get valueToDisplay() {
     const value = this.fieldValue;
     if (value.length < this.maxValuesToDisplay) {
