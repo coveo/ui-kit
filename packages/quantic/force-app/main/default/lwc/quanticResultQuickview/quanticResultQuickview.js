@@ -260,6 +260,12 @@ export default class QuanticResultQuickview extends LightningElement {
     ].join(' ');
   }
 
+  get buttonContainerClass() {
+    return `slds-is-relative slds-show_inline result-action_container ${
+      this.isResultAction ? 'result-action_white-container' : ''
+    }`;
+  }
+
   get buttonAriaLabelValue() {
     return I18nUtils.format(this.labels.openFileForPreview, this.result.title);
   }
