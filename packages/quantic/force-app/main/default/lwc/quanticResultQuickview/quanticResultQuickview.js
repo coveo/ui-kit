@@ -114,7 +114,7 @@ export default class QuanticResultQuickview extends LightningElement {
         console.error(error.message);
       });
 
-    if (this.previewButtonVariant === 'result-action') {
+    if (this.isResultAction) {
       const resultActionRegister = new CustomEvent(
         'quantic__resultactionregister',
         {
@@ -244,13 +244,13 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get buttonClass() {
-let variantClass = 'quickview__button-base';
-if (this.previewButtonVariant === 'result-action') {
-  variantClass = `slds-button_icon-border-filled ${this.resultActionOrderClasses}`;
-} else {
-  variantClass = `slds-button_${this.previewButtonVariant}`;
-}
-return ['slds-button', variantClass].join(' ');
+    let variantClass = 'quickview__button-base';
+    if (this.isResultAction) {
+      variantClass = `slds-button_icon-border-filled ${this.resultActionOrderClasses}`;
+    } else if (this.previewButtonVariant) {
+      variantClass = `slds-button_${this.previewButtonVariant}`;
+    }
+    return ['slds-button', variantClass].join(' ');
   }
 
   get buttonIconClass() {
@@ -376,5 +376,13 @@ return ['slds-button', variantClass].join(' ');
 
   get buttonTitle() {
     return this.tooltip ? null : this.buttonLabel;
+  }
+
+  /**
+   * Indicates whether the quickview button is used as a result action.
+   * @return {boolean}
+   */
+  get isResultAction() {
+    return this.previewButtonVariant === 'result-action';
   }
 }
