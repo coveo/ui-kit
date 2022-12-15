@@ -1,0 +1,17 @@
+@import '../../../../global/global.pcss';
+
+.atomic-quickview-modal {
+  &::part(backdrop) {
+    grid-template-columns: 1fr max(80vw, 30rem) 1fr;
+  }
+  &::part(body),
+  &::part(header),
+  &::part(footer) {
+    max-width: 100%;
+  }
+
+  &::part(footer) {
+    display: flex;
+    justify-content: center;
+  }
+}

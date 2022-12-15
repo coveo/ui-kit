@@ -822,6 +822,12 @@ export namespace Components {
     }
     interface AtomicQuerySummary {
     }
+    interface AtomicQuickview {
+    }
+    interface AtomicQuickviewModal {
+        "content"?: string;
+        "result"?: Result;
+    }
     interface AtomicRatingFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
@@ -2096,6 +2102,18 @@ declare global {
         prototype: HTMLAtomicQuerySummaryElement;
         new (): HTMLAtomicQuerySummaryElement;
     };
+    interface HTMLAtomicQuickviewElement extends Components.AtomicQuickview, HTMLStencilElement {
+    }
+    var HTMLAtomicQuickviewElement: {
+        prototype: HTMLAtomicQuickviewElement;
+        new (): HTMLAtomicQuickviewElement;
+    };
+    interface HTMLAtomicQuickviewModalElement extends Components.AtomicQuickviewModal, HTMLStencilElement {
+    }
+    var HTMLAtomicQuickviewModalElement: {
+        prototype: HTMLAtomicQuickviewModalElement;
+        new (): HTMLAtomicQuickviewModalElement;
+    };
     interface HTMLAtomicRatingFacetElement extends Components.AtomicRatingFacet, HTMLStencilElement {
     }
     var HTMLAtomicRatingFacetElement: {
@@ -2515,6 +2533,8 @@ declare global {
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
+        "atomic-quickview": HTMLAtomicQuickviewElement;
+        "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
@@ -3349,6 +3369,12 @@ declare namespace LocalJSX {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+    }
+    interface AtomicQuickview {
+    }
+    interface AtomicQuickviewModal {
+        "content"?: string;
+        "result"?: Result;
     }
     interface AtomicRatingFacet {
         /**
@@ -4247,6 +4273,8 @@ declare namespace LocalJSX {
         "atomic-popover": AtomicPopover;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
+        "atomic-quickview": AtomicQuickview;
+        "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-recs-interface": AtomicRecsInterface;
@@ -4371,6 +4399,8 @@ declare module "@stencil/core" {
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
+            "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
+            "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
