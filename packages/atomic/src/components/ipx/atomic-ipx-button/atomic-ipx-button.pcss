@@ -2,11 +2,9 @@
 
 /**
  * @prop --atomic-ipx-button-height: height of the IPX button.
- * @prop --atomic-ipx-button-width: width of the IPX button.
  */
 [part='ipx-button'] {
   @apply btn-primary fixed bottom-1 right-12 block px-3 whitespace-nowrap;
-  width: var(--atomic-ipx-button-width, 9.5rem);
   height: var(--atomic-ipx-button-height, 2.75rem);
   color: var(--atomic-neutral-light);
   background-color: var(--atomic-primary-dark);
@@ -42,5 +40,4 @@
 
 [part='button-text'] {
   @apply overflow-hidden;
-  max-width: 100px;
 }
