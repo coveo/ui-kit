@@ -244,14 +244,13 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get buttonClass() {
-    const variantClass = !this.previewButtonVariant
-      ? 'quickview__button-base'
-      : this.previewButtonVariant === 'result-action'
-      ? `slds-button_icon-border-filled ${this.resultActionOrderClasses}`
-      : `slds-button_${this.previewButtonVariant}`;
-    return ['slds-button', variantClass].join(
-      ' '
-    );
+let variantClass = 'quickview__button-base';
+if (this.previewButtonVariant === 'result-action') {
+  variantClass = `slds-button_icon-border-filled ${this.resultActionOrderClasses}`;
+} else {
+  variantClass = `slds-button_${this.previewButtonVariant}`;
+}
+return ['slds-button', variantClass].join(' ');
   }
 
   get buttonIconClass() {
