@@ -2,8 +2,8 @@
 import {createElement} from 'lwc';
 import QuanticResultMultiValueText from '../quanticResultMultiValueText';
 
-const exampleField = 'examplenumberfield';
-const exampleFieldValue = 1670118414000;
+const exampleField = 'examplemultivaluefield';
+const exampleFieldValue = ['One', 'Two', 'Three'];
 const exampleResult = {
   raw: {
     [exampleField]: exampleFieldValue,
