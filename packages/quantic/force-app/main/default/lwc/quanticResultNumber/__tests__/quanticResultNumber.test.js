@@ -94,7 +94,7 @@ describe('c-quantic-result-number', () => {
     });
   });
 
-  describe('when the field value is not a valid timestamp', () => {
+  describe('when the field value is not a valid number', () => {
     it('should show an error', async () => {
       isNumberMock.mockReturnValue(false);
       const element = createTestComponent();
