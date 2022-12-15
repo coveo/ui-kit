@@ -4,6 +4,7 @@ import {
   MockSearchEngine,
 } from '../../test/mock-engine';
 import {buildMockResult} from '../../test/mock-result';
+import {ResultTemplate} from './result-templates';
 import {
   ResultTemplatesManager,
   buildResultTemplatesManager,
@@ -85,6 +86,24 @@ describe('result template manager', () => {
       expect(resultTemplateManager.selectTemplate(buildMockResult())).toBe(
         '{{title1}}'
       );
+    });
+
+    it('validates the template', () => {
+      expect(() =>
+        resultTemplateManager.registerTemplates(
+          undefined as unknown as ResultTemplate<string>
+        )
+      ).toThrow();
+      expect(() =>
+        resultTemplateManager.registerTemplates({
+          content: 'abc',
+        } as unknown as ResultTemplate<string>)
+      ).toThrow();
+      expect(() =>
+        resultTemplateManager.registerTemplates({
+          conditions: [() => true],
+        } as unknown as ResultTemplate<string>)
+      ).toThrow();
     });
   });
 });

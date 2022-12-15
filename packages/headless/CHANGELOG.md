@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.0.0...@coveo/headless@2.0.1) (2022-12-15)
+
+### Bug Fixes
+
+- fixed v2 dependency linking ([#2614](https://github.com/coveo/ui-kit/issues/2614)) ([e9d8762](https://github.com/coveo/ui-kit/commit/e9d87627d21cf91dc258414f69e4cb5c13de39c3))
+
+# [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.114.0...@coveo/headless@2.0.0) (2022-12-14)
+
+### Bug Fixes
+
+- **headless:** made result template manager throw errors instead of logging errors ([#2518](https://github.com/coveo/ui-kit/issues/2518)) ([5d54709](https://github.com/coveo/ui-kit/commit/5d547095c68615120a4b087b3c993c111b3d6169))
+- **headless:** made trigger notify and execute events plural ([#2533](https://github.com/coveo/ui-kit/issues/2533)) ([dee24ad](https://github.com/coveo/ui-kit/commit/dee24ad9fc911e34111eb994c6b364d72a20b68f))
+- **headless:** modify delimiting character for facet in url manager ([#2545](https://github.com/coveo/ui-kit/issues/2545)) ([9f43709](https://github.com/coveo/ui-kit/commit/9f437099b31c055c5181463eb1954b923a74f023))
+- **headless:** add actionCause and customData to missing /v2 calls ([#2572](https://github.com/coveo/ui-kit/issues/2572)) ([130e94c](https://github.com/coveo/ui-kit/commit/130e94cede829f4417f86364de188e418480b083))
+- **headless:** use new preparable analytics ([#2604](https://github.com/coveo/ui-kit/pull/2604)) ([4349fb9](https://github.com/coveo/ui-kit/commit/4349fb9169768b243a5753488a25d34216de1591))
+
+### Features
+
+- **headless:** added platform-specific origins to requests ([#2472](https://github.com/coveo/ui-kit/issues/2472)) ([88d2f11](https://github.com/coveo/ui-kit/commit/88d2f111f0bfd846b93b051b176dfc59a19d1a76))
+- **headless:** added actionCause and customData to /v2 analytics object ([#2490](https://github.com/coveo/ui-kit/issues/2490)) ([2e2963d](https://github.com/coveo/ui-kit/commit/2e2963d287b6524f8f62ec79927d10e0c0190f71))
+- **headless:** refactored field suggestion options ([#2581](https://github.com/coveo/ui-kit/issues/2581)) ([4a5577e](https://github.com/coveo/ui-kit/commit/4a5577ec78461a1456c81a43385be34f6546b0fc))
+
+# [1.114.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.113.0...@coveo/headless@1.114.0) (2022-12-13)
+
+### Features
+
+- **headless:** add src to use quickview in iframe ([#2597](https://github.com/coveo/ui-kit/issues/2597)) ([faca366](https://github.com/coveo/ui-kit/commit/faca3665bcf6109ac237db977b8b4918360428bf))
+
 # [1.113.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.112.0...@coveo/headless@1.113.0) (2022-12-09)
 
 ### Features

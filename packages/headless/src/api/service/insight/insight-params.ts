@@ -1,5 +1,9 @@
 import {pickNonBaseParams} from '../../api-client-utils';
-import {HTTPContentType, HttpMethods} from '../../platform-client';
+import {
+  HTTPContentType,
+  HttpMethods,
+  PlatformClientCallOptions,
+} from '../../platform-client';
 import {BaseParam} from '../../platform-service-params';
 
 export interface InsightIdParam {
@@ -8,21 +12,28 @@ export interface InsightIdParam {
 
 export type InsightParam = BaseParam & InsightIdParam;
 
+export const baseInsightUrl = (req: InsightParam, path: string) =>
+  `${req.url}/rest/organizations/${req.organizationId}/insight/v1/configs/${req.insightId}${path}`;
+
 export const baseInsightRequest = (
   req: InsightParam,
   method: HttpMethods,
   contentType: HTTPContentType,
   path: string
-) => {
+): Pick<
+  PlatformClientCallOptions,
+  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
+> => {
   validateInsightRequestParams(req);
 
-  const baseUrl = `${req.url}/rest/organizations/${req.organizationId}/insight/v1/configs/${req.insightId}${path}`;
+  const baseUrl = baseInsightUrl(req, path);
 
   return {
     accessToken: req.accessToken,
     method,
     contentType,
     url: baseUrl,
+    origin: 'insightApiFetch',
   };
 };
 

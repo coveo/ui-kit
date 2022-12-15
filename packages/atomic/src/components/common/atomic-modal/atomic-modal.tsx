@@ -1,4 +1,3 @@
-// TODO: move to common components
 import {
   Component,
   h,

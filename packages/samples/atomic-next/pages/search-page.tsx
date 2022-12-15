@@ -58,7 +58,13 @@ const SearchPage: NextPage = () => {
       engine={engine}
       pipeline="Search"
       searchHub="MainSearch"
-      theme="none"
+      fieldsToInclude={[
+        'cat_platform',
+        'cat_condition',
+        'cat_categories',
+        'cat_review_count',
+        'cat_color',
+      ]}
     >
       <AtomicSearchLayout>
         <AtomicLayoutSection section="search">
@@ -119,7 +125,7 @@ const SearchPage: NextPage = () => {
         <AtomicLayoutSection section="main">
           <AtomicLayoutSection section="status">
             <AtomicBreadbox />
-            <AtomicQuerySummary enableDuration={false} />
+            <AtomicQuerySummary />
             <AtomicRefineToggle />
             <AtomicSortDropdown>
               <AtomicSortExpression label="relevance" expression="relevancy" />
@@ -136,7 +142,6 @@ const SearchPage: NextPage = () => {
           </AtomicLayoutSection>
           <AtomicLayoutSection section="results">
             <AtomicResultList
-              fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
               display="list"
               imageSize="large"
               template={MyTemplate}

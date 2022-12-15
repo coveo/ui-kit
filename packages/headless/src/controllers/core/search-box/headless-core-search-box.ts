@@ -186,7 +186,6 @@ export function buildCoreSearchBox(
     dispatch(
       registerQuerySuggest({
         id,
-        q: engine.state.query.q,
         count: options.numberOfSuggestions,
       })
     );

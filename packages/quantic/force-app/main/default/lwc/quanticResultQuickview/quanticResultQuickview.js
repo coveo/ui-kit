@@ -1,4 +1,7 @@
-import {LightningElement, api, track} from 'lwc';
+import close from '@salesforce/label/c.quantic_Close';
+import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
+import openFileForPreview from '@salesforce/label/c.quantic_OpenFileForPreview';
+import openPreview from '@salesforce/label/c.quantic_OpenPreview';
 import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
@@ -6,11 +9,7 @@ import {
   isHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
-
-import close from '@salesforce/label/c.quantic_Close';
-import openPreview from '@salesforce/label/c.quantic_OpenPreview';
-import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
-import openFileForPreview from '@salesforce/label/c.quantic_OpenFileForPreview';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -87,6 +86,8 @@ export default class QuanticResultQuickview extends LightningElement {
   headless;
   /** @type {boolean} */
   isFirstPreviewRender = true;
+  /** @type {boolean} */
+  _isLoading = false;
 
   labels = {
     close,
@@ -107,8 +108,6 @@ export default class QuanticResultQuickview extends LightningElement {
 
   renderedCallback() {
     if (this.contentContainer && this.state?.resultHasPreview) {
-      // eslint-disable-next-line @lwc/lwc/no-inner-html
-      this.contentContainer.innerHTML = this.state.content;
       if (this.isQuickviewOpen && this.isFirstPreviewRender) {
         this.isFirstPreviewRender = false;
         this.setFocusToHeader();
@@ -125,6 +124,7 @@ export default class QuanticResultQuickview extends LightningElement {
     const options = {
       result: this.result,
       maximumPreviewSize: Number(this.maximumPreviewSize),
+      onlyContentURL: true,
     };
     this.quickview = this.headless.buildQuickview(engine, {options});
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
@@ -142,10 +142,11 @@ export default class QuanticResultQuickview extends LightningElement {
 
   openQuickview() {
     this.isQuickviewOpen = true;
-    this.quickview.fetchResultContent();
+    this._isLoading = true;
     if (!isHeadlessBundle(this.engineId, HeadlessBundleNames.caseAssist)) {
       this.addRecentResult();
     }
+    this.quickview.fetchResultContent();
     this.sendResultPreviewEvent(true);
   }
 
@@ -195,7 +196,7 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get isLoading() {
-    return this.state?.isLoading;
+    return this._isLoading;
   }
 
   get hasNoPreview() {
@@ -206,7 +207,7 @@ export default class QuanticResultQuickview extends LightningElement {
     return !!this.previewButtonIcon;
   }
 
-  /** @type {HTMLElement} */
+  /** @type {HTMLIFrameElement} */
   get contentContainer() {
     return this.template.querySelector('.quickview__content-container');
   }
@@ -241,6 +242,14 @@ export default class QuanticResultQuickview extends LightningElement {
 
   get hasButtonLabel() {
     return !!this.previewButtonLabel;
+  }
+
+  get contentURL() {
+    return this.state.contentURL?.includes(
+      encodeURIComponent(this.result.uniqueId)
+    )
+      ? this.state.contentURL
+      : undefined;
   }
 
   setFocusToHeader() {
@@ -278,6 +287,10 @@ export default class QuanticResultQuickview extends LightningElement {
         this.setFocusToHeader();
       }
     }
+  }
+
+  onIframeLoaded() {
+    this._isLoading = false;
   }
 
   get lastFocusableElementInFooterSlot() {

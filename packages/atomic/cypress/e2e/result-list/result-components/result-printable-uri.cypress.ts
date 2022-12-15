@@ -114,7 +114,7 @@ describe('Result Printable Uri Component', () => {
         .init();
     });
 
-    it('should render an "atomic-result-link" containing an "atomic-result-text" component displaying the "printableUri" property', () => {
+    it('should render an "atomic-result-printable-uri" containing an "atomic-result-text" component displaying the "printableUri" property', () => {
       ResultPrintableUriSelectors.firstInResult()
         .find(resultTextComponent)
         .should('exist')
@@ -122,23 +122,24 @@ describe('Result Printable Uri Component', () => {
 
       ResultPrintableUriSelectors.links()
         .should('exist')
-        .should('have.attr', 'href', 'https://coveo.com')
-        .should('have.attr', 'target', '_self');
+        .should('have.attr', 'href', 'https://coveo.com');
     });
   });
 
   describe('when there is a "parents" property in the result object and "max-number-of-parts" is 3', () => {
-    const addResultListWithPrintableUri = () => (fixture: TestFixture) => {
-      fixture.with(
-        addResultList(
-          buildTemplateWithoutSections([
-            generateComponentHTML(resultPrintableUriComponent, {
-              'max-number-of-parts': '3',
-            }),
-          ])
-        )
-      );
-    };
+    const addResultListWithPrintableUri =
+      (children?: HTMLElement[]) => (fixture: TestFixture) => {
+        const printableUriEl = generateComponentHTML(
+          resultPrintableUriComponent,
+          {
+            'max-number-of-parts': '3',
+          }
+        );
+        children?.forEach((slot) => printableUriEl.appendChild(slot));
+        fixture.with(
+          addResultList(buildTemplateWithoutSections([printableUriEl]))
+        );
+      };
 
     describe('when the number of parts is 3', () => {
       before(() => {
@@ -195,6 +196,26 @@ describe('Result Printable Uri Component', () => {
 
       ResultPrintableUriAssertions.assertDisplayEllipsis(true);
       ResultPrintableUriAssertions.assertDisplayParentsCount(3);
+    });
+
+    describe('when there is a valid slot named "attributes"', () => {
+      before(() => {
+        const attributesSlot = generateComponentHTML('a', {
+          download: 'test',
+          target: '_self',
+          slot: 'attributes',
+        });
+        new TestFixture()
+          .with(addResultListWithPrintableUri([attributesSlot]))
+          .with(addUriParentsInResponse(5))
+          .init();
+      });
+
+      it('copies the attributes properly', () => {
+        ResultPrintableUriSelectors.links()
+          .should('have.attr', 'download', 'test')
+          .should('have.attr', 'target', '_self');
+      });
     });
   });
 });

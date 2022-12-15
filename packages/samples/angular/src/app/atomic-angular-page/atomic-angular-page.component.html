@@ -2,7 +2,17 @@
   #searchInterface
   searchHub="MainSearch"
   pipeline="Search"
-  fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
+  [fieldsToInclude]="[
+    'ec_price',
+    'ec_rating',
+    'ec_images',
+    'ec_brand',
+    'cat_platform',
+    'cat_condition',
+    'cat_categories',
+    'cat_review_count',
+    'cat_color'
+  ]"
 >
   <div class="search">
     <atomic-search-box>
@@ -84,7 +94,7 @@
   <atomic-breadbox></atomic-breadbox>
 
   <div class="topbar">
-    <atomic-query-summary enableDuration="false"></atomic-query-summary>
+    <atomic-query-summary></atomic-query-summary>
     <atomic-refine-toggle></atomic-refine-toggle>
     <atomic-sort-dropdown>
       <atomic-sort-expression label="Relevance" expression="relevancy"></atomic-sort-expression>
