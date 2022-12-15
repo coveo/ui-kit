@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.114.0",
+  "version": "2.0.1",
   "files": [
     "dist/",
     "recommendation/",
@@ -34,7 +34,6 @@
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
     "npm:publish": "node ../../scripts/deploy/publish.mjs",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.mjs alpha",
     "doc:generate": "npm run doc:extract && npm run doc:parse",
     "doc:extract": "node ./scripts/extract-documentation.mjs",
     "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
@@ -44,12 +43,12 @@
     "pino-pretty": "^6.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "0.42.3",
+    "@coveo/bueno": "0.43.0",
     "@reduxjs/toolkit": "1.8.5",
     "@types/pino": "6.3.12",
     "@types/redux-mock-store": "1.0.3",
     "abab": "2.0.6",
-    "coveo.analytics": "2.23.5",
+    "coveo.analytics": "2.23.7",
     "cross-fetch": "3.1.5",
     "dayjs": "1.11.5",
     "exponential-backoff": "3.1.0",
@@ -68,9 +67,5 @@
     "@microsoft/tsdoc": "0.14.1",
     "jest-fetch-mock": "3.0.3",
     "ts-node": "10.9.1"
-  },
-  "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=8.6.0"
   }
 }

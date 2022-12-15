@@ -1,8 +1,12 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {FunctionalComponent, h, VNode} from '@stencil/core';
 import {Button} from '../../button';
 import {FacetValueProps} from '../facet-common';
 
-export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
+export interface FacetValueLinkProps extends FacetValueProps {
+  subList?: VNode | VNode[];
+}
+
+export const FacetValueLink: FunctionalComponent<FacetValueLinkProps> = (
   props,
   children
 ) => {
@@ -38,6 +42,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
           })}
         </span>
       </Button>
+      {props.subList}
     </li>
   );
 };

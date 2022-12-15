@@ -2,6 +2,7 @@ import {ProductListingAppState} from '../../../state/product-listing-app-state';
 import {SearchAppState} from '../../../state/search-app-state';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 import {createMockState} from '../../../test/mock-state';
@@ -30,7 +31,7 @@ describe('facet-set selectors', () => {
     const facetId = '1';
     const state = createMockState();
     const facetRequest = buildMockFacetRequest({facetId});
-    state.facetSet[facetId] = facetRequest;
+    state.facetSet[facetId] = buildMockFacetSlice({request: facetRequest});
 
     expect(facetRequestSelector(state, facetId)).toBe(facetRequest);
   });
@@ -41,7 +42,9 @@ describe('facet-set selectors', () => {
 
     beforeEach(() => {
       state = createMockState();
-      state.facetSet[facetId] = buildMockFacetRequest({facetId});
+      state.facetSet[facetId] = buildMockFacetSlice({
+        request: buildMockFacetRequest({facetId}),
+      });
     });
 
     it('#facetResponseSelectedValuesSelector returns an empty array if the facet does not exist', () => {
@@ -122,7 +125,9 @@ describe('facet-set selectors', () => {
 
     beforeEach(() => {
       state = buildMockProductListingState();
-      state.facetSet[facetId] = buildMockFacetRequest({facetId});
+      state.facetSet[facetId] = buildMockFacetSlice({
+        request: buildMockFacetRequest({facetId}),
+      });
     });
 
     it('#facetResponseSelectedValuesSelector returns an empty array if the facet does not exist', () => {

@@ -3,7 +3,10 @@ import {
   SearchEngine,
   Suggestion,
 } from '@coveo/headless';
-import {QuerySuggestionSection} from '@coveo/headless/dist/definitions/state/state-sections';
+import {
+  QuerySetSection,
+  QuerySuggestionSection,
+} from '@coveo/headless/dist/definitions/state/state-sections';
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import SearchIcon from '../../../../images/search.svg';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
@@ -61,7 +64,9 @@ export class AtomicSearchBoxQuerySuggestions {
   }
 
   private initialize(): SearchBoxSuggestions {
-    const engine = this.bindings.engine as SearchEngine<QuerySuggestionSection>;
+    const engine = this.bindings.engine as SearchEngine<
+      QuerySuggestionSection & QuerySetSection
+    >;
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);
 

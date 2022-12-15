@@ -1,5 +1,4 @@
 import {Octokit} from '@octokit/rest';
-import {resolve} from 'node:path';
 import {getPackageDefinitionFromPackageDir} from '../packages.mjs';
 
 const token = process.env.GITHUB_TOKEN || '';

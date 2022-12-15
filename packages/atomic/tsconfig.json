@@ -30,7 +30,6 @@
   "exclude": [
     "node_modules",
     "src/external-builds",
-    "**/*.stories.tsx",
-    "headless"
+    "**/*.stories.tsx"
   ]
 }

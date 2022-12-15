@@ -1,17 +1,24 @@
-import {makeAnalyticsAction, AnalyticsType} from '../analytics/analytics-utils';
+import {
+  makeAnalyticsAction,
+  AnalyticsType,
+  CustomAction,
+  SearchAction,
+} from '../analytics/analytics-utils';
 
-export const logClearRecentQueries = makeAnalyticsAction(
-  'analytics/recentQueries/clear',
-  AnalyticsType.Custom,
-  (client) => {
-    return client.logClearRecentQueries();
-  }
-);
+export const logClearRecentQueries = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/recentQueries/clear',
+    AnalyticsType.Custom,
+    (client) => {
+      return client.makeClearRecentQueries();
+    }
+  );
 
-export const logRecentQueryClick = makeAnalyticsAction(
-  'analytics/recentQueries/click',
-  AnalyticsType.Search,
-  (client) => {
-    return client.logRecentQueryClick();
-  }
-);
+export const logRecentQueryClick = (): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/recentQueries/click',
+    AnalyticsType.Search,
+    (client) => {
+      return client.makeRecentQueryClick();
+    }
+  );

@@ -13,6 +13,7 @@ import {
 import {validatePayload} from '../../utils/validate-payload';
 import {
   AnalyticsType,
+  ClickAction,
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
@@ -130,24 +131,24 @@ function getQForHighlighting(state: StateNeededByLoadCollection) {
     : `( <@- ${state.query.q} -@> ) OR @uri`;
 }
 
-export const logShowMoreFoldedResults = (result: Result) =>
+export const logShowMoreFoldedResults = (result: Result): ClickAction =>
   makeAnalyticsAction(
     'analytics/folding/showMore',
     AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(result);
 
-      return client.logShowMoreFoldedResults(
+      return client.makeShowMoreFoldedResults(
         partialDocumentInformation(result, state),
         documentIdentifier(result)
       );
     }
-  )();
+  );
 
 export const logShowLessFoldedResults = makeAnalyticsAction(
   'analytics/folding/showLess',
   AnalyticsType.Custom,
   (client) => {
-    return client.logShowLessFoldedResults();
+    return client.makeShowLessFoldedResults();
   }
 );

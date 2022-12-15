@@ -1,5 +1,9 @@
+import {tableElementTagName} from '../../../src/components/search/atomic-table-result/table-element-utils';
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
-import {assertContainsComponentError} from '../common-assertions';
+import {
+  assertConsoleWarning,
+  assertContainsComponentError,
+} from '../common-assertions';
 import {
   addFieldValueInResponse,
   addResultList,
@@ -9,6 +13,7 @@ import {
 import {
   resultListComponent,
   ResultListSelectors,
+  resultSectionTags,
 } from './result-list-selectors';
 import {addResultTable} from './result-table-actions';
 import {ResultTableSelectors} from './result-table-selectors';
@@ -59,6 +64,42 @@ describe('Result Template Component', () => {
     });
 
     assertContainsComponentError(ResultTemplateSelectors, true);
+  });
+
+  describe('when it has both section and non-section elements', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addResultList(
+            buildTemplateWithoutSections([
+              new Text('hello'),
+              generateComponentHTML(resultSectionTags.actions),
+            ])
+          )
+        )
+        .init();
+    });
+
+    assertConsoleWarning(true);
+  });
+
+  describe('when it has strictly section and table-element elements', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addResultList(
+            buildTemplateWithoutSections([
+              generateComponentHTML(tableElementTagName),
+              new Text('    \n    '),
+              generateComponentHTML(resultSectionTags.actions),
+            ])
+          )
+        )
+        .init();
+    });
+
+    assertContainsComponentError(ResultTemplateSelectors, false);
+    assertConsoleWarning(false);
   });
 
   describe('with a visual section', () => {

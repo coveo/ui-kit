@@ -7,7 +7,7 @@ import {
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {ProductListingAppState} from '../../../../state/product-listing-app-state';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {
   MockProductListingEngine,
@@ -35,7 +35,7 @@ describe('date facet', () => {
     };
 
     state = buildMockProductListingState();
-    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
+    state.dateFacetSet[facetId] = buildMockDateFacetSlice();
 
     engine = buildMockProductListingEngine({state});
     dateFacet = buildDateFacet(engine, {options});

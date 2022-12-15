@@ -2,8 +2,10 @@ import {SearchAppState} from '../../../../state/search-app-state';
 import {createMockState} from '../../../../test';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {
   numericFacetResponseSelector,
@@ -23,7 +25,9 @@ describe('numeric facet selectors', () => {
   });
 
   it('#numericFacetResponseSelector gets a valid numeric facet response', () => {
-    state.numericFacetSet[facetId] = buildMockNumericFacetRequest({facetId});
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
+      request: buildMockNumericFacetRequest({facetId}),
+    });
     const mockResponse = buildMockNumericFacetResponse({facetId});
     state.search.response.facets = [mockResponse];
 
@@ -32,7 +36,9 @@ describe('numeric facet selectors', () => {
   });
 
   it('#numericFacetResponseSelector returns undefined if facet is of wrong type', () => {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId}),
+    });
     const mockResponse = buildMockFacetResponse({facetId});
     state.search.response.facets = [mockResponse];
 
@@ -42,7 +48,9 @@ describe('numeric facet selectors', () => {
 
   describe('#numericFacetSelectedValuesSelector', () => {
     beforeEach(() => {
-      state.numericFacetSet[facetId] = buildMockNumericFacetRequest({facetId});
+      state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({facetId}),
+      });
     });
 
     it('#numericFacetSelectedValuesSelector returns an empty array if the facet does not exist', () => {

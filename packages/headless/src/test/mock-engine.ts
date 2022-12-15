@@ -13,6 +13,7 @@ import {analyticsMiddleware} from '../app/analytics-middleware';
 import {CoreEngine} from '../app/engine';
 import {InsightEngine} from '../app/insight-engine/insight-engine';
 import {InsightThunkExtraArguments} from '../app/insight-thunk-extra-arguments';
+import {instantlyCallableThunkActionMiddleware} from '../app/instantly-callable-middleware';
 import {
   logActionErrorMiddleware,
   logActionMiddleware,
@@ -232,13 +233,13 @@ const configureMockStore = (logger: Logger) => {
     SearchThunkExtraArguments,
     'analyticsClientMiddleware'
   > = {
-    searchAPIClient: buildMockSearchAPIClient({logger}),
     apiClient: buildMockSearchAPIClient({logger}),
     validatePayload: validatePayloadAndThrow,
     logger,
   };
   return {
     store: configureStore<AppState, DispatchExts>([
+      instantlyCallableThunkActionMiddleware,
       logActionErrorMiddleware(logger),
       analyticsMiddleware,
       thunk.withExtraArgument(thunkExtraArguments),
@@ -260,6 +261,7 @@ const configureInsightMockStore = (logger: Logger) => {
   };
   return {
     store: configureStore<AppState, DispatchExts>([
+      instantlyCallableThunkActionMiddleware,
       logActionErrorMiddleware(logger),
       analyticsMiddleware,
       thunk.withExtraArgument(thunkExtraArguments),

@@ -185,7 +185,7 @@ export function buildCoreNumericFacet(
     NumericFacetResponse
   >(engine, {
     facetId,
-    getRequest: () => engine.state.numericFacetSet[facetId],
+    getRequest: () => engine.state.numericFacetSet[facetId]!.request,
   });
 
   return {

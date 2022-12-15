@@ -216,14 +216,14 @@ export declare interface AtomicFoldedResultList extends Components.AtomicFoldedR
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['childField', 'collectionField', 'density', 'fieldsToInclude', 'imageSize', 'parentField'],
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-folded-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['childField', 'collectionField', 'density', 'fieldsToInclude', 'imageSize', 'parentField']
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField']
 })
 export class AtomicFoldedResultList {
   protected el: HTMLElement;
@@ -572,14 +572,12 @@ export class AtomicQueryError {
 export declare interface AtomicQuerySummary extends Components.AtomicQuerySummary {}
 
 @ProxyCmp({
-  defineCustomElementFn: undefined,
-  inputs: ['enableDuration']
+  defineCustomElementFn: undefined
 })
 @Component({
   selector: 'atomic-query-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  inputs: ['enableDuration']
+  template: '<ng-content></ng-content>'
 })
 export class AtomicQuerySummary {
   protected el: HTMLElement;
@@ -784,13 +782,13 @@ export declare interface AtomicResult extends Components.AtomicResult {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result', 'stopPropagation']
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation']
 })
 @Component({
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result', 'stopPropagation']
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation']
 })
 export class AtomicResult {
   protected el: HTMLElement;
@@ -970,13 +968,13 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['hrefTemplate', 'target']
+  inputs: ['hrefTemplate']
 })
 @Component({
   selector: 'atomic-result-link',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['hrefTemplate', 'target']
+  inputs: ['hrefTemplate']
 })
 export class AtomicResultLink {
   protected el: HTMLElement;
@@ -991,14 +989,14 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['density', 'display', 'fieldsToInclude', 'image', 'imageSize'],
+  inputs: ['density', 'display', 'imageSize'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['density', 'display', 'fieldsToInclude', 'image', 'imageSize']
+  inputs: ['density', 'display', 'imageSize']
 })
 export class AtomicResultList {
   protected el: HTMLElement;
@@ -1076,13 +1074,13 @@ export declare interface AtomicResultPrintableUri extends Components.AtomicResul
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['maxNumberOfParts', 'target']
+  inputs: ['maxNumberOfParts']
 })
 @Component({
   selector: 'atomic-result-printable-uri',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['maxNumberOfParts', 'target']
+  inputs: ['maxNumberOfParts']
 })
 export class AtomicResultPrintableUri {
   protected el: HTMLElement;

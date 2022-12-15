@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "1.27.21",
+  "version": "2.0.1",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -16,7 +16,6 @@
     "compile:iife": "rollup --config rollup.config.js",
     "compile": "concurrently \"npm run compile:esm\" \"npm run compile:cjs\"  \"npm run compile:iife\"",
     "npm:publish": "node ../../scripts/deploy/publish.mjs",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.mjs alpha",
     "copy:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },
   "main": "./dist/cjs/index.js",
@@ -27,9 +26,10 @@
     "recommendation/"
   ],
   "dependencies": {
-    "@coveo/atomic": "1.126.1"
+    "@coveo/atomic": "2.0.1"
   },
   "devDependencies": {
+    "@coveo/headless": "2.0.1",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@rollup/plugin-replace": "^4.0.0",
@@ -45,6 +45,7 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "peerDependencies": {
+    "@coveo/headless": "^2.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   }

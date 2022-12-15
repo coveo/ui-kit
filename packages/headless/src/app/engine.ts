@@ -20,6 +20,7 @@ import {SearchParametersState} from '../state/search-app-state';
 import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
 import {EngineConfiguration} from './engine-configuration';
+import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware';
 import {LoggerOptions} from './logger';
 import {logActionErrorMiddleware} from './logger-middlewares';
 import {createReducerManager, ReducerManager} from './reducer-manager';
@@ -262,6 +263,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   );
 
   return [
+    instantlyCallableThunkActionMiddleware,
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
