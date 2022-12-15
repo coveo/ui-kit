@@ -697,13 +697,34 @@ export function isParentOf(element, targetElement) {
  * @param {string} text
  */
 export async function copyToClipboard(text) {
-  await navigator.clipboard.writeText(text);
+  if (navigator?.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      copyToClipboardFallback(text);
+    }
+  } else {
+    copyToClipboardFallback(text);
+  }
+}
+
+/**
+ * Copies text to clipboard using the DOM.
+ * @param {string} text
+ */
+export function copyToClipboardFallback(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
 }
 
 /**
  * Read the value of a given key from an object.
- * @param {object} object 
- * @param {string} key 
+ * @param {object} object
+ * @param {string} key
  */
 export function readFromObject(object, key) {
   const firstPeriodIndex = key.indexOf('.');
@@ -717,8 +738,8 @@ export function readFromObject(object, key) {
 
 /**
  * Generates a text from a result based on a given template.
- * @param {string} template 
- * @param {Result} result 
+ * @param {string} template
+ * @param {Result} result
  * @returns {string}
  */
 export function buildTemplateTextFromResult(template, result) {
