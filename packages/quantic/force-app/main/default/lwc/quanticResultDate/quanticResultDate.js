@@ -71,7 +71,11 @@ export default class QuanticResultDate extends LightningElement {
     this.error = `${this.template.host.localName} Error`;
   }
 
-  get isVisible() {
+  /**
+   * Whether the field value can be displayed.
+   * @returns {boolean}
+   */
+  get isValid() {
     return this.validated && !this.error;
   }
 
