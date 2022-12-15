@@ -95,8 +95,10 @@ describe('c-quantic-result-text', () => {
   });
 
   describe('when required props are given', () => {
-    it('should render the result field value', () => {
+    it('should render the result field value', async () => {
       const element = createTestComponent();
+      await flushPromises();
+
       const fieldValueElement = element.shadowRoot.querySelector(valueSelector);
 
       expect(fieldValueElement.textContent).toBe(exampleFieldValue);
@@ -104,11 +106,13 @@ describe('c-quantic-result-text', () => {
   });
 
   describe('when a label is given', () => {
-    it('should render the field value with a label', () => {
+    it('should render the field value with a label', async () => {
       const element = createTestComponent({
         ...defaultOptions,
         label: exampleLabel,
       });
+      await flushPromises();
+
       const labelElement = element.shadowRoot.querySelector(labelSelector);
       const fieldValueElement = element.shadowRoot.querySelector(valueSelector);
 
@@ -118,11 +122,13 @@ describe('c-quantic-result-text', () => {
   });
 
   describe('when a formatting function is given', () => {
-    it('should render the formatted field value', () => {
+    it('should render the formatted field value', async () => {
       const element = createTestComponent({
         ...defaultOptions,
         formattingFunction: exampleFormattingFunction,
       });
+      await flushPromises();
+
       const fieldValueElement = element.shadowRoot.querySelector(valueSelector);
 
       expect(fieldValueElement.textContent).toBe(
