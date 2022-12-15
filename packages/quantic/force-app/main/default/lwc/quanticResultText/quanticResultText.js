@@ -40,6 +40,7 @@ export default class QuanticResultText extends LightningElement {
 
   /** @type {string} */
   error;
+  validated = false;
 
   connectedCallback() {
     getBueno(this).then(() => {
@@ -53,7 +54,16 @@ export default class QuanticResultText extends LightningElement {
         console.error(`The "${this.label}" label is not a valid string.`);
         this.error = `${this.template.host.localName} Error`;
       }
+      this.validated = true;
     });
+  }
+
+  /**
+   * Whether the field value can be displayed.
+   * @returns {boolean}
+   */
+  get isValid() {
+    return this.validated && !this.error;
   }
 
   /**
