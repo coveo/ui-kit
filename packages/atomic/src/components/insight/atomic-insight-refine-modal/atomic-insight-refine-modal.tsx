@@ -66,7 +66,8 @@ export class AtomicInsightRefineModal
         this.host.append(
           getClonedFacetElements(
             this.bindings.store.getFacetElements(),
-            this.facetManager
+            this.facetManager,
+            0
           )
         );
       }
