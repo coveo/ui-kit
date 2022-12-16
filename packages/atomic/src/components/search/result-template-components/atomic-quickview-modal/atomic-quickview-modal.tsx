@@ -1,7 +1,12 @@
 import {Result} from '@coveo/headless';
-import {Component, h, Prop, Watch} from '@stencil/core';
+import {Component, h, Prop, State, Watch} from '@stencil/core';
 import dayjs from 'dayjs';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/button';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
@@ -11,16 +16,24 @@ import {Button} from '../../../common/button';
   styleUrl: 'atomic-quickview-modal.pcss',
   shadow: true,
 })
-export class AtomicQuickviewModal {
+export class AtomicQuickviewModal implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  @State() public error!: Error;
+
   @Prop({mutable: true, reflect: false}) content?: string;
   @Watch('content')
   watchContent() {
     if (this.content && this.iframeRef) {
       const documentWriter = this.iframeRef.contentWindow?.document;
-      documentWriter?.open();
-      documentWriter?.write(this.content);
-      documentWriter?.close();
-      this.iframeRef.style.height = `${documentWriter?.documentElement.scrollHeight}px`;
+      if (!documentWriter) {
+        return;
+      }
+
+      documentWriter.open();
+      documentWriter.write(this.content);
+      documentWriter.close();
+
+      this.resizeIframe(documentWriter);
     }
   }
 
@@ -46,6 +59,25 @@ export class AtomicQuickviewModal {
     );
   }
 
+  private resizeIframe(documentWriter: Document) {
+    if (!this.iframeRef) {
+      return;
+    }
+    // This "reset" of the iframe height allows the recalculation of the proper height needed for new content being added to the iframe
+    // when the end user navigates through the available quickview
+    // Since setting a new height on the iframe will cause the resize observer to essentially "call itself", we also add a flag to stop double resizing
+    this.iframeRef.style.height = '0';
+    let shouldRecalculateResize = true;
+    new ResizeObserver(([documentElementObserved]) => {
+      if (this.iframeRef && shouldRecalculateResize) {
+        this.iframeRef.style.height = `${
+          documentElementObserved.contentRect.height + 20
+        }px`;
+      }
+      shouldRecalculateResize = !shouldRecalculateResize;
+    }).observe(documentWriter.documentElement);
+  }
+
   private renderHeader() {
     // TODO: Header should be slottable from result template definition
     return (
@@ -66,20 +98,35 @@ export class AtomicQuickviewModal {
   }
 
   private renderFooter() {
-    // TODO: Footer that navigates results
+    const quickviewsInfoFromResultList =
+      this.bindings.store.get('resultList')?.quickviews;
+    const currentQuickviewPosition = this.bindings.store.get(
+      'currentQuickviewPosition'
+    );
+
+    const first =
+      (quickviewsInfoFromResultList?.position[currentQuickviewPosition] || 0) +
+      1;
+    const total = quickviewsInfoFromResultList?.total;
+
     return (
       <div slot="footer" class="flex items-center gap-2">
         <Button
           class="p-2"
           style="square-neutral"
-          onClick={() => {}}
+          onClick={() => this.bindings.store.previousQuickview()}
           text="Prev"
         ></Button>
-        <p>Results 1/10</p>
+        <p>
+          {this.bindings.i18n.t('showing-results-of', {
+            first,
+            total,
+          })}
+        </p>
         <Button
           class="p-2"
           style="square-neutral"
-          onClick={() => {}}
+          onClick={() => this.bindings.store.nextQuickview()}
           text="Next"
         ></Button>
       </div>

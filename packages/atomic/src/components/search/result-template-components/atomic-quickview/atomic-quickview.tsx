@@ -43,6 +43,26 @@ export class AtomicQuickview implements InitializableComponent {
     this.quickview = buildQuickview(this.bindings.engine, {
       options: {result: this.result},
     });
+    this.handleQuickviewNavigation();
+  }
+
+  private handleQuickviewNavigation() {
+    this.bindings.store.onChange('currentQuickviewPosition', (quickviewPos) => {
+      const quickviewsInfoFromResultList =
+        this.bindings.store.get('resultList')?.quickviews;
+
+      if (!quickviewsInfoFromResultList) {
+        return;
+      }
+
+      const isCurrentQuickview =
+        quickviewsInfoFromResultList.position[quickviewPos] ===
+        this.resultIndex;
+
+      if (isCurrentQuickview) {
+        this.quickview.fetchResultContent();
+      }
+    });
   }
 
   private addQuickviewModalIfNeeded() {
@@ -64,23 +84,43 @@ export class AtomicQuickview implements InitializableComponent {
 
   private updateModalContent() {
     if (this.quickviewModalRef && this.quickview.state.content) {
+      this.quickview.state.resultHasPreview;
       this.quickviewModalRef.content = this.quickview.state.content;
       this.quickviewModalRef.result = this.result;
     }
   }
 
+  private get resultIndex() {
+    return this.bindings.engine.state.search.results.findIndex(
+      (r) => r.uniqueId === this.result.uniqueId
+    );
+  }
+
+  private onClick() {
+    this.quickview.fetchResultContent();
+
+    const quickviewsInfoFromResultList =
+      this.bindings.store.get('resultList')?.quickviews;
+
+    if (!quickviewsInfoFromResultList) {
+      return;
+    }
+    this.bindings.store.set(
+      'currentQuickviewPosition',
+      quickviewsInfoFromResultList.position.indexOf(this.resultIndex)
+    );
+  }
+
   public render() {
     this.addQuickviewModalIfNeeded();
     this.updateModalContent();
-    if (this.result.hasHtmlVersion) {
+    if (this.quickviewState.resultHasPreview) {
       return (
         <Button
           title={this.bindings.i18n.t('quickview')}
           style="outline-primary"
           class="p-2"
-          onClick={() => {
-            this.quickview.fetchResultContent();
-          }}
+          onClick={() => this.onClick()}
         >
           <atomic-icon class="w-5" icon={QuickviewIcon}></atomic-icon>
         </Button>
