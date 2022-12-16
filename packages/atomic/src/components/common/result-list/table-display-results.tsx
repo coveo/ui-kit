@@ -29,9 +29,7 @@ export const TableDisplayResults: FunctionalComponent<
       <tbody part="result-table-body">
         {props.getResultListState().results.map((result, rowIndex) => (
           <tr
-            key={`${props.getResultId(
-              result
-            )}${props.getDensity()}${props.getImageSize()}`}
+            key={props.getResultId(result)}
             part={
               'result-table-row ' +
               (rowIndex % 2 === 1
