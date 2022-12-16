@@ -37,10 +37,7 @@ function flushPromises() {
 }
 
 describe('c-quantic-result-multi-value-text', () => {
-  let mockedConsoleError;
   let isStringMock;
-  let isNumberMock;
-  let formattingFunctionMock;
 
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
@@ -51,17 +48,12 @@ describe('c-quantic-result-multi-value-text', () => {
   }
 
   beforeEach(() => {
-    mockedConsoleError = jest.fn();
     isStringMock = jest.fn().mockReturnValue(true);
-    isNumberMock = jest.fn().mockReturnValue(true);
-    formattingFunctionMock = jest
-      .fn()
-      .mockImplementation((value) => `formatted ${value}`);
-    console.error = mockedConsoleError;
+
+    console.error = jest.fn();
     // @ts-ignore
     global.Bueno = {
       isString: isStringMock,
-      isNumber: isNumberMock,
     };
   });
 
@@ -77,7 +69,12 @@ describe('c-quantic-result-multi-value-text', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        'The c-quantic-result-multi-value-text requires a result and a multi-value field to be specified.'
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        'Could not parse value from field "examplemultivaluefield" as a string array.'
+      );
     });
   });
 
@@ -90,31 +87,48 @@ describe('c-quantic-result-multi-value-text', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
+      expect(console.error).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('when the field value is an empty string', () => {
+    it('should show an error', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        result: {
+          raw: {
+            // @ts-ignore
+            [exampleField]: '',
+          },
+        },
+      });
+      await flushPromises();
+
+      const errorMessage = element.shadowRoot.querySelector(errorSelector);
+
+      expect(errorMessage).not.toBeNull();
       expect(console.error).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('when the field value is not a valid multi-value field', () => {
     it('should show an error', async () => {
-      isNumberMock.mockReturnValue(false);
-      const element = createTestComponent();
+      isStringMock.mockReturnValue(false);
+      const element = createTestComponent({
+        ...defaultOptions,
+        result: {
+          raw: {
+            // @ts-ignore
+            [exampleField]: 1,
+          },
+        },
+      });
       await flushPromises();
 
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-    });
-  });
-
-  describe('when ', () => {
-    it('should render the formatted field value', async () => {
-      createTestComponent({
-        ...defaultOptions,
-        formattingFunction: formattingFunctionMock,
-      });
-      await flushPromises();
-
-      expect(formattingFunctionMock).toHaveBeenCalledWith(exampleFieldValue);
+      expect(console.error).toHaveBeenCalledTimes(2);
     });
   });
 });

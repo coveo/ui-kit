@@ -9,7 +9,7 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticResultMultiValueText` component displays a given result multi-value field value.
  * @category Result Template
  * @example
- * <c-quantic-result-multi-value-text result={result} label="Likes" field="ytlikecount" max-values-to-display="4"></c-quantic-result-multi-value>
+ * <c-quantic-result-multi-value-text result={result} label="Languages" field="language" max-values-to-display="4"></c-quantic-result-multi-value>
  */
 export default class QuanticResultMultiValueText extends LightningElement {
   /**
@@ -28,7 +28,7 @@ export default class QuanticResultMultiValueText extends LightningElement {
    * (Optional) The label to display.
    * @api
    * @type {string}
-   * @defaultValue `none`
+   * @defaultValue `undefined`
    */
   @api label;
   /**
@@ -68,7 +68,9 @@ export default class QuanticResultMultiValueText extends LightningElement {
         this.setError();
       }
       if (!this.fieldValue) {
-        console.error(`Could not parse value from field "${this.field}" as a string array.`);
+        console.error(
+          `Could not parse value from field "${this.field}" as a string array.`
+        );
         this.setError();
       }
       this.validated = true;
@@ -97,11 +99,16 @@ export default class QuanticResultMultiValueText extends LightningElement {
     }
     const value = this.result?.raw[this.field];
 
+    if (!value) {
+      return undefined;
+    }
     if (Array.isArray(value)) {
       return value.map((v) => `${v}`.trim());
     }
-
-    if (!value || !Bueno?.isString(value) || value.trim() === '') {
+    if (!Bueno?.isString(value)) {
+      return undefined;
+    }
+    if (value.trim() === '') {
       return undefined;
     }
 

@@ -48,14 +48,18 @@ export default class QuanticResultText extends LightningElement {
         console.error(
           `The ${this.template.host.localName} requires a result and a field to be specified.`
         );
-        this.error = `${this.template.host.localName} Error`;
+        this.setError();
       }
       if (this.label && !Bueno.isString(this.label)) {
         console.error(`The "${this.label}" label is not a valid string.`);
-        this.error = `${this.template.host.localName} Error`;
+        this.setError();
       }
       this.validated = true;
     });
+  }
+
+  setError() {
+    this.error = `${this.template.host.localName} Error`;
   }
 
   /**
@@ -73,14 +77,6 @@ export default class QuanticResultText extends LightningElement {
   get fieldValue() {
     // @ts-ignore
     return this.field ? this.result?.raw[this.field] : undefined;
-  }
-
-  /**
-   * Whether the given result has a value for the given field.
-   * @returns {boolean}
-   */
-  get hasFieldValue() {
-    return !!this.fieldValue;
   }
 
   /**
