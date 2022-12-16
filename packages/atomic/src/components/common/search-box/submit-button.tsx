@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
+import SearchIcon from '../../../images/search.svg';
 import {Button, ButtonProps} from '../button';
 import {AnyBindings} from '../interface/bindings';
 
