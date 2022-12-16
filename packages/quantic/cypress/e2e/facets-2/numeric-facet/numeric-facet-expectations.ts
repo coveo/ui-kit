@@ -90,7 +90,7 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
     },
     urlHashContains: (value: string, fromInput = false) => {
       const input = fromInput ? '_input' : '';
-      const urlHash = `#nf[${field.toLowerCase()}${input}]=${encodeURI(value)}`;
+      const urlHash = `#nf-${field.toLowerCase()}${input}=${encodeURI(value)}`;
       cy.url()
         .should('include', urlHash)
         .logDetail(`the URL hash should contain the range "${value}"`);

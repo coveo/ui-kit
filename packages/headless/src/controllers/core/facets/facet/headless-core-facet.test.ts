@@ -23,6 +23,7 @@ import {
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../../../test/mock-facet-value';
 import {createMockState} from '../../../../test/mock-state';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor';
@@ -41,7 +42,9 @@ describe('facet', () => {
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId, ...config}),
+    });
     state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 
@@ -92,7 +95,6 @@ describe('facet', () => {
       field: 'author',
       sortCriteria: 'score',
       facetId,
-      delimitingCharacter: '>',
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,

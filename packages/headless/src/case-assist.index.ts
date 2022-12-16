@@ -60,25 +60,6 @@ export type {
 } from './controllers/core/quickview/headless-core-quickview';
 
 export type {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  Quickview as QuickviewCore,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuickviewOptions as QuickviewCoreOptions,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuickviewProps as QuickviewCoreProps,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuickviewState as QuickviewCoreState,
-} from './controllers/core/quickview/headless-core-quickview';
-
-export type {
   CaseAssistQuickviewState,
   CaseAssistQuickview,
   CaseAssistQuickviewOptions,
@@ -100,15 +81,6 @@ export type {
 export {buildDocumentSuggestionList} from './controllers/document-suggestion-list/headless-document-suggestion-list';
 
 export {buildCaseAssistInteractiveResult as buildInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
-
-/**
- * @deprecated
- * Types exported for backward compatibility only.
- */
-export type {
-  DocumentSuggestionList as DocumentSuggestion,
-  DocumentSuggestionListState as DocumentSuggestionState,
-} from './controllers/document-suggestion-list/headless-document-suggestion-list';
 
 export {buildDocumentSuggestionList as buildDocumentSuggestion} from './controllers/document-suggestion-list/headless-document-suggestion-list';
 

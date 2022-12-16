@@ -1,9 +1,17 @@
 import {CoreEngine} from '../../..';
 import {HtmlApiClient} from '../../../api/search/html/html-api-client';
+import {
+  HtmlRequest,
+  HtmlRequestOptions,
+} from '../../../api/search/html/html-request';
 import {Result} from '../../../api/search/search/result';
 import {configuration, resultPreview} from '../../../app/reducers';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
-import {fetchResultContent} from '../../../features/result-preview/result-preview-actions';
+import {
+  fetchResultContent,
+  updateContentURL,
+} from '../../../features/result-preview/result-preview-actions';
+import {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result-preview-request-builder';
 import {
   ConfigurationSection,
   ResultPreviewSection,
@@ -31,11 +39,18 @@ export interface QuickviewOptions {
    * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
    */
   maximumPreviewSize?: number;
+
+  /**
+   * Whether to only update the `contentURL` attribute when using `fetchResultContent` rather than updating `content`.
+   * Use this if you are using an iframe with `state.contentURL` as the source url.
+   */
+  onlyContentURL?: boolean;
 }
 
 export interface Quickview extends Controller {
   /**
    * Retrieves the preview content for the configured result.
+   * If `options.onlyContentURL` is `true` this will update the `contentURL` state property rather than `content`.
    */
   fetchResultContent(): void;
 
@@ -62,6 +77,11 @@ export interface QuickviewState {
    * `true` if content is being fetched, and `false` otherwise.
    */
   isLoading: boolean;
+
+  /**
+   * The `src` path to use if rendering the quickview in an iframe.
+   */
+  contentURL?: string;
 }
 
 /**
@@ -75,6 +95,11 @@ export interface QuickviewState {
 export function buildCoreQuickview(
   engine: CoreEngine,
   props: QuickviewProps,
+  buildResultPreviewRequest: (
+    state: StateNeededByHtmlEndpoint,
+    options: HtmlRequestOptions
+  ) => Promise<HtmlRequest>,
+  path: string,
   fetchResultContentCallback?: () => void
 ): Quickview {
   if (!loadQuickviewReducers(engine)) {
@@ -91,24 +116,39 @@ export function buildCoreQuickview(
     ...controller,
 
     fetchResultContent() {
-      dispatch(
-        fetchResultContent({uniqueId, requestedOutputSize: maximumPreviewSize})
-      );
+      props.options.onlyContentURL
+        ? dispatch(
+            updateContentURL({
+              uniqueId,
+              requestedOutputSize: maximumPreviewSize,
+              buildResultPreviewRequest,
+              path,
+            })
+          )
+        : dispatch(
+            fetchResultContent({
+              uniqueId,
+              requestedOutputSize: maximumPreviewSize,
+            })
+          );
       if (fetchResultContentCallback) {
         fetchResultContentCallback();
       }
     },
 
     get state() {
+      const state = getState();
       const resultHasPreview = result.hasHtmlVersion;
-      const preview = getState().resultPreview;
+      const preview = state.resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
+      const contentURL = preview.contentURL;
 
       return {
         content,
         resultHasPreview,
         isLoading,
+        contentURL,
       };
     },
   };

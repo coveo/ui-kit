@@ -1,5 +1,6 @@
 import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockInsightEngine} from '../../../../test/mock-engine';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
@@ -31,9 +32,11 @@ describe('logBreadcrumbFacet', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         dateFacetSet: {
-          [exampleFacetId]: buildMockDateFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockDateFacetSlice({
+            request: buildMockDateFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: {

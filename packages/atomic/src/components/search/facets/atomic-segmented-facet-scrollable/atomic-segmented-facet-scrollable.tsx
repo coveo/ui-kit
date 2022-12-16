@@ -4,9 +4,9 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, State} from '@stencil/core';
-import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
-import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import {Bindings} from '../../../..';
+import ArrowLeftIcon from '../../../../images/arrow-left-rounded.svg';
+import ArrowRightIcon from '../../../../images/arrow-right-rounded.svg';
 import {
   BindStateToController,
   InitializableComponent,

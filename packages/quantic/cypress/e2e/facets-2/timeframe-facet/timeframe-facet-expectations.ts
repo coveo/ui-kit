@@ -76,7 +76,7 @@ function baseTimeframeFacetExpectations(selector: BaseFacetSelector) {
         .logDetail(`The clear filter button ${should(display)} be displayed.`),
 
     urlHashContains: (field: string, range: string) => {
-      const expectedHash = `#df[${field}]=${range}`;
+      const expectedHash = `#df-${field}=${range}`;
       cy.url()
         .should('include', expectedHash)
         .logDetail(`The URL hash should contain "${expectedHash}"`);

@@ -8,7 +8,7 @@ import {DateFacetValue} from '../../../../../features/facets/range-facets/date-f
 import {updateRangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/range-facet-actions';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 import {InsightAppState} from '../../../../../state/insight-app-state';
-import {buildMockDateFacetRequest} from '../../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
 import {
   MockInsightEngine,
@@ -41,7 +41,7 @@ describe('insight date facet', () => {
     };
 
     state = buildMockInsightState();
-    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
+    state.dateFacetSet[facetId] = buildMockDateFacetSlice();
 
     initDateFacet();
   });

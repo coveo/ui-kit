@@ -25,7 +25,6 @@ import {getQueryInitialState} from '../features/query/query-state';
 import {getQuestionAnsweringInitialState} from '../features/question-answering/question-answering-state';
 import {getRecentQueriesInitialState} from '../features/recent-queries/recent-queries-state';
 import {getRecentResultsInitialState} from '../features/recent-results/recent-results-state';
-import {getRedirectionInitialState} from '../features/redirection/redirection-state';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
 import {getSearchInitialState} from '../features/search/search-state';
@@ -63,7 +62,6 @@ export function createMockState(
     instantResults: getInstantResultsInitialState(),
     tabSet: getTabSetInitialState(),
     querySuggest: {},
-    redirection: getRedirectionInitialState(),
     search: getSearchInitialState(),
     sortCriteria: getSortCriteriaInitialState(),
     context: getContextInitialState(),

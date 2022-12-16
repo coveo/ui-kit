@@ -134,7 +134,7 @@ describe('Segmented Facet Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addSegmentedFacet({field, label}))
-        .withHash(`f[${field}]=Cervantes`)
+        .withHash(`f-${field}=Cervantes`)
         .init();
     });
 

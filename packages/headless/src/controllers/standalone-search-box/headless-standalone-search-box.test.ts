@@ -55,7 +55,7 @@ describe('headless standalone searchBox', () => {
   function initState() {
     state = createMockState();
     state.querySet[id] = 'query';
-    state.querySuggest[id] = buildMockQuerySuggest({id, q: 'some value'});
+    state.querySuggest[id] = buildMockQuerySuggest({id});
     state.standaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry();
   }
 

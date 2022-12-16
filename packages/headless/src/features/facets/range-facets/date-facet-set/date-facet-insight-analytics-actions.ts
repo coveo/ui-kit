@@ -1,6 +1,7 @@
 import {validatePayload} from '../../../../utils/validate-payload';
 import {
   AnalyticsType,
+  InsightAction,
   makeInsightAnalyticsAction,
 } from '../../../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../../../case-context/case-context-state';
@@ -10,7 +11,7 @@ import {LogDateFacetBreadcrumbActionCreatorPayload} from './date-facet-analytics
 
 export const logDateFacetBreadcrumb = (
   payload: LogDateFacetBreadcrumbActionCreatorPayload
-) =>
+): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/dateFacet/breadcrumb',
     AnalyticsType.Search,
@@ -26,4 +27,4 @@ export const logDateFacetBreadcrumb = (
 
       return client.logBreadcrumbFacet(metadata);
     }
-  )();
+  );

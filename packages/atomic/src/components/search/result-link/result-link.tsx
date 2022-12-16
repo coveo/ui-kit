@@ -10,7 +10,6 @@ export interface ResultLinkEventProps {
 
 export interface ResultLinkProps extends ResultLinkEventProps {
   href: string;
-  target: string;
   className?: string;
   part?: string;
   title?: string;
@@ -55,7 +54,6 @@ export const bindAnalyticsToLink = (
 export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
   {
     href,
-    target,
     className,
     part,
     title,
@@ -76,7 +74,6 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
       part={part}
       href={filterProtocol(href)}
       title={title}
-      target={target}
       ref={(el) => {
         if (ref) {
           ref(el);

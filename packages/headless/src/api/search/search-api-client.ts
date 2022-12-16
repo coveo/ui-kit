@@ -52,17 +52,8 @@ export type AllSearchAPIResponse =
   | QuerySuggest
   | FieldDescription;
 
-export interface AsyncThunkSearchOptions<
-  T extends Partial<SearchAppState>
-> extends AsyncThunkOptions<
-    T,
-    ClientThunkExtraArguments<SearchAPIClient> & {
-      /*
-       * @deprecated This property is now unused, please use `apiClient` instead.
-       */
-      searchAPIClient?: SearchAPIClient;
-    }
-  > {
+export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>>
+  extends AsyncThunkOptions<T, ClientThunkExtraArguments<SearchAPIClient>> {
   rejectValue: SearchAPIErrorWithStatusCode;
 }
 

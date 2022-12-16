@@ -102,7 +102,7 @@ export function assertValueSortedByDescending() {
 
 export function assertURLHash(field: string, value: string) {
   it('should display range value on UrlHash', () => {
-    const urlHash = `#nf[${field.toLowerCase()}]=${encodeURI(value)}`;
+    const urlHash = `#nf-${field.toLowerCase()}=${encodeURI(value)}`;
     cy.url().should('include', urlHash);
   });
 }

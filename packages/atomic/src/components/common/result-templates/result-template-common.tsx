@@ -4,6 +4,9 @@ import {
   ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {h} from '@stencil/core';
+import {aggregate, isElementNode, isVisualNode} from '../../../utils/utils';
+import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
+import {isResultSectionNode} from '../layout/sections';
 
 export type TemplateContent = DocumentFragment;
 
@@ -12,6 +15,32 @@ interface ResultTemplateCommonProps {
   host: HTMLDivElement;
   validParents: string[];
   setError: (error: Error) => void;
+}
+
+type TemplateNodeType =
+  | 'section'
+  | 'metadata'
+  | 'table-column-definition'
+  | 'other';
+
+export function getTemplateNodeType(node: Node): TemplateNodeType {
+  if (isResultSectionNode(node)) {
+    return 'section';
+  }
+  if (!isVisualNode(node)) {
+    return 'metadata';
+  }
+  if (
+    isElementNode(node) &&
+    node.tagName.toLowerCase() === tableElementTagName
+  ) {
+    return 'table-column-definition';
+  }
+  return 'other';
+}
+
+function groupNodesByType(nodes: NodeList) {
+  return aggregate(Array.from(nodes), (node) => getTemplateNodeType(node));
 }
 
 export class ResultTemplateCommon {
@@ -60,17 +89,28 @@ export class ResultTemplateCommon {
       return;
     }
 
-    if (!allowEmpty && !template?.innerHTML.trim()) {
+    if (!allowEmpty && !template.innerHTML.trim()) {
       setError(
-        new Error(`The "template" tag inside "${tagName}" cannot be empty`)
+        new Error(`The "template" tag inside "${tagName}" cannot be empty.`)
       );
       return;
     }
 
-    if (template?.content.querySelector('script')) {
+    if (template.content.querySelector('script')) {
       console.warn(
-        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the results are rendered',
+        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the results are rendered.',
         host
+      );
+    }
+
+    const {section: sectionNodes, other: otherNodes} = groupNodesByType(
+      template.content.childNodes
+    );
+    if (sectionNodes?.length && otherNodes?.length) {
+      console.warn(
+        'Result templates should only contain section elements or non-section elements. Future updates could unpredictably affect this result template.',
+        host,
+        {sectionNodes, otherNodes}
       );
     }
   }

@@ -1,4 +1,3 @@
-import {isUndefined} from '@coveo/bueno';
 import {
   formatDateForSearchApi,
   AbsoluteDate,
@@ -46,13 +45,6 @@ export interface DateRangeOptions {
    * Allows specifying a custom string date format. See [Day.js](https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens) for possible parsing tokens. Assumes [ISO 8601](https://day.js.org/docs/en/parse/string) format by default.
    */
   dateFormat?: string;
-
-  /**
-   * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
-   *
-   * @deprecated No adjusments to UTC are being made. Please use the `timezone` engine configuration option instead.
-   */
-  useLocalTime?: boolean;
 }
 
 /**
@@ -62,12 +54,6 @@ export interface DateRangeOptions {
  * @returns A new `DateRangeRequest`.
  */
 export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
-  if (!isUndefined(config.useLocalTime)) {
-    console.warn(
-      'The "useLocalTime" option for "buildDateRange" is deprecated. Please use the "timezone" engine configuration option instead.'
-    );
-  }
-
   const start = buildDate(config.start, config);
   const end = buildDate(config.end, config);
   const endInclusive = config.endInclusive ?? false;

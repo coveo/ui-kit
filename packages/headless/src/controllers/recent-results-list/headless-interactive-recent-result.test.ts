@@ -1,6 +1,6 @@
 import {Result} from '../../api/search/search/result';
 import {configuration} from '../../app/reducers';
-import {logRecentResultClickThunk} from '../../features/recent-results/recent-results-analytics-actions';
+import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions';
 import {buildMockResult} from '../../test';
 import {
   buildMockSearchAppEngine,
@@ -31,7 +31,7 @@ describe('InteractiveRecentResult', () => {
   function initializeInteractiveRecentResult(delay?: number) {
     const result = (mockResult = buildMockResult(resultStringParams));
     logRecentResultClickPendingActionType =
-      logRecentResultClickThunk(mockResult).pending.type;
+      logRecentResultClick(mockResult).pending.type;
     interactiveRecentResult = buildInteractiveRecentResult(engine, {
       options: {result, selectionDelay: delay},
     });
@@ -48,7 +48,7 @@ describe('InteractiveRecentResult', () => {
   function expectLogRecentResultActionPending() {
     const action = findLogRecentResultClickAction();
     expect(action).toEqual(
-      logRecentResultClickThunk(mockResult).pending(action!.meta.requestId)
+      logRecentResultClick(mockResult).pending(action!.meta.requestId)
     );
   }
 

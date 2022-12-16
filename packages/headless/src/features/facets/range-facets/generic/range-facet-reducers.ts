@@ -6,6 +6,15 @@ import {
   RangeValueRequest,
 } from './interfaces/range-facet';
 
+type RangeFacetSlice<
+  RequestType extends RangeFacetRequest = RangeFacetRequest
+> = {
+  request: RequestType;
+};
+
+type RangeFacetState<SliceType extends RangeFacetSlice<RangeFacetRequest>> =
+  Record<string, SliceType>;
+
 export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
   filterFacetCount: true,
   injectionDepth: 1000,
@@ -14,10 +23,11 @@ export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
   rangeAlgorithm: 'even',
 };
 
-export function registerRangeFacet<T extends RangeFacetRequest>(
-  state: Record<string, T>,
-  request: T
+export function registerRangeFacet<T extends RangeFacetSlice>(
+  state: RangeFacetState<T>,
+  slice: T
 ) {
+  const {request} = slice;
   const {facetId} = request;
 
   if (facetId in state) {
@@ -25,15 +35,16 @@ export function registerRangeFacet<T extends RangeFacetRequest>(
   }
 
   const numberOfValues = calculateNumberOfValues(request);
-  state[facetId] = {...request, numberOfValues};
+  request.numberOfValues = numberOfValues;
+  state[facetId] = slice;
 }
 
-export function updateRangeValues<T extends RangeFacetRequest>(
-  state: Record<string, T>,
+export function updateRangeValues<T extends RangeFacetSlice>(
+  state: RangeFacetState<T>,
   facetId: string,
-  values: T['currentValues']
+  values: T['request']['currentValues']
 ) {
-  const request = state[facetId];
+  const request = state[facetId]?.request;
 
   if (!request) {
     return;
@@ -44,10 +55,10 @@ export function updateRangeValues<T extends RangeFacetRequest>(
 }
 
 export function toggleSelectRangeValue<
-  T extends RangeFacetRequest,
+  T extends RangeFacetSlice,
   U extends RangeFacetValue
->(state: Record<string, T>, facetId: string, selection: U) {
-  const request = state[facetId];
+>(state: RangeFacetState<T>, facetId: string, selection: U) {
+  const request = state[facetId]?.request;
 
   if (!request) {
     return;
@@ -65,26 +76,27 @@ export function toggleSelectRangeValue<
   request.preventAutoSelect = true;
 }
 
-export function handleRangeFacetDeselectAll<T extends RangeFacetRequest>(
-  state: Record<string, T>,
+export function handleRangeFacetDeselectAll<T extends RangeFacetSlice>(
+  state: RangeFacetState<T>,
   facetId: string
 ) {
-  const facetRequest = state[facetId];
+  const facetRequest = state[facetId]?.request;
 
   if (!facetRequest) {
     return;
   }
 
-  facetRequest.currentValues.forEach(
-    (request: T['currentValues'][0]) => (request.state = 'idle')
-  );
+  facetRequest.currentValues.forEach((request) => (request.state = 'idle'));
 }
 
 export function handleRangeFacetSearchParameterRestoration<
-  T extends RangeFacetRequest
->(state: Record<string, T>, rangeFacets: Record<string, T['currentValues']>) {
-  Object.entries(state).forEach(([facetId, request]) => {
-    type Range = T['currentValues'][0];
+  T extends RangeFacetSlice
+>(
+  state: RangeFacetState<T>,
+  rangeFacets: Record<string, T['request']['currentValues']>
+) {
+  Object.entries(state).forEach(([facetId, {request}]) => {
+    type Range = T['request']['currentValues'][0];
     const rangesToSelect: Range[] = rangeFacets[facetId] || [];
 
     request.currentValues.forEach((range: Range) => {
@@ -107,16 +119,16 @@ export function handleRangeFacetSearchParameterRestoration<
 }
 
 export function onRangeFacetRequestFulfilled<
-  T extends RangeFacetRequest,
+  T extends RangeFacetSlice,
   U extends RangeFacetResponse
 >(
-  state: Record<string, T>,
+  state: RangeFacetState<T>,
   facets: U[],
-  convert: (values: U['values']) => T['currentValues']
+  convert: (values: U['values']) => T['request']['currentValues']
 ) {
   facets.forEach((facetResponse) => {
     const id = facetResponse.facetId;
-    const facetRequest = state[id];
+    const facetRequest = state[id]?.request;
 
     if (!facetRequest) {
       return;

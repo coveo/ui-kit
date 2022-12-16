@@ -1,13 +1,14 @@
 import {
   AnalyticsType,
   makeAnalyticsAction,
+  SearchAction,
 } from '../../analytics/analytics-utils';
 
-export const logClearBreadcrumbs = () =>
+export const logClearBreadcrumbs = (): SearchAction =>
   makeAnalyticsAction(
     'analytics/facet/deselectAllBreadcrumbs',
     AnalyticsType.Search,
     (client) => {
-      return client.logBreadcrumbResetAll();
+      return client.makeBreadcrumbResetAll();
     }
-  )();
+  );

@@ -2,13 +2,16 @@ import {Result} from '../../insight.index';
 import {
   AnalyticsType,
   documentIdentifier,
+  InsightAction,
   makeInsightAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
-export const logCopyToClipboard = (result: Result) =>
+export const logCopyToClipboard = (
+  result: Result
+): InsightAction<AnalyticsType.Click> =>
   makeInsightAnalyticsAction(
     'analytics/resultAction/insight/copyToClipboard',
     AnalyticsType.Click,
@@ -23,4 +26,4 @@ export const logCopyToClipboard = (result: Result) =>
         metadata
       );
     }
-  )();
+  );

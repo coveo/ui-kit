@@ -8,7 +8,7 @@ import noSuggestions from '@salesforce/label/c.quantic_NoSuggestions';
 import readMore from '@salesforce/label/c.quantic_ReadMore';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
-/** @typedef {import("coveo").DocumentSuggestion} DocumentSuggestion */
+/** @typedef {import("coveo").DocumentSuggestionList} DocumentSuggestionList */
 
 /**
  * The `QuanticDocumentSuggestion` component displays an accordion containing the document suggestions returned by Coveo Case Assist based on the values that the user has previously entred in the different fields.
@@ -65,7 +65,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   loading = false;
   /** @type {CaseAssistEngine} */
   engine;
-  /** @type {DocumentSuggestion} */
+  /** @type {DocumentSuggestionList} */
   documentSuggestion;
   /** @type {Function} */
   unsubscribeDocumentSuggestion;

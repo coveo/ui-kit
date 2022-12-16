@@ -60,6 +60,7 @@ describe('product listing api client', () => {
         contentType: 'application/json',
         url: `${request.platformUrl}/rest/organizations/${request.organizationId}/commerce/v1/products/listing`,
         accessToken: request.accessToken,
+        origin: 'commerceApiFetch',
         requestParams: {
           url: request.url,
           additionalFields: request.additionalFields,

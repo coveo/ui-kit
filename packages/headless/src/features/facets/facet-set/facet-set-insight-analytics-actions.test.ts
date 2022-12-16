@@ -1,6 +1,7 @@
 import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../../test/mock-engine';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {
   logFacetBreadcrumb,
@@ -70,9 +71,11 @@ describe('logBreadcrumbFacet', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         facetSet: {
-          [exampleFacetId]: buildMockFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: insightCaseContextState,
@@ -103,9 +106,11 @@ describe('logFacetSelect', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         facetSet: {
-          [exampleFacetId]: buildMockFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: insightCaseContextState,
@@ -134,9 +139,11 @@ describe('logFacetDeselect', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         facetSet: {
-          [exampleFacetId]: buildMockFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: insightCaseContextState,
@@ -167,9 +174,11 @@ describe('logFacetUpdateSort', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         facetSet: {
-          [exampleFacetId]: buildMockFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: insightCaseContextState,
@@ -200,9 +209,11 @@ describe('logFacetClearAll', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         facetSet: {
-          [exampleFacetId]: buildMockFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: insightCaseContextState,
@@ -225,9 +236,11 @@ describe('logFacetShowMore', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         facetSet: {
-          [exampleFacetId]: buildMockFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: insightCaseContextState,
@@ -250,9 +263,11 @@ describe('logFacetShowLess', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         facetSet: {
-          [exampleFacetId]: buildMockFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: insightCaseContextState,

@@ -91,7 +91,6 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
   const thunkArguments: SearchThunkExtraArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
-    searchAPIClient: searchAPIClient,
     apiClient: searchAPIClient,
   };
 

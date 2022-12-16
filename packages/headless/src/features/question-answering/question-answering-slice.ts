@@ -12,11 +12,7 @@ import {
   openFeedbackModal,
   closeFeedbackModal,
 } from './question-answering-actions';
-import {
-  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
-  QuestionAnsweringDocumentIdActionCreatorPayload,
-  isQuestionAnsweringUniqueIdentifierActionCreatorPayload,
-} from './question-answering-document-id';
+import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-answering-document-id';
 import {
   getQuestionAnsweringInitialState,
   QuestionAnsweringRelatedQuestionState,
@@ -24,15 +20,11 @@ import {
 
 const findRelatedQuestionIdx = (
   relatedQuestions: QuestionAnsweringRelatedQuestionState[],
-  identifier:
-    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-    | QuestionAnsweringDocumentIdActionCreatorPayload
+  identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload
 ) =>
-  relatedQuestions.findIndex((relatedQuestion) =>
-    isQuestionAnsweringUniqueIdentifierActionCreatorPayload(identifier)
-      ? relatedQuestion.questionAnswerId === identifier.questionAnswerId
-      : relatedQuestion.contentIdValue === identifier.contentIdValue &&
-        relatedQuestion.contentIdKey === identifier.contentIdKey
+  relatedQuestions.findIndex(
+    (relatedQuestion) =>
+      relatedQuestion.questionAnswerId === identifier.questionAnswerId
   );
 
 function hashQuestionAnswer({
