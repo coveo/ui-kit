@@ -682,10 +682,18 @@ export namespace Components {
         "source"?: HTMLElement;
     }
     interface AtomicIpxRefineModal {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter": number;
         "isOpen": boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicIpxRefineToggle {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter": number;
     }
     interface AtomicIpxTab {
         /**
@@ -1106,10 +1114,18 @@ export namespace Components {
         "ifNotDefined"?: string;
     }
     interface AtomicRefineModal {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter": number;
         "isOpen": boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter": number;
     }
     interface AtomicRelevanceInspector {
         /**
@@ -3233,10 +3249,18 @@ declare namespace LocalJSX {
         "source"?: HTMLElement;
     }
     interface AtomicIpxRefineModal {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter"?: number;
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicIpxRefineToggle {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter"?: number;
     }
     interface AtomicIpxTab {
         /**
@@ -3630,10 +3654,18 @@ declare namespace LocalJSX {
         "ifNotDefined"?: string;
     }
     interface AtomicRefineModal {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter"?: number;
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter"?: number;
     }
     interface AtomicRelevanceInspector {
         /**
