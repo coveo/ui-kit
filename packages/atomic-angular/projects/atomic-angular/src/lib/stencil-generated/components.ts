@@ -721,13 +721,13 @@ export declare interface AtomicRefineModal extends Components.AtomicRefineModal 
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['isOpen', 'openButton']
+  inputs: ['collapseFacetsAfter', 'isOpen', 'openButton']
 })
 @Component({
   selector: 'atomic-refine-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['isOpen', 'openButton']
+  inputs: ['collapseFacetsAfter', 'isOpen', 'openButton']
 })
 export class AtomicRefineModal {
   protected el: HTMLElement;
@@ -741,12 +741,14 @@ export class AtomicRefineModal {
 export declare interface AtomicRefineToggle extends Components.AtomicRefineToggle {}
 
 @ProxyCmp({
-  defineCustomElementFn: undefined
+  defineCustomElementFn: undefined,
+  inputs: ['collapseFacetsAfter']
 })
 @Component({
   selector: 'atomic-refine-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>'
+  template: '<ng-content></ng-content>',
+  inputs: ['collapseFacetsAfter']
 })
 export class AtomicRefineToggle {
   protected el: HTMLElement;

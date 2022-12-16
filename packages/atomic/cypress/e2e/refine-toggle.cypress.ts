@@ -63,12 +63,13 @@ describe('Refine Toggle Test Suites', () => {
         .children()
         .should('have.length', allFacets.length);
 
-      allFacets.forEach((facet) => {
-        RefineModalSelectors.facets()
-          .find(facet)
-          .should('be.visible')
-          .should('have.attr', 'is-collapsed');
-      });
+      RefineModalSelectors.facets()
+        .children<HTMLAtomicFacetElement>()
+        .map(([facet]) => facet.isCollapsed)
+        .should(
+          'deep.eq',
+          Array.from({length: allFacets.length}, () => true)
+        );
     });
 
     it('should close when clicking close button', () => {
@@ -87,6 +88,44 @@ describe('Refine Toggle Test Suites', () => {
       RefineModalSelectors.focusTrap().should('exist');
 
       cy.get(`${facetManagerComponent}[aria-hidden="true"]`).should('exist');
+    });
+  });
+
+  describe('when the modal is opened with collapseFacetsAfter=2', () => {
+    const collapseFacetsAfter = 2;
+    beforeEach(() => {
+      new TestFixture()
+        .with(addRefineToggle({'collapse-facets-after': collapseFacetsAfter}))
+        .withMobileViewport()
+        .init();
+      RefineToggleSelectors.buttonOpen().click();
+    });
+
+    it('should display the modal with all but the first 2 facets in collapsed mode', () => {
+      const allFacets = [
+        facetComponent,
+        numericFacetComponent,
+        categoryFacetComponent,
+        ratingFacetComponent,
+        colorFacetComponent,
+        timeframeFacetComponent,
+        ratingRangeFacetComponent,
+      ];
+      RefineModalSelectors.facets()
+        .should('be.visible')
+        .children()
+        .should('have.length', allFacets.length);
+
+      RefineModalSelectors.facets()
+        .children<HTMLAtomicFacetElement>()
+        .map(([facet]) => facet.isCollapsed)
+        .should(
+          'deep.eq',
+          Array.from(
+            {length: allFacets.length},
+            (_, i) => i >= collapseFacetsAfter
+          )
+        );
     });
   });
 

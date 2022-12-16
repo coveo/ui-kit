@@ -3,7 +3,7 @@ import {
   SearchStatusState,
   SearchStatus,
 } from '@coveo/headless';
-import {Component, h, State, Element} from '@stencil/core';
+import {Component, h, Prop, State, Element} from '@stencil/core';
 import {
   InitializeBindings,
   InitializableComponent,
@@ -35,6 +35,14 @@ export class AtomicRefineToggle implements InitializableComponent {
   @State()
   private searchStatusState!: SearchStatusState;
 
+  /**
+   * The number of expanded facets inside the refine modal.
+   * Remaining facets are automatically collapsed.
+   *
+   * Using the value `0` collapses all facets.
+   */
+  @Prop({reflect: true}) public collapseFacetsAfter = 0;
+
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
@@ -47,6 +55,7 @@ export class AtomicRefineToggle implements InitializableComponent {
     this.modalRef = document.createElement('atomic-refine-modal');
     this.host.insertAdjacentElement('beforebegin', this.modalRef);
     this.modalRef.openButton = this.buttonRef;
+    this.modalRef.collapseFacetsAfter = this.collapseFacetsAfter;
   }
 
   private enableModal() {

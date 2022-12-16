@@ -92,6 +92,15 @@ export class AtomicRefineModal implements InitializableComponent {
   @Prop({mutable: true}) openButton?: HTMLElement;
 
   @Prop({reflect: true, mutable: true}) isOpen = false;
+
+  /**
+   * The number of expanded facets inside the refine modal.
+   * Remaining facets are automatically collapsed.
+   *
+   * Using the value `0` collapses all facets.
+   */
+  @Prop({reflect: true}) public collapseFacetsAfter = 0;
+
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
     if (isOpen) {
@@ -102,7 +111,8 @@ export class AtomicRefineModal implements InitializableComponent {
       this.host.append(
         getClonedFacetElements(
           this.bindings.store.getFacetElements(),
-          this.facetManager
+          this.facetManager,
+          this.collapseFacetsAfter
         )
       );
     }
