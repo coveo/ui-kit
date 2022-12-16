@@ -123,7 +123,7 @@ export default class QuanticResultMultiValueText extends LightningElement {
    */
   get valueToDisplay() {
     const value = this.fieldValue;
-    if (value.length < this.maxValuesToDisplay) {
+    if (value.length <= this.maxValuesToDisplay) {
       return value.join(this.joinSeparator);
     }
     const truncatedArray = value.slice(0, this.maxValuesToDisplay);

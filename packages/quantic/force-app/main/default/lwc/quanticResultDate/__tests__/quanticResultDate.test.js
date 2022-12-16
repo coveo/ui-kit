@@ -38,8 +38,6 @@ function flushPromises() {
 
 describe('c-quantic-result-date', () => {
   let mockedConsoleError;
-  let isStringMock;
-  let isNumberMock;
   let formattingFunctionMock;
 
   function cleanup() {
@@ -52,16 +50,22 @@ describe('c-quantic-result-date', () => {
 
   beforeEach(() => {
     mockedConsoleError = jest.fn();
-    isStringMock = jest.fn().mockReturnValue(true);
-    isNumberMock = jest.fn().mockReturnValue(true);
     formattingFunctionMock = jest
       .fn()
       .mockImplementation((value) => `formatted ${value}`);
     console.error = mockedConsoleError;
     // @ts-ignore
     global.Bueno = {
-      isString: isStringMock,
-      isNumber: isNumberMock,
+      isString: jest
+        .fn()
+        .mockImplementation(
+          (value) => Object.prototype.toString.call(value) === '[object String]'
+        ),
+      isNumber: jest
+        .fn()
+        .mockImplementation(
+          (value) => typeof value === 'number' && !isNaN(value)
+        ),
     };
   });
 
@@ -77,7 +81,12 @@ describe('c-quantic-result-date', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        'The c-quantic-result-date requires a result and a date field to be specified.'
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        'The "exampledatefield" field value is not a valid timestamp.'
+      );
     });
   });
 
@@ -90,14 +99,29 @@ describe('c-quantic-result-date', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        'The c-quantic-result-date requires a result and a date field to be specified.'
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        'The "undefined" field value is not a valid timestamp.'
+      );
     });
   });
 
   describe('when the field value is not a valid timestamp', () => {
+    const invalidValue = 'not-a-timestamp';
+    const invalidOptions = {
+      ...defaultOptions,
+      result: {
+        raw: {
+          [exampleField]: invalidValue,
+        },
+      },
+    };
+
     it('should show an error', async () => {
-      isNumberMock.mockReturnValue(false);
-      const element = createTestComponent();
+      // @ts-ignore
+      const element = createTestComponent(invalidOptions);
       await flushPromises();
 
       const errorMessage = element.shadowRoot.querySelector(errorSelector);

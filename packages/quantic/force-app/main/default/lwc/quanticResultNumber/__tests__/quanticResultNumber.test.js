@@ -37,9 +37,6 @@ function flushPromises() {
 }
 
 describe('c-quantic-result-number', () => {
-  let mockedConsoleError;
-  let isStringMock;
-  let isNumberMock;
   let formattingFunctionMock;
 
   function cleanup() {
@@ -51,17 +48,22 @@ describe('c-quantic-result-number', () => {
   }
 
   beforeEach(() => {
-    mockedConsoleError = jest.fn();
-    isStringMock = jest.fn().mockReturnValue(true);
-    isNumberMock = jest.fn().mockReturnValue(true);
     formattingFunctionMock = jest
       .fn()
       .mockImplementation((value) => `formatted ${value}`);
-    console.error = mockedConsoleError;
+    console.error = jest.fn();
     // @ts-ignore
     global.Bueno = {
-      isString: isStringMock,
-      isNumber: isNumberMock,
+      isString: jest
+        .fn()
+        .mockImplementation(
+          (value) => Object.prototype.toString.call(value) === '[object String]'
+        ),
+      isNumber: jest
+        .fn()
+        .mockImplementation(
+          (value) => typeof value === 'number' && !isNaN(value)
+        ),
     };
   });
 
@@ -77,7 +79,12 @@ describe('c-quantic-result-number', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        'The c-quantic-result-number requires a result and a number field to be specified.'
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        'The "examplenumberfield" field value is not a valid number.'
+      );
     });
   });
 
@@ -90,14 +97,29 @@ describe('c-quantic-result-number', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        'The c-quantic-result-number requires a result and a number field to be specified.'
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        'The "undefined" field value is not a valid number.'
+      );
     });
   });
 
   describe('when the field value is not a valid number', () => {
+    const invalidValue = 'not-a-timestamp';
+    const invalidOptions = {
+      ...defaultOptions,
+      result: {
+        raw: {
+          [exampleField]: invalidValue,
+        },
+      },
+    };
+
     it('should show an error', async () => {
-      isNumberMock.mockReturnValue(false);
-      const element = createTestComponent();
+      // @ts-ignore
+      const element = createTestComponent(invalidOptions);
       await flushPromises();
 
       const errorMessage = element.shadowRoot.querySelector(errorSelector);

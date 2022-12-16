@@ -63,7 +63,6 @@ export default class QuanticResultNumber extends LightningElement {
       }
       this.validated = true;
     });
-    console.log(this.formattingFunction(this.fieldValue));
   }
 
   setError() {

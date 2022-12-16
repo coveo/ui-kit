@@ -10,6 +10,8 @@ const exampleResult = {
   },
 };
 
+const labelSelector = '.result-text__label';
+const valueSelector = '.result-text__value';
 const errorSelector = '.error-message';
 
 const defaultOptions = {
@@ -48,7 +50,11 @@ describe('c-quantic-result-multi-value-text', () => {
   }
 
   beforeEach(() => {
-    isStringMock = jest.fn().mockReturnValue(true);
+    isStringMock = jest
+      .fn()
+      .mockImplementation(
+        (value) => Object.prototype.toString.call(value) === '[object String]'
+      );
 
     console.error = jest.fn();
     // @ts-ignore
@@ -107,13 +113,14 @@ describe('c-quantic-result-multi-value-text', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        'Could not parse value from field "examplemultivaluefield" as a string array.'
+      );
     });
   });
 
   describe('when the field value is not a valid multi-value field', () => {
     it('should show an error', async () => {
-      isStringMock.mockReturnValue(false);
       const element = createTestComponent({
         ...defaultOptions,
         result: {
@@ -128,7 +135,101 @@ describe('c-quantic-result-multi-value-text', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.error).toHaveBeenCalledWith(
+        'Could not parse value from field "examplemultivaluefield" as a string array.'
+      );
+    });
+  });
+
+  describe('when required props are given', () => {
+    it('should render the result field value', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const fieldValueElement = element.shadowRoot.querySelector(valueSelector);
+
+      expect(fieldValueElement.textContent).toBe('One, Two, Three');
+    });
+
+    describe('when the number of values exceeds the maximum', () => {
+      const options = {
+        ...defaultOptions,
+        maxValuesToDisplay: 2,
+      };
+
+      it('should hide the extra values', async () => {
+        const element = createTestComponent(options);
+        await flushPromises();
+
+        const fieldValueElement =
+          element.shadowRoot.querySelector(valueSelector);
+
+        expect(fieldValueElement.textContent).toBe('One, Two, c.quantic_NMore');
+      });
+    });
+
+    describe('when the field value is a string with a separator', () => {
+      const testResult = {
+        raw: {
+          [exampleField]: 'One-Two-Three',
+        },
+      };
+      const options = {
+        ...defaultOptions,
+        result: testResult,
+        delimiter: '-',
+      };
+
+      it('should render the result field value', async () => {
+        // @ts-ignore
+        const element = createTestComponent(options);
+        await flushPromises();
+
+        const fieldValueElement =
+          element.shadowRoot.querySelector(valueSelector);
+
+        expect(fieldValueElement.textContent).toBe('One, Two, Three');
+      });
+    });
+
+    describe('when a label is provided', () => {
+      const testLabel = 'Numbers';
+      const options = {
+        ...defaultOptions,
+        label: testLabel,
+      };
+
+      it('should hide the extra values', async () => {
+        const element = createTestComponent(options);
+        await flushPromises();
+
+        const fieldValueElement =
+          element.shadowRoot.querySelector(valueSelector);
+        const labelElement = element.shadowRoot.querySelector(labelSelector);
+
+        expect(fieldValueElement.textContent).toBe('One, Two, Three');
+        expect(labelElement.textContent).toBe(`${testLabel}:`);
+      });
+
+      describe('when the label is not a valid string', () => {
+        const invalidLabel = {};
+        const invalidOptions = {
+          ...defaultOptions,
+          label: invalidLabel,
+        };
+
+        it('should show an error', async () => {
+          const element = createTestComponent(invalidOptions);
+          await flushPromises();
+
+          const errorMessage = element.shadowRoot.querySelector(errorSelector);
+
+          expect(errorMessage).not.toBeNull();
+          expect(console.error).toHaveBeenCalledWith(
+            `The "${invalidLabel}" label is not a valid string.`
+          );
+        });
+      });
     });
   });
 });
