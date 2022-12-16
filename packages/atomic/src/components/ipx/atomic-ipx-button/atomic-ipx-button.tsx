@@ -62,21 +62,17 @@ export class AtomicIPXButton {
     );
   }
 
-  private get button() {
-    return this.host.shadowRoot!.querySelector('button');
-  }
-
   private get ipxModal() {
     return document.querySelector('atomic-ipx-modal')!;
   }
 
   private open() {
-    this.button?.classList.add('btn-open');
+    this.host.classList.add('btn-open');
     this.ipxModal.setAttribute('is-open', 'true');
   }
 
   private close() {
-    this.button?.classList.remove('btn-open');
+    this.host.classList.remove('btn-open');
     this.ipxModal.setAttribute('is-open', 'false');
   }
 
