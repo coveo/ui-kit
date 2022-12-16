@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
+import ClearIcon from '../../../images/clear.svg';
 import {Button, ButtonProps} from '../button';
 import {AnyBindings} from '../interface/bindings';
 
