@@ -68,7 +68,8 @@ export default class QuanticResultMultiValueText extends LightningElement {
         this.setError();
       }
       if (!this.fieldValue) {
-        this.error = `Could not parse value from field "${this.field}" as a string array.`;
+        console.error(`Could not parse value from field "${this.field}" as a string array.`);
+        this.setError();
       }
       this.validated = true;
     });
@@ -100,7 +101,7 @@ export default class QuanticResultMultiValueText extends LightningElement {
       return value.map((v) => `${v}`.trim());
     }
 
-    if (typeof value !== 'string' || value.trim() === '') {
+    if (!value || !Bueno?.isString(value) || value.trim() === '') {
       return undefined;
     }
 

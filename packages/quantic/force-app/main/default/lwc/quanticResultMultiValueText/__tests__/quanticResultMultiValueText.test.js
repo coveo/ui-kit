@@ -106,7 +106,7 @@ describe('c-quantic-result-multi-value-text', () => {
     });
   });
 
-  describe('when a formatting function is given', () => {
+  describe('when ', () => {
     it('should render the formatted field value', async () => {
       createTestComponent({
         ...defaultOptions,
