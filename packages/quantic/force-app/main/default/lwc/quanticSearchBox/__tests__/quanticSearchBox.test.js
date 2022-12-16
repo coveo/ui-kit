@@ -1,5 +1,6 @@
-import {createElement} from 'lwc';
 import QuanticSearchBox from 'c/quanticSearchBox';
+// @ts-ignore
+import {createElement} from 'lwc';
 
 describe('c-quantic-search-box', () => {
   function cleanup() {
@@ -7,7 +8,7 @@ describe('c-quantic-search-box', () => {
     while (document.body.firstChild) {
       document.body.removeChild(document.body.firstChild);
     }
-  }  
+  }
 
   afterEach(() => {
     cleanup();

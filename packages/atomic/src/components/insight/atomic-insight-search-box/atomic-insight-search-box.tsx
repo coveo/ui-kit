@@ -1,12 +1,12 @@
 import {QuerySetActionCreators, Suggestion} from '@coveo/headless';
 import {Component, h, Prop, State} from '@stencil/core';
-import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import {
   buildInsightSearchBox,
   InsightSearchBox,
   InsightSearchBoxState,
   loadInsightQuerySetActions,
 } from '..';
+import SearchIcon from '../../../images/search.svg';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {isMacOS} from '../../../utils/device-utils';
 import {

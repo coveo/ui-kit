@@ -8,7 +8,7 @@ import {
   QuerySuggestionSection,
 } from '@coveo/headless/dist/definitions/state/state-sections';
 import {Component, Element, Prop, State, h} from '@stencil/core';
-import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
+import SearchIcon from '../../../../images/search.svg';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {
   dispatchSearchBoxSuggestionsEvent,
