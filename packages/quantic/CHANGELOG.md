@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.0.1...@coveo/quantic@2.1.0) (2022-12-15)
+
+### Features
+
+- **quantic:** result-action variant added to the QuanticResultQuickview component ([#2613](https://github.com/coveo/ui-kit/issues/2613)) ([11431f4](https://github.com/coveo/ui-kit/commit/11431f4593dfe6a4d7bc66d646b01f945f4c5e59))
+
 ## [2.0.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.0.0...@coveo/quantic@2.0.1) (2022-12-15)
 
 ### Bug Fixes
