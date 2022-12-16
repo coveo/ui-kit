@@ -1,6 +1,7 @@
 /* eslint-disable node/no-unpublished-import */
 import {InsightEngine, SearchEngine} from '@coveo/headless';
 import {LightningElement} from 'lwc';
+import * as BuenoTypes from './force-app/main/default/staticresources/coveobueno/definitions/index';
 import {CoreEngine} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine';
 import {ExternalEngineOptions} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine-configuration';
 import * as HeadlessCaseAssistTypes from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
@@ -10,6 +11,7 @@ import * as HeadlessInsightTypes from './force-app/main/default/staticresources/
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/index';
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/insight.index';
+export * from './force-app/main/default/staticresources/coveobueno/definitions/index';
 
 interface Bindings {
   engine?:
@@ -20,6 +22,7 @@ interface Bindings {
 }
 
 declare global {
+  const Bueno: typeof BuenoTypes;
   const CoveoHeadless: typeof HeadlessTypes;
   const CoveoHeadlessCaseAssist: typeof HeadlessCaseAssistTypes;
   const CoveoHeadlessInsight: typeof HeadlessInsightTypes;
