@@ -10,7 +10,6 @@ const exampleResult = {
     [exampleField]: exampleFieldValue,
   },
 };
-const exampleFormattingFunction = (value) => `formatted ${value}`;
 
 const labelSelector = '.result-text__label';
 const valueSelector = '.result-text__value';
@@ -41,7 +40,6 @@ function flushPromises() {
 }
 
 describe('c-quantic-result-text', () => {
-  let mockedConsoleError;
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
@@ -51,8 +49,7 @@ describe('c-quantic-result-text', () => {
   }
 
   beforeEach(() => {
-    mockedConsoleError = jest.fn();
-    console.error = mockedConsoleError;
+    console.error = jest.fn();
     // @ts-ignore
     global.Bueno = {
       isString: jest
@@ -125,6 +122,8 @@ describe('c-quantic-result-text', () => {
   });
 
   describe('when a formatting function is given', () => {
+    const exampleFormattingFunction = (value) => `formatted ${value}`;
+
     it('should render the formatted field value', async () => {
       const element = createTestComponent({
         ...defaultOptions,

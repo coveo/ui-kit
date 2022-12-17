@@ -39,8 +39,6 @@ function flushPromises() {
 }
 
 describe('c-quantic-result-multi-value-text', () => {
-  let isStringMock;
-
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
@@ -50,16 +48,14 @@ describe('c-quantic-result-multi-value-text', () => {
   }
 
   beforeEach(() => {
-    isStringMock = jest
-      .fn()
-      .mockImplementation(
-        (value) => Object.prototype.toString.call(value) === '[object String]'
-      );
-
     console.error = jest.fn();
     // @ts-ignore
     global.Bueno = {
-      isString: isStringMock,
+      isString: jest
+        .fn()
+        .mockImplementation(
+          (value) => Object.prototype.toString.call(value) === '[object String]'
+        ),
     };
   });
 

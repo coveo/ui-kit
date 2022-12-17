@@ -37,8 +37,6 @@ function flushPromises() {
 }
 
 describe('c-quantic-result-number', () => {
-  let formattingFunctionMock;
-
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
@@ -48,9 +46,6 @@ describe('c-quantic-result-number', () => {
   }
 
   beforeEach(() => {
-    formattingFunctionMock = jest
-      .fn()
-      .mockImplementation((value) => `formatted ${value}`);
     console.error = jest.fn();
     // @ts-ignore
     global.Bueno = {
@@ -129,6 +124,14 @@ describe('c-quantic-result-number', () => {
   });
 
   describe('when a formatting function is given', () => {
+    let formattingFunctionMock;
+
+    beforeEach(() => {
+      formattingFunctionMock = jest
+        .fn()
+        .mockImplementation((value) => `formatted ${value}`);
+    });
+
     it('should render the formatted field value', async () => {
       createTestComponent({
         ...defaultOptions,
