@@ -2,6 +2,7 @@ import {
   buildExecuteTrigger,
   SearchEngine,
   ExecuteTriggerParams,
+  FunctionExecutionTrigger,
 } from '@coveo/headless';
 
 /**
@@ -14,8 +15,8 @@ import {
 export function bindExecuteTrigger(engine: SearchEngine) {
   const controller = buildExecuteTrigger(engine);
 
-  const executeFunction = () => {
-    const {functionName, params} = controller.state;
+  const executeFunction = (execution: FunctionExecutionTrigger) => {
+    const {functionName, params} = execution;
 
     if (functionName === 'log') {
       log(params);
@@ -26,6 +27,10 @@ export function bindExecuteTrigger(engine: SearchEngine) {
     console.log('params: ', params);
   };
 
-  const unsubscribe = controller.subscribe(() => executeFunction());
+  const unsubscribe = controller.subscribe(() =>
+    controller.state.executions.forEach((execution) =>
+      executeFunction(execution)
+    )
+  );
   return unsubscribe;
 }

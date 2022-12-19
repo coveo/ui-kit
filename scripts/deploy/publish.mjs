@@ -3,10 +3,13 @@ import {isOnReleaseBranch} from '../git.mjs';
 import {getPackageManifestFromPackagePath} from '../packages.mjs';
 import {isPrereleaseVersion} from '../prerelease.mjs';
 
-const [tag] = process.argv.slice(2);
-
 const pkg = getPackageManifestFromPackagePath(process.cwd());
 const packageRef = `${pkg.name}@${pkg.version}`;
+
+const tags = /** @type {const} */ ({
+  release: 'alpha',
+  prerelease: 'next',
+});
 
 async function isAlreadyPublished() {
   try {
@@ -18,7 +21,10 @@ async function isAlreadyPublished() {
   }
 }
 
-async function shouldPublish() {
+/**
+ * @param {string} tag
+ */
+async function shouldPublish(tag) {
   if (await isAlreadyPublished()) {
     console.info(
       `Skipped publishing ${packageRef} (${
@@ -43,18 +49,25 @@ async function shouldPublish() {
   return true;
 }
 
-async function publish() {
-  const params = ['publish', '--verbose', '--access', 'public'];
-  if (tag) {
-    params.push('--tag', tag);
-  }
+/**
+ * @param {string} tag
+ */
+async function publish(tag) {
+  const params = ['publish', '--verbose', '--access', 'public', '--tag', tag];
   await execute('npm', params);
 }
 
-async function main() {
-  if (await shouldPublish()) {
-    await publish();
+/**
+ * @param {keyof typeof tags} releaseType
+ */
+async function main(releaseType) {
+  const tag = tags[releaseType];
+  if (!tag) {
+    throw `"${releaseType}" is not a valid release type.`;
+  }
+  if (await shouldPublish(tag)) {
+    await publish(tag);
   }
 }
 
-main();
+main(...process.argv.slice(2));

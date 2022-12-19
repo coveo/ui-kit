@@ -8,7 +8,7 @@ import {
 } from '../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
-export const logDocumentOpenThunk = (result: Result) =>
+export const logDocumentOpen = (result: Result) =>
   makeInsightAnalyticsAction(
     'analytics/insight/result/open',
     AnalyticsType.Click,
@@ -24,6 +24,3 @@ export const logDocumentOpenThunk = (result: Result) =>
       );
     }
   );
-
-export const logDocumentOpen = (result: Result) =>
-  logDocumentOpenThunk(result)();

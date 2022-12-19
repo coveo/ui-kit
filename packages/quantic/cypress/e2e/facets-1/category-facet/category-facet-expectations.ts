@@ -61,7 +61,7 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
     },
     urlHashContains: (path: string[]) => {
       const categoryFacetListInUrl = path.join(',');
-      const urlHash = `#cf[${hierarchicalField}]=${encodeURI(
+      const urlHash = `#cf-${hierarchicalField}=${encodeURI(
         categoryFacetListInUrl
       )}`;
       cy.url()

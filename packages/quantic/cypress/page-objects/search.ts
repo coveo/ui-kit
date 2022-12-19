@@ -44,6 +44,7 @@ export const InterceptAliases = {
     DocumentOpen: uaAlias('documentOpen'),
     DocumentQuickview: uaAlias('documentQuickview'),
     SearchFromLink: uaAlias('searchFromLink'),
+    CopyToClipboard: uaAlias('copyToClipboard'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -192,7 +193,7 @@ export function mockSearchWithResults() {
 }
 
 export function interceptResultHtmlContent() {
-  cy.intercept('POST', routeMatchers.html).as(
+  cy.intercept('GET', routeMatchers.html).as(
     InterceptAliases.ResultHtml.substring(1)
   );
 }

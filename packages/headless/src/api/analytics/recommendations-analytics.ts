@@ -21,13 +21,9 @@ export type StateNeededByRecommendationAnalyticsProvider =
     >;
 
 export class RecommendationAnalyticsProvider
-  extends BaseAnalyticsProvider
+  extends BaseAnalyticsProvider<StateNeededByRecommendationAnalyticsProvider>
   implements SearchPageClientProvider
 {
-  constructor(private state: StateNeededByRecommendationAnalyticsProvider) {
-    super(state);
-  }
-
   public getPipeline(): string {
     return (
       this.state.pipeline || this.state.recommendation?.pipeline || 'default'
@@ -47,8 +43,9 @@ export class RecommendationAnalyticsProvider
   }
 
   public getSearchUID(): string {
+    const newState = this.getState();
     return (
-      this.state.recommendation?.searchUid ||
+      newState.recommendation?.searchUid ||
       getRecommendationInitialState().searchUid
     );
   }

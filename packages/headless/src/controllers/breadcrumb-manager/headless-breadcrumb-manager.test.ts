@@ -32,12 +32,15 @@ import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-res
 import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../test/mock-facet-value';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetResponse} from '../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
@@ -96,7 +99,9 @@ describe('headless breadcrumb manager', () => {
           },
         },
         facetSet: {
-          [facetId]: buildMockFacetRequest({facetId}),
+          [facetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest({facetId}),
+          }),
         },
       });
       initController();
@@ -162,7 +167,9 @@ describe('headless breadcrumb manager', () => {
           },
         },
         dateFacetSet: {
-          [facetId]: buildMockDateFacetRequest({facetId}),
+          [facetId]: buildMockDateFacetSlice({
+            request: buildMockDateFacetRequest({facetId}),
+          }),
         },
       });
       initController();
@@ -218,7 +225,9 @@ describe('headless breadcrumb manager', () => {
           },
         },
         numericFacetSet: {
-          [facetId]: buildMockNumericFacetRequest({facetId}),
+          [facetId]: buildMockNumericFacetSlice({
+            request: buildMockNumericFacetRequest({facetId}),
+          }),
         },
       });
       initController();
@@ -375,7 +384,9 @@ describe('headless breadcrumb manager', () => {
   });
 
   it('hasBreadcrumbs returns true when a facet value is selected', () => {
-    state.numericFacetSet[facetId] = buildMockNumericFacetRequest({facetId});
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
+      request: buildMockNumericFacetRequest({facetId}),
+    });
     const mockValue = buildMockNumericFacetValue({state: 'selected'});
     state.search.response.facets = [
       buildMockNumericFacetResponse({facetId, values: [mockValue]}),

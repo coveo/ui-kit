@@ -13,7 +13,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.42.3",
+  "version": "0.43.0",
   "files": [
     "dist/"
   ],
@@ -24,7 +24,6 @@
     "clean": "rimraf -rf dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
-    "npm:publish": "node ../../scripts/deploy/publish.mjs",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.mjs alpha"
+    "npm:publish": "node ../../scripts/deploy/publish.mjs"
   }
 }

@@ -1,21 +1,25 @@
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {
   AnalyticsType,
+  InsightAction,
   makeInsightAnalyticsAction,
 } from '../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {getQueryInitialState} from '../query/query-state';
 
-export const logFetchMoreResults = makeInsightAnalyticsAction(
-  'search/logFetchMoreResults',
-  AnalyticsType.Search,
-  (client, state) =>
-    client.logFetchMoreResults(
-      getCaseContextAnalyticsMetadata(state.insightCaseContext)
-    )
-);
+export const logFetchMoreResults = (): InsightAction =>
+  makeInsightAnalyticsAction(
+    'search/logFetchMoreResults',
+    AnalyticsType.Search,
+    (client, state) =>
+      client.logFetchMoreResults(
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      )
+  );
 
-export const logQueryError = (error: SearchAPIErrorWithStatusCode) =>
+export const logQueryError = (
+  error: SearchAPIErrorWithStatusCode
+): InsightAction =>
   makeInsightAnalyticsAction(
     'search/queryError',
     AnalyticsType.Search,
@@ -29,9 +33,12 @@ export const logQueryError = (error: SearchAPIErrorWithStatusCode) =>
         errorType: error.type,
         errorMessage: error.message,
       })
-  )();
+  );
 
-export const logContextChanged = (caseId: string, caseNumber: string) =>
+export const logContextChanged = (
+  caseId: string,
+  caseNumber: string
+): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/contextChanged',
     AnalyticsType.Search,
@@ -43,14 +50,14 @@ export const logContextChanged = (caseId: string, caseNumber: string) =>
       };
       client.logContextChanged(meta);
     }
-  )();
+  );
 
 export const logExpandToFullUI = (
   caseId: string,
   caseNumber: string,
   fullSearchComponentName: string,
   triggeredBy: string
-) =>
+): InsightAction<AnalyticsType.Custom> =>
   makeInsightAnalyticsAction(
     'analytics/expandToFullUI',
     AnalyticsType.Custom,
@@ -64,4 +71,4 @@ export const logExpandToFullUI = (
       };
       client.logExpandToFullUI(meta);
     }
-  )();
+  );

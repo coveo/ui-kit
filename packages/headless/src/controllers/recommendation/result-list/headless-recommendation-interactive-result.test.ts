@@ -1,6 +1,6 @@
 import {Result} from '../../../api/search/search/result';
 import {configuration} from '../../../app/reducers';
-import {logRecommendationOpenThunk} from '../../../features/recommendation/recommendation-analytics-actions';
+import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions';
 import {buildMockResult} from '../../../test';
 import {
   buildMockRecommendationAppEngine,
@@ -31,7 +31,7 @@ describe('RecommendationInteractiveResult', () => {
   function initializeInteractiveResult(delay?: number) {
     const result = (mockResult = buildMockResult(resultStringParams));
     logRecommendationOpenPendingActionType =
-      logRecommendationOpenThunk(mockResult).pending.type;
+      logRecommendationOpen(mockResult).pending.type;
     interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
     });
@@ -48,7 +48,7 @@ describe('RecommendationInteractiveResult', () => {
   function expectLogRecommendationActionPending() {
     const action = findLogRecommendationAction();
     expect(action).toEqual(
-      logRecommendationOpenThunk(mockResult).pending(action!.meta.requestId)
+      logRecommendationOpen(mockResult).pending(action!.meta.requestId)
     );
   }
 

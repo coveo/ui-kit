@@ -21,7 +21,6 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
           onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
           onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
           href={unfoldedResult.clickUri}
-          target="_self"
           title={unfoldedResult.title}
           tabIndex={-1}
           ariaHidden={true}

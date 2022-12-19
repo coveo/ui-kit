@@ -43,7 +43,7 @@ describe('field suggestions', () => {
       await waitForNextStateChange(engine, {
         action: () =>
           (fieldSuggestions = buildFieldSuggestions(engine, {
-            options: {field, facetId: facet.state.facetId},
+            options: {facet: {field, facetId: facet.state.facetId}},
           })),
         expectedSubscriberCalls: 2,
       });
@@ -104,7 +104,7 @@ describe('field suggestions', () => {
       await waitForNextStateChange(engine, {
         action: () =>
           (fieldSuggestions = buildFieldSuggestions(engine, {
-            options: {field},
+            options: {facet: {field}},
           })),
         expectedSubscriberCalls: 3,
       });

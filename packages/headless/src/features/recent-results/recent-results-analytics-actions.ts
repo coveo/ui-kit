@@ -5,26 +5,25 @@ import {
   partialDocumentInformation,
   documentIdentifier,
   validateResultPayload,
+  CustomAction,
 } from '../analytics/analytics-utils';
 
-export const logRecentResultClickThunk = (result: Result) =>
+export const logRecentResultClick = (result: Result): CustomAction =>
   makeAnalyticsAction(
     'analytics/recentResults/click',
     AnalyticsType.Custom,
     (client, state) => {
       validateResultPayload(result);
-      client.logRecentResultClick(
+      return client.makeRecentResultClick(
         partialDocumentInformation(result, state),
         documentIdentifier(result)
       );
     }
   );
 
-export const logRecentResultClick = (result: Result) =>
-  logRecentResultClickThunk(result)();
-
-export const logClearRecentResults = makeAnalyticsAction(
-  'analytics/recentResults/clear',
-  AnalyticsType.Custom,
-  (client) => client.logClearRecentResults()
-);
+export const logClearRecentResults = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/recentResults/clear',
+    AnalyticsType.Custom,
+    (client) => client.makeClearRecentResults()
+  );

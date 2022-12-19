@@ -119,7 +119,7 @@ import {
   ControllerState,
   Controller,
   buildController,
-} from '@coveo/atomic/headless';
+} from '@coveo/headless';
 
 @Component({
   tag: 'atomic-component',

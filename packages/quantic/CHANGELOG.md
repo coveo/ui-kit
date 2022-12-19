@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.1.0...@coveo/quantic@2.2.0) (2022-12-16)
+
+### Features
+
+- **quantic:** added quantic-result-date component ([#2608](https://github.com/coveo/ui-kit/issues/2608)) ([06b04ee](https://github.com/coveo/ui-kit/commit/06b04ee4df7801c00b4a642bdb202024e4cc961b))
+- **quantic:** added quantic-result-number component ([#2618](https://github.com/coveo/ui-kit/issues/2618)) ([3af3284](https://github.com/coveo/ui-kit/commit/3af3284ec4be2162f76c79ce7d1580bf5b061b11))
+- **quantic:** added quantic-result-text component ([#2603](https://github.com/coveo/ui-kit/issues/2603)) ([ed6cbdd](https://github.com/coveo/ui-kit/commit/ed6cbddd030c6bbe12cef254456de4c6ae22004d))
+
+# [2.1.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.0.1...@coveo/quantic@2.1.0) (2022-12-15)
+
+### Features
+
+- **quantic:** result-action variant added to the QuanticResultQuickview component ([#2613](https://github.com/coveo/ui-kit/issues/2613)) ([11431f4](https://github.com/coveo/ui-kit/commit/11431f4593dfe6a4d7bc66d646b01f945f4c5e59))
+
+## [2.0.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.0.0...@coveo/quantic@2.0.1) (2022-12-15)
+
+### Bug Fixes
+
+- fixed v2 dependency linking ([#2614](https://github.com/coveo/ui-kit/issues/2614)) ([e9d8762](https://github.com/coveo/ui-kit/commit/e9d87627d21cf91dc258414f69e4cb5c13de39c3))
+
+# [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.55.0...@coveo/quantic@2.0.0) (2022-12-14)
+
+### Bug Fixes
+
+- **headless:** made result template manager throw errors instead of logging errors ([#2518](https://github.com/coveo/ui-kit/issues/2518)) ([5d54709](https://github.com/coveo/ui-kit/commit/5d547095c68615120a4b087b3c993c111b3d6169))
+- **headless:** made trigger notify and execute events plural ([#2533](https://github.com/coveo/ui-kit/issues/2533)) ([dee24ad](https://github.com/coveo/ui-kit/commit/dee24ad9fc911e34111eb994c6b364d72a20b68f))
+- **headless:** modify delimiting character for facet in url manager ([#2545](https://github.com/coveo/ui-kit/issues/2545)) ([9f43709](https://github.com/coveo/ui-kit/commit/9f437099b31c055c5181463eb1954b923a74f023))
+- **headless:** add actionCause and customData to missing /v2 calls ([#2572](https://github.com/coveo/ui-kit/issues/2572)) ([130e94c](https://github.com/coveo/ui-kit/commit/130e94cede829f4417f86364de188e418480b083))
+- **headless:** use new preparable analytics ([#2604](https://github.com/coveo/ui-kit/pull/2604)) ([4349fb9](https://github.com/coveo/ui-kit/commit/4349fb9169768b243a5753488a25d34216de1591))
+
+### Features
+
+- **headless:** added platform-specific origins to requests ([#2472](https://github.com/coveo/ui-kit/issues/2472)) ([88d2f11](https://github.com/coveo/ui-kit/commit/88d2f111f0bfd846b93b051b176dfc59a19d1a76))
+- **headless:** added actionCause and customData to /v2 analytics object ([#2490](https://github.com/coveo/ui-kit/issues/2490)) ([2e2963d](https://github.com/coveo/ui-kit/commit/2e2963d287b6524f8f62ec79927d10e0c0190f71))
+- **headless:** refactored field suggestion options ([#2581](https://github.com/coveo/ui-kit/issues/2581)) ([4a5577e](https://github.com/coveo/ui-kit/commit/4a5577ec78461a1456c81a43385be34f6546b0fc))
+
+# [1.55.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.54.0...@coveo/quantic@1.55.0) (2022-12-13)
+
+### Features
+
+- **headless:** add src to use quickview in iframe ([#2597](https://github.com/coveo/ui-kit/issues/2597)) ([faca366](https://github.com/coveo/ui-kit/commit/faca3665bcf6109ac237db977b8b4918360428bf))
+
+# [1.54.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.53.5...@coveo/quantic@1.54.0) (2022-12-12)
+
+### Features
+
+- **quantic:** QuanticResultCopyToClipboard component created ([#2558](https://github.com/coveo/ui-kit/issues/2558)) ([ddedd97](https://github.com/coveo/ui-kit/commit/ddedd978c4e11e8226f3ffe39bcff3dd5f06d6d5))
+
+## [1.53.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.53.4...@coveo/quantic@1.53.5) (2022-12-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [1.53.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.53.3...@coveo/quantic@1.53.4) (2022-12-08)
+
+### Bug Fixes
+
+- **quantic:** styling of the ExampleQuanticRefineToggle fixed ([#2588](https://github.com/coveo/ui-kit/issues/2588)) ([83d11a0](https://github.com/coveo/ui-kit/commit/83d11a0733adc4aa2fcf4fdf786dec09912c12f4))
+- **quantic:** Updated the way of setting an internal property in the Quantic Refine Toggle ([#2587](https://github.com/coveo/ui-kit/issues/2587)) ([b619259](https://github.com/coveo/ui-kit/commit/b61925922b33901ddc7b129b37c7ca542c8ded03))
+
 ## [1.53.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.53.2...@coveo/quantic@1.53.3) (2022-12-01)
 
 **Note:** Version bump only for package @coveo/quantic

@@ -1,7 +1,6 @@
-import {LightningElement, api} from "lwc";
-
-import recommended from '@salesforce/label/c.quantic_Recommended';
 import featured from '@salesforce/label/c.quantic_Featured';
+import recommended from '@salesforce/label/c.quantic_Recommended';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 
@@ -35,19 +34,24 @@ export default class QuanticResultBadge extends LightningElement {
       label: featured,
       icon: 'utility:pinned',
       condition: (result) => result.isTopResult,
-    }
+    },
   };
 
+  /** @type {string} */
   error;
 
   connectedCallback() {
     let hasError = false;
     if (!this.variant) {
-      console.error(`The ${this.template.host.localName} requires the variant attribute to be set.`);
+      console.error(
+        `The ${this.template.host.localName} requires the variant attribute to be set.`
+      );
       hasError = true;
-    } 
+    }
     if (!this.result) {
-      console.error(`The ${this.template.host.localName} requires the result attribute to be set.`);
+      console.error(
+        `The ${this.template.host.localName} requires the result attribute to be set.`
+      );
       hasError = true;
     }
     if (hasError) {
@@ -56,13 +60,15 @@ export default class QuanticResultBadge extends LightningElement {
   }
 
   renderedCallback() {
-    this.setBadgeClass()
+    this.setBadgeClass();
   }
 
   setBadgeClass() {
-    this.template.querySelector('.result-badge')?.classList.add(this.badgeClass);
+    this.template
+      .querySelector('.result-badge')
+      ?.classList.add(this.badgeClass);
   }
-  
+
   get label() {
     return this.variants[this.variant].label;
   }

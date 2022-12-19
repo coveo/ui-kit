@@ -79,7 +79,10 @@
     </script>
   </head>
   <body>
-    <atomic-search-interface search-hub="MainSearch" fields-to-include="ec_images,ec_rating,ec_price,cat_rating_count">
+    <atomic-search-interface
+      search-hub="MainSearch"
+      fields-to-include='["ec_images", "ec_rating", "ec_price", "cat_rating_count"]'
+    >
       <atomic-search-layout mobile-breakpoint="700px">
         <atomic-layout-section section="facets">
           <atomic-facet-manager>

@@ -1,4 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
+import {EventDescription} from 'coveo.analytics';
 import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {SearchAppState} from '../../state/search-app-state';
@@ -9,7 +10,8 @@ type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;
 
 export const buildSearchAndFoldingLoadCollectionRequest = async (
-  state: StateNeededByExecuteSearchAndFolding
+  state: StateNeededByExecuteSearchAndFolding,
+  eventDescription?: EventDescription
 ): Promise<SearchRequest> => {
   return {
     accessToken: state.configuration.accessToken,
@@ -61,7 +63,8 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     }),
     ...(state.configuration.analytics.enabled &&
       (await fromAnalyticsStateToAnalyticsParams(
-        state.configuration.analytics
+        state.configuration.analytics,
+        eventDescription
       ))),
     ...(state.excerptLength &&
       !isNullOrUndefined(state.excerptLength.length) && {

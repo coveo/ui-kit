@@ -11,15 +11,21 @@ import viewResults from '@salesforce/label/c.quantic_ViewResults';
 import noFiltersAvailableForThisQuery from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQuery';
 import noFilterForCurrentTab from '@salesforce/label/c.quantic_NoFilterForCurrentTab';
 
-/**
- * @typedef {Object} QuanticModalElement
- * @method openModal
- * @method closeModal
- */
-
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").QuerySummary} QuerySummary */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
+
+/**
+ * @typedef {Object} QuanticModalElement
+ * @property {function} openModal
+ * @property {function} closeModal
+ * @property {boolean} fullScreen
+ */
+
+/**
+ * @typedef {Object} QuanticModalContentElement
+ * @property {boolean} hideSort
+ */
 
 /**
  * The `QuanticRefineToggle` component displays a button that is used to open the refine modal.
@@ -128,6 +134,9 @@ export default class QuanticRefineToggle extends LightningElement {
     Object.keys(registeredFacets).forEach((facetId) => {
       this.renderedFacets[facetId] = true;
     });
+
+    this.modal.fullScreen = this.fullScreen;
+    this.modalContent.hideSort = this.hideSort;
   };
 
   get refineButtonDisabled() {
@@ -236,10 +245,22 @@ export default class QuanticRefineToggle extends LightningElement {
 
   /**
    * Returns the Quantic Modal element.
-   * @returns {HTMLElement}
+   * @return {QuanticModalElement}
    */
-  getModal() {
-    return this.template.querySelector(`[data-id=${this.modalId}]`);
+  get modal() {
+    /** @type {Object} */
+    const modal =  this.template.querySelector(`[data-id=${this.modalId}]`);
+    return modal;
+  }
+
+  /**
+   * Returns the Quantic Refine Modal Content element.
+   * @return {QuanticModalContentElement}
+   */
+  get modalContent() {
+    /** @type {Object} */
+    const modalContent = this.template.querySelector('c-quantic-refine-modal-content');
+    return modalContent;
   }
 
   /**
@@ -247,9 +268,7 @@ export default class QuanticRefineToggle extends LightningElement {
    * @returns {void}
    */
   openModal() {
-    /** @type {QuanticModalElement} */
-    const modal = this.getModal();
-    modal.openModal();
+    this.modal.openModal();
     this.sendRefineModalEvent(true);
     this.modalIsOpen = true;
   }
@@ -259,9 +278,7 @@ export default class QuanticRefineToggle extends LightningElement {
    * @returns {void}
    */
   closeModal() {
-    /** @type {QuanticModalElement} */
-    const modal = this.getModal();
-    modal.closeModal();
+    this.modal.closeModal();
     this.sendRefineModalEvent(false);
     this.modalIsOpen = false;
   }

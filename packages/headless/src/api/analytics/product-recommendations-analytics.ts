@@ -13,15 +13,10 @@ export type StateNeededByProductRecommendationsAnalyticsProvider =
     Partial<SearchHubSection & ProductRecommendationsSection>;
 
 export class ProductRecommendationAnalyticsProvider
-  extends BaseAnalyticsProvider
+  extends BaseAnalyticsProvider<StateNeededByProductRecommendationsAnalyticsProvider>
   implements SearchPageClientProvider
 {
   private initialState = getProductRecommendationsInitialState();
-  constructor(
-    private state: StateNeededByProductRecommendationsAnalyticsProvider
-  ) {
-    super(state);
-  }
 
   public getPipeline(): string {
     return '';
@@ -40,9 +35,9 @@ export class ProductRecommendationAnalyticsProvider
   }
 
   public getSearchUID() {
+    const newState = this.getState();
     return (
-      this.state.productRecommendations?.searchUid ||
-      this.initialState.searchUid
+      newState.productRecommendations?.searchUid || this.initialState.searchUid
     );
   }
 

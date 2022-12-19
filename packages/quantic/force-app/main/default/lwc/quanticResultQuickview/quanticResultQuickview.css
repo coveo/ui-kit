@@ -1,5 +1,8 @@
+@import 'c/quanticResultActionStyles';
+
 .quickview__content-container {
   overflow: auto;
+  border: none;
 }
 
 .quickview__result-title {

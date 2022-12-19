@@ -6,7 +6,6 @@ import {
 import {
   facetId,
   field,
-  delimitingCharacter,
   filterFacetCount,
   injectionDepth,
   numberOfValues,
@@ -20,11 +19,6 @@ export interface FacetOptions {
    * The field whose values you want to display in the facet.
    * */
   field: string;
-
-  /**
-   * @deprecated This option has no effect.
-   */
-  delimitingCharacter?: string;
 
   /**
    * A unique identifier for the controller. By default, a random unique identifier is generated.
@@ -112,7 +106,6 @@ export interface FacetSearchOptions {
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetId,
   field,
-  delimitingCharacter,
   filterFacetCount,
   injectionDepth,
   numberOfValues,

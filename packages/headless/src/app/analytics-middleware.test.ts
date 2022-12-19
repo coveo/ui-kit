@@ -57,7 +57,7 @@ describe('analytics middleware', () => {
     );
     e.dispatch(action);
     expect(e.actions[0].type).toBe(executeSearch.fulfilled.type);
-    expect(e.actions[1].type).toBe(logSearchboxSubmit.pending.type);
+    expect(e.actions[1].type).toBe(logSearchboxSubmit().pending.type);
   });
 
   it('correctly remove analytics payload from action', () => {

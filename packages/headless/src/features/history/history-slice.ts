@@ -6,10 +6,7 @@ import {ContextState} from '../context/context-state';
 import {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
-import {
-  BaseFacetValueRequest,
-  CurrentValues,
-} from '../facets/facet-api/request';
+import {AnyFacetSetState} from '../facets/generic/interfaces/generic-facet-section';
 import {PaginationState} from '../pagination/pagination-state';
 import {QueryState} from '../query/query-state';
 import {
@@ -100,26 +97,21 @@ const getActiveStaticFilterValues = (filter: StaticFilterSlice) => {
   return filter.values.filter((value) => value.state !== 'idle');
 };
 
-type FacetStateWithCurrentValues = Record<
-  string,
-  CurrentValues<BaseFacetValueRequest>
->;
+type AnyFacetValueRequest =
+  AnyFacetSetState[string]['request']['currentValues'][number];
 
-const isFacetsEqual = (
-  current: FacetStateWithCurrentValues,
-  next: FacetStateWithCurrentValues
-) => {
+const isFacetsEqual = (current: AnyFacetSetState, next: AnyFacetSetState) => {
   for (const [key, value] of Object.entries(next)) {
     if (!current[key]) {
       return false;
     }
 
-    const currentSelectedValues = current[key].currentValues.filter(
-      (value) => value.state === 'selected'
-    );
-    const nextSelectedValues = value.currentValues.filter(
-      (value) => value.state === 'selected'
-    );
+    const currentSelectedValues = (
+      current[key].request.currentValues as AnyFacetValueRequest[]
+    ).filter((value) => value.state === 'selected');
+    const nextSelectedValues = (
+      value.request.currentValues as AnyFacetValueRequest[]
+    ).filter((value) => value.state === 'selected');
 
     if (
       JSON.stringify(currentSelectedValues) !==

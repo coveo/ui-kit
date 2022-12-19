@@ -145,7 +145,7 @@ export const executeSearch = createAsyncThunk<
         mappedRequest.mappings
       ) as SuccessResponse
     ).success;
-    analyticsAction(
+    analyticsAction()(
       dispatch,
       () =>
         getStateAfterResponse(

@@ -148,7 +148,6 @@ export class AtomicResultChildren implements InitializableComponent {
         interactiveResult={buildInteractiveResult(this.bindings.engine, {
           options: {result: extractUnfoldedResult(child)},
         })}
-        engine={this.bindings.engine}
         store={this.bindings.store}
         density={this.displayConfig.density}
         imageSize={this.imageSize || this.displayConfig.imageSize}

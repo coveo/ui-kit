@@ -5,7 +5,6 @@ import {change} from '../../../history/history-actions';
 import {fetchProductListing} from '../../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../search/search-actions';
-import {deselectAllFacets} from '../../generic/facet-actions';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {
   registerRangeFacet,
@@ -24,7 +23,10 @@ import {
   RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
 } from './date-facet-actions';
-import {getDateFacetSetInitialState} from './date-facet-set-state';
+import {
+  getDateFacetSetInitialState,
+  getDateFacetSetSliceInitialState,
+} from './date-facet-set-state';
 import {DateFacetRequest, DateRangeRequest} from './interfaces/request';
 import {DateFacetResponse, DateFacetValue} from './interfaces/response';
 
@@ -35,7 +37,7 @@ export const dateFacetSetReducer = createReducer(
       .addCase(registerDateFacet, (state, action) => {
         const {payload} = action;
         const request = buildDateFacetRequest(payload);
-        registerRangeFacet<DateFacetRequest>(state, request);
+        registerRangeFacet(state, getDateFacetSetSliceInitialState(request));
       })
       .addCase(
         change.fulfilled,
@@ -47,48 +49,31 @@ export const dateFacetSetReducer = createReducer(
       })
       .addCase(toggleSelectDateFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
-        toggleSelectRangeValue<DateFacetRequest, DateFacetValue>(
-          state,
-          facetId,
-          selection
-        );
+        toggleSelectRangeValue(state, facetId, selection);
       })
       .addCase(updateDateFacetValues, (state, action) => {
         const {facetId, values} = action.payload;
-        updateRangeValues<DateFacetRequest>(state, facetId, values);
+        updateRangeValues(state, facetId, values);
       })
       .addCase(deselectAllDateFacetValues, (state, action) => {
-        handleRangeFacetDeselectAll<DateFacetRequest>(state, action.payload);
-      })
-      .addCase(deselectAllFacets, (state) => {
-        Object.keys(state).forEach((facetId) => {
-          handleRangeFacetDeselectAll<DateFacetRequest>(state, facetId);
-        });
+        handleRangeFacetDeselectAll(state, action.payload);
       })
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.keys(state).forEach((facetId) => {
-          handleRangeFacetDeselectAll<DateFacetRequest>(state, facetId);
+          handleRangeFacetDeselectAll(state, facetId);
         });
       })
       .addCase(updateDateFacetSortCriterion, (state, action) => {
-        handleFacetSortCriterionUpdate<DateFacetRequest>(state, action.payload);
+        handleFacetSortCriterionUpdate(state, action.payload);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as DateFacetResponse[];
-        onRangeFacetRequestFulfilled<DateFacetRequest, DateFacetResponse>(
-          state,
-          facets,
-          convertToRangeRequests
-        );
+        onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = (action.payload.response?.facets?.results ||
           []) as DateFacetResponse[];
-        onRangeFacetRequestFulfilled<DateFacetRequest, DateFacetResponse>(
-          state,
-          facets,
-          convertToRangeRequests
-        );
+        onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
       })
       .addCase(disableFacet, (state, action) => {
         handleRangeFacetDeselectAll(state, action.payload);

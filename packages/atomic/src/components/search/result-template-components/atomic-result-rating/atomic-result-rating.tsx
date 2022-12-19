@@ -41,8 +41,8 @@ export class AtomicResultRating {
    * When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`.
    * This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):
    *
-   * - `--atomic-rating-facet-icon-active-color`
-   * - `--atomic-rating-facet-icon-inactive-color`
+   * - `--atomic-rating-icon-active-color`
+   * - `--atomic-rating-icon-inactive-color`
    */
   @Prop({reflect: true}) public icon = Star;
 

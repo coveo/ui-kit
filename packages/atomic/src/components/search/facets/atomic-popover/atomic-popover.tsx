@@ -10,7 +10,7 @@ import {
   Instance as PopperInstance,
 } from '@popperjs/core';
 import {Component, h, Listen, State, Element, Host} from '@stencil/core';
-import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
+import ArrowBottomIcon from '../../../../images/arrow-bottom-rounded.svg';
 import {
   BindStateToController,
   InitializableComponent,

@@ -1,5 +1,6 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
+import {buildResultPreviewRequest} from '../../../features/result-preview/result-preview-request-builder';
 import {
   QuickviewProps,
   QuickviewOptions,
@@ -24,5 +25,13 @@ export function buildQuickview(
     engine.dispatch(logDocumentQuickview(props.options.result));
   };
 
-  return buildCoreQuickview(engine, props, fetchResultContentCallback);
+  const path = '/quickview';
+
+  return buildCoreQuickview(
+    engine,
+    props,
+    buildResultPreviewRequest,
+    path,
+    fetchResultContentCallback
+  );
 }

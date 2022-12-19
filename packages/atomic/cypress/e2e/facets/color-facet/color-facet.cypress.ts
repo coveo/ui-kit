@@ -441,7 +441,7 @@ describe('Color Facet Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
-        .withHash(`f[${colorFacetField}]=YouTubeVideo`)
+        .withHash(`f-${colorFacetField}=YouTubeVideo`)
         .init();
     });
 
@@ -497,7 +497,7 @@ describe('Color Facet Test Suites', () => {
         new TestFixture()
           .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
           .withStyle(colorFacetStyle)
-          .withHash(`f[${colorFacetField}]=YouTubeVideo`)
+          .withHash(`f-${colorFacetField}=YouTubeVideo`)
           .init();
       }
       before(generateCustomCSS);

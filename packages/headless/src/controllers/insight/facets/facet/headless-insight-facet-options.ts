@@ -3,7 +3,6 @@ import {facetSortCriteria} from '../../../../features/facets/facet-set/interface
 import {
   facetId,
   field,
-  delimitingCharacter,
   filterFacetCount,
   injectionDepth,
   numberOfValues,
@@ -34,7 +33,6 @@ export interface FacetOptions extends CoreFacetOptions {
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetId,
   field,
-  delimitingCharacter,
   filterFacetCount,
   injectionDepth,
   numberOfValues,

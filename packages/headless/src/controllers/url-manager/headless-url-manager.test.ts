@@ -56,7 +56,7 @@ describe('url manager', () => {
   });
 
   it('initial #restoreSearchParameters should parse the "active" fragment', () => {
-    initUrlManager('q=windmill&f[author]=Cervantes');
+    initUrlManager('q=windmill&f-author=Cervantes');
     testLatestRestoreSearchParameters({
       q: 'windmill',
       f: {author: ['Cervantes']},

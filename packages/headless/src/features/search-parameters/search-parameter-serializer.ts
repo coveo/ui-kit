@@ -92,7 +92,7 @@ function serializeFacets(key: string, facets: Record<string, string[]>) {
   return Object.entries(facets)
     .map(
       ([facetId, values]) =>
-        `${key}[${facetId}]${equal}${values
+        `${key}-${facetId}${equal}${values
           .map((value) => encodeURIComponent(value))
           .join(',')}`
     )
@@ -108,7 +108,7 @@ function serializeRangeFacets(
       const value = ranges
         .map(({start, end}) => `${start}${rangeDelimiter}${end}`)
         .join(',');
-      return `${key}[${facetId}]${equal}${value}`;
+      return `${key}-${facetId}${equal}${value}`;
     })
     .join(delimiter);
 }
@@ -142,7 +142,7 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessObjectPairs(pair: string[]) {
   const [key, val] = pair;
-  const objectKey = /^(f|cf|nf|df|sf)\[(.+)\]$/;
+  const objectKey = /^(f|cf|nf|df|sf)-(.+)$/;
   const result = objectKey.exec(key);
 
   if (!result) {

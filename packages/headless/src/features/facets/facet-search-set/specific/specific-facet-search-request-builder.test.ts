@@ -1,6 +1,6 @@
 import {SearchAppState} from '../../../../state/search-app-state';
-import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
 import {createMockState} from '../../../../test/mock-state';
 import {buildSearchRequest} from '../../../search/search-request';
@@ -12,7 +12,7 @@ describe('#buildSpecificFacetSearchRequest', () => {
 
   function setupState() {
     state = createMockState();
-    state.facetSet[id] = buildMockFacetRequest();
+    state.facetSet[id] = buildMockFacetSlice();
     state.facetSearchSet[id] = buildMockFacetSearch();
   }
 
@@ -45,13 +45,13 @@ describe('#buildSpecificFacetSearchRequest', () => {
 
   it('retrieves the #field from the facetSet', async () => {
     const field = 'author';
-    state.facetSet[id].field = field;
+    state.facetSet[id]!.request.field = field;
 
     expect((await buildParams()).field).toBe(field);
   });
 
   it('retrieves #filterFacetCount from the facetSet', async () => {
-    state.facetSet[id].filterFacetCount = true;
+    state.facetSet[id]!.request.filterFacetCount = true;
 
     expect((await buildParams()).filterFacetCount).toBe(true);
   });
@@ -62,7 +62,7 @@ describe('#buildSpecificFacetSearchRequest', () => {
       value: 'B',
       state: 'selected',
     });
-    state.facetSet[id].currentValues = [idle, selected];
+    state.facetSet[id]!.request.currentValues = [idle, selected];
 
     expect((await buildParams()).ignoreValues).toEqual([selected.value]);
   });

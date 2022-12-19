@@ -1,9 +1,4 @@
-import {
-  FoldedResult,
-  InteractiveResult,
-  Result,
-  SearchEngine,
-} from '@coveo/headless';
+import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
@@ -49,16 +44,9 @@ export class AtomicResult {
 
   /**
    * The InteractiveResult item.
-   * TODO: v2 make required
    * @internal
    */
-  @Prop() interactiveResult?: InteractiveResult;
-
-  /**
-   * The headless search engine.
-   * @deprecated This property is currently un-used
-   */
-  @Prop() engine?: SearchEngine;
+  @Prop() interactiveResult!: InteractiveResult;
 
   /**
    * Global Atomic state.
@@ -86,12 +74,7 @@ export class AtomicResult {
    *
    * This is overwritten by the image size defined in the result content, if it exists.
    */
-  @Prop() imageSize?: ResultDisplayImageSize;
-
-  /**
-   * @deprecated use `imageSize` instead.
-   */
-  @Prop() image: ResultDisplayImageSize = 'icon';
+  @Prop() imageSize: ResultDisplayImageSize = 'icon';
 
   /**
    * The classes to add to the result element.
@@ -150,7 +133,7 @@ export class AtomicResult {
       this.content!.children,
       this.display,
       this.density,
-      this.imageSize ?? this.image
+      this.imageSize
     );
   }
 

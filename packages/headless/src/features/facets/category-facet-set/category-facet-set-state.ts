@@ -5,10 +5,7 @@ export type CategoryFacetSlice = {
   initialNumberOfValues: number;
 };
 
-export type CategoryFacetSetState = Record<
-  string,
-  CategoryFacetSlice | undefined
->;
+export type CategoryFacetSetState = Record<string, CategoryFacetSlice>;
 
 export function getCategoryFacetSetInitialState(): CategoryFacetSetState {
   return {};
