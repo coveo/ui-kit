@@ -10,8 +10,6 @@ import {
   Host,
   Listen,
 } from '@stencil/core';
-import {isIOS} from '../../../utils/device-utils';
-import {listenOnce} from '../../../utils/event-utils';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -44,7 +42,6 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
   @Event() animationEnded!: EventEmitter<never>;
 
   private focusTrap?: HTMLAtomicFocusTrapElement;
-  private animatableContainer?: HTMLElement;
   private currentWatchToggleOpenExecution = 0;
 
   @Watch('isOpen')
@@ -54,30 +51,17 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
 
     if (isOpen) {
       document.body.classList.add(modalOpenedClass);
-      if (isIOS()) {
-        await this.waitForAnimationEnded();
-      }
       if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
         return;
       }
       this.focusTrap!.active = true;
     } else {
       document.body.classList.remove(modalOpenedClass);
-      if (isIOS()) {
-        await this.waitForAnimationEnded();
-      }
       if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
         return;
       }
       this.focusTrap!.active = false;
     }
-  }
-
-  private waitForAnimationEnded() {
-    // The focus trap focuses its first child when active. VoiceOver on iOS can't do it while an animation is ongoing.
-    return new Promise((resolve) =>
-      listenOnce(this.animatableContainer!, 'animationend', resolve)
-    );
   }
 
   private getClasses() {
@@ -124,7 +108,6 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
               part="container"
               class={`${this.isOpen ? 'visible' : 'invisible'}`}
               onAnimationEnd={() => this.animationEnded.emit()}
-              ref={(ref) => (this.animatableContainer = ref)}
             >
               <header part="header-wrapper" class="flex flex-col items-center">
                 <div part="header">
