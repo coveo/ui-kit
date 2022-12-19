@@ -673,7 +673,6 @@ export namespace Components {
         "label": string;
     }
     interface AtomicIpxModal {
-        "close": () => void;
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
          */
@@ -3239,7 +3238,6 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicIpxModal {
-        "close"?: () => void;
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
          */

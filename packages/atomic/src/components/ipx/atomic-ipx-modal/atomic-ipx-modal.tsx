@@ -40,7 +40,6 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
    */
   @Prop({mutable: true}) container?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
-  @Prop({mutable: true}) close: () => void = () => (this.isOpen = false);
 
   @Event() animationEnded!: EventEmitter<never>;
 
