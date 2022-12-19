@@ -164,3 +164,19 @@ export function makeMatchConditions(
   }
   return conditions;
 }
+
+export function makeDefinedConditions(
+  ifDefined?: string,
+  ifNotDefined?: string
+): ResultTemplateCondition[] {
+  const conditions: ResultTemplateCondition[] = [];
+  if (ifDefined) {
+    const fieldNames = ifDefined.split(',');
+    conditions.push(ResultTemplatesHelpers.fieldsMustBeDefined(fieldNames));
+  }
+  if (ifNotDefined) {
+    const fieldNames = ifNotDefined.split(',');
+    conditions.push(ResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames));
+  }
+  return conditions;
+}

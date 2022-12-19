@@ -4,6 +4,7 @@
 
 # Owners of the Quantic package
 /packages/quantic/ @coveo/service-integration
+/packages/atomic/src/components/insight @coveo/service-core
 
 # Owners of Atomic's Cypress Tests
 /packages/atomic/cypress/ @coveo/search @coveo/search-qa
