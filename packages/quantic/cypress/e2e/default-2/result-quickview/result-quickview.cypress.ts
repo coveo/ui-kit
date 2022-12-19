@@ -13,12 +13,14 @@ interface ResultQuickviewOptions {
   previewButtonIcon: string;
   previewButtonLabel: string;
   previewButtonVariant: string;
+  tooltip: string;
 }
 
 describe('quantic-result-quickview', () => {
   const pageUrl = 's/quantic-result-quickview';
 
   const haspreview = 'haspreview';
+  const resultActionRegister = 'quantic__resultactionregister';
 
   function visitResultQuickview(options: Partial<ResultQuickviewOptions> = {}) {
     interceptSearch();
@@ -108,6 +110,31 @@ describe('quantic-result-quickview', () => {
         Expect.displayButtonPreview(true, 'outline-brand');
         Actions.clickPreview('outline-brand');
         Expect.displaySectionPreview(true);
+      });
+
+      scope('custom #tooltip', () => {
+        const customTooltip = 'Quick view';
+        visitResultQuickview({
+          tooltip: customTooltip,
+        });
+        mockResultHtmlContent('div');
+
+        Expect.displayButtonPreview(true);
+        Expect.displayTooltip(customTooltip);
+      });
+    });
+  });
+
+  describe('with #previewButtonVariant set to result-action', () => {
+    it('should display the quickview button as a result action', () => {
+      visitResultQuickview({
+        previewButtonVariant: 'result-action',
+      });
+      mockResultHtmlContent('div');
+
+      scope('when loading the page', () => {
+        Expect.events.receivedEvent(true, resultActionRegister);
+        Expect.displayButtonPreview(true, 'icon-border-filled');
       });
     });
   });

@@ -60,7 +60,7 @@ export default class QuanticResultQuickview extends LightningElement {
   /**
    * The variant of the preview button.
    * @api
-   * @type {undefined|'brand'|'outline-brand'}
+   * @type {undefined|'brand'|'outline-brand'|'result-action'}
    * @defaultValue `undefined`
    */
   @api previewButtonVariant;
@@ -72,6 +72,13 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `'search'`
    */
   @api useCase = 'search';
+  /**
+   * The label displayed in the tooltip of the quick view button.
+   * @api
+   * @type {boolean}
+   * @defaultValue `undefined`
+   */
+  @api tooltip;
 
   /** @type {QuickviewState} */
   @track state;
@@ -86,6 +93,8 @@ export default class QuanticResultQuickview extends LightningElement {
   headless;
   /** @type {boolean} */
   isFirstPreviewRender = true;
+  /** @type {string} */
+  resultActionOrderClasses;
   /** @type {boolean} */
   _isLoading = false;
 
@@ -104,6 +113,20 @@ export default class QuanticResultQuickview extends LightningElement {
       .catch((error) => {
         console.error(error.message);
       });
+
+    if (this.isResultAction) {
+      const resultActionRegister = new CustomEvent(
+        'quantic__resultactionregister',
+        {
+          bubbles: true,
+          composed: true,
+          detail: {
+            applyCssOrderClass: this.applyCssOrderClass,
+          },
+        }
+      );
+      this.dispatchEvent(resultActionRegister);
+    }
   }
 
   renderedCallback() {
@@ -221,12 +244,13 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get buttonClass() {
-    return [
-      'slds-button',
-      this.previewButtonVariant
-        ? `slds-button_${this.previewButtonVariant}`
-        : 'quickview__button-base',
-    ].join(' ');
+    let variantClass = 'quickview__button-base';
+    if (this.isResultAction) {
+      variantClass = `slds-button_icon-border-filled ${this.resultActionOrderClasses}`;
+    } else if (this.previewButtonVariant) {
+      variantClass = `slds-button_${this.previewButtonVariant}`;
+    }
+    return ['slds-button', variantClass].join(' ');
   }
 
   get buttonIconClass() {
@@ -326,5 +350,39 @@ export default class QuanticResultQuickview extends LightningElement {
       },
     });
     this.dispatchEvent(resultPreviewEvent);
+  }
+
+  /**
+   * Applies the proper CSS order class.
+   * This method is inspired from how the lightning-button-group component works:
+   * https://github.com/salesforce/base-components-recipes/blob/master/force-app/main/default/lwc/buttonGroup/buttonGroup.js
+   * @param {'first' | 'middle' | 'last'} order
+   */
+  applyCssOrderClass = (order) => {
+    const commonButtonClass = 'result-action_button';
+    let orderClass = '';
+
+    if (order === 'first') {
+      orderClass = 'result-action_first';
+    } else if (order === 'middle') {
+      orderClass = 'result-action_middle';
+    } else if (order === 'last') {
+      orderClass = 'result-action_last';
+    }
+    this.resultActionOrderClasses = orderClass
+      ? `${commonButtonClass} ${orderClass}`
+      : commonButtonClass;
+  };
+
+  get buttonTitle() {
+    return this.tooltip ? null : this.buttonLabel;
+  }
+
+  /**
+   * Indicates whether the quickview button is used as a result action.
+   * @return {boolean}
+   */
+  get isResultAction() {
+    return this.previewButtonVariant === 'result-action';
   }
 }
