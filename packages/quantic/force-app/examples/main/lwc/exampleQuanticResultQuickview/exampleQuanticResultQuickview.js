@@ -46,9 +46,15 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
       description: 'The variant of the preview button.',
       defaultValue: undefined,
     },
+    {
+      attribute: 'tooltip',
+      label: 'Tooltip',
+      description: 'The label displayed in the tooltip of the quick view button.',
+      defaultValue: null,
+    },
   ];
 
-  expectedEvents = ['haspreview'];
+  expectedEvents = ['haspreview', 'quantic__resultactionregister'];
 
   handleTryItNow(evt) {
     this.config = evt.detail;

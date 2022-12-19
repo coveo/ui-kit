@@ -669,10 +669,18 @@ export namespace Components {
     interface AtomicIpxLayout {
     }
     interface AtomicIpxRefineModal {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter": number;
         "isOpen": boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicIpxRefineToggle {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter": number;
     }
     interface AtomicIpxTab {
         /**
@@ -821,6 +829,12 @@ export namespace Components {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+    }
+    interface AtomicQuickview {
+    }
+    interface AtomicQuickviewModal {
+        "content"?: string;
+        "result"?: Result;
     }
     interface AtomicRatingFacet {
         /**
@@ -1093,10 +1107,18 @@ export namespace Components {
         "ifNotDefined"?: string;
     }
     interface AtomicRefineModal {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter": number;
         "isOpen": boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter": number;
     }
     interface AtomicRelevanceInspector {
         /**
@@ -2096,6 +2118,18 @@ declare global {
         prototype: HTMLAtomicQuerySummaryElement;
         new (): HTMLAtomicQuerySummaryElement;
     };
+    interface HTMLAtomicQuickviewElement extends Components.AtomicQuickview, HTMLStencilElement {
+    }
+    var HTMLAtomicQuickviewElement: {
+        prototype: HTMLAtomicQuickviewElement;
+        new (): HTMLAtomicQuickviewElement;
+    };
+    interface HTMLAtomicQuickviewModalElement extends Components.AtomicQuickviewModal, HTMLStencilElement {
+    }
+    var HTMLAtomicQuickviewModalElement: {
+        prototype: HTMLAtomicQuickviewModalElement;
+        new (): HTMLAtomicQuickviewModalElement;
+    };
     interface HTMLAtomicRatingFacetElement extends Components.AtomicRatingFacet, HTMLStencilElement {
     }
     var HTMLAtomicRatingFacetElement: {
@@ -2515,6 +2549,8 @@ declare global {
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
+        "atomic-quickview": HTMLAtomicQuickviewElement;
+        "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
@@ -3195,10 +3231,18 @@ declare namespace LocalJSX {
     interface AtomicIpxLayout {
     }
     interface AtomicIpxRefineModal {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter"?: number;
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicIpxRefineToggle {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter"?: number;
     }
     interface AtomicIpxTab {
         /**
@@ -3349,6 +3393,12 @@ declare namespace LocalJSX {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+    }
+    interface AtomicQuickview {
+    }
+    interface AtomicQuickviewModal {
+        "content"?: string;
+        "result"?: Result;
     }
     interface AtomicRatingFacet {
         /**
@@ -3592,10 +3642,18 @@ declare namespace LocalJSX {
         "ifNotDefined"?: string;
     }
     interface AtomicRefineModal {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter"?: number;
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
+        /**
+          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
+         */
+        "collapseFacetsAfter"?: number;
     }
     interface AtomicRelevanceInspector {
         /**
@@ -4247,6 +4305,8 @@ declare namespace LocalJSX {
         "atomic-popover": AtomicPopover;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
+        "atomic-quickview": AtomicQuickview;
+        "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-recs-interface": AtomicRecsInterface;
@@ -4371,6 +4431,8 @@ declare module "@stencil/core" {
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
+            "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
+            "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;

@@ -258,6 +258,13 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.input.blur();
   }
 
+  handleKeyValues() {
+    if (this.standaloneSearchBox.state.value !== this.input.value) {
+      this.suggestionList?.resetSelection();
+      this.standaloneSearchBox.updateText(this.input.value);
+    }
+  }
+
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
@@ -270,8 +277,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
         this.suggestionList.selectionDown();
         break;
       default:
-        this.suggestionList?.resetSelection();
-        this.standaloneSearchBox.updateText(event.target.value);
+        this.handleKeyValues();
     }
   }
 

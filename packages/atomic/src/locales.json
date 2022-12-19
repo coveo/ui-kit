@@ -1505,5 +1505,30 @@
   "day_plural": {
     "en": "About {{count}} days",
     "fr": "Environ {{value}} jours"
+  },
+  "quickview": {
+    "en": "Quick View",
+    "fr": "Coup D'Oeil",
+    "cs": "Rychlé zobrazení",
+    "da": "Hurtigvis",
+    "de": "Schnellansicht",
+    "el": "Γρήγορη επισκόπηση",
+    "es-es": "Vista rápida",
+    "fi": "Pikanäkymä",
+    "hu": "Gyorsnézet",
+    "id": "Tampilan Cepat",
+    "it": "Anteprima",
+    "ja": "クイックビュー",
+    "ko": "간략히 보기",
+    "nl": "Snelle weergave",
+    "no": "Hurtigvisning",
+    "pl": "Szybki podgląd",
+    "pt-br": "Visualização rápida",
+    "ru": "Быстрый просмотр",
+    "sv": "Snabbvy",
+    "th": "มุมมองด่วน",
+    "tr": "Hızlı Bakış",
+    "zh-cn": "快速查看",
+    "zh-tw": "快速檢視"
   }
 }
