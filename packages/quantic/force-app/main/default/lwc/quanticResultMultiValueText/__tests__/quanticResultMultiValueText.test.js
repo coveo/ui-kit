@@ -89,7 +89,12 @@ describe('c-quantic-result-multi-value-text', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.error).toHaveBeenCalledWith(
+        'The c-quantic-result-multi-value-text requires a result and a multi-value field to be specified.'
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        'Could not parse value from field "undefined" as a string array.'
+      );
     });
   });
 
@@ -164,7 +169,7 @@ describe('c-quantic-result-multi-value-text', () => {
       });
     });
 
-    describe('when the field value is a string with a separator', () => {
+    describe('when the field value is a string with a delimiter', () => {
       const testResult = {
         raw: {
           [exampleField]: 'One-Two-Three',
