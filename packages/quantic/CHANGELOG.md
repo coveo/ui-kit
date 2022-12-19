@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.2.0...@coveo/quantic@2.3.0) (2022-12-19)
+
+### Features
+
+- **Quantic:** fix triggering query suggestions for any key press ([#2615](https://github.com/coveo/ui-kit/issues/2615)) ([a74e6ba](https://github.com/coveo/ui-kit/commit/a74e6bafad2b9d29acd3f700cc313836700118af))
+
 # [2.2.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.1.0...@coveo/quantic@2.2.0) (2022-12-16)
 
 ### Features
