@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.0.1...@coveo/headless@2.1.0) (2022-12-16)
+
+### Features
+
+- **headless:** dispatch-able actions added to send attach to case analytics ([#2609](https://github.com/coveo/ui-kit/issues/2609)) ([151f405](https://github.com/coveo/ui-kit/commit/151f4050716eb6c3bc06e117b59e6d7d668ce00a))
+
 ## [2.0.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.0.0...@coveo/headless@2.0.1) (2022-12-15)
 
 ### Bug Fixes
