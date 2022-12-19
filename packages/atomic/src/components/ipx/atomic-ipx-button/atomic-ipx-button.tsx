@@ -26,8 +26,6 @@ export class AtomicIPXButton {
 
   private async onClick() {
     this.isOpen ? this.close() : this.open();
-    this.isOpen = !this.isOpen;
-
     this.render();
   }
 
@@ -67,11 +65,13 @@ export class AtomicIPXButton {
   }
 
   private open() {
+    this.isOpen = true;
     this.host.classList.add('btn-open');
     this.ipxModal.setAttribute('is-open', 'true');
   }
 
   private close() {
+    this.isOpen = false;
     this.host.classList.remove('btn-open');
     this.ipxModal.setAttribute('is-open', 'false');
   }
