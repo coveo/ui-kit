@@ -81,7 +81,7 @@ describe('Search Interface Component', () => {
     it('should work with lowercase regions', () => {
       setLanguageAndWait('zh-tw');
 
-      QuerySummarySelectors.text().should('contain', '結果數');
+      QuerySummarySelectors.text().should('contain', '结果数');
     });
 
     it('should support adding a non-existing language', () => {
