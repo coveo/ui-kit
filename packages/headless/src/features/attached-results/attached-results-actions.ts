@@ -1,4 +1,9 @@
-import {ArrayValue, RecordValue, SchemaValidationError} from '@coveo/bueno';
+import {
+  ArrayValue,
+  BooleanValue,
+  RecordValue,
+  SchemaValidationError,
+} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   validatePayload,
@@ -15,9 +20,9 @@ export interface SetAttachedResultsActionCreatorPayload {
   results: AttachedResult[];
 
   /**
-   * A potential error message. null if success
+   * Is the data for Attached Results currently loading
    */
-  message?: string;
+  loading?: boolean;
 }
 
 export interface SetAttachToCaseAttachActionCreatorPayload {
@@ -54,7 +59,9 @@ export const setAttachedResults = createAction(
       results: new ArrayValue({
         each: RequiredAttachedResultRecord,
       }),
-      message: nonEmptyString,
+      loading: new BooleanValue({
+        default: false,
+      }),
     })
 );
 

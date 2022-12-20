@@ -37,7 +37,7 @@ describe('attached results slice', () => {
   it('#setAttachedResults accepts an empty array of results', () => {
     const action = setAttachedResults({
       results: [],
-      message: 'foo',
+      loading: true,
     });
     const finalState = attachedResultsReducer(state, action);
     expect(finalState).toStrictEqual(action.payload);

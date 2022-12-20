@@ -65,7 +65,7 @@ describe('insight attach to case', () => {
         permanentid: testPermanentId,
       }),
     });
-    expect(attachToCase.isAttached(mockSearchResult)).toBeTruthy();
+    expect(attachToCase.isAttached(mockSearchResult)).toBe(true);
   });
 
   it('calling #isAttached should return true if the result is attached with the uriHash.', () => {
@@ -81,7 +81,7 @@ describe('insight attach to case', () => {
         urihash: testUriHash,
       }),
     });
-    expect(attachToCase.isAttached(mockSearchResult)).toBeTruthy();
+    expect(attachToCase.isAttached(mockSearchResult)).toBe(true);
   });
 
   it('calling #isAttached should return false if the result is not attached.', () => {
@@ -98,7 +98,7 @@ describe('insight attach to case', () => {
         permanentid: otherPermanentId,
       }),
     });
-    expect(attachToCase.isAttached(mockSearchResult)).toBeFalsy();
+    expect(attachToCase.isAttached(mockSearchResult)).toBe(false);
   });
 
   it('calling #attach should trigger the attachResult action with the correct payload', () => {

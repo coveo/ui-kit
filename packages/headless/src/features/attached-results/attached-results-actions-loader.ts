@@ -16,10 +16,10 @@ export interface AttachedResultsActionCreators {
    * const {setAttachedResults} = loadInsightAttachedResultsActions(engine);
    * ```
    *
-   * engine.dispatch(setAttachedResults(attachedResults, message));
+   * engine.dispatch(setAttachedResults(attachedResults, loading));
    *
    * @param attachedResults - The attached results records corresponding to this record.
-   * @param message - Optional message in case of error.
+   * @param loading - Optional state of loading.
    * @returns A dispatchable action.
    */
   setAttachedResults(
@@ -27,6 +27,12 @@ export interface AttachedResultsActionCreators {
   ): PayloadAction<SetAttachedResultsActionCreatorPayload>;
 }
 
+/**
+ * Loads the `debug` reducer and returns possible action creators.
+ *
+ * @param engine - The headless engine.
+ * @returns An object holding the action creators.
+ */
 export function loadAttachedResultsActions(
   engine: InsightEngine
 ): AttachedResultsActionCreators {
