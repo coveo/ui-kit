@@ -390,4 +390,28 @@ export default class QuanticTabBar extends LightningElement {
     // @ts-ignore
     return Math.ceil(element.offsetWidth + padding);
   }
+
+  /**
+   * Returns the tab bar dropdown container element.
+   * @returns {Element}
+   */
+  get tabBarDropdownContainer() {
+    return this.template.querySelector('.tab-bar_dropdown');
+  }
+
+  /**
+   * @param {FocusEvent} event
+   */
+
+  onBlur(event) {
+    if (
+      this.isDropdownOpen &&
+      event.relatedTarget instanceof HTMLElement &&
+      this.tabBarDropdownContainer.contains(event.relatedTarget)
+    ) {
+      return;
+    }
+    event.preventDefault();
+    this.closeDropdown();
+  }
 }
