@@ -1,8 +1,33 @@
 import LOCALE from '@salesforce/i18n/locale';
-
 import dayPattern from '@salesforce/label/c.quantic_DatePatternDay';
 import monthPattern from '@salesforce/label/c.quantic_DatePatternMonth';
 import yearPattern from '@salesforce/label/c.quantic_DatePatternYear';
+import nextDay from '@salesforce/label/c.quantic_NextDay';
+import nextDay_plural from '@salesforce/label/c.quantic_NextDay_plural';
+import nextHour from '@salesforce/label/c.quantic_NextHour';
+import nextHour_plural from '@salesforce/label/c.quantic_NextHour_plural';
+import nextMonth from '@salesforce/label/c.quantic_NextMonth';
+import nextMonth_plural from '@salesforce/label/c.quantic_NextMonth_plural';
+import nextQuarter from '@salesforce/label/c.quantic_NextQuarter';
+import nextQuarter_plural from '@salesforce/label/c.quantic_NextQuarter_plural';
+import nextWeek from '@salesforce/label/c.quantic_NextWeek';
+import nextWeek_plural from '@salesforce/label/c.quantic_NextWeek_plural';
+import nextYear from '@salesforce/label/c.quantic_NextYear';
+import nextYear_plural from '@salesforce/label/c.quantic_NextYear_plural';
+import pastDay from '@salesforce/label/c.quantic_PastDay';
+import pastDay_plural from '@salesforce/label/c.quantic_PastDay_plural';
+
+/** @typedef {import("coveo").RelativeDate} RelativeDate */
+import pastHour from '@salesforce/label/c.quantic_PastHour';
+import pastHour_plural from '@salesforce/label/c.quantic_PastHour_plural';
+import pastMonth from '@salesforce/label/c.quantic_PastMonth';
+import pastMonth_plural from '@salesforce/label/c.quantic_PastMonth_plural';
+import pastQuarter from '@salesforce/label/c.quantic_PastQuarter';
+import pastQuarter_plural from '@salesforce/label/c.quantic_PastQuarter_plural';
+import pastWeek from '@salesforce/label/c.quantic_PastWeek';
+import pastWeek_plural from '@salesforce/label/c.quantic_PastWeek_plural';
+import pastYear from '@salesforce/label/c.quantic_PastYear';
+import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
 
 /** @typedef {import("coveo").Result} Result */
 
@@ -343,6 +368,20 @@ export class DateUtils {
     const timeIdx = dateString.indexOf('T');
     return timeIdx !== -1 ? dateString.substring(0, timeIdx) : dateString;
   }
+
+  /**
+   * @param {number} timestamp
+   */
+  static isValidTimestamp(timestamp) {
+    let isValid = true;
+    try {
+      // eslint-disable-next-line no-new
+      new Date(timestamp);
+    } catch (error) {
+      isValid = false;
+    }
+    return isValid;
+  }
 }
 
 /**
@@ -355,33 +394,6 @@ export class DateUtils {
 export function fromSearchApiDate(dateString) {
   return DateUtils.fromSearchApiDate(dateString);
 }
-
-/** @typedef {import("coveo").RelativeDate} RelativeDate */
-
-import pastHour from '@salesforce/label/c.quantic_PastHour';
-import pastHour_plural from '@salesforce/label/c.quantic_PastHour_plural';
-import pastDay from '@salesforce/label/c.quantic_PastDay';
-import pastDay_plural from '@salesforce/label/c.quantic_PastDay_plural';
-import pastWeek from '@salesforce/label/c.quantic_PastWeek';
-import pastWeek_plural from '@salesforce/label/c.quantic_PastWeek_plural';
-import pastMonth from '@salesforce/label/c.quantic_PastMonth';
-import pastMonth_plural from '@salesforce/label/c.quantic_PastMonth_plural';
-import pastQuarter from '@salesforce/label/c.quantic_PastQuarter';
-import pastQuarter_plural from '@salesforce/label/c.quantic_PastQuarter_plural';
-import pastYear from '@salesforce/label/c.quantic_PastYear';
-import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
-import nextHour from '@salesforce/label/c.quantic_NextHour';
-import nextHour_plural from '@salesforce/label/c.quantic_NextHour_plural';
-import nextDay from '@salesforce/label/c.quantic_NextDay';
-import nextDay_plural from '@salesforce/label/c.quantic_NextDay_plural';
-import nextWeek from '@salesforce/label/c.quantic_NextWeek';
-import nextWeek_plural from '@salesforce/label/c.quantic_NextWeek_plural';
-import nextMonth from '@salesforce/label/c.quantic_NextMonth';
-import nextMonth_plural from '@salesforce/label/c.quantic_NextMonth_plural';
-import nextQuarter from '@salesforce/label/c.quantic_NextQuarter';
-import nextQuarter_plural from '@salesforce/label/c.quantic_NextQuarter_plural';
-import nextYear from '@salesforce/label/c.quantic_NextYear';
-import nextYear_plural from '@salesforce/label/c.quantic_NextYear_plural';
 
 export class RelativeDateFormatter {
   constructor() {
@@ -702,8 +714,8 @@ export async function copyToClipboard(text) {
 
 /**
  * Read the value of a given key from an object.
- * @param {object} object 
- * @param {string} key 
+ * @param {object} object
+ * @param {string} key
  */
 export function readFromObject(object, key) {
   const firstPeriodIndex = key.indexOf('.');
@@ -717,8 +729,8 @@ export function readFromObject(object, key) {
 
 /**
  * Generates a text from a result based on a given template.
- * @param {string} template 
- * @param {Result} result 
+ * @param {string} template
+ * @param {Result} result
  * @returns {string}
  */
 export function buildTemplateTextFromResult(template, result) {
