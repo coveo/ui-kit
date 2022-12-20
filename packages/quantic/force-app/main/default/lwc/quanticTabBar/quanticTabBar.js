@@ -411,7 +411,6 @@ export default class QuanticTabBar extends LightningElement {
     ) {
       return;
     }
-    event.preventDefault();
     this.closeDropdown();
   }
 }
