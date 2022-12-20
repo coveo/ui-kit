@@ -26,7 +26,7 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
     },
     focusSearchBox: () => {
       selector.input().then((searchbox) => {
-        cy.wrap(searchbox).trigger('keyup', {key: '27'});
+        cy.wrap(searchbox).focus();
       });
     },
     clickFirstSuggestion: () => {
