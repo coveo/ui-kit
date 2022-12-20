@@ -71,7 +71,7 @@
           >
             <template for:each={facet.timeframes} for:item="timeframe">
               <c-quantic-timeframe
-                key={timeframe.unit}
+                key={timeframe.index}
                 unit={timeframe.unit}
                 label={timeframe.label}
                 amount={timeframe.amount}

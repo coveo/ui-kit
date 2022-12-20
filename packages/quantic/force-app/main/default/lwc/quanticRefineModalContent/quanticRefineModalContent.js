@@ -65,7 +65,6 @@ export default class QuanticRefineModalContent extends LightningElement {
   /** @type {boolean} */
   someFacetsRendered = false;
 
-
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
     this.addEventListener('renderfacet', this.handleRenderFacetEvent);
@@ -176,7 +175,10 @@ export default class QuanticRefineModalContent extends LightningElement {
   toTimeframeFacet = (facetObject) => {
     return {
       isTimeframe: true,
-      timeframes: facetObject.metadata.timeframes,
+      timeframes: facetObject.metadata.timeframes.map((timeframe, index) => ({
+        ...timeframe,
+        index,
+      })),
       ...this.extractFacetDataFromElement(
         facetObject.element,
         QuanticTimeframeFacet.attributes
