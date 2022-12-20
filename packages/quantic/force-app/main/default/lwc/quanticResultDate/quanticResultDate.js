@@ -8,7 +8,9 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticResultDate` component displays a given result date field value.
  * @category Result Template
  * @example
- * <c-quantic-result-date result={result} label="Date" field="date"></c-quantic-result-date>
+ * <template if:true={result.raw.date}>
+ *   <c-quantic-result-date result={result} label="Date" field="date"></c-quantic-result-date>
+ * </template>
  */
 export default class QuanticResultDate extends LightningElement {
   /**
