@@ -2,7 +2,7 @@
 import {createElement} from 'lwc';
 import QuanticResultText from '../quanticResultText';
 
-const exampleField = 'exampleField';
+const exampleField = 'examplefield';
 const exampleFieldValue = 'example value';
 const exampleLabel = 'example label';
 const exampleResult = {
@@ -10,7 +10,6 @@ const exampleResult = {
     [exampleField]: exampleFieldValue,
   },
 };
-const exampleFormattingFunction = (value) => `formatted ${value}`;
 
 const labelSelector = '.result-text__label';
 const valueSelector = '.result-text__value';
@@ -41,9 +40,6 @@ function flushPromises() {
 }
 
 describe('c-quantic-result-text', () => {
-  let mockedConsoleError;
-  let isStringMock;
-
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
@@ -53,12 +49,14 @@ describe('c-quantic-result-text', () => {
   }
 
   beforeEach(() => {
-    mockedConsoleError = jest.fn();
-    isStringMock = jest.fn().mockReturnValue(true);
-    console.error = mockedConsoleError;
+    console.error = jest.fn();
     // @ts-ignore
     global.Bueno = {
-      isString: isStringMock,
+      isString: jest
+        .fn()
+        .mockImplementation(
+          (value) => Object.prototype.toString.call(value) === '[object String]'
+        ),
     };
   });
 
@@ -75,14 +73,14 @@ describe('c-quantic-result-text', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        'The c-quantic-result-text requires a result and a field to be specified.'
+      );
     });
   });
 
   describe('when no field is given', () => {
     it('should show an error', async () => {
-      isStringMock.mockReturnValue(false);
-
       // @ts-ignore
       const element = createTestComponent({result: exampleResult});
       await flushPromises();
@@ -90,7 +88,9 @@ describe('c-quantic-result-text', () => {
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
-      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        'The c-quantic-result-text requires a result and a field to be specified.'
+      );
     });
   });
 
@@ -122,6 +122,8 @@ describe('c-quantic-result-text', () => {
   });
 
   describe('when a formatting function is given', () => {
+    const exampleFormattingFunction = (value) => `formatted ${value}`;
+
     it('should render the formatted field value', async () => {
       const element = createTestComponent({
         ...defaultOptions,
