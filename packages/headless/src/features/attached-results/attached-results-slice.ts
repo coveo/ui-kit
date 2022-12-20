@@ -45,10 +45,11 @@ const attachedResultsMatchIds = (
   result2: AttachedResult
 ) => {
   const isPermanentIdEqual =
-    result1?.permanentId !== undefined &&
+    !isNullOrUndefined(result1.permanentId) &&
     result1?.permanentId === result2?.permanentId;
   const isUriHashEqual =
-    result1?.uriHash !== undefined && result1?.uriHash === result2?.uriHash;
+    !isNullOrUndefined(result1.uriHash) &&
+    result1?.uriHash === result2?.uriHash;
   const isCaseIdEqual = result1.caseId === result2.caseId;
   return !isCaseIdEqual || (!isPermanentIdEqual && !isUriHashEqual);
 };

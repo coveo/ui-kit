@@ -25,13 +25,17 @@ describe('attached results slice', () => {
   });
 
   it('#setAttachedResults sets the state #results correctly', () => {
-    const testAttachedResult = createMockAttachedResult();
+    const testPermanentId = 'testPermanentId';
+    const testAttachedResult = createMockAttachedResult({
+      permanentId: testPermanentId,
+    });
     const action = setAttachedResults({
       results: [testAttachedResult],
     });
     const finalState = attachedResultsReducer(state, action);
     expect(finalState.results).toBe(action.payload.results);
     expect(finalState.results.length).toEqual(1);
+    expect(finalState.results).toContainEqual(testAttachedResult);
   });
 
   it('#setAttachedResults accepts an empty array of results', () => {
@@ -42,19 +46,6 @@ describe('attached results slice', () => {
     const finalState = attachedResultsReducer(state, action);
     expect(finalState).toStrictEqual(action.payload);
     expect(finalState.results.length).toEqual(0);
-  });
-
-  it('#setAttachedResults correctly adds the result as attach so we can find it later', () => {
-    const testPermanentId = 'testPermanentId';
-    const testAttachedResult = createMockAttachedResult({
-      permanentId: testPermanentId,
-    });
-    const action = setAttachedResults({
-      results: [testAttachedResult],
-    });
-    const finalState = attachedResultsReducer(state, action);
-
-    expect(finalState.results).toContainEqual(testAttachedResult);
   });
 
   it('#attachResult correctly adds a result in the attached state', () => {
