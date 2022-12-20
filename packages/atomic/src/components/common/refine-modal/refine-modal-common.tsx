@@ -1,5 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
+import {aggregate} from '../../../utils/utils';
 import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 import {Button} from '../button';
 import {
@@ -8,7 +9,6 @@ import {
 } from '../facets/facet-common';
 import {AnyBindings} from '../interface/bindings';
 import {isRefineModalFacet} from '../interface/store';
-import {FacetManager} from '../types';
 
 interface RefineModalCommonProps {
   host: HTMLElement;
@@ -103,7 +103,6 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
 
 export function getClonedFacetElements(
   facetElements: HTMLElement[],
-  facetManager: FacetManager,
   collapseFacetsAfter: number
 ): HTMLDivElement {
   const divSlot = document.createElement('div');
@@ -112,15 +111,15 @@ export function getClonedFacetElements(
   divSlot.style.flexDirection = 'column';
   divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
 
-  const facetElementsPayload = facetElements.map((f) => ({
-    facetId: f.getAttribute('facet-id')!,
-    payload: f,
-  }));
-  const sortedFacetsElements = facetManager
-    .sort(facetElementsPayload)
-    .map((f) => f.payload);
+  const allFacetTags = Object.keys(
+    aggregate(facetElements, (el) => el.tagName.toLowerCase())
+  );
 
-  sortedFacetsElements.forEach((facetElement, index) => {
+  const allFacetsInOrderInDOM = document.querySelectorAll(
+    allFacetTags.join(',')
+  );
+
+  allFacetsInOrderInDOM.forEach((facetElement, index) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
     clone.isCollapsed = facetShouldBeInitiallyCollapsed(
       index,
