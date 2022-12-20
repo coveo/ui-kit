@@ -318,7 +318,7 @@ function destroyEngine(engineId) {
  * Register a facet in the store.
  * @param {string} engineId The engine ID.
  * @param {string} facetType
- * @param {{ label: string; facetId: string; format?: function, element?: HTMLElement}} data
+ * @param {{ label: string; facetId: string; format?: function, element?: HTMLElement, metadata?: object}} data
  */
 function registerToStore(engineId, facetType, data) {
   const store = getQuanticStore(engineId);
