@@ -6,7 +6,7 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {Component, h, State, Element} from '@stencil/core';
+import {Component, h, State, Element, Prop} from '@stencil/core';
 import FilterIcon from '../../../images/filter.svg';
 import {
   InitializeBindings,
@@ -35,6 +35,14 @@ export class AtomicIPXRefineToggle {
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
+
+  /**
+   * The number of expanded facets inside the refine modal.
+   * Remaining facets are automatically collapsed.
+   *
+   * Using the value `0` collapses all facets.
+   */
+  @Prop({reflect: true}) public collapseFacetsAfter = 0;
 
   public breadcrumbManager!: BreadcrumbManager;
   public searchStatus!: SearchStatus;
@@ -71,6 +79,7 @@ export class AtomicIPXRefineToggle {
       this.modalRef
     );
     this.modalRef.openButton = this.buttonRef;
+    this.modalRef.collapseFacetsAfter = this.collapseFacetsAfter;
   }
 
   public render() {

@@ -1,3 +1,4 @@
+// @ts-ignore
 import {createElement} from 'lwc';
 import QuanticColoredResultBadge from '../quanticColoredResultBadge';
 

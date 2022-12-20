@@ -5,6 +5,7 @@
   "globals": {
     "CoveoHeadless": "readonly",
     "CoveoHeadlessCaseAssist": "readonly",
-    "CoveoHeadlessInsight": "readonly"
+    "CoveoHeadlessInsight": "readonly",
+    "Bueno": "readonly"
   }
 }

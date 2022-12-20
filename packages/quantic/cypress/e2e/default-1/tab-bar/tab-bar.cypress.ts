@@ -177,6 +177,7 @@ describe('quantic-tab-bar', () => {
         it('should correctly select the tab', () => {
           cy.viewport(extraSmallViewportWidth, 900);
           visitPage({useCase: param.useCase});
+          cy.wait(500);
 
           scope('when loading the page', () => {
             Expect.displayedTabsEqual([TAB_1]);

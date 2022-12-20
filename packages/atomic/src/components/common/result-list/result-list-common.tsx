@@ -43,10 +43,9 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
   }
 
   public getResultId(result: AnyResult) {
-    return (
-      extractUnfoldedResult(result).uniqueId +
+    return `${extractUnfoldedResult(result).uniqueId}${
       this.props.getResultListState().searchResponseId
-    );
+    }${this.props.getDensity()}${this.props.getImageSize()}`;
   }
 
   public setNewResultRef(element: HTMLElement, resultIndex: number) {
