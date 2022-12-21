@@ -95,10 +95,9 @@ describe('Did You Mean Test Suites', () => {
     describe('after pressing on the undo button', () => {
       before(() => {
         DidYouMeanSelectors.undoButton().click();
-        cy.wait(1000);
       });
 
-      QuerySummaryAssertions.assertHasQuery(newQuery);
+      QuerySummaryAssertions.assertHasQuery(originalQuery);
       DidYouMeanAssertions.assertDisplayAutoCorrected(false);
       DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(false);
       DidYouMeanAssertions.assertDisplayQueryTriggered(false);
