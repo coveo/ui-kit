@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.4.0...@coveo/quantic@2.5.0) (2022-12-21)
+
+### Bug Fixes
+
+- **quantic:** behaviour of the result actions on click fixed ([#2621](https://github.com/coveo/ui-kit/issues/2621)) ([3206d8b](https://github.com/coveo/ui-kit/commit/3206d8b4389b2d739c87c1a5d6be1152eb74a9c6))
+
+### Features
+
+- **quantic:** new internal property isHovered added to the QuanticResult component ([#2617](https://github.com/coveo/ui-kit/issues/2617)) ([e71c28e](https://github.com/coveo/ui-kit/commit/e71c28e190ec29a96cef19cf2794bcff9c86e440))
+
 # [2.4.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.3.0...@coveo/quantic@2.4.0) (2022-12-19)
 
 ### Features
