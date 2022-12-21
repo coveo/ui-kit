@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.5.0...@coveo/quantic@2.6.0) (2022-12-21)
+
+### Bug Fixes
+
+- **quantic:** fallback copyToClipboard method added to support this operation when Locker is ON ([#2622](https://github.com/coveo/ui-kit/issues/2622)) ([5d694c2](https://github.com/coveo/ui-kit/commit/5d694c28a6acbe29dcffb1fc6a781328a5c31be6))
+
+### Features
+
+- **Quantic:** close dropdown when Tab outside and CSS ([#2627](https://github.com/coveo/ui-kit/issues/2627)) ([4472b77](https://github.com/coveo/ui-kit/commit/4472b77cdeebbb5819b77aa076b521c7bb1282ae))
+
 # [2.5.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.4.0...@coveo/quantic@2.5.0) (2022-12-21)
 
 ### Bug Fixes
