@@ -49,7 +49,7 @@ describe('highlight', () => {
       const testCases = [
         {
           input: 'malicious <script/> string',
-          output: 'mal<span>iciou</span>s &ltscript/&gt <span>str</span>ing',
+          output: 'mal<span>iciou</span>s &lt;script/&gt; <span>str</span>ing',
           highlights: [
             {offset: 3, length: 5},
             {offset: 20, length: 3},
@@ -58,7 +58,7 @@ describe('highlight', () => {
         {
           input: '<p>Chat test for SFCT 809</p>',
           output:
-            '&ltp&gt<span>Chat</span> <span>test</span> <span>for</span> <span>SFCT</span> <span>809</span>&lt/p&gt',
+            '&lt;p&gt;<span>Chat</span> <span>test</span> <span>for</span> <span>SFCT</span> <span>809</span>&lt;/p&gt;',
           highlights: [
             {length: 4, offset: 3},
             {length: 4, offset: 8},
@@ -84,7 +84,7 @@ describe('highlight', () => {
       const str = 'malicious <script/> string';
       const newHighlights: HighlightKeyword[] = [];
 
-      const expectedString = 'malicious &ltscript/&gt string';
+      const expectedString = 'malicious &lt;script/&gt; string';
 
       expect(
         highlightString({
