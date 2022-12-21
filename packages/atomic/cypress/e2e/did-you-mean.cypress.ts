@@ -95,6 +95,7 @@ describe('Did You Mean Test Suites', () => {
     describe('after pressing on the undo button', () => {
       before(() => {
         DidYouMeanSelectors.undoButton().click();
+        cy.wait(TestFixture.interceptAliases.Search);
       });
 
       QuerySummaryAssertions.assertHasQuery(newQuery);
