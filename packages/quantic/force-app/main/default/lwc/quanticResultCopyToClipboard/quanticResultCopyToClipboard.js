@@ -18,6 +18,7 @@ import {LightningElement, api} from 'lwc';
  * <c-quantic-result-copy-to-clipboard engine-id={engineId} result={result} text-template="${title}\n${clickUri}"></c-quantic-result-copy-to-clipboard>
  */
 export default class QuanticResultCopyToClipboard extends LightningElement {
+  static delegatesFocus = true;
   labels = {
     copy,
     copied,
@@ -107,6 +108,8 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
         this.engine.dispatch(this.actions.logCopyToClipboard(this.result));
         this.displayedLabel = this.successLabel;
         this.resetOriginalLabel();
+        // The copy to clipboard fallback method makes the component lose focus, the logic below resets the focus on the button.
+        this.template.host.focus();
       })
       .catch((err) => {
         setLoading(false);

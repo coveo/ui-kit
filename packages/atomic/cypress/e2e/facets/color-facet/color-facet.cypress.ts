@@ -553,7 +553,10 @@ describe('Color Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedColorFacet);
+        before(() => {
+          setupSelectedColorFacet();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -569,7 +572,10 @@ describe('Color Facet Test Suites', () => {
           deselectBreadcrumbAtIndex(deselectionIndex);
         }
 
-        before(setupDeselectColorFacetValue);
+        before(() => {
+          setupDeselectColorFacetValue();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         BreadboxAssertions.assertDisplayBreadcrumb(false);
         BreadboxAssertions.assertLogBreadcrumbFacet(colorFacetField);
         ColorFacetAssertions.assertNumberOfSelectedBoxValues(0);
@@ -587,7 +593,10 @@ describe('Color Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedMulitpleColorFacets);
+        before(() => {
+          setupSelectedMulitpleColorFacets();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);

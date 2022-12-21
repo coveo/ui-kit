@@ -1,3 +1,5 @@
+// eslint-disable-next-line node/no-extraneous-import
+import {backOff} from 'exponential-backoff';
 import * as fs from 'fs';
 import * as path from 'path';
 import waitOn from 'wait-on';
@@ -180,12 +182,14 @@ async function deployComponents(
 ): Promise<void> {
   log('Deploying components...');
 
-  await sfdx.deploySource({
-    alias: options.scratchOrg.alias,
-    packagePaths: ['force-app/main', 'force-app/examples'],
-  });
+  return backOff(async () => {
+    await sfdx.deploySource({
+      alias: options.scratchOrg.alias,
+      packagePaths: ['force-app/main', 'force-app/examples'],
+    });
 
-  log('Components deployed.');
+    log('Components deployed.');
+  });
 }
 
 async function deployCommunity(
