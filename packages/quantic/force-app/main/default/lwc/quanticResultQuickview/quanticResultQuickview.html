@@ -1,5 +1,5 @@
 <template>
-  <div class="slds-is-relative slds-show_inline result-action_container">
+  <div class={buttonContainerClass}>
     <button aria-hidden={isQuickviewOpen} class={buttonClass} onclick={openQuickview} title={buttonTitle}
       disabled={hasNoPreview} aria-label={buttonAriaLabelValue}>
       <template if:true={hasButtonLabel}>
