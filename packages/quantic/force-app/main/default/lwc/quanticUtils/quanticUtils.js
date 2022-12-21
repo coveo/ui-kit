@@ -697,13 +697,9 @@ export function isParentOf(element, targetElement) {
  * @param {string} text
  */
 export async function copyToClipboard(text) {
-  if (navigator?.clipboard?.writeText) {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch (err) {
-      copyToClipboardFallback(text);
-    }
-  } else {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
     copyToClipboardFallback(text);
   }
 }

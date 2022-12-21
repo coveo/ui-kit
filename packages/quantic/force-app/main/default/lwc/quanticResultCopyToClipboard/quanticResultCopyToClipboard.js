@@ -108,6 +108,7 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
         this.engine.dispatch(this.actions.logCopyToClipboard(this.result));
         this.displayedLabel = this.successLabel;
         this.resetOriginalLabel();
+        // The copy to clipboard fallback method makes the component lose focus, the logic below resets the focus on the button.
         this.template.host.focus();
       })
       .catch((err) => {
