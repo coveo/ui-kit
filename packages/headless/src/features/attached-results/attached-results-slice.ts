@@ -17,7 +17,7 @@ export const attachedResultsReducer = createReducer(
       .addCase(setAttachedResults, (state, action) => {
         const {results, loading} = action.payload;
 
-        if ('attachedResults' in state && state['results']?.length > 0) {
+        if ('results' in state && state['results']?.length > 0) {
           return;
         }
 

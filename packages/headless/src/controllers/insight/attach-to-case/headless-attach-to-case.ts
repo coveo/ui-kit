@@ -1,10 +1,16 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {configuration, attachedResults} from '../../../app/reducers';
 import {
   attachResult,
   detachResult,
 } from '../../../features/attached-results/attached-results-actions';
-import {AttachedResult} from '../../../features/attached-results/attached-results-state';
+import {
+  logCaseAttach,
+  logCaseDetach,
+} from '../../../features/attached-results/attached-results-analytics-actions';
+import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils';
+import {Result} from '../../../insight.index';
 import {
   AttachedResultsSection,
   ConfigurationSection,
@@ -15,26 +21,19 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 
-export interface SearchResultRaw {
+export interface AttachToCaseProps {
   /**
-   * The permanentid of the result, a unique identifier of a result.
+   * The options for the `AttachToCase` controller.
    */
-  permanentid?: string;
-  /**
-   * The urihash of the result, a unique identifier of a result. Used only for backwards compatibility.
-   */
-  urihash?: string;
+  options: AttachToCaseOptions;
 }
 
-export interface SearchResult {
+export interface AttachToCaseOptions {
   /**
-   * The title of the search result.
+   * The result to attach, detach.
    */
-  title: string;
-  /**
-   * Some raw fields that are needed to identify a result.
-   */
-  raw: SearchResultRaw;
+  result: Result;
+  caseId: string;
 }
 
 /**
@@ -46,42 +45,53 @@ export interface AttachToCase extends Controller {
    * Check if a specific result is part of the list of AttachedResults in the state.
    * @param result A result to check if attached, with SearchAPI fields
    */
-  isAttached(result: SearchResult): boolean;
+  isAttached(): boolean;
   /**
    * Attach a new result by adding it to the attachedResults state.
    * @param result A result to add to the list of currently attached results.
    */
-  attach(result: AttachedResult): void;
+  attach(): void;
   /**
    * Detach a result by removing it from the attachedResults state.
    * @param result A result to remove from the list of currently attached results.
    */
-  detach(result: AttachedResult): void;
+  detach(): void;
 }
 
-export function buildAttachToCase(engine: InsightEngine): AttachToCase {
+export function buildAttachToCase(
+  engine: InsightEngine,
+  props: AttachToCaseProps
+): AttachToCase {
   if (!loadAttachedResultsReducers(engine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
   const {dispatch} = engine;
-
   const getState = () => engine.state.attachedResults;
+  const controller = buildController(engine);
+  const {result, caseId} = props.options;
 
-  const isResultAttached = (result: SearchResult) => {
-    let attached = false;
-    if (result.raw.permanentid || result.raw.urihash) {
-      attached = engine.state.attachedResults.results.some((attached) => {
-        const permanentIdMatches =
-          attached.permanentId &&
-          attached.permanentId === result.raw.permanentid;
-        const uriHashMatches =
-          attached.uriHash && attached.uriHash === result.raw.urihash;
-        return permanentIdMatches || uriHashMatches;
-      });
+  const isResultAttached = () => {
+    if (isNullOrUndefined(caseId)) {
+      return false;
     }
-    return attached;
+
+    if (
+      isNullOrUndefined(result.raw.permanentid) &&
+      isNullOrUndefined(result.raw.urihash)
+    ) {
+      return false;
+    }
+    return engine.state.attachedResults.results.some((attached) => {
+      const caseIdMatches = caseId === attached.caseId;
+      const permanentIdMatches =
+        !isNullOrUndefined(attached.permanentId) &&
+        attached.permanentId === result.raw.permanentid;
+      const uriHashMatches =
+        !isNullOrUndefined(attached.uriHash) &&
+        attached.uriHash === result.raw.urihash;
+      return caseIdMatches && (permanentIdMatches || uriHashMatches);
+    });
   };
 
   return {
@@ -91,16 +101,26 @@ export function buildAttachToCase(engine: InsightEngine): AttachToCase {
       return getState();
     },
 
-    isAttached(result) {
-      return isResultAttached(result);
+    isAttached() {
+      return isResultAttached();
     },
 
-    attach(result) {
-      dispatch(attachResult({result}));
+    attach() {
+      dispatch(
+        attachResult({
+          result: buildAttachedResultFromSearchResult(result, caseId),
+        })
+      );
+      dispatch(logCaseAttach(result));
     },
 
-    detach(result) {
-      dispatch(detachResult({result}));
+    detach() {
+      dispatch(
+        detachResult({
+          result: buildAttachedResultFromSearchResult(result, caseId),
+        })
+      );
+      dispatch(logCaseDetach(result.raw.urihash));
     },
   };
 }

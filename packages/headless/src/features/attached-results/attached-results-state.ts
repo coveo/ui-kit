@@ -30,7 +30,7 @@ export interface AttachedResult {
   /**
    * The source name where the attached result comes from.
    */
-  source: string;
+  source?: string;
   /**
    * The title of the attached result.
    */

@@ -1,6 +1,7 @@
 import {
   ArrayValue,
   BooleanValue,
+  isNullOrUndefined,
   RecordValue,
   SchemaValidationError,
 } from '@coveo/bueno';
@@ -82,7 +83,10 @@ const validatePayloadAndPermanentIdOrUriHash = (
     | SetAttachToCaseAttachActionCreatorPayload
     | SetAttachToCaseDetachActionCreatorPayload
 ) => {
-  if (!payload.result.permanentId && !payload.result.uriHash) {
+  if (
+    isNullOrUndefined(payload.result.permanentId) &&
+    isNullOrUndefined(payload.result.uriHash)
+  ) {
     return {
       payload,
       error: serializeSchemaValidationError(
