@@ -7,7 +7,7 @@ import {
   buildFacetManager,
 } from '@coveo/headless';
 import {Component, h, State, Element, VNode} from '@stencil/core';
-import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
+import CloseIcon from '../../../images/close.svg';
 import {
   FocusTarget,
   FocusTargetController,

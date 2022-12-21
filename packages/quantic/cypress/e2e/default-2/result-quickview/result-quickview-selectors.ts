@@ -13,6 +13,7 @@ export interface ResultQuickviewSelector extends ComponentSelector {
   resultDate: () => CypressSelector;
   contentContainer: () => CypressSelector;
   spinner: () => CypressSelector;
+  tooltip: () => CypressSelector;
 }
 
 export const ResultQuickviewSelectors: ResultQuickviewSelector = {
@@ -37,4 +38,5 @@ export const ResultQuickviewSelectors: ResultQuickviewSelector = {
     ResultQuickviewSelectors.get().find('.quickview__content-container'),
   spinner: () =>
     ResultQuickviewSelectors.get().find('.quickview__spinner-container'),
+  tooltip: () => ResultQuickviewSelectors.get().find('.slds-popover'),
 };
