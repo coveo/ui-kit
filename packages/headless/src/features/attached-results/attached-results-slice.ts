@@ -22,7 +22,9 @@ export const attachedResultsReducer = createReducer(
         }
 
         state['results'] = results;
-        state['loading'] = loading;
+        if (loading) {
+          state['loading'] = loading;
+        }
       })
       .addCase(attachResult, (state, action) => {
         if (

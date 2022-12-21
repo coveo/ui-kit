@@ -21,6 +21,7 @@ describe('attached results slice', () => {
     const finalState = attachedResultsReducer(undefined, {type: ''});
     expect(finalState).toEqual({
       results: [],
+      loading: false,
     });
   });
 

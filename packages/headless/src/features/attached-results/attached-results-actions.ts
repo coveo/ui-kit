@@ -61,6 +61,7 @@ export const setAttachedResults = createAction(
         each: RequiredAttachedResultRecord,
       }),
       loading: new BooleanValue({
+        required: false,
         default: false,
       }),
     })

@@ -63,7 +63,6 @@ export default class QuanticResultAction extends LightningElement {
   get selected() {
     return this._selected;
   }
-
   set selected(isSelected) {
     this._selected = isSelected;
   }

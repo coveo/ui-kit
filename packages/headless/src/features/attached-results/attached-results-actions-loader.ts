@@ -28,7 +28,7 @@ export interface AttachedResultsActionCreators {
 }
 
 /**
- * Loads the `debug` reducer and returns possible action creators.
+ * Loads the `attachedResults` reducer and returns possible action creators.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
