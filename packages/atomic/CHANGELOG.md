@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.2.0...@coveo/atomic@2.3.0) (2022-12-21)
+
+### Features
+
+- **atomic:** create component for IPX button ([#2602](https://github.com/coveo/ui-kit/issues/2602)) ([c25ac83](https://github.com/coveo/ui-kit/commit/c25ac83b431b348dd19f7f5f38f731b15ba49c73))
+
+# [2.2.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.1.1...@coveo/atomic@2.2.0) (2022-12-19)
+
+### Bug Fixes
+
+- **atomic:** add density and image size to key prop for atomic-result ([#2600](https://github.com/coveo/ui-kit/issues/2600)) ([ba78680](https://github.com/coveo/ui-kit/commit/ba7868050d10f9821366251ff9ecad0b146231fe))
+
+### Features
+
+- **atomic:** quickview base components ([#2620](https://github.com/coveo/ui-kit/issues/2620)) ([3a38f14](https://github.com/coveo/ui-kit/commit/3a38f14109407cb6c60361b2ce1348e1b35f1aef))
+
+## [2.1.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.1.0...@coveo/atomic@2.1.1) (2022-12-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
 # [2.1.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.0.1...@coveo/atomic@2.1.0) (2022-12-15)
 
 ### Features

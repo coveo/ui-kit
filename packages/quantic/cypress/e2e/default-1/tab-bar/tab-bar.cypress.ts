@@ -175,8 +175,9 @@ describe('quantic-tab-bar', () => {
 
       describe('when a tab containing the same expression as another tab is selected from the dropdown list', () => {
         it('should correctly select the tab', () => {
-          visitPage({useCase: param.useCase});
           cy.viewport(extraSmallViewportWidth, 900);
+          visitPage({useCase: param.useCase});
+          cy.wait(500);
 
           scope('when loading the page', () => {
             Expect.displayedTabsEqual([TAB_1]);

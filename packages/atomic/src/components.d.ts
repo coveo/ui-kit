@@ -666,7 +666,19 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
-    interface AtomicIpxLayout {
+    interface AtomicIpxButton {
+        /**
+          * The label that will be shown to the user.
+         */
+        "label": string;
+    }
+    interface AtomicIpxModal {
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
+        "isOpen": boolean;
+        "source"?: HTMLElement;
     }
     interface AtomicIpxRefineModal {
         /**
@@ -829,6 +841,12 @@ export namespace Components {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+    }
+    interface AtomicQuickview {
+    }
+    interface AtomicQuickviewModal {
+        "content"?: string;
+        "result"?: Result;
     }
     interface AtomicRatingFacet {
         /**
@@ -1735,6 +1753,10 @@ export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightPagerElement;
 }
+export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicIpxModalElement;
+}
 export interface AtomicModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicModalElement;
@@ -2010,11 +2032,17 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
-    interface HTMLAtomicIpxLayoutElement extends Components.AtomicIpxLayout, HTMLStencilElement {
+    interface HTMLAtomicIpxButtonElement extends Components.AtomicIpxButton, HTMLStencilElement {
     }
-    var HTMLAtomicIpxLayoutElement: {
-        prototype: HTMLAtomicIpxLayoutElement;
-        new (): HTMLAtomicIpxLayoutElement;
+    var HTMLAtomicIpxButtonElement: {
+        prototype: HTMLAtomicIpxButtonElement;
+        new (): HTMLAtomicIpxButtonElement;
+    };
+    interface HTMLAtomicIpxModalElement extends Components.AtomicIpxModal, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxModalElement: {
+        prototype: HTMLAtomicIpxModalElement;
+        new (): HTMLAtomicIpxModalElement;
     };
     interface HTMLAtomicIpxRefineModalElement extends Components.AtomicIpxRefineModal, HTMLStencilElement {
     }
@@ -2111,6 +2139,18 @@ declare global {
     var HTMLAtomicQuerySummaryElement: {
         prototype: HTMLAtomicQuerySummaryElement;
         new (): HTMLAtomicQuerySummaryElement;
+    };
+    interface HTMLAtomicQuickviewElement extends Components.AtomicQuickview, HTMLStencilElement {
+    }
+    var HTMLAtomicQuickviewElement: {
+        prototype: HTMLAtomicQuickviewElement;
+        new (): HTMLAtomicQuickviewElement;
+    };
+    interface HTMLAtomicQuickviewModalElement extends Components.AtomicQuickviewModal, HTMLStencilElement {
+    }
+    var HTMLAtomicQuickviewModalElement: {
+        prototype: HTMLAtomicQuickviewModalElement;
+        new (): HTMLAtomicQuickviewModalElement;
     };
     interface HTMLAtomicRatingFacetElement extends Components.AtomicRatingFacet, HTMLStencilElement {
     }
@@ -2514,7 +2554,8 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
-        "atomic-ipx-layout": HTMLAtomicIpxLayoutElement;
+        "atomic-ipx-button": HTMLAtomicIpxButtonElement;
+        "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
@@ -2531,6 +2572,8 @@ declare global {
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
+        "atomic-quickview": HTMLAtomicQuickviewElement;
+        "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
@@ -3208,7 +3251,20 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
-    interface AtomicIpxLayout {
+    interface AtomicIpxButton {
+        /**
+          * The label that will be shown to the user.
+         */
+        "label"?: string;
+    }
+    interface AtomicIpxModal {
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
+        "isOpen"?: boolean;
+        "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
+        "source"?: HTMLElement;
     }
     interface AtomicIpxRefineModal {
         /**
@@ -3373,6 +3429,12 @@ declare namespace LocalJSX {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+    }
+    interface AtomicQuickview {
+    }
+    interface AtomicQuickviewModal {
+        "content"?: string;
+        "result"?: Result;
     }
     interface AtomicRatingFacet {
         /**
@@ -4262,7 +4324,8 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
-        "atomic-ipx-layout": AtomicIpxLayout;
+        "atomic-ipx-button": AtomicIpxButton;
+        "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-tab": AtomicIpxTab;
@@ -4279,6 +4342,8 @@ declare namespace LocalJSX {
         "atomic-popover": AtomicPopover;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
+        "atomic-quickview": AtomicQuickview;
+        "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-recs-interface": AtomicRecsInterface;
@@ -4386,7 +4451,8 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
-            "atomic-ipx-layout": LocalJSX.AtomicIpxLayout & JSXBase.HTMLAttributes<HTMLAtomicIpxLayoutElement>;
+            "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
+            "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
             "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
@@ -4403,6 +4469,8 @@ declare module "@stencil/core" {
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
+            "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
+            "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;

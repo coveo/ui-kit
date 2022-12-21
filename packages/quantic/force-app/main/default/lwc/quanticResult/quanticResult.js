@@ -40,8 +40,13 @@ export default class QuanticResult extends LightningElement {
 
   @track resultHasPreview = true;
 
+  /** @type {boolean} */
+  isHovered = false;
+
   connectedCallback() {
     this.template.addEventListener('haspreview', this.onHasPreview);
+    this.template.host.addEventListener('mouseenter', this.setHoverState);
+    this.template.host.addEventListener('mouseleave', this.removeHoverState);
   }
 
   disconnectedCallback() {
@@ -83,4 +88,12 @@ export default class QuanticResult extends LightningElement {
   get isAnyPreviewOpen() {
     return !!this.openPreviewId;
   }
+
+  setHoverState = () => {
+    this.isHovered = true;
+  };
+
+  removeHoverState = () => {
+    this.isHovered = false;
+  };
 }
