@@ -2,6 +2,7 @@ import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {InsightResultTemplate, InsightResultTemplateCondition} from '..';
 import {MapProp} from '../../../utils/props-utils';
 import {
+  makeDefinedConditions,
   makeMatchConditions,
   ResultTemplateCommon,
 } from '../../common/result-templates/result-template-common';
@@ -70,6 +71,7 @@ export class AtomicInsightResultTemplate {
   }
 
   public componentWillLoad() {
+    this.conditions = makeDefinedConditions(this.ifDefined, this.ifNotDefined);
     this.resultTemplateCommon.matchConditions = makeMatchConditions(
       this.mustMatch,
       this.mustNotMatch
