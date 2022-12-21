@@ -400,17 +400,16 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
+   * Triggered when the focus on dropdown item is out.
    * @param {FocusEvent} event
    */
-
   onBlur(event) {
-    if (
-      this.isDropdownOpen &&
+    const isTargetElementOutsideDropdown = !(
       event.relatedTarget instanceof HTMLElement &&
       this.tabBarDropdownContainer.contains(event.relatedTarget)
-    ) {
-      return;
+    );
+    if (this.isDropdownOpen && isTargetElementOutsideDropdown) {
+      this.closeDropdown();
     }
-    this.closeDropdown();
   }
 }
