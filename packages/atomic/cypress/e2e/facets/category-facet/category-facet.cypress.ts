@@ -784,7 +784,10 @@ describe('Category Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedCategoryFacet);
+        before(() => {
+          setupSelectedCategoryFacet();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         const selectedPath = canadaHierarchy.slice(0, 1);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
@@ -813,8 +816,15 @@ describe('Category Facet Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupDeselectCategoryFacetValue);
+          before(() => {
+            setupDeselectCategoryFacetValue();
+            cy.wait(TestFixture.interceptAliases.Search);
+          });
           BreadboxAssertions.assertDisplayBreadcrumb(false);
+        });
+
+        describe('verify analytics', () => {
+          before(setupDeselectCategoryFacetValue);
           BreadboxAssertions.assertLogBreadcrumbCategoryFacet(
             hierarchicalField
           );
@@ -838,7 +848,10 @@ describe('Category Facet Test Suites', () => {
 
       describe('verify rendering', () => {
         const selectedPath = canadaHierarchy;
-        before(setupSelectedDeeperLeverCategoryFacets);
+        before(() => {
+          setupSelectedDeeperLeverCategoryFacets();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -852,6 +865,7 @@ describe('Category Facet Test Suites', () => {
         before(() => {
           setupSelectedDeeperLeverCategoryFacets();
           pressAllCategoriesButton();
+          cy.wait(TestFixture.interceptAliases.Search);
         });
 
         describe('verify rendering', () => {

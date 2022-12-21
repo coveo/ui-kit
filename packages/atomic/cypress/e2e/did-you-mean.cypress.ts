@@ -97,7 +97,7 @@ describe('Did You Mean Test Suites', () => {
         DidYouMeanSelectors.undoButton().click();
       });
 
-      QuerySummaryAssertions.assertHasQuery(newQuery);
+      QuerySummaryAssertions.assertHasQuery(originalQuery);
       DidYouMeanAssertions.assertDisplayAutoCorrected(false);
       DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(false);
       DidYouMeanAssertions.assertDisplayQueryTriggered(false);
