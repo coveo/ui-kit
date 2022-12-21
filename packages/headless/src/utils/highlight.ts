@@ -150,11 +150,20 @@ function suggestionWithDelimiters(
  */
 
 export function escape(str: string) {
-  return str
-    .replace(/&/g, '&amp')
-    .replace(/</g, '&lt')
-    .replace(/>/g, '&gt')
-    .replace(/"/g, '&quot')
-    .replace(/`/g, '&#96')
-    .replace(/'/g, '&#x27');
+  const mapOfCharToEscape: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;',
+  };
+
+  const source = '(?:' + Object.keys(mapOfCharToEscape).join('|') + ')';
+  const testRegexp = RegExp(source);
+  const replaceRegexp = RegExp(source, 'g');
+
+  return testRegexp.test(str)
+    ? str.replace(replaceRegexp, (substring) => mapOfCharToEscape[substring])
+    : str;
 }

@@ -168,10 +168,10 @@ describe('highlight', () => {
 
   describe('escape', () => {
     it('should replace special characters', () => {
-      const str = "an'es'caped&<str&>ing`\"`";
-      expect(escape(str)).toBe(
-        'an&#x27es&#x27caped&amp&ltstr&amp&gting&#96&quot&#96'
+      expect(escape("an'es'caped&<str&>ing`\"`")).toBe(
+        'an&#x27;es&#x27;caped&amp;&lt;str&amp;&gt;ing&#x60;&quot;&#x60;'
       );
+      expect(escape("constante d'acidité")).toBe('constante d&#x27;acidité');
     });
   });
 });
