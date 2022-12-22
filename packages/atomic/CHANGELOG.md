@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.3.0...@coveo/atomic@2.3.1) (2022-12-21)
+
+### Bug Fixes
+
+- **atomic:** fixed if-defined and if-not-defined template conditions ([#2625](https://github.com/coveo/ui-kit/issues/2625)) ([fcca2c2](https://github.com/coveo/ui-kit/commit/fcca2c22752b3fca68cc29b0e8527a0039ee6a01))
+
+# [2.3.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.2.0...@coveo/atomic@2.3.0) (2022-12-21)
+
+### Features
+
+- **atomic:** create component for IPX button ([#2602](https://github.com/coveo/ui-kit/issues/2602)) ([c25ac83](https://github.com/coveo/ui-kit/commit/c25ac83b431b348dd19f7f5f38f731b15ba49c73))
+
+# [2.2.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.1.1...@coveo/atomic@2.2.0) (2022-12-19)
+
+### Bug Fixes
+
+- **atomic:** add density and image size to key prop for atomic-result ([#2600](https://github.com/coveo/ui-kit/issues/2600)) ([ba78680](https://github.com/coveo/ui-kit/commit/ba7868050d10f9821366251ff9ecad0b146231fe))
+
+### Features
+
+- **atomic:** quickview base components ([#2620](https://github.com/coveo/ui-kit/issues/2620)) ([3a38f14](https://github.com/coveo/ui-kit/commit/3a38f14109407cb6c60361b2ce1348e1b35f1aef))
+
+## [2.1.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.1.0...@coveo/atomic@2.1.1) (2022-12-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.1.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.0.1...@coveo/atomic@2.1.0) (2022-12-15)
+
+### Features
+
+- **atomic:** added collapseFacetsAfter option to refine toggle ([#2610](https://github.com/coveo/ui-kit/issues/2610)) ([be26233](https://github.com/coveo/ui-kit/commit/be2623379e96f7298eb21d2162acf0f56652f6e4))
+
+## [2.0.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.0.0...@coveo/atomic@2.0.1) (2022-12-15)
+
+### Bug Fixes
+
+- fixed v2 dependency linking ([#2614](https://github.com/coveo/ui-kit/issues/2614)) ([e9d8762](https://github.com/coveo/ui-kit/commit/e9d87627d21cf91dc258414f69e4cb5c13de39c3))
+
 # [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.126.1...@coveo/atomic@2.0.0) (2022-12-14)
 
 ### Bug Fixes
@@ -25,6 +63,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **atomic:** replaced printable uri target attribute with attributes slot ([#2525](https://github.com/coveo/ui-kit/issues/2525)) ([d9a5c2f](https://github.com/coveo/ui-kit/commit/d9a5c2f0608dd006384e5c1de0c17c9bc7498f42))
 - **atomic:** adapt search box + suggestion width in search layout ([#2589](https://github.com/coveo/ui-kit/issues/2589)) ([56ca263](https://github.com/coveo/ui-kit/commit/56ca263f8d52a99157bb3dfa3fdeb3a12ef8d869))
 - **headless:** refactored field suggestion options ([#2581](https://github.com/coveo/ui-kit/issues/2581)) ([4a5577e](https://github.com/coveo/ui-kit/commit/4a5577ec78461a1456c81a43385be34f6546b0fc))
+
 ## [1.126.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.126.0...@coveo/atomic@1.126.1) (2022-12-13)
 
 ### Bug Fixes

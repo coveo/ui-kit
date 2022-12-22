@@ -84,7 +84,6 @@ export class AtomicQuickview implements InitializableComponent {
 
   private updateModalContent() {
     if (this.quickviewModalRef && this.quickview.state.content) {
-      this.quickview.state.resultHasPreview;
       this.quickviewModalRef.content = this.quickview.state.content;
       this.quickviewModalRef.result = this.result;
     }

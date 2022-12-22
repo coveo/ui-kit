@@ -1,3 +1,4 @@
+// @ts-nocheck
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticResultActionBar from '../quanticResultActionBar';
@@ -29,12 +30,15 @@ function registerExampleResultActionButton(
   resultActionButton,
   setOrderCallback
 ) {
-  const resultActionRegister = new CustomEvent('quantic__resultactionregister', {
-    bubbles: true,
-    detail: {
-      applyCssOrderClass: setOrderCallback,
-    },
-  });
+  const resultActionRegister = new CustomEvent(
+    'quantic__resultactionregister',
+    {
+      bubbles: true,
+      detail: {
+        applyCssOrderClass: setOrderCallback,
+      },
+    }
+  );
 
   resultActionButton.dispatchEvent(resultActionRegister);
 }

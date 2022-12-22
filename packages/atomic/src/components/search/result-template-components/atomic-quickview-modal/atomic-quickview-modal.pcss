@@ -7,11 +7,10 @@
   &::part(body),
   &::part(header),
   &::part(footer) {
-    max-width: 100%;
+    @apply max-w-full;
   }
 
   &::part(footer) {
-    display: flex;
-    justify-content: center;
+    @apply flex justify-center;
   }
 }

@@ -87,6 +87,12 @@ function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
         })
         .logDetail('should log the "documentQuickview" UA event');
     },
+    displayTooltip: (label: string) => {
+      selector
+        .tooltip()
+        .contains(label)
+        .log('should display the correct tooltip');
+    },
   };
 }
 

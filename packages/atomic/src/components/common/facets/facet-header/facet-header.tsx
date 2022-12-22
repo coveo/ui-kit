@@ -1,8 +1,8 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
-import ArrowTopIcon from 'coveo-styleguide/resources/icons/svg/arrow-top-rounded.svg';
-import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {i18n} from 'i18next';
+import ArrowBottomIcon from '../../../../images/arrow-bottom-rounded.svg';
+import ArrowTopIcon from '../../../../images/arrow-top-rounded.svg';
+import CloseIcon from '../../../../images/close.svg';
 import {Button} from '../../button';
 import {Heading} from '../../heading';
 

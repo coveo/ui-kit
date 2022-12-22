@@ -25,6 +25,8 @@ import { errorMap, genericError } from './errorLabels.js';
  * <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>
  */
 export default class QuanticQueryError extends LightningElement {
+  static delegatesFocus = true;
+
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -113,9 +115,14 @@ export default class QuanticQueryError extends LightningElement {
   async handleCopyToClipboard() {
     const text = this.template.querySelector('code').textContent;
 
-    copyToClipboard(text).catch((err) => {
-      console.error('Copy to clipboard failed.', text, err);
-    });
+    copyToClipboard(text)
+      .then(() => {
+        // The copy to clipboard fallback method makes the component lose focus, the logic below resets the focus on the button.
+        this.template.host.focus();
+      })
+      .catch((err) => {
+        console.error('Copy to clipboard failed.', text, err);
+      });
   }
 
   get checkForMoreLabel() {

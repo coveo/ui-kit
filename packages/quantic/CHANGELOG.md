@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.5.0...@coveo/quantic@2.6.0) (2022-12-21)
+
+### Bug Fixes
+
+- **quantic:** fallback copyToClipboard method added to support this operation when Locker is ON ([#2622](https://github.com/coveo/ui-kit/issues/2622)) ([5d694c2](https://github.com/coveo/ui-kit/commit/5d694c28a6acbe29dcffb1fc6a781328a5c31be6))
+
+### Features
+
+- **Quantic:** close dropdown when Tab outside and CSS ([#2627](https://github.com/coveo/ui-kit/issues/2627)) ([4472b77](https://github.com/coveo/ui-kit/commit/4472b77cdeebbb5819b77aa076b521c7bb1282ae))
+
+# [2.5.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.4.0...@coveo/quantic@2.5.0) (2022-12-21)
+
+### Bug Fixes
+
+- **quantic:** behaviour of the result actions on click fixed ([#2621](https://github.com/coveo/ui-kit/issues/2621)) ([3206d8b](https://github.com/coveo/ui-kit/commit/3206d8b4389b2d739c87c1a5d6be1152eb74a9c6))
+
+### Features
+
+- **quantic:** new internal property isHovered added to the QuanticResult component ([#2617](https://github.com/coveo/ui-kit/issues/2617)) ([e71c28e](https://github.com/coveo/ui-kit/commit/e71c28e190ec29a96cef19cf2794bcff9c86e440))
+
+# [2.4.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.3.0...@coveo/quantic@2.4.0) (2022-12-19)
+
+### Features
+
+- **quantic:** added quantic-result-multi-value-text component ([#2624](https://github.com/coveo/ui-kit/issues/2624)) ([12e7cc6](https://github.com/coveo/ui-kit/commit/12e7cc611e3837f5084b9a6ee4af415e37eae55b))
+
+# [2.3.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.2.0...@coveo/quantic@2.3.0) (2022-12-19)
+
+### Features
+
+- **Quantic:** fix triggering query suggestions for any key press ([#2615](https://github.com/coveo/ui-kit/issues/2615)) ([a74e6ba](https://github.com/coveo/ui-kit/commit/a74e6bafad2b9d29acd3f700cc313836700118af))
+
+# [2.2.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.1.0...@coveo/quantic@2.2.0) (2022-12-16)
+
+### Features
+
+- **quantic:** added quantic-result-date component ([#2608](https://github.com/coveo/ui-kit/issues/2608)) ([06b04ee](https://github.com/coveo/ui-kit/commit/06b04ee4df7801c00b4a642bdb202024e4cc961b))
+- **quantic:** added quantic-result-number component ([#2618](https://github.com/coveo/ui-kit/issues/2618)) ([3af3284](https://github.com/coveo/ui-kit/commit/3af3284ec4be2162f76c79ce7d1580bf5b061b11))
+- **quantic:** added quantic-result-text component ([#2603](https://github.com/coveo/ui-kit/issues/2603)) ([ed6cbdd](https://github.com/coveo/ui-kit/commit/ed6cbddd030c6bbe12cef254456de4c6ae22004d))
+
+# [2.1.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.0.1...@coveo/quantic@2.1.0) (2022-12-15)
+
+### Features
+
+- **quantic:** result-action variant added to the QuanticResultQuickview component ([#2613](https://github.com/coveo/ui-kit/issues/2613)) ([11431f4](https://github.com/coveo/ui-kit/commit/11431f4593dfe6a4d7bc66d646b01f945f4c5e59))
+
+## [2.0.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.0.0...@coveo/quantic@2.0.1) (2022-12-15)
+
+### Bug Fixes
+
+- fixed v2 dependency linking ([#2614](https://github.com/coveo/ui-kit/issues/2614)) ([e9d8762](https://github.com/coveo/ui-kit/commit/e9d87627d21cf91dc258414f69e4cb5c13de39c3))
+
 # [2.0.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.55.0...@coveo/quantic@2.0.0) (2022-12-14)
 
 ### Bug Fixes
