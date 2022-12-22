@@ -21,7 +21,7 @@ export interface SetAttachedResultsActionCreatorPayload {
   results: AttachedResult[];
 
   /**
-   * Is the data for Attached Results currently loading
+   * Is the data for Attached Results currently loading.
    */
   loading?: boolean;
 }

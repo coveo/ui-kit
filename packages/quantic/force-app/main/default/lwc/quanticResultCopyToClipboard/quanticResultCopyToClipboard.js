@@ -62,6 +62,8 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
   /** @type {InsightEngine} */
   engine;
 
+  _loading = false;
+
   connectedCallback() {
     this.displayedLabel = this.label;
     registerComponentForInit(this, this.engineId);
@@ -97,20 +99,21 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
    */
   handleCopyToClipBoard = (event) => {
     event.stopPropagation();
-    const {setLoading, result} = event.detail;
-    setLoading(true);
+    const {result} = event.detail;
+    this._loading = true;
     const resultText = buildTemplateTextFromResult(this.textTemplate, result);
 
     copyToClipboard(resultText)
       .then(() => {
-        setLoading(false);
         this.engine.dispatch(this.actions.logCopyToClipboard(this.result));
         this.displayedLabel = this.successLabel;
         this.resetOriginalLabel();
       })
       .catch((err) => {
-        setLoading(false);
         console.error('Copy to clipboard action failed.', err);
+      })
+      .finally(() => {
+        this._loading = false;
       });
   };
 
