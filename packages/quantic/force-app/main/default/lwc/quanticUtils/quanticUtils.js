@@ -709,7 +709,24 @@ export function isParentOf(element, targetElement) {
  * @param {string} text
  */
 export async function copyToClipboard(text) {
-  await navigator.clipboard.writeText(text);
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    copyToClipboardFallback(text);
+  }
+}
+
+/**
+ * Copies text to clipboard using the DOM.
+ * @param {string} text
+ */
+export function copyToClipboardFallback(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
 }
 
 /**

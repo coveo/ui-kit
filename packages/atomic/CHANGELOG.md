@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.3.0...@coveo/atomic@2.3.1) (2022-12-21)
+
+### Bug Fixes
+
+- **atomic:** fixed if-defined and if-not-defined template conditions ([#2625](https://github.com/coveo/ui-kit/issues/2625)) ([fcca2c2](https://github.com/coveo/ui-kit/commit/fcca2c22752b3fca68cc29b0e8527a0039ee6a01))
+
+# [2.3.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.2.0...@coveo/atomic@2.3.0) (2022-12-21)
+
+### Features
+
+- **atomic:** create component for IPX button ([#2602](https://github.com/coveo/ui-kit/issues/2602)) ([c25ac83](https://github.com/coveo/ui-kit/commit/c25ac83b431b348dd19f7f5f38f731b15ba49c73))
+
 # [2.2.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.1.1...@coveo/atomic@2.2.0) (2022-12-19)
 
 ### Bug Fixes
