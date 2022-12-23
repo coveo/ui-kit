@@ -33,6 +33,9 @@ export interface AttachToCaseOptions {
    * The result to attach, detach.
    */
   result: Result;
+  /**
+   * The Id of the case to attach to.
+   */
   caseId: string;
 }
 
