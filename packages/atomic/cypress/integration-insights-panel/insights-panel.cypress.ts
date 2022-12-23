@@ -183,4 +183,22 @@ describe('Insights panel test suites', () => {
 
     CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
   });
+
+  describe('when there is a custom salesforce result template', () => {
+    before(setupPage);
+
+    it('should display a salesforce result template for salesforce results', () => {
+      InsightPanelsSelectors.tabs()
+        .should('exist')
+        .find('atomic-insight-tab')
+        .eq(3)
+        .click();
+      cy.wait(200);
+      InsightPanelsSelectors.results()
+        .first()
+        .shadow()
+        .find('atomic-result-text[field="sfid"]')
+        .should('exist');
+    });
+  });
 });

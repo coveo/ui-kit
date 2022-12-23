@@ -951,7 +951,10 @@ describe('Facet v1 Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedFacet);
+        before(() => {
+          setupSelectedFacet();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -970,7 +973,10 @@ describe('Facet v1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupDeselectFacetValue);
+          before(() => {
+            setupDeselectFacetValue();
+            cy.wait(TestFixture.interceptAliases.Search);
+          });
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
 
@@ -995,6 +1001,7 @@ describe('Facet v1 Test Suites', () => {
         setupBreadboxWithFacet();
         index.forEach((position, i) => {
           selectIdleCheckboxValueAt(FacetSelectors, position);
+          cy.wait(TestFixture.interceptAliases.Search);
           BreadboxSelectors.breadcrumbButton().should('have.length', i + 1);
         });
       }
