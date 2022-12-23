@@ -31,6 +31,7 @@ export * from './features/facets/range-facets/date-facet-set/date-facet-actions-
 export * from './features/case-context/case-context-actions-loader';
 export * from './features/insight-search/insight-search-analytics-actions-loader';
 export * from './features/fields/fields-actions-loader';
+export * from './features/attached-results/attached-results-actions-loader';
 
 // Controllers
 export type {
@@ -170,6 +171,12 @@ export type {
   Pager,
 } from './controllers/insight/pager/headless-insight-pager';
 export {buildPager} from './controllers/insight/pager/headless-insight-pager';
+
+export type {
+  AttachToCaseProps,
+  AttachToCase,
+} from './controllers/insight/attach-to-case/headless-attach-to-case';
+export {buildAttachToCase} from './controllers/insight/attach-to-case/headless-attach-to-case';
 
 export type {
   QuerySummaryState,
