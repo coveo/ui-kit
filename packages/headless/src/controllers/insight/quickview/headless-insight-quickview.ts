@@ -32,24 +32,22 @@ export function buildQuickview(
   const {insightId} = getState().insightConfiguration;
 
   const path = '/quickview';
-  const url = baseInsightUrl(
-    {
-      url: platformUrl,
-      accessToken,
-      organizationId,
-      insightId,
+  const url = baseInsightUrl({
+    url: platformUrl,
+    accessToken,
+    organizationId,
+    insightId,
+  });
+  const coreProps = {
+    options: {
+      ...props.options,
+      onlyContentURL: true,
     },
-    ''
-  );
+  };
 
   return buildCoreQuickview(
     engine,
-    {
-      options: {
-        ...props.options,
-        onlyContentURL: true,
-      },
-    },
+    coreProps,
     (state, options) => buildInsightResultPreviewRequest(state, options, url),
     path,
     fetchResultContentCallback
