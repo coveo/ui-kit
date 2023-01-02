@@ -16,7 +16,7 @@ export default class QuanticTimelineEvent extends LightningElement {
   /**
    * The type of the timeline event.
    * @api
-   * @type {`click` | `view` | `custom` | `search` | `case-creation` | `active-case-creation`}
+   * @type {'click' | 'view' | 'custom' | 'search' | 'case-creation' | 'active-case-creation'}
    */
   @api type;
   /**
