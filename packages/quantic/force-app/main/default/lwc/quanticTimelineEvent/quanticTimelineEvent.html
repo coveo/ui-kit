@@ -1,0 +1,21 @@
+<template>
+  <div class="slds-var-p-vertical_xx-small">
+    <div class="slds-grid">
+      <lightning-icon class={iconClass} icon-name={iconName} size="xx-small" variant={iconVariant}></lightning-icon>
+      <div data-id="title" class={titleClass}>{title}</div>
+    </div>
+    <div class="slds-grid slds-var-m-top_xx-small">
+      <div class="slds-var-p-horizontal_xx-small slds-var-m-horizontal_xxx-small">
+        <template if:false={isLastEventInSession}>
+          <div class="timeline-event_vector"></div>
+        </template>
+      </div>
+      <div class={eventInfoClass}>
+        <template if:true={timestamp}>
+          <span data-id="timestamp" class="slds-text-title timeline-event_small-text slds-var-m-right_xx-small">{timestamp}</span>
+        </template>
+        <span data-id="searchHub" class="slds-text-title timeline-event_small-text">{searchHub}</span>
+      </div>
+    </div>
+  </div>
+</template>
