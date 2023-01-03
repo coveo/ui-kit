@@ -561,7 +561,10 @@ describe('Timeframe Facet V1 Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedTimeframeFacetValue);
+        before(() => {
+          setupSelectedTimeframeFacetValue();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -580,7 +583,10 @@ describe('Timeframe Facet V1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupDeselectTimeframeFacetValue);
+          before(() => {
+            setupDeselectTimeframeFacetValue();
+            cy.wait(TestFixture.interceptAliases.Search);
+          });
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
 

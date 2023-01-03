@@ -56,6 +56,10 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
       flex-shrink: 0;
     }`
     )}
+
+    ${sectionSelector('search')} ${tabsSelector} {
+      width: 100%;
+    }
     `;
 
   const results = `
