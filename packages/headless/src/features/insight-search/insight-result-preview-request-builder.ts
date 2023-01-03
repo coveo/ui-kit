@@ -3,15 +3,28 @@ import {
   HtmlRequest,
   HtmlRequestOptions,
 } from '../../api/search/html/html-request';
+import {baseInsightUrl} from '../../api/service/insight/insight-params';
+import {InsightConfigurationSection} from '../../state/state-sections';
 import {StateNeededByHtmlEndpoint} from '../result-preview/result-preview-request-builder';
 
+export type StateNeededByInsightHtmlEndpoint = StateNeededByHtmlEndpoint &
+  InsightConfigurationSection;
+
 export async function buildInsightResultPreviewRequest(
-  state: StateNeededByHtmlEndpoint,
-  options: HtmlRequestOptions,
-  url: string
+  state: StateNeededByInsightHtmlEndpoint,
+  options: HtmlRequestOptions
 ): Promise<HtmlRequest> {
-  const {accessToken, organizationId, analytics} = state.configuration;
+  const {platformUrl, accessToken, organizationId, analytics} =
+    state.configuration;
+  const {insightId} = state.insightConfiguration;
+
   const q = state.query?.q || '';
+  const url = baseInsightUrl({
+    url: platformUrl,
+    accessToken,
+    organizationId,
+    insightId,
+  });
 
   return {
     url,
