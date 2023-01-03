@@ -1,6 +1,6 @@
 import {TermsToHighlight} from '@coveo/headless';
-import {HIGHLIGHT_PREFIX} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
 
+const HIGHLIGHT_PREFIX = 'CoveoHighlight';
 export class QuickviewWordHighlight {
   public text: string;
   public indexIdentifier: string;

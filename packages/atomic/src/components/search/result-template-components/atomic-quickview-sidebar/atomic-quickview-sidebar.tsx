@@ -10,8 +10,6 @@ import {
   QuickviewWordHighlight,
 } from '../quickview-word-highlight/quickview-word-highlight';
 
-export const HIGHLIGHT_PREFIX = 'CoveoHighlight';
-
 export interface QuickviewSidebarProps {
   iframe: HTMLIFrameElement;
   termsToHighlight: TermsToHighlight;
