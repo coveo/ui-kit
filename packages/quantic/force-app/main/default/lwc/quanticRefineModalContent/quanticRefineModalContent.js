@@ -24,6 +24,7 @@ import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
  * @typedef {Object} FacetObject
  * @property {HTMLElement} element - The HTML element of the facet.
  * @property {function} [format] - The formatting function of the facet.
+ * @property {object} [metadata] - Metadata of the facet.
  */
 
 /**
@@ -63,7 +64,6 @@ export default class QuanticRefineModalContent extends LightningElement {
   renderedFacets = {};
   /** @type {boolean} */
   someFacetsRendered = false;
-
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -175,6 +175,10 @@ export default class QuanticRefineModalContent extends LightningElement {
   toTimeframeFacet = (facetObject) => {
     return {
       isTimeframe: true,
+      timeframes: facetObject.metadata.timeframes.map((timeframe, index) => ({
+        ...timeframe,
+        index,
+      })),
       ...this.extractFacetDataFromElement(
         facetObject.element,
         QuanticTimeframeFacet.attributes

@@ -1,6 +1,6 @@
 <template>
   <div class="slds-is-relative slds-show_inline result-action_container result-action_white-container">
-    <template if:true={_loading}>
+    <template if:true={loading}>
       <button class={loadingClasses} aria-label={displayedLabel}>
         <div class="slds-spinner_container slds-var-m-around_xx-small">
           <div role="status" class="slds-spinner slds-spinner_xx-small">
@@ -10,7 +10,7 @@
         </div>
       </button>
     </template>
-    <template if:false={_loading}>
+    <template if:false={loading}>
       <lightning-button-icon-stateful onclick={handleClick} aria-label={displayedLabel} variant="border-filled"
         class={resultActionOrderClasses} icon-name={displayedIcon} selected={_selected}>
       </lightning-button-icon-stateful>
