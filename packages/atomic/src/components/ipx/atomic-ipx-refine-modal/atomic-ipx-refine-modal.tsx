@@ -69,7 +69,8 @@ export class AtomicIPXRefineModal implements InitializableComponent {
         this.host.append(
           getClonedFacetElements(
             this.bindings.store.getFacetElements(),
-            this.collapseFacetsAfter
+            this.collapseFacetsAfter,
+            this.bindings.interfaceElement
           )
         );
       }

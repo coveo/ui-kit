@@ -61,7 +61,11 @@ export class AtomicInsightRefineModal
     if (isOpen) {
       if (!this.host.querySelector('div[slot="facets"]')) {
         this.host.append(
-          getClonedFacetElements(this.bindings.store.getFacetElements(), 0)
+          getClonedFacetElements(
+            this.bindings.store.getFacetElements(),
+            0,
+            this.bindings.interfaceElement
+          )
         );
       }
       this.onAnimationFrame();

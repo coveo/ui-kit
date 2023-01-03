@@ -1,6 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
-import {aggregate} from '../../../utils/utils';
 import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 import {Button} from '../button';
 import {
@@ -103,7 +102,8 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
 
 export function getClonedFacetElements(
   facetElements: HTMLElement[],
-  collapseFacetsAfter: number
+  collapseFacetsAfter: number,
+  root: HTMLElement
 ): HTMLDivElement {
   const divSlot = document.createElement('div');
   divSlot.setAttribute('slot', 'facets');
@@ -111,13 +111,11 @@ export function getClonedFacetElements(
   divSlot.style.flexDirection = 'column';
   divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
 
-  const allFacetTags = Object.keys(
-    aggregate(facetElements, (el) => el.tagName.toLowerCase())
+  const allFacetTags = Array.from(
+    new Set(facetElements.map((el) => el.tagName.toLowerCase()))
   );
 
-  const allFacetsInOrderInDOM = document.querySelectorAll(
-    allFacetTags.join(',')
-  );
+  const allFacetsInOrderInDOM = root.querySelectorAll(allFacetTags.join(','));
 
   allFacetsInOrderInDOM.forEach((facetElement, index) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
