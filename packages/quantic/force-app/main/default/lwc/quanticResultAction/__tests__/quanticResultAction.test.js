@@ -51,13 +51,12 @@ function clickButton(element) {
 
 function setupClickSimulation(element, eventName, newState) {
   const handler = (event) => {
-    const {setLoading, setSelected, isSelected} = event.detail;
     functionsMocks.listener();
     if (newState === 'loading') {
-      setLoading(true);
+      event.target.loading = true;
     }
     if (newState === 'selected') {
-      setSelected(!isSelected);
+      event.target.selected = !event.detail.isSelected;
     }
     element.removeEventListener(eventName, handler);
   };
@@ -212,7 +211,7 @@ describe('c-quantic-result-action', () => {
   });
 
   describe('when the result action is clicked', () => {
-    it('should dispatch the correct event and set the loading state', async () => {
+    it('should dispatch the correct event and we can set the loading state', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -231,7 +230,7 @@ describe('c-quantic-result-action', () => {
       expect(loadingResultActionButton).not.toBeNull();
     });
 
-    it('should dispatch the correct event and set the selected state', async () => {
+    it('should dispatch the correct event and we can set the selected state', async () => {
       const element = createTestComponent();
       await flushPromises();
 

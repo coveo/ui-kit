@@ -377,6 +377,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
       facetId: this.facet.state.facetId,
       format: this.formatFacetValue,
       element: this.template.host,
+      metadata: {timeframes: this.timeframes}
     });
   };
 

@@ -1,5 +1,6 @@
 import {StateWithHistory} from '../app/undoable';
 import {AdvancedSearchQueriesState} from '../features/advanced-search-queries/advanced-search-queries-state';
+import {AttachedResultsState} from '../features/attached-results/attached-results-state';
 import {CaseAssistConfigurationState} from '../features/case-assist-configuration/case-assist-configuration-state';
 import {CaseContextState} from '../features/case-context/case-context-state';
 import {CaseFieldState} from '../features/case-field/case-field-state';
@@ -372,4 +373,11 @@ export interface InsightCaseContextSection {
    * The insight case context to use with the insight search query.
    */
   insightCaseContext: CaseContextState;
+}
+
+export interface AttachedResultsSection {
+  /**
+   * The properties related to pagination.
+   */
+  attachedResults: AttachedResultsState;
 }
