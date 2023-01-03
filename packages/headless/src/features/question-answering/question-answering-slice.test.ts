@@ -97,58 +97,6 @@ describe('question answering slice', () => {
     expect(resulting.liked).toBe(false);
   });
 
-  it('should handle expandSmartSnippetRelatedQuestion using the documentId', () => {
-    state.relatedQuestions = [
-      {
-        contentIdKey: 'foo',
-        contentIdValue: 'bar',
-        expanded: false,
-        questionAnswerId: 'a',
-      },
-      {
-        contentIdKey: 'foo',
-        contentIdValue: 'bazz',
-        expanded: false,
-        questionAnswerId: 'b',
-      },
-    ];
-    const resulting = questionAnsweringReducer(
-      state,
-      expandSmartSnippetRelatedQuestion({
-        contentIdKey: 'foo',
-        contentIdValue: 'bazz',
-      })
-    );
-    expect(resulting.relatedQuestions[0].expanded).toBe(false);
-    expect(resulting.relatedQuestions[1].expanded).toBe(true);
-  });
-
-  it('should handle collapseSmartSnippetRelatedQuestion using the documentId', () => {
-    state.relatedQuestions = [
-      {
-        contentIdKey: 'foo',
-        contentIdValue: 'bar',
-        expanded: true,
-        questionAnswerId: 'a',
-      },
-      {
-        contentIdKey: 'foo',
-        contentIdValue: 'bazz',
-        expanded: true,
-        questionAnswerId: 'b',
-      },
-    ];
-    const resulting = questionAnsweringReducer(
-      state,
-      collapseSmartSnippetRelatedQuestion({
-        contentIdKey: 'foo',
-        contentIdValue: 'bazz',
-      })
-    );
-    expect(resulting.relatedQuestions[0].expanded).toBe(true);
-    expect(resulting.relatedQuestions[1].expanded).toBe(false);
-  });
-
   it('should handle expandSmartSnippetRelatedQuestion using the unique id', () => {
     state.relatedQuestions = [
       {

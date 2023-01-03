@@ -9,7 +9,7 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {Component, h, State, Element} from '@stencil/core';
-import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
+import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
 import {
   BindStateToController,
   InitializableComponent,

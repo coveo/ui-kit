@@ -142,6 +142,28 @@ export class AtomicTimeframeFacet
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
+  /**
+   * The earliest date to accept from user input when the `withDatepicker` option is enabled.
+   *
+   * This value must be a valid date string in the format `YYYY-MM-DD`.
+   *
+   * If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.
+   *
+   * See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
+   */
+  @Prop({reflect: true}) public min?: string;
+
+  /**
+   * The latest date to accept from user input when the `withDatepicker` option is enabled.
+   *
+   * This value must be a valid date string in the format `YYYY-MM-DD`.
+   *
+   * If this format is not respected, the date picker ignores this property, behaving as if no `max` value had been set.
+   *
+   * See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
+   */
+  @Prop({reflect: true}) public max?: string;
+
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
@@ -169,6 +191,8 @@ export class AtomicTimeframeFacet
       initializeFacetForDateRange: (values: DateRangeRequest[]) =>
         this.initializeFacetForDateRange(values),
       initializeFilter: () => this.initializeFilter(),
+      min: this.min,
+      max: this.max,
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }

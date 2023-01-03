@@ -1,4 +1,4 @@
-import {NumberValue, StringValue} from '@coveo/bueno';
+import {NumberValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
@@ -24,9 +24,8 @@ import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-pa
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySuggestionSection &
-  Partial<
-    QuerySetSection & ContextSection & PipelineSection & SearchHubSection
-  >;
+  QuerySetSection &
+  Partial<ContextSection & PipelineSection & SearchHubSection>;
 
 const idDefinition = {
   id: requiredNonEmptyString,
@@ -43,11 +42,6 @@ export interface RegisterQuerySuggestActionCreatorPayload {
   id: string;
 
   /**
-   * The partial basic query expression for which to request query suggestions (e.g., `cov`).
-   */
-  q?: string;
-
-  /**
    * The number of query suggestions to request from Coveo ML (e.g., `3`).
    *
    * @defaultValue `5`.
@@ -60,7 +54,6 @@ export const registerQuerySuggest = createAction(
   (payload: RegisterQuerySuggestActionCreatorPayload) =>
     validatePayload(payload, {
       ...idDefinition,
-      q: new StringValue(),
       count: new NumberValue({min: 0}),
     })
 );
@@ -157,10 +150,7 @@ export const buildQuerySuggestRequest = async (
     organizationId: s.configuration.organizationId,
     url: s.configuration.search.apiBaseUrl,
     count: s.querySuggest[id]!.count,
-    /**
-     * @deprecated - Adjust `StateNeededByQuerySuggest` to make `querySet` required in v2.
-     */
-    q: s.querySet?.[id],
+    q: s.querySet[id],
     locale: s.configuration.search.locale,
     timezone: s.configuration.search.timezone,
     actionsHistory: s.configuration.analytics.enabled

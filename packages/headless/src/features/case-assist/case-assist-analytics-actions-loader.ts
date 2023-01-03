@@ -1,7 +1,5 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededByCaseAssistAnalytics} from '../../api/analytics/case-assist-analytics';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {AsyncThunkAnalyticsOptions} from '../analytics/analytics-utils';
+import {CaseAssistAction} from '../analytics/analytics-utils';
 import {
   logAbandonCase,
   logCaseNextStage,
@@ -28,11 +26,7 @@ export interface CaseAssistAnalyticsActionCreators {
    *
    * @returns A dispatchable action.
    */
-  logCaseStart(): AsyncThunkAction<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >;
+  logCaseStart(): CaseAssistAction;
 
   /**
    * Creates a Case Assist event for when the user moves to the next stage.
@@ -40,46 +34,28 @@ export interface CaseAssistAnalyticsActionCreators {
    * @param options - Options of the event.
    * @returns A dispatchable action.
    */
-  logCaseNextStage(
-    options?: NextStageOptions
-  ): AsyncThunkAction<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >;
+  logCaseNextStage(options?: NextStageOptions): CaseAssistAction;
 
   /**
    * Creates a Case Assist event for when the user creates a case.
    *
    * @returns A dispatchable action.
    */
-  logCreateCase(): AsyncThunkAction<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >;
+  logCreateCase(): CaseAssistAction;
 
   /**
    * Creates a Case Assist event for when the case is solved.
    *
    * @returns A dispatchable action.
    */
-  logSolveCase(): AsyncThunkAction<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >;
+  logSolveCase(): CaseAssistAction;
 
   /**
    * Creates a Case Assist event for when the user leaves.
    *
    * @returns A dispatchable action.
    */
-  logAbandonCase(): AsyncThunkAction<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >;
+  logAbandonCase(): CaseAssistAction;
 
   /**
    * Creates a Case Assist event for when the user updates a field.
@@ -87,13 +63,7 @@ export interface CaseAssistAnalyticsActionCreators {
    * @param fieldName - The target field name.
    * @returns A dispatchable action.
    */
-  logUpdateCaseField(
-    fieldName: string
-  ): AsyncThunkAction<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >;
+  logUpdateCaseField(fieldName: string): CaseAssistAction;
 
   /**
    * Creates a Case Assist event for when the user selects a classification suggestion.
@@ -101,13 +71,7 @@ export interface CaseAssistAnalyticsActionCreators {
    * @param classificationId - The unique identifier of the target classification.
    * @returns A dispatchable action.
    */
-  logClassificationClick(
-    classificationId: string
-  ): AsyncThunkAction<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >;
+  logClassificationClick(classificationId: string): CaseAssistAction;
 
   /**
    * Creates a Case Assist event for when the user selects a document suggestion.
@@ -115,13 +79,7 @@ export interface CaseAssistAnalyticsActionCreators {
    * @param suggestionId - The unique identifier of the target document.
    * @returns A dispatchable action.
    */
-  logDocumentSuggestionClick(
-    suggestionId: string
-  ): AsyncThunkAction<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >;
+  logDocumentSuggestionClick(suggestionId: string): CaseAssistAction;
 
   /**
    * Creates a Case Assist event for when the user previews a document suggestion from the quickview.
@@ -129,13 +87,7 @@ export interface CaseAssistAnalyticsActionCreators {
    * @param suggestionId - The unique identifier of the target document.
    * @returns A dispatchable action.
    */
-  logQuickviewDocumentSuggestionClick(
-    suggestionId: string
-  ): AsyncThunkAction<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >;
+  logQuickviewDocumentSuggestionClick(suggestionId: string): CaseAssistAction;
 
   /**
    * Creates a Case Assist event for when the user rates a document suggestion.
@@ -147,11 +99,7 @@ export interface CaseAssistAnalyticsActionCreators {
   logDocumentSuggestionRating(
     suggestionId: string,
     rating: number
-  ): AsyncThunkAction<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >;
+  ): CaseAssistAction;
 }
 
 /**

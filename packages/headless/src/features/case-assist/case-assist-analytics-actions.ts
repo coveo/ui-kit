@@ -1,4 +1,7 @@
-import {makeCaseAssistAnalyticsAction} from '../analytics/analytics-utils';
+import {
+  CaseAssistAction,
+  makeCaseAssistAnalyticsAction,
+} from '../analytics/analytics-utils';
 import {NextStageOptions} from './case-assist-analytics-actions-loader';
 import {
   caseAssistCaseSelector,
@@ -6,15 +9,18 @@ import {
   caseAssistDocumentSuggestionSelector,
 } from './case-assist-analytics-selectors';
 
-export const logCaseStart = makeCaseAssistAnalyticsAction(
-  'analytics/caseAssist/case/start',
-  (client, state) =>
-    client.logEnterInterface({
-      ticket: caseAssistCaseSelector(state),
-    })
-);
+export const logCaseStart = (): CaseAssistAction =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/case/start',
+    (client, state) =>
+      client.logEnterInterface({
+        ticket: caseAssistCaseSelector(state),
+      })
+  );
 
-export const logCaseNextStage = (options?: NextStageOptions) =>
+export const logCaseNextStage = (
+  options?: NextStageOptions
+): CaseAssistAction =>
   makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/case/nextStage',
     (client, state) =>
@@ -22,33 +28,36 @@ export const logCaseNextStage = (options?: NextStageOptions) =>
         ticket: caseAssistCaseSelector(state),
         stage: options?.stageName,
       })
-  )();
+  );
 
-export const logCreateCase = makeCaseAssistAnalyticsAction(
-  'analytics/caseAssist/case/create',
-  (client, state) =>
-    client.logCaseCreated({
-      ticket: caseAssistCaseSelector(state),
-    })
-);
+export const logCreateCase = (): CaseAssistAction =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/case/create',
+    (client, state) =>
+      client.logCaseCreated({
+        ticket: caseAssistCaseSelector(state),
+      })
+  );
 
-export const logSolveCase = makeCaseAssistAnalyticsAction(
-  'analytics/caseAssist/case/solve',
-  (client, state) =>
-    client.logCaseSolved({
-      ticket: caseAssistCaseSelector(state),
-    })
-);
+export const logSolveCase = (): CaseAssistAction =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/case/solve',
+    (client, state) =>
+      client.logCaseSolved({
+        ticket: caseAssistCaseSelector(state),
+      })
+  );
 
-export const logAbandonCase = makeCaseAssistAnalyticsAction(
-  'analytics/caseAssist/case/abandon',
-  (client, state) =>
-    client.logCaseCancelled({
-      ticket: caseAssistCaseSelector(state),
-    })
-);
+export const logAbandonCase = (): CaseAssistAction =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/case/abandon',
+    (client, state) =>
+      client.logCaseCancelled({
+        ticket: caseAssistCaseSelector(state),
+      })
+  );
 
-export const logUpdateCaseField = (fieldName: string) =>
+export const logUpdateCaseField = (fieldName: string): CaseAssistAction =>
   makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/case/field/update',
     (client, state) =>
@@ -56,9 +65,11 @@ export const logUpdateCaseField = (fieldName: string) =>
         fieldName,
         ticket: caseAssistCaseSelector(state),
       })
-  )();
+  );
 
-export const logAutoSelectCaseField = (classificationId: string) =>
+export const logAutoSelectCaseField = (
+  classificationId: string
+): CaseAssistAction =>
   makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/classification/click',
     (client, state) =>
@@ -70,9 +81,11 @@ export const logAutoSelectCaseField = (classificationId: string) =>
         ),
         ticket: caseAssistCaseSelector(state),
       })
-  )();
+  );
 
-export const logClassificationClick = (classificationId: string) =>
+export const logClassificationClick = (
+  classificationId: string
+): CaseAssistAction =>
   makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/classification/click',
     (client, state) =>
@@ -83,9 +96,11 @@ export const logClassificationClick = (classificationId: string) =>
         ),
         ticket: caseAssistCaseSelector(state),
       })
-  )();
+  );
 
-export const logDocumentSuggestionClick = (suggestionId: string) =>
+export const logDocumentSuggestionClick = (
+  suggestionId: string
+): CaseAssistAction =>
   makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/documentSuggestion/click',
     (client, state) =>
@@ -93,16 +108,12 @@ export const logDocumentSuggestionClick = (suggestionId: string) =>
         suggestion: caseAssistDocumentSuggestionSelector(state, suggestionId),
         ticket: caseAssistCaseSelector(state),
       })
-  )();
+  );
 
-export const logQuickviewDocumentSuggestionClick = (suggestionId: string) => {
-  return buildQuickviewDocumentSuggestionClickThunk(suggestionId)();
-};
-
-export const buildQuickviewDocumentSuggestionClickThunk = (
+export const logQuickviewDocumentSuggestionClick = (
   suggestionId: string
-) => {
-  return makeCaseAssistAnalyticsAction(
+): CaseAssistAction =>
+  makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/documentSuggestion/click',
     (client, state) =>
       client.logSelectDocumentSuggestion({
@@ -114,14 +125,11 @@ export const buildQuickviewDocumentSuggestionClickThunk = (
         ticket: caseAssistCaseSelector(state),
       })
   );
-};
 
-export const logDocumentSuggestionOpen = (suggestionId: string) => {
-  return buildDocumentSuggestionOpenThunk(suggestionId)();
-};
-
-export const buildDocumentSuggestionOpenThunk = (suggestionId: string) => {
-  return makeCaseAssistAnalyticsAction(
+export const logDocumentSuggestionOpen = (
+  suggestionId: string
+): CaseAssistAction =>
+  makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/documentSuggestion/click',
     (client, state) =>
       client.logSelectDocumentSuggestion({
@@ -134,12 +142,11 @@ export const buildDocumentSuggestionOpenThunk = (suggestionId: string) => {
         ticket: caseAssistCaseSelector(state),
       })
   );
-};
 
 export const logDocumentSuggestionRating = (
   suggestionId: string,
   rating: number
-) =>
+): CaseAssistAction =>
   makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/documentSuggestion/rate',
     (client, state) =>
@@ -148,4 +155,4 @@ export const logDocumentSuggestionRating = (
         suggestion: caseAssistDocumentSuggestionSelector(state, suggestionId),
         ticket: caseAssistCaseSelector(state),
       })
-  )();
+  );

@@ -211,32 +211,3 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
     });
   });
 });
-
-describe('deprecated image prop on result-list', () => {
-  it('should use image prop if defined', () => {
-    new TestFixture()
-      .with(addResultList(undefined, {image: 'large'}))
-      .withoutFirstAutomaticSearch()
-      .init();
-
-    ResultListSelectors.shadow().find('.image-large').should('exist');
-  });
-
-  it('should use image-size prop if defined', () => {
-    new TestFixture()
-      .with(addResultList(undefined, {'image-size': 'small'}))
-      .withoutFirstAutomaticSearch()
-      .init();
-
-    ResultListSelectors.shadow().find('.image-small').should('exist');
-  });
-  it('should prioritize image-size over image prop if both are defined', () => {
-    new TestFixture()
-      .with(addResultList(undefined, {'image-size': 'small', image: 'large'}))
-      .withoutFirstAutomaticSearch()
-      .init();
-
-    ResultListSelectors.shadow().find('.image-small').should('exist');
-    ResultListSelectors.shadow().find('.image-large').should('not.exist');
-  });
-});

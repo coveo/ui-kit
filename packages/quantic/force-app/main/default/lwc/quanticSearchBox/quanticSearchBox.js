@@ -210,6 +210,13 @@ export default class QuanticSearchBox extends LightningElement {
     this.input.blur();
   }
 
+  handleKeyValues() {
+    if (this.searchBox.state.value !== this.input.value) {
+      this.suggestionList?.resetSelection();
+      this.searchBox.updateText(this.input.value);
+    }
+  }
+
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
@@ -222,8 +229,7 @@ export default class QuanticSearchBox extends LightningElement {
         this.suggestionList?.selectionDown();
         break;
       default:
-        this.suggestionList?.resetSelection();
-        this.searchBox.updateText(event.target.value);
+        this.handleKeyValues();
     }
   }
 

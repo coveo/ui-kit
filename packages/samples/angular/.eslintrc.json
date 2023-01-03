@@ -3,5 +3,8 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
   "extends": ["./node_modules/gts"],
-  "ignorePatterns": ["**/*.js", "dist"]
+  "ignorePatterns": ["**/*.js", "dist"],
+  "rules": {
+    "node/no-unpublished-import": "off"
+  }
 }

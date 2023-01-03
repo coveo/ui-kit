@@ -1,7 +1,7 @@
 import {Result} from '../../../api/search/search/result';
 import {configuration} from '../../../app/reducers';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {logDocumentOpenThunk} from '../../../features/result/result-insight-analytics-actions';
+import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions';
 import {buildMockResult} from '../../../test';
 import {
   buildMockInsightEngine,
@@ -31,8 +31,7 @@ describe('InsightInteractiveResult', () => {
 
   function initializeInteractiveResult(delay?: number) {
     const result = (mockResult = buildMockResult(resultStringParams));
-    logDocumentOpenPendingActionType =
-      logDocumentOpenThunk(mockResult).pending.type;
+    logDocumentOpenPendingActionType = logDocumentOpen(mockResult).pending.type;
     interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
     });
@@ -49,7 +48,7 @@ describe('InsightInteractiveResult', () => {
   function expectLogDocumentActionPending() {
     const action = findLogDocumentAction();
     expect(action).toEqual(
-      logDocumentOpenThunk(mockResult).pending(action!.meta.requestId)
+      logDocumentOpen(mockResult).pending(action!.meta.requestId)
     );
   }
 

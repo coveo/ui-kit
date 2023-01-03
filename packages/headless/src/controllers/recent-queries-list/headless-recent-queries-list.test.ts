@@ -90,7 +90,7 @@ describe('recent queries list', () => {
       expectContainAction(clearRecentQueries);
       expect(recentQueriesList.state.queries.length).toBe(0);
       expect(
-        engine.findAsyncAction(logClearRecentQueries.pending)
+        engine.findAsyncAction(logClearRecentQueries().pending)
       ).toBeDefined();
     });
 

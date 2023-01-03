@@ -1,5 +1,6 @@
 import {StateWithHistory} from '../app/undoable';
 import {AdvancedSearchQueriesState} from '../features/advanced-search-queries/advanced-search-queries-state';
+import {AttachedResultsState} from '../features/attached-results/attached-results-state';
 import {CaseAssistConfigurationState} from '../features/case-assist-configuration/case-assist-configuration-state';
 import {CaseContextState} from '../features/case-context/case-context-state';
 import {CaseFieldState} from '../features/case-field/case-field-state';
@@ -34,7 +35,6 @@ import {QuestionAnsweringState} from '../features/question-answering/question-an
 import {RecentQueriesState} from '../features/recent-queries/recent-queries-state';
 import {RecentResultsState} from '../features/recent-results/recent-results-state';
 import {RecommendationState} from '../features/recommendation/recommendation-state';
-import {RedirectionState} from '../features/redirection/redirection-state';
 import {ResultPreviewState} from '../features/result-preview/result-preview-state';
 import {SearchState} from '../features/search/search-state';
 import {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state';
@@ -198,14 +198,6 @@ export interface CategoryFacetSearchSection {
    * The set of category facet searches.
    */
   categoryFacetSearchSet: CategoryFacetSearchSetState;
-}
-
-export interface RedirectionSection {
-  /**
-   * The URL redirection triggered by the preprocessed query.
-   * @deprecated - The `redirection` property will be removed in the future. Please use `standaloneSearchBoxSet` instead.
-   */
-  redirection: RedirectionState;
 }
 
 export interface StandaloneSearchBoxSection {
@@ -381,4 +373,11 @@ export interface InsightCaseContextSection {
    * The insight case context to use with the insight search query.
    */
   insightCaseContext: CaseContextState;
+}
+
+export interface AttachedResultsSection {
+  /**
+   * The properties related to pagination.
+   */
+  attachedResults: AttachedResultsState;
 }

@@ -5,10 +5,7 @@ import {change} from '../../history/history-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
-import {
-  deselectAllFacets,
-  updateFacetAutoSelection,
-} from '../generic/facet-actions';
+import {updateFacetAutoSelection} from '../generic/facet-actions';
 import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {
@@ -112,11 +109,6 @@ export const categoryFacetSetReducer = createReducer(
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
         const facetId = action.payload;
         handleCategoryFacetDeselectAll(state, facetId);
-      })
-      .addCase(deselectAllFacets, (state) => {
-        Object.keys(state).forEach((facetId) =>
-          handleCategoryFacetDeselectAll(state, facetId)
-        );
       })
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.keys(state).forEach((facetId) =>

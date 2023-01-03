@@ -13,19 +13,19 @@ import {
 import {resultTemplateComponent} from './result-template-selectors';
 
 export function buildTemplateWithoutSections(
-  elements: HTMLElement | HTMLElement[],
+  nodes: Node | Node[],
   props: TagProps = {},
   templateComponent = resultTemplateComponent
 ) {
   const resultTemplate = generateComponentHTML(templateComponent, props);
   const template = generateComponentHTML('template') as HTMLTemplateElement;
   resultTemplate.appendChild(template);
-  toArray(elements).forEach((element) => template.content.appendChild(element));
+  template.content.append(...toArray(nodes));
   return resultTemplate;
 }
 
 export function buildTemplateWithSections(
-  sections: Partial<Record<ResultSection, HTMLElement | HTMLElement[]>>,
+  sections: Partial<Record<ResultSection, Node | Node[]>>,
   props: TagProps = {},
   templateComponent = resultTemplateComponent
 ) {
@@ -34,9 +34,9 @@ export function buildTemplateWithSections(
     HTMLElement | HTMLElement[]
   ][];
   const sectionsEls: HTMLElement[] = [];
-  for (const [section, elements] of sectionPairs) {
+  for (const [section, nodes] of sectionPairs) {
     const sectionEl = generateComponentHTML(resultSectionTags[section]);
-    toArray(elements).forEach((e) => sectionEl.appendChild(e));
+    sectionEl.append(...toArray(nodes));
     sectionsEls.push(sectionEl);
   }
   return buildTemplateWithoutSections(sectionsEls, props, templateComponent);

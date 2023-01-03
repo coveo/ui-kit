@@ -1,6 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import { registerComponentForInit, initializeWithHeadless, getHeadlessBundle } from 'c/quanticHeadlessLoader';
 import { AriaLiveRegion, I18nUtils } from 'c/quanticUtils';
+import { copyToClipboard } from 'c/quanticUtils';
 
 import coveoOnlineHelpLink from '@salesforce/label/c.quantic_CoveoOnlineHelpLink';
 import moreInformation from '@salesforce/label/c.quantic_MoreInformation';
@@ -24,6 +25,8 @@ import { errorMap, genericError } from './errorLabels.js';
  * <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>
  */
 export default class QuanticQueryError extends LightningElement {
+  static delegatesFocus = true;
+
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -36,7 +39,7 @@ export default class QuanticQueryError extends LightningElement {
   /** @type {Boolean} */
   @track hasError;
   /** @type {string} */
-  @track error
+  @track error;
 
   /** @type {QueryError} */
   queryError;
@@ -111,27 +114,15 @@ export default class QuanticQueryError extends LightningElement {
 
   async handleCopyToClipboard() {
     const text = this.template.querySelector('code').textContent;
-    if (navigator?.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch (err) {
+
+    copyToClipboard(text)
+      .then(() => {
+        // The copy to clipboard fallback method makes the component lose focus, the logic below resets the focus on the button.
+        this.template.host.focus();
+      })
+      .catch((err) => {
         console.error('Copy to clipboard failed.', text, err);
-        this.copyToClipboardFallback(text);
-      }
-    } else {
-      this.copyToClipboardFallback(text);
-    } 
-  }
-  /**
-   * @param {string} text
-   */
-  copyToClipboardFallback(text) {
-    const el = document.createElement('textarea');
-    el.value = text;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
+      });
   }
 
   get checkForMoreLabel() {

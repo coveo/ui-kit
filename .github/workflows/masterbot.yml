@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - 'prerelease/**'
 jobs:
   build:
     name: 'Build'

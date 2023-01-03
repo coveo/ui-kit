@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { SearchEngine } from "@coveo/atomic/headless";
+import { SearchEngine } from "@coveo/headless";
 import { Router } from "stencil-router-v2";
 export namespace Components {
     interface AppRoot {

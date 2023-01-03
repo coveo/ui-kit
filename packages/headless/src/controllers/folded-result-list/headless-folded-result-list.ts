@@ -128,11 +128,6 @@ export interface FoldedResultListState extends SearchStatusState {
    * */
   results: FoldedCollection[];
   /**
-   * The unique identifier of the last executed search.
-   * @deprecated - Use the `searchResponseId` instead.
-   */
-  searchUid: string;
-  /**
    * The unique identifier of the response where the results were fetched, this value does not change when loading more results.
    */
   searchResponseId: string;

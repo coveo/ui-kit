@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import type {JSX as AtomicJSX} from '@coveo/atomic';
-import type {Result} from '@coveo/atomic/headless/recommendation';
+import type {Result} from '@coveo/headless/recommendation';
 import {AtomicRecsList} from '../stencil-generated';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';

@@ -11,10 +11,7 @@ import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
 } from './question-answering-actions';
-import {
-  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
-  QuestionAnsweringDocumentIdActionCreatorPayload,
-} from './question-answering-document-id';
+import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-answering-document-id';
 
 /**
  * The question answering action creators.
@@ -64,10 +61,7 @@ export interface QuestionAnsweringActionCreators {
    */
   expandSmartSnippetRelatedQuestion(
     payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
-  ): PayloadAction<
-    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-    | QuestionAnsweringDocumentIdActionCreatorPayload
-  >;
+  ): PayloadAction<QuestionAnsweringUniqueIdentifierActionCreatorPayload>;
   /**
    * Collapses the specified snippet suggestion.
    *
@@ -76,10 +70,7 @@ export interface QuestionAnsweringActionCreators {
    */
   collapseSmartSnippetRelatedQuestion(
     payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
-  ): PayloadAction<
-    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-    | QuestionAnsweringDocumentIdActionCreatorPayload
-  >;
+  ): PayloadAction<QuestionAnsweringUniqueIdentifierActionCreatorPayload>;
 }
 
 /**

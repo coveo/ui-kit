@@ -1,4 +1,5 @@
 import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/advanced-search-queries-slice';
+import {attachedResultsReducer} from '../features/attached-results/attached-results-slice';
 import {caseAssistConfigurationReducer} from '../features/case-assist-configuration/case-assist-configuration-slice';
 import {caseContextReducer} from '../features/case-context/case-context-slice';
 import {caseFieldReducer} from '../features/case-field/case-field-slice';
@@ -37,7 +38,6 @@ import {questionAnsweringReducer} from '../features/question-answering/question-
 import {recentQueriesReducer} from '../features/recent-queries/recent-queries-slice';
 import {recentResultsReducer} from '../features/recent-results/recent-results-slice';
 import {recommendationReducer} from '../features/recommendation/recommendation-slice';
-import {redirectionReducer} from '../features/redirection/redirection-slice';
 import {resultPreviewReducer} from '../features/result-preview/result-preview-slice';
 import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 import {searchReducer} from '../features/search/search-slice';
@@ -68,10 +68,6 @@ export const staticFilterSet = staticFilterSetReducer;
 export const querySet = querySetReducer;
 export const instantResults = instantResultsReducer;
 export const tabSet = tabSetReducer;
-/**
- * @deprecated - The `redirection` functionality is now handled by the `standaloneSearchBoxSet`.
- */
-export const redirection = redirectionReducer;
 export const querySuggest = querySuggestReducer;
 export const sortCriteria = sortCriteriaReducer;
 export const context = contextReducer;
@@ -88,6 +84,7 @@ export const questionAnswering = questionAnsweringReducer;
 export const standaloneSearchBoxSet = standaloneSearchBoxSetReducer;
 export const recentResults = recentResultsReducer;
 export const recentQueries = recentQueriesReducer;
+export const attachedResults = attachedResultsReducer;
 
 export const history = undoable({
   actionTypes: {

@@ -686,6 +686,21 @@ describe('Facet v1 Test Suites', () => {
       before(() => setupSelectShowMore());
 
       FacetAssertions.assertLogFacetShowMore(field);
+      it('should include analytics in the v2 call', async () => {
+        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+          expect(firstSearch.request.body).to.have.property('analytics');
+          const analyticsBody = firstSearch.request.body.analytics;
+          expect(analyticsBody).to.have.property('eventType', 'facet');
+          expect(analyticsBody).to.have.property(
+            'eventValue',
+            'showMoreFacetResults'
+          );
+          expect(analyticsBody.customData).to.have.property(
+            'facetField',
+            field
+          );
+        });
+      });
     });
 
     describe('when there\'s no more "Show more" button', () => {
@@ -900,7 +915,7 @@ describe('Facet v1 Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addFacet({field, label}))
-        .withHash(`f[${field}]=Cervantes`)
+        .withHash(`f-${field}=Cervantes`)
         .init();
     });
 
@@ -936,7 +951,10 @@ describe('Facet v1 Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedFacet);
+        before(() => {
+          setupSelectedFacet();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -955,7 +973,10 @@ describe('Facet v1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupDeselectFacetValue);
+          before(() => {
+            setupDeselectFacetValue();
+            cy.wait(TestFixture.interceptAliases.Search);
+          });
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
 
@@ -980,6 +1001,7 @@ describe('Facet v1 Test Suites', () => {
         setupBreadboxWithFacet();
         index.forEach((position, i) => {
           selectIdleCheckboxValueAt(FacetSelectors, position);
+          cy.wait(TestFixture.interceptAliases.Search);
           BreadboxSelectors.breadcrumbButton().should('have.length', i + 1);
         });
       }
@@ -1075,36 +1097,20 @@ describe('Facet v1 Test Suites', () => {
   describe('with allowed-values', () => {
     beforeEach(() => {
       new TestFixture()
-        .with(addFacet({field: 'objecttype', 'allowed-values': 'FAQ,File'}))
-        .init();
-    });
-
-    it('returns only allowed values', () => {
-      FacetSelectors.values()
-        .should('contain.text', 'FAQ')
-        .should('contain.text', 'File')
-        .should('not.contain.text', 'Message');
-    });
-
-    CommonAssertions.assertConsoleWarningMessage(
-      'This will be enforced in the next major versio'
-    );
-  });
-
-  describe('with allowed-values as JSON string array', () => {
-    beforeEach(() => {
-      new TestFixture()
         .with(
-          addFacet({field: 'objecttype', 'allowed-values': '["FAQ","File"]'})
+          addFacet({
+            field: 'objecttype',
+            'allowed-values': JSON.stringify(['FAQ', 'File']),
+          })
         )
         .init();
     });
+
     it('returns only allowed values', () => {
       FacetSelectors.values()
         .should('contain.text', 'FAQ')
         .should('contain.text', 'File')
         .should('not.contain.text', 'Message');
     });
-    CommonAssertions.assertConsoleWarning(false);
   });
 });

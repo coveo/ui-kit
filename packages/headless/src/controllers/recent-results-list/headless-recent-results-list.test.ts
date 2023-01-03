@@ -101,7 +101,7 @@ describe('recent results list', () => {
 
       expectContainAction(clearRecentResults);
       expect(
-        engine.findAsyncAction(logClearRecentResults.pending)
+        engine.findAsyncAction(logClearRecentResults().pending)
       ).toBeDefined();
     });
   });

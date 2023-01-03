@@ -1,4 +1,5 @@
 import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
+import {InsightAction} from '../analytics/analytics-utils';
 import {logInsightInterfaceChange} from '../analytics/insight-analytics-actions';
 import {
   logFacetClearAll,
@@ -12,7 +13,7 @@ import {SearchParameters} from './search-parameter-actions';
 export function logParametersChange(
   previousParameters: SearchParameters,
   newParameters: SearchParameters
-) {
+): InsightAction {
   if (previousParameters.q !== newParameters.q) {
     return logSearchboxSubmit();
   }
@@ -76,7 +77,7 @@ function parseRangeFacetParams(facetsParams: RangeFacetParameters) {
 function logFacetAnalyticsAction(
   previousFacets: FacetParameters = {},
   newFacets: FacetParameters = {}
-) {
+): InsightAction {
   const previousIds = Object.keys(previousFacets);
   const newIds = Object.keys(newFacets);
 
@@ -137,7 +138,7 @@ function logFacetAnalyticsAction(
 function logRangeFacetAnalyticsAction(
   previousFacets: RangeFacetParameters = {},
   newFacets: RangeFacetParameters = {}
-) {
+): InsightAction {
   return logFacetAnalyticsAction(
     parseRangeFacetParams(previousFacets),
     parseRangeFacetParams(newFacets)

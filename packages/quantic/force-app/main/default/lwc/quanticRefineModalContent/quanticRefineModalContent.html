@@ -68,7 +68,17 @@
             injection-depth={facet.injectionDepth}
             key={facet.field}
             is-collapsed
-          ></c-quantic-timeframe-facet>
+          >
+            <template for:each={facet.timeframes} for:item="timeframe">
+              <c-quantic-timeframe
+                key={timeframe.index}
+                unit={timeframe.unit}
+                label={timeframe.label}
+                amount={timeframe.amount}
+                period={timeframe.period}
+              ></c-quantic-timeframe>
+            </template>
+          </c-quantic-timeframe-facet>
         </template>
         <template if:true={facet.isDate}>
           <c-quantic-date-facet

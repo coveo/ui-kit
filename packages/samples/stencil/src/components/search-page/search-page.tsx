@@ -2,7 +2,7 @@ import {
   loadSearchActions,
   loadSearchAnalyticsActions,
   SearchEngine,
-} from '@coveo/atomic/headless';
+} from '@coveo/headless';
 import {Component, h, Prop} from '@stencil/core';
 import template from './template.html';
 

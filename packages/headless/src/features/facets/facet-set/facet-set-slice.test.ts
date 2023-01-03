@@ -2,6 +2,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
@@ -24,10 +25,7 @@ import {
   fetchFacetValues,
 } from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
-import {
-  deselectAllFacets,
-  updateFacetAutoSelection,
-} from '../generic/facet-actions';
+import {updateFacetAutoSelection} from '../generic/facet-actions';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
 import {
   registerFacet,
@@ -76,10 +74,8 @@ describe('facet-set slice', () => {
       field: options.field,
       type: 'specific',
       currentValues: [],
-      delimitingCharacter: '>',
       filterFacetCount: true,
       freezeCurrentValues: false,
-      hasBreadcrumbs: true,
       injectionDepth: 1000,
       isFieldExpanded: false,
       numberOfValues: 8,
@@ -87,7 +83,7 @@ describe('facet-set slice', () => {
       sortCriteria: 'automatic',
     };
 
-    expect(finalState[facetId]).toEqual(expectedFacet);
+    expect(finalState[facetId]?.request).toEqual(expectedFacet);
   });
 
   it('registers a facet request with the passed optional values', () => {
@@ -99,7 +95,7 @@ describe('facet-set slice', () => {
 
     const action = registerFacet(options);
     const finalState = facetSetReducer(state, action);
-    const facetRequest = finalState[options.facetId];
+    const {request: facetRequest} = finalState[options.facetId];
 
     expect(facetRequest.sortCriteria).toBe(criterion);
     expect(facetRequest.allowedValues?.values).toEqual(['foo', 'bar']);
@@ -107,19 +103,19 @@ describe('facet-set slice', () => {
 
   it('if a facet request is already registered for an id, it does not overwrite the request', () => {
     const id = '1';
-    state[id] = buildMockFacetRequest();
+    state[id] = buildMockFacetSlice();
 
     const options = buildRegistrationOptions({facetId: id, field: 'author'});
     const action = registerFacet(options);
     const finalState = facetSetReducer(state, action);
 
-    expect(finalState[id].field).toBe(state[id].field);
+    expect(finalState[id].request.field).toBe(state[id].request.field);
   });
 
   it('allows to restore a facet set on history change', () => {
     const state = getFacetSetInitialState();
     const expectedFacetSet = {
-      foo: buildMockFacetRequest(),
+      foo: buildMockFacetSlice(),
     };
     const historyChange = {
       ...getHistoryInitialState(),
@@ -135,7 +131,7 @@ describe('facet-set slice', () => {
   });
 
   it('ignore an empty facet set on history change', () => {
-    const state = {foo: buildMockFacetRequest()};
+    const state = {foo: buildMockFacetSlice()};
     const emptyFacetSet = {};
     const historyChange = {
       ...getHistoryInitialState(),
@@ -157,7 +153,9 @@ describe('facet-set slice', () => {
         const facetValue = buildMockFacetValue({value: 'TED'});
         const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-        state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
 
         const action = toggleSelectFacetValue({
           facetId: id,
@@ -165,7 +163,7 @@ describe('facet-set slice', () => {
         });
         const finalState = facetSetReducer(state, action);
 
-        const targetValue = finalState[id].currentValues.find(
+        const targetValue = finalState[id]?.request.currentValues.find(
           (req) => req.value === facetValue.value
         );
         expect(targetValue?.state).toBe('selected');
@@ -178,7 +176,9 @@ describe('facet-set slice', () => {
         });
         const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-        state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
 
         const action = toggleSelectFacetValue({
           facetId: id,
@@ -186,7 +186,7 @@ describe('facet-set slice', () => {
         });
         const finalState = facetSetReducer(state, action);
 
-        const targetValue = finalState[id].currentValues.find(
+        const targetValue = finalState[id]?.request.currentValues.find(
           (req) => req.value === facetValue.value
         );
         expect(targetValue?.state).toBe('idle');
@@ -196,7 +196,9 @@ describe('facet-set slice', () => {
         const facetValue = buildMockFacetValue({value: 'TED'});
         const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-        state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
 
         const action = toggleSelectFacetValue({
           facetId: id,
@@ -204,14 +206,16 @@ describe('facet-set slice', () => {
         });
         const finalState = facetSetReducer(state, action);
 
-        expect(finalState[id].freezeCurrentValues).toBe(true);
+        expect(finalState[id]?.request.freezeCurrentValues).toBe(true);
       });
 
       it('sets #preventAutoSelect to true', () => {
         const facetValue = buildMockFacetValue({value: 'TED'});
         const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-        state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
 
         const action = toggleSelectFacetValue({
           facetId: id,
@@ -219,7 +223,7 @@ describe('facet-set slice', () => {
         });
         const finalState = facetSetReducer(state, action);
 
-        expect(finalState[id].preventAutoSelect).toBe(true);
+        expect(finalState[id]?.request.preventAutoSelect).toBe(true);
       });
     });
 
@@ -230,13 +234,15 @@ describe('facet-set slice', () => {
           state: 'selected',
         });
 
-        state[id] = buildMockFacetRequest({
-          currentValues: [
-            buildMockFacetValue({value: 'selected1', state: 'selected'}),
-            buildMockFacetValue({value: 'selected2', state: 'selected'}),
-            buildMockFacetValue({value: 'idle1', state: 'idle'}),
-            buildMockFacetValue({value: 'idle2', state: 'idle'}),
-          ],
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({
+            currentValues: [
+              buildMockFacetValue({value: 'selected1', state: 'selected'}),
+              buildMockFacetValue({value: 'selected2', state: 'selected'}),
+              buildMockFacetValue({value: 'idle1', state: 'idle'}),
+              buildMockFacetValue({value: 'idle2', state: 'idle'}),
+            ],
+          }),
         });
 
         const action = toggleSelectFacetValue({
@@ -245,12 +251,16 @@ describe('facet-set slice', () => {
         });
 
         const finalState = facetSetReducer(state, action);
-        expect(finalState[id].currentValues.indexOf(newFacetValue)).toBe(2);
-        expect(finalState[id].currentValues.length).toBe(4);
+        expect(
+          finalState[id]?.request.currentValues.indexOf(newFacetValue)
+        ).toBe(2);
+        expect(finalState[id]?.request.currentValues.length).toBe(4);
       });
 
       it('does not set #freezeCurrentValues to true', () => {
-        state[id] = buildMockFacetRequest({currentValues: []});
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: []}),
+        });
 
         const action = toggleSelectFacetValue({
           facetId: id,
@@ -258,11 +268,13 @@ describe('facet-set slice', () => {
         });
         const finalState = facetSetReducer(state, action);
 
-        expect(finalState[id].freezeCurrentValues).toBe(false);
+        expect(finalState[id]?.request.freezeCurrentValues).toBe(false);
       });
 
       it('sets #preventAutoSelect to true', () => {
-        state[id] = buildMockFacetRequest({currentValues: []});
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: []}),
+        });
 
         const action = toggleSelectFacetValue({
           facetId: id,
@@ -270,7 +282,7 @@ describe('facet-set slice', () => {
         });
         const finalState = facetSetReducer(state, action);
 
-        expect(finalState[id].preventAutoSelect).toBe(true);
+        expect(finalState[id]?.request.preventAutoSelect).toBe(true);
       });
     });
   });
@@ -289,14 +301,14 @@ describe('facet-set slice', () => {
   sets the state updateFreezeCurrentValues to the value`, () => {
     const id = '1';
 
-    state[id] = buildMockFacetRequest();
+    state[id] = buildMockFacetSlice();
 
     const action = updateFreezeCurrentValues({
       facetId: id,
       freezeCurrentValues: true,
     });
     const finalState = facetSetReducer(state, action);
-    expect(finalState[id].freezeCurrentValues).toBe(true);
+    expect(finalState[id]?.request.freezeCurrentValues).toBe(true);
   });
 
   it('dispatching #updateFreezeCurrentValues with an invalid id does not throw', () => {
@@ -315,32 +327,26 @@ describe('facet-set slice', () => {
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every facet', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
-
-    state['1'] = buildMockFacetRequest();
-    state['2'] = buildMockFacetRequest();
-    facetSetReducer(state, deselectAllFacets());
-
-    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(2);
-  });
-
   it('dispatching #updateFacetAutoSelection updates autoSelection for all facets', () => {
-    state['1'] = buildMockFacetRequest({preventAutoSelect: true});
-    state['2'] = buildMockFacetRequest({preventAutoSelect: true});
+    state['1'] = buildMockFacetSlice({
+      request: buildMockFacetRequest({preventAutoSelect: true}),
+    });
+    state['2'] = buildMockFacetSlice({
+      request: buildMockFacetRequest({preventAutoSelect: true}),
+    });
     const finalState = facetSetReducer(
       state,
       updateFacetAutoSelection({allow: true})
     );
-    expect(finalState['1'].preventAutoSelect).toBe(false);
-    expect(finalState['2'].preventAutoSelect).toBe(false);
+    expect(finalState['1']?.request.preventAutoSelect).toBe(false);
+    expect(finalState['2']?.request.preventAutoSelect).toBe(false);
   });
 
   it('dispatching #deselectAllBreadcrumbs calls #handleFacetDeselectAll for every facet', () => {
     jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
-    state['1'] = buildMockFacetRequest();
-    state['2'] = buildMockFacetRequest();
+    state['1'] = buildMockFacetSlice();
+    state['2'] = buildMockFacetSlice();
     facetSetReducer(state, deselectAllBreadcrumbs());
 
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(2);
@@ -349,7 +355,9 @@ describe('facet-set slice', () => {
   it('dispatching #deselectAllBreadcrumbs does not call #handleFacetDeselectAll for a facet where hasBreadcrumbs is false', () => {
     jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
-    state['1'] = buildMockFacetRequest({hasBreadcrumbs: false});
+    state['1'] = buildMockFacetSlice({
+      hasBreadcrumbs: false,
+    });
     facetSetReducer(state, deselectAllBreadcrumbs());
 
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(0);
@@ -358,9 +366,15 @@ describe('facet-set slice', () => {
   it('dispatching #deselectAllBreadcrumbs does not call #handleFacetDeselectAll for a facet where hasBreadcrumbs is false', () => {
     jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
 
-    state['1'] = buildMockFacetRequest({hasBreadcrumbs: false});
-    state['2'] = buildMockFacetRequest({hasBreadcrumbs: true});
-    state['3'] = buildMockFacetRequest({hasBreadcrumbs: true});
+    state['1'] = buildMockFacetSlice({
+      hasBreadcrumbs: false,
+    });
+    state['2'] = buildMockFacetSlice({
+      hasBreadcrumbs: true,
+    });
+    state['3'] = buildMockFacetSlice({
+      hasBreadcrumbs: true,
+    });
     facetSetReducer(state, deselectAllNonBreadcrumbs());
 
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
@@ -398,14 +412,18 @@ describe('facet-set slice', () => {
     it('dispatching with a registered id updates the value', () => {
       const facetId = '1';
       const isFieldExpanded = true;
-      state[facetId] = buildMockFacetRequest({
-        isFieldExpanded: !isFieldExpanded,
+      state[facetId] = buildMockFacetSlice({
+        request: buildMockFacetRequest({
+          isFieldExpanded: !isFieldExpanded,
+        }),
       });
 
       const action = updateFacetIsFieldExpanded({facetId, isFieldExpanded});
       const finalState = facetSetReducer(state, action);
 
-      expect(finalState[facetId].isFieldExpanded).toBe(isFieldExpanded);
+      expect(finalState[facetId]?.request.isFieldExpanded).toBe(
+        isFieldExpanded
+      );
     });
 
     it('dispatching with an unregistered id does not throw', () => {
@@ -430,35 +448,43 @@ describe('facet-set slice', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       const facet = buildMockFacetResponse({facetId: id, values: [facetValue]});
 
-      state[id] = buildMockFacetRequest({facetId: id});
+      state[id] = buildMockFacetSlice({
+        request: buildMockFacetRequest({facetId: id}),
+      });
 
       const action = searchBuilder([facet]);
       const finalState = facetSetReducer(state, action);
 
       const expectedFacetValueRequest = convertFacetValueToRequest(facetValue);
-      expect(finalState[id].currentValues).toEqual([expectedFacetValueRequest]);
+      expect(finalState[id]?.request.currentValues).toEqual([
+        expectedFacetValueRequest,
+      ]);
     });
 
     it('sets #freezeCurrentValues to false', () => {
       const id = '1';
-      state[id] = buildMockFacetRequest({freezeCurrentValues: true});
+      state[id] = buildMockFacetSlice({
+        request: buildMockFacetRequest({freezeCurrentValues: true}),
+      });
 
       const facet = buildMockFacetResponse({facetId: id});
       const action = searchBuilder([facet]);
 
       const finalState = facetSetReducer(state, action);
-      expect(finalState[id].freezeCurrentValues).toBe(false);
+      expect(finalState[id]?.request.freezeCurrentValues).toBe(false);
     });
 
     it('sets #preventAutoSelect to false', () => {
       const id = '1';
-      state[id] = buildMockFacetRequest({preventAutoSelect: true});
+      state[id] = buildMockFacetSlice({
+        request: buildMockFacetRequest({preventAutoSelect: true}),
+      });
 
       const facet = buildMockFacetResponse({facetId: id});
       const action = searchBuilder([facet]);
 
       const finalState = facetSetReducer(state, action);
-      expect(finalState[id].preventAutoSelect).toBe(false);
+      expect(finalState[id]?.request.preventAutoSelect).toBe(false);
     });
 
     it('response containing unregistered facet ids does not throw', () => {
@@ -522,11 +548,11 @@ describe('facet-set slice', () => {
     }
 
     function getFacetRequest() {
-      return state[facetId];
+      return state[facetId]?.request;
     }
 
     beforeEach(() => {
-      state[facetId] = buildMockFacetRequest();
+      state[facetId] = buildMockFacetSlice();
     });
 
     it('adds the #value.rawValue to #currentValues with #state.selected', () => {
@@ -563,7 +589,7 @@ describe('facet-set slice', () => {
     });
 
     it('when the #value.rawValue already exists and is idle, it selects the value', () => {
-      state[facetId].currentValues = [
+      state[facetId]!.request.currentValues = [
         buildMockFacetValueRequest({value: rawValue, state: 'idle'}),
       ];
       dispatchSelectFacetSearchResult();
@@ -581,7 +607,7 @@ describe('facet-set slice', () => {
       const valueA = buildMockFacetValueRequest({value: 'A'});
       const valueB = buildMockFacetValueRequest({value: 'B'});
 
-      state[facetId].currentValues = [valueA, valueB];
+      state[facetId]!.request.currentValues = [valueA, valueB];
       dispatchSelectFacetSearchResult();
 
       const {currentValues} = getFacetRequest();
@@ -590,7 +616,7 @@ describe('facet-set slice', () => {
 
     it('when there are only selected values, it adds the search result to the end', () => {
       const selectedValue = buildMockFacetValueRequest({state: 'selected'});
-      state[facetId].currentValues = [selectedValue];
+      state[facetId]!.request.currentValues = [selectedValue];
       dispatchSelectFacetSearchResult();
 
       const {currentValues} = getFacetRequest();
@@ -610,8 +636,8 @@ describe('facet-set slice', () => {
       const facetId = 'author';
       const valueA = buildMockFacetValueRequest({value: 'a'});
       const valueB = buildMockFacetValueRequest({value: 'b'});
-      state[facetId] = buildMockFacetRequest({
-        currentValues: [valueA, valueB],
+      state[facetId] = buildMockFacetSlice({
+        request: buildMockFacetRequest({currentValues: [valueA, valueB]}),
       });
       const f = {[facetId]: ['a']};
       const finalState = facetSetReducer(state, restoreSearchParameters({f}));
@@ -619,7 +645,7 @@ describe('facet-set slice', () => {
         value: 'a',
         state: 'selected',
       });
-      expect(finalState[facetId].currentValues).toEqual([
+      expect(finalState[facetId]?.request.currentValues).toEqual([
         selectedValue,
         valueB,
       ]);
@@ -628,32 +654,38 @@ describe('facet-set slice', () => {
     it(`when the number of values in the payload is greater than the number of values on the request,
     it sets the request #numberOfValues to the length of the payload`, () => {
       const facetId = 'author';
-      state[facetId] = buildMockFacetRequest({numberOfValues: 1});
+      state[facetId] = buildMockFacetSlice({
+        request: buildMockFacetRequest({numberOfValues: 1}),
+      });
 
       const f = {[facetId]: ['a', 'b']};
       const finalState = facetSetReducer(state, restoreSearchParameters({f}));
 
-      expect(finalState[facetId].numberOfValues).toBe(2);
+      expect(finalState[facetId]?.request.numberOfValues).toBe(2);
     });
 
     it(`when the number of values in the payload is less than the number of values on the request,
     it does not change the request #numberOfValues`, () => {
       const facetId = 'author';
-      state[facetId] = buildMockFacetRequest({numberOfValues: 8});
+      state[facetId] = buildMockFacetSlice({
+        request: buildMockFacetRequest({numberOfValues: 8}),
+      });
 
       const f = {[facetId]: ['a']};
       const finalState = facetSetReducer(state, restoreSearchParameters({f}));
 
-      expect(finalState[facetId].numberOfValues).toBe(8);
+      expect(finalState[facetId]?.request.numberOfValues).toBe(8);
     });
 
     it(`when a facet is not found in the #f payload,
     it deselects all values by setting the state of each facet value in #currentValues to idle`, () => {
       const currentValues = [buildMockFacetValueRequest({state: 'selected'})];
-      state['author'] = buildMockFacetRequest({currentValues});
+      state['author'] = buildMockFacetSlice({
+        request: buildMockFacetRequest({currentValues}),
+      });
 
       const finalState = facetSetReducer(state, restoreSearchParameters({}));
-      expect(finalState['author'].currentValues).toEqual([
+      expect(finalState['author']?.request.currentValues).toEqual([
         buildMockFacetValueRequest(),
       ]);
     });
@@ -662,13 +694,17 @@ describe('facet-set slice', () => {
       const a = 'a';
       const b = 'b';
 
-      state[a] = buildMockFacetRequest({preventAutoSelect: false});
-      state[b] = buildMockFacetRequest({preventAutoSelect: false});
+      state[a] = buildMockFacetSlice({
+        request: buildMockFacetRequest({preventAutoSelect: false}),
+      });
+      state[b] = buildMockFacetSlice({
+        request: buildMockFacetRequest({preventAutoSelect: false}),
+      });
       const f = {[a]: [], [b]: ['foo', 'bar']};
 
       const finalState = facetSetReducer(state, restoreSearchParameters({f}));
-      expect(finalState[a].preventAutoSelect).toBe(false);
-      expect(finalState[b].preventAutoSelect).toBe(true);
+      expect(finalState[a]?.request.preventAutoSelect).toBe(false);
+      expect(finalState[b]?.request.preventAutoSelect).toBe(true);
     });
   });
 });

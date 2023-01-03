@@ -1,4 +1,4 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/atomic/headless';
+import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {Component, h, Prop} from '@stencil/core';
 import {Router} from 'stencil-router-v2';
 

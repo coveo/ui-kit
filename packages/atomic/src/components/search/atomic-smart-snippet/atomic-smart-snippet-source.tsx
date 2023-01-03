@@ -51,7 +51,6 @@ export class AtomicSmartSnippetSource implements InitializableComponent {
         <LinkWithResultAnalytics
           title={this.source.clickUri}
           href={this.source.clickUri}
-          target="_self"
           className="block"
           part="source-url"
           onSelect={() => this.selectSource.emit()}
@@ -63,7 +62,6 @@ export class AtomicSmartSnippetSource implements InitializableComponent {
         <LinkWithResultAnalytics
           title={this.source.title}
           href={this.source.clickUri}
-          target="_self"
           className="block"
           part="source-title"
           onSelect={() => this.selectSource.emit()}

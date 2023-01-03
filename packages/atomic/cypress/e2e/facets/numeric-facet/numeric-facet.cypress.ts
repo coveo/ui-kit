@@ -561,7 +561,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       });
 
       describe('verify visibility of range input', () => {
-        const activeInput = `nf[${numericFacetField}_input]=0..1000`;
+        const activeInput = `nf-${numericFacetField}_input=0..1000`;
 
         const visibilitySetup = () =>
           new TestFixture().with(
@@ -629,7 +629,7 @@ describe('Numeric Facet V1 Test Suites', () => {
               'with-input': 'integer',
             })
           )
-          .withHash(`nf[${numericFacetField}_input]=${min}..${max}`)
+          .withHash(`nf-${numericFacetField}_input=${min}..${max}`)
           .init();
       }
 
@@ -767,7 +767,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         .with(
           addNumericFacet({field: numericFacetField, label: numericFacetLabel})
         )
-        .withHash(`nf[${numericFacetField}]=0..100000`)
+        .withHash(`nf-${numericFacetField}=0..100000`)
         .init();
     });
 
@@ -1128,7 +1128,10 @@ describe('Numeric Facet V1 Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedNumericFacetValue);
+        before(() => {
+          setupSelectedNumericFacetValue();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -1148,7 +1151,10 @@ describe('Numeric Facet V1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupDeselectNumericFacetValue);
+          before(() => {
+            setupDeselectNumericFacetValue();
+            cy.wait(TestFixture.interceptAliases.Search);
+          });
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
 
@@ -1190,7 +1196,10 @@ describe('Numeric Facet V1 Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedMulitpleNumericFacetValuess);
+        before(() => {
+          setupSelectedMulitpleNumericFacetValuess();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);

@@ -1,4 +1,5 @@
-import {fetchResultContent} from './result-preview-actions';
+import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder';
+import {fetchResultContent, updateContentURL} from './result-preview-actions';
 import {resultPreviewReducer} from './result-preview-slice';
 import {
   getResultPreviewInitialState,
@@ -52,5 +53,24 @@ describe('ResultPreview', () => {
 
       expect(state.isLoading).toBe(false);
     });
+  });
+
+  it('on #updateContentURL.fulfilled, it sets #contentURL', () => {
+    const testPath = '/html';
+    const testUniqueId = '1';
+    const payload = {
+      contentURL: 'https://testurl.coveo.com/html?',
+    };
+
+    state.contentURL = undefined;
+    const action = updateContentURL.fulfilled(payload, '', {
+      uniqueId: testUniqueId,
+      path: testPath,
+      buildResultPreviewRequest: buildMockResultPreviewRequest,
+    });
+
+    state = resultPreviewReducer(state, action);
+
+    expect(state.contentURL).toBe(payload.contentURL);
   });
 });

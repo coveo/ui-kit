@@ -7,7 +7,7 @@ import {
   MockInsightEngine,
 } from '../../../../../test/mock-engine';
 import {buildMockInsightState} from '../../../../../test/mock-insight-state';
-import {buildMockNumericFacetRequest} from '../../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
 import {
   buildNumericFilter,
@@ -38,7 +38,7 @@ describe('insight numeric filter', () => {
     };
 
     state = buildMockInsightState();
-    state.numericFacetSet[facetId] = buildMockNumericFacetRequest();
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice();
 
     initNumericFilter();
   });

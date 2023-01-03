@@ -45,16 +45,12 @@ describe('Result Link Component', () => {
     const title = 'Abc result';
     const author = 'Albert';
 
-    function setupResultLink({
-      target,
-      hrefTemplate,
-      slots,
-    }: ResultLinkOptions = {}) {
+    function setupResultLink({hrefTemplate, slots}: ResultLinkOptions = {}) {
       new TestFixture()
         .with(
           addResultLinkInResultList(
             pickBy(
-              {target: target, 'href-template': hrefTemplate},
+              {'href-template': hrefTemplate},
               (property) => property !== undefined
             ) as TagProps,
             slots
@@ -69,13 +65,6 @@ describe('Result Link Component', () => {
         )
         .init();
     }
-
-    it('the "target" prop should set the target on the "a" tag', () => {
-      setupResultLink({target: '_parent'});
-      ResultLinkSelectors.firstInResult()
-        .find('a')
-        .should('have.attr', 'target', '_parent');
-    });
 
     it('the "href" attribute of the "a" tag should be the result\'s clickUri', () => {
       setupResultLink();

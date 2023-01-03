@@ -20,7 +20,7 @@ describe('RedirectionTrigger', () => {
 
   function getLogTriggerRedirectAction() {
     return engine.actions.find(
-      (a) => a.type === logTriggerRedirect.pending.type
+      (a) => a.type === logTriggerRedirect().pending.type
     );
   }
 

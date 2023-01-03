@@ -22,8 +22,7 @@ import {
 } from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {validatePayload} from '../../utils/validate-payload';
-import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
-import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
+import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../search/search-analytics-actions';
 import {SortBy} from '../sort/sort';
 import {ProductListingState} from './product-listing-state';
@@ -171,19 +170,9 @@ function getFacets(state: StateNeededByFetchProductListing) {
 
 function getAllFacets(state: StateNeededByFetchProductListing) {
   return [
-    ...getFacetRequests(state.facetSet),
-    ...getFacetRequests(state.numericFacetSet),
-    ...getFacetRequests(state.dateFacetSet),
-    ...getCategoryFacetRequests(state.categoryFacetSet),
+    ...getFacetRequests(state.facetSet ?? {}),
+    ...getFacetRequests(state.numericFacetSet ?? {}),
+    ...getFacetRequests(state.dateFacetSet ?? {}),
+    ...getFacetRequests(state.categoryFacetSet ?? {}),
   ];
-}
-
-function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
-  return Object.values(state || {}).map((slice) => slice!.request);
-}
-
-function getFacetRequests<T extends AnyFacetRequest>(
-  requests: Record<string, T> = {}
-) {
-  return Object.keys(requests).map((id) => requests[id]);
 }

@@ -1,6 +1,6 @@
 import {configuration, resultPreview} from '../../app/reducers';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
-import {buildDocumentQuickviewThunk} from '../../features/result-preview/result-preview-analytics-actions';
+import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
@@ -65,7 +65,7 @@ describe('Quickview', () => {
 
     it('dispatches a document quickview click event', () => {
       const result = buildMockResult();
-      const thunk = buildDocumentQuickviewThunk(result);
+      const thunk = logDocumentQuickview(result);
       const action = engine.findAsyncAction(thunk.pending);
 
       expect(action).toBeTruthy();

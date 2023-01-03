@@ -50,7 +50,7 @@ export const baseProductListingRequest = (
   queryStringArguments: Record<string, string> = {}
 ): Pick<
   PlatformClientCallOptions,
-  'accessToken' | 'method' | 'contentType' | 'url'
+  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
 > => {
   const {platformUrl, organizationId, accessToken, version} = req;
   const baseUrl = `${platformUrl}/rest/organizations/${organizationId}/commerce/${
@@ -64,6 +64,7 @@ export const baseProductListingRequest = (
     method,
     contentType,
     url: effectiveUrl,
+    origin: 'commerceApiFetch',
   };
 };
 

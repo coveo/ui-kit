@@ -11,7 +11,6 @@ import {updateFacetOptions} from '../../../features/facet-options/facet-options-
 import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
-import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
   FacetSection,
@@ -20,13 +19,13 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
-import {omit} from '../../../utils/utils';
 import {
   buildController,
   Subscribable,
 } from '../../controller/headless-controller';
 import {determineFacetId} from '../../core/facets/_common/facet-id-determinor';
 import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
+import {FacetOptions} from '../../facets/facet/headless-facet-options';
 
 export interface FieldSuggestionsValue {
   /**
@@ -124,83 +123,11 @@ export interface FieldSuggestions extends Subscribable {
   state: FieldSuggestionsState;
 }
 
-// TODO: In v2, move these options into `FieldSuggestionsOptions` and remove `facetSearch`.
-export interface FieldSuggestionsFacetSearchOptions {
-  /**
-   * A dictionary that maps field values to field suggestion display names.
-   */
-  captions?: Record<string, string>;
-
-  /**
-   * The maximum number of suggestions to request.
-   *
-   * @defaultValue `10`
-   */
-  numberOfValues?: number;
-
-  /**
-   * The query with which to request field suggestions.
-   */
-  query?: string;
-}
-
 export interface FieldSuggestionsOptions {
   /**
-   * The field for which you wish to get field suggestions.
+   * The options used to register the facet used by the field suggestions controller.
    */
-  field: string;
-
-  /**
-   * @deprecated This option has no effect.
-   */
-  delimitingCharacter?: string;
-
-  /**
-   * A unique identifier for the controller. By default, a random unique identifier is generated.
-   *
-   * If a facet shares the same id, then its values are going to be selectable with `select` and `singleSelect`.
-   */
-  facetId?: string;
-
-  /**
-   * The options related to search.
-   */
-  facetSearch?: FieldSuggestionsFacetSearchOptions;
-
-  /**
-   * Whether to exclude the parents of folded results when estimating the result count for each field suggestion.
-   *
-   * @defaultValue `true`
-   */
-  filterFacetCount?: boolean;
-
-  /**
-   * @deprecated This option has no effect.
-   */
-  injectionDepth?: number;
-
-  /**
-   * This option has no effect.
-   */
-  numberOfValues?: number;
-
-  /**
-   * The criterion to use to sort returned field suggestions.
-   * Learn more about `sortCriteria` values and the default behavior of specific facets in the [Search API documentation](https://docs.coveo.com/en/1461/#RestFacetRequest-sortCriteria).
-   *
-   * @defaultValue `automatic`
-   */
-  sortCriteria?: FacetSortCriterion;
-
-  /**
-   * @deprecated This option has no effect.
-   */
-  allowedValues?: string[];
-
-  /**
-   * @deprecated This option has no effect.
-   */
-  hasBreadcrumbs?: boolean;
+  facet: FacetOptions;
 }
 
 export interface FieldSuggestionsProps {
@@ -212,6 +139,10 @@ export interface FieldSuggestionsProps {
 
 /**
  * Creates a `FieldSuggestions` controller instance.
+ *
+ * This controller initializes a facet under the hood, but exposes state and methods that are relevant for suggesting field values based on a query.
+ * It's important not to initialize a facet with the same `facetId` but different options, because only the options of the controller which is built first will be taken into account.
+ *
  * @param engine The headless engine.
  * @param props The configurable `FieldSuggestions` controller properties.
  * @returns A `FieldSuggestions` controller instance.
@@ -223,18 +154,28 @@ export function buildFieldSuggestions(
   if (!loadFieldSuggestionsReducers(engine)) {
     throw loadReducerError;
   }
-  const facetId = determineFacetId(engine, props.options);
+  const {
+    facetSearch: facetSearchOptions,
+    allowedValues,
+    ...facetOptions
+  } = props.options.facet;
+  const facetId = determineFacetId(engine, facetOptions);
   engine.dispatch(
     registerFacet({
       ...defaultFacetOptions,
-      ...omit('facetSearch', props.options),
-      field: props.options.field,
+      ...facetOptions,
       facetId,
+      ...(allowedValues && {
+        allowedValues: {
+          type: 'simple',
+          values: allowedValues,
+        },
+      }),
     })
   );
 
   const facetSearch = buildFacetSearch(engine, {
-    options: {...props.options.facetSearch, facetId},
+    options: {...facetSearchOptions, facetId},
     select: (value) => {
       engine.dispatch(updateFacetOptions({freezeFacetOrder: true}));
       engine.dispatch(

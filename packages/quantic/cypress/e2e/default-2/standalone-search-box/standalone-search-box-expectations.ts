@@ -58,7 +58,7 @@ function standaloneSearchBoxExpectations(
     inputContains: (value: string) => {
       selector.input().invoke('attr', 'value').contains(value);
     },
-    urlHashContains: (redirectUrl: string) => {
+    urlContains: (redirectUrl: string) => {
       cy.url()
         .should('include', redirectUrl)
         .logDetail(`URL hash should contain "${redirectUrl}"`);

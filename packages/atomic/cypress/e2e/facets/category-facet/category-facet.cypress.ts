@@ -78,6 +78,10 @@ describe('Category Facet Test Suites', () => {
         categoryFacetLabel
       );
       CategoryFacetAssertions.assertValuesSortedByOccurrences();
+      CategoryFacetAssertions.assertHierarchy({
+        type: 'values',
+        valueLabels: ['North America', 'Europe', 'Asia'],
+      });
     });
 
     describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
@@ -216,7 +220,37 @@ describe('Category Facet Test Suites', () => {
       });
     });
 
-    describe('when selecting values subsequently to go deeper three level (last level of the dataset)', () => {
+    describe('when selecting values subsequently to go deepeer three level', () => {
+      before(() => {
+        setupWithDefaultSettings();
+        selectChildValueAt(canadaHierarchyIndex[0]);
+        selectChildValueAt(canadaHierarchyIndex[1]);
+        selectChildValueAt(canadaHierarchyIndex[2]);
+        pressShowMore(CategoryFacetSelectors);
+      });
+
+      CategoryFacetAssertions.assertHierarchy({
+        type: 'hierarchy-root',
+        children: {
+          type: 'sub-parent',
+          valueLabel: canadaHierarchy[0],
+          children: {
+            type: 'sub-parent',
+            valueLabel: canadaHierarchy[1],
+            children: {
+              type: 'active-value',
+              valueLabel: canadaHierarchy[2],
+              children: {
+                type: 'values',
+                valueLabels: ['Montreal', 'Quebec', 'Sherbrooke'],
+              },
+            },
+          },
+        },
+      });
+    });
+
+    describe('when selecting values subsequently to go deeper four level (last level of the dataset)', () => {
       function setupGoDeeperLastLevel() {
         setupWithDefaultSettings();
         selectChildValueAt(canadaHierarchyIndex[0]);
@@ -480,7 +514,7 @@ describe('Category Facet Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addCategoryFacet({}, true))
-        .withHash('cf[geographicalhierarchy]=Africa,Togo')
+        .withHash('cf-geographicalhierarchy=Africa,Togo')
         .init();
     });
 
@@ -495,7 +529,7 @@ describe('Category Facet Test Suites', () => {
       new TestFixture()
         .with(
           addCategoryFacet(
-            {'base-path': togoHierarchy.slice(0, 2).join(',')},
+            {'base-path': JSON.stringify(togoHierarchy.slice(0, 2))},
             true
           )
         )
@@ -506,34 +540,6 @@ describe('Category Facet Test Suites', () => {
     CategoryFacetAssertions.assertFirstChildContains(togoHierarchy[2]);
     CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
     CategoryFacetAssertions.assertNumberOfParentValues(0);
-  });
-
-  describe('with #basePath using a JSON string representation', () => {
-    let test: TestFixture;
-    before(() => {
-      test = new TestFixture().with(
-        addCategoryFacet(
-          {
-            'base-path': '["some value with a, comma","another value"]',
-          },
-          true
-        )
-      );
-    });
-
-    it('should send the proper base path split on the delitiming character', () => {
-      cy.intercept({
-        method: 'POST',
-        url: '**/rest/search/v2?*',
-      }).as('searchRequest');
-
-      test.init();
-      cy.wait('@searchRequest').then(({request}) => {
-        const basePathRequested = request.body.facets[0].basePath;
-        cy.wrap(basePathRequested[0]).should('eq', 'some value with a, comma');
-        cy.wrap(basePathRequested[1]).should('eq', 'another value');
-      });
-    });
   });
 
   describe('with #basePath using incorrect JSON array', () => {
@@ -549,7 +555,7 @@ describe('Category Facet Test Suites', () => {
         )
         .init();
     });
-    CommonAssertions.assertConsoleWarningMessage(
+    CommonAssertions.assertConsoleErrorMessage(
       'Error while parsing attribute base-path'
     );
   });
@@ -560,7 +566,7 @@ describe('Category Facet Test Suites', () => {
         .with(
           addCategoryFacet(
             {
-              'base-path': togoHierarchy.slice(0, 2).join(','),
+              'base-path': JSON.stringify(togoHierarchy.slice(0, 2)),
               'filter-by-base-path': 'false',
             },
             true
@@ -778,7 +784,10 @@ describe('Category Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectedCategoryFacet);
+        before(() => {
+          setupSelectedCategoryFacet();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         const selectedPath = canadaHierarchy.slice(0, 1);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
@@ -807,8 +816,15 @@ describe('Category Facet Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupDeselectCategoryFacetValue);
+          before(() => {
+            setupDeselectCategoryFacetValue();
+            cy.wait(TestFixture.interceptAliases.Search);
+          });
           BreadboxAssertions.assertDisplayBreadcrumb(false);
+        });
+
+        describe('verify analytics', () => {
+          before(setupDeselectCategoryFacetValue);
           BreadboxAssertions.assertLogBreadcrumbCategoryFacet(
             hierarchicalField
           );
@@ -832,7 +848,10 @@ describe('Category Facet Test Suites', () => {
 
       describe('verify rendering', () => {
         const selectedPath = canadaHierarchy;
-        before(setupSelectedDeeperLeverCategoryFacets);
+        before(() => {
+          setupSelectedDeeperLeverCategoryFacets();
+          cy.wait(TestFixture.interceptAliases.Search);
+        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -846,6 +865,7 @@ describe('Category Facet Test Suites', () => {
         before(() => {
           setupSelectedDeeperLeverCategoryFacets();
           pressAllCategoriesButton();
+          cy.wait(TestFixture.interceptAliases.Search);
         });
 
         describe('verify rendering', () => {

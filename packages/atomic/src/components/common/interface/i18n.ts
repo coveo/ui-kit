@@ -1,4 +1,5 @@
 import {getAssetPath} from '@stencil/core';
+import DOMPurify from 'dompurify';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import availableLocales from '../../../generated/availableLocales.json';
 import {AnyEngineType} from './bindings';
@@ -57,5 +58,8 @@ export function initi18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
     nsSeparator: '___',
     fallbackLng: 'en',
     backend: i18nBackendOptions(atomicInterface),
+    interpolation: {
+      escape: (str) => DOMPurify.sanitize(str),
+    },
   });
 }

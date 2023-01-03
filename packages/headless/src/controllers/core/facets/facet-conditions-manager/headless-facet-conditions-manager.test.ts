@@ -11,12 +11,13 @@ import {
 } from '../../../../test';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildFacetOptionsSlice} from '../../../../test/mock-facet-options-slice';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {FacetValueState} from '../facet/headless-core-facet';
 import {
@@ -51,7 +52,7 @@ describe('facet conditions manager', () => {
     let condition: jest.Mock;
 
     function initCondition() {
-      state.facetSet[facetId] = buildMockFacetRequest();
+      state.facetSet[facetId] = buildMockFacetSlice();
       state.facetOptions.facets[facetId] = buildFacetOptionsSlice();
       facetConditionsManager = buildCoreFacetConditionsManager(engine, {
         facetId: facetId,
@@ -77,10 +78,10 @@ describe('facet conditions manager', () => {
 
     describe('with a parent facet', () => {
       beforeEach(() => {
-        state.facetSet[parentFacetId] = buildMockFacetRequest();
+        state.facetSet[parentFacetId] = buildMockFacetSlice();
         state.facetOptions.facets[parentFacetId] = buildFacetOptionsSlice();
         initCondition();
-        state.facetSet[parentFacetId].currentValues = [
+        state.facetSet[parentFacetId]!.request.currentValues = [
           buildMockFacetValueRequest({
             state: 'idle',
             value: 'value a',
@@ -95,7 +96,7 @@ describe('facet conditions manager', () => {
 
       it('calls condition with the correct values', () => {
         expect(condition).toHaveBeenCalledWith(
-          state.facetSet[parentFacetId].currentValues
+          state.facetSet[parentFacetId]!.request.currentValues
         );
       });
     });
@@ -127,10 +128,10 @@ describe('facet conditions manager', () => {
 
     describe('with a parent numeric facet', () => {
       beforeEach(() => {
-        state.numericFacetSet[parentFacetId] = buildMockNumericFacetRequest();
+        state.numericFacetSet[parentFacetId] = buildMockNumericFacetSlice();
         state.facetOptions.facets[parentFacetId] = buildFacetOptionsSlice();
         initCondition();
-        state.numericFacetSet[parentFacetId].currentValues = [
+        state.numericFacetSet[parentFacetId]!.request.currentValues = [
           buildMockNumericFacetValue({
             state: 'idle',
             start: 0,
@@ -147,17 +148,17 @@ describe('facet conditions manager', () => {
 
       it('calls condition with the correct values', () => {
         expect(condition).toHaveBeenCalledWith(
-          state.numericFacetSet[parentFacetId].currentValues
+          state.numericFacetSet[parentFacetId]!.request.currentValues
         );
       });
     });
 
     describe('with a parent date facet', () => {
       beforeEach(() => {
-        state.dateFacetSet[parentFacetId] = buildMockDateFacetRequest();
+        state.dateFacetSet[parentFacetId] = buildMockDateFacetSlice();
         state.facetOptions.facets[parentFacetId] = buildFacetOptionsSlice();
         initCondition();
-        state.dateFacetSet[parentFacetId].currentValues = [
+        state.dateFacetSet[parentFacetId]!.request.currentValues = [
           buildMockDateFacetValue({
             state: 'idle',
             start: '0',
@@ -174,7 +175,7 @@ describe('facet conditions manager', () => {
 
       it('calls condition with the correct values', () => {
         expect(condition).toHaveBeenCalledWith(
-          state.dateFacetSet[parentFacetId].currentValues
+          state.dateFacetSet[parentFacetId]!.request.currentValues
         );
       });
     });
@@ -185,7 +186,7 @@ describe('facet conditions manager', () => {
     const parentFacetAId = 'def';
     const parentFacetBId = 'ghi';
     function updateFacetValues(facetId: string, conditionMet: boolean) {
-      const values = state.facetSet[facetId]!.currentValues;
+      const values = state.facetSet[facetId]!.request.currentValues;
       const valueState: FacetValueState = conditionMet ? 'selected' : 'idle';
       if (values.length) {
         values[0].value += 'a';
@@ -196,7 +197,10 @@ describe('facet conditions manager', () => {
     }
 
     function getConditionIsMet(facetId: string) {
-      return state.facetSet?.[facetId].currentValues?.[0]?.state === 'selected';
+      return (
+        state.facetSet?.[facetId]!.request.currentValues?.[0]?.state ===
+        'selected'
+      );
     }
 
     function initFacet({
@@ -209,7 +213,9 @@ describe('facet conditions manager', () => {
       conditionMet?: boolean;
     }) {
       state.facetOptions.facets[facetId] = buildFacetOptionsSlice({enabled});
-      state.facetSet[facetId] = buildMockFacetRequest({facetId});
+      state.facetSet[facetId] = buildMockFacetSlice({
+        request: buildMockFacetRequest({facetId}),
+      });
       if (conditionMet) {
         updateFacetValues(facetId, true);
       }

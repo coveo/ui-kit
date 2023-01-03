@@ -83,10 +83,10 @@ describe('Facet DependsOn Test Suites', () => {
     ) => {
       const values: string[] = [];
       if (selectLevel0) {
-        values.push(`f[${level0FacetId}]=${level0FacetExpectedValue}`);
+        values.push(`f-${level0FacetId}=${level0FacetExpectedValue}`);
       }
       if (selectLevel1) {
-        values.push(`f[${level1FacetIdA}]=${level1FacetAPossibleValue}`);
+        values.push(`f-${level1FacetIdA}=${level1FacetAPossibleValue}`);
       }
       return values.join('&');
     };

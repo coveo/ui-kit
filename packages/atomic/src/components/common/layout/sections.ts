@@ -1,4 +1,6 @@
-export const resultSectionTags = [
+import {isElementNode} from '../../../utils/utils';
+
+export const resultSectionTags = new Set([
   'atomic-result-section-visual',
   'atomic-result-section-badges',
   'atomic-result-section-actions',
@@ -7,20 +9,27 @@ export const resultSectionTags = [
   'atomic-result-section-emphasized',
   'atomic-result-section-excerpt',
   'atomic-result-section-bottom-metadata',
-] as const;
+  'atomic-result-section-children',
+] as const);
 
-export function containsSections(content: string): boolean;
-export function containsSections(content: HTMLCollection): boolean;
+type SetValueType<T> = T extends Set<infer U> ? U : never;
 
-export function containsSections(content: string | HTMLCollection) {
+export type ResultSectionTagName = SetValueType<typeof resultSectionTags>;
+
+export function isResultSectionNode(element: Node) {
+  if (!isElementNode(element)) {
+    return false;
+  }
+  return resultSectionTags.has(
+    element.tagName.toLowerCase() as ResultSectionTagName
+  );
+}
+
+export function containsSections(content: string | NodeList | HTMLCollection) {
   if (typeof content === 'string') {
-    return resultSectionTags.some((resultSectionTag) =>
+    return Array.from(resultSectionTags.values()).some((resultSectionTag) =>
       content.includes(resultSectionTag)
     );
   }
-  return Array.from(content).some((child) =>
-    (resultSectionTags as readonly string[]).includes(
-      child.tagName.toLowerCase()
-    )
-  );
+  return Array.from(content).some((child) => isResultSectionNode(child));
 }
