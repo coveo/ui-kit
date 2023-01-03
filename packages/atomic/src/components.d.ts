@@ -12,6 +12,7 @@ import { NumberInputType } from "./components/common/facets/facet-number-input/n
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { VNode } from "@stencil/core";
+import { ButtonStyle } from "./components/common/button-style";
 import { InsightEngine, InsightFacetSortCriterion, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
@@ -350,6 +351,7 @@ export namespace Components {
     interface AtomicIconButton {
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
+        "buttonStyle": ButtonStyle;
         "clickCallback": () => void;
         "disabled": boolean;
         "icon": string;
@@ -2955,6 +2957,7 @@ declare namespace LocalJSX {
     interface AtomicIconButton {
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
+        "buttonStyle"?: ButtonStyle;
         "clickCallback"?: () => void;
         "disabled"?: boolean;
         "icon": string;
