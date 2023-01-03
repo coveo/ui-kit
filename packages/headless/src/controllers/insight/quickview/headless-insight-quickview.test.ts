@@ -36,7 +36,7 @@ describe('Insight Quickview', () => {
     expect(quickview).toBeTruthy();
   });
 
-  it('it adds the correct reducers to engine', () => {
+  it('adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
       resultPreview,
