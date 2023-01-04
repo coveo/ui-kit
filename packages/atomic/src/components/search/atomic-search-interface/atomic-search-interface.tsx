@@ -36,7 +36,6 @@ import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
-import type {AtomicResult} from '../atomic-result/atomic-result';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicStore, createAtomicStore} from './store';
 
