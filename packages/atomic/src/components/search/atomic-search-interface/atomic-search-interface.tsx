@@ -36,6 +36,7 @@ import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
+import type {AtomicResult} from '../atomic-result/atomic-result';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicStore, createAtomicStore} from './store';
 
@@ -69,7 +70,7 @@ export class AtomicSearchInterface
   @Element() public host!: HTMLAtomicSearchInterfaceElement;
 
   @State() public error?: Error;
-  @State() openRelevanceInspector = false;
+  @State() relevanceInspectorIsOpen = false;
 
   /**
    * A list of non-default fields to include in the query results.
@@ -254,7 +255,7 @@ export class AtomicSearchInterface
 
   @Listen('atomic/relevanceInspector/close')
   public closeRelevanceInspector() {
-    this.openRelevanceInspector = false;
+    this.relevanceInspectorIsOpen = false;
   }
 
   /**
@@ -416,7 +417,7 @@ export class AtomicSearchInterface
     if (this.enableRelevanceInspector) {
       this.host.addEventListener('dblclick', (e) => {
         if (e.altKey) {
-          this.openRelevanceInspector = !this.openRelevanceInspector;
+          this.relevanceInspectorIsOpen = !this.relevanceInspectorIsOpen;
         }
       });
     }
@@ -470,9 +471,9 @@ export class AtomicSearchInterface
 
   public render() {
     return [
-      this.engine && (
+      this.engine && this.enableRelevanceInspector && (
         <atomic-relevance-inspector
-          open={this.openRelevanceInspector}
+          open={this.relevanceInspectorIsOpen}
           bindings={this.bindings}
         ></atomic-relevance-inspector>
       ),

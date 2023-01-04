@@ -24,7 +24,7 @@ export class AtomicRelevanceInspector {
   public render() {
     const {platformUrl, organizationId} =
       this.bindings.engine.state.configuration;
-    const {searchUid} = this.bindings.engine.state.search.response;
+    const {searchResponseId} = this.bindings.engine.state.search;
     return (
       <atomic-modal
         exportparts="footer"
@@ -48,7 +48,8 @@ export class AtomicRelevanceInspector {
           <a
             class="btn-primary p-2"
             target="_blank"
-            href={`${platformUrl}/admin/#/${organizationId}/search/relevanceInspector/${searchUid}`}
+            href={`${platformUrl}/admin/#/${organizationId}/search/relevanceInspector/${searchResponseId}`}
+            onClick={() => this.closeRelevanceInspector?.emit()}
           >
             Open
           </a>
