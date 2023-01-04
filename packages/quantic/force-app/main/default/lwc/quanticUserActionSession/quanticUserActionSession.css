@@ -1,0 +1,37 @@
+.session_vertical-center-align {
+  align-items: center;
+}
+
+.session_more-actions-button {
+  font-size: 10px;
+}
+
+.session-icon {
+  border-radius: var(--lwc-borderRadiusCircle, 0%);
+  --sds-c-icon-color-background: orange;
+  --slds-c-icon-color-foreground-default: #fff;
+}
+
+.session-title {
+  font-style: italic;
+}
+
+.session-title_container {
+  display: inline-block;
+}
+
+.session-tooltip {
+  right: -125px;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+}
+
+.session-title_container:hover > .session-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.session_bold-text {
+  font-weight: 600;
+}

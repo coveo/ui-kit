@@ -1,0 +1,78 @@
+<template>
+  <div class="slds-is-relative session-title_container slds-var-m-top_xx-small">
+    <div class="slds-grid session_vertical-center-align">
+      <template if:true={isActiveSession}>
+        <lightning-icon
+          class="session-icon slds-var-p-around_xx-small slds-var-m-right_xx-small"
+          icon-name="utility:priority"
+          size="xx-small"
+        ></lightning-icon>
+      </template>
+      <div class="session-title slds-text-body_regular session_bold-text">
+        <lightning-formatted-date-time
+          value={startDate}
+        ></lightning-formatted-date-time>
+      </div>
+    </div>
+    <div
+      class="slds-popover slds-popover_tooltip slds-nubbin_left slds-is-absolute session-tooltip slds-fall-into-ground"
+      role="tooltip"
+    >
+      <div class="slds-popover__body">
+        <lightning-formatted-date-time
+          value={startDate}
+          hour="2-digit"
+          minute="2-digit"
+          hour12={ampmFormat}
+        ></lightning-formatted-date-time>
+        &nbsp; {labels.to} &nbsp;
+        <lightning-formatted-date-time
+          value={endDate}
+          hour="2-digit"
+          minute="2-digit"
+          hour12={ampmFormat}
+        ></lightning-formatted-date-time>
+      </div>
+    </div>
+  </div>
+  <template if:true={moreActionsButtonIsVisible}>
+    <div class="slds-grid session_vertical-center-align">
+      <lightning-icon
+        icon-name="utility:threedots"
+        size="xx-small"
+      ></lightning-icon>
+      <lightning-button
+        onclick={displayActionsAfterCaseCreation}
+        variant="base"
+        label={moreActionsLabel}
+        title={moreActionsLabel}
+        class="slds-text-title slds-var-m-left_small session_more-actions-button"
+      ></lightning-button>
+    </div>
+  </template>
+  <template if:true={actionsAfterCaseCreationAreVisible}>
+    <div class="slds-var-m-top_x-small">
+      <template iterator:action={actionsAfterCaseCreation}>
+        <c-quantic-timeline-event
+          key={action.value.timestamp}
+          type={action.value.type}
+          title={action.value.title}
+          timestamp={action.value.timestamp}
+          search-hub={action.value.searchHub}
+        ></c-quantic-timeline-event>
+      </template>
+    </div>
+  </template>
+  <div class={actionsContainerClass}>
+    <template iterator:action={actionsBeforeCaseCreation}>
+      <c-quantic-timeline-event
+        key={action.value.timestamp}
+        type={action.value.type}
+        title={action.value.title}
+        timestamp={action.value.timestamp}
+        search-hub={action.value.searchHub}
+        is-last-event-in-session={action.last}
+      ></c-quantic-timeline-event>
+    </template>
+  </div>
+</template>
