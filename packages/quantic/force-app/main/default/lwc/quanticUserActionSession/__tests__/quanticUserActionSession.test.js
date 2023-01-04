@@ -61,7 +61,7 @@ const defaultOptions = {
 
 jest.mock(
   '@salesforce/label/c.quantic_MoreActionsInSession',
-  () => ({default: '1 more action in this section'}),
+  () => ({default: '1 more action in this session'}),
   {
     virtual: true,
   }
@@ -69,7 +69,7 @@ jest.mock(
 jest.mock(
   '@salesforce/label/c.quantic_MoreActionsInSession_plural',
   () => ({
-    default: `${exampleActionsAfterCaseCreation.length} more actions in this section`,
+    default: `${exampleActionsAfterCaseCreation.length} more actions in this session`,
   }),
   {
     virtual: true,
