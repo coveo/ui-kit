@@ -8,7 +8,6 @@ export type InsightUserActionsRequest = InsightParam &
   TicketCreationDateParam &
   NumberSessionsBeforeParam &
   NumberSessionsAfterParam &
-  MaximumSessionInactivityMinutesParam &
   ExcludedCustomActionsParam;
 
 interface TicketCreationDateParam {
@@ -26,10 +25,6 @@ interface NumberSessionsAfterParam {
   numberSessionsAfter?: number;
 }
 
-interface MaximumSessionInactivityMinutesParam {
-  maximumSessionInactivityMinutes?: number;
-}
-
 interface ExcludedCustomActionsParam {
   excludedCustomActions?: string[];
 }
@@ -45,10 +40,8 @@ export const buildInsightUserActionsRequest = (
     ...baseInsightRequest(req, 'POST', 'application/json', '/useractions'),
     requestParams: {
       ticketCreationDate: params.ticketCreationDate,
-      numberSessionsBefore: params.numberSessionsBefore ?? 50,
-      numberSessionsAfter: params.numberSessionsAfter ?? 50,
-      maximumSessionInactivityMinutes:
-        params.maximumSessionInactivityMinutes ?? 30,
+      numberSessionsBefore: params.numberSessionsBefore ?? 0,
+      numberSessionsAfter: params.numberSessionsAfter ?? 0,
       excludedCustomActions: params.excludedCustomActions ?? [],
     },
   };

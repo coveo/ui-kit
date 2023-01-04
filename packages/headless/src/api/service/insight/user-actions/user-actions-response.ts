@@ -1,5 +1,12 @@
+export enum UserActionType {
+  SEARCH = 'SEARCH',
+  CLICK = 'CLICK',
+  VIEW = 'VIEW',
+  CUSTOM = 'CUSTOM',
+}
+
 export interface InsightUserActionsResponse {
-  timeline?: UserActionTimeline;
+  timeline: UserActionTimeline;
 }
 
 interface UserActionTimeline {
@@ -12,12 +19,21 @@ interface UserSession {
   actions: UserAction[];
 }
 
-type UserActionType = 'SEARCH' | 'CLICK' | 'VIEW' | 'CUSTOM';
 interface UserAction {
   actionType: UserActionType;
   timestamp: Date;
-  raw: Record<string, string>;
+  eventData: {
+    type?: string;
+    value?: string;
+  };
+  cause?: string;
   searchHub?: string;
-  document?: string;
+  document?: {
+    title: string;
+    clickUri: string;
+    uriHash?: string;
+    contentIdKey?: string;
+    contentIdValue?: string;
+  };
   query?: string;
 }
