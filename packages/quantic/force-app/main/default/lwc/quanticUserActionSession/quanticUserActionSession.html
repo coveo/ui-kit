@@ -53,26 +53,26 @@
   <template if:true={actionsAfterCaseCreationAreVisible}>
     <div class="slds-var-m-top_x-small">
       <template iterator:action={actionsAfterCaseCreation}>
-        <c-quantic-timeline-event
+        <c-quantic-user-action-event
           key={action.value.timestamp}
           type={action.value.type}
           title={action.value.title}
           timestamp={action.value.timestamp}
           search-hub={action.value.searchHub}
-        ></c-quantic-timeline-event>
+        ></c-quantic-user-action-event>
       </template>
     </div>
   </template>
   <div class={actionsContainerClass}>
     <template iterator:action={actionsBeforeCaseCreation}>
-      <c-quantic-timeline-event
+      <c-quantic-user-action-event
         key={action.value.timestamp}
         type={action.value.type}
         title={action.value.title}
         timestamp={action.value.timestamp}
         search-hub={action.value.searchHub}
         is-last-event-in-session={action.last}
-      ></c-quantic-timeline-event>
+      ></c-quantic-user-action-event>
     </template>
   </div>
 </template>
