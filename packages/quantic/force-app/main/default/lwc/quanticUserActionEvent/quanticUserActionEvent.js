@@ -59,6 +59,8 @@ export default class QuanticUserActionEvent extends LightningElement {
     }
   }
 
+  ampmFormat = false;
+
   /**
    * Returns the variant of the icon to display.
    * @returns {'success' | null}
