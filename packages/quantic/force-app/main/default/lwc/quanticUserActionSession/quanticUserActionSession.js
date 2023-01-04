@@ -13,7 +13,7 @@ import {LightningElement, api} from 'lwc';
  */
 
 /**
- * The `QuanticUserActionSession` component displays all the user actions during a specific session.
+ * The `QuanticUserActionSession` component displays all user actions that took place during a specific user session.
  * @category Insight Panel
  * @example
  * <c-quantic-user-action-session actions={actions} start-date={startDate} end-date={endDate} is-active-session></c-quantic-user-action-session>
