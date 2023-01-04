@@ -5,6 +5,8 @@ import pageNotFound from './pageNotFound.html';
 import noResults from './noResults.html';
 // @ts-ignore
 import _default from './default.html';
+// @ts-ignore
+import userActionError from './userActionError.html';
 
 /**
  * The `QuanticSvg` is used internally to display static svg images.
@@ -18,6 +20,7 @@ export default class QuanticSvg extends LightningElement {
    * The options are:
    *   - `'pageNotFound'`
    *   - `'noResults'`
+   *   - `'userActionError'`
    *   - `undefined (default)`
    * @api
    * @type {string}
@@ -31,6 +34,8 @@ export default class QuanticSvg extends LightningElement {
         return pageNotFound;
       case "noResults":
         return noResults;
+      case "userActionError":
+        return userActionError;
       default:
         return _default;
     }   
