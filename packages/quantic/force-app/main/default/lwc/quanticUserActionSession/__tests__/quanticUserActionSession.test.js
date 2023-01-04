@@ -7,7 +7,7 @@ const selectors = {
   title: '.session-title lightning-formatted-date-time',
   startTime: '.slds-popover__body lightning-formatted-date-time:nth-child(1)',
   endTime: '.slds-popover__body lightning-formatted-date-time:nth-child(2)',
-  timelineEvent: 'c-quantic-timeline-event',
+  userActionEvent: 'c-quantic-user-action-event',
   moreActionsButton: '.session_more-actions-button',
 };
 
@@ -129,18 +129,18 @@ describe('c-quantic-user-action-session', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const timelineEvents = element.shadowRoot.querySelectorAll(
-        selectors.timelineEvent
+      const userActionEvents  = element.shadowRoot.querySelectorAll(
+        selectors.userActionEvent
       );
       const moreActionsButton = element.shadowRoot.querySelector(
         selectors.moreActionsButton
       );
 
-      timelineEvents.forEach((timelineEvent, index) => {
-        expect(timelineEvent.title).toBe(exampleActions[index].title);
-        expect(timelineEvent.type).toBe(exampleActions[index].type);
-        expect(timelineEvent.searchHub).toBe(exampleActions[index].searchHub);
-        expect(timelineEvent.timestamp).toBe(exampleActions[index].timestamp);
+      userActionEvents .forEach((userActionEvent, index) => {
+        expect(userActionEvent.title).toBe(exampleActions[index].title);
+        expect(userActionEvent.type).toBe(exampleActions[index].type);
+        expect(userActionEvent.searchHub).toBe(exampleActions[index].searchHub);
+        expect(userActionEvent.timestamp).toBe(exampleActions[index].timestamp);
       });
 
       expect(moreActionsButton).toBeNull();
@@ -175,8 +175,8 @@ describe('c-quantic-user-action-session', () => {
       });
       await flushPromises();
 
-      const timelineEvents = element.shadowRoot.querySelectorAll(
-        selectors.timelineEvent
+      const userActionEvents  = element.shadowRoot.querySelectorAll(
+        selectors.userActionEvent
       );
       const moreActionsButton = element.shadowRoot.querySelector(
         selectors.moreActionsButton
@@ -186,21 +186,21 @@ describe('c-quantic-user-action-session', () => {
       expect(moreActionsButton.label).toBe(
         `${exampleActionsAfterCaseCreation.length} more actions in this section`
       );
-      timelineEvents.forEach((timelineEvent, index) => {
-        expect(timelineEvent.title).toBe(
+      userActionEvents .forEach((userActionEvent, index) => {
+        expect(userActionEvent.title).toBe(
           exampleActionsBeforeCaseCreation[index].title
         );
         if (exampleActionsBeforeCaseCreation[index].type === 'case-creation') {
-          expect(timelineEvent.type).toBe('active-case-creation');
+          expect(userActionEvent.type).toBe('active-case-creation');
         } else {
-          expect(timelineEvent.type).toBe(
+          expect(userActionEvent.type).toBe(
             exampleActionsBeforeCaseCreation[index].type
           );
         }
-        expect(timelineEvent.searchHub).toBe(
+        expect(userActionEvent.searchHub).toBe(
           exampleActionsBeforeCaseCreation[index].searchHub
         );
-        expect(timelineEvent.timestamp).toBe(
+        expect(userActionEvent.timestamp).toBe(
           exampleActionsBeforeCaseCreation[index].timestamp
         );
       });
@@ -225,19 +225,19 @@ describe('c-quantic-user-action-session', () => {
         );
         expect(moreActionsButton).toBeNull();
 
-        const timelineEvents = element.shadowRoot.querySelectorAll(
-          selectors.timelineEvent
+        const userActionEvents  = element.shadowRoot.querySelectorAll(
+          selectors.userActionEvent
         );
 
-        timelineEvents.forEach((timelineEvent, index) => {
-          expect(timelineEvent.title).toBe(exampleActions[index].title);
+        userActionEvents .forEach((userActionEvent, index) => {
+          expect(userActionEvent.title).toBe(exampleActions[index].title);
           if (exampleActions[index].type === 'case-creation') {
-            expect(timelineEvent.type).toBe('active-case-creation');
+            expect(userActionEvent.type).toBe('active-case-creation');
           } else {
-            expect(timelineEvent.type).toBe(exampleActions[index].type);
+            expect(userActionEvent.type).toBe(exampleActions[index].type);
           }
-          expect(timelineEvent.searchHub).toBe(exampleActions[index].searchHub);
-          expect(timelineEvent.timestamp).toBe(exampleActions[index].timestamp);
+          expect(userActionEvent.searchHub).toBe(exampleActions[index].searchHub);
+          expect(userActionEvent.timestamp).toBe(exampleActions[index].timestamp);
         });
       });
     });
