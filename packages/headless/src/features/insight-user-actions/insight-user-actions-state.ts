@@ -9,11 +9,11 @@ export enum UserActionType {
 
 export interface InsightUserActionTimeline {
   sessions: {
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
     actions: {
       actionType: UserActionType;
-      timestamp: Date;
+      timestamp: string;
       eventData: {
         type?: string;
         value?: string;

@@ -192,9 +192,8 @@ describe('insight api client', () => {
     const userActionsRequest = {
       ...insightRequest,
       ticketCreationDate: new Date().toISOString(),
-      numberSessionsBefore: 50,
-      numberSessionsAfter: 250,
-      maximumSessionInactivityMinutes: 60,
+      numberSessionsBefore: 5,
+      numberSessionsAfter: 2,
       excludedCustomActions: ['unknown', 'irrelevant'],
     };
 
@@ -215,8 +214,6 @@ describe('insight api client', () => {
           ticketCreationDate: userActionsRequest.ticketCreationDate,
           numberSessionsBefore: userActionsRequest.numberSessionsBefore,
           numberSessionsAfter: userActionsRequest.numberSessionsAfter,
-          maximumSessionInactivityMinutes:
-            userActionsRequest.maximumSessionInactivityMinutes,
           excludedCustomActions: userActionsRequest.excludedCustomActions,
         },
       });
@@ -234,9 +231,8 @@ describe('insight api client', () => {
       const request = callSpy.mock.calls[0][0];
       expect(request).toMatchObject({
         requestParams: {
-          numberSessionsBefore: 50,
-          numberSessionsAfter: 50,
-          maximumSessionInactivityMinutes: 30,
+          numberSessionsBefore: 0,
+          numberSessionsAfter: 0,
           excludedCustomActions: [],
         },
       });

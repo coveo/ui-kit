@@ -9,7 +9,7 @@ export type StateNeededByFetchUserActions = ConfigurationSection &
   InsightConfigurationSection &
   InsightUserActionSection;
 
-export const buildFetchUserActionRequest = async (
+export const buildFetchUserActionsRequest = async (
   s: StateNeededByFetchUserActions
 ): Promise<InsightUserActionsRequest> => {
   return {

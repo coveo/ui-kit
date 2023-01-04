@@ -9,7 +9,7 @@ import {
   InsightUserActionSection,
 } from '../../state/state-sections';
 import {nonEmptyString, validatePayload} from '../../utils/validate-payload';
-import {buildFetchUserActionRequest} from './insight-user-actions-request';
+import {buildFetchUserActionsRequest} from './insight-user-actions-request';
 
 const numberValue = new NumberValue({required: true, min: 0});
 
@@ -58,7 +58,7 @@ export const fetcUserActions = createAsyncThunk<
     const state = getState();
 
     const fetched = await apiClient.userActions(
-      await buildFetchUserActionRequest(state)
+      await buildFetchUserActionsRequest(state)
     );
 
     if (isErrorResponse(fetched)) {
