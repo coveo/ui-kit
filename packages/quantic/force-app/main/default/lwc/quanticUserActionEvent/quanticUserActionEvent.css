@@ -1,30 +1,30 @@
-.timeline-event_black-icon {
+.ua-event_black-icon {
   --slds-c-icon-color-foreground-default: var(--lwc-brandContrast, #1a1b1e);
 }
 
-.timeline-event_blue-icon {
+.ua-event_blue-icon {
   --slds-c-icon-color-foreground-default: var(--lwc-brandAccessible, #0176d3);
 }
 
-.timeline-event_bold-text {
+.ua-event_bold-text {
   font-weight: 700;
 }
 
-.timeline-event_black-text {
+.ua-event_black-text {
   color: var(--lwc-brandContrast, #1a1b1e);
 }
 
-.timeline-event_blue-text {
+.ua-event_blue-text {
   color: var(--lwc-brandAccessible, #0176d3);
 }
 
-.timeline-event_vector {
+.ua-event_vector {
   height: 25px;
   width: 1px;
   background-color: #3e3e3c;
   border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
 }
 
-.timeline-event_small-text {
+.ua-event_small-text {
   font-size: 10px;
 }

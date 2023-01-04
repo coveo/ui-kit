@@ -1,19 +1,19 @@
 /* eslint-disable jest/no-conditional-expect */
 // @ts-ignore
 import {createElement} from 'lwc';
-import QuanticTimelineEvent from '../quanticTimelineEvent';
+import QuanticUserActionEvent from '../quanticUserActionEvent';
 
 const selectors = {
   title: '[data-id="title"]',
   icon: 'lightning-icon',
-  vector: '.timeline-event_vector',
-  timestamp: '[data-id="timestamp"]',
+  vector: '.ua-event_vector',
+  timestamp: '[data-id="timestamp"] lightning-formatted-date-time',
   searchHub: '[data-id="searchHub"]',
 };
 
 const exampleSearchHub = 'example search hub';
 const exampleTitle = 'example title';
-const exampleTimestamp = '10:25';
+const exampleTimestamp = '1672768867000';
 
 const defaultOptions = {
   title: exampleTitle,
@@ -26,47 +26,47 @@ const defaultOptions = {
 const expectations = {
   click: {
     iconName: 'utility:file',
-    iconClass: 'timeline-event_blue-icon',
+    iconClass: 'ua-event_blue-icon',
     iconVariant: null,
-    textClass: 'timeline-event_blue-text',
+    textClass: 'ua-event_blue-text',
   },
   view: {
     iconName: 'utility:preview',
-    iconClass: 'timeline-event_blue-icon',
+    iconClass: 'ua-event_blue-icon',
     iconVariant: null,
-    textClass: 'timeline-event_blue-text',
+    textClass: 'ua-event_blue-text',
   },
   search: {
     iconName: 'utility:search',
-    iconClass: 'timeline-event_black-icon',
+    iconClass: 'ua-event_black-icon',
     iconVariant: null,
-    textClass: 'timeline-event_black-text',
+    textClass: 'ua-event_black-text',
   },
   custom: {
     iconName: 'utility:record',
-    iconClass: 'timeline-event_black-icon',
+    iconClass: 'ua-event_black-icon',
     iconVariant: null,
-    textClass: 'timeline-event_black-text',
+    textClass: 'ua-event_black-text',
   },
   'case-creation': {
     iconName: 'utility:priority',
-    iconClass: 'timeline-event_black-icon',
+    iconClass: 'ua-event_black-icon',
     iconVariant: null,
-    textClass: 'timeline-event_black-text',
+    textClass: 'ua-event_black-text',
   },
   'active-case-creation': {
     iconName: 'utility:priority',
     iconClass: null,
     iconVariant: 'success',
-    textClass: 'slds-text-color_success timeline-event_bold-text',
+    textClass: 'slds-text-color_success ua-event_bold-text',
   },
 };
 
 const baseExpectedTextClass = 'slds-text-title slds-var-m-left_small';
 
 function createTestComponent(options = defaultOptions) {
-  const element = createElement('c-quantic-timeline-event', {
-    is: QuanticTimelineEvent,
+  const element = createElement('c-quantic-user-action-event', {
+    is: QuanticUserActionEvent,
   });
 
   for (const [key, value] of Object.entries(options)) {
@@ -83,7 +83,7 @@ function flushPromises() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
-describe('c-quantic-timeline-event', () => {
+describe('c-quantic-user-action-event', () => {
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
@@ -96,8 +96,8 @@ describe('c-quantic-timeline-event', () => {
   });
 
   for (const [key, expectation] of Object.entries(expectations)) {
-    describe(`timeline event of type "${key}"`, () => {
-      it('should properly display the QuanticTimelineEvent', async () => {
+    describe(`user action event of type "${key}"`, () => {
+      it('should properly display the QuanticUserActionEvent', async () => {
         const element = createTestComponent({...defaultOptions, type: key});
         await flushPromises();
 
@@ -108,7 +108,7 @@ describe('c-quantic-timeline-event', () => {
         const vector = element.shadowRoot.querySelector(selectors.vector);
 
         expect(title.textContent).toBe(exampleTitle);
-        expect(timestamp.textContent).toBe(exampleTimestamp);
+        expect(timestamp.value).toBe(exampleTimestamp);
         expect(searchHub.textContent).toBe(exampleSearchHub);
         expect(icon.iconName).toBe(expectation.iconName);
         if (!expectation.iconVariant) {
@@ -131,7 +131,7 @@ describe('c-quantic-timeline-event', () => {
     });
   }
 
-  it('should not display the vector in the last timeline event', async () => {
+  it('should not display the vector in the last user action event', async () => {
     const element = createTestComponent({
       ...defaultOptions,
       isLastEventInSession: true,

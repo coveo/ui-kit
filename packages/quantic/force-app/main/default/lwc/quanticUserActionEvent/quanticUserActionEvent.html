@@ -7,14 +7,17 @@
     <div class="slds-grid slds-var-m-top_xx-small">
       <div class="slds-var-p-horizontal_xx-small slds-var-m-horizontal_xxx-small">
         <template if:false={isLastEventInSession}>
-          <div class="timeline-event_vector"></div>
+          <div class="ua-event_vector"></div>
         </template>
       </div>
       <div class={eventInfoClass}>
         <template if:true={timestamp}>
-          <span data-id="timestamp" class="slds-text-title timeline-event_small-text slds-var-m-right_xx-small">{timestamp}</span>
+          <span data-id="timestamp" class="slds-text-title ua-event_small-text slds-var-m-right_xx-small">
+            <lightning-formatted-date-time value={timestamp} hour="2-digit" minute="2-digit"
+            hour12={ampmFormat}></lightning-formatted-date-time>
+          </span>
         </template>
-        <span data-id="searchHub" class="slds-text-title timeline-event_small-text">{searchHub}</span>
+        <span data-id="searchHub" class="slds-text-title ua-event_small-text">{searchHub}</span>
       </div>
     </div>
   </div>

@@ -1,38 +1,38 @@
 import {LightningElement, api} from 'lwc';
 
 /**
- * The `QuanticTimelineEvent` component displays a single user action event in the user action timeline.
+ * The `QuanticUserActionEvent` component displays a single user action event in the user action timeline.
  * @category Insight Panel
  * @example
- * <c-quantic-timeline-event title="Example user action" type="view" timestamp="10:45" search-hub="default"></c-quantic-timeline-event>
+ * <c-quantic-user-action-event title="Example user action" type="view" timestamp="1672768867000" search-hub="default"></c-quantic-user-action-event>
  */
-export default class QuanticTimelineEvent extends LightningElement {
+export default class QuanticUserActionEvent extends LightningElement {
   /**
-   * The title of the timeline event.
+   * The title of the user action event.
    * @api
    * @type {string}
    */
   @api title;
   /**
-   * The type of the timeline event.
+   * The type of the user action event.
    * @api
    * @type {'click' | 'view' | 'custom' | 'search' | 'case-creation' | 'active-case-creation'}
    */
   @api type;
   /**
-   * The timestamp of the timeline event.
+   * The timestamp of the user action event.
    * @api
-   * @type {string}
+   * @type {number}
    */
   @api timestamp;
   /**
-   * The search hub where the timeline event originated.
+   * The search hub where the user action event originated.
    * @api
    * @type {string}
    */
   @api searchHub;
   /**
-   * Indicates whether the timeline event is the last event in a user action session.
+   * Indicates whether the user action event is the last event in a user action session.
    * @api
    * @type {boolean}
    */
@@ -79,29 +79,29 @@ export default class QuanticTimelineEvent extends LightningElement {
       return null;
     }
     if (this.isClickOrViewAction) {
-      return 'timeline-event_blue-icon';
+      return 'ua-event_blue-icon';
     }
-    return 'timeline-event_black-icon';
+    return 'ua-event_black-icon';
   }
 
   /**
-   * Returns the CSS classes of the timeline event title.
+   * Returns the CSS classes of the user action event title.
    * @returns {string}
    */
   get titleClass() {
     const classes = ['slds-text-title', 'slds-var-m-left_small'];
     if (this.isActiveCaseCreationAction) {
-      classes.push('slds-text-color_success timeline-event_bold-text');
+      classes.push('slds-text-color_success ua-event_bold-text');
     } else if (this.isClickOrViewAction) {
-      classes.push('timeline-event_blue-text');
+      classes.push('ua-event_blue-text');
     } else {
-      classes.push('timeline-event_black-text');
+      classes.push('ua-event_black-text');
     }
     return classes.join(' ');
   }
 
   /**
-   * Indicates whether the timeline event is a click or a view event.
+   * Indicates whether the user action event is a click or a view event.
    * @returns {boolean}
    */
   get isClickOrViewAction() {
@@ -109,7 +109,7 @@ export default class QuanticTimelineEvent extends LightningElement {
   }
 
   /**
-   * Indicates whether the timeline event is an active case creation event.
+   * Indicates whether the user action event is an active case creation event.
    * @returns {boolean}
    */
   get isActiveCaseCreationAction() {
@@ -117,7 +117,7 @@ export default class QuanticTimelineEvent extends LightningElement {
   }
 
   /**
-   * Returns the CSS classes of the timeline event info.
+   * Returns the CSS classes of the user action event info.
    * @returns {string}
    */
   get eventInfoClass() {
