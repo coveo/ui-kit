@@ -109,4 +109,4 @@ export const insightConfiguration = insightConfigurationReducer;
 export const insightInterface = insightInterfaceReducer;
 export const insightCaseContext = caseContextReducer;
 export const attachedResults = attachedResultsReducer;
-export const insightuserActions = insightUserActionsReducer;
+export const insightUserActions = insightUserActionsReducer;

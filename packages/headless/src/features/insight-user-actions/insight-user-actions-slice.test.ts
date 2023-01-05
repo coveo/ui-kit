@@ -26,7 +26,7 @@ describe('insight user actions slice', () => {
   });
 
   describe('#fetcUserActions', () => {
-    it('should set #loading to #true when fetching the interface', () => {
+    it('should set #loading to #true when fetching the user actions', () => {
       const modifiedState = insightUserActionsReducer(
         getInsightUserActionsInitialState(),
         fetchUserActions.pending(requestId)
@@ -35,7 +35,7 @@ describe('insight user actions slice', () => {
       expect(modifiedState.loading).toBe(true);
     });
 
-    it('should clear the #error when fetching the interface', () => {
+    it('should clear the #error when fetching the user actions', () => {
       const errorState = {
         ...getInsightUserActionsInitialState(),
         error: errorResponse,
@@ -49,7 +49,7 @@ describe('insight user actions slice', () => {
       expect(modifiedState.error).toBeUndefined();
     });
 
-    describe('when fetching interface fails', () => {
+    describe('when fetching user actions fails', () => {
       const failedAction = fetchUserActions.rejected(
         null,
         requestId,

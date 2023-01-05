@@ -1,5 +1,5 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {configuration, insightuserActions} from '../../../app/reducers';
+import {configuration, insightUserActions} from '../../../app/reducers';
 import {
   fetchUserActions,
   incrementNumberOfSessionsAfter,
@@ -140,6 +140,6 @@ export function buildUserActions(
 function loadUserActionsReducers(
   engine: InsightEngine
 ): engine is InsightEngine<ConfigurationSection & InsightUserActionSection> {
-  engine.addReducers({configuration, insightuserActions});
+  engine.addReducers({configuration, insightuserActions: insightUserActions});
   return true;
 }
