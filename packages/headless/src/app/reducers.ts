@@ -26,6 +26,7 @@ import {redo, snapshot, undo} from '../features/history/history-actions';
 import {historyReducer} from '../features/history/history-slice';
 import {insightConfigurationReducer} from '../features/insight-configuration/insight-configuration-slice';
 import {insightInterfaceReducer} from '../features/insight-interface/insight-interface-slice';
+import {insightUserActionsReducer} from '../features/insight-user-actions/insight-user-actions-slice';
 import {instantResultsReducer} from '../features/instant-results/instant-results-slice';
 import {paginationReducer} from '../features/pagination/pagination-slice';
 import {pipelineReducer} from '../features/pipeline/pipeline-slice';
@@ -84,7 +85,6 @@ export const questionAnswering = questionAnsweringReducer;
 export const standaloneSearchBoxSet = standaloneSearchBoxSetReducer;
 export const recentResults = recentResultsReducer;
 export const recentQueries = recentQueriesReducer;
-export const attachedResults = attachedResultsReducer;
 
 export const history = undoable({
   actionTypes: {
@@ -108,3 +108,5 @@ export const excerptLength = excerptLengthReducer;
 export const insightConfiguration = insightConfigurationReducer;
 export const insightInterface = insightInterfaceReducer;
 export const insightCaseContext = caseContextReducer;
+export const attachedResults = attachedResultsReducer;
+export const insightuserActions = insightUserActionsReducer;

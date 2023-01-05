@@ -13,30 +13,35 @@ import {buildFetchUserActionsRequest} from './insight-user-actions-request';
 
 const numberValue = new NumberValue({required: true, min: 0});
 
-export const updateTicketCreationDate = createAction(
-  'insight/userActions/updateTicketCreationDate',
-  (payload: string) => validatePayload(payload, nonEmptyString)
+interface RegisterUserActionsPayload {
+  ticketCreationDate: string;
+  numberSessionsBefore?: number;
+  numberSessionsAfter?: number;
+  excludedCustomActions?: string[];
+}
+
+const registerUserActionsPayloadSchema = {
+  ticketCreationDate: nonEmptyString,
+  excludedCustomActions: new ArrayValue({
+    required: false,
+    each: nonEmptyString,
+  }),
+  numberSessionsBefore: numberValue,
+  numberSessionsAfter: numberValue,
+};
+
+export const registerUserActions = createAction(
+  'insight/userActions/registerUserActions',
+  (payload: RegisterUserActionsPayload) =>
+    validatePayload(payload, registerUserActionsPayloadSchema)
 );
 
-export const updateNumberOfSessionsBefore = createAction(
-  'insight/userActions/updateNumberOfSessionsBefore',
-  (payload: number) => validatePayload(payload, numberValue)
+export const incrementNumberOfSessionsBefore = createAction(
+  'insight/userActions/updateNumberOfSessionsBefore'
 );
 
-export const updateNumberOfSessionsAfter = createAction(
-  'insight/userActions/updateNumberOfSessionsAfter',
-  (payload: number) => validatePayload(payload, numberValue)
-);
-
-export const updateExcludedCustomActions = createAction(
-  'insight/userActions/updateExcludedCustomActions',
-  (payload: string[]) =>
-    validatePayload(
-      payload,
-      new ArrayValue({
-        each: nonEmptyString,
-      })
-    )
+export const incrementNumberOfSessionsAfter = createAction(
+  'insight/userActions/updateNumberOfSessionsAfter'
 );
 
 export interface FetchUserActionsThunkReturn {
@@ -48,7 +53,7 @@ export type StateNeededByFetchUserActions = ConfigurationSection &
   InsightConfigurationSection &
   InsightUserActionSection;
 
-export const fetcUserActions = createAsyncThunk<
+export const fetchUserActions = createAsyncThunk<
   FetchUserActionsThunkReturn,
   void,
   AsyncThunkInsightOptions<StateNeededByFetchUserActions>

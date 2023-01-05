@@ -24,7 +24,7 @@ import {FoldingState} from '../features/folding/folding-state';
 import {HistoryState} from '../features/history/history-state';
 import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state';
 import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
-import {UserActionState} from '../features/insight-user-actions/insight-user-actions-state';
+import {UserActionsState} from '../features/insight-user-actions/insight-user-actions-state';
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {PaginationState} from '../features/pagination/pagination-state';
 import {ProductListingState} from '../features/product-listing/product-listing-state';
@@ -386,5 +386,5 @@ export interface InsightUserActionSection {
   /**
    * The insight user action state.
    */
-  insightUserAction: UserActionState;
+  insightUserAction: UserActionsState;
 }

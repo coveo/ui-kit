@@ -32,7 +32,7 @@ export interface InsightUserActionTimeline {
   }[];
 }
 
-export interface UserActionState {
+export interface UserActionsState {
   timeline: InsightUserActionTimeline;
   numberSessionsBefore: number;
   numberSessionsAfter: number;
@@ -42,7 +42,7 @@ export interface UserActionState {
   error?: InsightAPIErrorStatusResponse;
 }
 
-export function getInsightUserActionsInitialState(): UserActionState {
+export function getInsightUserActionsInitialState(): UserActionsState {
   return {
     timeline: {
       sessions: [],
