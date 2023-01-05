@@ -38,7 +38,7 @@ describe('ec events', () => {
         fetchMockBeforeEach();
 
         changeDocumentLocation(initialLocation);
-        const address = `${anEndpoint}/rest/v15/analytics/collect`;
+        const address = new RegExp('/rest/v15/analytics');
         fetchMock.reset();
         fetchMock.post(address, (url, {body}) => {
             const parsedBody = JSON.parse(body.toString());
@@ -66,6 +66,17 @@ describe('ec events', () => {
             t: 'pageview',
             verycustom: 'value',
         });
+    });
+
+    it('can set custom data as a customData object and send a click event', async () => {
+        await coveoua('set', 'custom', {
+            verycustom: 'value',
+        });
+        await coveoua('send', 'click');
+
+        const [body] = getParsedBody();
+
+        expect(body).toHaveProperty('customData.verycustom', 'value');
     });
 
     it('should lowercase the properties of custom objects', async () => {

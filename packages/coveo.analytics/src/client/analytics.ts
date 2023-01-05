@@ -34,6 +34,7 @@ import {isApiKey} from './token';
 import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
 import {doNotTrack} from '../donottrack';
 import {NullStorage} from '../storage';
+import {isObject} from './utils';
 
 export const Version = 'v15';
 
@@ -294,7 +295,9 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const removeUnknownParameters: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? this.removeUnknownParameters(currentPayload) : currentPayload;
         const processCustomParameters: ProcessPayloadStep = (currentPayload) =>
-            usesMeasurementProtocol ? this.processCustomParameters(currentPayload) : currentPayload;
+            usesMeasurementProtocol
+                ? this.processCustomParameters(currentPayload)
+                : this.mapCustomParametersToCustomData(currentPayload);
 
         const payloadToSend = await [
             cleanPayloadStep,
@@ -489,8 +492,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     private processCustomParameters(payload: IRequestPayload): IRequestPayload {
         const {custom, ...rest} = payload;
-
-        const lowercasedCustom = this.lowercaseKeys(custom);
+        let lowercasedCustom = {};
+        if (custom && isObject(custom)) {
+            lowercasedCustom = this.lowercaseKeys(custom);
+        }
 
         const newPayload = convertCustomMeasurementProtocolKeys(rest);
 
@@ -500,16 +505,23 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         };
     }
 
-    private lowercaseKeys(custom: any) {
-        const keys = Object.keys(custom || {});
+    private mapCustomParametersToCustomData(payload: IRequestPayload): IRequestPayload {
+        const {custom, ...rest} = payload;
+        if (custom && isObject(custom)) {
+            const lowercasedCustom = this.lowercaseKeys(custom);
+            return {...rest, customData: {...lowercasedCustom, ...payload.customData}};
+        } else {
+            return payload;
+        }
+    }
 
-        return keys.reduce(
-            (all, key) => ({
-                ...all,
-                [key.toLowerCase()]: custom[key],
-            }),
-            {}
-        );
+    private lowercaseKeys(custom: Record<string, unknown>) {
+        const keys = Object.keys(custom);
+        let result: Record<string, unknown> = {};
+        keys.forEach((key) => {
+            result[key.toLowerCase() as string] = custom[key];
+        });
+        return result;
     }
 
     private validateParams(payload: IRequestPayload): IRequestPayload {

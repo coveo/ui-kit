@@ -38,7 +38,7 @@ export class Plugins {
         }
         const actionFunction = plugin[fn];
         if (!actionFunction) {
-            throw new Error(`The function "${fn}" does not exists on the plugin "${name}".`);
+            throw new Error(`The function "${fn}" does not exist on the plugin "${name}".`);
         }
         if (typeof actionFunction !== 'function') {
             throw new Error(`"${fn}" of the plugin "${name}" is not a function.`);
