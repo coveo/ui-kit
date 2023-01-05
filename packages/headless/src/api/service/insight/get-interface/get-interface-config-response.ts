@@ -38,9 +38,12 @@ interface Badge {
   color: string;
 }
 
+export type InsightFieldType = 'string' | 'date' | 'number' | 'multi';
+
 interface Detail {
   field: string;
   label?: string;
+  fieldType?: InsightFieldType;
 }
 
 type ResultAction =
