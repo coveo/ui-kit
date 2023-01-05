@@ -34,7 +34,7 @@ export class AtomicResultDate implements InitializableComponent {
   /**
    * The result field which the component should use.
    * This will look for the field in the Result object first, and then in the Result.raw object.
-   * It is important to include the necessary field in the ResultList component.
+   * It is important to include the necessary field in the `atomic-search-interface` component.
    */
   @Prop({reflect: true}) field = 'date';
   /**

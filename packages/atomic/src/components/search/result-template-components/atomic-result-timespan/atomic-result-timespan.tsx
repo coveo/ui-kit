@@ -27,7 +27,7 @@ export class AtomicResultTimespan {
   /**
    * The target result field.
    * The component first looks for the field in the Result object, and then in the Result.raw object.
-   * It is important to include the necessary field in the ResultList component.
+   * It is important to include the necessary field in the `atomic-search-interface` component.
    */
   @Prop({reflect: true}) field!: string;
   /**
