@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.2.0...@coveo/headless@2.3.0) (2023-01-05)
+
+### Features
+
+- **headless:** insight quickview using proper endpoint ([#2631](https://github.com/coveo/ui-kit/issues/2631)) ([9bb8ff9](https://github.com/coveo/ui-kit/commit/9bb8ff9a849b3d131f6f98b9d45cadf8cfceb2e3))
+
 # [2.2.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.1.0...@coveo/headless@2.2.0) (2023-01-05)
 
 ### Bug Fixes
