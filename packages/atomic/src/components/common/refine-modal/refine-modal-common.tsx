@@ -8,7 +8,6 @@ import {
 } from '../facets/facet-common';
 import {AnyBindings} from '../interface/bindings';
 import {isRefineModalFacet} from '../interface/store';
-import {FacetManager} from '../types';
 
 interface RefineModalCommonProps {
   host: HTMLElement;
@@ -103,8 +102,8 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
 
 export function getClonedFacetElements(
   facetElements: HTMLElement[],
-  facetManager: FacetManager,
-  collapseFacetsAfter: number
+  collapseFacetsAfter: number,
+  root: HTMLElement
 ): HTMLDivElement {
   const divSlot = document.createElement('div');
   divSlot.setAttribute('slot', 'facets');
@@ -112,15 +111,13 @@ export function getClonedFacetElements(
   divSlot.style.flexDirection = 'column';
   divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
 
-  const facetElementsPayload = facetElements.map((f) => ({
-    facetId: f.getAttribute('facet-id')!,
-    payload: f,
-  }));
-  const sortedFacetsElements = facetManager
-    .sort(facetElementsPayload)
-    .map((f) => f.payload);
+  const allFacetTags = Array.from(
+    new Set(facetElements.map((el) => el.tagName.toLowerCase()))
+  );
 
-  sortedFacetsElements.forEach((facetElement, index) => {
+  const allFacetsInOrderInDOM = root.querySelectorAll(allFacetTags.join(','));
+
+  allFacetsInOrderInDOM.forEach((facetElement, index) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
     clone.isCollapsed = facetShouldBeInitiallyCollapsed(
       index,
