@@ -1,3 +1,4 @@
+import {UserActionTimeline} from '../../api/service/insight/user-actions/user-actions-response';
 import {InsightAPIErrorStatusResponse} from '../../insight.index';
 
 export enum UserActionType {
@@ -7,33 +8,8 @@ export enum UserActionType {
   CUSTOM = 'CUSTOM',
 }
 
-export interface InsightUserActionTimeline {
-  sessions: {
-    start: string;
-    end: string;
-    actions: {
-      actionType: UserActionType;
-      timestamp: string;
-      eventData: {
-        type?: string;
-        value?: string;
-      };
-      cause?: string;
-      searchHub?: string;
-      document?: {
-        title: string;
-        clickUri: string;
-        uriHash?: string;
-        contentIdKey?: string;
-        contentIdValue?: string;
-      };
-      query?: string;
-    }[];
-  }[];
-}
-
 export interface UserActionsState {
-  timeline: InsightUserActionTimeline;
+  timeline: UserActionTimeline;
   numberSessionsBefore: number;
   numberSessionsAfter: number;
   excludedCustomActions: string[];

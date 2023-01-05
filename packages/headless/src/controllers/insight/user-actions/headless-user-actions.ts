@@ -1,3 +1,4 @@
+import {UserActionTimeline} from '../../../api/service/insight/user-actions/user-actions-response';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {configuration, insightUserActions} from '../../../app/reducers';
 import {
@@ -6,7 +7,6 @@ import {
   incrementNumberOfSessionsBefore,
   registerUserActions,
 } from '../../../features/insight-user-actions/insight-user-actions-actions';
-import {InsightUserActionTimeline} from '../../../features/insight-user-actions/insight-user-actions-state';
 import {InsightAPIErrorStatusResponse} from '../../../insight.index';
 import {
   ConfigurationSection,
@@ -51,7 +51,7 @@ export interface UserActionsState {
   /**
    * The timeline of user actions.
    */
-  timeline: InsightUserActionTimeline;
+  timeline: UserActionTimeline;
   /**
    * The number of sessions included before the ticket creation date.
    */

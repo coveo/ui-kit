@@ -32,6 +32,7 @@ export * from './features/case-context/case-context-actions-loader';
 export * from './features/insight-search/insight-search-analytics-actions-loader';
 export * from './features/fields/fields-actions-loader';
 export * from './features/attached-results/attached-results-actions-loader';
+export * from './features/insight-user-actions/insight-user-actions-action-loader';
 
 // Controllers
 export type {
@@ -281,6 +282,14 @@ export type {
 export {buildQueryError} from './controllers/insight/query-error/headless-insight-query-error';
 
 export type {
+  UserActions,
+  UserActionsProps,
+  UserActionsOptions,
+  UserActionsState,
+} from './controllers/insight/user-actions/headless-user-actions';
+export {buildUserActions} from './controllers/insight/user-actions/headless-user-actions';
+
+export type {
   FacetValueRequest,
   FacetSortCriterion,
 } from './features/facets/facet-set/interfaces/request';
@@ -307,5 +316,11 @@ export type {
   RelativeDatePeriod,
   RelativeDateUnit,
 } from './api/search/date/relative-date';
+
+export type {
+  UserActionTimeline,
+  UserSession,
+  UserAction,
+} from './api/service/insight/user-actions/user-actions-response';
 
 export {deserializeRelativeDate} from './api/search/date/relative-date';

@@ -9,17 +9,17 @@ export interface InsightUserActionsResponse {
   timeline: UserActionTimeline;
 }
 
-interface UserActionTimeline {
+export interface UserActionTimeline {
   sessions: UserSession[];
 }
 
-interface UserSession {
+export interface UserSession {
   start: string;
   end: string;
   actions: UserAction[];
 }
 
-interface UserAction {
+export interface UserAction {
   actionType: UserActionType;
   timestamp: string;
   eventData: {
