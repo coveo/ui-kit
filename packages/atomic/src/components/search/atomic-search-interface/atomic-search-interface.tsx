@@ -69,6 +69,7 @@ export class AtomicSearchInterface
   @Element() public host!: HTMLAtomicSearchInterfaceElement;
 
   @State() public error?: Error;
+  @State() relevanceInspectorIsOpen = false;
 
   /**
    * A list of non-default fields to include in the query results.
@@ -151,8 +152,18 @@ export class AtomicSearchInterface
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
+  /**
+   * Whether the relevance inspector shortcut should be enabled for this interface.
+   *
+   * The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.
+   *
+   * The relevance inspector allows to troubleshoot and debug queries.
+   */
+  @Prop({reflect: true}) public enableRelevanceInspector = true;
+
   public constructor() {
     this.initAriaLive();
+    this.initRelevanceInspector();
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
       'CoveoAtomic'
@@ -239,6 +250,11 @@ export class AtomicSearchInterface
     }
 
     scrollContainerElement.scrollIntoView({behavior: 'smooth'});
+  }
+
+  @Listen('atomic/relevanceInspector/close')
+  public closeRelevanceInspector() {
+    this.relevanceInspectorIsOpen = false;
   }
 
   /**
@@ -396,6 +412,16 @@ export class AtomicSearchInterface
     this.host.prepend(document.createElement('atomic-aria-live'));
   }
 
+  private initRelevanceInspector() {
+    if (this.enableRelevanceInspector) {
+      this.host.addEventListener('dblclick', (e) => {
+        if (e.altKey) {
+          this.relevanceInspectorIsOpen = !this.relevanceInspectorIsOpen;
+        }
+      });
+    }
+  }
+
   private initSearchStatus() {
     this.searchStatus = buildSearchStatus(this.engine!);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
@@ -444,8 +470,9 @@ export class AtomicSearchInterface
 
   public render() {
     return [
-      this.engine && (
+      this.engine && this.enableRelevanceInspector && (
         <atomic-relevance-inspector
+          open={this.relevanceInspectorIsOpen}
           bindings={this.bindings}
         ></atomic-relevance-inspector>
       ),

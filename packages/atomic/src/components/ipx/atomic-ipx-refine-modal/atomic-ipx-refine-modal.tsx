@@ -2,9 +2,7 @@ import {
   BreadcrumbManager,
   BreadcrumbManagerState,
   buildBreadcrumbManager,
-  buildFacetManager,
   buildQuerySummary,
-  FacetManager,
   QuerySummary,
   QuerySummaryState,
 } from '@coveo/headless';
@@ -63,7 +61,6 @@ export class AtomicIPXRefineModal implements InitializableComponent {
 
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
-  private facetManager!: FacetManager;
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
@@ -72,8 +69,8 @@ export class AtomicIPXRefineModal implements InitializableComponent {
         this.host.append(
           getClonedFacetElements(
             this.bindings.store.getFacetElements(),
-            this.facetManager,
-            this.collapseFacetsAfter
+            this.collapseFacetsAfter,
+            this.bindings.interfaceElement
           )
         );
       }
@@ -111,7 +108,6 @@ export class AtomicIPXRefineModal implements InitializableComponent {
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
-    this.facetManager = buildFacetManager(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
   }
 

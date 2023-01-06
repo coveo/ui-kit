@@ -4,9 +4,7 @@ import {
   BreadcrumbManagerState,
   QuerySummary,
   QuerySummaryState,
-  FacetManager,
   FacetManagerState,
-  buildFacetManager,
   Sort,
   buildSort,
   SortState,
@@ -73,7 +71,6 @@ export class AtomicRefineModal implements InitializableComponent {
   private sort!: Sort;
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
-  private facetManager!: FacetManager;
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
@@ -111,8 +108,8 @@ export class AtomicRefineModal implements InitializableComponent {
       this.host.append(
         getClonedFacetElements(
           this.bindings.store.getFacetElements(),
-          this.facetManager,
-          this.collapseFacetsAfter
+          this.collapseFacetsAfter,
+          this.bindings.interfaceElement
         )
       );
     }
@@ -120,7 +117,6 @@ export class AtomicRefineModal implements InitializableComponent {
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
-    this.facetManager = buildFacetManager(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
     this.watchEnabled(this.isOpen);

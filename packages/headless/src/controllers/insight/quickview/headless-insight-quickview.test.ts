@@ -1,4 +1,8 @@
-import {configuration, resultPreview} from '../../../app/reducers';
+import {
+  configuration,
+  insightInterface,
+  resultPreview,
+} from '../../../app/reducers';
 import {updateContentURL} from '../../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
 import {buildMockResult} from '../../../test';
@@ -40,6 +44,7 @@ describe('Insight Quickview', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
       resultPreview,
+      insightInterface,
     });
   });
 

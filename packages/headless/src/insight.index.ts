@@ -186,10 +186,10 @@ export type {
 export {buildQuerySummary} from './controllers/insight/query-summary/headless-insight-query-summary';
 
 export type {
-  Quickview,
-  QuickviewOptions,
   QuickviewProps,
+  QuickviewOptions,
   QuickviewState,
+  Quickview,
 } from './controllers/insight/quickview/headless-insight-quickview';
 export {buildQuickview} from './controllers/insight/quickview/headless-insight-quickview';
 

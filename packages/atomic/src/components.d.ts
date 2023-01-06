@@ -1137,6 +1137,7 @@ export namespace Components {
           * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
         "bindings": Bindings;
+        "open": boolean;
     }
     interface AtomicResult {
         /**
@@ -1487,6 +1488,10 @@ export namespace Components {
          */
         "analytics": boolean;
         /**
+          * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
+         */
+        "enableRelevanceInspector": boolean;
+        /**
           * The search interface headless engine.
          */
         "engine"?: SearchEngine;
@@ -1764,6 +1769,10 @@ export interface AtomicModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicPagerElement;
+}
+export interface AtomicRelevanceInspectorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicRelevanceInspectorElement;
 }
 export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3696,6 +3705,8 @@ declare namespace LocalJSX {
           * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
         "bindings": Bindings;
+        "onAtomic/relevanceInspector/close"?: (event: AtomicRelevanceInspectorCustomEvent<any>) => void;
+        "open"?: boolean;
     }
     interface AtomicResult {
         /**
@@ -4031,6 +4042,10 @@ declare namespace LocalJSX {
           * Whether analytics should be enabled.
          */
         "analytics"?: boolean;
+        /**
+          * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
+         */
+        "enableRelevanceInspector"?: boolean;
         /**
           * The search interface headless engine.
          */
