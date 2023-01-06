@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.2.0...@coveo/atomic-angular@2.2.1) (2023-01-05)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+# [2.2.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.1.4...@coveo/atomic-angular@2.2.0) (2023-01-05)
+
+### Features
+
+- **atomic:** add relevance inspector modal ([#2564](https://github.com/coveo/ui-kit/issues/2564)) ([a30f32d](https://github.com/coveo/ui-kit/commit/a30f32d0b41d569bba11dd561f1d42f5287633d4))
+
 ## [2.1.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.1.3...@coveo/atomic-angular@2.1.4) (2022-12-21)
 
 **Note:** Version bump only for package @coveo/atomic-angular

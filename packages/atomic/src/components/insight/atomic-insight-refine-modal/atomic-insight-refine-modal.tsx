@@ -1,7 +1,5 @@
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
 import {
-  InsightFacetManager,
-  buildInsightFacetManager,
   InsightQuerySummary,
   InsightQuerySummaryState,
   buildInsightQuerySummary,
@@ -55,7 +53,6 @@ export class AtomicInsightRefineModal
 
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
-  private facetManager!: InsightFacetManager;
   public querySummary!: InsightQuerySummary;
   private breadcrumbManager!: InsightBreadcrumbManager;
 
@@ -66,8 +63,8 @@ export class AtomicInsightRefineModal
         this.host.append(
           getClonedFacetElements(
             this.bindings.store.getFacetElements(),
-            this.facetManager,
-            0
+            0,
+            this.bindings.interfaceElement
           )
         );
       }
@@ -102,7 +99,6 @@ export class AtomicInsightRefineModal
   }
 
   public initialize() {
-    this.facetManager = buildInsightFacetManager(this.bindings.engine);
     this.querySummary = buildInsightQuerySummary(this.bindings.engine);
     this.breadcrumbManager = buildInsightBreadcrumbManager(
       this.bindings.engine
