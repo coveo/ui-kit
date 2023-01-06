@@ -16,7 +16,7 @@ export interface QuickviewSidebarProps {
   i18n: i18n;
   highlightKeywords: boolean;
   onHighlightKeywords: (doHighlight: boolean) => void;
-  minimize: boolean;
+  minimized: boolean;
   onMinimize: (minimize: boolean) => void;
   result: Result;
 }
@@ -24,7 +24,7 @@ export interface QuickviewSidebarProps {
 export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
   props
 ) => {
-  const {iframe, termsToHighlight, highlightKeywords, minimize} = props;
+  const {iframe, termsToHighlight, highlightKeywords, minimized} = props;
 
   const words = getWordsHighlights(iframe, termsToHighlight);
 
@@ -37,13 +37,13 @@ export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
       class="p-4 border-r border-neutral h-full"
       style={{backgroundColor: 'var(--atomic-neutral-light)'}}
     >
-      {minimize && minimizeButton}
+      {minimized && minimizeButton}
       <div class="flex items-center">
         <HighlightKeywordsCheckbox {...props} />
-        {!minimize && minimizeButton}
+        {!minimized && minimizeButton}
       </div>
 
-      {highlightKeywords && !minimize && (
+      {highlightKeywords && !minimized && (
         <KeywordsNavigation {...props} words={words} />
       )}
     </div>
@@ -53,18 +53,18 @@ export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
 const MinimizeButton: FunctionalComponent<
   Pick<
     QuickviewSidebarProps,
-    'i18n' | 'minimize' | 'onMinimize' | 'highlightKeywords'
+    'i18n' | 'minimized' | 'onMinimize' | 'highlightKeywords'
   > & {wordsLength: number}
-> = ({i18n, minimize, onMinimize, highlightKeywords, wordsLength}) => (
+> = ({i18n, minimized, onMinimize, highlightKeywords, wordsLength}) => (
   <atomic-icon-button
     buttonStyle="text-transparent"
-    class={`w-fit ${minimize ? '' : 'ml-auto'}`}
+    class={`w-fit ${minimized ? '' : 'ml-auto'}`}
     icon={MinimizeIcon}
     labelI18nKey="minimize"
     tooltip={i18n.t('minimize')}
-    clickCallback={() => onMinimize(!minimize)}
+    clickCallback={() => onMinimize(!minimized)}
     badge={
-      highlightKeywords && minimize ? <slot>{wordsLength}</slot> : undefined
+      highlightKeywords && minimized ? <slot>{wordsLength}</slot> : undefined
     }
   ></atomic-icon-button>
 );
@@ -72,9 +72,9 @@ const MinimizeButton: FunctionalComponent<
 const HighlightKeywordsCheckbox: FunctionalComponent<
   Pick<
     QuickviewSidebarProps,
-    'i18n' | 'highlightKeywords' | 'onHighlightKeywords' | 'minimize'
+    'i18n' | 'highlightKeywords' | 'onHighlightKeywords' | 'minimized'
   >
-> = ({i18n, highlightKeywords, onHighlightKeywords, minimize}) => (
+> = ({i18n, highlightKeywords, onHighlightKeywords, minimized}) => (
   <Fragment>
     <Checkbox
       text={i18n.t('keywords-highlight')}
@@ -83,7 +83,7 @@ const HighlightKeywordsCheckbox: FunctionalComponent<
       checked={highlightKeywords}
       onToggle={onHighlightKeywords}
     ></Checkbox>
-    {!minimize && (
+    {!minimized && (
       <label
         class="font-bold cursor-pointer whitespace-nowrap"
         htmlFor="atomic-quickview-sidebar-highlight-keywords"
@@ -103,7 +103,10 @@ const KeywordsNavigation: FunctionalComponent<
     <Fragment>
       {Object.values(words).map((keyword) => {
         return (
-          <div class="flex items-center w-100 my-4 bg-background border border-neutral rounded-lg overflow-x-auto">
+          <div
+            key={keyword.text}
+            class="flex items-center w-100 my-4 bg-background border border-neutral rounded-lg overflow-x-auto"
+          >
             <div class="flex items-center grow p-4 border-r">
               <div
                 class="w-5 h-5 flex-none mr-2"

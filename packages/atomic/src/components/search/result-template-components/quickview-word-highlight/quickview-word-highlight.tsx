@@ -1,6 +1,6 @@
 import {TermsToHighlight} from '@coveo/headless';
 
-const HIGHLIGHT_PREFIX = 'CoveoHighlight';
+export const HIGHLIGHT_PREFIX = 'CoveoHighlight';
 export class QuickviewWordHighlight {
   public text: string;
   public indexIdentifier: string;
@@ -174,28 +174,11 @@ export const getWordsHighlights = (
         wordsHighlights[wordHighlight.indexIdentifier];
 
       if (alreadyScannedKeyword) {
-        addNewWordElementToExistingHighlights(
-          alreadyScannedKeyword,
-          wordHighlight,
-          el as HTMLElement
-        );
+        alreadyScannedKeyword.addElement(wordHTMLElementToHighlight);
       } else {
         wordsHighlights[wordHighlight.indexIdentifier] = wordHighlight;
       }
     });
 
   return wordsHighlights;
-};
-
-const addNewWordElementToExistingHighlights = (
-  existingHighlight: QuickviewWordHighlight,
-  newWordHighlight: QuickviewWordHighlight,
-  newWordElement: HTMLElement
-) => {
-  existingHighlight.addElement(newWordElement as HTMLElement);
-
-  // Special code needed to workaround invalid HTML returned by the index with embedded keyword
-  if (existingHighlight.occurrences === newWordHighlight.occurrences) {
-    existingHighlight.text += newWordHighlight.text;
-  }
 };

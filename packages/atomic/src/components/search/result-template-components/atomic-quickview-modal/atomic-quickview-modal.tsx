@@ -8,6 +8,8 @@ import {
 import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
+import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';
+import {HIGHLIGHT_PREFIX} from '../quickview-word-highlight/quickview-word-highlight';
 
 /**
  * @internal
@@ -24,39 +26,28 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @State() private highlightKeywords = true;
   @Watch('highlightKeywords')
   watchHighlightKeywords() {
-    this.handleKeywordHighlight();
+    if (this.highlightKeywords) {
+      this.enableHighlights();
+    } else {
+      this.disableHighlights();
+    }
   }
 
   @State() private minimizeSidebar = false;
+  @State() private iframeRef?: HTMLIFrameElement;
 
   @Prop({mutable: true, reflect: false}) content?: string;
-  @Watch('content')
-  watchContent() {
-    if (this.content && this.iframeRef) {
-      const documentWriter = this.iframeRef.contentDocument;
-      if (!documentWriter) {
-        return;
-      }
-
-      documentWriter.open();
-      documentWriter.write(this.content);
-      documentWriter.close();
-      this.resizeIframe(documentWriter);
-    }
-    this.handleKeywordHighlight();
-  }
-
   @Prop({mutable: true, reflect: false}) result?: Result;
 
-  private iframeRef?: HTMLIFrameElement;
+  private observer?: ResizeObserver;
 
   private renderSidebar() {
-    if (!this.content || !this.result) {
+    if (!this.content || !this.result || !this.iframeRef) {
       return;
     }
     return (
       <QuickviewSidebar
-        iframe={this.iframeRef!}
+        iframe={this.iframeRef}
         termsToHighlight={
           this.bindings.engine.state.search.response.termsToHighlight
         }
@@ -66,39 +57,10 @@ export class AtomicQuickviewModal implements InitializableComponent {
           (this.highlightKeywords = highlight)
         }
         result={this.result}
-        minimize={this.minimizeSidebar}
+        minimized={this.minimizeSidebar}
         onMinimize={(minimize) => (this.minimizeSidebar = minimize)}
       />
     );
-  }
-
-  private renderIframe() {
-    return (
-      <iframe
-        class="w-full"
-        frameBorder={0}
-        ref={(el) => (this.iframeRef = el as HTMLIFrameElement)}
-      ></iframe>
-    );
-  }
-
-  private resizeIframe(documentWriter: Document) {
-    if (!this.iframeRef) {
-      return;
-    }
-    // This "reset" of the iframe height allows the recalculation of the proper height needed for new content being added to the iframe
-    // when the end user navigates through the available quickview
-    // Since setting a new height on the iframe will cause the resize observer to essentially "call itself", we also add a flag to stop double resizing
-    this.iframeRef.style.height = '0';
-    let shouldRecalculateResize = true;
-    new ResizeObserver(([documentElementObserved]) => {
-      if (this.iframeRef && shouldRecalculateResize) {
-        this.iframeRef.style.height = `${
-          documentElementObserved.contentRect.height + 20
-        }px`;
-      }
-      shouldRecalculateResize = !shouldRecalculateResize;
-    }).observe(documentWriter.documentElement);
   }
 
   private renderHeader() {
@@ -119,7 +81,12 @@ export class AtomicQuickviewModal implements InitializableComponent {
         style={{height: '90vh'}}
       >
         <div class="h-full">{this.renderSidebar()}</div>
-        <div class="overflow-auto">{this.renderIframe()}</div>
+        <div class="overflow-auto">
+          <QuickviewIframe
+            content={this.content}
+            onSetIframeRef={(ref) => (this.iframeRef = ref)}
+          />
+        </div>
       </div>
     );
   }
@@ -169,25 +136,38 @@ export class AtomicQuickviewModal implements InitializableComponent {
     return !!this.content && !!this.result;
   }
 
-  private handleKeywordHighlight() {
+  private get highlightScriptId() {
+    return 'CoveoDisableHighlightStyle';
+  }
+
+  private enableHighlights() {
     const doc = this.iframeRef?.contentWindow?.document;
     if (!doc) {
       return;
     }
-    if (this.highlightKeywords) {
-      doc.getElementById('CoveoDisableHighlightStyle')?.remove();
-    } else {
-      const head = doc.head;
-      const style = doc.createElement('style');
-      style.setAttribute('id', 'CoveoDisableHighlightStyle');
-      head.appendChild(style);
-      style.appendChild(
-        doc.createTextNode(`[id^=CoveoHighlight] {
-        background-color: inherit !important;
-        color: inherit !important;
-      }`)
-      );
+    doc.getElementById(this.highlightScriptId)?.remove();
+  }
+
+  private disableHighlights() {
+    const doc = this.iframeRef?.contentWindow?.document;
+    if (!doc) {
+      return;
     }
+
+    const head = doc.head;
+    const style = doc.createElement('style');
+    style.setAttribute('id', this.highlightScriptId);
+    head.appendChild(style);
+    style.appendChild(
+      doc.createTextNode(`[id^=${HIGHLIGHT_PREFIX}] {
+      background-color: inherit !important;
+      color: inherit !important;
+    }`)
+    );
+  }
+
+  public disconnectedCallback(): void {
+    this.observer?.disconnect();
   }
 
   public render() {
