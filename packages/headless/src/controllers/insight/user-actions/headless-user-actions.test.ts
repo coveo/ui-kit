@@ -58,18 +58,4 @@ describe('UserActions', () => {
 
     expect(action).toBeTruthy();
   });
-
-  it('#fetchWithPrecedingSession dispatches #fetchUserActions', () => {
-    userActions.fetchWithPrecedingSession();
-    const action = engine.findAsyncAction(fetchUserActions.pending);
-
-    expect(action).toBeTruthy();
-  });
-
-  it('#fetchWithFollowingSession dispatches #fetchUserActions', () => {
-    userActions.fetchWithFollowingSession();
-    const action = engine.findAsyncAction(fetchUserActions.pending);
-
-    expect(engine.actions).toContainEqual(action);
-  });
 });

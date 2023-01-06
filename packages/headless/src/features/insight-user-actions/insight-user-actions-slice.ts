@@ -2,8 +2,6 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   fetchUserActions,
   registerUserActions,
-  incrementNumberOfSessionsBefore,
-  incrementNumberOfSessionsAfter,
 } from './insight-user-actions-actions';
 import {getInsightUserActionsInitialState} from './insight-user-actions-state';
 
@@ -22,12 +20,6 @@ export const insightUserActionsReducer = createReducer(
         if (action.payload.excludedCustomActions) {
           state.excludedCustomActions = action.payload.excludedCustomActions;
         }
-      })
-      .addCase(incrementNumberOfSessionsBefore, (state) => {
-        state.numberSessionsBefore++;
-      })
-      .addCase(incrementNumberOfSessionsAfter, (state) => {
-        state.numberSessionsAfter++;
       })
       .addCase(fetchUserActions.pending, (state) => {
         state.loading = true;

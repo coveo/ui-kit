@@ -36,14 +36,6 @@ export const registerUserActions = createAction(
     validatePayload(payload, registerUserActionsPayloadSchema)
 );
 
-export const incrementNumberOfSessionsBefore = createAction(
-  'insight/userActions/updateNumberOfSessionsBefore'
-);
-
-export const incrementNumberOfSessionsAfter = createAction(
-  'insight/userActions/updateNumberOfSessionsAfter'
-);
-
 export interface FetchUserActionsThunkReturn {
   /** The successful user actions response. */
   response: InsightUserActionsResponse;

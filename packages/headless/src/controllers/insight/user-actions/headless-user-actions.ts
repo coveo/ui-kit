@@ -3,8 +3,6 @@ import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {configuration, insightUserActions} from '../../../app/reducers';
 import {
   fetchUserActions,
-  incrementNumberOfSessionsAfter,
-  incrementNumberOfSessionsBefore,
   registerUserActions,
 } from '../../../features/insight-user-actions/insight-user-actions-actions';
 import {InsightAPIErrorStatusResponse} from '../../../insight.index';
@@ -87,14 +85,6 @@ export interface UserActions extends Controller {
    */
   fetchUserActions(): void;
   /**
-   * Fetch the list of user actions including one more session preceding the ticket creation.
-   */
-  fetchWithPrecedingSession(): void;
-  /**
-   * Fetch the list of user actions including one more session following the ticket creation.
-   */
-  fetchWithFollowingSession(): void;
-  /**
    * The state of the UserActions controller.
    * */
   state: UserActionsState;
@@ -122,16 +112,6 @@ export function buildUserActions(
     },
 
     fetchUserActions() {
-      dispatch(fetchUserActions());
-    },
-
-    fetchWithPrecedingSession() {
-      dispatch(incrementNumberOfSessionsBefore());
-      dispatch(fetchUserActions());
-    },
-
-    fetchWithFollowingSession() {
-      dispatch(incrementNumberOfSessionsAfter());
       dispatch(fetchUserActions());
     },
   };

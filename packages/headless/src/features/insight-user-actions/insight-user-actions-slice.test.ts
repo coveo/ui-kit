@@ -4,8 +4,6 @@ import {
 } from '../../api/service/insight/user-actions/user-actions-response';
 import {
   fetchUserActions,
-  incrementNumberOfSessionsAfter,
-  incrementNumberOfSessionsBefore,
   registerUserActions,
 } from './insight-user-actions-actions';
 import {insightUserActionsReducer} from './insight-user-actions-slice';
@@ -196,34 +194,6 @@ describe('insight user actions slice', () => {
 
       expect(modifiedState.excludedCustomActions).toBe(
         testExcludedCustomActions
-      );
-    });
-  });
-
-  describe('incrementNumberOfSessionsBefore', () => {
-    it('should increase the #numberSessionsBefore by 1', () => {
-      const initialState = getInsightUserActionsInitialState();
-      const modifiedState = insightUserActionsReducer(
-        initialState,
-        incrementNumberOfSessionsBefore()
-      );
-
-      expect(modifiedState.numberSessionsBefore).toBe(
-        initialState.numberSessionsBefore + 1
-      );
-    });
-  });
-
-  describe('incrementNumberOfSessionsAfter', () => {
-    it('should increase the #numberSessionsAfter by 1', () => {
-      const initialState = getInsightUserActionsInitialState();
-      const modifiedState = insightUserActionsReducer(
-        initialState,
-        incrementNumberOfSessionsAfter()
-      );
-
-      expect(modifiedState.numberSessionsAfter).toBe(
-        initialState.numberSessionsAfter + 1
       );
     });
   });
