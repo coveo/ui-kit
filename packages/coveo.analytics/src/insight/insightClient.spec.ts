@@ -829,4 +829,19 @@ describe('InsightClient', () => {
         await client.logExpandToFullUI(meta);
         expectMatchCustomEventPayload(InsightEvents.expandToFullUI, expectedMeta);
     });
+
+    it('should send proper payload for #logOpenUserActions', async () => {
+        await client.logOpenUserActions(baseCaseMetadata);
+        expectMatchCustomEventPayload(InsightEvents.openUserActions, expectedBaseCaseMetadata);
+    });
+
+    it('should send proper payload for #logShowPrecedingSession', async () => {
+        await client.logShowPrecedingSessions(baseCaseMetadata);
+        expectMatchCustomEventPayload(InsightEvents.showPrecedingSessions, expectedBaseCaseMetadata);
+    });
+
+    it('should send proper payload for #logShowFollowingSession', async () => {
+        await client.logShowFollowingSessions(baseCaseMetadata);
+        expectMatchCustomEventPayload(InsightEvents.showFollowingSessions, expectedBaseCaseMetadata);
+    });
 });

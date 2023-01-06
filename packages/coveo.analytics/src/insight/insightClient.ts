@@ -219,6 +219,21 @@ export class CoveoInsightClient {
         return this.logCustomEvent(InsightEvents.expandToFullUI, metadataToSend);
     }
 
+    public logOpenUserActions(metadata: CaseMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logCustomEvent(InsightEvents.openUserActions, metadataToSend);
+    }
+
+    public logShowPrecedingSessions(metadata: CaseMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logCustomEvent(InsightEvents.showPrecedingSessions, metadataToSend);
+    }
+
+    public logShowFollowingSessions(metadata: CaseMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logCustomEvent(InsightEvents.showFollowingSessions, metadataToSend);
+    }
+
     public logDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {
         return this.logClickEvent(
             SearchPageEvents.documentOpen,

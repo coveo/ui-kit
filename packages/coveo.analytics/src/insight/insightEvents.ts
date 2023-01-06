@@ -20,6 +20,18 @@ export enum InsightEvents {
      * Identifies the event that gets logged when the user opens the full search page from the insight panel.
      */
     expandToFullUI = 'expandToFullUI',
+    /**
+     * Identifies the event that gets logged when the user opens the user actions section.
+     */
+    openUserActions = 'openUserActions',
+    /**
+     * Identifies the event that gets logged when the user clicks to view user action sessions preceding the ticket creation.
+     */
+    showPrecedingSessions = 'showPrecedingSessions',
+    /**
+     * Identifies the event that gets logged when the user clicks to view user action sessions following the ticket creation.
+     */
+    showFollowingSessions = 'showFollowingSessions',
 }
 
 export interface CaseMetadata {

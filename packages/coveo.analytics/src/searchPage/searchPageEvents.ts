@@ -322,6 +322,9 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.clearRecentResults]: 'recentlyClickedDocuments',
     [SearchPageEvents.showLessFoldedResults]: 'folding',
     [InsightEvents.expandToFullUI]: 'interface',
+    [InsightEvents.openUserActions]: 'User Actions',
+    [InsightEvents.showPrecedingSessions]: 'User Actions',
+    [InsightEvents.showFollowingSessions]: 'User Actions',
     [SearchPageEvents.caseDetach]: 'case',
 };
 
