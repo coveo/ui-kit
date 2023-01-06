@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {mergeObjects} from '../../utils/utils';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {change} from '../history/history-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
@@ -8,7 +9,9 @@ import {getQueryInitialState} from './query-state';
 
 export const queryReducer = createReducer(getQueryInitialState(), (builder) =>
   builder
-    .addCase(updateQuery, (state, action) => ({...state, ...action.payload}))
+    .addCase(updateQuery, (state, action) =>
+      mergeObjects(state, action.payload)
+    )
     .addCase(applyDidYouMeanCorrection, (state, action) => {
       state.q = action.payload;
     })

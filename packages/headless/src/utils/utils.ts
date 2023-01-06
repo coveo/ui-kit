@@ -64,3 +64,18 @@ export function doNotTrack() {
     win.doNotTrack,
   ].some((value) => doNotTrackValues.has(value));
 }
+
+export function mergeObjects<T>(...objects: Partial<T>[]): T {
+  return objects
+    .flatMap((obj) => (obj ? Object.entries(obj) : []))
+    .reduce(
+      (mergedObject, [key, value]) =>
+        value !== undefined
+          ? {
+              ...mergedObject,
+              [key]: value,
+            }
+          : mergedObject,
+      {} as T
+    );
+}

@@ -173,7 +173,7 @@ export function buildCoreSearchBox(
   const getState = () => engine.state;
 
   const id = props.options?.id || randomID('search_box');
-  const options: Required<SearchBoxOptions> = {
+  const options = {
     id,
     highlightOptions: {...props.options?.highlightOptions},
     ...defaultSearchBoxOptions,

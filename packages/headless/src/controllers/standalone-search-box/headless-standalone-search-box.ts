@@ -94,7 +94,7 @@ export function buildStandaloneSearchBox(
   const getState = () => engine.state;
 
   const id = props.options.id || randomID('standalone_search_box');
-  const options: Required<StandaloneSearchBoxOptions> = {
+  const options = {
     id,
     highlightOptions: {...props.options.highlightOptions},
     ...defaultSearchBoxOptions,

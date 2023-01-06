@@ -45,11 +45,10 @@ export interface SearchBoxOptions {
 
 type DefaultSearchBoxOptions = Pick<
   SearchBoxOptions,
-  'enableQuerySyntax' | 'numberOfSuggestions' | 'clearFilters'
+  'numberOfSuggestions' | 'clearFilters'
 >;
 
 export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
-  enableQuerySyntax: false,
   numberOfSuggestions: 5,
   clearFilters: true,
 };
