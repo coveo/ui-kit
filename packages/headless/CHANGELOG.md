@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.3.0...@coveo/headless@2.3.1) (2023-01-09)
+
+**Note:** Version bump only for package @coveo/headless
+
+# [2.3.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.2.0...@coveo/headless@2.3.0) (2023-01-05)
+
+### Features
+
+- **headless:** insight quickview using proper endpoint ([#2631](https://github.com/coveo/ui-kit/issues/2631)) ([9bb8ff9](https://github.com/coveo/ui-kit/commit/9bb8ff9a849b3d131f6f98b9d45cadf8cfceb2e3))
+
+# [2.2.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.1.0...@coveo/headless@2.2.0) (2023-01-05)
+
+### Bug Fixes
+
+- **headless:** improve escape highlight function ([#2630](https://github.com/coveo/ui-kit/issues/2630)) ([c12d373](https://github.com/coveo/ui-kit/commit/c12d37371416ccd001bc67a7158de02952becf4b))
+
+### Features
+
+- **headless:** add support for attached results feature ([#2605](https://github.com/coveo/ui-kit/issues/2605)) ([9a7b2fb](https://github.com/coveo/ui-kit/commit/9a7b2fbe9c50762b581cc360d55f164b24103251))
+
 # [2.1.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.0.1...@coveo/headless@2.1.0) (2022-12-16)
 
 ### Features

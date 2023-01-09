@@ -1,6 +1,7 @@
 import {Component, h, Host, Prop, State, VNode} from '@stencil/core';
 import {InitializeBindings} from '../../../utils/initialization-utils';
 import {Button} from '../button';
+import {ButtonStyle} from '../button-style';
 import {AnyBindings} from '../interface/bindings';
 
 /**
@@ -25,12 +26,13 @@ export class AtomicIconButton {
   @Prop({mutable: true}) public buttonRef?: (el?: HTMLButtonElement) => void;
   @Prop({mutable: true}) public badge?: VNode;
   @Prop() public disabled = false;
+  @Prop() buttonStyle: ButtonStyle = 'outline-neutral';
 
   public render() {
     return (
       <Host>
         <Button
-          style="outline-neutral"
+          style={this.buttonStyle}
           disabled={this.disabled}
           ariaLabel={this.bindings.i18n.t(this.labelI18nKey)}
           class="p-3 relative"

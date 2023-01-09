@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.3...@coveo/atomic@2.4.4) (2023-01-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.4.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.2...@coveo/atomic@2.4.3) (2023-01-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.4.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.1...@coveo/atomic@2.4.2) (2023-01-06)
+
+### Bug Fixes
+
+- **atomic:** prevented left suggestions from expanding beyond layout variable ([#2639](https://github.com/coveo/ui-kit/issues/2639)) ([edb8083](https://github.com/coveo/ui-kit/commit/edb80835b502897a9ffe891ed748dd62a60f7b62))
+
+## [2.4.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.0...@coveo/atomic@2.4.1) (2023-01-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.4.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.3.1...@coveo/atomic@2.4.0) (2023-01-05)
+
+### Bug Fixes
+
+- **atomic:** fix modal refine not respecting DOM order ([#2632](https://github.com/coveo/ui-kit/issues/2632)) ([330305f](https://github.com/coveo/ui-kit/commit/330305f08b5aa81ce061ab8d8cd8c032596295f7))
+- **atomic:** insight tab section full width ([#2633](https://github.com/coveo/ui-kit/issues/2633)) ([a7a89e1](https://github.com/coveo/ui-kit/commit/a7a89e15867f2b34f31759158558eee12f66e964))
+
+### Features
+
+- **atomic:** add relevance inspector modal ([#2564](https://github.com/coveo/ui-kit/issues/2564)) ([a30f32d](https://github.com/coveo/ui-kit/commit/a30f32d0b41d569bba11dd561f1d42f5287633d4))
+
 ## [2.3.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.3.0...@coveo/atomic@2.3.1) (2022-12-21)
 
 ### Bug Fixes

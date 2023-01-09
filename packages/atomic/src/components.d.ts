@@ -12,6 +12,7 @@ import { NumberInputType } from "./components/common/facets/facet-number-input/n
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { VNode } from "@stencil/core";
+import { ButtonStyle } from "./components/common/button-style";
 import { InsightEngine, InsightFacetSortCriterion, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
@@ -350,6 +351,7 @@ export namespace Components {
     interface AtomicIconButton {
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
+        "buttonStyle": ButtonStyle;
         "clickCallback": () => void;
         "disabled": boolean;
         "icon": string;
@@ -1222,7 +1224,7 @@ export namespace Components {
     }
     interface AtomicResultDate {
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -1250,7 +1252,7 @@ export namespace Components {
     }
     interface AtomicResultImage {
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
     }
@@ -1377,7 +1379,7 @@ export namespace Components {
          */
         "default"?: string;
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -1387,7 +1389,7 @@ export namespace Components {
     }
     interface AtomicResultTimespan {
         /**
-          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -2964,6 +2966,7 @@ declare namespace LocalJSX {
     interface AtomicIconButton {
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
+        "buttonStyle"?: ButtonStyle;
         "clickCallback"?: () => void;
         "disabled"?: boolean;
         "icon": string;
@@ -3787,7 +3790,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultDate {
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field"?: string;
         /**
@@ -3815,7 +3818,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultImage {
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
     }
@@ -3933,7 +3936,7 @@ declare namespace LocalJSX {
          */
         "default"?: string;
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -3943,7 +3946,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTimespan {
         /**
-          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
         /**

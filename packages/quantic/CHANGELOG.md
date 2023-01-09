@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.7.1...@coveo/quantic@2.7.2) (2023-01-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [2.7.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.7.0...@coveo/quantic@2.7.1) (2023-01-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+# [2.7.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.6.0...@coveo/quantic@2.7.0) (2023-01-05)
+
+### Bug Fixes
+
+- **quantic:** issue fixed in the QuanticRefineToggleModel ([#2626](https://github.com/coveo/ui-kit/issues/2626)) ([04fe29a](https://github.com/coveo/ui-kit/commit/04fe29abe85d0c764323ca03daf4c31cf8a6519f))
+
+### Features
+
+- **headless:** add support for attached results feature ([#2605](https://github.com/coveo/ui-kit/issues/2605)) ([9a7b2fb](https://github.com/coveo/ui-kit/commit/9a7b2fbe9c50762b581cc360d55f164b24103251))
+
 # [2.6.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.5.0...@coveo/quantic@2.6.0) (2022-12-21)
 
 ### Bug Fixes

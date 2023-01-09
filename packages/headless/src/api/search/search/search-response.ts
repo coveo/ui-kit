@@ -10,8 +10,10 @@ import {QueryRankingExpression} from './query-ranking-expression';
 import {QuestionsAnswers} from './question-answering';
 import {Result} from './result';
 import {SecurityIdentity} from './security-identity';
+import {TermsToHighlight} from './stemming';
 
 export interface SearchResponseSuccess {
+  termsToHighlight: TermsToHighlight;
   results: Result[];
   searchUid: string;
   totalCountFiltered: number;
