@@ -31,6 +31,12 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   registerFieldsToInclude(): void;
 }
 
+export const mismatchedInterfaceAndEnginePropError = (
+  interfaceKind: 'search' | 'recommendation',
+  configurationName: 'query pipeline' | 'search hub'
+) =>
+  `A ${configurationName} is configured on the ${interfaceKind} interface, but the ${interfaceKind} interface was initialized with an engine. You should only configure the ${configurationName} in the engine.`;
+
 export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
   private i18nPromise!: Promise<TFunction>;
   private hangingComponentsInitialization: InitializeEvent[] = [];

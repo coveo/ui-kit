@@ -1,8 +1,22 @@
+import {buildSearchEngine} from '@coveo/headless';
+import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {TestFixture} from '../fixtures/test-fixture';
-import {assertConsoleErrorMessage} from './common-assertions';
+import {
+  assertConsoleErrorMessage,
+  assertConsoleWarningMessage,
+} from './common-assertions';
 import {addQuerySummary} from './query-summary-actions';
 import {QuerySummarySelectors} from './query-summary-selectors';
-import {getSearchInterface, setLanguage} from './search-interface-utils';
+import {
+  getSearchInterface,
+  searchInterfaceComponent,
+  setInterfaceProp,
+  setLanguage,
+} from './search-interface-utils';
+
+function entries<K extends PropertyKey, V>(obj: Record<K, V>): [K, V][] {
+  return Object.entries(obj) as [K, V][];
+}
 
 describe('Search Interface Component', () => {
   const setTranslation = (lang: string, key: string, value: string) => {
@@ -34,12 +48,178 @@ describe('Search Interface Component', () => {
       assertConsoleErrorMessage(engineError);
     });
 
-    describe('when changing a prop', () => {
-      beforeEach(() => {
-        cy.wait(300);
-        setLanguage('fr');
+    describe('when changing a prop too early', () => {
+      entries({
+        language: 'fr',
+        pipeline: 'test',
+        searchHub: 'abc',
+      }).forEach(([propName, value]) => {
+        describe(`when changing ${propName}`, () => {
+          beforeEach(() => {
+            cy.wait(300);
+            setInterfaceProp(propName, value);
+          });
+          assertConsoleErrorMessage(engineError);
+        });
       });
-      assertConsoleErrorMessage(engineError);
+    });
+  });
+
+  describe('when initializing with an engine', () => {
+    function setupWithEngine(options: {
+      engine: {accessToken?: string; pipeline?: string; searchHub?: string};
+      interface?: {pipeline?: string; searchHub?: string};
+    }) {
+      new TestFixture().withoutInterfaceInitialization().init();
+      getSearchInterface(async (searchInterface) => {
+        const sampleConfiguration = getSampleSearchEngineConfiguration();
+        options.interface?.pipeline &&
+          searchInterface.setAttribute('pipeline', options.interface!.pipeline);
+        options.interface?.searchHub &&
+          searchInterface.setAttribute(
+            'search-hub',
+            options.interface!.searchHub
+          );
+        const engine = buildSearchEngine({
+          configuration: {
+            accessToken:
+              options.engine?.accessToken ?? sampleConfiguration.accessToken,
+            organizationId: sampleConfiguration.organizationId,
+            search: {
+              pipeline: options.engine?.pipeline,
+              searchHub: options.engine?.searchHub,
+            },
+          },
+        });
+        await searchInterface.initializeWithSearchEngine(engine);
+      });
+      cy.wait(300);
+    }
+
+    describe("when the access token isn't a JWT", () => {
+      const enginePipeline = 'test';
+      const engineSearchHub = 'hello';
+
+      describe('when the search interface has nothing configured', () => {
+        before(() =>
+          setupWithEngine({
+            engine: {pipeline: enginePipeline, searchHub: engineSearchHub},
+          })
+        );
+
+        it("should update the interface's query pipeline and search hub to match the engine", () => {
+          cy.get(searchInterfaceComponent).should(
+            'have.attr',
+            'pipeline',
+            enginePipeline
+          );
+          cy.get(searchInterfaceComponent).should(
+            'have.attr',
+            'search-hub',
+            engineSearchHub
+          );
+        });
+      });
+
+      describe('when the search interface has a configured query pipeline', () => {
+        before(() =>
+          setupWithEngine({
+            engine: {pipeline: enginePipeline, searchHub: engineSearchHub},
+            interface: {pipeline: enginePipeline + enginePipeline},
+          })
+        );
+
+        assertConsoleWarningMessage(
+          'A query pipeline is configured on the search interface, but the search interface was initialized with an engine. You should only configure the query pipeline in the engine.'
+        );
+      });
+
+      describe('when the search interface has a configured search hub', () => {
+        before(() =>
+          setupWithEngine({
+            engine: {pipeline: enginePipeline, searchHub: engineSearchHub},
+            interface: {searchHub: engineSearchHub + engineSearchHub},
+          })
+        );
+
+        assertConsoleWarningMessage(
+          'A search hub is configured on the search interface, but the search interface was initialized with an engine. You should only configure the search hub in the engine.'
+        );
+      });
+    });
+
+    describe('when the access token is a JWT', () => {
+      // expired search token where:
+      // - searchHub = 'testing hub'
+      // - pipeline = 'testing';
+      // - userDisplayname = 'Alice Smith';
+      const accessToken =
+        'eyJhbGciOiJIUzI1NiJ9.eyJwaXBlbGluZSI6InRlc3RpbmciLCJzZWFyY2hIdWIiOiJ0ZXN0aW5nIGh1YiIsInY4Ijp0cnVlLCJvcmdhbml6YXRpb24iOiJzZWFyY2h1aXNhbXBsZXMiLCJ1c2VySWRzIjpbeyJhdXRoQ29va2llIjoiIiwicHJvdmlkZXIiOiJFbWFpbCBTZWN1cml0eSBQcm92aWRlciIsIm5hbWUiOiJhc21pdGhAZXhhbXBsZS5jb20iLCJ0eXBlIjoiVXNlciIsImluZm9zIjp7fX1dLCJyb2xlcyI6WyJxdWVyeUV4ZWN1dG9yIl0sInVzZXJEaXNwbGF5TmFtZSI6IkFsaWNlIFNtaXRoIiwiZXhwIjoxNjQ2NzUzNDM0LCJpYXQiOjE2NDY2NjcwMzR9.p70UUYXKmg3sHU961G1Vmwp45qp8EgxvHisPMk-RUPw';
+      const tokenPipeline = 'testing';
+      const tokenSearchHub = 'testing hub';
+
+      describe('when the search interface has nothing configured', () => {
+        before(() =>
+          setupWithEngine({
+            engine: {accessToken},
+            interface: {pipeline: tokenPipeline + tokenPipeline},
+          })
+        );
+
+        it("should update the interface's query pipeline and search hub to match the token", () => {
+          cy.get(searchInterfaceComponent).should(
+            'have.attr',
+            'pipeline',
+            tokenPipeline
+          );
+          cy.get(searchInterfaceComponent).should(
+            'have.attr',
+            'search-hub',
+            tokenSearchHub
+          );
+        });
+      });
+
+      describe('when the search interface has the same query pipeline and search hub as the token', () => {
+        before(() =>
+          setupWithEngine({
+            engine: {accessToken},
+            interface: {pipeline: tokenPipeline, searchHub: tokenSearchHub},
+          })
+        );
+
+        it('should not log any warning', () => {
+          cy.get(TestFixture.consoleAliases.warn).should(
+            'not.have.been.called'
+          );
+        });
+      });
+
+      describe('when the search interface has a configured query pipeline', () => {
+        before(() =>
+          setupWithEngine({
+            engine: {accessToken},
+            interface: {pipeline: tokenPipeline + tokenPipeline},
+          })
+        );
+
+        assertConsoleWarningMessage(
+          'A query pipeline is configured on the search interface, but the search interface was initialized with an engine. You should only configure the query pipeline in the engine.'
+        );
+      });
+
+      describe('when the search interface has a configured search hub', () => {
+        before(() =>
+          setupWithEngine({
+            engine: {accessToken},
+            interface: {searchHub: tokenSearchHub + tokenSearchHub},
+          })
+        );
+
+        assertConsoleWarningMessage(
+          'A search hub is configured on the search interface, but the search interface was initialized with an engine. You should only configure the search hub in the engine.'
+        );
+      });
     });
   });
 

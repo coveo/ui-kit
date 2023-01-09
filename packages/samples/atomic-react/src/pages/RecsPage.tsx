@@ -30,13 +30,13 @@ export const RecsPage: FunctionComponent = () => {
     configuration: {
       accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
       organizationId: 'electronicscoveodemocomo0n2fu8v',
+      pipeline: 'Search',
+      searchHub: 'MainSearch',
     },
   });
   return (
     <AtomicRecsInterface
       engine={engine}
-      pipeline="Search"
-      searchHub="MainSearch"
       fieldsToInclude={[
         'ec_price',
         'ec_rating',

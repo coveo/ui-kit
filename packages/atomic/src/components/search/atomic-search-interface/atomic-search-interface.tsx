@@ -35,6 +35,7 @@ import {CommonBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
+  mismatchedInterfaceAndEnginePropError,
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicStore, createAtomicStore} from './store';
@@ -85,13 +86,17 @@ export class AtomicSearchInterface
 
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+   *
+   * If the search interface is initialized with `initializeWithSearchEngine`, the query pipeline should instead be configured on the engine.
    */
   @Prop({reflect: true}) public pipeline?: string;
 
   /**
    * The search interface [search hub](https://docs.coveo.com/en/1342/).
+   *
+   * If the search interface is initialized with `initializeWithSearchEngine`, the search hub should instead be configured on the engine.
    */
-  @Prop({reflect: true}) public searchHub = 'default';
+  @Prop({reflect: true}) public searchHub?: string;
 
   /**
    * Whether analytics should be enabled.
@@ -179,10 +184,15 @@ export class AtomicSearchInterface
     this.initFieldsToInclude();
   }
 
-  @Watch('searchHub')
-  @Watch('pipeline')
-  public updateSearchConfiguration() {
+  public updateSearchConfiguration(
+    updatedProp: 'searchHub' | 'pipeline',
+    newValue: string | undefined
+  ) {
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
+    if (this.engine.state[updatedProp] === newValue) {
       return;
     }
 
@@ -191,10 +201,19 @@ export class AtomicSearchInterface
     );
     this.engine.dispatch(
       updateSearchConfiguration({
-        pipeline: this.pipeline,
-        searchHub: this.searchHub,
+        [updatedProp]: newValue,
       })
     );
+  }
+
+  @Watch('searchHub')
+  public updateSearchHub() {
+    this.updateSearchConfiguration('searchHub', this.searchHub ?? 'default');
+  }
+
+  @Watch('pipeline')
+  public updatePipeline() {
+    this.updateSearchConfiguration('pipeline', this.pipeline);
   }
 
   @Watch('analytics')
@@ -269,6 +288,16 @@ export class AtomicSearchInterface
    * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
   @Method() public initializeWithSearchEngine(engine: SearchEngine) {
+    if (this.pipeline && this.pipeline !== engine.state.pipeline) {
+      console.warn(
+        mismatchedInterfaceAndEnginePropError('search', 'query pipeline')
+      );
+    }
+    if (this.searchHub && this.searchHub !== engine.state.searchHub) {
+      console.warn(
+        mismatchedInterfaceAndEnginePropError('search', 'search hub')
+      );
+    }
     return this.internalInitialization(() => (this.engine = engine));
   }
 
@@ -365,7 +394,7 @@ export class AtomicSearchInterface
 
   private getSearchConfiguration(options: InitializationOptions) {
     const searchConfigFromProps = {
-      searchHub: this.searchHub,
+      searchHub: this.searchHub ?? 'default',
       pipeline: this.pipeline,
       locale: this.language,
       timezone: this.timezone,
@@ -463,6 +492,8 @@ export class AtomicSearchInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.pipeline = this.engine!.state.pipeline;
+    this.searchHub = this.engine!.state.searchHub;
     this.initSearchStatus();
     this.initUrlManager();
     this.initialized = true;
