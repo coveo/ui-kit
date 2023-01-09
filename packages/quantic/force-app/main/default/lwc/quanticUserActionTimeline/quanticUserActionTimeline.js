@@ -1,10 +1,40 @@
-import {LightningElement} from 'lwc';
+import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import errorTemplate from './quanticUserActionError.html';
 // @ts-ignore
+import loadingTemplate from './quanticUserActionLoading.html';
+// @ts-ignore
 import timelineTemplate from './quanticUserActionTimeline.html';
+import showPrecedingSessions from '@salesforce/label/c.quantic_ShowPrecedingSessions';
+import hidePrecedingSessions from '@salesforce/label/c.quantic_HidePrecedingSessions';
+import showFollowingSessions from '@salesforce/label/c.quantic_ShowFollowingSessions';
+import hideFollowingSessions from '@salesforce/label/c.quantic_HideFollowingSessions';
+import noActionsAvailable from '@salesforce/label/c.quantic_NoActionsAvailable';
+import contactYourAdministratorForHelp from '@salesforce/label/c.quantic_ContactYourAdministratorForHelp';
+import potentialCauses from '@salesforce/label/c.quantic_PotentialCauses';
+import noUserActionsAssociated from '@salesforce/label/c.quantic_NoUserActionsAssociated';
+import eventsHaveBeenFiltered from '@salesforce/label/c.quantic_EventsHaveBeenFiltered';
+
+
+
+
 
 export default class QuanticUserActionTimeline extends LightningElement {
+  @api engineId;
+  @api caseId;
+
+  labels = {
+    showFollowingSessions,
+    showPrecedingSessions,
+    hideFollowingSessions,
+    hidePrecedingSessions,
+    noActionsAvailable,
+    contactYourAdministratorForHelp,
+    potentialCauses,
+    noUserActionsAssociated,
+    eventsHaveBeenFiltered
+  }
+
   session = {
     start: 1672778845000,
     end: 1672778845000,
@@ -34,7 +64,8 @@ export default class QuanticUserActionTimeline extends LightningElement {
 
   followingSessionsAreVisible = false;
   precedingSessionsAreVisible = false;
-  error = false;
+  error = true;
+  loading = false;
 
   toggleFollowingSessions() {
     this.followingSessionsAreVisible = !this.followingSessionsAreVisible;
@@ -52,8 +83,8 @@ export default class QuanticUserActionTimeline extends LightningElement {
 
   get showFollowingSessionLabel() {
     return this.followingSessionsAreVisible
-      ? 'Hide following sessions'
-      : 'Show following sessions';
+      ? this.labels.hideFollowingSessions
+      : this.labels.showFollowingSessions;
   }
 
   get showPrecedingSessionIcon() {
@@ -64,13 +95,16 @@ export default class QuanticUserActionTimeline extends LightningElement {
 
   get showPrecedingSessionLabel() {
     return this.precedingSessionsAreVisible
-      ? 'Hide preceding sessions'
-      : 'Show preceding sessions';
+      ? this.labels.hidePrecedingSessions
+      : this.labels.showPrecedingSessions;
   }
 
   render() {
     if (this.error) {
       return errorTemplate;
+    }
+    if (this.loading) {
+      return loadingTemplate;
     }
     return timelineTemplate;
   }

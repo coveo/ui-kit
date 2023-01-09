@@ -1,3 +1,13 @@
 .timeline_small-text {
   font-size: 10px;
 }
+
+.ua-timeline-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ua-timeline_sessions {
+  flex: 1;
+}

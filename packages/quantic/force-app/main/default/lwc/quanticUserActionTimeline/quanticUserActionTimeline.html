@@ -1,35 +1,39 @@
 <template>
-  <div class="slds-align_absolute-center slds-var-p-vertical_x-small">
-    <lightning-button class="timeline_small-text" variant="base" label={showFollowingSessionLabel}
-      title={showFollowingSessionLabel} icon-name={showFollowingSessionIcon}
-      onclick={toggleFollowingSessions}></lightning-button>
-  </div>
+  <div class="ua-timeline-container">
+    <div class="slds-text-align_center slds-var-p-vertical_x-small slds-border_bottom">
+      <lightning-button class="timeline_small-text" variant="base" label={showFollowingSessionLabel}
+        title={showFollowingSessionLabel} icon-name={showFollowingSessionIcon}
+        onclick={toggleFollowingSessions}></lightning-button>
+    </div>
 
-  <template if:true={followingSessionsAreVisible}>
-    <template for:each={followingSessions} for:item="session">
-      <div key={session.start} class="slds-border_top slds-var-p-vertical_x-small">
-        <c-quantic-user-action-session start-date={session.start} end-date={session.end}
-          actions={session.actions}></c-quantic-user-action-session>
+    <div class="ua-timeline_sessions">
+      <template if:true={followingSessionsAreVisible}>
+        <template for:each={followingSessions} for:item="session">
+          <div key={session.start} class="slds-border_bottom slds-var-p-vertical_x-small">
+            <c-quantic-user-action-session start-date={session.start} end-date={session.end}
+              actions={session.actions}></c-quantic-user-action-session>
+          </div>
+        </template>
+      </template>
+
+      <div class="slds-var-p-vertical_x-small">
+        <c-quantic-user-action-session is-active-session></c-quantic-user-action-session>
       </div>
-    </template>
-  </template>
 
-  <div class="slds-border_top slds-border_bottom slds-var-p-vertical_x-small">
-    <c-quantic-user-action-session is-active-session></c-quantic-user-action-session>
-  </div>
+      <template if:true={precedingSessionsAreVisible}>
+        <template for:each={precedingSessions} for:item="session">
+          <div key={session.start} class="slds-border_top slds-var-p-vertical_x-small">
+            <c-quantic-user-action-session start-date={session.start} end-date={session.end}
+              actions={session.actions}></c-quantic-user-action-session>
+          </div>
+        </template>
+      </template>
+    </div>
 
-  <template if:true={precedingSessionsAreVisible}>
-    <template for:each={precedingSessions} for:item="session">
-      <div key={session.start} class="slds-border_bottom slds-var-p-vertical_x-small">
-        <c-quantic-user-action-session start-date={session.start} end-date={session.end}
-          actions={session.actions}></c-quantic-user-action-session>
-      </div>
-    </template>
-  </template>
-
-  <div class="slds-align_absolute-center slds-var-p-vertical_x-small">
-    <lightning-button class="timeline_small-text" variant="base" label={showPrecedingSessionLabel}
-      title={showPrecedingSessionLabel} icon-name={showPrecedingSessionIcon}
-      onclick={togglePrecedingSessions}></lightning-button>
+    <div class="slds-text-align_center slds-var-p-vertical_x-small slds-border_top">
+      <lightning-button class="timeline_small-text" variant="base" label={showPrecedingSessionLabel}
+        title={showPrecedingSessionLabel} icon-name={showPrecedingSessionIcon}
+        onclick={togglePrecedingSessions}></lightning-button>
+    </div>
   </div>
 </template>
