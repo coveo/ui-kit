@@ -14,7 +14,7 @@ import {
   FacetSearchOptions,
 } from '../../../core/facets/facet/headless-core-facet-options';
 
-export type {FacetSearchOptions};
+export type {FacetSearchOptions, CoreFacetOptions};
 
 export interface FacetOptions extends CoreFacetOptions {
   /**

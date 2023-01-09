@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.3...@coveo/atomic@2.4.4) (2023-01-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.4.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.2...@coveo/atomic@2.4.3) (2023-01-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.4.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.1...@coveo/atomic@2.4.2) (2023-01-06)
+
+### Bug Fixes
+
+- **atomic:** prevented left suggestions from expanding beyond layout variable ([#2639](https://github.com/coveo/ui-kit/issues/2639)) ([edb8083](https://github.com/coveo/ui-kit/commit/edb80835b502897a9ffe891ed748dd62a60f7b62))
+
 ## [2.4.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.0...@coveo/atomic@2.4.1) (2023-01-05)
 
 **Note:** Version bump only for package @coveo/atomic
