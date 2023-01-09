@@ -30,7 +30,6 @@ import {
   CoreFacet,
   CoreFacetState,
   Facet,
-  FacetProps,
   FacetSearch,
   FacetSearchState,
   FacetState,
@@ -41,13 +40,13 @@ import {
   FacetOptions,
   FacetSearchOptions,
   facetOptionsSchema,
+  CoreFacetOptions,
 } from './headless-insight-facet-options';
 
 export type {
   FacetOptions,
   FacetSearchOptions,
   FacetValueState,
-  FacetProps,
   Facet,
   FacetState,
   FacetSearch,
@@ -56,7 +55,15 @@ export type {
   FacetValue,
   CoreFacet,
   CoreFacetState,
+  CoreFacetOptions,
 };
+
+export interface FacetProps {
+  /**
+   * The options for the `Facet` controller.
+   * */
+  options: FacetOptions;
+}
 
 /**
  * Creates an insight `Facet` controller instance.
@@ -65,10 +72,7 @@ export type {
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
  */
-export function buildFacet(
-  engine: InsightEngine,
-  props: FacetProps<FacetOptions>
-): Facet {
+export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }

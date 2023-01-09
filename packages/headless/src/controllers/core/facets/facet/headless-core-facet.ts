@@ -54,11 +54,11 @@ import {
 
 export type {FacetOptions, FacetSearchOptions, FacetValueState};
 
-export interface FacetProps<Options = FacetOptions> {
+export interface CoreFacetProps {
   /**
-   * The options for the `Facet` controller.
+   * The options for the core `Facet` controller.
    * */
-  options: Options;
+  options: FacetOptions;
 }
 
 export interface Facet extends CoreFacet {
@@ -288,7 +288,7 @@ export interface FacetValue {
  * */
 export function buildCoreFacet(
   engine: CoreEngine,
-  props: FacetProps,
+  props: CoreFacetProps,
   optionsSchema = facetOptionsSchema
 ): CoreFacet {
   if (!loadFacetReducers(engine)) {
