@@ -1530,5 +1530,13 @@
     "tr": "Hızlı Bakış",
     "zh-cn": "快速查看",
     "zh-tw": "快速檢視"
+  },
+  "keywords-highlight": {
+    "en": "Keywords highlight",
+    "fr": "Surlignage des mots-clés"
+  },
+  "minimize": {
+    "en": "Minimize",
+    "fr": "Minimiser"
   }
 }
