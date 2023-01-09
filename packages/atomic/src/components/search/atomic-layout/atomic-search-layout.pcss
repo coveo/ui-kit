@@ -52,6 +52,10 @@ atomic-search-layout {
       &::part(suggestions-left) {
         flex-basis: var(--atomic-layout-search-box-left-suggestions-width, 30%);
       }
+
+      &::part(suggestions-right) {
+        flex-basis: calc(100% - var(--atomic-layout-search-box-left-suggestions-width, 30%));
+      }
     }
   }
 
