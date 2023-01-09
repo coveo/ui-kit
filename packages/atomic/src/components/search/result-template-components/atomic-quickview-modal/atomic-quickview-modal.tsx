@@ -9,7 +9,12 @@ import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';
-import {HIGHLIGHT_PREFIX} from '../quickview-word-highlight/quickview-word-highlight';
+import {buildQuickviewPreviewBar} from '../quickview-preview-bar/quickview-preview-bar';
+import {
+  getWordsHighlights,
+  HIGHLIGHT_PREFIX,
+  QuickviewWordHighlight,
+} from '../quickview-word-highlight/quickview-word-highlight';
 
 /**
  * @internal
@@ -34,34 +39,11 @@ export class AtomicQuickviewModal implements InitializableComponent {
   }
 
   @State() private minimizeSidebar = false;
-  @State() private iframeRef?: HTMLIFrameElement;
+  @State() private words: Record<string, QuickviewWordHighlight> = {};
+  private iframeRef?: HTMLIFrameElement;
 
   @Prop({mutable: true, reflect: false}) content?: string;
   @Prop({mutable: true, reflect: false}) result?: Result;
-
-  private observer?: ResizeObserver;
-
-  private renderSidebar() {
-    if (!this.content || !this.result || !this.iframeRef) {
-      return;
-    }
-    return (
-      <QuickviewSidebar
-        iframe={this.iframeRef}
-        termsToHighlight={
-          this.bindings.engine.state.search.response.termsToHighlight
-        }
-        i18n={this.bindings.i18n}
-        highlightKeywords={this.highlightKeywords}
-        onHighlightKeywords={(highlight) =>
-          (this.highlightKeywords = highlight)
-        }
-        result={this.result}
-        minimized={this.minimizeSidebar}
-        onMinimize={(minimize) => (this.minimizeSidebar = minimize)}
-      />
-    );
-  }
 
   private renderHeader() {
     // TODO: Header should be slottable from result template definition
@@ -75,17 +57,35 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   private renderBody() {
     return (
-      <div
-        slot="body"
-        class="grid grid-cols-[min-content_auto]"
-        style={{height: '90vh'}}
-      >
-        <div class="h-full">{this.renderSidebar()}</div>
-        <div class="overflow-auto">
-          <QuickviewIframe
-            content={this.content}
-            onSetIframeRef={(ref) => (this.iframeRef = ref)}
+      <div slot="body" class="grid grid-cols-[min-content_auto] h-full">
+        <div class="h-full">
+          <QuickviewSidebar
+            words={this.words}
+            result={this.result}
+            i18n={this.bindings.i18n}
+            highlightKeywords={this.highlightKeywords}
+            onHighlightKeywords={(highlight) =>
+              (this.highlightKeywords = highlight)
+            }
+            minimized={this.minimizeSidebar}
+            onMinimize={(minimize) => (this.minimizeSidebar = minimize)}
           />
+        </div>
+        <div class="overflow-auto relative">
+          <QuickviewIframe
+            result={this.result}
+            content={this.content}
+            onSetIframeRef={(ref) => {
+              this.iframeRef = ref;
+              setTimeout(() => {
+                this.words = getWordsHighlights(
+                  this.termsToHighlight,
+                  this.iframeRef
+                );
+              });
+            }}
+          />
+          {buildQuickviewPreviewBar(this.words, this.iframeRef)}
         </div>
       </div>
     );
@@ -166,8 +166,8 @@ export class AtomicQuickviewModal implements InitializableComponent {
     );
   }
 
-  public disconnectedCallback(): void {
-    this.observer?.disconnect();
+  private get termsToHighlight() {
+    return this.bindings.engine.state.search.response.termsToHighlight;
   }
 
   public render() {
