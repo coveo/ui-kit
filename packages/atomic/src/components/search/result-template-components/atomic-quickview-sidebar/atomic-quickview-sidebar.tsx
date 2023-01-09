@@ -1,4 +1,3 @@
-import {Result} from '@coveo/headless';
 import {Fragment, FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import ArrowDown from '../../../../images/arrow-bottom-rounded.svg';
@@ -14,7 +13,6 @@ export interface QuickviewSidebarProps {
   onHighlightKeywords: (doHighlight: boolean) => void;
   minimized: boolean;
   onMinimize: (minimize: boolean) => void;
-  result?: Result;
 }
 
 export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (

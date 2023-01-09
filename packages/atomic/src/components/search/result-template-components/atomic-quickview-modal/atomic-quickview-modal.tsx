@@ -61,7 +61,6 @@ export class AtomicQuickviewModal implements InitializableComponent {
         <div class="h-full">
           <QuickviewSidebar
             words={this.words}
-            result={this.result}
             i18n={this.bindings.i18n}
             highlightKeywords={this.highlightKeywords}
             onHighlightKeywords={(highlight) =>
