@@ -20,6 +20,7 @@ export default class QuanticModal extends LightningElement {
   animations = {
     slideToLeft: 'slideToLeft',
     slideToTop: 'slideToTop',
+    slideToRight: 'slideToRight',
   };
 
   /**
@@ -47,11 +48,8 @@ export default class QuanticModal extends LightningElement {
   }
 
   validateProps() {
-    if (
-      this.animation !== this.animations.slideToLeft &&
-      this.animation !== this.animations.slideToTop
-    ) {
-      this.renderingError = `"${this.animation}" is an invalid value for the animation property. animation can only be set to "${this.animations.slideToTop}" or "${this.animations.slideToLeft}".`;
+    if (!Object.values(this.animations).includes(this.animation)) {
+      this.renderingError = `"${this.animation}" is an invalid value for the animation property. animation can only be set to "${this.animations.slideToTop}", "${this.animations.slideToLeft}" or "${this.animations.slideToRight}".`;
     }
     if (typeof this.fullScreen !== 'boolean') {
       this.renderingError = `"${this.fullScreen}" is an invalid value for the full-screen property. full-screen can only be set to a boolean value.`;
@@ -85,10 +83,14 @@ export default class QuanticModal extends LightningElement {
    */
   get modalCssClass() {
     const displayAreaClass = this.fullScreen ? 'full-screen' : 'part-screen';
-    const animationClass =
-      this.animation === this.animations.slideToLeft
-        ? 'hidden-modal_slide-to-left'
-        : 'hidden-modal_slide-to-top';
+    let animationClass;
+    if (this.animation === this.animations.slideToLeft) {
+      animationClass = 'hidden-modal_slide-to-left';
+    } else if (this.animation === this.animations.slideToRight) {
+      animationClass = 'hidden-modal_slide-to-right';
+    } else if (this.animation === this.animations.slideToTop) {
+      animationClass = 'hidden-modal_slide-to-top';
+    }
     const visibilityClass = this.isVisible
       ? ''
       : `modal_hidden ${animationClass}`;

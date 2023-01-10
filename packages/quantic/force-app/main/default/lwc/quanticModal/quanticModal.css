@@ -27,6 +27,11 @@
   clip-path: inset(0 0 0 100%);
 }
 
+.hidden-modal_slide-to-right {
+  -webkit-clip-path: inset(0 100% 0 0);
+  clip-path: inset(0 100% 0 0);
+}
+
 .modal__header {
   background-color: var(--lwc-colorBackground, rgb(243, 243, 243));
 }

@@ -18,8 +18,8 @@ export default class QuanticModalA11yHandler extends LightningElement {
       this.handleResultPreviewToggle
     );
     this.template.addEventListener(
-      'quantic__refinemodaltoggle',
-      this.handleRefineModalToggle
+      'quantic__modaltoggle',
+      this.handleModalToggle
     );
   }
 
@@ -29,8 +29,8 @@ export default class QuanticModalA11yHandler extends LightningElement {
       this.handleResultPreviewToggle
     );
     this.template.removeEventListener(
-      'quantic__refinemodaltoggle',
-      this.handleRefineModalToggle
+      'quantic__modaltoggle',
+      this.handleModalToggle
     );
   }
 
@@ -38,8 +38,8 @@ export default class QuanticModalA11yHandler extends LightningElement {
     this.manageInterfaceA11y(event, 'C-QUANTIC-RESULT-LIST');
   };
 
-  handleRefineModalToggle = (event) => {
-    this.manageInterfaceA11y(event, 'C-QUANTIC-REFINE-TOGGLE');
+  handleModalToggle = (event) => {
+    this.manageInterfaceA11y(event, event.detail.parentName);
   };
 
   /**

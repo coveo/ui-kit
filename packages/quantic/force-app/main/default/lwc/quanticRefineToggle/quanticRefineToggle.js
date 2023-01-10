@@ -269,7 +269,7 @@ export default class QuanticRefineToggle extends LightningElement {
    */
   openModal() {
     this.modal.openModal();
-    this.sendRefineModalEvent(true);
+    this.sendModalEvent(true);
     this.modalIsOpen = true;
   }
 
@@ -279,7 +279,7 @@ export default class QuanticRefineToggle extends LightningElement {
    */
   closeModal() {
     this.modal.closeModal();
-    this.sendRefineModalEvent(false);
+    this.sendModalEvent(false);
     this.modalIsOpen = false;
   }
 
@@ -304,15 +304,15 @@ export default class QuanticRefineToggle extends LightningElement {
   }
 
   /**
-   * Sends the "quantic__refinemodaltoggle" event.
+   * Sends the "quantic__modaltoggle" event.
    * @param {boolean} isOpen
    */
-  sendRefineModalEvent(isOpen) {
-    const refineModalEvent = new CustomEvent('quantic__refinemodaltoggle', {
+  sendModalEvent(isOpen) {
+    const modalEvent = new CustomEvent('quantic__modaltoggle', {
       composed: true,
       bubbles: true,
-      detail: {isOpen},
+      detail: {isOpen, parentName: 'C-QUANTIC-REFINE-TOGGLE'},
     });
-    this.dispatchEvent(refineModalEvent);
+    this.dispatchEvent(modalEvent);
   }
 }
