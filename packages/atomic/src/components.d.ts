@@ -998,11 +998,11 @@ export namespace Components {
          */
         "logLevel"?: RecsLogLevel;
         /**
-          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized with `initializeWithSearchEngine`, the query pipeline should instead be configured on the engine.
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
-          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized with `initializeWithSearchEngine`, the search hub should instead be configured on the engine.
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
         /**
@@ -1532,7 +1532,7 @@ export namespace Components {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized with `initializeWithSearchEngine`, the query pipeline should instead be configured on the engine.
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
@@ -1544,7 +1544,7 @@ export namespace Components {
          */
         "scrollContainer": string;
         /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized with `initializeWithSearchEngine`, the search hub should instead be configured on the engine.
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
         /**
@@ -3583,11 +3583,11 @@ declare namespace LocalJSX {
          */
         "logLevel"?: RecsLogLevel;
         /**
-          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized with `initializeWithSearchEngine`, the query pipeline should instead be configured on the engine.
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
-          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized with `initializeWithSearchEngine`, the search hub should instead be configured on the engine.
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
         /**
@@ -4075,7 +4075,7 @@ declare namespace LocalJSX {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized with `initializeWithSearchEngine`, the query pipeline should instead be configured on the engine.
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
@@ -4087,7 +4087,7 @@ declare namespace LocalJSX {
          */
         "scrollContainer"?: string;
         /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized with `initializeWithSearchEngine`, the search hub should instead be configured on the engine.
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
         /**
