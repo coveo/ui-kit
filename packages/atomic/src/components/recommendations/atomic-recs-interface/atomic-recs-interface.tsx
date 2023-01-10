@@ -59,14 +59,14 @@ export class AtomicRecsInterface
   /**
    * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
    *
-   * If the recommendation interface is initialized with `initializeWithSearchEngine`, the query pipeline should instead be configured on the engine.
+   * If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
    */
   @Prop({reflect: true}) public pipeline?: string;
 
   /**
    * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
    *
-   * If the recommendation interface is initialized with `initializeWithSearchEngine`, the search hub should instead be configured on the engine.
+   * If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
    */
   @Prop({reflect: true}) public searchHub?: string;
 

@@ -26,11 +26,11 @@ interface WrapperProps
    */
   localization?: (i18n: i18n) => void;
   /**
-   * @deprecated this option should instead be part of the `engine`'s `search` configuration.
+   * @deprecated This option has no effect. Rather, set the pipeline through the `engine` `search` configuration.
    */
   pipeline?: string;
   /**
-   * @deprecated this option should instead be part of the `engine`'s `search` configuration.
+   * @deprecated This option has no effect. Rather, set the search hub through the `engine` `search` configuration.
    */
   searchHub?: string;
 }
