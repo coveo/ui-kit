@@ -15,10 +15,6 @@ import potentialCauses from '@salesforce/label/c.quantic_PotentialCauses';
 import noUserActionsAssociated from '@salesforce/label/c.quantic_NoUserActionsAssociated';
 import eventsHaveBeenFiltered from '@salesforce/label/c.quantic_EventsHaveBeenFiltered';
 
-
-
-
-
 export default class QuanticUserActionTimeline extends LightningElement {
   @api engineId;
   @api caseId;
@@ -35,6 +31,7 @@ export default class QuanticUserActionTimeline extends LightningElement {
     eventsHaveBeenFiltered
   }
 
+  // temporary test sesssions, real sessions should come from the Headless USer Actions controller
   session = {
     start: 1672778845000,
     end: 1672778845000,
