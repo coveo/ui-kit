@@ -1,5 +1,6 @@
 import {buildSearchEngine} from '@coveo/headless';
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
+import {mismatchedInterfaceAndEnginePropError} from '../../src/components/common/interface/interface-common';
 import {TestFixture} from '../fixtures/test-fixture';
 import {
   assertConsoleErrorMessage,
@@ -130,7 +131,7 @@ describe('Search Interface Component', () => {
         );
 
         assertConsoleWarningMessage(
-          'A query pipeline is configured on the search interface, but the search interface was initialized with an engine. You should only configure the query pipeline in the engine.'
+          mismatchedInterfaceAndEnginePropError('search', 'query pipeline')
         );
       });
 
@@ -143,7 +144,7 @@ describe('Search Interface Component', () => {
         );
 
         assertConsoleWarningMessage(
-          'A search hub is configured on the search interface, but the search interface was initialized with an engine. You should only configure the search hub in the engine.'
+          mismatchedInterfaceAndEnginePropError('search', 'search hub')
         );
       });
     });
@@ -204,7 +205,7 @@ describe('Search Interface Component', () => {
         );
 
         assertConsoleWarningMessage(
-          'A query pipeline is configured on the search interface, but the search interface was initialized with an engine. You should only configure the query pipeline in the engine.'
+          mismatchedInterfaceAndEnginePropError('search', 'query pipeline')
         );
       });
 
@@ -217,7 +218,7 @@ describe('Search Interface Component', () => {
         );
 
         assertConsoleWarningMessage(
-          'A search hub is configured on the search interface, but the search interface was initialized with an engine. You should only configure the search hub in the engine.'
+          mismatchedInterfaceAndEnginePropError('search', 'search hub')
         );
       });
     });
