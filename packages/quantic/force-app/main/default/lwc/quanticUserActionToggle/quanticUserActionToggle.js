@@ -1,3 +1,5 @@
+import close from '@salesforce/label/c.quantic_Close';
+import userActions from '@salesforce/label/c.quantic_UserActions';
 import {LightningElement, api} from 'lwc';
 
 /**
@@ -10,7 +12,12 @@ import {LightningElement, api} from 'lwc';
 export default class QuanticUserActionToggle extends LightningElement {
   @api engineId;
   @api caseId;
-  
+
+  labels = {
+    userActions,
+    close,
+  };
+
   /** @type {string} */
   modalId = 'userActionModal';
   /** @type {boolean} */

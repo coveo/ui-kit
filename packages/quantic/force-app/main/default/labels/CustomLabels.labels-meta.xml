@@ -903,4 +903,11 @@
       <protected>false</protected>
       <shortDescription>Copied!</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_UserActions</fullName>
+      <value>User Actions</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>User Actions</shortDescription>
+    </labels>
 </CustomLabels>

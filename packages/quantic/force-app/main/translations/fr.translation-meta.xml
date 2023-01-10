@@ -476,4 +476,8 @@
       <label>Copié!</label>
       <name>quantic_Copied</name>
     </customLabels>
+    <customLabels>
+      <label>Actions de l'utilisateur</label>
+      <name>quantic_UserActions</name>
+    </customLabels>
 </Translations>

@@ -1,35 +1,19 @@
 <template>
-  <button
-    aria-hidden={modalIsOpen}
-    class="slds-button slds-button_neutral ua-toggle_button"
-    onclick={openModal}
-    title="User Actions"
-    disabled={refineButtonDisabled}
-  >
-    <lightning-icon
-      size="x-small"
-      icon-name="utility:clock"
-      class="slds-var-p-vertical_x-small"
-    >
+  <button aria-hidden={modalIsOpen} class="slds-button slds-button_neutral ua-toggle_button" onclick={openModal}
+    title={labels.userActions} disabled={refineButtonDisabled}>
+    <lightning-icon size="x-small" icon-name="utility:clock" class="slds-var-p-vertical_x-small">
     </lightning-icon>
   </button>
   <c-quantic-modal data-id={modalId} animation="slideToRight">
-    <div
-      class="slds-var-p-vertical_medium slds-is-relative slds-align_absolute-center slds-border_bottom"
-      slot="header"
-    >
-        <div class="slds-text-title_bold slds-align_absolute-center">
-          <lightning-icon class="slds-var-m-right_small" size="xx-small" icon-name="utility:clock"></lightning-icon>
-          User Actions
-        </div>
-      <lightning-button-icon
-        data-focusable="true"
+    <div class="slds-var-p-vertical_medium slds-is-relative slds-align_absolute-center slds-border_bottom"
+      slot="header">
+      <div class="slds-text-title_bold slds-align_absolute-center">
+        <lightning-icon class="slds-var-m-right_small" size="xx-small" icon-name="utility:clock"></lightning-icon>
+        {labels.userActions}
+      </div>
+      <lightning-button-icon data-focusable="true"
         class="slds-is-absolute slds-align_absolute-center slds-var-m-left_large ua-toggle__close-action"
-        onclick={closeModal}
-        variant="bare"
-        title="Close"
-        icon-name="utility:back"
-      ></lightning-button-icon>
+        onclick={closeModal} variant="bare" title={labels.close} icon-name="utility:back"></lightning-button-icon>
     </div>
     <div slot="content" class="slds-var-p-horizontal_medium ua-toggle__full-height">
       <c-quantic-user-action-timeline engine-id={engineId} case-id={caseId}></c-quantic-user-action-timeline>
