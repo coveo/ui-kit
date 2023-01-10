@@ -74,14 +74,12 @@ export class AtomicQuickviewModal implements InitializableComponent {
           <QuickviewIframe
             result={this.result}
             content={this.content}
-            onSetIframeRef={(ref) => {
+            onSetIframeRef={async (ref) => {
               this.iframeRef = ref;
-              setTimeout(() => {
-                this.words = getWordsHighlights(
-                  this.termsToHighlight,
-                  this.iframeRef
-                );
-              });
+              this.words = getWordsHighlights(
+                this.termsToHighlight,
+                this.iframeRef
+              );
             }}
           />
           {buildQuickviewPreviewBar(this.words, this.iframeRef)}

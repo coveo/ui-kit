@@ -7,8 +7,8 @@ export class QuickviewWordHighlight {
   public indexIdentifier: string;
   public occurrences = 0;
   public color: string;
-  public invertColor: string;
-  public saturateColor: string;
+  public focusedColor: string;
+  public previewBorderColor: string;
   public elements: HTMLElement[] = [];
 
   private currentNavigationPosition = -1;
@@ -25,8 +25,8 @@ export class QuickviewWordHighlight {
     this.indexIdentifier = parsed.keywordIdentifier;
     this.text = this.getText(keywordElementInIframe);
     this.color = keywordElementInIframe.style.backgroundColor;
-    this.invertColor = this.computeInvertedColor();
-    this.saturateColor = this.computeSaturatedColor();
+    this.focusedColor = this.computeInvertedColor();
+    this.previewBorderColor = this.computeSaturatedColor();
 
     this.addElement(keywordElementInIframe);
   }
@@ -64,7 +64,7 @@ export class QuickviewWordHighlight {
     const currentElement = this.elements[this.currentNavigationPosition];
     const otherElements = this.elements.filter((el) => el !== currentElement);
     currentElement.style.color = this.color;
-    currentElement.style.backgroundColor = this.invertColor;
+    currentElement.style.backgroundColor = this.focusedColor;
     otherElements.forEach((element) => {
       element.style.color = '';
       element.style.backgroundColor = this.color;

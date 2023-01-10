@@ -7,6 +7,7 @@ const buildPreviewBar = (documentWriter: Document) => {
   bar.style.right = '0';
   bar.style.width = '15px';
   bar.style.height = '100%';
+  bar.setAttribute('aria-hidden', 'true');
   return bar;
 };
 
@@ -22,7 +23,7 @@ const buildPreviewUnit = (
   previewUnit.style.top = `${(elementPosition / docHeight) * 100}%`;
   previewUnit.style.width = '100%';
   previewUnit.style.height = '1px';
-  previewUnit.style.border = `1px solid ${word.saturateColor}`;
+  previewUnit.style.border = `1px solid ${word.previewBorderColor}`;
   previewUnit.style.backgroundColor = word.color;
   return previewUnit;
 };
