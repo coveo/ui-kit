@@ -35,7 +35,7 @@ export const mismatchedInterfaceAndEnginePropError = (
   interfaceKind: 'search' | 'recommendation',
   configurationName: 'query pipeline' | 'search hub'
 ) =>
-  `A ${configurationName} is configured on the ${interfaceKind} interface, but the ${interfaceKind} interface was initialized with an engine. You should only configure the ${configurationName} in the engine.`;
+  `A ${configurationName} is configured on the ${interfaceKind} interface element, but the ${interfaceKind} interface was initialized with an engine. You should only configure the ${configurationName} in the target engine.`;
 
 export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
   private i18nPromise!: Promise<TFunction>;

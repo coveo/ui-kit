@@ -87,14 +87,14 @@ export class AtomicSearchInterface
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
    *
-   * If the search interface is initialized with `initializeWithSearchEngine`, the query pipeline should instead be configured on the engine.
+   * If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
    */
   @Prop({reflect: true}) public pipeline?: string;
 
   /**
    * The search interface [search hub](https://docs.coveo.com/en/1342/).
    *
-   * If the search interface is initialized with `initializeWithSearchEngine`, the search hub should instead be configured on the engine.
+   * If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
    */
   @Prop({reflect: true}) public searchHub?: string;
 
