@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.4.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.3.1...@coveo/headless@2.4.0) (2023-01-11)
+
+### Features
+
+- **atomic:** implement quickview pagination/navigation/keyword hit ([#2623](https://github.com/coveo/ui-kit/issues/2623)) ([c5ec5e1](https://github.com/coveo/ui-kit/commit/c5ec5e10e37ce3a9b4a0c6ac3220a57d6242c7a8))
+- **headless:** updated insight result template detail type ([#2636](https://github.com/coveo/ui-kit/issues/2636)) ([9ec0bc8](https://github.com/coveo/ui-kit/commit/9ec0bc8bf6326960b35689d79e5974915ce512c0))
+
 ## [2.3.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.3.0...@coveo/headless@2.3.1) (2023-01-09)
 
 **Note:** Version bump only for package @coveo/headless

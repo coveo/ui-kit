@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.4...@coveo/atomic@2.5.0) (2023-01-11)
+
+### Features
+
+- **atomic:** add quickview hit highlight preview bar ([#2643](https://github.com/coveo/ui-kit/issues/2643)) ([cb3e212](https://github.com/coveo/ui-kit/commit/cb3e2127d4cdb7d3a40d1da45826e9dc9f0d7a9c))
+- **atomic:** implement quickview pagination/navigation/keyword hit ([#2623](https://github.com/coveo/ui-kit/issues/2623)) ([c5ec5e1](https://github.com/coveo/ui-kit/commit/c5ec5e10e37ce3a9b4a0c6ac3220a57d6242c7a8))
+
 ## [2.4.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.3...@coveo/atomic@2.4.4) (2023-01-09)
 
 **Note:** Version bump only for package @coveo/atomic
