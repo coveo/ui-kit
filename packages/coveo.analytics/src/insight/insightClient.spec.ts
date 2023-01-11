@@ -844,4 +844,31 @@ describe('InsightClient', () => {
         await client.logShowFollowingSessions(baseCaseMetadata);
         expectMatchCustomEventPayload(InsightEvents.showFollowingSessions, expectedBaseCaseMetadata);
     });
+
+    it('should send proper payload for #logViewedDocumentClick', async () => {
+        const document = {
+            title: 'Some Title',
+            uri: 'https://www.some-uri.com',
+            uriHash: 'Acp8NfEWi0DeðeZU',
+            permanentId: '8c88cd894t2767a96fa4f109041bb62bb54ca21ff31c1d760814b60cbcf2',
+        };
+        await client.logViewedDocumentClick(document, baseCaseMetadata);
+        expectMatchCustomEventPayload(InsightEvents.clickViewedDocument, {
+            ...expectedBaseCaseMetadata,
+            document,
+        });
+    });
+
+    it('should send proper payload for #logPageViewClick', async () => {
+        const pageView = {
+            title: 'Some Title',
+            contentIdKey: 'someKey',
+            contentIdValue: 'some-content-id-value',
+        };
+        await client.logPageViewClick(pageView, baseCaseMetadata);
+        expectMatchCustomEventPayload(InsightEvents.clickPageView, {
+            ...expectedBaseCaseMetadata,
+            pageView,
+        });
+    });
 });
