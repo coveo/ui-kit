@@ -149,7 +149,6 @@ const Keywords: FunctionalComponent<
             </div>
 
             <atomic-icon-button
-              disabled={!wordIsEnabled}
               class={`${
                 highlightKeywords.highlightAll
                   ? ''
