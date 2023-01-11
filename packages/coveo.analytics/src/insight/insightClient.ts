@@ -24,6 +24,7 @@ import {
     InsightPagerMetadata,
     InsightResultsSortMetadata,
     UserActionsDocumentMetadata,
+    UserActionsPageViewMetadata,
 } from './insightEvents';
 
 export interface InsightClientProvider {
@@ -239,6 +240,13 @@ export class CoveoInsightClient {
         return this.logCustomEvent(InsightEvents.clickViewedDocument, {
             ...generateMetadataToSend(metadata, false),
             document,
+        });
+    }
+
+    public logPageViewClick(pageView: UserActionsPageViewMetadata, metadata: CaseMetadata) {
+        return this.logCustomEvent(InsightEvents.clickPageView, {
+            ...generateMetadataToSend(metadata, false),
+            pageView,
         });
     }
 

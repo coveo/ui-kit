@@ -858,4 +858,17 @@ describe('InsightClient', () => {
             document,
         });
     });
+
+    it('should send proper payload for #logPageViewClick', async () => {
+        const pageView = {
+            title: 'Some Title',
+            contentIdKey: 'someKey',
+            contentIdValue: 'some-content-id-value',
+        };
+        await client.logPageViewClick(pageView, baseCaseMetadata);
+        expectMatchCustomEventPayload(InsightEvents.clickPageView, {
+            ...expectedBaseCaseMetadata,
+            pageView,
+        });
+    });
 });

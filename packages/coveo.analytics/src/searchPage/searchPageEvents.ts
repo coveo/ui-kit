@@ -326,6 +326,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [InsightEvents.showPrecedingSessions]: 'User Actions',
     [InsightEvents.showFollowingSessions]: 'User Actions',
     [InsightEvents.clickViewedDocument]: 'User Actions',
+    [InsightEvents.clickPageView]: 'User Actions',
     [SearchPageEvents.caseDetach]: 'case',
 };
 

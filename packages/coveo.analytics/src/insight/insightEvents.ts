@@ -36,6 +36,10 @@ export enum InsightEvents {
      * Identifies the event that gets logged when the user clicks a viewed document.
      */
     clickViewedDocument = 'clickViewedDocument',
+    /**
+     * Identifies the event that gets logged when the user clicks a viewed page.
+     */
+    clickPageView = 'clickPageView',
 }
 
 export interface CaseMetadata {
@@ -54,6 +58,12 @@ export interface UserActionsDocumentMetadata {
     uri: string;
     uriHash?: string;
     permanentId?: string;
+}
+
+export interface UserActionsPageViewMetadata {
+    title: string;
+    contentIdKey: string;
+    contentIdValue: string;
 }
 
 export interface InsightInterfaceChangeMetadata extends InterfaceChangeMetadata, CaseMetadata {}
