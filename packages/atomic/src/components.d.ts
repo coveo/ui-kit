@@ -848,6 +848,7 @@ export namespace Components {
     }
     interface AtomicQuickviewModal {
         "content"?: string;
+        "reset": () => Promise<void>;
         "result"?: Result;
     }
     interface AtomicRatingFacet {

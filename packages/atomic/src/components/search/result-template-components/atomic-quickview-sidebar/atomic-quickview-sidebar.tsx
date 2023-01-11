@@ -1,16 +1,19 @@
 import {Fragment, FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
+import Add from '../../../../images/add.svg';
 import ArrowDown from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowUp from '../../../../images/arrow-top-rounded.svg';
 import MinimizeIcon from '../../../../images/menu.svg';
+import Remove from '../../../../images/remove.svg';
 import {Checkbox} from '../../../common/checkbox';
+import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 
 export interface QuickviewSidebarProps {
   words: Record<string, QuickviewWordHighlight>;
   i18n: i18n;
-  highlightKeywords: boolean;
-  onHighlightKeywords: (doHighlight: boolean) => void;
+  highlightKeywords: HighlightKeywords;
+  onHighlightKeywords: (highlight: HighlightKeywords) => void;
   minimized: boolean;
   onMinimize: (minimize: boolean) => void;
 }
@@ -18,7 +21,7 @@ export interface QuickviewSidebarProps {
 export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
   props
 ) => {
-  const {words, highlightKeywords, minimized} = props;
+  const {words, minimized} = props;
 
   const minimizeButton = (
     <MinimizeButton {...props} wordsLength={Object.values(words).length} />
@@ -35,9 +38,7 @@ export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
         {!minimized && minimizeButton}
       </div>
 
-      {highlightKeywords && !minimized && (
-        <KeywordsNavigation {...props} words={words} />
-      )}
+      {!minimized && <Keywords {...props} words={words} />}
     </div>
   );
 };
@@ -72,8 +73,13 @@ const HighlightKeywordsCheckbox: FunctionalComponent<
       text={i18n.t('keywords-highlight')}
       class="mr-2"
       id="atomic-quickview-sidebar-highlight-keywords"
-      checked={highlightKeywords}
-      onToggle={onHighlightKeywords}
+      checked={highlightKeywords.highlightAll}
+      onToggle={(checked) =>
+        onHighlightKeywords({
+          ...highlightKeywords,
+          highlightAll: checked,
+        })
+      }
     ></Checkbox>
     {!minimized && (
       <label
@@ -86,47 +92,87 @@ const HighlightKeywordsCheckbox: FunctionalComponent<
   </Fragment>
 );
 
-const KeywordsNavigation: FunctionalComponent<
-  Pick<QuickviewSidebarProps, 'i18n'> & {
+const Keywords: FunctionalComponent<
+  Pick<
+    QuickviewSidebarProps,
+    'i18n' | 'onHighlightKeywords' | 'highlightKeywords'
+  > & {
     words: Record<string, QuickviewWordHighlight>;
   }
-> = ({words, i18n}) => {
+> = ({words, i18n, highlightKeywords, onHighlightKeywords}) => {
   return (
     <Fragment>
       {Object.values(words).map((keyword) => {
+        const wordIsEnabled =
+          highlightKeywords.highlightAll &&
+          (highlightKeywords.keywords[keyword.text] === undefined ||
+            highlightKeywords.keywords[keyword.text].enabled === true);
+
         return (
           <div
             key={keyword.text}
-            class="flex items-center w-100 my-4 bg-background border border-neutral rounded-lg overflow-x-auto"
+            class="flex items-center justify-between gap-x-2 my-4 w-100"
           >
-            <div class="flex items-center grow p-4 border-r">
-              <div
-                class="w-5 h-5 flex-none mr-2"
-                style={{backgroundColor: keyword.color}}
-              ></div>
-              <div class="grow mr-2">{keyword.text}</div>
-              <div class="flex-none">{keyword.occurrences}</div>
+            <div
+              class={`flex grow items-center bg-background border border-neutral rounded-lg overflow-x-auto ${
+                !wordIsEnabled ? 'pointer-events-none opacity-50' : ''
+              }`}
+            >
+              <div class="flex items-center grow p-4 border-r">
+                <div
+                  class="w-5 h-5 flex-none mr-2"
+                  style={{backgroundColor: keyword.color}}
+                ></div>
+                <div class="grow mr-2">{keyword.text}</div>
+                <div class="flex-none">{keyword.occurrences}</div>
+              </div>
+              <div class="flex px-2">
+                <atomic-icon-button
+                  buttonStyle="text-transparent"
+                  class="border-0"
+                  labelI18nKey="next"
+                  tooltip={i18n.t('next')}
+                  icon={ArrowDown}
+                  clickCallback={() => {
+                    keyword.navigateForward();
+                  }}
+                ></atomic-icon-button>
+                <atomic-icon-button
+                  buttonStyle="text-transparent"
+                  class="border-0"
+                  labelI18nKey="previous"
+                  tooltip={i18n.t('previous')}
+                  icon={ArrowUp}
+                  clickCallback={() => keyword.navigateBackward()}
+                ></atomic-icon-button>
+              </div>
             </div>
-            <div class="flex px-2">
-              <atomic-icon-button
-                buttonStyle="text-transparent"
-                class="mr-2 border-0"
-                labelI18nKey="next"
-                tooltip={i18n.t('next')}
-                icon={ArrowDown}
-                clickCallback={() => {
-                  keyword.navigateForward();
-                }}
-              ></atomic-icon-button>
-              <atomic-icon-button
-                buttonStyle="text-transparent"
-                class="border-0"
-                labelI18nKey="previous"
-                tooltip={i18n.t('previous')}
-                icon={ArrowUp}
-                clickCallback={() => keyword.navigateBackward()}
-              ></atomic-icon-button>
-            </div>
+
+            <atomic-icon-button
+              disabled={!wordIsEnabled}
+              class={`${
+                highlightKeywords.highlightAll
+                  ? ''
+                  : 'pointer-events-none opacity-50'
+              }`}
+              buttonStyle="text-transparent"
+              icon={wordIsEnabled ? Remove : Add}
+              labelI18nKey={
+                wordIsEnabled ? 'quickview-remove-word' : 'quickview-add-word'
+              }
+              clickCallback={() => {
+                onHighlightKeywords({
+                  ...highlightKeywords,
+                  keywords: {
+                    ...highlightKeywords.keywords,
+                    [keyword.text]: {
+                      enabled: !wordIsEnabled,
+                      indexIdentifier: keyword.indexIdentifier,
+                    },
+                  },
+                });
+              }}
+            ></atomic-icon-button>
           </div>
         );
       })}
