@@ -33,11 +33,11 @@ export enum InsightEvents {
      */
     showFollowingSessions = 'showFollowingSessions',
     /**
-     * Identifies the event that gets logged when the user clicks a viewed document.
+     * Identifies the event that gets logged when the user clicks a viewed document link on the user actions timeline.
      */
     clickViewedDocument = 'clickViewedDocument',
     /**
-     * Identifies the event that gets logged when the user clicks a viewed page.
+     * Identifies the event that gets logged when the user clicks a viewed page link on the user actions timeline.
      */
     clickPageView = 'clickPageView',
 }
