@@ -33,13 +33,9 @@ export enum InsightEvents {
      */
     showFollowingSessions = 'showFollowingSessions',
     /**
-     * Identified the event that gets logged when the user clicks a viewed document.
+     * Identifies the event that gets logged when the user clicks a viewed document.
      */
     clickViewedDocument = 'clickViewedDocument',
-    /**
-     * Identified the event that gets logged when the user clicks a viewed page.
-     */
-    clickPageView = 'clickPageView',
 }
 
 export interface CaseMetadata {
@@ -56,14 +52,8 @@ export interface ExpandToFullUIMetadata extends CaseMetadata {
 export interface UserActionsDocumentMetadata {
     title: string;
     uri: string;
-    uriHash: string;
+    uriHash?: string;
     permanentId?: string;
-}
-
-export interface UserActionsPageViewMetadata {
-    title: string;
-    contentIdKey: string;
-    contentIdValue: string;
 }
 
 export interface InsightInterfaceChangeMetadata extends InterfaceChangeMetadata, CaseMetadata {}
