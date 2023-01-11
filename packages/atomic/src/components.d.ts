@@ -672,7 +672,7 @@ export namespace Components {
         /**
           * The button icon.
          */
-        "icon": string;
+        "icon"?: string;
         /**
           * The label that will be shown to the user.
          */
