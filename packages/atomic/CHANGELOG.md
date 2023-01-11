@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.5.0...@coveo/atomic@2.6.0) (2023-01-11)
+
+### Features
+
+- **atomic,atomic-react:** added warning when initializing with engine and pipeline ([#2644](https://github.com/coveo/ui-kit/issues/2644)) ([d816158](https://github.com/coveo/ui-kit/commit/d816158f72fa0cde7250221cb10855351c6461eb))
+
 # [2.5.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.4...@coveo/atomic@2.5.0) (2023-01-11)
 
 ### Features
