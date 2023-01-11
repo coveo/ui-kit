@@ -22,7 +22,7 @@ export class AtomicIPXButton {
   /**
    * The button icon.
    */
-  @Prop({reflect: true}) public icon = '';
+  @Prop({reflect: true}) public icon?: string;
 
   /**
    * Whether the IPX layout is open.
