@@ -43,7 +43,12 @@ export class AtomicIPXButton {
         onClick={() => this.onClick()}
       >
         <span part="button-icon">
-          {this.icon === '' ? (
+          {this.icon ? (
+            <atomic-icon
+              part="ipx-custom-icon"
+              icon={this.getIcon(this.icon)}
+            ></atomic-icon>
+          ) : (
             [
               <atomic-icon
                 part="ipx-close-icon"
@@ -54,8 +59,6 @@ export class AtomicIPXButton {
                 icon={this.getIcon(SearchIcon)}
               ></atomic-icon>,
             ]
-          ) : (
-            <atomic-icon part="ipx-custom-icon" icon={this.icon}></atomic-icon>
           )}
         </span>
         <span part="button-text">{this.label}</span>
