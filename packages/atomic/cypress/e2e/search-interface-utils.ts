@@ -1,23 +1,30 @@
-import {i18n} from 'i18next';
+import {Components} from '../../src/components';
 
-export type SearchInterface = HTMLElement & {
-  language: string;
-  i18n: i18n;
-  executeFirstSearch: () => void;
-};
+export type SearchInterface = Components.AtomicSearchInterface;
+
+export const searchInterfaceComponent = 'atomic-search-interface';
 
 export function getSearchInterface(
-  cb: (searchInterface: SearchInterface) => void
+  cb: (
+    searchInterface: HTMLAtomicSearchInterfaceElement
+  ) => void | Promise<void>
 ) {
-  return cy.get('atomic-search-interface').then(($el) => {
-    cb($el.get(0) as SearchInterface);
+  return cy.get(searchInterfaceComponent).then(($el) => {
+    cy.wrap(cb($el.get(0) as HTMLAtomicSearchInterfaceElement));
+  });
+}
+
+export function setInterfaceProp<K extends keyof SearchInterface>(
+  prop: K,
+  value: SearchInterface[K]
+) {
+  return getSearchInterface((searchInterface) => {
+    (searchInterface as SearchInterface)[prop] = value;
   });
 }
 
 export function setLanguage(lang: string) {
-  return getSearchInterface((searchInterface) => {
-    searchInterface.language = lang;
-  });
+  return setInterfaceProp('language', lang);
 }
 
 export function executeFirstSearch() {

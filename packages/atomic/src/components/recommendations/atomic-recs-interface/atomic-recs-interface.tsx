@@ -25,6 +25,7 @@ import {CommonBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
+  mismatchedInterfaceAndEnginePropError,
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
 import {createAtomicRecsStore, AtomicRecsStore} from './store';
@@ -56,9 +57,18 @@ export class AtomicRecsInterface
   @State() public error?: Error;
 
   /**
-   * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+   * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+   *
+   * If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
    */
-  @Prop({reflect: true}) public searchHub = 'default';
+  @Prop({reflect: true}) public pipeline?: string;
+
+  /**
+   * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+   *
+   * If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
+   */
+  @Prop({reflect: true}) public searchHub?: string;
 
   /**
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
@@ -72,11 +82,6 @@ export class AtomicRecsInterface
    * The recommendation interface headless engine.
    */
   @Prop({mutable: true}) public engine?: RecommendationEngine;
-
-  /**
-   * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
-   */
-  @Prop({reflect: true}) public pipeline?: string;
 
   /**
    * Whether analytics should be enabled.
@@ -160,6 +165,19 @@ export class AtomicRecsInterface
   @Method() public initializeWithRecommendationEngine(
     engine: RecommendationEngine
   ) {
+    if (this.pipeline && this.pipeline !== engine.state.pipeline) {
+      console.warn(
+        mismatchedInterfaceAndEnginePropError(
+          'recommendation',
+          'query pipeline'
+        )
+      );
+    }
+    if (this.searchHub && this.searchHub !== engine.state.searchHub) {
+      console.warn(
+        mismatchedInterfaceAndEnginePropError('recommendation', 'search hub')
+      );
+    }
     return this.internalInitialization(() => (this.engine = engine));
   }
 
@@ -232,6 +250,8 @@ export class AtomicRecsInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.pipeline = this.engine!.state.pipeline;
+    this.searchHub = this.engine!.state.searchHub;
     this.store.unsetLoadingFlag(FirstRecommendationExecutedFlag);
     this.initialized = true;
   }
@@ -241,10 +261,10 @@ export class AtomicRecsInterface
     try {
       this.engine = buildRecommendationEngine({
         configuration: {
-          searchHub: this.searchHub,
+          pipeline: this.pipeline,
+          searchHub: this.searchHub ?? 'default',
           locale: this.language,
           timezone: this.timezone,
-          pipeline: this.pipeline,
           ...options,
           analytics: analyticsConfig,
         },

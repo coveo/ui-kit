@@ -51,13 +51,15 @@ const SearchPage: NextPage = () => {
     configuration: {
       accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
       organizationId: 'electronicscoveodemocomo0n2fu8v',
+      search: {
+        pipeline: 'Search',
+        searchHub: 'MainSearch',
+      },
     },
   });
   return (
     <AtomicSearchInterface
       engine={engine}
-      pipeline="Search"
-      searchHub="MainSearch"
       fieldsToInclude={[
         'cat_platform',
         'cat_condition',

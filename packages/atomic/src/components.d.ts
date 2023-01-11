@@ -1000,13 +1000,13 @@ export namespace Components {
          */
         "logLevel"?: RecsLogLevel;
         /**
-          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
-          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
          */
-        "searchHub": string;
+        "searchHub"?: string;
         /**
           * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
@@ -1534,7 +1534,7 @@ export namespace Components {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
@@ -1546,9 +1546,9 @@ export namespace Components {
          */
         "scrollContainer": string;
         /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
          */
-        "searchHub": string;
+        "searchHub"?: string;
         /**
           * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
@@ -3586,11 +3586,11 @@ declare namespace LocalJSX {
          */
         "logLevel"?: RecsLogLevel;
         /**
-          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
-          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
         /**
@@ -4078,7 +4078,7 @@ declare namespace LocalJSX {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
@@ -4090,7 +4090,7 @@ declare namespace LocalJSX {
          */
         "scrollContainer"?: string;
         /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
         /**

@@ -1,16 +1,17 @@
-import React, {useEffect, useRef} from 'react';
 import type {JSX, i18n} from '@coveo/atomic';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
+import React, {useEffect, useRef} from 'react';
 import {AtomicSearchInterface} from './stencil-generated/index';
 
 type ExecuteSearch = HTMLAtomicSearchInterfaceElement['executeFirstSearch'];
 /**
  * The properties of the AtomicSearchInterface component
  */
-interface WrapperProps extends Omit<JSX.AtomicSearchInterface, 'i18n'> {
+interface WrapperProps
+  extends Omit<JSX.AtomicSearchInterface, 'i18n' | 'pipeline' | 'searchHub'> {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *
@@ -24,6 +25,14 @@ interface WrapperProps extends Omit<JSX.AtomicSearchInterface, 'i18n'> {
    *
    */
   localization?: (i18n: i18n) => void;
+  /**
+   * @deprecated This option has no effect. Rather, set the pipeline through the `engine` `search` configuration.
+   */
+  pipeline?: string;
+  /**
+   * @deprecated This option has no effect. Rather, set the search hub through the `engine` `search` configuration.
+   */
+  searchHub?: string;
 }
 
 const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
