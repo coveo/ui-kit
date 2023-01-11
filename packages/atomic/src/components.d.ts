@@ -670,6 +670,10 @@ export namespace Components {
     }
     interface AtomicIpxButton {
         /**
+          * The button icon.
+         */
+        "icon": string;
+        /**
           * The label that will be shown to the user.
          */
         "label": string;
@@ -3264,6 +3268,10 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface AtomicIpxButton {
+        /**
+          * The button icon.
+         */
+        "icon"?: string;
         /**
           * The label that will be shown to the user.
          */
