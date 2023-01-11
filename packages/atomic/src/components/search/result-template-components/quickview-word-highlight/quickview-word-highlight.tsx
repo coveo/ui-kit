@@ -1,4 +1,5 @@
 import {TermsToHighlight} from '@coveo/headless';
+import {hsvToRgb, rgbToHsv} from '../../../../utils/color-utils';
 
 export const HIGHLIGHT_PREFIX = 'CoveoHighlight';
 export class QuickviewWordHighlight {
@@ -6,10 +7,11 @@ export class QuickviewWordHighlight {
   public indexIdentifier: string;
   public occurrences = 0;
   public color: string;
-  public invertColor: string;
+  public focusedColor: string;
+  public previewBorderColor: string;
+  public elements: HTMLElement[] = [];
 
   private currentNavigationPosition = -1;
-  private elements: HTMLElement[] = [];
 
   constructor(
     private stemmingInfoFromIndex: TermsToHighlight,
@@ -23,7 +25,8 @@ export class QuickviewWordHighlight {
     this.indexIdentifier = parsed.keywordIdentifier;
     this.text = this.getText(keywordElementInIframe);
     this.color = keywordElementInIframe.style.backgroundColor;
-    this.invertColor = this.computeInvertedColor();
+    this.focusedColor = this.computeInvertedColor();
+    this.previewBorderColor = this.computeSaturatedColor();
 
     this.addElement(keywordElementInIframe);
   }
@@ -61,7 +64,7 @@ export class QuickviewWordHighlight {
     const currentElement = this.elements[this.currentNavigationPosition];
     const otherElements = this.elements.filter((el) => el !== currentElement);
     currentElement.style.color = this.color;
-    currentElement.style.backgroundColor = this.invertColor;
+    currentElement.style.backgroundColor = this.focusedColor;
     otherElements.forEach((element) => {
       element.style.color = '';
       element.style.backgroundColor = this.color;
@@ -138,23 +141,47 @@ export class QuickviewWordHighlight {
   }
 
   private computeInvertedColor() {
+    const {r, g, b} = this.extractRgb();
+    return `rgb(${255 - r}, ${255 - g}, ${255 - b})`;
+  }
+
+  private computeSaturatedColor() {
+    const {r, g, b} = this.extractRgb();
+    const {h, s, v} = rgbToHsv(r, g, b);
+    let newSaturation = s * 2;
+    if (newSaturation > 1) {
+      newSaturation = 1;
+    }
+    const {
+      r: rSaturated,
+      g: gSaturated,
+      b: bSaturated,
+    } = hsvToRgb(h, newSaturation, v);
+    return `rgb(${rSaturated}, ${gSaturated}, ${bSaturated})`;
+  }
+
+  private extractRgb() {
     const rgbExtracted = this.color.match(/\d+/g);
     if (!rgbExtracted) {
-      return 'white';
+      return {r: 255, g: 255, b: 255};
     }
 
-    const r = parseInt(rgbExtracted[0], 10);
-    const g = parseInt(rgbExtracted[1], 10);
-    const b = parseInt(rgbExtracted[2], 10);
-    return `rgb(${255 - r}, ${255 - g}, ${255 - b})`;
+    return {
+      r: parseInt(rgbExtracted[0], 10),
+      g: parseInt(rgbExtracted[1], 10),
+      b: parseInt(rgbExtracted[2], 10),
+    };
   }
 }
 
 export const getWordsHighlights = (
-  iframe: HTMLIFrameElement,
-  stemmingInfoFromIndex: TermsToHighlight
+  stemmingInfoFromIndex: TermsToHighlight,
+  iframe?: HTMLIFrameElement
 ) => {
   const wordsHighlights: Record<string, QuickviewWordHighlight> = {};
+  if (!iframe) {
+    return wordsHighlights;
+  }
 
   iframe.contentDocument?.body
     .querySelectorAll(`[id^="${HIGHLIGHT_PREFIX}"]`)

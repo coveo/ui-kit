@@ -1,24 +1,7 @@
+import {Result} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 
-const autoresize = (documentWriter: Document, iframeRef: HTMLIFrameElement) => {
-  // This "reset" of the iframe height allows the recalculation of the proper height needed for new content being added to the iframe
-  // when the end user navigates through the available quickview
-  // Since setting a new height on the iframe will cause the resize observer to essentially "call itself", we also add a flag to stop double resizing
-  iframeRef.style.height = '0';
-
-  let shouldRecalculateResize = true;
-  const arbitraryMarginToComfortablyReadLastLineOfText = 20;
-
-  new ResizeObserver(([documentElementObserved]) => {
-    if (iframeRef && shouldRecalculateResize) {
-      iframeRef.style.height = `${
-        documentElementObserved.contentRect.height +
-        arbitraryMarginToComfortablyReadLastLineOfText
-      }px`;
-    }
-    shouldRecalculateResize = !shouldRecalculateResize;
-  }).observe(documentWriter.documentElement);
-};
+const documentIdentifierInIframe = 'CoveoDocIdentifier';
 
 const writeDocument = (documentWriter: Document, content: string) => {
   documentWriter.open();
@@ -26,17 +9,50 @@ const writeDocument = (documentWriter: Document, content: string) => {
   documentWriter.close();
 };
 
+const currentResultAlreadyWrittenToDocument = (
+  documentWriter: Document,
+  result: Result
+) => {
+  const currentDocIdentifier = documentWriter.getElementById(
+    documentIdentifierInIframe
+  );
+
+  return (
+    currentDocIdentifier && currentDocIdentifier.textContent === result.uniqueId
+  );
+};
+
+const ensureSameResultIsNotOverwritten = (
+  documentWriter: Document,
+  result: Result
+) => {
+  const docIdentifier = documentWriter.createElement('div');
+  docIdentifier.style.display = 'none';
+  docIdentifier.setAttribute('aria-hidden', 'true');
+  docIdentifier.id = documentIdentifierInIframe;
+  docIdentifier.textContent = result.uniqueId;
+  documentWriter.body.appendChild(docIdentifier);
+};
+
 export const QuickviewIframe: FunctionalComponent<{
   content?: string;
   onSetIframeRef: (ref: HTMLIFrameElement) => void;
-}> = ({content, onSetIframeRef}) => {
+  result?: Result;
+}> = ({onSetIframeRef, result, content}) => {
+  // When a document is written with document.open/document.write/document.close
+  // it is not synchronous and the content of the iframe is only available to be queried at the end of the current call stack.
+  // This add a "wait" (setTimeout 0) before calling the `onSetIframeRef` from the parent modal quickview
+  const waitForIframeContentToBeWritten = () => {
+    return new Promise((resolve) => setTimeout(resolve));
+  };
+
   return (
     <iframe
-      class="w-full"
-      ref={(el) => {
+      class="w-full h-full"
+      ref={async (el) => {
         const iframeRef = el as HTMLIFrameElement;
 
-        if (!content) {
+        if (!result || !content) {
           return;
         }
 
@@ -44,9 +60,14 @@ export const QuickviewIframe: FunctionalComponent<{
         if (!documentWriter) {
           return;
         }
+        if (currentResultAlreadyWrittenToDocument(documentWriter, result)) {
+          return;
+        }
 
         writeDocument(documentWriter, content);
-        autoresize(documentWriter, iframeRef);
+        ensureSameResultIsNotOverwritten(documentWriter, result);
+
+        await waitForIframeContentToBeWritten();
         onSetIframeRef(iframeRef);
       }}
     ></iframe>

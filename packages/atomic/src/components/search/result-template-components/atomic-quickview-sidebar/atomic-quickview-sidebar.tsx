@@ -1,32 +1,24 @@
-import {Result, TermsToHighlight} from '@coveo/headless';
 import {Fragment, FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import ArrowDown from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowUp from '../../../../images/arrow-top-rounded.svg';
 import MinimizeIcon from '../../../../images/menu.svg';
 import {Checkbox} from '../../../common/checkbox';
-import {
-  getWordsHighlights,
-  QuickviewWordHighlight,
-} from '../quickview-word-highlight/quickview-word-highlight';
+import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 
 export interface QuickviewSidebarProps {
-  iframe: HTMLIFrameElement;
-  termsToHighlight: TermsToHighlight;
+  words: Record<string, QuickviewWordHighlight>;
   i18n: i18n;
   highlightKeywords: boolean;
   onHighlightKeywords: (doHighlight: boolean) => void;
   minimized: boolean;
   onMinimize: (minimize: boolean) => void;
-  result: Result;
 }
 
 export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
   props
 ) => {
-  const {iframe, termsToHighlight, highlightKeywords, minimized} = props;
-
-  const words = getWordsHighlights(iframe, termsToHighlight);
+  const {words, highlightKeywords, minimized} = props;
 
   const minimizeButton = (
     <MinimizeButton {...props} wordsLength={Object.values(words).length} />
