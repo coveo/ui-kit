@@ -93,7 +93,6 @@ describe('Search Interface Component', () => {
         });
         await searchInterface.initializeWithSearchEngine(engine);
       });
-      cy.wait(300);
     }
 
     describe("when the access token isn't a JWT", () => {
@@ -159,12 +158,15 @@ describe('Search Interface Component', () => {
       const tokenSearchHub = 'testing hub';
 
       describe('when the search interface has nothing configured', () => {
-        before(() =>
+        beforeEach(() =>
           setupWithEngine({
             engine: {accessToken},
-            interface: {pipeline: tokenPipeline + tokenPipeline},
           })
         );
+
+        it('should not log any warning', () => {
+          cy.get(TestFixture.consoleAliases.warn).should('not.be.called');
+        });
 
         it("should update the interface's query pipeline and search hub to match the token", () => {
           cy.get(searchInterfaceComponent).should(
@@ -189,9 +191,7 @@ describe('Search Interface Component', () => {
         );
 
         it('should not log any warning', () => {
-          cy.get(TestFixture.consoleAliases.warn).should(
-            'not.have.been.called'
-          );
+          cy.get(TestFixture.consoleAliases.warn).should('not.be.called');
         });
       });
 

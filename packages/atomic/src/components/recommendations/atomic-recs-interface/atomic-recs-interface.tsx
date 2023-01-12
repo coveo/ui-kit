@@ -61,14 +61,14 @@ export class AtomicRecsInterface
    *
    * If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
    */
-  @Prop({reflect: true}) public pipeline?: string;
+  @Prop({reflect: true, mutable: true}) public pipeline?: string;
 
   /**
    * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
    *
    * If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
    */
-  @Prop({reflect: true}) public searchHub?: string;
+  @Prop({reflect: true, mutable: true}) public searchHub?: string;
 
   /**
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
