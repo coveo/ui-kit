@@ -29,7 +29,7 @@ export default class QuanticResultField extends LightningElement {
    * (Optional) The label to display.
    * @api
    * @type {string}
-   * @defaultValue `none`
+   * @defaultValue `undefined`
    */
   @api label;
   /**
@@ -44,14 +44,26 @@ export default class QuanticResultField extends LightningElement {
    */
   @api type;
 
-  render() {
-    if (this.type === 'multi') {
-      return multiValueTemplate;
-    } else if (this.type === 'number') {
-      return numberTemplate;
-    } else if (this.type === 'date') {
-      return dateTemplate;
+  templateTypeMap = {
+    multi: multiValueTemplate,
+    number: numberTemplate,
+    date: dateTemplate,
+    string: stringTemplate,
+    default: stringTemplate,
+  };
+
+  connectedCallback() {
+    const templateTypes = Object.keys(this.templateTypeMap);
+    if (!templateTypes.includes(this.type)) {
+      console.error(
+        `The provided type "${
+          this.type
+        }" is invalid. The type must be one of ${templateTypes.join(' | ')}`
+      );
     }
-    return stringTemplate;
+  }
+
+  render() {
+    return this.templateTypeMap[this.type] || this.templateTypeMap.default;
   }
 }

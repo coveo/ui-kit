@@ -2,6 +2,8 @@
 import {createElement} from 'lwc';
 import QuanticResultField from '../quanticResultField';
 
+const invalidType = 'invalid type';
+
 const fieldTypes = [
   {
     name: 'string',
@@ -19,11 +21,20 @@ const fieldTypes = [
     name: 'multi',
     element: 'c-quantic-result-multi-value-text',
   },
+  {
+    name: invalidType,
+    element: 'c-quantic-result-text',
+  },
 ];
 
 const defaultOptions = {
+  result: {
+    raw: {
+      testField: 'test value',
+    },
+  },
   field: 'testField',
-  label: 'test value',
+  label: 'test label',
   type: 'string',
 };
 
@@ -73,6 +84,20 @@ describe('c-quantic-result-field', () => {
 
   afterEach(() => {
     cleanup();
+  });
+
+  describe('when the field type is invalid', () => {
+    it('should log an error', async () => {
+      createTestComponent({
+        ...defaultOptions,
+        type: invalidType,
+      });
+      await flushPromises();
+
+      expect(console.error).toHaveBeenCalledWith(
+        `The provided type "${invalidType}" is invalid. The type must be one of multi | number | date | string | default`
+      );
+    });
   });
 
   fieldTypes.forEach((fieldType) => {
