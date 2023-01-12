@@ -3,5 +3,4 @@
   font-size: 10px;
   background-color: var(--primaryColor, #fff7ba);
   color: var(--secondaryColor, #e2b104);
-  border: 1px solid var(--secondaryColor, #e2b104);
 }
