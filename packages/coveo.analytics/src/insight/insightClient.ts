@@ -23,6 +23,8 @@ import {
     InsightQueryErrorMeta,
     InsightPagerMetadata,
     InsightResultsSortMetadata,
+    UserActionsDocumentMetadata,
+    UserActionsPageViewMetadata,
 } from './insightEvents';
 
 export interface InsightClientProvider {
@@ -217,6 +219,35 @@ export class CoveoInsightClient {
     public logExpandToFullUI(metadata: ExpandToFullUIMetadata) {
         const metadataToSend = generateMetadataToSend(metadata);
         return this.logCustomEvent(InsightEvents.expandToFullUI, metadataToSend);
+    }
+
+    public logOpenUserActions(metadata: CaseMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata, false);
+        return this.logCustomEvent(InsightEvents.openUserActions, metadataToSend);
+    }
+
+    public logShowPrecedingSessions(metadata: CaseMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata, false);
+        return this.logCustomEvent(InsightEvents.showPrecedingSessions, metadataToSend);
+    }
+
+    public logShowFollowingSessions(metadata: CaseMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata, false);
+        return this.logCustomEvent(InsightEvents.showFollowingSessions, metadataToSend);
+    }
+
+    public logViewedDocumentClick(document: UserActionsDocumentMetadata, metadata: CaseMetadata) {
+        return this.logCustomEvent(InsightEvents.clickViewedDocument, {
+            ...generateMetadataToSend(metadata, false),
+            document,
+        });
+    }
+
+    public logPageViewClick(pageView: UserActionsPageViewMetadata, metadata: CaseMetadata) {
+        return this.logCustomEvent(InsightEvents.clickPageView, {
+            ...generateMetadataToSend(metadata, false),
+            pageView,
+        });
     }
 
     public logDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {
