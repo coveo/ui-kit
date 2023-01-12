@@ -1,5 +1,4 @@
-import {Schema} from '@coveo/bueno';
-import {StringValue} from '@coveo/bueno';
+import {Schema, StringValue} from '@coveo/bueno';
 import {
   Result,
   buildQuickview,
