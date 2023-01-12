@@ -5,9 +5,9 @@
  */
 :host {
   &::part(ipx-button) {
-    @apply btn-primary fixed bottom-1 right-12 block px-3 whitespace-nowrap text-neutral-light bg-primary-dark;
+    @apply btn-primary fixed bottom-1 right-12 block px-3 whitespace-nowrap text-neutral-light;
     height: var(--atomic-ipx-button-height, 2.75rem);
-    background-image: linear-gradient(315deg, var(--atomic-primary-light) 0%, var(--atomic-primary-dark) 74%);
+    background-color: var(--atomic-primary);
   }
 
   &::part(button-icon) {

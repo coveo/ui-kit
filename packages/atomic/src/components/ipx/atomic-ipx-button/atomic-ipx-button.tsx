@@ -20,9 +20,14 @@ export class AtomicIPXButton {
   @Prop({reflect: true}) public label = 'Workplace Search';
 
   /**
-   * The button icon.
+   * The close icon of the button.
    */
-  @Prop({reflect: true}) public icon?: string;
+  @Prop({reflect: true}) public closeIcon = CloseIcon;
+
+  /**
+   * The open icon of the button.
+   */
+  @Prop({reflect: true}) public openIcon = SearchIcon;
 
   /**
    * Whether the IPX layout is open.
@@ -43,23 +48,14 @@ export class AtomicIPXButton {
         onClick={() => this.onClick()}
       >
         <span part="button-icon">
-          {this.icon ? (
-            <atomic-icon
-              part="ipx-custom-icon"
-              icon={this.getIcon(this.icon)}
-            ></atomic-icon>
-          ) : (
-            [
-              <atomic-icon
-                part="ipx-close-icon"
-                icon={this.getIcon(CloseIcon)}
-              ></atomic-icon>,
-              <atomic-icon
-                part="ipx-search-icon"
-                icon={this.getIcon(SearchIcon)}
-              ></atomic-icon>,
-            ]
-          )}
+          <atomic-icon
+            part="ipx-close-icon"
+            icon={this.getIcon(this.closeIcon)}
+          ></atomic-icon>
+          <atomic-icon
+            part="ipx-search-icon"
+            icon={this.getIcon(this.openIcon)}
+          ></atomic-icon>
         </span>
         <span part="button-text">{this.label}</span>
       </Button>

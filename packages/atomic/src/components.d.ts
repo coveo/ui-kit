@@ -670,13 +670,17 @@ export namespace Components {
     }
     interface AtomicIpxButton {
         /**
-          * The button icon.
+          * The close icon of the button.
          */
-        "icon"?: string;
+        "closeIcon": string;
         /**
           * The label that will be shown to the user.
          */
         "label": string;
+        /**
+          * The open icon of the button.
+         */
+        "openIcon": string;
     }
     interface AtomicIpxModal {
         /**
@@ -3269,13 +3273,17 @@ declare namespace LocalJSX {
     }
     interface AtomicIpxButton {
         /**
-          * The button icon.
+          * The close icon of the button.
          */
-        "icon"?: string;
+        "closeIcon"?: string;
         /**
           * The label that will be shown to the user.
          */
         "label"?: string;
+        /**
+          * The open icon of the button.
+         */
+        "openIcon"?: string;
     }
     interface AtomicIpxModal {
         /**
