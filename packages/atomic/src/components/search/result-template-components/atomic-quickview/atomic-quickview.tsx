@@ -1,3 +1,5 @@
+import {Schema} from '@coveo/bueno';
+import {StringValue} from '@coveo/bueno';
 import {
   Result,
   buildQuickview,
@@ -58,6 +60,12 @@ export class AtomicQuickview implements InitializableComponent {
       options: {result: this.result},
     });
     this.handleQuickviewNavigation();
+    new Schema({
+      sandbox: new StringValue({
+        required: true,
+        regex: /allow-same-origin/,
+      }),
+    }).validate({sandbox: this.sandbox});
   }
 
   private handleQuickviewNavigation() {
