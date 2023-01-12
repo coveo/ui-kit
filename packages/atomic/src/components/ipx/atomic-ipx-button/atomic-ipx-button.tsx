@@ -53,7 +53,7 @@ export class AtomicIPXButton {
             icon={this.getIcon(this.closeIcon)}
           ></atomic-icon>
           <atomic-icon
-            part="ipx-search-icon"
+            part="ipx-open-icon"
             icon={this.getIcon(this.openIcon)}
           ></atomic-icon>
         </span>

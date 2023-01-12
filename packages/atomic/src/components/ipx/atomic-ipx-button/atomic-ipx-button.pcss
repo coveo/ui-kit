@@ -20,12 +20,12 @@
   }
 
   &::part(ipx-close-icon),
-  &::part(ipx-search-icon) {
+  &::part(ipx-open-icon) {
     @apply absolute left-0;
     transition: transform 500ms;
   }
 
-  &::part(ipx-search-icon) {
+  &::part(ipx-open-icon) {
     @apply translate-y-0;
   }
 
@@ -35,7 +35,7 @@
 }
 
 :host(.btn-open) {
-  &::part(ipx-search-icon) {
+  &::part(ipx-open-icon) {
     @apply translate-y-12;
   }
 
