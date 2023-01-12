@@ -53,7 +53,7 @@ export default class QuanticResultField extends LightningElement {
   };
 
   connectedCallback() {
-    const templateTypes = Object.keys(this.templateTypeMap);
+    const templateTypes = Object.keys(this.templateTypeMap).slice(0, 4);
     if (!templateTypes.includes(this.type)) {
       console.error(
         `The provided type "${

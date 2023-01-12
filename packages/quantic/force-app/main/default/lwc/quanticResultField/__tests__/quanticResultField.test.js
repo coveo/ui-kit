@@ -95,7 +95,7 @@ describe('c-quantic-result-field', () => {
       await flushPromises();
 
       expect(console.error).toHaveBeenCalledWith(
-        `The provided type "${invalidType}" is invalid. The type must be one of multi | number | date | string | default`
+        `The provided type "${invalidType}" is invalid. The type must be one of multi | number | date | string`
       );
     });
   });
