@@ -3,7 +3,7 @@ import {
   StorageItems,
 } from '../../../src/utils/local-storage-utils';
 import {RouteAlias} from '../../fixtures/fixture-common';
-import {TestFixture} from '../../fixtures/test-fixture';
+import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import * as CommonAssertions from '../common-assertions';
 import {selectIdleCheckboxValueAt} from '../facets/facet-common-actions';
 import * as FacetCommonAssertions from '../facets/facet-common-assertions';
@@ -11,6 +11,14 @@ import {addFacet, field} from '../facets/facet/facet-actions';
 import {FacetSelectors} from '../facets/facet/facet-selectors';
 import {addQuerySummary} from '../query-summary-actions';
 import * as QuerySummaryAssertions from '../query-summary-assertions';
+import {
+  resultTextComponent,
+  ResultTextSelectors,
+} from '../result-list/result-components/result-text-selectors';
+import {
+  addResultList,
+  buildTemplateWithoutSections,
+} from '../result-list/result-list-actions';
 import {addSearchBox} from './search-box-actions';
 import * as SearchBoxAssertions from './search-box-assertions';
 import {searchBoxComponent, SearchBoxSelectors} from './search-box-selectors';
@@ -112,7 +120,7 @@ describe('Search Box Test Suites', () => {
         cy.wait(100);
 
         SearchBoxSelectors.inputBox().click();
-        SearchBoxSelectors.querySuggestions().eq(1).click();
+        SearchBoxSelectors.querySuggestion('query-suggestion-1').click();
       });
 
       SearchBoxAssertions.assertHasText('query-suggestion-1');
@@ -142,7 +150,7 @@ describe('Search Box Test Suites', () => {
         before(() => {
           setupWithRecentQueries();
           setInputText();
-          SearchBoxSelectors.querySuggestions().eq(1).click();
+          SearchBoxSelectors.querySuggestion('Recent query 1').click();
         });
 
         SearchBoxAssertions.assertFocusSearchBox();
@@ -317,5 +325,27 @@ describe('Search Box Test Suites', () => {
       FacetSelectors,
       0
     );
+  });
+
+  describe('with the query syntax enabled', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addSearchBox({props: {'enable-query-syntax': ''}}))
+        .with(
+          addResultList(
+            buildTemplateWithoutSections(
+              generateComponentHTML(resultTextComponent, {field: 'title'})
+            )
+          )
+        )
+        .withoutFirstAutomaticSearch()
+        .init();
+    });
+
+    it('uses the query syntax', () => {
+      SearchBoxSelectors.inputBox().type('@urihash=Wl1SZoqFsR8bpsbG');
+      SearchBoxSelectors.submitButton().click();
+      ResultTextSelectors.firstInResult().should('have.text', 'bushy lichens');
+    });
   });
 });

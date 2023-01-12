@@ -1,10 +1,11 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import {
   Result,
   buildQuickview,
   Quickview,
   QuickviewState,
 } from '@coveo/headless';
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import QuickviewIcon from '../../../../images/quickview.svg';
 import {
   BindStateToController,
@@ -37,6 +38,20 @@ export class AtomicQuickview implements InitializableComponent {
   @State()
   public quickviewState!: QuickviewState;
 
+  /**
+   * The `sandbox` attribute to apply to the quickview iframe.
+   *
+   * The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.
+   *
+   * This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.
+   *
+   * By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.
+   *
+   * `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+   */
+  @Prop() public sandbox =
+    'allow-popups allow-top-navigation allow-same-origin';
+
   private quickviewModalRef?: HTMLAtomicQuickviewModalElement;
 
   public initialize() {
@@ -44,6 +59,12 @@ export class AtomicQuickview implements InitializableComponent {
       options: {result: this.result},
     });
     this.handleQuickviewNavigation();
+    new Schema({
+      sandbox: new StringValue({
+        required: true,
+        regex: /allow-same-origin/,
+      }),
+    }).validate({sandbox: this.sandbox});
   }
 
   private handleQuickviewNavigation() {
@@ -79,6 +100,7 @@ export class AtomicQuickview implements InitializableComponent {
     }
 
     this.quickviewModalRef = document.createElement('atomic-quickview-modal');
+    this.quickviewModalRef.setAttribute('sandbox', this.sandbox);
     this.bindings.interfaceElement.appendChild(this.quickviewModalRef);
   }
 

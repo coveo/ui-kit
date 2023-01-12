@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.6.0...@coveo/atomic@2.7.0) (2023-01-12)
+
+### Bug Fixes
+
+- **atomic:** removed console warning when pipeline or search hub aren't configured ([#2654](https://github.com/coveo/ui-kit/issues/2654)) ([1e97521](https://github.com/coveo/ui-kit/commit/1e9752175b7ab74162ff42d31c975f54615022a5))
+
+### Features
+
+- **atomic:** added query syntax support to search box ([#2647](https://github.com/coveo/ui-kit/issues/2647)) ([c4c96b8](https://github.com/coveo/ui-kit/commit/c4c96b83136dd4b9a4cd34d613ec2b0737673e1b))
+
 # [2.6.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.5.0...@coveo/atomic@2.6.0) (2023-01-11)
 
 ### Features

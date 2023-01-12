@@ -44,6 +44,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   @Prop({mutable: true, reflect: false}) content?: string;
   @Prop({mutable: true, reflect: false}) result?: Result;
+  @Prop() sandbox?: string;
 
   private renderHeader() {
     // TODO: Header should be slottable from result template definition
@@ -72,6 +73,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
         </div>
         <div class="overflow-auto relative">
           <QuickviewIframe
+            sandbox={this.sandbox}
             result={this.result}
             content={this.content}
             onSetIframeRef={async (ref) => {
