@@ -845,10 +845,15 @@ export namespace Components {
     interface AtomicQuerySummary {
     }
     interface AtomicQuickview {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox": string;
     }
     interface AtomicQuickviewModal {
         "content"?: string;
         "result"?: Result;
+        "sandbox"?: string;
     }
     interface AtomicRatingFacet {
         /**
@@ -3447,10 +3452,15 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
     }
     interface AtomicQuickview {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox"?: string;
     }
     interface AtomicQuickviewModal {
         "content"?: string;
         "result"?: Result;
+        "sandbox"?: string;
     }
     interface AtomicRatingFacet {
         /**
