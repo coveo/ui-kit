@@ -91,7 +91,7 @@ export class AtomicIPXButton {
     initialDiv.innerHTML = icon;
     initialDiv
       .querySelector('svg')
-      ?.setAttribute('fill', 'var(--atomic-neutral-light)');
+      ?.setAttribute('fill', 'var(--atomic-on-primary)');
 
     return initialDiv.innerHTML;
   }
