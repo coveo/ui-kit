@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.4.0...@coveo/headless@2.5.0) (2023-01-12)
+
+### Features
+
+- **atomic:** added query syntax support to search box ([#2647](https://github.com/coveo/ui-kit/issues/2647)) ([c4c96b8](https://github.com/coveo/ui-kit/commit/c4c96b83136dd4b9a4cd34d613ec2b0737673e1b))
+
 # [2.4.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.3.1...@coveo/headless@2.4.0) (2023-01-11)
 
 ### Features
