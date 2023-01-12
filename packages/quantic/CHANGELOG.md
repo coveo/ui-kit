@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.7.4...@coveo/quantic@2.7.5) (2023-01-12)
+
+### Bug Fixes
+
+- **quantic:** hover state removed from result only when the modal quickview is closed ([#2649](https://github.com/coveo/ui-kit/issues/2649)) ([0f6c800](https://github.com/coveo/ui-kit/commit/0f6c800f437ccf892b19c0930c90267305154e86))
+
 ## [2.7.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.7.3...@coveo/quantic@2.7.4) (2023-01-12)
 
 **Note:** Version bump only for package @coveo/quantic
