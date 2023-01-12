@@ -332,8 +332,8 @@ export class AtomicSearchInterface
 
     safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
     const {updateQuery} = loadQueryActions(this.engine!);
-    const {value, analytics} = standaloneSearchBoxData;
-    this.engine!.dispatch(updateQuery({q: value}));
+    const {value, enableQuerySyntax, analytics} = standaloneSearchBoxData;
+    this.engine!.dispatch(updateQuery({q: value, enableQuerySyntax}));
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 

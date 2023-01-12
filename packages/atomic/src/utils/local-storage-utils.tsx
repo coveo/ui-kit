@@ -7,6 +7,7 @@ export enum StorageItems {
 
 export interface StandaloneSearchBoxData {
   value: string;
+  enableQuerySyntax?: boolean;
   analytics: StandaloneSearchBoxAnalytics;
 }
 
