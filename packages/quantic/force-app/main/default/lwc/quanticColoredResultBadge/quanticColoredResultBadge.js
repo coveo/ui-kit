@@ -1,9 +1,8 @@
 import {LightningElement, api} from 'lwc';
-import {RGBToHSL, HEXToRGB, invalidRGBValues} from './colorsUtils';
+import {HEXToRGB, invalidRGBValues} from './colorsUtils';
 
 const defaultPrimaryColor = '#FFF7BA';
-const defaultSecondaryColor = '#E2B104';
-const lightnessDegree = 48;
+const defaultSecondaryColor = 'black';
 
 /** @typedef {import("coveo").Result} Result */
 
@@ -21,6 +20,18 @@ export default class QuanticColoredResultBadge extends LightningElement {
    */
   @api label;
   /**
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
+   * @api
+   * @type {Result}
+   */
+  @api result;
+  /**
+   * The [result field](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
+   * @api
+   * @type {string}
+   */
+  @api field;
+  /**
    * The primary color of the badge.
    * @api
    * @type {string}
@@ -30,22 +41,34 @@ export default class QuanticColoredResultBadge extends LightningElement {
   /** @type{boolean} */
   invalidColor = false;
 
+  hasValidTextContent() {
+    return !!this.label || !!this.result?.raw?.[this.field]
+  }
+
   renderedCallback() {
-    if (this.label && this.color) {
+    if (this.hasValidTextContent() && this.color) {
       this.setBadgeColors();
-    } else if (this.label) {
+    } else if (this.hasValidTextContent()) {
       this.setBadgeDefaultColors();
     }
   }
 
   /**
-   * Sets the primary and scondary colors to be used in the colored badge.
+   * get the text content to display depending the provided props.
+   * @returns {string}
+   */
+  get textToDisplay() {
+    return this.label || this.result?.raw?.[this.field].toString()
+  }
+
+  /**
+   * Sets the primary and secondary colors to be used in the colored badge.
    * @returns {void}
    */
   setBadgeColors() {
     // @ts-ignore
     const styles = this.template.querySelector('.result-badge')?.style;
-    const secondaryColor = this.generateSecondaryColor(lightnessDegree);
+    const secondaryColor = this.generateSecondaryColor();
     styles.setProperty(
       '--primaryColor',
       this.invalidColor ? defaultPrimaryColor : this.color
@@ -57,7 +80,7 @@ export default class QuanticColoredResultBadge extends LightningElement {
   }
 
   /**
-   * Sets the primary and scondary colors of the badge to the default colors.
+   * Sets the primary and secondary colors of the badge to the default colors.
    * @returns {void}
    */
   setBadgeDefaultColors() {
@@ -70,10 +93,9 @@ export default class QuanticColoredResultBadge extends LightningElement {
 
   /**
    * Generates the secondary color.
-   * @param {number} lightnessAmount the amount of lightness with which to update the primary color.
    * @returns {string}
    */
-  generateSecondaryColor(lightnessAmount) {
+  generateSecondaryColor() {
     const {r, g, b} = HEXToRGB(this.color);
 
     if (invalidRGBValues(r, g, b)) {
@@ -81,16 +103,11 @@ export default class QuanticColoredResultBadge extends LightningElement {
       return defaultSecondaryColor;
     }
 
-    const HSLColor = RGBToHSL(r, g, b);
-    const {h, s} = HSLColor;
-    let l = HSLColor.l;
+    const luminance =
+      (r / 255.0) * 0.2126 +
+      (g / 255.0) * 0.7152 +
+      (b / 255.0) * 0.0722
 
-    if (l >= 50) {
-      l -= lightnessAmount;
-    } else {
-      l += lightnessAmount;
-    }
-
-    return `hsl(${h}, ${s}%, ${l.toFixed(1)}%)`;
+    return luminance >= 0.50 ? 'black' : 'white'
   }
 }
