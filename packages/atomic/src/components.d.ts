@@ -349,6 +349,7 @@ export namespace Components {
         "icon": string;
     }
     interface AtomicIconButton {
+        "ariaPressed"?: boolean;
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "buttonStyle": ButtonStyle;
@@ -845,11 +846,16 @@ export namespace Components {
     interface AtomicQuerySummary {
     }
     interface AtomicQuickview {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox": string;
     }
     interface AtomicQuickviewModal {
         "content"?: string;
         "reset": () => Promise<void>;
         "result"?: Result;
+        "sandbox"?: string;
     }
     interface AtomicRatingFacet {
         /**
@@ -1001,13 +1007,13 @@ export namespace Components {
          */
         "logLevel"?: RecsLogLevel;
         /**
-          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
-          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
          */
-        "searchHub": string;
+        "searchHub"?: string;
         /**
           * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
@@ -1422,6 +1428,10 @@ export namespace Components {
          */
         "disableSearch": boolean;
         /**
+          * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
+         */
+        "enableQuerySyntax": boolean;
+        /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries": number;
@@ -1535,7 +1545,7 @@ export namespace Components {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
@@ -1547,9 +1557,9 @@ export namespace Components {
          */
         "scrollContainer": string;
         /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
          */
-        "searchHub": string;
+        "searchHub"?: string;
         /**
           * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
@@ -2965,6 +2975,7 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicIconButton {
+        "ariaPressed"?: boolean;
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "buttonStyle"?: ButtonStyle;
@@ -3444,10 +3455,15 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
     }
     interface AtomicQuickview {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox"?: string;
     }
     interface AtomicQuickviewModal {
         "content"?: string;
         "result"?: Result;
+        "sandbox"?: string;
     }
     interface AtomicRatingFacet {
         /**
@@ -3587,11 +3603,11 @@ declare namespace LocalJSX {
          */
         "logLevel"?: RecsLogLevel;
         /**
-          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
-          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
         /**
@@ -3979,6 +3995,10 @@ declare namespace LocalJSX {
          */
         "disableSearch"?: boolean;
         /**
+          * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
+         */
+        "enableQuerySyntax"?: boolean;
+        /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries"?: number;
@@ -4079,7 +4099,7 @@ declare namespace LocalJSX {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
@@ -4091,7 +4111,7 @@ declare namespace LocalJSX {
          */
         "scrollContainer"?: string;
         /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
         /**

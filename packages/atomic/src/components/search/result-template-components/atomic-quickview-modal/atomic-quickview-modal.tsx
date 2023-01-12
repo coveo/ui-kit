@@ -17,7 +17,7 @@ import {
 } from '../quickview-word-highlight/quickview-word-highlight';
 
 export interface HighlightKeywords {
-  highlightAll: boolean;
+  highlightNone: boolean;
   keywords: {
     [text: string]: {
       indexIdentifier: string;
@@ -39,7 +39,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @State() public error!: Error;
 
   @State() private highlightKeywords: HighlightKeywords = {
-    highlightAll: true,
+    highlightNone: false,
     keywords: {},
   };
   @Watch('highlightKeywords')
@@ -53,12 +53,13 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   @Prop({mutable: true, reflect: false}) content?: string;
   @Prop({mutable: true, reflect: false}) result?: Result;
+  @Prop() sandbox?: string;
 
   @Method()
   public async reset() {
     this.words = {};
     this.highlightKeywords = {
-      highlightAll: true,
+      highlightNone: true,
       keywords: {},
     };
     this.minimizeSidebar = false;
@@ -94,6 +95,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
         </div>
         <div class="overflow-auto relative">
           <QuickviewIframe
+            sandbox={this.sandbox}
             result={this.result}
             content={this.content}
             onSetIframeRef={async (ref) => {
@@ -220,7 +222,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   }
 
   private handleHighlightsScripts() {
-    if (this.highlightKeywords.highlightAll) {
+    if (this.highlightKeywords.highlightNone) {
       this.enableHighlights();
     } else {
       this.disableHighlights();

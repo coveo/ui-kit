@@ -55,7 +55,7 @@ export const buildQuickviewPreviewBar = (
     return;
   }
   const bar = buildPreviewBar(documentWriter);
-  if (!highlightKeywords.highlightAll) {
+  if (highlightKeywords.highlightNone) {
     bar.remove();
     return;
   }

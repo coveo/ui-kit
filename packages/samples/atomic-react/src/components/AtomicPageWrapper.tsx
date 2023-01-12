@@ -59,13 +59,15 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
     configuration: {
       accessToken,
       organizationId,
+      search: {
+        pipeline: 'Search',
+        searchHub: 'MainSearch',
+      },
     },
   });
   return (
     <AtomicSearchInterface
       engine={engine}
-      pipeline="Search"
-      searchHub="MainSearch"
       fieldsToInclude={[
         'ec_price',
         'ec_rating',

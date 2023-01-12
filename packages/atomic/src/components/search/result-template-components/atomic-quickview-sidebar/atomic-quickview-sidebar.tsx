@@ -73,11 +73,11 @@ const HighlightKeywordsCheckbox: FunctionalComponent<
       text={i18n.t('keywords-highlight')}
       class="mr-2"
       id="atomic-quickview-sidebar-highlight-keywords"
-      checked={highlightKeywords.highlightAll}
+      checked={!highlightKeywords.highlightNone}
       onToggle={(checked) =>
         onHighlightKeywords({
           ...highlightKeywords,
-          highlightAll: checked,
+          highlightNone: !checked,
         })
       }
     ></Checkbox>
@@ -104,7 +104,7 @@ const Keywords: FunctionalComponent<
     <Fragment>
       {Object.values(words).map((keyword) => {
         const wordIsEnabled =
-          highlightKeywords.highlightAll &&
+          !highlightKeywords.highlightNone &&
           (highlightKeywords.keywords[keyword.text] === undefined ||
             highlightKeywords.keywords[keyword.text].enabled === true);
 
@@ -128,6 +128,7 @@ const Keywords: FunctionalComponent<
               </div>
               <div class="flex px-2">
                 <atomic-icon-button
+                  disabled={!wordIsEnabled}
                   buttonStyle="text-transparent"
                   class="border-0"
                   labelI18nKey="next"
@@ -138,6 +139,7 @@ const Keywords: FunctionalComponent<
                   }}
                 ></atomic-icon-button>
                 <atomic-icon-button
+                  disabled={!wordIsEnabled}
                   buttonStyle="text-transparent"
                   class="border-0"
                   labelI18nKey="previous"
@@ -150,15 +152,14 @@ const Keywords: FunctionalComponent<
 
             <atomic-icon-button
               class={`${
-                highlightKeywords.highlightAll
-                  ? ''
-                  : 'pointer-events-none opacity-50'
+                highlightKeywords.highlightNone
+                  ? 'pointer-events-none opacity-50'
+                  : ''
               }`}
+              ariaPressed={!wordIsEnabled}
               buttonStyle="text-transparent"
               icon={wordIsEnabled ? Remove : Add}
-              labelI18nKey={
-                wordIsEnabled ? 'quickview-remove-word' : 'quickview-add-word'
-              }
+              labelI18nKey={'quickview-remove-word'}
               clickCallback={() => {
                 onHighlightKeywords({
                   ...highlightKeywords,

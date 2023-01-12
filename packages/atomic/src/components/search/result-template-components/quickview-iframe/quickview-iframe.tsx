@@ -38,7 +38,8 @@ export const QuickviewIframe: FunctionalComponent<{
   content?: string;
   onSetIframeRef: (ref: HTMLIFrameElement) => void;
   result?: Result;
-}> = ({onSetIframeRef, result, content}) => {
+  sandbox?: string;
+}> = ({onSetIframeRef, result, content, sandbox}) => {
   // When a document is written with document.open/document.write/document.close
   // it is not synchronous and the content of the iframe is only available to be queried at the end of the current call stack.
   // This add a "wait" (setTimeout 0) before calling the `onSetIframeRef` from the parent modal quickview
@@ -48,7 +49,9 @@ export const QuickviewIframe: FunctionalComponent<{
 
   return (
     <iframe
+      src="about:blank"
       class="w-full h-full"
+      sandbox={sandbox}
       ref={async (el) => {
         const iframeRef = el as HTMLIFrameElement;
 
