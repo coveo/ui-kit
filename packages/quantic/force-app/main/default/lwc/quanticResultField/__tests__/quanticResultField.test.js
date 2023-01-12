@@ -21,10 +21,6 @@ const fieldTypes = [
     name: 'multi',
     element: 'c-quantic-result-multi-value-text',
   },
-  {
-    name: invalidType,
-    element: 'c-quantic-result-text',
-  },
 ];
 
 const defaultOptions = {
@@ -87,13 +83,17 @@ describe('c-quantic-result-field', () => {
   });
 
   describe('when the field type is invalid', () => {
-    it('should log an error', async () => {
-      createTestComponent({
+    it('should display an error', async () => {
+      const element = createTestComponent({
         ...defaultOptions,
         type: invalidType,
       });
       await flushPromises();
 
+      const error = element.shadowRoot.querySelector('.error-message');
+
+      expect(error).not.toBeNull();
+      expect(error.textContent).toBe('c-quantic-result-field Error');
       expect(console.error).toHaveBeenCalledWith(
         `The provided type "${invalidType}" is invalid. The type must be one of multi | number | date | string`
       );

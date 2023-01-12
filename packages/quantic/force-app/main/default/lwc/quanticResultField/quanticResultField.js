@@ -2,6 +2,8 @@ import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import dateTemplate from './dateTemplate.html';
 // @ts-ignore
+import errorTemplate from './errorTemplate.html';
+// @ts-ignore
 import multiValueTemplate from './multiValueTemplate.html';
 // @ts-ignore
 import numberTemplate from './numberTemplate.html';
@@ -44,26 +46,35 @@ export default class QuanticResultField extends LightningElement {
    */
   @api type;
 
+  /** @type {string} */
+  error;
   templateTypeMap = {
     multi: multiValueTemplate,
     number: numberTemplate,
     date: dateTemplate,
     string: stringTemplate,
-    default: stringTemplate,
   };
 
   connectedCallback() {
-    const templateTypes = Object.keys(this.templateTypeMap).slice(0, 4);
+    const templateTypes = Object.keys(this.templateTypeMap);
     if (!templateTypes.includes(this.type)) {
       console.error(
         `The provided type "${
           this.type
         }" is invalid. The type must be one of ${templateTypes.join(' | ')}`
       );
+      this.setError();
     }
   }
 
+  setError() {
+    this.error = `${this.template.host.localName} Error`;
+  }
+
   render() {
+    if (this.error) {
+      return errorTemplate;
+    }
     return this.templateTypeMap[this.type] || this.templateTypeMap.default;
   }
 }
