@@ -18,17 +18,10 @@ export const resultPreviewReducer = createReducer(
         state.isLoading = false;
       })
       .addCase(updateContentURL.fulfilled, (state, action) => {
-        const {contentURL} = action.payload;
-
-        state.contentURL = contentURL;
+        state.contentURL = action.payload.contentURL;
       })
       .addCase(executeSearch.fulfilled, (state) => {
-        const {content, isLoading, uniqueId, contentURL} =
-          getResultPreviewInitialState();
-        state.content = content;
-        state.isLoading = isLoading;
-        state.uniqueId = uniqueId;
-        state.contentURL = contentURL;
+        Object.assign(state, getResultPreviewInitialState());
       });
   }
 );
