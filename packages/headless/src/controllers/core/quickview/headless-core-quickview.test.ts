@@ -1,6 +1,9 @@
-import {configuration, resultPreview} from '../../../app/reducers';
+import {configuration, resultPreview, search} from '../../../app/reducers';
 import {
   fetchResultContent,
+  nextPreview,
+  preparePreviewPagination,
+  previousPreview,
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
 import {
@@ -50,6 +53,7 @@ describe('QuickviewCore', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
       resultPreview,
+      search,
     });
   });
 
@@ -148,5 +152,26 @@ describe('QuickviewCore', () => {
     initQuickview();
 
     expect(defaultOptions.maximumPreviewSize).toBe(0);
+  });
+
+  it('when going to #next preview, it dispatches the proper actions', () => {
+    initQuickview();
+    quickview.next();
+    expect(engine.actions).toContainEqual(nextPreview());
+    expect(engine.findAsyncAction(fetchResultContent.pending)).toBeDefined();
+  });
+
+  it('when going to #previous preview, it dispatches the proper actions', () => {
+    initQuickview();
+    quickview.previous();
+    expect(engine.actions).toContainEqual(previousPreview());
+    expect(engine.findAsyncAction(fetchResultContent.pending)).toBeDefined();
+  });
+
+  it('#preparePreviewPagination on initialization', () => {
+    initQuickview();
+    expect(engine.actions).toContainEqual(
+      preparePreviewPagination({results: engine.state.search.response.results})
+    );
   });
 });

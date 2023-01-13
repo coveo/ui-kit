@@ -108,7 +108,17 @@ export interface QuickviewState {
    */
   contentURL?: string;
 
+  /**
+   * The number of available results for the current result set.
+   *
+   * Can be used for quickview pagination purpose.
+   */
   totalResults: number;
+  /**
+   * The position of the result in the current result set.
+   *
+   * Can be used for quickview pagination purpose.
+   */
   currentResult: number;
 }
 

@@ -11,7 +11,7 @@ import {
 import {getResultPreviewInitialState} from './result-preview-state';
 
 const getUniqueIdsOfResultsWithHTMLVersion = (results: Result[]) =>
-  results.filter((r) => r.uniqueId).map((r) => r.uniqueId);
+  results.filter((r) => r.hasHtmlVersion).map((r) => r.uniqueId);
 
 export const resultPreviewReducer = createReducer(
   getResultPreviewInitialState(),

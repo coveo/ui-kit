@@ -106,18 +106,6 @@ export class AtomicQuickview implements InitializableComponent {
 
   private onClick() {
     this.quickview.fetchResultContent();
-    //this.
-
-    /*const quickviewsInfoFromResultList =
-      this.bindings.store.get('resultList')?.quickviews;
-
-    if (!quickviewsInfoFromResultList) {
-      return;
-    }
-    this.bindings.store.set(
-      'currentQuickviewPosition',
-      quickviewsInfoFromResultList.position.indexOf(this.resultIndex)
-    );*/
   }
 
   public render() {
