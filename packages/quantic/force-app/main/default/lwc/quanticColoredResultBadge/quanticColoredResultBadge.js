@@ -41,24 +41,16 @@ export default class QuanticColoredResultBadge extends LightningElement {
   /** @type{boolean} */
   invalidColor = false;
 
-  hasValidTextContent() {
-    return !!this.label || !!this.result?.raw?.[this.field]
-  }
-
-  renderedCallback() {
-    if (this.hasValidTextContent() && this.color) {
-      this.setBadgeColors();
-    } else if (this.hasValidTextContent()) {
-      this.setBadgeDefaultColors();
-    }
-  }
-
   /**
    * get the text content to display depending the provided props.
    * @returns {string}
    */
   get textToDisplay() {
     return this.label || this.result?.raw?.[this.field].toString()
+  }
+
+  hasTextToDisplay() {
+    return !!this.textToDisplay;
   }
 
   /**
@@ -109,5 +101,13 @@ export default class QuanticColoredResultBadge extends LightningElement {
       (b / 255.0) * 0.0722
 
     return luminance >= 0.50 ? 'black' : 'white'
+  }
+
+  renderedCallback() {
+    if (this.hasTextToDisplay && this.color) {
+      this.setBadgeColors();
+    } else if (this.hasTextToDisplay) {
+      this.setBadgeDefaultColors();
+    }
   }
 }
