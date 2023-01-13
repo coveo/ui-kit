@@ -5,7 +5,7 @@ import {
   Quickview,
   QuickviewState,
 } from '@coveo/headless';
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, Listen, Prop, State} from '@stencil/core';
 import QuickviewIcon from '../../../../images/quickview.svg';
 import {
   BindStateToController,
@@ -52,38 +52,30 @@ export class AtomicQuickview implements InitializableComponent {
   @Prop() public sandbox =
     'allow-popups allow-top-navigation allow-same-origin';
 
+  @Listen('atomic/quickview/next', {target: 'body'})
+  public onNextQuickview(evt: Event) {
+    evt.stopImmediatePropagation();
+    this.quickview.next();
+  }
+
+  @Listen('atomic/quickview/previous', {target: 'body'})
+  public onPreviousQuickview(evt: Event) {
+    evt.stopImmediatePropagation();
+    this.quickview.previous();
+  }
+
   private quickviewModalRef?: HTMLAtomicQuickviewModalElement;
 
   public initialize() {
     this.quickview = buildQuickview(this.bindings.engine, {
       options: {result: this.result},
     });
-    this.handleQuickviewNavigation();
     new Schema({
       sandbox: new StringValue({
         required: true,
         regex: /allow-same-origin/,
       }),
     }).validate({sandbox: this.sandbox});
-  }
-
-  private handleQuickviewNavigation() {
-    this.bindings.store.onChange('currentQuickviewPosition', (quickviewPos) => {
-      const quickviewsInfoFromResultList =
-        this.bindings.store.get('resultList')?.quickviews;
-
-      if (!quickviewsInfoFromResultList) {
-        return;
-      }
-
-      const isCurrentQuickview =
-        quickviewsInfoFromResultList.position[quickviewPos] ===
-        this.resultIndex;
-
-      if (isCurrentQuickview) {
-        this.quickview.fetchResultContent();
-      }
-    });
   }
 
   private addQuickviewModalIfNeeded() {
@@ -98,7 +90,6 @@ export class AtomicQuickview implements InitializableComponent {
       this.quickviewModalRef = quickviewModal;
       return;
     }
-
     this.quickviewModalRef = document.createElement('atomic-quickview-modal');
     this.quickviewModalRef.setAttribute('sandbox', this.sandbox);
     this.bindings.interfaceElement.appendChild(this.quickviewModalRef);
@@ -108,19 +99,16 @@ export class AtomicQuickview implements InitializableComponent {
     if (this.quickviewModalRef && this.quickview.state.content) {
       this.quickviewModalRef.content = this.quickview.state.content;
       this.quickviewModalRef.result = this.result;
+      this.quickviewModalRef.total = this.quickviewState.totalResults;
+      this.quickviewModalRef.current = this.quickviewState.currentResult;
     }
-  }
-
-  private get resultIndex() {
-    return this.bindings.engine.state.search.results.findIndex(
-      (r) => r.uniqueId === this.result.uniqueId
-    );
   }
 
   private onClick() {
     this.quickview.fetchResultContent();
+    //this.
 
-    const quickviewsInfoFromResultList =
+    /*const quickviewsInfoFromResultList =
       this.bindings.store.get('resultList')?.quickviews;
 
     if (!quickviewsInfoFromResultList) {
@@ -129,7 +117,7 @@ export class AtomicQuickview implements InitializableComponent {
     this.bindings.store.set(
       'currentQuickviewPosition',
       quickviewsInfoFromResultList.position.indexOf(this.resultIndex)
-    );
+    );*/
   }
 
   public render() {

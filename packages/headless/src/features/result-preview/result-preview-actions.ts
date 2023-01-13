@@ -1,4 +1,5 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {ArrayValue} from '@coveo/bueno';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   buildContentURL,
   HtmlApiClient,
@@ -9,8 +10,10 @@ import {
 } from '../../api/search/html/html-request';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import type {Result} from '../../api/search/search/result';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {validatePayload} from '../../utils/validate-payload';
 import {
   buildResultPreviewRequest,
   StateNeededByHtmlEndpoint,
@@ -26,6 +29,10 @@ interface UpdateContentURLActionCreatorPayload {
    * The path to retrieve result quickview content.
    */
   contentURL?: string;
+}
+
+interface PreparePreviewPagination {
+  results: Result[];
 }
 
 export interface AsyncThunkGlobalOptions<T>
@@ -53,6 +60,14 @@ export const fetchResultContent = createAsyncThunk<
       uniqueId: options.uniqueId,
     };
   }
+);
+
+export const nextPreview = createAction('resultPreview/next');
+export const previousPreview = createAction('resultPreview/previous');
+export const preparePreviewPagination = createAction(
+  'resultPreview/prepare',
+  (payload: PreparePreviewPagination) =>
+    validatePayload(payload, {results: new ArrayValue({required: true})})
 );
 
 type UpdateContentURLOptions = HtmlRequestOptions & {

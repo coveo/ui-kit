@@ -852,8 +852,10 @@ export namespace Components {
     }
     interface AtomicQuickviewModal {
         "content"?: string;
+        "current"?: number;
         "result"?: Result;
         "sandbox"?: string;
+        "total"?: number;
     }
     interface AtomicRatingFacet {
         /**
@@ -1780,6 +1782,10 @@ export interface AtomicModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicPagerElement;
+}
+export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicQuickviewModalElement;
 }
 export interface AtomicRelevanceInspectorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3459,8 +3465,12 @@ declare namespace LocalJSX {
     }
     interface AtomicQuickviewModal {
         "content"?: string;
+        "current"?: number;
+        "onAtomic/quickview/next"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
+        "onAtomic/quickview/previous"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
         "result"?: Result;
         "sandbox"?: string;
+        "total"?: number;
     }
     interface AtomicRatingFacet {
         /**

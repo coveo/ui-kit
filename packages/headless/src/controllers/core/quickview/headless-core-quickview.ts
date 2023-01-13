@@ -5,16 +5,20 @@ import {
   HtmlRequestOptions,
 } from '../../../api/search/html/html-request';
 import {Result} from '../../../api/search/search/result';
-import {configuration, resultPreview} from '../../../app/reducers';
+import {configuration, resultPreview, search} from '../../../app/reducers';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   fetchResultContent,
+  nextPreview,
+  preparePreviewPagination,
+  previousPreview,
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
 import {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result-preview-request-builder';
 import {
   ConfigurationSection,
   ResultPreviewSection,
+  SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {
@@ -55,6 +59,27 @@ export interface Quickview extends Controller {
   fetchResultContent(): void;
 
   /**
+   * Retrieves the preview content for the next available result in the current result set.
+   *
+   * If it reaches the last available result in the current result set, it will not perform an additional query to fetch new results.
+   *
+   * Instead, it will loop back to the first available result.
+   *
+   * If `options.onlyContentURL` is `true` this will update the `contentURL` state property rather than `content`.
+   */
+  next(): void;
+  /**
+   * Retrieves the preview content for the previous available result in the current result set.
+   *
+   * If it reaches the first available result in the current result set, it will not perform an additional query to fetch new results.
+   *
+   * Instead, it will loop back to the last available result.
+   *
+   * If `options.onlyContentURL` is `true` this will update the `contentURL` state property rather than `content`.
+   */
+  previous(): void;
+
+  /**
    * The state for the `Quickview` controller.
    */
   state: QuickviewState;
@@ -82,6 +107,9 @@ export interface QuickviewState {
    * The `src` path to use if rendering the quickview in an iframe.
    */
   contentURL?: string;
+
+  totalResults: number;
+  currentResult: number;
 }
 
 /**
@@ -110,37 +138,64 @@ export function buildCoreQuickview(
   const getState = () => engine.state;
   const controller = buildController(engine);
   const {result, maximumPreviewSize} = props.options;
-  const uniqueId = result.uniqueId;
+
+  const getUniqueIdFromPosition = () => {
+    const {resultsWithPreview, position} = getState().resultPreview;
+    return resultsWithPreview[position];
+  };
+
+  dispatch(preparePreviewPagination({results: getState().search.results}));
+
+  const onFetchContent = (uniqueId: string) => {
+    props.options.onlyContentURL
+      ? dispatch(
+          updateContentURL({
+            uniqueId,
+            requestedOutputSize: maximumPreviewSize,
+            buildResultPreviewRequest,
+            path,
+          })
+        )
+      : dispatch(
+          fetchResultContent({
+            uniqueId,
+            requestedOutputSize: maximumPreviewSize,
+          })
+        );
+    if (fetchResultContentCallback) {
+      fetchResultContentCallback();
+    }
+  };
 
   return {
     ...controller,
 
     fetchResultContent() {
-      props.options.onlyContentURL
-        ? dispatch(
-            updateContentURL({
-              uniqueId,
-              requestedOutputSize: maximumPreviewSize,
-              buildResultPreviewRequest,
-              path,
-            })
-          )
-        : dispatch(
-            fetchResultContent({
-              uniqueId,
-              requestedOutputSize: maximumPreviewSize,
-            })
-          );
-      if (fetchResultContentCallback) {
-        fetchResultContentCallback();
-      }
+      onFetchContent(result.uniqueId);
+    },
+
+    next() {
+      dispatch(nextPreview());
+      onFetchContent(getUniqueIdFromPosition());
+    },
+
+    previous() {
+      dispatch(previousPreview());
+      onFetchContent(getUniqueIdFromPosition());
     },
 
     get state() {
       const state = getState();
       const resultHasPreview = result.hasHtmlVersion;
       const preview = state.resultPreview;
-      const content = uniqueId === preview.uniqueId ? preview.content : '';
+      const totalResults = state.search.results.length;
+      const currentResult =
+        state.search.results.findIndex(
+          (r) => r.uniqueId === getUniqueIdFromPosition()
+        ) + 1;
+
+      const content =
+        result.uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
       const contentURL = preview.contentURL;
 
@@ -149,6 +204,8 @@ export function buildCoreQuickview(
         resultHasPreview,
         isLoading,
         contentURL,
+        totalResults,
+        currentResult,
       };
     },
   };
@@ -157,9 +214,9 @@ export function buildCoreQuickview(
 function loadQuickviewReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  ConfigurationSection & ResultPreviewSection,
+  ConfigurationSection & ResultPreviewSection & SearchSection,
   ClientThunkExtraArguments<HtmlApiClient>
 > {
-  engine.addReducers({configuration, resultPreview});
+  engine.addReducers({configuration, resultPreview, search});
   return true;
 }
