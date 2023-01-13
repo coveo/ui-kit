@@ -67,6 +67,10 @@ export class AtomicQuickview implements InitializableComponent {
     }).validate({sandbox: this.sandbox});
   }
 
+  public disconnectedCallback(): void {
+    this.quickviewModalRef?.reset();
+  }
+
   private handleQuickviewNavigation() {
     this.bindings.store.onChange('currentQuickviewPosition', (quickviewPos) => {
       const quickviewsInfoFromResultList =

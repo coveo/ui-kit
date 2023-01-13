@@ -349,6 +349,7 @@ export namespace Components {
         "icon": string;
     }
     interface AtomicIconButton {
+        "ariaPressed"?: boolean;
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "buttonStyle": ButtonStyle;
@@ -860,6 +861,7 @@ export namespace Components {
     }
     interface AtomicQuickviewModal {
         "content"?: string;
+        "reset": () => Promise<void>;
         "result"?: Result;
         "sandbox"?: string;
     }
@@ -2981,6 +2983,7 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicIconButton {
+        "ariaPressed"?: boolean;
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "buttonStyle"?: ButtonStyle;
