@@ -21,7 +21,12 @@ export const resultPreviewReducer = createReducer(
         state.contentURL = action.payload.contentURL;
       })
       .addCase(executeSearch.fulfilled, (state) => {
-        Object.assign(state, getResultPreviewInitialState());
+        const {content, isLoading, uniqueId, contentURL} =
+          getResultPreviewInitialState();
+        state.content = content;
+        state.isLoading = isLoading;
+        state.uniqueId = uniqueId;
+        state.contentURL = contentURL;
       });
   }
 );
