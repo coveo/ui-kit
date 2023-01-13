@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.8.0...@coveo/atomic@2.9.0) (2023-01-12)
+
+### Features
+
+- **atomic:** add ipx footer items + small changes ([#2651](https://github.com/coveo/ui-kit/issues/2651)) ([c7f37a8](https://github.com/coveo/ui-kit/commit/c7f37a808d60a0044572d58b952c21b51065825b))
+
+# [2.8.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.7.0...@coveo/atomic@2.8.0) (2023-01-12)
+
+### Features
+
+- **atomic:** add new prop to allow to control the iframe sandbox attribute ([#2652](https://github.com/coveo/ui-kit/issues/2652)) ([1af9fcc](https://github.com/coveo/ui-kit/commit/1af9fcc9c51fc33bf3ba5a1969c9f9cc776a3a9f))
+
 # [2.7.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.6.0...@coveo/atomic@2.7.0) (2023-01-12)
 
 ### Bug Fixes
