@@ -59,7 +59,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   public async reset() {
     this.words = {};
     this.highlightKeywords = {
-      highlightNone: true,
+      highlightNone: false,
       keywords: {},
     };
     this.minimizeSidebar = false;
@@ -222,7 +222,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   }
 
   private handleHighlightsScripts() {
-    if (this.highlightKeywords.highlightNone) {
+    if (!this.highlightKeywords.highlightNone) {
       this.enableHighlights();
     } else {
       this.disableHighlights();
