@@ -7,6 +7,7 @@ import {
   Prop,
   State,
   Watch,
+  Method,
 } from '@stencil/core';
 import dayjs from 'dayjs';
 import {
@@ -24,6 +25,16 @@ import {
   QuickviewWordHighlight,
 } from '../quickview-word-highlight/quickview-word-highlight';
 
+export interface HighlightKeywords {
+  highlightNone: boolean;
+  keywords: {
+    [text: string]: {
+      indexIdentifier: string;
+      enabled: boolean;
+    };
+  };
+}
+
 /**
  * @internal
  */
@@ -36,14 +47,13 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
 
-  @State() private highlightKeywords = true;
+  @State() private highlightKeywords: HighlightKeywords = {
+    highlightNone: false,
+    keywords: {},
+  };
   @Watch('highlightKeywords')
   watchHighlightKeywords() {
-    if (this.highlightKeywords) {
-      this.enableHighlights();
-    } else {
-      this.disableHighlights();
-    }
+    this.handleHighlightsScripts();
   }
 
   @Event({eventName: 'atomic/quickview/next'}) nextQuickview?: EventEmitter;
@@ -59,6 +69,19 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Prop() current?: number;
   @Prop() total?: number;
   @Prop() sandbox?: string;
+
+  @Method()
+  public async reset() {
+    this.words = {};
+    this.highlightKeywords = {
+      highlightNone: false,
+      keywords: {},
+    };
+    this.minimizeSidebar = false;
+    this.iframeRef = undefined;
+    this.content = undefined;
+    this.result = undefined;
+  }
 
   private renderHeader() {
     // TODO: Header should be slottable from result template definition
@@ -96,9 +119,14 @@ export class AtomicQuickviewModal implements InitializableComponent {
                 this.termsToHighlight,
                 this.iframeRef
               );
+              this.handleHighlightsScripts();
             }}
           />
-          {buildQuickviewPreviewBar(this.words, this.iframeRef)}
+          {buildQuickviewPreviewBar(
+            this.words,
+            this.highlightKeywords,
+            this.iframeRef
+          )}
         </div>
       </div>
     );
@@ -143,25 +171,50 @@ export class AtomicQuickviewModal implements InitializableComponent {
   }
 
   private enableHighlights() {
+    this.removeDisableHighlightScript();
+  }
+
+  private enableHighlightsSpecificKeyword(identifier: string) {
+    this.removeDisableHighlightScript(identifier);
+  }
+
+  private disableHighlights() {
+    this.createDisableHighlightScript();
+  }
+
+  private disableHighlightsSpecificKeyword(identifier: string) {
+    this.createDisableHighlightScript(identifier);
+  }
+
+  private removeDisableHighlightScript(identifier?: string) {
     const doc = this.iframeRef?.contentWindow?.document;
     if (!doc) {
       return;
     }
-    doc.getElementById(this.highlightScriptId)?.remove();
+    doc
+      .getElementById(
+        `${this.highlightScriptId}${identifier ? `:${identifier}` : ''}`
+      )
+      ?.remove();
   }
 
-  private disableHighlights() {
+  private createDisableHighlightScript(identifier?: string) {
     const doc = this.iframeRef?.contentWindow?.document;
     if (!doc) {
       return;
     }
 
     const head = doc.head;
-    const style = doc.createElement('style');
-    style.setAttribute('id', this.highlightScriptId);
+    const scriptId = `${this.highlightScriptId}${
+      identifier ? `:${identifier}` : ''
+    }`;
+    const style = doc.getElementById(scriptId) || doc.createElement('style');
+    style.setAttribute('id', scriptId);
     head.appendChild(style);
     style.appendChild(
-      doc.createTextNode(`[id^=${HIGHLIGHT_PREFIX}] {
+      doc.createTextNode(`[id^="${HIGHLIGHT_PREFIX}${
+        identifier ? `:${identifier}` : ''
+      }"] {
       background-color: inherit !important;
       color: inherit !important;
     }`)
@@ -170,6 +223,21 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   private get termsToHighlight() {
     return this.bindings.engine.state.search.response.termsToHighlight;
+  }
+
+  private handleHighlightsScripts() {
+    if (!this.highlightKeywords.highlightNone) {
+      this.enableHighlights();
+    } else {
+      this.disableHighlights();
+    }
+    Object.values(this.highlightKeywords.keywords).forEach((word) => {
+      if (word.enabled) {
+        this.enableHighlightsSpecificKeyword(word.indexIdentifier);
+      } else {
+        this.disableHighlightsSpecificKeyword(word.indexIdentifier);
+      }
+    });
   }
 
   public render() {

@@ -1,7 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result';
-import {executeSearch} from '../insight-search/insight-search-actions';
-import {fetchMoreResults} from '../search/search-actions';
+import {fetchMoreResults, executeSearch} from '../search/search-actions';
 import {
   fetchResultContent,
   nextPreview,
@@ -30,6 +29,13 @@ export const resultPreviewReducer = createReducer(
         state.isLoading = false;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
+        const {content, isLoading, uniqueId, contentURL} =
+          getResultPreviewInitialState();
+        state.content = content;
+        state.isLoading = isLoading;
+        state.uniqueId = uniqueId;
+        state.contentURL = contentURL;
+
         state.resultsWithPreview = getUniqueIdsOfResultsWithHTMLVersion(
           action.payload.response.results
         );
@@ -59,9 +65,7 @@ export const resultPreviewReducer = createReducer(
         state.position = newPos;
       })
       .addCase(updateContentURL.fulfilled, (state, action) => {
-        const {contentURL} = action.payload;
-
-        state.contentURL = contentURL;
+        state.contentURL = action.payload.contentURL;
       });
   }
 );

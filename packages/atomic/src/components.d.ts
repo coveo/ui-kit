@@ -349,6 +349,7 @@ export namespace Components {
         "icon": string;
     }
     interface AtomicIconButton {
+        "ariaPressed"?: boolean;
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "buttonStyle": ButtonStyle;
@@ -670,9 +671,17 @@ export namespace Components {
     }
     interface AtomicIpxButton {
         /**
+          * The close icon of the button.
+         */
+        "closeIcon": string;
+        /**
           * The label that will be shown to the user.
          */
         "label": string;
+        /**
+          * The open icon of the button.
+         */
+        "openIcon": string;
     }
     interface AtomicIpxModal {
         /**
@@ -853,6 +862,7 @@ export namespace Components {
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
+        "reset": () => Promise<void>;
         "result"?: Result;
         "sandbox"?: string;
         "total"?: number;
@@ -2979,6 +2989,7 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicIconButton {
+        "ariaPressed"?: boolean;
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "buttonStyle"?: ButtonStyle;
@@ -3280,9 +3291,17 @@ declare namespace LocalJSX {
     }
     interface AtomicIpxButton {
         /**
+          * The close icon of the button.
+         */
+        "closeIcon"?: string;
+        /**
           * The label that will be shown to the user.
          */
         "label"?: string;
+        /**
+          * The open icon of the button.
+         */
+        "openIcon"?: string;
     }
     interface AtomicIpxModal {
         /**

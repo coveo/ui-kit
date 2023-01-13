@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {Component, h, Host, Prop, State, VNode} from '@stencil/core';
 import {InitializeBindings} from '../../../utils/initialization-utils';
 import {Button} from '../button';
@@ -26,12 +27,16 @@ export class AtomicIconButton {
   @Prop({mutable: true}) public buttonRef?: (el?: HTMLButtonElement) => void;
   @Prop({mutable: true}) public badge?: VNode;
   @Prop() public disabled = false;
-  @Prop() buttonStyle: ButtonStyle = 'outline-neutral';
+  @Prop() public buttonStyle: ButtonStyle = 'outline-neutral';
+  @Prop() public ariaPressed?: boolean;
 
   public render() {
     return (
       <Host>
         <Button
+          {...(!isNullOrUndefined(this.ariaPressed) && {
+            ariaPressed: this.ariaPressed.toString(),
+          })}
           style={this.buttonStyle}
           disabled={this.disabled}
           ariaLabel={this.bindings.i18n.t(this.labelI18nKey)}

@@ -208,16 +208,20 @@ describe('Breadbox Test Suites', () => {
     });
 
     describe('when selecting "+" show more breadcrumb', () => {
-      before(() => {
+      function setupFacetWithMultipleSelectedValuesAndShowMore() {
         setupFacetWithMultipleSelectedValues();
         BreadboxSelectors.breadcrumbShowMoreButton().click();
-      });
+      }
 
       describe('verify accessibility', () => {
+        beforeEach(setupFacetWithMultipleSelectedValuesAndShowMore);
+
         BreadboxAssertions.assertFocusBreadcrumb('@numberOfVisibleButtons');
       });
 
       describe('verify rendering', () => {
+        before(setupFacetWithMultipleSelectedValuesAndShowMore);
+
         BreadboxAssertions.assertRemoveBreadcrumbShowMoreInDOM();
         BreadboxAssertions.assertDisplayBreadcrumbShowLess(true);
         BreadboxAssertions.assertDisplayAllBreadcrumb(true);
