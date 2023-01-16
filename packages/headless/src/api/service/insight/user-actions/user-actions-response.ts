@@ -10,7 +10,9 @@ export interface InsightUserActionsResponse {
 }
 
 export interface UserActionTimeline {
-  sessions: UserSession[];
+  precedingSessions: UserSession[];
+  session: UserSession;
+  followingSessions: UserSession[];
 }
 
 export interface UserSession {

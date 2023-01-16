@@ -1,4 +1,4 @@
-import {ArrayValue, NumberValue} from '@coveo/bueno';
+import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
@@ -21,7 +21,10 @@ interface RegisterUserActionsPayload {
 }
 
 const registerUserActionsPayloadSchema = {
-  ticketCreationDate: nonEmptyString,
+  ticketCreationDate: new StringValue({
+    emptyAllowed: false,
+    ISODate: true,
+  }),
   excludedCustomActions: new ArrayValue({
     required: false,
     each: nonEmptyString,

@@ -16,6 +16,23 @@ describe('insight user actions slice', () => {
     statusCode: 400,
     type: 'badluck',
   };
+  const session = {
+    start: '2023-01-04T20:05:13.741Z',
+    end: '2023-01-04T21:00:42.741Z',
+    actions: [
+      {
+        actionType: UserActionType.CLICK,
+        timestamp: '2022-12-04T20:05:13.741Z',
+        eventData: {},
+        cause: 'resultClick',
+        searchHub: 'someSearchHub',
+        document: {
+          title: 'How to do that thing I need to do',
+          clickUri: 'https://www.insightfulwebsite.com/how-to',
+        },
+      },
+    ],
+  };
 
   it('should have an initial state', () => {
     expect(insightUserActionsReducer(undefined, {type: 'foo'})).toEqual(
@@ -79,32 +96,16 @@ describe('insight user actions slice', () => {
           failedAction
         );
 
-        expect(modifiedState.timeline.sessions).toHaveLength(0);
+        expect(modifiedState.timeline).toBeUndefined();
       });
     });
 
     describe('when fetching the user actions succeeds', () => {
       const response: InsightUserActionsResponse = {
         timeline: {
-          sessions: [
-            {
-              start: '2023-01-04T20:05:13.741Z',
-              end: '2023-01-04T21:00:42.741Z',
-              actions: [
-                {
-                  actionType: UserActionType.CLICK,
-                  timestamp: '2022-12-04T20:05:13.741Z',
-                  eventData: {},
-                  cause: 'resultClick',
-                  searchHub: 'someSearchHub',
-                  document: {
-                    title: 'How to do that thing I need to do',
-                    clickUri: 'https://www.insightfulwebsite.com/how-to',
-                  },
-                },
-              ],
-            },
-          ],
+          precedingSessions: [session],
+          session: session,
+          followingSessions: [],
         },
       };
       const fetchUserActionsResponse = {

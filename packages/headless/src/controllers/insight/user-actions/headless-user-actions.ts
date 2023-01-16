@@ -49,7 +49,7 @@ export interface UserActionsState {
   /**
    * The timeline of user actions.
    */
-  timeline: UserActionTimeline;
+  timeline?: UserActionTimeline;
   /**
    * The number of sessions included before the ticket creation date.
    */
@@ -86,7 +86,7 @@ export interface UserActions extends Controller {
   fetchUserActions(): void;
   /**
    * The state of the UserActions controller.
-   * */
+   */
   state: UserActionsState;
 }
 

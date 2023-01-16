@@ -9,7 +9,7 @@ export enum UserActionType {
 }
 
 export interface UserActionsState {
-  timeline: UserActionTimeline;
+  timeline?: UserActionTimeline;
   numberSessionsBefore: number;
   numberSessionsAfter: number;
   excludedCustomActions: string[];
@@ -20,9 +20,7 @@ export interface UserActionsState {
 
 export function getInsightUserActionsInitialState(): UserActionsState {
   return {
-    timeline: {
-      sessions: [],
-    },
+    timeline: undefined,
     numberSessionsBefore: 0,
     numberSessionsAfter: 0,
     excludedCustomActions: [],
