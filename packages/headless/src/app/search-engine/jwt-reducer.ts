@@ -5,6 +5,7 @@ import P, {Logger} from 'pino';
 import {SearchAppState} from '../..';
 import {
   updateAnalyticsConfiguration,
+  updateBasicConfiguration,
   updateSearchConfiguration,
 } from '../../features/configuration/configuration-actions';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
@@ -29,10 +30,6 @@ const possiblyWarnOnMismatch = (
 ) => {
   const tokenValue = token[tokenProp];
   if (isNullOrUndefined(tokenValue)) {
-    return;
-  }
-
-  if (stateProp === tokenValue) {
     return;
   }
 
@@ -95,6 +92,16 @@ const decodeJSONWebToken = (token: string): CoveoJSONWebToken | false => {
   }
 };
 
+const updateSearchHub = (
+  jwt: CoveoJSONWebToken,
+  state: SearchAppState
+): SearchAppState => {
+  if (shouldReconcileValues(jwt.searchHub, state.searchHub)) {
+    state.searchHub = jwt.searchHub!;
+  }
+  return state;
+};
+
 const handleMismatchOnSearchHub = (
   jwt: CoveoJSONWebToken,
   state: SearchAppState,
@@ -109,10 +116,16 @@ const handleMismatchOnSearchHub = (
     payload,
     logger
   );
-  if (shouldReconcileValues(jwt.searchHub, state.searchHub)) {
-    state.searchHub = jwt.searchHub!;
-  }
+  return updateSearchHub(jwt, state);
+};
 
+const updatePipeline = (
+  jwt: CoveoJSONWebToken,
+  state: SearchAppState
+): SearchAppState => {
+  if (shouldReconcileValues(jwt.pipeline, state.pipeline)) {
+    state.pipeline = jwt.pipeline!;
+  }
   return state;
 };
 
@@ -130,8 +143,20 @@ const handleMismatchOnPipeline = (
     payload,
     logger
   );
-  if (shouldReconcileValues(jwt.pipeline, state.pipeline)) {
-    state.pipeline = jwt.pipeline!;
+  return updatePipeline(jwt, state);
+};
+
+const updateUserDisplayName = (
+  jwt: CoveoJSONWebToken,
+  state: SearchAppState
+): SearchAppState => {
+  if (
+    shouldReconcileValues(
+      jwt.userDisplayName,
+      state.configuration.analytics.userDisplayName
+    )
+  ) {
+    state.configuration.analytics.userDisplayName = jwt.userDisplayName!;
   }
   return state;
 };
@@ -150,15 +175,7 @@ const handleMismatchOnUserDisplayName = (
     payload,
     logger
   );
-  if (
-    shouldReconcileValues(
-      jwt.userDisplayName,
-      state.configuration.analytics.userDisplayName
-    )
-  ) {
-    state.configuration.analytics.userDisplayName = jwt.userDisplayName!;
-  }
-  return state;
+  return updateUserDisplayName(jwt, state);
 };
 
 export const jwtReducer: (logger: P.Logger) => Reducer = (logger) => {
@@ -177,6 +194,23 @@ export const jwtReducer: (logger: P.Logger) => Reducer = (logger) => {
           return state;
         }
         return handleMismatchOnPipeline(jwt, state, action.payload, logger);
+      })
+      .addCase(updateBasicConfiguration, (state, action) => {
+        if (state.configuration.accessToken !== action.payload.accessToken) {
+          return state;
+        }
+        const {accessToken} = action.payload;
+        if (!accessToken) {
+          return state;
+        }
+        const jwt = decodeJSONWebToken(accessToken);
+        if (!jwt) {
+          return state;
+        }
+        return [updatePipeline, updateSearchHub, updateUserDisplayName].reduce(
+          (resultingState, updateProp) => updateProp(jwt, resultingState),
+          state
+        );
       })
       .addCase(updateSearchConfiguration, (state, action) => {
         const jwt = decodeJSONWebToken(state.configuration.accessToken);

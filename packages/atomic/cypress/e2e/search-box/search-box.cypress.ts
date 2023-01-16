@@ -120,7 +120,7 @@ describe('Search Box Test Suites', () => {
         cy.wait(100);
 
         SearchBoxSelectors.inputBox().click();
-        SearchBoxSelectors.querySuggestions().eq(1).click();
+        SearchBoxSelectors.querySuggestion('query-suggestion-1').click();
       });
 
       SearchBoxAssertions.assertHasText('query-suggestion-1');
@@ -150,7 +150,7 @@ describe('Search Box Test Suites', () => {
         before(() => {
           setupWithRecentQueries();
           setInputText();
-          SearchBoxSelectors.querySuggestions().eq(1).click();
+          SearchBoxSelectors.querySuggestion('Recent query 1').click();
         });
 
         SearchBoxAssertions.assertFocusSearchBox();
