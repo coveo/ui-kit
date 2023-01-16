@@ -40,7 +40,7 @@ describe('insight user actions slice', () => {
     );
   });
 
-  describe('#fetcUserActions', () => {
+  describe('#fetchUserActions', () => {
     it('should set #loading to #true when fetching the user actions', () => {
       const modifiedState = insightUserActionsReducer(
         getInsightUserActionsInitialState(),

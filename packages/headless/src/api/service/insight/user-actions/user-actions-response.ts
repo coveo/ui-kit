@@ -3,6 +3,7 @@ export enum UserActionType {
   CLICK = 'CLICK',
   VIEW = 'VIEW',
   CUSTOM = 'CUSTOM',
+  TICKET_CREATED = 'TICKET_CREATED',
 }
 
 export interface InsightUserActionsResponse {

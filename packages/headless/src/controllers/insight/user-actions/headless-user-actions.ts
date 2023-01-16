@@ -29,12 +29,12 @@ export interface UserActionsOptions {
    */
   ticketCreationDate: string;
   /**
-   * The number of sessions to include occuring before the ticket creation session.
+   * The number of sessions to include occurring before the ticket creation session.
    * @defaultValue `0`
    */
   numberSessionsBefore?: number;
   /**
-   * The number of sessions to include occuring after the ticket creation session.
+   * The number of sessions to include occurring after the ticket creation session.
    * @defaultValue `0`
    */
   numberSessionsAfter?: number;
