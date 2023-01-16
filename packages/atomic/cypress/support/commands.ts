@@ -28,7 +28,7 @@ declare global {
       distanceTo(
         getSubjectB: () => Chainable<JQuery<HTMLElement>>
       ): Chainable<{horizontal: number; vertical: number}>;
-      getCalls<TArgs extends any[], TReturnValue>(): Chainable<
+      getCalls<TArgs extends unknown[], TReturnValue>(): Chainable<
         sinon.SinonSpyCall<TArgs, TReturnValue>[]
       >;
     }
@@ -118,8 +118,8 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add('getCalls', {prevSubject: 'optional'}, (spy) => {
-  function isSinonSpy(obj: any): obj is SinonSpy<[], any> {
-    return 'getCalls' in obj;
+  function isSinonSpy(obj: unknown): obj is SinonSpy<[], unknown> {
+    return obj instanceof Object && 'getCalls' in obj;
   }
 
   if (!isSinonSpy(spy)) {
