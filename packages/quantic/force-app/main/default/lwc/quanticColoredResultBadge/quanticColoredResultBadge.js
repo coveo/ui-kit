@@ -85,20 +85,8 @@ export default class QuanticColoredResultBadge extends LightningElement {
     );
   }
 
-  // /**
-  //  * Sets the primary and secondary colors of the badge to the default colors.
-  //  * @returns {void}
-  //  */
-  // setBadgeDefaultColors() {
-  //   // @ts-ignore
-  //   const styles = this.template.querySelector('.result-badge')?.style;
-  //
-  //   styles.setProperty('--primaryColor', defaultPrimaryColor);
-  //   styles.setProperty('--secondaryColor', defaultSecondaryColor);
-  // }
-
   /**
-   * Generates the secondary color.
+   * Generates the secondary color. Based on the Builder backend algo.
    * @returns {string}
    */
   generateSecondaryColor() {
