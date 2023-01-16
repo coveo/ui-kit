@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.6.0...@coveo/headless@2.6.1) (2023-01-16)
+
+### Bug Fixes
+
+- **headless:** allowed empty string for query pipeline ([#2659](https://github.com/coveo/ui-kit/issues/2659)) ([d1ea78d](https://github.com/coveo/ui-kit/commit/d1ea78d36c323cc2a6b343cb117a90fd2c4aaf3b))
+
 # [2.6.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.5.0...@coveo/headless@2.6.0) (2023-01-13)
 
 ### Bug Fixes
