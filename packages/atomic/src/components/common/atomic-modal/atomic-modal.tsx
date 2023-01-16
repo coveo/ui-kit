@@ -131,7 +131,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
 
   public disconnectedCallback(): void {
     this.closeOnEscape &&
-      document.removeEventListener('keyup', this.closeOnEscape);
+      document.body.removeEventListener('keyup', this.closeOnEscape);
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
