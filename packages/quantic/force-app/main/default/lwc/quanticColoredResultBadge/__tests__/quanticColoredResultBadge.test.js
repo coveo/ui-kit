@@ -109,13 +109,16 @@ describe('c-quantic-colored-result-badge', () => {
       const element = createTestComponent('#FFF7BA', '', defaultOptions);
       await flushPromises();
 
-      const badge = element.shadowRoot.querySelector('.result-badge');
-      const fieldComponent = element.shadowRoot.querySelector(
-        '.result-text__value'
-      );
+      const badge = element.shadowRoot.querySelector('.result-badge')
+      const resultField = element.shadowRoot.querySelector('c-quantic-result-field')
 
       expect(badge).not.toBeNull();
-      expect(fieldComponent).toBe(defaultOptions.result.raw.testField);
+      expect(resultField).not.toBeNull();
+      expect(resultField.result).toEqual(defaultOptions.result);
+      expect(resultField.field).toEqual(defaultOptions.field);
+      expect(resultField.type).toEqual(defaultOptions.type);
+
+      // expect(fieldComponent.textContent).toBe(defaultOptions.result.raw.testField);
     });
   })
 
