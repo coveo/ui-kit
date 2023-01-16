@@ -30,9 +30,9 @@ describe('searchEngine', () => {
       expect(initEngine).toThrow();
     });
 
-    it('passing an invalid pipeline throws', () => {
+    it('passing an empty pipeline does not throw', () => {
       options.configuration.search!.pipeline = '';
-      expect(initEngine).toThrow();
+      expect(initEngine).not.toThrow();
     });
 
     it('exposes an #executeFirstSearch method', () => {
