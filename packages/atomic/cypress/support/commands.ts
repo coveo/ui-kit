@@ -28,9 +28,9 @@ declare global {
       distanceTo(
         getSubjectB: () => Chainable<JQuery<HTMLElement>>
       ): Chainable<{horizontal: number; vertical: number}>;
-      getCalls<TArgs extends unknown[], TReturnValue>(): Chainable<
-        sinon.SinonSpyCall<TArgs, TReturnValue>[]
-      >;
+      getCalls<TArgs extends unknown[], TReturnValue>(
+        fixture: string
+      ): Chainable<sinon.SinonSpyCall<TArgs, TReturnValue>[]>;
     }
   }
 }
@@ -117,16 +117,13 @@ Cypress.Commands.add(
     })
 );
 
-Cypress.Commands.add('getCalls', {prevSubject: 'optional'}, (spy) => {
+Cypress.Commands.add('getCalls', (fixture) => {
   function isSinonSpy(obj: unknown): obj is SinonSpy<[], unknown> {
-    return obj instanceof Object && 'getCalls' in obj;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return 'getCalls' in (obj as any);
   }
 
-  if (!isSinonSpy(spy)) {
-    throw ['Not Sinon a spy', spy];
-  }
-
-  cy.wrap(spy.getCalls());
+  cy.get(fixture).should('satisfy', isSinonSpy).invoke('getCalls');
 });
 
 // Convert this to a module instead of script (allows import/export)
