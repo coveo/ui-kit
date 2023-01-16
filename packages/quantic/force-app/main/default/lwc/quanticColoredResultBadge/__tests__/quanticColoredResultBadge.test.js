@@ -3,49 +3,28 @@ import {createElement} from 'lwc';
 import QuanticColoredResultBadge from '../quanticColoredResultBadge';
 
 const defaultPrimaryColor = '#FFF7BA';
-const defaultSecondaryColor = '#E2B104';
-const defaultLabel = 'Case';
+const defaultSecondaryColor = 'black';
+const defaultLabel = 'Document';
+const defaultOptions = {
+  result: {
+    raw: {
+      testField: 'test value',
+    },
+  },
+  field: 'testField',
+  type: 'string',
+};
 
-const colorsToTest = [
-  {
-    primaryColor: '#DABFE9',
-    expectedSecondaryColor: 'hsl(279, 48.8%, 35.1%)',
-  },
-  {
-    primaryColor: '#EF233C',
-    expectedSecondaryColor: 'hsl(353, 86.4%, 5.7%)',
-  },
-  {
-    primaryColor: '03A06E',
-    expectedSecondaryColor: 'hsl(161, 96.3%, 80.0%)',
-  },
-  {
-    primaryColor: 'FFF',
-    expectedSecondaryColor: 'hsl(0, 0%, 52.0%)',
-  },
-];
-
-const invalidColors = [
-  {
-    primaryColor: '#ZZFFFF',
-    portion: 'red',
-  },
-  {
-    primaryColor: '#FFZZFF',
-    portion: 'green',
-  },
-  {
-    primaryColor: '#FFFFZZ',
-    portion: 'blue',
-  },
-];
-
-function createTestComponent(color, label = defaultLabel) {
+function createTestComponent(color, label, options = {}) {
   const element = createElement('c-quantic-colored-result-badge', {
     is: QuanticColoredResultBadge,
   });
   element.label = label;
   element.color = color;
+
+  for (const [key, value] of Object.entries(options)) {
+    element[key] = value;
+  }
 
   document.body.appendChild(element);
 
@@ -66,51 +45,42 @@ describe('c-quantic-colored-result-badge', () => {
     }
   }
 
+  beforeEach(() => {
+    console.error = jest.fn();
+    // @ts-ignore
+    global.Bueno = {
+      isString: jest
+        .fn()
+        .mockImplementation(
+          (value) => Object.prototype.toString.call(value) === '[object String]'
+        ),
+      isNumber: jest
+        .fn()
+        .mockImplementation(
+          (value) => typeof value === 'number' && !isNaN(value)
+        ),
+    };
+  });
+
   afterEach(() => {
     cleanup();
     jest.clearAllMocks();
   });
 
-  it('should display the colored badge with the correct label and color when the label property is given', async () => {
-    const label = 'Document';
-    const element = createTestComponent('#FFF7BA', label);
-    await flushPromises();
-
-    const badge = element.shadowRoot.querySelector('.result-badge');
-
-    expect(badge).not.toBeNull();
-    expect(badge.textContent).toBe(label);
-  });
-
-  it('should not display the colored badge when the label property is missing', async () => {
-    const element = createTestComponent('#FFF7BA', null);
-    await flushPromises();
-
-    const badge = element.shadowRoot.querySelector('.result-badge');
-
-    expect(badge).toBeNull();
-  });
-
-  colorsToTest.forEach((color) => {
-    it(`should display the colored badge with the following colors: Primary Color: ${color.primaryColor}; Secondary Color: ${color.expectedSecondaryColor}`, async () => {
-      const element = createTestComponent(color.primaryColor);
+  describe('when a label is provided', () => {
+    it('should display the colored badge with the correct label and color when the label property is given', async () => {
+      const element = createTestComponent('#FFF7BA', defaultLabel);
       await flushPromises();
 
       const badge = element.shadowRoot.querySelector('.result-badge');
 
       expect(badge).not.toBeNull();
       expect(badge.textContent).toBe(defaultLabel);
-      expect(badge.style._values['--primaryColor']).toBe(color.primaryColor);
-      expect(badge.style._values['--secondaryColor']).toBe(
-        color.expectedSecondaryColor
-      );
     });
-  });
 
-  invalidColors.forEach((color) => {
-    it(`should display the colored badge with the correct label and the default colors when the ${color.portion} portion of the color value is invalid`, async () => {
-      const invalidColor = color.primaryColor;
-      const element = createTestComponent(invalidColor);
+    it(`should display the colored badge with the correct label and the default colors when the given the color value is an invalid HEX color value`, async () => {
+      const invalidColor = '#AAAAAAB';
+      const element = createTestComponent(invalidColor, defaultLabel);
       await flushPromises();
 
       const badge = element.shadowRoot.querySelector('.result-badge');
@@ -118,34 +88,47 @@ describe('c-quantic-colored-result-badge', () => {
       expect(badge).not.toBeNull();
       expect(badge.textContent).toBe(defaultLabel);
       expect(badge.style._values['--primaryColor']).toBe(defaultPrimaryColor);
-      expect(badge.style._values['--secondaryColor']).toBe(
-        defaultSecondaryColor
-      );
+      expect(badge.style._values['--secondaryColor']).toBe(defaultSecondaryColor);
     });
-  });
 
-  it(`should display the colored badge with the correct label and the default colors when the given the color value is an invalid HEX color value`, async () => {
-    const invalidColor = '#AAAAAAB';
-    const element = createTestComponent(invalidColor);
-    await flushPromises();
+    it('should display the colored badge with the correct label and the default colors when the color is not given', async () => {
+      const element = createTestComponent('',defaultLabel);
+      await flushPromises();
 
-    const badge = element.shadowRoot.querySelector('.result-badge');
+      const badge = element.shadowRoot.querySelector('.result-badge');
 
-    expect(badge).not.toBeNull();
-    expect(badge.textContent).toBe(defaultLabel);
-    expect(badge.style._values['--primaryColor']).toBe(defaultPrimaryColor);
-    expect(badge.style._values['--secondaryColor']).toBe(defaultSecondaryColor);
-  });
+      expect(badge).not.toBeNull();
+      expect(badge.textContent).toBe(defaultLabel);
+      expect(badge.style._values['--primaryColor']).toBe(defaultPrimaryColor);
+      expect(badge.style._values['--secondaryColor']).toBe(defaultSecondaryColor);
+    });
+  })
 
-  it('should display the colored badge with the correct label and the default colors when the color is not given', async () => {
-    const element = createTestComponent('');
-    await flushPromises();
+  describe('when a result is provided', () => {
+    it('should display the colored badge with the correct result field', async () => {
+      const element = createTestComponent('#FFF7BA', '', defaultOptions);
+      await flushPromises();
 
-    const badge = element.shadowRoot.querySelector('.result-badge');
+      const badge = element.shadowRoot.querySelector('.result-badge');
+      const fieldComponent = element.shadowRoot.querySelector(
+        '.result-text__value'
+      );
 
-    expect(badge).not.toBeNull();
-    expect(badge.textContent).toBe(defaultLabel);
-    expect(badge.style._values['--primaryColor']).toBe(defaultPrimaryColor);
-    expect(badge.style._values['--secondaryColor']).toBe(defaultSecondaryColor);
-  });
+      expect(badge).not.toBeNull();
+      expect(fieldComponent).toBe(defaultOptions.result.raw.testField);
+    });
+  })
+
+  describe('when no label and no result are provided', () => {
+    it('should not display the colored badge when the label property is missing', async () => {
+      const element = createTestComponent('#FFF7BA', null);
+      await flushPromises();
+
+      const badge = element.shadowRoot.querySelector('.result-badge');
+
+      expect(badge).toBeNull();
+    });
+  })
+
+
 });

@@ -32,6 +32,11 @@ export default class QuanticColoredResultBadge extends LightningElement {
    */
   @api field;
   /**
+   * The field type whose values you want to display.
+   * @type { 'string' | 'date' | 'number' | 'multi'}
+   */
+  @api type;
+  /**
    * The primary color of the badge.
    * @api
    * @type {string}
@@ -49,8 +54,12 @@ export default class QuanticColoredResultBadge extends LightningElement {
     return this.label || this.result?.raw?.[this.field].toString()
   }
 
-  hasTextToDisplay() {
+  get hasTextToDisplay() {
     return !!this.textToDisplay;
+  }
+
+  get hasLabel() {
+    return !!this.label;
   }
 
   /**

@@ -32,6 +32,8 @@ export default class ExampleQuanticColoredResultBadge extends LightningElement {
 
   testField = 'source'
 
+  testType = 'string'
+
   handleTryItNow(evt) {
     this.config = evt.detail;
 
