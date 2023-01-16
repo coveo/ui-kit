@@ -85,7 +85,8 @@ export function assertConsoleErrorMessage(msg: string) {
     cy.getCalls(TestFixture.consoleAliases.error).should((calls) => {
       function isError(obj: unknown): obj is Error {
         return (
-          obj instanceof Object &&
+          !!obj &&
+          typeof obj === 'object' &&
           'name' in obj &&
           typeof obj['name'] === 'string' &&
           'message' in obj &&
