@@ -20,19 +20,19 @@ export default class QuanticColoredResultBadge extends LightningElement {
    */
   @api label;
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result) to use. Will be ignored if label is provided.
    * @api
    * @type {Result}
    */
   @api result;
   /**
-   * The [result field](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
+   * The field name whose values you want to display. Will be ignored if label is provided.
    * @api
    * @type {string}
    */
   @api field;
   /**
-   * The field type whose values you want to display.
+   * The field type whose values you want to display. Will be ignored if label is provided.
    * @type { 'string' | 'date' | 'number' | 'multi'}
    */
   @api type;
@@ -45,6 +45,11 @@ export default class QuanticColoredResultBadge extends LightningElement {
 
   /** @type{boolean} */
   invalidColor = false;
+
+  renderedCallback() {
+    // eslint-disable-next-line no-unused-expressions
+    this.hasTextToDisplay && this.setBadgeColors();
+  }
 
   /**
    * get the text content to display depending the provided props.
@@ -80,17 +85,17 @@ export default class QuanticColoredResultBadge extends LightningElement {
     );
   }
 
-  /**
-   * Sets the primary and secondary colors of the badge to the default colors.
-   * @returns {void}
-   */
-  setBadgeDefaultColors() {
-    // @ts-ignore
-    const styles = this.template.querySelector('.result-badge')?.style;
-
-    styles.setProperty('--primaryColor', defaultPrimaryColor);
-    styles.setProperty('--secondaryColor', defaultSecondaryColor);
-  }
+  // /**
+  //  * Sets the primary and secondary colors of the badge to the default colors.
+  //  * @returns {void}
+  //  */
+  // setBadgeDefaultColors() {
+  //   // @ts-ignore
+  //   const styles = this.template.querySelector('.result-badge')?.style;
+  //
+  //   styles.setProperty('--primaryColor', defaultPrimaryColor);
+  //   styles.setProperty('--secondaryColor', defaultSecondaryColor);
+  // }
 
   /**
    * Generates the secondary color.
@@ -110,13 +115,5 @@ export default class QuanticColoredResultBadge extends LightningElement {
       (b / 255.0) * 0.0722
 
     return luminance >= 0.50 ? 'black' : 'white'
-  }
-
-  renderedCallback() {
-    if (this.hasTextToDisplay && this.color) {
-      this.setBadgeColors();
-    } else if (this.hasTextToDisplay) {
-      this.setBadgeDefaultColors();
-    }
   }
 }

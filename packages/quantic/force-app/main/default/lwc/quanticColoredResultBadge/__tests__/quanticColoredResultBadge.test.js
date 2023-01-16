@@ -68,7 +68,7 @@ describe('c-quantic-colored-result-badge', () => {
   });
 
   describe('when a label is provided', () => {
-    it('should display the colored badge with the correct label and color when the label property is given', async () => {
+    it('should display the colored badge with the correct label and color when the label property is valid', async () => {
       const element = createTestComponent('#FFF7BA', defaultLabel);
       await flushPromises();
 
@@ -78,7 +78,7 @@ describe('c-quantic-colored-result-badge', () => {
       expect(badge.textContent).toBe(defaultLabel);
     });
 
-    it(`should display the colored badge with the correct label and the default colors when the given the color value is an invalid HEX color value`, async () => {
+    it(`should display the colored badge with the correct label and the default colors when the given value is an invalid HEX color value`, async () => {
       const invalidColor = '#AAAAAAB';
       const element = createTestComponent(invalidColor, defaultLabel);
       await flushPromises();
@@ -132,6 +132,4 @@ describe('c-quantic-colored-result-badge', () => {
       expect(badge).toBeNull();
     });
   })
-
-
 });
