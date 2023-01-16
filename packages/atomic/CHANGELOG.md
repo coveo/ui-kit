@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.10.1...@coveo/atomic@2.10.2) (2023-01-16)
+
+### Bug Fixes
+
+- **atomic:** improved atomic-icon error handling ([#2658](https://github.com/coveo/ui-kit/issues/2658)) ([908e529](https://github.com/coveo/ui-kit/commit/908e529cddb7c34ff20e8e6d7039bdae748a400d))
+
 ## [2.10.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.10.0...@coveo/atomic@2.10.1) (2023-01-16)
 
 **Note:** Version bump only for package @coveo/atomic
