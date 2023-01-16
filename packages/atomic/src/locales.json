@@ -1530,5 +1530,21 @@
     "tr": "Hızlı Bakış",
     "zh-cn": "快速查看",
     "zh-tw": "快速檢視"
+  },
+  "keywords-highlight": {
+    "en": "Keywords highlight",
+    "fr": "Surlignage des mots-clés"
+  },
+  "minimize": {
+    "en": "Minimize",
+    "fr": "Minimiser"
+  },
+  "quickview-add-word": {
+    "en": "Add highlights",
+    "fr": "Ajouter le surlignage"
+  },
+  "quickview-remove-word": {
+    "en": "Remove highlights",
+    "fr": "Enlever le surlignage"
   }
 }

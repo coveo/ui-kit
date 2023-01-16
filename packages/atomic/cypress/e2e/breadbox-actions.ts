@@ -18,7 +18,7 @@ export function deselectBreadcrumbAtIndex(index: number) {
           numberOfBreadcrumbs
         );
       } else {
-        BreadboxSelectors.breadcrumbClearFacetValueButton().should('not.exist');
+        BreadboxSelectors.breadcrumbButton().should('not.exist');
       }
     });
 }

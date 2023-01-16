@@ -33,7 +33,6 @@ import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless
 import {
   buildCoreFacet,
   Facet,
-  FacetProps,
   FacetSearch,
   FacetSearchState,
   FacetState,
@@ -52,7 +51,6 @@ export type {
   FacetOptions,
   FacetSearchOptions,
   FacetValueState,
-  FacetProps,
   Facet,
   FacetState,
   FacetSearch,
@@ -63,6 +61,13 @@ export type {
   CoreFacetState,
 };
 
+export interface FacetProps {
+  /**
+   * The options for the `Facet` controller.
+   * */
+  options: FacetOptions;
+}
+
 /**
  * Creates a `Facet` controller instance.
  *
@@ -70,10 +75,7 @@ export type {
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
  * */
-export function buildFacet(
-  engine: SearchEngine,
-  props: FacetProps<FacetOptions>
-): Facet {
+export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }

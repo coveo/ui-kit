@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.10.0...@coveo/atomic@2.10.1) (2023-01-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.10.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.9.0...@coveo/atomic@2.10.0) (2023-01-13)
+
+### Features
+
+- **atomic:** add feature to disable specific keywords highlights ([#2648](https://github.com/coveo/ui-kit/issues/2648)) ([86b6743](https://github.com/coveo/ui-kit/commit/86b67436c9866a58e651e0e08ce1506a968567d3))
+
+# [2.9.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.8.0...@coveo/atomic@2.9.0) (2023-01-12)
+
+### Features
+
+- **atomic:** add ipx footer items + small changes ([#2651](https://github.com/coveo/ui-kit/issues/2651)) ([c7f37a8](https://github.com/coveo/ui-kit/commit/c7f37a808d60a0044572d58b952c21b51065825b))
+
+# [2.8.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.7.0...@coveo/atomic@2.8.0) (2023-01-12)
+
+### Features
+
+- **atomic:** add new prop to allow to control the iframe sandbox attribute ([#2652](https://github.com/coveo/ui-kit/issues/2652)) ([1af9fcc](https://github.com/coveo/ui-kit/commit/1af9fcc9c51fc33bf3ba5a1969c9f9cc776a3a9f))
+
+# [2.7.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.6.0...@coveo/atomic@2.7.0) (2023-01-12)
+
+### Bug Fixes
+
+- **atomic:** removed console warning when pipeline or search hub aren't configured ([#2654](https://github.com/coveo/ui-kit/issues/2654)) ([1e97521](https://github.com/coveo/ui-kit/commit/1e9752175b7ab74162ff42d31c975f54615022a5))
+
+### Features
+
+- **atomic:** added query syntax support to search box ([#2647](https://github.com/coveo/ui-kit/issues/2647)) ([c4c96b8](https://github.com/coveo/ui-kit/commit/c4c96b83136dd4b9a4cd34d613ec2b0737673e1b))
+
+# [2.6.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.5.0...@coveo/atomic@2.6.0) (2023-01-11)
+
+### Features
+
+- **atomic,atomic-react:** added warning when initializing with engine and pipeline ([#2644](https://github.com/coveo/ui-kit/issues/2644)) ([d816158](https://github.com/coveo/ui-kit/commit/d816158f72fa0cde7250221cb10855351c6461eb))
+
+# [2.5.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.4...@coveo/atomic@2.5.0) (2023-01-11)
+
+### Features
+
+- **atomic:** add quickview hit highlight preview bar ([#2643](https://github.com/coveo/ui-kit/issues/2643)) ([cb3e212](https://github.com/coveo/ui-kit/commit/cb3e2127d4cdb7d3a40d1da45826e9dc9f0d7a9c))
+- **atomic:** implement quickview pagination/navigation/keyword hit ([#2623](https://github.com/coveo/ui-kit/issues/2623)) ([c5ec5e1](https://github.com/coveo/ui-kit/commit/c5ec5e10e37ce3a9b4a0c6ac3220a57d6242c7a8))
+
+## [2.4.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.3...@coveo/atomic@2.4.4) (2023-01-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.4.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.2...@coveo/atomic@2.4.3) (2023-01-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.4.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.1...@coveo/atomic@2.4.2) (2023-01-06)
+
+### Bug Fixes
+
+- **atomic:** prevented left suggestions from expanding beyond layout variable ([#2639](https://github.com/coveo/ui-kit/issues/2639)) ([edb8083](https://github.com/coveo/ui-kit/commit/edb80835b502897a9ffe891ed748dd62a60f7b62))
+
 ## [2.4.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.4.0...@coveo/atomic@2.4.1) (2023-01-05)
 
 **Note:** Version bump only for package @coveo/atomic

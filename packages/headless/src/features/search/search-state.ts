@@ -70,6 +70,7 @@ export function getSearchInitialState(): SearchState {
       questionAnswer: emptyQuestionAnswer(),
       pipeline: '',
       splitTestRun: '',
+      termsToHighlight: {},
     },
     duration: 0,
     queryExecuted: '',

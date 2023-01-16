@@ -1,7 +1,30 @@
 import {Result} from '@coveo/headless';
-import {Component, h, Prop, Watch} from '@stencil/core';
+import {Component, h, Method, Prop, State, Watch} from '@stencil/core';
 import dayjs from 'dayjs';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/button';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
+import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';
+import {buildQuickviewPreviewBar} from '../quickview-preview-bar/quickview-preview-bar';
+import {
+  getWordsHighlights,
+  HIGHLIGHT_PREFIX,
+  QuickviewWordHighlight,
+} from '../quickview-word-highlight/quickview-word-highlight';
+
+export interface HighlightKeywords {
+  highlightNone: boolean;
+  keywords: {
+    [text: string]: {
+      indexIdentifier: string;
+      enabled: boolean;
+    };
+  };
+}
 
 /**
  * @internal
@@ -11,39 +34,38 @@ import {Button} from '../../../common/button';
   styleUrl: 'atomic-quickview-modal.pcss',
   shadow: true,
 })
-export class AtomicQuickviewModal {
-  @Prop({mutable: true, reflect: false}) content?: string;
-  @Watch('content')
-  watchContent() {
-    if (this.content && this.iframeRef) {
-      const documentWriter = this.iframeRef.contentWindow?.document;
-      documentWriter?.open();
-      documentWriter?.write(this.content);
-      documentWriter?.close();
-      this.iframeRef.style.height = `${documentWriter?.documentElement.scrollHeight}px`;
-    }
+export class AtomicQuickviewModal implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  @State() public error!: Error;
+
+  @State() private highlightKeywords: HighlightKeywords = {
+    highlightNone: false,
+    keywords: {},
+  };
+  @Watch('highlightKeywords')
+  watchHighlightKeywords() {
+    this.handleHighlightsScripts();
   }
 
-  @Prop({mutable: true, reflect: false}) result?: Result;
-
+  @State() private minimizeSidebar = false;
+  @State() private words: Record<string, QuickviewWordHighlight> = {};
   private iframeRef?: HTMLIFrameElement;
 
-  private renderSidebar() {
-    return (
-      <div>
-        TODO This will be the sidebar component with keywords navigation
-      </div>
-    );
-  }
+  @Prop({mutable: true, reflect: false}) content?: string;
+  @Prop({mutable: true, reflect: false}) result?: Result;
+  @Prop() sandbox?: string;
 
-  private renderIframe() {
-    return (
-      <iframe
-        class="col-span-3 w-full"
-        frameBorder={0}
-        ref={(el) => (this.iframeRef = el as HTMLIFrameElement)}
-      ></iframe>
-    );
+  @Method()
+  public async reset() {
+    this.words = {};
+    this.highlightKeywords = {
+      highlightNone: false,
+      keywords: {},
+    };
+    this.minimizeSidebar = false;
+    this.iframeRef = undefined;
+    this.content = undefined;
+    this.result = undefined;
   }
 
   private renderHeader() {
@@ -58,28 +80,73 @@ export class AtomicQuickviewModal {
 
   private renderBody() {
     return (
-      <div slot="body" class="grid grid-cols-4">
-        {this.renderSidebar()}
-        {this.renderIframe()}
+      <div slot="body" class="grid grid-cols-[min-content_auto] h-full">
+        <div class="h-full">
+          <QuickviewSidebar
+            words={this.words}
+            i18n={this.bindings.i18n}
+            highlightKeywords={this.highlightKeywords}
+            onHighlightKeywords={(highlight) =>
+              (this.highlightKeywords = highlight)
+            }
+            minimized={this.minimizeSidebar}
+            onMinimize={(minimize) => (this.minimizeSidebar = minimize)}
+          />
+        </div>
+        <div class="overflow-auto relative">
+          <QuickviewIframe
+            sandbox={this.sandbox}
+            result={this.result}
+            content={this.content}
+            onSetIframeRef={async (ref) => {
+              this.iframeRef = ref;
+              this.words = getWordsHighlights(
+                this.termsToHighlight,
+                this.iframeRef
+              );
+              this.handleHighlightsScripts();
+            }}
+          />
+          {buildQuickviewPreviewBar(
+            this.words,
+            this.highlightKeywords,
+            this.iframeRef
+          )}
+        </div>
       </div>
     );
   }
 
   private renderFooter() {
-    // TODO: Footer that navigates results
+    const quickviewsInfoFromResultList =
+      this.bindings.store.get('resultList')?.quickviews;
+    const currentQuickviewPosition = this.bindings.store.get(
+      'currentQuickviewPosition'
+    );
+
+    const first =
+      (quickviewsInfoFromResultList?.position[currentQuickviewPosition] || 0) +
+      1;
+    const total = quickviewsInfoFromResultList?.total;
+
     return (
       <div slot="footer" class="flex items-center gap-2">
         <Button
           class="p-2"
           style="square-neutral"
-          onClick={() => {}}
+          onClick={() => this.bindings.store.previousQuickview()}
           text="Prev"
         ></Button>
-        <p>Results 1/10</p>
+        <p>
+          {this.bindings.i18n.t('showing-results-of', {
+            first,
+            total,
+          })}
+        </p>
         <Button
           class="p-2"
           style="square-neutral"
-          onClick={() => {}}
+          onClick={() => this.bindings.store.nextQuickview()}
           text="Next"
         ></Button>
       </div>
@@ -93,6 +160,80 @@ export class AtomicQuickviewModal {
 
   private get isOpen() {
     return !!this.content && !!this.result;
+  }
+
+  private get highlightScriptId() {
+    return 'CoveoDisableHighlightStyle';
+  }
+
+  private enableHighlights() {
+    this.removeDisableHighlightScript();
+  }
+
+  private enableHighlightsSpecificKeyword(identifier: string) {
+    this.removeDisableHighlightScript(identifier);
+  }
+
+  private disableHighlights() {
+    this.createDisableHighlightScript();
+  }
+
+  private disableHighlightsSpecificKeyword(identifier: string) {
+    this.createDisableHighlightScript(identifier);
+  }
+
+  private removeDisableHighlightScript(identifier?: string) {
+    const doc = this.iframeRef?.contentWindow?.document;
+    if (!doc) {
+      return;
+    }
+    doc
+      .getElementById(
+        `${this.highlightScriptId}${identifier ? `:${identifier}` : ''}`
+      )
+      ?.remove();
+  }
+
+  private createDisableHighlightScript(identifier?: string) {
+    const doc = this.iframeRef?.contentWindow?.document;
+    if (!doc) {
+      return;
+    }
+
+    const head = doc.head;
+    const scriptId = `${this.highlightScriptId}${
+      identifier ? `:${identifier}` : ''
+    }`;
+    const style = doc.getElementById(scriptId) || doc.createElement('style');
+    style.setAttribute('id', scriptId);
+    head.appendChild(style);
+    style.appendChild(
+      doc.createTextNode(`[id^="${HIGHLIGHT_PREFIX}${
+        identifier ? `:${identifier}` : ''
+      }"] {
+      background-color: inherit !important;
+      color: inherit !important;
+    }`)
+    );
+  }
+
+  private get termsToHighlight() {
+    return this.bindings.engine.state.search.response.termsToHighlight;
+  }
+
+  private handleHighlightsScripts() {
+    if (!this.highlightKeywords.highlightNone) {
+      this.enableHighlights();
+    } else {
+      this.disableHighlights();
+    }
+    Object.values(this.highlightKeywords.keywords).forEach((word) => {
+      if (word.enabled) {
+        this.enableHighlightsSpecificKeyword(word.indexIdentifier);
+      } else {
+        this.disableHighlightsSpecificKeyword(word.indexIdentifier);
+      }
+    });
   }
 
   public render() {

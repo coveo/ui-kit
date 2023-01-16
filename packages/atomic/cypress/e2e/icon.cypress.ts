@@ -50,6 +50,52 @@ describe('Icon Test Suites', () => {
     CommonAssertions.assertConsoleWarning(false);
   });
 
+  describe('when the icon cannot be fetched', () => {
+    const iconDoesNotExistWith404ErrorMessage = (url: string) =>
+      `Could not fetch icon from ${url}, got status code 404 (Not Found).`;
+    const iconDoesNotExistThrowErrorMessage = (url: string) =>
+      `Could not fetch icon from ${url}, got an error.`;
+
+    describe('with a url that returns a 404', () => {
+      const url = 'https://hello.invalid/my-icon.svg';
+      beforeEach(() => {
+        cy.intercept(url, {statusCode: 404});
+        setupIcon(url);
+      });
+
+      CommonAssertions.assertConsoleErrorMessage(
+        iconDoesNotExistWith404ErrorMessage(url)
+      );
+    });
+
+    describe('with an asset path', () => {
+      const asset = 'assets://some-icon-that-does-not-exist';
+      const url = asset.replace('assets://', '/build/assets/') + '.svg';
+
+      describe('with an asset path that returns a 404', () => {
+        beforeEach(() => {
+          cy.intercept(url, {statusCode: 404});
+          setupIcon(asset);
+        });
+
+        CommonAssertions.assertConsoleErrorMessage(
+          iconDoesNotExistWith404ErrorMessage(url)
+        );
+      });
+
+      describe('with an asset path that throws an error', () => {
+        beforeEach(() => {
+          cy.intercept(url, {forceNetworkError: true});
+          setupIcon(asset);
+        });
+
+        CommonAssertions.assertConsoleErrorMessage(
+          iconDoesNotExistThrowErrorMessage(url)
+        );
+      });
+    });
+  });
+
   describe('with the contents of an inline non svg icon', () => {
     beforeEach(() => {
       getSvg('custom').then(() => {

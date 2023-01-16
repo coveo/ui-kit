@@ -25,7 +25,6 @@ import {
   buildCoreFacet,
   Facet,
   FacetOptions,
-  FacetProps,
   FacetSearch,
   FacetSearchOptions,
   FacetSearchState,
@@ -40,7 +39,6 @@ export type {
   FacetOptions,
   FacetSearchOptions,
   FacetValueState,
-  FacetProps,
   Facet,
   FacetState,
   FacetSearch,
@@ -50,6 +48,13 @@ export type {
   CoreFacet,
   CoreFacetState,
 };
+
+export interface FacetProps {
+  /**
+   * The options for the `Facet` controller.
+   * */
+  options: FacetOptions;
+}
 
 /**
  * Creates a `Facet` controller instance for the product listing.

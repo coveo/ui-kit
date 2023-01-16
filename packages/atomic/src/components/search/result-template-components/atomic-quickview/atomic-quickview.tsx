@@ -1,10 +1,11 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import {
   Result,
   buildQuickview,
   Quickview,
   QuickviewState,
 } from '@coveo/headless';
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import QuickviewIcon from '../../../../images/quickview.svg';
 import {
   BindStateToController,
@@ -37,11 +38,55 @@ export class AtomicQuickview implements InitializableComponent {
   @State()
   public quickviewState!: QuickviewState;
 
+  /**
+   * The `sandbox` attribute to apply to the quickview iframe.
+   *
+   * The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.
+   *
+   * This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.
+   *
+   * By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.
+   *
+   * `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+   */
+  @Prop() public sandbox =
+    'allow-popups allow-top-navigation allow-same-origin';
+
   private quickviewModalRef?: HTMLAtomicQuickviewModalElement;
 
   public initialize() {
     this.quickview = buildQuickview(this.bindings.engine, {
       options: {result: this.result},
+    });
+    this.handleQuickviewNavigation();
+    new Schema({
+      sandbox: new StringValue({
+        required: true,
+        regex: /allow-same-origin/,
+      }),
+    }).validate({sandbox: this.sandbox});
+  }
+
+  public disconnectedCallback(): void {
+    this.quickviewModalRef?.reset();
+  }
+
+  private handleQuickviewNavigation() {
+    this.bindings.store.onChange('currentQuickviewPosition', (quickviewPos) => {
+      const quickviewsInfoFromResultList =
+        this.bindings.store.get('resultList')?.quickviews;
+
+      if (!quickviewsInfoFromResultList) {
+        return;
+      }
+
+      const isCurrentQuickview =
+        quickviewsInfoFromResultList.position[quickviewPos] ===
+        this.resultIndex;
+
+      if (isCurrentQuickview) {
+        this.quickview.fetchResultContent();
+      }
     });
   }
 
@@ -59,6 +104,7 @@ export class AtomicQuickview implements InitializableComponent {
     }
 
     this.quickviewModalRef = document.createElement('atomic-quickview-modal');
+    this.quickviewModalRef.setAttribute('sandbox', this.sandbox);
     this.bindings.interfaceElement.appendChild(this.quickviewModalRef);
   }
 
@@ -69,18 +115,37 @@ export class AtomicQuickview implements InitializableComponent {
     }
   }
 
+  private get resultIndex() {
+    return this.bindings.engine.state.search.results.findIndex(
+      (r) => r.uniqueId === this.result.uniqueId
+    );
+  }
+
+  private onClick() {
+    this.quickview.fetchResultContent();
+
+    const quickviewsInfoFromResultList =
+      this.bindings.store.get('resultList')?.quickviews;
+
+    if (!quickviewsInfoFromResultList) {
+      return;
+    }
+    this.bindings.store.set(
+      'currentQuickviewPosition',
+      quickviewsInfoFromResultList.position.indexOf(this.resultIndex)
+    );
+  }
+
   public render() {
     this.addQuickviewModalIfNeeded();
     this.updateModalContent();
-    if (this.result.hasHtmlVersion) {
+    if (this.quickviewState.resultHasPreview) {
       return (
         <Button
           title={this.bindings.i18n.t('quickview')}
           style="outline-primary"
           class="p-2"
-          onClick={() => {
-            this.quickview.fetchResultContent();
-          }}
+          onClick={() => this.onClick()}
         >
           <atomic-icon class="w-5" icon={QuickviewIcon}></atomic-icon>
         </Button>

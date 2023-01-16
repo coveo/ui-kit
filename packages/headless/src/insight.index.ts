@@ -114,6 +114,7 @@ export type {
   SpecificFacetSearchResult,
   CoreFacet,
   CoreFacetState,
+  CoreFacetOptions,
 } from './controllers/insight/facets/facet/headless-insight-facet';
 export {buildFacet} from './controllers/insight/facets/facet/headless-insight-facet';
 

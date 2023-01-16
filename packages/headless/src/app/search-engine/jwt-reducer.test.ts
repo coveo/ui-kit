@@ -1,6 +1,7 @@
 import pino from 'pino';
 import {SearchAppState} from '../..';
 import {
+  updateBasicConfiguration,
   updateAnalyticsConfiguration,
   updateSearchConfiguration,
 } from '../../features/configuration/configuration-actions';
@@ -12,10 +13,17 @@ import {getSearchHubInitialState} from '../../features/search-hub/search-hub-sta
 import {createMockState} from '../../test';
 import {jwtReducer} from './jwt-reducer';
 
+function cloneDeep<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value));
+}
+
 describe('jwt-reducer', () => {
   const logger = pino({level: 'silent'});
   const loggerSpy = jest.spyOn(logger, 'warn');
   const reducer = jwtReducer(logger);
+  const tokenPipeline = 'testing';
+  const tokenSearchHub = 'testing hub';
+  const tokenUserDisplayName = 'Alice Smith';
   // expired search token where:
   // - searchHub = 'testing hub'
   // - pipeline = 'testing';
@@ -32,10 +40,12 @@ describe('jwt-reducer', () => {
   });
   it('should handle access token not being JWT token', () => {
     const initialState = createMockState();
-    initialState.configuration.accessToken = 'random stuff';
+    const accessToken = (initialState.configuration.accessToken =
+      'random stuff');
 
     [
       {type: 'foo'},
+      updateBasicConfiguration({accessToken}),
       setSearchHub('foo'),
       setPipeline('foo'),
       updateSearchConfiguration({searchHub: 'foo', pipeline: 'foo'}),
@@ -48,9 +58,28 @@ describe('jwt-reducer', () => {
 
   describe('when an access token is a valid JWT token', () => {
     let initialState: SearchAppState;
+    function updateToken(token: string) {
+      initialState.configuration.accessToken = token;
+      initialState = cloneDeep(
+        reducer(initialState, updateBasicConfiguration({accessToken: jwtToken}))
+      );
+    }
+
     beforeEach(() => {
       initialState = createMockState();
-      initialState.configuration.accessToken = jwtToken;
+      updateToken(jwtToken);
+    });
+
+    it('should update the query pipeline, search hub and display name', () => {
+      expect(initialState.pipeline).toEqual(tokenPipeline);
+      expect(initialState.searchHub).toEqual(tokenSearchHub);
+      expect(initialState.configuration.analytics.userDisplayName).toEqual(
+        tokenUserDisplayName
+      );
+    });
+
+    it('should not warn about anything', () => {
+      expect(loggerSpy).not.toHaveBeenCalled();
     });
 
     describe('when executing setSearchHub', () => {
@@ -61,7 +90,7 @@ describe('jwt-reducer', () => {
         );
         expect(newState).toMatchObject({
           ...initialState,
-          searchHub: 'testing hub',
+          searchHub: tokenSearchHub,
         });
       });
 
@@ -76,12 +105,12 @@ describe('jwt-reducer', () => {
       });
 
       it('should not warn when search hub is matching', () => {
-        reducer(initialState, setSearchHub('testing hub'));
+        reducer(initialState, setSearchHub(tokenSearchHub));
         expect(loggerSpy).not.toHaveBeenCalled();
       });
 
       it('should not reconcile the search hub if the search token is empty', () => {
-        initialState.configuration.accessToken = emptyJwtToken;
+        updateToken(emptyJwtToken);
         const newState = reducer(initialState, setSearchHub('random stuff'));
         expect(newState).toMatchObject(initialState);
       });
@@ -93,8 +122,11 @@ describe('jwt-reducer', () => {
           initialState,
           setPipeline('not the correct one')
         );
-        expect(newState).toMatchObject({...initialState, pipeline: 'testing'});
-        expect(newState.pipeline).toEqual('testing');
+        expect(newState).toMatchObject({
+          ...initialState,
+          pipeline: tokenPipeline,
+        });
+        expect(newState.pipeline).toEqual(tokenPipeline);
       });
 
       it('should warn when pipeline is not default', () => {
@@ -108,12 +140,12 @@ describe('jwt-reducer', () => {
       });
 
       it('should not warn when pipeline is matching', () => {
-        reducer(initialState, setPipeline('testing'));
+        reducer(initialState, setPipeline(tokenPipeline));
         expect(loggerSpy).not.toHaveBeenCalled();
       });
 
       it('should not reconcile the pipeline if the search token is empty', () => {
-        initialState.configuration.accessToken = emptyJwtToken;
+        updateToken(emptyJwtToken);
         const newState = reducer(initialState, setPipeline('random stuff'));
         expect(newState).toMatchObject(initialState);
       });
@@ -133,8 +165,8 @@ describe('jwt-reducer', () => {
         );
         expect(newState).toMatchObject({
           ...initialState,
-          pipeline: 'testing',
-          searchHub: 'testing hub',
+          pipeline: tokenPipeline,
+          searchHub: tokenSearchHub,
         });
       });
 
@@ -190,15 +222,15 @@ describe('jwt-reducer', () => {
         reducer(
           initialState,
           updateSearchConfiguration({
-            searchHub: 'testing hub',
-            pipeline: 'testing',
+            searchHub: tokenSearchHub,
+            pipeline: tokenPipeline,
           })
         );
         expect(loggerSpy).not.toHaveBeenCalled();
       });
 
       it('should not reconcile the pipeline and search hub if the search token is empty', () => {
-        initialState.configuration.accessToken = emptyJwtToken;
+        updateToken(emptyJwtToken);
         const newState = reducer(
           initialState,
           updateSearchConfiguration({
@@ -214,7 +246,9 @@ describe('jwt-reducer', () => {
       it('should reconcile userDisplayName', () => {
         const newState = reducer(
           initialState,
-          updateAnalyticsConfiguration({userDisplayName: 'not the correct one'})
+          updateAnalyticsConfiguration({
+            userDisplayName: 'not the correct one',
+          })
         );
         expect(newState).toMatchObject({
           ...initialState,
@@ -222,7 +256,7 @@ describe('jwt-reducer', () => {
             ...initialState.configuration,
             analytics: {
               ...initialState.configuration.analytics,
-              userDisplayName: 'Alice Smith',
+              userDisplayName: tokenUserDisplayName,
             },
           },
         });
@@ -231,7 +265,9 @@ describe('jwt-reducer', () => {
       it('should warn when userDisplayName is not default', () => {
         reducer(
           initialState,
-          updateAnalyticsConfiguration({userDisplayName: 'not the correct one'})
+          updateAnalyticsConfiguration({
+            userDisplayName: 'not the correct one',
+          })
         );
         expect(loggerSpy).toHaveBeenCalled();
       });
@@ -261,14 +297,14 @@ describe('jwt-reducer', () => {
         reducer(
           initialState,
           updateAnalyticsConfiguration({
-            userDisplayName: 'Alice Smith',
+            userDisplayName: tokenUserDisplayName,
           })
         );
         expect(loggerSpy).not.toHaveBeenCalled();
       });
 
       it('should not reconcile the userDisplayName if the search token is empty', () => {
-        initialState.configuration.accessToken = emptyJwtToken;
+        updateToken(emptyJwtToken);
         const newState = reducer(
           initialState,
           updateAnalyticsConfiguration({userDisplayName: 'random name'})

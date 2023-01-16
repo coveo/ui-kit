@@ -28,7 +28,7 @@ export class AtomicResultText implements InitializableComponent {
   /**
    * The result field which the component should use.
    * This will look in the Result object first, and then in the Result.raw object for the fields.
-   * It is important to include the necessary field in the ResultList component.
+   * It is important to include the necessary field in the `atomic-search-interface` component.
    */
   @Prop({reflect: true}) public field!: string;
   /**

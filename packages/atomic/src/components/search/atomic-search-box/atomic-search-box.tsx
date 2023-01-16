@@ -26,7 +26,11 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
+import {
+  SafeStorage,
+  StandaloneSearchBoxData,
+  StorageItems,
+} from '../../../utils/local-storage-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {getUniqueItemsByProperties, once, randomID} from '../../../utils/utils';
@@ -160,6 +164,16 @@ export class AtomicSearchBox {
   @Prop({reflect: true}) public clearFilters = true;
 
   /**
+   * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query.
+   * You should only enable query syntax in the search box if you have good reasons to do so, as it
+   * requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised
+   * by the search box behaviour.
+   *
+   * When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
+   */
+  @Prop({reflect: true}) public enableQuerySyntax = false;
+
+  /**
    * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
    *
    * Example:
@@ -203,6 +217,7 @@ export class AtomicSearchBox {
         },
       },
       clearFilters: this.clearFilters,
+      enableQuerySyntax: this.enableQuerySyntax,
     };
 
     this.searchBox = this.redirectionUrl
@@ -245,7 +260,11 @@ export class AtomicSearchBox {
     if (redirectTo === '') {
       return;
     }
-    const data = {value, analytics};
+    const data: StandaloneSearchBoxData = {
+      value,
+      enableQuerySyntax: this.enableQuerySyntax,
+      analytics,
+    };
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 

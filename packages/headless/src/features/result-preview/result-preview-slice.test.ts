@@ -1,4 +1,7 @@
 import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder';
+import {buildMockSearch} from '../../test/mock-search';
+import {logInterfaceLoad} from '../analytics/analytics-actions';
+import {executeSearch} from '../insight-search/insight-search-actions';
 import {fetchResultContent, updateContentURL} from './result-preview-actions';
 import {resultPreviewReducer} from './result-preview-slice';
 import {
@@ -20,6 +23,21 @@ describe('ResultPreview', () => {
       content: '',
       isLoading: false,
     });
+  });
+
+  it('re-initialize the state to initial when a query returns correctly', () => {
+    state.content = 'content';
+    state.contentURL = 'url';
+    state.isLoading = true;
+    state.uniqueId = 'uniqueId';
+    const action = executeSearch.fulfilled(
+      buildMockSearch(),
+      '',
+      logInterfaceLoad()
+    );
+    const finalState = resultPreviewReducer(state, action);
+
+    expect(finalState).toEqual(getResultPreviewInitialState());
   });
 
   it(`on #fetchResultContent.pending,

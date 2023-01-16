@@ -1,4 +1,4 @@
-import {ArrayValue, RecordValue, Schema} from '@coveo/bueno';
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
@@ -81,7 +81,7 @@ export const searchEngineConfigurationSchema =
         required: false,
       },
       values: {
-        pipeline: nonEmptyString,
+        pipeline: new StringValue({required: false, emptyAllowed: true}),
         searchHub: nonEmptyString,
         locale: nonEmptyString,
         timezone: nonEmptyString,

@@ -12,6 +12,7 @@ import { NumberInputType } from "./components/common/facets/facet-number-input/n
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { VNode } from "@stencil/core";
+import { ButtonStyle } from "./components/common/button-style";
 import { InsightEngine, InsightFacetSortCriterion, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
@@ -348,8 +349,10 @@ export namespace Components {
         "icon": string;
     }
     interface AtomicIconButton {
+        "ariaPressed"?: boolean;
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
+        "buttonStyle": ButtonStyle;
         "clickCallback": () => void;
         "disabled": boolean;
         "icon": string;
@@ -668,9 +671,17 @@ export namespace Components {
     }
     interface AtomicIpxButton {
         /**
+          * The close icon of the button.
+         */
+        "closeIcon": string;
+        /**
           * The label that will be shown to the user.
          */
         "label": string;
+        /**
+          * The open icon of the button.
+         */
+        "openIcon": string;
     }
     interface AtomicIpxModal {
         /**
@@ -843,10 +854,16 @@ export namespace Components {
     interface AtomicQuerySummary {
     }
     interface AtomicQuickview {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox": string;
     }
     interface AtomicQuickviewModal {
         "content"?: string;
+        "reset": () => Promise<void>;
         "result"?: Result;
+        "sandbox"?: string;
     }
     interface AtomicRatingFacet {
         /**
@@ -998,13 +1015,13 @@ export namespace Components {
          */
         "logLevel"?: RecsLogLevel;
         /**
-          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
-          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
          */
-        "searchHub": string;
+        "searchHub"?: string;
         /**
           * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
@@ -1222,7 +1239,7 @@ export namespace Components {
     }
     interface AtomicResultDate {
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -1250,7 +1267,7 @@ export namespace Components {
     }
     interface AtomicResultImage {
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
     }
@@ -1377,7 +1394,7 @@ export namespace Components {
          */
         "default"?: string;
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -1387,7 +1404,7 @@ export namespace Components {
     }
     interface AtomicResultTimespan {
         /**
-          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -1418,6 +1435,10 @@ export namespace Components {
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch": boolean;
+        /**
+          * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
+         */
+        "enableQuerySyntax": boolean;
         /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
@@ -1532,7 +1553,7 @@ export namespace Components {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
@@ -1544,9 +1565,9 @@ export namespace Components {
          */
         "scrollContainer": string;
         /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
          */
-        "searchHub": string;
+        "searchHub"?: string;
         /**
           * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
@@ -2962,8 +2983,10 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicIconButton {
+        "ariaPressed"?: boolean;
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
+        "buttonStyle"?: ButtonStyle;
         "clickCallback"?: () => void;
         "disabled"?: boolean;
         "icon": string;
@@ -3262,9 +3285,17 @@ declare namespace LocalJSX {
     }
     interface AtomicIpxButton {
         /**
+          * The close icon of the button.
+         */
+        "closeIcon"?: string;
+        /**
           * The label that will be shown to the user.
          */
         "label"?: string;
+        /**
+          * The open icon of the button.
+         */
+        "openIcon"?: string;
     }
     interface AtomicIpxModal {
         /**
@@ -3440,10 +3471,15 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
     }
     interface AtomicQuickview {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox"?: string;
     }
     interface AtomicQuickviewModal {
         "content"?: string;
         "result"?: Result;
+        "sandbox"?: string;
     }
     interface AtomicRatingFacet {
         /**
@@ -3583,11 +3619,11 @@ declare namespace LocalJSX {
          */
         "logLevel"?: RecsLogLevel;
         /**
-          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
-          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
         /**
@@ -3787,7 +3823,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultDate {
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field"?: string;
         /**
@@ -3815,7 +3851,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultImage {
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
     }
@@ -3933,7 +3969,7 @@ declare namespace LocalJSX {
          */
         "default"?: string;
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -3943,7 +3979,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTimespan {
         /**
-          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -3974,6 +4010,10 @@ declare namespace LocalJSX {
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch"?: boolean;
+        /**
+          * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
+         */
+        "enableQuerySyntax"?: boolean;
         /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
@@ -4075,7 +4115,7 @@ declare namespace LocalJSX {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
         "pipeline"?: string;
         /**
@@ -4087,7 +4127,7 @@ declare namespace LocalJSX {
          */
         "scrollContainer"?: string;
         /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
         /**

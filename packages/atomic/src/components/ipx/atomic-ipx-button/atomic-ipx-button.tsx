@@ -20,6 +20,16 @@ export class AtomicIPXButton {
   @Prop({reflect: true}) public label = 'Workplace Search';
 
   /**
+   * The close icon of the button.
+   */
+  @Prop({reflect: true}) public closeIcon = CloseIcon;
+
+  /**
+   * The open icon of the button.
+   */
+  @Prop({reflect: true}) public openIcon = SearchIcon;
+
+  /**
    * Whether the IPX layout is open.
    */
   private isOpen = false;
@@ -40,11 +50,11 @@ export class AtomicIPXButton {
         <span part="button-icon">
           <atomic-icon
             part="ipx-close-icon"
-            icon={this.getIcon(CloseIcon)}
+            icon={this.getIcon(this.closeIcon)}
           ></atomic-icon>
           <atomic-icon
-            part="ipx-search-icon"
-            icon={this.getIcon(SearchIcon)}
+            part="ipx-open-icon"
+            icon={this.getIcon(this.openIcon)}
           ></atomic-icon>
         </span>
         <span part="button-text">{this.label}</span>
@@ -81,7 +91,7 @@ export class AtomicIPXButton {
     initialDiv.innerHTML = icon;
     initialDiv
       .querySelector('svg')
-      ?.setAttribute('fill', 'var(--atomic-neutral-light)');
+      ?.setAttribute('fill', 'var(--atomic-on-primary)');
 
     return initialDiv.innerHTML;
   }
