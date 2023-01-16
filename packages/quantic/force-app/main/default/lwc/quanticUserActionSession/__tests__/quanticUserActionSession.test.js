@@ -136,7 +136,7 @@ describe('c-quantic-user-action-session', () => {
         selectors.moreActionsButton
       );
 
-      userActionEvents .forEach((userActionEvent, index) => {
+      userActionEvents.forEach((userActionEvent, index) => {
         expect(userActionEvent.title).toBe(exampleActions[index].title);
         expect(userActionEvent.type).toBe(exampleActions[index].type);
         expect(userActionEvent.searchHub).toBe(exampleActions[index].searchHub);
