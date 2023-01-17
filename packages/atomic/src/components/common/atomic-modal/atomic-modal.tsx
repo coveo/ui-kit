@@ -61,7 +61,6 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
   private focusTrap?: HTMLAtomicFocusTrapElement;
   private animatableContainer?: HTMLElement;
   private currentWatchToggleOpenExecution = 0;
-  private closeOnEscape?: (e: KeyboardEvent) => void;
 
   @Watch('isOpen')
   async watchToggleOpen(isOpen: boolean) {
@@ -90,6 +89,13 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
     }
   }
 
+  @Listen('keyup', {target: 'body'})
+  handleCloseOnEscape(e: KeyboardEvent) {
+    if (e.key.toLowerCase() === 'escape') {
+      this.close();
+    }
+  }
+
   private waitForAnimationEnded() {
     // The focus trap focuses its first child when active. VoiceOver on iOS can't do it while an animation is ongoing.
     return new Promise((resolve) =>
@@ -110,15 +116,6 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
     return classes;
   }
 
-  private handleCloseOnEscape() {
-    this.closeOnEscape = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === 'escape') {
-        this.close();
-      }
-    };
-    document.body.addEventListener('keyup', this.closeOnEscape);
-  }
-
   @Listen('touchmove', {passive: false})
   onWindowTouchMove(e: Event) {
     this.isOpen && e.preventDefault();
@@ -126,12 +123,6 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
 
   public componentDidLoad() {
     this.watchToggleOpen(this.isOpen);
-    this.handleCloseOnEscape();
-  }
-
-  public disconnectedCallback(): void {
-    this.closeOnEscape &&
-      document.body.removeEventListener('keyup', this.closeOnEscape);
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
