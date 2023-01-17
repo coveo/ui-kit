@@ -81,7 +81,10 @@ export class AtomicQuickviewModal implements InitializableComponent {
   private renderBody() {
     return (
       <div slot="body" class="grid grid-cols-[min-content_auto] h-full">
-        <div class="h-full">
+        <div
+          class="h-full overflow-y-auto"
+          style={{backgroundColor: 'var(--atomic-neutral-light)'}}
+        >
           <QuickviewSidebar
             words={this.words}
             i18n={this.bindings.i18n}

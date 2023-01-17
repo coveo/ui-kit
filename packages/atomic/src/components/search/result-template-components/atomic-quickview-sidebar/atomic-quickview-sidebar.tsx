@@ -28,10 +28,7 @@ export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
   );
 
   return (
-    <div
-      class="p-4 border-r border-neutral h-full"
-      style={{backgroundColor: 'var(--atomic-neutral-light)'}}
-    >
+    <div class="p-4 border-r border-neutral h-full">
       {minimized && minimizeButton}
       <div class="flex items-center">
         <HighlightKeywordsCheckbox {...props} />

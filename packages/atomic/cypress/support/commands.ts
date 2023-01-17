@@ -3,6 +3,7 @@ import {
   SearchEventRequest,
   ClickEventRequest,
 } from 'coveo.analytics/src/events';
+import {SinonSpy} from 'cypress/types/sinon';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 
 // eslint-disable @typescript/interface-name
@@ -27,6 +28,9 @@ declare global {
       distanceTo(
         getSubjectB: () => Chainable<JQuery<HTMLElement>>
       ): Chainable<{horizontal: number; vertical: number}>;
+      getCalls<TArgs extends unknown[], TReturnValue>(
+        fixture: string
+      ): Chainable<sinon.SinonSpyCall<TArgs, TReturnValue>[]>;
     }
   }
 }
@@ -112,6 +116,15 @@ Cypress.Commands.add(
       });
     })
 );
+
+Cypress.Commands.add('getCalls', (fixture) => {
+  function isSinonSpy(obj: unknown): obj is SinonSpy<[], unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return 'getCalls' in (obj as any);
+  }
+
+  cy.get(fixture).should('satisfy', isSinonSpy).invoke('getCalls');
+});
 
 // Convert this to a module instead of script (allows import/export)
 export {};
