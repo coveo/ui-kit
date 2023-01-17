@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.6.0...@coveo/headless@2.6.1) (2023-01-16)
+
+### Bug Fixes
+
+- **headless:** allowed empty string for query pipeline ([#2659](https://github.com/coveo/ui-kit/issues/2659)) ([d1ea78d](https://github.com/coveo/ui-kit/commit/d1ea78d36c323cc2a6b343cb117a90fd2c4aaf3b))
+
+# [2.6.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.5.0...@coveo/headless@2.6.0) (2023-01-13)
+
+### Bug Fixes
+
+- **headless,atomic,atomic-react,atomic-angular,quantic:** made query pipeline update with jwt tokens ([#2650](https://github.com/coveo/ui-kit/issues/2650)) ([1498706](https://github.com/coveo/ui-kit/commit/149870620f90c488f666b128ba659fdf09a34765))
+
+### Features
+
+- **headless:** reset preview content on new query ([#2657](https://github.com/coveo/ui-kit/issues/2657)) ([8daf76d](https://github.com/coveo/ui-kit/commit/8daf76d82334639bc23a044aa6a5ed9b5be06d7f))
+
 # [2.5.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.4.0...@coveo/headless@2.5.0) (2023-01-12)
 
 ### Features

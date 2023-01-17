@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "2.9.0",
+  "version": "2.10.2",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -29,7 +29,7 @@
     "build:locales": "node ./scripts/create-generated-folder.mjs && node ./scripts/split-locales.mjs && node ./scripts/copy-dayjs-locales.mjs",
     "build:stencil": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
     "start": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
-    "start:prod": "npx serve www -l 3333",
+    "start:prod": "npx serve www -l 3333 --no-request-logging",
     "test": "npm run build:locales && stencil test --spec",
     "test:watch": "stencil test --spec --watchAll",
     "generate": "stencil generate",
@@ -67,7 +67,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.18.10",
-    "@coveo/headless": "2.5.0",
+    "@coveo/headless": "2.6.1",
     "@fullhuman/postcss-purgecss": "4.1.3",
     "@monaco-editor/react": "4.3.1",
     "@rollup/plugin-alias": "3.1.9",

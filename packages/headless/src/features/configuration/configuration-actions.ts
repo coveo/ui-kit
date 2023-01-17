@@ -1,4 +1,4 @@
-import {ArrayValue, BooleanValue, Value} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, StringValue, Value} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {IRuntimeEnvironment} from 'coveo.analytics';
 import {doNotTrack} from '../../utils/utils';
@@ -77,7 +77,7 @@ export const updateSearchConfiguration = createAction(
   (payload: UpdateSearchConfigurationActionCreatorPayload) =>
     validatePayload(payload, {
       apiBaseUrl: nonEmptyString,
-      pipeline: nonEmptyString,
+      pipeline: new StringValue({required: false, emptyAllowed: true}),
       searchHub: nonEmptyString,
       timezone: nonEmptyString,
       locale: nonEmptyString,

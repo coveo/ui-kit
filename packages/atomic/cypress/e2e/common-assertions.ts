@@ -82,7 +82,24 @@ export function assertConsoleError(error = true) {
 
 export function assertConsoleErrorMessage(msg: string) {
   it('should log an error containing the appropriate message to the console', () => {
-    cy.get(TestFixture.consoleAliases.error).should('be.calledWithMatch', msg);
+    cy.getCalls(TestFixture.consoleAliases.error).should((calls) => {
+      function isError(obj: unknown): obj is Error {
+        return (
+          !!obj &&
+          typeof obj === 'object' &&
+          'name' in obj &&
+          typeof obj['name'] === 'string' &&
+          'message' in obj &&
+          typeof obj['message'] === 'string'
+        );
+      }
+
+      expect(calls.length).to.be.greaterThan(0);
+      const err = calls[calls.length - 1].args[0];
+      isError(err)
+        ? expect(err.message).to.contain(msg)
+        : expect(err).to.contain(msg);
+    });
   });
 }
 
