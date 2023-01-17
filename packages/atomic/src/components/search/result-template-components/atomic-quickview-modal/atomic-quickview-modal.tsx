@@ -141,7 +141,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
           class="p-2"
           style="square-neutral"
           onClick={() => this.previousQuickview?.emit()}
-          text={this.bindings.i18n.t('previous')}
+          text={this.bindings.i18n.t('quickview-previous')}
         ></Button>
         <p>
           {this.bindings.i18n.t('showing-results-of', {
@@ -153,7 +153,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
           class="p-2"
           style="square-neutral"
           onClick={() => this.nextQuickview?.emit()}
-          text={this.bindings.i18n.t('next')}
+          text={this.bindings.i18n.t('quickview-next')}
         ></Button>
       </div>
     );
