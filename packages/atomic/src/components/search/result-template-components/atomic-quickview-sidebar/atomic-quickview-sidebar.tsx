@@ -121,7 +121,11 @@ const Keywords: FunctionalComponent<
                   style={{backgroundColor: keyword.color}}
                 ></div>
                 <div class="grow mr-2">{keyword.text}</div>
-                <div class="flex-none">{keyword.occurrences}</div>
+                <div class="flex-none">
+                  {new Intl.NumberFormat(i18n.language, {
+                    notation: 'compact',
+                  }).format(keyword.occurrences)}
+                </div>
               </div>
               <div class="flex px-2">
                 <atomic-icon-button
