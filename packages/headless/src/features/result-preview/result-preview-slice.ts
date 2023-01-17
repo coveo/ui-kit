@@ -51,6 +51,9 @@ export const resultPreviewReducer = createReducer(
         );
       })
       .addCase(nextPreview, (state) => {
+        if (state.isLoading) {
+          return;
+        }
         let newPos = state.position + 1;
         if (newPos > state.resultsWithPreview.length - 1) {
           newPos = 0;
@@ -58,6 +61,10 @@ export const resultPreviewReducer = createReducer(
         state.position = newPos;
       })
       .addCase(previousPreview, (state) => {
+        if (state.isLoading) {
+          return;
+        }
+
         let newPos = state.position - 1;
         if (newPos < 0) {
           newPos = state.resultsWithPreview.length - 1;
