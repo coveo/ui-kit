@@ -1,36 +1,44 @@
 import {LightningElement, api} from 'lwc';
 
 /**
+ * @typedef Document
+ * @property {string} title
+ * @property {string} [clickUri]
+ * @property {string} [uriHash]
+ * @property {string} [contentIdKey]
+ * @property {string} [contentIdValue]
+ */
+
+/**
+ * @typedef UserAction
+ * @property {'search' | 'click' | 'view' | 'custom' | 'case-creation' | 'active-case-creation'} actionType
+ * @property {number} timestamp
+ * @property {{type?: string, value: string}} [eventData]:
+ * @property {string} [cause]
+ * @property {string} searchHub
+ * @property {string} [query]
+ * @property {Document} document
+ */
+
+/**
  * The `QuanticUserActionEvent` component displays a single user action event in the user action timeline.
  * @category Insight Panel
  * @example
- * <c-quantic-user-action-event title="Example user action" type="view" timestamp="1672768867000" search-hub="default"></c-quantic-user-action-event>
+ * <c-quantic-user-action-event engine-id={engineId} action={action}></c-quantic-user-action-event>
  */
 export default class QuanticUserActionEvent extends LightningElement {
   /**
-   * The title of the user action event.
+   * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
    */
-  @api title;
+  @api engineId;
   /**
-   * The type of the user action event.
+   * The user action event to display.
    * @api
-   * @type {'click' | 'view' | 'custom' | 'search' | 'case-creation' | 'active-case-creation'}
+   * @type {UserAction}
    */
-  @api type;
-  /**
-   * The timestamp of the user action event.
-   * @api
-   * @type {number}
-   */
-  @api timestamp;
-  /**
-   * The search hub where the user action event originated.
-   * @api
-   * @type {string}
-   */
-  @api searchHub;
+  @api action;
   /**
    * Indicates whether the user action event is the last event in a user action session.
    * @api
@@ -43,7 +51,7 @@ export default class QuanticUserActionEvent extends LightningElement {
    * @returns {string}
    */
   get iconName() {
-    switch (this.type) {
+    switch (this.action?.actionType) {
       case 'click':
         return 'utility:file';
       case 'search':
@@ -80,7 +88,7 @@ export default class QuanticUserActionEvent extends LightningElement {
     if (this.isActiveCaseCreationAction) {
       return null;
     }
-    if (this.isClickOrViewAction) {
+    if (this.isClickableAction) {
       return 'ua-event_blue-icon';
     }
     return 'ua-event_black-icon';
@@ -94,8 +102,6 @@ export default class QuanticUserActionEvent extends LightningElement {
     const classes = ['slds-text-title', 'slds-var-m-left_small'];
     if (this.isActiveCaseCreationAction) {
       classes.push('slds-text-color_success ua-event_bold-text');
-    } else if (this.isClickOrViewAction) {
-      classes.push('ua-event_blue-text');
     } else {
       classes.push('ua-event_black-text');
     }
@@ -107,7 +113,9 @@ export default class QuanticUserActionEvent extends LightningElement {
    * @returns {boolean}
    */
   get isClickOrViewAction() {
-    return this.type === 'click' || this.type === 'view';
+    return (
+      this.action?.actionType === 'click' || this.action?.actionType === 'view'
+    );
   }
 
   /**
@@ -115,7 +123,7 @@ export default class QuanticUserActionEvent extends LightningElement {
    * @returns {boolean}
    */
   get isActiveCaseCreationAction() {
-    return this.type === 'active-case-creation';
+    return this.action?.actionType === 'active-case-creation';
   }
 
   /**
@@ -126,5 +134,36 @@ export default class QuanticUserActionEvent extends LightningElement {
     return `slds-grid slds-var-m-left_small ${
       this.isLastEventInSession ? 'slds-var-p-left_xxx-small' : ''
     }`;
+  }
+
+  /**
+   * Returns the user action title.
+   * @returns {string}
+   */
+  get actionTitle() {
+    return this.action?.document?.title;
+  }
+
+  /**
+   * Returns the user action uri.
+   * @returns {string}
+   */
+  get clickUri() {
+    return this.action?.document?.clickUri;
+  }
+
+  /**
+   * Indicates whether the user action event can be clickable.
+   * @returns {boolean}
+   */
+  get isClickableAction() {
+    return this.isClickOrViewAction && !!this.clickUri;
+  }
+
+  /**
+   * Logs the needed analytics event.
+   */
+  logAnalytics() {
+    // log analytics
   }
 }

@@ -5,6 +5,7 @@ import QuanticUserActionEvent from '../quanticUserActionEvent';
 
 const selectors = {
   title: '[data-id="title"]',
+  link: '[data-id="link"]',
   icon: 'lightning-icon',
   vector: '.ua-event_vector',
   timestamp: '[data-id="timestamp"] lightning-formatted-date-time',
@@ -14,27 +15,33 @@ const selectors = {
 const exampleSearchHub = 'example search hub';
 const exampleTitle = 'example title';
 const exampleTimestamp = '1672768867000';
+const exampleUri = 'http://exampleuri.com/';
+const clickableIconClass = 'ua-event_blue-icon';
 
 const defaultOptions = {
-  title: exampleTitle,
-  type: 'custom',
-  searchHub: exampleSearchHub,
-  timestamp: exampleTimestamp,
-  isLastEventInSession: false,
+  action: {
+    actionType: 'custom',
+    document: {
+      title: exampleTitle,
+    },
+    searchHub: exampleSearchHub,
+    timestamp: exampleTimestamp,
+    isLastEventInSession: false,
+  },
 };
 
 const expectations = {
   click: {
     iconName: 'utility:file',
-    iconClass: 'ua-event_blue-icon',
+    iconClass: 'ua-event_black-icon',
     iconVariant: null,
-    textClass: 'ua-event_blue-text',
+    textClass: 'ua-event_black-text',
   },
   view: {
     iconName: 'utility:preview',
-    iconClass: 'ua-event_blue-icon',
+    iconClass: 'ua-event_black-icon',
     iconVariant: null,
-    textClass: 'ua-event_blue-text',
+    textClass: 'ua-event_black-text',
   },
   search: {
     iconName: 'utility:search',
@@ -98,7 +105,9 @@ describe('c-quantic-user-action-event', () => {
   for (const [key, expectation] of Object.entries(expectations)) {
     describe(`user action event of type "${key}"`, () => {
       it('should properly display the QuanticUserActionEvent', async () => {
-        const element = createTestComponent({...defaultOptions, type: key});
+        const element = createTestComponent({
+          action: {...defaultOptions.action, actionType: key},
+        });
         await flushPromises();
 
         const title = element.shadowRoot.querySelector(selectors.title);
@@ -140,5 +149,39 @@ describe('c-quantic-user-action-event', () => {
 
     const vector = element.shadowRoot.querySelector(selectors.vector);
     expect(vector).toBeNull();
+  });
+
+  describe('when the #clickUri is defined in the user action event', () => {
+    ['click', 'view'].forEach((type) => {
+      it(`should display a clickable user action event of type ${type}`, async () => {
+        const element = createTestComponent({
+          action: {
+            ...defaultOptions.action,
+            actionType: type,
+            document: {...defaultOptions.action.document, clickUri: exampleUri},
+          },
+        });
+        await flushPromises();
+
+        const link = element.shadowRoot.querySelector(selectors.link);
+        const icon = element.shadowRoot.querySelector(selectors.icon);
+        const timestamp = element.shadowRoot.querySelector(selectors.timestamp);
+        const searchHub = element.shadowRoot.querySelector(selectors.searchHub);
+        const vector = element.shadowRoot.querySelector(selectors.vector);
+
+        expect(link.textContent).toBe(exampleTitle);
+        expect(link.href).toBe(exampleUri);
+
+        expect(timestamp.value).toBe(exampleTimestamp);
+        expect(searchHub.textContent).toBe(exampleSearchHub);
+        expect(icon.iconName).toBe(expectations[type].iconName);
+        expect(icon.variant).toBeNull();
+
+        expect(Object.values(icon.classList).join(' ')).toBe(
+          clickableIconClass
+        );
+        expect(vector).not.toBeNull();
+      });
+    });
   });
 });

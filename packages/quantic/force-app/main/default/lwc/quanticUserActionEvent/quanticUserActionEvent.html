@@ -1,8 +1,14 @@
 <template>
   <div class="slds-var-p-vertical_xx-small">
-    <div class="slds-grid">
+    <div class="slds-grid ua-event_vertical-align">
       <lightning-icon class={iconClass} icon-name={iconName} size="xx-small" variant={iconVariant}></lightning-icon>
-      <div data-id="title" class={titleClass}>{title}</div>
+      <template if:true={isClickableAction}>
+        <a data-id="link" class="slds-var-m-left_small" href={clickUri} target="_blank"
+          onclick={logAnalytics}>{actionTitle}</a>
+      </template>
+      <template if:false={isClickableAction}>
+        <div data-id="title" class={titleClass}>{actionTitle}</div>
+      </template>
     </div>
     <div class="slds-grid slds-var-m-top_xx-small">
       <div class="slds-var-p-horizontal_xx-small slds-var-m-horizontal_xxx-small">
@@ -11,13 +17,13 @@
         </template>
       </div>
       <div class={eventInfoClass}>
-        <template if:true={timestamp}>
+        <template if:true={action.timestamp}>
           <span data-id="timestamp" class="slds-text-title ua-event_small-text slds-var-m-right_xx-small">
-            <lightning-formatted-date-time value={timestamp} hour="2-digit" minute="2-digit"
-            hour12={ampmFormat}></lightning-formatted-date-time>
+            <lightning-formatted-date-time value={action.timestamp} hour="2-digit" minute="2-digit"
+              hour12={ampmFormat}></lightning-formatted-date-time>
           </span>
         </template>
-        <span data-id="searchHub" class="slds-text-title ua-event_small-text">{searchHub}</span>
+        <span data-id="searchHub" class="slds-text-title ua-event_small-text">{action.searchHub}</span>
       </div>
     </div>
   </div>
