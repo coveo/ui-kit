@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.11.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.10.2...@coveo/atomic@2.11.0) (2023-01-17)
+
+### Bug Fixes
+
+- **atomic:** empty highlight keywords column should not be visible ([#2661](https://github.com/coveo/ui-kit/issues/2661)) ([93c9dbd](https://github.com/coveo/ui-kit/commit/93c9dbdf25da2dc504844155dcd657a3a65f3f6e))
+- **atomic:** fix quickview column keywords scroll ([#2665](https://github.com/coveo/ui-kit/issues/2665)) ([8dc0fae](https://github.com/coveo/ui-kit/commit/8dc0fae469e9d03c6ce3c982114e8d6960f6443e))
+- **atomic:** format keyword occurence number in quickview ([#2662](https://github.com/coveo/ui-kit/issues/2662)) ([88d268f](https://github.com/coveo/ui-kit/commit/88d268f003a3a47e2ff29e19c060f0ee0c3f3466))
+
+### Features
+
+- **atomic:** add support to close modal on escape ([#2664](https://github.com/coveo/ui-kit/issues/2664)) ([7541df0](https://github.com/coveo/ui-kit/commit/7541df04dac410e8b785db4f82da89e2648ffe6b))
+
 ## [2.10.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.10.1...@coveo/atomic@2.10.2) (2023-01-16)
 
 ### Bug Fixes
