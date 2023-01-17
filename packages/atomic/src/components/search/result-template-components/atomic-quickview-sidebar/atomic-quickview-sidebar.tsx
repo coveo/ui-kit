@@ -22,9 +22,14 @@ export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
   props
 ) => {
   const {words, minimized} = props;
+  const numberOfWords = Object.values(words).length;
+
+  if (numberOfWords === 0) {
+    return;
+  }
 
   const minimizeButton = (
-    <MinimizeButton {...props} wordsLength={Object.values(words).length} />
+    <MinimizeButton {...props} wordsLength={numberOfWords} />
   );
 
   return (

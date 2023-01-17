@@ -57,7 +57,6 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   @Method()
   public async reset() {
-    this.words = {};
     this.highlightKeywords = {
       highlightNone: false,
       keywords: {},
