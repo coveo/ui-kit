@@ -10,7 +10,7 @@ interface ModalOptions {
 }
 
 const invalidAnimationError = (value: string) => {
-  return `"${value}" is an invalid value for the animation property. animation can only be set to "slideToTop" or "slideToLeft".`;
+  return `"${value}" is an invalid value for the animation property. animation can only be set to "slideToTop", "slideToLeft" or "slideToRight".`;
 };
 
 describe('quantic-modal', () => {
@@ -55,6 +55,33 @@ describe('quantic-modal', () => {
       scope('when loading the page', () => {
         Expect.displayModal(false);
         Expect.haveSlideToLeftAnimation(true);
+      });
+
+      scope('when opening the modal', () => {
+        openModal();
+        Expect.displayModal(true);
+        Expect.displayHeader(true);
+        Expect.displayContent(true);
+        Expect.displayFooter(true);
+        Expect.displayFullScreen(false);
+      });
+
+      scope('when closing the modal', () => {
+        closeModal();
+        Expect.displayModal(false);
+      });
+    });
+  });
+
+  describe('when using slide to right animation', () => {
+    it('should render the modal opening with a slide to right animation', () => {
+      visitModal({
+        animation: 'slideToRight',
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayModal(false);
+        Expect.haveSlideToRightAnimation(true);
       });
 
       scope('when opening the modal', () => {

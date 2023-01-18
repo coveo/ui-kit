@@ -53,6 +53,10 @@ function modalExpectations(selector: ModalSelector) {
           slideToTopAnimation ? 'not.have.class' : 'have.class',
           'hidden-modal_slide-to-left'
         )
+        .should(
+          slideToTopAnimation ? 'not.have.class' : 'have.class',
+          'hidden-modal_slide-to-right'
+        )
         .logDetail(
           `${should(slideToTopAnimation)} have slide to top animation.`
         );
@@ -70,8 +74,33 @@ function modalExpectations(selector: ModalSelector) {
           slideToLeftAnimation ? 'not.have.class' : 'have.class',
           'hidden-modal_slide-to-top'
         )
+        .should(
+          slideToLeftAnimation ? 'not.have.class' : 'have.class',
+          'hidden-modal_slide-to-right'
+        )
         .logDetail(
           `${should(slideToLeftAnimation)} have slide to left animation.`
+        );
+    },
+
+    haveSlideToRightAnimation: (slideToRightAnimation: boolean) => {
+      selector
+        .modal()
+        .should('exist')
+        .should(
+          slideToRightAnimation ? 'have.class' : 'not.have.class',
+          'hidden-modal_slide-to-right'
+        )
+        .should(
+          slideToRightAnimation ? 'not.have.class' : 'have.class',
+          'hidden-modal_slide-to-top'
+        )
+        .should(
+          slideToRightAnimation ? 'not.have.class' : 'have.class',
+          'hidden-modal_slide-to-left'
+        )
+        .logDetail(
+          `${should(slideToRightAnimation)} have slide to right animation.`
         );
     },
 
