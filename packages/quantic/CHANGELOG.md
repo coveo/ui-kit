@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.9.0...@coveo/quantic@2.9.1) (2023-01-18)
+
+### Bug Fixes
+
+- **quantic:** added spacing above error message in insight panel ([#2669](https://github.com/coveo/ui-kit/issues/2669)) ([3f5cef1](https://github.com/coveo/ui-kit/commit/3f5cef13969333bb7a1501cdc6d90598b5ce6415))
+
 # [2.9.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.8.2...@coveo/quantic@2.9.0) (2023-01-18)
 
 ### Features
