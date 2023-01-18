@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.8.2...@coveo/quantic@2.9.0) (2023-01-18)
+
+### Features
+
+- **quantic:** colored result badge svcc-2706 ([#2653](https://github.com/coveo/ui-kit/issues/2653)) ([073eb60](https://github.com/coveo/ui-kit/commit/073eb603c5dabd365261ad649f4020e8fc506292))
+
 ## [2.8.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.8.1...@coveo/quantic@2.8.2) (2023-01-16)
 
 **Note:** Version bump only for package @coveo/quantic
