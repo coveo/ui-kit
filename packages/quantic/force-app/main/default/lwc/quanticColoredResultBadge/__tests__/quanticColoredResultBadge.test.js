@@ -117,8 +117,6 @@ describe('c-quantic-colored-result-badge', () => {
       expect(resultField.result).toEqual(defaultOptions.result);
       expect(resultField.field).toEqual(defaultOptions.field);
       expect(resultField.type).toEqual(defaultOptions.type);
-
-      // expect(fieldComponent.textContent).toBe(defaultOptions.result.raw.testField);
     });
   })
 
