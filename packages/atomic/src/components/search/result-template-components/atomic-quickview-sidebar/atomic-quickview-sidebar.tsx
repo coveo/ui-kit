@@ -22,16 +22,18 @@ export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
   props
 ) => {
   const {words, minimized} = props;
+  const numberOfWords = Object.values(words).length;
+
+  if (numberOfWords === 0) {
+    return;
+  }
 
   const minimizeButton = (
-    <MinimizeButton {...props} wordsLength={Object.values(words).length} />
+    <MinimizeButton {...props} wordsLength={numberOfWords} />
   );
 
   return (
-    <div
-      class="p-4 border-r border-neutral h-full"
-      style={{backgroundColor: 'var(--atomic-neutral-light)'}}
-    >
+    <div class="p-4 border-r border-neutral h-full">
       {minimized && minimizeButton}
       <div class="flex items-center">
         <HighlightKeywordsCheckbox {...props} />
@@ -124,7 +126,11 @@ const Keywords: FunctionalComponent<
                   style={{backgroundColor: keyword.color}}
                 ></div>
                 <div class="grow mr-2">{keyword.text}</div>
-                <div class="flex-none">{keyword.occurrences}</div>
+                <div class="flex-none">
+                  {new Intl.NumberFormat(i18n.language, {
+                    notation: 'compact',
+                  }).format(keyword.occurrences)}
+                </div>
               </div>
               <div class="flex px-2">
                 <atomic-icon-button

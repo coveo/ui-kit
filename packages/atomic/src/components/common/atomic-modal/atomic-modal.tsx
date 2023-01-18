@@ -89,6 +89,13 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
     }
   }
 
+  @Listen('keyup', {target: 'body'})
+  handleCloseOnEscape(e: KeyboardEvent) {
+    if (e.key.toLowerCase() === 'escape') {
+      this.close();
+    }
+  }
+
   private waitForAnimationEnded() {
     // The focus trap focuses its first child when active. VoiceOver on iOS can't do it while an animation is ongoing.
     return new Promise((resolve) =>

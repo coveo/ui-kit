@@ -7,6 +7,21 @@
       "matchPackagePatterns": ["*"],
       "groupName": "all dependencies",
       "groupSlug": "all"
+    },
+    {
+      "matchPackagePatterns": ["^@angular/*", "^@angular-devkit/*"],
+      "groupSlug": "angular",
+      "rangeStrategy": "replace"
+    },
+    {
+      "matchPackagePatterns": [
+        "react",
+        "react-router-dom",
+        "react-dom",
+        "@types/react"
+      ],
+      "groupSlug": "react",
+      "rangeStrategy": "replace"
     }
   ],
   "rangeStrategy": "auto",
