@@ -11,38 +11,54 @@ const selectors = {
   moreActionsButton: '.session_more-actions-button',
 };
 
+const exampleEngineId = 'example EngineId';
 const exampleStartDate = 1672768867000;
 const exampleEndDate = 1672778845000;
 const exampleActionsAfterCaseCreation = [
   {
-    type: 'search',
-    title: 'Action One',
+    actionType: 'search',
+    document: {
+      title: 'Action One',
+      clickUri: 'https://example.com',
+    },
     searchHub: 'One',
     timestamp: '1',
   },
   {
-    type: 'click',
-    title: 'Action Two',
+    actionType: 'click',
+    document: {
+      title: 'Action Two',
+      clickUri: 'https://example.com',
+    },
     searchHub: 'Two',
     timestamp: '2',
   },
 ];
 const exampleActionsBeforeCaseCreation = [
   {
-    type: 'case-creation',
-    title: 'Action Three',
+    actionType: 'case-creation',
+    document: {
+      title: 'Action Three',
+      clickUri: 'https://example.com',
+    },
     searchHub: 'Three',
     timestamp: '3',
   },
   {
-    type: 'click',
-    title: 'Action Four',
+    actionType: 'click',
+    document: {
+      title: 'Action Four',
+      clickUri: 'https://example.com',
+    },
     searchHub: 'Four',
     timestamp: '4',
   },
   {
-    type: 'view',
-    title: 'Action Five',
+    actionType: 'view',
+    document: {
+      title: 'Action Five',
+      clickUri: 'https://example.com',
+    },
     searchHub: 'Five',
     timestamp: '5',
   },
@@ -53,6 +69,7 @@ const exampleActions = [
 ];
 
 const defaultOptions = {
+  engineId: exampleEngineId,
   startDate: exampleStartDate,
   endDate: exampleEndDate,
   isActiveSession: false,
@@ -129,18 +146,16 @@ describe('c-quantic-user-action-session', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const userActionEvents  = element.shadowRoot.querySelectorAll(
+      const userActionEvents = element.shadowRoot.querySelectorAll(
         selectors.userActionEvent
       );
       const moreActionsButton = element.shadowRoot.querySelector(
         selectors.moreActionsButton
       );
 
-      userActionEvents .forEach((userActionEvent, index) => {
-        expect(userActionEvent.title).toBe(exampleActions[index].title);
-        expect(userActionEvent.type).toBe(exampleActions[index].type);
-        expect(userActionEvent.searchHub).toBe(exampleActions[index].searchHub);
-        expect(userActionEvent.timestamp).toBe(exampleActions[index].timestamp);
+      userActionEvents.forEach((userActionEvent, index) => {
+        expect(userActionEvent.action).toEqual(defaultOptions.actions[index]);
+        expect(userActionEvent.engineId).toBe(defaultOptions.engineId);
       });
 
       expect(moreActionsButton).toBeNull();
@@ -175,34 +190,30 @@ describe('c-quantic-user-action-session', () => {
       });
       await flushPromises();
 
-      const userActionEvents  = element.shadowRoot.querySelectorAll(
+      const userActionEvents = element.shadowRoot.querySelectorAll(
         selectors.userActionEvent
       );
       const moreActionsButton = element.shadowRoot.querySelector(
         selectors.moreActionsButton
       );
-
       expect(moreActionsButton).not.toBeNull();
       expect(moreActionsButton.label).toBe(
-        `${exampleActionsAfterCaseCreation.length} more actions in this section`
+        `${exampleActionsAfterCaseCreation.length} more actions in this session`
       );
-      userActionEvents .forEach((userActionEvent, index) => {
-        expect(userActionEvent.title).toBe(
-          exampleActionsBeforeCaseCreation[index].title
-        );
-        if (exampleActionsBeforeCaseCreation[index].type === 'case-creation') {
-          expect(userActionEvent.type).toBe('active-case-creation');
+      userActionEvents.forEach((userActionEvent, index) => {
+        if (
+          exampleActionsBeforeCaseCreation[index].actionType === 'case-creation'
+        ) {
+          expect(userActionEvent.action).toEqual({
+            ...exampleActionsBeforeCaseCreation[index],
+            actionType: 'active-case-creation',
+          });
         } else {
-          expect(userActionEvent.type).toBe(
-            exampleActionsBeforeCaseCreation[index].type
+          expect(userActionEvent.action).toEqual(
+            exampleActionsBeforeCaseCreation[index]
           );
         }
-        expect(userActionEvent.searchHub).toBe(
-          exampleActionsBeforeCaseCreation[index].searchHub
-        );
-        expect(userActionEvent.timestamp).toBe(
-          exampleActionsBeforeCaseCreation[index].timestamp
-        );
+        expect(userActionEvent.engineId).toBe(defaultOptions.engineId);
       });
     });
 
@@ -225,19 +236,22 @@ describe('c-quantic-user-action-session', () => {
         );
         expect(moreActionsButton).toBeNull();
 
-        const userActionEvents  = element.shadowRoot.querySelectorAll(
+        const userActionEvents = element.shadowRoot.querySelectorAll(
           selectors.userActionEvent
         );
 
-        userActionEvents .forEach((userActionEvent, index) => {
-          expect(userActionEvent.title).toBe(exampleActions[index].title);
-          if (exampleActions[index].type === 'case-creation') {
-            expect(userActionEvent.type).toBe('active-case-creation');
+        userActionEvents.forEach((userActionEvent, index) => {
+          if (defaultOptions.actions[index].actionType === 'case-creation') {
+            expect(userActionEvent.action).toEqual({
+              ...defaultOptions.actions[index],
+              actionType: 'active-case-creation',
+            });
           } else {
-            expect(userActionEvent.type).toBe(exampleActions[index].type);
+            expect(userActionEvent.action).toEqual(
+              defaultOptions.actions[index]
+            );
           }
-          expect(userActionEvent.searchHub).toBe(exampleActions[index].searchHub);
-          expect(userActionEvent.timestamp).toBe(exampleActions[index].timestamp);
+          expect(userActionEvent.engineId).toBe(defaultOptions.engineId);
         });
       });
     });
@@ -276,7 +290,7 @@ describe('c-quantic-user-action-session', () => {
         );
 
         expect(moreActionsButton).not.toBeNull();
-        expect(moreActionsButton.label).toBe('1 more action in this section');
+        expect(moreActionsButton.label).toBe('1 more action in this session');
       });
     });
   });

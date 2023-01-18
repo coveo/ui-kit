@@ -20,6 +20,12 @@ import {LightningElement, api} from 'lwc';
  */
 export default class QuanticUserActionSession extends LightningElement {
   /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
+    @api engineId;
+  /**
    * The start date of the user session.
    * @api
    * @type {number}
@@ -34,7 +40,7 @@ export default class QuanticUserActionSession extends LightningElement {
   /**
    * The actions that took place during this user session.
    * @api
-   * @type {Array<UserAction>}
+   * @type {Array<import('../quanticUserActionEvent/quanticUserActionEvent').UserAction>}
    */
   @api actions
   /**
@@ -64,8 +70,8 @@ export default class QuanticUserActionSession extends LightningElement {
       return this.actions;
     }
     return this.actions.map((action) => {
-      if (action.type === 'case-creation') {
-        return {...action, type: 'active-case-creation'};
+      if (action.actionType === 'case-creation') {
+        return {...action, actionType: 'active-case-creation'};
       }
       return action;
     });
@@ -73,7 +79,7 @@ export default class QuanticUserActionSession extends LightningElement {
 
   get caseCreationActionIndex() {
     return this.displayedActions.findIndex(
-      (action) => action.type === 'active-case-creation'
+      (action) => action.actionType === 'active-case-creation'
     );
   }
 
