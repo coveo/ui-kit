@@ -11,7 +11,7 @@ import {LightningElement, api} from 'lwc';
 
 export default class QuanticUserActionToggle extends LightningElement {
   @api engineId;
-  @api caseId;
+  @api ticketCreationDate;
 
   labels = {
     userActions,
