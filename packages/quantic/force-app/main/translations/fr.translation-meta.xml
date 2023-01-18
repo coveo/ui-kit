@@ -476,4 +476,16 @@
       <label>Copié!</label>
       <name>quantic_Copied</name>
     </customLabels>
+    <customLabels>
+      <label>1 action supplémentaire dans cette session</label>
+      <name>quantic_MoreActionsInSession</name>
+    </customLabels>
+    <customLabels>
+      <label>{{0}} actions supplémentaires dans cette session</label>
+      <name>quantic_MoreActionsInSession_plural</name>
+    </customLabels>
+    <customLabels>
+      <label>Copié!</label>
+      <name>quantic_To</name>
+    </customLabels>
 </Translations>

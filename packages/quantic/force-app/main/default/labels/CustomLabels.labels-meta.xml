@@ -903,4 +903,25 @@
       <protected>false</protected>
       <shortDescription>Copied!</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_MoreActionsInSession</fullName>
+      <value>1 more action in this session</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>1 more actions in this session</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_MoreActionsInSession_plural</fullName>
+      <value>{{0}} more actions in this session</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>2 more actions in this session</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_To</fullName>
+      <value>to</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>to</shortDescription>
+    </labels>
 </CustomLabels>
