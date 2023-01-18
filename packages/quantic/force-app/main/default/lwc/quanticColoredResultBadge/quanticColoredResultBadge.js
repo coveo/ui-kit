@@ -56,7 +56,7 @@ export default class QuanticColoredResultBadge extends LightningElement {
    * @returns {string}
    */
   get textToDisplay() {
-    return this.label || this.result?.raw?.[this.field].toString()
+    return this.label || this.result?.raw?.[this.field]?.toString()
   }
 
   get hasTextToDisplay() {
