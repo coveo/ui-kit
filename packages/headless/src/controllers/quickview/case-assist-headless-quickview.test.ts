@@ -3,6 +3,7 @@ import {
   resultPreview,
   documentSuggestion,
 } from '../../app/reducers';
+import {DocumentSuggestionResponse} from '../../case-assist.index';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
 import {
   fetchResultContent,
@@ -144,5 +145,28 @@ describe('CaseAssistQuickview', () => {
         results: engine.state.documentSuggestion.documents,
       })
     );
+  });
+
+  describe('pagination', () => {
+    beforeEach(() => {
+      engine = buildMockCaseAssistEngine();
+      engine.state.documentSuggestion.documents = [
+        {hasHtmlVersion: true, uniqueId: 'first'},
+        {hasHtmlVersion: true, uniqueId: 'second'},
+        {hasHtmlVersion: true, uniqueId: 'third'},
+      ] as DocumentSuggestionResponse[];
+      engine.state.resultPreview.resultsWithPreview = [
+        'first',
+        'second',
+        'third',
+      ];
+      engine.state.resultPreview.position = 0;
+      initQuickview();
+    });
+
+    it('returns the proper current and total results for pagination purpose', () => {
+      expect(quickview.state.currentDocument).toBe(1);
+      expect(quickview.state.totalDocuments).toBe(3);
+    });
   });
 });

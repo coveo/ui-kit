@@ -20,9 +20,24 @@ export interface CaseAssistQuickviewProps extends QuickviewProps {}
 
 export interface CaseAssistQuickviewOptions extends QuickviewOptions {}
 
-export interface CaseAssistQuickview extends Quickview {}
+export interface CaseAssistQuickview extends Quickview {
+  state: CaseAssistQuickviewState;
+}
 
-export interface CaseAssistQuickviewState extends QuickviewState {}
+export interface CaseAssistQuickviewState extends QuickviewState {
+  /**
+   * The number of available document for the current document set.
+   *
+   * Can be used for quickview pagination purpose.
+   */
+  totalDocuments: number;
+  /**
+   * The position of the document in the current document set.
+   *
+   * Can be used for quickview pagination purpose.
+   */
+  currentDocument: number;
+}
 
 /**
  * Creates a `CaseAssistQuickview` controller instance.
@@ -41,9 +56,10 @@ export function buildCaseAssistQuickview(
 
   const {dispatch} = engine;
   const getState = () => engine.state;
+  const getDocuments = () => getState().documentSuggestion.documents;
   dispatch(
     preparePreviewPagination({
-      results: getState().documentSuggestion.documents,
+      results: getDocuments(),
     })
   );
 
@@ -54,13 +70,25 @@ export function buildCaseAssistQuickview(
   };
   const path = '/html';
 
-  return buildCoreQuickview(
+  const core = buildCoreQuickview(
     engine,
     props,
     buildResultPreviewRequest,
     path,
     fetchResultContentCallback
   );
+
+  return {
+    ...core,
+    state: {
+      ...core.state,
+      currentDocument:
+        getDocuments().findIndex(
+          (r) => r.uniqueId === core.state.currentResultUniqueId
+        ) + 1,
+      totalDocuments: getDocuments().length,
+    },
+  };
 }
 
 function loadSearchQuickviewReducers(

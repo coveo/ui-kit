@@ -139,4 +139,27 @@ describe('Quickview', () => {
       preparePreviewPagination({results: engine.state.search.response.results})
     );
   });
+
+  describe('pagination', () => {
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      engine.state.search.results = [
+        buildMockResult({uniqueId: 'first', hasHtmlVersion: true}),
+        buildMockResult({uniqueId: 'second', hasHtmlVersion: true}),
+        buildMockResult({uniqueId: 'third', hasHtmlVersion: true}),
+      ];
+      engine.state.resultPreview.resultsWithPreview = [
+        'first',
+        'second',
+        'third',
+      ];
+      engine.state.resultPreview.position = 0;
+      initQuickview();
+    });
+
+    it('returns the proper current and total results for pagination purpose', () => {
+      expect(quickview.state.currentResult).toBe(1);
+      expect(quickview.state.totalResults).toBe(3);
+    });
+  });
 });

@@ -11,12 +11,42 @@ import {loadReducerError} from '../../utils/errors';
 import {
   buildCoreQuickview,
   QuickviewOptions,
-  QuickviewState,
+  QuickviewState as CoreQuickviewState,
   QuickviewProps,
-  Quickview,
+  Quickview as CoreQuickview,
 } from '../core/quickview/headless-core-quickview';
 
-export type {QuickviewOptions, QuickviewState, QuickviewProps, Quickview};
+export type {
+  QuickviewOptions,
+  QuickviewProps,
+  CoreQuickviewState,
+  CoreQuickview,
+};
+
+/**
+ * asdf
+ */
+export interface QuickviewState extends CoreQuickviewState {
+  /**
+   * The number of available results for the current result set.
+   *
+   * Can be used for quickview pagination purpose.
+   */
+  totalResults: number;
+  /**
+   * The position of the result in the current result set.
+   *
+   * Can be used for quickview pagination purpose.
+   */
+  currentResult: number;
+}
+
+/**
+ * asd
+ */
+export interface Quickview extends CoreQuickview {
+  state: QuickviewState;
+}
 
 /**
  * Creates a `Quickview` controller instance.
@@ -35,7 +65,8 @@ export function buildQuickview(
 
   const {dispatch} = engine;
   const getState = () => engine.state;
-  dispatch(preparePreviewPagination({results: getState().search.results}));
+  const getResults = () => getState().search.results;
+  dispatch(preparePreviewPagination({results: getResults()}));
 
   const fetchResultContentCallback = () => {
     engine.dispatch(logDocumentQuickview(props.options.result));
@@ -50,7 +81,17 @@ export function buildQuickview(
     fetchResultContentCallback
   );
 
-  return core;
+  return {
+    ...core,
+    state: {
+      ...core.state,
+      currentResult:
+        getResults().findIndex(
+          (r) => r.uniqueId === core.state.currentResultUniqueId
+        ) + 1,
+      totalResults: getResults().length,
+    },
+  };
 }
 
 function loadSearchQuickviewReducers(

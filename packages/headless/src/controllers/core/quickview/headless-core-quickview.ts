@@ -105,6 +105,11 @@ export interface QuickviewState {
    * The `src` path to use if rendering the quickview in an iframe.
    */
   contentURL?: string;
+
+  /**
+   * The current result unique ID,
+   */
+  currentResultUniqueId: string;
 }
 
 /**
@@ -185,12 +190,14 @@ export function buildCoreQuickview(
         result.uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
       const contentURL = preview.contentURL;
+      const currentResultUniqueId = getUniqueIdFromPosition();
 
       return {
         content,
         resultHasPreview,
         isLoading,
         contentURL,
+        currentResultUniqueId,
       };
     },
   };
