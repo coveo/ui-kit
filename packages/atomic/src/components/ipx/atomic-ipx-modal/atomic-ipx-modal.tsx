@@ -33,6 +33,8 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
   @State() public error!: Error;
 
   @Prop({mutable: true}) source?: HTMLElement;
+
+  @Prop() isEmbedded = false;
   /**
    * The container to hide from the tabindex and accessibility DOM when the modal is closed.
    */
@@ -46,20 +48,21 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
 
   @Watch('isOpen')
   async watchToggleOpen(isOpen: boolean) {
+    if (this.isEmbedded) {
+      return;
+    }
     const watchToggleOpenExecution = ++this.currentWatchToggleOpenExecution;
     const modalOpenedClass = 'atomic-ipx-modal-opened';
 
     if (isOpen) {
       document.body.classList.add(modalOpenedClass);
-      if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
-        return;
+      if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
+        this.focusTrap!.active = true;
       }
-      this.focusTrap!.active = true;
-    } else {
-      document.body.classList.remove(modalOpenedClass);
-      if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
-        return;
-      }
+      return;
+    }
+    document.body.classList.remove(modalOpenedClass);
+    if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
       this.focusTrap!.active = false;
     }
   }
@@ -80,6 +83,10 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
     this.isOpen && e.preventDefault();
   }
 
+  public componentWillLoad(): void {
+    this.isOpen = this.isOpen || this.isEmbedded;
+  }
+
   public componentDidLoad() {
     const id = this.host.id || randomID('atomic-ipx-modal-');
     this.host.id = id;
@@ -95,7 +102,11 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
       <Host class={this.getClasses().join(' ')}>
         <div
           part="backdrop"
-          class="fixed left-0 top-0 right-0 bottom-0 z-[9999]"
+          class={
+            this.isEmbedded
+              ? ''
+              : 'fixed left-0 top-0 right-0 bottom-0 z-[9999]'
+          }
         >
           <atomic-focus-trap
             role="dialog"

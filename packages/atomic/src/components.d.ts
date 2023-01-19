@@ -679,6 +679,7 @@ export namespace Components {
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
          */
         "container"?: HTMLElement;
+        "isEmbedded": boolean;
         "isOpen": boolean;
         "source"?: HTMLElement;
     }
@@ -3286,6 +3287,7 @@ declare namespace LocalJSX {
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
          */
         "container"?: HTMLElement;
+        "isEmbedded"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
         "source"?: HTMLElement;

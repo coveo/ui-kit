@@ -9,9 +9,17 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script>
-      (async () => {
-        await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('atomic-search-interface');
+      const ipxSelectorToButtonMode = (searchInterface, hostDiv) => {
+        searchInterface.style.display = 'inline';
+        hostDiv.style.display = 'none';
+      };
+
+      const ipxButtonToSelectorMode = (searchInterface, hostDiv) => {
+        searchInterface.style.display = 'none';
+        hostDiv.style.display = 'inline';
+      };
+
+      const initializeSearchInterface = async (searchInterface) => {
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
@@ -28,6 +36,35 @@
 
         searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
           '.html': 'html',
+        });
+      };
+
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+
+        const ipxInSelector = searchInterface.cloneNode(true);
+
+        await initializeSearchInterface(searchInterface);
+
+        const hostDiv = document.querySelector('div#host-div');
+        hostDiv.style.display = 'none';
+        hostDiv.appendChild(ipxInSelector);
+        ipxInSelector.querySelector('atomic-ipx-modal').setAttribute('is-embedded', 'true');
+        ipxInSelector.removeChild(ipxInSelector.querySelector('atomic-ipx-button'));
+        await initializeSearchInterface(ipxInSelector);
+
+        const displaySelect = document.getElementById('ipx-display-select');
+        displaySelect.addEventListener('change', ({target: {value}}) => {
+          switch (value) {
+            case 'button':
+              ipxSelectorToButtonMode(searchInterface, hostDiv);
+              break;
+            case 'target-selector':
+              ipxButtonToSelectorMode(searchInterface, hostDiv);
+            default:
+              break;
+          }
         });
       })();
     </script>
@@ -114,6 +151,13 @@
   </head>
 
   <body>
+    <div id="ipx-display-option">
+      <label for="ipx-display-select">IPX display type:&nbsp;</label>
+      <select id="ipx-display-select">
+        <option value="button" selected>Button</option>
+        <option value="target-selector">Target Selector</option>
+      </select>
+    </div>
     <atomic-search-interface fields-to-include='["snrating","sncost"]'>
       <atomic-ipx-modal is-open="true">
         <div slot="header">
@@ -342,6 +386,7 @@
       </atomic-ipx-modal>
       <atomic-ipx-button is-modal-open="true"></atomic-ipx-button>
     </atomic-search-interface>
+    <div id="host-div"></div>
     <script src="../header.js" type="text/javascript"></script>
   </body>
 </html>
