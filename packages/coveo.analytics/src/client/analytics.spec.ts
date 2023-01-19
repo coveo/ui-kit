@@ -453,3 +453,34 @@ describe('doNotTrack', () => {
         expect(Cookie.get('coveo_visitorId')).not.toBe(aVisitorId);
     });
 });
+
+describe('custom clientId', () => {
+    it('allows setting of a custom clientId', async () => {
+        let client = new CoveoAnalyticsClient({});
+        client.setClientId('c7d57b22-4aa8-487a-a106-be5243885f0a');
+        expect(await client.getCurrentVisitorId()).toBe('c7d57b22-4aa8-487a-a106-be5243885f0a');
+    });
+
+    it('allows setting a custom consistent clientId given a string', async () => {
+        let client = new CoveoAnalyticsClient({});
+        client.setClientId('somestring', 'testNameSpace');
+        //uuid v5 specific uuid generation
+        expect(await client.getCurrentVisitorId()).toBe('2c356915-8223-5773-acb8-e2a34404a559');
+        //check for consistent ids
+        client.setClientId('somestring', 'testNameSpace');
+        expect(await client.getCurrentVisitorId()).toBe('2c356915-8223-5773-acb8-e2a34404a559');
+        client.setClientId('otherstring', 'testNameSpace');
+        expect(await client.getCurrentVisitorId()).not.toBe('2c356915-8223-5773-acb8-e2a34404a559');
+        client.setClientId('somestring', 'otherNameSpace');
+        expect(await client.getCurrentVisitorId()).not.toBe('2c356915-8223-5773-acb8-e2a34404a559');
+    });
+
+    it('errors when not providing a namespace', async () => {
+        let client = new CoveoAnalyticsClient({});
+        expect.assertions(1);
+        await expect(client.setClientId('somestring')).rejects.toEqual(
+            Error('Cannot generate uuid client id without a specific namespace string.')
+        );
+        //uuid v5 specific uuid generation
+    });
+});

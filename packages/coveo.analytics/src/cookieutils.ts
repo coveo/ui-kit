@@ -1,50 +1,27 @@
 interface CookieDetails {
     name: string;
     value: string;
-    expires: string;
-    domain: string;
+    expirationDate?: Date;
+    domain?: string;
 }
 
-// Code originally taken from : https://developers.livechatinc.com/blog/setting-cookies-to-subdomains-in-javascript/
+// Code originally modified from : https://developers.livechatinc.com/blog/setting-cookies-to-subdomains-in-javascript/
 export class Cookie {
-    static set(name: string, value: string, expiration?: number) {
-        var domain: string, domainParts: string[], date: any, expires: string, host: string;
-
-        if (expiration) {
-            date = new Date();
-            date.setTime(date.getTime() + expiration);
-            expires = '; expires=' + date.toGMTString();
-        } else {
-            expires = '';
+    static set(name: string, value: string, expire?: number) {
+        var domain: string, expirationDate: Date | undefined, domainParts: string[], host: string;
+        if (expire) {
+            expirationDate = new Date();
+            expirationDate.setTime(expirationDate.getTime() + expire);
         }
-
         host = window.location.hostname;
         if (host.indexOf('.') === -1) {
-            // no "." in a domain - it's localhost or something similar
-            document.cookie = name + '=' + value + expires + '; path=/';
+            // no "." in a domain - single domain name, it's localhost or something similar
+            writeCookie(name, value, expirationDate);
         } else {
-            // Remember the cookie on all subdomains.
-            //
-            // Start with trying to set cookie to the top domain.
-            // (example: if user is on foo.com, try to set
-            //  cookie to domain ".com")
-            //
-            // If the cookie will not be set, it means ".com"
-            // is a top level domain and we need to
-            // set the cookie to ".foo.com"
             domainParts = host.split('.');
-            domainParts.shift();
-            domain = '.' + domainParts.join('.');
-
-            writeCookie({name, value, expires, domain});
-
-            // check if cookie was successfuly set to the given domain
-            // (otherwise it was a Top-Level Domain)
-            if (Cookie.get(name) == null || Cookie.get(name) != value) {
-                // append "." to current domain
-                domain = '.' + host;
-                writeCookie({name, value, expires, domain});
-            }
+            // we always have at least 2 domain parts
+            domain = domainParts[domainParts.length - 2] + '.' + domainParts[domainParts.length - 1];
+            writeCookie(name, value, expirationDate, domain);
         }
     }
 
@@ -53,9 +30,8 @@ export class Cookie {
         var cookieArray = document.cookie.split(';');
         for (var i = 0; i < cookieArray.length; i++) {
             var cookie = cookieArray[i];
-            cookie = cookie.replace(/^\s+/, '');
-
-            if (cookie.indexOf(cookiePrefix) == 0) {
+            cookie = cookie.replace(/^\s+/, ''); //strip whitespace from front of cookie only
+            if (cookie.lastIndexOf(cookiePrefix, 0) === 0) {
                 return cookie.substring(cookiePrefix.length, cookie.length);
             }
         }
@@ -67,7 +43,10 @@ export class Cookie {
     }
 }
 
-function writeCookie(details: CookieDetails) {
-    const {name, value, expires, domain} = details;
-    document.cookie = `${name}=${value}${expires}; path=/; domain=${domain}; SameSite=Lax`;
+function writeCookie(name: string, value: string, expirationDate?: Date, domain?: string) {
+    document.cookie =
+        `${name}=${value}` +
+        (expirationDate ? `;expires=${expirationDate.toUTCString()}` : '') +
+        (domain ? `;domain=${domain}` : '') +
+        ';SameSite=Lax';
 }

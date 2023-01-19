@@ -23,6 +23,7 @@ import {hasWindow, hasDocument} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
 import {uuidv4} from './crypto';
+import {v5 as uuidv5, validate as uuidValidate} from 'uuid';
 import {
     convertKeysToMeasurementProtocol,
     isMeasurementProtocolKey,
@@ -118,6 +119,11 @@ export function buildBaseUrl(endpoint = Endpoints.default, apiVersion = Version)
     return `${endpoint}${endpointIsCoveoProxy ? '' : '/rest'}/${apiVersion}`;
 }
 
+// Note: Changing this value will destroy the mapping from tracking string to clientId for all customers
+// using the setClientId() api. It will have the same effect as every visitor for those customers clearing
+// their cookie store at the same time, with corresponding downstream effects.
+const COVEO_NAMESPACE = '38824e1f-37f5-42d3-8372-a4b8fa9df946';
+
 export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider {
     private get defaultOptions(): ClientOptions {
         return {
@@ -207,6 +213,17 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     async setCurrentVisitorId(visitorId: string) {
         this.visitorId = visitorId;
         await this.storage.setItem('visitorId', visitorId);
+    }
+
+    async setClientId(value: string, namespace?: string) {
+        if (uuidValidate(value)) {
+            this.setCurrentVisitorId(value);
+        } else {
+            if (!namespace) {
+                throw Error('Cannot generate uuid client id without a specific namespace string.');
+            }
+            this.setCurrentVisitorId(uuidv5(value, uuidv5(namespace, COVEO_NAMESPACE)));
+        }
     }
 
     async getParameters(eventType: EventType | string, ...payload: VariableArgumentsPayload) {

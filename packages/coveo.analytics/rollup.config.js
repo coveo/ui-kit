@@ -48,6 +48,7 @@ const browserUMD = {
     ],
     plugins: [
         browserFetch(),
+        nodeResolve({preferBuiltins: true, only: ['uuid']}),
         tsPlugin(),
         process.env.SERVE
             ? serve({
@@ -68,7 +69,12 @@ const nodeCJS = {
         file: './dist/library.js',
         format: 'cjs',
     },
-    plugins: [nodeResolve({mainFields: ['main']}), commonjs(), tsPlugin(), json()],
+    plugins: [
+        nodeResolve({mainFields: ['main'], preferBuiltins: true, only: ['uuid']}),
+        commonjs(),
+        tsPlugin(),
+        json(),
+    ],
 };
 
 const browserESM = {
@@ -79,6 +85,7 @@ const browserESM = {
     },
     plugins: [
         browserFetch(),
+        nodeResolve({preferBuiltins: true, only: ['uuid']}),
         typescript({
             useTsconfigDeclarationDir: true,
             tsconfigOverride: {compilerOptions: {target: 'es6'}},
@@ -93,6 +100,9 @@ const libRN = {
         format: 'es',
     },
     plugins: [
+        nodeResolve({preferBuiltins: true, only: ['uuid']}),
+        commonjs(),
+        json(),
         typescript({
             useTsconfigDeclarationDir: true,
             tsconfigOverride: {compilerOptions: {target: 'es6'}},

@@ -33,8 +33,8 @@ export class CookieStorage implements WebStorage {
     removeItem(key: string) {
         Cookie.erase(`${CookieStorage.prefix}${key}`);
     }
-    setItem(key: string, data: string): void {
-        Cookie.set(`${CookieStorage.prefix}${key}`, data);
+    setItem(key: string, data: string, expire?: number): void {
+        Cookie.set(`${CookieStorage.prefix}${key}`, data, expire);
     }
 }
 
@@ -52,7 +52,7 @@ export class CookieAndLocalStorage implements WebStorage {
 
     setItem(key: string, data: string): void {
         localStorage.setItem(key, data);
-        this.cookieStorage.setItem(key, data);
+        this.cookieStorage.setItem(key, data, 31556926000); // 1 year first party cookie
     }
 }
 

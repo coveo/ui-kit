@@ -1,4 +1,5 @@
 import {CookieStorage, CookieAndLocalStorage} from './storage';
+import {Cookie} from './cookieutils';
 
 describe('CookieStorage', () => {
     const key = 'wow';
@@ -14,6 +15,13 @@ describe('CookieStorage', () => {
         const storage = new CookieStorage();
         storage.setItem(key, someData);
         storage.removeItem(key);
+        expect(storage.getItem(key)).toBe(null);
+    });
+
+    it('honors expiration date', async () => {
+        const storage = new CookieStorage();
+        storage.setItem(key, someData, 1000);
+        await new Promise((res) => setTimeout(res, 1000)); // wait for 1 sec
         expect(storage.getItem(key)).toBe(null);
     });
 });
