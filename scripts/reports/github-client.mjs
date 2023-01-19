@@ -1,8 +1,6 @@
 import {getOctokit, context} from '@actions/github';
 
-const octokit = getOctokit(process.env.GITHUB_CREDENTIALS);
-console.log('octokit');
-console.log(octokit);
+const octokit = getOctokit(process.env.GITHUB_CREDENTIALS).rest;
 const owner = 'coveo';
 const repo = 'ui-kit';
 
