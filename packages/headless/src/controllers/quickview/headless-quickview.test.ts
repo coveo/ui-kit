@@ -1,5 +1,8 @@
-import {configuration, resultPreview} from '../../app/reducers';
-import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
+import {configuration, resultPreview, search} from '../../app/reducers';
+import {
+  fetchResultContent,
+  preparePreviewPagination,
+} from '../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {
   buildMockResult,
@@ -37,7 +40,10 @@ describe('Quickview', () => {
   });
 
   it('it adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({
+    expect(engine.addReducers).toHaveBeenNthCalledWith(1, {
+      search,
+    });
+    expect(engine.addReducers).toHaveBeenNthCalledWith(2, {
       configuration,
       resultPreview,
     });
@@ -125,5 +131,12 @@ describe('Quickview', () => {
     initQuickview();
 
     expect(options.maximumPreviewSize).toBe(0);
+  });
+
+  it('#preparePreviewPagination on initialization', () => {
+    initQuickview();
+    expect(engine.actions).toContainEqual(
+      preparePreviewPagination({results: engine.state.search.response.results})
+    );
   });
 });

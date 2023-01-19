@@ -1,6 +1,13 @@
+import {CoreEngine} from '../..';
+import {HtmlApiClient} from '../../api/search/html/html-api-client';
+import {search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
+import {SearchSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {
   buildCoreQuickview,
   QuickviewOptions,
@@ -22,16 +29,36 @@ export function buildQuickview(
   engine: SearchEngine,
   props: QuickviewProps
 ): Quickview {
+  if (!loadSearchQuickviewReducers(engine)) {
+    throw loadReducerError;
+  }
+
+  const {dispatch} = engine;
+  const getState = () => engine.state;
+  dispatch(preparePreviewPagination({results: getState().search.results}));
+
   const fetchResultContentCallback = () => {
     engine.dispatch(logDocumentQuickview(props.options.result));
   };
   const path = '/html';
 
-  return buildCoreQuickview(
+  const core = buildCoreQuickview(
     engine,
     props,
     buildResultPreviewRequest,
     path,
     fetchResultContentCallback
   );
+
+  return core;
+}
+
+function loadSearchQuickviewReducers(
+  engine: CoreEngine
+): engine is CoreEngine<
+  SearchSection,
+  ClientThunkExtraArguments<HtmlApiClient>
+> {
+  engine.addReducers({search});
+  return true;
 }

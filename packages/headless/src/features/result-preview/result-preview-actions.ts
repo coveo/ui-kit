@@ -32,7 +32,7 @@ export interface UpdateContentURLThunkReturn {
 }
 
 export interface PreparePreviewPaginationActionPayload {
-  results: Result[];
+  results: Pick<Result, 'hasHtmlVersion' | 'uniqueId'>[];
 }
 
 export interface AsyncThunkGlobalOptions<T>

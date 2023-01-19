@@ -10,8 +10,9 @@ import {
 } from './result-preview-actions';
 import {getResultPreviewInitialState} from './result-preview-state';
 
-const getUniqueIdsOfResultsWithHTMLVersion = (results: Result[]) =>
-  results.filter((r) => r.hasHtmlVersion).map((r) => r.uniqueId);
+const getUniqueIdsOfResultsWithHTMLVersion = (
+  results: Pick<Result, 'hasHtmlVersion' | 'uniqueId'>[]
+) => results.filter((r) => r.hasHtmlVersion).map((r) => r.uniqueId);
 
 export const resultPreviewReducer = createReducer(
   getResultPreviewInitialState(),

@@ -5,12 +5,11 @@ import {
   HtmlRequestOptions,
 } from '../../../api/search/html/html-request';
 import {Result} from '../../../api/search/search/result';
-import {configuration, resultPreview, search} from '../../../app/reducers';
+import {configuration, resultPreview} from '../../../app/reducers';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   fetchResultContent,
   nextPreview,
-  preparePreviewPagination,
   previousPreview,
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
@@ -18,7 +17,6 @@ import {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result
 import {
   ConfigurationSection,
   ResultPreviewSection,
-  SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {
@@ -107,19 +105,6 @@ export interface QuickviewState {
    * The `src` path to use if rendering the quickview in an iframe.
    */
   contentURL?: string;
-
-  /**
-   * The number of available results for the current result set.
-   *
-   * Can be used for quickview pagination purpose.
-   */
-  totalResults: number;
-  /**
-   * The position of the result in the current result set.
-   *
-   * Can be used for quickview pagination purpose.
-   */
-  currentResult: number;
 }
 
 /**
@@ -153,8 +138,6 @@ export function buildCoreQuickview(
     const {resultsWithPreview, position} = getState().resultPreview;
     return resultsWithPreview[position];
   };
-
-  dispatch(preparePreviewPagination({results: getState().search.results}));
 
   const onFetchContent = (uniqueId: string) => {
     props.options.onlyContentURL
@@ -198,12 +181,6 @@ export function buildCoreQuickview(
       const state = getState();
       const resultHasPreview = result.hasHtmlVersion;
       const preview = state.resultPreview;
-      const totalResults = state.search.results.length;
-      const currentResult =
-        state.search.results.findIndex(
-          (r) => r.uniqueId === getUniqueIdFromPosition()
-        ) + 1;
-
       const content =
         result.uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
@@ -214,8 +191,6 @@ export function buildCoreQuickview(
         resultHasPreview,
         isLoading,
         contentURL,
-        totalResults,
-        currentResult,
       };
     },
   };
@@ -224,9 +199,9 @@ export function buildCoreQuickview(
 function loadQuickviewReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  ConfigurationSection & ResultPreviewSection & SearchSection,
+  ConfigurationSection & ResultPreviewSection,
   ClientThunkExtraArguments<HtmlApiClient>
 > {
-  engine.addReducers({configuration, resultPreview, search});
+  engine.addReducers({configuration, resultPreview});
   return true;
 }
