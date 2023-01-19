@@ -31,7 +31,6 @@ import {
   nextPage,
 } from './pagination-actions';
 import {
-  maximumNumberOfResultsFromIndex,
   minimumPage,
 } from './pagination-constants';
 import {getPaginationInitialState, PaginationState} from './pagination-state';
@@ -159,9 +158,5 @@ export function calculateMaxPage(
   totalCountFiltered: number,
   numberOfResults: number
 ) {
-  const totalCount = Math.min(
-    totalCountFiltered,
-    maximumNumberOfResultsFromIndex
-  );
-  return Math.ceil(totalCount / numberOfResults);
+  return Math.ceil(totalCountFiltered / numberOfResults);
 }
