@@ -94,6 +94,21 @@ describe('c-quantic-result-text', () => {
     });
   });
 
+  describe('when field is given as am empty string', () => {
+    it('should show an error', async () => {
+      // @ts-ignore
+      const element = createTestComponent({...defaultOptions, field: ''});
+      await flushPromises();
+
+      const errorMessage = element.shadowRoot.querySelector(errorSelector);
+
+      expect(errorMessage).not.toBeNull();
+      expect(console.error).toHaveBeenCalledWith(
+        'The c-quantic-result-text requires a result and a field to be specified.'
+      );
+    });
+  });
+
   describe('when required props are given', () => {
     it('should render the result field value', async () => {
       const element = createTestComponent();
