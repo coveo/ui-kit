@@ -39,20 +39,24 @@
         });
       };
 
+      const setupEmbeddedInterface = async (embeddedSearchInterface) => {
+        const hostDiv = document.querySelector('div#host-div');
+        hostDiv.style.display = 'none';
+        hostDiv.appendChild(ipxInSelector);
+        embeddedSearchInterface.querySelector('atomic-ipx-modal').setAttribute('is-embedded', 'true');
+        embeddedSearchInterface.removeChild(ipxInSelector.querySelector('atomic-ipx-button'));
+        await initializeSearchInterface(ipxInSelector);
+      };
+
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('atomic-search-interface');
 
-        const ipxInSelector = searchInterface.cloneNode(true);
+        const embeddedSearchInterface = searchInterface.cloneNode(true);
 
         await initializeSearchInterface(searchInterface);
 
-        const hostDiv = document.querySelector('div#host-div');
-        hostDiv.style.display = 'none';
-        hostDiv.appendChild(ipxInSelector);
-        ipxInSelector.querySelector('atomic-ipx-modal').setAttribute('is-embedded', 'true');
-        ipxInSelector.removeChild(ipxInSelector.querySelector('atomic-ipx-button'));
-        await initializeSearchInterface(ipxInSelector);
+        await setupEmbeddedInterface(embeddedSearchInterface);
 
         const displaySelect = document.getElementById('ipx-display-select');
         displaySelect.addEventListener('change', ({target: {value}}) => {
