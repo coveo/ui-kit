@@ -23,17 +23,22 @@ import {
   Result,
   AtomicRecsList,
 } from '@coveo/atomic-react/recommendation';
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useMemo} from 'react';
 
 export const RecsPage: FunctionComponent = () => {
-  const engine = buildRecommendationEngine({
-    configuration: {
-      accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
-      organizationId: 'electronicscoveodemocomo0n2fu8v',
-      pipeline: 'Search',
-      searchHub: 'MainSearch',
-    },
-  });
+  const engine = useMemo(
+    () =>
+      buildRecommendationEngine({
+        configuration: {
+          accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+          organizationId: 'electronicscoveodemocomo0n2fu8v',
+          pipeline: 'Search',
+          searchHub: 'MainSearch',
+        },
+      }),
+    []
+  );
+
   return (
     <AtomicRecsInterface
       engine={engine}

@@ -46,18 +46,24 @@ import {
 } from '@coveo/atomic-react';
 import type {NextPage} from 'next';
 import dynamic from 'next/dynamic';
+import {useMemo} from 'react';
 
 const SearchPage: NextPage = () => {
-  const engine = buildSearchEngine({
-    configuration: {
-      accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
-      organizationId: 'electronicscoveodemocomo0n2fu8v',
-      search: {
-        pipeline: 'Search',
-        searchHub: 'MainSearch',
-      },
-    },
-  });
+  const engine = useMemo(
+    () =>
+      buildSearchEngine({
+        configuration: {
+          accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+          organizationId: 'electronicscoveodemocomo0n2fu8v',
+          search: {
+            pipeline: 'Search',
+            searchHub: 'MainSearch',
+          },
+        },
+      }),
+    []
+  );
+
   return (
     <AtomicSearchInterface
       engine={engine}

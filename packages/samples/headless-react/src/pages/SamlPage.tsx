@@ -1,38 +1,37 @@
 import {buildSamlClient, SamlClientOptions} from '@coveo/auth';
 import {buildSearchEngine} from '@coveo/headless';
-import {useEffect, useState, PropsWithChildren} from 'react';
+import {useEffect, useState, PropsWithChildren, useMemo} from 'react';
 import {AppContext} from '../context/engine';
 
-export function SamlPage(props: PropsWithChildren<SamlClientOptions>) {
-  const [accessToken, setAccessToken] = useState('');
-  const saml = buildSamlClient(props);
+export function SamlPage({
+  children,
+  ...samlClientOptions
+}: PropsWithChildren<SamlClientOptions>) {
+  const [initialAccessToken, setInitialAccessToken] = useState('');
+  const saml = useMemo(
+    () => buildSamlClient(samlClientOptions),
+    [samlClientOptions]
+  );
 
   useEffect(() => {
-    getToken();
-  }, []);
+    saml.authenticate().then(setInitialAccessToken);
+  }, [saml]);
 
-  if (!accessToken) {
+  if (!initialAccessToken) {
     return null;
   }
 
-  async function getToken() {
-    try {
-      const token = await saml.authenticate();
-      setAccessToken(token);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  const engine = buildSearchEngine({
-    configuration: {
-      organizationId: props.organizationId,
-      accessToken,
-      renewAccessToken: saml.authenticate,
-    },
-  });
-
-  return (
-    <AppContext.Provider value={{engine}}>{props.children}</AppContext.Provider>
+  const engine = useMemo(
+    () =>
+      buildSearchEngine({
+        configuration: {
+          organizationId: samlClientOptions.organizationId,
+          accessToken: initialAccessToken,
+          renewAccessToken: saml.authenticate,
+        },
+      }),
+    [samlClientOptions.organizationId, saml.authenticate, initialAccessToken]
   );
+
+  return <AppContext.Provider value={{engine}}>{children}</AppContext.Provider>;
 }
