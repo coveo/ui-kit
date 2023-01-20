@@ -8,14 +8,14 @@ export function SamlPage({
   ...samlClientOptions
 }: PropsWithChildren<SamlClientOptions>) {
   const [initialAccessToken, setInitialAccessToken] = useState('');
-  const saml = useMemo(
+  const samlClient = useMemo(
     () => buildSamlClient(samlClientOptions),
     [samlClientOptions]
   );
 
   useEffect(() => {
-    saml.authenticate().then(setInitialAccessToken);
-  }, [saml]);
+    samlClient.authenticate().then(setInitialAccessToken);
+  }, [samlClient]);
 
   if (!initialAccessToken) {
     return null;
@@ -27,10 +27,14 @@ export function SamlPage({
         configuration: {
           organizationId: samlClientOptions.organizationId,
           accessToken: initialAccessToken,
-          renewAccessToken: saml.authenticate,
+          renewAccessToken: samlClient.authenticate,
         },
       }),
-    [samlClientOptions.organizationId, saml.authenticate, initialAccessToken]
+    [
+      samlClientOptions.organizationId,
+      samlClient.authenticate,
+      initialAccessToken,
+    ]
   );
 
   return <AppContext.Provider value={{engine}}>{children}</AppContext.Provider>;
