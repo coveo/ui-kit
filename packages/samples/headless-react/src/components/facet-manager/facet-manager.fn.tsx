@@ -1,5 +1,5 @@
 import {
-  FacetManager as HeadlessFacetManager,
+  buildFacetManager,
   Facet as HeadlessFacet,
   FacetManagerPayload,
 } from '@coveo/headless';
@@ -9,18 +9,33 @@ import {
   FunctionComponent,
   ReactElement,
   Children,
+  useContext,
+  useMemo,
 } from 'react';
+import {AppContext} from '../../context/engine';
 
-type FacetManagerChild = ReactElement<{controller: HeadlessFacet}>;
+export interface FacetManagerFunctionChildProps {
+  controllerOptions: {facetId: string};
+  /** @deprecated */
+  controller?: HeadlessFacet;
+}
+
+type FacetManagerChild = ReactElement<FacetManagerFunctionChildProps>;
 
 interface FacetManagerProps {
-  controller: HeadlessFacetManager;
   children: FacetManagerChild | FacetManagerChild[];
 }
 
-export const FacetManager: FunctionComponent<FacetManagerProps> = (props) => {
-  const {controller} = props;
+export const FacetManager: FunctionComponent<FacetManagerProps> = ({
+  children,
+}) => {
+  const {engine} = useContext(AppContext);
+  const controller = useMemo(() => buildFacetManager(engine!), [engine]);
   const [, setState] = useState(controller.state);
+  useEffect(
+    () => controller.subscribe(() => setState(controller.state)),
+    [controller]
+  );
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
@@ -28,12 +43,14 @@ export const FacetManager: FunctionComponent<FacetManagerProps> = (props) => {
     facets: FacetManagerChild[]
   ): FacetManagerPayload<FacetManagerChild>[] {
     return facets.map((facet) => ({
-      facetId: facet.props.controller.state.facetId,
+      facetId:
+        facet.props.controller?.state.facetId ??
+        facet.props.controllerOptions.facetId,
       payload: facet,
     }));
   }
 
-  const childFacets = Children.toArray(props.children) as FacetManagerChild[];
+  const childFacets = Children.toArray(children) as FacetManagerChild[];
   const payload = createPayload(childFacets);
   const sortedFacets = controller.sort(payload).map((p) => p.payload);
 

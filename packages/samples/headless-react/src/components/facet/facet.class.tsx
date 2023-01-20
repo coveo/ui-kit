@@ -9,8 +9,8 @@ import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {FacetSearch} from './facet-search';
 
-interface FacetProps extends FacetOptions {
-  facetId: string;
+interface FacetProps {
+  controllerOptions: FacetOptions;
 }
 
 export class Facet extends Component<FacetProps, FacetState> {
@@ -22,7 +22,7 @@ export class Facet extends Component<FacetProps, FacetState> {
 
   componentDidMount() {
     this.controller = buildFacet(this.context.engine!, {
-      options: this.props,
+      options: this.props.controllerOptions,
     });
     this.updateState();
 

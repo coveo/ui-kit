@@ -21,12 +21,8 @@ import {
   buildResultList,
   FoldedResultList as HeadlessFoldedResultList,
   buildFoldedResultList,
-  FacetManager as HeadlessFacetManager,
-  buildFacetManager,
   CategoryFacet as HeadlessCategoryFacet,
   buildCategoryFacet,
-  Facet as HeadlessFacet,
-  buildFacet,
   NumericFacet as HeadlessNumericFacet,
   buildNumericFacet,
   buildNumericRange,
@@ -199,9 +195,7 @@ export class SearchPage extends Component {
   private readonly querySummary: HeadlessQuerySummary;
   private readonly resultList: HeadlessResultList;
   private readonly foldedResultList: HeadlessFoldedResultList;
-  private readonly facetManager: HeadlessFacetManager;
   private readonly geographyFacet: HeadlessCategoryFacet;
-  private readonly objectTypeFacet: HeadlessFacet;
   private readonly fileSizeAutomaticNumericFacet: HeadlessNumericFacet;
   private readonly fileSizeManualNumericFacet: HeadlessNumericFacet;
   private readonly fileSizeNumericFilter: HeadlessNumericFilter;
@@ -271,16 +265,11 @@ export class SearchPage extends Component {
 
     this.querySummary = buildQuerySummary(this.engine);
 
-    this.facetManager = buildFacetManager(this.engine);
-
     this.geographyFacet = buildCategoryFacet(this.engine, {
       options: {
         field: 'geographicalhierarchy',
         facetId: 'geographicalhierarchy-2',
       },
-    });
-    this.objectTypeFacet = buildFacet(this.engine, {
-      options: {field: 'objecttype', facetId: 'objecttype-2'},
     });
 
     this.fileSizeAutomaticNumericFacet = buildNumericFacet(this.engine, {
@@ -590,7 +579,9 @@ export class SearchPage extends Component {
                 field="geographicalhierarchy"
                 facetId="geographicalhierarchy-1"
               />
-              <Facet field="author" facetId="author-1" />
+              <Facet
+                controllerOptions={{field: 'author', facetId: 'author-1'}}
+              />
               <NumericFacet
                 format={(bytes) => filesize(bytes, {base: 10})}
                 field="size"
@@ -628,9 +619,14 @@ export class SearchPage extends Component {
               />
               <DateFilter field="date" facetId="date-3" />
             </FacetManager>
-            <FacetManagerFn controller={this.facetManager}>
+            <FacetManagerFn>
               <CategoryFacetFn controller={this.geographyFacet} />
-              <FacetFn controller={this.objectTypeFacet} />
+              <FacetFn
+                controllerOptions={{
+                  field: 'objecttype',
+                  facetId: 'objecttype-2',
+                }}
+              />
               <NumericFacetFn
                 controller={this.fileSizeAutomaticNumericFacet}
                 format={(bytes) => filesize(bytes, {base: 10})}
