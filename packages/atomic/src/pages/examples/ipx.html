@@ -39,24 +39,25 @@
         });
       };
 
-      const setupEmbeddedInterface = async (embeddedSearchInterface) => {
-        const hostDiv = document.querySelector('div#host-div');
+      const setupEmbeddedInterface = async (embeddedSearchInterfaceChildren, hostDiv) => {
         hostDiv.style.display = 'none';
-        hostDiv.appendChild(ipxInSelector);
-        embeddedSearchInterface.querySelector('atomic-ipx-modal').setAttribute('is-embedded', 'true');
-        embeddedSearchInterface.removeChild(ipxInSelector.querySelector('atomic-ipx-button'));
-        await initializeSearchInterface(ipxInSelector);
+        embeddedSearchInterfaceChildren.forEach((element) => {
+          hostDiv.querySelector('atomic-ipx-embedded').appendChild(element);
+        });
+        await initializeSearchInterface(hostDiv.querySelector('atomic-search-interface'));
       };
 
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('atomic-search-interface');
+        const ipxModal = document.querySelector('atomic-ipx-modal');
+        const hostDiv = document.querySelector('div#host-div');
 
-        const embeddedSearchInterface = searchInterface.cloneNode(true);
+        const embeddedSearchInterfaceChildren = Array.from(ipxModal.cloneNode(true).childNodes);
 
         await initializeSearchInterface(searchInterface);
 
-        await setupEmbeddedInterface(embeddedSearchInterface);
+        await setupEmbeddedInterface(embeddedSearchInterfaceChildren, hostDiv);
 
         const displaySelect = document.getElementById('ipx-display-select');
         displaySelect.addEventListener('change', ({target: {value}}) => {
@@ -177,7 +178,7 @@
             </atomic-ipx-tabs>
           </atomic-layout-section>
         </div>
-        <atomic-layout-section section="facets">
+        <atomic-layout-section section="facets" slot="facets">
           <atomic-facet field="source" label="Source" display-values-as="checkbox"></atomic-facet>
           <atomic-facet field="filetype" label="Filetype" display-values-as="checkbox"></atomic-facet>
           <atomic-numeric-facet
@@ -388,9 +389,13 @@
           </a>
         </div>
       </atomic-ipx-modal>
-      <atomic-ipx-button is-modal-open="true"></atomic-ipx-button>
+      <atomic-ipx-button is-modal-open="true" label="Workplace Search"></atomic-ipx-button>
     </atomic-search-interface>
-    <div id="host-div"></div>
+    <div id="host-div">
+      <atomic-search-interface fields-to-include='["snrating","sncost"]'>
+        <atomic-ipx-embedded></atomic-ipx-embedded>
+      </atomic-search-interface>
+    </div>
     <script src="../header.js" type="text/javascript"></script>
   </body>
 </html>

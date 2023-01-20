@@ -1,18 +1,8 @@
 @import '../../../global/global.pcss';
 
-atomic-focus-trap {
-  @apply contents;
-}
-
-:host(.open) {
+:host {
   &::part(backdrop) {
     @apply pointer-events-auto;
     inset: auto 3rem 4.25rem auto;
-  }
-}
-
-:host {
-  &::part(backdrop) {
-    @apply pointer-events-none;
   }
 }
