@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Use Node.js 14.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 14.x
       - name: Check Out Repository
@@ -27,13 +27,13 @@ jobs:
           echo ${{ github.sha }} > github-sha.txt
       - name: Check SHA
         id: check_sha
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: check-SHA
           key: check-SHA-${{ github.sha }}
       - name: Cancel current workflow run if no changes made
         if: steps.check_sha.outputs.cache-hit == 'true'
-        uses: actions/github-script@v4
+        uses: actions/github-script@v6
         with:
           script: |
             github.actions.cancelWorkflowRun({

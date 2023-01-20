@@ -36,8 +36,8 @@
   },
   "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
   "devDependencies": {
-    "rimraf": "3.0.2",
-    "vite": "2.9.15"
+    "rimraf": "4.1.1",
+    "vite": "4.0.4"
   },
   "engines": {
     "node": ">=10"

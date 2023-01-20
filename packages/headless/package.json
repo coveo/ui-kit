@@ -40,21 +40,21 @@
   },
   "peerDependencies": {
     "encoding": "^0.1.13",
-    "pino-pretty": "^6.0.0"
+    "pino-pretty": "^6.0.0 || ^9.0.0"
   },
   "dependencies": {
     "@coveo/bueno": "0.43.0",
     "@reduxjs/toolkit": "1.8.5",
-    "@types/pino": "6.3.12",
+    "@types/pino": "7.0.4",
     "@types/redux-mock-store": "1.0.3",
     "abab": "2.0.6",
     "coveo.analytics": "2.23.8",
     "cross-fetch": "3.1.5",
     "dayjs": "1.11.5",
     "exponential-backoff": "3.1.0",
-    "fast-equals": "2.0.4",
-    "node-abort-controller": "^1.1.0",
-    "pino": "6.14.0",
+    "fast-equals": "4.0.3",
+    "node-abort-controller": "^3.0.0",
+    "pino": "8.8.0",
     "redux": "4.2.0",
     "redux-mock-store": "1.5.4",
     "redux-thunk": "2.4.1",
