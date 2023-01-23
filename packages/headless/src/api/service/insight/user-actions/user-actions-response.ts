@@ -3,7 +3,7 @@ export enum UserActionType {
   CLICK = 'CLICK',
   VIEW = 'VIEW',
   CUSTOM = 'CUSTOM',
-  TICKET_CREATED = 'TICKET_CREATED',
+  TICKET_CREATE = 'TICKET_CREATE',
 }
 
 export interface InsightUserActionsResponse {
@@ -26,7 +26,7 @@ export interface UserAction {
   actionType: UserActionType;
   timestamp: string;
   eventData: {
-    type?: string;
+    type: string;
     value?: string;
   };
   cause?: string;
