@@ -675,6 +675,10 @@ export namespace Components {
          */
         "closeIcon": string;
         /**
+          * Whether the IPX modal is open.
+         */
+        "isModalOpen": boolean;
+        /**
           * The label that will be shown to the user.
          */
         "label": string;
@@ -3288,6 +3292,10 @@ declare namespace LocalJSX {
           * The close icon of the button.
          */
         "closeIcon"?: string;
+        /**
+          * Whether the IPX modal is open.
+         */
+        "isModalOpen"?: boolean;
         /**
           * The label that will be shown to the user.
          */

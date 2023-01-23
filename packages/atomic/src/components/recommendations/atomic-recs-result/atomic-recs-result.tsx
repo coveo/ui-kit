@@ -161,9 +161,8 @@ export class AtomicRecsResult {
     }
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
-      <Host exportparts="result-list-grid-content" class={resultComponentClass}>
+      <Host class={resultComponentClass}>
         <div
-          part="result-list-grid-content"
           class={`result-root ${this.layout
             .getClasses()
             .concat(this.classes)

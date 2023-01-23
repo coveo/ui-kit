@@ -24,22 +24,4 @@
     @apply absolute left-0;
     transition: transform 500ms;
   }
-
-  &::part(ipx-open-icon) {
-    @apply translate-y-0;
-  }
-
-  &::part(ipx-close-icon) {
-    @apply translate-y-12;
-  }
-}
-
-:host(.btn-open) {
-  &::part(ipx-open-icon) {
-    @apply translate-y-12;
-  }
-
-  &::part(ipx-close-icon) {
-    @apply translate-y-0;
-  }
 }
