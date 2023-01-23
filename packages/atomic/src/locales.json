@@ -1546,5 +1546,13 @@
   "quickview-remove-word": {
     "en": "Remove highlights",
     "fr": "Enlever le surlignage"
+  },
+  "quickview-next": {
+    "en": "Next quickview",
+    "fr": "Prochain aperçu"
+  },
+  "quickview-previous": {
+    "en": "Previous quickview",
+    "fr": "Aperçu précédent"
   }
 }

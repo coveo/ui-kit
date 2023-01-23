@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.9.2...@coveo/quantic@2.9.3) (2023-01-23)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [2.9.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.9.1...@coveo/quantic@2.9.2) (2023-01-19)
+
+### Bug Fixes
+
+- **quantic:** fixed alignment of input when error state is on for numericFacet ([#2666](https://github.com/coveo/ui-kit/issues/2666)) ([53d2c9b](https://github.com/coveo/ui-kit/commit/53d2c9b5df5e70e417ed2b0a8d23eef1cb82139c))
+
 ## [2.9.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.9.0...@coveo/quantic@2.9.1) (2023-01-18)
 
 ### Bug Fixes
