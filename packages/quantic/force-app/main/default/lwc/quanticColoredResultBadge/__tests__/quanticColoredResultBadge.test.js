@@ -156,7 +156,7 @@ describe('c-quantic-colored-result-badge', () => {
       });
     });
 
-    describe('when no result is given', () => {
+    describe('when no field is given', () => {
       it('should show an error', async () => {
         const element = createTestComponent({
           ...defaultOptions,
