@@ -32,7 +32,7 @@ export class AtomicIPXButton {
   /**
    * Whether the IPX layout is open.
    */
-  private isOpen = false;
+  private isOpen = this.host.classList.contains('btn-open');
 
   private async onClick() {
     this.isOpen ? this.close() : this.open();
