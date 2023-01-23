@@ -83,13 +83,16 @@ export function buildQuickview(
 
   return {
     ...core,
-    state: {
-      ...core.state,
-      currentResult:
-        getResults().findIndex(
-          (r) => r.uniqueId === core.state.currentResultUniqueId
-        ) + 1,
-      totalResults: getResults().length,
+
+    get state() {
+      return {
+        ...core.state,
+        currentResult:
+          getResults().findIndex(
+            (r) => r.uniqueId === core.state.currentResultUniqueId
+          ) + 1,
+        totalResults: getResults().length,
+      };
     },
   };
 }

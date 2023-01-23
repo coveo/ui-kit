@@ -80,13 +80,15 @@ export function buildCaseAssistQuickview(
 
   return {
     ...core,
-    state: {
-      ...core.state,
-      currentDocument:
-        getDocuments().findIndex(
-          (r) => r.uniqueId === core.state.currentResultUniqueId
-        ) + 1,
-      totalDocuments: getDocuments().length,
+    get state() {
+      return {
+        ...core.state,
+        currentDocument:
+          getDocuments().findIndex(
+            (r) => r.uniqueId === core.state.currentResultUniqueId
+          ) + 1,
+        totalDocuments: getDocuments().length,
+      };
     },
   };
 }
