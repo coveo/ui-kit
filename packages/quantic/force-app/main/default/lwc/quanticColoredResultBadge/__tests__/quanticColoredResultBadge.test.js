@@ -82,7 +82,7 @@ describe('c-quantic-colored-result-badge', () => {
 
   describe('when the badge is used to display a label', () => {
     describe('when a label is given', () => {
-      it('should display the colored badge with the correct label and color when the label property is valid', async () => {
+      it('should display the colored badge with the correct label and color', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           result: null,
@@ -140,7 +140,7 @@ describe('c-quantic-colored-result-badge', () => {
       });
     });
 
-    describe('when no field is given', () => {
+    describe('when no result is given', () => {
       it('should show an error', async () => {
         const element = createTestComponent({
           ...defaultOptions,
@@ -156,7 +156,7 @@ describe('c-quantic-colored-result-badge', () => {
       });
     });
 
-    describe('when no result is given', () => {
+    describe('when no field is given', () => {
       it('should show an error', async () => {
         const element = createTestComponent({
           ...defaultOptions,
