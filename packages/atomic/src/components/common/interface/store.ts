@@ -11,10 +11,6 @@ import {AnyEngineType, CommonStencilStore} from './bindings';
 
 export interface ResultListInfo {
   focusOnNextNewResult(): void;
-  quickviews: {
-    total: number;
-    position: number[];
-  };
 }
 
 export type AtomicCommonStoreData = {

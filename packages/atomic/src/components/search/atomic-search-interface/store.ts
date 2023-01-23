@@ -14,7 +14,6 @@ import {
   createAtomicCommonStore,
   AtomicCommonStoreData,
   AtomicCommonStore,
-  ResultListInfo,
 } from '../../common/interface/store';
 import {makeDesktopQuery} from '../atomic-layout/search-layout';
 
@@ -43,9 +42,6 @@ export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
   };
 
   isMobile(): boolean;
-
-  nextQuickview(): void;
-  previousQuickview(): void;
 }
 
 export function createAtomicStore(): AtomicStore {
@@ -62,16 +58,6 @@ export function createAtomicStore(): AtomicStore {
     fieldsToInclude: [],
     currentQuickviewPosition: -1,
   });
-
-  const getMaxPositionForQuickviews = (
-    quickviewsInfoFromResultList?: ResultListInfo['quickviews']
-  ) => {
-    if (quickviewsInfoFromResultList) {
-      return quickviewsInfoFromResultList.position.length - 1;
-    }
-
-    return 0;
-  };
 
   return {
     ...commonStore,
@@ -93,31 +79,6 @@ export function createAtomicStore(): AtomicStore {
 
     getUniqueIDFromEngine(engine: SearchEngine): string {
       return engine.state.search.response.searchUid;
-    },
-
-    nextQuickview() {
-      const maxPos = getMaxPositionForQuickviews(
-        this.get('resultList')?.quickviews
-      );
-
-      let nextPos = this.get('currentQuickviewPosition') + 1;
-      if (nextPos > maxPos) {
-        nextPos = 0;
-      }
-
-      this.set('currentQuickviewPosition', nextPos);
-    },
-
-    previousQuickview() {
-      const maxPos = getMaxPositionForQuickviews(
-        this.get('resultList')?.quickviews
-      );
-
-      let previousPos = this.get('currentQuickviewPosition') - 1;
-      if (previousPos < 0) {
-        previousPos = maxPos;
-      }
-      this.set('currentQuickviewPosition', previousPos);
     },
   };
 }

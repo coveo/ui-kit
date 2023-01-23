@@ -1,5 +1,8 @@
-import {configuration, resultPreview} from '../../app/reducers';
-import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
+import {configuration, resultPreview, search} from '../../app/reducers';
+import {
+  fetchResultContent,
+  preparePreviewPagination,
+} from '../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {
   buildMockResult,
@@ -37,7 +40,10 @@ describe('Quickview', () => {
   });
 
   it('it adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({
+    expect(engine.addReducers).toHaveBeenNthCalledWith(1, {
+      search,
+    });
+    expect(engine.addReducers).toHaveBeenNthCalledWith(2, {
       configuration,
       resultPreview,
     });
@@ -125,5 +131,35 @@ describe('Quickview', () => {
     initQuickview();
 
     expect(options.maximumPreviewSize).toBe(0);
+  });
+
+  it('#preparePreviewPagination on initialization', () => {
+    initQuickview();
+    expect(engine.actions).toContainEqual(
+      preparePreviewPagination({results: engine.state.search.response.results})
+    );
+  });
+
+  describe('pagination', () => {
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      engine.state.search.results = [
+        buildMockResult({uniqueId: 'first', hasHtmlVersion: true}),
+        buildMockResult({uniqueId: 'second', hasHtmlVersion: true}),
+        buildMockResult({uniqueId: 'third', hasHtmlVersion: true}),
+      ];
+      engine.state.resultPreview.resultsWithPreview = [
+        'first',
+        'second',
+        'third',
+      ];
+      engine.state.resultPreview.position = 0;
+      initQuickview();
+    });
+
+    it('returns the proper current and total results for pagination purpose', () => {
+      expect(quickview.state.currentResult).toBe(1);
+      expect(quickview.state.totalResults).toBe(3);
+    });
   });
 });

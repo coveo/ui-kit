@@ -1,5 +1,14 @@
 import {Result} from '@coveo/headless';
-import {Component, h, Method, Prop, State, Watch} from '@stencil/core';
+import {
+  Component,
+  Event,
+  EventEmitter,
+  h,
+  Prop,
+  State,
+  Watch,
+  Method,
+} from '@stencil/core';
 import dayjs from 'dayjs';
 import {
   InitializableComponent,
@@ -47,12 +56,18 @@ export class AtomicQuickviewModal implements InitializableComponent {
     this.handleHighlightsScripts();
   }
 
+  @Event({eventName: 'atomic/quickview/next'}) nextQuickview?: EventEmitter;
+  @Event({eventName: 'atomic/quickview/previous'})
+  previousQuickview?: EventEmitter;
+
   @State() private minimizeSidebar = false;
   @State() private words: Record<string, QuickviewWordHighlight> = {};
   private iframeRef?: HTMLIFrameElement;
 
   @Prop({mutable: true, reflect: false}) content?: string;
   @Prop({mutable: true, reflect: false}) result?: Result;
+  @Prop() current?: number;
+  @Prop() total?: number;
   @Prop() sandbox?: string;
 
   @Method()
@@ -120,36 +135,25 @@ export class AtomicQuickviewModal implements InitializableComponent {
   }
 
   private renderFooter() {
-    const quickviewsInfoFromResultList =
-      this.bindings.store.get('resultList')?.quickviews;
-    const currentQuickviewPosition = this.bindings.store.get(
-      'currentQuickviewPosition'
-    );
-
-    const first =
-      (quickviewsInfoFromResultList?.position[currentQuickviewPosition] || 0) +
-      1;
-    const total = quickviewsInfoFromResultList?.total;
-
     return (
       <div slot="footer" class="flex items-center gap-2">
         <Button
           class="p-2"
           style="square-neutral"
-          onClick={() => this.bindings.store.previousQuickview()}
-          text="Prev"
+          onClick={() => this.previousQuickview?.emit()}
+          text={this.bindings.i18n.t('quickview-previous')}
         ></Button>
         <p>
           {this.bindings.i18n.t('showing-results-of', {
-            first,
-            total,
+            first: this.current,
+            total: this.total,
           })}
         </p>
         <Button
           class="p-2"
           style="square-neutral"
-          onClick={() => this.bindings.store.nextQuickview()}
-          text="Next"
+          onClick={() => this.nextQuickview?.emit()}
+          text={this.bindings.i18n.t('quickview-next')}
         ></Button>
       </div>
     );
