@@ -12,6 +12,11 @@ function invalidRGBValues(r, g, b) {
   return false;
 }
 
+function validHEXColor(color) {
+  const regex = /^#([0-9a-f]{3}){1,2}$/i;
+  return regex.test(color);
+}
+
 /**
  * Converts a Hex color value to RGB.
  * @param {string} color the Hex color value.
@@ -43,4 +48,4 @@ function HEXToRGB(color) {
   };
 }
 
-export { invalidRGBValues, HEXToRGB };
+export {invalidRGBValues, HEXToRGB, validHEXColor};
