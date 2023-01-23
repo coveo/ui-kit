@@ -280,6 +280,8 @@ export type {
   QuickviewOptions,
   QuickviewProps,
   QuickviewState,
+  CoreQuickviewState,
+  CoreQuickview,
 } from './quickview/headless-quickview';
 export {buildQuickview} from './quickview/headless-quickview';
 

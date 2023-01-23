@@ -38,6 +38,7 @@ export * from './breadcrumb/breadcrumb-actions-loader';
 export * from './recent-queries/recent-queries-actions-loader';
 export * from './recent-results/recent-results-actions-loader';
 export * from './excerpt-length/excerpt-length-actions-loader';
+export * from './result-preview/result-preview-actions-loader';
 
 export type {ResultTemplatesManager} from './result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './result-templates/result-templates-manager';
