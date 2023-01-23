@@ -82,7 +82,7 @@ describe('c-quantic-colored-result-badge', () => {
 
   describe('when the badge is used to display a label', () => {
     describe('when a label is given', () => {
-      it('should display the colored badge with the correct label and color when the label property is valid', async () => {
+      it('should display the colored badge with the correct label and color', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           result: null,
