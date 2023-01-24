@@ -23,9 +23,6 @@ export type {
   CoreQuickview,
 };
 
-/**
- * asdf
- */
 export interface QuickviewState extends CoreQuickviewState {
   /**
    * The number of available results for the current result set.
@@ -66,7 +63,6 @@ export function buildQuickview(
   const {dispatch} = engine;
   const getState = () => engine.state;
   const getResults = () => getState().search.results;
-  dispatch(preparePreviewPagination({results: getResults()}));
 
   const fetchResultContentCallback = () => {
     engine.dispatch(logDocumentQuickview(props.options.result));
@@ -80,6 +76,8 @@ export function buildQuickview(
     path,
     fetchResultContentCallback
   );
+
+  dispatch(preparePreviewPagination({results: getResults()}));
 
   return {
     ...core,
