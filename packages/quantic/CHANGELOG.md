@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.9.4...@coveo/quantic@2.9.5) (2023-01-24)
+
+### Bug Fixes
+
+- **quantic:** issues in the QuanticColoredResultBadge component fixed ([#2687](https://github.com/coveo/ui-kit/issues/2687)) ([c276161](https://github.com/coveo/ui-kit/commit/c276161b5403ef87bba2f2dd4715d37437b7ee02))
+
 ## [2.9.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.9.3...@coveo/quantic@2.9.4) (2023-01-24)
 
 ### Bug Fixes
