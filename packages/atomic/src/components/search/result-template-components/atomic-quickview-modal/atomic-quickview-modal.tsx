@@ -1,4 +1,4 @@
-import {Result} from '@coveo/headless';
+import {buildInteractiveResult, Result} from '@coveo/headless';
 import {
   Component,
   Event,
@@ -8,14 +8,15 @@ import {
   State,
   Watch,
   Method,
+  VNode,
 } from '@stencil/core';
-import dayjs from 'dayjs';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {LinkWithResultAnalytics} from '../../result-link/result-link';
 import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';
 import {buildQuickviewPreviewBar} from '../quickview-preview-bar/quickview-preview-bar';
@@ -83,11 +84,25 @@ export class AtomicQuickviewModal implements InitializableComponent {
   }
 
   private renderHeader() {
-    // TODO: Header should be slottable from result template definition
+    let headerContent: VNode | null = null;
+    if (this.result) {
+      const interactiveResult = buildInteractiveResult(this.bindings.engine, {
+        options: {result: this.result!},
+      });
+      headerContent = (
+        <LinkWithResultAnalytics
+          href={this.result?.clickUri}
+          onSelect={() => interactiveResult.select()}
+          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
+          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
+        >
+          {this.result.title}
+        </LinkWithResultAnalytics>
+      );
+    }
     return (
       <div slot="header" class="w-full flex justify-between">
-        <div>{this.result?.title}</div>
-        <div>{dayjs(this.result?.raw.date).format('D/M/YYYY')}</div>
+        {headerContent}
       </div>
     );
   }
