@@ -1,4 +1,4 @@
-import {Component, Element, h, Prop} from '@stencil/core';
+import {Component, Element, Fragment, h, Prop} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
 import SearchIcon from '../../../images/search.svg';
 import {Button} from '../../common/button';
@@ -30,12 +30,12 @@ export class AtomicIPXButton {
   @Prop({reflect: true}) public openIcon = SearchIcon;
 
   /**
-   * Whether the IPX layout is open.
+   * Whether the IPX modal is open.
    */
-  private isOpen = false;
+  @Prop({mutable: true, reflect: true}) public isModalOpen = false;
 
   private async onClick() {
-    this.isOpen ? this.close() : this.open();
+    this.isModalOpen ? this.close() : this.open();
     this.render();
   }
 
@@ -63,10 +63,38 @@ export class AtomicIPXButton {
   }
 
   public render() {
+    const [displayedIcon, hiddenIcon] = this.isModalOpen
+      ? ['ipx-close-icon', 'ipx-open-icon']
+      : ['ipx-open-icon', 'ipx-close-icon'];
+
     return (
-      <div class="flex flex-col items-center" part="container">
-        {this.renderIPXButton()}
-      </div>
+      <Fragment>
+        {
+          <style>
+            {`
+              [part=${displayedIcon}] {
+                transform: translateY(0rem);
+              }
+
+              [part=${hiddenIcon}] {
+                transform: translateY(3rem);
+              }
+                
+              .btn-open {
+                [part=${displayedIcon}] {
+                  transform: translateY(3rem);
+                }
+              
+                [part=${hiddenIcon}] {
+                  transform: translateY(0rem);
+                }
+              }`}
+          </style>
+        }
+        <div class="flex flex-col items-center" part="container">
+          {this.renderIPXButton()}
+        </div>
+      </Fragment>
     );
   }
 
@@ -75,13 +103,13 @@ export class AtomicIPXButton {
   }
 
   private open() {
-    this.isOpen = true;
+    this.isModalOpen = true;
     this.host.classList.add('btn-open');
     this.ipxModal.setAttribute('is-open', 'true');
   }
 
   private close() {
-    this.isOpen = false;
+    this.isModalOpen = false;
     this.host.classList.remove('btn-open');
     this.ipxModal.setAttribute('is-open', 'false');
   }
