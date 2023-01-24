@@ -10,7 +10,7 @@ import {LightningElement, api} from 'lwc';
  * @category Result Template
  * @example
  * <template if:true={result.raw.language}>
- *   <c-quantic-result-multi-value-text result={result} label="Languages" field="language" max-values-to-display="4"></c-quantic-result-multi-value>
+ *   <c-quantic-result-multi-value-text result={result} label="Languages" field="language" max-values-to-display="4"></c-quantic-result-multi-value-text>
  * </template>
  */
 export default class QuanticResultMultiValueText extends LightningElement {

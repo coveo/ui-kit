@@ -46,7 +46,7 @@ export default class QuanticResultText extends LightningElement {
 
   connectedCallback() {
     getBueno(this).then(() => {
-      if (!this.result || !Bueno.isString(this.field)) {
+      if (!this.result || !this.field || !Bueno.isString(this.field)) {
         console.error(
           `The ${this.template.host.localName} requires a result and a field to be specified.`
         );
