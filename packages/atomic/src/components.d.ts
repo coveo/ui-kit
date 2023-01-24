@@ -675,6 +675,10 @@ export namespace Components {
          */
         "closeIcon": string;
         /**
+          * Whether the IPX modal is open.
+         */
+        "isModalOpen": boolean;
+        /**
           * The label that will be shown to the user.
          */
         "label": string;
@@ -861,9 +865,11 @@ export namespace Components {
     }
     interface AtomicQuickviewModal {
         "content"?: string;
+        "current"?: number;
         "reset": () => Promise<void>;
         "result"?: Result;
         "sandbox"?: string;
+        "total"?: number;
     }
     interface AtomicRatingFacet {
         /**
@@ -1790,6 +1796,10 @@ export interface AtomicModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicPagerElement;
+}
+export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicQuickviewModalElement;
 }
 export interface AtomicRelevanceInspectorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3289,6 +3299,10 @@ declare namespace LocalJSX {
          */
         "closeIcon"?: string;
         /**
+          * Whether the IPX modal is open.
+         */
+        "isModalOpen"?: boolean;
+        /**
           * The label that will be shown to the user.
          */
         "label"?: string;
@@ -3478,8 +3492,12 @@ declare namespace LocalJSX {
     }
     interface AtomicQuickviewModal {
         "content"?: string;
+        "current"?: number;
+        "onAtomic/quickview/next"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
+        "onAtomic/quickview/previous"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
         "result"?: Result;
         "sandbox"?: string;
+        "total"?: number;
     }
     interface AtomicRatingFacet {
         /**

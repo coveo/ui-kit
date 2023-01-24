@@ -1,4 +1,5 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {ArrayValue} from '@coveo/bueno';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   buildContentURL,
   HtmlApiClient,
@@ -9,23 +10,29 @@ import {
 } from '../../api/search/html/html-request';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import type {Result} from '../../api/search/search/result';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {validatePayload} from '../../utils/validate-payload';
 import {
   buildResultPreviewRequest,
   StateNeededByHtmlEndpoint,
 } from './result-preview-request-builder';
 
-interface FetchResultContentResponse {
+export interface FetchResultContentThunkReturn {
   content: string;
   uniqueId: string;
 }
 
-interface UpdateContentURLActionCreatorPayload {
+export interface UpdateContentURLThunkReturn {
   /**
    * The path to retrieve result quickview content.
    */
   contentURL?: string;
+}
+
+export interface PreparePreviewPaginationActionPayload {
+  results: Pick<Result, 'hasHtmlVersion' | 'uniqueId'>[];
 }
 
 export interface AsyncThunkGlobalOptions<T>
@@ -34,7 +41,7 @@ export interface AsyncThunkGlobalOptions<T>
 }
 
 export const fetchResultContent = createAsyncThunk<
-  FetchResultContentResponse,
+  FetchResultContentThunkReturn,
   HtmlRequestOptions,
   AsyncThunkGlobalOptions<StateNeededByHtmlEndpoint>
 >(
@@ -55,7 +62,15 @@ export const fetchResultContent = createAsyncThunk<
   }
 );
 
-type UpdateContentURLOptions = HtmlRequestOptions & {
+export const nextPreview = createAction('resultPreview/next');
+export const previousPreview = createAction('resultPreview/previous');
+export const preparePreviewPagination = createAction(
+  'resultPreview/prepare',
+  (payload: PreparePreviewPaginationActionPayload) =>
+    validatePayload(payload, {results: new ArrayValue({required: true})})
+);
+
+export type UpdateContentURLOptions = HtmlRequestOptions & {
   path: string;
   buildResultPreviewRequest: (
     state: StateNeededByHtmlEndpoint,
@@ -66,7 +81,7 @@ type UpdateContentURLOptions = HtmlRequestOptions & {
 const MAX_GET_LENGTH = 2048;
 
 export const updateContentURL = createAsyncThunk<
-  UpdateContentURLActionCreatorPayload,
+  UpdateContentURLThunkReturn,
   UpdateContentURLOptions,
   AsyncThunkGlobalOptions<StateNeededByHtmlEndpoint>
 >(

@@ -1,6 +1,8 @@
 import {configuration, resultPreview} from '../../../app/reducers';
 import {
   fetchResultContent,
+  nextPreview,
+  previousPreview,
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
 import {
@@ -148,5 +150,19 @@ describe('QuickviewCore', () => {
     initQuickview();
 
     expect(defaultOptions.maximumPreviewSize).toBe(0);
+  });
+
+  it('when going to #next preview, it dispatches the proper actions', () => {
+    initQuickview();
+    quickview.next();
+    expect(engine.actions).toContainEqual(nextPreview());
+    expect(engine.findAsyncAction(fetchResultContent.pending)).toBeDefined();
+  });
+
+  it('when going to #previous preview, it dispatches the proper actions', () => {
+    initQuickview();
+    quickview.previous();
+    expect(engine.actions).toContainEqual(previousPreview());
+    expect(engine.findAsyncAction(fetchResultContent.pending)).toBeDefined();
   });
 });

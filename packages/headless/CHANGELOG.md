@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.6.1...@coveo/headless@2.7.0) (2023-01-23)
+
+### Features
+
+- **headless:** add quickview pagination mechanism to headless ([#2660](https://github.com/coveo/ui-kit/issues/2660)) ([51bb2ed](https://github.com/coveo/ui-kit/commit/51bb2ed87a5b0d2d269c3193d896f9fe2e2a0386))
+
 ## [2.6.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.6.0...@coveo/headless@2.6.1) (2023-01-16)
 
 ### Bug Fixes

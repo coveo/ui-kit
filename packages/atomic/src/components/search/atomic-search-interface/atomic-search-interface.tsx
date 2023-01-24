@@ -469,6 +469,11 @@ export class AtomicSearchInterface
         this.searchStatus.state.hasError
       );
 
+      this.host.classList.toggle(
+        'atomic-search-interface-search-executed',
+        this.searchStatus.state.firstSearchExecuted
+      );
+
       if (
         this.searchStatus.state.firstSearchExecuted &&
         this.store.hasLoadingFlag(FirstSearchExecutedFlag)
