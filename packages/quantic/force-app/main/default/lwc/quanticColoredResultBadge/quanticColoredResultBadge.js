@@ -1,5 +1,6 @@
+import {getBueno} from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
-import {HEXToRGB, invalidRGBValues} from './colorsUtils';
+import {HEXToRGB, invalidRGBValues, validHEXColor} from './colorsUtils';
 
 const defaultPrimaryColor = '#FFF7BA';
 const defaultSecondaryColor = 'black';
@@ -46,21 +47,53 @@ export default class QuanticColoredResultBadge extends LightningElement {
   /** @type{boolean} */
   invalidColor = false;
 
-  renderedCallback() {
-    // eslint-disable-next-line no-unused-expressions
-    this.hasTextToDisplay && this.setBadgeColors();
+  /** @type {string} */
+  error;
+  validated = false;
+
+  connectedCallback() {
+    getBueno(this).then(() => {
+      if (
+        (!this.label || !Bueno.isString(this.label)) &&
+        (!this.result || !this.field || !Bueno.isString(this.field))
+      ) {
+        console.error(
+          `The ${this.template.host.localName} requires a label or result and a field to be specified.`
+        );
+        this.setError();
+      }
+      if (this.color && !validHEXColor(this.color)) {
+        console.error(`The "${this.color}" color is not a valid HEX color.`);
+        this.setError();
+      }
+      if (!this.color) {
+        console.warn(
+          'The color property has not been specified, the default colors will be used.'
+        );
+      }
+      this.validated = true;
+    });
+  }
+
+  setError() {
+    this.error = `${this.template.host.localName} Error`;
   }
 
   /**
-   * get the text content to display depending the provided props.
-   * @returns {string}
+   * Whether the field value can be displayed.
+   * @returns {boolean}
    */
-  get textToDisplay() {
-    return this.label || this.result?.raw?.[this.field]?.toString()
+  get isValid() {
+    return this.validated && !this.error;
+  }
+
+  renderedCallback() {
+    // eslint-disable-next-line no-unused-expressions
+    this.isValid && this.hasTextToDisplay && this.setBadgeColors();
   }
 
   get hasTextToDisplay() {
-    return !!this.textToDisplay;
+    return !!(this.label || this.result?.raw?.[this.field]);
   }
 
   get hasLabel() {
@@ -90,6 +123,11 @@ export default class QuanticColoredResultBadge extends LightningElement {
    * @returns {string}
    */
   generateSecondaryColor() {
+    if (!this.color) {
+      this.invalidColor = true;
+      return defaultSecondaryColor;
+    }
+
     const {r, g, b} = HEXToRGB(this.color);
 
     if (invalidRGBValues(r, g, b)) {
@@ -98,10 +136,8 @@ export default class QuanticColoredResultBadge extends LightningElement {
     }
 
     const luminance =
-      (r / 255.0) * 0.2126 +
-      (g / 255.0) * 0.7152 +
-      (b / 255.0) * 0.0722
+      (r / 255.0) * 0.2126 + (g / 255.0) * 0.7152 + (b / 255.0) * 0.0722;
 
-    return luminance >= 0.50 ? 'black' : 'white'
+    return luminance >= 0.5 ? 'black' : 'white';
   }
 }
