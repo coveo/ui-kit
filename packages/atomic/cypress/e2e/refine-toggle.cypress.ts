@@ -78,6 +78,12 @@ describe('Refine Toggle Test Suites', () => {
       RefineModalSelectors.facets().should('not.exist');
     });
 
+    it('should close when the escape key is used', () => {
+      cy.get('body').type('{esc}', {force: true});
+      cy.get('body').should('not.have.class', 'atomic-modal-opened');
+      RefineModalSelectors.facets().should('not.exist');
+    });
+
     it('should close when clicking footer button', () => {
       RefineModalSelectors.footerButton().click();
       cy.get('body').should('not.have.class', 'atomic-modal-opened');

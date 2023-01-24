@@ -9,6 +9,8 @@ import {configuration, resultPreview} from '../../../app/reducers';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   fetchResultContent,
+  nextPreview,
+  previousPreview,
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
 import {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result-preview-request-builder';
@@ -55,6 +57,27 @@ export interface Quickview extends Controller {
   fetchResultContent(): void;
 
   /**
+   * Retrieves the preview content for the next available result in the current result set.
+   *
+   * If it reaches the last available result in the current result set, it will not perform an additional query to fetch new results.
+   *
+   * Instead, it will loop back to the first available result.
+   *
+   * If `options.onlyContentURL` is `true` this will update the `contentURL` state property rather than `content`.
+   */
+  next(): void;
+  /**
+   * Retrieves the preview content for the previous available result in the current result set.
+   *
+   * If it reaches the first available result in the current result set, it will not perform an additional query to fetch new results.
+   *
+   * Instead, it will loop back to the last available result.
+   *
+   * If `options.onlyContentURL` is `true` this will update the `contentURL` state property rather than `content`.
+   */
+  previous(): void;
+
+  /**
    * The state for the `Quickview` controller.
    */
   state: QuickviewState;
@@ -82,6 +105,11 @@ export interface QuickviewState {
    * The `src` path to use if rendering the quickview in an iframe.
    */
   contentURL?: string;
+
+  /**
+   * The current result unique ID,
+   */
+  currentResultUniqueId: string;
 }
 
 /**
@@ -110,45 +138,66 @@ export function buildCoreQuickview(
   const getState = () => engine.state;
   const controller = buildController(engine);
   const {result, maximumPreviewSize} = props.options;
-  const uniqueId = result.uniqueId;
+
+  const getUniqueIdFromPosition = () => {
+    const {resultsWithPreview, position} = getState().resultPreview;
+    return resultsWithPreview[position];
+  };
+
+  const onFetchContent = (uniqueId: string) => {
+    props.options.onlyContentURL
+      ? dispatch(
+          updateContentURL({
+            uniqueId,
+            requestedOutputSize: maximumPreviewSize,
+            buildResultPreviewRequest,
+            path,
+          })
+        )
+      : dispatch(
+          fetchResultContent({
+            uniqueId,
+            requestedOutputSize: maximumPreviewSize,
+          })
+        );
+    if (fetchResultContentCallback) {
+      fetchResultContentCallback();
+    }
+  };
 
   return {
     ...controller,
 
     fetchResultContent() {
-      props.options.onlyContentURL
-        ? dispatch(
-            updateContentURL({
-              uniqueId,
-              requestedOutputSize: maximumPreviewSize,
-              buildResultPreviewRequest,
-              path,
-            })
-          )
-        : dispatch(
-            fetchResultContent({
-              uniqueId,
-              requestedOutputSize: maximumPreviewSize,
-            })
-          );
-      if (fetchResultContentCallback) {
-        fetchResultContentCallback();
-      }
+      onFetchContent(result.uniqueId);
+    },
+
+    next() {
+      dispatch(nextPreview());
+      onFetchContent(getUniqueIdFromPosition());
+    },
+
+    previous() {
+      dispatch(previousPreview());
+      onFetchContent(getUniqueIdFromPosition());
     },
 
     get state() {
       const state = getState();
       const resultHasPreview = result.hasHtmlVersion;
       const preview = state.resultPreview;
-      const content = uniqueId === preview.uniqueId ? preview.content : '';
+      const content =
+        result.uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
       const contentURL = preview.contentURL;
+      const currentResultUniqueId = getUniqueIdFromPosition();
 
       return {
         content,
         resultHasPreview,
         isLoading,
         contentURL,
+        currentResultUniqueId,
       };
     },
   };

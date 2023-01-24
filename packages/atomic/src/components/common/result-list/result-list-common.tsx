@@ -67,30 +67,6 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
     this.props.nextNewResultTarget.focusOnNextTarget();
   }
 
-  public get quickviews() {
-    const extractResult = (possiblyFolded: AnyResult) => {
-      if ('result' in possiblyFolded) {
-        return possiblyFolded.result;
-      }
-      return possiblyFolded;
-    };
-
-    const position: number[] = [];
-    this.props
-      .getResultListState()
-      .results.forEach((possiblyFoldedResult, i) => {
-        const result = extractResult(possiblyFoldedResult);
-        if (result.hasHtmlVersion) {
-          position.push(i);
-        }
-      });
-
-    return {
-      total: this.props.getResultListState().results.length,
-      position,
-    };
-  }
-
   private get displayPlaceholders() {
     return !this.props.bindings.store.isAppLoaded();
   }
