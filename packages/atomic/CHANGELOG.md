@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.13.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.12.0...@coveo/atomic@2.13.0) (2023-01-24)
+
+### Features
+
+- **atomic:** add recommendations in ipx ([#2686](https://github.com/coveo/ui-kit/issues/2686)) ([2c6d082](https://github.com/coveo/ui-kit/commit/2c6d0827a39ffbe89260e15cb3ea5502b088a31e))
+
 # [2.12.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.11.0...@coveo/atomic@2.12.0) (2023-01-23)
 
 ### Features

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.9.3...@coveo/quantic@2.9.4) (2023-01-24)
+
+### Bug Fixes
+
+- **quantic:** fixed width of inputs for numericFacet ([#2688](https://github.com/coveo/ui-kit/issues/2688)) ([3403137](https://github.com/coveo/ui-kit/commit/34031377514080fb21f8fd55822df869299345d0))
+- **quantic:** issue fixed with the QuanticResultText ([#2680](https://github.com/coveo/ui-kit/issues/2680)) ([bc6387d](https://github.com/coveo/ui-kit/commit/bc6387d9d2930a5267880b2519e6f4c89ae9de82))
+- **quantic:** padding added to the QuanticPlaceholder component ([#2677](https://github.com/coveo/ui-kit/issues/2677)) ([d2675a0](https://github.com/coveo/ui-kit/commit/d2675a002915813412bb5562e08e31616beb2c40))
+
 ## [2.9.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.9.2...@coveo/quantic@2.9.3) (2023-01-23)
 
 **Note:** Version bump only for package @coveo/quantic
