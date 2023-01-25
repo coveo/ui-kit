@@ -12,6 +12,7 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../utils/initialization-utils';
+import {IconButton} from '../../common/iconButton';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -19,6 +20,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  */
 @Component({
   tag: 'atomic-insight-refine-toggle',
+  styleUrl: 'atomic-insight-refine-toggle.pcss',
   shadow: true,
 })
 export class AtomicInsightRefineToggle {
@@ -76,14 +78,15 @@ export class AtomicInsightRefineToggle {
 
   public render() {
     return (
-      <atomic-icon-button
-        tooltip={this.bindings.i18n.t('filters')}
+      <IconButton
+        style="outline-neutral"
+        title={this.bindings.i18n.t('filters')}
         icon={FilterIcon}
         disabled={
           !this.searchStatusState.hasResults && !this.numberOfBreadcrumbs
         }
-        labelI18nKey="sort"
-        clickCallback={() => {
+        ariaLabel={this.bindings.i18n.t('sort')}
+        onClick={() => {
           this.bindings.store.waitUntilAppLoaded(() => {
             this.enableModal();
           });
