@@ -87,7 +87,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
     let headerContent: VNode | null = null;
     if (this.result) {
       const interactiveResult = buildInteractiveResult(this.bindings.engine, {
-        options: {result: this.result!},
+        options: {result: this.result},
       });
       headerContent = (
         <LinkWithResultAnalytics
