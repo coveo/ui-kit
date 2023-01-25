@@ -27,7 +27,7 @@
         //searchInterface.executeFirstSearch();
 
         await customElements.whenDefined('atomic-recs-interface');
-        const recsInterface = document.querySelector('atomic-recs-interface');
+        const recsInterface = searchInterface.querySelector('atomic-recs-interface');
         await recsInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
@@ -44,7 +44,9 @@
         embeddedSearchInterfaceChildren.forEach((element) => {
           hostDiv.querySelector('atomic-ipx-embedded').appendChild(element);
         });
-        await initializeSearchInterface(hostDiv.querySelector('atomic-search-interface'));
+        const searchInterface = hostDiv.querySelector('atomic-search-interface');
+        searchInterface.querySelector('atomic-recs-list').setAttribute('recommendation', 'frequentViewed');
+        await initializeSearchInterface(searchInterface);
       };
 
       (async () => {
@@ -137,12 +139,21 @@
       atomic-search-interface:not(.atomic-search-interface-search-executed)
         > atomic-ipx-modal
         > div[slot='body']
+        > atomic-layout-section,
+      atomic-search-interface:not(.atomic-search-interface-search-executed)
+        > atomic-ipx-embedded
+        > div[slot='body']
         > atomic-layout-section {
         display: none;
       }
 
       atomic-search-interface.atomic-search-interface-search-executed
         > atomic-ipx-modal
+        > div[slot='body']
+        > atomic-recs-interface
+        > atomic-recs-list,
+      atomic-search-interface.atomic-search-interface-search-executed
+        > atomic-ipx-embedded
         > div[slot='body']
         > atomic-recs-interface
         > atomic-recs-list {
