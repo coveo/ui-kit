@@ -23,7 +23,7 @@ on:
         type: boolean
         required: false
       skipAtomicInsightsPanelE2E:
-        description: 'Skip Atomic Insights Panel end to end tests'
+        description: 'Skip Atomic Insight Panel end to end tests'
         type: boolean
         required: false
       skipAtomicStencilE2E:
@@ -116,7 +116,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-vuejs
   e2e-atomic-insight-panel-test:
-    name: 'Run e2e tests on Atomic insights panel'
+    name: 'Run e2e tests on Atomic insight panel'
     if: ${{ github.event.inputs.skipAtomicInsightsPanelE2E != 'true' }}
     needs: build
     runs-on: ubuntu-latest

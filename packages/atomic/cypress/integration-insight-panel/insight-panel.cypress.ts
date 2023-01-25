@@ -3,7 +3,7 @@ import {InsightPanelsSelectors} from './insight-panel-selectors';
 
 const host = 'http://localhost:3333/examples/insights.html';
 
-describe('Insights panel test suites', () => {
+describe('Insight Panel test suites', () => {
   function setupPage() {
     cy.visit(host);
     cy.injectAxe();

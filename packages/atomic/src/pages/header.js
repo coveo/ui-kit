@@ -9,7 +9,7 @@ const links = [
   {href: '/examples/modal.html', label: 'Modal'},
   {href: '/examples/suggestions.html', label: 'Custom Query Suggestions'},
   {href: '/examples/fashion.html', label: 'Fashion (Instant results + Recs)'},
-  {href: '/examples/insights.html', label: 'Insights Panel'},
+  {href: '/examples/insights.html', label: 'Insight Panel'},
   {
     href: '/examples/recommendations.html',
     label: 'Recommendations',

@@ -110,7 +110,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-stencil
   e2e-atomic-insight-panel-test:
-    name: 'Run e2e tests on Atomic insights panel'
+    name: 'Run e2e tests on Atomic insight panel'
     needs: build
     runs-on: ubuntu-latest
     steps:

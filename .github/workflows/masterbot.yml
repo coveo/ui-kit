@@ -99,7 +99,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-next
   e2e-atomic-insight-panel-test:
-    name: 'Run e2e tests on Atomic Insights Panel'
+    name: 'Run e2e tests on Atomic Insight Panel'
     needs: build
     runs-on: ubuntu-latest
     steps:

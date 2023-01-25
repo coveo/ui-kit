@@ -1,5 +1,5 @@
-name: 'Atomic Insights Panel E2E tests'
-description: 'Runs Cypress tests for Atomic Insights Panel'
+name: 'Atomic Insight Panel E2E tests'
+description: 'Runs Cypress tests for Atomic Insight Panel'
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
