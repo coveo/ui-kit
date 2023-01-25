@@ -9,7 +9,9 @@ import {
   Watch,
   Method,
   VNode,
+  Fragment,
 } from '@stencil/core';
+import CloseIcon from '../../../../images/close.svg';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -90,18 +92,29 @@ export class AtomicQuickviewModal implements InitializableComponent {
         options: {result: this.result},
       });
       headerContent = (
-        <LinkWithResultAnalytics
-          href={this.result?.clickUri}
-          onSelect={() => interactiveResult.select()}
-          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-        >
-          {this.result.title}
-        </LinkWithResultAnalytics>
+        <Fragment>
+          <LinkWithResultAnalytics
+            href={this.result?.clickUri}
+            onSelect={() => interactiveResult.select()}
+            onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
+            onCancelPendingSelect={() =>
+              interactiveResult.cancelPendingSelect()
+            }
+          >
+            {this.result.title}
+          </LinkWithResultAnalytics>
+          <atomic-icon-button
+            icon={CloseIcon}
+            clickCallback={() => this.onClose()}
+            labelI18nKey="close"
+            buttonStyle="text-transparent"
+            tooltip={this.bindings.i18n.t('close')}
+          ></atomic-icon-button>
+        </Fragment>
       );
     }
     return (
-      <div slot="header" class="w-full flex justify-between">
+      <div slot="header" class="w-full flex justify-between items-center">
         {headerContent}
       </div>
     );
