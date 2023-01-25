@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.13.0...@coveo/atomic@2.13.1) (2023-01-25)
+
+### Bug Fixes
+
+- **atomic:** fixed insight numeric facet not showing up ([#2693](https://github.com/coveo/ui-kit/issues/2693)) ([42e8d35](https://github.com/coveo/ui-kit/commit/42e8d35ac2c89bdf16ee9210b1d6529749b1dc8f))
+- **atomic:** insight query suggestions being hidden ([#2690](https://github.com/coveo/ui-kit/issues/2690)) ([ccc2f8a](https://github.com/coveo/ui-kit/commit/ccc2f8aab6d494b6f2351b18b19b52f235b34b50))
+
 # [2.13.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.12.0...@coveo/atomic@2.13.0) (2023-01-24)
 
 ### Features
