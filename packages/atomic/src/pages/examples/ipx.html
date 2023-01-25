@@ -152,6 +152,14 @@
       body:not(.atomic-ipx-modal-opened) > atomic-search-interface > atomic-ipx-modal {
         display: none;
       }
+
+      #host-div {
+        height: 900px;
+        position: relative;
+        width: 500px;
+        top: 10px;
+        left: 5px;
+      }
     </style>
   </head>
 
@@ -178,7 +186,7 @@
             </atomic-ipx-tabs>
           </atomic-layout-section>
         </div>
-        <atomic-layout-section section="facets" slot="facets">
+        <atomic-layout-section section="facets">
           <atomic-facet field="source" label="Source" display-values-as="checkbox"></atomic-facet>
           <atomic-facet field="filetype" label="Filetype" display-values-as="checkbox"></atomic-facet>
           <atomic-numeric-facet

@@ -52,7 +52,6 @@ export class AtomicIPXEmbedded implements InitializableComponent<AnyBindings> {
         <div part="backdrop">
           <atomic-ipx-body>
             <slot name="header" slot="header" />
-            <slot name="facets" slot="facets" />
             <slot name="body" slot="body" />
             <slot name="footer" slot="footer" />
           </atomic-ipx-body>

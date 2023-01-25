@@ -53,6 +53,7 @@ export type Bindings = CommonBindings<
  */
 @Component({
   tag: 'atomic-search-interface',
+  styleUrl: 'atomic-search-interface.pcss',
   shadow: true,
   assetsDirs: ['lang'],
 })

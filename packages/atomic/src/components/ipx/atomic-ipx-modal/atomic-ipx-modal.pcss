@@ -2,17 +2,31 @@
 
 atomic-focus-trap {
   @apply contents;
+  height: inherit;
+}
+
+:host {
+  width: var(--atomic-ipx-width, 31.25rem);
+  height: var(--atomic-ipx-height, 43.75rem);
+  box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
+  inset: auto 3rem 4.25rem auto;
+  position: fixed;
 }
 
 :host(.open) {
+  display: block;
+
   &::part(backdrop) {
     @apply pointer-events-auto;
-    inset: auto 3rem 4.25rem auto;
+    height: inherit;
   }
 }
 
 :host {
+  display: none;
+
   &::part(backdrop) {
     @apply pointer-events-none;
+    height: inherit;
   }
 }

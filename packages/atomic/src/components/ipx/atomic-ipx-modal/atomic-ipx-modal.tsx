@@ -92,10 +92,7 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
 
     return (
       <Host class={this.getClasses().join(' ')}>
-        <div
-          part="backdrop"
-          class="fixed left-0 top-0 right-0 bottom-0 z-[9999]"
-        >
+        <div part="backdrop">
           <atomic-focus-trap
             role="dialog"
             aria-modal={this.isOpen.toString()}

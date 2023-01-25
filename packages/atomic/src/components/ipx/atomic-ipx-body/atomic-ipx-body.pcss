@@ -1,12 +1,15 @@
 @import '../../../global/global.pcss';
 
 :host {
+  position: relative;
+  overflow: hidden;
+  height: inherit;
+
   &::part(container) {
     @apply rounded;
     @apply overflow-hidden flex flex-col justify-between bg-background box-border;
     grid-area: modal;
-    width: var(--atomic-ipx-width, 31.25rem);
-    height: var(--atomic-ipx-height, 43.75rem);
+    height: inherit;
     box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
   }
 

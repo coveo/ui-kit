@@ -54,6 +54,11 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
   @Prop({reflect: true, mutable: true}) isOpen = false;
   @Prop({mutable: true}) close: () => void = () => (this.isOpen = false);
   @Prop({reflect: true}) noFocusTrap = false;
+  /**
+   * Wether to display the open and close animations over the entire page or the atomic-modal only.
+   */
+  @Prop({reflect: true}) animateOverEntirePage = true;
+  @Prop({reflect: true}) isIPX = false;
 
   @Event() animationEnded!: EventEmitter<never>;
 
@@ -134,9 +139,15 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
     const Content = () => (
       <article
         part="container"
-        class={`flex flex-col justify-between bg-background text-on-background ${
-          this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'
-        } ${this.wasEverOpened ? '' : 'invisible'}`}
+        class={`flex flex-col justify-between bg-background text-on-background
+          ${
+            this.isOpen
+              ? this.isIPX
+                ? 'animate-scaleUpModalIPX'
+                : 'animate-scaleUpModal'
+              : 'animate-slideDownModal'
+          }
+          ${this.wasEverOpened ? '' : 'invisible'}`}
         onAnimationEnd={() => this.animationEnded.emit()}
         ref={(ref) => (this.animatableContainer = ref)}
       >
@@ -183,7 +194,10 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
       <Host class={this.getClasses().join(' ')}>
         <div
           part="backdrop"
-          class="fixed left-0 top-0 right-0 bottom-0 z-[9999]"
+          class={`
+            ${this.animateOverEntirePage ? 'fixed' : 'absolute'}
+            left-0 top-0 right-0 bottom-0 z-[9999]
+          `}
           onClick={(e) => e.target === e.currentTarget && this.close()}
         >
           {this.noFocusTrap ? (

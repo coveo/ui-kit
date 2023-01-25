@@ -744,12 +744,17 @@ export namespace Components {
     interface AtomicLoadMoreResults {
     }
     interface AtomicModal {
+        /**
+          * Wether to display the open and close animations over the entire page or the atomic-modal only.
+         */
+        "animateOverEntirePage": boolean;
         "close": () => void;
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
          */
         "container"?: HTMLElement;
         "fullscreen": boolean;
+        "isIPX": boolean;
         "isOpen": boolean;
         "noFocusTrap": boolean;
         "source"?: HTMLElement;
@@ -3385,12 +3390,17 @@ declare namespace LocalJSX {
     interface AtomicLoadMoreResults {
     }
     interface AtomicModal {
+        /**
+          * Wether to display the open and close animations over the entire page or the atomic-modal only.
+         */
+        "animateOverEntirePage"?: boolean;
         "close"?: () => void;
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
          */
         "container"?: HTMLElement;
         "fullscreen"?: boolean;
+        "isIPX"?: boolean;
         "isOpen"?: boolean;
         "noFocusTrap"?: boolean;
         "onAnimationEnded"?: (event: AtomicModalCustomEvent<never>) => void;

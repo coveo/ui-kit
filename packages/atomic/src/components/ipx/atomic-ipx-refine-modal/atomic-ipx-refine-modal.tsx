@@ -78,32 +78,40 @@ export class AtomicIPXRefineModal implements InitializableComponent {
     }
   }
 
+  private getAtomicModalDimensions(): DOMRect | undefined {
+    const parentIPX =
+      this.bindings.interfaceElement.querySelector('atomic-ipx-modal') ??
+      this.bindings.interfaceElement.querySelector('atomic-ipx-embedded');
+    return parentIPX!.shadowRoot
+      ?.querySelector('atomic-ipx-body')!
+      .shadowRoot?.querySelector('article[part="container"]')!
+      .getBoundingClientRect();
+  }
+
   private onAnimationFrame() {
     if (!this.isOpen) {
       return;
     }
-    if (this.dimensionChanged()) {
-      this.updateDimensions();
+    const atomicModalDimensions = this.getAtomicModalDimensions();
+    if (
+      !!atomicModalDimensions &&
+      this.dimensionChanged(atomicModalDimensions)
+    ) {
+      this.updateDimensions(atomicModalDimensions);
     }
     window.requestAnimationFrame(() => this.onAnimationFrame());
   }
 
-  private dimensionChanged() {
+  private dimensionChanged(atomicModalDimensions: DOMRect) {
     if (!this.interfaceDimensions) {
       return true;
     }
 
-    return !rectEquals(
-      this.interfaceDimensions,
-      this.bindings.interfaceElement.getBoundingClientRect()
-    );
+    return !rectEquals(this.interfaceDimensions, atomicModalDimensions);
   }
 
-  public updateDimensions() {
-    this.interfaceDimensions = this.bindings.interfaceElement
-      .querySelector('atomic-ipx-modal')!
-      .shadowRoot?.querySelector('article[part="container"]')!
-      .getBoundingClientRect();
+  public updateDimensions(atomicModalDimensions: DOMRect) {
+    this.interfaceDimensions = atomicModalDimensions;
   }
 
   public initialize() {
@@ -148,10 +156,9 @@ export class AtomicIPXRefineModal implements InitializableComponent {
         {this.interfaceDimensions && (
           <style>
             {`atomic-modal::part(backdrop) {
-            top: ${this.interfaceDimensions.top}px;
-            left: ${this.interfaceDimensions.left}px;
             width: ${this.interfaceDimensions.width}px;
             height: ${this.interfaceDimensions.height}px;
+            ${this.isOpen ? '' : 'display: none;'}
             }`}
           </style>
         )}
@@ -163,6 +170,8 @@ export class AtomicIPXRefineModal implements InitializableComponent {
           querySummaryState={this.querySummaryState}
           title={this.bindings.i18n.t('filters')}
           openButton={this.openButton}
+          animateOverEntirePage={false}
+          isIPX={true}
         >
           {this.renderBody()}
         </RefineModalCommon>
