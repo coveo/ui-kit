@@ -755,6 +755,7 @@ export namespace Components {
         "container"?: HTMLElement;
         "fullscreen": boolean;
         "isOpen": boolean;
+        "noFocusTrap": boolean;
         "source"?: HTMLElement;
     }
     interface AtomicNoResults {
@@ -3380,6 +3381,7 @@ declare namespace LocalJSX {
         "container"?: HTMLElement;
         "fullscreen"?: boolean;
         "isOpen"?: boolean;
+        "noFocusTrap"?: boolean;
         "onAnimationEnded"?: (event: AtomicModalCustomEvent<never>) => void;
         "source"?: HTMLElement;
     }

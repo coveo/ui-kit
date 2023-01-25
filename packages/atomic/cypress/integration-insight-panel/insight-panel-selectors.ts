@@ -17,6 +17,10 @@ export const InsightPanelsSelectors = {
     InsightPanelsSelectors.interface().find('atomic-insight-refine-toggle'),
   refineModal: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-refine-modal'),
+  focusTrap: () =>
+    InsightPanelsSelectors.refineModal().shadow().find('atomic-focus-trap', {
+      includeShadowDom: true,
+    }),
   filtersModal: () =>
     InsightPanelsSelectors.refineModal().shadow().find('atomic-modal'),
   filters: () => InsightPanelsSelectors.refineModal().find('[slot~="facets"]'),
