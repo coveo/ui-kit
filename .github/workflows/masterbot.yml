@@ -98,14 +98,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-next
-  e2e-atomic-insights-panel-test:
-    name: 'Run e2e tests on Atomic Insights Panel'
+  e2e-atomic-insight-panel-test:
+    name: 'Run e2e tests on Atomic Insight Panel'
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-atomic-insights-panel
+      - uses: ./.github/actions/e2e-atomic-insight-panel
   e2e-quantic-setup:
     name: 'Setup e2e tests on Quantic'
     needs: build

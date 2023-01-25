@@ -161,6 +161,7 @@ export class AtomicInsightNumericFacet
 
   public initialize() {
     this.numericFacetCommon = new NumericFacetCommon({
+      facetId: this.facetId,
       host: this.host,
       bindings: this.bindings,
       label: this.label,

@@ -3,7 +3,7 @@ import {InsightPanelsSelectors} from './insight-panel-selectors';
 
 const host = 'http://localhost:3333/examples/insights.html';
 
-describe('Insights panel test suites', () => {
+describe('Insight Panel test suites', () => {
   function setupPage() {
     cy.visit(host);
     cy.injectAxe();
@@ -87,17 +87,17 @@ describe('Insights panel test suites', () => {
 
       InsightPanelsSelectors.filters()
         .find('atomic-insight-facet')
-        .should('exist')
+        .should('be.visible')
         .should('have.length.at.least', 1);
 
       InsightPanelsSelectors.filters()
         .find('atomic-insight-timeframe-facet')
-        .should('exist')
+        .should('be.visible')
         .should('have.length.at.least', 1);
 
       InsightPanelsSelectors.filters()
         .find('atomic-insight-numeric-facet')
-        .should('exist')
+        .should('be.visible')
         .should('have.length.at.least', 1);
 
       InsightPanelsSelectors.filtersModal().find('[slot="footer"]').click();
