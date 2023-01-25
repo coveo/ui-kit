@@ -1,4 +1,5 @@
 @import '../../../../global/global.pcss';
+@import '../../../../global/mixins.pcss';
 
 .atomic-quickview-modal {
   &::part(backdrop) {
@@ -24,5 +25,13 @@
 
   &::part(backdrop) {
     grid-template-rows: 1fr 100% 3fr;
+  }
+
+  &::part(header-wrapper) {
+    @apply bg-neutral-light;
+  }
+
+  a {
+    @mixin link-style;
   }
 }
