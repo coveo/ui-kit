@@ -1,15 +1,14 @@
 import {h} from '@stencil/core';
-import {Args} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
-
+import {Args} from '@storybook/api';
+import {html, TemplateResult} from 'lit-html';
+import {initializeInterfaceDebounced} from './default-init';
 import sharedDefaultStory, {
   DefaultStoryAdvancedConfig,
   renderAdditionalMarkup,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
 } from './default-story-shared';
-import {initializeInterfaceDebounced} from './default-init';
-import {html, TemplateResult} from 'lit-html';
 import {
   resultComponentArgTypes,
   resultSections,
@@ -187,9 +186,11 @@ const buildConfigPreprocessRequest = (
   advancedConfig: DefaultStoryAdvancedConfig
 ) => {
   const preprocessRequestForOneResult = (r) => {
-    const bodyParsed = JSON.parse(r.body as string);
-    bodyParsed.numberOfResults = 1;
-    r.body = JSON.stringify(bodyParsed);
+    if (r.headers['Content-Type'] === 'application/json') {
+      const bodyParsed = JSON.parse(r.body as string);
+      bodyParsed.numberOfResults = 1;
+      r.body = JSON.stringify(bodyParsed);
+    }
     return r;
   };
 

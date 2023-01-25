@@ -57,11 +57,6 @@ export function buildCaseAssistQuickview(
   const {dispatch} = engine;
   const getState = () => engine.state;
   const getDocuments = () => getState().documentSuggestion.documents;
-  dispatch(
-    preparePreviewPagination({
-      results: getDocuments(),
-    })
-  );
 
   const fetchResultContentCallback = () => {
     engine.dispatch(
@@ -76,6 +71,12 @@ export function buildCaseAssistQuickview(
     buildResultPreviewRequest,
     path,
     fetchResultContentCallback
+  );
+
+  dispatch(
+    preparePreviewPagination({
+      results: getDocuments(),
+    })
   );
 
   return {
