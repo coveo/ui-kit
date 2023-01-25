@@ -23,7 +23,9 @@ describe('insight user actions slice', () => {
       {
         actionType: UserActionType.CLICK,
         timestamp: '2022-12-04T20:05:13.741Z',
-        eventData: {},
+        eventData: {
+          type: 'click',
+        },
         cause: 'resultClick',
         searchHub: 'someSearchHub',
         document: {
