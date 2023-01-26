@@ -747,7 +747,7 @@ export namespace Components {
         /**
           * Whether to display the open and close animations over the entire page or the atomic-modal only.
          */
-        "animateOverEntirePage": boolean;
+        "boundaries": 'page' | 'element';
         "close": () => void;
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
@@ -3393,7 +3393,7 @@ declare namespace LocalJSX {
         /**
           * Whether to display the open and close animations over the entire page or the atomic-modal only.
          */
-        "animateOverEntirePage"?: boolean;
+        "boundaries"?: 'page' | 'element';
         "close"?: () => void;
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.

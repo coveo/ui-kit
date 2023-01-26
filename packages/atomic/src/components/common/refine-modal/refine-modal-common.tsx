@@ -20,7 +20,7 @@ interface RefineModalCommonProps {
   isOpen: boolean;
   openButton?: HTMLElement;
   noFocusTrap?: boolean;
-  animateOverEntirePage?: boolean;
+  boundaries?: 'page' | 'element';
   isIPX?: boolean;
 }
 
@@ -96,7 +96,7 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
       }}
       exportparts={exportparts}
       noFocusTrap={props.noFocusTrap}
-      animateOverEntirePage={props.animateOverEntirePage}
+      boundaries={props.boundaries}
       isIPX={props.isIPX}
     >
       {renderHeader()}

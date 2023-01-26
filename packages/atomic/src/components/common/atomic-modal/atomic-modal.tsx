@@ -57,7 +57,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
   /**
    * Whether to display the open and close animations over the entire page or the atomic-modal only.
    */
-  @Prop({reflect: true}) animateOverEntirePage = true;
+  @Prop({reflect: true}) boundaries: 'page' | 'element' = 'page';
   @Prop({reflect: true}) isIPX = false;
 
   @Event() animationEnded!: EventEmitter<never>;
@@ -195,7 +195,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
         <div
           part="backdrop"
           class={`
-            ${this.animateOverEntirePage ? 'fixed' : 'absolute'}
+            ${this.boundaries === 'page' ? 'fixed' : 'absolute'}
             left-0 top-0 right-0 bottom-0 z-[9999]
           `}
           onClick={(e) => e.target === e.currentTarget && this.close()}
