@@ -34,17 +34,20 @@ function useDeepCompareMemo<T>(
   return lastState.current.value;
 }
 
-function useOnChange<T>(value: T, callback: () => void) {
-  const ref = useRef<T | null>(null);
+function useHasChanged(deps: DependencyList) {
+  const ref = useRef<DependencyList | null>(null);
   if (ref.current === null) {
-    ref.current = value;
-    return;
+    ref.current = deps;
+    return false;
   }
-  if (Object.is(ref.current, value)) {
-    return;
+  if (
+    ref.current.length === deps.length &&
+    !deps.some((dep, i) => !Object.is(ref.current![i], dep))
+  ) {
+    return false;
   }
-  ref.current = value;
-  callback();
+  ref.current = deps;
+  return true;
 }
 
 export type ReactController<T extends Controller> = Omit<
@@ -97,6 +100,29 @@ function buildController(
   };
 }
 
+/**
+ * Same as [useSyncExternalStore](https://reactjs.org/docs/hooks-reference.html#usesyncexternalstore), but doesn't infinitely re-render with a memoized store.
+ */
+function useSyncMemoizedStore<T>(
+  subscribe: (listener: () => void) => () => void,
+  getSnapshot: () => T
+) {
+  const state = useRef<T | null>(null);
+  const [, render] = useReducer((renderCount: number) => renderCount + 1, 0);
+  useEffect(
+    () =>
+      subscribe(() => {
+        state.current = getSnapshot();
+        render();
+      }),
+    [subscribe, getSnapshot]
+  );
+  if (useHasChanged([subscribe, getSnapshot]) || state.current === null) {
+    state.current = getSnapshot();
+  }
+  return state.current as T;
+}
+
 export function useController<
   TController extends Controller,
   TEngine extends CoreEngine
@@ -118,22 +144,16 @@ export function useController(
   engine: CoreEngine,
   props?: object
 ): UseControllerReturnType<Controller> {
-  useOnChange(builder, () =>
+  if (useHasChanged([builder])) {
     console.error(
       'A Coveo Headless controller builder was changed in between renders. This can happen when a custom callback is passed as a builder instead of an build function imported directly from Headless.'
-    )
-  );
+    );
+  }
   const {controller, getStateSnapshot, onStateChanged} = useDeepCompareMemo(
     () => buildController(builder, engine, props),
     props ?? {},
     [builder, engine]
   );
-  const [state, updateState] = useReducer(
-    getStateSnapshot,
-    undefined,
-    getStateSnapshot
-  );
-  useOnChange(getStateSnapshot, updateState);
-  useEffect(() => onStateChanged(updateState), [onStateChanged]);
+  const state = useSyncMemoizedStore(onStateChanged, getStateSnapshot);
   return {state, controller};
 }
