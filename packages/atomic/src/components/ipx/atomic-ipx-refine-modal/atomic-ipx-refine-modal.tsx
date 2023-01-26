@@ -158,7 +158,6 @@ export class AtomicIPXRefineModal implements InitializableComponent {
             {`atomic-modal::part(backdrop) {
             width: ${this.interfaceDimensions.width}px;
             height: ${this.interfaceDimensions.height}px;
-            ${this.isOpen ? '' : 'display: none;'}
             }`}
           </style>
         )}
