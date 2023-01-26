@@ -77,9 +77,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
       if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
         return;
       }
-      if (!this.noFocusTrap) {
-        this.focusTrap!.active = true;
-      }
+      !this.noFocusTrap && (this.focusTrap!.active = true);
     } else {
       document.body.classList.remove(modalOpenedClass);
       if (isIOS()) {
@@ -88,9 +86,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
       if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
         return;
       }
-      if (!this.noFocusTrap) {
-        this.focusTrap!.active = false;
-      }
+      !this.noFocusTrap && (this.focusTrap!.active = false);
     }
   }
 
@@ -135,7 +131,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
   public render() {
     this.updateBreakpoints();
 
-    const content = (
+    const Content = () => (
       <article
         part="container"
         class={`flex flex-col justify-between bg-background text-on-background ${
@@ -191,7 +187,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
           onClick={(e) => e.target === e.currentTarget && this.close()}
         >
           {this.noFocusTrap ? (
-            content
+            <Content />
           ) : (
             <atomic-focus-trap
               role="dialog"
@@ -201,7 +197,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
               container={this.container ?? this.host}
               ref={(ref) => (this.focusTrap = ref)}
             >
-              {content}
+              <Content />
             </atomic-focus-trap>
           )}
         </div>
