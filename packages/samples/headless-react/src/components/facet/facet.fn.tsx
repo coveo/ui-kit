@@ -1,16 +1,19 @@
-import {Facet as HeadlessFacet} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {useController, buildFacet, FacetOptions} from '@coveo/headless-react';
+import {FunctionComponent, useContext} from 'react';
+import {AppContext} from '../../context/engine';
+import {FacetManagerFunctionChildProps} from '../facet-manager/facet-manager.fn';
 import {FacetSearch} from './facet-search';
 
-interface FacetProps {
-  controller: HeadlessFacet;
+interface FacetProps extends FacetManagerFunctionChildProps {
+  controllerOptions: FacetOptions &
+    FacetManagerFunctionChildProps['controllerOptions'];
 }
 
-export const Facet: FunctionComponent<FacetProps> = (props) => {
-  const {controller} = props;
-  const [state, setState] = useState(controller.state);
-
-  useEffect(() => controller.subscribe(() => setState(controller.state)), []);
+export const Facet: FunctionComponent<FacetProps> = ({controllerOptions}) => {
+  const {engine} = useContext(AppContext);
+  const {controller, state} = useController(buildFacet, engine!, {
+    options: controllerOptions,
+  });
 
   if (!state.values.length) {
     return <div>No facet values</div>;

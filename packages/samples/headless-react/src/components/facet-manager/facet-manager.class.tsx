@@ -8,7 +8,13 @@ import {
 import {Children, Component, ContextType, ReactElement} from 'react';
 import {AppContext} from '../../context/engine';
 
-type FacetManagerChild = ReactElement<{facetId: string}>;
+export interface FacetManagerClassChildProps {
+  controllerOptions: {facetId: string};
+  /** @deprecated */
+  facetId?: string;
+}
+
+type FacetManagerChild = ReactElement<FacetManagerClassChildProps>;
 export class FacetManager extends Component<
   {
     children?: FacetManagerChild | FacetManagerChild[];
@@ -40,7 +46,7 @@ export class FacetManager extends Component<
     facets: FacetManagerChild[]
   ): FacetManagerPayload<FacetManagerChild>[] {
     return facets.map((facet) => ({
-      facetId: facet.props.facetId,
+      facetId: facet.props.facetId ?? facet.props.controllerOptions.facetId,
       payload: facet,
     }));
   }

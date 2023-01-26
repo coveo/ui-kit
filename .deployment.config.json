@@ -49,6 +49,39 @@
       }
     },
     {
+      "id": "deploy-headless-react-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless-react/v$[HEADLESS_REACT_PATCH_VERSION]",
+        "source": "packages/headless-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-headless-react-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless-react/v$[HEADLESS_REACT_MINOR_VERSION]",
+        "source": "packages/headless-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-headless-react-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless/v$[HEADLESS_REACT_MAJOR_VERSION]",
+        "source": "packages/headless-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-patch-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",

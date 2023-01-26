@@ -1,15 +1,17 @@
 import {
+  AnyFacetValuesCondition,
   buildFacet,
+  buildFacetConditionsManager,
   buildSearchEngine,
-  Facet as HeadlessFacet,
+  FacetOptions,
+  FacetValueRequest,
   getSampleSearchEngineConfiguration,
+  loadGenericAnalyticsActions,
+  loadSearchActions,
   SearchEngine,
-} from '@coveo/headless';
-import {Component} from 'react';
-import {MultilevelDependentFacet} from '../components/dependent-facet/multi-level-dependent-facet';
-import {SingleParentMultipleDependentFacet} from '../components/dependent-facet/single-parent-multiple-dependent.fn';
-import {SingleParentSingleDependentFacet} from '../components/dependent-facet/single-parent-single-dependent.fn';
-import {SingleValueDependentFacet} from '../components/dependent-facet/single-value-dependent.fn';
+  useController,
+} from '@coveo/headless-react';
+import {FunctionComponent, useEffect, useMemo, useState} from 'react';
 
 const Examples = {
   SingleParentSingleDependent: {
@@ -36,116 +38,249 @@ const Examples = {
 
 type ExampleType = keyof typeof Examples;
 
-export class DependentFacetPage extends Component<
-  {},
-  {currentExample: ExampleType}
-> {
-  private engine: SearchEngine;
-  private readonly authorFacet: HeadlessFacet;
-  private readonly sourceFacet: HeadlessFacet;
-  private readonly objectTypeFacet: HeadlessFacet;
-  private readonly fileTypeFacet: HeadlessFacet;
+type FacetWithDependenciesControllerOptions = FacetOptions &
+  Required<Pick<FacetOptions, 'facetId'>>;
 
-  constructor(props: {}) {
-    super(props);
-
-    this.engine = buildSearchEngine({
-      configuration: getSampleSearchEngineConfiguration(),
-    });
-
-    this.authorFacet = buildFacet(this.engine, {options: {field: 'author'}});
-    this.sourceFacet = buildFacet(this.engine, {options: {field: 'source'}});
-    this.objectTypeFacet = buildFacet(this.engine, {
-      options: {field: 'objecttype'},
-    });
-    this.fileTypeFacet = buildFacet(this.engine, {
-      options: {field: 'filetype'},
-    });
-    this.state = {currentExample: 'SingleParentSingleDependent'};
-  }
-
-  componentDidMount() {
-    this.engine.executeFirstSearch();
-  }
-
-  render() {
-    return (
-      <>
-        <select
-          onChange={(e) =>
-            this.setState({currentExample: e.target.value as ExampleType})
-          }
-        >
-          {Object.entries(Examples).map(([key, value]) => (
-            <option value={key} key={key}>
-              {value.name}
-            </option>
-          ))}
-        </select>
-        <div>
-          <h2>{Examples[this.state.currentExample].name}</h2>
-          <h3>{Examples[this.state.currentExample].description}</h3>
-          {this.renderExample()}
-        </div>
-      </>
-    );
-  }
-
-  renderExample() {
-    switch (this.state.currentExample) {
-      case 'SingleParentSingleDependent':
-        return (
-          <SingleParentSingleDependentFacet
-            engine={this.engine}
-            parentFacet={this.sourceFacet}
-            dependentFacet={this.objectTypeFacet}
-          />
-        );
-      case 'SingleParentMultipleDependent':
-        return (
-          <SingleParentMultipleDependentFacet
-            engine={this.engine}
-            parentFacet={this.sourceFacet}
-            dependentFacets={[this.objectTypeFacet, this.fileTypeFacet]}
-          />
-        );
-
-      case 'SingleValueDependent':
-        return (
-          <SingleValueDependentFacet
-            engine={this.engine}
-            parentFacet={this.fileTypeFacet}
-            dependentFacet={this.authorFacet}
-            dependentValue="doc"
-          />
-        );
-
-      case 'ComplexDependencies':
-        return (
-          <MultilevelDependentFacet
-            engine={this.engine}
-            dependencies={{
-              [this.sourceFacet.state.facetId]: {
-                facet: this.sourceFacet,
-              },
-              [this.objectTypeFacet.state.facetId]: {
-                facet: this.objectTypeFacet,
-                dependsOn: this.sourceFacet,
-              },
-              [this.authorFacet.state.facetId]: {
-                facet: this.authorFacet,
-                dependsOn: this.sourceFacet,
-              },
-              [this.fileTypeFacet.state.facetId]: {
-                facet: this.fileTypeFacet,
-                dependsOn: this.authorFacet,
-              },
-            }}
-          />
-        );
-
-      default:
-        return null;
-    }
-  }
+interface FacetWithDependenciesProps {
+  engine: SearchEngine;
+  controllerOptions: FacetWithDependenciesControllerOptions;
+  conditions?: AnyFacetValuesCondition<FacetValueRequest>[];
 }
+
+const FacetWithDependencies: FunctionComponent<FacetWithDependenciesProps> = ({
+  engine,
+  controllerOptions,
+  conditions,
+}) => {
+  // Initialize facet.
+  const {state, controller} = useController(buildFacet, engine, {
+    options: controllerOptions,
+  });
+
+  // Initialize conditions.
+  useEffect(() => {
+    if (!conditions?.length) {
+      return;
+    }
+    const conditionsManager = buildFacetConditionsManager(engine, {
+      facetId: state.facetId,
+      conditions: conditions,
+    });
+    return () => conditionsManager.stopWatching();
+  }, [engine, state.facetId, conditions]);
+
+  // Hide if conditions aren't met.
+  if (!state.enabled) {
+    return null;
+  }
+
+  // Render facet.
+  if (state.isLoading) {
+    return <>{`Loading ${state.facetId}`}</>;
+  }
+
+  if (!state.values.length) {
+    return <>{`No values for facet ${state.facetId}.`}</>;
+  }
+
+  return (
+    <ul>
+      {state.values.map((value) => (
+        <li key={value.value}>
+          <input
+            type="checkbox"
+            checked={controller.isValueSelected(value)}
+            onChange={() => controller.toggleSelect(value)}
+            disabled={state.isLoading}
+          />
+          {value.value} ({value.numberOfResults} results)
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+const DependentFacetExample: FunctionComponent<{
+  currentExample: ExampleType;
+}> = ({currentExample}) => {
+  const engine = useMemo(
+    () =>
+      buildSearchEngine({
+        configuration: getSampleSearchEngineConfiguration(),
+      }),
+    []
+  );
+  useEffect(() => {
+    if (!engine.state.search.requestId) {
+      engine.executeFirstSearch();
+      return;
+    }
+    const {executeSearch} = loadSearchActions(engine);
+    const {logSearchEvent} = loadGenericAnalyticsActions(engine);
+    engine.dispatch(executeSearch(logSearchEvent({evt: 'replaced-facets'})));
+  }, [engine, currentExample]);
+
+  const authorFacetOptions: FacetWithDependenciesControllerOptions = {
+    facetId: 'author-1',
+    field: 'author',
+  };
+  const sourceFacetOptions: FacetWithDependenciesControllerOptions = {
+    facetId: 'source-1',
+    field: 'source',
+  };
+  const objectTypeFacetOptions: FacetWithDependenciesControllerOptions = {
+    facetId: 'objecttype-1',
+    field: 'objecttype',
+  };
+  const fileTypeFacetOptions: FacetWithDependenciesControllerOptions = {
+    facetId: 'filetype-1',
+    field: 'filetype',
+    sortCriteria: 'alphanumeric',
+  };
+
+  switch (currentExample) {
+    case 'SingleParentSingleDependent':
+      return (
+        <>
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={sourceFacetOptions}
+          />
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={objectTypeFacetOptions}
+            conditions={[
+              {
+                parentFacetId: sourceFacetOptions.facetId,
+                condition: (values) =>
+                  values.some((value) => value.state === 'selected'),
+              },
+            ]}
+          />
+        </>
+      );
+    case 'SingleParentMultipleDependent':
+      return (
+        <>
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={sourceFacetOptions}
+          />
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={objectTypeFacetOptions}
+            conditions={[
+              {
+                parentFacetId: sourceFacetOptions.facetId,
+                condition: (values) =>
+                  values.some((value) => value.state === 'selected'),
+              },
+            ]}
+          />
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={fileTypeFacetOptions}
+            conditions={[
+              {
+                parentFacetId: sourceFacetOptions.facetId,
+                condition: (values) =>
+                  values.some((value) => value.state === 'selected'),
+              },
+            ]}
+          />
+        </>
+      );
+    case 'SingleValueDependent':
+      return (
+        <>
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={fileTypeFacetOptions}
+          />
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={authorFacetOptions}
+            conditions={[
+              {
+                parentFacetId: fileTypeFacetOptions.facetId,
+                condition: (values) =>
+                  values.some(
+                    (value) =>
+                      value.value === 'doc' && value.state === 'selected'
+                  ),
+              },
+            ]}
+          />
+        </>
+      );
+    case 'ComplexDependencies':
+      return (
+        <>
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={sourceFacetOptions}
+          />
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={objectTypeFacetOptions}
+            conditions={[
+              {
+                parentFacetId: sourceFacetOptions.facetId,
+                condition: (values) =>
+                  values.some((value) => value.state === 'selected'),
+              },
+            ]}
+          />
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={authorFacetOptions}
+            conditions={[
+              {
+                parentFacetId: sourceFacetOptions.facetId,
+                condition: (values) =>
+                  values.some((value) => value.state === 'selected'),
+              },
+            ]}
+          />
+          <FacetWithDependencies
+            engine={engine}
+            controllerOptions={fileTypeFacetOptions}
+            conditions={[
+              {
+                parentFacetId: authorFacetOptions.facetId,
+                condition: (values) =>
+                  values.some((value) => value.state === 'selected'),
+              },
+            ]}
+          />
+        </>
+      );
+    default:
+      return null;
+  }
+};
+
+export const DependentFacetPage = () => {
+  const [currentExample, setCurrentExample] = useState<ExampleType>(
+    'SingleParentSingleDependent'
+  );
+
+  return (
+    <>
+      <select
+        onChange={(e) => setCurrentExample(e.target.value as ExampleType)}
+      >
+        {Object.entries(Examples).map(([key, value]) => (
+          <option value={key} key={key}>
+            {value.name}
+          </option>
+        ))}
+      </select>
+      <div>
+        <h2>{Examples[currentExample].name}</h2>
+        <h3>{Examples[currentExample].description}</h3>
+        <DependentFacetExample currentExample={currentExample} />
+      </div>
+    </>
+  );
+};

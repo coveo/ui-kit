@@ -61,10 +61,12 @@ node('heavy && linux && docker') {
 
       stage('Deployment pipeline upload') {
         headless = readJSON file: 'packages/headless/package.json'
+        headlessReact = readJSON file: 'packages/atomic-react/package.json'
         atomic = readJSON file: 'packages/atomic/package.json'
         atomicReact = readJSON file: 'packages/atomic-react/package.json'
 
         (headlessMajor, headlessMinor, headlessPatch) = parseSemanticVersion(headless.version)
+        (headlessReactMajor, headlessReactMinor, headlessReactPatch) = parseSemanticVersion(headlessReact.version)
         (atomicMajor, atomicMinor, atomicPatch) = parseSemanticVersion(atomic.version)
         (atomicReactMajor, atomicReactMinor, atomicReactPatch) = parseSemanticVersion(atomicReact.version)
 
@@ -74,6 +76,9 @@ node('heavy && linux && docker') {
         --resolve HEADLESS_MAJOR_VERSION=${headlessMajor} \
         --resolve HEADLESS_MINOR_VERSION=${headlessMinor} \
         --resolve HEADLESS_PATCH_VERSION=${headlessPatch} \
+        --resolve ATOMIC_HEADLESS_MAJOR_VERSION=${headlessReactMajor} \
+        --resolve ATOMIC_HEADLESS_MINOR_VERSION=${headlessReactMinor} \
+        --resolve ATOMIC_HEADLESS_PATCH_VERSION=${headlessReactPatch} \
         --resolve ATOMIC_MAJOR_VERSION=${atomicMajor} \
         --resolve ATOMIC_MINOR_VERSION=${atomicMinor} \
         --resolve ATOMIC_PATCH_VERSION=${atomicPatch} \

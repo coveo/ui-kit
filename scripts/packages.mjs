@@ -36,6 +36,7 @@ export const packageDirsNpmTag = /** @type {const} */ ([
   'auth',
   'bueno',
   'headless',
+  'headless-react',
   'atomic-react',
   'atomic-angular/projects/atomic-angular',
   'quantic',
