@@ -745,7 +745,7 @@ export namespace Components {
     }
     interface AtomicModal {
         /**
-          * Wether to display the open and close animations over the entire page or the atomic-modal only.
+          * Whether to display the open and close animations over the entire page or the atomic-modal only.
          */
         "animateOverEntirePage": boolean;
         "close": () => void;
@@ -3391,7 +3391,7 @@ declare namespace LocalJSX {
     }
     interface AtomicModal {
         /**
-          * Wether to display the open and close animations over the entire page or the atomic-modal only.
+          * Whether to display the open and close animations over the entire page or the atomic-modal only.
          */
         "animateOverEntirePage"?: boolean;
         "close"?: () => void;
