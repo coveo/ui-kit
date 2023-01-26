@@ -68,8 +68,6 @@ describe('Insight Panel test suites', () => {
       InsightPanelsSelectors.refineToggle()
         .should('exist')
         .shadow()
-        .find('atomic-icon-button')
-        .shadow()
         .find('button')
         .should('exist')
         .should('have.attr', 'title', 'Filters');
@@ -112,13 +110,9 @@ describe('Insight Panel test suites', () => {
 
       InsightPanelsSelectors.editToggle()
         .shadow()
-        .find('atomic-icon-button')
-        .shadow()
         .find('button')
         .should('have.attr', 'title');
       InsightPanelsSelectors.editToggle()
-        .shadow()
-        .find('atomic-icon-button')
         .shadow()
         .find('button')
         .find('atomic-icon')
@@ -132,13 +126,9 @@ describe('Insight Panel test suites', () => {
 
       InsightPanelsSelectors.historyToggle()
         .shadow()
-        .find('atomic-icon-button')
-        .shadow()
         .find('button')
         .should('have.attr', 'title');
       InsightPanelsSelectors.historyToggle()
-        .shadow()
-        .find('atomic-icon-button')
         .shadow()
         .find('button')
         .find('atomic-icon')

@@ -12,6 +12,7 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../utils/initialization-utils';
+import {IconButton} from '../../common/iconButton';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
@@ -84,14 +85,17 @@ export class AtomicIPXRefineToggle {
 
   public render() {
     return (
-      <atomic-icon-button
-        tooltip={this.bindings.i18n.t('filters')}
+      <IconButton
+        partPrefix="ipx-refine-toggle"
+        class="icon-button"
+        style="outline-neutral"
+        title={this.bindings.i18n.t('filters')}
         icon={FilterIcon}
         disabled={
           !this.searchStatusState.hasResults && !this.numberOfBreadcrumbs
         }
-        labelI18nKey="sort"
-        clickCallback={() => {
+        ariaLabel={this.bindings.i18n.t('sort')}
+        onClick={() => {
           this.bindings.store.waitUntilAppLoaded(() => {
             this.enableModal();
           });

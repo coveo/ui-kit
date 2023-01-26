@@ -1,17 +1,16 @@
 @import '../../../global/global.pcss';
 
-atomic-icon-button {
+[part='ipx-refine-toggle-container'] {
   @apply pl-2 h-full pb-3.5;
+}
+[part='ipx-refine-toggle-button'] {
+  @apply h-full w-auto;
+}
 
-  &::part(button) {
-    @apply h-full w-auto;
-  }
+[part='ipx-refine-toggle-badge'] {
+  @apply w-5 h-5 leading-5 text-xs;
+}
 
-  &::part(badge) {
-    @apply w-5 h-5 leading-5 text-xs;
-  }
-
-  &::part(icon) {
-    @apply w-5 h-5;
-  }
+[part='ipx-refine-toggle-icon'] {
+  @apply w-5 h-5;
 }
