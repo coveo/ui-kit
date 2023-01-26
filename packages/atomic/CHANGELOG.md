@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.13.1...@coveo/atomic@2.13.2) (2023-01-26)
+
+### Bug Fixes
+
+- **atomic:** scroll top on new quickview ([#2694](https://github.com/coveo/ui-kit/issues/2694)) ([b628d58](https://github.com/coveo/ui-kit/commit/b628d58e68ec258be5a21af61b77dd9b68746af5))
+
 ## [2.13.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.13.0...@coveo/atomic@2.13.1) (2023-01-25)
 
 ### Bug Fixes
