@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.14.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.13.2...@coveo/atomic@2.14.0) (2023-01-26)
+
+### Features
+
+- **atomic:** add result link for quickview header ([#2691](https://github.com/coveo/ui-kit/issues/2691)) ([7a25db0](https://github.com/coveo/ui-kit/commit/7a25db0b7c5e426d5fcf295a1266f600c51b667c))
+
 ## [2.13.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.13.1...@coveo/atomic@2.13.2) (2023-01-26)
 
 ### Bug Fixes
