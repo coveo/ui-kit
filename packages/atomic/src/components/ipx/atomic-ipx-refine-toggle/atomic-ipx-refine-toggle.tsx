@@ -86,6 +86,7 @@ export class AtomicIPXRefineToggle {
   public render() {
     return (
       <IconButton
+        partPrefix="ipx-refine-toggle"
         class="icon-button"
         style="outline-neutral"
         title={this.bindings.i18n.t('filters')}

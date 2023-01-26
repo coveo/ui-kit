@@ -79,6 +79,7 @@ export class AtomicInsightRefineToggle {
   public render() {
     return (
       <IconButton
+        partPrefix="insight-refine-toggle"
         style="outline-neutral"
         title={this.bindings.i18n.t('filters')}
         icon={FilterIcon}

@@ -18,6 +18,7 @@ export class AtomicInsightHistoryToggle {
   public render() {
     return (
       <IconButton
+        partPrefix="insight-history-toggle"
         style="outline-neutral"
         icon={Clockicon}
         ariaLabel="history"

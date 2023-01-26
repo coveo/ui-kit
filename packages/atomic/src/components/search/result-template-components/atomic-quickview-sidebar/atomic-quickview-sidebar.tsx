@@ -53,6 +53,7 @@ const MinimizeButton: FunctionalComponent<
   > & {wordsLength: number}
 > = ({i18n, minimized, onMinimize, highlightKeywords, wordsLength}) => (
   <IconButton
+    partPrefix="sidebar-minimize"
     icon={MinimizeIcon}
     style="text-transparent"
     title={i18n.t('minimize')}
@@ -135,6 +136,7 @@ const Keywords: FunctionalComponent<
               </div>
               <div class="flex px-2">
                 <IconButton
+                  partPrefix="sidebar-next"
                   icon={ArrowDown}
                   disabled={!wordIsEnabled}
                   style="text-transparent"
@@ -144,6 +146,7 @@ const Keywords: FunctionalComponent<
                   onClick={() => keyword.navigateForward()}
                 />
                 <IconButton
+                  partPrefix="sidebar-previous"
                   icon={ArrowUp}
                   disabled={!wordIsEnabled}
                   style="text-transparent"
@@ -155,6 +158,7 @@ const Keywords: FunctionalComponent<
               </div>
             </div>
             <IconButton
+              partPrefix="sidebar-remove-word"
               class={`${
                 highlightKeywords.highlightNone
                   ? 'pointer-events-none opacity-50'

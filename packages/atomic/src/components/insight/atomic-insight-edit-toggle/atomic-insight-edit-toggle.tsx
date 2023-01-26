@@ -18,6 +18,7 @@ export class AtomicInsightEditToggle {
   public render() {
     return (
       <IconButton
+        partPrefix="insight-edit-toggle"
         style="outline-neutral"
         icon={EditIcon}
         ariaLabel="Edit"
