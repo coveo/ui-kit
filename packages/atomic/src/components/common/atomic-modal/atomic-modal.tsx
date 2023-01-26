@@ -55,7 +55,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
   @Prop({mutable: true}) close: () => void = () => (this.isOpen = false);
   @Prop({reflect: true}) noFocusTrap = false;
   /**
-   * Wether to display the open and close animations over the entire page or the atomic-modal only.
+   * Whether to display the open and close animations over the entire page or the atomic-modal only.
    */
   @Prop({reflect: true}) animateOverEntirePage = true;
   @Prop({reflect: true}) isIPX = false;
