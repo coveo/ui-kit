@@ -3,6 +3,7 @@ import {AnalyticsClient, CoveoAnalyticsClient, Endpoints} from '../client/analyt
 import {Plugins} from './plugins';
 import {PluginOptions} from '../plugins/BasePlugin';
 import {PluginClass} from '../plugins/BasePlugin';
+import {libVersion} from '../version';
 
 export type AvailableActions = keyof CoveoUA;
 
@@ -137,6 +138,10 @@ export class CoveoUA {
         this.plugins = new Plugins();
         this.params = {};
     }
+
+    version(): string {
+        return libVersion;
+    }
 }
 
 export const coveoua = new CoveoUA();
@@ -160,6 +165,7 @@ export const handleOneAnalyticsEvent = (command: string, ...params: any[]) => {
             'reset',
             'require',
             'provide',
+            'version',
         ];
         throw new Error(`The action "${command}" does not exist. Available actions: ${actions.join(', ')}.`);
     }

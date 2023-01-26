@@ -24,6 +24,7 @@ import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
 import {uuidv4} from './crypto';
 import {v5 as uuidv5, validate as uuidValidate} from 'uuid';
+import {libVersion} from '../version';
 import {
     convertKeysToMeasurementProtocol,
     isMeasurementProtocolKey,
@@ -99,6 +100,7 @@ export interface AnalyticsClient {
     registerAfterSendEventHook(hook: AnalyticsClientSendEventHook): void;
     addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void;
     runtime: IRuntimeEnvironment;
+    version: string;
     /**
      * @deprecated
      */
@@ -136,6 +138,9 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     public runtime: IRuntimeEnvironment;
+    public get version(): string {
+        return libVersion;
+    }
     private visitorId: string;
     private bufferedRequests: BufferedRequest[];
     private beforeSendHooks: AnalyticsClientSendEventHook[];

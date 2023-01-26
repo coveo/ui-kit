@@ -5,7 +5,9 @@ import commonjs from '@rollup/plugin-commonjs';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
 import json from '@rollup/plugin-json';
+import replace from '@rollup/plugin-replace';
 import {resolve} from 'path';
+import packageJson from './package.json';
 
 const browserFetch = () =>
     alias({
@@ -20,6 +22,12 @@ const browserFetch = () =>
 const tsPlugin = () =>
     typescript({
         useTsconfigDeclarationDir: true,
+    });
+
+const versionReplace = () =>
+    replace({
+        preventAssignment: true,
+        'process.env.PKG_VERSION': JSON.stringify(packageJson.version),
     });
 
 const browserUMD = {
@@ -49,6 +57,7 @@ const browserUMD = {
     plugins: [
         browserFetch(),
         nodeResolve({preferBuiltins: true, only: ['uuid']}),
+        versionReplace(),
         tsPlugin(),
         process.env.SERVE
             ? serve({
@@ -71,6 +80,7 @@ const nodeCJS = {
     },
     plugins: [
         nodeResolve({mainFields: ['main'], preferBuiltins: true, only: ['uuid']}),
+        versionReplace(),
         commonjs(),
         tsPlugin(),
         json(),
@@ -86,6 +96,7 @@ const browserESM = {
     plugins: [
         browserFetch(),
         nodeResolve({preferBuiltins: true, only: ['uuid']}),
+        versionReplace(),
         typescript({
             useTsconfigDeclarationDir: true,
             tsconfigOverride: {compilerOptions: {target: 'es6'}},
@@ -101,6 +112,7 @@ const libRN = {
     },
     plugins: [
         nodeResolve({preferBuiltins: true, only: ['uuid']}),
+        versionReplace(),
         commonjs(),
         json(),
         typescript({

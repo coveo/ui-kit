@@ -124,7 +124,7 @@ describe('AnalyticsBeaconClient', () => {
 
         await client.sendEvent(EventType.collect, {});
 
-        expect(clientOrigin).toBe('analyticsBeacon');
+        expect(clientOrigin!).toBe('analyticsBeacon');
         expect(sendBeaconMock).toHaveBeenCalledWith(processedRequest.url, processedRequest.body);
     });
 

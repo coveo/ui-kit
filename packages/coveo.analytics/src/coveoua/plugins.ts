@@ -20,7 +20,7 @@ export class Plugins {
                 `No plugin named "${name}" is currently registered. If you use a custom plugin, use 'provide' first.`
             );
         }
-        this.requiredPlugins[name] = new pluginClass(options);
+        this.requiredPlugins[name] = new (pluginClass as any)(options);
     }
 
     provide(name: string, plugin: PluginClass) {

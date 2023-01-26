@@ -5,6 +5,7 @@ import {uuidv4} from '../client/crypto';
 import {PluginOptions} from '../plugins/BasePlugin';
 import {mockFetch} from '../../tests/fetchMock';
 import {CookieStorage} from '../storage';
+import {libVersion} from '../version';
 
 const uuidv4Mock = jest.fn();
 jest.mock('../client/crypto', () => ({
@@ -376,6 +377,13 @@ describe('simpleanalytics', () => {
         });
     });
 
+    describe('version', () => {
+        it('returns the current version string', () => {
+            coveoua('init', 'MYTOKEN');
+            expect(coveoua('version')).toBe(libVersion);
+        });
+    });
+
     describe('callPlugin', () => {
         it('resolves properly plugin actions', () => {
             coveoua('provide', 'test', TestPluginWithSpy);
@@ -468,7 +476,7 @@ describe('simpleanalytics', () => {
         coveoua('init', 'SOME TOKEN', {plugins: ['svc']});
 
         expect(() => coveoua('potato')).toThrow(
-            `The action "potato" does not exist. Available actions: init, set, send, onLoad, callPlugin, reset, require, provide.`
+            `The action "potato" does not exist. Available actions: init, set, send, onLoad, callPlugin, reset, require, provide, version.`
         );
     });
 

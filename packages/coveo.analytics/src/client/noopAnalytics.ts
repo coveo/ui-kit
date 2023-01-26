@@ -17,6 +17,7 @@ import {
     PreparedViewEventRequest,
     ViewEventRequest,
 } from '../events';
+import {libVersion} from '../version';
 import {NoopRuntime} from './runtimeEnvironment';
 
 export class NoopAnalytics implements AnalyticsClient {
@@ -68,5 +69,8 @@ export class NoopAnalytics implements AnalyticsClient {
     registerAfterSendEventHook(): void {}
     addEventTypeMapping(): void {}
     runtime = new NoopRuntime();
+    public get version(): string {
+        return libVersion;
+    }
     currentVisitorId = '';
 }

@@ -9,10 +9,10 @@ const makeEvent = (eventType: EventType | string) =>
     Promise.resolve({eventType: eventType as EventType, payload: null, log: () => Promise.resolve()});
 
 export const createAnalyticsClientMock = (): jest.Mocked<AnalyticsClient> => ({
-    getPayload: jest.fn((eventType, ...payload) => Promise.resolve()),
-    getParameters: jest.fn((eventType, ...payload) => Promise.resolve()),
-    makeEvent: jest.fn(makeEvent),
-    sendEvent: jest.fn((eventType, payload) => Promise.resolve()),
+    getPayload: jest.fn((eventType, ...payload) => Promise.resolve()) as any,
+    getParameters: jest.fn((eventType, ...payload) => Promise.resolve()) as any,
+    makeEvent: jest.fn(makeEvent) as any,
+    sendEvent: jest.fn((eventType, payload) => Promise.resolve()) as any,
     makeClickEvent: jest.fn((request) => makeEvent(EventType.click)),
     sendClickEvent: jest.fn((request) => Promise.resolve()),
     makeCustomEvent: jest.fn((request) => makeEvent(EventType.custom)),
@@ -29,4 +29,5 @@ export const createAnalyticsClientMock = (): jest.Mocked<AnalyticsClient> => ({
     runtime: new NoopRuntime(),
     currentVisitorId: '',
     getCurrentVisitorId: jest.fn(() => Promise.resolve(visitorIdMock)),
+    version: 'mock',
 });

@@ -66,7 +66,7 @@ describe('Analytics', () => {
 
         expect(fetchMock.called()).toBe(true);
 
-        const [path, {headers, body}] = fetchMock.lastCall();
+        const [path, {headers, body}]: any = fetchMock.lastCall();
         expect(path).toBe(endpointForEventType(EventType.view));
 
         const h = headers as Record<string, string>;
@@ -115,8 +115,8 @@ describe('Analytics', () => {
 
         await Promise.all([firstRequest, secondRequest, thirdRequest]);
 
-        const assertResponseHasCustomDataWithIndex = (response: RequestInit, index: number) => {
-            const parsedBody = JSON.parse(response.body.toString());
+        const assertResponseHasCustomDataWithIndex = (response: RequestInit | undefined, index: number) => {
+            const parsedBody = JSON.parse(response!.body!.toString());
             expect(parsedBody.customData.index).toBe(index);
         };
         const [[, firstResponse], [, secondResponse], [, thirdResponse]] = fetchMock.calls();
@@ -170,7 +170,7 @@ describe('Analytics', () => {
         it('should properly parse empty arguments', async () => {
             await client.sendEvent(specialEventType);
 
-            const [path, {body}] = fetchMock.lastCall();
+            const [path, {body}]: any = fetchMock.lastCall();
             expect(path).toBe(endpointForEventType(EventType.custom));
 
             const parsedBody = JSON.parse(body.toString());
@@ -409,16 +409,16 @@ describe('Analytics', () => {
 
         const call = fetchMock.calls()[0];
         const url = call[0];
-        const options: RequestInit = call[1];
+        const options: RequestInit | undefined = call[1];
 
         const {url: expectedUrl, ...expectedOptions} = processedRequest;
-        expect(clientOrigin).toBe('analyticsFetch');
+        expect(clientOrigin!).toBe('analyticsFetch');
         expect(url).toBe(expectedUrl);
         expect(options).toEqual(expectedOptions);
     });
 
     const getParsedBodyCalls = (): any[] => {
-        return fetchMock.calls().map(([, {body}]) => {
+        return fetchMock.calls().map(([, {body}]: any) => {
             return JSON.parse(body.toString());
         });
     };
@@ -456,13 +456,13 @@ describe('doNotTrack', () => {
 
 describe('custom clientId', () => {
     it('allows setting of a custom clientId', async () => {
-        let client = new CoveoAnalyticsClient({});
+        const client = new CoveoAnalyticsClient({});
         client.setClientId('c7d57b22-4aa8-487a-a106-be5243885f0a');
         expect(await client.getCurrentVisitorId()).toBe('c7d57b22-4aa8-487a-a106-be5243885f0a');
     });
 
     it('allows setting a custom consistent clientId given a string', async () => {
-        let client = new CoveoAnalyticsClient({});
+        const client = new CoveoAnalyticsClient({});
         client.setClientId('somestring', 'testNameSpace');
         //uuid v5 specific uuid generation
         expect(await client.getCurrentVisitorId()).toBe('2c356915-8223-5773-acb8-e2a34404a559');
@@ -476,7 +476,7 @@ describe('custom clientId', () => {
     });
 
     it('errors when not providing a namespace', async () => {
-        let client = new CoveoAnalyticsClient({});
+        const client = new CoveoAnalyticsClient({});
         expect.assertions(1);
         await expect(client.setClientId('somestring')).rejects.toEqual(
             Error('Cannot generate uuid client id without a specific namespace string.')
