@@ -63,8 +63,6 @@ module.exports = {
       animation: {
         scaleUpModal:
           'scaleUp .5s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards',
-        scaleUpModalIPX:
-          'scaleUpIPX .5s cubic-bezier(0.165, 0.840, 0.440, 1.000) backwards',
         slideDownModal: 'slideDown .5s linear forwards',
       },
       transitionProperty: {
@@ -72,11 +70,7 @@ module.exports = {
       },
       keyframes: {
         scaleUp: {
-          '0%': {transform: 'scale(0.7) translateY(1000px)', opacity: '0.7'},
-          '100%': {transform: 'scale(1) translateY(0px)', opacity: '1'},
-        },
-        scaleUpIPX: {
-          '0%': {transform: 'scale(1) translateY(500px)', opacity: '0.7'},
+          '0%': {transform: 'scale(0.7) translateY(150vh)', opacity: '0.7'},
           '100%': {transform: 'scale(1) translateY(0px)', opacity: '1'},
         },
         slideDown: {

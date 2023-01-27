@@ -58,7 +58,6 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
    * Whether to display the open and close animations over the entire page or the atomic-modal only.
    */
   @Prop({reflect: true}) boundaries: 'page' | 'element' = 'page';
-  @Prop({reflect: true}) isIPX = false;
 
   @Event() animationEnded!: EventEmitter<never>;
 
@@ -140,13 +139,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
       <article
         part="container"
         class={`flex flex-col justify-between bg-background text-on-background
-          ${
-            this.isOpen
-              ? this.isIPX
-                ? 'animate-scaleUpModalIPX'
-                : 'animate-scaleUpModal'
-              : 'animate-slideDownModal'
-          }
+          ${this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'}
           ${this.wasEverOpened ? '' : 'invisible'}`}
         onAnimationEnd={() => this.animationEnded.emit()}
         ref={(ref) => (this.animatableContainer = ref)}
