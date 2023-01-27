@@ -171,6 +171,7 @@ export class AtomicIPXRefineModal implements InitializableComponent {
           openButton={this.openButton}
           boundaries="element"
           isIPX={true}
+          noFocusTrap
         >
           {this.renderBody()}
         </RefineModalCommon>
