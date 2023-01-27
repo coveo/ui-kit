@@ -7,7 +7,6 @@ import {
   QuerySummaryState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
-import {rectEquals} from '../../../utils/dom-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -74,44 +73,7 @@ export class AtomicIPXRefineModal implements InitializableComponent {
           )
         );
       }
-      this.onAnimationFrame();
     }
-  }
-
-  private getAtomicModalDimensions(): DOMRect | undefined {
-    const parentIPX =
-      this.bindings.interfaceElement.querySelector('atomic-ipx-modal') ??
-      this.bindings.interfaceElement.querySelector('atomic-ipx-embedded');
-    return parentIPX!.shadowRoot
-      ?.querySelector('atomic-ipx-body')!
-      .shadowRoot?.querySelector('article[part="container"]')!
-      .getBoundingClientRect();
-  }
-
-  private onAnimationFrame() {
-    if (!this.isOpen) {
-      return;
-    }
-    const atomicModalDimensions = this.getAtomicModalDimensions();
-    if (
-      !!atomicModalDimensions &&
-      this.dimensionChanged(atomicModalDimensions)
-    ) {
-      this.updateDimensions(atomicModalDimensions);
-    }
-    window.requestAnimationFrame(() => this.onAnimationFrame());
-  }
-
-  private dimensionChanged(atomicModalDimensions: DOMRect) {
-    if (!this.interfaceDimensions) {
-      return true;
-    }
-
-    return !rectEquals(this.interfaceDimensions, atomicModalDimensions);
-  }
-
-  public updateDimensions(atomicModalDimensions: DOMRect) {
-    this.interfaceDimensions = atomicModalDimensions;
   }
 
   public initialize() {
@@ -153,14 +115,6 @@ export class AtomicIPXRefineModal implements InitializableComponent {
   public render() {
     return (
       <Host>
-        {this.interfaceDimensions && (
-          <style>
-            {`atomic-modal::part(backdrop) {
-            width: ${this.interfaceDimensions.width}px;
-            height: ${this.interfaceDimensions.height}px;
-            }`}
-          </style>
-        )}
         <RefineModalCommon
           bindings={this.bindings}
           host={this.host}
