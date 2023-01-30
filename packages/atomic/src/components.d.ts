@@ -747,7 +747,7 @@ export namespace Components {
         /**
           * Whether to display the open and close animations over the entire page or the atomic-modal only.
          */
-        "boundaries": 'page' | 'element';
+        "boundary": 'page' | 'element';
         "close": () => void;
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
