@@ -30,6 +30,7 @@ import {
   updateQuery,
   UpdateQueryActionCreatorPayload,
 } from '../query/query-actions';
+import {logSearchboxAsYouType} from '../query/query-analytics-actions';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {
   AsyncSearchThunkProcessor,
@@ -220,10 +221,17 @@ export const fetchInstantResults = createAsyncThunk<
     });
     const {q, maxResultsPerQuery} = payload;
     const state = config.getState();
+    const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+    const {action: analyticsAction} = await logSearchboxAsYouType().prepare({
+      getState: () => config.getState(),
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    });
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction: null}, (modification) =>
+    >({...config, analyticsAction}, (modification) =>
       config.dispatch(
         updateInstantResultsQuery({q: modification, id: payload.id})
       )
@@ -243,6 +251,8 @@ export const fetchInstantResults = createAsyncThunk<
     if ('response' in processed) {
       return {
         results: processed.response.results,
+        searchUid: processed.response.searchUid,
+        analyticsAction: processed.analyticsAction,
       };
     }
     return processed as ReturnType<typeof config.rejectWithValue>;

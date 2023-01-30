@@ -2,6 +2,7 @@ import {createReducer, PayloadAction} from '@reduxjs/toolkit';
 import {
   executeSearch,
   fetchFacetValues,
+  fetchInstantResults,
   fetchMoreResults,
   fetchPage,
 } from './search-actions';
@@ -89,6 +90,9 @@ export const searchReducer = createReducer(
     builder.addCase(fetchFacetValues.fulfilled, (state, action) => {
       state.response.facets = action.payload.response.facets;
       state.response.searchUid = action.payload.response.searchUid;
+    });
+    builder.addCase(fetchInstantResults.fulfilled, (state, action) => {
+      state.response.searchUid = action.payload.searchUid;
     });
     builder.addCase(executeSearch.pending, handlePendingSearch);
     builder.addCase(fetchMoreResults.pending, handlePendingSearch);
