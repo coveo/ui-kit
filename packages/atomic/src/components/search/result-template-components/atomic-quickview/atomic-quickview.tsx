@@ -7,6 +7,7 @@ import {
 } from '@coveo/headless';
 import {Component, h, Listen, Prop, State} from '@stencil/core';
 import QuickviewIcon from '../../../../images/quickview.svg';
+import {AriaLiveRegion} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -55,6 +56,9 @@ export class AtomicQuickview implements InitializableComponent {
    */
   @Prop() public sandbox =
     'allow-popups allow-top-navigation allow-same-origin';
+
+  @AriaLiveRegion('quickview')
+  protected quickviewAriaMessage!: string;
 
   @Listen('atomic/quickview/next', {target: 'body'})
   public onNextQuickview(evt: Event) {
@@ -105,6 +109,17 @@ export class AtomicQuickview implements InitializableComponent {
       this.quickviewModalRef.result = this.result;
       this.quickviewModalRef.total = this.quickviewState.totalResults;
       this.quickviewModalRef.current = this.quickviewState.currentResult;
+      if (this.quickviewState.isLoading) {
+        this.quickviewAriaMessage = this.bindings.i18n.t('quickview-loading');
+      } else {
+        if (!this.quickviewState.isLoading) {
+          this.quickviewAriaMessage = this.bindings.i18n.t('quickview-loaded', {
+            first: this.quickviewState.currentResult,
+            last: this.quickviewState.totalResults,
+            title: this.result.title,
+          });
+        }
+      }
     }
   }
 

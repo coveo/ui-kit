@@ -34,7 +34,13 @@ export class AtomicFocusTrap {
   private readonly hiddenElements: Element[] = [];
 
   hide(element: Element) {
-    if (element.hasAttribute('aria-hidden')) {
+    // aria-hidden -> already hidden
+    // aria-live or atomic-aria-live -> must not be hidden otherwise it won't announce dynamic changes in the live region
+    if (
+      element.hasAttribute('aria-hidden') ||
+      element.hasAttribute('aria-live') ||
+      element.tagName.toLowerCase() === 'atomic-aria-live'
+    ) {
       return;
     }
     element.setAttribute('aria-hidden', 'true');
