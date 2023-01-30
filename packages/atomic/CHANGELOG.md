@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.14.1...@coveo/atomic@2.15.0) (2023-01-26)
+
+### Features
+
+- **atomic:** added prop to omit the modal focus trap ([#2697](https://github.com/coveo/ui-kit/issues/2697)) ([aa85344](https://github.com/coveo/ui-kit/commit/aa85344fc31fb0a0b853c501045bed4e9f16d87b))
+
+## [2.14.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.14.0...@coveo/atomic@2.14.1) (2023-01-26)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.14.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.13.2...@coveo/atomic@2.14.0) (2023-01-26)
+
+### Features
+
+- **atomic:** add result link for quickview header ([#2691](https://github.com/coveo/ui-kit/issues/2691)) ([7a25db0](https://github.com/coveo/ui-kit/commit/7a25db0b7c5e426d5fcf295a1266f600c51b667c))
+
+## [2.13.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.13.1...@coveo/atomic@2.13.2) (2023-01-26)
+
+### Bug Fixes
+
+- **atomic:** scroll top on new quickview ([#2694](https://github.com/coveo/ui-kit/issues/2694)) ([b628d58](https://github.com/coveo/ui-kit/commit/b628d58e68ec258be5a21af61b77dd9b68746af5))
+
+## [2.13.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.13.0...@coveo/atomic@2.13.1) (2023-01-25)
+
+### Bug Fixes
+
+- **atomic:** fixed insight numeric facet not showing up ([#2693](https://github.com/coveo/ui-kit/issues/2693)) ([42e8d35](https://github.com/coveo/ui-kit/commit/42e8d35ac2c89bdf16ee9210b1d6529749b1dc8f))
+- **atomic:** insight query suggestions being hidden ([#2690](https://github.com/coveo/ui-kit/issues/2690)) ([ccc2f8a](https://github.com/coveo/ui-kit/commit/ccc2f8aab6d494b6f2351b18b19b52f235b34b50))
+
 # [2.13.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.12.0...@coveo/atomic@2.13.0) (2023-01-24)
 
 ### Features

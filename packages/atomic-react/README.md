@@ -77,6 +77,7 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/atomic-react';
+import {useMemo} from 'react';
 
 const MyResultTemplateForYouTubeVideos: React.FC<{result: Result}> = ({
   result,
@@ -156,9 +157,14 @@ const MyResultTemplateFunction = (result: Result) => {
 };
 
 const MyPage = () => {
-  const engine = buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
-  });
+  const engine = useMemo(
+    () =>
+      buildSearchEngine({
+        configuration: getSampleSearchEngineConfiguration(),
+      }),
+    []
+  );
+
   return (
     <AtomicSearchInterface engine={engine}>
       <AtomicResultList template={MyResultTemplateFunction} />
@@ -185,6 +191,7 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/atomic-react';
+import {useMemo} from 'react';
 
 const MyStyledResultLink: React.FC<
   React.ComponentProps<typeof AtomicResultLink>
@@ -197,9 +204,14 @@ const MyStyledResultLink: React.FC<
 };
 
 const MyPage = () => {
-  const engine = buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
-  });
+  const engine = useMemo(
+    () =>
+      buildSearchEngine({
+        configuration: getSampleSearchEngineConfiguration(),
+      }),
+    []
+  );
+
   return (
     <AtomicSearchInterface engine={engine}>
       <AtomicResultList
@@ -231,6 +243,7 @@ import {
   AtomicResultList,
   AtomicResultBadge,
 } from '@coveo/atomic-react';
+import {useMemo} from 'react';
 
 const myStyles = `
 atomic-result-badge::part(result-badge-element) {
@@ -239,9 +252,14 @@ atomic-result-badge::part(result-badge-element) {
 `;
 
 const MyPage = () => {
-  const engine = buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
-  });
+  const engine = useMemo(
+    () =>
+      buildSearchEngine({
+        configuration: getSampleSearchEngineConfiguration(),
+      }),
+    []
+  );
+
   return (
     <AtomicSearchInterface engine={engine}>
       <AtomicResultList

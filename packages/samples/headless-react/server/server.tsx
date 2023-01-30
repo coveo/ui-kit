@@ -8,6 +8,7 @@ import escape from 'escape-html';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
+import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import App from '../src/App';
 
@@ -49,9 +50,12 @@ function renderServerSide(engine: SearchEngine) {
 function firstSearchExecuted(engine: SearchEngine) {
   return new Promise((resolve) => {
     const searchStatus = buildSearchStatus(engine);
-    searchStatus.subscribe(
-      () => searchStatus.state.firstSearchExecuted && resolve(true)
-    );
+    const unsubscribe = searchStatus.subscribe(() => {
+      if (searchStatus.state.firstSearchExecuted) {
+        unsubscribe();
+        resolve(true);
+      }
+    });
     engine.executeFirstSearch();
   });
 }

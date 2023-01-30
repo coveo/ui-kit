@@ -67,7 +67,7 @@ function App(props: SearchPageProps) {
             <AboutPage />
           </Route>
           <Route path="/saml">
-            <SamlPage organizationId="" provider="" />
+            <SamlPage />
           </Route>
           <Route path="/dependent-facet">
             <DependentFacetPage />

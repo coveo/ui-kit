@@ -68,8 +68,6 @@ describe('Insight Panel test suites', () => {
       InsightPanelsSelectors.refineToggle()
         .should('exist')
         .shadow()
-        .find('atomic-icon-button')
-        .shadow()
         .find('button')
         .should('exist')
         .should('have.attr', 'title', 'Filters');
@@ -78,6 +76,7 @@ describe('Insight Panel test suites', () => {
     it('should display refine-modal', () => {
       InsightPanelsSelectors.refineToggle().click();
       InsightPanelsSelectors.refineModal().should('exist');
+      InsightPanelsSelectors.focusTrap().should('not.exist');
 
       InsightPanelsSelectors.filtersModal().should('have.attr', 'is-open');
 
@@ -112,13 +111,9 @@ describe('Insight Panel test suites', () => {
 
       InsightPanelsSelectors.editToggle()
         .shadow()
-        .find('atomic-icon-button')
-        .shadow()
         .find('button')
         .should('have.attr', 'title');
       InsightPanelsSelectors.editToggle()
-        .shadow()
-        .find('atomic-icon-button')
         .shadow()
         .find('button')
         .find('atomic-icon')
@@ -132,13 +127,9 @@ describe('Insight Panel test suites', () => {
 
       InsightPanelsSelectors.historyToggle()
         .shadow()
-        .find('atomic-icon-button')
-        .shadow()
         .find('button')
         .should('have.attr', 'title');
       InsightPanelsSelectors.historyToggle()
-        .shadow()
-        .find('atomic-icon-button')
         .shadow()
         .find('button')
         .find('atomic-icon')

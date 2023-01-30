@@ -2,25 +2,34 @@ import {
   buildProductRecommendationEngine,
   buildFrequentlyViewedTogetherList,
 } from '@coveo/headless/product-recommendation';
+import {useMemo} from 'react';
 import {RecommendationList} from '../components/product-recommendations/popular-viewed.class';
 import {RecommendationList as RecommendationListFn} from '../components/product-recommendations/popular-viewed.fn';
 import {AppContext} from '../context/engine';
 import {Section} from '../layout/section';
 
 export function ProductRecommendationsPage() {
-  const engine = buildProductRecommendationEngine({
-    configuration: {
-      accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
-      organizationId: 'electronicscoveodemocomo0n2fu8v',
-      platformUrl: 'https://platform.cloud.coveo.com',
-    },
-  });
+  const engine = useMemo(
+    () =>
+      buildProductRecommendationEngine({
+        configuration: {
+          accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+          organizationId: 'electronicscoveodemocomo0n2fu8v',
+          platformUrl: 'https://platform.cloud.coveo.com',
+        },
+      }),
+    []
+  );
 
-  const recommendationList = buildFrequentlyViewedTogetherList(engine, {
-    options: {
-      maxNumberOfRecommendations: 5,
-    },
-  });
+  const recommendationList = useMemo(
+    () =>
+      buildFrequentlyViewedTogetherList(engine, {
+        options: {
+          maxNumberOfRecommendations: 5,
+        },
+      }),
+    [engine]
+  );
 
   return (
     <AppContext.Provider value={{productRecommendationEngine: engine}}>

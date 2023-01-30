@@ -157,6 +157,7 @@ export class AtomicInsightRefineModal
           querySummaryState={this.querySummaryState}
           title={this.bindings.i18n.t('filters')}
           openButton={this.openButton}
+          noFocusTrap
         >
           {this.renderBody()}
         </RefineModalCommon>

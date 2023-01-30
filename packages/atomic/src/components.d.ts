@@ -11,8 +11,6 @@ import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, Relativ
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
-import { VNode } from "@stencil/core";
-import { ButtonStyle } from "./components/common/button-style";
 import { InsightEngine, InsightFacetSortCriterion, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
@@ -347,17 +345,6 @@ export namespace Components {
           * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
-    }
-    interface AtomicIconButton {
-        "ariaPressed"?: boolean;
-        "badge"?: VNode;
-        "buttonRef"?: (el?: HTMLButtonElement) => void;
-        "buttonStyle": ButtonStyle;
-        "clickCallback": () => void;
-        "disabled": boolean;
-        "icon": string;
-        "labelI18nKey": string;
-        "tooltip": string;
     }
     interface AtomicInsightEditToggle {
         "clickCallback": () => void;
@@ -755,6 +742,7 @@ export namespace Components {
         "container"?: HTMLElement;
         "fullscreen": boolean;
         "isOpen": boolean;
+        "noFocusTrap": boolean;
         "source"?: HTMLElement;
     }
     interface AtomicNoResults {
@@ -1952,12 +1940,6 @@ declare global {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
     };
-    interface HTMLAtomicIconButtonElement extends Components.AtomicIconButton, HTMLStencilElement {
-    }
-    var HTMLAtomicIconButtonElement: {
-        prototype: HTMLAtomicIconButtonElement;
-        new (): HTMLAtomicIconButtonElement;
-    };
     interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightEditToggleElement: {
@@ -2574,7 +2556,6 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
-        "atomic-icon-button": HTMLAtomicIconButtonElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
@@ -2992,17 +2973,6 @@ declare namespace LocalJSX {
          */
         "icon": string;
     }
-    interface AtomicIconButton {
-        "ariaPressed"?: boolean;
-        "badge"?: VNode;
-        "buttonRef"?: (el?: HTMLButtonElement) => void;
-        "buttonStyle"?: ButtonStyle;
-        "clickCallback"?: () => void;
-        "disabled"?: boolean;
-        "icon": string;
-        "labelI18nKey": string;
-        "tooltip"?: string;
-    }
     interface AtomicInsightEditToggle {
         "clickCallback"?: () => void;
         "tooltip"?: string;
@@ -3380,6 +3350,7 @@ declare namespace LocalJSX {
         "container"?: HTMLElement;
         "fullscreen"?: boolean;
         "isOpen"?: boolean;
+        "noFocusTrap"?: boolean;
         "onAnimationEnded"?: (event: AtomicModalCustomEvent<never>) => void;
         "source"?: HTMLElement;
     }
@@ -4377,7 +4348,6 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
-        "atomic-icon-button": AtomicIconButton;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
@@ -4504,7 +4474,6 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
-            "atomic-icon-button": LocalJSX.AtomicIconButton & JSXBase.HTMLAttributes<HTMLAtomicIconButtonElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;

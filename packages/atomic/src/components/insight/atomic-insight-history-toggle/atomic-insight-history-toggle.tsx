@@ -1,11 +1,13 @@
 import {Component, h, Prop} from '@stencil/core';
 import Clockicon from '../../../images/clock.svg';
+import {IconButton} from '../../common/iconButton';
 
 /**
  * @internal
  */
 @Component({
   tag: 'atomic-insight-history-toggle',
+  styleUrl: 'atomic-insight-history-toggle.pcss',
   shadow: true,
 })
 export class AtomicInsightHistoryToggle {
@@ -15,11 +17,13 @@ export class AtomicInsightHistoryToggle {
 
   public render() {
     return (
-      <atomic-icon-button
+      <IconButton
+        partPrefix="insight-history-toggle"
+        style="outline-neutral"
         icon={Clockicon}
-        labelI18nKey="insight-history"
-        click-callback={this.clickCallback}
-        tooltip={this.tooltip}
+        ariaLabel="history"
+        onClick={this.clickCallback}
+        title={this.tooltip}
       />
     );
   }

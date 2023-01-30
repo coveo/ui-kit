@@ -6,6 +6,7 @@ import ArrowUp from '../../../../images/arrow-top-rounded.svg';
 import MinimizeIcon from '../../../../images/menu.svg';
 import Remove from '../../../../images/remove.svg';
 import {Checkbox} from '../../../common/checkbox';
+import {IconButton} from '../../../common/iconButton';
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 
@@ -51,17 +52,18 @@ const MinimizeButton: FunctionalComponent<
     'i18n' | 'minimized' | 'onMinimize' | 'highlightKeywords'
   > & {wordsLength: number}
 > = ({i18n, minimized, onMinimize, highlightKeywords, wordsLength}) => (
-  <atomic-icon-button
-    buttonStyle="text-transparent"
-    class={`w-fit ${minimized ? '' : 'ml-auto'}`}
+  <IconButton
+    partPrefix="sidebar-minimize"
     icon={MinimizeIcon}
-    labelI18nKey="minimize"
-    tooltip={i18n.t('minimize')}
-    clickCallback={() => onMinimize(!minimized)}
+    style="text-transparent"
+    title={i18n.t('minimize')}
+    ariaLabel={i18n.t('minimize')}
+    onClick={() => onMinimize(!minimized)}
     badge={
       highlightKeywords && minimized ? <slot>{wordsLength}</slot> : undefined
     }
-  ></atomic-icon-button>
+    class={`w-fit ${minimized ? '' : 'ml-auto'}`}
+  />
 );
 
 const HighlightKeywordsCheckbox: FunctionalComponent<
@@ -133,40 +135,40 @@ const Keywords: FunctionalComponent<
                 </div>
               </div>
               <div class="flex px-2">
-                <atomic-icon-button
-                  disabled={!wordIsEnabled}
-                  buttonStyle="text-transparent"
-                  class="border-0"
-                  labelI18nKey="next"
-                  tooltip={i18n.t('next')}
+                <IconButton
+                  partPrefix="sidebar-next"
                   icon={ArrowDown}
-                  clickCallback={() => {
-                    keyword.navigateForward();
-                  }}
-                ></atomic-icon-button>
-                <atomic-icon-button
                   disabled={!wordIsEnabled}
-                  buttonStyle="text-transparent"
+                  style="text-transparent"
                   class="border-0"
-                  labelI18nKey="previous"
-                  tooltip={i18n.t('previous')}
+                  ariaLabel={i18n.t('next')}
+                  title={i18n.t('next')}
+                  onClick={() => keyword.navigateForward()}
+                />
+                <IconButton
+                  partPrefix="sidebar-previous"
                   icon={ArrowUp}
-                  clickCallback={() => keyword.navigateBackward()}
-                ></atomic-icon-button>
+                  disabled={!wordIsEnabled}
+                  style="text-transparent"
+                  class="border-0"
+                  ariaLabel={i18n.t('previous')}
+                  title={i18n.t('previous')}
+                  onClick={() => keyword.navigateBackward()}
+                />
               </div>
             </div>
-
-            <atomic-icon-button
+            <IconButton
+              partPrefix="sidebar-remove-word"
               class={`${
                 highlightKeywords.highlightNone
                   ? 'pointer-events-none opacity-50'
                   : ''
               }`}
-              ariaPressed={!wordIsEnabled}
-              buttonStyle="text-transparent"
+              ariaPressed={(!wordIsEnabled).toString()}
+              style="text-transparent"
               icon={wordIsEnabled ? Remove : Add}
-              labelI18nKey={'quickview-remove-word'}
-              clickCallback={() => {
+              ariaLabel={i18n.t('quickview-remove-word')}
+              onClick={() => {
                 onHighlightKeywords({
                   ...highlightKeywords,
                   keywords: {
@@ -178,7 +180,7 @@ const Keywords: FunctionalComponent<
                   },
                 });
               }}
-            ></atomic-icon-button>
+            />
           </div>
         );
       })}

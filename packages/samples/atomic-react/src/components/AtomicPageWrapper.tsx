@@ -36,7 +36,7 @@ import {
   Bindings,
   AtomicSearchBoxQuerySuggestions,
 } from '@coveo/atomic-react';
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useMemo} from 'react';
 
 type Options = {
   instantResults?: boolean;
@@ -55,16 +55,21 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
   children,
   options = {},
 }) => {
-  const engine = buildSearchEngine({
-    configuration: {
-      accessToken,
-      organizationId,
-      search: {
-        pipeline: 'Search',
-        searchHub: 'MainSearch',
-      },
-    },
-  });
+  const engine = useMemo(
+    () =>
+      buildSearchEngine({
+        configuration: {
+          accessToken,
+          organizationId,
+          search: {
+            pipeline: 'Search',
+            searchHub: 'MainSearch',
+          },
+        },
+      }),
+    [accessToken, organizationId]
+  );
+
   return (
     <AtomicSearchInterface
       engine={engine}
