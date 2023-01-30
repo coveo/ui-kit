@@ -123,7 +123,7 @@ export class AtomicIPXRefineModal implements InitializableComponent {
           querySummaryState={this.querySummaryState}
           title={this.bindings.i18n.t('filters')}
           openButton={this.openButton}
-          boundaries="element"
+          boundary="element"
           noFocusTrap
         >
           {this.renderBody()}
