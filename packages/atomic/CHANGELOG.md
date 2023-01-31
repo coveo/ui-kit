@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.16.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.15.0...@coveo/atomic@2.16.0) (2023-01-31)
+
+### Features
+
+- **atomic:** allow sip protocol on links (e.g. for Microsoft Teams) ([#2701](https://github.com/coveo/ui-kit/issues/2701)) ([e346d1a](https://github.com/coveo/ui-kit/commit/e346d1aa9a5b69996509c0574f371cc77e7773cc))
+
 # [2.15.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.14.1...@coveo/atomic@2.15.0) (2023-01-26)
 
 ### Features
