@@ -9,9 +9,17 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script>
-      (async () => {
-        await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('atomic-search-interface');
+      const ipxSelectorToButtonMode = (searchInterface, hostDiv) => {
+        searchInterface.style.display = 'inline';
+        hostDiv.style.display = 'none';
+      };
+
+      const ipxButtonToSelectorMode = (searchInterface, hostDiv) => {
+        searchInterface.style.display = 'none';
+        hostDiv.style.display = 'inline';
+      };
+
+      const initializeSearchInterface = async (searchInterface) => {
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
@@ -19,7 +27,7 @@
         //searchInterface.executeFirstSearch();
 
         await customElements.whenDefined('atomic-recs-interface');
-        const recsInterface = document.querySelector('atomic-recs-interface');
+        const recsInterface = searchInterface.querySelector('atomic-recs-interface');
         await recsInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
@@ -28,6 +36,42 @@
 
         searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
           '.html': 'html',
+        });
+      };
+
+      const setupEmbeddedInterface = async (embeddedSearchInterfaceChildren, hostDiv) => {
+        hostDiv.style.display = 'none';
+        embeddedSearchInterfaceChildren.forEach((element) => {
+          hostDiv.querySelector('atomic-ipx-embedded').appendChild(element);
+        });
+        const searchInterface = hostDiv.querySelector('atomic-search-interface');
+        searchInterface.querySelector('atomic-recs-list').setAttribute('recommendation', 'frequentViewed');
+        await initializeSearchInterface(searchInterface);
+      };
+
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+        const ipxModal = document.querySelector('atomic-ipx-modal');
+        const hostDiv = document.querySelector('div#host-div');
+
+        const embeddedSearchInterfaceChildren = Array.from(ipxModal.cloneNode(true).childNodes);
+
+        await initializeSearchInterface(searchInterface);
+
+        await setupEmbeddedInterface(embeddedSearchInterfaceChildren, hostDiv);
+
+        const displaySelect = document.getElementById('ipx-display-select');
+        displaySelect.addEventListener('change', ({target: {value}}) => {
+          switch (value) {
+            case 'button':
+              ipxSelectorToButtonMode(searchInterface, hostDiv);
+              break;
+            case 'target-selector':
+              ipxButtonToSelectorMode(searchInterface, hostDiv);
+            default:
+              break;
+          }
         });
       })();
     </script>
@@ -95,12 +139,21 @@
       atomic-search-interface:not(.atomic-search-interface-search-executed)
         > atomic-ipx-modal
         > div[slot='body']
+        > atomic-layout-section,
+      atomic-search-interface:not(.atomic-search-interface-search-executed)
+        > atomic-ipx-embedded
+        > div[slot='body']
         > atomic-layout-section {
         display: none;
       }
 
       atomic-search-interface.atomic-search-interface-search-executed
         > atomic-ipx-modal
+        > div[slot='body']
+        > atomic-recs-interface
+        > atomic-recs-list,
+      atomic-search-interface.atomic-search-interface-search-executed
+        > atomic-ipx-embedded
         > div[slot='body']
         > atomic-recs-interface
         > atomic-recs-list {
@@ -110,10 +163,25 @@
       body:not(.atomic-ipx-modal-opened) > atomic-search-interface > atomic-ipx-modal {
         display: none;
       }
+
+      #host-div {
+        height: 900px;
+        position: relative;
+        width: 500px;
+        top: 10px;
+        left: 5px;
+      }
     </style>
   </head>
 
   <body>
+    <div id="ipx-display-option">
+      <label for="ipx-display-select">IPX display type:&nbsp;</label>
+      <select id="ipx-display-select">
+        <option value="button" selected>Button</option>
+        <option value="target-selector">Target Selector</option>
+      </select>
+    </div>
     <atomic-search-interface fields-to-include='["snrating","sncost"]'>
       <atomic-ipx-modal is-open="true">
         <div slot="header">
@@ -340,8 +408,13 @@
           </a>
         </div>
       </atomic-ipx-modal>
-      <atomic-ipx-button is-modal-open="true"></atomic-ipx-button>
+      <atomic-ipx-button is-modal-open="true" label="Help"></atomic-ipx-button>
     </atomic-search-interface>
+    <div id="host-div">
+      <atomic-search-interface fields-to-include='["snrating","sncost"]'>
+        <atomic-ipx-embedded></atomic-ipx-embedded>
+      </atomic-search-interface>
+    </div>
     <script src="../header.js" type="text/javascript"></script>
   </body>
 </html>

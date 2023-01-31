@@ -7,7 +7,6 @@ import {
   QuerySummaryState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
-import {rectEquals} from '../../../utils/dom-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -74,36 +73,7 @@ export class AtomicIPXRefineModal implements InitializableComponent {
           )
         );
       }
-      this.onAnimationFrame();
     }
-  }
-
-  private onAnimationFrame() {
-    if (!this.isOpen) {
-      return;
-    }
-    if (this.dimensionChanged()) {
-      this.updateDimensions();
-    }
-    window.requestAnimationFrame(() => this.onAnimationFrame());
-  }
-
-  private dimensionChanged() {
-    if (!this.interfaceDimensions) {
-      return true;
-    }
-
-    return !rectEquals(
-      this.interfaceDimensions,
-      this.bindings.interfaceElement.getBoundingClientRect()
-    );
-  }
-
-  public updateDimensions() {
-    this.interfaceDimensions = this.bindings.interfaceElement
-      .querySelector('atomic-ipx-modal')!
-      .shadowRoot?.querySelector('article[part="container"]')!
-      .getBoundingClientRect();
   }
 
   public initialize() {
@@ -145,16 +115,6 @@ export class AtomicIPXRefineModal implements InitializableComponent {
   public render() {
     return (
       <Host>
-        {this.interfaceDimensions && (
-          <style>
-            {`atomic-modal::part(backdrop) {
-            top: ${this.interfaceDimensions.top}px;
-            left: ${this.interfaceDimensions.left}px;
-            width: ${this.interfaceDimensions.width}px;
-            height: ${this.interfaceDimensions.height}px;
-            }`}
-          </style>
-        )}
         <RefineModalCommon
           bindings={this.bindings}
           host={this.host}
@@ -163,6 +123,8 @@ export class AtomicIPXRefineModal implements InitializableComponent {
           querySummaryState={this.querySummaryState}
           title={this.bindings.i18n.t('filters')}
           openButton={this.openButton}
+          boundary="element"
+          noFocusTrap
         >
           {this.renderBody()}
         </RefineModalCommon>
