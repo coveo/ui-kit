@@ -36,7 +36,8 @@ const ELLIPSIS = '...';
 /**
  * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
  *
- * @part container - The container of the component.
+ * @part container - The container of the whole component, list & label.
+ * @part breadcrumb-list-container - The container for the list of breadcrumb buttons.
  * @part breadcrumb-list - The list of breadcrumb buttons.
  * @part breadcrumb-button - A single breadcrumb button.
  * @part breadcrumb-label - The breadcrumb label, associated with the facet.
@@ -412,7 +413,7 @@ export class AtomicBreadbox implements InitializableComponent {
             text: this.bindings.i18n.t('filters'),
           })}
         </span>
-        <div class="relative grow">
+        <div part="breadcrumb-list-container" class="relative grow">
           <ul
             part="breadcrumb-list"
             class={`flex gap-1 ${
