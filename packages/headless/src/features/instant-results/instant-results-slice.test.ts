@@ -157,7 +157,7 @@ describe('instant results slice', () => {
       it('updates results in correct searchbox and query cache', () => {
         const query = 'some_query';
         const action = fetchInstantResults.fulfilled(
-          {results: [buildMockResult()]},
+          {results: [buildMockResult()], searchUid: 'someid'},
           'req_id',
           {
             id: id1,
@@ -197,7 +197,7 @@ describe('instant results slice', () => {
       it('sets correct isLoading, error and expiresAt properties', () => {
         const query = 'some_query';
         const action = fetchInstantResults.fulfilled(
-          {results: [buildMockResult()]},
+          {results: [buildMockResult()], searchUid: 'someid'},
           'req_id',
           {
             id: id1,
