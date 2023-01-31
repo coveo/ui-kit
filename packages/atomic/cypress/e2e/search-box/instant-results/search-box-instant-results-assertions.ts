@@ -22,3 +22,9 @@ export function assertNoResultIsSelected() {
     );
   });
 }
+
+export function assertLogSearchboxAsYouType() {
+  it('should log the SearchboxAsYouType event to UA', () => {
+    cy.expectSearchEvent('searchboxAsYouType');
+  });
+}
