@@ -7,7 +7,9 @@ const writeDocument = (documentWriter: Document, content: string) => {
   documentWriter.open();
   documentWriter.write(content);
   documentWriter.close();
-  documentWriter.body.scrollTop = 0;
+  if (documentWriter.scrollingElement) {
+    documentWriter.scrollingElement.scrollTop = 0;
+  }
 };
 
 const currentResultAlreadyWrittenToDocument = (
