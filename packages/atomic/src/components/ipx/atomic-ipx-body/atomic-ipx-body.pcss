@@ -1,0 +1,33 @@
+@import '../../../global/global.pcss';
+
+:host {
+  position: relative;
+  overflow: hidden;
+  height: inherit;
+
+  &::part(container) {
+    @apply rounded;
+    @apply overflow-hidden flex flex-col justify-between bg-background box-border;
+    grid-area: modal;
+    height: inherit;
+    box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
+  }
+
+  &::part(header-wrapper) {
+    @apply px-6 pt-4 w-full grid bg-neutral-light;
+    padding: 1.5rem 1.5rem 0 1.5rem;
+  }
+
+  &::part(header) {
+    @apply font-bold;
+  }
+
+  &::part(body-wrapper) {
+    padding: 1rem 1.5rem 1rem 1.5rem;
+  }
+
+  &::part(footer-wrapper) {
+    @apply bg-neutral-light items-stretch;
+    padding: 1rem 1.75rem;
+  }
+}

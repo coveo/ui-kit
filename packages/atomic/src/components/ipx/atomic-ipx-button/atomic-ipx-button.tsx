@@ -17,7 +17,7 @@ export class AtomicIPXButton {
   /**
    * The label that will be shown to the user.
    */
-  @Prop({reflect: true}) public label = 'Workplace Search';
+  @Prop({reflect: true}) public label?: string;
 
   /**
    * The close icon of the button.

@@ -13,6 +13,10 @@ atomic-focus-trap {
   grid-area: modal;
 }
 
+.animate-scaleUpModalIPX[part='container'] {
+  @apply rounded shadow;
+}
+
 :host(.open) {
   [part='backdrop'] {
     @apply pointer-events-auto;

@@ -70,7 +70,7 @@ module.exports = {
       },
       keyframes: {
         scaleUp: {
-          '0%': {transform: 'scale(0.7) translateY(1000px)', opacity: '0.7'},
+          '0%': {transform: 'scale(0.7) translateY(150vh)', opacity: '0.7'},
           '100%': {transform: 'scale(1) translateY(0px)', opacity: '1'},
         },
         slideDown: {
