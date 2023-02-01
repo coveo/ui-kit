@@ -25,6 +25,7 @@ export const RouteAlias = {
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
+  Quickview: '@coveoQuickview',
   Locale: '@locale',
 };
 
@@ -67,6 +68,11 @@ export function setupIntercept() {
 
   cy.intercept({
     method: 'POST',
+    url: '**/rest/search/v2/html?*',
+  }).as(RouteAlias.Quickview.substring(1));
+
+  cy.intercept({
+    method: 'POST',
     path: '**/rest/search/v2/facet?*',
   }).as(RouteAlias.FacetSearch.substring(1));
 
@@ -96,7 +102,11 @@ export function interceptSearchAndReturnError() {
     (request) =>
       request.reply((response) =>
         response.send(418, {
-          exception: {code: 'Something very weird just happened'},
+          ok: false,
+          status: 418,
+          message: 'Something very weird just happened',
+          statusCode: 418,
+          type: 'ClientError',
         })
       )
   ).as(RouteAlias.Search.substring(1));

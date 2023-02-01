@@ -12,16 +12,32 @@ export const QuickviewSelectors = {
 };
 
 export const QuickviewModalSelectors = {
-  shadow: () => cy.get(quickviewComponent).shadow(),
+  shadow: () => cy.get(quickviewModalComponent).shadow(),
   focusTrap: () =>
     QuickviewModalSelectors.shadow().find(focusTrapComponent, {
       includeShadowDom: true,
     }),
   focusTrapContainer: () =>
     QuickviewModalSelectors.focusTrap().shadow().find('[part="container"]'),
-  closeButton: () =>
-    QuickviewModalSelectors.shadow().find('[part="close-button"]'),
-  footerButton: () =>
-    QuickviewModalSelectors.shadow().find('[part="footer-button"]'),
-  facets: () => cy.get(quickviewModalComponent).find('[slot="facets"]'),
+  header: () => QuickviewModalSelectors.shadow().find('[slot="header"]'),
+  body: () => QuickviewModalSelectors.shadow().find('[slot="body"]'),
+  footer: () => QuickviewModalSelectors.shadow().find('[slot="footer"]'),
+  closeButton: () => QuickviewModalSelectors.header().find('button'),
+  titleLink: () => QuickviewModalSelectors.header().find('a'),
+  iframe: () => QuickviewModalSelectors.body().find('iframe'),
+  pagerSummary: () => QuickviewModalSelectors.footer().find('p'),
+  nextButton: () => QuickviewModalSelectors.footer().find('button').eq(1),
+  previousButton: () => QuickviewModalSelectors.footer().find('button').eq(0),
+  keywordsHighlightToggleButton: () =>
+    QuickviewModalSelectors.body().find(
+      'button[id="atomic-quickview-sidebar-highlight-keywords"]'
+    ),
+  keywordsSidebar: () =>
+    QuickviewModalSelectors.body().find(
+      '[id="coveo-quickview-sidebar-keywords"]'
+    ),
+  keywordsMinimizeButton: () =>
+    QuickviewModalSelectors.body()
+      .find('[part="sidebar-minimize-container"]')
+      .find('button'),
 };
