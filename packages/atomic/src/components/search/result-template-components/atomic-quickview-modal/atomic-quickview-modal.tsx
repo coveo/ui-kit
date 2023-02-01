@@ -78,7 +78,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Prop() total?: number;
   @Prop() sandbox?: string;
 
-  private interactiveResult: InteractiveResult | undefined = undefined;
+  private interactiveResult?: InteractiveResult;
 
   @Method()
   public async reset() {

@@ -141,27 +141,5 @@ describe('Quickview Component', () => {
       QuickviewModalSelectors.keywordsMinimizeButton().click();
       QuickviewModalSelectors.keywordsSidebar().should('exist');
     });
-
-    // it('should disable individual keywords when toggle button ');
-
-    /*it('should highlight keywords in the iframe', () => {
-      QuickviewSelectors.button().click();
-
-      QuickviewModalSelectors.iframe()
-        .should('exist')
-        .its('0.contentDocument.body')
-        .then((body: JQuery) => {
-          cy.wait(5000).then(() => {
-            console.log(body.get(0).querySelector('span'));
-          });
-
-          //          cy.wrap(body).find('span').should('exist');
-        });
-
-
-        .then(cy.wrap)
-        .find('span')
-        .should('exist');
-    });*/
   });
 });
