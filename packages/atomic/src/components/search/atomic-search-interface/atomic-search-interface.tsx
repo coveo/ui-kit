@@ -432,7 +432,7 @@ export class AtomicSearchInterface
       this.updateHash()
     );
 
-    window.addEventListener('hashchange', (e) => this.onHashChange(e));
+    window.addEventListener('hashchange', () => this.onHashChange());
   }
 
   private initAriaLive() {
@@ -488,25 +488,8 @@ export class AtomicSearchInterface
     });
   }
 
-  private fragmentBeforeHashChange?: string;
-
   private updateHash() {
     const newFragment = this.urlManager.state.fragment;
-
-    // Sometimes possible to get a "corrected" fragment for an user input "errored" state.
-    // E.g. currently seen w/ headless tabs, when setting a non existing tab value.
-    // TODO: KIT-2248 Fix in Headless, remove this code.
-    const sameAsBefore =
-      this.fragmentBeforeHashChange &&
-      newFragment === this.fragmentBeforeHashChange;
-
-    if (sameAsBefore) {
-      this.bindings.engine.logger.warn(
-        `Wrong input, history back to #${this.fragmentBeforeHashChange}`
-      );
-      history.back();
-      return;
-    }
 
     if (!this.searchStatus.state.firstSearchExecuted) {
       history.replaceState(null, document.title, `#${newFragment}`);
@@ -519,8 +502,7 @@ export class AtomicSearchInterface
     this.bindings.engine.logger.info(`History pushState #${newFragment}`);
   }
 
-  private onHashChange = (e: HashChangeEvent) => {
-    this.fragmentBeforeHashChange = this.makeFragment(new URL(e.oldURL));
+  private onHashChange = () => {
     this.urlManager.synchronize(this.fragment);
   };
 
