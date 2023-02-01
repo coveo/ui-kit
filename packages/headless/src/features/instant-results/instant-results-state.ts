@@ -7,6 +7,8 @@ export type InstantResultCache = {
   isLoading: boolean;
   error: SearchAPIErrorWithStatusCode | SerializedError | null;
   results: Result[];
+  isActive: boolean;
+  searchUid: string;
 };
 
 export type InstantResultsState = Record<
