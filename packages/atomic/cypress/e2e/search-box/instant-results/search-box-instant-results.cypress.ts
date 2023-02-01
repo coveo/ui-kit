@@ -108,6 +108,7 @@ describe('Instant Results Test Suites', () => {
     });
 
     CommonAssertions.assertAccessibility(searchBoxComponent);
+    InstantResultsAssertions.assertLogSearchboxAsYouType();
 
     it('uses the generated labels', () => {
       InstantResultsSelectors.results().should(([...results]) =>
