@@ -411,12 +411,8 @@ export class AtomicSearchInterface
     return searchConfigFromProps;
   }
 
-  private makeFragment(url: URL | Location) {
-    return url.hash.slice(1);
-  }
-
   private get fragment() {
-    return this.makeFragment(window.location);
+    return window.location.hash.slice(1);
   }
 
   private initUrlManager() {
@@ -432,7 +428,7 @@ export class AtomicSearchInterface
       this.updateHash()
     );
 
-    window.addEventListener('hashchange', () => this.onHashChange());
+    window.addEventListener('hashchange', this.onHashChange);
   }
 
   private initAriaLive() {
