@@ -10,11 +10,24 @@ import {InstantResultCache} from './instant-results-state';
 const id1 = 'search_box_1';
 const id2 = 'search_box_2';
 
-const getSearchBoxInstantResultsState = (id: string, q = '', cache = {}) => ({
+const getSearchBoxInstantResultsState = (
+  id: string,
+  q = '',
+  cache: Record<string, InstantResultCache> = {}
+) => ({
   [id]: {
     q,
     cache,
   },
+});
+
+const initialEmptyCache: () => InstantResultCache = () => ({
+  isLoading: true,
+  error: null,
+  results: [],
+  expiresAt: 0,
+  isActive: false,
+  searchUid: '',
 });
 
 describe('instant results slice', () => {
@@ -41,7 +54,7 @@ describe('instant results slice', () => {
     it('does not override an existing search box', () => {
       const searchBox1 = () =>
         getSearchBoxInstantResultsState(id1, 'some_query', {
-          some_query: {isLoading: true, error: null, results: []},
+          some_query: initialEmptyCache(),
         });
 
       expect(
@@ -89,7 +102,7 @@ describe('instant results slice', () => {
 
         const initialState = getSearchBoxInstantResultsState(id1, query);
         const expectedState = getSearchBoxInstantResultsState(id1, query, {
-          some_query: {isLoading: true, error: null, results: [], expiresAt: 0},
+          some_query: initialEmptyCache(),
         });
 
         expect(instantResultsReducer(initialState, action)).toEqual(
@@ -106,10 +119,10 @@ describe('instant results slice', () => {
         });
 
         const initialState = getSearchBoxInstantResultsState(id1, query, {
-          some_query: {isLoading: false, error: null, results: []},
+          some_query: initialEmptyCache(),
         });
         const expectedState = getSearchBoxInstantResultsState(id1, query, {
-          some_query: {isLoading: true, error: null, results: []},
+          some_query: initialEmptyCache(),
         });
 
         expect(instantResultsReducer(initialState, action)).toEqual(
@@ -131,12 +144,7 @@ describe('instant results slice', () => {
         };
         const expectedState = {
           ...getSearchBoxInstantResultsState(id1, query, {
-            some_query: {
-              isLoading: true,
-              error: null,
-              results: [],
-              expiresAt: 0,
-            },
+            some_query: initialEmptyCache(),
           }),
           ...getSearchBoxInstantResultsState(id2, query),
         };
@@ -169,25 +177,22 @@ describe('instant results slice', () => {
         const makeState = (some_query: InstantResultCache) => ({
           ...getSearchBoxInstantResultsState(id1, query, {
             some_query,
-            some_other_query: {isLoading: false, error: null, results: []},
+            some_other_query: initialEmptyCache(),
           }),
           ...getSearchBoxInstantResultsState(id2, query, {
-            some_query: {isLoading: false, error: null, results: []},
+            some_query: initialEmptyCache(),
           }),
         });
 
-        const initialState = makeState({
-          isLoading: true,
-          error: null,
-          results: [],
-          expiresAt: 0,
-        });
+        const initialState = makeState(initialEmptyCache());
 
         const expectedState = makeState({
           isLoading: false,
           error: null,
           results: [buildMockResult()],
           expiresAt: 0,
+          isActive: true,
+          searchUid: 'someid',
         });
 
         expect(instantResultsReducer(initialState, action)).toEqual(
@@ -210,21 +215,18 @@ describe('instant results slice', () => {
         const makeState = (some_query: InstantResultCache) =>
           getSearchBoxInstantResultsState(id1, query, {
             some_query,
-            some_other_query: {isLoading: false, error: null, results: []},
+            some_other_query: initialEmptyCache(),
           });
 
-        const initialState = makeState({
-          isLoading: true,
-          error: null,
-          results: [],
-          expiresAt: 0,
-        });
+        const initialState = makeState(initialEmptyCache());
 
         const expectedState = makeState({
           isLoading: false,
           error: null,
           results: [buildMockResult()],
           expiresAt: Date.now() + 10000,
+          isActive: true,
+          searchUid: 'someid',
         });
 
         expect(instantResultsReducer(initialState, action)).toEqual(

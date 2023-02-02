@@ -596,25 +596,4 @@ describe('search-slice', () => {
       expect(finalState.searchResponseId).not.toEqual('test');
     });
   });
-
-  it('fetchInstantResults updates the searchUid, but not the searchResponseId', () => {
-    const searchUid = 'someid';
-    const action = fetchInstantResults.fulfilled(
-      {
-        results: [buildMockResult()],
-        searchUid,
-      },
-      'req_id',
-      {
-        id: '',
-        q: '',
-        maxResultsPerQuery: 2,
-        cacheTimeout: 10000,
-      }
-    );
-
-    const finalState = searchReducer(state, action);
-    expect(finalState.response.searchUid).toEqual(searchUid);
-    expect(finalState.searchResponseId).not.toEqual(searchUid);
-  });
 });
