@@ -167,7 +167,7 @@ function validateTab(
   const isInState = tabParam in tabState;
   if (!isInState) {
     engine.logger.warn(
-      `The tab search parameter "${tabParam}" is invalid, ignoring change`
+      `The tab search parameter "${tabParam}" is invalid. Ignoring change.`
     );
   }
 
