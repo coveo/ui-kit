@@ -121,10 +121,12 @@ describe('Standalone Search Box Test Suites', () => {
       setupIntercept();
       cy.visit(standalonePage);
 
-      SearchBoxSelectors.inputBox().type(query);
-      SearchBoxSelectors.submitButton().click();
+      cy.get('atomic-search-box')
+        .shadow()
+        .find('input')
+        .type(`${query}{enter}`);
 
-      cy.wait(500);
+      cy.wait(RouteAlias.UA);
     });
 
     it('should append the default search param value', () => {
