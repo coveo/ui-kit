@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.16.0...@coveo/atomic@2.17.0) (2023-02-01)
+
+### Features
+
+- **atomic:** add container part to breadbox ([#2702](https://github.com/coveo/ui-kit/issues/2702)) ([1c23dbb](https://github.com/coveo/ui-kit/commit/1c23dbb2da894284ee7f9c52873c3976d16127e9))
+- **headless:** add instant results analytics ([#2703](https://github.com/coveo/ui-kit/issues/2703)) ([b90648f](https://github.com/coveo/ui-kit/commit/b90648fae90c24af71459afd8622f05587012474))
+
 # [2.16.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.15.0...@coveo/atomic@2.16.0) (2023-01-31)
 
 ### Features
