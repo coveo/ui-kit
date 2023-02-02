@@ -6,9 +6,12 @@ import ArrowUp from '../../../../images/arrow-top-rounded.svg';
 import MinimizeIcon from '../../../../images/menu.svg';
 import Remove from '../../../../images/remove.svg';
 import {Checkbox} from '../../../common/checkbox';
+import {FieldsetGroup} from '../../../common/fieldset-group';
 import {IconButton} from '../../../common/iconButton';
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
+
+const identifierKeywordsSection = 'coveo-quickview-sidebar-keywords';
 
 export interface QuickviewSidebarProps {
   words: Record<string, QuickviewWordHighlight>;
@@ -56,13 +59,15 @@ const MinimizeButton: FunctionalComponent<
     partPrefix="sidebar-minimize"
     icon={MinimizeIcon}
     style="text-transparent"
-    title={i18n.t('minimize')}
-    ariaLabel={i18n.t('minimize')}
+    title={i18n.t('quickview-toggle-navigation')}
+    ariaLabel={i18n.t('quickview-toggle-navigation')}
     onClick={() => onMinimize(!minimized)}
     badge={
       highlightKeywords && minimized ? <slot>{wordsLength}</slot> : undefined
     }
     class={`w-fit ${minimized ? '' : 'ml-auto'}`}
+    ariaExpanded={(!minimized).toString()}
+    ariaControls={identifierKeywordsSection}
   />
 );
 
@@ -105,7 +110,7 @@ const Keywords: FunctionalComponent<
   }
 > = ({words, i18n, highlightKeywords, onHighlightKeywords}) => {
   return (
-    <Fragment>
+    <div id={identifierKeywordsSection}>
       {Object.values(words).map((keyword) => {
         const wordIsEnabled =
           !highlightKeywords.highlightNone &&
@@ -122,7 +127,10 @@ const Keywords: FunctionalComponent<
                 !wordIsEnabled ? 'pointer-events-none opacity-50' : ''
               }`}
             >
-              <div class="flex items-center grow p-4 border-r">
+              <div
+                class="flex items-center grow p-4 border-r"
+                aria-hidden="true"
+              >
                 <div
                   class="w-5 h-5 flex-none mr-2"
                   style={{backgroundColor: keyword.color}}
@@ -134,28 +142,35 @@ const Keywords: FunctionalComponent<
                   }).format(keyword.occurrences)}
                 </div>
               </div>
-              <div class="flex px-2">
-                <IconButton
-                  partPrefix="sidebar-next"
-                  icon={ArrowDown}
-                  disabled={!wordIsEnabled}
-                  style="text-transparent"
-                  class="border-0"
-                  ariaLabel={i18n.t('next')}
-                  title={i18n.t('next')}
-                  onClick={() => keyword.navigateForward()}
-                />
-                <IconButton
-                  partPrefix="sidebar-previous"
-                  icon={ArrowUp}
-                  disabled={!wordIsEnabled}
-                  style="text-transparent"
-                  class="border-0"
-                  ariaLabel={i18n.t('previous')}
-                  title={i18n.t('previous')}
-                  onClick={() => keyword.navigateBackward()}
-                />
-              </div>
+              <FieldsetGroup
+                label={i18n.t('quickview-navigate-keywords', {
+                  occurrences: keyword.occurrences,
+                  keyword: keyword.text,
+                })}
+              >
+                <div class="flex px-2">
+                  <IconButton
+                    partPrefix="sidebar-next"
+                    icon={ArrowDown}
+                    disabled={!wordIsEnabled}
+                    style="text-transparent"
+                    class="border-0"
+                    ariaLabel={i18n.t('next')}
+                    title={i18n.t('next')}
+                    onClick={() => keyword.navigateForward()}
+                  />
+                  <IconButton
+                    partPrefix="sidebar-previous"
+                    icon={ArrowUp}
+                    disabled={!wordIsEnabled}
+                    style="text-transparent"
+                    class="border-0"
+                    ariaLabel={i18n.t('previous')}
+                    title={i18n.t('previous')}
+                    onClick={() => keyword.navigateBackward()}
+                  />
+                </div>
+              </FieldsetGroup>
             </div>
             <IconButton
               partPrefix="sidebar-remove-word"
@@ -184,6 +199,6 @@ const Keywords: FunctionalComponent<
           </div>
         );
       })}
-    </Fragment>
+    </div>
   );
 };
