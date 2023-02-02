@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.18.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.17.1...@coveo/atomic@2.18.0) (2023-02-02)
+
+### Features
+
+- **atomic:** quickview better accessibility support ([#2700](https://github.com/coveo/ui-kit/issues/2700)) ([8f1034b](https://github.com/coveo/ui-kit/commit/8f1034b9d70f5adf5b38ceeef7be9307b9f12ddf))
+
 ## [2.17.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.17.0...@coveo/atomic@2.17.1) (2023-02-02)
 
 ### Bug Fixes
