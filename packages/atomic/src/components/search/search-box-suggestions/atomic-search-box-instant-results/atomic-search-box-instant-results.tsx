@@ -1,6 +1,6 @@
 import {
   buildInstantResults,
-  buildInteractiveResult,
+  buildInteractiveInstantResult,
   InstantResults,
   Result,
 } from '@coveo/headless';
@@ -129,9 +129,12 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
             key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
             part="outline"
             result={result}
-            interactiveResult={buildInteractiveResult(this.bindings.engine, {
-              options: {result},
-            })}
+            interactiveResult={buildInteractiveInstantResult(
+              this.bindings.engine,
+              {
+                options: {result},
+              }
+            )}
             display={this.display}
             density={this.density}
             imageSize={this.imageSize}
