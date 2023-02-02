@@ -124,7 +124,7 @@ describe('Standalone Search Box Test Suites', () => {
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.submitButton().click();
 
-      cy.wait(RouteAlias.UA);
+      cy.wait(500);
     });
 
     it('should append the default search param value', () => {
