@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.18.0...@coveo/atomic@2.19.0) (2023-02-02)
+
+### Features
+
+- **atomic:** add prop to remove ipx focus trap ([#2710](https://github.com/coveo/ui-kit/issues/2710)) ([077f8f9](https://github.com/coveo/ui-kit/commit/077f8f91364f3d1bc3f4467cb04a2cedb499c861))
+
 # [2.18.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.17.1...@coveo/atomic@2.18.0) (2023-02-02)
 
 ### Features
