@@ -81,6 +81,7 @@ export interface FetchInstantResultsActionCreatorPayload {
 
 export interface FetchInstantResultsThunkReturn {
   results: Result[];
+  searchUid: string;
 }
 
 export type StateNeededByInstantResults = StateNeededByExecuteSearch &
