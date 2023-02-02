@@ -1,4 +1,3 @@
-import {InstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   partialDocumentInformation,
@@ -6,11 +5,13 @@ import {
   validateResultPayload,
   makeAnalyticsAction,
   AnalyticsType,
-  ClickAction,
-  SearchAction,
+  InstantResultsSearchAction,
+  InstantResultsClickAction,
 } from '../analytics/analytics-utils';
 
-export const logInstantResultOpen = (result: Result): ClickAction =>
+export const logInstantResultOpen = (
+  result: Result
+): InstantResultsClickAction =>
   makeAnalyticsAction(
     'analytics/instantResult/open',
     AnalyticsType.Click,
@@ -20,14 +21,12 @@ export const logInstantResultOpen = (result: Result): ClickAction =>
         partialDocumentInformation(result, state),
         documentIdentifier(result)
       );
-    },
-    (getState) => new InstantResultsAnalyticsProvider(getState)
+    }
   );
 
-export const logInstantResultsSearch = (): SearchAction =>
+export const logInstantResultsSearch = (): InstantResultsSearchAction =>
   makeAnalyticsAction(
     'analytics/instantResult/searchboxAsYouType',
     AnalyticsType.Search,
-    (client) => client.makeSearchboxAsYouType(),
-    (getState) => new InstantResultsAnalyticsProvider(getState)
+    (client) => client.makeSearchboxAsYouType()
   );

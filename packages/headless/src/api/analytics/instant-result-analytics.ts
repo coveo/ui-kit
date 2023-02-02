@@ -1,12 +1,21 @@
-import {SearchAnalyticsProvider} from './search-analytics';
+import {InstantResultSection} from '../../state/state-sections';
+import {
+  SearchAnalyticsProvider,
+  StateNeededBySearchAnalyticsProvider,
+} from './search-analytics';
+
+export type StateNeededByInstantResultsAnalyticsProvider =
+  StateNeededBySearchAnalyticsProvider & InstantResultSection;
 
 export class InstantResultsAnalyticsProvider extends SearchAnalyticsProvider {
+  constructor(
+    protected getState: () => StateNeededByInstantResultsAnalyticsProvider
+  ) {
+    super(getState);
+  }
+
   private get instantResultsSearchUid() {
     const state = this.getState().instantResults;
-    if (!state) {
-      return null;
-    }
-
     for (const id in state) {
       for (const query in state[id].cache) {
         if (state[id].cache[query].isActive) {
