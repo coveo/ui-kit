@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.17.0...@coveo/atomic@2.17.1) (2023-02-02)
+
+### Bug Fixes
+
+- **atomic,headless:** log proper search ID with instant results ([#2709](https://github.com/coveo/ui-kit/issues/2709)) ([3fb2015](https://github.com/coveo/ui-kit/commit/3fb20151d9f2c77f8aac7dee8f4a5e3aefc54d73))
+
+# [2.17.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.16.0...@coveo/atomic@2.17.0) (2023-02-01)
+
+### Features
+
+- **atomic:** add container part to breadbox ([#2702](https://github.com/coveo/ui-kit/issues/2702)) ([1c23dbb](https://github.com/coveo/ui-kit/commit/1c23dbb2da894284ee7f9c52873c3976d16127e9))
+- **headless:** add instant results analytics ([#2703](https://github.com/coveo/ui-kit/issues/2703)) ([b90648f](https://github.com/coveo/ui-kit/commit/b90648fae90c24af71459afd8622f05587012474))
+
+# [2.16.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.15.0...@coveo/atomic@2.16.0) (2023-01-31)
+
+### Features
+
+- **atomic:** allow sip protocol on links (e.g. for Microsoft Teams) ([#2701](https://github.com/coveo/ui-kit/issues/2701)) ([e346d1a](https://github.com/coveo/ui-kit/commit/e346d1aa9a5b69996509c0574f371cc77e7773cc))
+
 # [2.15.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.14.1...@coveo/atomic@2.15.0) (2023-01-26)
 
 ### Features

@@ -239,7 +239,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
 
     if (recListWithRecommendation.length > 1) {
       this.bindings.engine.logger.warn(
-        `There are multiple atomic-recs-list in this page with the same recommendation propery "${this.recommendation}". Make sure to set a different recommendation property for each.`
+        `There are multiple atomic-recs-list in this page with the same recommendation property "${this.recommendation}". Make sure to set a different recommendation property for each.`
       );
     }
   }

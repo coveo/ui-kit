@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {Result} from '../../case-assist.index';
+import {Result} from '../../index';
 import {InstantResultSection} from '../../state/state-sections';
 import {
   validatePayload,
@@ -81,6 +81,7 @@ export interface FetchInstantResultsActionCreatorPayload {
 
 export interface FetchInstantResultsThunkReturn {
   results: Result[];
+  searchUid: string;
 }
 
 export type StateNeededByInstantResults = StateNeededByExecuteSearch &
