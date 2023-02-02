@@ -114,6 +114,13 @@ export function enrichParameters(
   };
 }
 
+export function validateParams(
+  engine: CoreEngine,
+  parameters: Required<SearchParameters>
+): Boolean {
+  return validateTab(engine, parameters);
+}
+
 export function getCoreActiveSearchParameters(
   engine: CoreEngine
 ): SearchParameters {
@@ -145,6 +152,26 @@ function getTab(state: Partial<SearchParametersState>) {
   );
 
   return activeTab ? {tab: activeTab.id} : {};
+}
+
+function validateTab(
+  engine: CoreEngine,
+  parameters: Required<SearchParameters>
+) {
+  const tabState = engine.state.tabSet;
+  const tabParam = parameters.tab;
+  if (!tabState || !Object.entries(tabState).length || !tabParam) {
+    return true;
+  }
+
+  const isInState = tabParam in tabState;
+  if (!isInState) {
+    engine.logger.warn(
+      `The tab search parameter "${tabParam}" is invalid, ignoring change`
+    );
+  }
+
+  return isInState;
 }
 
 function getSortCriteria(state: Partial<SearchParametersState>) {
