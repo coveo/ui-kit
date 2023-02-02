@@ -21,7 +21,6 @@ import {
   executeSearch,
   ExecuteSearchThunkReturn,
   fetchFacetValues,
-  fetchInstantResults,
   fetchMoreResults,
   fetchPage,
 } from './search-actions';
