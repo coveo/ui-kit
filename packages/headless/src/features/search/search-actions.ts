@@ -20,6 +20,7 @@ import {
   deselectAllNonBreadcrumbs,
 } from '../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
+import {logInstantResultsSearch} from '../instant-results/instant-result-analytics-actions';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
@@ -30,7 +31,6 @@ import {
   updateQuery,
   UpdateQueryActionCreatorPayload,
 } from '../query/query-actions';
-import {logSearchboxAsYouType} from '../query/query-analytics-actions';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {
   AsyncSearchThunkProcessor,
@@ -222,7 +222,7 @@ export const fetchInstantResults = createAsyncThunk<
     const {q, maxResultsPerQuery} = payload;
     const state = config.getState();
     const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
-    const {action: analyticsAction} = await logSearchboxAsYouType().prepare({
+    const {action: analyticsAction} = await logInstantResultsSearch().prepare({
       getState: () => config.getState(),
       analyticsClientMiddleware,
       preprocessRequest,
