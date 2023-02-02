@@ -1,3 +1,4 @@
+import {RouteAlias, setupIntercept} from '../../fixtures/fixture-common';
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {
   resultTextComponent,
@@ -104,6 +105,47 @@ describe('Standalone Search Box Test Suites', () => {
 
     it('uses the query syntax for the first search', () => {
       ResultTextSelectors.firstInResult().should('have.text', 'bushy lichens');
+    });
+  });
+
+  describe('with a default search param on the target page (e.g. tabs)', () => {
+    const query = 'test';
+    const queryParam = `q=${query}`;
+    const defaultParam = 'tab=all-tab';
+    const incorrectParam = 'tab=not-a-tab';
+    const defaultHash = `#${queryParam}&${defaultParam}`;
+    const standalonePage = '/examples/standalone.html';
+    const standaloneResultsPage = '/examples/standalone-results.html';
+
+    beforeEach(() => {
+      setupIntercept();
+      cy.visit(standalonePage);
+
+      SearchBoxSelectors.inputBox().type(query);
+      SearchBoxSelectors.submitButton().click();
+
+      cy.wait(RouteAlias.UA);
+    });
+
+    it('should append the default search param value', () => {
+      cy.location('pathname').should('eq', standaloneResultsPage);
+      cy.hash().should('eq', defaultHash);
+    });
+
+    it('when going back once, should go to original page directly (no hash)', () => {
+      cy.go('back');
+      cy.location('pathname').should('eq', standalonePage);
+      cy.hash().should('eq', '');
+    });
+
+    it('when manually setting an invalid hash, it should allow going back', () => {
+      const newHash = `#${queryParam}&${incorrectParam}`;
+      cy.visit(`${standaloneResultsPage}${newHash}`);
+      cy.hash().should('eq', newHash);
+
+      cy.go('back');
+      cy.location('pathname').should('eq', standaloneResultsPage);
+      cy.hash().should('eq', defaultHash);
     });
   });
 });
