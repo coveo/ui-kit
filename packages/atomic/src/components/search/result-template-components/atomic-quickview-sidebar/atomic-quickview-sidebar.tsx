@@ -1,5 +1,4 @@
 import {Fragment, FunctionalComponent, h} from '@stencil/core';
-import {sanitize} from 'dompurify';
 import {i18n} from 'i18next';
 import Add from '../../../../images/add.svg';
 import ArrowDown from '../../../../images/arrow-bottom-rounded.svg';
@@ -146,7 +145,7 @@ const Keywords: FunctionalComponent<
               <FieldsetGroup
                 label={i18n.t('quickview-navigate-keywords', {
                   occurrences: keyword.occurrences,
-                  keyword: sanitize(keyword.text),
+                  keyword: keyword.text,
                 })}
               >
                 <div class="flex px-2">
