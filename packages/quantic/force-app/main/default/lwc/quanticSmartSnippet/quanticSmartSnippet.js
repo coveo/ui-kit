@@ -1,3 +1,5 @@
+import showLess from '@salesforce/label/c.quantic_SmartSnippetShowLess';
+import showMore from '@salesforce/label/c.quantic_SmartSnippetShowMore';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -30,7 +32,7 @@ export default class QuanticSmartSnippet extends LightningElement {
    * @api
    * @type {number}
    */
-  @api maximumSnippetHeight = 150;
+  @api maximumSnippetHeight = 250;
 
   /** @type {SmartSnippet} */
   smartSnippet;
@@ -44,6 +46,11 @@ export default class QuanticSmartSnippet extends LightningElement {
   expandableAnswerClass = expandableAnswerBaseClass;
   /** @type {string} */
   answer;
+
+  labels = {
+    showMore,
+    showLess,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -228,7 +235,7 @@ export default class QuanticSmartSnippet extends LightningElement {
    * @returns {string}
    */
   get toggleSmartSnippetAnswerLabel() {
-    return this?.state?.expanded ? 'Show less' : 'Show more';
+    return this?.state?.expanded ? this.labels.showLess : this.labels.showMore;
   }
 
   /**
