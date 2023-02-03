@@ -36,10 +36,20 @@ export default class QuanticSmartSnippetAnswer extends LightningElement {
   isInitialRender = true;
   /** @type {string} */
   _answer;
+  /**
+   * @type {Array<function>}
+   */
+  bindingsRemovalFunctions = [];
 
   renderedCallback() {
     this.updateSmartSnippetAnswer();
     this.isInitialRender = false;
+  }
+
+  disconnectedCallback() {
+    this.bindingsRemovalFunctions.forEach((removeBindings) => {
+      removeBindings?.();
+    });
   }
 
   updateSmartSnippetAnswer() {
@@ -75,7 +85,8 @@ export default class QuanticSmartSnippetAnswer extends LightningElement {
         },
       };
 
-      LinkUtils.bindAnalyticsToLink(link, actions);
+      const removeBindings = LinkUtils.bindAnalyticsToLink(link, actions);
+      this.bindingsRemovalFunctions.push(removeBindings);
     });
   }
 }
