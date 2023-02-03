@@ -163,6 +163,13 @@ export type {
 export {buildInteractiveResult} from './result-list/headless-interactive-result';
 
 export type {
+  InteractiveInstantResultOptions,
+  InteractiveInstantResultProps,
+  InteractiveInstantResult,
+} from './instant-results/headless-interactive-instant-result';
+export {buildInteractiveInstantResult} from './instant-results/headless-interactive-instant-result';
+
+export type {
   ResultsPerPageInitialState,
   ResultsPerPageProps,
   ResultsPerPageState,

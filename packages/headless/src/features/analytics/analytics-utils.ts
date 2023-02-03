@@ -33,6 +33,7 @@ import {
   InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
+import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
 import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
   configureAnalytics,
@@ -117,6 +118,16 @@ export type CustomAction = PreparableAnalyticsAction<
 export type ClickAction = PreparableAnalyticsAction<
   {analyticsType: AnalyticsType.Click},
   StateNeededBySearchAnalyticsProvider
+>;
+
+export type InstantResultsSearchAction = PreparableAnalyticsAction<
+  {analyticsType: AnalyticsType.Search},
+  StateNeededByInstantResultsAnalyticsProvider
+>;
+
+export type InstantResultsClickAction = PreparableAnalyticsAction<
+  {analyticsType: AnalyticsType.Click},
+  StateNeededByInstantResultsAnalyticsProvider
 >;
 
 export type InsightAction<T extends AnalyticsType = AnalyticsType.Search> =
@@ -225,21 +236,20 @@ function makePreparableAnalyticsAction<
   return rootAction as PreparableAnalyticsAction<EventType, StateNeeded>;
 }
 
-export const makeAnalyticsAction = <EventType extends AnalyticsType>(
+export const makeAnalyticsAction = <
+  EventType extends AnalyticsType,
+  StateNeeded extends StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider
+>(
   prefix: string,
   analyticsType: EventType,
   getBuilder: (
     client: CoveoSearchPageClient,
-    state: StateNeededBySearchAnalyticsProvider
+    state: StateNeeded
   ) => Promise<EventBuilder | null> | null,
-  provider: (
-    getState: () => StateNeededBySearchAnalyticsProvider
-  ) => SearchPageClientProvider = (getState) =>
-    new SearchAnalyticsProvider(getState)
-): PreparableAnalyticsAction<
-  WrappedAnalyticsType<EventType>,
-  StateNeededBySearchAnalyticsProvider
-> => {
+  provider: (getState: () => StateNeeded) => SearchPageClientProvider = (
+    getState
+  ) => new SearchAnalyticsProvider(getState)
+): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded> => {
   return makePreparableAnalyticsAction(
     prefix,
     async ({

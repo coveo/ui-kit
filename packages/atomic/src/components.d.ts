@@ -689,6 +689,7 @@ export namespace Components {
          */
         "container"?: HTMLElement;
         "isOpen": boolean;
+        "noFocusTrap": boolean;
         "source"?: HTMLElement;
     }
     interface AtomicIpxRefineModal {
@@ -3333,6 +3334,7 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         "isOpen"?: boolean;
+        "noFocusTrap"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
         "source"?: HTMLElement;
     }

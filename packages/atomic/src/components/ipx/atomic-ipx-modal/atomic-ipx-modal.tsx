@@ -39,6 +39,7 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
    */
   @Prop({mutable: true}) container?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
+  @Prop({reflect: true}) noFocusTrap = false;
 
   @Event() animationEnded!: EventEmitter<never>;
 
@@ -53,13 +54,13 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
     if (isOpen) {
       document.body.classList.add(modalOpenedClass);
       if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
-        this.focusTrap!.active = true;
+        !this.noFocusTrap && (this.focusTrap!.active = true);
       }
       return;
     }
     document.body.classList.remove(modalOpenedClass);
     if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
-      this.focusTrap!.active = false;
+      !this.noFocusTrap && (this.focusTrap!.active = false);
     }
   }
 
@@ -90,22 +91,30 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
   public render() {
     this.updateBreakpoints();
 
+    const Body = () => (
+      <atomic-ipx-body isOpen={this.isOpen}>
+        <slot name="header" slot="header" />
+        <slot name="body" slot="body" />
+        <slot name="footer" slot="footer" />
+      </atomic-ipx-body>
+    );
+
     return (
       <Host class={this.getClasses().join(' ')}>
         <div part="backdrop">
-          <atomic-focus-trap
-            role="dialog"
-            aria-modal={this.isOpen.toString()}
-            source={this.source}
-            container={this.container ?? this.host}
-            ref={(ref) => (this.focusTrap = ref)}
-          >
-            <atomic-ipx-body isOpen={this.isOpen}>
-              <slot name="header" slot="header" />
-              <slot name="body" slot="body" />
-              <slot name="footer" slot="footer" />
-            </atomic-ipx-body>
-          </atomic-focus-trap>
+          {this.noFocusTrap ? (
+            <Body />
+          ) : (
+            <atomic-focus-trap
+              role="dialog"
+              aria-modal={this.isOpen.toString()}
+              source={this.source}
+              container={this.container ?? this.host}
+              ref={(ref) => (this.focusTrap = ref)}
+            >
+              <Body />
+            </atomic-focus-trap>
+          )}
         </div>
       </Host>
     );
