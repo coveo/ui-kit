@@ -1,10 +1,11 @@
 <template>
   <div class="smart-snippet__source">
     <div>
-      <a class="slds-text-title_bold smart-snippet__source-uri" href={uri}>{uri}</a>
+      <a data-cy="smart-snippet__source-uri" class="slds-text-title_bold smart-snippet__source-uri" href={uri}>{uri}</a>
     </div>
-    <div>
-      <a class="smart-snippet__source-title slds-text-heading_small" href={uri}>{title}</a>
+    <div class="slds-var-m-top_xx-small">
+      <a data-cy="smart-snippet__source-title" class="smart-snippet__source-title slds-text-heading_small"
+        href={uri}>{title}</a>
     </div>
   </div>
 </template>
