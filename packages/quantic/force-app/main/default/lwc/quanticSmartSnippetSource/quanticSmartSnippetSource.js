@@ -30,12 +30,21 @@ export default class QuanticSmartSnippetSource extends LightningElement {
 
   /** @type {boolean} */
   isInitialRender = true;
+  /** @type {function} */
+  removeUriBindings;
+  /** @type {function} */
+  removeTitleBindings;
 
   renderedCallback() {
     if (this.isInitialRender) {
       this.isInitialRender = false;
       this.bindAnalyticsToSmartSnippetSource();
     }
+  }
+
+  disconnectedCallback() {
+    this.removeTitleBindings?.();
+    this.removeUriBindings?.();
   }
 
   bindAnalyticsToSmartSnippetSource() {
@@ -48,7 +57,13 @@ export default class QuanticSmartSnippetSource extends LightningElement {
       '.smart-snippet__source-title'
     );
 
-    LinkUtils.bindAnalyticsToLink(snippetSourceUrlElement, this.actions);
-    LinkUtils.bindAnalyticsToLink(snippetSourceTitleElement, this.actions);
+    this.removeUriBindings = LinkUtils.bindAnalyticsToLink(
+      snippetSourceUrlElement,
+      this.actions
+    );
+    this.removeTitleBindings = LinkUtils.bindAnalyticsToLink(
+      snippetSourceTitleElement,
+      this.actions
+    );
   }
 }
