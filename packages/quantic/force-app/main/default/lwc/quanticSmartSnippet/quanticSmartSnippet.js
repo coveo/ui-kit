@@ -18,7 +18,7 @@ const expandableAnswerBaseClass = 'smart-snippet__answer slds-is-relative';
  * The `QuanticSmartSnippet` component displays the excerpt of a document that would be most likely to answer a particular query.
  * @category Search
  * @example
- *  <c-quantic-smart-snippet maximum-snippet-height="250"></c-quantic-smart-snippet>
+ *  <c-quantic-smart-snippet engine-id={engineId} maximum-snippet-height="250"></c-quantic-smart-snippet>
  */
 export default class QuanticSmartSnippet extends LightningElement {
   /**
