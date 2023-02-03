@@ -152,7 +152,7 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
           expect(customData).to.have.property('linkText', linkText);
           expect(customData).to.have.property('linkURL', linkUrl);
         })
-        .logDetail("should log the 'openSmartSnippetSource' UA event");
+        .logDetail("should log the 'openSmartSnippetInlineLink' UA event");
     },
   };
 }
