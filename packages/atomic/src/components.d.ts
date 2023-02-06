@@ -847,6 +847,9 @@ export namespace Components {
          */
         "start": number;
     }
+    interface AtomicPage {
+        "initialize": (options: AtomicPageInitializationOptions) => Promise<void>;
+    }
     interface AtomicPager {
         /**
           * Specifies how many page buttons to display in the pager.
@@ -2172,6 +2175,12 @@ declare global {
         prototype: HTMLAtomicNumericRangeElement;
         new (): HTMLAtomicNumericRangeElement;
     };
+    interface HTMLAtomicPageElement extends Components.AtomicPage, HTMLStencilElement {
+    }
+    var HTMLAtomicPageElement: {
+        prototype: HTMLAtomicPageElement;
+        new (): HTMLAtomicPageElement;
+    };
     interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
     }
     var HTMLAtomicPagerElement: {
@@ -2625,6 +2634,7 @@ declare global {
         "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
+        "atomic-page": HTMLAtomicPageElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -3493,6 +3503,8 @@ declare namespace LocalJSX {
           * The starting value for the numeric range.
          */
         "start": number;
+    }
+    interface AtomicPage {
     }
     interface AtomicPager {
         /**
@@ -4435,6 +4447,7 @@ declare namespace LocalJSX {
         "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
+        "atomic-page": AtomicPage;
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-query-error": AtomicQueryError;
@@ -4563,6 +4576,7 @@ declare module "@stencil/core" {
             "atomic-notifications": LocalJSX.AtomicNotifications & JSXBase.HTMLAttributes<HTMLAtomicNotificationsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
+            "atomic-page": LocalJSX.AtomicPage & JSXBase.HTMLAttributes<HTMLAtomicPageElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
