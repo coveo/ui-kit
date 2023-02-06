@@ -83,17 +83,24 @@ interface CypressRequest {
   xhr: {url: string};
 }
 
-// Only possible to filter on the url
-Cypress.Commands.add('shouldBeCalled', (urlPart, timesCalled) => {
-  cy.state('requests').forEach((call) =>
-    console.log('Should be called contains: ', call.xhr.url)
+// Only possible to filter on the alias
+Cypress.Commands.add('shouldBeCalled', (interceptAlias, timesCalled) => {
+  // cy.state('aliasRequests') contains a map of all intercepted requests, with the number of times they've been called.
+  // ie: {coveoSearch: 1, coveoAnalytics: 4}
+  Object.entries(cy.state('aliasRequests')).forEach(([alias, _]) =>
+    console.log('Should be called contains: ', alias)
   );
+  const aliasRequestThatMatch = Object.entries(
+    cy.state('aliasRequests')
+  ).filter(
+    ([alias]) =>
+      alias.includes(interceptAlias) || interceptAlias.includes(alias)
+  );
+  const numCall = aliasRequestThatMatch[0] ? aliasRequestThatMatch[0][1] : 0;
   expect(
-    cy
-      .state('requests')
-      .filter((call: CypressRequest) => call.xhr.url.includes(urlPart)),
-    `Url containing "${urlPart}"" should have been called ${timesCalled} times`
-  ).to.have.length(timesCalled);
+    numCall,
+    `Intercept alias "${interceptAlias}"" should have been called ${timesCalled} times`
+  ).to.equal(timesCalled);
 });
 
 Cypress.Commands.add(
