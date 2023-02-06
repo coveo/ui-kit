@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.0...@coveo/atomic@2.19.1) (2023-02-06)
+
+### Bug Fixes
+
+- **atomic:** make suggestion (button) text left align by default ([#2712](https://github.com/coveo/ui-kit/issues/2712)) ([e27dd3f](https://github.com/coveo/ui-kit/commit/e27dd3f927f4855b0029a8d3c60f87925d73b7bb))
+
 # [2.19.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.18.0...@coveo/atomic@2.19.0) (2023-02-02)
 
 ### Features
