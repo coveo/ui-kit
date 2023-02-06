@@ -38,9 +38,6 @@ export interface QuickviewState extends CoreQuickviewState {
   currentResult: number;
 }
 
-/**
- * asd
- */
 export interface Quickview extends CoreQuickview {
   state: QuickviewState;
 }
