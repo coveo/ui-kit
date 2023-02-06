@@ -92,7 +92,7 @@ Next, execute the following steps:
 1. Deploy the example components to your org.
 
     ```bash
-    npm run deploy:examples
+    pnpm deploy:examples
     ```
 
 2. Open the community builder, then create a `Quantic Greeting` page and drop your `exampleQuanticGreeting` component into it. Don't forget to also update the community home page to add a link to your page.
@@ -143,6 +143,6 @@ describe('quantic greeting', () => {
 });
 ```
 
-**Tip** As soon as you create the test file, run `npm run cypress:open` to see your tests run live as you write them. Writing and debugging your tests is much more efficient this way.
+**Tip** As soon as you create the test file, run `pnpm cypress:open` to see your tests run live as you write them. Writing and debugging your tests is much more efficient this way.
 
 **Tip** When writing a test, use `describe.only(...)` or `it.only(...)` to focus only on the test at hand. 

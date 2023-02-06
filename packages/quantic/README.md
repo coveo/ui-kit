@@ -65,7 +65,7 @@ Otherwise you will get an error similar to this:
 
 Start the server.
 
-- Run `npm run start`
+- Run `pnpm start`
 - You can also run this command from the command line. `sfdx force:lightning:lwc:start`
 - View the server at http://localhost:3334/.
 
@@ -80,7 +80,7 @@ Example components are available as a Salesforce community (Digital Experience) 
 To setup the community in the `LWC` scratch org, run:
 
 ```bash
-npm run setup:examples
+pnpm setup:examples
 ```
 
 This script creates, configures, and deploys everything required to have fully working examples. The community URL is provided at the end of the script output, as in the following example:
@@ -92,14 +92,14 @@ The 'Quantic Examples' community is ready, you can access it at the following UR
 https://your-salesforce-scratch-org-instance.force.com/examples
 
 To open Cypress, run:
-npm run cypress:open
+pnpm cypress:open
 ```
 
 Once the community has been deployed, you can deploy the `main` or `example` components only when needed. To do so, run:
 
 ```bash
-npm run deploy:main
-npm run deploy:examples
+pnpm deploy:main
+pnpm deploy:examples
 ```
 
 ### Run Cypress for Quantic Components
@@ -113,26 +113,26 @@ To learn how to add tests, see [adding tests](./docs/adding-tests.md).
 To open Cypress in browser mode, run:
 
 ```bash
-npm run cypress:open
+pnpm cypress:open
 ```
 
 To run Cypress tests directly in your console, run:
 
 ```bash
-npm run cypress:test
+pnpm cypress:test
 ```
 
 To get the [detailed report](./docs/detailed-reporting.md), run:
 
 ```bash
-npm run cypress:test:detailed
+pnpm cypress:test:detailed
 ```
 
 ## Use Quantic From Source
 
-After you have cloned the repository and have run `npm install`, run the following commands:
+After you have cloned the repository and have run `pnpm i`, run the following commands:
 
-- `npm run copy:staticresources`
+- `pnpm copy:staticresources`
 - `sfdx force:source:deploy -m LightningComponentBundle`
 
 ## Other Useful Commands

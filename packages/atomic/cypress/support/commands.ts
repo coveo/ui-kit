@@ -2,7 +2,7 @@
 import {
   SearchEventRequest,
   ClickEventRequest,
-} from 'coveo.analytics/src/events';
+} from '@coveo/headless/node_modules/coveo.analytics/src/events';
 import {SinonSpy} from 'cypress/types/sinon';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 

@@ -50,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npm run lint:check
+      - run: pnpm lint:check
   unit-test:
     name: 'Run unit tests'
     if: ${{ github.event.inputs.skipUnitTests != 'true' }}
@@ -59,8 +59,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npm run copy:staticresources -w @coveo/quantic
-      - run: npm test
+      - run: pnpm -F @coveo/quantic copy:staticresources
+      - run: pnpm test
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
     if: ${{ github.event.inputs.skipAtomicE2E != 'true' }}
@@ -169,11 +169,11 @@ jobs:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: git add '**package-lock.json'
+      - run: git add 'pnpm-lock.yaml'
       - name: Clean directory
         run: git clean -xfd -e node_modules/ -e .husky
       - name: Commit & push
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "<>"
-          npm run bump:version
+          pnpm bump:version

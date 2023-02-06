@@ -14,40 +14,40 @@
 To install all dependencies and link local packages, run:
 
 ```sh
-npm i
+pnpm i
 ```
 
 To install a dependency in a specific package, specify the workspace:
 
 ```sh
-npm i lodash -w @coveo/headless-react-samples
+pnpm add -F @coveo/headless-react-samples lodash
 ```
 
 To build all projects for production, run:
 
 ```sh
-npm run build
+pnpm build
 ```
 
 To build a single project for production (for instance, the `@coveo/atomic` package), run:
 
 ```sh
-npm run build -w @coveo/atomic
+pnpm -F @coveo/atomic build
 ```
 
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npm start -w @coveo/quantic
+pnpm -F @coveo/quantic start
 ```
 
 To start Atomic & Headless simultaneously in development (recommended), run:
 
 ```sh
-npm run dev
+pnpm dev
 ```
 
-The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `npm rebuild` command.
+The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `pnpm rebuild` command.
 
 The following Visual Studio Code extensions are recommended:
 
@@ -60,13 +60,13 @@ The following Visual Studio Code extensions are recommended:
 
 1. Make sure that `HEAD` refers to a version bump on `master`.
 2. Create a new branch prefixed with `prerelease/` (e.g., `prerelease/headless_atomic_v2`).
-3. Run `npm run bump:version:major-prerelease -- @coveo/package1 @coveo/package2 @coveo/package3`.
+3. Run `pnpm bump:version:major-prerelease @coveo/package1 @coveo/package2 @coveo/package3`.
 4. Push the new commit and its tags to the branch.
 
 ### Adding a new package to an already started prerelease
 
 1. Checkout the prerelease branch.
-2. Run `npm run bump:version:major-prerelease -- @coveo/package1` where `@coveo/package1` is the new package.
+2. Run `pnpm bump:version:major-prerelease @coveo/package1` where `@coveo/package1` is the new package.
 3. Push the new commit and its tags to the branch.
 
 ### Updating a prerelease branch

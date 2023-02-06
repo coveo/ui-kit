@@ -23,18 +23,19 @@ node('heavy && linux && docker') {
     return
   }
 
-  withEnv(['npm_config_cache=npm-cache', 'CI=true', 'NODE_OPTIONS=--max_old_space_size=8192']) {
-    withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
+  withEnv(['npm_config_store_dir=npm-cache', 'CI=true', 'NODE_OPTIONS=--max_old_space_size=8192']) {
+    withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e npm_config_modules_dir=/tmp/.pnpm_node_modules') {
       stage('Setup') {
-        sh 'npm ci'
+        sh 'npm i -G pnpm@7.26.3'
+        sh 'pnpm i'
       }
 
       stage('Build') {
-        sh 'npm run build'
+        sh 'pnpm build'
       }
 
       stage('Generate docs') {
-        sh 'npm run doc:generate'
+        sh 'pnpm doc:generate'
       }
     }
 
@@ -43,15 +44,19 @@ node('heavy && linux && docker') {
       sh 'git clean -f'
     }
 
-    withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
+    withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e npm_config_modules_dir=/tmp/.pnpm_node_modules') {
+      stage('Setup') {
+        sh 'npm i -G pnpm@7.26.3'
+      }
+
       stage('Npm publish') {
         withCredentials([
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
           sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
           if (isOnReleaseBranch) {
-            sh 'npm run npm:publish -- release || true'
+            sh 'pnpm npm:publish release || true'
           } else {
-            sh 'npm run npm:publish -- prerelease || true'
+            sh 'pnpm npm:publish prerelease || true'
           }
         }
       }

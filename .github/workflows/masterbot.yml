@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npm run lint:check
+      - run: pnpm lint:check
   unit-test:
     name: 'Run unit tests'
     needs: build
@@ -26,8 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npm run copy:staticresources -w @coveo/quantic
-      - run: npm test
+      - run: pnpm -F @coveo/quantic copy:staticresources
+      - run: pnpm test
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
     needs: build
@@ -144,7 +144,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
+      - run: pnpm exec ts-node packages/quantic/scripts/build/delete-org.ts
         shell: bash
   bump-version:
     name: 'Bump version'
@@ -166,4 +166,4 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "<>"
-          npm run bump:version
+          pnpm bump:version

@@ -5,12 +5,16 @@ on:
     branches: [master]
     paths-ignore:
       - '**/package-lock.json'
-      - '!package-lock.json'
+      - '**/pnpm-lock.yaml'
+      - 'package-lock.json'
+      - '!pnpm-lock.yaml'
   pull_request:
     branches: [master]
     paths-ignore:
       - '**/package-lock.json'
-      - '!package-lock.json'
+      - '**/pnpm-lock.yaml'
+      - 'package-lock.json'
+      - '!pnpm-lock.yaml'
 
 jobs:
   lockfile-outside-of-root:

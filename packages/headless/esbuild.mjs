@@ -120,8 +120,7 @@ function buildBrowserConfig(options) {
     plugins: [
       alias({
         'coveo.analytics': resolve(
-          '..',
-          '..',
+          '.',
           'node_modules',
           'coveo.analytics',
           'dist',
@@ -129,9 +128,11 @@ function buildBrowserConfig(options) {
         ),
         'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
         'web-encoding': resolve(
-          '..',
-          '..',
-          'node_modules/web-encoding/src/lib.js'
+          '.',
+          'node_modules',
+          'web-encoding',
+          'src',
+          'lib.js'
         ),
       }),
     ],
@@ -173,16 +174,14 @@ function buildNodeConfig(options) {
     plugins: [
       alias({
         'coveo.analytics': resolve(
-          '..',
-          '..',
+          '.',
           'node_modules',
           'coveo.analytics',
           'dist',
           'library.js'
         ),
         'web-encoding': resolve(
-          '..',
-          '..',
+          '.',
           'node_modules',
           'web-encoding',
           'src',

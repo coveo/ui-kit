@@ -4,9 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && npm run copy:assets && npm run npm:modify:dist",
+    "build": "ng build && pnpm copy:assets && pnpm npm:modify:dist",
     "copy:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
-    "npm:publish": "npm --prefix projects/atomic-angular/dist run npm:publish",
+    "npm:publish": "pnpm -F ./projects/atomic-angular/dist npm:publish",
     "npm:modify:dist": "node modify-package-json.js"
   },
   "private": true,
@@ -19,11 +19,11 @@
     "@angular/platform-browser": "14.2.12",
     "@angular/platform-browser-dynamic": "14.2.12",
     "@angular/router": "14.2.12",
-    "@coveo/atomic": "^2.0.0",
+    "@coveo/atomic": "workspace:*",
     "rxjs": "7.5.6"
   },
   "peerDependencies": {
-    "@coveo/headless": "^2.0.0"
+    "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "14.2.10",
@@ -40,6 +40,6 @@
     "ncp": "2.0.0",
     "ng-packagr": "14.2.2",
     "typescript": "4.6.4",
-    "@coveo/headless": "^2.0.0"
+    "@coveo/headless": "workspace:*"
   }
 }

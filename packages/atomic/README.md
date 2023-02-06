@@ -14,19 +14,19 @@ Once you have cloned the repo, follow the instructions in the top-level [README.
 To start the project in development mode, run:
 
 ```bash
-npm start
+pnpm start
 ```
 
 To build the library for production, run:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 To run the unit tests for the components, run:
 
 ```bash
-npm test
+pnpm test
 ```
 
 ## Run Cypress for Atomic components
@@ -40,19 +40,19 @@ Ref: https://docs.cypress.io/
 To open cypress, run:
 
 ```sh
-npm run cypress:open
+pnpm cypress:open
 ```
 
 To run all the test, run:
 
 ```sh
-npm run cypress:test
+pnpm cypress:test
 ```
 
 To run all the test in Firefox:
 
 ```sh
-npm run cypress:test:firefox
+pnpm cypress:test:firefox
 ```
 
 ### Separate test for Hosted Search Page
@@ -60,9 +60,9 @@ npm run cypress:test:firefox
 To test the current Atomic build against the hosted search pages for Trials, use the following commands:
 
 ```sh
-npm run cypress-hsp:open
-npm run cypress-hsp:test
-npm run cypress-hsp:test:firefox
+pnpm cypress-hsp:open
+pnpm cypress-hsp:test
+pnpm cypress-hsp:test:firefox
 ```
 
 ### Visual regression tests
@@ -89,8 +89,8 @@ setx APPLITOOLS_API_KEY *****
 Run the tests using either of these commands:
 
 ```sh
-npm run cypress-visual:open
-npm run cypress-visual:test
+pnpm cypress-visual:open
+pnpm cypress-visual:test
 ```
 
 ## Utilities

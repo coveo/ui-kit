@@ -12,13 +12,13 @@ runs:
   steps:
     - run: |
         echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
-        npx --no-install sfdx force:auth:jwt:grant \
+        pnpm exec sfdx force:auth:jwt:grant \
           --clientid ${{ env.SFDX_AUTH_CLIENT_ID }} \
           --jwtkeyfile server.key \
           --username ${{ env.SFDX_AUTH_JWT_USERNAME }} \
           --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} \
           --setdefaultdevhubusername
-        npx --no-install ts-node scripts/build/deploy-community.ts --ci
+        pnpm exec ts-node scripts/build/deploy-community.ts --ci
         rm server.key
       shell: bash
       working-directory: ./packages/quantic

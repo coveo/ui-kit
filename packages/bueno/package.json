@@ -18,8 +18,8 @@
     "dist/"
   ],
   "scripts": {
-    "start": "concurrently \"npm run typedefinitions -- -w\" \"node esbuild.mjs dev\"",
-    "build": "npm run typedefinitions & node esbuild.mjs",
+    "start": "concurrently \"pnpm typedefinitions -w\" \"node esbuild.mjs dev\"",
+    "build": "pnpm typedefinitions & node esbuild.mjs",
     "typedefinitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
     "test": "jest",

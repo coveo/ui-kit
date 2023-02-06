@@ -12,7 +12,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/samples/vuejs
-        start: npm run dev
+        start: pnpm dev
         wait-on: 'http://localhost:8080'
         install: false
         record: false

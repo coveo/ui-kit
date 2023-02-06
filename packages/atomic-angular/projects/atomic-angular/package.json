@@ -5,10 +5,10 @@
   "peerDependencies": {
     "@angular/common": "^14.0.0",
     "@angular/core": "^14.0.0",
-    "@coveo/headless": "^2.0.0"
+    "@coveo/headless": "workspace:*"
   },
   "dependencies": {
-    "@coveo/atomic": "2.19.0",
+    "@coveo/atomic": "workspace:*",
     "tslib": "2.4.0"
   }
 }

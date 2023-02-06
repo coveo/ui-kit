@@ -4,12 +4,12 @@ import {execute} from '../../exec.mjs';
 
 async function setup() {
   console.log('setting up repositories');
-  await execute('npm', ['ci']);
+  await execute('pnpm', ['i']);
 }
 
 async function buildFiles() {
   console.log('building files');
-  await execute('npm', ['run', 'build']);
+  await execute('pnpm', ['build']);
 }
 
 function readFileSizes() {

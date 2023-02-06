@@ -11,11 +11,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v2
         with:
-          node-version-file: '.nvmrc'
-      - run: npm ci
-      - run: npm run pr:report
+          version: 7.26.3
+      - run: pnpm pr:report
   build:
     name: 'Build'
     runs-on: ubuntu-latest
@@ -30,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npm run lint:check
+      - run: pnpm lint:check
   unit-test:
     name: 'Run unit tests'
     needs: build
@@ -38,8 +37,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npm run copy:staticresources -w @coveo/quantic
-      - run: npm test
+      - run: pnpm -F @coveo/quantic copy:staticresources
+      - run: pnpm test
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
     needs: build
@@ -154,7 +153,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
+      - run: pnpm exec ts-node packages/quantic/scripts/build/delete-org.ts
         shell: bash
   required-jobs:
     if: success()

@@ -1,0 +1,4 @@
+packages:
+- 'packages/*'
+- 'packages/atomic-angular/projects/*'
+- 'packages/samples/*'

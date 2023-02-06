@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v1
+      - uses: pnpm/action-setup@v2
         with:
-          node-version: 14.x
+          version: 7.26.3
+          run_install: false
       - name: Check Out Repository
         uses: actions/checkout@v3
       - name: Create cache file
@@ -47,7 +47,7 @@ jobs:
         working-directory: ./packages/quantic
         run: |
           echo "${{ secrets.SFDX_AUTH_PACKAGE_JWT_KEY }}" > server.key
-          npx --no-install ts-node scripts/build/create-package.ts --remove-translations --ci
+          pnpm exec ts-node scripts/build/create-package.ts --remove-translations --ci
           rm server.key
         env:
           SFDX_AUTH_JWT_USERNAME: sfdc.integration.devv2.hub@coveo.com

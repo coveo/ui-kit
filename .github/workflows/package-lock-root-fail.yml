@@ -1,16 +1,20 @@
-name: 'package-lock.json root validator'
+name: 'lockfile root validator'
 
 on:
   push:
     branches: [master]
     paths:
       - '**/package-lock.json'
-      - '!package-lock.json'
+      - '**/pnpm-lock.yaml'
+      - 'package-lock.json'
+      - '!pnpm-lock.yaml'
   pull_request:
     branches: [master]
     paths:
       - '**/package-lock.json'
-      - '!package-lock.json'
+      - '**/pnpm-lock.yaml'
+      - 'package-lock.json'
+      - '!pnpm-lock.yaml'
 
 jobs:
   lockfile-outside-of-root:

@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "^2.0.0",
-    "@coveo/atomic-react": "^2.0.0",
-    "@coveo/headless": "^2.0.0",
+    "@coveo/atomic": "workspace:*",
+    "@coveo/atomic-react": "workspace:*",
+    "@coveo/headless": "workspace:*",
     "next": "12.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0"
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "tsc --noEmit && tsc --module commonjs --noEmit",
-    "dev": "npm run copy:assets && next dev",
+    "dev": "pnpm copy:assets && next dev",
     "copy:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
     "cypress:open": "cypress open",
     "cypress:test": "cypress run --browser chrome"

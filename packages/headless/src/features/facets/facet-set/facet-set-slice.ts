@@ -1,5 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
-import {WritableDraft} from 'immer/dist/internal';
+import {createReducer, Draft} from '@reduxjs/toolkit';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
@@ -229,7 +228,7 @@ function insertNewValue(
 }
 
 function mutateStateFromFacetResponse(
-  facetRequest: WritableDraft<FacetRequest> | undefined,
+  facetRequest: Draft<FacetRequest> | undefined,
   facetResponse: AnyFacetResponse
 ) {
   if (!facetRequest) {

@@ -36,27 +36,27 @@ const main = async () => {
     }
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/browser/headless.js',
+    './node_modules/@coveo/headless/dist/browser/headless.js',
     './force-app/main/default/staticresources/coveoheadless/browser/headless.js'
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/browser/case-assist/headless.js',
+    './node_modules/@coveo/headless/dist/browser/case-assist/headless.js',
     './force-app/main/default/staticresources/coveoheadless/browser/case-assist/headless.js'
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/browser/insight/headless.js',
+    './node_modules/@coveo/headless/dist/browser/insight/headless.js',
     './force-app/main/default/staticresources/coveoheadless/browser/insight/headless.js'
   );
   await copy(
-    '../../node_modules/@coveo/headless/dist/definitions',
+    './node_modules/@coveo/headless/dist/definitions',
     './force-app/main/default/staticresources/coveoheadless/definitions'
   );
   await copy(
-    '../../node_modules/@coveo/bueno/dist/browser/bueno.js',
+    './node_modules/@coveo/bueno/dist/browser/bueno.js',
     './force-app/main/default/staticresources/coveobueno/browser/bueno.js'
   );
   await copy(
-    '../../node_modules/@coveo/bueno/dist/definitions',
+    './node_modules/@coveo/bueno/dist/definitions',
     './force-app/main/default/staticresources/coveobueno/definitions'
   );
 

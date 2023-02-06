@@ -11,7 +11,7 @@ import {
   packageDirsNpmTag,
   getPackageDefinitionFromPackageDir,
   getPackagePathFromPackageDir,
-  updatePackageVersionsAndDependents,
+  updatePackageVersions,
 } from './packages.mjs';
 
 /**
@@ -55,7 +55,7 @@ async function locallyBumpVersions(packages) {
   for (const packageDef of packages) {
     newVersions[packageDef.packageDir] = await getNewVersion(packageDef);
   }
-  await updatePackageVersionsAndDependents(newVersions);
+  await updatePackageVersions(newVersions);
 }
 
 export async function bumpPrereleaseVersionAndPush() {

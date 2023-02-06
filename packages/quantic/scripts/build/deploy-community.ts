@@ -328,7 +328,7 @@ async function deleteScratchOrg(
     );
     console.log(communityUrl);
     console.log('\nTo open Cypress, run:');
-    console.log('npm run cypress:open');
+    console.log('pnpm cypress:open');
   } catch (error) {
     console.error('Failed to complete');
     console.error(error);

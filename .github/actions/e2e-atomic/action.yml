@@ -16,7 +16,7 @@ runs:
       with:
         working-directory: ./packages/atomic
         spec: ${{ inputs.spec }}
-        start: npm run start:prod
+        start: pnpm start:prod
         wait-on: 'http://localhost:3333'
         install: false
         record: false

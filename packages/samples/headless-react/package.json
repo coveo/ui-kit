@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "@coveo/auth": "^1.9.1",
-    "@coveo/headless": "^2.0.0",
+    "@coveo/headless": "workspace:*",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "13.3.0",
     "@testing-library/user-event": "14.4.3",
@@ -34,7 +34,7 @@
     "build:server": "tsc --project ./tsconfig.server.json",
     "test": "react-scripts test --env=./jest.setup.js",
     "eject": "react-scripts eject",
-    "ssr:build": "npm run build && npm run build:server",
+    "ssr:build": "pnpm build && pnpm build:server",
     "ssr:start": "node ./build/server/server/server.js"
   },
   "browserslist": {

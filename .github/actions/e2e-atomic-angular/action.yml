@@ -9,14 +9,14 @@ runs:
   using: composite
   steps:
     - run: |
-        npm i
+        pnpm i
       shell: bash
       working-directory: ./packages/samples/angular
     - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
         working-directory: ./packages/samples/angular
-        start: npm run dev
+        start: pnpm dev
         wait-on: 'http://localhost:4200'
         install: false
         record: false
