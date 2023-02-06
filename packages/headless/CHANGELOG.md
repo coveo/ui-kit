@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.1...@coveo/headless@2.8.2) (2023-02-06)
+
+**Note:** Version bump only for package @coveo/headless
+
+## [2.8.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.0...@coveo/headless@2.8.1) (2023-02-02)
+
+### Bug Fixes
+
+- **atomic,headless:** log proper search ID with instant results ([#2709](https://github.com/coveo/ui-kit/issues/2709)) ([3fb2015](https://github.com/coveo/ui-kit/commit/3fb20151d9f2c77f8aac7dee8f4a5e3aefc54d73))
+
+# [2.8.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.7.1...@coveo/headless@2.8.0) (2023-02-01)
+
+### Features
+
+- **headless:** add instant results analytics ([#2703](https://github.com/coveo/ui-kit/issues/2703)) ([b90648f](https://github.com/coveo/ui-kit/commit/b90648fae90c24af71459afd8622f05587012474))
+
 ## [2.7.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.7.0...@coveo/headless@2.7.1) (2023-01-25)
 
 **Note:** Version bump only for package @coveo/headless

@@ -109,17 +109,13 @@ export class AtomicQuickview implements InitializableComponent {
       this.quickviewModalRef.result = this.result;
       this.quickviewModalRef.total = this.quickviewState.totalResults;
       this.quickviewModalRef.current = this.quickviewState.currentResult;
-      if (this.quickviewState.isLoading) {
-        this.quickviewAriaMessage = this.bindings.i18n.t('quickview-loading');
-      } else {
-        if (!this.quickviewState.isLoading) {
-          this.quickviewAriaMessage = this.bindings.i18n.t('quickview-loaded', {
+      this.quickviewAriaMessage = this.quickviewState.isLoading
+        ? this.bindings.i18n.t('quickview-loading')
+        : this.bindings.i18n.t('quickview-loaded', {
             first: this.quickviewState.currentResult,
             last: this.quickviewState.totalResults,
             title: this.result.title,
           });
-        }
-      }
     }
   }
 

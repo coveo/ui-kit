@@ -20,6 +20,7 @@ import {
   deselectAllNonBreadcrumbs,
 } from '../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
+import {logInstantResultsSearch} from '../instant-results/instant-result-analytics-actions';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
@@ -220,10 +221,17 @@ export const fetchInstantResults = createAsyncThunk<
     });
     const {q, maxResultsPerQuery} = payload;
     const state = config.getState();
+    const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+    const {action: analyticsAction} = await logInstantResultsSearch().prepare({
+      getState: () => config.getState(),
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    });
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction: null}, (modification) =>
+    >({...config, analyticsAction}, (modification) =>
       config.dispatch(
         updateInstantResultsQuery({q: modification, id: payload.id})
       )
@@ -243,6 +251,8 @@ export const fetchInstantResults = createAsyncThunk<
     if ('response' in processed) {
       return {
         results: processed.response.results,
+        searchUid: processed.response.searchUid,
+        analyticsAction: processed.analyticsAction,
       };
     }
     return processed as ReturnType<typeof config.rejectWithValue>;

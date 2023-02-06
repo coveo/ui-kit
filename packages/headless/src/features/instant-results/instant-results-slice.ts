@@ -39,18 +39,28 @@ export const instantResultsReducer = createReducer(
       });
     });
     builder.addCase(fetchInstantResults.pending, (state, action) => {
+      for (const id in state) {
+        for (const query in state[id].cache) {
+          state[id].cache[query].isActive = false;
+        }
+      }
+
       if (!getCached(state, action.meta)) {
         makeEmptyCache(state, action.meta);
-      } else {
-        const cached = getCached(state, action.meta);
-        cached!.isLoading = true;
-        cached!.error = null;
+        return;
       }
+
+      const cached = getCached(state, action.meta);
+      cached!.isLoading = true;
+      cached!.error = null;
     });
     builder.addCase(fetchInstantResults.fulfilled, (state, action) => {
-      const {results} = action.payload;
+      const {results, searchUid} = action.payload;
       const {cacheTimeout} = action.meta.arg;
       const cached = getCached(state, action.meta);
+
+      cached!.isActive = true;
+      cached!.searchUid = searchUid;
       cached!.isLoading = false;
       cached!.error = null;
       cached!.results = results;
@@ -74,6 +84,8 @@ const makeEmptyCache = (
     error: null,
     results: [],
     expiresAt: 0,
+    isActive: false,
+    searchUid: '',
   };
 };
 
