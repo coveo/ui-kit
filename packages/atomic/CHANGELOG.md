@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.2...@coveo/atomic@2.19.3) (2023-02-06)
+
+### Bug Fixes
+
+- **atomic,headless:** update history with replaceState (before search) or pushState (after search) & validate tab values ([#2704](https://github.com/coveo/ui-kit/issues/2704)) ([5ae1115](https://github.com/coveo/ui-kit/commit/5ae1115abfc60fe198f55c8474786373d5e13f92))
+
+## [2.19.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.1...@coveo/atomic@2.19.2) (2023-02-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.19.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.0...@coveo/atomic@2.19.1) (2023-02-06)
+
+### Bug Fixes
+
+- **atomic:** make suggestion (button) text left align by default ([#2712](https://github.com/coveo/ui-kit/issues/2712)) ([e27dd3f](https://github.com/coveo/ui-kit/commit/e27dd3f927f4855b0029a8d3c60f87925d73b7bb))
+
 # [2.19.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.18.0...@coveo/atomic@2.19.0) (2023-02-02)
 
 ### Features
