@@ -33,7 +33,7 @@ export default class QuanticFeedback extends LightningElement {
    */
   @api state;
   /**
-   * Indicates whether the "Explain why" button should be hidden..
+   * Indicates whether the "Explain why" button should be hidden.
    * @api
    * @type {boolean}
    */
