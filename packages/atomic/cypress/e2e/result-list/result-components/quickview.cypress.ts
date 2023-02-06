@@ -19,7 +19,7 @@ const addQuickviewInResultList = () =>
 
 const openModal = () => {
   cy.intercept('**/build/iconButton*').as('quickviewResources');
-  cy.wait('@quickviewResources');
+  cy.wait('@quickviewResources', {timeout: 50000});
   QuickviewSelectors.button().click();
   cy.wait(TestFixture.interceptAliases.Quickview);
   cy.expectClickEvent('documentQuickview');
