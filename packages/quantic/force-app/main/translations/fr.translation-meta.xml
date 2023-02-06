@@ -476,4 +476,20 @@
       <label>Copié!</label>
       <name>quantic_Copied</name>
     </customLabels>
+    <customLabels>
+      <label>Oui</label>
+      <name>quantic_Yes</name>
+    </customLabels>
+    <customLabels>
+      <label>Non</label>
+      <name>quantic_No</name>
+    </customLabels>
+    <customLabels>
+      <label>Est-ce que cela a été utile ?</label>
+      <name>quantic_WasThisUseful</name>
+    </customLabels>
+    <customLabels>
+      <label>Expliquer pourquoi</label>
+      <name>quantic_ExplainWhyd</name>
+    </customLabels>
 </Translations>
