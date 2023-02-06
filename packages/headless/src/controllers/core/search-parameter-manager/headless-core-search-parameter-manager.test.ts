@@ -21,6 +21,7 @@ import {
   buildCoreSearchParameterManager,
   SearchParameterManager,
   SearchParameterManagerProps,
+  validateParams,
 } from './headless-core-search-parameter-manager';
 
 describe('search parameter manager', () => {
@@ -306,6 +307,42 @@ describe('search parameter manager', () => {
       });
 
       expect(engine.actions).toContainEqual(action);
+    });
+  });
+
+  describe('#validateParams', () => {
+    it('with initial params, should return true', () => {
+      const initialParameters = initialSearchParameterSelector(engine.state);
+
+      expect(validateParams(engine, initialParameters)).toBe(true);
+    });
+
+    describe('with tabs', () => {
+      beforeEach(() => {
+        engine.state.tabSet = {
+          someTab: {id: 'someTab', isActive: true, expression: ''},
+          otherTab: {id: 'otherTab', isActive: false, expression: ''},
+        };
+      });
+
+      it('with an existing tab parameter, should return true', () => {
+        const initialParameters = initialSearchParameterSelector(engine.state);
+
+        expect(
+          validateParams(engine, {...initialParameters, tab: 'someTab'})
+        ).toBe(true);
+        expect(
+          validateParams(engine, {...initialParameters, tab: 'otherTab'})
+        ).toBe(true);
+      });
+
+      it('with a non-existing tab parameter, should return false', () => {
+        const initialParameters = initialSearchParameterSelector(engine.state);
+
+        expect(
+          validateParams(engine, {...initialParameters, tab: 'notMyTab'})
+        ).toBe(false);
+      });
     });
   });
 });

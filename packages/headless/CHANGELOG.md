@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.2...@coveo/headless@2.8.3) (2023-02-06)
+
+### Bug Fixes
+
+- **atomic,headless:** update history with replaceState (before search) or pushState (after search) & validate tab values ([#2704](https://github.com/coveo/ui-kit/issues/2704)) ([5ae1115](https://github.com/coveo/ui-kit/commit/5ae1115abfc60fe198f55c8474786373d5e13f92))
+
+## [2.8.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.1...@coveo/headless@2.8.2) (2023-02-06)
+
+**Note:** Version bump only for package @coveo/headless
+
+## [2.8.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.0...@coveo/headless@2.8.1) (2023-02-02)
+
+### Bug Fixes
+
+- **atomic,headless:** log proper search ID with instant results ([#2709](https://github.com/coveo/ui-kit/issues/2709)) ([3fb2015](https://github.com/coveo/ui-kit/commit/3fb20151d9f2c77f8aac7dee8f4a5e3aefc54d73))
+
 # [2.8.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.7.1...@coveo/headless@2.8.0) (2023-02-01)
 
 ### Features
