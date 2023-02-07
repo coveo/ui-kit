@@ -34,10 +34,10 @@ interface AtomicPageInitializationOptions {
  * @internal
  */
 @Component({
-  tag: 'atomic-page',
+  tag: 'atomic-hosted-page',
   shadow: false,
 })
-export class AtomicPage implements ComponentInterface {
+export class AtomicHostedPage implements ComponentInterface {
   @State() private error?: Error;
   @Element() private element!: HTMLElement;
 

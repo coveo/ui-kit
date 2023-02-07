@@ -1,18 +1,18 @@
 {
-  "name": "@coveo/atomic-page",
+  "name": "@coveo/atomic-hosted-page",
   "description": "TODO: ...",
   "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/coveo/ui-kit.git",
-    "directory": "packages/atomic-page"
+    "directory": "packages/atomic-hosted-page"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/components.d.ts",
-  "unpkg": "dist/atomic-page/atomic-page.esm.js",
+  "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
   "collection:main": "dist/collection/index.js",
   "collection": "dist/collection/collection-manifest.json",
   "files": [
@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "@coveo/bueno": "0.43.0",
-    "@stencil/core": "3.0.0"
+    "@stencil/core": "2.17.3"
   }
 }
