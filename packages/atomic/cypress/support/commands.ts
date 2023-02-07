@@ -87,7 +87,7 @@ interface CypressRequest {
 Cypress.Commands.add('shouldBeCalled', (interceptAlias, timesCalled) => {
   // cy.state('aliasRequests') contains a map of all intercepted requests, with the number of times they've been called.
   // ie: {coveoSearch: 1, coveoAnalytics: 4}
-  Object.entries(cy.state('aliasRequests')).forEach(([alias, _]) =>
+  Object.entries(cy.state('aliasRequests')).forEach(([alias]) =>
     console.log('Should be called contains: ', alias)
   );
   const aliasRequestThatMatch = Object.entries(
