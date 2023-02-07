@@ -28,6 +28,7 @@ interface AtomicPageInitializationOptions {
 }
 
 /**
+ * TODO: add description
  * @internal
  */
 @Component({

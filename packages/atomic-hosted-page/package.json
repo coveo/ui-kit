@@ -1,6 +1,7 @@
 {
   "name": "@coveo/atomic-hosted-page",
-  "description": "TODO: ...",
+  "private": "true",
+  "description": "TODO: add description",
   "version": "1.0.0",
   "repository": {
     "type": "git",
@@ -13,8 +14,6 @@
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/components.d.ts",
   "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
-  "collection:main": "dist/collection/index.js",
-  "collection": "dist/collection/collection-manifest.json",
   "files": [
     "dist/",
     "loader/",
