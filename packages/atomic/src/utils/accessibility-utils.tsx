@@ -103,6 +103,7 @@ export function FocusTarget() {
           }
         },
         focus: async () => {
+          // The focus seems to be flaky without deferring, especially on iOS.
           await defer();
           element?.focus();
           onFocusCallback?.();
