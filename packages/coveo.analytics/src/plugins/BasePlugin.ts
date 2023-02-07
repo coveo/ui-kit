@@ -1,7 +1,6 @@
 import {AnalyticsClient} from '../client/analytics';
-import {uuidv4} from '../client/crypto';
+import {v4 as uuidv4} from 'uuid';
 import {getFormattedLocation} from '../client/location';
-import {UAPluginOptions} from '../coveoua/plugins';
 import {hasDocument} from '../detector';
 
 type PluginWithId = {
@@ -67,7 +66,7 @@ export abstract class BasePlugin {
     public getDefaultContextInformation(eventType: string) {
         const documentContext = {
             title: hasDocument() ? document.title : '',
-            encoding: hasDocument() ? document.characterSet :'UTF-8',
+            encoding: hasDocument() ? document.characterSet : 'UTF-8',
         };
         const screenContext = {
             screenResolution: `${screen.width}x${screen.height}`,
@@ -103,7 +102,7 @@ export abstract class BasePlugin {
     }
 
     /*
-        When calling getPayload or getParameters, we need to return what would be sent by the API without updating our internal reference. 
+        When calling getPayload or getParameters, we need to return what would be sent by the API without updating our internal reference.
         For instance, if you getPayload("pageview"), we want to return the same payload as if you did coveoua("send", "pageview").
     */
     private getNextValues(eventType: string, payload: any) {

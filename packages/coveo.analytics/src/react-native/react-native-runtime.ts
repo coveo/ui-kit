@@ -2,7 +2,7 @@ import {WebStorage} from '../storage';
 import {AnalyticsFetchClient} from '../client/analyticsFetchClient';
 import {IRuntimeEnvironment} from '../client/runtimeEnvironment';
 import {PreprocessAnalyticsRequest} from '../client/analyticsRequestClient';
-import {uuidv4} from '../client/crypto';
+import {v4 as uuidv4} from 'uuid';
 import {buildBaseUrl} from '../client/analytics';
 
 export type ReactNativeStorage = WebStorage;

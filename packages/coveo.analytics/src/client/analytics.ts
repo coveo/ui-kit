@@ -22,8 +22,7 @@ import {IAnalyticsClientOptions, PreprocessAnalyticsRequest, VisitorIdProvider} 
 import {hasWindow, hasDocument} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
-import {uuidv4} from './crypto';
-import {v5 as uuidv5, validate as uuidValidate} from 'uuid';
+import {v4 as uuidv4, v5 as uuidv5, validate as uuidValidate} from 'uuid';
 import {libVersion} from '../version';
 import {
     convertKeysToMeasurementProtocol,

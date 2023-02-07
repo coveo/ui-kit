@@ -1,5 +1,5 @@
 import {EventType} from '../events';
-import {uuidv4} from '../client/crypto';
+import {v4 as uuidv4} from 'uuid';
 import {convertTicketToMeasurementProtocol} from '../client/measurementProtocolMapping/serviceMeasurementProtocolMapper';
 import {BasePlugin, BasePluginEventTypes, PluginClass, PluginOptions} from './BasePlugin';
 

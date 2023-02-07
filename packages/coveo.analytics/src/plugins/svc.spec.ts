@@ -25,7 +25,7 @@ describe('SVC plugin', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         client = createAnalyticsClientMock();
-        svc = new SVCPlugin({client, uuidGenerator: someUUIDGenerator});
+        svc = new SVCPlugin({client, uuidGenerator: someUUIDGenerator as any});
     });
 
     it('should register a hook in the client', () => {

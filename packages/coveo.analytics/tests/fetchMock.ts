@@ -5,6 +5,6 @@ export function mockFetch() {
     const fetchMock = sandbox();
     return {
         fetchMock,
-        fetchMockBeforeEach: () => jest.spyOn(CrossFetch, 'fetch').mockImplementation(fetchMock),
+        fetchMockBeforeEach: () => jest.spyOn(CrossFetch, 'fetch').mockImplementation(fetchMock as any),
     };
 }

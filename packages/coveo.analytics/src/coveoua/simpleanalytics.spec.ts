@@ -1,16 +1,14 @@
 import coveoua from './simpleanalytics';
 import {createAnalyticsClientMock, visitorIdMock} from '../../tests/analyticsClientMock';
 import {TestPlugin} from '../../tests/pluginMock';
-import {uuidv4} from '../client/crypto';
+import {v4 as uuidv4} from 'uuid';
 import {PluginOptions} from '../plugins/BasePlugin';
 import {mockFetch} from '../../tests/fetchMock';
 import {CookieStorage} from '../storage';
 import {libVersion} from '../version';
 
 const uuidv4Mock = jest.fn();
-jest.mock('../client/crypto', () => ({
-    uuidv4: () => uuidv4Mock(),
-}));
+jest.mock('uuid', () => ({v4: () => uuidv4Mock()}));
 
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
 

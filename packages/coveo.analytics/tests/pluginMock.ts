@@ -1,4 +1,4 @@
-import {uuidv4} from '../src/client/crypto';
+import {v4 as uuidv4} from 'uuid';
 import {BasePlugin, PluginOptions} from '../src/plugins/BasePlugin';
 
 export class TestPlugin extends BasePlugin {

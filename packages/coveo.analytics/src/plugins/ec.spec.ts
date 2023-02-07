@@ -25,7 +25,7 @@ describe('EC plugin', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         client = createAnalyticsClientMock();
-        ec = new ECPlugin({client, uuidGenerator: someUUIDGenerator});
+        ec = new ECPlugin({client, uuidGenerator: someUUIDGenerator as any});
     });
 
     it('should register a hook in the client', () => {

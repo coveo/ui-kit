@@ -9,10 +9,10 @@ import * as doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
 
 const aVisitorId = '123';
-
-const uuidv4Mock = jest.fn();
-jest.mock('./crypto', () => ({
-    uuidv4: () => uuidv4Mock(),
+jest.mock('uuid', () => ({
+    v4: () => aVisitorId,
+    validate: jest.requireActual('uuid').validate,
+    v5: jest.requireActual('uuid').v5,
 }));
 
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
@@ -49,7 +49,6 @@ describe('Analytics', () => {
         new CookieStorage().removeItem('visitorId');
         localStorage.clear();
         fetchMock.reset();
-        uuidv4Mock.mockImplementationOnce(() => aVisitorId);
 
         client = new CoveoAnalyticsClient({
             token: aToken,
