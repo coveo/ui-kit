@@ -1,3 +1,4 @@
+import {InstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   partialDocumentInformation,
@@ -21,12 +22,14 @@ export const logInstantResultOpen = (
         partialDocumentInformation(result, state),
         documentIdentifier(result)
       );
-    }
+    },
+    (getState) => new InstantResultsAnalyticsProvider(getState)
   );
 
 export const logInstantResultsSearch = (): InstantResultsSearchAction =>
   makeAnalyticsAction(
     'analytics/instantResult/searchboxAsYouType',
     AnalyticsType.Search,
-    (client) => client.makeSearchboxAsYouType()
+    (client) => client.makeSearchboxAsYouType(),
+    (getState) => new InstantResultsAnalyticsProvider(getState)
   );

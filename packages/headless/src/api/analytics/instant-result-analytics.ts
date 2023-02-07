@@ -14,19 +14,40 @@ export class InstantResultsAnalyticsProvider extends SearchAnalyticsProvider {
     super(getState);
   }
 
-  private get instantResultsSearchUid() {
+  private getActiveInstantResultQuery() {
     const state = this.getState().instantResults;
     for (const id in state) {
       for (const query in state[id].cache) {
         if (state[id].cache[query].isActive) {
-          return state[id].cache[query].searchUid;
+          return state[id].q;
         }
       }
     }
 
     return null;
   }
+
+  private getActiveInstantResultCache() {
+    const state = this.getState().instantResults;
+    for (const id in state) {
+      for (const query in state[id].cache) {
+        if (state[id].cache[query].isActive) {
+          return state[id].cache[query];
+        }
+      }
+    }
+
+    return null;
+  }
+
   public getSearchUID(): string {
-    return this.instantResultsSearchUid || super.getSearchUID();
+    const searchUid = this.getActiveInstantResultCache()?.searchUid;
+    return searchUid || super.getSearchUID();
+  }
+
+  public getSearchEventRequestPayload() {
+    const payload = super.getSearchEventRequestPayload();
+    const queryText = this.getActiveInstantResultQuery() || payload.queryText;
+    return {...payload, queryText};
   }
 }
