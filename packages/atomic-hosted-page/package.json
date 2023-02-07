@@ -2,12 +2,13 @@
   "name": "@coveo/atomic-hosted-page",
   "private": "true",
   "description": "TODO: add description",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic-hosted-page"
   },
+  "license": "Apache-2.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",
