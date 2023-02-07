@@ -13,7 +13,7 @@ on:
     paths:
       - '**/package-lock.json'
       - '**/pnpm-lock.yaml'
-      - 'package-lock.json'
+      # - 'package-lock.json' # TODO: uncomment in a separate PR
       - '!pnpm-lock.yaml'
 
 jobs:
