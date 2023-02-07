@@ -72,6 +72,7 @@ export function getPackageManifestFromPackagePath(fullPath) {
 }
 
 /**
+ * @param {string} fullPath
  * @returns {{packages?: string[]}}
  */
 export function getWorkspacesFromPackagePath(fullPath) {
