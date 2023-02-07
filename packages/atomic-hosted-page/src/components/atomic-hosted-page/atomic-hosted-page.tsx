@@ -1,13 +1,10 @@
 import {Schema, StringValue} from '@coveo/bueno';
+import {Component, ComponentInterface, Method, Element} from '@stencil/core';
 import {
-  Component,
-  h,
-  ComponentInterface,
-  Method,
-  State,
-  Element,
-} from '@stencil/core';
-import {HostedPage} from './hosted-pages';
+  HostedPage,
+  HostedPageJavascriptFile,
+  HostedPageCssFile,
+} from './hosted-pages';
 
 interface AtomicPageInitializationOptions {
   /**
@@ -38,7 +35,6 @@ interface AtomicPageInitializationOptions {
   shadow: false,
 })
 export class AtomicHostedPage implements ComponentInterface {
-  @State() private error?: Error;
   @Element() private element!: HTMLElement;
 
   private validateOptions(opts: AtomicPageInitializationOptions) {
@@ -50,12 +46,46 @@ export class AtomicHostedPage implements ComponentInterface {
         platformUrl: new StringValue({required: false, emptyAllowed: false}),
       }).validate(opts);
     } catch (e) {
-      this.error = e as Error;
+      console.error(e);
     }
   }
 
   private processHostedPage(hostedPage: HostedPage) {
-    console.log('hostedPage', hostedPage);
+    this.element.innerHTML = hostedPage.html;
+    hostedPage.javascript?.forEach((file) => this.insertJS(file));
+    hostedPage.css?.forEach((file) => this.insertCSS(file));
+  }
+
+  private insertJS(file: HostedPageJavascriptFile) {
+    const script = document.createElement('script');
+    if (file.isModule) {
+      script.type = 'module';
+    }
+
+    if (file.url) {
+      script.src = file.url;
+    }
+
+    if (file.inlineContent) {
+      script.innerHTML = file.inlineContent;
+    }
+
+    document.head.appendChild(script);
+  }
+
+  private insertCSS(file: HostedPageCssFile) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+
+    if (file.url) {
+      link.href = file.url;
+    }
+
+    if (file.inlineContent) {
+      link.innerHTML = file.inlineContent;
+    }
+
+    document.head.appendChild(link);
   }
 
   @Method() public async initialize(options: AtomicPageInitializationOptions) {
@@ -75,19 +105,7 @@ export class AtomicHostedPage implements ComponentInterface {
 
       this.processHostedPage(await pageResponse.json());
     } catch (e) {
-      this.error = e as Error;
-    }
-  }
-
-  public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          style={{'--atomic-error': '#ce3f00;'}}
-          element={this.element}
-          error={this.error}
-        ></atomic-component-error>
-      );
+      console.error(e);
     }
   }
 }
