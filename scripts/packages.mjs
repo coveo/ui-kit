@@ -5,6 +5,7 @@ import {resolve, relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import rimraf from 'rimraf';
 import {execute} from './exec.mjs';
+import YAML from 'yaml';
 
 export const workspacesRoot = resolve(
   fileURLToPath(import.meta.url),
@@ -13,9 +14,9 @@ export const workspacesRoot = resolve(
 );
 
 /** @type {PackageDir[]} */
-const allPackageDirs = getPackageManifestFromPackagePath(
+const allPackageDirs = getWorkspacesFromPackagePath(
   workspacesRoot
-).workspaces.reduce(
+).packages.reduce(
   (packageDirs, workspacesEntry) => [
     ...packageDirs,
     ...glob
@@ -68,6 +69,15 @@ export function getPackagePathFromPackageDir(packageDir) {
  */
 export function getPackageManifestFromPackagePath(fullPath) {
   return JSON.parse(readFileSync(resolve(fullPath, 'package.json')).toString());
+}
+
+/**
+ * @returns {{packages?: string[]}}
+ */
+export function getWorkspacesFromPackagePath(fullPath) {
+  return YAML.parse(
+    readFileSync(resolve(fullPath, 'pnpm-workspace.yaml')).toString()
+  );
 }
 
 /**

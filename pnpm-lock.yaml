@@ -44,6 +44,7 @@ importers:
       semver: 7.3.7
       ts-jest: 27.1.5
       typescript: 4.6.4
+      yaml: 2.2.1
     devDependencies:
       '@actions/core': 1.9.1
       '@actions/github': 5.1.1
@@ -80,6 +81,7 @@ importers:
       semver: 7.3.7
       ts-jest: 27.1.5_nvhgjdjksqf5k4ifxwjrcppuvu
       typescript: 4.6.4
+      yaml: 2.2.1
 
   packages/atomic:
     specifiers:
