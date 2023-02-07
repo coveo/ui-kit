@@ -73,6 +73,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Prop() current?: number;
   @Prop() total?: number;
   @Prop() sandbox?: string;
+  @Prop() onModalClose?: () => void;
 
   @Method()
   public async reset() {
@@ -192,6 +193,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   private onClose() {
     this.content = undefined;
     this.result = undefined;
+    this.onModalClose && this.onModalClose();
   }
 
   private get isOpen() {

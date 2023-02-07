@@ -49,6 +49,7 @@ export interface FocusTargetController {
   setTarget(element: HTMLElement | undefined): void;
   focusAfterSearch(): Promise<void>;
   focusOnNextTarget(): Promise<void>;
+  focus(): Promise<void>;
   disableForCurrentSearch(): void;
 }
 
@@ -98,12 +99,13 @@ export function FocusTarget() {
           element = el;
           if (focusOnNextTarget) {
             focusOnNextTarget = false;
-            // The focus seems to be flaky without deferring, especially on iOS.
-            defer().then(() => {
-              el.focus();
-              onFocusCallback?.();
-            });
+            focusTargetController.focus();
           }
+        },
+        focus: async () => {
+          await defer();
+          element?.focus();
+          onFocusCallback?.();
         },
         focusAfterSearch: () => {
           lastSearchId = this.bindings.store.getUniqueIDFromEngine(

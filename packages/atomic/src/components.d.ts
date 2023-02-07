@@ -868,6 +868,7 @@ export namespace Components {
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
+        "onModalClose"?: () => void;
         "reset": () => Promise<void>;
         "result"?: Result;
         "sandbox"?: string;
@@ -3518,6 +3519,7 @@ declare namespace LocalJSX {
         "current"?: number;
         "onAtomic/quickview/next"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
         "onAtomic/quickview/previous"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
+        "onModalClose"?: () => void;
         "result"?: Result;
         "sandbox"?: string;
         "total"?: number;
