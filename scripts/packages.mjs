@@ -21,7 +21,10 @@ const allPackageDirs = getWorkspacesFromPackagePath(
     ...packageDirs,
     ...glob
       .sync(workspacesEntry)
-      .map((packagePath) => relative('packages', packagePath)),
+      .filter((entry) => existsSync(resolve(entry, 'package.json')))
+      .map((packagePath) =>
+        relative(resolve(workspacesRoot, 'packages'), packagePath)
+      ),
   ],
   []
 );

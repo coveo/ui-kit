@@ -34,6 +34,7 @@ importers:
       eslint-config-prettier: 8.5.0
       eslint-plugin-cypress: 2.12.1
       exponential-backoff: ^3.1.0
+      glob: 8.1.0
       gts: 3.1.0
       husky: 5.2.0
       jest: 27.5.1
@@ -71,6 +72,7 @@ importers:
       eslint-config-prettier: 8.5.0_eslint@8.22.0
       eslint-plugin-cypress: 2.12.1_eslint@8.22.0
       exponential-backoff: 3.1.0
+      glob: 8.1.0
       gts: 3.1.0_typescript@4.6.4
       husky: 5.2.0
       jest: 27.5.1
