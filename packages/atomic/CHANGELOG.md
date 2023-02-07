@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.3...@coveo/atomic@2.19.4) (2023-02-07)
+
+### Bug Fixes
+
+- **atomic:** moved insight facets outside of the refine-toggle ([#2715](https://github.com/coveo/ui-kit/issues/2715)) ([8770438](https://github.com/coveo/ui-kit/commit/8770438eaf2920433948df786c969410ee9bf305))
+
 ## [2.19.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.2...@coveo/atomic@2.19.3) (2023-02-06)
 
 ### Bug Fixes
