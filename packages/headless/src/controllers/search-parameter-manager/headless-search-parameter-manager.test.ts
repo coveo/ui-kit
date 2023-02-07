@@ -236,9 +236,18 @@ describe('search parameter manager', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('executes a search', () => {
+    it('given valid search parameters, executes a search', () => {
       manager.synchronize({q: 'a'});
       expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
+
+    it('given invalid search parameters, should not execute a search', () => {
+      engine.state.tabSet = {
+        someTab: {id: 'someTab', isActive: true, expression: ''},
+      };
+      manager.synchronize({tab: 'notMyTab!'});
+
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
     });
 
     it(`when only the order of facet values changes,

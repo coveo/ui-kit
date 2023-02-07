@@ -63,13 +63,18 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
     }
     `;
 
+  const facets = `${sectionSelector('facets')} {
+      display: none;
+    }
+    `;
+
   const results = `
     ${sectionSelector('results')} {
       overflow: auto;
     }
     `;
 
-  return [interfaceStyle, search, results]
+  return [interfaceStyle, search, facets, results]
     .filter((declaration) => declaration !== '')
     .join('\n\n');
 }
