@@ -114,7 +114,7 @@ export class AtomicQuickview implements InitializableComponent {
       this.quickviewModalRef.result = this.result;
       this.quickviewModalRef.total = this.quickviewState.totalResults;
       this.quickviewModalRef.current = this.quickviewState.currentResult;
-      this.quickviewModalRef.onModalClose = () =>
+      this.quickviewModalRef.modalCloseCallback = () =>
         this.buttonFocusTarget.focus();
 
       this.quickviewAriaMessage = this.quickviewState.isLoading

@@ -868,7 +868,7 @@ export namespace Components {
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
-        "onModalClose"?: () => void;
+        "modalCloseCallback"?: () => void;
         "reset": () => Promise<void>;
         "result"?: Result;
         "sandbox"?: string;
@@ -3517,9 +3517,9 @@ declare namespace LocalJSX {
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
+        "modalCloseCallback"?: () => void;
         "onAtomic/quickview/next"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
         "onAtomic/quickview/previous"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
-        "onModalClose"?: () => void;
         "result"?: Result;
         "sandbox"?: string;
         "total"?: number;
