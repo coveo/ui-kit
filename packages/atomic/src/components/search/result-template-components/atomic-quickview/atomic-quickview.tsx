@@ -38,7 +38,7 @@ import {ResultContext} from '../result-template-decorators';
 export class AtomicQuickview implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
-  @FocusTarget() buttonFocusTarget?: FocusTargetController;
+  @FocusTarget() buttonFocusTarget!: FocusTargetController;
 
   @State() public error!: Error;
 
@@ -115,7 +115,7 @@ export class AtomicQuickview implements InitializableComponent {
       this.quickviewModalRef.total = this.quickviewState.totalResults;
       this.quickviewModalRef.current = this.quickviewState.currentResult;
       this.quickviewModalRef.onModalClose = () =>
-        this.buttonFocusTarget?.focus();
+        this.buttonFocusTarget.focus();
 
       this.quickviewAriaMessage = this.quickviewState.isLoading
         ? this.bindings.i18n.t('quickview-loading')
@@ -141,7 +141,7 @@ export class AtomicQuickview implements InitializableComponent {
           style="outline-primary"
           class="p-2"
           onClick={() => this.onClick()}
-          ref={this.buttonFocusTarget?.setTarget}
+          ref={this.buttonFocusTarget.setTarget}
         >
           <atomic-icon class="w-5" icon={QuickviewIcon}></atomic-icon>
         </Button>
