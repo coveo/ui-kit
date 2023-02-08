@@ -24,6 +24,7 @@ export default class QuanticFeedback extends LightningElement {
    * The question to be displayed.
    * @api
    * @type {string}
+   * @defaultValue `"Was this useful?"`
    */
   @api question = this.labels.wasThisUseful;
   /**
