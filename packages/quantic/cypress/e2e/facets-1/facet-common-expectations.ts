@@ -271,19 +271,6 @@ export function facetWithSearchExpectations(selector: FacetWithSearchSelector) {
           `"No matches found for" label should have the query "${query}"`
         );
     },
-
-    logFacetSearch: (field: string) => {
-      cy.wait(InterceptAliases.UA.Facet.Search)
-        .then((interception) => {
-          const analyticsBody = interception.request.body;
-          expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
-          expect(analyticsBody.customData).to.have.property(
-            'facetField',
-            field
-          );
-        })
-        .logDetail('should log the "facetSearch" UA event');
-    },
   };
 }
 
