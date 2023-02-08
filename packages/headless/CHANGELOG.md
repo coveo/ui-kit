@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.3...@coveo/headless@2.8.4) (2023-02-08)
+
+### Bug Fixes
+
+- **headless:** provide proper instant results query for analytics ([#2719](https://github.com/coveo/ui-kit/issues/2719)) ([d40668f](https://github.com/coveo/ui-kit/commit/d40668fb1cedb5805001aaa331a0ac1991885cc5))
+
 ## [2.8.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.2...@coveo/headless@2.8.3) (2023-02-06)
 
 ### Bug Fixes
