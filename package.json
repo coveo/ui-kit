@@ -70,6 +70,7 @@
     "packages/headless",
     "packages/atomic",
     "packages/quantic",
+    "packages/atomic-hosted-page",
     "packages/atomic-react",
     "packages/atomic-angular",
     "packages/atomic-angular/projects/*",
