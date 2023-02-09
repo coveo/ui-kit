@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.4...@coveo/atomic@2.19.5) (2023-02-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.19.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.3...@coveo/atomic@2.19.4) (2023-02-07)
+
+### Bug Fixes
+
+- **atomic:** moved insight facets outside of the refine-toggle ([#2715](https://github.com/coveo/ui-kit/issues/2715)) ([8770438](https://github.com/coveo/ui-kit/commit/8770438eaf2920433948df786c969410ee9bf305))
+
+## [2.19.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.2...@coveo/atomic@2.19.3) (2023-02-06)
+
+### Bug Fixes
+
+- **atomic,headless:** update history with replaceState (before search) or pushState (after search) & validate tab values ([#2704](https://github.com/coveo/ui-kit/issues/2704)) ([5ae1115](https://github.com/coveo/ui-kit/commit/5ae1115abfc60fe198f55c8474786373d5e13f92))
+
 ## [2.19.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.1...@coveo/atomic@2.19.2) (2023-02-06)
 
 **Note:** Version bump only for package @coveo/atomic

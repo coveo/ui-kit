@@ -1,0 +1,34 @@
+{
+  "name": "@coveo/atomic-hosted-page",
+  "private": "true",
+  "description": "TODO: add description",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coveo/ui-kit.git",
+    "directory": "packages/atomic-hosted-page"
+  },
+  "license": "Apache-2.0",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "types": "dist/types/components.d.ts",
+  "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
+  "files": [
+    "dist/",
+    "loader/",
+    "docs/"
+  ],
+  "scripts": {
+    "clean": "rimraf -rf dist/*",
+    "build": "npm run build:stencil && npm run validate:definitions",
+    "build:stencil": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+    "start": "npm run build:stencil -- --dev --watch --serve",
+    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
+  },
+  "dependencies": {
+    "@coveo/bueno": "0.43.0",
+    "@stencil/core": "2.17.3"
+  }
+}

@@ -485,11 +485,17 @@ export class AtomicSearchInterface
   }
 
   private updateHash() {
-    history.pushState(
-      null,
-      document.title,
-      `#${this.urlManager.state.fragment}`
-    );
+    const newFragment = this.urlManager.state.fragment;
+
+    if (!this.searchStatus.state.firstSearchExecuted) {
+      history.replaceState(null, document.title, `#${newFragment}`);
+      this.bindings.engine.logger.info(`History replaceState #${newFragment}`);
+
+      return;
+    }
+
+    history.pushState(null, document.title, `#${newFragment}`);
+    this.bindings.engine.logger.info(`History pushState #${newFragment}`);
   }
 
   private onHashChange = () => {

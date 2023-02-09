@@ -77,6 +77,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Prop() current?: number;
   @Prop() total?: number;
   @Prop() sandbox?: string;
+  @Prop() modalCloseCallback?: () => void;
 
   private interactiveResult?: InteractiveResult;
 
@@ -201,6 +202,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   private onClose() {
     this.content = undefined;
     this.result = undefined;
+    this.modalCloseCallback && this.modalCloseCallback();
   }
 
   private get isOpen() {
