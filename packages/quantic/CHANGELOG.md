@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.10.1...@coveo/quantic@2.10.2) (2023-02-09)
+
+### Bug Fixes
+
+- **headless:** remove facetSearch analytics ([#2720](https://github.com/coveo/ui-kit/issues/2720)) ([22a1b8b](https://github.com/coveo/ui-kit/commit/22a1b8bdeecf4214247c65cdab3d7f9a5d3dca58))
+
 ## [2.10.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.10.0...@coveo/quantic@2.10.1) (2023-02-08)
 
 **Note:** Version bump only for package @coveo/quantic
