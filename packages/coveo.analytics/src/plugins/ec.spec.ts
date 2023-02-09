@@ -15,7 +15,7 @@ describe('EC plugin', () => {
         title: 'MAH PAGE',
         screenColor: '24-bit',
         screenResolution: '0x0',
-        time: expect.any(String),
+        time: expect.any(Number),
         userAgent: navigator.userAgent,
         language: 'en-US',
         hitType: ECPluginEventTypes.event,

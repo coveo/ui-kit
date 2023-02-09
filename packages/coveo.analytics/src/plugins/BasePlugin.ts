@@ -77,7 +77,7 @@ export abstract class BasePlugin {
             userAgent: navigator.userAgent,
         };
         const eventContext = {
-            time: Date.now().toString(),
+            time: Date.now(),
             eventId: this.uuidGenerator(),
         };
         return {

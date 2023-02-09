@@ -9,7 +9,6 @@ describe('svc events', () => {
     const aToken = 'token';
     const anEndpoint = 'http://bloup';
 
-    const numberFormat = /[0-9]+/;
     const guidFormat = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
     const defaultContextValues = {
@@ -25,7 +24,7 @@ describe('svc events', () => {
         de: document.characterSet,
         pid: expect.stringMatching(guidFormat),
         cid: expect.stringMatching(guidFormat),
-        tm: expect.stringMatching(numberFormat),
+        tm: expect.any(Number),
         z: expect.stringMatching(guidFormat),
     };
 
@@ -36,7 +35,7 @@ describe('svc events', () => {
         const address = `${anEndpoint}/rest/v15/analytics/collect`;
         fetchMock.reset();
         fetchMock.post(address, (url, {body}) => {
-            const parsedBody = JSON.parse(body.toString());
+            const parsedBody = JSON.parse(body!.toString());
             const visitorId = parsedBody.cid;
             return {
                 visitId: 'firsttimevisiting',
@@ -111,6 +110,7 @@ describe('svc events', () => {
     };
 
     const changeDocumentLocation = (url: string) => {
+        // @ts-ignore
         delete window.location;
         // @ts-ignore
         // Ooommmpf... JSDOM does not support any form of navigation, so let's overwrite the whole thing 💥.

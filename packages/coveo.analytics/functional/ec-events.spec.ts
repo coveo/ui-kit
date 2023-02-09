@@ -12,7 +12,6 @@ describe('ec events', () => {
     const aToken = 'token';
     const anEndpoint = 'http://bloup';
 
-    const numberFormat = /[0-9]+/;
     const guidFormat = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
     const defaultContextValues = {
@@ -28,7 +27,7 @@ describe('ec events', () => {
         de: document.characterSet,
         pid: expect.stringMatching(guidFormat),
         cid: expect.stringMatching(guidFormat),
-        tm: expect.stringMatching(numberFormat),
+        tm: expect.any(Number),
         z: expect.stringMatching(guidFormat),
     };
 
@@ -41,7 +40,7 @@ describe('ec events', () => {
         const address = new RegExp('/rest/v15/analytics');
         fetchMock.reset();
         fetchMock.post(address, (url, {body}) => {
-            const parsedBody = JSON.parse(body.toString());
+            const parsedBody = JSON.parse(body!.toString());
             const visitorId = parsedBody.cid;
             return {
                 visitId: 'firsttimevisiting',
@@ -328,13 +327,13 @@ describe('ec events', () => {
     it('should return the same payload', async () => {
         const secondLocation = 'http://very.new/';
 
-        const firstPayload = await client.getPayload('pageview', {
+        const firstPayload = await client!.getPayload('pageview', {
             title: 'wow',
             custom: {
                 verycustom: 'value',
             },
         });
-        const secondPayload = await client.getPayload('pageview', {
+        const secondPayload = await client!.getPayload('pageview', {
             title: 'wow',
             custom: {
                 verycustom: 'value',
@@ -342,13 +341,13 @@ describe('ec events', () => {
         });
         await coveoua('send', 'pageview');
         changeDocumentLocation(secondLocation);
-        const firstAfterPayload = await client.getPayload('pageview', {
+        const firstAfterPayload = await client!.getPayload('pageview', {
             title: 'wow',
             custom: {
                 verycustom: 'value',
             },
         });
-        const secondAfterPayload = await client.getPayload('pageview', {
+        const secondAfterPayload = await client!.getPayload('pageview', {
             title: 'wow',
             custom: {
                 verycustom: 'value',
@@ -372,13 +371,13 @@ describe('ec events', () => {
     it('should return the same parameters', async () => {
         const secondLocation = 'http://very.new/';
 
-        const firstParameters = await client.getParameters('pageview', {
+        const firstParameters = await client!.getParameters('pageview', {
             title: 'wow',
             custom: {
                 verycustom: 'value',
             },
         });
-        const secondParameters = await client.getParameters('pageview', {
+        const secondParameters = await client!.getParameters('pageview', {
             title: 'wow',
             custom: {
                 verycustom: 'value',
@@ -386,13 +385,13 @@ describe('ec events', () => {
         });
         await coveoua('send', 'pageview');
         changeDocumentLocation(secondLocation);
-        const firstAfterParameters = await client.getParameters('pageview', {
+        const firstAfterParameters = await client!.getParameters('pageview', {
             title: 'wow',
             custom: {
                 verycustom: 'value',
             },
         });
-        const secondAfterParameters = await client.getParameters('pageview', {
+        const secondAfterParameters = await client!.getParameters('pageview', {
             title: 'wow',
             custom: {
                 verycustom: 'value',
@@ -414,8 +413,8 @@ describe('ec events', () => {
     });
 
     it('should return similar parameters and payload', async () => {
-        const parameters = await client.getParameters('pageview', {});
-        const payload = await client.getPayload('pageview', {});
+        const parameters = await client!.getParameters('pageview', {});
+        const payload = await client!.getPayload('pageview', {});
 
         const firstParametersToCompare = returnCommonAttributes(parameters, ['time', 'eventId']);
 
@@ -435,9 +434,9 @@ describe('ec events', () => {
     });
 
     it('should return similar parameters and send', async () => {
-        const firstParameters = await client.getParameters('pageview', {});
+        const firstParameters = await client!.getParameters('pageview', {});
         await coveoua('send', 'pageview');
-        const secondParameters = await client.getParameters('pageview', {});
+        const secondParameters = await client!.getParameters('pageview', {});
         await coveoua('send', 'pageview');
 
         const [pageView, secondPageView] = getParsedBody();
@@ -475,9 +474,9 @@ describe('ec events', () => {
     });
 
     it('should return similar payload and send', async () => {
-        const firstPayload = await client.getPayload('pageview', {});
+        const firstPayload = await client!.getPayload('pageview', {});
         await coveoua('send', 'pageview');
-        const secondPayload = await client.getPayload('pageview', {});
+        const secondPayload = await client!.getPayload('pageview', {});
         await coveoua('send', 'pageview');
 
         const [pageView, secondPageView] = getParsedBody();
@@ -727,8 +726,7 @@ describe('ec events', () => {
             sd: defaultContextValues.sd,
             sr: defaultContextValues.sr,
             t: 'event',
-            // tid: "toosogoogleanalyticsevents0l18in4y", removed, this one is picked up from the `ca("create", TID)` call.
-            tm: expect.stringMatching(numberFormat),
+            tm: expect.any(Number),
             ua: defaultContextValues.ua, // Added
             ul: defaultContextValues.ul,
             // v: 1, removed, we don't send version as of now.
@@ -786,7 +784,7 @@ describe('ec events', () => {
             sd: defaultContextValues.sd,
             sr: defaultContextValues.sr,
             t: 'pageview',
-            tm: expect.stringMatching(numberFormat),
+            tm: expect.any(Number),
             ua: defaultContextValues.ua,
             ul: defaultContextValues.ul,
             z: expect.stringMatching(guidFormat),
@@ -914,6 +912,7 @@ describe('ec events', () => {
     };
 
     const changeDocumentLocation = (url: string) => {
+        // @ts-ignore
         delete window.location;
         // @ts-ignore
         // Ooommmpf... JSDOM does not support any form of navigation, so let's overwrite the whole thing 💥.
