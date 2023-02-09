@@ -256,14 +256,6 @@ export function assertNoMatchesFoundContainsQuery(
   });
 }
 
-export function assertLogFacetSearch(field: string) {
-  it('should log the facet search to UA', () => {
-    cy.expectSearchEvent('facetSearch').then((analyticsBody) => {
-      expect(analyticsBody.customData).to.have.property('facetField', field);
-    });
-  });
-}
-
 export function assertDisplayShowMoreButton(
   FacetWithShowMoreLessSelector: FacetWithShowMoreLessSelector,
   display: boolean,

@@ -263,7 +263,6 @@ describe('Facet Test Suite', () => {
               Expect.displayShowMoreButton(false);
               Expect.displaySearchClearButton(true);
               Expect.highlightsResults(query);
-              Expect.logFacetSearch(defaultField);
             });
 
             scope('when clearing the facet search results', () => {
@@ -545,7 +544,6 @@ describe('Facet Test Suite', () => {
               Expect.displayShowMoreButton(false);
               Expect.displaySearchClearButton(true);
               Expect.highlightsResults(query);
-              Expect.logFacetSearch(defaultField);
 
               scope('when clearing the facet search results', () => {
                 function clearSearchInput() {

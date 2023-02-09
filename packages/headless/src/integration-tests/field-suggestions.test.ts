@@ -1,4 +1,3 @@
-import {CoveoSearchPageClient} from 'coveo.analytics';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
@@ -121,7 +120,6 @@ describe('field suggestions', () => {
 
     describe('after calling #search', () => {
       beforeEach(async () => {
-        jest.spyOn(CoveoSearchPageClient.prototype, 'logFacetSearch');
         await waitForNextStateChange(fieldSuggestions, {
           action: () => fieldSuggestions.search(),
           expectedSubscriberCalls: 2,
@@ -146,12 +144,6 @@ describe('field suggestions', () => {
         expect(fieldSuggestions.state.values.length).toBeGreaterThan(
           numberOfValues
         );
-      });
-
-      it('does not log analytics', () => {
-        expect(
-          CoveoSearchPageClient.prototype.logFacetSearch
-        ).not.toHaveBeenCalled();
       });
     });
 
