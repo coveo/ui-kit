@@ -168,7 +168,7 @@ export function getFocusedElement(
 }
 
 export async function defer() {
-  return new Promise<void>((resolve) => setTimeout(resolve));
+  return new Promise<void>((resolve) => setTimeout(resolve, 10));
 }
 
 // https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
