@@ -91,7 +91,7 @@ export default class QuanticSmartSnippet extends LightningElement {
   }
 
   /**
-   * Updates the display of the expandable smart snippet answer.c/exampleSearch
+   * Updates the display of the expandable smart snippet answer.
    * @returns {void}
    */
   updateExpandableAnswerDisplay() {
