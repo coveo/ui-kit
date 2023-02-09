@@ -689,6 +689,7 @@ export namespace Components {
          */
         "container"?: HTMLElement;
         "isOpen": boolean;
+        "noFocusTrap": boolean;
         "source"?: HTMLElement;
     }
     interface AtomicIpxRefineModal {
@@ -867,6 +868,7 @@ export namespace Components {
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
+        "modalCloseCallback"?: () => void;
         "reset": () => Promise<void>;
         "result"?: Result;
         "sandbox"?: string;
@@ -3333,6 +3335,7 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         "isOpen"?: boolean;
+        "noFocusTrap"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
         "source"?: HTMLElement;
     }
@@ -3514,6 +3517,7 @@ declare namespace LocalJSX {
     interface AtomicQuickviewModal {
         "content"?: string;
         "current"?: number;
+        "modalCloseCallback"?: () => void;
         "onAtomic/quickview/next"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
         "onAtomic/quickview/previous"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
         "result"?: Result;

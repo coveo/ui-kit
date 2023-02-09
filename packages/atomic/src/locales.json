@@ -1554,5 +1554,21 @@
   "quickview-previous": {
     "en": "Previous quickview",
     "fr": "Aperçu précédent"
+  },
+  "quickview-toggle-navigation": {
+    "en": "Toggle keywords navigation",
+    "fr": "Contrôle de la navigation par mots-clés"
+  },
+  "quickview-navigate-keywords": {
+    "en": "Navigate between {{occurrences}} occurrences of {{keyword}}",
+    "fr": "Naviguer entre {{occurrences}} occurrences pour {{keyword}}"
+  },
+  "quickview-loading": {
+    "en": "Loading new quickview",
+    "fr": "Chargement d'un nouvel aperçu˝"
+  },
+  "quickview-loaded": {
+    "en": "Quickview for result {{title}} loaded. {{first}} out of {{last}} available.",
+    "fr": "Aperçu pour le résultat {{title}} chargé. {{first}} de {{last}} disponible."
   }
 }

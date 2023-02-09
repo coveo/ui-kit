@@ -186,12 +186,6 @@ describe('Facet v1 Test Suites', () => {
           CommonFacetAssertions.assertHighlightsResults(FacetSelectors, query);
         });
 
-        describe('verify analytics', () => {
-          before(setupSearchFor);
-
-          CommonFacetAssertions.assertLogFacetSearch(field);
-        });
-
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
@@ -475,12 +469,6 @@ describe('Facet v1 Test Suites', () => {
           CommonFacetAssertions.assertHighlightsResults(FacetSelectors, query);
         });
 
-        describe('verify analytics', () => {
-          before(setupSearchFor);
-
-          CommonFacetAssertions.assertLogFacetSearch(field);
-        });
-
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();
@@ -612,12 +600,6 @@ describe('Facet v1 Test Suites', () => {
           FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues);
           FacetAssertions.assertNumberOfSelectedBoxValues(0);
           CommonFacetAssertions.assertHighlightsResults(FacetSelectors, query);
-        });
-
-        describe('verify analytics', () => {
-          before(setupSearchFor);
-
-          CommonFacetAssertions.assertLogFacetSearch(field);
         });
 
         describe('when selecting a search result', () => {

@@ -17,6 +17,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/button';
+import {IconButton} from '../../../common/iconButton';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {LinkWithResultAnalytics} from '../../result-link/result-link';
 import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
@@ -72,6 +73,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Prop() current?: number;
   @Prop() total?: number;
   @Prop() sandbox?: string;
+  @Prop() modalCloseCallback?: () => void;
 
   @Method()
   public async reset() {
@@ -103,13 +105,14 @@ export class AtomicQuickviewModal implements InitializableComponent {
           >
             {this.result.title}
           </LinkWithResultAnalytics>
-          <atomic-icon-button
+          <IconButton
+            partPrefix="quickview-modal-header"
             icon={CloseIcon}
-            clickCallback={() => this.onClose()}
-            labelI18nKey="close"
-            buttonStyle="text-transparent"
-            tooltip={this.bindings.i18n.t('close')}
-          ></atomic-icon-button>
+            onClick={() => this.onClose()}
+            ariaLabel={this.bindings.i18n.t('close')}
+            style="text-transparent"
+            title={this.bindings.i18n.t('close')}
+          />
         </Fragment>
       );
     }
@@ -190,6 +193,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   private onClose() {
     this.content = undefined;
     this.result = undefined;
+    this.modalCloseCallback && this.modalCloseCallback();
   }
 
   private get isOpen() {

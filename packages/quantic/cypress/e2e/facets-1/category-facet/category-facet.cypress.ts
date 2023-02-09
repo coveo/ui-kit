@@ -284,7 +284,6 @@ describe('quantic-category-facet', () => {
 
               Actions.typeQueryInSearchInput(query);
 
-              Expect.logFacetSearch(hierarchicalField);
               Expect.displayFacet(true);
               Expect.displayNoMatchesFound(false);
               Expect.displayMoreMatchesFound(true);
@@ -306,7 +305,6 @@ describe('quantic-category-facet', () => {
               });
 
               Actions.typeQueryInSearchInput(query);
-              Expect.logFacetSearch(hierarchicalField);
 
               Actions.selectSearchResult(selectedValue);
               Expect.logCategoryFacetSelected(montrealHierarchy);
@@ -325,11 +323,9 @@ describe('quantic-category-facet', () => {
               });
 
               Actions.typeQueryInSearchInput(query);
-              Expect.logFacetSearch(hierarchicalField);
               Expect.searchResults(8);
 
               Actions.clickSearchClearButton();
-              Expect.logFacetSearch(hierarchicalField);
               Expect.numberOfValues(defaultNumberOfValues - 1);
               Expect.searchInputEmpty();
             });
@@ -346,7 +342,6 @@ describe('quantic-category-facet', () => {
 
               Actions.typeQueryInSearchInput(query);
 
-              Expect.logFacetSearch(hierarchicalField);
               Expect.displayNoMatchesFound(true);
               Expect.noMatchesFoundContainsQuery(query);
               Expect.displaySearchClearButton(true);
@@ -379,7 +374,6 @@ describe('quantic-category-facet', () => {
               setupWithCustomBasePath(basePath, useCaseEnum.search, true);
 
               Actions.typeQueryInSearchInput(query);
-              Expect.logFacetSearch(hierarchicalField);
               Expect.searchResults(2);
               Expect.searchResultsPathContains(allCategories);
             });

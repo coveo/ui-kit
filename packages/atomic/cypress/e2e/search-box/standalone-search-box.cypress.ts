@@ -1,19 +1,19 @@
-import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
+import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {
   resultTextComponent,
   ResultTextSelectors,
-} from './result-list/result-components/result-text-selectors';
+} from '../result-list/result-components/result-text-selectors';
 import {
   addResultList,
   buildTemplateWithoutSections,
-} from './result-list/result-list-actions';
-import {addSearchBox} from './search-box/search-box-actions';
+} from '../result-list/result-list-actions';
+import {addSearchBox} from './search-box-actions';
 import {
   assertHasText,
   assertLogOmniboxFromLink,
   assertLogSearchFromLink,
-} from './search-box/search-box-assertions';
-import {SearchBoxSelectors} from './search-box/search-box-selectors';
+} from './search-box-assertions';
+import {SearchBoxSelectors} from './search-box-selectors';
 
 describe('Standalone Search Box Test Suites', () => {
   function setupStandaloneSearchBox(options?: {

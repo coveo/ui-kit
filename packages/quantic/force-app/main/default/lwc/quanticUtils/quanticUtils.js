@@ -131,6 +131,34 @@ export class ResultUtils {
   }
 }
 
+export class LinkUtils {
+  /**
+   * Binds the logging of a link
+   * @returns An unbind function for the events
+   * @param {HTMLAnchorElement} link the link element
+   * @param {{select:function, beginDelayedSelect: function, cancelPendingSelect: function  }} actions
+   */
+  static bindAnalyticsToLink(link, actions) {
+    const eventsMap = {
+      contextmenu: () => actions.select(),
+      click: () => actions.select(),
+      mouseup: () => actions.select(),
+      mousedown: () => actions.select(),
+      touchstart: () => actions.beginDelayedSelect(),
+      touchend: () => actions.cancelPendingSelect(),
+    };
+    Object.keys(eventsMap).forEach((key) =>
+      link.addEventListener(key, eventsMap[key])
+    );
+
+    return () => {
+      Object.keys(eventsMap).forEach((key) =>
+        link.removeEventListener(key, eventsMap[key])
+      );
+    };
+  }
+}
+
 export class I18nUtils {
   static getTextWithDecorator(text, startTag, endTag) {
     return `${startTag}${text}${endTag}`;
