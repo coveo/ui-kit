@@ -68,6 +68,7 @@ export function typeFacetSearchQuery(
   query: string,
   shouldFindResults: boolean
 ) {
+  cy.wait(1000);
   // https://github.com/cypress-io/cypress/issues/5827
   Array.from(query).forEach((character) => {
     FacetWithSearchSelector.searchInput()
