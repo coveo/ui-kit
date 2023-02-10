@@ -1,0 +1,29 @@
+<template>
+  <lightning-modal-header label="Explain why"></lightning-modal-header>
+  <lightning-modal-body>
+    <div class="slds-var-p-around_x-large">
+      <lightning-radio-group class="slds-var-m-bottom_large" name="feedback" label="Select the reason" options={options}
+        value={optionsValue} type="radio" onchange={handleOptionChange}></lightning-radio-group>
+      <template if:true={displayReasonInput}>
+        <div class={reasonFormClass}>
+          <label class="slds-form-element__label reason-input__label" for="textarea-id-01">
+            What was the reason?</label>
+          <div class="slds-form-element__control">
+            <textarea rows="4" id="textarea-id-01" aria-describedby="error" class="slds-textarea"
+              onchange={handleReasonChange} onkeyup={handleReasonChange} onpaste={handleReasonChange}>
+              {reasonValue}
+            </textarea>
+          </div>
+          <template if:true={reasonInputError}>
+            <div class="slds-form-element__help" id="error">Enter a value.</div>
+          </template>
+        </div>
+      </template>
+    </div>
+  </lightning-modal-body>
+  <lightning-modal-footer>
+    <lightning-button class="slds-button" variant="neutral" label="Cancel" onclick={closeModal}></lightning-button>
+    <lightning-button class="slds-button slds-m-left_x-small" variant="brand" label="Send feedback"
+      onclick={submitFeedback}></lightning-button>
+  </lightning-modal-footer>
+</template>

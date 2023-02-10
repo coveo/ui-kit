@@ -1,0 +1,7 @@
+textarea {
+  resize: none;
+}
+
+.reason-input__label {
+  font-weight: var(--lwc-fontWeightBold, 700);
+}
