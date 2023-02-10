@@ -5,7 +5,7 @@ import wasThisUseful from '@salesforce/label/c.quantic_WasThisUseful';
 import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
 
 /**
- * The `QuanticFeedback` component displays a question and two buttons for selecting a positive or a negative feedback.
+ * The `QuanticFeedback` component displays a question and two buttons for giving positive or negative feedback.
  * @fires CustomEvent#like
  * @fires CustomEvent#dislike
  * @fires CustomEvent#pressExplainWhy
@@ -24,6 +24,7 @@ export default class QuanticFeedback extends LightningElement {
    * The question to be displayed.
    * @api
    * @type {string}
+   * @defaultValue `"Was this useful?"`
    */
   @api question = this.labels.wasThisUseful;
   /**
