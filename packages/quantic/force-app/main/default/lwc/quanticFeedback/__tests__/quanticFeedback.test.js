@@ -13,10 +13,10 @@ const exampleSuccessMessage = 'Example success Message';
 
 const selectors = {
   feedbackQuestion: '.feedback__question',
-  likeButton: '.slds-button:nth-of-type(1)',
-  likeButtonIcon: '.slds-button:nth-of-type(1) > lightning-icon ',
-  dislikeButton: '.slds-button:nth-of-type(2) ',
-  dislikeButtonIcon: '.slds-button:nth-of-type(2) > lightning-icon ',
+  likeButton: '.feedback__like-button',
+  likeButtonIcon: '.feedback__like-button > lightning-icon ',
+  dislikeButton: '.feedback__dislike-button',
+  dislikeButtonIcon: '.feedback__dislike-button > lightning-icon ',
   successMessage: '.feedback__success-message',
   explainWhyButton: '.feedback__explain-why',
 };

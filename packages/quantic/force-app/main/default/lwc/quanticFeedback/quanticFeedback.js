@@ -137,7 +137,7 @@ export default class QuanticFeedback extends LightningElement {
    * @returns {string}
    */
   get likeButtonClass() {
-    return `slds-button slds-button_icon slds-var-m-right_small ${
+    return `feedback__like-button slds-button slds-button_icon slds-var-m-right_small ${
       this.liked ? 'feedback__button--liked' : 'feedback__button--neutral'
     } `;
   }
@@ -147,7 +147,7 @@ export default class QuanticFeedback extends LightningElement {
    * @returns {string}
    */
   get dislikeButtonClass() {
-    return `slds-button slds-button_icon ${
+    return `feedback__dislike-button slds-button slds-button_icon ${
       this.disliked ? 'feedback__button--disliked' : 'feedback__button--neutral'
     } `;
   }
