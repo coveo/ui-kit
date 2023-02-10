@@ -65,7 +65,7 @@ Otherwise you will get an error similar to this:
 
 Start the server.
 
-- Run `npm run start`
+- Run `npm run dev`
 - You can also run this command from the command line. `sfdx force:lightning:lwc:start`
 - View the server at http://localhost:3334/.
 
@@ -92,7 +92,7 @@ The 'Quantic Examples' community is ready, you can access it at the following UR
 https://your-salesforce-scratch-org-instance.force.com/examples
 
 To open Cypress, run:
-npm run cypress:open
+npm run e2e:watch
 ```
 
 Once the community has been deployed, you can deploy the `main` or `example` components only when needed. To do so, run:
@@ -113,26 +113,26 @@ To learn how to add tests, see [adding tests](./docs/adding-tests.md).
 To open Cypress in browser mode, run:
 
 ```bash
-npm run cypress:open
+npm run e2e:watch
 ```
 
 To run Cypress tests directly in your console, run:
 
 ```bash
-npm run cypress:test
+npm run e2e
 ```
 
 To get the [detailed report](./docs/detailed-reporting.md), run:
 
 ```bash
-npm run cypress:test:detailed
+npm run e2e:detailed
 ```
 
 ## Use Quantic From Source
 
 After you have cloned the repository and have run `npm install`, run the following commands:
 
-- `npm run copy:staticresources`
+- `npm run build:staticresources`
 - `sfdx force:source:deploy -m LightningComponentBundle`
 
 ## Other Useful Commands

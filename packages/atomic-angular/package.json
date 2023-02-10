@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build && npm run copy:assets && npm run npm:modify:dist",
-    "copy:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
-    "npm:publish": "npm --prefix projects/atomic-angular/dist run npm:publish",
-    "npm:modify:dist": "node modify-package-json.js"
+    "dev": "ng serve",
+    "build": "npm run build:bundles && npm run build:assets && npm run build:npm-package",
+    "build:bundles": "ng build",
+    "build:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
+    "publish:npm": "npm --prefix projects/atomic-angular/dist run publish:npm",
+    "build:npm-package": "node modify-package-json.js"
   },
   "private": true,
   "dependencies": {

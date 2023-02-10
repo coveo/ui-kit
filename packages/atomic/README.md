@@ -40,19 +40,19 @@ Ref: https://docs.cypress.io/
 To open cypress, run:
 
 ```sh
-npm run cypress:open
+npm run e2e:watch
 ```
 
 To run all the test, run:
 
 ```sh
-npm run cypress:test
+npm run e2e
 ```
 
 To run all the test in Firefox:
 
 ```sh
-npm run cypress:test:firefox
+npm run e2e:firefox
 ```
 
 ### Separate test for Hosted Search Page
@@ -60,37 +60,9 @@ npm run cypress:test:firefox
 To test the current Atomic build against the hosted search pages for Trials, use the following commands:
 
 ```sh
-npm run cypress-hsp:open
-npm run cypress-hsp:test
-npm run cypress-hsp:test:firefox
-```
-
-### Visual regression tests
-
-Visual regression test for the result templates use Applitools Eyes. Results can ve viewed at
-https://eyes.applitools.com/app/test-results/. Log in using the username `developers@qa.coveo.com`
-(password in Lastpass)
-
-In order to run these locally, you will need to set an environment variable containing the Applitools api key.
-This key can be found by logging in to Applitools and clicking on **User** (top right icon) > **My Api Key**.
-
-When using Mac or Linux use a command like this in your terminal, `~/.bash-profile` or `~/.profile`:
-
-```sh
-export APPLITOOLS_API_KEY=*****
-```
-
-Using Windows:
-
-```bat
-setx APPLITOOLS_API_KEY *****
-```
-
-Run the tests using either of these commands:
-
-```sh
-npm run cypress-visual:open
-npm run cypress-visual:test
+npm run e2e:hsp:watch
+npm run e2e:hsp
+npm run e2e:hsp:firefox
 ```
 
 ## Utilities

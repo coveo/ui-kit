@@ -18,12 +18,13 @@
     "dist/"
   ],
   "scripts": {
-    "start": "concurrently \"npm run typedefinitions -- -w\" \"node esbuild.mjs dev\"",
-    "build": "npm run typedefinitions & node esbuild.mjs",
-    "typedefinitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
+    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
+    "build": "npm run build:definitions & npm run build:bundles",
+    "build:bundles": "node esbuild.mjs",
+    "build:definitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
-    "npm:publish": "node ../../scripts/deploy/publish.mjs"
+    "publish:npm": "node ../../scripts/deploy/publish.mjs"
   }
 }

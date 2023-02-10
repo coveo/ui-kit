@@ -1,0 +1,41 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": []
+      }
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "prod": {
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "e2e": {
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "doc": {
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "lint:check": {},
+    "lint:fix": {},
+    "publish:npm": {}
+  },
+  "defaultBase": "master"
+}

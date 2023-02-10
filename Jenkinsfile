@@ -34,7 +34,7 @@ node('heavy && linux && docker') {
       }
 
       stage('Generate docs') {
-        sh 'npm run doc:generate'
+        sh 'npm run doc'
       }
     }
 
@@ -49,9 +49,9 @@ node('heavy && linux && docker') {
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
           sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
           if (isOnReleaseBranch) {
-            sh 'npm run npm:publish -- release || true'
+            sh 'npm run publish:npm -- release || true'
           } else {
-            sh 'npm run npm:publish -- prerelease || true'
+            sh 'npm run publish:npm -- prerelease || true'
           }
         }
       }
