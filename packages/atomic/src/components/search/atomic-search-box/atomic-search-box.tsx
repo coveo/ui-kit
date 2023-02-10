@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {
   SearchBox,
   SearchBoxState,
@@ -33,7 +34,7 @@ import {
 } from '../../../utils/local-storage-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {getUniqueItemsByProperties, once, randomID} from '../../../utils/utils';
+import {once, randomID} from '../../../utils/utils';
 import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchInput} from '../../common/search-box/search-input';
@@ -516,7 +517,14 @@ export class AtomicSearchBox {
 
   private getAndFilterLeftSuggestionElements() {
     const suggestionElements = this.getSuggestionElements(this.leftSuggestions);
-    return getUniqueItemsByProperties(suggestionElements, ['query']);
+    // We want to remove duplicates elements for the same `query` property, but only when it's not null.
+    // Since the custom search box suggestion system does not enforce a query property (it's optional),
+    // it's a system that people will use to provide a "title" section for multiple suggestions provider.
+    return suggestionElements.filter(
+      (suggestionElement, i, self) =>
+        isNullOrUndefined(suggestionElement.query) ||
+        i === self.findIndex((other) => other.query === suggestionElement.query)
+    );
   }
 
   private onKeyDown(e: KeyboardEvent) {
