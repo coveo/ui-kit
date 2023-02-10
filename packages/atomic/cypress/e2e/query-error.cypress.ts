@@ -38,7 +38,7 @@ describe('Query Error Test Suites', () => {
       QueryErrorSelectors.moreInfoBtn().should('exist').click();
       QueryErrorSelectors.moreInfoMessage()
         .should('exist')
-        .contains('statusText": "I\'m a Teapot"');
+        .contains('message": "Something very weird just happened"');
     });
   });
 });

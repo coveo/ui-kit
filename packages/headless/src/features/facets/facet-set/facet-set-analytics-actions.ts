@@ -46,19 +46,6 @@ export const logFacetShowLess = (facetId: string): SearchAction =>
     }
   );
 
-export const logFacetSearch = (facetId: string): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/facet/search',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(facetId, facetIdDefinition);
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
-
-      return client.makeFacetSearch(metadata);
-    }
-  );
-
 export interface LogFacetUpdateSortActionCreatorPayload {
   /**
    * The facet id.

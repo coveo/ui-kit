@@ -45,6 +45,10 @@ export const InterceptAliases = {
     DocumentQuickview: uaAlias('documentQuickview'),
     SearchFromLink: uaAlias('searchFromLink'),
     CopyToClipboard: uaAlias('copyToClipboard'),
+    ExpandSmartSnippet: uaAlias('expandSmartSnippet'),
+    CollapseSmartSnippet: uaAlias('collapseSmartSnippet'),
+    OpenSmartSnippetSource: uaAlias('openSmartSnippetSource'),
+    OpenSmartSnippetInlineLink: uaAlias('openSmartSnippetInlineLink'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -67,7 +71,7 @@ export function interceptSearch() {
     .intercept('POST', routeMatchers.analytics, (req) => {
       if (req.body.actionCause) {
         req.alias = uaAlias(req.body.actionCause).substring(1);
-      } else if (req.body.eventType === 'getMoreResults') {
+      } else if (req.body.eventType) {
         req.alias = uaAlias(req.body.eventValue).substring(1);
       }
     })
@@ -250,6 +254,51 @@ export function mockSearchWithoutAnyFacetValues() {
       ];
       res.body.totalCount = 1;
       res.body.totalCountFiltered = 1;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithSmartSnippet(smartSnippetOptions: {
+  question: string;
+  answer: string;
+  title: string;
+  uri: string;
+  permanentId: string;
+}) {
+  const {question, answer, title, uri, permanentId} = smartSnippetOptions;
+  cy.intercept(routeMatchers.search, (req) => {
+    req.continue((res) => {
+      res.body.questionAnswer = {
+        answerFound: true,
+        answerSnippet: answer,
+        question: question,
+        documentId: {
+          contentIdKey: 'permanentid',
+          contentIdValue: permanentId,
+        },
+      };
+      res.body.results = [
+        {
+          uri: uri,
+          title: title,
+          ClickUri: uri,
+          clickUri: uri,
+          uniqueId: '123',
+          raw: {permanentid: permanentId},
+        },
+      ];
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithoutSmartSnippet() {
+  cy.intercept(routeMatchers.search, (req) => {
+    req.continue((res) => {
+      res.body.questionAnswer = {
+        answerFound: false,
+      };
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));

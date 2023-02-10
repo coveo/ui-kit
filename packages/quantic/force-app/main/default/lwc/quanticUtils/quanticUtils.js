@@ -131,6 +131,34 @@ export class ResultUtils {
   }
 }
 
+export class LinkUtils {
+  /**
+   * Binds the logging of a link
+   * @returns An unbind function for the events
+   * @param {HTMLAnchorElement} link the link element
+   * @param {{select:function, beginDelayedSelect: function, cancelPendingSelect: function  }} actions
+   */
+  static bindAnalyticsToLink(link, actions) {
+    const eventsMap = {
+      contextmenu: () => actions.select(),
+      click: () => actions.select(),
+      mouseup: () => actions.select(),
+      mousedown: () => actions.select(),
+      touchstart: () => actions.beginDelayedSelect(),
+      touchend: () => actions.cancelPendingSelect(),
+    };
+    Object.keys(eventsMap).forEach((key) =>
+      link.addEventListener(key, eventsMap[key])
+    );
+
+    return () => {
+      Object.keys(eventsMap).forEach((key) =>
+        link.removeEventListener(key, eventsMap[key])
+      );
+    };
+  }
+}
+
 export class I18nUtils {
   static getTextWithDecorator(text, startTag, endTag) {
     return `${startTag}${text}${endTag}`;
@@ -760,3 +788,51 @@ export function buildTemplateTextFromResult(template, result) {
     return newValue || value;
   });
 }
+
+  /**
+   * Returns the padding values of an element.
+   * @param {Element} element
+   * @returns {{top: number, right:number, bottom:number, left:number}}
+   */
+  export function getElementPadding(element) {
+    const styles = window.getComputedStyle(element);
+
+    return {
+      top: parseFloat(styles.paddingTop),
+      right: parseFloat(styles.paddingRight),
+      bottom: parseFloat(styles.paddingBottom),
+      left: parseFloat(styles.paddingLeft),
+    };
+  }
+
+  /**
+   * Returns the absolute width of an element.
+   * @param {Element} element
+   * @returns {number}
+   */
+  export function getAbsoluteHeight(element) {
+    if (!element) {
+      return 0;
+    }
+    const paddings = getElementPadding(element);
+    const padding = paddings.top + paddings.bottom;
+
+    // @ts-ignore
+    return Math.ceil(element.offsetHeight + padding);
+  }
+
+  /**
+   * Returns the absolute width of an element.
+   * @param {Element} element
+   * @returns {number}
+   */
+  export function getAbsoluteWidth(element) {
+    if (!element) {
+      return 0;
+    }
+    const paddings = getElementPadding(element);
+    const padding = paddings.left + paddings.right;
+
+    // @ts-ignore
+    return Math.ceil(element.offsetWidth + padding);
+  }

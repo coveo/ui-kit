@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic Hosted Page</title>
+
+    <script type="module" src="/build/atomic-hosted-page.esm.js"></script>
+    <script>
+      (async () => {
+        await customElements.whenDefined('atomic-hosted-page');
+
+        const page = document.querySelector('atomic-hosted-page');
+        await page.initialize({
+          pageId: 'a5cb9c6e-600b-4b4f-bc76-e60ff610ea1a',
+          accessToken: '---- ADD KEY ----',
+          organizationId: 'hostedsearchpagetest5ftf64ka',
+          platformUrl: 'https://platformdev.cloud.coveo.com',
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <atomic-hosted-page></atomic-hosted-page>
+  </body>
+</html>

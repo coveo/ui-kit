@@ -26,7 +26,7 @@ const initialEmptyCache: () => InstantResultCache = () => ({
   error: null,
   results: [],
   expiresAt: 0,
-  isActive: false,
+  isActive: true,
   searchUid: '',
 });
 
@@ -147,6 +147,31 @@ describe('instant results slice', () => {
             some_query: initialEmptyCache(),
           }),
           ...getSearchBoxInstantResultsState(id2, query),
+        };
+
+        expect(instantResultsReducer(initialState, action)).toEqual(
+          expectedState
+        );
+      });
+
+      it('set isActive of all previous caches to false', () => {
+        const query = 'some_query';
+        const action = fetchInstantResults.pending('req_id', {
+          id: id1,
+          q: query,
+          maxResultsPerQuery: 2,
+        });
+
+        const initialState = {
+          ...getSearchBoxInstantResultsState(id1, query, {
+            another_query: initialEmptyCache(),
+          }),
+        };
+        const expectedState = {
+          ...getSearchBoxInstantResultsState(id1, query, {
+            some_query: initialEmptyCache(),
+            another_query: {...initialEmptyCache(), isActive: false},
+          }),
         };
 
         expect(instantResultsReducer(initialState, action)).toEqual(

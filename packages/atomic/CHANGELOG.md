@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.6...@coveo/atomic@2.19.7) (2023-02-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.19.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.5...@coveo/atomic@2.19.6) (2023-02-09)
+
+### Bug Fixes
+
+- **atomic:** more improvements for quickview accessibility ([#2718](https://github.com/coveo/ui-kit/issues/2718)) ([3b9d73a](https://github.com/coveo/ui-kit/commit/3b9d73a613129d6056d4f96c7d325ef79d8c02ac))
+- **headless:** remove facetSearch analytics ([#2720](https://github.com/coveo/ui-kit/issues/2720)) ([22a1b8b](https://github.com/coveo/ui-kit/commit/22a1b8bdeecf4214247c65cdab3d7f9a5d3dca58))
+
+## [2.19.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.4...@coveo/atomic@2.19.5) (2023-02-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.19.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.3...@coveo/atomic@2.19.4) (2023-02-07)
+
+### Bug Fixes
+
+- **atomic:** moved insight facets outside of the refine-toggle ([#2715](https://github.com/coveo/ui-kit/issues/2715)) ([8770438](https://github.com/coveo/ui-kit/commit/8770438eaf2920433948df786c969410ee9bf305))
+
 ## [2.19.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.2...@coveo/atomic@2.19.3) (2023-02-06)
 
 ### Bug Fixes

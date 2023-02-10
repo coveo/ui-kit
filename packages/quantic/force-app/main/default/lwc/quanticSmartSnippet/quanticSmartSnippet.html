@@ -1,0 +1,25 @@
+<template>
+  <template if:true={answerFound}>
+    <div class="smart-snippet">
+      <lightning-card data-cy="smart-snippet-card" title={question}>
+        <div class="slds-p-horizontal_medium slds-p-top_small slds-border_top">
+          <div class="slds-var-m-bottom_small">
+            <div data-cy="expandable-smart-snippet-answer" class={expandableAnswerClass}>
+              <c-quantic-smart-snippet-answer answer={answer}
+                actions={smartSnippetAnswerActions}></c-quantic-smart-snippet-answer>
+            </div>
+          </div>
+          <template if:true={snippetHeightExceedsMaxHeight}>
+            <div class="slds-align_absolute-center slds-var-m-bottom_small">
+              <lightning-button data-cy="smart-snippet-answer-toggle" icon-name={toggleSmartSnippetAnswerIcon}
+                variant="base" label={toggleSmartSnippetAnswerLabel} title={toggleSmartSnippetAnswerLabel}
+                onclick={handleToggleSmartSnippetAnswer}></lightning-button>
+            </div>
+          </template>
+          <c-quantic-smart-snippet-source title={sourceTitle} uri={sourceUri}
+            actions={smartSnippetSourceActions}></c-quantic-smart-snippet-source>
+        </div>
+      </lightning-card>
+    </div>
+  </template>
+</template>

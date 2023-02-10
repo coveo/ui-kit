@@ -2,7 +2,7 @@ import {defineConfig} from 'cypress';
 
 export default defineConfig({
   projectId: '5ph2j4',
-  experimentalFetchPolyfill: true,
+  experimentalFetchPolyfill: false,
   reporter: 'spec',
   viewportHeight: 1080,
   viewportWidth: 1920,

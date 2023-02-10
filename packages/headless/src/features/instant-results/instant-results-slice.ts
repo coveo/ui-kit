@@ -52,6 +52,7 @@ export const instantResultsReducer = createReducer(
 
       const cached = getCached(state, action.meta);
       cached!.isLoading = true;
+      cached!.isActive = true;
       cached!.error = null;
     });
     builder.addCase(fetchInstantResults.fulfilled, (state, action) => {
@@ -70,6 +71,7 @@ export const instantResultsReducer = createReducer(
       const cached = getCached(state, action.meta);
       cached!.error = action.error || null;
       cached!.isLoading = false;
+      cached!.isActive = false;
     });
   }
 );
@@ -84,7 +86,7 @@ const makeEmptyCache = (
     error: null,
     results: [],
     expiresAt: 0,
-    isActive: false,
+    isActive: true,
     searchUid: '',
   };
 };

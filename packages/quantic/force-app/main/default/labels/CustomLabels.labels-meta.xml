@@ -931,4 +931,18 @@
       <protected>false</protected>
       <shortDescription>Explain why</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_SmartSnippetShowMore</fullName>
+      <value>Show more</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Show more</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_SmartSnippetShowLess</fullName>
+      <value>Show less</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Show less</shortDescription>
+    </labels>
 </CustomLabels>

@@ -347,7 +347,7 @@ describe('Search Interface Component', () => {
 
       it('should not call the analytics server', () => {
         cy.wait(TestFixture.interceptAliases.Search);
-        cy.shouldBeCalled(TestFixture.urlParts.UASearch, 0);
+        cy.shouldBeCalled(TestFixture.interceptAliases.UA, 0);
       });
 
       it('should not include analytics in the search request', () => {
@@ -364,7 +364,7 @@ describe('Search Interface Component', () => {
 
       it('should not call the analytics server', () => {
         cy.wait(TestFixture.interceptAliases.Search);
-        cy.shouldBeCalled(TestFixture.urlParts.UASearch, 0);
+        cy.shouldBeCalled(TestFixture.interceptAliases.UA, 0);
       });
 
       it('should not include analytics in the search request', () => {
