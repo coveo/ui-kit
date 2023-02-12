@@ -37,11 +37,11 @@ export default class QuanticFeedbackModal extends LightningModal {
   /** @type {string} */
   optionsValue;
   /** @type {string} */
-  reasonValue;
+  detailsValue;
   /** @type {boolean} */
   feedbackSubmitted = false;
   /** @type {boolean} */
-  reasonInputError = false;
+  detailsInputError = false;
 
   /**
    * Closes the modal.
@@ -62,7 +62,7 @@ export default class QuanticFeedbackModal extends LightningModal {
   /**
    * Returns the CSS class of the reason input.
    */
-  get reasonFormClass() {
+  get detailsFormClass() {
     return `slds-form-element ${this.reasonInputError ? 'slds-has-error' : ''}`;
   }
 
@@ -81,7 +81,7 @@ export default class QuanticFeedbackModal extends LightningModal {
    * Handles the reason change.
    * @param {CustomEvent} event
    */
-  handleReasonChange(event) {
+  handleDetailsChange(event) {
     this.reasonInputError = false;
     this.reasonValue = event.target.value;
   }
@@ -90,7 +90,7 @@ export default class QuanticFeedbackModal extends LightningModal {
    * Indicates whether the reason input should be displayed.
    * @returns {boolean}
    */
-  get displayReasonInput() {
+  get displayDetailsInput() {
     return this.optionsValue === 'other';
   }
 
@@ -98,7 +98,7 @@ export default class QuanticFeedbackModal extends LightningModal {
    * Indicates whether the feedback form is valid.
    * @returns {boolean}
    */
-  get validForm() {
+  get feedbackFormIsValid() {
     return (
       (this.optionsValue === 'other' && !!this.reasonValue) ||
       (!!this.optionsValue && this.optionsValue !== 'other')
@@ -110,8 +110,7 @@ export default class QuanticFeedbackModal extends LightningModal {
    * @returns {void}
    */
   submitFeedback() {
-    if (this.validForm) {
-      this.sendFeedbackSuccessEvent();
+    if (this.feedbackFormIsValid) {
       this.feedbackSubmitted = true;
     } else {
       if (this.optionsValue === 'other') {
@@ -121,22 +120,6 @@ export default class QuanticFeedbackModal extends LightningModal {
         this.optionsInput.reportValidity();
       }
     }
-  }
-
-  /**
-   * Fires the quantic__feedbacksuccess event.
-   */
-  sendFeedbackSuccessEvent() {
-    this.dispatchEvent(
-      new CustomEvent('quantic__feedbacksuccess', {
-        detail: {
-          value: this.optionsValue,
-          reason: this.reasonValue,
-        },
-        bubbles: true,
-        composed: true,
-      })
-    );
   }
 
   /**

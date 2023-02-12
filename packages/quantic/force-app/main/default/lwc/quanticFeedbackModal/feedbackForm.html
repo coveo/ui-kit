@@ -2,27 +2,32 @@
   <lightning-modal-header label={labels.explainWhy}></lightning-modal-header>
   <lightning-modal-body>
     <div class="slds-var-p-around_x-large">
-      <lightning-radio-group class="slds-var-m-bottom_large" name="feedback" label={labels.selectTheReason} options={options}
-        value={optionsValue} type="radio" onchange={handleOptionChange}></lightning-radio-group>
-      <template if:true={displayReasonInput}>
-        <div class={reasonFormClass}>
-          <label class="slds-form-element__label reason-input__label" for="textarea-id-01">
-            {labels.whatWastheReason}</label>
-          <div class="slds-form-element__control">
-            <textarea rows="4" id="textarea-id-01" aria-describedby="error" class="slds-textarea"
-              onchange={handleReasonChange} onkeyup={handleReasonChange} onpaste={handleReasonChange}>
-              {reasonValue}
-            </textarea>
+      <lightning-radio-group class="slds-var-m-bottom_large" name="feedback" label={labels.selectTheReason}
+        options={options} value={optionsValue} type="radio" onchange={handleOptionChange}></lightning-radio-group>
+      <div class="details-input__container">
+        <template if:true={displayDetailsInput}>
+          <div class={detailsFormClass}>
+            <label class="slds-form-element__label details-input__label" for="textarea-id-01">
+              {labels.whatWasTheReason}</label>
+            <div class="slds-form-element__control">
+              <textarea rows="4" id="textarea-id-01" aria-describedby="error" class="slds-textarea"
+                onchange={handleDetailsChange} onkeyup={handleDetailsChange} onpaste={handleDetailsChange}>
+                {detailsValue}
+              </textarea>
+            </div>
+            <template if:true={detailsInputError}>
+              <div class="slds-form-element__help" id="error">
+                {labels.fillOutField}
+              </div>
+            </template>
           </div>
-          <template if:true={reasonInputError}>
-            <div class="slds-form-element__help" id="error">{labels.fillOutField}</div>
-          </template>
-        </div>
-      </template>
+        </template>
+      </div>
     </div>
   </lightning-modal-body>
   <lightning-modal-footer>
-    <lightning-button class="slds-button" variant="neutral" label={labels.cancel} onclick={closeModal}></lightning-button>
+    <lightning-button class="slds-button" variant="neutral" label={labels.cancel}
+      onclick={closeModal}></lightning-button>
     <lightning-button class="slds-button slds-m-left_x-small" variant="brand" label={labels.sendFeedback}
       onclick={submitFeedback}></lightning-button>
   </lightning-modal-footer>

@@ -2,6 +2,10 @@ textarea {
   resize: none;
 }
 
-.reason-input__label {
+.details-input__label {
   font-weight: var(--lwc-fontWeightBold, 700);
+}
+
+.details-input__container {
+  height: 7.25rem;
 }
