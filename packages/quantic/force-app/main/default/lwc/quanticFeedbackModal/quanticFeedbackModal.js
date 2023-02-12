@@ -17,10 +17,17 @@ import feedbackSuccessTemplate from './feedbackSuccess.html';
 
 export default class QuanticFeedbackModal extends LightningModal {
   /**
+   * @api
    * The list of options to be displayed in the modal.
    * @type {Array<{label: string, value: string}>}
    */
   @api options;
+  /**
+   * @api
+   * The function to be excuted when the feedback has been submited.
+   * @type {(feedback: {value: string, details: string}) => void}
+   */
+  @api submitFeedback;
 
   labels = {
     done,
@@ -109,8 +116,12 @@ export default class QuanticFeedbackModal extends LightningModal {
    * Submits the feedback.
    * @returns {void}
    */
-  submitFeedback() {
+  handleSubmitFeedback() {
     if (this.feedbackFormIsValid) {
+      this.submitFeedback({
+        value: this.optionsValue,
+        details: this.detailsValue,
+      });
       this.feedbackSubmitted = true;
     } else {
       if (this.optionsValue === 'other') {
