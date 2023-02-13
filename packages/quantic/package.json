@@ -11,8 +11,8 @@
     "url": "git+https://github.com/coveo/ui-kit"
   },
   "scripts": {
-    "test": "npm run lint:tests && npm run validate:types && npm run test:unit",
-    "lint:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
+    "test": "npm run lint:check:tests && npm run validate:types && npm run test:unit",
+    "lint:check:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
     "lint:fix": "eslint force-app/main/default/lwc/ --fix && eslint force-app/examples/main/lwc/ --fix",
     "fix": "npm run lint:fix",
     "build:staticresources": "node copy-static-resources.js",
