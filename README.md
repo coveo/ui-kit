@@ -38,13 +38,13 @@ npm run build -w @coveo/atomic
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npm start -w @coveo/quantic
+npm dev -w @coveo/quantic
 ```
 
 To start Atomic & Headless simultaneously in development (recommended), run:
 
 ```sh
-npm run dev
+npm run dev:atomic
 ```
 
 The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `npm rebuild` command.
