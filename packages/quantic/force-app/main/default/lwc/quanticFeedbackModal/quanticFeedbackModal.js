@@ -162,7 +162,7 @@ export default class QuanticFeedbackModal extends LightningModal {
   }
 
   /**
-   * Indicates whether the reason input should be displayed.
+   * Indicates whether the details input should be displayed.
    * @returns {boolean}
    */
   get displayDetailsInput() {
