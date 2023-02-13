@@ -5,7 +5,7 @@ import {stubConsoleError} from '../../console-selectors';
 import {FeedbackModalActions as Actions} from './feedback-modal-actions';
 import {FeedbackModalExpectations as Expect} from './feedback-modal-expectations';
 
-const invalidArrayError = 'The options provided are not in a valid table.';
+const invalidArrayError = 'The options provided are not in a valid array.';
 const EmptyArrayError = 'At least one option must be specified.';
 const missingLabelOrValueError =
   'In the c-quantic-feedback-modal, each option requires a label and a value to be specified.';
