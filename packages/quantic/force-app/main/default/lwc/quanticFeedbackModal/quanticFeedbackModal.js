@@ -16,6 +16,12 @@ import errorTemplate from './error.html';
 import feedbackFormTemplate from './feedbackForm.html';
 import successTemplate from './success.html';
 
+/**
+ * The `QuanticFeedbackModal` component overlays a message modal on top of the current app window, the modal contains a form that allows the user to give feedback.
+ *
+ * @category Search
+ * @category Insight Panel
+ */
 export default class QuanticFeedbackModal extends LightningModal {
   /**
    * @api

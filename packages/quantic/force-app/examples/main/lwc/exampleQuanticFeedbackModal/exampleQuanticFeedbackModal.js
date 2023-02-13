@@ -6,7 +6,7 @@ export default class ExampleQuanticModal extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Feedback Modal';
-  pageDescription = 'The QuanticFeedbackModal component';
+  pageDescription = 'The QuanticFeedbackModal component overlays a message modal on top of the current app window, the modal contains a form that allows the user to give feedback.';
 
   options = [
     {
