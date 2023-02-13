@@ -19,7 +19,10 @@
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
-    "publish:npm": "node ../../scripts/deploy/publish.mjs",
+    "publish:npm:release": "node ../../scripts/deploy/publish.mjs release",
+    "publish:npm:prerelease": "node ../../scripts/deploy/publish.mjs prerelease",
+    "promote:npm:beta": "node ../../scripts/deploy/update-npm-tag.mjs beta",
+    "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "e2e": "npm run e2e:saml",
     "e2e:saml": "vite manual-e2e/saml/"
   },

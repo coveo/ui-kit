@@ -28,14 +28,28 @@
         "build"
       ]
     },
-    "doc": {
+    "lint:check": {},
+    "lint:fix": {},
+    "publish:npm:release": {
       "dependsOn": [
         "build"
       ]
     },
-    "lint:check": {},
-    "lint:fix": {},
-    "publish:npm": {}
+    "publish:npm:prerelease": {
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "publish:sfdx": {
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "promote:sfdx": {
+      "dependsOn": [
+        "build"
+      ]
+    }
   },
   "defaultBase": "master"
 }

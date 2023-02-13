@@ -9,5 +9,9 @@ if (!packageJSON.scripts) {
 }
 packageJSON.scripts['publish:npm'] =
   'node ../../../../../scripts/deploy/publish.mjs';
+packageJSON.scripts['promote:npm:beta'] =
+  'node ../../../../../scripts/deploy/update-npm-tag.mjs beta';
+packageJSON.scripts['promote:npm:latest'] =
+  'node ../../../../../scripts/deploy/update-npm-tag.mjs latest';
 
 writeFileSync(packageJSONPath, JSON.stringify(packageJSON, null, 2));

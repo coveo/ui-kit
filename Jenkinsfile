@@ -33,25 +33,14 @@ node('heavy && linux && docker') {
         sh 'npm run build'
       }
 
-      stage('Generate docs') {
-        sh 'npm run doc'
-      }
-    }
-
-    stage('Clean working directory') {
-      sh 'git checkout -- .'
-      sh 'git clean -f'
-    }
-
-    withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
       stage('Npm publish') {
         withCredentials([
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
           sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
           if (isOnReleaseBranch) {
-            sh 'npm run publish:npm -- release || true'
+            sh 'npm run publish:npm:release || true'
           } else {
-            sh 'npm run publish:npm -- prerelease || true'
+            sh 'npm run publish:npm:prerelease || true'
           }
         }
       }
