@@ -1,10 +1,7 @@
 import {resolve} from 'node:path';
 import {promisify} from 'node:util';
 import {execute} from '../exec.mjs';
-import {
-  packageDirsNpmTag,
-  getPackageManifestFromPackagePath,
-} from '../packages.mjs';
+import {getPackageManifestFromPackagePath} from '../packages.mjs';
 
 const pkg = getPackageManifestFromPackagePath(process.cwd());
 
