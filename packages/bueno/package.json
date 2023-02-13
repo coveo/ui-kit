@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "npm run build:definitions & npm run build:bundles",
+    "build": "npm run build:definitions && npm run build:bundles",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
