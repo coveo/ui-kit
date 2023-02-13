@@ -132,7 +132,7 @@ npm run e2e:detailed
 
 After you have cloned the repository and have run `npm install`, run the following commands:
 
-- `npm run build:staticresources`
+- `npm run build`
 - `sfdx force:source:deploy -m LightningComponentBundle`
 
 ## Other Useful Commands
