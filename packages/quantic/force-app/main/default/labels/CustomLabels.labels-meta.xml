@@ -980,4 +980,11 @@
       <protected>false</protected>
       <shortDescription>Your responses help</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_ThankYouForYourFeedback</fullName>
+      <value>Thank you for your feedback!</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Thank you for your feedback!</shortDescription>
+    </labels>
 </CustomLabels>

@@ -8,4 +8,6 @@ export const ConsoleExpectations = {
       hasError ? 'be.calledWith' : 'not.be.calledWith',
       message
     ),
+  errorMessage: (message: string) =>
+    ConsoleSelectors.error().should('be.calledWith', message),
 };

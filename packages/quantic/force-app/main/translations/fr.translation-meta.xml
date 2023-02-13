@@ -520,4 +520,8 @@
       <label>Vos réponses permettent d'améliorer l'expérience de recherche.</label>
       <name>quantic_YourResponsesHelp</name>
     </customLabels>
+    <customLabels>
+      <label>Merci pour votre commentaire!</label>
+      <name>quantic_ThankYouForYourFeedback</name>
+    </customLabels>
 </Translations>

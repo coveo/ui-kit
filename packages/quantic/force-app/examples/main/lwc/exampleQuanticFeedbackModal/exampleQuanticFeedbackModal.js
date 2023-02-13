@@ -31,10 +31,21 @@ export default class ExampleQuanticModal extends LightningElement {
       size: 'small',
       label: 'Example feedback modal',
       description: 'Example feedback modal',
-      options: JSON.parse(this.config.options),
+      options: this.prepareOptions(),
       submitFeedback: () => {},
     });
   };
+
+  prepareOptions() {
+    if (!this.config.options) {
+      return null;
+    }
+    try {
+      return JSON.parse(this.config.options);
+    } catch (err) {
+      return this.config.options;
+    }
+  }
 
   async handleTryItNow(evt) {
     this.config = evt.detail;

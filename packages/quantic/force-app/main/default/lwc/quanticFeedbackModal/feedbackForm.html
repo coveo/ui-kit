@@ -1,34 +1,36 @@
 <template>
-  <lightning-modal-header label={labels.explainWhy}></lightning-modal-header>
-  <lightning-modal-body>
-    <div class="slds-var-p-around_x-large">
-      <lightning-radio-group class="slds-var-m-bottom_large" name="feedback" label={labels.selectTheReason}
-        options={options} value={optionsValue} type="radio" onchange={handleOptionChange}></lightning-radio-group>
-      <div class="details-input__container">
-        <template if:true={displayDetailsInput}>
-          <div class={detailsFormClass}>
-            <label class="slds-form-element__label details-input__label" for="textarea-id-01">
-              {labels.whatWasTheReason}</label>
-            <div class="slds-form-element__control">
-              <textarea rows="4" id="textarea-id-01" aria-describedby="error" class="slds-textarea"
-                onchange={handleDetailsChange} onkeyup={handleDetailsChange} onpaste={handleDetailsChange}>
-                {detailsValue}
-              </textarea>
-            </div>
-            <template if:true={detailsInputError}>
-              <div class="slds-form-element__help" id="error">
-                {labels.fillOutField}
+  <template if:true={validated}>
+    <lightning-modal-header label={labels.explainWhy}></lightning-modal-header>
+    <lightning-modal-body>
+      <div class="slds-var-p-around_x-large">
+        <lightning-radio-group class="slds-var-m-bottom_large" name="feedback" label={labels.selectTheReason}
+          options={options} value={optionsValue} type="radio" onchange={handleOptionChange}></lightning-radio-group>
+        <div class="details-input__container">
+          <template if:true={displayDetailsInput}>
+            <div data-cy="feedback-modal-body__details-input" class={detailsFormClass}>
+              <label class="slds-form-element__label details-input__label" for="details-input">
+                {labels.whatWasTheReason}</label>
+              <div class="slds-form-element__control">
+                <textarea rows="4" id="details-input" aria-describedby="details-error" class="slds-textarea"
+                  onchange={handleDetailsChange} onkeyup={handleDetailsChange} onpaste={handleDetailsChange}>
+                  {detailsValue}
+                </textarea>
               </div>
-            </template>
-          </div>
-        </template>
+              <template if:true={detailsInputError}>
+                <div class="slds-form-element__help" id="details-error">
+                  {labels.fillOutField}
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
       </div>
-    </div>
-  </lightning-modal-body>
-  <lightning-modal-footer>
-    <lightning-button class="slds-button" variant="neutral" label={labels.cancel}
-      onclick={closeModal}></lightning-button>
-    <lightning-button class="slds-button slds-m-left_x-small" variant="brand" label={labels.sendFeedback}
-      onclick={handleSubmitFeedback}></lightning-button>
-  </lightning-modal-footer>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+      <lightning-button data-cy="feedback-modal-footer__cancel" class="slds-button" variant="neutral"
+        label={labels.cancel} onclick={closeModal}></lightning-button>
+      <lightning-button data-cy="feedback-modal-footer__submit" class="slds-button slds-m-left_x-small" variant="brand"
+        label={labels.sendFeedback} onclick={handleSubmitFeedback}></lightning-button>
+    </lightning-modal-footer>
+  </template>
 </template>
