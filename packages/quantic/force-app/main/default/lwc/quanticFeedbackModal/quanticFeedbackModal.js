@@ -81,7 +81,7 @@ export default class QuanticFeedbackModal extends LightningModal {
 
   validateOptionList() {
     if (!Bueno.isArray(this.options)) {
-      console.error('The options provided are not in a valid table.');
+      console.error('The options provided are not in a valid array.');
       this.setError();
     } else if (!this.options.length) {
       console.error('At least one option must be specified.');
