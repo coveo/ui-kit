@@ -11,6 +11,9 @@ export interface SmartSnippetSelector extends ComponentSelector {
   smartSnippetAnswerToggle: () => CypressSelector;
   smartSnippetExpandableAnswer: () => CypressSelector;
   smartSnippetInlineLink: () => CypressSelector;
+  smartSnippetLikeButton: () => CypressSelector;
+  smartSnippetDislikeButton: () => CypressSelector;
+  smartSnippetExplainWhyButton: () => CypressSelector;
 }
 
 export const SmartSnippetSelectors: SmartSnippetSelector = {
@@ -34,4 +37,12 @@ export const SmartSnippetSelectors: SmartSnippetSelector = {
     ),
   smartSnippetInlineLink: () =>
     SmartSnippetSelectors.get().find('[data-cy="smart-snippet__inline-link"]'),
+  smartSnippetLikeButton: () =>
+    SmartSnippetSelectors.get().find('[data-cy="feedback__like-button"]'),
+  smartSnippetDislikeButton: () =>
+    SmartSnippetSelectors.get().find('[data-cy="feedback__dislike-button"]'),
+  smartSnippetExplainWhyButton: () =>
+    SmartSnippetSelectors.get().find(
+      '[data-cy="feedback__explain-why-button"]'
+    ),
 };

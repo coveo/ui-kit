@@ -141,5 +141,16 @@ describe('quantic-smart-snippet', () => {
         });
       });
     });
+
+    describe('when clicking the feedback like button', () => {
+      it('should properly log the analytics', () => {
+        visitPage();
+
+        scope('when loading the page', () => {
+          Expect.displaySmartSnippetCard(true);
+          Actions.clickSmartSnippetLikeButton();
+        });
+      });
+    });
   });
 });
