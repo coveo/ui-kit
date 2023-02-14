@@ -93,6 +93,13 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         );
     },
 
+    displayExplainWhyButton: (display: boolean) => {
+      selector
+        .smartSnippetExplainWhyButton()
+        .should(display ? 'exist' : 'not.exist')
+        .log('should display the smart snippet explain why button');
+    },
+
     logExpandSmartSnippet: () => {
       cy.wait(InterceptAliases.UA.ExpandSmartSnippet)
         .then((interception) => {
@@ -164,13 +171,48 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         .logDetail("should log the 'likeSmartSnippet' UA event");
     },
 
-    logDisikeSmartSnippet: () => {
+    logDislikeSmartSnippet: () => {
       cy.wait(InterceptAliases.UA.dislikeSmartSnippet)
         .then((interception) => {
           const analyticsBody = interception.request.body;
           expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
         })
         .logDetail("should log the 'dislikeSmartSnippet' UA event");
+    },
+
+    logOpenSmartSnippetFeedbackModal: () => {
+      cy.wait(InterceptAliases.UA.openSmartSnippetFeedbackModal)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
+        })
+        .logDetail("should log the 'openSmartSnippetFeedbackModal' UA event");
+    },
+
+    logCloseSmartSnippetFeedbackModal: () => {
+      cy.wait(InterceptAliases.UA.closeSmartSnippetFeedbackModal)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
+        })
+        .logDetail("should log the 'closeSmartSnippetFeedbackModal' UA event");
+    },
+
+    logSendSmartSnippetReason: (payload: {
+      reason: string;
+      details?: string;
+    }) => {
+      cy.wait(InterceptAliases.UA.sendSmartSnippetReason)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
+          expect(customData).to.have.property('reason', payload.reason);
+          if (payload.details) {
+            expect(customData).to.have.property('details', payload.details);
+          }
+        })
+        .logDetail("should log the 'sendSmartSnippetReason' UA event");
     },
   };
 }

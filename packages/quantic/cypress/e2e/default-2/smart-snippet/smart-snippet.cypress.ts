@@ -26,6 +26,13 @@ const exampleSmartSnippetAnswer = `
   </div>
 `;
 
+const feedbackOptions = [
+  'does_not_answer',
+  'partially_answers',
+  'was_not_a_question',
+  'other',
+];
+
 describe('quantic-smart-snippet', () => {
   const pageUrl = 's/quantic-smart-snippet';
 
@@ -146,9 +153,49 @@ describe('quantic-smart-snippet', () => {
       it('should properly log the analytics', () => {
         visitPage();
 
-        scope('when loading the page', () => {
+        scope('when clicking the like button', () => {
           Expect.displaySmartSnippetCard(true);
           Actions.clickSmartSnippetLikeButton();
+          Expect.logLikeSmartSnippet();
+          Expect.displayExplainWhyButton(false);
+        });
+      });
+    });
+
+    describe('when clicking the feedback dislike button', () => {
+      it('should properly log the analytics', () => {
+        visitPage();
+
+        scope('when clicking the dislike button', () => {
+          Expect.displaySmartSnippetCard(true);
+          Actions.clickSmartSnippetDislikeButton();
+          Expect.logDislikeSmartSnippet();
+          Expect.displayExplainWhyButton(true);
+        });
+
+        scope('when clicking the explain why button', () => {
+          Actions.clickSmartSnippetExplainWhyButton();
+          Expect.logOpenSmartSnippetFeedbackModal();
+        });
+
+        scope('when closing the feedback modal', () => {
+          Actions.clickFeedbackCancelButton();
+          Expect.logCloseSmartSnippetFeedbackModal();
+        });
+
+        scope('when selecting a feedback option', () => {
+          const exampleDetails = 'example details';
+          Actions.clickSmartSnippetExplainWhyButton();
+          Expect.logOpenSmartSnippetFeedbackModal();
+          Actions.clickFeedbackOption(feedbackOptions.length - 1);
+          Actions.typeInFeedbackDetailsInput(exampleDetails);
+          Actions.clickFeedbackSubmitButton();
+          Expect.logSendSmartSnippetReason({
+            reason: feedbackOptions[feedbackOptions.length - 1],
+            details: exampleDetails,
+          });
+          Actions.clickFeedbackDoneButton();
+          Expect.logCloseSmartSnippetFeedbackModal();
         });
       });
     });

@@ -14,6 +14,11 @@ export interface SmartSnippetSelector extends ComponentSelector {
   smartSnippetLikeButton: () => CypressSelector;
   smartSnippetDislikeButton: () => CypressSelector;
   smartSnippetExplainWhyButton: () => CypressSelector;
+  feedbackOption: (index: number) => CypressSelector;
+  feedbackSubmitButton: () => CypressSelector;
+  feedbackCancelButton: () => CypressSelector;
+  feedbackDoneButton: () => CypressSelector;
+  feedbackDetailsInput: () => CypressSelector;
 }
 
 export const SmartSnippetSelectors: SmartSnippetSelector = {
@@ -45,4 +50,16 @@ export const SmartSnippetSelectors: SmartSnippetSelector = {
     SmartSnippetSelectors.get().find(
       '[data-cy="feedback__explain-why-button"]'
     ),
+  feedbackOption: (index: number) =>
+    cy.get('lightning-modal').find('lightning-radio-group input').eq(index),
+  feedbackSubmitButton: () =>
+    cy.get('lightning-modal').find('[data-cy="feedback-modal-footer__submit"]'),
+  feedbackCancelButton: () =>
+    cy.get('lightning-modal').find('[data-cy="feedback-modal-footer__cancel"]'),
+  feedbackDoneButton: () =>
+    cy.get('lightning-modal').find('[data-cy="feedback-modal-footer__done"]'),
+  feedbackDetailsInput: () =>
+    cy
+      .get('lightning-modal')
+      .find('[data-cy="feedback-modal-body__details-input"]'),
 };
