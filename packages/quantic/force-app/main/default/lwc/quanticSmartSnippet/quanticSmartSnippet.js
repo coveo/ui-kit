@@ -50,6 +50,8 @@ export default class QuanticSmartSnippet extends LightningElement {
   answer;
   /** @type {boolean} */
   hideExplainWhyFeedbackButton = false;
+  /** @type {boolean} */
+  feedbackSubmitted = false;
 
   labels = {
     showMore,
@@ -184,7 +186,9 @@ export default class QuanticSmartSnippet extends LightningElement {
     event.stopPropagation();
     if (!this.disliked) {
       this.smartSnippet.dislike();
-      this.hideExplainWhyFeedbackButton = false;
+      if (!this.feedbackSubmitted) {
+        this.hideExplainWhyFeedbackButton = false;
+      }
     }
   };
 
@@ -223,6 +227,7 @@ export default class QuanticSmartSnippet extends LightningElement {
     } else if (feedback?.value) {
       this.smartSnippet.sendFeedback(feedback.value);
     }
+    this.feedbackSubmitted = true;
     this.hideExplainWhyFeedbackButton = true;
   }
 
