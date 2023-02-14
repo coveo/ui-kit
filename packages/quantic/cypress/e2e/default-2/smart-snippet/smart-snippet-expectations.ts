@@ -154,6 +154,24 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         })
         .logDetail("should log the 'openSmartSnippetInlineLink' UA event");
     },
+
+    logLikeSmartSnippet: () => {
+      cy.wait(InterceptAliases.UA.likeSmartSnippet)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
+        })
+        .logDetail("should log the 'likeSmartSnippet' UA event");
+    },
+
+    logDisikeSmartSnippet: () => {
+      cy.wait(InterceptAliases.UA.dislikeSmartSnippet)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
+        })
+        .logDetail("should log the 'dislikeSmartSnippet' UA event");
+    },
   };
 }
 
