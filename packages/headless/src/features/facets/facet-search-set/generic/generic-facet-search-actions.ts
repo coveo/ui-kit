@@ -13,7 +13,6 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../../utils/validate-payload';
-import {logFacetSearch} from '../../facet-set/facet-set-analytics-actions';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {buildCategoryFacetSearchRequest} from '../category/category-facet-search-request-builder';
 import {buildSpecificFacetSearchRequest} from '../specific/specific-facet-search-request-builder';
@@ -41,10 +40,7 @@ const getExecuteFacetSearchThunkPayloadCreator =
     ExecuteFacetSearchThunkArg,
     ExecuteFacetSearchThunkApiConfig
   > =>
-  async (
-    facetId: string,
-    {dispatch, getState, extra: {apiClient, validatePayload}}
-  ) => {
+  async (facetId: string, {getState, extra: {apiClient, validatePayload}}) => {
     const state = getState();
     let req: SpecificFacetSearchRequest | CategoryFacetSearchRequest;
     validatePayload(facetId, requiredNonEmptyString);
@@ -63,9 +59,6 @@ const getExecuteFacetSearchThunkPayloadCreator =
     }
 
     const response = await apiClient.facetSearch(req);
-    if (!isFieldSuggestionsRequest) {
-      dispatch(logFacetSearch(facetId));
-    }
 
     return {facetId, response};
   };

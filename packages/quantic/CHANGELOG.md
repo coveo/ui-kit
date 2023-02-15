@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.11.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.10.2...@coveo/quantic@2.11.0) (2023-02-10)
+
+### Features
+
+- **quantic:** new Quantic Smart Snippet component created ([#2711](https://github.com/coveo/ui-kit/issues/2711)) ([00a5e51](https://github.com/coveo/ui-kit/commit/00a5e51aa29906d4c25fc279ea8762197073b4f2))
+
+## [2.10.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.10.1...@coveo/quantic@2.10.2) (2023-02-09)
+
+### Bug Fixes
+
+- **headless:** remove facetSearch analytics ([#2720](https://github.com/coveo/ui-kit/issues/2720)) ([22a1b8b](https://github.com/coveo/ui-kit/commit/22a1b8bdeecf4214247c65cdab3d7f9a5d3dca58))
+
 ## [2.10.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.10.0...@coveo/quantic@2.10.1) (2023-02-08)
 
 **Note:** Version bump only for package @coveo/quantic

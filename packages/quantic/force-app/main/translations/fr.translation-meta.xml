@@ -476,4 +476,12 @@
       <label>Copié!</label>
       <name>quantic_Copied</name>
     </customLabels>
+    <customLabels>
+      <label>Voir plus</label>
+      <name>quantic_SmartSnippetShowMore</name>
+    </customLabels>
+    <customLabels>
+      <label>Voir moins</label>
+      <name>quantic_SmartSnippetShowLess</name>
+    </customLabels>
 </Translations>

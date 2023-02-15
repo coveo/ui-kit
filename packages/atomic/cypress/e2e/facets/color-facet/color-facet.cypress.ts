@@ -169,12 +169,6 @@ describe('Color Facet Test Suites', () => {
           );
         });
 
-        describe('verify analytics', () => {
-          before(setupSearchFor);
-
-          CommonFacetAssertions.assertLogFacetSearch(colorFacetField);
-        });
-
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
             setupSearchFor();

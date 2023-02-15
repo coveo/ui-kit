@@ -673,12 +673,6 @@ describe('Category Facet Test Suites', () => {
         );
       });
 
-      describe('verify analytics', () => {
-        before(setupSearchFor);
-
-        CommonFacetAssertions.assertLogFacetSearch(hierarchicalField);
-      });
-
       describe('when selecting a search result', () => {
         function setupSelectSearchResult() {
           setupSearchFor();

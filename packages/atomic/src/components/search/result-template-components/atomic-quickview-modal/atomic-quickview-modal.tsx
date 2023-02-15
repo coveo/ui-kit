@@ -1,4 +1,8 @@
-import {buildInteractiveResult, Result} from '@coveo/headless';
+import {
+  buildInteractiveResult,
+  Result,
+  InteractiveResult,
+} from '@coveo/headless';
 import {
   Component,
   Event,
@@ -73,6 +77,9 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Prop() current?: number;
   @Prop() total?: number;
   @Prop() sandbox?: string;
+  @Prop() modalCloseCallback?: () => void;
+
+  private interactiveResult?: InteractiveResult;
 
   @Method()
   public async reset() {
@@ -84,22 +91,25 @@ export class AtomicQuickviewModal implements InitializableComponent {
     this.iframeRef = undefined;
     this.content = undefined;
     this.result = undefined;
+    this.interactiveResult = undefined;
   }
 
   private renderHeader() {
     let headerContent: VNode | null = null;
     if (this.result) {
-      const interactiveResult = buildInteractiveResult(this.bindings.engine, {
+      this.interactiveResult = buildInteractiveResult(this.bindings.engine, {
         options: {result: this.result},
       });
       headerContent = (
         <Fragment>
           <LinkWithResultAnalytics
             href={this.result?.clickUri}
-            onSelect={() => interactiveResult.select()}
-            onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
+            onSelect={() => this.interactiveResult?.select()}
+            onBeginDelayedSelect={() =>
+              this.interactiveResult?.beginDelayedSelect()
+            }
             onCancelPendingSelect={() =>
-              interactiveResult.cancelPendingSelect()
+              this.interactiveResult?.cancelPendingSelect()
             }
           >
             {this.result.title}
@@ -192,6 +202,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   private onClose() {
     this.content = undefined;
     this.result = undefined;
+    this.modalCloseCallback && this.modalCloseCallback();
   }
 
   private get isOpen() {
