@@ -39,9 +39,11 @@ export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
   return (
     <div class="p-4 border-r border-neutral h-full">
       {minimized && minimizeButton}
-      <div class="flex items-center">
-        <HighlightKeywordsCheckbox {...props} />
-        {!minimized && minimizeButton}
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <HighlightKeywordsCheckbox {...props} />
+        </div>
+        {!minimized && <div>{minimizeButton}</div>}
       </div>
 
       {!minimized && <Keywords {...props} words={words} />}
@@ -135,11 +137,13 @@ const Keywords: FunctionalComponent<
                   class="w-5 h-5 flex-none mr-2"
                   style={{backgroundColor: keyword.color}}
                 ></div>
-                <div class="grow mr-2">{keyword.text}</div>
+                <div class="grow mr-2 whitespace-nowrap">{keyword.text}</div>
                 <div class="flex-none">
+                  (
                   {new Intl.NumberFormat(i18n.language, {
                     notation: 'compact',
                   }).format(keyword.occurrences)}
+                  )
                 </div>
               </div>
               <FieldsetGroup
@@ -179,6 +183,7 @@ const Keywords: FunctionalComponent<
                   ? 'pointer-events-none opacity-50'
                   : ''
               }`}
+              tabIndex={highlightKeywords.highlightNone ? '-1' : '0'}
               ariaPressed={(!wordIsEnabled).toString()}
               style="text-transparent"
               icon={wordIsEnabled ? Remove : Add}

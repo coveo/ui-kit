@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic Hosted Page</title>
+
+    <script type="module" src="/build/atomic-hosted-page.esm.js"></script>
+    <script>
+      (async () => {
+        await customElements.whenDefined('atomic-hosted-page');
+
+        const page = document.querySelector('atomic-hosted-page');
+        // TODO: switch for prod - searchuisamples
+        await page.initialize({
+          pageId: '4d4af944-1a6e-4be3-9c04-9c772e031956',
+          accessToken: 'xxa6e9ee50-2dcf-4062-890f-c63d57b061ab',
+          organizationId: 'qaregression2',
+          platformUrl: 'https://platformstg.cloud.coveo.com',
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <atomic-hosted-page></atomic-hosted-page>
+  </body>
+</html>

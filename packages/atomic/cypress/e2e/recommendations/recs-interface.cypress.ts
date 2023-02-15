@@ -84,7 +84,7 @@ describe('Recs Interface Component', () => {
     });
 
     it('should not call the analytics server', () => {
-      cy.shouldBeCalled(TestRecsFixture.urlParts.UASearch, 0);
+      cy.shouldBeCalled(TestRecsFixture.interceptAliases.UA, 0);
     });
   });
 });

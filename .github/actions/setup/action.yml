@@ -20,6 +20,7 @@ runs:
           packages/atomic/www
           packages/quantic/docs/out
           packages/atomic-react/dist
+          packages/atomic-hosted-page/dist
           packages/atomic-angular/projects/atomic-angular/dist
           packages/samples/headless-react
           packages/quantic/force-app/main/default/staticresources/coveoheadless

@@ -52,10 +52,12 @@ node('heavy && linux && docker') {
         headless = readJSON file: 'packages/headless/package.json'
         atomic = readJSON file: 'packages/atomic/package.json'
         atomicReact = readJSON file: 'packages/atomic-react/package.json'
+        atomicHostedPage = readJSON file: 'packages/atomic-hosted-page/package.json'
 
         (headlessMajor, headlessMinor, headlessPatch) = parseSemanticVersion(headless.version)
         (atomicMajor, atomicMinor, atomicPatch) = parseSemanticVersion(atomic.version)
         (atomicReactMajor, atomicReactMinor, atomicReactPatch) = parseSemanticVersion(atomicReact.version)
+        (atomicHostedPageMajor, atomicHostedPageMinor, atomicHostedPagePatch) = parseSemanticVersion(atomicHostedPage.version)
 
         environments = (isOnReleaseBranch ? ['dev', 'stg', 'prd'] : ['dev']) as String[]
         
@@ -69,6 +71,9 @@ node('heavy && linux && docker') {
         --resolve ATOMIC_REACT_MAJOR_VERSION=${atomicReactMajor} \
         --resolve ATOMIC_REACT_MINOR_VERSION=${atomicReactMinor} \
         --resolve ATOMIC_REACT_PATCH_VERSION=${atomicReactPatch} \
+        --resolve ATOMIC_HOSTED_PAGE_MAJOR_VERSION=${atomicHostedPageMajor} \
+        --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPageMinor} \
+        --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPagePatch} \
         --resolve ENVIRONMENTS=${toJSONArray(environments)} \
         || true"
       }

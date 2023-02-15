@@ -159,6 +159,39 @@
       }
     },
     {
+      "id": "deploy-atomic-hosted-page-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_PATCH_VERSION]",
+        "source": "packages/atomic-hosted-page/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MINOR_VERSION]",
+        "source": "packages/atomic-hosted-page/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]",
+        "source": "packages/atomic-hosted-page/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "stg-release",
       "team_jenkins": {
         "disabled": true,

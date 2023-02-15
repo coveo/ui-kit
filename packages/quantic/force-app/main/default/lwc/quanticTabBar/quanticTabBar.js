@@ -1,4 +1,5 @@
 import {LightningElement, api} from 'lwc';
+import {getAbsoluteWidth} from 'c/quanticUtils';
 
 import more from '@salesforce/label/c.quantic_More';
 
@@ -151,7 +152,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   get containerWidth() {
-    return this.getAbsoluteWidth(this.container);
+    return getAbsoluteWidth(this.container);
   }
 
   /**
@@ -160,7 +161,7 @@ export default class QuanticTabBar extends LightningElement {
    */
   get slotContentWidth() {
     return this.getTabsFromSlot().reduce(
-      (total, el) => total + this.getAbsoluteWidth(el),
+      (total, el) => total + getAbsoluteWidth(el),
       0
     );
   }
@@ -170,7 +171,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   get moreButtonWidth() {
-    return this.moreButton ? this.getAbsoluteWidth(this.moreButton) : 0;
+    return this.moreButton ? getAbsoluteWidth(this.moreButton) : 0;
   }
 
   /**
@@ -178,7 +179,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   get selectedTabWidth() {
-    return this.getAbsoluteWidth(this.selectedTab);
+    return getAbsoluteWidth(this.selectedTab);
   }
 
   /**
@@ -357,38 +358,6 @@ export default class QuanticTabBar extends LightningElement {
     return Array.from(this.querySelectorAll('*')).filter((element) =>
       isTab(element.tagName)
     );
-  }
-
-  /**
-   * Returns the padding values of an element.
-   * @param {Element} element
-   * @returns {{top: number, right:number, bottom:number, left:number}}
-   */
-  getElementPadding(element) {
-    const styles = window.getComputedStyle(element);
-
-    return {
-      top: parseFloat(styles.paddingTop),
-      right: parseFloat(styles.paddingRight),
-      bottom: parseFloat(styles.paddingBottom),
-      left: parseFloat(styles.paddingLeft),
-    };
-  }
-
-  /**
-   * Returns the absolute width of an element.
-   * @param {Element} element
-   * @returns {number}
-   */
-  getAbsoluteWidth(element) {
-    if (!element) {
-      return 0;
-    }
-    const paddings = this.getElementPadding(element);
-    const padding = paddings.left + paddings.right;
-
-    // @ts-ignore
-    return Math.ceil(element.offsetWidth + padding);
   }
 
   /**
