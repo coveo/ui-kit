@@ -9,7 +9,7 @@ Once you have cloned the repo, follow the instructions in the top-level [README.
 To start the project in development mode, run:
 
 ```bash
-npm start
+npm run dev
 ```
 
 To build the library for production, run:
@@ -29,11 +29,11 @@ Ref: https://docs.cypress.io/
 To open cypress, run:
 
 ```sh
-npm run cypress:open
+npm run e2e:watch
 ```
 
 To run all the test, run:
 
 ```sh
-npm run cypress:test
+npm run e2e
 ```

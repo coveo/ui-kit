@@ -12,7 +12,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/atomic-hosted-page
-        start: npm start
+        start: npm run dev
         wait-on: 'http://localhost:3335'
         install: false
         record: false
