@@ -1,9 +1,7 @@
-import {VNode} from '@stencil/core';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
 } from '../../../src/components/search/search-box-suggestions/suggestions-common';
-import {buildCustomEvent} from '../../../src/utils/event-utils';
 import {
   SafeStorage,
   StorageItems,
