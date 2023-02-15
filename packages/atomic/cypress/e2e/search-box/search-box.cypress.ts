@@ -1,3 +1,9 @@
+import {VNode} from '@stencil/core';
+import {
+  dispatchSearchBoxSuggestionsEvent,
+  SearchBoxSuggestionElement,
+} from '../../../src/components/search/search-box-suggestions/suggestions-common';
+import {buildCustomEvent} from '../../../src/utils/event-utils';
 import {
   SafeStorage,
   StorageItems,
@@ -87,6 +93,27 @@ describe('Search Box Test Suites', () => {
         .init();
     }
 
+    function setupSearchBoxOnly() {
+      new TestFixture()
+        .with(
+          addSearchBox({
+            suggestions: {
+              maxWithoutQuery: 0,
+              maxWithQuery: 0,
+            },
+            recentQueries: {
+              maxWithoutQuery: 0,
+              maxWithQuery: 0,
+            },
+            props: {
+              'number-of-queries': 50,
+              'suggestion-timeout': 2000,
+            },
+          })
+        )
+        .init();
+    }
+
     describe('without input', () => {
       const expectedSum =
         maxSuggestionsWithoutQuery + maxRecentQueriesWithoutQuery;
@@ -144,6 +171,110 @@ describe('Search Box Test Suites', () => {
           SearchBoxSelectors.searchBoxAriaLive,
           expectedSum.toString()
         );
+      });
+
+      describe('with custom suggestions provider', () => {
+        beforeEach(() => {
+          // Disable "standard" query suggestion components to display only custom ones
+          new TestFixture()
+            .with(
+              addSearchBox({
+                suggestions: {
+                  maxWithoutQuery: 0,
+                  maxWithQuery: 0,
+                },
+                props: {
+                  'number-of-queries': 50,
+                },
+              })
+            )
+            .init();
+        });
+
+        const registerFakeSuggestionComponent = (
+          title: string,
+          query: string,
+          numItem = 1
+        ) => {
+          SearchBoxSelectors.host().then(($el) => {
+            const searchBoxElement = $el.get(0);
+
+            dispatchSearchBoxSuggestionsEvent(() => {
+              return {
+                position: 0,
+                renderItems: () => [
+                  fakeSuggestionSectionTitle(title),
+
+                  ...Array.from(Array(numItem).keys()).map((i) =>
+                    fakeSuggestionItem(`${query}_${i}`, `${query}_${i}`)
+                  ),
+                ],
+              };
+            }, searchBoxElement);
+          });
+        };
+
+        const fakeSuggestionItem = (content: string, query?: string) => {
+          return {
+            content: content as unknown,
+            key: content,
+            query,
+          } as SearchBoxSuggestionElement;
+        };
+
+        const fakeSuggestionSectionTitle = (content: string) =>
+          fakeSuggestionItem(content);
+
+        it('should display the custom suggestions', () => {
+          const firstSuggestionsLen = 5;
+          const secondSuggestionsLen = 10;
+          const firstSuggestionsText = 'some suggestion';
+          const secondSuggestionsText = 'another suggestion';
+
+          registerFakeSuggestionComponent(
+            'the first title',
+            firstSuggestionsText,
+            firstSuggestionsLen
+          );
+
+          registerFakeSuggestionComponent(
+            'the second title',
+            secondSuggestionsText,
+            secondSuggestionsLen
+          );
+          SearchBoxSelectors.inputBox().focus();
+
+          Array.from(Array(firstSuggestionsLen).keys()).forEach((i) => {
+            SearchBoxSelectors.shadow()
+              .find('button[part~="suggestion-with-query"]')
+              .should('contain.text', `${firstSuggestionsText}_${i}`);
+          });
+          Array.from(Array(secondSuggestionsLen).keys()).forEach((i) => {
+            SearchBoxSelectors.shadow()
+              .find('button[part~="suggestion-with-query"]')
+              .should('contain.text', `${secondSuggestionsText}_${i}`);
+          });
+        });
+
+        it('should not remove title with no queries associated', () => {
+          // In this particular test, we are trying to verify that we do not
+          // remove duplicates elements for the same empty `query` property on a suggestion.
+          // Since the custom search box suggestion system does not enforce the query property (it's optional),
+          // it's a system that custom search box suggestions component will use to provide a "title" or separator section.
+          // We don't want to detect multiple separator section with no query as duplicate
+
+          registerFakeSuggestionComponent('the first title', 'some suggestion');
+          registerFakeSuggestionComponent(
+            'the second title',
+            'another suggestion'
+          );
+          SearchBoxSelectors.inputBox().focus();
+
+          SearchBoxSelectors.shadow()
+            .find('[part="suggestion"]')
+            .should('contain.text', 'the first title')
+            .should('contain.text', 'the second title');
+        });
       });
 
       describe('after selecting a suggestion with the mouse', () => {

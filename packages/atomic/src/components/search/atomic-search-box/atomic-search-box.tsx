@@ -517,15 +517,19 @@ export class AtomicSearchBox {
 
   private getAndFilterLeftSuggestionElements() {
     const suggestionElements = this.getSuggestionElements(this.leftSuggestions);
-    // We want to remove duplicates elements for the same `query` property, but only when it's not empty.
-    // Since the custom search box suggestion system does not enforce the query property (it's optional),
-    // it's a system that custom search box suggestions component will use to provide a "title" or separator section.
-    // We don't want to detect multiple separator section with no query as duplicate
-    return suggestionElements.filter(
-      (suggestionElement, i, self) =>
-        isNullOrUndefined(suggestionElement.query) ||
-        i === self.findIndex((other) => other.query === suggestionElement.query)
-    );
+    const filterOnDuplicate = new Set();
+
+    return suggestionElements.filter((suggestionElement) => {
+      if (isNullOrUndefined(suggestionElement.query)) {
+        return true;
+      }
+      if (filterOnDuplicate.has(suggestionElement.query)) {
+        return false;
+      } else {
+        filterOnDuplicate.add(suggestionElement.query);
+        return true;
+      }
+    });
   }
 
   private onKeyDown(e: KeyboardEvent) {
