@@ -1,5 +1,10 @@
+import didNotAnswerQuestion from '@salesforce/label/c.quantic_DidNotAnswerQuestion';
+import Other from '@salesforce/label/c.quantic_Other';
+import partiallyAnsweredQuestion from '@salesforce/label/c.quantic_PartiallyAnsweredQuestion';
+import requestWasNotQuestion from '@salesforce/label/c.quantic_RequestWasNotQuestion';
 import showLess from '@salesforce/label/c.quantic_SmartSnippetShowLess';
 import showMore from '@salesforce/label/c.quantic_SmartSnippetShowMore';
+import thankYouForFeedback from '@salesforce/label/c.quantic_ThankYouForFeedback';
 import FeedbackModal from 'c/quanticFeedbackModal';
 import {
   registerComponentForInit,
@@ -56,6 +61,11 @@ export default class QuanticSmartSnippet extends LightningElement {
   labels = {
     showMore,
     showLess,
+    didNotAnswerQuestion,
+    requestWasNotQuestion,
+    partiallyAnsweredQuestion,
+    Other,
+    thankYouForFeedback,
   };
 
   connectedCallback() {
@@ -234,18 +244,18 @@ export default class QuanticSmartSnippet extends LightningElement {
   get options() {
     return [
       {
-        label: "This didn't answer my question at all",
+        label: this.labels.didNotAnswerQuestion,
         value: 'does_not_answer',
       },
       {
-        label: 'This only partially answered my question',
+        label: this.labels.partiallyAnsweredQuestion,
         value: 'partially_answers',
       },
       {
-        label: "My request wasn't meant to be perceived as a question",
+        label: this.labels.requestWasNotQuestion,
         value: 'was_not_a_question',
       },
-      {label: 'Other', value: 'other'},
+      {label: this.labels.Other, value: 'other'},
     ];
   }
 

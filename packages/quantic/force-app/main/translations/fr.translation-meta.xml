@@ -484,4 +484,24 @@
       <label>Voir moins</label>
       <name>quantic_SmartSnippetShowLess</name>
     </customLabels>
+    <customLabels>
+      <label>Cela ne répond pas du tout à ma question</label>
+      <name>quantic_DidNotAnswerQuestion</name>
+    </customLabels>
+    <customLabels>
+      <label>Cela ne répond que partiellement à ma question</label>
+      <name>quantic_PartiallyAnsweredQuestion</name>
+    </customLabels>
+    <customLabels>
+      <label>Ma demande ne devait pas être perçue comme une question</label>
+      <name>quantic_RequestWasNotQuestion</name>
+    </customLabels>
+    <customLabels>
+      <label>Autre</label>
+      <name>quantic_Other</name>
+    </customLabels>
+    <customLabels>
+      <label>Merci pour votre commentaire!</label>
+      <name>quantic_ThankYouForFeedback</name>
+    </customLabels>
 </Translations>

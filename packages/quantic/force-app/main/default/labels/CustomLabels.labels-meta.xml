@@ -917,4 +917,39 @@
       <protected>false</protected>
       <shortDescription>Show less</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_DidNotAnswerQuestion</fullName>
+      <value>This didn't answer my question at all</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>This didn't answer my question at all</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_PartiallyAnsweredQuestion</fullName>
+      <value>This only partially answered my question</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>This only partially answered my question</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_RequestWasNotQuestion</fullName>
+      <value>My request wasn't meant to be perceived as a question</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Request wasn't a question</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Other</fullName>
+      <value>Other</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Other</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ThankYouForFeedback</fullName>
+      <value>Thank you for your feedback!</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Thank you for your feedback!</shortDescription>
+    </labels>
 </CustomLabels>
