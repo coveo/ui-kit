@@ -103,32 +103,33 @@ describe('quantic-smart-snippet-suggestions', () => {
       scope(
         'when the source title of one of the suggestions is clicked',
         () => {
-          Actions.toggleSuggestion(0);
-          Actions.clickSmartSnippetSuggestionsSourceTitle(0);
+          const index = 0;
+          Actions.toggleSuggestion(index);
+          Actions.clickSmartSnippetSuggestionsSourceTitle(index);
           Expect.logOpenSmartSnippetSuggestionSource({
-            ...exampleRelatedQuestions[0],
-            position: 1,
+            ...exampleRelatedQuestions[index],
+            position: index + 1,
           });
         }
       );
 
       scope('when the source uri of one of the suggestions is clicked', () => {
+        const index = 0;
         visitPage();
-        Actions.toggleSuggestion(0);
-        Actions.clickSmartSnippetSuggestionsSourceUri(0);
+        Actions.toggleSuggestion(index);
+        Actions.clickSmartSnippetSuggestionsSourceUri(index);
         Expect.logOpenSmartSnippetSuggestionSource({
-          ...exampleRelatedQuestions[0],
-          position: 1,
+          ...exampleRelatedQuestions[index],
+          position: index + 1,
         });
       });
 
       scope('when an inline link of one of the suggestions is clicked', () => {
-        visitPage();
-        Actions.toggleSuggestion(0);
-        Actions.clickSmartSnippetSuggestionsInlineLink(0);
+        const index = 0;
+        Actions.clickSmartSnippetSuggestionsInlineLink(index);
         Expect.logOpenSmartSnippetSuggestionInlineLink({
-          ...exampleRelatedQuestions[0],
-          position: 1,
+          ...exampleRelatedQuestions[index],
+          position: index + 1,
           linkUrl: exampleInlineLinkUrl,
           linkText: exampleInlineLinkText,
         });

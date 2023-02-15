@@ -4,6 +4,7 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
+import peopleAlsoAsk from '@salesforce/label/c.quantic_PeopleAlsoAsk';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SmartSnippetQuestionsList} SmartSnippetSuggestions */
@@ -29,6 +30,10 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
    * @type {string}
    */
   @api engineId;
+
+  labels = {
+    peopleAlsoAsk
+  }
 
   /** @type {SmartSnippetSuggestions} */
   smartSnippetSuggestions;

@@ -917,4 +917,11 @@
       <protected>false</protected>
       <shortDescription>Show less</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_PeopleAlsoAsk</fullName>
+      <value>People also ask</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>People also ask</shortDescription>
+    </labels>
 </CustomLabels>

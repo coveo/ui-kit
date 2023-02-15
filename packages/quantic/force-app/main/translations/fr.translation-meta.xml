@@ -484,4 +484,8 @@
       <label>Voir moins</label>
       <name>quantic_SmartSnippetShowLess</name>
     </customLabels>
+    <customLabels>
+      <label>les gens demandent aussi</label>
+      <name>quantic_PeopleAlsoAsk</name>
+    </customLabels>
 </Translations>
