@@ -30,6 +30,10 @@ on:
         description: 'Skip Atomic stencil end to end tests'
         type: boolean
         required: false
+      skipAtomicHostedPageE2E:
+        description: 'Skip Atomic Hosted Page end to end tests'
+        type: boolean
+        required: false
       skipAtomicReactNextJSE2E:
         description: 'Skip Atomic React NextJS end to end tests'
         type: boolean
@@ -137,6 +141,7 @@ jobs:
 
   e2e-atomic-hosted-page-test:
     name: 'Runs Cypress tests for Atomic Hosted Page'
+    if: ${{ github.event.inputs.skipAtomicHostedPageE2E != 'true' }}
     needs: build
     runs-on: ubuntu-latest
     steps:
