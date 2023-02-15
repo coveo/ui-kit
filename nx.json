@@ -20,7 +20,7 @@
     },
     "test": {
       "dependsOn": [
-        "build"
+        "^build"
       ]
     },
     "e2e": {
