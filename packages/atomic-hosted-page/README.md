@@ -1,6 +1,6 @@
 # Atomic Hosted Page
 
-A web-component used to inject a Coveo Hosted Search Page in the DOM
+A Web Component used to inject a Coveo Hosted Search Page in the DOM.
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ npm run build
 
 Ref: https://docs.cypress.io/
 
-- All the tests will need to be under folder cypress\integration
+- All the tests need to be under folder cypress\integration
 
 ### Open
 

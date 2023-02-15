@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-hosted-page",
-  "description": "Web-component used to inject a Coveo Hosted Search Page in the DOM",
+  "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
   "version": "0.0.1",
   "repository": {
     "type": "git",
