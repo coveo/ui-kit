@@ -25,10 +25,15 @@
     "build": "npm run build:stencil && npm run validate:definitions",
     "build:stencil": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
     "start": "npm run build:stencil -- --dev --watch --serve",
+    "cypress:open": "cypress open",
+    "cypress:test": "cypress run --browser chrome",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
     "@coveo/bueno": "0.43.0",
     "@stencil/core": "2.17.3"
+  },
+  "devDependencies": {
+    "cypress": "9.7.0"
   }
 }
