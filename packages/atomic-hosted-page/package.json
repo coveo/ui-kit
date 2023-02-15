@@ -1,7 +1,6 @@
 {
   "name": "@coveo/atomic-hosted-page",
-  "private": "true",
-  "description": "TODO: add description",
+  "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
   "version": "0.0.1",
   "repository": {
     "type": "git",
@@ -27,7 +26,8 @@
     "start": "npm run build:stencil -- --dev --watch --serve",
     "cypress:open": "cypress open",
     "cypress:test": "cypress run --browser chrome",
-    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
+    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+    "npm:publish": "node ../../scripts/deploy/publish.mjs"
   },
   "dependencies": {
     "@coveo/bueno": "0.43.0",
