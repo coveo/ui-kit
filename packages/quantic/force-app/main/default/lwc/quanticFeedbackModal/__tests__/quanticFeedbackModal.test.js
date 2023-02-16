@@ -309,7 +309,7 @@ describe('c-quantic-fedback-modal', () => {
         });
       });
 
-      describe('when the option "others" is selected', () => {
+      describe('when the option "other" is selected', () => {
         it('should display the success message and execute the submit feedback function', async () => {
           const element = createTestComponent();
           await flushPromises();
