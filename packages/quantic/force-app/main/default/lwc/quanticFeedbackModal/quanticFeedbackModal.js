@@ -32,7 +32,7 @@ export default class QuanticFeedbackModal extends LightningModal {
   /**
    * @api
    * The function that will be executed when the feedback is submitted.
-   * @type {(feedback: {value: string, details: string}) => void}
+   * @type {function}
    */
   @api submitFeedback;
 

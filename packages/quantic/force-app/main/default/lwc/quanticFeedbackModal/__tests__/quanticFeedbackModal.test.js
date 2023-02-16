@@ -17,7 +17,7 @@ const selectors = {
 
 const otherValue = 'other';
 const exampleValue = 'example';
-/** @type {Array<{label?, value?}>} */
+/** @type {Array} */
 const exampleOptions = [
   {label: exampleValue, value: exampleValue},
   {label: otherValue, value: otherValue},
