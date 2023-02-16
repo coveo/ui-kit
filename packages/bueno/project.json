@@ -1,1 +1,109 @@
-{}
+{
+  "namedInputs": {
+    "tests": ["{projectRoot}/**/*.test.ts"],
+    "source": [
+      "{projectRoot}/esbuild.mjs",
+      "{workspaceRoot}/tsconfig.json",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/src/**/*([^.]).!(test.ts)"
+    ]
+  },
+  "targets": {
+    "clean": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rimraf dist",
+        "cwd": "packages/bueno"
+      }
+    },
+    "cached:build:esbuild": {
+      "dependsOn": ["^build"],
+      "inputs": ["^source", "source"],
+      "outputs": ["{projectRoot}/dist"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node esbuild.mjs",
+        "cwd": "packages/bueno"
+      }
+    },
+    "cached:build:definitions": {
+      "dependsOn": ["cached:build:esbuild"],
+      "inputs": ["^source", "source"],
+      "outputs": ["{projectRoot}/dist/definitions"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
+        "cwd": "packages/bueno"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build:esbuild", "cached:build:definitions"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:noop"
+    },
+    "dev:esbuild": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node esbuild.mjs dev",
+        "cwd": "packages/bueno"
+      }
+    },
+    "dev:definitions": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions -w",
+        "cwd": "packages/bueno"
+      }
+    },
+    "dev": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run bueno:\"dev:esbuild\"",
+          "nx run bueno:\"dev:definitions\""
+        ],
+        "parallel": true
+      }
+    },
+    "cached:test:unit": {
+      "dependsOn": ["^build"],
+      "inputs": ["^source", "source", "tests"],
+      "outputs": [],
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "packages/bueno/jest.config.js"
+      }
+    },
+    "test": {
+      "dependsOn": ["cached:test:unit"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:noop"
+    },
+    "test:watch": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "packages/bueno/jest.config.js",
+        "watch": true,
+        "color": true,
+        "silent": false
+      }
+    }
+  }
+}

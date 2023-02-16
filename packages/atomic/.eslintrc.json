@@ -9,7 +9,6 @@
     "curly": ["error"]
   },
   "ignorePatterns": [
-    "src/external-builds/**/*",
     "dist/**/*",
     "www/**/*",
     "loader/**/*",

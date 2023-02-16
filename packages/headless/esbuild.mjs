@@ -61,7 +61,7 @@ const base = {
 const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
   (entry) => {
     const [useCase, entryPoint] = entry;
-    const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
+    const outDir = getUseCaseDir('www', useCase);
     const outfile = `${outDir}/headless.esm.js`;
 
     return buildBrowserConfig({

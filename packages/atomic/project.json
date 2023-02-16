@@ -1,1 +1,264 @@
-{}
+{
+  "namedInputs": {
+    "tests": ["{projectRoot}/src/**/*.{spec.{ts,tsx},spec.{ts,tsx}.snap}"],
+    "e2e": ["{projectRoot}/cypress/**"],
+    "stories": ["{projectRoot}/src/**/*.{?(*([^.]).)stories.{tsx,css},mdx}"],
+    "source": [
+      "{projectRoot}/stencil.config.ts",
+      "{projectRoot}/collection-manifest.json",
+      "{projectRoot}/tailwind.config.js",
+      "{projectRoot}/svg.transform.js",
+      "{workspaceRoot}/tsconfig.json",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/src/**/*([^.]).!({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})",
+      "{projectRoot}/stencil-plugin/**"
+    ]
+  },
+  "targets": {
+    "clean": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rimraf dist docs loader www storybook-static src/components/search/atomic-search-interface/lang src/generated",
+        "cwd": "packages/atomic"
+      }
+    },
+    "cached:build:locales": {
+      "dependsOn": [],
+      "inputs": [
+        "{projectRoot}/scripts/create-generated-folder.mjs",
+        "{projectRoot}/scripts/split-locales.mjs",
+        "{projectRoot}/scripts/copy-dayjs-locales.mjs",
+        "{projectRoot}/src/locales.json"
+      ],
+      "outputs": [
+        "{projectRoot}/src/generated/availableLocales.json",
+        "{projectRoot}/src/generated/dayjs-locales-data.ts",
+        "{projectRoot}/src/components/search/atomic-search-interface/lang"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node ./scripts/create-generated-folder.mjs",
+          "node ./scripts/split-locales.mjs",
+          "node ./scripts/copy-dayjs-locales.mjs"
+        ],
+        "parallel": false,
+        "cwd": "packages/atomic"
+      }
+    },
+    "cached:build:stencil": {
+      "dependsOn": ["^build", "cached:build:locales"],
+      "inputs": ["^source", "source"],
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/www",
+        "{projectRoot}/docs",
+        "{projectRoot}/loader",
+        "{projectRoot}/src/components.d.ts"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+        "cwd": "packages/atomic"
+      }
+    },
+    "cached:validate:definitions": {
+      "dependsOn": ["^build", "cached:build:stencil"],
+      "inputs": ["{projectRoot}/dist/types/components.d.ts"],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+        "cwd": "packages/atomic"
+      }
+    },
+    "cached:validate:storybook": {
+      "dependsOn": ["^build"],
+      "inputs": ["stories"],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "lit-analyzer src/components/**/*.stories.tsx",
+        "cwd": "packages/atomic"
+      }
+    },
+    "cached:build:storybook:assets-list": {
+      "dependsOn": ["cached:build:stencil"],
+      "inputs": [
+        "{projectRoot}/scripts/list-assets.mjs",
+        "{projectRoot}/dist/atomic/assets/**"
+      ],
+      "outputs": ["{projectRoot}/docs/assets.json"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/list-assets.mjs",
+        "cwd": "packages/atomic"
+      }
+    },
+    "cached:build:storybook": {
+      "dependsOn": [
+        "cached:build:stencil",
+        "cached:build:storybook:assets-list"
+      ],
+      "inputs": [
+        "^source",
+        "source",
+        "stories",
+        "{projectRoot}/.storybook/**",
+        "{projectRoot}/docs/assets.json"
+      ],
+      "outputs": ["{projectRoot}/storybook-static"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["build-storybook", "ncp dist/ storybook-static/"],
+        "parallel": false,
+        "cwd": "packages/atomic"
+      }
+    },
+    "build": {
+      "dependsOn": [
+        "cached:build:stencil",
+        "cached:build:storybook",
+        "cached:validate:storybook",
+        "cached:validate:definitions"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:noop"
+    },
+    "dev": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --serve",
+        "cwd": "packages/atomic"
+      }
+    },
+    "prod": {
+      "dependsOn": ["cached:build:stencil"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "serve -l 3333 --no-request-logging",
+        "cwd": "packages/atomic/www"
+      }
+    },
+    "dev:storybook": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "start-storybook -s ./dist -p 6006",
+        "cwd": "packages/atomic"
+      }
+    },
+    "cached:test:unit": {
+      "dependsOn": ["^build", "cached:build:locales"],
+      "inputs": ["^source", "source", "tests"],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "stencil test --spec",
+        "cwd": "packages/atomic"
+      }
+    },
+    "test": {
+      "dependsOn": ["cached:test:unit"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:noop"
+    },
+    "test:watch": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "stencil test --spec --watchAll",
+        "cwd": "packages/atomic"
+      }
+    },
+    "e2e": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cypress run --browser chrome --config-file={args.config-file}",
+        "cwd": "packages/atomic"
+      },
+      "configurations": {
+        "search": {
+          "args": "--config-file=cypress.config.ts"
+        },
+        "hsp": {
+          "args": "--config-file=cypress-hsp.config.ts"
+        },
+        "screenshots": {
+          "args": "--config-file=cypress-screenshots.config.ts"
+        },
+        "insight": {
+          "args": "--config-file=cypress-insight-panel.config.ts"
+        }
+      },
+      "defaultConfiguration": "search"
+    },
+    "e2e:firefox": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cypress run --browser firefox --config-file={args.config-file}",
+        "cwd": "packages/atomic"
+      },
+      "configurations": {
+        "search": {
+          "args": "--config-file=cypress.config.ts"
+        },
+        "hsp": {
+          "args": "--config-file=cypress-hsp.config.ts"
+        },
+        "screenshots": {
+          "args": "--config-file=cypress-screenshots.config.ts"
+        },
+        "insight": {
+          "args": "--config-file=cypress-insight-panel.config.ts"
+        }
+      },
+      "defaultConfiguration": "search"
+    },
+    "e2e:watch": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cypress open --config-file={args.config-file}",
+        "cwd": "packages/atomic"
+      },
+      "configurations": {
+        "search": {
+          "args": "--config-file=cypress.config.ts"
+        },
+        "hsp": {
+          "args": "--config-file=cypress-hsp.config.ts"
+        },
+        "screenshots": {
+          "args": "--config-file=cypress-screenshots.config.ts"
+        },
+        "insight": {
+          "args": "--config-file=cypress-insight-panel.config.ts"
+        }
+      },
+      "defaultConfiguration": "search"
+    }
+  }
+}

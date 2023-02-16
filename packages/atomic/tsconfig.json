@@ -29,7 +29,6 @@
   "include": ["src", "types/jsx.d.ts"],
   "exclude": [
     "node_modules",
-    "src/external-builds",
     "**/*.stories.tsx"
   ]
 }

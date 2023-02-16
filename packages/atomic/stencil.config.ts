@@ -17,6 +17,8 @@ import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
+const workspacesRoot = path.resolve(__dirname, '..', '..');
+
 const isProduction = process.env.BUILD === 'production';
 
 function getPackageVersion(): string {
@@ -57,6 +59,11 @@ const isDevWatch: boolean =
   process.argv &&
   process.argv.indexOf('--dev') > -1 &&
   process.argv.indexOf('--watch') > -1;
+
+const headlessDevDirectory = path.resolve(
+  workspacesRoot,
+  'packages/headless/www'
+);
 
 export const config: Config = {
   namespace: 'atomic',
@@ -108,7 +115,7 @@ export const config: Config = {
         {src: 'pages', keepDirStructure: false},
         {src: 'themes'},
         isDevWatch
-          ? {src: 'external-builds', dest: 'build/headless'}
+          ? {src: headlessDevDirectory, dest: 'build/headless'}
           : {src: ''},
         {
           src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
@@ -155,36 +162,36 @@ export const config: Config = {
             {
               find: '@coveo/headless/case-assist',
               replacement: path.resolve(
-                __dirname,
-                './src/external-builds/case-assist/headless.esm.js'
+                headlessDevDirectory,
+                'case-assist/headless.esm.js'
               ),
             },
             {
               find: '@coveo/headless/recommendation',
               replacement: path.resolve(
-                __dirname,
-                './src/external-builds/recommendation/headless.esm.js'
+                headlessDevDirectory,
+                'recommendation/headless.esm.js'
               ),
             },
             {
               find: '@coveo/headless/product-recommendation',
               replacement: path.resolve(
-                __dirname,
-                './src/external-builds/product-recommendation/headless.esm.js'
+                headlessDevDirectory,
+                'product-recommendation/headless.esm.js'
               ),
             },
             {
               find: '@coveo/headless/insight',
               replacement: path.resolve(
-                __dirname,
-                './src/external-builds/insight/headless.esm.js'
+                headlessDevDirectory,
+                'insight/headless.esm.js'
               ),
             },
             {
               find: '@coveo/headless',
               replacement: path.resolve(
-                __dirname,
-                './src/external-builds/headless.esm.js'
+                headlessDevDirectory,
+                'headless.esm.js'
               ),
             },
           ],

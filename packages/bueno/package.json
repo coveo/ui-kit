@@ -18,16 +18,17 @@
     "dist/"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "npm run build:definitions && npm run build:bundles",
-    "build:bundles": "node esbuild.mjs",
-    "build:definitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
-    "clean": "rimraf -rf dist/*",
-    "test": "jest",
-    "test:watch": "jest --watch --colors --no-cache",
+    "dev": "nx run dev",
+    "build": "nx run build",
+    "clean": "nx run clean",
+    "test": "nx run test",
+    "test:watch": "nx run bueno:\"test:watch\"",
     "publish:npm:release": "node ../../scripts/deploy/publish.mjs release",
     "publish:npm:prerelease": "node ../../scripts/deploy/publish.mjs prerelease",
     "promote:npm:beta": "node ../../scripts/deploy/update-npm-tag.mjs beta",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest"
+  },
+  "devDependencies": {
+    "@nrwl/jest": "15.7.0"
   }
 }

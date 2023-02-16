@@ -1,1 +1,166 @@
-{}
+{
+  "namedInputs": {
+    "tests": [
+      "{projectRoot}/src/**/*.{test,spec}.ts",
+      "{projectRoot}/src/{integration-tests,test}/**"
+    ],
+    "source": [
+      "{projectRoot}/esbuild.mjs",
+      "{workspaceRoot}/tsconfig.json",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/src/tsconfig.build.json",
+      "{projectRoot}/fetch-ponyfill.js",
+      "{projectRoot}/src/?(*.)index.ts",
+      "{projectRoot}/src/!({integration-tests,test})/**/*([^.]).!({test,spec}.ts)",
+      "{projectRoot}/*/package.json"
+    ]
+  },
+  "targets": {
+    "clean": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rimraf dist temp www",
+        "cwd": "packages/headless"
+      }
+    },
+    "cached:build:esbuild": {
+      "dependsOn": ["^build"],
+      "inputs": ["^source", "source"],
+      "outputs": ["{projectRoot}/dist", "{projectRoot}/www"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node esbuild.mjs",
+        "cwd": "packages/headless"
+      }
+    },
+    "cached:build:definitions": {
+      "dependsOn": ["cached:build:esbuild"],
+      "inputs": ["^source", "source"],
+      "outputs": ["{projectRoot}/dist/definitions"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
+        "cwd": "packages/headless"
+      }
+    },
+    "cached:build:doc:extract": {
+      "dependsOn": ["cached:build:definitions"],
+      "inputs": [
+        "{projectRoot}/scripts/extract-documentation.mjs",
+        "{projectRoot}/config/api-extractor/**",
+        "{projectRoot}/dist/definitions/**"
+      ],
+      "outputs": ["{projectRoot}/temp"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/extract-documentation.mjs",
+        "cwd": "packages/headless"
+      }
+    },
+    "cached:build:doc": {
+      "dependsOn": ["cached:build:esbuild", "cached:build:doc:extract"],
+      "inputs": ["{projectRoot}/doc-parser/**", "{projectRoot}/temp/**"],
+      "outputs": ["{projectRoot}/dist/parsed_doc.json"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts",
+        "cwd": "packages/headless"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build:esbuild", "cached:build:doc"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:noop"
+    },
+    "dev:esbuild": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node esbuild.mjs dev",
+        "cwd": "packages/headless"
+      }
+    },
+    "dev:definitions": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions -w",
+        "cwd": "packages/headless"
+      }
+    },
+    "dev": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run headless:\"dev:esbuild\"",
+          "nx run headless:\"dev:definitions\""
+        ],
+        "parallel": true
+      }
+    },
+    "cached:test:unit": {
+      "dependsOn": ["^build", "cached:build:doc"],
+      "inputs": [
+        "^source",
+        "source",
+        "{projectRoot}/dist/parsed_doc.json",
+        "tests"
+      ],
+      "outputs": [],
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "packages/headless/jest.config.js",
+        "testPathIgnorePatterns": ["src/integration-tests"]
+      }
+    },
+    "test:integration": {
+      "dependsOn": ["^build", "cached:build:doc"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "packages/headless/jest.config.js",
+        "testPathPattern": ["src/integration-tests"]
+      }
+    },
+    "test": {
+      "dependsOn": ["cached:test:unit", "test:integration"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:noop"
+    },
+    "test:watch": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "packages/headless/jest.config.js",
+        "watch": true,
+        "color": true,
+        "silent": false
+      },
+      "configurations": {
+        "all": {},
+        "unit": {
+          "testPathIgnorePatterns": ["src/integration-tests"]
+        },
+        "integration": {
+          "testPathPattern": ["src/integration-tests"]
+        }
+      },
+      "defaultConfiguration": "all"
+    }
+  }
+}

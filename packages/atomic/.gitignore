@@ -26,7 +26,6 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 .env
 
-src/external-builds
 src/components/search/atomic-search-interface/lang/
 src/generated
 

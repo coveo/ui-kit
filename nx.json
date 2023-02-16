@@ -3,52 +3,48 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": []
+        "cacheableOperations": [
+          "cached:build:esbuild",
+          "cached:build:definitions",
+          "cached:build:doc:extract",
+          "cached:build:doc",
+          "cached:build:locales",
+          "cached:build:stencil",
+          "cached:build:storybook:assets-list",
+          "cached:build:storybook",
+          "cached:validate:storybook",
+          "cached:validate:definitions",
+          "cached:test:unit"
+        ]
       }
     }
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "prod": {
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     },
     "test": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "e2e": {
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     },
     "lint:check": {},
     "lint:fix": {},
     "publish:npm:release": {
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     },
     "publish:npm:prerelease": {
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     },
     "publish:sfdx": {
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     },
     "promote:sfdx": {
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     }
   },
   "defaultBase": "master"
