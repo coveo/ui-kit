@@ -12,22 +12,20 @@ const selectors = {
   successMesage: '.feedback-modal-body__success-message',
   radioGroup: 'lightning-radio-group',
   textarea: 'textarea',
-  detailsErrorMessage: '.feedback-modal-body__details-error-message'
+  detailsErrorMessage: '.feedback-modal-body__details-error-message',
 };
 
-const otherValue = 'other';
-const exampleValue = 'example';
+const exampleValue = 'example value';
+const exampleLabel = 'example label';
+const exampleDetails = 'example details';
 /** @type {Array} */
-const exampleOptions = [
-  {label: exampleValue, value: exampleValue},
-  {label: otherValue, value: otherValue},
-];
+const exampleOptions = [{label: exampleLabel, value: exampleValue}];
 
 const errors = {
   invalidArrayError: 'The options provided are not in a valid array.',
   emptyArrayError: 'At least one option must be specified.',
   missingLabelOrValueError:
-    'In the c-quantic-feedback-modal, each option requires a label and a value to be specified.',
+    'Each option requires a label and a value to be specified.',
   missingSubmitFeedback: 'The submitFeedback property is not a valid function.',
   invalidLabelTypeError: (label) =>
     `The "${label}" label is not a valid string.`,
@@ -238,6 +236,46 @@ describe('c-quantic-fedback-modal', () => {
   });
 
   describe('when valid options are provided to the feedback modal', () => {
+    describe('when an option with details is provided', () => {
+      it('should display the details input when the option is selected', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          options: [
+            {label: exampleLabel, value: exampleValue, withDetails: true},
+          ],
+        });
+        await flushPromises();
+
+        selectOption(element, exampleValue);
+        await flushPromises();
+
+        const detailsInput = element.shadowRoot.querySelector(
+          selectors.textarea
+        );
+        expect(detailsInput).not.toBeNull();
+      });
+    });
+
+    describe('when an option without details is provided', () => {
+      it('should not display the details input when the option is selected', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          options: [
+            {label: exampleLabel, value: exampleValue, withDetails: false},
+          ],
+        });
+        await flushPromises();
+
+        selectOption(element, exampleValue);
+        await flushPromises();
+
+        const detailsInput = element.shadowRoot.querySelector(
+          selectors.textarea
+        );
+        expect(detailsInput).toBeNull();
+      });
+    });
+
     describe('when the form is submitted and the required inputs are not filled', () => {
       it('should not display the success message', async () => {
         const element = createTestComponent();
@@ -257,12 +295,22 @@ describe('c-quantic-fedback-modal', () => {
         expect(successMesage).toBeNull();
       });
 
-      describe('when the option "other" is selected', () => {
+      describe('when an option with required details is selected', () => {
         it('should not display the success message', async () => {
-          const element = createTestComponent();
+          const element = createTestComponent({
+            ...defaultOptions,
+            options: [
+              {
+                label: exampleLabel,
+                value: exampleValue,
+                withDetails: true,
+                detailsRequired: true,
+              },
+            ],
+          });
           await flushPromises();
 
-          selectOption(element, otherValue);
+          selectOption(element, exampleValue);
 
           const submitButton = element.shadowRoot.querySelector(
             selectors.submitButton
@@ -309,14 +357,24 @@ describe('c-quantic-fedback-modal', () => {
         });
       });
 
-      describe('when the option "other" is selected', () => {
+      describe('when an option with required details is selected', () => {
         it('should display the success message and execute the submit feedback function', async () => {
-          const element = createTestComponent();
+          const element = createTestComponent({
+            ...defaultOptions,
+            options: [
+              {
+                label: exampleLabel,
+                value: exampleValue,
+                withDetails: true,
+                detailsRequired: true,
+              },
+            ],
+          });
           await flushPromises();
 
-          selectOption(element, otherValue);
+          selectOption(element, exampleValue);
           await flushPromises();
-          typeDetails(element, exampleValue);
+          typeDetails(element, exampleDetails);
 
           const submitButton = element.shadowRoot.querySelector(
             selectors.submitButton
@@ -331,8 +389,45 @@ describe('c-quantic-fedback-modal', () => {
           );
           expect(successMesage).not.toBeNull();
           expect(functionsMocks.submitFeedback).toHaveBeenCalledWith({
-            details: exampleValue,
-            value: otherValue,
+            details: exampleDetails,
+            value: exampleValue,
+          });
+        });
+      });
+
+      describe('when an option with optional details is selected', () => {
+        it('should display the success message and execute the submit feedback function', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            options: [
+              {
+                label: exampleLabel,
+                value: exampleValue,
+                withDetails: true,
+                detailsRequired: false,
+              },
+            ],
+          });
+          await flushPromises();
+
+          selectOption(element, exampleValue);
+          await flushPromises();
+
+          const submitButton = element.shadowRoot.querySelector(
+            selectors.submitButton
+          );
+
+          expect(submitButton).not.toBeNull();
+          submitButton.click();
+          await flushPromises();
+
+          const successMesage = element.shadowRoot.querySelector(
+            selectors.successMesage
+          );
+          expect(successMesage).not.toBeNull();
+          expect(functionsMocks.submitFeedback).toHaveBeenCalledWith({
+            details: undefined,
+            value: exampleValue,
           });
         });
       });

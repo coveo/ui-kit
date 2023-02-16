@@ -26,7 +26,7 @@ export default class QuanticFeedbackModal extends LightningModal {
   /**
    * @api
    * The list of options to be displayed in the modal.
-   * @type {Array<{label: string, value: string}>}
+   * @type {Array<{label: string, value: string, withDetails?: boolean, detailsRequired?: boolean}>}
    */
   @api options;
   /**
@@ -50,7 +50,7 @@ export default class QuanticFeedbackModal extends LightningModal {
   };
 
   /** @type {string} */
-  optionsValue;
+  feedbackValue;
   /** @type {string} */
   detailsValue;
   /** @type {boolean} */
@@ -71,18 +71,18 @@ export default class QuanticFeedbackModal extends LightningModal {
    */
   validateFeedbackModal() {
     getBueno(this).then(() => {
-      this.validateOptionList();
+      this.validateTheOptionsProperty();
       if (!this.error) {
         this.validateOptions();
       }
       if (!this.error) {
-        this.validateSubmitFeedback();
+        this.validateTheSubmitFeedbackProperty();
       }
       this.validated = true;
     });
   }
 
-  validateOptionList() {
+  validateTheOptionsProperty() {
     if (!Bueno.isArray(this.options)) {
       console.error('The options provided are not in a valid array.');
       this.setError();
@@ -98,7 +98,7 @@ export default class QuanticFeedbackModal extends LightningModal {
     );
     if (missingValueOrLabel) {
       console.error(
-        'In the c-quantic-feedback-modal, each option requires a label and a value to be specified.'
+        'Each option requires a label and a value to be specified.'
       );
       this.setError();
     } else {
@@ -115,7 +115,7 @@ export default class QuanticFeedbackModal extends LightningModal {
     }
   }
 
-  validateSubmitFeedback() {
+  validateTheSubmitFeedbackProperty() {
     if (typeof this.submitFeedback !== 'function') {
       console.error('The submitFeedback property is not a valid function.');
       this.setError();
@@ -159,7 +159,7 @@ export default class QuanticFeedbackModal extends LightningModal {
     this.detailsInputError = false;
     this.optionsInput.setCustomValidity();
     this.optionsInput.reportValidity();
-    this.optionsValue = event.detail.value;
+    this.feedbackValue = event.detail.value;
   }
 
   /**
@@ -176,7 +176,10 @@ export default class QuanticFeedbackModal extends LightningModal {
    * @returns {boolean}
    */
   get displayDetailsInput() {
-    return this.optionsValue === 'other';
+    const selectedOption = this.options.find(
+      (option) => option.value === this.feedbackValue
+    );
+    return !!selectedOption?.withDetails;
   }
 
   /**
@@ -184,10 +187,16 @@ export default class QuanticFeedbackModal extends LightningModal {
    * @returns {boolean}
    */
   get feedbackFormIsValid() {
-    return (
-      (this.optionsValue === 'other' && !!this.detailsValue) ||
-      (!!this.optionsValue && this.optionsValue !== 'other')
+    if(!this.feedbackValue){
+      return false;
+    }
+    const selectedOption = this.options.find(
+      (option) => option.value === this.feedbackValue
     );
+    if(!!selectedOption?.withDetails && !!selectedOption.detailsRequired && !this.detailsValue){
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -197,16 +206,16 @@ export default class QuanticFeedbackModal extends LightningModal {
   handleSubmitFeedback() {
     if (this.feedbackFormIsValid) {
       this.submitFeedback({
-        value: this.optionsValue,
+        value: this.feedbackValue,
         details: this.detailsValue,
       });
       this.feedbackSubmitted = true;
     } else {
-      if (this.optionsValue === 'other') {
-        this.detailsInputError = true;
-      } else {
+      if (!this.feedbackValue) {
         this.optionsInput.setCustomValidity(this.labels.selectOneOfOptions);
         this.optionsInput.reportValidity();
+      } else {
+        this.detailsInputError = true;
       }
     }
   }

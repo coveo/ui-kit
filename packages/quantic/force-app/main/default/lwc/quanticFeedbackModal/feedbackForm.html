@@ -4,7 +4,7 @@
     <lightning-modal-body>
       <div class="slds-var-p-around_x-large">
         <lightning-radio-group class="slds-var-m-bottom_large" name="feedback" label={labels.selectTheReason}
-          options={options} value={optionsValue} type="radio" onchange={handleOptionChange}></lightning-radio-group>
+          options={options} value={feedbackValue} type="radio" onchange={handleOptionChange}></lightning-radio-group>
         <div class="details-input__container">
           <template if:true={displayDetailsInput}>
             <div class={detailsFormClass}>
