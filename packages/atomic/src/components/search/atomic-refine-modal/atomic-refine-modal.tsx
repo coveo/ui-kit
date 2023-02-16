@@ -49,6 +49,8 @@ import {SortDropdownOption} from '../atomic-search-interface/store';
  * @part body - The body of the modal, between the header and the footer.
  * @part content - The wrapper around the content inside the body of the modal.
  * @part section-title - The title for each section.
+ * @part section-sort-title - The title for the sort section.
+ * @part section-filters-title - The title for the filters section.
  * @part select-wrapper - The wrapper around the select element, used to position the icon.
  * @part select - The `<select>` element of the drop-down list.
  * @part select-icon-wrapper - The wrapper around the sort icon that's used to align it.
@@ -149,7 +151,10 @@ export class AtomicRefineModal implements InitializableComponent {
 
     return (
       <Fragment>
-        <h1 part="section-title" class="text-2xl font-bold truncate mb-3">
+        <h1
+          part="section-title section-sort-title"
+          class="text-2xl font-bold truncate mb-3"
+        >
           {this.bindings.i18n.t('sort')}
         </h1>
         <div part="select-wrapper" class="relative">
@@ -187,7 +192,10 @@ export class AtomicRefineModal implements InitializableComponent {
           part="filter-section"
           class="w-full flex justify-between mt-8 mb-3"
         >
-          <h1 part="section-title" class="text-2xl font-bold truncate">
+          <h1
+            part="section-title section-filters-title"
+            class="text-2xl font-bold truncate"
+          >
             {this.bindings.i18n.t('filters')}
           </h1>
           {this.breadcrumbManagerState.hasBreadcrumbs && (

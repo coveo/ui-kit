@@ -11,11 +11,12 @@
         await customElements.whenDefined('atomic-hosted-page');
 
         const page = document.querySelector('atomic-hosted-page');
+        // TODO: switch for prod - searchuisamples
         await page.initialize({
-          pageId: 'a5cb9c6e-600b-4b4f-bc76-e60ff610ea1a',
-          accessToken: '---- ADD KEY ----',
-          organizationId: 'hostedsearchpagetest5ftf64ka',
-          platformUrl: 'https://platformdev.cloud.coveo.com',
+          pageId: '4d4af944-1a6e-4be3-9c04-9c772e031956',
+          accessToken: 'xxa6e9ee50-2dcf-4062-890f-c63d57b061ab',
+          organizationId: 'qaregression2',
+          platformUrl: 'https://platformstg.cloud.coveo.com',
         });
       })();
     </script>

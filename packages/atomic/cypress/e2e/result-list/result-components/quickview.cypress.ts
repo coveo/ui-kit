@@ -141,4 +141,23 @@ describe('Quickview Component', () => {
       QuickviewModalSelectors.keywordsSidebar().should('exist');
     });
   });
+
+  describe('when used on an excel file with a query that returns invalid HTML', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addFacet({field: 'filetype'}))
+        .with(addSearchBox())
+        .withHash('f-filetype=xls&q=1/12')
+        .with(addQuickviewInResultList())
+        .init();
+    });
+
+    it('should handle displaying keywords correctly', () => {
+      openModal();
+      QuickviewModalSelectors.keywordsSidebar()
+        .should('exist')
+        .should('contain.text', 'Navigate between 6 occurrences of 1')
+        .should('contain.text', 'Navigate between 6 occurrences of 12');
+    });
+  });
 });

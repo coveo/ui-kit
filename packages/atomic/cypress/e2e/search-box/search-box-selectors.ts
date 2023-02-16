@@ -3,6 +3,7 @@ import {AriaLiveSelectors} from '../aria-live-selectors';
 export const searchBoxComponent = 'atomic-search-box';
 
 export const SearchBoxSelectors = {
+  host: () => cy.get(searchBoxComponent),
   shadow: () => cy.get(searchBoxComponent).shadow(),
   inputBox: () => SearchBoxSelectors.shadow().find('[part="input"]'),
   submitButton: () =>

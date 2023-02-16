@@ -1,18 +1,9 @@
 import {resolve} from 'node:path';
 import {promisify} from 'node:util';
 import {execute} from '../exec.mjs';
-import {
-  packageDirsNpmTag,
-  getPackageDefinitionFromPackageDir,
-} from '../packages.mjs';
+import {getPackageManifestFromPackagePath} from '../packages.mjs';
 
-async function main() {
-  const requests = packageDirsNpmTag
-    .map((dir) => getPackageDefinitionFromPackageDir(dir))
-    .map(({name, version}) => updateNpmTag(name, version));
-
-  await Promise.all(requests);
-}
+const pkg = getPackageManifestFromPackagePath(process.cwd());
 
 async function updateNpmTag(packageName, version) {
   const tag = process.argv[2];
@@ -57,4 +48,4 @@ function isCandidateGreaterThanLatestVersion(candidate, latest, i) {
   return candidate[i] > latest[i];
 }
 
-main();
+updateNpmTag(pkg.name, pkg.version);

@@ -143,6 +143,6 @@ describe('quantic greeting', () => {
 });
 ```
 
-**Tip** As soon as you create the test file, run `npm run cypress:open` to see your tests run live as you write them. Writing and debugging your tests is much more efficient this way.
+**Tip** As soon as you create the test file, run `npm run e2e:watch` to see your tests run live as you write them. Writing and debugging your tests is much more efficient this way.
 
 **Tip** When writing a test, use `describe.only(...)` or `it.only(...)` to focus only on the test at hand. 
