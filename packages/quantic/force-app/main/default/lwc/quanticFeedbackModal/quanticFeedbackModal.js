@@ -67,7 +67,7 @@ export default class QuanticFeedbackModal extends LightningModal {
   }
 
   /**
-   * Validates the properties provided to the feedback moda.
+   * Validates the properties provided to the feedback modal.
    */
   validateFeedbackModal() {
     getBueno(this).then(() => {
