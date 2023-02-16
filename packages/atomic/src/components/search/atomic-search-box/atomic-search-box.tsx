@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {
   SearchBox,
   SearchBoxState,
@@ -33,7 +34,7 @@ import {
 } from '../../../utils/local-storage-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {getUniqueItemsByProperties, once, randomID} from '../../../utils/utils';
+import {once, randomID} from '../../../utils/utils';
 import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchInput} from '../../common/search-box/search-input';
@@ -516,7 +517,19 @@ export class AtomicSearchBox {
 
   private getAndFilterLeftSuggestionElements() {
     const suggestionElements = this.getSuggestionElements(this.leftSuggestions);
-    return getUniqueItemsByProperties(suggestionElements, ['query']);
+    const filterOnDuplicate = new Set();
+
+    return suggestionElements.filter((suggestionElement) => {
+      if (isNullOrUndefined(suggestionElement.query)) {
+        return true;
+      }
+      if (filterOnDuplicate.has(suggestionElement.query)) {
+        return false;
+      } else {
+        filterOnDuplicate.add(suggestionElement.query);
+        return true;
+      }
+    });
   }
 
   private onKeyDown(e: KeyboardEvent) {

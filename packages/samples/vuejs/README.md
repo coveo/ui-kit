@@ -8,7 +8,7 @@ To test it, run it locally by following the steps below:
 
 ```sh
 npm install
-npm run serve
+npm run dev
 ```
 
 ## Using Atomic
@@ -85,8 +85,8 @@ To leverage everything that Atomic has to offer, you will need to copy some asse
 ```json
 scripts: {
   ...,
-  "dev": "npm run copy:assets && npm run serve",
-  "copy:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets public/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang public/lang"
+  "dev": "npm run build:assets && npm run serve",
+  "build:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets public/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang public/lang"
 }
 ```
 

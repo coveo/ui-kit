@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.8...@coveo/atomic@2.19.9) (2023-02-15)
+
+### Bug Fixes
+
+- **atomic:** ignore empty query when detecting duplicates in search box suggestions ([#2723](https://github.com/coveo/ui-kit/issues/2723)) ([75b6ee9](https://github.com/coveo/ui-kit/commit/75b6ee97642bcd616aa4932d850705099e9dac0b))
+
+## [2.19.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.7...@coveo/atomic@2.19.8) (2023-02-15)
+
+### Bug Fixes
+
+- **atomic:** handle invalid HTML highlights ([#2726](https://github.com/coveo/ui-kit/issues/2726)) ([35d5969](https://github.com/coveo/ui-kit/commit/35d596913e556d03297cef8800ed780809758129))
+
 ## [2.19.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.6...@coveo/atomic@2.19.7) (2023-02-10)
 
 **Note:** Version bump only for package @coveo/atomic
