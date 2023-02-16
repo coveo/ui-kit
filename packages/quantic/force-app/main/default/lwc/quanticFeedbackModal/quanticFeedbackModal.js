@@ -75,6 +75,9 @@ export default class QuanticFeedbackModal extends LightningModal {
       if (!this.error) {
         this.validateOptions();
       }
+      if (!this.error) {
+        this.validateSubmitFeedback();
+      }
       this.validated = true;
     });
   }
@@ -109,6 +112,13 @@ export default class QuanticFeedbackModal extends LightningModal {
           this.setError();
         }
       });
+    }
+  }
+
+  validateSubmitFeedback() {
+    if (typeof this.submitFeedback !== 'function') {
+      console.error('The submitFeedback property is not a valid function.');
+      this.setError();
     }
   }
 

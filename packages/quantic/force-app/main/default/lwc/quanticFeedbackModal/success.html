@@ -1,7 +1,7 @@
 <template>
   <lightning-modal-header label={labels.thankYouForYourFeedback}></lightning-modal-header>
   <lightning-modal-body>
-    <div data-cy="feedback-modal-body__success-message" class="slds-var-p-bottom_x-large">
+    <div class="slds-var-p-bottom_x-large feedback-modal-body__success-message">
       <div class="slds-col slds-size_12-of-12 slds-var-m-vertical_x-large slds-illustration slds-illustration_small">
         <c-quantic-svg name="success"></c-quantic-svg>
       </div>
@@ -9,7 +9,7 @@
     </div>
   </lightning-modal-body>
   <lightning-modal-footer>
-    <lightning-button data-cy="feedback-modal-footer__done" variant="brand" label={labels.done}
+    <lightning-button variant="brand" label={labels.done}
       onclick={closeModal}></lightning-button>
   </lightning-modal-footer>
 </template>
