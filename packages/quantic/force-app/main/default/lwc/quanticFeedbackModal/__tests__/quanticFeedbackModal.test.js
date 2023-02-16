@@ -162,7 +162,7 @@ describe('c-quantic-fedback-modal', () => {
       it('should display and log an error message', async () => {
         const element = createTestComponent({
           ...defaultOptions,
-          options: [{value: 'example'}],
+          options: [{value: exampleValue}],
         });
         await flushPromises();
 
@@ -181,7 +181,7 @@ describe('c-quantic-fedback-modal', () => {
       it('should display and log an error message', async () => {
         const element = createTestComponent({
           ...defaultOptions,
-          options: [{label: 'example'}],
+          options: [{label: exampleValue}],
         });
         await flushPromises();
 
@@ -201,7 +201,7 @@ describe('c-quantic-fedback-modal', () => {
         const invalidLabel = 1;
         const element = createTestComponent({
           ...defaultOptions,
-          options: [{label: invalidLabel, value: 'example'}],
+          options: [{label: invalidLabel, value: exampleValue}],
         });
         await flushPromises();
 
@@ -221,7 +221,7 @@ describe('c-quantic-fedback-modal', () => {
         const invalidValue = 1;
         const element = createTestComponent({
           ...defaultOptions,
-          options: [{label: 'example', value: invalidValue}],
+          options: [{label: exampleValue, value: invalidValue}],
         });
         await flushPromises();
 
