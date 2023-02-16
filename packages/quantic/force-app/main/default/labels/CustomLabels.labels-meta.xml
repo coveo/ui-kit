@@ -904,6 +904,34 @@
       <shortDescription>Copied!</shortDescription>
     </labels>
     <labels>
+      <fullName>quantic_Yes</fullName>
+      <value>Yes</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Yes</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_No</fullName>
+      <value>No</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>No</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_WasThisUseful</fullName>
+      <value>Was this useful?</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Was this useful?</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ExplainWhy</fullName>
+      <value>Explain Why</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Explain why</shortDescription>
+    </labels>
+    <labels>
       <fullName>quantic_SmartSnippetShowMore</fullName>
       <value>Show more</value>
       <language>en_US</language>
