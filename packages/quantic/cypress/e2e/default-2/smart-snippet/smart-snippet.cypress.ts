@@ -26,11 +26,12 @@ const exampleSmartSnippetAnswer = `
   </div>
 `;
 
+const otherOption = 'other';
 const feedbackOptions = [
   'does_not_answer',
   'partially_answers',
   'was_not_a_question',
-  'other',
+  otherOption,
 ];
 
 describe('quantic-smart-snippet', () => {
@@ -187,11 +188,11 @@ describe('quantic-smart-snippet', () => {
           const exampleDetails = 'example details';
           Actions.clickSmartSnippetExplainWhyButton();
           Expect.logOpenSmartSnippetFeedbackModal();
-          Actions.clickFeedbackOption(feedbackOptions.length - 1);
+          Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
           Actions.typeInFeedbackDetailsInput(exampleDetails);
           Actions.clickFeedbackSubmitButton();
           Expect.logSendSmartSnippetReason({
-            reason: feedbackOptions[feedbackOptions.length - 1],
+            reason: otherOption,
             details: exampleDetails,
           });
           Actions.clickFeedbackDoneButton();
