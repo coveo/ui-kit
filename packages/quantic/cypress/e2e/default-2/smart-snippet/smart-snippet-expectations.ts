@@ -20,14 +20,14 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
       selector
         .smartSnippetCard()
         .should(display ? 'exist' : 'not.exist')
-        .log(`${should} display the smart snippet`);
+        .logDetail(`${should} display the smart snippet`);
     },
 
     displaySmartSnippetQuestion: (value: string) => {
       selector
         .smartSnippetQuestion()
         .contains(value)
-        .log('should display the correct smart snippet question');
+        .logDetail('should display the correct smart snippet question');
     },
 
     displaySmartSnippetAnswer: (value: string) => {
@@ -36,28 +36,28 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         .then((elem) => {
           expect(elem[0].innerHTML).to.eq(value);
         })
-        .log('should display the correct smart snippet answer');
+        .logDetail('should display the correct smart snippet answer');
     },
 
     displaySmartSnippetSourceUri: (value: string) => {
       selector
         .smartSnippetSourceUri()
         .contains(value)
-        .log('should display the correct smart snippet source uri');
+        .logDetail('should display the correct smart snippet source uri');
     },
 
     displaySmartSnippetSourceTitle: (value: string) => {
       selector
         .smartSnippetSourceTitle()
         .contains(value)
-        .log('should display the correct smart snippet source title');
+        .logDetail('should display the correct smart snippet source title');
     },
 
     displaySmartSnippetAnswerToggle: (display: boolean) => {
       selector
         .smartSnippetAnswerToggle()
         .should(display ? 'exist' : 'not.exist')
-        .log(`${should} display the smart snippet toggle`);
+        .logDetail(`${should} display the smart snippet toggle`);
     },
 
     displaySmartSnippetShowMoreButton: (display: boolean) => {
@@ -65,7 +65,7 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         .smartSnippetAnswerToggle()
         .contains('Show more')
         .should(display ? 'exist' : 'not.exist')
-        .log(`${should} display the smart snippet show more button`);
+        .logDetail(`${should} display the smart snippet show more button`);
     },
 
     displaySmartSnippetShowLessButton: (display: boolean) => {
@@ -73,7 +73,7 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         .smartSnippetAnswerToggle()
         .contains('Show less')
         .should(display ? 'exist' : 'not.exist')
-        .log(`${should}display the smart snippet show less button`);
+        .logDetail(`${should}display the smart snippet show less button`);
     },
 
     displayCollapsedSmartSnippetAnswer: (collapsed: boolean) => {
@@ -106,7 +106,7 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
       selector
         .smartSnippetExplainWhyButton()
         .should(display ? 'exist' : 'not.exist')
-        .log(`${should} display the smart snippet explain why button`);
+        .logDetail(`${should} display the smart snippet explain why button`);
     },
 
     logExpandSmartSnippet: () => {
