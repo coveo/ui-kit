@@ -103,7 +103,7 @@ function smartSnippetSuggestionsExpectations(
       selector
         .smartSnippetSuggestionsSourceUri(index)
         .contains(value)
-        .log(
+        .logDetail(
           `should display the correct source uri of the suggestion at the index ${index}`
         );
     },
