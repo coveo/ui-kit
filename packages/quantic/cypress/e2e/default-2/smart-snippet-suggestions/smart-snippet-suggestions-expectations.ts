@@ -115,7 +115,7 @@ function smartSnippetSuggestionsExpectations(
       selector
         .smartSnippetSuggestionsSourceTitle(index)
         .contains(value)
-        .log(
+        .logDetail(
           `should display the correct source title of the suggestion at the index ${index}`
         );
     },
