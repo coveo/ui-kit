@@ -76,7 +76,7 @@ function smartSnippetSuggestionsExpectations(
       selector
         .smartSnippetSuggestionsCard()
         .should(display ? 'exist' : 'not.exist')
-        .log(`${should(display)} display the smart snippet suggestions`);
+        .logDetail(`${should(display)} display the smart snippet suggestions`);
     },
 
     displaySmartSnippetSuggestionsQuestion: (index: number, value: string) => {
