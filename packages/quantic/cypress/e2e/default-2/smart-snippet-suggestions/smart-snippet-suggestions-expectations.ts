@@ -94,7 +94,7 @@ function smartSnippetSuggestionsExpectations(
         .then((elem) => {
           expect(elem[0].innerHTML).to.eq(value);
         })
-        .log(
+        .logDetail(
           `should display the correct  answer of the suggestion at the index ${index}`
         );
     },
