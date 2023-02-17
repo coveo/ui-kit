@@ -1,4 +1,7 @@
 <template>
+  <template if:true={error}>
+    <div class="error-message slds-text-color_destructive">{error}</div>
+  </template>
   <template if:true={displaySmartSnippetSuggestions}>
     <div data-cy="smart-snippet-suggestions-card" class="slds-card">
       <p class="slds-text-heading_small slds-var-p-around_small slds-border_bottom smart-snippet-suggestions__title">
