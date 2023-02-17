@@ -12,6 +12,7 @@ runs:
         path: |
           packages/bueno/dist
           packages/headless/dist
+          packages/headless/www
           packages/auth/dist
           packages/atomic/dist
           packages/atomic/docs
@@ -38,6 +39,10 @@ runs:
         key: cy-${{ hashFiles('**/package-lock.json') }}
     - run: npm ci
       shell: bash
+    - uses: actions/cache@v3
+      with:
+        path: node_modules/.cache/nx
+        key: nx-${{ github.sha }}
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run build
       shell: bash
