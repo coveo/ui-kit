@@ -83,7 +83,7 @@ function smartSnippetSuggestionsExpectations(
       selector
         .smartSnippetSuggestionHeading(index)
         .contains(value)
-        .log(
+        .logDetail(
           `should display the correct question of the suggestion at the index ${index}`
         );
     },
