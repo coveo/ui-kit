@@ -26,7 +26,7 @@ export default class QuanticFeedbackModal extends LightningModal {
   /**
    * @api
    * The list of options to be displayed in the modal.
-   * @type {Array<{label: string, value: string, withDetails?: boolean, detailsRequired?: boolean}>}
+   * @type {Array<{label: string, value: string, withDetails: boolean, detailsRequired: boolean}>}
    */
   @api options;
   /**
