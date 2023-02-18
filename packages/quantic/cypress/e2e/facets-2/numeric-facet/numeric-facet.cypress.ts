@@ -5,6 +5,7 @@ import {
   InterceptAliases,
   interceptSearch,
   mockSearchNoResults,
+  mockSearchWithoutAnyFacetValues,
 } from '../../../page-objects/search';
 import {
   useCaseParamTest,
@@ -164,6 +165,20 @@ describe('quantic-numeric-facet', () => {
                 Expect.numberOfSelectedCheckboxValues(0);
               });
             });
+        });
+
+        describe('when no numeric facet values are returned', () => {
+          it('should work as expected', () => {
+            mockSearchWithoutAnyFacetValues(param.useCase);
+            visitNumericFacetPage({
+              ...customWithInputSettings,
+              useCase: param.useCase,
+            });
+
+            scope('on initial load', () => {
+              Expect.displayNumericFacetCard(false);
+            });
+          });
         });
       });
 
@@ -360,6 +375,20 @@ describe('quantic-numeric-facet', () => {
             Expect.inputMinEmpty();
           });
         });
+
+        describe('when no numeric facet values are returned', () => {
+          it('should work as expected', () => {
+            mockSearchWithoutAnyFacetValues(param.useCase);
+            visitNumericFacetPage({
+              ...customWithInputSettings,
+              useCase: param.useCase,
+            });
+
+            scope('on initial load', () => {
+              Expect.displayNumericFacetCard(false);
+            });
+          });
+        });
       });
 
       describe('when selecting range with no search results', () => {
@@ -514,6 +543,7 @@ describe('quantic-numeric-facet', () => {
               useCase: param.useCase,
             });
 
+            Expect.displayNumericFacetCard(true);
             Expect.displayLabel(true);
             Expect.displayValues(true);
             Expect.numberOfValues(2);
@@ -528,8 +558,7 @@ describe('quantic-numeric-facet', () => {
               useCase: param.useCase,
             });
 
-            Expect.displayLabel(false);
-            Expect.displayValues(false);
+            Expect.displayNumericFacetCard(false);
           });
 
           scope(
@@ -543,9 +572,7 @@ describe('quantic-numeric-facet', () => {
                 useCase: param.useCase,
               });
 
-              Expect.displayLabel(true);
-              Expect.displaySearchForm(true);
-              Expect.displayValues(false);
+              Expect.displayNumericFacetCard(false);
             }
           );
         });
