@@ -77,14 +77,14 @@ function smartSnippetSuggestionsExpectations(
       selector
         .smartSnippetSuggestionsCard()
         .should(display ? 'exist' : 'not.exist')
-        .log(`${should(display)} display the smart snippet suggestions`);
+        .logDetail(`${should(display)} display the smart snippet suggestions`);
     },
 
     displaySmartSnippetSuggestionsQuestion: (index: number, value: string) => {
       selector
         .smartSnippetSuggestionHeading(index)
         .contains(value)
-        .log(
+        .logDetail(
           `should display the correct question of the suggestion at the index ${index}`
         );
     },
@@ -95,7 +95,7 @@ function smartSnippetSuggestionsExpectations(
         .then((elem) => {
           expect(elem[0].innerHTML).to.eq(value);
         })
-        .log(
+        .logDetail(
           `should display the correct  answer of the suggestion at the index ${index}`
         );
     },
@@ -104,7 +104,7 @@ function smartSnippetSuggestionsExpectations(
       selector
         .smartSnippetSuggestionsSourceUri(index)
         .contains(value)
-        .log(
+        .logDetail(
           `should display the correct source uri of the suggestion at the index ${index}`
         );
     },
@@ -116,7 +116,7 @@ function smartSnippetSuggestionsExpectations(
       selector
         .smartSnippetSuggestionsSourceTitle(index)
         .contains(value)
-        .log(
+        .logDetail(
           `should display the correct source title of the suggestion at the index ${index}`
         );
     },
