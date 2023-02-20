@@ -4,7 +4,6 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {getBueno} from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -31,12 +30,6 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
    * @type {string}
    */
   @api engineId;
-  /**
-   * The number of suggestions to display in the component. Must be a value between 1 and 4.
-   * @api
-   * @type {number}
-   */
-  @api maximumNumberOfSuggestions = 4;
 
   labels = {
     peopleAlsoAsk,
@@ -48,42 +41,9 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
   state;
   /** @type {Array<string>} */
   previousOpenedSuggestions = [];
-  /** @type {string} */
-  error;
-  /** @type {boolean} */
-  validated = false;
 
   connectedCallback() {
-    getBueno(this).then(() => {
-      if (!Bueno.isNumber(this.maximumNumberOfSuggestions)) {
-        console.error(
-          `The "${this.maximumNumberOfSuggestions}" value of the maximumNumberOfSuggestions property is not a valid number.`
-        );
-        this.setError();
-      } else if (
-        this.maximumNumberOfSuggestions > 4 ||
-        this.maximumNumberOfSuggestions < 1
-      ) {
-        console.error(
-          'The value of the maximumNumberOfSuggestions property must be a value between 1 and 4.'
-        );
-        this.setError();
-      }
-      this.validated = true;
-    });
     registerComponentForInit(this, this.engineId);
-  }
-
-  setError() {
-    this.error = `${this.template.host.localName} Error`;
-  }
-
-  /**
-   * Whether the field value can be displayed.
-   * @returns {boolean}
-   */
-  get isValid() {
-    return this.validated && !this.error;
   }
 
   renderedCallback() {
@@ -190,19 +150,15 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
    * Indicates whether smart snippet suggestions should be displayed.
    * @returns {boolean}
    */
-  get displaySmartSnippetSuggestions() {
-    return this.isValid && !!this.state?.questions?.length;
+  get shouldDisplaySmartSnippetSuggestions() {
+    return !!this.state?.questions?.length;
   }
 
   /**
    * Returns the list of smart snippet suggestions.
    */
   get suggestions() {
-    const questions = this.state?.questions?.slice(
-      0,
-      Math.min(4, this.maximumNumberOfSuggestions)
-    );
-    return questions?.map((suggestion) => {
+    return this.state?.questions?.map((suggestion) => {
       const questionAnswerId = suggestion.questionAnswerId;
       return {
         ...suggestion,

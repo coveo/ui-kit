@@ -10,7 +10,6 @@ export interface SmartSnippetSuggestionsSelector extends ComponentSelector {
   smartSnippetSuggestionsSourceUri: (index: number) => CypressSelector;
   smartSnippetSuggestionsSourceTitle: (index: number) => CypressSelector;
   smartSnippetSuggestionsInlineLink: (index: number) => CypressSelector;
-  smartSnippetSuggestionsError: () => CypressSelector;
 }
 
 export const SmartSnippetSuggestionsSelectors: SmartSnippetSuggestionsSelector =
@@ -41,6 +40,4 @@ export const SmartSnippetSuggestionsSelectors: SmartSnippetSuggestionsSelector =
       SmartSnippetSuggestionsSelectors.get()
         .find('[data-cy="smart-snippet__inline-link"]')
         .eq(index),
-    smartSnippetSuggestionsError: () =>
-      SmartSnippetSuggestionsSelectors.get().find('[data-cy="error-message"]'),
   };
