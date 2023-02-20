@@ -50,10 +50,10 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
   previousOpenedSuggestions = [];
   /** @type {string} */
   error;
+  /** @type {boolean} */
+  validated = false;
 
   connectedCallback() {
-    console.log('validating ...');
-    console.log(this.maximumNumberOfSuggestions);
     getBueno(this).then(() => {
       if (!Bueno.isNumber(this.maximumNumberOfSuggestions)) {
         console.error(
