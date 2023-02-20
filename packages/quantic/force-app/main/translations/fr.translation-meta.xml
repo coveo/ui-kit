@@ -477,6 +477,22 @@
       <name>quantic_Copied</name>
     </customLabels>
     <customLabels>
+      <label>Oui</label>
+      <name>quantic_Yes</name>
+    </customLabels>
+    <customLabels>
+      <label>Non</label>
+      <name>quantic_No</name>
+    </customLabels>
+    <customLabels>
+      <label>Est-ce que cela a été utile?</label>
+      <name>quantic_WasThisUseful</name>
+    </customLabels>
+    <customLabels>
+      <label>Dites-nous pourquoi</label>
+      <name>quantic_ExplainWhy</name>
+    </customLabels>
+    <customLabels>
       <label>Voir plus</label>
       <name>quantic_SmartSnippetShowMore</name>
     </customLabels>

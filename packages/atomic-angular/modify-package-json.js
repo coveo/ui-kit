@@ -7,7 +7,13 @@ const packageJSON = JSON.parse(readFileSync(packageJSONPath));
 if (!packageJSON.scripts) {
   packageJSON.scripts = {};
 }
-packageJSON.scripts['npm:publish'] =
-  'node ../../../../../scripts/deploy/publish.mjs';
+packageJSON.scripts['publish:npm:release'] =
+  'node ../../../../../scripts/deploy/publish.mjs release';
+packageJSON.scripts['publish:npm:prerelease'] =
+  'node ../../../../../scripts/deploy/publish.mjs prerelease';
+packageJSON.scripts['promote:npm:beta'] =
+  'node ../../../../../scripts/deploy/update-npm-tag.mjs beta';
+packageJSON.scripts['promote:npm:latest'] =
+  'node ../../../../../scripts/deploy/update-npm-tag.mjs latest';
 
 writeFileSync(packageJSONPath, JSON.stringify(packageJSON, null, 2));
