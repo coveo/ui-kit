@@ -58,6 +58,14 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
           `The "${this.maximumNumberOfSuggestions}" value of the maximumNumberOfSuggestions property is not a valid number.`
         );
         this.setError();
+      } else if (
+        this.maximumNumberOfSuggestions > 4 ||
+        this.maximumNumberOfSuggestions < 1
+      ) {
+        console.error(
+          'The value of the maximumNumberOfSuggestions property needs to be a value between 1 and 4.'
+        );
+        this.setError();
       }
       this.validated = true;
     });
