@@ -926,7 +926,7 @@
     </labels>
     <labels>
       <fullName>quantic_SelectTheReason</fullName>
-      <value>Select the reason</value>
+      <value>Select a reason</value>
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Select the reason</shortDescription>
