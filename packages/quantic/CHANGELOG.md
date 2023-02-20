@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.13.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.12.0...@coveo/quantic@2.13.0) (2023-02-20)
+
+### Features
+
+- **quantic:** quantic smart snippet suggestions component created ([#2729](https://github.com/coveo/ui-kit/issues/2729)) ([74b5c91](https://github.com/coveo/ui-kit/commit/74b5c9117a48d8bc5032b087cf96acc4dec30b62))
+
 # [2.12.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.11.1...@coveo/quantic@2.12.0) (2023-02-16)
 
 ### Features
