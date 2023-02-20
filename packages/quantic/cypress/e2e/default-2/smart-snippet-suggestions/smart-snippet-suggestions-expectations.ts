@@ -1,5 +1,6 @@
 import {InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
+import {ConsoleExpectations} from '../../console-expectations';
 import {
   SmartSnippetSuggestionsSelector,
   SmartSnippetSuggestionsSelectors,
@@ -120,6 +121,13 @@ function smartSnippetSuggestionsExpectations(
         );
     },
 
+    displayErrorMessage: (display: boolean) => {
+      selector
+        .smartSnippetSuggestionsError()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the error message`);
+    },
+
     logExpandSmartSnippetSuggestion: (suggestion: Suggestion) => {
       logSmartSnippetSuggestionsEvent(
         suggestion,
@@ -156,4 +164,7 @@ function smartSnippetSuggestionsExpectations(
 
 export const SmartSnippetSuggestionsExpectations = {
   ...smartSnippetSuggestionsExpectations(SmartSnippetSuggestionsSelectors),
+  console: {
+    ...ConsoleExpectations,
+  },
 };

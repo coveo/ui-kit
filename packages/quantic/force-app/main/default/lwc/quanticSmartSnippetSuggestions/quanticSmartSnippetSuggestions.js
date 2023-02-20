@@ -32,7 +32,7 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
    */
   @api engineId;
   /**
-   * The ID of the engine instance the component registers to.
+   * The number of suggestions to display in the component. Must be a value between 1 and 4.
    * @api
    * @type {number}
    */
@@ -52,6 +52,8 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
   error;
 
   connectedCallback() {
+    console.log('validating ...');
+    console.log(this.maximumNumberOfSuggestions);
     getBueno(this).then(() => {
       if (!Bueno.isNumber(this.maximumNumberOfSuggestions)) {
         console.error(
@@ -63,7 +65,7 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
         this.maximumNumberOfSuggestions < 1
       ) {
         console.error(
-          'The value of the maximumNumberOfSuggestions property needs to be a value between 1 and 4.'
+          'The value of the maximumNumberOfSuggestions property must be a value between 1 and 4.'
         );
         this.setError();
       }

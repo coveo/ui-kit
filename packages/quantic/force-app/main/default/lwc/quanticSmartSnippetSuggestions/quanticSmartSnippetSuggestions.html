@@ -1,6 +1,6 @@
 <template>
   <template if:true={error}>
-    <div class="error-message slds-text-color_destructive">{error}</div>
+    <div data-cy="error-message" class="error-message slds-text-color_destructive">{error}</div>
   </template>
   <template if:true={displaySmartSnippetSuggestions}>
     <div data-cy="smart-snippet-suggestions-card" class="slds-card">
