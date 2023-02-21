@@ -929,7 +929,7 @@
       <value>Select a reason</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Select the reason</shortDescription>
+      <shortDescription>Select a reason</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_WhatWasTheReason</fullName>
