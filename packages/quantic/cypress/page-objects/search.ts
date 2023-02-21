@@ -251,8 +251,8 @@ export function getRoute(useCase?: string) {
     : routeMatchers.search;
 }
 
-export function mockSearchWithoutAnyFacetValues() {
-  cy.intercept(routeMatchers.search, (req) => {
+export function mockSearchWithoutAnyFacetValues(useCase: string) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.facets.forEach((facet: {values: string[]}) => {
         facet.values = [];
