@@ -23,6 +23,7 @@ import {
   addResultList,
   buildTemplateWithoutSections,
 } from '../result-list/result-list-actions';
+import {ResultListSelectors} from '../result-list/result-list-selectors';
 import {addSearchBox} from './search-box-actions';
 import * as SearchBoxAssertions from './search-box-assertions';
 import {searchBoxComponent, SearchBoxSelectors} from './search-box-selectors';
@@ -76,6 +77,23 @@ describe('Search Box Test Suites', () => {
       });
     }
 
+    function setupSearchboxOnly() {
+      return addSearchBox({
+        suggestions: {
+          maxWithoutQuery: 0,
+          maxWithQuery: 0,
+        },
+        recentQueries: {
+          maxWithoutQuery: 0,
+          maxWithQuery: 0,
+        },
+        props: {
+          'number-of-queries': 0,
+          'suggestion-timeout': 2000,
+        },
+      });
+    }
+
     function setupWithSuggestionsAndRecentQueries() {
       new TestFixture()
         .with(setSuggestions(numOfSuggestions))
@@ -88,27 +106,6 @@ describe('Search Box Test Suites', () => {
       new TestFixture()
         .with(setRecentQueries(numOfRecentQueries))
         .with(setupSearchbox())
-        .init();
-    }
-
-    function setupSearchBoxOnly() {
-      new TestFixture()
-        .with(
-          addSearchBox({
-            suggestions: {
-              maxWithoutQuery: 0,
-              maxWithQuery: 0,
-            },
-            recentQueries: {
-              maxWithoutQuery: 0,
-              maxWithQuery: 0,
-            },
-            props: {
-              'number-of-queries': 50,
-              'suggestion-timeout': 2000,
-            },
-          })
-        )
         .init();
     }
 
@@ -151,13 +148,82 @@ describe('Search Box Test Suites', () => {
       SearchBoxAssertions.assertHasText('query-suggestion-1');
     });
 
+    describe('analytics', () => {
+      it('should log interface load with a correct number of results for query that return only one result', () => {
+        new TestFixture()
+          .with(setupSearchboxOnly())
+          .withHash('q=singhr')
+          .init();
+
+        cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
+          expect(analyticsBody.numberOfResults).to.equal(1);
+        });
+      });
+
+      it('should log the correct results array for a query that return only one result', () => {
+        new TestFixture()
+          .with(setupSearchboxOnly())
+          .with(addResultList())
+          .withHash('q=singhr')
+          .init();
+
+        cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
+          const resultsArray = analyticsBody.results;
+
+          expect(resultsArray?.length).equal(1);
+        });
+
+        ResultListSelectors.result().should('have.length', 1);
+      });
+
+      it('should log interface load with a correct number of results for a query that return multiple results', () => {
+        new TestFixture().with(setupSearchboxOnly()).withHash('q=test').init();
+
+        cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
+          expect(analyticsBody.numberOfResults).to.be.greaterThan(1000);
+        });
+      });
+
+      it('should log the correct results array for a query that return 10 results', () => {
+        new TestFixture()
+          .with(setupSearchboxOnly())
+          .with(addResultList())
+          .withHash('q=test')
+          .init();
+
+        cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
+          const resultsArray = analyticsBody.results;
+
+          expect(resultsArray?.length).equal(10);
+        });
+
+        ResultListSelectors.result().should('have.length', 10);
+      });
+
+      it('should log search box submit with a correct number of results when the query changes', () => {
+        new TestFixture()
+          .with(setupSearchboxOnly())
+          .withHash('q=singhr')
+          .init();
+
+        SearchBoxSelectors.inputBox().clear();
+        SearchBoxSelectors.inputBox().type('test', {force: true, delay: 100});
+        SearchBoxSelectors.submitButton().click();
+
+        cy.expectSearchEvent('searchboxSubmit').should((analyticsBody) => {
+          expect(analyticsBody.numberOfResults).to.be.greaterThan(1000);
+        });
+      });
+
+      it('should ');
+    });
+
     describe('with input', () => {
       const expectedSum = numOfSuggestions + numOfRecentQueries;
 
       function setInputText() {
         SearchBoxSelectors.inputBox().type('Rec', {delay: 100});
       }
-
       describe('verify rendering', () => {
         before(() => {
           setupWithSuggestionsAndRecentQueries();
