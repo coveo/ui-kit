@@ -214,8 +214,6 @@ describe('Search Box Test Suites', () => {
           expect(analyticsBody.numberOfResults).to.be.greaterThan(1000);
         });
       });
-
-      it('should ');
     });
 
     describe('with input', () => {
