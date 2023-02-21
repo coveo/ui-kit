@@ -932,11 +932,11 @@
       <shortDescription>Select a reason</shortDescription>
     </labels>
     <labels>
-      <fullName>quantic_WhatWasTheReason</fullName>
-      <value>What was the reason?</value>
+      <fullName>quantic_ProvideDetails</fullName>
+      <value>Please provide details.</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>What was the reason?</shortDescription>
+      <shortDescription>Please provide details.</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_FillOutField</fullName>
@@ -947,7 +947,7 @@
     </labels>
     <labels>
       <fullName>quantic_SelectOneOfOptions</fullName>
-      <value>Please select one of these options</value>
+      <value>Please select an option</value>
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Please select an option</shortDescription>
@@ -974,11 +974,11 @@
       <shortDescription>Done</shortDescription>
     </labels>
     <labels>
-      <fullName>quantic_YourResponsesHelp</fullName>
-      <value>Your responses help improve the search experience.</value>
+      <fullName>quantic_YourFeedbackHelps</fullName>
+      <value>Your feedback helps improve the search experience.</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Your responses help</shortDescription>
+      <shortDescription>Your feedback helps</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_ThankYouForYourFeedback</fullName>

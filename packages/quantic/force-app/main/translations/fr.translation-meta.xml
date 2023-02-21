@@ -493,15 +493,15 @@
       <name>quantic_SelectTheReason</name>
     </customLabels>
     <customLabels>
-      <label>Quelle était la raison?</label>
-      <name>quantic_WhatWasTheReason</name>
+      <label>Veuillez fournir des détails.</label>
+      <name>quantic_ProvideDetails</name>
     </customLabels>
     <customLabels>
       <label>Veuillez remplir ce champ</label>
       <name>quantic_FillOutField</name>
     </customLabels>
     <customLabels>
-      <label>Veuillez choisir l'une des options suivantes</label>
+      <label>Veuillez choisir l'une des options précédentes</label>
       <name>quantic_SelectOneOfOptions</name>
     </customLabels>
     <customLabels>
@@ -517,8 +517,8 @@
       <name>quantic_Done</name>
     </customLabels>
     <customLabels>
-      <label>Vos réponses permettent d'améliorer l'expérience de recherche.</label>
-      <name>quantic_YourResponsesHelp</name>
+      <label>Vos commentaires permettent d'améliorer l'expérience de recherche.</label>
+      <name>quantic_YourFeedbackHelps</name>
     </customLabels>
     <customLabels>
       <label>Merci pour votre commentaire!</label>

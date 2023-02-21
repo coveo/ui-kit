@@ -7,8 +7,8 @@ import selectOneOfOptions from '@salesforce/label/c.quantic_SelectOneOfOptions';
 import selectTheReason from '@salesforce/label/c.quantic_SelectTheReason';
 import sendFeedback from '@salesforce/label/c.quantic_SendFeedback';
 import thankYouForYourFeedback from '@salesforce/label/c.quantic_ThankYouForYourFeedback';
-import whatWasTheReason from '@salesforce/label/c.quantic_WhatWasTheReason';
-import yourResponsesHelp from '@salesforce/label/c.quantic_YourResponsesHelp';
+import provideDetails from '@salesforce/label/c.quantic_ProvideDetails';
+import yourFeedbackHelps from '@salesforce/label/c.quantic_YourFeedbackHelps';
 import {getBueno} from 'c/quanticHeadlessLoader';
 import LightningModal from 'lightning/modal';
 import {api} from 'lwc';
@@ -43,9 +43,9 @@ export default class QuanticFeedbackModal extends LightningModal {
     explainWhy,
     selectOneOfOptions,
     selectTheReason,
-    whatWasTheReason,
+    provideDetails,
     fillOutField,
-    yourResponsesHelp,
+    yourFeedbackHelps,
     thankYouForYourFeedback,
   };
 
