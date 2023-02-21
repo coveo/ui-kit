@@ -950,7 +950,7 @@
       <value>Please select one of these options</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Select one of options</shortDescription>
+      <shortDescription>Please select an option</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_Cancel</fullName>
