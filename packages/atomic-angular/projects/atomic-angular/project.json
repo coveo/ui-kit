@@ -8,7 +8,7 @@
       "outputs": [],
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ../../../../../scripts/deploy/update-npm-tag.mjs beta",
+        "command": "node ../../../../scripts/deploy/update-npm-tag.mjs beta",
         "cwd": "packages/atomic-angular/projects/atomic-angular"
       }
     },
@@ -18,7 +18,7 @@
       "outputs": [],
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ../../../../../scripts/deploy/update-npm-tag.mjs latest",
+        "command": "node ../../../../scripts/deploy/update-npm-tag.mjs latest",
         "cwd": "packages/atomic-angular/projects/atomic-angular"
       }
     }
