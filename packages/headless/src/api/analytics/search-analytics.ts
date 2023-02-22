@@ -94,8 +94,8 @@ export class SearchAnalyticsProvider
 
   private get numberOfResults() {
     return (
-      this.state.search?.response.results.length ||
-      getSearchInitialState().response.results.length
+      this.state.search?.response.totalCountFiltered ||
+      getSearchInitialState().response.totalCountFiltered
     );
   }
 }
