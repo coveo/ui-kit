@@ -15,6 +15,7 @@ export interface NumericFacetSelector extends ComponentSelector {
   helpMessage: () => CypressSelector;
   inputMinWarning: () => CypressSelector;
   inputMaxWarning: () => CypressSelector;
+  numericFacetCard: () => CypressSelector;
 }
 
 export type AllFacetSelectors = BaseFacetSelector &
@@ -65,4 +66,6 @@ export const NumericFacetSelectors: AllFacetSelectors = {
     NumericFacetSelectors.get().find(
       '.numeric__input-max div.slds-form-element__help'
     ),
+  numericFacetCard: () =>
+    NumericFacetSelectors.get().find('[data-cy="numeric-facet__card"]'),
 };
