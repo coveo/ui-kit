@@ -9,8 +9,6 @@
     "build:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
     "publish:npm:release": "npm --prefix projects/atomic-angular/dist run publish:npm:release",
     "publish:npm:prerelease": "npm --prefix projects/atomic-angular/dist run publish:npm:prerelease",
-    "promote:npm:beta": "npm --prefix projects/atomic-angular/dist run promote:npm:beta",
-    "promote:npm:latest": "npm --prefix projects/atomic-angular/dist run promote:npm:latest",
     "build:npm-package": "node modify-package-json.js"
   },
   "private": true,
