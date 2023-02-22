@@ -54,6 +54,14 @@ export const InterceptAliases = {
     OpenSmartSnippetFeedbackModal: uaAlias('openSmartSnippetFeedbackModal'),
     CloseSmartSnippetFeedbackModal: uaAlias('closeSmartSnippetFeedbackModal'),
     SendSmartSnippetReason: uaAlias('sendSmartSnippetReason'),
+    ExpandSmartSnippetSuggestion: uaAlias('expandSmartSnippetSuggestion'),
+    CollapseSmartSnippetSuggestion: uaAlias('collapseSmartSnippetSuggestion'),
+    OpenSmartSnippetSuggestionSource: uaAlias(
+      'openSmartSnippetSuggestionSource'
+    ),
+    OpenSmartSnippetSuggestionInlineLink: uaAlias(
+      'openSmartSnippetSuggestionInlineLink'
+    ),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -248,8 +256,8 @@ export function getRoute(useCase?: string) {
     : routeMatchers.search;
 }
 
-export function mockSearchWithoutAnyFacetValues() {
-  cy.intercept(routeMatchers.search, (req) => {
+export function mockSearchWithoutAnyFacetValues(useCase: string) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.facets.forEach((facet: {values: string[]}) => {
         facet.values = [];
@@ -303,6 +311,47 @@ export function mockSearchWithoutSmartSnippet() {
     req.continue((res) => {
       res.body.questionAnswer = {
         answerFound: false,
+      };
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithSmartSnippetSuggestions(
+  relatedQuestions: Array<{
+    question: string;
+    answerSnippet: string;
+    title: string;
+    uri: string;
+    documentId: {
+      contentIdKey: string;
+      contentIdValue: string;
+    };
+  }>
+) {
+  cy.intercept(routeMatchers.search, (req) => {
+    req.continue((res) => {
+      res.body.questionAnswer = {
+        relatedQuestions: relatedQuestions,
+      };
+      res.body.results = relatedQuestions.map(({title, uri, documentId}) => ({
+        uri,
+        title,
+        ClickUri: uri,
+        clickUri: uri,
+        uniqueId: '123',
+        raw: {permanentid: documentId.contentIdValue},
+      }));
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithoutSmartSnippetSuggestions() {
+  cy.intercept(routeMatchers.search, (req) => {
+    req.continue((res) => {
+      res.body.questionAnswer = {
+        relatedQuestions: [],
       };
       res.send();
     });

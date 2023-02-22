@@ -22,8 +22,8 @@ export class QuickviewWordHighlight {
       throw 'Invalid keyword identifier for quickview';
     }
 
-    this.indexIdentifier = parsed.keywordIdentifier;
     this.text = this.getText(keywordElementInIframe);
+    this.indexIdentifier = `${parsed.keywordIdentifier}-${this.text}`;
     this.color = keywordElementInIframe.style.backgroundColor;
     this.focusedColor = this.computeInvertedColor();
     this.previewBorderColor = this.computeSaturatedColor();
@@ -78,7 +78,7 @@ export class QuickviewWordHighlight {
 
   private getText(element: HTMLElement) {
     const innerTextOfHTMLElement = this.getHighlightedInnerText(element);
-    return this.resolveOriginalTerm(innerTextOfHTMLElement);
+    return this.resolveOriginalTerm(innerTextOfHTMLElement).trim();
   }
 
   private resolveOriginalTerm(highlight: string): string {

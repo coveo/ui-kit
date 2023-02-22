@@ -22,6 +22,12 @@ const getEvenRangeValue = (value: {start?: unknown; end?: unknown}) => {
 
 const numericFacetExpectations = (selector: AllFacetSelectors) => {
   return {
+    displayNumericFacetCard: (display: boolean) => {
+      selector
+        .numericFacetCard()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the numeric facet card`);
+    },
     displaySearchForm: (display: boolean) => {
       selector
         .searchForm()

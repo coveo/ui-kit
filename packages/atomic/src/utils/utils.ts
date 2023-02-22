@@ -194,19 +194,6 @@ export function isPropValuesEqual<ObjectWithProperties extends object>(
   return propNames.every((propName) => subject[propName] === target[propName]);
 }
 
-export function getUniqueItemsByProperties<Item extends object>(
-  items: Item[],
-  propNames: (keyof Item)[]
-) {
-  return items.filter(
-    (item, index, self) =>
-      index ===
-      self.findIndex((foundItem) =>
-        isPropValuesEqual(foundItem, item, propNames)
-      )
-  );
-}
-
 export function getParent(element: Element | ShadowRoot) {
   if (element.parentNode) {
     return element.parentNode as Element | ShadowRoot;

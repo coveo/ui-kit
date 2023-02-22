@@ -1,4 +1,8 @@
 import {
+  dispatchSearchBoxSuggestionsEvent,
+  SearchBoxSuggestionElement,
+} from '../../../src/components/search/search-box-suggestions/suggestions-common';
+import {
   SafeStorage,
   StorageItems,
 } from '../../../src/utils/local-storage-utils';
@@ -19,6 +23,7 @@ import {
   addResultList,
   buildTemplateWithoutSections,
 } from '../result-list/result-list-actions';
+import {ResultListSelectors} from '../result-list/result-list-selectors';
 import {addSearchBox} from './search-box-actions';
 import * as SearchBoxAssertions from './search-box-assertions';
 import {searchBoxComponent, SearchBoxSelectors} from './search-box-selectors';
@@ -67,6 +72,23 @@ describe('Search Box Test Suites', () => {
         },
         props: {
           'number-of-queries': numOfSuggestions + numOfRecentQueries,
+          'suggestion-timeout': 2000,
+        },
+      });
+    }
+
+    function setupSearchboxOnly() {
+      return addSearchBox({
+        suggestions: {
+          maxWithoutQuery: 0,
+          maxWithQuery: 0,
+        },
+        recentQueries: {
+          maxWithoutQuery: 0,
+          maxWithQuery: 0,
+        },
+        props: {
+          'number-of-queries': 0,
           'suggestion-timeout': 2000,
         },
       });
@@ -126,13 +148,80 @@ describe('Search Box Test Suites', () => {
       SearchBoxAssertions.assertHasText('query-suggestion-1');
     });
 
+    describe('analytics', () => {
+      it('should log interface load with a correct number of results for query that return only one result', () => {
+        new TestFixture()
+          .with(setupSearchboxOnly())
+          .withHash('q=singhr')
+          .init();
+
+        cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
+          expect(analyticsBody.numberOfResults).to.equal(1);
+        });
+      });
+
+      it('should log the correct results array for a query that return only one result', () => {
+        new TestFixture()
+          .with(setupSearchboxOnly())
+          .with(addResultList())
+          .withHash('q=singhr')
+          .init();
+
+        cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
+          const resultsArray = analyticsBody.results;
+
+          expect(resultsArray?.length).equal(1);
+        });
+
+        ResultListSelectors.result().should('have.length', 1);
+      });
+
+      it('should log interface load with a correct number of results for a query that return multiple results', () => {
+        new TestFixture().with(setupSearchboxOnly()).withHash('q=test').init();
+
+        cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
+          expect(analyticsBody.numberOfResults).to.be.greaterThan(1000);
+        });
+      });
+
+      it('should log the correct results array for a query that return 10 results', () => {
+        new TestFixture()
+          .with(setupSearchboxOnly())
+          .with(addResultList())
+          .withHash('q=test')
+          .init();
+
+        cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
+          const resultsArray = analyticsBody.results;
+
+          expect(resultsArray?.length).equal(10);
+        });
+
+        ResultListSelectors.result().should('have.length', 10);
+      });
+
+      it('should log search box submit with a correct number of results when the query changes', () => {
+        new TestFixture()
+          .with(setupSearchboxOnly())
+          .withHash('q=singhr')
+          .init();
+
+        SearchBoxSelectors.inputBox().clear();
+        SearchBoxSelectors.inputBox().type('test', {force: true, delay: 100});
+        SearchBoxSelectors.submitButton().click();
+
+        cy.expectSearchEvent('searchboxSubmit').should((analyticsBody) => {
+          expect(analyticsBody.numberOfResults).to.be.greaterThan(1000);
+        });
+      });
+    });
+
     describe('with input', () => {
       const expectedSum = numOfSuggestions + numOfRecentQueries;
 
       function setInputText() {
         SearchBoxSelectors.inputBox().type('Rec', {delay: 100});
       }
-
       describe('verify rendering', () => {
         before(() => {
           setupWithSuggestionsAndRecentQueries();
@@ -144,6 +233,110 @@ describe('Search Box Test Suites', () => {
           SearchBoxSelectors.searchBoxAriaLive,
           expectedSum.toString()
         );
+      });
+
+      describe('with custom suggestions provider', () => {
+        beforeEach(() => {
+          // Disable "standard" query suggestion components to display only custom ones
+          new TestFixture()
+            .with(
+              addSearchBox({
+                suggestions: {
+                  maxWithoutQuery: 0,
+                  maxWithQuery: 0,
+                },
+                props: {
+                  'number-of-queries': 50,
+                },
+              })
+            )
+            .init();
+        });
+
+        const registerFakeSuggestionComponent = (
+          title: string,
+          query: string,
+          numItem = 1
+        ) => {
+          SearchBoxSelectors.host().then(($el) => {
+            const searchBoxElement = $el.get(0);
+
+            dispatchSearchBoxSuggestionsEvent(() => {
+              return {
+                position: 0,
+                renderItems: () => [
+                  fakeSuggestionSectionTitle(title),
+
+                  ...Array.from(Array(numItem).keys()).map((i) =>
+                    fakeSuggestionItem(`${query}_${i}`, `${query}_${i}`)
+                  ),
+                ],
+              };
+            }, searchBoxElement);
+          });
+        };
+
+        const fakeSuggestionItem = (content: string, query?: string) => {
+          return {
+            content: content as unknown,
+            key: content,
+            query,
+          } as SearchBoxSuggestionElement;
+        };
+
+        const fakeSuggestionSectionTitle = (content: string) =>
+          fakeSuggestionItem(content);
+
+        it('should display the custom suggestions', () => {
+          const firstSuggestionsLen = 5;
+          const secondSuggestionsLen = 10;
+          const firstSuggestionsText = 'some suggestion';
+          const secondSuggestionsText = 'another suggestion';
+
+          registerFakeSuggestionComponent(
+            'the first title',
+            firstSuggestionsText,
+            firstSuggestionsLen
+          );
+
+          registerFakeSuggestionComponent(
+            'the second title',
+            secondSuggestionsText,
+            secondSuggestionsLen
+          );
+          SearchBoxSelectors.inputBox().focus();
+
+          Array.from(Array(firstSuggestionsLen).keys()).forEach((i) => {
+            SearchBoxSelectors.shadow()
+              .find('button[part~="suggestion-with-query"]')
+              .should('contain.text', `${firstSuggestionsText}_${i}`);
+          });
+          Array.from(Array(secondSuggestionsLen).keys()).forEach((i) => {
+            SearchBoxSelectors.shadow()
+              .find('button[part~="suggestion-with-query"]')
+              .should('contain.text', `${secondSuggestionsText}_${i}`);
+          });
+        });
+
+        it('should not remove title with no queries associated', () => {
+          // In this particular test, we are trying to verify that we do not
+          // remove duplicates elements for the same empty `query` property on a suggestion.
+          // Since the custom search box suggestion system does not enforce the query property (it's optional),
+          // it's a system that custom search box suggestions component will use to provide a "title" or separator section.
+          // We don't want to detect multiple separator section with no query as duplicate
+
+          registerFakeSuggestionComponent('the first title', 'some suggestion');
+          registerFakeSuggestionComponent(
+            'the second title',
+            'another suggestion'
+          );
+          SearchBoxSelectors.inputBox().focus();
+
+          SearchBoxSelectors.shadow()
+            .find('[part="suggestion"]')
+            .should('contain.text', 'the first title')
+            .should('contain.text', 'the second title');
+        });
       });
 
       describe('after selecting a suggestion with the mouse', () => {

@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "e9f0d009-989b-4ef9-827e-9cc369d35bf0",
   "label" : "Quantic Case Classification",
   "regions" : [ {

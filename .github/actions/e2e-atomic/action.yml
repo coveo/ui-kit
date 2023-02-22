@@ -16,13 +16,13 @@ runs:
       with:
         working-directory: ./packages/atomic
         spec: ${{ inputs.spec }}
-        start: npm run start:prod
+        start: npm run prod
         wait-on: 'http://localhost:3333'
         install: false
         record: false
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: failure()
       with:
         name: cypress-screenshots
