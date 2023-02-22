@@ -134,7 +134,6 @@ export default class QuanticFeedbackModal extends LightningModal {
    * @param {CustomEvent} event
    */
   handleFeedbackChange(event) {
-    this.feedbackInput.setCustomValidity();
     this.feedbackInput.reportValidity();
     this.feedbackValue = event.detail.value;
   }
@@ -144,6 +143,7 @@ export default class QuanticFeedbackModal extends LightningModal {
    * @param {CustomEvent} event
    */
   handleDetailsChange(event) {
+    this.detailsInput.reportValidity();
     this.detailsValue = event.detail.value;
   }
 
@@ -166,7 +166,6 @@ export default class QuanticFeedbackModal extends LightningModal {
 
   /**
    * Returns the lightning-radio-group element.
-   * @returns {{setCustomValidity: function, reportValidity: function}}
    */
   get feedbackInput() {
     return this.template.querySelector('lightning-radio-group');
