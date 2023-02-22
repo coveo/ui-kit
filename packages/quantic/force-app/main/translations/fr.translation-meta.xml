@@ -501,10 +501,6 @@
       <name>quantic_SmartSnippetShowLess</name>
     </customLabels>
     <customLabels>
-      <label>Expliquez pourquoi</label>
-      <name>quantic_ExplainWhy</name>
-    </customLabels>
-    <customLabels>
       <label>Sélectionnez la raison</label>
       <name>quantic_SelectTheReason</name>
     </customLabels>
