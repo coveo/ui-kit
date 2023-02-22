@@ -1,4 +1,26 @@
 {
   "name": "atomic-angular",
-  "implicitDependencies": ["atomic-angular-builder"]
+  "implicitDependencies": ["atomic-angular-builder"],
+  "targets": {
+    "promote:npm:beta": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ../../../../../scripts/deploy/update-npm-tag.mjs beta",
+        "cwd": "packages/atomic-angular/projects/atomic-angular"
+      }
+    },
+    "promote:npm:latest": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ../../../../../scripts/deploy/update-npm-tag.mjs latest",
+        "cwd": "packages/atomic-angular/projects/atomic-angular"
+      }
+    }
+  }
 }
