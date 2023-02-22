@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "e7f7f0ea-01ea-45ea-805b-673dc50bc487",
   "label" : "Quantic Breadcrumb Manager",
   "regions" : [ {

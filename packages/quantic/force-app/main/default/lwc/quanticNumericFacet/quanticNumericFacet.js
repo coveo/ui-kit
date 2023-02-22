@@ -390,7 +390,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get shouldRenderInput() {
     return (
-      (this.withInput && this.searchStatus?.state?.hasResults) ||
+      (this.withInput && !!this.values.length) ||
       !!this.filterState?.range
     );
   }

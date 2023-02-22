@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "0f82ebb1-3e29-4a18-a755-d278cdfce075",
   "label" : "Quantic Tab",
   "regions" : [ {

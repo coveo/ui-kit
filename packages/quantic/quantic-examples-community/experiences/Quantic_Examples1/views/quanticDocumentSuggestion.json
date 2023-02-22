@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "4562247f-5298-4c06-8325-e3813f369bf8",
   "label" : "Quantic Document Suggestion",
   "regions" : [ {

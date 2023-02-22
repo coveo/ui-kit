@@ -28,7 +28,6 @@ import {ResultContext} from '../result-template-decorators';
  * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
  * images/links may not work as expected in an `atomic-quickview`).
  *
- * @internal
  */
 @Component({
   tag: 'atomic-quickview',

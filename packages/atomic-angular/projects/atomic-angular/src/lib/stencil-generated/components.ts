@@ -588,6 +588,27 @@ export class AtomicQuerySummary {
 }
 
 
+export declare interface AtomicQuickview extends Components.AtomicQuickview {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['sandbox']
+})
+@Component({
+  selector: 'atomic-quickview',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['sandbox']
+})
+export class AtomicQuickview {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicRatingFacet extends Components.AtomicRatingFacet {}
 
 @ProxyCmp({
