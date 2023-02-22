@@ -501,6 +501,42 @@
       <name>quantic_SmartSnippetShowLess</name>
     </customLabels>
     <customLabels>
+      <label>Sélectionnez la raison</label>
+      <name>quantic_SelectTheReason</name>
+    </customLabels>
+    <customLabels>
+      <label>Veuillez fournir des détails.</label>
+      <name>quantic_ProvideDetails</name>
+    </customLabels>
+    <customLabels>
+      <label>Veuillez remplir ce champ</label>
+      <name>quantic_FillOutField</name>
+    </customLabels>
+    <customLabels>
+      <label>Veuillez choisir l'une des options précédentes</label>
+      <name>quantic_SelectOneOfOptions</name>
+    </customLabels>
+    <customLabels>
+      <label>Annuler</label>
+      <name>quantic_Cancel</name>
+    </customLabels>
+    <customLabels>
+      <label>Envoyez vos commentaires</label>
+      <name>quantic_SendFeedback</name>
+    </customLabels>
+    <customLabels>
+      <label>Terminé</label>
+      <name>quantic_Done</name>
+    </customLabels>
+    <customLabels>
+      <label>Vos commentaires permettent d'améliorer l'expérience de recherche.</label>
+      <name>quantic_YourFeedbackHelps</name>
+    </customLabels>
+    <customLabels>
+      <label>Merci pour vos commentaires!</label>
+      <name>quantic_ThankYouForYourFeedback</name>
+    </customLabels>
+    <customLabels>
       <label>les gens demandent aussi</label>
       <name>quantic_PeopleAlsoAsk</name>
     </customLabels>
