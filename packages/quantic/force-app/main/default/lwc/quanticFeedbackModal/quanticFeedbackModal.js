@@ -34,7 +34,7 @@ export default class QuanticFeedbackModal extends LightningModal {
    * The function that will be executed when the feedback is submitted.
    * @type {function}
    */
-  @api submitFeedback;
+  @api handleSubmit;
 
   labels = {
     done,
@@ -114,8 +114,8 @@ export default class QuanticFeedbackModal extends LightningModal {
   }
 
   validateTheSubmitFeedbackProperty() {
-    if (typeof this.submitFeedback !== 'function') {
-      console.error('The submitFeedback property is not a valid function.');
+    if (typeof this.handleSubmit !== 'function') {
+      console.error('The handleSubmit property is not a valid function.');
       this.setError();
     }
   }
@@ -156,7 +156,7 @@ export default class QuanticFeedbackModal extends LightningModal {
    */
   handleSubmitFeedback() {
     if (this.feedbackFormIsValid) {
-      this.submitFeedback({
+      this.handleSubmit({
         value: this.feedbackValue,
         details: this.detailsValue,
       });
