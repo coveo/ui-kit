@@ -943,7 +943,7 @@
       <value>Please fill out this field</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Please fill out this field</shortDescription>
+      <shortDescription>You must fill out this field</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_SelectOneOfOptions</fullName>

@@ -485,7 +485,7 @@
       <name>quantic_SmartSnippetShowLess</name>
     </customLabels>
     <customLabels>
-      <label>Expliquer pourquoi</label>
+      <label>Expliquez pourquoi</label>
       <name>quantic_ExplainWhy</name>
     </customLabels>
     <customLabels>
@@ -505,11 +505,11 @@
       <name>quantic_SelectOneOfOptions</name>
     </customLabels>
     <customLabels>
-      <label>annuler</label>
+      <label>Annuler</label>
       <name>quantic_Cancel</name>
     </customLabels>
     <customLabels>
-      <label>envoyer le commentaire</label>
+      <label>Envoyez vos commentaires</label>
       <name>quantic_SendFeedback</name>
     </customLabels>
     <customLabels>
@@ -521,7 +521,7 @@
       <name>quantic_YourFeedbackHelps</name>
     </customLabels>
     <customLabels>
-      <label>Merci pour votre commentaire!</label>
+      <label>Merci pour vos commentaires!</label>
       <name>quantic_ThankYouForYourFeedback</name>
     </customLabels>
 </Translations>
