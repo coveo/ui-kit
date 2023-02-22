@@ -1,11 +1,3 @@
-textarea {
-  resize: none;
-}
-
-.details-input__label {
-  font-weight: var(--lwc-fontWeightBold, 700);
-}
-
 .details-input__container {
-  height: 7.25rem;
+  height: 6rem;
 }

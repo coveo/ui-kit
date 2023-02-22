@@ -11,8 +11,7 @@ const selectors = {
   submitButton: '.feedback-modal-footer__submit',
   successMesage: '.feedback-modal-body__success-message',
   radioGroup: 'lightning-radio-group',
-  textarea: 'textarea',
-  detailsErrorMessage: '.feedback-modal-body__details-error-message',
+  textarea: 'lightning-textarea',
 };
 
 const exampleValue = 'example value';
@@ -68,8 +67,9 @@ function selectOption(element, value) {
 
 function typeDetails(element, value) {
   const textarea = element.shadowRoot.querySelector(selectors.textarea);
-  textarea.value = value;
-  const event = new CustomEvent('change');
+  const event = new CustomEvent('change', {
+    detail: {value},
+  });
   textarea.dispatchEvent(event);
 }
 
@@ -323,11 +323,7 @@ describe('c-quantic-fedback-modal', () => {
           const successMesage = element.shadowRoot.querySelector(
             selectors.successMesage
           );
-          const detailsErrorMessage = element.shadowRoot.querySelector(
-            selectors.detailsErrorMessage
-          );
           expect(successMesage).toBeNull();
-          expect(detailsErrorMessage).not.toBeNull();
         });
       });
     });

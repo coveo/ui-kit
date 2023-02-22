@@ -3,11 +3,11 @@ import cancel from '@salesforce/label/c.quantic_Cancel';
 import done from '@salesforce/label/c.quantic_Done';
 import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
 import fillOutField from '@salesforce/label/c.quantic_FillOutField';
+import provideDetails from '@salesforce/label/c.quantic_ProvideDetails';
 import selectOneOfOptions from '@salesforce/label/c.quantic_SelectOneOfOptions';
 import selectTheReason from '@salesforce/label/c.quantic_SelectTheReason';
 import sendFeedback from '@salesforce/label/c.quantic_SendFeedback';
 import thankYouForYourFeedback from '@salesforce/label/c.quantic_ThankYouForYourFeedback';
-import provideDetails from '@salesforce/label/c.quantic_ProvideDetails';
 import yourFeedbackHelps from '@salesforce/label/c.quantic_YourFeedbackHelps';
 import {getBueno} from 'c/quanticHeadlessLoader';
 import LightningModal from 'lightning/modal';
@@ -54,13 +54,11 @@ export default class QuanticFeedbackModal extends LightningModal {
   /** @type {string} */
   detailsValue;
   /** @type {boolean} */
-  feedbackSubmitted = false;
-  /** @type {boolean} */
-  detailsInputError = false;
+  isFeedbackSubmitted = false;
   /** @type {string} */
   error;
   /** @type {boolean} */
-  validated = false;
+  isValidated = false;
 
   connectedCallback() {
     this.validateFeedbackModal();
@@ -78,7 +76,7 @@ export default class QuanticFeedbackModal extends LightningModal {
       if (!this.error) {
         this.validateTheSubmitFeedbackProperty();
       }
-      this.validated = true;
+      this.isValidated = true;
     });
   }
 
@@ -135,30 +133,12 @@ export default class QuanticFeedbackModal extends LightningModal {
   }
 
   /**
-   * Returns the lightning-radio-group element.
-   * @returns {{setCustomValidity: function, reportValidity: function}}
-   */
-  get optionsInput() {
-    return this.template.querySelector('lightning-radio-group');
-  }
-
-  /**
-   * Returns the CSS class of the reason input.
-   */
-  get detailsFormClass() {
-    return `slds-form-element ${
-      this.detailsInputError ? 'slds-has-error' : ''
-    }`;
-  }
-
-  /**
-   * Handles the option change.
+   * Handles the feedback input change.
    * @param {CustomEvent} event
    */
-  handleOptionChange(event) {
-    this.detailsInputError = false;
-    this.optionsInput.setCustomValidity();
-    this.optionsInput.reportValidity();
+  handleFeedbackChange(event) {
+    this.feedbackInput.setCustomValidity();
+    this.feedbackInput.reportValidity();
     this.feedbackValue = event.detail.value;
   }
 
@@ -167,36 +147,7 @@ export default class QuanticFeedbackModal extends LightningModal {
    * @param {CustomEvent} event
    */
   handleDetailsChange(event) {
-    this.detailsInputError = false;
-    this.detailsValue = event.target.value;
-  }
-
-  /**
-   * Indicates whether the details input should be displayed.
-   * @returns {boolean}
-   */
-  get displayDetailsInput() {
-    const selectedOption = this.options.find(
-      (option) => option.value === this.feedbackValue
-    );
-    return !!selectedOption?.withDetails;
-  }
-
-  /**
-   * Indicates whether the feedback form is valid.
-   * @returns {boolean}
-   */
-  get feedbackFormIsValid() {
-    if(!this.feedbackValue){
-      return false;
-    }
-    const selectedOption = this.options.find(
-      (option) => option.value === this.feedbackValue
-    );
-    if(!!selectedOption?.withDetails && !!selectedOption.detailsRequired && !this.detailsValue){
-      return false;
-    }
-    return true;
+    this.detailsValue = event.detail.value;
   }
 
   /**
@@ -209,15 +160,67 @@ export default class QuanticFeedbackModal extends LightningModal {
         value: this.feedbackValue,
         details: this.detailsValue,
       });
-      this.feedbackSubmitted = true;
+      this.isFeedbackSubmitted = true;
     } else {
-      if (!this.feedbackValue) {
-        this.optionsInput.setCustomValidity(this.labels.selectOneOfOptions);
-        this.optionsInput.reportValidity();
-      } else {
-        this.detailsInputError = true;
-      }
+      this.feedbackInput.reportValidity();
+      this.detailsInput?.reportValidity();
     }
+  }
+
+  /**
+   * Returns the lightning-radio-group element.
+   * @returns {{setCustomValidity: function, reportValidity: function}}
+   */
+  get feedbackInput() {
+    return this.template.querySelector('lightning-radio-group');
+  }
+
+  /**
+   * Returns the lightning-textarea element.
+   */
+  get detailsInput() {
+    return this.template.querySelector('lightning-textarea');
+  }
+
+  /**
+   * Returns the selected option.
+   */
+  get selectedOption() {
+    return this.options.find((option) => option.value === this.feedbackValue);
+  }
+
+  /**
+   * Indicates whether the details are required.
+   * @returns {boolean}
+   */
+  get detailsAreRequired() {
+    return !!this.selectedOption?.detailsRequired;
+  }
+
+  /**
+   * Indicates whether the details input should be displayed.
+   * @returns {boolean}
+   */
+  get shouldDisplayDetailsInput() {
+    return !!this.selectedOption?.withDetails;
+  }
+
+  /**
+   * Indicates whether the feedback form is valid.
+   * @returns {boolean}
+   */
+  get feedbackFormIsValid() {
+    if (!this.feedbackValue) {
+      return false;
+    }
+    if (
+      !!this.selectedOption?.withDetails &&
+      !!this.detailsAreRequired &&
+      !this.detailsValue
+    ) {
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -226,7 +229,7 @@ export default class QuanticFeedbackModal extends LightningModal {
   render() {
     if (this.error) {
       return errorTemplate;
-    } else if (this.feedbackSubmitted) {
+    } else if (this.isFeedbackSubmitted) {
       return successTemplate;
     }
     return feedbackFormTemplate;
