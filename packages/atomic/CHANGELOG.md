@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.12](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.11...@coveo/atomic@2.19.12) (2023-02-22)
+
+### Bug Fixes
+
+- **atomic,headless:** fix analytics for number of results and results array ([#2738](https://github.com/coveo/ui-kit/issues/2738)) ([b870c41](https://github.com/coveo/ui-kit/commit/b870c4119a2a3b6c89ff5a4c046f9c7b66e1a08e))
+
 ## [2.19.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.10...@coveo/atomic@2.19.11) (2023-02-21)
 
 **Note:** Version bump only for package @coveo/atomic
