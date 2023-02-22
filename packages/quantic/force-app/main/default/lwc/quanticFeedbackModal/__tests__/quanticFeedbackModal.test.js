@@ -3,7 +3,7 @@ import {createElement} from 'lwc';
 import QuanticFeedbackModal from '../quanticFeedbackModal';
 
 const functionsMocks = {
-  submitFeedback: jest.fn(),
+  handleSubmit: jest.fn(),
 };
 
 const selectors = {
@@ -21,11 +21,10 @@ const exampleDetails = 'example details';
 const exampleOptions = [{label: exampleLabel, value: exampleValue}];
 
 const errors = {
-  invalidArrayError: 'The options provided are not in a valid array.',
-  emptyArrayError: 'At least one option must be specified.',
+  invalidArrayError: 'The options provided must be a non-empty array.',
   missingLabelOrValueError:
     'Each option requires a label and a value to be specified.',
-  missingSubmitFeedback: 'The submitFeedback property is not a valid function.',
+  missingSubmitFeedback: 'The handleSubmit property is not a valid function.',
   invalidLabelTypeError: (label) =>
     `The "${label}" label is not a valid string.`,
   invalidValueTypeError: (value) =>
@@ -34,7 +33,7 @@ const errors = {
 
 const defaultOptions = {
   options: exampleOptions,
-  submitFeedback: functionsMocks.submitFeedback,
+  handleSubmit: functionsMocks.handleSubmit,
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -61,6 +60,7 @@ function selectOption(element, value) {
   const event = new CustomEvent('change', {
     detail: {value},
   });
+  expect(radioGroup).not.toBeNull();
   radioGroup.dispatchEvent(event);
 }
 
@@ -69,6 +69,7 @@ function typeDetails(element, value) {
   const event = new CustomEvent('change', {
     detail: {value},
   });
+  expect(textarea).not.toBeNull();
   textarea.dispatchEvent(event);
 }
 
@@ -112,7 +113,7 @@ describe('c-quantic-fedback-modal', () => {
       it('should display and log an error message', async () => {
         const element = createTestComponent({
           ...defaultOptions,
-          submitFeedback: null,
+          handleSubmit: null,
         });
         await flushPromises();
 
@@ -151,7 +152,7 @@ describe('c-quantic-fedback-modal', () => {
         );
 
         expect(errorMessage).not.toBeNull();
-        expect(console.error).toHaveBeenCalledWith(errors.emptyArrayError);
+        expect(console.error).toHaveBeenCalledWith(errors.invalidArrayError);
       });
     });
 
@@ -346,7 +347,7 @@ describe('c-quantic-fedback-modal', () => {
           selectors.successMesage
         );
         expect(successMesage).not.toBeNull();
-        expect(functionsMocks.submitFeedback).toHaveBeenCalledWith({
+        expect(functionsMocks.handleSubmit).toHaveBeenCalledWith({
           details: undefined,
           value: exampleValue,
         });
@@ -383,7 +384,7 @@ describe('c-quantic-fedback-modal', () => {
             selectors.successMesage
           );
           expect(successMesage).not.toBeNull();
-          expect(functionsMocks.submitFeedback).toHaveBeenCalledWith({
+          expect(functionsMocks.handleSubmit).toHaveBeenCalledWith({
             details: exampleDetails,
             value: exampleValue,
           });
@@ -420,7 +421,7 @@ describe('c-quantic-fedback-modal', () => {
             selectors.successMesage
           );
           expect(successMesage).not.toBeNull();
-          expect(functionsMocks.submitFeedback).toHaveBeenCalledWith({
+          expect(functionsMocks.handleSubmit).toHaveBeenCalledWith({
             details: undefined,
             value: exampleValue,
           });
