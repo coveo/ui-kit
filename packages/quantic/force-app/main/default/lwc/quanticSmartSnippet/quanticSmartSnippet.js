@@ -5,6 +5,7 @@ import requestWasNotQuestion from '@salesforce/label/c.quantic_RequestWasNotQues
 import showLess from '@salesforce/label/c.quantic_SmartSnippetShowLess';
 import showMore from '@salesforce/label/c.quantic_SmartSnippetShowMore';
 import thankYouForFeedback from '@salesforce/label/c.quantic_ThankYouForFeedback';
+import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
 import FeedbackModal from 'c/quanticFeedbackModal';
 import {
   registerComponentForInit,
@@ -66,6 +67,7 @@ export default class QuanticSmartSnippet extends LightningElement {
     partiallyAnsweredQuestion,
     Other,
     thankYouForFeedback,
+    explainWhy,
   };
 
   connectedCallback() {
@@ -216,12 +218,13 @@ export default class QuanticSmartSnippet extends LightningElement {
    */
   async openFeedbackModal() {
     this.smartSnippet.openFeedbackModal();
+    // @ts-ignore
     await FeedbackModal.open({
-      label: 'Explain why',
+      label: this.labels.explainWhy,
       size: 'small',
-      description: 'Feedback modal',
+      description: this.labels.explainWhy,
       options: this.options,
-      submitFeedback: this.submitFeedback.bind(this),
+      handleSubmit: this.submitFeedback.bind(this),
     });
     this.smartSnippet.closeFeedbackModal();
   }
@@ -241,6 +244,9 @@ export default class QuanticSmartSnippet extends LightningElement {
     this.hideExplainWhyFeedbackButton = true;
   }
 
+  /**
+   * Resturns the options displayed in the Quantic Feedback Modal.
+   */
   get options() {
     return [
       {
@@ -255,7 +261,7 @@ export default class QuanticSmartSnippet extends LightningElement {
         label: this.labels.requestWasNotQuestion,
         value: 'was_not_a_question',
       },
-      {label: this.labels.Other, value: 'other'},
+      {label: this.labels.Other, value: 'other', withDetails: true, detailsRequired: true},
     ];
   }
 
