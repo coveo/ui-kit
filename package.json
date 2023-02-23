@@ -2,7 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "postinstall": "husky install && patch-package && npm run link:angular -w @coveo/atomic-angular-samples",
+    "postinstall": "husky install && npm run link:angular -w @coveo/atomic-angular-samples",
     "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic dev\"",
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
@@ -20,9 +20,6 @@
     "promote:npm:beta": "nx run-many --target=promote:npm:beta",
     "promote:npm:latest": "nx run-many --target=promote:npm:latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs"
-  },
-  "dependencies": {
-    "patch-package": "6.4.7"
   },
   "devDependencies": {
     "@actions/core": "1.9.1",
