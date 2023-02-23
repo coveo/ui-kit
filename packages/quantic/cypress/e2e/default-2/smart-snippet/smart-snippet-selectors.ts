@@ -61,5 +61,5 @@ export const SmartSnippetSelectors: SmartSnippetSelector = {
   feedbackDetailsInput: () =>
     cy
       .get('lightning-modal')
-      .find('[data-cy="feedback-modal-body__details-input"]'),
+      .find('[data-cy="feedback-modal-body__details-input"] textarea'),
 };
