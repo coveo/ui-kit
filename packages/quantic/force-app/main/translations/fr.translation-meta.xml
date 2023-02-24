@@ -509,7 +509,7 @@
       <name>quantic_PartiallyAnsweredQuestion</name>
     </customLabels>
     <customLabels>
-      <label>Ma demande ne devait pas être perçue comme une question</label>
+      <label>Ma demande n'était pas une question</label>
       <name>quantic_RequestWasNotQuestion</name>
     </customLabels>
     <customLabels>
