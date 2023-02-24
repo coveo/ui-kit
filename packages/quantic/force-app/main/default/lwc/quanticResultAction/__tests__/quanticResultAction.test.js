@@ -55,7 +55,7 @@ function setupClickSimulation(element, eventName, newState) {
       event.target.loading = true;
     }
     if (newState === 'selected') {
-      event.target.selected = !event.detail.isSelected;
+      event.target.selected = true;
     }
     element.removeEventListener(eventName, handler);
   };
