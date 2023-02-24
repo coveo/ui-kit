@@ -121,13 +121,9 @@ export default class QuanticResultAction extends LightningElement {
    */
   handleClick(event) {
     event.stopPropagation();
-    const resultCopy = {...this.result};
     const resultActionEvent = new CustomEvent(this.eventName, {
       bubbles: true,
       composed: true,
-      detail: {
-        result: resultCopy,
-      },
     });
 
     this.dispatchEvent(resultActionEvent);
