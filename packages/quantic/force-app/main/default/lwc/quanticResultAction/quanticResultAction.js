@@ -38,6 +38,7 @@ export default class QuanticResultAction extends LightningElement {
    * The result to perform the action on.
    * @api
    * @type {Result}
+   * @deprecated
    */
   @api result;
   /**
