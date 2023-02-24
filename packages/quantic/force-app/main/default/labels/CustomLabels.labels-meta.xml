@@ -947,24 +947,24 @@
     </labels>
     <labels>
       <fullName>quantic_DidNotAnswerQuestion</fullName>
-      <value>This didn't answer my question at all</value>
+      <value>Didn't answer my question at all</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>This didn't answer my question at all</shortDescription>
+      <shortDescription>Didn't answer my question at all</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_PartiallyAnsweredQuestion</fullName>
-      <value>This only partially answered my question</value>
+      <value>Only answered part of my question</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>This only partially answered my question</shortDescription>
+      <shortDescription>Only answered part of my question</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_RequestWasNotQuestion</fullName>
-      <value>My request wasn't meant to be perceived as a question</value>
+      <value>My request wasn't a question</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Request wasn't a question</shortDescription>
+      <shortDescription>My request wasn't a question</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_Other</fullName>
