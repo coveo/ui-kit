@@ -505,7 +505,7 @@
       <name>quantic_DidNotAnswerQuestion</name>
     </customLabels>
     <customLabels>
-      <label>Cela ne répond que partiellement à ma question</label>
+      <label>Ne répond pas complètement à ma question</label>
       <name>quantic_PartiallyAnsweredQuestion</name>
     </customLabels>
     <customLabels>
