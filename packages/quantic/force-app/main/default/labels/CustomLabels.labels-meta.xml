@@ -1050,4 +1050,18 @@
       <protected>false</protected>
       <shortDescription>People also ask</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_InclusionFilter</fullName>
+      <value>Inclusion filter on {{0}}; {{1}} result</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Inclusion filter on field; 1 result</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_InclusionFilter_plural</fullName>
+      <value>Inclusion filter on {{0}}; {{1}} results</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Inclusion filter on field; 2 results</shortDescription>
+    </labels>
 </CustomLabels>
