@@ -2,14 +2,13 @@
   "namedInputs": {
     "production": [
       "sharedGlobals",
+      "commonSourceFiles",
       "{projectRoot}/stencil.config.ts",
       "{projectRoot}/collection-manifest.json",
       "{projectRoot}/tailwind.config.js",
       "{projectRoot}/svg.transform.js",
-      "{workspaceRoot}/tsconfig.json",
-      "{projectRoot}/tsconfig.json",
-      "{projectRoot}/src/**/*([^.]).!({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})",
       "{projectRoot}/stencil-plugin/**",
+      "!{projectRoot}/src/components.d.ts",
       "!{projectRoot}/src/external-builds/**",
       "!{projectRoot}/src/generated/**",
       "!{projectRoot}/src/components/search/atomic-search-interface/lang/**"

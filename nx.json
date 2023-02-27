@@ -9,6 +9,11 @@
   },
   "namedInputs": {
     "sharedGlobals": [{"runtime": "node -v"}],
+    "commonSourceFiles": [
+      "{workspaceRoot}/tsconfig.json",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/src/**/*([^.]).!({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})"
+    ],
     "production": [
       "sharedGlobals",
       "{projectRoot}/**/*",

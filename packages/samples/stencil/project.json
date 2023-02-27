@@ -1,3 +1,32 @@
 {
-  "name": "atomic-stencil-samples"
+  "name": "atomic-stencil-samples",
+  "namedInputs": {
+    "production": [
+      "sharedGlobals",
+      "commonSourceFiles",
+      "{projectRoot}/stencil.config.ts",
+      "!{projectRoot}/src/components.d.ts"
+    ]
+  },
+  "targets": {
+    "cached:build:stencil": {
+      "dependsOn": ["^build"],
+      "inputs": ["^production", "production"],
+      "outputs": [
+        "{projectRoot}/www",
+        "{projectRoot}/src/components.d.ts"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+        "cwd": "packages/atomic"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build:stencil"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:noop"
+    }
+  }
 }
