@@ -121,6 +121,9 @@
             "c/quanticTimeframeFacet": [
               "quanticTimeframeFacet/quanticTimeframeFacet.js"
             ],
+            "c/quanticFeedbackModal": [
+              "quanticFeedbackModal/quanticFeedbackModal.js"
+            ],
         }
     },
     "include": [

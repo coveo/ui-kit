@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.14.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.13.3...@coveo/quantic@2.14.0) (2023-02-22)
+
+### Features
+
+- **quantic:** quantic feedback modal component created ([#2722](https://github.com/coveo/ui-kit/issues/2722)) ([1fb7fe8](https://github.com/coveo/ui-kit/commit/1fb7fe84f814a6504471714b99e2fe1a1587ea61))
+
 ## [2.13.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.13.2...@coveo/quantic@2.13.3) (2023-02-22)
 
 **Note:** Version bump only for package @coveo/quantic

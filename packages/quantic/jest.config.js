@@ -12,8 +12,12 @@ module.exports = {
     ],
   ],
   moduleNameMapper: {
-    "^@salesforce/i18n/": "<rootDir>/typings/lwc/customlabels.d.ts"
+    '^@salesforce/i18n/': '<rootDir>/typings/lwc/customlabels.d.ts',
+    '^lightning/modal$': '<rootDir>/force-app/test/jest-mocks/lightning/modal/modal',
+    '^lightning/modalBody$': '<rootDir>/force-app/test/jest-mocks/lightning/modalBody/modalBody',
+    '^lightning/modalFooter$': '<rootDir>/force-app/test/jest-mocks/lightning/modalFooter/modalFooter',
+    '^lightning/modalHeader$': '<rootDir>/force-app/test/jest-mocks/lightning/modalHeader/modalHeader',
   },
-  modulePathIgnorePatterns: ['.cache']
+  modulePathIgnorePatterns: ['.cache'],
   // add any custom configurations here
 };
