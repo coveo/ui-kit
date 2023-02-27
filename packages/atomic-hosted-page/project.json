@@ -23,8 +23,17 @@
         "cwd": "packages/atomic"
       }
     },
+    "validate:definitions": {
+      "dependsOn": ["^build", "cached:build:stencil"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-script",
+      "options": {
+        "script": "validate:definitions"
+      }
+    },
     "build": {
-      "dependsOn": ["cached:build:stencil"],
+      "dependsOn": ["cached:build:stencil", "validate:definitions"],
       "inputs": [],
       "outputs": [],
       "executor": "nx:noop"
