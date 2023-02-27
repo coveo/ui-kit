@@ -1,1 +1,42 @@
-{}
+{
+  "namedInputs": {
+    "production": [
+      "sharedGlobals",
+      "{projectRoot}/stencil.config.ts",
+      "{projectRoot}/collection-manifest.json",
+      "{projectRoot}/tailwind.config.js",
+      "{projectRoot}/svg.transform.js",
+      "{workspaceRoot}/tsconfig.json",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/src/**/*([^.]).!({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})",
+      "{projectRoot}/stencil-plugin/**",
+      "!{projectRoot}/src/external-builds/**",
+      "!{projectRoot}/src/generated/**",
+      "!{projectRoot}/src/components/search/atomic-search-interface/lang/**"
+    ]
+  },
+  "targets": {
+    "cached:build:stencil": {
+      "dependsOn": ["^build", "build:locales"],
+      "inputs": ["^production", "production"],
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/www",
+        "{projectRoot}/docs",
+        "{projectRoot}/loader",
+        "{projectRoot}/src/components.d.ts"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+        "cwd": "packages/atomic"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build:stencil"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:noop"
+    }
+  }
+}

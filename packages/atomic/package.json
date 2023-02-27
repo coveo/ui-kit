@@ -25,10 +25,9 @@
   ],
   "scripts": {
     "clean": "rimraf -rf dist/*",
-    "build": "npm run build:locales && npm run build:stencil && npm run build:storybook && npm run validate:definitions",
+    "build": "nx build",
     "build:locales": "node ./scripts/create-generated-folder.mjs && node ./scripts/split-locales.mjs && node ./scripts/copy-dayjs-locales.mjs",
-    "build:stencil": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
-    "dev": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
+    "dev": "npm run build:locales && node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --serve",
     "prod": "npx serve www -l 3333 --no-request-logging",
     "test": "npm run build:locales && stencil test --spec",
     "test:watch": "stencil test --spec --watchAll",
