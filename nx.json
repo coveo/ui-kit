@@ -12,12 +12,13 @@
     "commonSourceFiles": [
       "{workspaceRoot}/tsconfig.json",
       "{projectRoot}/tsconfig.json",
-      "{projectRoot}/src/**/*([^.]).!({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})"
+      "{projectRoot}/src/**",
+      "!{projectRoot}/src/**/?(*.)+({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})"
     ],
     "production": [
       "sharedGlobals",
       "{projectRoot}/**/*",
-      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/src/**/?(*.)+({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})",
       "!{projectRoot}/{dist,www,temp}/**"
     ]
   },
