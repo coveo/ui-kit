@@ -39,7 +39,6 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
    */
   @Prop({mutable: true}) container?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
-  @Prop({reflect: true}) noFocusTrap = false;
 
   @Event() animationEnded!: EventEmitter<never>;
 
@@ -54,13 +53,13 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
     if (isOpen) {
       document.body.classList.add(modalOpenedClass);
       if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
-        !this.noFocusTrap && (this.focusTrap!.active = true);
+        this.focusTrap!.active = true;
       }
       return;
     }
     document.body.classList.remove(modalOpenedClass);
     if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
-      !this.noFocusTrap && (this.focusTrap!.active = false);
+      this.focusTrap!.active = false;
     }
   }
 
@@ -102,19 +101,16 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
     return (
       <Host class={this.getClasses().join(' ')}>
         <div part="backdrop">
-          {this.noFocusTrap ? (
+          <atomic-focus-trap
+            role="dialog"
+            aria-modal={this.isOpen.toString()}
+            source={this.source}
+            container={this.container ?? this.host}
+            ref={(ref) => (this.focusTrap = ref)}
+            scope={this.bindings.interfaceElement}
+          >
             <Body />
-          ) : (
-            <atomic-focus-trap
-              role="dialog"
-              aria-modal={this.isOpen.toString()}
-              source={this.source}
-              container={this.container ?? this.host}
-              ref={(ref) => (this.focusTrap = ref)}
-            >
-              <Body />
-            </atomic-focus-trap>
-          )}
+          </atomic-focus-trap>
         </div>
       </Host>
     );

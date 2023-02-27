@@ -1,5 +1,8 @@
 import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
-import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
+import {
+  getFirstFocusableDescendant,
+  getLastFocusableDescendant,
+} from '../../utils/accessibility-utils';
 import {
   isAncestorOf,
   defer,
@@ -30,6 +33,11 @@ export class AtomicFocusTrap {
    * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
    */
   @Prop() shouldHideSelf = true;
+
+  /**
+   * The ancestor of the focus trap and of all the elements that should be hidden when inside the focus trap.
+   */
+  @Prop() scope = document.body;
 
   private readonly hiddenElements: Element[] = [];
 
@@ -71,7 +79,7 @@ export class AtomicFocusTrap {
       }
       this.hide(sibling);
     });
-    if (parent !== document.body) {
+    if (parent !== this.scope) {
       this.hideSiblingsRecursively(parent);
     }
   }
@@ -118,14 +126,36 @@ export class AtomicFocusTrap {
 
   @Listen('focusin', {target: 'document'})
   onFocusChanged(e: FocusEvent) {
+    const elementIsPartOfHost = (focusedElement: Element | ShadowRoot) =>
+      isAncestorOf(this.host, focusedElement);
+
+    const elementIsPartOfScope = (focusedElement: Element | ShadowRoot) =>
+      isAncestorOf(this.scope, focusedElement);
+
+    const previousFocusedElementWasFirstOfHost = () =>
+      e.relatedTarget === getFirstFocusableDescendant(this.host);
+
     if (!e.target || !this.active) {
       return;
     }
 
     const focusedElement = getFocusedElement();
 
-    if (focusedElement && isAncestorOf(this.host, focusedElement)) {
-      return;
+    if (focusedElement) {
+      if (
+        elementIsPartOfHost(focusedElement) ||
+        !elementIsPartOfScope(focusedElement)
+      ) {
+        return;
+      }
+      if (
+        previousFocusedElementWasFirstOfHost() &&
+        !elementIsPartOfHost(focusedElement) &&
+        elementIsPartOfScope(focusedElement)
+      ) {
+        getLastFocusableDescendant(this.host)?.focus;
+        return;
+      }
     }
 
     getFirstFocusableDescendant(this.host)?.focus();

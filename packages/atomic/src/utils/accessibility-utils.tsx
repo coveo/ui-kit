@@ -177,3 +177,9 @@ export function getFirstFocusableDescendant(
 ): HTMLElement | null {
   return getFocusableDescendants(element).next().value ?? null;
 }
+
+export function getLastFocusableDescendant(
+  element: Element
+): HTMLElement | null {
+  return [...getFocusableDescendants(element)]?.pop() ?? null;
+}
