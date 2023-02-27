@@ -17,8 +17,8 @@
     ],
     "production": [
       "sharedGlobals",
-      "{projectRoot}/**/*",
-      "!{projectRoot}/src/**/?(*.)+({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})",
+      "{projectRoot}/**",
+      "!{projectRoot}/**/?(*.)+({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})",
       "!{projectRoot}/{dist,www,temp}/**"
     ]
   },
