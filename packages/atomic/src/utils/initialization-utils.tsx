@@ -21,6 +21,7 @@ export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 export const initializeEventName = 'atomic/initializeComponent';
 const initializableElements = [
+  'atomic-recs-interface',
   'atomic-search-interface',
   'atomic-insight-interface',
   'atomic-external',
