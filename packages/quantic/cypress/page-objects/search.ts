@@ -49,6 +49,11 @@ export const InterceptAliases = {
     CollapseSmartSnippet: uaAlias('collapseSmartSnippet'),
     OpenSmartSnippetSource: uaAlias('openSmartSnippetSource'),
     OpenSmartSnippetInlineLink: uaAlias('openSmartSnippetInlineLink'),
+    LikeSmartSnippet: uaAlias('likeSmartSnippet'),
+    DislikeSmartSnippet: uaAlias('dislikeSmartSnippet'),
+    OpenSmartSnippetFeedbackModal: uaAlias('openSmartSnippetFeedbackModal'),
+    CloseSmartSnippetFeedbackModal: uaAlias('closeSmartSnippetFeedbackModal'),
+    SendSmartSnippetReason: uaAlias('sendSmartSnippetReason'),
     ExpandSmartSnippetSuggestion: uaAlias('expandSmartSnippetSuggestion'),
     CollapseSmartSnippetSuggestion: uaAlias('collapseSmartSnippetSuggestion'),
     OpenSmartSnippetSuggestionSource: uaAlias(
@@ -251,8 +256,8 @@ export function getRoute(useCase?: string) {
     : routeMatchers.search;
 }
 
-export function mockSearchWithoutAnyFacetValues() {
-  cy.intercept(routeMatchers.search, (req) => {
+export function mockSearchWithoutAnyFacetValues(useCase: string) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.facets.forEach((facet: {values: string[]}) => {
         facet.values = [];

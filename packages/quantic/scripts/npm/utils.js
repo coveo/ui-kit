@@ -12,7 +12,7 @@ function quanticIsDependency() {
 }
 
 function getProjectPath() {
-  return __dirname.split('/node_modules')[0];
+  return __dirname.split('node_modules')[0];
 }
 
 module.exports = {

@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.14.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.13.3...@coveo/quantic@2.14.0) (2023-02-22)
+
+### Features
+
+- **quantic:** quantic feedback modal component created ([#2722](https://github.com/coveo/ui-kit/issues/2722)) ([1fb7fe8](https://github.com/coveo/ui-kit/commit/1fb7fe84f814a6504471714b99e2fe1a1587ea61))
+
+## [2.13.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.13.2...@coveo/quantic@2.13.3) (2023-02-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [2.13.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.13.1...@coveo/quantic@2.13.2) (2023-02-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [2.13.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.13.0...@coveo/quantic@2.13.1) (2023-02-21)
+
+### Bug Fixes
+
+- **quantic:** pre install script adapted to work on windows ([#2736](https://github.com/coveo/ui-kit/issues/2736)) ([f7ac959](https://github.com/coveo/ui-kit/commit/f7ac9595d8fd8862c76c61f1ac3054372e44e75c))
+- **quantic:** numeric facet displayed only when it contains facet values ([#2735](https://github.com/coveo/ui-kit/issues/2735)) ([53a9d35](https://github.com/coveo/ui-kit/commit/53a9d358cddfcdaf9f57040a3576035b43910159))
+
 # [2.13.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.12.0...@coveo/quantic@2.13.0) (2023-02-20)
 
 ### Features
