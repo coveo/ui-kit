@@ -144,29 +144,34 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
       const element = getElement(this);
       element.setAttribute(renderedAttribute, 'false');
       element.setAttribute(loadedAttribute, 'false');
-      buildCustomEvent(initializeEventName, (bindings: SpecificBindings) => {
-        this.bindings = bindings;
+      const event = buildCustomEvent(
+        initializeEventName,
+        (bindings: SpecificBindings) => {
+          this.bindings = bindings;
 
-        const updateLanguage = () => forceUpdateComponent(this);
-        this.bindings.i18n.on('languageChanged', updateLanguage);
-        unsubscribeLanguage = () =>
-          this.bindings.i18n.off('languageChanged', updateLanguage);
+          const updateLanguage = () => forceUpdateComponent(this);
+          this.bindings.i18n.on('languageChanged', updateLanguage);
+          unsubscribeLanguage = () =>
+            this.bindings.i18n.off('languageChanged', updateLanguage);
 
-        try {
-          // When no controller is initialized, updating a property with a State() decorator, there will be no re-render.
-          // In this case, we have to manually trigger it.
-          if (this.initialize) {
-            this.initialize();
-            if (forceUpdate) {
+          try {
+            // When no controller is initialized, updating a property with a State() decorator, there will be no re-render.
+            // In this case, we have to manually trigger it.
+            if (this.initialize) {
+              this.initialize();
+              if (forceUpdate) {
+                forceUpdateComponent(this);
+              }
+            } else {
               forceUpdateComponent(this);
             }
-          } else {
-            forceUpdateComponent(this);
+          } catch (e) {
+            this.error = e as Error;
           }
-        } catch (e) {
-          this.error = e as Error;
         }
-      });
+      );
+
+      element.dispatchEvent(event);
 
       if (!closest(element, initializableElements.join(', '))) {
         this.error = new MissingInterfaceParentError(
