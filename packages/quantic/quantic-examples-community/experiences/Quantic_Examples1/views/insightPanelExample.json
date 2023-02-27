@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "9b192ca0-f004-4c4e-bb44-8c59a33c190f",
   "label" : "Insight Panel Example",
   "regions" : [ {

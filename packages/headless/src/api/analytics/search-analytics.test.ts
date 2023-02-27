@@ -157,6 +157,7 @@ describe('search analytics', () => {
         buildMockResult(),
         buildMockResult(),
       ];
+      state.search.response.totalCountFiltered = 1234;
       state.query = buildMockQueryState({q: 'foo'});
       expect(
         new SearchAnalyticsProvider(() => state).getSearchEventRequestPayload()
@@ -164,7 +165,7 @@ describe('search analytics', () => {
         queryText: 'foo',
         responseTime: 0,
         results: expect.any(Array),
-        numberOfResults: 3,
+        numberOfResults: 1234,
       });
     });
 

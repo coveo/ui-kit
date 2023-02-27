@@ -477,11 +477,87 @@
       <name>quantic_Copied</name>
     </customLabels>
     <customLabels>
+      <label>Oui</label>
+      <name>quantic_Yes</name>
+    </customLabels>
+    <customLabels>
+      <label>Non</label>
+      <name>quantic_No</name>
+    </customLabels>
+    <customLabels>
+      <label>Est-ce que cela a été utile?</label>
+      <name>quantic_WasThisUseful</name>
+    </customLabels>
+    <customLabels>
+      <label>Dites-nous pourquoi</label>
+      <name>quantic_ExplainWhy</name>
+    </customLabels>
+    <customLabels>
       <label>Voir plus</label>
       <name>quantic_SmartSnippetShowMore</name>
     </customLabels>
     <customLabels>
       <label>Voir moins</label>
       <name>quantic_SmartSnippetShowLess</name>
+    </customLabels>
+    <customLabels>
+      <label>Ne répond pas du tout à ma question</label>
+      <name>quantic_DidNotAnswerQuestion</name>
+    </customLabels>
+    <customLabels>
+      <label>Ne répond pas complètement à ma question</label>
+      <name>quantic_PartiallyAnsweredQuestion</name>
+    </customLabels>
+    <customLabels>
+      <label>Ma demande n'était pas une question</label>
+      <name>quantic_RequestWasNotQuestion</name>
+    </customLabels>
+    <customLabels>
+      <label>Autre</label>
+      <name>quantic_Other</name>
+    </customLabels>
+    <customLabels>
+      <label>Merci pour vos commentaires!</label>
+      <name>quantic_ThankYouForFeedback</name>
+    </customLabels>
+    <customLabels>
+      <label>Sélectionnez la raison</label>
+      <name>quantic_SelectTheReason</name>
+    </customLabels>
+    <customLabels>
+      <label>Veuillez fournir des détails.</label>
+      <name>quantic_ProvideDetails</name>
+    </customLabels>
+    <customLabels>
+      <label>Veuillez remplir ce champ</label>
+      <name>quantic_FillOutField</name>
+    </customLabels>
+    <customLabels>
+      <label>Veuillez choisir l'une des options précédentes</label>
+      <name>quantic_SelectOneOfOptions</name>
+    </customLabels>
+    <customLabels>
+      <label>Annuler</label>
+      <name>quantic_Cancel</name>
+    </customLabels>
+    <customLabels>
+      <label>Envoyez vos commentaires</label>
+      <name>quantic_SendFeedback</name>
+    </customLabels>
+    <customLabels>
+      <label>Terminé</label>
+      <name>quantic_Done</name>
+    </customLabels>
+    <customLabels>
+      <label>Vos commentaires permettent d'améliorer l'expérience de recherche.</label>
+      <name>quantic_YourFeedbackHelps</name>
+    </customLabels>
+    <customLabels>
+      <label>Merci pour vos commentaires!</label>
+      <name>quantic_ThankYouForYourFeedback</name>
+    </customLabels>
+    <customLabels>
+      <label>les gens demandent aussi</label>
+      <name>quantic_PeopleAlsoAsk</name>
     </customLabels>
 </Translations>

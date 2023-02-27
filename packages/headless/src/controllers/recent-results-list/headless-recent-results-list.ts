@@ -60,7 +60,7 @@ const optionsSchema = new Schema<RecentResultsListOptions>({
 });
 
 /**
- * The `RecentResultsList` controller manages the user's recent results.
+ * The `RecentResultsList` controller manages a user's recently clicked results.
  */
 export interface RecentResultsList extends Controller {
   /**

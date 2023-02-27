@@ -20,9 +20,10 @@
   },
   "scripts": {
     "build": "tsc --noEmit && tsc --module commonjs --noEmit",
-    "dev": "npm run copy:assets && next dev",
-    "copy:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
-    "cypress:open": "cypress open",
-    "cypress:test": "cypress run --browser chrome"
+    "dev": "npm run build:assets && npm run dev:nextjs",
+    "dev:nextjs": "next dev",
+    "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
+    "e2e:watch": "cypress open",
+    "e2e": "cypress run --browser chrome"
   }
 }

@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "stencil build --dev --watch --serve --port 3666 --no-open",
+    "dev": "stencil build --dev --watch --serve --port 3666 --no-open",
     "build": "stencil build",
-    "cypress:open": "cypress open"
+    "e2e:watch": "cypress open"
   },
   "dependencies": {
     "@coveo/atomic": "^2.0.0",

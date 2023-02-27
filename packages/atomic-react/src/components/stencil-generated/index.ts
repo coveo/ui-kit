@@ -35,6 +35,7 @@ export const AtomicPager = /*@__PURE__*/createReactComponent<JSX.AtomicPager, HT
 export const AtomicPopover = /*@__PURE__*/createReactComponent<JSX.AtomicPopover, HTMLAtomicPopoverElement>('atomic-popover');
 export const AtomicQueryError = /*@__PURE__*/createReactComponent<JSX.AtomicQueryError, HTMLAtomicQueryErrorElement>('atomic-query-error');
 export const AtomicQuerySummary = /*@__PURE__*/createReactComponent<JSX.AtomicQuerySummary, HTMLAtomicQuerySummaryElement>('atomic-query-summary');
+export const AtomicQuickview = /*@__PURE__*/createReactComponent<JSX.AtomicQuickview, HTMLAtomicQuickviewElement>('atomic-quickview');
 export const AtomicRatingFacet = /*@__PURE__*/createReactComponent<JSX.AtomicRatingFacet, HTMLAtomicRatingFacetElement>('atomic-rating-facet');
 export const AtomicRatingRangeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicRatingRangeFacet, HTMLAtomicRatingRangeFacetElement>('atomic-rating-range-facet');
 export const AtomicRecsInterface = /*@__PURE__*/createReactComponent<JSX.AtomicRecsInterface, HTMLAtomicRecsInterfaceElement>('atomic-recs-interface');

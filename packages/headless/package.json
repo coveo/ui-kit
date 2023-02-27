@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.8.5",
+  "version": "2.8.9",
   "files": [
     "dist/",
     "recommendation/",
@@ -24,26 +24,30 @@
     "case-assist/"
   ],
   "scripts": {
-    "start": "concurrently \"npm run typedefinitions -- -w\" \"node esbuild.mjs dev\"",
-    "build": "npm run build:prod --",
-    "build:prod": "npm run typedefinitions && node esbuild.mjs",
-    "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
+    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
+    "build": "npm run build:prod && npm run build:doc",
+    "build:prod": "npm run build:definitions && npm run build:bundles",
+    "build:bundles": "node esbuild.mjs",
+    "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache --silent=false",
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
-    "npm:publish": "node ../../scripts/deploy/publish.mjs",
-    "doc:generate": "npm run doc:extract && npm run doc:parse",
-    "doc:extract": "node ./scripts/extract-documentation.mjs",
-    "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
+    "publish:npm:release": "node ../../scripts/deploy/publish.mjs release",
+    "publish:npm:prerelease": "node ../../scripts/deploy/publish.mjs prerelease",
+    "promote:npm:beta": "node ../../scripts/deploy/update-npm-tag.mjs beta",
+    "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
+    "build:doc": "npm run build:doc:extract && npm run build:doc:parse",
+    "build:doc:extract": "node ./scripts/extract-documentation.mjs",
+    "build:doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
   },
   "peerDependencies": {
     "encoding": "^0.1.13",
     "pino-pretty": "^6.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "0.43.0",
+    "@coveo/bueno": "0.43.1",
     "@reduxjs/toolkit": "1.8.5",
     "@types/pino": "6.3.12",
     "@types/redux-mock-store": "1.0.3",
@@ -65,7 +69,9 @@
     "@microsoft/api-extractor": "7.29.3",
     "@microsoft/api-extractor-model": "7.23.1",
     "@microsoft/tsdoc": "0.14.1",
+    "execa": "^7.0.0",
     "jest-fetch-mock": "3.0.3",
+    "pad-stream": "^4.0.0",
     "ts-node": "10.9.1"
   }
 }

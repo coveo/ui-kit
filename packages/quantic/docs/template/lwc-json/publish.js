@@ -5,6 +5,7 @@
 'use strict';
 
 const fs = require('fs');
+const {resolve} = require('path');
 const paramCase = require('change-case').paramCase;
 const xmlToJson = require('xml2json').toJson;
 const dump = require('jsdoc/util/dumper').dump;
@@ -206,8 +207,6 @@ exports.publish = function (data, opts) {
   if (opts.destination === 'console') {
     console.log(dump(root));
   } else {
-    console.log(
-      'This template only supports output to the console. Use the option "-d console" when you run JSDoc.'
-    );
+    fs.writeFileSync(resolve(opts.destination), dump(root));
   }
 };

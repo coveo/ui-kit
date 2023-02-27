@@ -137,11 +137,13 @@ const Keywords: FunctionalComponent<
                   class="w-5 h-5 flex-none mr-2"
                   style={{backgroundColor: keyword.color}}
                 ></div>
-                <div class="grow mr-2">{keyword.text}</div>
+                <div class="grow mr-2 whitespace-nowrap">{keyword.text}</div>
                 <div class="flex-none">
+                  (
                   {new Intl.NumberFormat(i18n.language, {
                     notation: 'compact',
                   }).format(keyword.occurrences)}
+                  )
                 </div>
               </div>
               <FieldsetGroup

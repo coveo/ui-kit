@@ -2,27 +2,24 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "postinstall": "husky install & patch-package && npm run link:angular -w @coveo/atomic-angular-samples",
-    "start": "lerna run --parallel start",
-    "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
-    "build": "lerna run clean && lerna run build",
-    "test": "lerna run --parallel test",
-    "test:watch": "lerna run --parallel test:watch --no-prefix",
-    "lint:check": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "postinstall": "husky install && patch-package && npm run link:angular -w @coveo/atomic-angular-samples",
+    "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic dev\"",
+    "build": "nx run-many --target=build",
+    "test": "nx run-many --target=test",
+    "e2e": "nx run-many --target=e2e",
+    "lint:check": "npx eslint .",
+    "lint:fix": "npx eslint --fix .",
+    "publish:npm:release": "nx run-many --target=publish:npm:release",
+    "publish:npm:prerelease": "nx run-many --target=publish:npm:prerelease",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
-    "cypress:test": "lerna run cypress:test",
     "commit": "git-cz",
     "setup:snyk": "node ./scripts/snyk/remove-samples-workspace.mjs",
     "bump:version": "node ./scripts/deploy/bump-version.mjs",
     "bump:version:major-prerelease": "node ./scripts/deploy/manual-major-prerelease.mjs",
-    "npm:publish": "lerna run --stream npm:publish --",
-    "npm:tag": "node ./scripts/deploy/update-npm-tag.mjs",
-    "npm:tag:beta": "npm run npm:tag -- beta",
-    "npm:tag:latest": "npm run npm:tag -- latest",
-    "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
-    "doc:generate": "lerna run doc:generate"
+    "promote:npm:beta": "nx run-many --target=promote:npm:beta",
+    "promote:npm:latest": "nx run-many --target=promote:npm:latest",
+    "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs"
   },
   "dependencies": {
     "patch-package": "6.4.7"
@@ -62,7 +59,8 @@
     "rimraf": "3.0.2",
     "semver": "7.3.7",
     "ts-jest": "27.1.5",
-    "typescript": "4.6.4"
+    "typescript": "4.6.4",
+    "nx": "15.7.0"
   },
   "workspaces": [
     "packages/bueno",
