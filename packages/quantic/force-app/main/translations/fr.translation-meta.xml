@@ -501,6 +501,26 @@
       <name>quantic_SmartSnippetShowLess</name>
     </customLabels>
     <customLabels>
+      <label>Ne répond pas du tout à ma question</label>
+      <name>quantic_DidNotAnswerQuestion</name>
+    </customLabels>
+    <customLabels>
+      <label>Ne répond pas complètement à ma question</label>
+      <name>quantic_PartiallyAnsweredQuestion</name>
+    </customLabels>
+    <customLabels>
+      <label>Ma demande n'était pas une question</label>
+      <name>quantic_RequestWasNotQuestion</name>
+    </customLabels>
+    <customLabels>
+      <label>Autre</label>
+      <name>quantic_Other</name>
+    </customLabels>
+    <customLabels>
+      <label>Merci pour vos commentaires!</label>
+      <name>quantic_ThankYouForFeedback</name>
+    </customLabels>
+    <customLabels>
       <label>Sélectionnez la raison</label>
       <name>quantic_SelectTheReason</name>
     </customLabels>
