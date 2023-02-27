@@ -98,19 +98,19 @@ export const executeSearch = createAsyncThunk<
   addEntryInActionsHistory(state);
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
-  const {description: eventDescription, action: analyticsAction} =
-    await searchAction.prepare({
-      getState: () => config.getState(),
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    });
+  const {description: eventDescription} = await searchAction.prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
+
+  const request = await buildSearchRequest(state, eventDescription);
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
-  >({...config, analyticsAction});
+  >({...config, analyticsAction: searchAction});
 
-  const request = await buildSearchRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
@@ -125,19 +125,18 @@ export const fetchPage = createAsyncThunk<
   addEntryInActionsHistory(state);
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
-  const {description: eventDescription, action: analyticsAction} =
-    await searchAction.prepare({
-      getState: () => config.getState(),
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    });
+  const {description: eventDescription} = await searchAction.prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
   >({
     ...config,
-    analyticsAction,
+    analyticsAction: searchAction,
   });
 
   const request = await buildSearchRequest(state, eventDescription);
@@ -154,19 +153,18 @@ export const fetchMoreResults = createAsyncThunk<
   const state = config.getState();
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
-  const {description: eventDescription, action: analyticsAction} =
-    await logFetchMoreResults().prepare({
-      getState: () => config.getState(),
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    });
+  const {description: eventDescription} = await logFetchMoreResults().prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
   >({
     ...config,
-    analyticsAction,
+    analyticsAction: logFetchMoreResults(),
   });
 
   const request = await buildFetchMoreRequest(state, eventDescription);
@@ -183,17 +181,16 @@ export const fetchFacetValues = createAsyncThunk<
   const state = config.getState();
 
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
-  const {description: eventDescription, action: analyticsAction} =
-    await searchAction.prepare({
-      getState: () => config.getState(),
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    });
+  const {description: eventDescription} = await searchAction.prepare({
+    getState: () => config.getState(),
+    analyticsClientMiddleware,
+    preprocessRequest,
+    logger,
+  });
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
-  >({...config, analyticsAction});
+  >({...config, analyticsAction: searchAction});
 
   const request = await buildFetchFacetValuesRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(request, {
@@ -221,20 +218,16 @@ export const fetchInstantResults = createAsyncThunk<
     });
     const {q, maxResultsPerQuery} = payload;
     const state = config.getState();
-    const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
-    const {action: analyticsAction} = await logInstantResultsSearch().prepare({
-      getState: () => config.getState(),
-      analyticsClientMiddleware,
-      preprocessRequest,
-      logger,
-    });
 
     const processor = new AsyncSearchThunkProcessor<
       ReturnType<typeof config.rejectWithValue>
-    >({...config, analyticsAction}, (modification) =>
-      config.dispatch(
-        updateInstantResultsQuery({q: modification, id: payload.id})
-      )
+    >(
+      {...config, analyticsAction: logInstantResultsSearch()},
+      (modification) => {
+        config.dispatch(
+          updateInstantResultsQuery({q: modification, id: payload.id})
+        );
+      }
     );
 
     const request = await buildInstantResultSearchRequest(

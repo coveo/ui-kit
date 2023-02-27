@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "c01ca255-789f-48be-999d-bca16f0ff27a",
   "label" : "Quantic Modal",
   "regions" : [ {

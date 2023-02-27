@@ -1,5 +1,12 @@
+import didNotAnswerQuestion from '@salesforce/label/c.quantic_DidNotAnswerQuestion';
+import Other from '@salesforce/label/c.quantic_Other';
+import partiallyAnsweredQuestion from '@salesforce/label/c.quantic_PartiallyAnsweredQuestion';
+import requestWasNotQuestion from '@salesforce/label/c.quantic_RequestWasNotQuestion';
 import showLess from '@salesforce/label/c.quantic_SmartSnippetShowLess';
 import showMore from '@salesforce/label/c.quantic_SmartSnippetShowMore';
+import thankYouForFeedback from '@salesforce/label/c.quantic_ThankYouForFeedback';
+import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
+import FeedbackModal from 'c/quanticFeedbackModal';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -11,6 +18,7 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SmartSnippet} SmartSnippet */
 /** @typedef {import("coveo").SmartSnippetState} SmartSnippetState */
+/** @typedef {import("coveo").SmartSnippetFeedback} SmartSnippetFeedback */
 
 const expandableAnswerBaseClass = 'smart-snippet__answer slds-is-relative';
 
@@ -46,10 +54,20 @@ export default class QuanticSmartSnippet extends LightningElement {
   expandableAnswerClass = expandableAnswerBaseClass;
   /** @type {string} */
   answer;
+  /** @type {boolean} */
+  hideExplainWhyFeedbackButton = false;
+  /** @type {boolean} */
+  feedbackSubmitted = false;
 
   labels = {
     showMore,
     showLess,
+    didNotAnswerQuestion,
+    requestWasNotQuestion,
+    partiallyAnsweredQuestion,
+    Other,
+    thankYouForFeedback,
+    explainWhy,
   };
 
   connectedCallback() {
@@ -161,6 +179,93 @@ export default class QuanticSmartSnippet extends LightningElement {
   }
 
   /**
+   * Handles the "like" button press.
+   * @returns {void}
+   */
+  like = (event) => {
+    event.stopPropagation();
+    if (!this.liked) {
+      this.smartSnippet.like();
+      this.hideExplainWhyFeedbackButton = true;
+    }
+  };
+
+  /**
+   * Handles the "dislike" button press.
+   * @returns {void}
+   */
+  dislike = (event) => {
+    event.stopPropagation();
+    if (!this.disliked) {
+      this.smartSnippet.dislike();
+      if (!this.feedbackSubmitted) {
+        this.hideExplainWhyFeedbackButton = false;
+      }
+    }
+  };
+
+  /**
+   * Handles the "explain why" button press.
+   * @returns {void}
+   */
+  explainWhy = (event) => {
+    event.stopPropagation();
+    this.openFeedbackModal();
+  };
+
+  /**
+   * Opens the feedback modal.
+   */
+  async openFeedbackModal() {
+    this.smartSnippet.openFeedbackModal();
+    // @ts-ignore
+    await FeedbackModal.open({
+      label: this.labels.explainWhy,
+      size: 'small',
+      description: this.labels.explainWhy,
+      options: this.options,
+      handleSubmit: this.submitFeedback.bind(this),
+    });
+    this.smartSnippet.closeFeedbackModal();
+  }
+
+  /**
+   * Submits the feedback
+   * @param {{value: SmartSnippetFeedback, details: string}} feedback
+   * @returns {void}
+   */
+  submitFeedback(feedback) {
+    if (feedback?.details) {
+      this.smartSnippet.sendDetailedFeedback(feedback.details);
+    } else if (feedback?.value) {
+      this.smartSnippet.sendFeedback(feedback.value);
+    }
+    this.feedbackSubmitted = true;
+    this.hideExplainWhyFeedbackButton = true;
+  }
+
+  /**
+   * Resturns the options displayed in the Quantic Feedback Modal.
+   */
+  get options() {
+    return [
+      {
+        label: this.labels.didNotAnswerQuestion,
+        value: 'does_not_answer',
+      },
+      {
+        label: this.labels.partiallyAnsweredQuestion,
+        value: 'partially_answers',
+      },
+      {
+        label: this.labels.requestWasNotQuestion,
+        value: 'was_not_a_question',
+      },
+      {label: this.labels.Other, value: 'other', withDetails: true, detailsRequired: true},
+    ];
+  }
+
+  /**
    * Returns the smart snippet question.
    * @returns {string}
    */
@@ -244,5 +349,29 @@ export default class QuanticSmartSnippet extends LightningElement {
    */
   get toggleSmartSnippetAnswerIcon() {
     return this?.state?.expanded ? 'utility:chevronup' : 'utility:chevrondown';
+  }
+
+  /**
+   * Indicates whether the smart snippet has a positive feedback.
+   * @returns {boolean}
+   */
+  get liked() {
+    return this?.state?.liked;
+  }
+
+  /**
+   * Indicates whether the smart snippet has a negative feedback.
+   * @returns {boolean}
+   */
+  get disliked() {
+    return this?.state?.disliked;
+  }
+
+  /**
+   * Returns the state of the feedback component.
+   * @returns {'liked' | 'disliked' | 'neutral'}
+   */
+  get feedbackState() {
+    return this.liked ? 'liked' : this.disliked ? 'disliked' : 'neutral';
   }
 }

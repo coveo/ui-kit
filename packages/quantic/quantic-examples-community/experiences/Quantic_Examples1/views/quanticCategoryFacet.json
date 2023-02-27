@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "5bae37dd-3ff0-4700-b886-d940ec7b6d38",
   "label" : "Quantic Category Facet",
   "regions" : [ {

@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "7e73f1a0-9732-4fb8-90ba-1925165170b2",
   "label" : "Quantic Aria Live",
   "regions" : [ {
