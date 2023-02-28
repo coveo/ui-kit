@@ -16,7 +16,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
-        "cwd": "packages/atomic"
+        "cwd": "packages/samples/stencil"
       }
     },
     "build": {
