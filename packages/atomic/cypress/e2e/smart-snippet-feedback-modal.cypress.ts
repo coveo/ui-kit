@@ -89,6 +89,8 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
   describe('after opening the modal then clicking cancel', () => {
     before(() => {
       setupOpenModal();
+      //Wait for the modal opening animation to end.
+      cy.wait(1000);
       SmartSnippetFeedbackModalSelectors.cancelButton().click();
     });
 
