@@ -561,11 +561,11 @@
       <name>quantic_PeopleAlsoAsk</name>
     </customLabels>
     <customLabels>
-      <label>Filtre d'inclusion sur {{value}}; {{count}} résultat</label>
+      <label>Filtre d'inclusion sur {{0}}; {{1}} résultat</label>
       <name>quantic_InclusionFilter</name>
     </customLabels>
     <customLabels>
-      <label>Filtre d'inclusion sur {{value}}; {{count}} résultats</label>
+      <label>Filtre d'inclusion sur {{0}}; {{1}} résultats</label>
       <name>quantic_InclusionFilter_plural</name>
     </customLabels>
 </Translations>
