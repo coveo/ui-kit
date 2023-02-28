@@ -2,7 +2,7 @@
   "namedInputs": {
     "production": [
       "sharedGlobals",
-      "commonSourceFiles",
+      "sharedTypescriptSources",
       "{projectRoot}/stencil.config.ts",
       "{projectRoot}/collection-manifest.json",
       "{projectRoot}/tailwind.config.js",

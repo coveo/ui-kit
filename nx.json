@@ -9,7 +9,7 @@
   },
   "namedInputs": {
     "sharedGlobals": [{"runtime": "node -v"}],
-    "commonSourceFiles": [
+    "sharedTypescriptSources": [
       "{workspaceRoot}/tsconfig.json",
       "{projectRoot}/tsconfig.json",
       "{projectRoot}/src/**",

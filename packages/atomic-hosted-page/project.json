@@ -2,7 +2,7 @@
   "namedInputs": {
     "production": [
       "sharedGlobals",
-      "commonSourceFiles",
+      "sharedTypescriptSources",
       "{projectRoot}/stencil.config.ts",
       "!{projectRoot}/src/components.d.ts"
     ]
