@@ -34,7 +34,7 @@
                   onclick={clearInput}
                   icon-name="utility:close"
                   variant="bare"
-                  class="slds-input__icon slds-input__icon_right input__icon_cursor"
+                  class="slds-input__icon slds-input__icon_right input__icon_cursor slds-grid"
                   size="medium"
                   name={labels.clear}
                   title={labels.clear}
@@ -44,10 +44,20 @@
               </template>
             </div>
             <template if:false={withoutSubmitButton}>
-                <button class="searchbox__submit-button slds-button slds-button_icon-inverse slds-button_icon-brand" title={labels.search} onclick={onSubmit}>
-                  <lightning-icon class="slds-current-color" size="x-small" icon-name="utility:search" alternative-text={labels.search} title={labels.search}></lightning-icon>
-                  <span class="slds-assistive-text">{labels.search}</span>
-                </button>
+              <button
+                class="searchbox__submit-button slds-button slds-button_icon-inverse slds-button_icon-brand"
+                title={labels.search}
+                onclick={onSubmit}
+              >
+                <lightning-icon
+                  class="slds-current-color"
+                  size="x-small"
+                  icon-name="utility:search"
+                  alternative-text={labels.search}
+                  title={labels.search}
+                ></lightning-icon>
+                <span class="slds-assistive-text">{labels.search}</span>
+              </button>
             </template>
           </div>
 
