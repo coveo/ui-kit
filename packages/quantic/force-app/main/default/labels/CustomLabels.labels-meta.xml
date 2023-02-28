@@ -946,6 +946,41 @@
       <shortDescription>Show less</shortDescription>
     </labels>
     <labels>
+      <fullName>quantic_DidNotAnswerQuestion</fullName>
+      <value>Didn't answer my question at all</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Didn't answer my question at all</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_PartiallyAnsweredQuestion</fullName>
+      <value>Only answered part of my question</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Only answered part of my question</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_RequestWasNotQuestion</fullName>
+      <value>My request wasn't a question</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>My request wasn't a question</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Other</fullName>
+      <value>Other</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Other</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ThankYouForFeedback</fullName>
+      <value>Thank you for your feedback!</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Thank you for your feedback!</shortDescription>
+    </labels>
+    <labels>
       <fullName>quantic_SelectTheReason</fullName>
       <value>Select a reason</value>
       <language>en_US</language>

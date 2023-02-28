@@ -49,6 +49,11 @@ export const InterceptAliases = {
     CollapseSmartSnippet: uaAlias('collapseSmartSnippet'),
     OpenSmartSnippetSource: uaAlias('openSmartSnippetSource'),
     OpenSmartSnippetInlineLink: uaAlias('openSmartSnippetInlineLink'),
+    LikeSmartSnippet: uaAlias('likeSmartSnippet'),
+    DislikeSmartSnippet: uaAlias('dislikeSmartSnippet'),
+    OpenSmartSnippetFeedbackModal: uaAlias('openSmartSnippetFeedbackModal'),
+    CloseSmartSnippetFeedbackModal: uaAlias('closeSmartSnippetFeedbackModal'),
+    SendSmartSnippetReason: uaAlias('sendSmartSnippetReason'),
     ExpandSmartSnippetSuggestion: uaAlias('expandSmartSnippetSuggestion'),
     CollapseSmartSnippetSuggestion: uaAlias('collapseSmartSnippetSuggestion'),
     OpenSmartSnippetSuggestionSource: uaAlias(
