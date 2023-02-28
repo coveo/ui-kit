@@ -10,6 +10,13 @@
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
+  "exports": {
+    "." : {
+      "browser":"./dist/components/index.js",
+      "import":"./dist/index.js",
+      "require":"./dist/index.cjs.js"
+    }
+  },
   "es2015": "dist/esm/index.mjs",
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
