@@ -49,6 +49,7 @@ export interface EngineConfiguration {
    * Allows configuring options related to analytics.
    */
   analytics?: AnalyticsConfiguration;
+  useCustomDNS?: boolean;
 }
 
 /**
@@ -154,5 +155,6 @@ export function getSampleEngineConfiguration(): EngineConfiguration {
     organizationId: 'searchuisamples',
     // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
     accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    useCustomDNS: true,
   };
 }

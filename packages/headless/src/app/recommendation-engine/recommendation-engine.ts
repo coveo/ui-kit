@@ -126,6 +126,9 @@ function createSearchAPIClient(
   logger: Logger
 ) {
   return new SearchAPIClient({
+    useCustomDNS: isNullOrUndefined(configuration.useCustomDNS)
+      ? false
+      : configuration.useCustomDNS,
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     postprocessSearchResponseMiddleware:

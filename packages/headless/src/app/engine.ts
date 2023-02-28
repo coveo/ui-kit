@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {
   AnyAction,
   Dispatch,
@@ -9,6 +10,7 @@ import {
   Reducer,
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
+import {customDNSUrl} from '../api/platform-client';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -17,6 +19,7 @@ import {
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
 import {SearchParametersState} from '../state/search-app-state';
+import {isCoveoCustomDNSUrl} from '../utils/url-utils';
 import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
 import {EngineConfiguration} from './engine-configuration';
@@ -163,7 +166,27 @@ export function buildEngine<
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const engine = buildCoreEngine(options, thunkExtraArguments);
-  const {accessToken, organizationId, platformUrl} = options.configuration;
+  const {accessToken, organizationId} = options.configuration;
+  let {platformUrl, useCustomDNS} = options.configuration;
+
+  if (shouldWarnAboutCustomDNS(options)) {
+    // @v3 make useCustomDNS true by default.
+    engine.logger.warn(
+      'The `useCustomDNS` options was not explicitely set on Headless engine configuration. Coveo recommend setting this option to `true`, as it allows a simpler way to interact with your Coveo organization. Read more: TODO INSERT A LINK TO COVEO DOC HERE.'
+    );
+    useCustomDNS = false;
+  }
+
+  if (shouldWarnAboutPlatformURL(options)) {
+    engine.logger.warn(
+      `The \`useCustomDNS\` (${options.configuration.useCustomDNS}) option cannot be set at the same time as \`platformUrl\`(${options.configuration.platformUrl}) on Headless engine configuration. Both options are in contradiction. \`useCustomDNS\` will be set to false. Read more: TODO INSERT A LINK TO COVEO DOC HERE.`
+    );
+    useCustomDNS = false;
+  }
+
+  if (useCustomDNS) {
+    platformUrl = customDNSUrl(organizationId).platform;
+  }
 
   engine.dispatch(
     updateBasicConfiguration({
@@ -268,4 +291,26 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
   ].concat(options.middlewares || []);
+}
+
+function shouldWarnAboutCustomDNS(options: EngineOptions<ReducersMapObject>) {
+  return (
+    isNullOrUndefined(options.configuration.useCustomDNS) &&
+    isNullOrUndefined(options.configuration.platformUrl)
+  );
+}
+
+function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
+  if (
+    isNullOrUndefined(options.configuration.platformUrl) ||
+    isNullOrUndefined(options.configuration.useCustomDNS) ||
+    options.configuration.useCustomDNS === false
+  ) {
+    return false;
+  }
+
+  return !isCoveoCustomDNSUrl(
+    options.configuration.platformUrl,
+    options.configuration.organizationId
+  );
 }

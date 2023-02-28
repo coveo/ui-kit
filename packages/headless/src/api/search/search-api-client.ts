@@ -61,6 +61,7 @@ export interface SearchAPIClientOptions extends HtmlAPIClientOptions {
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
+  useCustomDNS: boolean;
 }
 
 export type SearchAPIClientResponse<T> =
@@ -74,7 +75,13 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
+      ...baseSearchRequest(
+        req,
+        'POST',
+        'application/json',
+        '/plan',
+        this.options.useCustomDNS
+      ),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'plan'},
       ...this.options,
@@ -99,7 +106,13 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     req: QuerySuggestRequest
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
+      ...baseSearchRequest(
+        req,
+        'POST',
+        'application/json',
+        '/querySuggest',
+        this.options.useCustomDNS
+      ),
       requestMetadata: {method: 'querySuggest'},
       requestParams: pickNonBaseParams(req),
       ...this.options,
@@ -138,7 +151,13 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     this.searchAbortController = this.getAbortControllerInstanceIfAvailable();
 
     const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', ''),
+      ...baseSearchRequest(
+        req,
+        'POST',
+        'application/json',
+        '',
+        this.options.useCustomDNS
+      ),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'search', origin: options?.origin},
       ...this.options,
@@ -173,7 +192,13 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async facetSearch(req: FacetSearchRequest) {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
+      ...baseSearchRequest(
+        req,
+        'POST',
+        'application/json',
+        '/facet',
+        this.options.useCustomDNS
+      ),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'facetSearch'},
       ...this.options,
@@ -194,7 +219,13 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async recommendations(req: RecommendationRequest) {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', ''),
+      ...baseSearchRequest(
+        req,
+        'POST',
+        'application/json',
+        '',
+        this.options.useCustomDNS
+      ),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'recommendations'},
       ...this.options,
@@ -221,7 +252,13 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async productRecommendations(req: ProductRecommendationsRequest) {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', ''),
+      ...baseSearchRequest(
+        req,
+        'POST',
+        'application/json',
+        '',
+        this.options.useCustomDNS
+      ),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'productRecommendations'},
       ...this.options,
@@ -244,7 +281,13 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async fieldDescriptions(req: BaseParam) {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'GET', 'application/json', '/fields'),
+      ...baseSearchRequest(
+        req,
+        'GET',
+        'application/json',
+        '/fields',
+        this.options.useCustomDNS
+      ),
       requestParams: {},
       requestMetadata: {method: 'fieldDescriptions'},
       ...this.options,

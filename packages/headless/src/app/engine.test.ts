@@ -3,6 +3,17 @@ import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
 import {configuration} from './reducers';
 
+jest.mock('pino', () => ({
+  ...jest.requireActual('pino'),
+  __esModule: true,
+  default: () => ({
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  }),
+}));
+
 describe('engine', () => {
   let options: EngineOptions<{}>;
   let engine: CoreEngine;
@@ -21,8 +32,6 @@ describe('engine', () => {
       },
       reducers: {},
     };
-
-    initEngine();
   });
 
   it('when no reducers are specified, it still registers the configuration correctly', () => {
@@ -105,5 +114,68 @@ describe('engine', () => {
     engine.addReducers({configuration});
 
     expect(stateListener).not.toHaveBeenCalled();
+  });
+
+  it('should correctly log warnings when dealing with the useCustomDNS and platformUrl option', () => {
+    const testCases: Array<{
+      useCustomDNS: boolean | undefined;
+      platformUrl: string | undefined;
+      expectation: () => void;
+    }> = [
+      {
+        useCustomDNS: undefined,
+        platformUrl: undefined,
+        expectation: () =>
+          expect(engine.logger.warn).toHaveBeenCalledWith(
+            expect.stringContaining(
+              'The `useCustomDNS` options was not explicitely set on Headless engine configuration'
+            )
+          ),
+      },
+      {
+        useCustomDNS: true,
+        platformUrl: undefined,
+        expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
+      },
+      {
+        useCustomDNS: false,
+        platformUrl: undefined,
+        expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
+      },
+      {
+        useCustomDNS: undefined,
+        platformUrl: 'https://definitely.not.a.coveo.custom.dns',
+        expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
+      },
+      {
+        useCustomDNS: true,
+        platformUrl: 'https://definitely.not.a.coveo.custom.dns',
+        expectation: () =>
+          expect(engine.logger.warn).toHaveBeenCalledWith(
+            expect.stringContaining(
+              'The `useCustomDNS` (true) option cannot be set at the same time as `platformUrl`'
+            )
+          ),
+      },
+      {
+        useCustomDNS: false,
+        platformUrl: 'https://definitely.not.a.coveo.custom.dns',
+        expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
+      },
+      {
+        useCustomDNS: true,
+        platformUrl: 'https://orgId.org.coveo.com',
+        expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
+      },
+    ];
+
+    testCases.forEach((testCase) => {
+      options.configuration = {
+        ...options.configuration,
+        ...testCase,
+      };
+      initEngine();
+      testCase.expectation();
+    });
   });
 });

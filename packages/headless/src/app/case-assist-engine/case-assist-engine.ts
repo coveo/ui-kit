@@ -122,6 +122,9 @@ function createCaseAssistAPIClient(
   logger: Logger
 ) {
   return new CaseAssistAPIClient({
+    useCustomDNS: isNullOrUndefined(configuration.useCustomDNS)
+      ? false
+      : configuration.useCustomDNS,
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
   });

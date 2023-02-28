@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {Logger} from 'pino';
 import {StateFromReducersMapObject} from 'redux';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
@@ -158,6 +159,9 @@ function createSearchAPIClient(
 ) {
   const {search} = configuration;
   return new SearchAPIClient({
+    useCustomDNS: isNullOrUndefined(configuration.useCustomDNS)
+      ? false
+      : configuration.useCustomDNS,
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     postprocessSearchResponseMiddleware:

@@ -1,6 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {clearAnalyticsClient} from '../../api/analytics/search-analytics';
+import {isCoveoCustomDNSUrl, isCoveoPlatformURL} from '../../utils/url-utils';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
@@ -22,24 +23,23 @@ function analyticsUrlFromPlatformUrl(
   platformUrl: string,
   organizationId: string
 ) {
-  const isCoveoPlatformURL =
-    /^https:\/\/platform(dev|stg|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/.test(
-      platformUrl
-    );
-  if (isCoveoPlatformURL) {
+  const matchCoveoPlatformURL = isCoveoPlatformURL(platformUrl);
+  if (matchCoveoPlatformURL) {
     return (
       platformUrl.replace(/^(https:\/\/)platform/, '$1analytics') +
       analyticsAPIEndpoint
     );
   }
 
-  const isCoveoOrgDomainUrlMatch = platformUrl.match(
-    new RegExp(`^https://(${organizationId}\\.org)\\.coveo.com`)
+  const matchCoveoCustomDNSUrl = isCoveoCustomDNSUrl(
+    platformUrl,
+    organizationId
   );
-  if (isCoveoOrgDomainUrlMatch) {
-    return (
-      platformUrl.replace(isCoveoOrgDomainUrlMatch[1], 'analytics.cloud') +
-      analyticsAPIEndpoint
+
+  if (matchCoveoCustomDNSUrl) {
+    return platformUrl.replace(
+      matchCoveoCustomDNSUrl[1],
+      `${organizationId}.analytics.org`
     );
   }
 

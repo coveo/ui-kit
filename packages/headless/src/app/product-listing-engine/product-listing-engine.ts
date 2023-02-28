@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
@@ -112,6 +113,9 @@ function createSearchAPIClient(
 ) {
   const {search} = configuration;
   return new SearchAPIClient({
+    useCustomDNS: isNullOrUndefined(configuration.useCustomDNS)
+      ? false
+      : configuration.useCustomDNS,
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     postprocessSearchResponseMiddleware:

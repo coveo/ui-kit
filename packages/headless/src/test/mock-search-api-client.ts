@@ -14,6 +14,7 @@ export function buildMockSearchAPIClient(
   options?: Partial<SearchAPIClientOptions>
 ) {
   return new SearchAPIClient({
+    useCustomDNS: false,
     logger: pino({level: 'silent'}),
     preprocessRequest: NoopPreprocessRequest,
     postprocessSearchResponseMiddleware:

@@ -8,6 +8,7 @@ import {
   PlatformClient,
   PlatformClientCallOptions,
   analyticsUrl,
+  customDNSUrl,
 } from './platform-client';
 import {
   NoopPreprocessRequest,
@@ -32,6 +33,40 @@ describe('url helper', () => {
         expectation.analytics.split('/rest')[0]
       );
     });
+  });
+
+  it('return the correct #customDNSUrl()', () => {
+    expect(customDNSUrl('foo', 'dev')).toEqual(
+      expect.objectContaining({
+        platform: 'https://foo.orgdev.coveo.com',
+        search: 'https://foo.orgdev.coveo.com/rest/search/v2',
+        analytics: 'https://foo.analytics.orgdev.coveo.com/rest/v15',
+      })
+    );
+
+    expect(customDNSUrl('foo', 'stg')).toEqual(
+      expect.objectContaining({
+        platform: 'https://foo.orgstg.coveo.com',
+        search: 'https://foo.orgstg.coveo.com/rest/search/v2',
+        analytics: 'https://foo.analytics.orgstg.coveo.com/rest/v15',
+      })
+    );
+
+    expect(customDNSUrl('foo', 'prod')).toEqual(
+      expect.objectContaining({
+        platform: 'https://foo.org.coveo.com',
+        search: 'https://foo.org.coveo.com/rest/search/v2',
+        analytics: 'https://foo.analytics.org.coveo.com/rest/v15',
+      })
+    );
+
+    expect(customDNSUrl('foo', 'hipaa')).toEqual(
+      expect.objectContaining({
+        platform: 'https://foo.orghipaa.coveo.com',
+        search: 'https://foo.orghipaa.coveo.com/rest/search/v2',
+        analytics: 'https://foo.analytics.orghipaa.coveo.com/rest/v15',
+      })
+    );
   });
 });
 

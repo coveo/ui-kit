@@ -9,6 +9,7 @@ export function buildMockCaseAssistAPIClient(
   options?: Partial<CaseAssistAPIClientOptions>
 ) {
   return new CaseAssistAPIClient({
+    useCustomDNS: false,
     preprocessRequest: NoopPreprocessRequest,
     logger: pino({level: 'silent'}),
     ...options,

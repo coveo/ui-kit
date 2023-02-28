@@ -2,6 +2,7 @@ import fetch from 'cross-fetch';
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
 import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
+import {PlatformCombination, PlatformEnvironment} from '../utils/url-utils';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
 import {
   PlatformClientOrigin,
@@ -104,14 +105,6 @@ export class PlatformClient {
   }
 }
 
-type PlatformCombination =
-  | {env: 'dev'; region: 'us' | 'eu'}
-  | {env: 'stg'; region: 'us'}
-  | {env: 'hipaa'; region: 'us'}
-  | {env: 'prod'; region: 'us' | 'eu' | 'au'};
-
-type PlatformEnvironment = PlatformCombination['env'];
-
 interface URLOptions<E extends PlatformEnvironment> {
   environment?: E;
   region?: Extract<PlatformCombination, {env: E}>['region'];
@@ -134,6 +127,28 @@ function coveoCloudURL<E extends PlatformEnvironment>(
   return `https://${subdomain}${urlEnv}${urlRegion}.cloud.coveo.com`;
 }
 
+/**
+ * Return the unique DNS entry for a given organization identifier.
+ * @param orgId The organization identifier.
+ * @param env Optional. The environment (prod, hipaa, staging, dev) that the organization belongs to. Default to `prod`.
+ * @returns
+ */
+export function customDNSUrl(orgId: string, env: PlatformEnvironment = 'prod') {
+  const envSuffix = env === 'prod' ? '' : env;
+
+  const platform = `https://${orgId}.org${envSuffix}.coveo.com`;
+  const analytics = `https://${orgId}.analytics.org${envSuffix}.coveo.com/rest/v15`;
+  const search = `${platform}/rest/search/v2`;
+  return {platform, analytics, search};
+}
+
+/**
+ * Return the base Coveo platform URL, based on environment and region.
+ * @deprecated Coveo now offers unique DNS for each organization. Consider switching to customDNSUrl utility function instead.
+ *
+ * @param options
+ * @returns string
+ */
 export function platformUrl<E extends PlatformEnvironment>(
   options?: URLOptions<E>
 ) {
@@ -144,6 +159,13 @@ export function platformUrl<E extends PlatformEnvironment>(
   return coveoCloudURL('platform', options);
 }
 
+/**
+ * Return the Coveo analytics platform URL, based on environment and region.
+ * @deprecated Coveo now offers unique DNS for each organization. Consider switching to customDNSUrl utility function instead.
+ *
+ * @param options
+ * @returns
+ */
 export function analyticsUrl<E extends PlatformEnvironment = 'prod'>(
   options?: URLOptions<E>
 ) {

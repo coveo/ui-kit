@@ -24,7 +24,11 @@ import {createMockRecommendationState} from '../../test/mock-recommendation-stat
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {createMockState} from '../../test/mock-state';
-import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
+import {
+  customDNSUrl,
+  PlatformClient,
+  PlatformClientCallOptions,
+} from '../platform-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
 import {
   isErrorResponse,
@@ -711,6 +715,25 @@ describe('search api client', () => {
       expect(res.questionAnswer.relatedQuestions.length).toEqual(
         emptyQuestionAnswer().relatedQuestions.length
       );
+    });
+  });
+
+  describe('with custom DNS', () => {
+    beforeEach(() => {
+      buildSearchAPIClient({useCustomDNS: true});
+    });
+
+    it('should not append organization id in query string parameter', async () => {
+      state.configuration.search.apiBaseUrl = customDNSUrl('myorg').search;
+      const req = (await buildSearchRequest(state)).request;
+      searchAPIClient.search(req);
+      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+
+      const expectedRequest: Partial<PlatformClientCallOptions> = {
+        url: customDNSUrl('myorg').search,
+      };
+
+      expect(request).toMatchObject(expect.objectContaining(expectedRequest));
     });
   });
 });

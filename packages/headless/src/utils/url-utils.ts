@@ -33,3 +33,28 @@ export class URLPath {
       : this.basePath;
   }
 }
+
+export type PlatformCombination =
+  | {env: 'dev'; region: 'us' | 'eu'}
+  | {env: 'stg'; region: 'us'}
+  | {env: 'hipaa'; region: 'us'}
+  | {env: 'prod'; region: 'us' | 'eu' | 'au'};
+
+export type PlatformEnvironment = PlatformCombination['env'];
+
+export const isCoveoPlatformURL = (url: string) =>
+  /^https:\/\/platform(dev|stg|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/.test(
+    url
+  );
+
+export const isCoveoCustomDNSUrl = (
+  url: string,
+  organizationId: string,
+  env: PlatformEnvironment = 'prod'
+) => {
+  const envSuffix = env === 'prod' ? '' : env;
+
+  return url.match(
+    new RegExp(`^https://(${organizationId}\\.org${envSuffix})\\.coveo.com`)
+  );
+};

@@ -121,6 +121,6 @@ export const allValidPlatformCombination: () => TestedPlatformURL[] = () => [
     multiRegionSubDomain: 'myorg',
     platform: 'https://myorg.org.coveo.com',
     search: 'https://myorg.org.coveo.com/rest/search/v2',
-    analytics: 'https://analytics.cloud.coveo.com/rest/ua',
+    analytics: 'https://myorg.analytics.org.coveo.com',
   },
 ];
