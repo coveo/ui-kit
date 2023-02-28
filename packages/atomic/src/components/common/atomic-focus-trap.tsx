@@ -153,7 +153,7 @@ export class AtomicFocusTrap {
         !elementIsPartOfHost(focusedElement) &&
         elementIsPartOfScope(focusedElement)
       ) {
-        getLastFocusableDescendant(this.host)?.focus;
+        getLastFocusableDescendant(this.host)?.focus();
         return;
       }
     }
