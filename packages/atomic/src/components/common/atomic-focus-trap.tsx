@@ -106,6 +106,13 @@ export class AtomicFocusTrap {
   }
 
   async onActivated(isInitialLoad: boolean) {
+    if (!isAncestorOf(this.scope, this.host)) {
+      console.error(
+        'The scope should be an ancestor of the focus trap.',
+        this.scope
+      );
+    }
+
     this.showSelf();
     if (!isInitialLoad) {
       await defer();
