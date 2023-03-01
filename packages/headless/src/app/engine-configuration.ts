@@ -49,6 +49,13 @@ export interface EngineConfiguration {
    * Allows configuring options related to analytics.
    */
   analytics?: AnalyticsConfiguration;
+  /**
+   * Specify that the custom DNS URL scheme should be used to communicate with the Coveo platform.
+   *
+   * This is a recommended setting for most implementation, as this will simplify the overall configuration of a Coveo deployment in a multi region scenario.
+   *
+   * TODO: Insert Coveo documentation link
+   */
   useCustomDNS?: boolean;
 }
 
