@@ -253,7 +253,7 @@ export namespace Components {
          */
         "container"?: HTMLElement;
         /**
-          * The ancestor of the focus trap and of all the elements that should be hidden when inside the focus trap.
+          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
          */
         "scope": HTMLElement;
         /**
@@ -2924,7 +2924,7 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         /**
-          * The ancestor of the focus trap and of all the elements that should be hidden when inside the focus trap.
+          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
          */
         "scope"?: HTMLElement;
         /**
