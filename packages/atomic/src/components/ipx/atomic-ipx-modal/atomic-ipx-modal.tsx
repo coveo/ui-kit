@@ -107,7 +107,7 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
             source={this.source}
             container={this.container ?? this.host}
             ref={(ref) => (this.focusTrap = ref)}
-            scope={this.bindings.interfaceElement}
+            scope={this.host}
           >
             <Body />
           </atomic-focus-trap>
