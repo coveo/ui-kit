@@ -139,30 +139,18 @@ export class AtomicFocusTrap {
     const elementIsPartOfScope = (focusedElement: Element | ShadowRoot) =>
       isAncestorOf(this.scope, focusedElement);
 
-    const previousFocusedElementWasFirstOfHost = () =>
-      e.relatedTarget === getFirstFocusableDescendant(this.host);
-
     if (!e.target || !this.active) {
       return;
     }
 
     const focusedElement = getFocusedElement();
 
-    if (focusedElement) {
-      if (
-        elementIsPartOfHost(focusedElement) ||
-        !elementIsPartOfScope(focusedElement)
-      ) {
-        return;
-      }
-      if (
-        previousFocusedElementWasFirstOfHost() &&
-        !elementIsPartOfHost(focusedElement) &&
-        elementIsPartOfScope(focusedElement)
-      ) {
-        getLastFocusableDescendant(this.host)?.focus();
-        return;
-      }
+    if (
+      focusedElement &&
+      (elementIsPartOfHost(focusedElement) ||
+        !elementIsPartOfScope(focusedElement))
+    ) {
+      return;
     }
 
     getFirstFocusableDescendant(this.host)?.focus();
