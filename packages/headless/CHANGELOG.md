@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.10](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.9...@coveo/headless@2.8.10) (2023-02-28)
+
+### Bug Fixes
+
+- **headless:** fixed tab set restore on history change ([#2747](https://github.com/coveo/ui-kit/issues/2747)) ([5de405c](https://github.com/coveo/ui-kit/commit/5de405c09ecc8619527f1e28dfb13d88a33814f3))
+
 ## [2.8.9](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.8...@coveo/headless@2.8.9) (2023-02-22)
 
 **Note:** Version bump only for package @coveo/headless

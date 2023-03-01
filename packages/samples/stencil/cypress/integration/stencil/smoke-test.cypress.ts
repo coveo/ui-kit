@@ -13,6 +13,14 @@ describe('smoke test', () => {
     cy.visit('http://localhost:3666/search').wait('@analytics');
   }
 
+  function setupHSP() {
+    cy.intercept({
+      method: 'POST',
+      path: '**/rest/ua/v15/analytics/*',
+    }).as('analytics');
+    cy.visit('http://localhost:3666/hsp.html').wait('@analytics');
+  }
+
   function assertions() {
     it('should load', () => {
       cy.get('atomic-search-box')
@@ -90,5 +98,15 @@ describe('smoke test', () => {
     });
 
     assertions();
+  });
+
+  describe('testing the /hsp sample', () => {
+    before(() => {
+      setupHSP();
+    });
+
+    it('should not log an error to the console', () => {
+      cy.get('@consoleError').should('not.be.called');
+    });
   });
 });
