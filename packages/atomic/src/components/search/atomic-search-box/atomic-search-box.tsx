@@ -394,6 +394,9 @@ export class AtomicSearchBox {
   }
 
   private async triggerSuggestions() {
+    if (this.disableSearch) {
+      return;
+    }
     const settled = await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(
