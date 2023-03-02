@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.15](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.14...@coveo/atomic@2.19.15) (2023-03-02)
+
+### Bug Fixes
+
+- **atomic:** do not modify host dom in ctor ([#2756](https://github.com/coveo/ui-kit/issues/2756)) ([f4566fd](https://github.com/coveo/ui-kit/commit/f4566fdc3d987ba3f67e9364928bf1951ce4e6a6))
+- **atomic:** use closest for internal initialization utils ([#2748](https://github.com/coveo/ui-kit/issues/2748)) ([5c2b8e0](https://github.com/coveo/ui-kit/commit/5c2b8e01a2b55355d560525101b37ff8703102fa))
+
 ## [2.19.14](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.13...@coveo/atomic@2.19.14) (2023-02-28)
 
 **Note:** Version bump only for package @coveo/atomic
