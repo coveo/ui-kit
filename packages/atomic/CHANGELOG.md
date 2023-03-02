@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.16](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.15...@coveo/atomic@2.19.16) (2023-03-02)
+
+### Bug Fixes
+
+- prevent focus trapping when outside of the focus scope ([#2750](https://github.com/coveo/ui-kit/issues/2750)) ([6e276b5](https://github.com/coveo/ui-kit/commit/6e276b5958c5e2389e31b073f87712918d23ddfe))
+
 ## [2.19.15](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.14...@coveo/atomic@2.19.15) (2023-03-02)
 
 ### Bug Fixes
