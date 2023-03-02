@@ -1,8 +1,5 @@
 import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
-import {
-  getFirstFocusableDescendant,
-  getLastFocusableDescendant,
-} from '../../utils/accessibility-utils';
+import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
 import {
   isAncestorOf,
   defer,
@@ -106,13 +103,6 @@ export class AtomicFocusTrap {
   }
 
   async onActivated(isInitialLoad: boolean) {
-    if (!isAncestorOf(this.scope, this.host)) {
-      console.error(
-        'The scope should be an ancestor of the focus trap.',
-        this.scope
-      );
-    }
-
     this.showSelf();
     if (!isInitialLoad) {
       await defer();
