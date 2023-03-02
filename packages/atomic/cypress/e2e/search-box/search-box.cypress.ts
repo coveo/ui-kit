@@ -478,7 +478,7 @@ describe('Search Box Test Suites', () => {
       SearchBoxSelectors.submitButton().click({force: true});
     });
 
-    SearchBoxAssertions.assertHasSuggestionsCount(0);
+    SearchBoxAssertions.assertNoSuggestionGenerated();
     SearchBoxAssertions.assertHasText('test');
     QuerySummaryAssertions.assertHasPlaceholder();
     CommonAssertions.assertConsoleError(false);

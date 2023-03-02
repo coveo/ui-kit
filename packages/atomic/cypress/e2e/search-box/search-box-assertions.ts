@@ -20,6 +20,12 @@ export function assertHasSuggestionsCount(count: number) {
   });
 }
 
+export function assertNoSuggestionGenerated() {
+  it('should have no suggestions', () => {
+    SearchBoxSelectors.querySuggestions().should('not.exist');
+  });
+}
+
 export function assertSuggestionIsSelected(index: number) {
   it(`should have selected suggestion ${index}`, () => {
     SearchBoxSelectors.querySuggestions()
