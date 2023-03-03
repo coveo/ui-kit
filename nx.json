@@ -30,6 +30,11 @@
     },
     "lint:check": {},
     "lint:fix": {},
+    "bump:version:newprocess": {
+      "dependsOn": [
+        "^bump:version:newprocess"
+      ]
+    },
     "publish:npm:release": {
       "dependsOn": [
         "build"

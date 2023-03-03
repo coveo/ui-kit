@@ -21,6 +21,13 @@
         "command": "node ../../../../scripts/deploy/update-npm-tag.mjs latest",
         "cwd": "packages/atomic-angular/projects/atomic-angular"
       }
+    },
+    "bump:version:newprocess": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ../../../../scripts/deploy/new-bump-version.mjs",
+        "cwd": "packages/atomic-angular/projects/atomic-angular"
+      }
     }
   }
 }

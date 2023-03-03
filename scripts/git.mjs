@@ -62,3 +62,12 @@ export async function tagPackages(packages) {
     await gitTag(tag);
   }
 }
+
+/**
+ * @param {string} relativePath
+ */
+export function hasFileChanged(relativePath) {
+  return execute('git', ['diff', '--exit-code', relativePath])
+    .then(() => false)
+    .catch(() => true);
+}

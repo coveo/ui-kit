@@ -153,6 +153,28 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
         shell: bash
+  bump-version-new:
+    name: 'Bump version (new process, dry run)'
+    # TODO: Dependencies commented since this is a dry run.
+    needs:
+        - 'build' # TODO: only needed for the NPM cache, remove when removing Lerna.
+    #   - 'lint-check'
+    #   - 'unit-test'
+    #   - 'e2e-atomic-test'
+    #   - 'e2e-quantic-test'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-node
+      - name: Bump version
+        run: npm run bump:version:newprocess # TODO: Rename script and commit changes when removing Lerna.
+        env:
+          RELEASE_TYPE: prerelease
+      - name: Build # TODO: Only needed to verify dependencies aren't broken. Remove this when removing Lerna
+        run: npm run build
   bump-version:
     name: 'Bump version'
     needs:

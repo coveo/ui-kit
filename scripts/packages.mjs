@@ -13,13 +13,13 @@ export const workspacesRoot = resolve(
 );
 
 /** @type {PackageDir[]} */
-const allPackageDirs = getPackageManifestFromPackagePath(
+export const allPackageDirs = getPackageManifestFromPackagePath(
   workspacesRoot
 ).workspaces.reduce(
   (packageDirs, workspacesEntry) => [
     ...packageDirs,
     ...glob
-      .sync(workspacesEntry)
+      .sync(workspacesEntry, {cwd: workspacesRoot})
       .map((packagePath) => relative('packages', packagePath)),
   ],
   []
@@ -98,7 +98,11 @@ export function getPackageDefinitionFromPackageName(name) {
  * @param {string} newVersion
  * @param {PackageDir[]} packageDirsToUpdate E.g.: [`samples/some-package`]
  */
-function updatePackageDependents(packageName, newVersion, packageDirsToUpdate) {
+export function updatePackageDependents(
+  packageName,
+  newVersion,
+  packageDirsToUpdate
+) {
   packageDirsToUpdate.forEach((packageDir) => {
     const manifestPath = resolve(
       getPackagePathFromPackageDir(packageDir),
@@ -109,19 +113,24 @@ function updatePackageDependents(packageName, newVersion, packageDirsToUpdate) {
     /** @type {import('@lerna/package').RawManifest} */
     const manifest = JSON.parse(originalContentAsText);
 
-    if (packageName in (manifest.dependencies || {})) {
-      manifest.dependencies[packageName] = newVersion;
-    }
-    if (packageName in (manifest.devDependencies || {})) {
-      manifest.devDependencies[packageName] = newVersion;
-    }
-    if (packageName in (manifest.peerDependencies || {})) {
-      manifest.peerDependencies[packageName] = newVersion;
-    }
-    writeFileSync(
-      manifestPath,
-      JSON.stringify(manifest, undefined, indent || '  ')
+    let saveChanges = false;
+    ['dependencies', 'devDependencies', 'peerDependencies'].forEach(
+      (dependenciesObjectKey) => {
+        if (
+          dependenciesObjectKey in manifest &&
+          packageName in manifest[dependenciesObjectKey]
+        ) {
+          manifest[dependenciesObjectKey][packageName] = newVersion;
+          saveChanges = true;
+        }
+      }
     );
+    if (saveChanges) {
+      writeFileSync(
+        manifestPath,
+        JSON.stringify(manifest, undefined, indent || '  ')
+      );
+    }
   });
 }
 
