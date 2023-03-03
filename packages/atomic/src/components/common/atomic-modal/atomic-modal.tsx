@@ -53,7 +53,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
   @Prop({mutable: true}) container?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
   @Prop({mutable: true}) close: () => void = () => (this.isOpen = false);
-  @Prop({reflect: true}) noFocusTrap = false;
+  @Prop({reflect: true}) scope?: HTMLElement;
   /**
    * Whether to display the open and close animations over the entire page or the atomic-modal only.
    */
@@ -75,13 +75,11 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
     if (isOpen) {
       this.wasEverOpened = true;
       document.body.classList.add(modalOpenedClass);
-      if (isIOS()) {
-        await this.waitForAnimationEnded();
-      }
+      await this.waitForAnimationEnded();
       if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
         return;
       }
-      !this.noFocusTrap && (this.focusTrap!.active = true);
+      this.focusTrap!.active = true;
     } else {
       document.body.classList.remove(modalOpenedClass);
       if (isIOS()) {
@@ -90,7 +88,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
       if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
         return;
       }
-      !this.noFocusTrap && (this.focusTrap!.active = false);
+      this.focusTrap!.active = false;
     }
   }
 
@@ -102,7 +100,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
   }
 
   private waitForAnimationEnded() {
-    // The focus trap focuses its first child when active. VoiceOver on iOS can't do it while an animation is ongoing.
+    // The focus trap focuses its first child when active. It cannot do that while an animation is ongoing.
     return new Promise((resolve) =>
       listenOnce(this.animatableContainer!, 'animationend', resolve)
     );
@@ -193,20 +191,17 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
           `}
           onClick={(e) => e.target === e.currentTarget && this.close()}
         >
-          {this.noFocusTrap ? (
+          <atomic-focus-trap
+            role="dialog"
+            aria-modal={this.isOpen.toString()}
+            aria-labelledby={this.headerId}
+            source={this.source}
+            container={this.container ?? this.host}
+            ref={(ref) => (this.focusTrap = ref)}
+            scope={this.scope}
+          >
             <Content />
-          ) : (
-            <atomic-focus-trap
-              role="dialog"
-              aria-modal={this.isOpen.toString()}
-              aria-labelledby={this.headerId}
-              source={this.source}
-              container={this.container ?? this.host}
-              ref={(ref) => (this.focusTrap = ref)}
-            >
-              <Content />
-            </atomic-focus-trap>
-          )}
+          </atomic-focus-trap>
         </div>
       </Host>
     );
