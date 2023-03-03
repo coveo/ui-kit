@@ -1,6 +1,7 @@
 import LOCALE from '@salesforce/i18n/locale';
 import inclusionFilter from '@salesforce/label/c.quantic_InclusionFilter';
 import inclusionFilter_plural from '@salesforce/label/c.quantic_InclusionFilter_plural';
+import inclusionFilter_zero from '@salesforce/label/c.quantic_InclusionFilter_zero';
 import {I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
@@ -64,6 +65,7 @@ export default class QuanticFacetValue extends LightningElement {
   labels = {
     inclusionFilter,
     inclusionFilter_plural,
+    inclusionFilter_zero,
   };
 
   get isStandardFacet() {

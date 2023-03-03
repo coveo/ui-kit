@@ -2,6 +2,7 @@ import LOCALE from '@salesforce/i18n/locale';
 import inLabel from '@salesforce/label/c.quantic_InLabel';
 import inclusionFilter from '@salesforce/label/c.quantic_InclusionFilter';
 import inclusionFilter_plural from '@salesforce/label/c.quantic_InclusionFilter_plural';
+import inclusionFilter_zero from '@salesforce/label/c.quantic_InclusionFilter_zero';
 import {I18nUtils} from 'c/quanticUtils';
 import {api, LightningElement} from 'lwc';
 
@@ -59,6 +60,7 @@ export default class QuanticCategoryFacetValue extends LightningElement {
     inLabel,
     inclusionFilter,
     inclusionFilter_plural,
+    inclusionFilter_zero,
   };
 
   get categoryFacetLiClass() {
