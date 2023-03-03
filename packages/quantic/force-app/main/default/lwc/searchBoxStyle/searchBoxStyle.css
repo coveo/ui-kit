@@ -1,6 +1,6 @@
 /* Shared style between the searchBox and the standaloneSearchBox */
 
-.searchbox__container{
+.searchbox__container {
   display: flex;
   position: relative;
   border-color: #e5e8e8;
@@ -45,6 +45,6 @@
   pointer-events: auto;
 }
 
-input[type="search"] {
+input[type='search'] {
   -webkit-appearance: none;
 }

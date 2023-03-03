@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.16](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.15...@coveo/atomic@2.19.16) (2023-03-02)
+
+### Bug Fixes
+
+- prevent focus trapping when outside of the focus scope ([#2750](https://github.com/coveo/ui-kit/issues/2750)) ([6e276b5](https://github.com/coveo/ui-kit/commit/6e276b5958c5e2389e31b073f87712918d23ddfe))
+
+## [2.19.15](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.14...@coveo/atomic@2.19.15) (2023-03-02)
+
+### Bug Fixes
+
+- **atomic:** do not modify host dom in ctor ([#2756](https://github.com/coveo/ui-kit/issues/2756)) ([f4566fd](https://github.com/coveo/ui-kit/commit/f4566fdc3d987ba3f67e9364928bf1951ce4e6a6))
+- **atomic:** use closest for internal initialization utils ([#2748](https://github.com/coveo/ui-kit/issues/2748)) ([5c2b8e0](https://github.com/coveo/ui-kit/commit/5c2b8e01a2b55355d560525101b37ff8703102fa))
+
+## [2.19.14](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.13...@coveo/atomic@2.19.14) (2023-02-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
 ## [2.19.13](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.12...@coveo/atomic@2.19.13) (2023-02-22)
 
 **Note:** Version bump only for package @coveo/atomic

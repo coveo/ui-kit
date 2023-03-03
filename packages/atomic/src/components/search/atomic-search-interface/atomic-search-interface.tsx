@@ -168,7 +168,6 @@ export class AtomicSearchInterface
   @Prop({reflect: true}) public enableRelevanceInspector = true;
 
   public constructor() {
-    this.initAriaLive();
     this.initRelevanceInspector();
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
@@ -182,6 +181,7 @@ export class AtomicSearchInterface
   }
 
   componentWillLoad() {
+    this.initAriaLive();
     this.initFieldsToInclude();
   }
 

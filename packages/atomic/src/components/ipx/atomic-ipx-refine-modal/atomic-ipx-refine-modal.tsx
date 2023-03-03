@@ -124,7 +124,7 @@ export class AtomicIPXRefineModal implements InitializableComponent {
           title={this.bindings.i18n.t('filters')}
           openButton={this.openButton}
           boundary="element"
-          noFocusTrap
+          scope={this.bindings.interfaceElement}
         >
           {this.renderBody()}
         </RefineModalCommon>
