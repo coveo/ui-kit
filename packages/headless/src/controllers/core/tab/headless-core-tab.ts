@@ -2,11 +2,17 @@ import {BooleanValue, Schema} from '@coveo/bueno';
 import {CoreEngine} from '../../../app/engine';
 import {configuration, tabSet} from '../../../app/reducers';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state';
+import {updatePage} from '../../../features/pagination/pagination-actions';
+import {paginationReducer} from '../../../features/pagination/pagination-slice';
 import {
   registerTab,
   updateActiveTab,
 } from '../../../features/tab-set/tab-set-actions';
-import {ConfigurationSection, TabSection} from '../../../state/state-sections';
+import {
+  ConfigurationSection,
+  PaginationSection,
+  TabSection,
+} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {
   requiredEmptyAllowedString,
@@ -126,6 +132,7 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
 
     select() {
       dispatch(updateActiveTab(id));
+      dispatch(updatePage(1));
     },
 
     get state() {
@@ -139,8 +146,8 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
 
 function loadTabReducers(
   engine: CoreEngine
-): engine is CoreEngine<ConfigurationSection & TabSection> {
-  engine.addReducers({configuration, tabSet});
+): engine is CoreEngine<ConfigurationSection & TabSection & PaginationSection> {
+  engine.addReducers({configuration, tabSet, paginationReducer});
   return true;
 }
 

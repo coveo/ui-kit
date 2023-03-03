@@ -1,5 +1,7 @@
 import {configuration, tabSet} from '../../../app/reducers';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state';
+import {updatePage} from '../../../features/pagination/pagination-actions';
+import {paginationReducer} from '../../../features/pagination/pagination-slice';
 import {
   registerTab,
   updateActiveTab,
@@ -36,6 +38,7 @@ describe('Core Tab', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
       tabSet,
+      paginationReducer,
     });
   });
 
@@ -94,6 +97,12 @@ describe('Core Tab', () => {
       tab.select();
 
       expect(engine.actions).toContainEqual(updateActiveTab(id));
+    });
+
+    it('dispatches #updatePage', () => {
+      tab.select();
+
+      expect(engine.actions).toContainEqual(updatePage(1));
     });
   });
 
