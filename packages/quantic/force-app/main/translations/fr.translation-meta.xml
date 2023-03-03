@@ -568,4 +568,8 @@
       <label>Filtre d'inclusion sur {{0}}; {{1}} résultats</label>
       <name>quantic_InclusionFilter_plural</name>
     </customLabels>
+    <customLabels>
+      <label>Filtre d'inclusion sur {{0}}; aucun résultat</label>
+      <name>quantic_InclusionFilter_zero</name>
+    </customLabels>
 </Translations>
