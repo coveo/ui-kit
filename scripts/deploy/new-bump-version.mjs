@@ -28,7 +28,7 @@ import {
 
 const CONVENTION = angularChangelogConvention;
 const PRERELEASE_SUFFIX = 'pre';
-const SHA1_CHARACTERS_TO_KEEP = 7; // Arbitrarily chosen number. I chose it because that's what GitHub displays.
+const SHA1_CHARACTERS_TO_KEEP = 10; // Arbitrarily chosen number.
 
 /**
  * @param {string[]} paths
