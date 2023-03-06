@@ -153,7 +153,7 @@ export class AtomicSearchBox {
   @Prop() public suggestionTimeout = 400;
 
   /**
-   * Whether to prevent the user from triggering a search from the component.
+   * Whether to prevent the user from triggering searches and query suggestions from the component.
    * Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
    */
   @Prop({reflect: true}) public disableSearch = false;
