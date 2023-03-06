@@ -68,7 +68,7 @@ async function getPrereleaseIdentifier(head) {
 /**
  * @param {string} projectPath
  * @param {Commit[]} changes
- * @param {boolean} [prereleaseIdentifier]
+ * @param {string} [prereleaseIdentifier]
  */
 async function bumpPackageVersion(projectPath, changes, prereleaseIdentifier) {
   const currentVersion = getCurrentVersion(projectPath);
@@ -81,14 +81,17 @@ async function bumpPackageVersion(projectPath, changes, prereleaseIdentifier) {
   console.info(
     `Updating version from ${currentVersion.version} to ${newVersion}.`
   );
+  const projectName = getPackageManifestFromPackagePath(projectPath).name;
   updatePackageDependents(
-    getPackageManifestFromPackagePath(projectPath).name,
-    newVersion,
+    projectName,
+    `${currentVersion.version} || ${newVersion}`,
     allPackageDirs
   );
   await npmBumpVersion(newVersion, relativeToCwd(projectPath), {
     workspaceUpdateStrategy: 'UpdateExact',
   });
+  console.info(`Updating dependencies referencing ${projectName}.`);
+  updatePackageDependents(projectName, newVersion, allPackageDirs);
 }
 
 /**
@@ -145,5 +148,8 @@ async function main(context) {
     projectPath: process.cwd(),
     releaseType: process.env.RELEASE_TYPE || 'prerelease',
     base: await getLastTag('@coveo/'),
-    head: 'HEAD',
-  }))();
+    head: 'HEAD^1',
+  }))().catch((...err) => {
+  console.error(...err);
+  process.exit(1);
+});
