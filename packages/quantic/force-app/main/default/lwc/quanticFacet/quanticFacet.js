@@ -1,4 +1,15 @@
-import {LightningElement, track, api} from 'lwc';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
+import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
+import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
+import search from '@salesforce/label/c.quantic_Search';
+import showLess from '@salesforce/label/c.quantic_ShowLess';
+import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
+import showMore from '@salesforce/label/c.quantic_ShowMore';
+import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -6,19 +17,7 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
-
-import showMore from '@salesforce/label/c.quantic_ShowMore';
-import showLess from '@salesforce/label/c.quantic_ShowLess';
-import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues';
-import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
-import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
-import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
-import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
-import search from '@salesforce/label/c.quantic_Search';
-import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
-import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
-import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
-import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").FacetState} FacetState */
 /** @typedef {import("coveo").Facet} Facet */
@@ -181,8 +180,15 @@ export default class QuanticFacet extends LightningElement {
     expandFacet,
   };
 
+  /** @type {object} */
+  customCaptions = {};
+
+  /** @type {Function} */
+  remoteGetValueCaption;
+
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.remoteGetValueCaption = this.getValueCaption.bind(this);
   }
 
   renderedCallback() {
@@ -204,6 +210,8 @@ export default class QuanticFacet extends LightningElement {
       this.updateState()
     );
 
+    this.customCaptions = this.loadCustomCaptions();
+
     const options = {
       field: this.field,
       sortCriteria: this.sortCriteria,
@@ -211,6 +219,7 @@ export default class QuanticFacet extends LightningElement {
       facetSearch: this.noSearch
         ? undefined
         : {
+            captions: this.customCaptions,
             numberOfValues: Number(this.numberOfValues),
           },
       facetId: this.facetId ?? this.field,
@@ -222,6 +231,7 @@ export default class QuanticFacet extends LightningElement {
     registerToStore(this.engineId, Store.facetTypes.FACETS, {
       label: this.label,
       facetId: this.facet.state.facetId,
+      format: this.remoteGetValueCaption,
       element: this.template.host,
     });
   };
@@ -256,7 +266,7 @@ export default class QuanticFacet extends LightningElement {
         .map((v) => ({
           ...v,
           checked: v.state === 'selected',
-          highlightedResult: v.value,
+          highlightedResult: this.getValueCaption(v.value),
         })) || []
     );
   }
@@ -395,7 +405,22 @@ export default class QuanticFacet extends LightningElement {
   getItemFromValue(value) {
     return (
       this.isFacetSearchActive ? this.facetSearchResults : this.values
-    ).find((item) => item.value === value);
+    ).find((item) => this.getValueCaption(item) === value);
+  }
+
+  getValueCaption(item) {
+    return this.customCaptions[item.value] || item.value;
+  }
+
+  loadCustomCaptions() {
+    const providers = Array.from(this.querySelectorAll('*')).filter(
+      (component) => !!component.captions
+    );
+
+    // The list is reversed so the caption comes from the first provider matching the value.
+    return providers
+      .reverse()
+      .reduce((res, provider) => ({...res, ...provider.captions}), {});
   }
 
   /**
