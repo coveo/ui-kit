@@ -24,6 +24,7 @@ import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {executeSearch} from '../search/search-actions';
+import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
   deselectAllFacetValues,
   toggleSelectFacetValue,
@@ -96,6 +97,13 @@ describe('pagination slice', () => {
   it('#updateNumberOfResults sets the #firstResult to 0', () => {
     state.firstResult = 1;
     const finalState = paginationReducer(state, updateNumberOfResults(20));
+
+    expect(finalState.firstResult).toBe(0);
+  });
+
+  it('#updateActiveTab sets sets the #firstResult to 0', () => {
+    const action = updateActiveTab('page');
+    const finalState = paginationReducer(state, action);
 
     expect(finalState.firstResult).toBe(0);
   });
