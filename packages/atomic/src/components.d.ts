@@ -253,6 +253,10 @@ export namespace Components {
          */
         "container"?: HTMLElement;
         /**
+          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
+         */
+        "scope": HTMLElement;
+        /**
           * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
          */
         "shouldHideSelf": boolean;
@@ -689,7 +693,6 @@ export namespace Components {
          */
         "container"?: HTMLElement;
         "isOpen": boolean;
-        "noFocusTrap": boolean;
         "source"?: HTMLElement;
     }
     interface AtomicIpxRefineModal {
@@ -756,7 +759,7 @@ export namespace Components {
         "container"?: HTMLElement;
         "fullscreen": boolean;
         "isOpen": boolean;
-        "noFocusTrap": boolean;
+        "scope"?: HTMLElement;
         "source"?: HTMLElement;
     }
     interface AtomicNoResults {
@@ -2921,6 +2924,10 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         /**
+          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
+         */
+        "scope"?: HTMLElement;
+        /**
           * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
          */
         "shouldHideSelf"?: boolean;
@@ -3335,7 +3342,6 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         "isOpen"?: boolean;
-        "noFocusTrap"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
         "source"?: HTMLElement;
     }
@@ -3403,8 +3409,8 @@ declare namespace LocalJSX {
         "container"?: HTMLElement;
         "fullscreen"?: boolean;
         "isOpen"?: boolean;
-        "noFocusTrap"?: boolean;
         "onAnimationEnded"?: (event: AtomicModalCustomEvent<never>) => void;
+        "scope"?: HTMLElement;
         "source"?: HTMLElement;
     }
     interface AtomicNoResults {

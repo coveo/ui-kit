@@ -19,8 +19,8 @@ interface RefineModalCommonProps {
   };
   isOpen: boolean;
   openButton?: HTMLElement;
-  noFocusTrap?: boolean;
   boundary?: 'page' | 'element';
+  scope?: HTMLElement;
 }
 
 export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
@@ -94,8 +94,8 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
         }
       }}
       exportparts={exportparts}
-      noFocusTrap={props.noFocusTrap}
       boundary={props.boundary}
+      scope={props.scope}
     >
       {renderHeader()}
       {...children}

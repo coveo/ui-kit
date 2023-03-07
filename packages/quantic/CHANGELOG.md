@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.15.0...@coveo/quantic@2.15.1) (2023-03-06)
+
+### Bug Fixes
+
+- **quantic:** improved aria labels of the facet values ([#2751](https://github.com/coveo/ui-kit/issues/2751)) ([bf96881](https://github.com/coveo/ui-kit/commit/bf968818ab4426b422282f7f5b874b9aeb22ebac))
+
 # [2.15.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.14.0...@coveo/quantic@2.15.0) (2023-02-28)
 
 ### Bug Fixes
