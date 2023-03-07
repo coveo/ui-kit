@@ -57,7 +57,7 @@ export class AtomicSimpleBuilder implements ComponentInterface {
 
     try {
       const pageResponse = await fetch(
-        `${platformUrl}/rest/organizations/${options.organizationId}/searchinterfaces/${options.interfaceId}/hostedpage`,
+        `${platformUrl}/rest/organizations/${options.organizationId}/searchinterfaces/${options.interfaceId}/hostedpage/v1`,
         {
           headers: {
             Authorization: `Bearer ${options.accessToken}`,
