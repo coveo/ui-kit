@@ -88,7 +88,7 @@ async function bumpPackageVersion(projectPath, changes, prereleaseIdentifier) {
     allPackageDirs
   );
   await npmBumpVersion(newVersion, relativeToCwd(projectPath), {
-    workspaceUpdateStrategy: 'UpdateExact',
+    workspaceUpdateStrategy: 'NoUpdate',
   });
   console.info(`Updating dependencies referencing ${projectName}.`);
   updatePackageDependents(projectName, newVersion, allPackageDirs);
