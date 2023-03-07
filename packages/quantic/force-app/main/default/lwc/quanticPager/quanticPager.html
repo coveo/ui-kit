@@ -1,4 +1,8 @@
 <template>
+  <template if:true={hasError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
   <template if:true={hasResults}>
     <lightning-button-group>
       <lightning-button

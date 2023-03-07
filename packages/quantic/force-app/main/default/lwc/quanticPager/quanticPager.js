@@ -54,6 +54,8 @@ export default class QuanticPager extends LightningElement {
   currentPage = 1;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasError;
 
   labels = {
     nextPage,
@@ -112,6 +114,10 @@ export default class QuanticPager extends LightningElement {
    */
   goto(event) {
     this.pager.selectPage(event.detail);
+  }
+
+  setError() {
+    this.hasError = true;
   }
 
   get nextDisabled() {

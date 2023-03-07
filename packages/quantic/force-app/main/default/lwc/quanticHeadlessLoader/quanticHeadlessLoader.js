@@ -298,9 +298,11 @@ async function initializeWithHeadless(element, engineId, initialize) {
   try {
     initQuanticStore(engineId);
     initialize(await getHeadlessEnginePromise(engineId));
-    setComponentInitialized(element, engineId);
   } catch (error) {
     console.error('Fatal error: unable to initialize component', error);
+    element?.setError?.();
+  } finally{
+    setComponentInitialized(element, engineId);
   }
 }
 
