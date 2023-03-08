@@ -1,3 +1,4 @@
+import {Logger} from 'pino';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {getDebugInitialState} from '../../features/debug/debug-state';
 import {getPaginationInitialState} from '../../features/pagination/pagination-state';
@@ -17,6 +18,7 @@ import {
   SearchParameterManagerProps,
   SearchParameterManagerState,
   validateParams,
+  warnAndHintOnPartialState,
 } from '../core/search-parameter-manager/headless-core-search-parameter-manager';
 
 export type {
@@ -69,21 +71,30 @@ export function buildSearchParameterManager(
 }
 
 function getActiveSearchParameters(engine: SearchEngine): SearchParameters {
-  const state = engine.state;
+  const {state, logger} = engine;
   return {
     ...getCoreActiveSearchParameters(engine),
-    ...getEnableQuerySyntax(state),
-    ...getAq(state),
-    ...getCq(state),
-    ...getFirstResult(state),
-    ...getNumberOfResults(state),
-    ...getDebug(state),
-    ...getStaticFilters(state),
+    ...getEnableQuerySyntax(state, logger),
+    ...getAq(state, logger),
+    ...getCq(state, logger),
+    ...getFirstResult(state, logger),
+    ...getNumberOfResults(state, logger),
+    ...getDebug(state, logger),
+    ...getStaticFilters(state, logger),
   };
 }
 
-function getEnableQuerySyntax(state: Partial<SearchParametersState>) {
+function getEnableQuerySyntax(
+  state: Partial<SearchParametersState>,
+  logger: Logger
+) {
   if (state.query === undefined) {
+    warnAndHintOnPartialState(
+      'query',
+      'enableQuerySyntax',
+      'loadQueryActions',
+      logger
+    );
     return {};
   }
 
@@ -94,8 +105,14 @@ function getEnableQuerySyntax(state: Partial<SearchParametersState>) {
   return shouldInclude ? {enableQuerySyntax} : {};
 }
 
-function getAq(state: Partial<SearchParametersState>) {
+function getAq(state: Partial<SearchParametersState>, logger: Logger) {
   if (state.advancedSearchQueries === undefined) {
+    warnAndHintOnPartialState(
+      'advancedSearchQueries',
+      'aq',
+      'loadAdvancedSearchQueryActions',
+      logger
+    );
     return {};
   }
 
@@ -104,8 +121,14 @@ function getAq(state: Partial<SearchParametersState>) {
   return shouldInclude ? {aq} : {};
 }
 
-function getCq(state: Partial<SearchParametersState>) {
+function getCq(state: Partial<SearchParametersState>, logger: Logger) {
   if (state.advancedSearchQueries === undefined) {
+    warnAndHintOnPartialState(
+      'advancedSearchQueries',
+      'cq',
+      'loadAdvancedSearchQueryActions',
+      logger
+    );
     return {};
   }
 
@@ -114,8 +137,14 @@ function getCq(state: Partial<SearchParametersState>) {
   return shouldInclude ? {cq} : {};
 }
 
-function getFirstResult(state: Partial<SearchParametersState>) {
+function getFirstResult(state: Partial<SearchParametersState>, logger: Logger) {
   if (state.pagination === undefined) {
+    warnAndHintOnPartialState(
+      'pagination',
+      'firstResult',
+      'loadPaginationActions',
+      logger
+    );
     return {};
   }
 
@@ -124,8 +153,17 @@ function getFirstResult(state: Partial<SearchParametersState>) {
   return shouldInclude ? {firstResult} : {};
 }
 
-function getNumberOfResults(state: Partial<SearchParametersState>) {
+function getNumberOfResults(
+  state: Partial<SearchParametersState>,
+  logger: Logger
+) {
   if (state.pagination === undefined) {
+    warnAndHintOnPartialState(
+      'pagination',
+      'numberOfResults',
+      'loadPaginationActions',
+      logger
+    );
     return {};
   }
 
@@ -134,8 +172,17 @@ function getNumberOfResults(state: Partial<SearchParametersState>) {
   return shouldInclude ? {numberOfResults} : {};
 }
 
-function getStaticFilters(state: Partial<SearchParametersState>) {
+function getStaticFilters(
+  state: Partial<SearchParametersState>,
+  logger: Logger
+) {
   if (state.staticFilterSet === undefined) {
+    warnAndHintOnPartialState(
+      'staticFilterSet',
+      'staticFilter',
+      'loadStaticFilterSetActions',
+      logger
+    );
     return {};
   }
 
@@ -153,8 +200,9 @@ function getSelectedStaticFilterCaptions(values: StaticFilterValue[]) {
   return values.filter((v) => v.state === 'selected').map((v) => v.caption);
 }
 
-function getDebug(state: Partial<SearchParametersState>) {
+function getDebug(state: Partial<SearchParametersState>, logger: Logger) {
   if (state.debug === undefined) {
+    warnAndHintOnPartialState('debug', 'debug', 'loadDebugActions', logger);
     return {};
   }
 

@@ -1,3 +1,4 @@
+import {SearchAppState} from '../..';
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {executeSearch} from '../../features/search/search-actions';
@@ -23,6 +24,17 @@ import {
   SearchParameterManager,
   SearchParameterManagerProps,
 } from './headless-search-parameter-manager';
+
+jest.mock('pino', () => ({
+  ...jest.requireActual('pino'),
+  __esModule: true,
+  default: () => ({
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  }),
+}));
 
 describe('search parameter manager', () => {
   let engine: MockSearchEngine;
@@ -275,6 +287,135 @@ describe('search parameter manager', () => {
       manager.synchronize({f: {author: [value2, value1]}});
 
       expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    });
+  });
+
+  describe('with missing state parameters', () => {
+    function deletePartOfState(stateKey: keyof SearchAppState) {
+      delete (engine.state as Partial<SearchAppState>)[stateKey];
+    }
+
+    it('warn when #advancedSearchQueries is missing', () => {
+      deletePartOfState('advancedSearchQueries');
+
+      manager.synchronize({cq: 'foo'});
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('advancedSearchQueries')
+      );
+    });
+
+    it('warn when #query is missing', () => {
+      deletePartOfState('query');
+
+      manager.synchronize({q: 'foo'});
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('query')
+      );
+    });
+
+    it('warn when #tabSet is missing', () => {
+      deletePartOfState('tabSet');
+
+      manager.synchronize({tab: 'foo'});
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('tabSet')
+      );
+    });
+
+    it('warn when #tabSet is missing', () => {
+      deletePartOfState('sortCriteria');
+
+      manager.synchronize({sortCriteria: 'foo'});
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('sortCriteria')
+      );
+    });
+
+    it('warn when #facetSet is missing', () => {
+      deletePartOfState('facetSet');
+
+      manager.synchronize({f: {foo: ['bar']}});
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('facetSet')
+      );
+    });
+
+    it('warn when #categoryFacetSet is missing', () => {
+      deletePartOfState('categoryFacetSet');
+
+      manager.synchronize({cf: {foo: ['bar']}});
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('categoryFacetSet')
+      );
+    });
+
+    it('warn when #numericFacetSet is missing', () => {
+      deletePartOfState('numericFacetSet');
+
+      manager.synchronize({
+        nf: {foo: [{start: 1, end: 2, endInclusive: false, state: 'selected'}]},
+      });
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('numericFacetSet')
+      );
+    });
+
+    it('warn when #categoryFacetSet is missing', () => {
+      deletePartOfState('categoryFacetSet');
+
+      manager.synchronize({
+        cf: {foo: ['bar']},
+      });
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('categoryFacetSet')
+      );
+    });
+
+    it('warn when #categoryFacetSet is missing', () => {
+      deletePartOfState('dateFacetSet');
+
+      manager.synchronize({
+        df: {
+          foo: [
+            {
+              start: '2000/01/01',
+              end: '2000/01/02',
+              endInclusive: false,
+              state: 'selected',
+            },
+          ],
+        },
+      });
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('dateFacetSet')
+      );
+    });
+
+    it('warn when #pagination is missing', () => {
+      deletePartOfState('pagination');
+
+      manager.synchronize({firstResult: 1234});
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('pagination')
+      );
+    });
+
+    it('warn when #debug is missing', () => {
+      deletePartOfState('debug');
+
+      manager.synchronize({debug: true});
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('debug')
+      );
+    });
+
+    it('warn when #staticFilterSet is missing', () => {
+      deletePartOfState('staticFilterSet');
+
+      manager.synchronize({sf: {foo: ['bar']}});
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('staticFilterSet')
+      );
     });
   });
 });

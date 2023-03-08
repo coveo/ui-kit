@@ -1,4 +1,5 @@
 import {RecordValue, Schema} from '@coveo/bueno';
+import {Logger} from 'pino';
 import {CoreEngine} from '../../../app/engine';
 import {partitionIntoParentsAndValues} from '../../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
@@ -124,20 +125,21 @@ export function validateParams(
 export function getCoreActiveSearchParameters(
   engine: CoreEngine
 ): SearchParameters {
-  const state = engine.state;
+  const {state, logger} = engine;
   return {
-    ...getQ(state),
-    ...getTab(state),
-    ...getSortCriteria(state),
-    ...getFacets(state),
-    ...getCategoryFacets(state),
-    ...getNumericFacets(state),
-    ...getDateFacets(state),
+    ...getQ(state, logger),
+    ...getTab(state, logger),
+    ...getSortCriteria(state, logger),
+    ...getFacets(state, logger),
+    ...getCategoryFacets(state, logger),
+    ...getNumericFacets(state, logger),
+    ...getDateFacets(state, logger),
   };
 }
 
-function getQ(state: Partial<SearchParametersState>) {
+function getQ(state: Partial<SearchParametersState>, logger: Logger) {
   if (state.query === undefined) {
+    warnAndHintOnPartialState('query', 'q', 'loadQueryActions', logger);
     return {};
   }
 
@@ -146,7 +148,10 @@ function getQ(state: Partial<SearchParametersState>) {
   return shouldInclude ? {q} : {};
 }
 
-function getTab(state: Partial<SearchParametersState>) {
+function getTab(state: Partial<SearchParametersState>, logger: Logger) {
+  if (state.tabSet === undefined) {
+    warnAndHintOnPartialState('tabSet', 'tab', 'loadTabSetActions', logger);
+  }
   const activeTab = Object.values(state.tabSet || {}).find(
     (tab) => tab.isActive
   );
@@ -174,8 +179,17 @@ function validateTab(
   return isInState;
 }
 
-function getSortCriteria(state: Partial<SearchParametersState>) {
+function getSortCriteria(
+  state: Partial<SearchParametersState>,
+  logger: Logger
+) {
   if (state.sortCriteria === undefined) {
+    warnAndHintOnPartialState(
+      'sortCriteria',
+      'sortCriteria',
+      'loadSortCriteriaActions',
+      logger
+    );
     return {};
   }
 
@@ -184,8 +198,14 @@ function getSortCriteria(state: Partial<SearchParametersState>) {
   return shouldInclude ? {sortCriteria} : {};
 }
 
-function getFacets(state: Partial<SearchParametersState>) {
+function getFacets(state: Partial<SearchParametersState>, logger: Logger) {
   if (state.facetSet === undefined) {
+    warnAndHintOnPartialState(
+      'facetSet',
+      'facets',
+      'loadFacetSetActions',
+      logger
+    );
     return {};
   }
 
@@ -204,8 +224,17 @@ function getSelectedValues(values: FacetValueRequest[]) {
   return values.filter((fv) => fv.state === 'selected').map((fv) => fv.value);
 }
 
-function getCategoryFacets(state: Partial<SearchParametersState>) {
+function getCategoryFacets(
+  state: Partial<SearchParametersState>,
+  logger: Logger
+) {
   if (state.categoryFacetSet === undefined) {
+    warnAndHintOnPartialState(
+      'categoryFacetSet',
+      'facets',
+      'loadCategoryFacetSetActions',
+      logger
+    );
     return {};
   }
 
@@ -224,8 +253,17 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
   return Object.keys(cf).length ? {cf} : {};
 }
 
-function getNumericFacets(state: Partial<SearchParametersState>) {
+function getNumericFacets(
+  state: Partial<SearchParametersState>,
+  logger: Logger
+) {
   if (state.numericFacetSet === undefined) {
+    warnAndHintOnPartialState(
+      'numericFacetSet',
+      'facets',
+      'loadNumericFacetSetActions',
+      logger
+    );
     return {};
   }
 
@@ -240,8 +278,14 @@ function getNumericFacets(state: Partial<SearchParametersState>) {
   return Object.keys(nf).length ? {nf} : {};
 }
 
-function getDateFacets(state: Partial<SearchParametersState>) {
+function getDateFacets(state: Partial<SearchParametersState>, logger: Logger) {
   if (state.dateFacetSet === undefined) {
+    warnAndHintOnPartialState(
+      'dateFacetSet',
+      'facets',
+      'loadDateFacetSetActions',
+      logger
+    );
     return {};
   }
 
@@ -258,4 +302,17 @@ function getDateFacets(state: Partial<SearchParametersState>) {
 
 function getSelectedRanges<T extends RangeValueRequest>(ranges: T[]) {
   return ranges.filter((range) => range.state === 'selected');
+}
+
+export function warnAndHintOnPartialState(
+  stateKeyHint: string,
+  paramKeyHint: string,
+  actionHint: string,
+  logger: Logger
+) {
+  logger.warn(
+    `Headless search parameter manager: Engine state is missing an entry for ${stateKeyHint}. 
+    Parameter manager won't be able to synchronize ${paramKeyHint}. 
+    The proper state entry can be loaded using ${actionHint}`
+  );
 }
