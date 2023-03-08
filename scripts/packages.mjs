@@ -112,12 +112,9 @@ export function updatePackageDependents(
     const {indent} = detectIndent(originalContentAsText);
     /** @type {import('@lerna/package').RawManifest} */
     const manifest = JSON.parse(originalContentAsText);
-    if (manifest.private) {
-      return;
-    }
 
     let saveChanges = false;
-    ['dependencies', 'devDependencies'].forEach((dependenciesObjectKey) => {
+    ['dependencies', 'devDependencies', 'peerDependencies'].forEach((dependenciesObjectKey) => {
       if (
         dependenciesObjectKey in manifest &&
         packageName in manifest[dependenciesObjectKey]
