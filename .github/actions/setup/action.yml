@@ -3,9 +3,7 @@ description: 'Setup node, install dependencies & build'
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v3
-      with:
-        node-version-file: '.nvmrc'
+    - uses: ./.github/actions/setup-node
     - uses: actions/cache@v3
       id: build-cache
       with:
@@ -27,17 +25,8 @@ runs:
           packages/quantic/force-app/main/default/staticresources/coveobueno
           !node_modules
           !**/node_modules
+          !package-lock.json
         key: ${{ github.sha }}
-    - uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: npm-${{ hashFiles('**/package-lock.json') }}
-    - uses: actions/cache@v3
-      with:
-        path: ~/.cache/Cypress
-        key: cy-${{ hashFiles('**/package-lock.json') }}
-    - run: npm ci
-      shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run build
       shell: bash
