@@ -34,6 +34,15 @@
     "@coveo/semantic-monorepo-tools": "1.5.22",
     "@octokit/rest": "19.0.5",
     "@rollup/plugin-typescript": "8.3.4",
+    "@storybook/addon-a11y": "6.3.12",
+    "@storybook/addon-controls": "6.3.12",
+    "@storybook/addon-docs": "6.3.12",
+    "@storybook/addon-essentials": "6.3.12",
+    "@storybook/addon-viewport": "6.3.12",
+    "@storybook/api": "6.3.12",
+    "@storybook/builder-webpack5": "6.3.12",
+    "@storybook/html": "6.3.12",
+    "@storybook/manager-webpack5": "6.3.12",
     "@trivago/prettier-plugin-sort-imports": "4.0.0",
     "@types/jest": "27.5.2",
     "@types/node": "14.18.25",
@@ -62,7 +71,9 @@
     "rimraf": "3.0.2",
     "semver": "7.3.7",
     "ts-jest": "27.1.5",
-    "typescript": "4.6.4"
+    "typescript": "4.6.4",
+    "rxjs": "^6.0.0",
+    "@angular/core": "^15.2.0"
   },
   "workspaces": [
     "packages/bueno",
