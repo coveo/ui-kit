@@ -1,0 +1,15 @@
+<template>
+  <iframe
+    id="quickview__content-container"
+    class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap"
+    height="100%"
+    allowfullscreen
+    referrerpolicy="same-origin"
+    onload={onIframeLoaded}
+    sandbox="allow-same-origin allow-scripts allow-popups allow-top-navigation allow-top-navigation-by-user-activation allow-presentation"
+    src={youtubeIframeUrl}
+  ></iframe>
+  <lightning-formatted-rich-text
+    value={excerpts}
+  ></lightning-formatted-rich-text>
+</template>

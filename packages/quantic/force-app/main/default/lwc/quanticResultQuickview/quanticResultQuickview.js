@@ -275,11 +275,21 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get contentURL() {
+    // console.log('result: ' + JSON.stringify(this.result));
+    // console.log('state: ' + JSON.stringify(this.state));
+    // console.log('raw: ' + JSON.stringify(this.result.raw.ytvideoid));
     return this.state.contentURL?.includes(
       encodeURIComponent(this.result.uniqueId)
     )
       ? this.state.contentURL
       : undefined;
+  }
+
+  get isYoutube() {
+    if (this.result.uniqueId.includes('youtube')) {
+      return true;
+    }
+    return false;
   }
 
   setFocusToHeader() {

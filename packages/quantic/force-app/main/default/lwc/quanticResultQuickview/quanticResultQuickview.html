@@ -1,60 +1,118 @@
 <template>
   <div class={buttonContainerClass}>
-    <button aria-hidden={isQuickviewOpen} class={buttonClass} onclick={openQuickview} title={buttonTitle}
-      disabled={hasNoPreview} aria-label={buttonAriaLabelValue}>
-      <template if:true={hasButtonLabel}>
-        {previewButtonLabel}
-      </template>
+    <button
+      aria-hidden={isQuickviewOpen}
+      class={buttonClass}
+      onclick={openQuickview}
+      title={buttonTitle}
+      disabled={hasNoPreview}
+      aria-label={buttonAriaLabelValue}
+    >
+      <template if:true={hasButtonLabel}> {previewButtonLabel} </template>
       <template if:true={hasIcon}>
-        <lightning-icon size="x-small" icon-name={previewButtonIcon} alternative-text={buttonLabel}
-          class={buttonIconClass}>
+        <lightning-icon
+          size="x-small"
+          icon-name={previewButtonIcon}
+          alternative-text={buttonLabel}
+          class={buttonIconClass}
+        >
         </lightning-icon>
       </template>
     </button>
     <template if:true={tooltip}>
-      <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left result-action_tooltip slds-fall-into-ground"
-        aria-hidden="true">
+      <div
+        class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left result-action_tooltip slds-fall-into-ground"
+        aria-hidden="true"
+      >
         <div class="slds-popover__body">{tooltip}</div>
       </div>
     </template>
   </div>
   <template if:true={isQuickviewOpen}>
-    <section onclick={closeQuickview} role="dialog" tabindex="-1" aria-labelledby="quickview-modal-heading"
-      aria-modal="true" aria-describedby="quickview__content-container"
-      class="slds-modal slds-modal_medium slds-fade-in-open">
+    <section
+      onclick={closeQuickview}
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="quickview-modal-heading"
+      aria-modal="true"
+      aria-describedby="quickview__content-container"
+      class="slds-modal slds-modal_medium slds-fade-in-open"
+    >
       <div class="slds-modal__container">
         <header class="slds-modal__header" onclick={stopPropagation}>
-          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
-            onclick={closeQuickview} onkeydown={onCloseKeyDown}>
-            <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close"
-              alternative-text={labels.close}></lightning-icon>
+          <button
+            class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+            onclick={closeQuickview}
+            onkeydown={onCloseKeyDown}
+          >
+            <lightning-icon
+              class="slds-current-color slds-m-right_xx-small"
+              icon-name="utility:close"
+              alternative-text={labels.close}
+            ></lightning-icon>
           </button>
-          <div id="quickview-modal-heading"
-            class="slds-modal__title slds-truncate slds-grid slds-grid_vertical-align-center">
-            <div class="slds-grid slds-truncate slds-grid_vertical-align-center slds-text-align_left">
+          <div
+            id="quickview-modal-heading"
+            class="slds-modal__title slds-truncate slds-grid slds-grid_vertical-align-center"
+          >
+            <div
+              class="slds-grid slds-truncate slds-grid_vertical-align-center slds-text-align_left"
+            >
               <div class="slds-m-right_small">
-                <c-quantic-result-label result={result} icon-only></c-quantic-result-label>
+                <c-quantic-result-label
+                  result={result}
+                  icon-only
+                ></c-quantic-result-label>
               </div>
               <div class="slds-truncate quickview__result-title">
-                <c-quantic-result-link target="_blank" result={result} engine-id={engineId}></c-quantic-result-link>
+                <c-quantic-result-link
+                  target="_blank"
+                  result={result}
+                  engine-id={engineId}
+                ></c-quantic-result-link>
               </div>
             </div>
-            <div class="slds-text-align_right quickview__result-date slds-col_bump-left">
-              <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
+            <div
+              class="slds-text-align_right quickview__result-date slds-col_bump-left"
+            >
+              <lightning-formatted-date-time
+                value={result.raw.date}
+              ></lightning-formatted-date-time>
             </div>
           </div>
         </header>
         <template if:true={isLoading}>
-          <div onclick={stopPropagation}
-            class="quickview__spinner-container slds-modal__content slds-p-around_large slds-is-relative">
-            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+          <div
+            onclick={stopPropagation}
+            class="quickview__spinner-container slds-modal__content slds-p-around_large slds-is-relative"
+          >
+            <lightning-spinner
+              alternative-text="Loading"
+              size="large"
+            ></lightning-spinner>
           </div>
         </template>
-        <iframe id="quickview__content-container"
-          class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap" src={contentURL}
-          height="100%" onload={onIframeLoaded}></iframe>
+        <template if:true={isYoutube}>
+          <c-quantic-quickview-iframe
+            result={result}
+            engine-id={engineId}
+            onload={onIframeLoaded}
+          ></c-quantic-quickview-iframe>
+        </template>
+        <template if:false={isYoutube}>
+          <iframe
+            id="quickview__content-container"
+            class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap"
+            src={contentURL}
+            height="100%"
+            onload={onIframeLoaded}
+          ></iframe>
+        </template>
         <template if:false={isLoading}>
-          <footer onclick={stopPropagation} class="slds-modal__footer slds-p-top_none slds-p-bottom_none">
+          <footer
+            onclick={stopPropagation}
+            class="slds-modal__footer slds-p-top_none slds-p-bottom_none"
+          >
             <slot name="footer"></slot>
           </footer>
         </template>
