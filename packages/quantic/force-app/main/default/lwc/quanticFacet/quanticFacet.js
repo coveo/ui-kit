@@ -217,6 +217,15 @@ export default class QuanticFacet extends LightningElement {
 
     this.customCaptions = this.loadCustomCaptions();
 
+    if (
+      this.sortCriteria === 'alphanumeric' &&
+      Object.keys(this.customCaptions).length > 0
+    ) {
+      console.warn(
+        'The Quantic Facet component should not be used with custom captions and alphanumeric sorting simultaneously. The values might appear in the wrong order.'
+      );
+    }
+
     const options = {
       field: this.field,
       sortCriteria: this.sortCriteria,
@@ -265,13 +274,15 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get values() {
-    return this.state?.values
-      .filter((value) => value.numberOfResults || value.state === 'selected')
-      .map((v) => ({
-        ...v,
-        checked: v.state === 'selected',
-        highlightedResult: this.getValueCaption(v),
-      })) || [];
+    return (
+      this.state?.values
+        .filter((value) => value.numberOfResults || value.state === 'selected')
+        .map((v) => ({
+          ...v,
+          checked: v.state === 'selected',
+          highlightedResult: this.getValueCaption(v),
+        })) || []
+    );
   }
 
   get query() {

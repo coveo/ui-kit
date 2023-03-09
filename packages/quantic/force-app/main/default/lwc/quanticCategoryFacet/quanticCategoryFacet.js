@@ -221,6 +221,15 @@ export default class QuanticCategoryFacet extends LightningElement {
     );
     this.customCaptions = this.loadCustomCaptions();
 
+    if (
+      this.sortCriteria === 'alphanumeric' &&
+      Object.keys(this.customCaptions).length > 0
+    ) {
+      console.warn(
+        'The Quantic Category Facet component should not be used with custom captions and alphanumeric sorting simultaneously. The values might appear in the wrong order.'
+      );
+    }
+
     this.facet = this.headless.buildCategoryFacet(engine, {
       options: {
         field: this.field,
