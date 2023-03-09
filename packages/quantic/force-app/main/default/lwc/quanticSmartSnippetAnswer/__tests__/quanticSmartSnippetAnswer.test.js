@@ -95,4 +95,33 @@ describe('c-quantic-smart-snippet-answer', () => {
       });
     }
   });
+
+  describe('when invalid inline links are returned in the answer of the smart snippet', () => {
+    const exampleAnswerWithInvalidLink = `
+      <div>
+        <a>Example invalid inline link</a>
+      </div>
+    `;
+    const expectedRenderedAnswer = `
+      <div>
+        <a class="inline-link--disabled">Example invalid inline link</a>
+      </div>
+    `;
+
+    it('should properly assign the disabled CSS class to the invalid inline link', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        answer: exampleAnswerWithInvalidLink,
+      });
+      await flushPromises();
+
+      const answer = element.shadowRoot.querySelector(
+        selectors.smartSnippetAnswer
+      );
+
+      expect(answer).not.toBeNull();
+      // eslint-disable-next-line @lwc/lwc/no-inner-html
+      expect(answer.innerHTML).toBe(expectedRenderedAnswer);
+    });
+  });
 });

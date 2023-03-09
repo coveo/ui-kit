@@ -59,34 +59,59 @@ export default class QuanticSmartSnippetAnswer extends LightningElement {
     // eslint-disable-next-line @lwc/lwc/no-inner-html
     snippetAnswerElement.innerHTML = this?.answer;
     this.bindAnalyticsToSmartSnippetInlineLinks();
+    this.disableInvalidInlineLinks();
   }
 
+  /**
+   * Binds the inline links to the proper analytics events.
+   * @returns {void}
+   */
   bindAnalyticsToSmartSnippetInlineLinks() {
-    /** @type {HTMLAnchorElement[]} */
-    const inlineLinks = Array.from(
+    this.inlineLinks.forEach((link) => {
+      if (link?.href) {
+        const linkInfo = {
+          linkText: link?.innerText,
+          linkURL: link.href,
+        };
+
+        const actions = {
+          select: () => {
+            this.actions.select(linkInfo);
+          },
+          beginDelayedSelect: () => {
+            this.actions.beginDelayedSelect(linkInfo);
+          },
+          cancelPendingSelect: () => {
+            this.actions.cancelPendingSelect(linkInfo);
+          },
+        };
+
+        const removeBindings = LinkUtils.bindAnalyticsToLink(link, actions);
+        this.bindingsRemovalFunctions.push(removeBindings);
+      }
+    });
+  }
+
+  /**
+   * Assigns the CSS disabled class to the invalid inline links.
+   * @returns {void}
+   */
+  disableInvalidInlineLinks() {
+    const disabledCSSClass = 'inline-link--disabled';
+    this.inlineLinks.forEach((link) => {
+      if (!link?.href) {
+        link.classList.add(disabledCSSClass);
+      }
+    });
+  }
+
+  /**
+   * Returns the inline links of the smart snippet answer.
+   * @returns {HTMLAnchorElement[]}
+   */
+  get inlineLinks() {
+    return Array.from(
       this.template.querySelectorAll('.smart-snippet-answer a')
     );
-
-    inlineLinks.forEach((link) => {
-      const linkInfo = {
-        linkText: link?.innerText,
-        linkURL: link?.href,
-      };
-
-      const actions = {
-        select: () => {
-          this.actions.select(linkInfo);
-        },
-        beginDelayedSelect: () => {
-          this.actions.beginDelayedSelect(linkInfo);
-        },
-        cancelPendingSelect: () => {
-          this.actions.cancelPendingSelect(linkInfo);
-        },
-      };
-
-      const removeBindings = LinkUtils.bindAnalyticsToLink(link, actions);
-      this.bindingsRemovalFunctions.push(removeBindings);
-    });
   }
 }
