@@ -76,7 +76,7 @@ describe('Insight Panel test suites', () => {
     it('should display refine-modal', () => {
       InsightPanelsSelectors.refineToggle().click();
       InsightPanelsSelectors.refineModal().should('exist');
-      InsightPanelsSelectors.focusTrap().should('not.exist');
+      InsightPanelsSelectors.focusTrap().should('exist');
 
       InsightPanelsSelectors.filtersModal().should('have.attr', 'is-open');
 

@@ -1,5 +1,9 @@
-import {LightningElement, api} from 'lwc';
 import LOCALE from '@salesforce/i18n/locale';
+import inclusionFilter from '@salesforce/label/c.quantic_InclusionFilter';
+import inclusionFilter_plural from '@salesforce/label/c.quantic_InclusionFilter_plural';
+import inclusionFilter_zero from '@salesforce/label/c.quantic_InclusionFilter_zero';
+import {I18nUtils} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 
 /**
  * @typedef FacetValueBase
@@ -66,6 +70,12 @@ export default class QuanticFacetValue extends LightningElement {
     }
   }
 
+  labels = {
+    inclusionFilter,
+    inclusionFilter_plural,
+    inclusionFilter_zero,
+  };
+
   get isStandardFacet() {
     return !this.isRangeFacet;
   }
@@ -86,7 +96,15 @@ export default class QuanticFacetValue extends LightningElement {
   }
 
   get ariaLabelValue() {
-    return `Inclusion filter on ${this.formattedFacetValue}; ${this.numberOfResults} result`;
+    const labelName = I18nUtils.getLabelNameWithCount(
+      'inclusionFilter',
+      this.numberOfResults
+    );
+    return I18nUtils.format(
+      this.labels[labelName],
+      this.formattedFacetValue,
+      this.numberOfResults
+    );
   }
 
   /**
