@@ -71,10 +71,8 @@
     "nx": "15.7.0"
   },
   "overrides": {
-    "@coveo/atomic": {
-      "@storybook/addon-docs@6.5.16": {
-        "@mdx-js/react": "^2"
-      }
+    "@storybook/addon-docs@6.5.16": {
+      "@mdx-js/react": "^2"
     }
   },
   "workspaces": [
