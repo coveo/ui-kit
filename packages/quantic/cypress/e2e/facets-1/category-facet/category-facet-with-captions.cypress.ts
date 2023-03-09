@@ -61,7 +61,7 @@ describe('quantic-category-facet with captions', () => {
             Expect.parentValueLabel(caption);
 
             BreadcrumbManagerExpectations.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
-              `North America/Canada/${caption}`
+              `North America / Canada / ${caption}`
             );
           });
         });

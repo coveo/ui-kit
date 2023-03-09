@@ -46,6 +46,14 @@ export default class QuanticFacetValue extends LightningElement {
   @api formattingFunction;
 
   /**
+   * Whether the facet value belongs to a range facet.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api isRangeFacet;
+
+  /**
    * A function used to set focus to the value.
    * @api
    * @type {VoidFunction}
@@ -60,7 +68,7 @@ export default class QuanticFacetValue extends LightningElement {
   }
 
   get isStandardFacet() {
-    return !this.formattingFunction;
+    return !this.isRangeFacet;
   }
 
   get formattedFacetValue() {

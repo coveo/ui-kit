@@ -265,15 +265,13 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get values() {
-    return (
-      this.state?.values
-        .filter((value) => value.numberOfResults || value.state === 'selected')
-        .map((v) => ({
-          ...v,
-          checked: v.state === 'selected',
-          highlightedResult: this.getValueCaption(v.value),
-        })) || []
-    );
+    return this.state?.values
+      .filter((value) => value.numberOfResults || value.state === 'selected')
+      .map((v) => ({
+        ...v,
+        checked: v.state === 'selected',
+        highlightedResult: this.getValueCaption(v),
+      })) || [];
   }
 
   get query() {
@@ -400,7 +398,10 @@ export default class QuanticFacet extends LightningElement {
    */
   get captionProviders() {
     // @ts-ignore
-    return Array.from(this.querySelectorAll('*[slot="captions"]')).filter((component) => component.captions);
+    return Array.from(this.querySelectorAll('*[slot="captions"]')).filter(
+      // @ts-ignore
+      (component) => component.captions
+    );
   }
 
   onSelectClickHandler(value) {
