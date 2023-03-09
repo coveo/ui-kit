@@ -7,7 +7,10 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface AtomicHostedPage {
-        "initialize": (options: AtomicPageInitializationOptions) => Promise<void>;
+        "initialize": (options: AtomicHostedPageInitializationOptions) => Promise<void>;
+    }
+    interface AtomicSimpleBuilder {
+        "initialize": (options: AtomicSimpleBuilderInitializationOptions) => Promise<void>;
     }
 }
 declare global {
@@ -17,15 +20,25 @@ declare global {
         prototype: HTMLAtomicHostedPageElement;
         new (): HTMLAtomicHostedPageElement;
     };
+    interface HTMLAtomicSimpleBuilderElement extends Components.AtomicSimpleBuilder, HTMLStencilElement {
+    }
+    var HTMLAtomicSimpleBuilderElement: {
+        prototype: HTMLAtomicSimpleBuilderElement;
+        new (): HTMLAtomicSimpleBuilderElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-hosted-page": HTMLAtomicHostedPageElement;
+        "atomic-simple-builder": HTMLAtomicSimpleBuilderElement;
     }
 }
 declare namespace LocalJSX {
     interface AtomicHostedPage {
     }
+    interface AtomicSimpleBuilder {
+    }
     interface IntrinsicElements {
         "atomic-hosted-page": AtomicHostedPage;
+        "atomic-simple-builder": AtomicSimpleBuilder;
     }
 }
 export { LocalJSX as JSX };
@@ -33,6 +46,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "atomic-hosted-page": LocalJSX.AtomicHostedPage & JSXBase.HTMLAttributes<HTMLAtomicHostedPageElement>;
+            "atomic-simple-builder": LocalJSX.AtomicSimpleBuilder & JSXBase.HTMLAttributes<HTMLAtomicSimpleBuilderElement>;
         }
     }
 }
