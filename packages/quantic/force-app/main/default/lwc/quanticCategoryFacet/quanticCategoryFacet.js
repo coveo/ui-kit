@@ -219,8 +219,6 @@ export default class QuanticCategoryFacet extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
-
-    // Getting custom captions
     this.customCaptions = this.loadCustomCaptions();
 
     this.facet = this.headless.buildCategoryFacet(engine, {

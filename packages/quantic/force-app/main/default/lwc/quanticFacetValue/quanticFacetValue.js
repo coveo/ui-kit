@@ -5,7 +5,6 @@ import LOCALE from '@salesforce/i18n/locale';
  * @typedef FacetValueBase
  * @property {string} value
  * @property {number} numberOfResults
- * @property {string} caption
  */
 
 /**
