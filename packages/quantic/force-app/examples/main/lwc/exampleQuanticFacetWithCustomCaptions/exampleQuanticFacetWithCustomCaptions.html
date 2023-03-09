@@ -9,15 +9,14 @@
         </c-configurator>
 
         <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
+            <c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>
+
             <c-quantic-facet
                 engine-id={engineId}
-                field={config.field}
-                label={config.label}
-                number-of-values={config.numberOfValues}
-                sort-criteria={config.sortCriteria}
-                no-search={config.noSearch}
-                is-collapsed={config.isCollapsed}
-                display-values-as={config.displayValuesAs}>
+                field="objecttype"
+                label="Type"
+                number-of-values="5">
+                <c-quantic-facet-caption slot="captions" value={config.value} caption={config.caption}></c-quantic-facet-caption>
             </c-quantic-facet>
         </c-example-use-case>
     </c-example-layout>

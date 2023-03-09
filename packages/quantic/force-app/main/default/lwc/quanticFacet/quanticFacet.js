@@ -31,6 +31,11 @@ import {LightningElement, track, api} from 'lwc';
  * @property {string} [value]
  * @property {number} [index]
  */
+/**
+ * @typedef CaptionProvider
+ * @type {object}
+ * @property {Record<string, string>} captions
+ */
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
@@ -390,6 +395,14 @@ export default class QuanticFacet extends LightningElement {
     return !this.noSearch && this.state?.canShowMoreValues;
   }
 
+  /**
+   * @returns {Array<CaptionProvider>}
+   */
+  get captionProviders() {
+    // @ts-ignore
+    return Array.from(this.querySelectorAll('*[slot="captions"]')).filter((component) => component.captions);
+  }
+
   onSelectClickHandler(value) {
     if (this.isDisplayAsLink) {
       this.facet.toggleSingleSelect(value);
@@ -413,12 +426,8 @@ export default class QuanticFacet extends LightningElement {
   }
 
   loadCustomCaptions() {
-    const providers = Array.from(this.querySelectorAll('*')).filter(
-      (component) => !!component.captions
-    );
-
     // The list is reversed so the caption comes from the first provider matching the value.
-    return providers
+    return this.captionProviders
       .reverse()
       .reduce((res, provider) => ({...res, ...provider.captions}), {});
   }

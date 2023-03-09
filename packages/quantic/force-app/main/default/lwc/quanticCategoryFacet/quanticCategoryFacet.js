@@ -1,4 +1,14 @@
-import {api, LightningElement, track} from 'lwc';
+import allCategories from '@salesforce/label/c.quantic_AllCategories';
+import clear from '@salesforce/label/c.quantic_Clear';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
+import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
+import search from '@salesforce/label/c.quantic_Search';
+import showLess from '@salesforce/label/c.quantic_ShowLess';
+import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
+import showMore from '@salesforce/label/c.quantic_ShowMore';
+import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -6,18 +16,7 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
-
-import clear from '@salesforce/label/c.quantic_Clear';
-import showMore from '@salesforce/label/c.quantic_ShowMore';
-import showLess from '@salesforce/label/c.quantic_ShowLess';
-import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues';
-import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
-import allCategories from '@salesforce/label/c.quantic_AllCategories';
-import search from '@salesforce/label/c.quantic_Search';
-import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
-import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
-import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
-import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import {api, LightningElement, track} from 'lwc';
 
 /** @typedef {import("coveo").CategoryFacet} CategoryFacet */
 /** @typedef {import("coveo").CategoryFacetState} CategoryFacetState */
@@ -28,6 +27,11 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
  * @typedef FocusTarget
  * @type {object}
  * @property {'facetValue' | 'facetHeader'} type
+ */
+/**
+ * @typedef CaptionProvider
+ * @type {object}
+ * @property {Record<string, string>} captions
  */
 
 /**
@@ -312,7 +316,9 @@ export default class QuanticCategoryFacet extends LightningElement {
       index: index,
       numberOfResults: result.count,
       path: result.path,
-      localizedPath: this.buildPath(result.path.map((path) => this.translateValue(path))),
+      localizedPath: this.buildPath(
+        result.path.map((path) => this.translateValue(path))
+      ),
       highlightedResult: this.highlightResult(
         result.displayValue,
         this.input?.value
@@ -367,6 +373,14 @@ export default class QuanticCategoryFacet extends LightningElement {
     return this.withSearch && !!this.input?.value?.length;
   }
 
+  /**
+   * @returns {Array<CaptionProvider>}
+   */
+  get captionProviders() {
+    // @ts-ignore
+    return Array.from(this.querySelectorAll('*[slot="captions"]')).filter((component) => component.captions);
+  }
+
   getSearchValues() {
     return this.facet?.state?.facetSearch?.values ?? [];
   }
@@ -380,12 +394,13 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   loadCustomCaptions() {
-    const providers = Array.from(this.querySelectorAll('*')).filter((component) => component.captions);
-
     // The list is reversed so the caption comes from the first provider matching the value.
-    return providers
+    return this.captionProviders
       .reverse()
-      .reduce((captions, provider) => ({ ...captions, ...provider.captions }), {});
+      .reduce(
+        (captions, provider) => ({...captions, ...provider.captions}),
+        {}
+      );
   }
 
   /**
