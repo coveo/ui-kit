@@ -101,7 +101,7 @@ describe('pagination slice', () => {
     expect(finalState.firstResult).toBe(0);
   });
 
-  it('#updateActiveTab sets sets the #firstResult to 0', () => {
+  it('#updateActiveTab should return to the first page by setting the #firstResult to 0', () => {
     const action = updateActiveTab('page');
     const finalState = paginationReducer(state, action);
 
