@@ -63,7 +63,7 @@ export default class QuanticSmartSnippetAnswer extends LightningElement {
   }
 
   /**
-   * Binds the inline links to the proper analytics events.
+   * Binds the inline links to the proper actions.
    * @returns {void}
    */
   bindAnalyticsToSmartSnippetInlineLinks() {
