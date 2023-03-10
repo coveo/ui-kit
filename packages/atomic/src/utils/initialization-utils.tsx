@@ -21,7 +21,9 @@ export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 export const initializeEventName = 'atomic/initializeComponent';
 const initializableElements = [
+  'atomic-recs-interface',
   'atomic-search-interface',
+  'atomic-relevance-inspector',
   'atomic-insight-interface',
   'atomic-external',
 ];
@@ -171,8 +173,9 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
         }
       );
 
-      const canceled = element.dispatchEvent(event);
-      if (canceled) {
+      element.dispatchEvent(event);
+
+      if (!closest(element, initializableElements.join(', '))) {
         this.error = new MissingInterfaceParentError(
           element.nodeName.toLowerCase()
         );
