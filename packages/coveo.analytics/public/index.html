@@ -10,6 +10,9 @@
         // Replace YOUR-TOKEN with your real token
         // (eg: an API key which has the rights to write into Coveo UsageAnalytics)
         coveoua('init', 'YOUR-TOKEN');
+        // tests cross domain linking
+        coveoua('link:acceptFrom', ['localhost.corp.coveo.com:9001']);
+
         coveoua('ec:addProduct', {
             name: 'wow',
             id: 'something',
@@ -38,11 +41,15 @@
             });
             coveoua('ec:setAction', 'addToCart');
             coveoua('send', 'event');
-            window.location = 'index.html?added=' + new Date().valueOf();
+        }
+
+        async function decorate(element) {
+            element.href = await coveoua('link:decorate', element.href);
         }
     </script>
 
     <body>
         <button onclick="testBeacon()">Test beacon</button>
+        <a onclick="decorate(this)" href="http://localhost1.corp.coveo.com:9001">Navigate</a>
     </body>
 </html>

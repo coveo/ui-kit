@@ -71,6 +71,19 @@ export class ECPlugin extends BasePlugin {
         super({client, uuidGenerator});
     }
 
+    public getApi(name: string): Function | null {
+        const superCall: Function | null = super.getApi(name);
+        if (superCall !== null) return superCall;
+        switch (name) {
+            case 'addProduct':
+                return this.addProduct;
+            case 'addImpression':
+                return this.addImpression;
+            default:
+                return null;
+        }
+    }
+
     protected addHooks(): void {
         this.addHooksForPageView();
         this.addHooksForEvent();

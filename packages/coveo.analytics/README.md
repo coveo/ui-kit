@@ -130,6 +130,33 @@ As a sample, here is how an [addition to the cart interaction](https://docs.cove
     coveoua('send', 'event');
     ```
 
+## Linking clientIds across different domains using a URL parameter
+
+To help track a visitor across different domains, the library offers functionality to initialize a clientId from a URL query parameter. The query parameter is named `cvo_cid` with value `<clientid>.<timestamp>`. The clientId is encoded without dashes and the timestamp is encoded in seconds since epoch, both to save space in the url. Both are separated by a period. A sample parameter could be `cvo_cid=c0b48880743e484f8044d7c37910c55b.1676298678`. This query parameter will be picked up by the target page if the following conditions hold:
+
+-   The target page has a equal or greater version of coveo.analytics.js loaded.
+-   The current URL contains a `cvo_cid` query parameter
+-   The parameter contains a valid uuid.
+-   The parameter contains a valid timestamp, and that timestamp is no more than 120 seconds in the past.
+-   The receiving page has specified a list of valid referrers and the current referrer host matches that list, using wildcards, including ports, specified using `coveoua('link:acceptFrom', [<referrers>])`.
+
+Given that you want to ensure the clientId remains consistent when you navigate from a source page on http://foo.com/index.html to a target page http://bar.com/index.html, the following steps are needed.
+
+1. Ensure coveo.analytics.js is loaded on the source page.
+2. Modify the source page such that whenever a link to the target page is clicked, its `href` is replaced by `coveoua('link:decorate', 'http://bar.com/index.html')`. For example, by creating an onClick event listener on the element or on the page. It's important that the decorated link is generated at the moment the link is clicked, as it will be valid only for a short time after generation.
+
+```html
+<script>
+    async function decorate(element) {
+        element.href = await coveoua('link:decorate', element.href);
+    }
+</script>
+<a onclick="decorate(this)" href="http://bar.com/index.html">Navigate</a>>
+```
+
+3. Ensure coveo.analytics.js is loaded on the target page.
+4. Ensure that the target page allows reception of links from the source page by adding `coveoua('link:acceptFrom', ['foo.com']);` immediately after script load.
+
 # Developer information
 
 Information for contributors or Coveo developers developing or integrating coveoua.
@@ -211,6 +238,10 @@ client.sendCustomEvent({
     language: 'en',
 });
 ```
+
+## Conformance
+
+Chrome, Firefox, Safari, Edge. IE11 support on a reasonable-effort basis.
 
 ## Contributing
 

@@ -34,6 +34,17 @@ export class SVCPlugin extends BasePlugin {
         super({client, uuidGenerator});
     }
 
+    public getApi(name: string): Function | null {
+        const superCall: Function | null = super.getApi(name);
+        if (superCall !== null) return superCall;
+        switch (name) {
+            case 'setTicket':
+                return this.setTicket;
+            default:
+                return null;
+        }
+    }
+
     protected addHooks(): void {
         this.addHooksForEvent();
         this.addHooksForPageView();

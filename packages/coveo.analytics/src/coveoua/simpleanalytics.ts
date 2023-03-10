@@ -129,8 +129,8 @@ export class CoveoUA {
         this.plugins.require(name, {...options, client: this.client});
     }
 
-    callPlugin(pluginName: string, fn: string, ...args: any): void {
-        this.plugins.execute(pluginName, fn, ...args);
+    callPlugin(pluginName: string, fn: string, ...args: any): any {
+        return this.plugins.execute(pluginName, fn, ...args);
     }
 
     reset() {

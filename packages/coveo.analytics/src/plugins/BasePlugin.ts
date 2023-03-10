@@ -7,8 +7,7 @@ type PluginWithId = {
     readonly Id: string;
 };
 
-export type PluginClass = typeof BasePlugin & PluginWithId;
-
+export type PluginClass = typeof Plugin & PluginWithId;
 export const BasePluginEventTypes = {
     pageview: 'pageview',
     event: 'event',
@@ -16,9 +15,17 @@ export const BasePluginEventTypes = {
 
 export type PluginOptions = {client: AnalyticsClient; uuidGenerator?: typeof uuidv4};
 
-export abstract class BasePlugin {
+export abstract class Plugin {
     protected client: AnalyticsClient;
     protected uuidGenerator: typeof uuidv4;
+    constructor({client, uuidGenerator = uuidv4}: PluginOptions) {
+        this.client = client;
+        this.uuidGenerator = uuidGenerator;
+    }
+    public abstract getApi(name: string): any;
+}
+
+export abstract class BasePlugin extends Plugin {
     protected action?: string;
     protected actionData: {[name: string]: string} = {};
     private pageViewId: string;
@@ -28,8 +35,7 @@ export abstract class BasePlugin {
     private lastReferrer: string;
 
     constructor({client, uuidGenerator = uuidv4}: PluginOptions) {
-        this.client = client;
-        this.uuidGenerator = uuidGenerator;
+        super({client, uuidGenerator});
         this.pageViewId = uuidGenerator();
         this.nextPageViewId = this.pageViewId;
         this.currentLocation = getFormattedLocation(window.location);
@@ -37,9 +43,17 @@ export abstract class BasePlugin {
 
         this.addHooks();
     }
-
     protected abstract addHooks(): void;
     protected abstract clearPluginData(): void;
+
+    public getApi(name: string): Function | null {
+        switch (name) {
+            case 'setAction':
+                return this.setAction;
+            default:
+                return null;
+        }
+    }
 
     public setAction(action: string, options?: any) {
         this.action = action;
@@ -59,7 +73,7 @@ export abstract class BasePlugin {
         };
     }
 
-    public updateLocationInformation(eventType: string, payload: any) {
+    protected updateLocationInformation(eventType: string, payload: any) {
         this.updateLocationForNextPageView(eventType, payload);
     }
 

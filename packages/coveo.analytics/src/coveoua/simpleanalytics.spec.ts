@@ -19,10 +19,19 @@ class TestPluginWithSpy extends TestPlugin {
         super({client, uuidGenerator});
         TestPluginWithSpy.spy = jest.fn();
     }
+
+    public getApi(name: string): Function | null {
+        switch (name) {
+            case 'testMethod':
+                return this.testMethod;
+            default:
+                return null;
+        }
+    }
+
     testMethod(...args: any[]) {
         TestPluginWithSpy.spy(args);
     }
-    someProperty: string = 'foo';
 }
 
 describe('simpleanalytics', () => {
@@ -122,21 +131,24 @@ describe('simpleanalytics', () => {
             expect(fetchMock.lastUrl()).toMatch(/^https:\/\/someendpoint\.com/);
         });
 
-        it('uses EC and SVC plugins by default', () => {
+        it('uses EC, SVC and Link plugins by default', () => {
             coveoua('init', 'SOME TOKEN');
             expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(/does not exist/);
             expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(/does not exist/);
+            expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(/does not exist/);
         });
 
         it('can accept no plugins', () => {
             coveoua('init', 'SOME TOKEN', {plugins: []});
             expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(/is not required/);
             expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(/is not required/);
+            expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(/is not required/);
         });
 
         it('can accept one plugin', () => {
             coveoua('init', 'SOME TOKEN', {plugins: ['svc']});
             expect(() => coveoua('callPlugin', 'ec', 'nosuchfunction')).toThrow(/is not required/);
+            expect(() => coveoua('callPlugin', 'link', 'nosuchfunction')).toThrow(/is not required/);
             expect(() => coveoua('callPlugin', 'svc', 'nosuchfunction')).toThrow(/does not exist/);
         });
 
@@ -151,7 +163,7 @@ describe('simpleanalytics', () => {
             expect(() => coveoua('initForProxy')).toThrow(`You must pass your endpoint when you call 'initForProxy'`);
         });
 
-        it(`throw if the initForProxy receive an endpoint that's is not a string`, () => {
+        it(`throw if the initForProxy receive an endpoint that is not a string`, () => {
             expect(() => coveoua('initForProxy', {})).toThrow(
                 `You must pass a string as the endpoint parameter when you call 'initForProxy'`
             );
@@ -403,13 +415,6 @@ describe('simpleanalytics', () => {
             coveoua('init', 'SOME TOKEN', {plugins: ['svc']});
 
             expect(() => coveoua('callPlugin', 'svc', 'fooBarBaz')).toThrow(/does not exist/);
-        });
-
-        it('throws when a namespaced action is called and that this action is not a function on the plugin', () => {
-            coveoua('provide', 'test', TestPluginWithSpy);
-
-            coveoua('init', 'SOME TOKEN', {plugins: ['test']});
-            expect(() => coveoua('callPlugin', 'test', 'someProperty')).toThrow(/is not a function/);
         });
     });
 
