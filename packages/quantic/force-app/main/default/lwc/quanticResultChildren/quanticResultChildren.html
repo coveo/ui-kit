@@ -1,0 +1,41 @@
+<template>
+  <div class="slds-var-m-left_medium">
+    <template if:true={hasChildren}>
+      <div class="slds-var-m-top_medium">
+        <slot name="before-children"></slot>
+        <div class="slds-var-p-left_medium slds-border_left">
+          <template for:each={displayedChildren} for:item="foldedResult">
+            <c-quantic-result
+              key={foldedResult.result.uniqueId}
+              result={foldedResult.result}
+              folded-collection={foldedResult}
+              result-templates-manager={resultTemplatesManager}
+              engine-id={engineId}
+              template-id={templateId}
+            ></c-quantic-result>
+          </template>
+        </div>
+        <slot name="after-children"></slot>
+      </div>
+    </template>
+    <template if:true={shouldDisplayFoldedResultsToggle}>
+      <div class="slds-grid slds-grid_align-end folded-result__toggle-button">
+        <lightning-button
+          variant="base"
+          icon-name={toggleFoldedResultsIcon}
+          icon-position="right"
+          label={toggleFoldedResultsLabel}
+          onclick={handleToggleFoldedResults}
+        ></lightning-button>
+      </div>
+    </template>
+
+    <template if:true={shouldDisplayNoChildrenMessage}>
+      <div
+        class="result-children__no-more-children-message slds-grid slds-grid_align-end slds-var-p-vertical_x-small slds-text-color_weak"
+      >
+        {noMoreChildResutsMessage}
+      </div>
+    </template>
+  </div>
+</template>

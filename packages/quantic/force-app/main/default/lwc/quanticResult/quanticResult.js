@@ -6,6 +6,8 @@ import {TimeSpan} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultTemplatesManager} ResultTemplatesManager */
+/** @typedef {import("coveo").FoldedCollection} FoldedCollection */
+/** @typedef {import("coveo").FoldedResultList} FoldedResultList */
 
 /**
  * The `QuanticResult` component is used internally by the `QuanticResultList` component.
@@ -34,6 +36,23 @@ export default class QuanticResult extends LightningElement {
    */
   @api resultTemplatesManager;
   /**
+   * The folded result list controller.
+   * @api
+   * @type {FoldedResultList}
+   */
+  @api foldedResultListController;
+  /**
+   * @api
+   * @type {FoldedCollection}
+   */
+  @api foldedCollection;
+  /**
+   * The id of the template that should be used to display the result.
+   * @api
+   * @type {string}
+   */
+  @api templateId;
+  /**
    * @type {string}
    */
   @api openPreviewId;
@@ -49,14 +68,20 @@ export default class QuanticResult extends LightningElement {
     this.template.addEventListener('haspreview', this.onHasPreview);
     this.template.host.addEventListener('mouseenter', this.setHoverState);
     this.template.host.addEventListener('mouseleave', this.removeHoverState);
-    this.template.addEventListener('quantic__resultpreviewtoggle', this.handlePreviewToggle);
+    this.template.addEventListener(
+      'quantic__resultpreviewtoggle',
+      this.handlePreviewToggle
+    );
   }
 
   disconnectedCallback() {
     this.template.removeEventListener('haspreview', this.onHasPreview);
     this.template.host.removeEventListener('mouseenter', this.setHoverState);
     this.template.host.removeEventListener('mouseleave', this.removeHoverState);
-    this.template.removeEventListener('quantic__resultpreviewtoggle', this.handlePreviewToggle);
+    this.template.removeEventListener(
+      'quantic__resultpreviewtoggle',
+      this.handlePreviewToggle
+    );
   }
 
   get videoThumbnail() {
@@ -80,7 +105,11 @@ export default class QuanticResult extends LightningElement {
   };
 
   render() {
-    const template = this.resultTemplatesManager.selectTemplate(this.result);
+    const result = {
+      ...this.result,
+      raw: {...this.result.raw, quantic__resultTemplateId: this.templateId},
+    };
+    const template = this?.resultTemplatesManager?.selectTemplate(result);
     if (template) {
       return template;
     }

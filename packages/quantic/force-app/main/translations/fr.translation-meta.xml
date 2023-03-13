@@ -572,4 +572,24 @@
       <label>Filtre d'inclusion sur {{0}}; aucun résultat</label>
       <name>quantic_InclusionFilter_zero</name>
     </customLabels>
+    <customLabels>
+      <label>Charger le fil de discussion</label>
+      <name>quantic_LoadThread</name>
+    </customLabels>
+    <customLabels>
+      <label>Afficher le fil de discussion</label>
+      <name>quantic_ShowThread</name>
+    </customLabels>
+    <customLabels>
+      <label>Cacher le fil de discussion</label>
+      <name>quantic_HideThread</name>
+    </customLabels>
+    <customLabels>
+      <label>Aucun document n'est lié à celui-ci</label>
+      <name>quantic_NoDocumentsRelated</name>
+    </customLabels>
+    <customLabels>
+      <label>Aucun autre document n'est lié à celui-ci</label>
+      <name>quantic_NoMoreDocumentsRelated</name>
+    </customLabels>
 </Translations>

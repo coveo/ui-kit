@@ -1071,4 +1071,39 @@
       <protected>false</protected>
       <shortDescription>Inclusion filter on field; no results</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_LoadThread</fullName>
+      <value>Load thread</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Load thread</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ShowThread</fullName>
+      <value>Show thread</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Show thread</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_HideThread</fullName>
+      <value>Hide thread</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Hide thread</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_NoDocumentsRelated</fullName>
+      <value>No documents are related to this one.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>No documents are related to this one.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_NoMoreDocumentsRelated</fullName>
+      <value>No more documents are related to this one.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>No more documents are related to this one.</shortDescription>
+    </labels>
 </CustomLabels>
