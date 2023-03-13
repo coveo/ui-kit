@@ -26,6 +26,14 @@ const exampleSmartSnippetAnswer = `
   </div>
 `;
 
+const otherOption = 'other';
+const feedbackOptions = [
+  'does_not_answer',
+  'partially_answers',
+  'was_not_a_question',
+  otherOption,
+];
+
 describe('quantic-smart-snippet', () => {
   const pageUrl = 's/quantic-smart-snippet';
 
@@ -138,6 +146,57 @@ describe('quantic-smart-snippet', () => {
           Expect.displayExpandedSmartSnippetAnswer(false);
           Expect.displaySmartSnippetShowMoreButton(true);
           Expect.logCollapseSmartSnippet();
+        });
+      });
+    });
+
+    describe('when clicking the feedback like button', () => {
+      it('should properly log the analytics', () => {
+        visitPage();
+
+        scope('when clicking the like button', () => {
+          Expect.displaySmartSnippetCard(true);
+          Actions.clickSmartSnippetLikeButton();
+          Expect.logLikeSmartSnippet();
+          Expect.displayExplainWhyButton(false);
+        });
+      });
+    });
+
+    describe('when clicking the feedback dislike button', () => {
+      it('should properly log the analytics', () => {
+        visitPage();
+
+        scope('when clicking the dislike button', () => {
+          Expect.displaySmartSnippetCard(true);
+          Actions.clickSmartSnippetDislikeButton();
+          Expect.logDislikeSmartSnippet();
+          Expect.displayExplainWhyButton(true);
+        });
+
+        scope('when clicking the explain why button', () => {
+          Actions.clickSmartSnippetExplainWhyButton();
+          Expect.logOpenSmartSnippetFeedbackModal();
+        });
+
+        scope('when closing the feedback modal', () => {
+          Actions.clickFeedbackCancelButton();
+          Expect.logCloseSmartSnippetFeedbackModal();
+        });
+
+        scope('when selecting a feedback option', () => {
+          const exampleDetails = 'example details';
+          Actions.clickSmartSnippetExplainWhyButton();
+          Expect.logOpenSmartSnippetFeedbackModal();
+          Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
+          Actions.typeInFeedbackDetailsInput(exampleDetails);
+          Actions.clickFeedbackSubmitButton();
+          Expect.logSendSmartSnippetReason({
+            reason: otherOption,
+            details: exampleDetails,
+          });
+          Actions.clickFeedbackDoneButton();
+          Expect.logCloseSmartSnippetFeedbackModal();
         });
       });
     });

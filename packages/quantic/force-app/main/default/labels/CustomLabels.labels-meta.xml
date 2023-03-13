@@ -946,10 +946,129 @@
       <shortDescription>Show less</shortDescription>
     </labels>
     <labels>
+      <fullName>quantic_DidNotAnswerQuestion</fullName>
+      <value>Didn't answer my question at all</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Didn't answer my question at all</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_PartiallyAnsweredQuestion</fullName>
+      <value>Only answered part of my question</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Only answered part of my question</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_RequestWasNotQuestion</fullName>
+      <value>My request wasn't a question</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>My request wasn't a question</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Other</fullName>
+      <value>Other</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Other</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ThankYouForFeedback</fullName>
+      <value>Thank you for your feedback!</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Thank you for your feedback!</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_SelectTheReason</fullName>
+      <value>Select a reason</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Select a reason</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ProvideDetails</fullName>
+      <value>Please provide details.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Please provide details.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_FillOutField</fullName>
+      <value>Please fill out this field</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>You must fill out this field</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_SelectOneOfOptions</fullName>
+      <value>Please select an option</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Please select an option</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Cancel</fullName>
+      <value>Cancel</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Cancel</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_SendFeedback</fullName>
+      <value>Send feedback</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Send feedback</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Done</fullName>
+      <value>Done</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Done</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_YourFeedbackHelps</fullName>
+      <value>Your feedback helps improve the search experience.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Your feedback helps</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ThankYouForYourFeedback</fullName>
+      <value>Thank you for your feedback!</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Thank you for your feedback!</shortDescription>
+    </labels>
+    <labels>
       <fullName>quantic_PeopleAlsoAsk</fullName>
       <value>People also ask</value>
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>People also ask</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_InclusionFilter</fullName>
+      <value>Inclusion filter on {{0}}; {{1}} result</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Inclusion filter on field; 1 result</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_InclusionFilter_plural</fullName>
+      <value>Inclusion filter on {{0}}; {{1}} results</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Inclusion filter on field; 2 results</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_InclusionFilter_zero</fullName>
+      <value>Inclusion filter on {{0}}; no results</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Inclusion filter on field; no results</shortDescription>
     </labels>
 </CustomLabels>

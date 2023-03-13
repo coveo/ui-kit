@@ -38,6 +38,7 @@ export default class QuanticResultAction extends LightningElement {
    * The result to perform the action on.
    * @api
    * @type {Result}
+   * @deprecated The component no longer needs a result.
    */
   @api result;
   /**
@@ -121,13 +122,9 @@ export default class QuanticResultAction extends LightningElement {
    */
   handleClick(event) {
     event.stopPropagation();
-    const resultCopy = {...this.result};
     const resultActionEvent = new CustomEvent(this.eventName, {
       bubbles: true,
       composed: true,
-      detail: {
-        result: resultCopy,
-      },
     });
 
     this.dispatchEvent(resultActionEvent);

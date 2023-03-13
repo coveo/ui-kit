@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.15.1...@coveo/quantic@2.15.2) (2023-03-10)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [2.15.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.15.0...@coveo/quantic@2.15.1) (2023-03-06)
+
+### Bug Fixes
+
+- **quantic:** improved aria labels of the facet values ([#2751](https://github.com/coveo/ui-kit/issues/2751)) ([bf96881](https://github.com/coveo/ui-kit/commit/bf968818ab4426b422282f7f5b874b9aeb22ebac))
+
+# [2.15.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.14.0...@coveo/quantic@2.15.0) (2023-02-28)
+
+### Bug Fixes
+
+- **quantic:** fix styling issues in quantic ([#2749](https://github.com/coveo/ui-kit/issues/2749)) ([ae7ef77](https://github.com/coveo/ui-kit/commit/ae7ef773fa4226f70aed3817414b8049fe630383))
+- **quantic:** overflow issue fixed in the quantic smart snippet source component ([#2746](https://github.com/coveo/ui-kit/issues/2746)) ([7595a23](https://github.com/coveo/ui-kit/commit/7595a233f68318af2839d15fa52c79d94e3c851a))
+- **quantic:** removed the result from the event sent by the result action component ([#2744](https://github.com/coveo/ui-kit/issues/2744)) ([41498c3](https://github.com/coveo/ui-kit/commit/41498c3dbbd56e86dc950b53a9af0b072817b626))
+
+### Features
+
+- **quantic:** add the feedback feature to the quantic smart snippet ([#2727](https://github.com/coveo/ui-kit/issues/2727)) ([73335f6](https://github.com/coveo/ui-kit/commit/73335f6d937560a23ca7c9769fe6f783f8065c8e))
+
+# [2.14.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.13.3...@coveo/quantic@2.14.0) (2023-02-22)
+
+### Features
+
+- **quantic:** quantic feedback modal component created ([#2722](https://github.com/coveo/ui-kit/issues/2722)) ([1fb7fe8](https://github.com/coveo/ui-kit/commit/1fb7fe84f814a6504471714b99e2fe1a1587ea61))
+
 ## [2.13.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.13.2...@coveo/quantic@2.13.3) (2023-02-22)
 
 **Note:** Version bump only for package @coveo/quantic

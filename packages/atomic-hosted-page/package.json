@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-hosted-page",
   "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/coveo/ui-kit.git",
@@ -21,9 +21,8 @@
   ],
   "scripts": {
     "clean": "rimraf -rf dist/*",
-    "build": "npm run build:stencil && npm run validate:definitions",
-    "build:stencil": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
-    "dev": "npm run build:stencil -- --dev --watch --serve",
+    "build": "nx build",
+    "dev": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --serve",
     "e2e:watch": "cypress open",
     "e2e": "cypress run --browser chrome",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",

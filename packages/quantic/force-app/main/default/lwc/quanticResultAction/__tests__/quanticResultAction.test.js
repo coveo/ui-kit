@@ -37,7 +37,6 @@ function createTestComponent(options = defaultOptions) {
 
 // Helper function to wait until the microtask queue is empty.
 function flushPromises() {
-  // eslint-disable-next-line @lwc/lwc/no-async-operation
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
@@ -56,7 +55,7 @@ function setupClickSimulation(element, eventName, newState) {
       event.target.loading = true;
     }
     if (newState === 'selected') {
-      event.target.selected = !event.detail.isSelected;
+      event.target.selected = true;
     }
     element.removeEventListener(eventName, handler);
   };

@@ -5,20 +5,29 @@ import {
   SmartSnippetSelectors,
 } from './smart-snippet-selectors';
 
+function logCustomSmartSnippetEvent(event: string) {
+  cy.wait(event)
+    .then((interception) => {
+      const analyticsBody = interception.request.body;
+      expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
+    })
+    .logDetail(`should log the '${event}' UA event`);
+}
+
 function smartSnippetExpectations(selector: SmartSnippetSelector) {
   return {
     displaySmartSnippetCard: (display: boolean) => {
       selector
         .smartSnippetCard()
         .should(display ? 'exist' : 'not.exist')
-        .log('should display the smart snippet');
+        .logDetail(`${should} display the smart snippet`);
     },
 
     displaySmartSnippetQuestion: (value: string) => {
       selector
         .smartSnippetQuestion()
         .contains(value)
-        .log('should display the correct smart snippet question');
+        .logDetail('should display the correct smart snippet question');
     },
 
     displaySmartSnippetAnswer: (value: string) => {
@@ -27,28 +36,28 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         .then((elem) => {
           expect(elem[0].innerHTML).to.eq(value);
         })
-        .log('should display the correct smart snippet answer');
+        .logDetail('should display the correct smart snippet answer');
     },
 
     displaySmartSnippetSourceUri: (value: string) => {
       selector
         .smartSnippetSourceUri()
         .contains(value)
-        .log('should display the correct smart snippet source uri');
+        .logDetail('should display the correct smart snippet source uri');
     },
 
     displaySmartSnippetSourceTitle: (value: string) => {
       selector
         .smartSnippetSourceTitle()
         .contains(value)
-        .log('should display the correct smart snippet source title');
+        .logDetail('should display the correct smart snippet source title');
     },
 
     displaySmartSnippetAnswerToggle: (display: boolean) => {
       selector
         .smartSnippetAnswerToggle()
         .should(display ? 'exist' : 'not.exist')
-        .log('should display the smart snippet toggle');
+        .logDetail(`${should} display the smart snippet toggle`);
     },
 
     displaySmartSnippetShowMoreButton: (display: boolean) => {
@@ -56,7 +65,7 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         .smartSnippetAnswerToggle()
         .contains('Show more')
         .should(display ? 'exist' : 'not.exist')
-        .log('should display the smart snippet show more button');
+        .logDetail(`${should} display the smart snippet show more button`);
     },
 
     displaySmartSnippetShowLessButton: (display: boolean) => {
@@ -64,7 +73,7 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         .smartSnippetAnswerToggle()
         .contains('Show less')
         .should(display ? 'exist' : 'not.exist')
-        .log('should display the smart snippet show less button');
+        .logDetail(`${should}display the smart snippet show less button`);
     },
 
     displayCollapsedSmartSnippetAnswer: (collapsed: boolean) => {
@@ -93,22 +102,19 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
         );
     },
 
+    displayExplainWhyButton: (display: boolean) => {
+      selector
+        .smartSnippetExplainWhyButton()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should} display the smart snippet explain why button`);
+    },
+
     logExpandSmartSnippet: () => {
-      cy.wait(InterceptAliases.UA.ExpandSmartSnippet)
-        .then((interception) => {
-          const analyticsBody = interception.request.body;
-          expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
-        })
-        .logDetail("should log the 'expandSmartSnippet' UA event");
+      logCustomSmartSnippetEvent(InterceptAliases.UA.ExpandSmartSnippet);
     },
 
     logCollapseSmartSnippet: () => {
-      cy.wait(InterceptAliases.UA.CollapseSmartSnippet)
-        .then((interception) => {
-          const analyticsBody = interception.request.body;
-          expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
-        })
-        .logDetail("should log the 'collapseSmartSnippet' UA event");
+      logCustomSmartSnippetEvent(InterceptAliases.UA.CollapseSmartSnippet);
     },
 
     logOpenSmartSnippetSource: (document: {
@@ -153,6 +159,43 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
           expect(customData).to.have.property('linkURL', linkUrl);
         })
         .logDetail("should log the 'openSmartSnippetInlineLink' UA event");
+    },
+
+    logLikeSmartSnippet: () => {
+      logCustomSmartSnippetEvent(InterceptAliases.UA.LikeSmartSnippet);
+    },
+
+    logDislikeSmartSnippet: () => {
+      logCustomSmartSnippetEvent(InterceptAliases.UA.DislikeSmartSnippet);
+    },
+
+    logOpenSmartSnippetFeedbackModal: () => {
+      logCustomSmartSnippetEvent(
+        InterceptAliases.UA.OpenSmartSnippetFeedbackModal
+      );
+    },
+
+    logCloseSmartSnippetFeedbackModal: () => {
+      logCustomSmartSnippetEvent(
+        InterceptAliases.UA.CloseSmartSnippetFeedbackModal
+      );
+    },
+
+    logSendSmartSnippetReason: (payload: {
+      reason: string;
+      details?: string;
+    }) => {
+      cy.wait(InterceptAliases.UA.SendSmartSnippetReason)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
+          expect(customData).to.have.property('reason', payload.reason);
+          if (payload.details) {
+            expect(customData).to.have.property('details', payload.details);
+          }
+        })
+        .logDetail("should log the 'sendSmartSnippetReason' UA event");
     },
   };
 }

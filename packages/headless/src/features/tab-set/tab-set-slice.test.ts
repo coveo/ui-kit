@@ -1,4 +1,6 @@
 import {buildMockTabSlice} from '../../test/mock-tab-state';
+import {change} from '../history/history-actions';
+import {getHistoryInitialState} from '../history/history-state';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {registerTab, updateActiveTab} from './tab-set-actions';
 import {tabSetReducer} from './tab-set-slice';
@@ -7,6 +9,29 @@ describe('tab set slice', () => {
   it('initializes state correctly', () => {
     const finalState = tabSetReducer(undefined, {type: ''});
     expect(finalState).toEqual({});
+  });
+
+  it('it restores the tabSet on history change', () => {
+    const tabA = buildMockTabSlice({id: 'a'});
+    const tabB = buildMockTabSlice({id: 'b'});
+
+    const payload = {
+      ...getHistoryInitialState(),
+      tabSet: {a: {...tabA, isActive: false}, b: {...tabB, isActive: true}},
+    };
+
+    const finalState = tabSetReducer(
+      {
+        a: {...tabA, isActive: true},
+        b: {...tabB, isActive: false},
+      },
+      change.fulfilled(payload, '')
+    );
+
+    expect(finalState).toEqual({
+      a: {...tabA, isActive: false},
+      b: {...tabB, isActive: true},
+    });
   });
 
   describe('#registerTab', () => {

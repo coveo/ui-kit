@@ -65,3 +65,44 @@ export interface HostedPageJavascriptFile {
    */
   url?: string;
 }
+
+export function processHostedPage(
+  element: HTMLElement,
+  hostedPage: HostedPage
+) {
+  element.innerHTML = hostedPage.html;
+  hostedPage.javascript?.forEach((file) => insertJS(file));
+  hostedPage.css?.forEach((file) => insertCSS(file));
+}
+
+function insertJS(file: HostedPageJavascriptFile) {
+  const script = document.createElement('script');
+  if (file.isModule) {
+    script.type = 'module';
+  }
+
+  if (file.url) {
+    script.src = file.url;
+  }
+
+  if (file.inlineContent) {
+    script.innerHTML = file.inlineContent;
+  }
+
+  document.head.appendChild(script);
+}
+
+function insertCSS(file: HostedPageCssFile) {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+
+  if (file.url) {
+    link.href = file.url;
+  }
+
+  if (file.inlineContent) {
+    link.innerHTML = file.inlineContent;
+  }
+
+  document.head.appendChild(link);
+}
