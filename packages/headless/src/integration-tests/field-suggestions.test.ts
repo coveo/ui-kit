@@ -198,7 +198,7 @@ describe('field suggestions', () => {
     });
 
     it('can update captions', async () => {
-      const rawValue = 'pdf';
+      const rawValue = 'PDF';
       const displayValue = 'Portable Document Format';
       const query = 'doc';
       fieldSuggestions.updateCaptions({[rawValue]: displayValue});
