@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "stencil build --dev --watch --serve --port 3666 --no-open",
-    "build": "stencil build",
+    "build": "nx build",
     "e2e:watch": "cypress open"
   },
   "dependencies": {
