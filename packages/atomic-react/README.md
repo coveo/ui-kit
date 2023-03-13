@@ -301,7 +301,7 @@ First, identify the required versions of `@coveo/atomic`, `@coveo/headless`, `re
 You can do that by running `npm view @coveo/atomic-react@latest version dependencies devDependencies peerDependencies`, like so:
 
 ```
-$ npm view @coveo/atomic-react@latest version dependencies devDependencies
+$ npm view @coveo/atomic-react@latest version dependencies devDependencies peerDependencies
 
 version = '2.1.35'
 dependencies = { '@coveo/atomic': '2.19.16' }
@@ -328,7 +328,7 @@ peerDependencies = {
 }
 ```
 
-In the above example, you can see that of the time of this writing:
+In the above example, you can see that, as of the time of this writing:
 
 - The current latest version of `@coveo/atomic-react` is `2.1.35`.
 - The current latest version is using `@coveo/atomic` at version `2.19.16`.
@@ -396,6 +396,8 @@ Once this is done, you can start using `CoveoAtomicReact` directly with an inlin
   </body>
   <script type="text/babel">
     'use strict';
+
+    const {buildSearchEngine} = CoveoHeadless;
 
     const {
       buildSearchEngine,
