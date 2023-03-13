@@ -14,6 +14,17 @@ import resultChildrenTemplate from './quanticResultChildren.html';
 /** @typedef {import("coveo").FoldedResultList} FoldedResultList */
 /** @typedef {import("coveo").ResultTemplatesManager} ResultTemplatesManager */
 
+/**
+ * The `QuanticResultChildren` component is responsible for displaying the child results of a given result.
+ * This component includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children, only when children exist.
+ * @category Result Template
+ * @slot before-children - Slot that allows rendering content before the list of children, only when children exist.
+ * @slot after-children - Slot that allows rendering content after the list of children, only when children exist.
+ * @example
+ * <c-quantic-result-children engine-id={engineId} folded-collection={foldedCollection} template-id="example-template-id" folded-result-list-controller={foldedResultListController} result-templates-manager={resultTemplatesManager}>
+ *   <div slot="before-children">Attached documents</div>
+ * </c-quantic-result-children>
+ */
 export default class QuanticResultChildren extends LightningElement {
   /**
    * The ID of the engine instance the component registers to.
@@ -21,20 +32,24 @@ export default class QuanticResultChildren extends LightningElement {
    * @type {string}
    */
   @api engineId;
-  /** @type {FoldedCollection} */
-  @api foldedCollection;
   /**
-   * The folded result list controller.
+   * The folded collection containing the result and its children.
    * @api
-   * @type {FoldedResultList}
+   * @type {FoldedCollection}
    */
-  @api foldedResultListController;
+  @api foldedCollection;
   /**
    * The ID of the template used to display the child results.
    * @api
    * @type {string}
    */
   @api templateId;
+  /**
+   * The folded result list controller responsible for executing the actions of the folded collection.
+   * @api
+   * @type {FoldedResultList}
+   */
+  @api foldedResultListController;
   /**
    * The template manager from which to get registered custom templates.
    * @api
