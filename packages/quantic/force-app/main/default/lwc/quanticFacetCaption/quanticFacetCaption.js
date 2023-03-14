@@ -24,10 +24,10 @@ export default class QuanticFacetCaption extends LightningElement {
 
     /**
      * Gets the custom captions provided by this component as an object.
+     * @api
+     * @type {Record<string,string>}
      * @example
-     * ```json
      * { "text": "Plain text" }
-     * ```
      */
     @api
     get captions() {
