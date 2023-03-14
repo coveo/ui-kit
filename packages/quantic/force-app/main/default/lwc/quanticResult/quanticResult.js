@@ -36,12 +36,13 @@ export default class QuanticResult extends LightningElement {
    */
   @api resultTemplatesManager;
   /**
-   * The folded result list controller.
+   * The folded result list controller responsible for executing the actions of the folded collection.
    * @api
    * @type {FoldedResultList}
    */
   @api foldedResultListController;
   /**
+   * The folded collection containing the result and its children.
    * @api
    * @type {FoldedCollection}
    */
