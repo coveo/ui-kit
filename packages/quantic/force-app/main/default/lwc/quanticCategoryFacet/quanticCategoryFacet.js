@@ -37,10 +37,17 @@ import {api, LightningElement, track} from 'lwc';
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
  * A `QuanticCategoryFacet` displays field values in a browsable, hierarchical fashion.
+ * Custom captions can be provided by adding caption provider components to the `captions` named slot.
  * @category Search
  * @category Insight Panel
  * @example
  * <c-quantic-category-facet engine-id={engineId} facet-id="myfacet" field="geographicalhierarchy" label="Country" base-path="Africa,Togo,Lome" no-filter-by-base-path delimiting-character="/" number-of-values="5" is-collapsed></c-quantic-category-facet>
+ * 
+ * @example
+ * <c-quantic-category-facet engine-id={engineId} field="geographicalhierarchy">
+ *   <c-quantic-facet-caption slot="captions" value="United States" caption="United States of America"></c-quantic-facet-caption>
+ *   <c-quantic-facet-caption slot="captions" value="usa" caption="USA"></c-quantic-facet-caption>
+ * </c-quantic-facet>
  */
 export default class QuanticCategoryFacet extends LightningElement {
   /**
@@ -193,7 +200,7 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-    this.remoteGetValueCaption = this.getValueCaption.bind(this);
+    this.remoteGetValueCaption = (item) => this.translateValue(item.value);
   }
 
   renderedCallback() {
@@ -288,7 +295,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get activeParentFormattedValue() {
-    return this.activeParent ? this.getValueCaption(this.activeParent) : '';
+    return this.activeParent ? this.remoteGetValueCaption(this.activeParent) : '';
   }
 
   get canShowMore() {
@@ -392,10 +399,6 @@ export default class QuanticCategoryFacet extends LightningElement {
     return this.facet?.state?.facetSearch?.values ?? [];
   }
 
-  getValueCaption(item) {
-    return this.translateValue(item.value);
-  }
-
   translateValue(value) {
     return this.customCaptions[value] || value;
   }
@@ -435,7 +438,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     return (
       (this.isFacetSearchActive ? this.facetSearchResults : facetValues)
         // @ts-ignore
-        .find((item) => this.getValueCaption(item) === value)
+        .find((item) => this.remoteGetValueCaption(item) === value)
     );
   }
 
