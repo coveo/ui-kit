@@ -31,6 +31,7 @@
                 <c-quantic-tab label="Issues" expression="@jisourcetype AND NOT @jidocumenttype=&quot;WorkLog&quot;" engine-id={engineId}></c-quantic-tab>
                 <c-quantic-tab label="Community" expression="@objecttype==&quot;Message&quot;" engine-id={engineId}></c-quantic-tab>
                 <c-quantic-tab label="Files" expression="@boxdocumenttype==File OR @spcontenttype==Document" engine-id={engineId}></c-quantic-tab>
+                <c-quantic-tab label="Thread" expression="@source==iNaturalistTaxons" engine-id={engineId}></c-quantic-tab>
               </c-quantic-tab-bar>
               <div class="slds-grid slds-var-m-top_small">
                 <c-quantic-summary class="slds-var-m-vertical_x-small slds-small-size_8-of-12 slds-large-size_7-of-12" engine-id={engineId}>
@@ -47,7 +48,7 @@
               <c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>
               <c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>
               <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>
-              <c-quantic-result-list engine-id={engineId}></c-quantic-result-list>
+              <c-quantic-folded-result-list engine-id={engineId}></c-quantic-folded-result-list>
               <div class="slds-var-m-vertical_medium">
                   <c-quantic-pager engine-id={engineId}></c-quantic-pager>
                   <c-quantic-results-per-page engine-id={engineId}></c-quantic-results-per-page>

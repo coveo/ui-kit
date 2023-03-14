@@ -11,6 +11,14 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").ResultTemplatesManager} ResultTemplatesManager */
 /** @typedef {import("coveo").ResultsPerPage} ResultsPerPage */
 
+/**
+ * The `QuanticFoldedResultList` component is responsible for displaying query results by applying one or more result templates.
+ * This component can display query results that have a parent-child relationship with any level of nesting.
+ * @fires CustomEvent#registerresulttemplates
+ * @category Search
+ * @example
+ * <c-quantic-folded-result-list engine-id={engineId} fields-to-include="objecttype,gdfiletitle" collection-field="foldingcollection" parent-field="foldingparent" child-field="foldingchild" number-of-folded-results="2"></c-quantic-folded-result-list>
+ */
 export default class QuanticFoldedResultList extends LightningElement {
   /**
    * The ID of the engine instance the component registers to.
@@ -55,6 +63,8 @@ export default class QuanticFoldedResultList extends LightningElement {
    */
   @api numberOfFoldedResults;
 
+  /** @type {AnyHeadless} */
+  headless;
   /** @type {FoldedResultList} */
   foldedResultList;
   /** @type {ResultTemplatesManager} */
@@ -67,6 +77,10 @@ export default class QuanticFoldedResultList extends LightningElement {
   showPlaceholder = true;
   /** @type {number} */
   numberOfResults;
+  /** @type {Function} */
+  unsubscribe;
+  /** @type {Function} */
+  unsubscribeResultsPerPage;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -127,7 +141,6 @@ export default class QuanticFoldedResultList extends LightningElement {
       !this?.state?.hasError &&
       !this?.state?.firstSearchExecuted &&
       !this?.state?.hasResults;
-    console.log(JSON.parse(JSON.stringify(this.state)));
   }
 
   updateResultPerPage() {
