@@ -108,12 +108,12 @@ function cleanup() {
   }
 }
 
-function expectProperChildResultsDisplay(element, foldedCollection) {
+function expectProperChildResultsDisplay(element, collection) {
   const childResults = element.shadowRoot.querySelectorAll(
     selectors.quanticResult
   );
-  expect(childResults.length).toBe(foldedCollection.children.length);
-  foldedCollection.children.forEach((foldedResult, index) => {
+  expect(childResults.length).toBe(collection.children.length);
+  collection.children.forEach((foldedResult, index) => {
     expect(childResults[index].engineId).toBe(exampleEngineId);
     expect(childResults[index].templateId).toBe(exampleTemplateId);
     expect(childResults[index].result).toEqual(foldedResult.result);
