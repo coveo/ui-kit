@@ -101,15 +101,6 @@ const controllers: ControllerConfiguration[] = [
     },
     utils: ['buildDateRange'],
   },
-  {
-    initializer: 'buildInteractiveResult',
-    samplePaths: {
-      react_class: [],
-      react_fn: [
-        'packages/samples/headless-react/src/components/result-list/result-link.tsx',
-      ],
-    },
-  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [
