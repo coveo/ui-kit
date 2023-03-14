@@ -139,11 +139,23 @@
       atomic-search-interface:not(.atomic-search-interface-search-executed)
         > atomic-ipx-modal
         > div[slot='body']
-        > atomic-layout-section,
+        > atomic-layout-section
+        > atomic-result-list,
+      atomic-search-interface:not(.atomic-search-interface-search-executed)
+        > atomic-ipx-modal
+        > div[slot='body']
+        > atomic-layout-section
+        > atomic-query-summary,
       atomic-search-interface:not(.atomic-search-interface-search-executed)
         > atomic-ipx-embedded
         > div[slot='body']
-        > atomic-layout-section {
+        > atomic-layout-section
+        > atomic-result-list,
+      atomic-search-interface:not(.atomic-search-interface-search-executed)
+        > atomic-ipx-embedded
+        > div[slot='body']
+        > atomic-layout-section
+        > atomic-query-summary {
         display: none;
       }
 
