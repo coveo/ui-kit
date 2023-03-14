@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "postinstall": "husky install && patch-package",
-    "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic dev\"",
+    "dev:atomic": "concurrently \"nx run headless:dev\" \"nx run atomic:dev\"",
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "e2e": "nx run-many --target=e2e",
@@ -103,7 +103,7 @@
     "**/*.ts?(x)": [
       "eslint --fix"
     ],
-    "**/*.{scss,css,pcss,html,mdx}": [
+    "**/{*.{scss,css,pcss,html,mdx},{package,nx,project}.json}": [
       "prettier --write"
     ]
   },
