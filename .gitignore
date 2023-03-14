@@ -9,4 +9,4 @@ reports/*.xml
 !.vscode/extensions.json
 .dccache
 sarifs
-.cy.ts.mp4
+**.cy.ts.mp4
