@@ -18,7 +18,7 @@ export interface HostedPage {
   /**
    * The CSS resources appended in the header, pertaining to a specific hosted page in the target Coveo Cloud organization.
    */
-  css?: HostedPageCssFile[];
+  css?: HostedPageCSS[];
   /**
    * The creation timestamp. (ISO 8601)
    */
@@ -40,15 +40,20 @@ export interface HostedPage {
   updatedBy: string;
 }
 
-export interface HostedPageCssFile {
+export type HostedPageCSS = HostedPageCssInlineFile | HostedPageCssUrlFile;
+
+export interface HostedPageCssUrlFile {
   /**
-   * The content of the header `style` tag. If this property is defined, the `url` property should not be specified.
+   * The URL of CSS stylesheet.
    */
-  inlineContent?: string;
+  url: string;
+}
+
+export interface HostedPageCssInlineFile {
   /**
-   * The URL of CSS stylesheet. If this property is defined, the `inlineContent` property should not be specified.
+   * The content of the header `style` tag.
    */
-  url?: string;
+  inlineContent: string;
 }
 
 export interface HostedPageJavascriptFile {
@@ -64,4 +69,46 @@ export interface HostedPageJavascriptFile {
    * The URL of the JavaScript source file. If this property is defined, the `inlineContent` property should not be specified.
    */
   url?: string;
+}
+
+export function processHostedPage(
+  element: HTMLElement,
+  hostedPage: HostedPage
+) {
+  element.innerHTML = hostedPage.html;
+  hostedPage.javascript?.forEach((file) => insertJS(file));
+  hostedPage.css?.forEach((file) =>
+    'url' in file ? insertCSSUrl(file) : insertCSSInline(file)
+  );
+}
+
+function insertJS(file: HostedPageJavascriptFile) {
+  const script = document.createElement('script');
+  if (file.isModule) {
+    script.type = 'module';
+  }
+
+  if (file.url) {
+    script.src = file.url;
+  }
+
+  if (file.inlineContent) {
+    script.innerHTML = file.inlineContent;
+  }
+
+  document.head.appendChild(script);
+}
+
+function insertCSSInline(file: HostedPageCssInlineFile) {
+  const style = document.createElement('style');
+  style.innerHTML = file.inlineContent!;
+
+  document.head.appendChild(style);
+}
+
+function insertCSSUrl(file: HostedPageCssUrlFile) {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = file.url;
+  document.head.appendChild(link);
 }
