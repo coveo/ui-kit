@@ -12,7 +12,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/samples/iife
-        start: npm run dev
+        start: npm run prod
         wait-on: 'http://localhost:3000'
         install: false
         record: false
