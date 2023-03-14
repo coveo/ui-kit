@@ -136,36 +136,16 @@
         inset: unset;
       }
 
-      atomic-search-interface:not(.atomic-search-interface-search-executed)
+      :is(atomic-search-interface:not(.atomic-search-interface-search-executed), atomic-search-interface:not(.atomic-search-interface-search-executed))
         > atomic-ipx-modal
         > div[slot='body']
         > atomic-layout-section
-        > atomic-result-list,
-      atomic-search-interface:not(.atomic-search-interface-search-executed)
-        > atomic-ipx-modal
-        > div[slot='body']
-        > atomic-layout-section
-        > atomic-query-summary,
-      atomic-search-interface:not(.atomic-search-interface-search-executed)
-        > atomic-ipx-embedded
-        > div[slot='body']
-        > atomic-layout-section
-        > atomic-result-list,
-      atomic-search-interface:not(.atomic-search-interface-search-executed)
-        > atomic-ipx-embedded
-        > div[slot='body']
-        > atomic-layout-section
-        > atomic-query-summary {
+        > :is(atomic-result-list, atomic-query-summary) {
         display: none;
       }
 
       atomic-search-interface.atomic-search-interface-search-executed
-        > atomic-ipx-modal
-        > div[slot='body']
-        > atomic-recs-interface
-        > atomic-recs-list,
-      atomic-search-interface.atomic-search-interface-search-executed
-        > atomic-ipx-embedded
+        > :is(atomic-ipx-modal, atomic-ipx-embedded)
         > div[slot='body']
         > atomic-recs-interface
         > atomic-recs-list {
