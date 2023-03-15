@@ -92,7 +92,7 @@ pipeline {
 
 def notifySlack(options) {
     // Cannot use `notify.sendSlackWithChannel` because it hardcodes "tokenCredentialId = "jenkinsbot"
-    options.channel = "#commerceteambuilds";
+    options.channel = "#analyticsdeployments-dev";
     options.botUser = true;
     options.tokenCredentialId = "slack_jenkinsbot";
     return slackSend(options);

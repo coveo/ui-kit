@@ -1,14 +1,14 @@
 {
     "product": "coveo-analytics-js",
-    "team_name": "commerce",
+    "team_name": "dataplatformfoundation",
     "general": {
         "environments_order": {
             "sequential": ["dev", "stg", "prd"]
         },
         "notifications": {
-            "slack_channels": ["commerceteambuilds"]
+            "slack_channels": ["analyticsdeployments"]
         },
-        "team_jenkins": "commercebuilds"
+        "team_jenkins": "uabuilds"
     },
     "package_rollout": {
         "only_consider_changesets_after": "688b6873442721d61e2a0ac492b9da808ddb0ef0"
@@ -19,7 +19,7 @@
             {
                 "path": "src",
                 "project_name": "coveo.analytics.js",
-                "org": "coveo-commerce"
+                "org": "coveo-ua"
             }
         ]
     },
@@ -27,7 +27,7 @@
         "no_endpoint": true
     },
     "snyk": {
-        "org": "coveo-commerce",
+        "org": "coveo-ua",
         "no_container_images": true,
         "configurations": [
             {

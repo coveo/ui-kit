@@ -99,7 +99,7 @@ pipeline {
       when { expression { !skipRemainingStages }}
       steps {
         script {
-          runSnyk(org: "coveo-commerce", projectName: "coveo.analytics.js", directory: ".", archiveArtifacts: true)
+          runSnyk(org: "coveo-ua", projectName: "coveo.analytics.js", directory: ".", archiveArtifacts: true)
 
           sh "npm publish --dry-run"
           sh 'npm run prepare-deploy'
