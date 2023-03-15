@@ -169,7 +169,11 @@ export class AtomicBreadbox implements InitializableComponent {
     return ellipsedPath.join(SEPARATOR);
   }
 
-  private renderBreadcrumb(breadcrumb: Breadcrumb, index: number) {
+  private renderBreadcrumb(
+    breadcrumb: Breadcrumb,
+    index: number,
+    totalBreadcrumbs: number
+  ) {
     const fullValue = Array.isArray(breadcrumb.formattedValue)
       ? breadcrumb.formattedValue.join(SEPARATOR)
       : breadcrumb.formattedValue;
@@ -177,6 +181,7 @@ export class AtomicBreadbox implements InitializableComponent {
       ? this.limitPath(breadcrumb.formattedValue)
       : breadcrumb.formattedValue;
     const title = `${breadcrumb.label}: ${fullValue}`;
+    const isLastBreadcrumb = totalBreadcrumbs === 1;
 
     return (
       <li class="breadcrumb" key={value}>
@@ -194,6 +199,9 @@ export class AtomicBreadbox implements InitializableComponent {
             }
             this.lastRemovedBreadcrumbIndex = index;
             breadcrumb.deselect();
+            if (isLastBreadcrumb) {
+              this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+            }
           }}
           ref={(ref) => {
             if (this.lastRemovedBreadcrumbIndex === index) {
@@ -220,7 +228,6 @@ export class AtomicBreadbox implements InitializableComponent {
             part="breadcrumb-clear"
             class="w-2.5 h-2.5 ml-2 mt-px"
             icon={CloseIcon}
-            aria-hidden="true"
           ></atomic-icon>
         </Button>
       </li>
@@ -298,7 +305,10 @@ export class AtomicBreadbox implements InitializableComponent {
           text={this.bindings.i18n.t('clear')}
           class="p-2 btn-pill"
           ariaLabel={this.bindings.i18n.t('clear-all-filters')}
-          onClick={() => this.breadcrumbManager.deselectAll()}
+          onClick={async () => {
+            this.breadcrumbManager.deselectAll();
+            this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+          }}
           ref={
             isFocusTarget ? this.breadcrumbRemovedFocus.setTarget : undefined
           }
@@ -391,7 +401,7 @@ export class AtomicBreadbox implements InitializableComponent {
 
     return [
       sortedBreadcrumbs.map((breadcrumb, i) =>
-        this.renderBreadcrumb(breadcrumb, i)
+        this.renderBreadcrumb(breadcrumb, i, allBreadcrumbs.length)
       ),
       this.isCollapsed && this.renderShowMore(),
       !this.isCollapsed && this.renderShowLess(),

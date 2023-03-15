@@ -20,7 +20,6 @@ export const IconButton: FunctionalComponent<IconButtonProps> = (props) => {
         <atomic-icon
           icon={props.icon}
           class="w-4 h-4 shrink-0"
-          aria-hidden="true"
           part={`${props.partPrefix}-icon`}
         ></atomic-icon>
       </Button>

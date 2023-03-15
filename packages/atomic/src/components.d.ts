@@ -1819,6 +1819,10 @@ export interface AtomicRelevanceInspectorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicRelevanceInspectorElement;
 }
+export interface AtomicResultsPerPageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicResultsPerPageElement;
+}
 export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSearchBoxElement;
@@ -4049,6 +4053,7 @@ declare namespace LocalJSX {
           * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
          */
         "initialChoice"?: number;
+        "onAtomic/scrollToTop"?: (event: AtomicResultsPerPageCustomEvent<any>) => void;
     }
     interface AtomicSearchBox {
         /**

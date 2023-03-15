@@ -246,6 +246,14 @@
     "en": "Values found for {{query}} in the {{label}} facet",
     "fr": "Valeurs trouvées pour {{query}} dans la facette {{label}}"
   },
+  "facet-search-results-count": {
+    "en": "{{count}} value found in the {{label}} facet",
+    "fr": "{{count}} valeur trouvée dans la facette {{label}}"
+  },
+  "facet-search-results-count_plural": {
+    "en": "{{count}} values found in the {{label}} facet",
+    "fr": "{{count}} valeurs trouvées dans la facette {{label}}"
+  },
   "pagination": {
     "en": "Pagination",
     "fr": "Pagination"
