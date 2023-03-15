@@ -19,7 +19,7 @@ pipeline {
   }
 
   environment {
-    NPM_TOKEN = credentials("coveo-analytics-js-npm-deployment-token")
+    NPM_TOKEN = credentials("npmjs_com_token")
     GIT = credentials('github-coveobot')
     GH_TOKEN = credentials('github-coveobot_token')
     SNYK_TOKEN = credentials("snyk_token")
@@ -99,7 +99,7 @@ pipeline {
       when { expression { !skipRemainingStages }}
       steps {
         script {
-          runSnyk(org: "coveo-commerce", projectName: "coveo.analytics.js", directory: ".", archiveArtifacts: true)
+          runSnyk(org: "coveo-ua", projectName: "coveo.analytics.js", directory: ".", archiveArtifacts: true)
 
           sh "npm publish --dry-run"
           sh 'npm run prepare-deploy'
