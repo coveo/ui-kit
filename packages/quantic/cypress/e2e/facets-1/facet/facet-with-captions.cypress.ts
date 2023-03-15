@@ -16,7 +16,7 @@ interface FacetCaptionOptions {
   caption: string;
 }
 
-describe('Facet with captions Test Suite', () => {
+describe('quantic-facet with captions', () => {
   const pageUrl = 's/quantic-facet-with-captions';
 
   const defaultValue = 'Case';
