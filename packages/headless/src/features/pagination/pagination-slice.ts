@@ -18,6 +18,7 @@ import {change} from '../history/history-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {executeSearch} from '../search/search-actions';
+import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
   deselectAllFacetValues,
   toggleSelectFacetValue,
@@ -50,6 +51,9 @@ export const paginationReducer = createReducer(
       })
       .addCase(updateNumberOfResults, (state, action) => {
         state.numberOfResults = action.payload;
+        state.firstResult = 0;
+      })
+      .addCase(updateActiveTab, (state) => {
         state.firstResult = 0;
       })
       .addCase(registerPage, (state, action) => {
