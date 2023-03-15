@@ -151,7 +151,7 @@
       "id": "deploy-atomic-react-major-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_REACT_MAJOR_VERSION]",
+        "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MAJOR_VERSION]",
         "source": "packages/atomic-react/dist",
         "parameters": {
           "acl": "public-read"

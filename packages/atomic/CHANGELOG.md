@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.18...@coveo/atomic@2.20.0) (2023-03-14)
+
+### Features
+
+- use querySelector with interface element ([#2767](https://github.com/coveo/ui-kit/issues/2767)) ([be94ca4](https://github.com/coveo/ui-kit/commit/be94ca4f054d4085350f995be86e7c4da5005695))
+
 ## [2.19.18](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.17...@coveo/atomic@2.19.18) (2023-03-13)
 
 **Note:** Version bump only for package @coveo/atomic

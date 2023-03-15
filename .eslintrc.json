@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["node_modules", "stencil-generated", "dist"],
+  "ignorePatterns": ["node_modules", "stencil-generated", "dist", "www"],
   "env": {
     "jest": true,
     "es6": true
@@ -40,6 +40,10 @@
       "env": {
         "node": true
       }
+    },
+    {
+      "files": "**/*.mjs",
+      "parserOptions": {"sourceType": "module", "ecmaVersion": 2022}
     }
   ],
   "root": true
