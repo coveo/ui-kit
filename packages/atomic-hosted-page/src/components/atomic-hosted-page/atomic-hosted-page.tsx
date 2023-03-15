@@ -1,12 +1,8 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {Component, ComponentInterface, Method, Element} from '@stencil/core';
-import {
-  HostedPage,
-  HostedPageJavascriptFile,
-  HostedPageCssFile,
-} from './hosted-pages';
+import {processHostedPage} from './hosted-pages';
 
-interface AtomicPageInitializationOptions {
+interface AtomicHostedPageInitializationOptions {
   /**
    * The unique identifier of the hosted page.
    */
@@ -28,7 +24,8 @@ interface AtomicPageInitializationOptions {
 }
 
 /**
- * TODO: add description
+ * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
+ * Pulls from the [Hosted Pages API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/Hosted%20Page)
  * @internal
  */
 @Component({
@@ -38,7 +35,7 @@ interface AtomicPageInitializationOptions {
 export class AtomicHostedPage implements ComponentInterface {
   @Element() private element!: HTMLElement;
 
-  private validateOptions(opts: AtomicPageInitializationOptions) {
+  private validateOptions(opts: AtomicHostedPageInitializationOptions) {
     try {
       new Schema({
         organizationId: new StringValue({required: true, emptyAllowed: false}),
@@ -51,45 +48,9 @@ export class AtomicHostedPage implements ComponentInterface {
     }
   }
 
-  private processHostedPage(hostedPage: HostedPage) {
-    this.element.innerHTML = hostedPage.html;
-    hostedPage.javascript?.forEach((file) => this.insertJS(file));
-    hostedPage.css?.forEach((file) => this.insertCSS(file));
-  }
-
-  private insertJS(file: HostedPageJavascriptFile) {
-    const script = document.createElement('script');
-    if (file.isModule) {
-      script.type = 'module';
-    }
-
-    if (file.url) {
-      script.src = file.url;
-    }
-
-    if (file.inlineContent) {
-      script.innerHTML = file.inlineContent;
-    }
-
-    document.head.appendChild(script);
-  }
-
-  private insertCSS(file: HostedPageCssFile) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-
-    if (file.url) {
-      link.href = file.url;
-    }
-
-    if (file.inlineContent) {
-      link.innerHTML = file.inlineContent;
-    }
-
-    document.head.appendChild(link);
-  }
-
-  @Method() public async initialize(options: AtomicPageInitializationOptions) {
+  @Method() public async initialize(
+    options: AtomicHostedPageInitializationOptions
+  ) {
     this.validateOptions(options);
     const platformUrl =
       options.platformUrl || 'https://platform.cloud.coveo.com';
@@ -104,7 +65,7 @@ export class AtomicHostedPage implements ComponentInterface {
         }
       );
 
-      this.processHostedPage(await pageResponse.json());
+      processHostedPage(this.element, await pageResponse.json());
     } catch (e) {
       console.error(e);
     }
