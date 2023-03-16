@@ -20,6 +20,7 @@ export const allPackageDirs = getPackageManifestFromPackagePath(
     ...packageDirs,
     ...glob
       .sync(workspacesEntry, {cwd: workspacesRoot})
+      .filter((packagePath) => existsSync(resolve(packagePath, 'package.json')))
       .map((packagePath) => relative('packages', packagePath)),
   ],
   []
@@ -111,15 +112,17 @@ export function updatePackageDependents(
     const manifest = JSON.parse(originalContentAsText);
 
     let saveChanges = false;
-    ['dependencies', 'devDependencies', 'peerDependencies'].forEach((dependenciesObjectKey) => {
-      if (
-        dependenciesObjectKey in manifest &&
-        packageName in manifest[dependenciesObjectKey]
-      ) {
-        manifest[dependenciesObjectKey][packageName] = newVersion;
-        saveChanges = true;
+    ['dependencies', 'devDependencies', 'peerDependencies'].forEach(
+      (dependenciesObjectKey) => {
+        if (
+          dependenciesObjectKey in manifest &&
+          packageName in manifest[dependenciesObjectKey]
+        ) {
+          manifest[dependenciesObjectKey][packageName] = newVersion;
+          saveChanges = true;
+        }
       }
-    });
+    );
     if (saveChanges) {
       writeFileSync(
         manifestPath,
