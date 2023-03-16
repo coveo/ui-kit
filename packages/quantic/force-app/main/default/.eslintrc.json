@@ -6,6 +6,7 @@
     "CoveoHeadless": "readonly",
     "CoveoHeadlessCaseAssist": "readonly",
     "CoveoHeadlessInsight": "readonly",
+    "CoveoHeadlessRecommendation": "readonly",
     "Bueno": "readonly"
   },
   "overrides": [

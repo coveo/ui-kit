@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.16.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.15.3...@coveo/quantic@2.16.0) (2023-03-15)
+
+### Bug Fixes
+
+- **quantic:** Fixed few issues related to smartSnippetFeedback component ([#2774](https://github.com/coveo/ui-kit/issues/2774)) ([ba3d538](https://github.com/coveo/ui-kit/commit/ba3d53864a0123f5692d6404143d620a5cf6ba36))
+
+### Features
+
+- **Quantic:** added smartSnippet and smartSnippetSuggestions components to exampleS… ([#2770](https://github.com/coveo/ui-kit/issues/2770)) ([183a243](https://github.com/coveo/ui-kit/commit/183a2431d1883a7aacc6a0f5dd7bf28ec3c08880))
+
+## [2.15.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.15.2...@coveo/quantic@2.15.3) (2023-03-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
 ## [2.15.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.15.1...@coveo/quantic@2.15.2) (2023-03-10)
 
 **Note:** Version bump only for package @coveo/quantic
