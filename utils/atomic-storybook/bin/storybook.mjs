@@ -86,9 +86,19 @@ async function main(command, ...allParams) {
           );
       return;
     case 'analyze':
-      await execute(findBinary('lit-analyzer'), allParams, {
-        cwd: atomicStorybookPackageDir,
-      });
+      await execute(
+        findBinary('lit-analyzer'),
+        [
+          ...allParams,
+          ...[
+            'dist/types/components.d.ts',
+            'src/components/**/*.stories.tsx',
+          ].map((path) => path.resolve(callerRoot, path)),
+        ],
+        {
+          cwd: atomicStorybookPackageDir,
+        }
+      );
       return;
     default:
       throw 'Invalid command';

@@ -48,7 +48,7 @@
     "dev:storybook": "npm run validate:storybook && atomic-storybook start",
     "build:storybook": "npm run build:storybook:assets-list && npm run validate:storybook && atomic-storybook build",
     "build:storybook:assets-list": "node scripts/list-assets.mjs",
-    "validate:storybook": "atomic-storybook analyze dist/types/components.d.ts src/components/**/*.stories.tsx",
+    "validate:storybook": "atomic-storybook analyze",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
