@@ -8,8 +8,8 @@
     "e2e:watch": "cypress open"
   },
   "dependencies": {
-    "@coveo/atomic": "^2.0.0",
-    "@coveo/headless": "^2.0.0",
+    "@coveo/atomic": "2.20.3-pre.e277925c44",
+    "@coveo/headless": "2.10.1-pre.e277925c44",
     "@stencil/core": "2.17.3",
     "stencil-router-v2": "0.6.0"
   },

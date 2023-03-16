@@ -1,3 +1,12 @@
+# 2.17.0-pre.e277925c44 (2023-03-16)
+
+
+### Features
+
+* **quantic:** Exposed the headless recommendations scripts in coveoHeadless static resources ([#2780](https://github.com/coveo/ui-kit/issues/2780)) ([8b5ec7c](https://github.com/coveo/ui-kit/commits/8b5ec7c162a907b9ce30c69fef565365b973b82a))
+
+
+
 # Change Log
 
 All notable changes to this project will be documented in this file.

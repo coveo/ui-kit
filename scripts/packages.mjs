@@ -103,13 +103,6 @@ export function updatePackageDependents(
   newVersion,
   packageDirsToUpdate
 ) {
-  console.log({
-    packageName,
-    newVersion,
-    packageDirsToUpdate,
-    workspacesRoot,
-    allPackageDirs,
-  });
   packageDirsToUpdate.forEach((packageDir) => {
     const manifestPath = resolve(
       getPackagePathFromPackageDir(packageDir),
