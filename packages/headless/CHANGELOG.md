@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.10.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.9.0...@coveo/headless@2.10.0) (2023-03-15)
+
+### Features
+
+- add interactiveResult controller for ProductListingEngine ([#2768](https://github.com/coveo/ui-kit/issues/2768)) ([991a670](https://github.com/coveo/ui-kit/commit/991a6701727dd5bf4cc7eb21f923af0de4201d4f))
+
 # [2.9.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.11...@coveo/headless@2.9.0) (2023-03-14)
 
 ### Bug Fixes
