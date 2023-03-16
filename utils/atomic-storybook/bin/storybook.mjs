@@ -93,7 +93,7 @@ async function main(command, ...allParams) {
           ...[
             'dist/types/components.d.ts',
             'src/components/**/*.stories.tsx',
-          ].map((path) => path.resolve(callerRoot, path)),
+          ].map((path) => resolve(callerRoot, path)),
         ],
         {
           cwd: atomicStorybookPackageDir,
