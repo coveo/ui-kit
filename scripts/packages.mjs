@@ -20,7 +20,9 @@ export const allPackageDirs = getPackageManifestFromPackagePath(
     ...packageDirs,
     ...glob
       .sync(workspacesEntry, {cwd: workspacesRoot})
-      .filter((packagePath) => existsSync(resolve(packagePath, 'package.json')))
+      .filter((packagePath) =>
+        existsSync(resolve(workspacesRoot, packagePath, 'package.json'))
+      )
       .map((packagePath) => relative('packages', packagePath)),
   ],
   []
@@ -101,13 +103,19 @@ export function updatePackageDependents(
   newVersion,
   packageDirsToUpdate
 ) {
+  console.log({
+    packageName,
+    newVersion,
+    packageDirsToUpdate,
+    workspacesRoot,
+    allPackageDirs,
+  });
   packageDirsToUpdate.forEach((packageDir) => {
     const manifestPath = resolve(
       getPackagePathFromPackageDir(packageDir),
       'package.json'
     );
     const originalContentAsText = readFileSync(manifestPath).toString();
-    const {indent} = detectIndent(originalContentAsText);
     /** @type {import('@lerna/package').RawManifest} */
     const manifest = JSON.parse(originalContentAsText);
 
@@ -124,6 +132,7 @@ export function updatePackageDependents(
       }
     );
     if (saveChanges) {
+      const {indent} = detectIndent(originalContentAsText);
       writeFileSync(
         manifestPath,
         JSON.stringify(manifest, undefined, indent || '  ')
