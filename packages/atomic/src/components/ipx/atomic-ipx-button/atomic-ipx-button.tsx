@@ -1,7 +1,12 @@
-import {Component, Element, Fragment, h, Prop} from '@stencil/core';
+import {Component, Element, Fragment, h, Prop, State} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
 import SearchIcon from '../../../images/search.svg';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
+import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
@@ -11,7 +16,11 @@ import {Button} from '../../common/button';
   styleUrl: './atomic-ipx-button.pcss',
   shadow: true,
 })
-export class AtomicIPXButton {
+export class AtomicIPXButton implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+
+  @State() public error!: Error;
+
   @Element() public host!: HTMLElement;
 
   /**
@@ -99,7 +108,7 @@ export class AtomicIPXButton {
   }
 
   private get ipxModal() {
-    return document.querySelector('atomic-ipx-modal')!;
+    return this.bindings.interfaceElement.querySelector('atomic-ipx-modal')!;
   }
 
   private open() {

@@ -1,4 +1,4 @@
-import defaultResultComponentStory from '../../../../../.storybook/default-result-component-story';
+import {defaultResultComponentStory} from '@coveo/atomic-storybook';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/ResultText',

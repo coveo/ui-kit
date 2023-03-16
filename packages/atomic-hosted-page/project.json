@@ -1,1 +1,42 @@
-{}
+{
+  "namedInputs": {
+    "production": [
+      "sharedGlobals",
+      "sharedTypescriptSources",
+      "{projectRoot}/stencil.config.ts",
+      "!{projectRoot}/src/components.d.ts"
+    ]
+  },
+  "targets": {
+    "cached:build:stencil": {
+      "dependsOn": ["^build"],
+      "inputs": ["^production", "production"],
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/www",
+        "{projectRoot}/loader",
+        "{projectRoot}/src/components.d.ts"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+        "cwd": "packages/atomic-hosted-page"
+      }
+    },
+    "validate:definitions": {
+      "dependsOn": ["^build", "cached:build:stencil"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-script",
+      "options": {
+        "script": "validate:definitions"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build:stencil", "validate:definitions"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:noop"
+    }
+  }
+}

@@ -1,5 +1,5 @@
+import {recsStory} from '@coveo/atomic-storybook';
 import {html} from 'lit-html';
-import recsStory from '../../../../.storybook/recommendation/recs-story';
 
 const {defaultModuleExport, exportedStory} = recsStory(
   'Atomic/RecsList',

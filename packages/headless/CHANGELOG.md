@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.10.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.9.0...@coveo/headless@2.10.0) (2023-03-15)
+
+### Features
+
+- add interactiveResult controller for ProductListingEngine ([#2768](https://github.com/coveo/ui-kit/issues/2768)) ([991a670](https://github.com/coveo/ui-kit/commit/991a6701727dd5bf4cc7eb21f923af0de4201d4f))
+
+# [2.9.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.11...@coveo/headless@2.9.0) (2023-03-14)
+
+### Bug Fixes
+
+- **headless:** when a tab is selected, the pagination resets to 1 ([#2757](https://github.com/coveo/ui-kit/issues/2757)) ([b93211c](https://github.com/coveo/ui-kit/commit/b93211c7d899e86c609807b2d73b64db62043941))
+
+### Features
+
+- **headless:** typo in contribution guide ([#2776](https://github.com/coveo/ui-kit/issues/2776)) ([ae0a39c](https://github.com/coveo/ui-kit/commit/ae0a39c79ac255a95f6e4e3ae24a4c5f54677097))
+
+## [2.8.11](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.10...@coveo/headless@2.8.11) (2023-03-10)
+
+**Note:** Version bump only for package @coveo/headless
+
 ## [2.8.10](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.8.9...@coveo/headless@2.8.10) (2023-02-28)
 
 ### Bug Fixes

@@ -11,11 +11,12 @@ function trimNewline(str) {
 /**
  * @param {string} command
  * @param {readonly string[]} [args]
+ * @param {import('node:child_process').SpawnOptions} [options]
  * @returns {Promise<string>}
  */
-export function execute(command, args = []) {
+export function execute(command, args = [], options = {}) {
   return new Promise((resolve, reject) => {
-    const proc = spawn(command, args);
+    const proc = spawn(command, args, options);
     /** @type {Buffer} */
     let dataBuffer = Buffer.alloc(0);
     /** @type {Buffer} */
