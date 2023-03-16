@@ -1,5 +1,5 @@
-import {execa} from 'execa';
 import {Buffer} from 'node:buffer';
+import {spawn} from 'node:child_process';
 
 /**
  * @param {string} str
@@ -11,12 +11,12 @@ function trimNewline(str) {
 /**
  * @param {string} command
  * @param {readonly string[]} [args]
- * @param {import('execa').Options} [options]
+ * @param {import('node:child_process').SpawnOptions} [options]
  * @returns {Promise<string>}
  */
 export function execute(command, args = [], options = {}) {
   return new Promise((resolve, reject) => {
-    const proc = execa(command, args, options);
+    const proc = spawn(command, args, options);
     /** @type {Buffer} */
     let dataBuffer = Buffer.alloc(0);
     /** @type {Buffer} */
