@@ -74,15 +74,18 @@ async function main(command, ...allParams) {
     case 'start':
       const {parameters, environment} =
         buildStorybookParametersAndEnvironment(allParams);
-      Object.assign(process.env, environment);
       command === 'build'
         ? await execute(findBinary('build-storybook'), parameters, {
             cwd: atomicStorybookPackageDir,
+            env: {...process.env, ...environment},
           })
         : await execute(
             findBinary('start-storybook'),
             [...parameters, ...['-p', '6006']],
-            {cwd: atomicStorybookPackageDir}
+            {
+              cwd: atomicStorybookPackageDir,
+              env: {...process.env, ...environment},
+            }
           );
       return;
     case 'analyze':
