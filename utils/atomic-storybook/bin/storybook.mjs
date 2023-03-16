@@ -28,11 +28,10 @@ function buildStorybookParametersAndEnvironment(allParams) {
   const params = {
     configDir: resolve(atomicStorybookPackageDir, '.storybook'),
     staticDir: resolve(callerRoot, 'dist'),
-    outputDir: resolve(callerRoot, 'storybook-static'),
     stories: ['./src/**/*.stories.mdx', './src/**/*.stories.tsx'].map(
       (storyGlob) => resolve(callerRoot, storyGlob)
     ),
-    stencilDocs: readFileSync(resolve(callerRoot, 'docs', 'atomic-docs.json')),
+    stencilDocs: resolve(callerRoot, 'docs', 'atomic-docs.json'),
   };
   return {
     parameters: [
@@ -40,12 +39,10 @@ function buildStorybookParametersAndEnvironment(allParams) {
       params.configDir,
       '--static-dir',
       params.staticDir,
-      '--output-dir',
-      params.outputDir,
     ],
     environment: {
       STORYBOOK_STENCIL_STORIES: JSON.stringify(params.stories),
-      STORYBOOK_STENCIL_DOCS: params.stencilDocs,
+      STORYBOOK_STENCIL_DOCS_LOCATION: params.stencilDocs,
       STORYBOOK_CALLER: callerRoot,
     },
   };
@@ -75,10 +72,17 @@ async function main(command, ...allParams) {
       const {parameters, environment} =
         buildStorybookParametersAndEnvironment(allParams);
       command === 'build'
-        ? await execute(findBinary('build-storybook'), parameters, {
-            cwd: atomicStorybookPackageDir,
-            env: {...process.env, ...environment},
-          })
+        ? await execute(
+            findBinary('build-storybook'),
+            [
+              ...parameters,
+              ...['--output-dir', resolve(callerRoot, 'storybook-static')],
+            ],
+            {
+              cwd: atomicStorybookPackageDir,
+              env: {...process.env, ...environment},
+            }
+          )
         : await execute(
             findBinary('start-storybook'),
             [...parameters, ...['-p', '6006']],

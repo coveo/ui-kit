@@ -1,6 +1,10 @@
 const path = require('path');
 const fs = require('fs');
 
+process.env.STORYBOOK_STENCIL_DOCS = fs
+  .readFileSync(process.env.STORYBOOK_STENCIL_DOCS_LOCATION)
+  .toString();
+
 /**
  * @param {string} path
  */
