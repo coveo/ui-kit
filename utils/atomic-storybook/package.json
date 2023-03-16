@@ -1,9 +1,9 @@
 {
   "name": "@coveo/atomic-storybook",
   "version": "1.0.0",
-  "type": "module",
   "private": true,
   "dependencies": {
+    "@coveo/bueno": "0.43.1",
     "@storybook/addon-a11y": "6.3.12",
     "@storybook/addon-controls": "6.3.12",
     "@storybook/addon-docs": "6.3.12",
@@ -11,14 +11,20 @@
     "@storybook/addon-viewport": "6.3.12",
     "@storybook/api": "6.3.12",
     "@storybook/builder-webpack5": "6.3.12",
+    "@storybook/components": "6.3.12",
     "@storybook/html": "6.3.12",
     "@storybook/manager-webpack5": "6.3.12",
     "@monaco-editor/react": "4.3.1",
     "monaco-editor-webpack-plugin": "6.0.0",
     "lit-analyzer": "1.2.1",
-    "lit-html": "2.3.1",
     "react": "16.14.0",
-    "react-dom": "16.14.0"
+    "react-dom": "16.14.0",
+    "lodash": "4.17.21"
+  },
+  "peerDependencies": {
+    "@coveo/headless": "^2.0.0",
+    "@stencil/core": "^2.0.0",
+    "lit-html": "^2.0.0"
   },
   "bin": {
     "atomic-storybook": "./bin/storybook.mjs"

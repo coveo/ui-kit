@@ -2,18 +2,18 @@ import {h} from '@stencil/core';
 import {DocsPage} from '@storybook/addon-docs';
 import {Args} from '@storybook/api';
 import {html, TemplateResult} from 'lit-html';
-import {initializeInterfaceDebounced} from './default-init';
+import {initializeInterfaceDebounced} from '../initialization/default-init';
+import {
+  resultComponentArgTypes,
+  resultSections,
+  ResultSectionWithHighlights,
+} from '../utils/map-result-list-props-to-args';
 import sharedDefaultStory, {
   DefaultStoryAdvancedConfig,
   renderAdditionalMarkup,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
 } from './default-story-shared';
-import {
-  resultComponentArgTypes,
-  resultSections,
-  ResultSectionWithHighlights,
-} from './map-result-list-props-to-args';
 
 const renderInsideResultList = (
   content: string,

@@ -1,12 +1,14 @@
-import {h} from '@stencil/core';
 import {SearchEngineConfiguration} from '@coveo/headless';
+import {h} from '@stencil/core';
 import {Args} from '@storybook/api';
 import {render, TemplateResult} from 'lit-html';
-import {mapPropsToArgTypes} from './map-props-to-args';
-import {resultComponentArgTypes} from './map-result-list-props-to-args';
+import {mapPropsToArgTypes} from '../utils/map-props-to-args';
+import {resultComponentArgTypes} from '../utils/map-result-list-props-to-args';
 
 export const ADDON_PARAMETER_KEY = 'shadowParts';
-export interface DefaultStoryAdvancedConfig<Config = SearchEngineConfiguration> {
+export interface DefaultStoryAdvancedConfig<
+  Config = SearchEngineConfiguration
+> {
   engineConfig?: Partial<Config>;
   additionalMarkup?: () => TemplateResult;
   additionalChildMarkup?: () => TemplateResult;

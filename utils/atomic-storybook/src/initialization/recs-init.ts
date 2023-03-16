@@ -3,7 +3,7 @@ import {
   RecommendationEngineConfiguration,
 } from '@coveo/headless/recommendation';
 import {debounce} from 'lodash';
-import {dispatchAddons} from '../dispatch-addons';
+import {dispatchAddons} from '../utils/dispatch-addons';
 
 interface RecsInterface extends HTMLElement {
   initialize: (cfg: RecommendationEngineConfiguration) => Promise<void>;

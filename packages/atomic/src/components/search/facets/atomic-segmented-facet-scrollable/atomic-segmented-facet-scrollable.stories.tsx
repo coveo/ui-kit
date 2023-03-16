@@ -1,5 +1,5 @@
+import {defaultStory} from '@coveo/atomic-storybook';
 import {html} from 'lit-html';
-import defaultStory from '../../../../../.storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/SegmentedFacet/SegmentedFacetScrollable',

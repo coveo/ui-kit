@@ -1,12 +1,10 @@
-import {h} from '@stencil/core';
-import {Args} from '@storybook/api';
-import {DocsPage} from '@storybook/addon-docs';
-import {initializeInterfaceDebounced} from './recs-init';
-import {
-  DefaultStoryAdvancedConfig,
-} from '../default-story-shared';
 import {RecommendationEngineConfiguration} from '@coveo/headless/recommendation';
-import defaultStory from '../default-story';
+import {h} from '@stencil/core';
+import {DocsPage} from '@storybook/addon-docs';
+import {Args} from '@storybook/api';
+import {initializeInterfaceDebounced} from '../initialization/recs-init';
+import defaultStory from './default-story';
+import {DefaultStoryAdvancedConfig} from './default-story-shared';
 
 export default function recsStory(
   title: string,

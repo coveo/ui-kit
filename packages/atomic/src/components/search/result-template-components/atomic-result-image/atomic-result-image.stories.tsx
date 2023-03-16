@@ -1,4 +1,4 @@
-import defaultResultComponentStory from '../../../../../.storybook/default-result-component-story';
+import {defaultResultComponentStory} from '@coveo/atomic-storybook';
 
 // TODO: This will require KIT-1178 to actually be usable properly
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(

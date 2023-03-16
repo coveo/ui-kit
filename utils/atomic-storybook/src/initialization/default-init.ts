@@ -3,7 +3,7 @@ import {
   SearchEngineConfiguration,
 } from '@coveo/headless';
 import {debounce} from 'lodash';
-import {dispatchAddons} from './dispatch-addons';
+import {dispatchAddons} from '../utils/dispatch-addons';
 
 interface SearchInterface extends HTMLElement {
   initialize: (cfg: SearchEngineConfiguration) => Promise<void>;

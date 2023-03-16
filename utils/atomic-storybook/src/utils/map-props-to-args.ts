@@ -1,8 +1,8 @@
-import AtomicDocumentation from '../docs/atomic-docs.json';
+import {isNullOrUndefined} from '@coveo/bueno';
+import {JsonDocsValue} from '@stencil/core/internal';
 import {ArgTypes} from '@storybook/api';
 import {Options} from '@storybook/components';
-import {JsonDocs, JsonDocsValue} from '@stencil/core/internal';
-import {isNullOrUndefined} from '@coveo/bueno';
+import {StencilDocumentation} from './stencil-utils';
 
 const availableControlType = [
   'radio',
@@ -26,7 +26,7 @@ const excludedPropType = ['ResultTemplateCondition'] as const;
 type ControlType = typeof availableControlType[number];
 
 export const getDocumentationFromTag = (componentTag: string) => {
-  return (AtomicDocumentation as JsonDocs).components.find(
+  return StencilDocumentation!.components.find(
     (componentDoc) => componentDoc.tag === componentTag
   );
 };

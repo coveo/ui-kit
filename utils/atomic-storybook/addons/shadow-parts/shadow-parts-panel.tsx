@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
-import {Placeholder} from '@storybook/components';
 import {useParameter, useArgs} from '@storybook/api';
-import {getDocumentationFromTag} from '../map-props-to-args';
+import {Placeholder} from '@storybook/components';
+import React, {useState} from 'react';
+import {getDocumentationFromTag} from '../../src/utils/map-props-to-args';
+import './shadow-parts-panel.css';
 
 const ADDON_PARAMETER_KEY = 'shadowParts';
-import './shadow-parts-panel.css';
 
 export const ShadowPartPanel: React.FunctionComponent<{}> = () => {
   const componentTag = useParameter(ADDON_PARAMETER_KEY, null)?.componentTag;

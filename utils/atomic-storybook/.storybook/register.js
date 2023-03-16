@@ -1,8 +1,8 @@
 import React from 'react';
 import {addons, types} from '@storybook/addons';
 import {AddonPanel} from '@storybook/components';
-import {ShadowPartPanel} from './shadow-parts-addon/shadow-parts-panel';
-import {CodeSamplePanel} from './code-sample-addon/code-sample-panel';
+import {ShadowPartPanel} from '../addons/shadow-parts/shadow-parts-panel';
+import {CodeSamplePanel} from '../addons/code-sample/code-sample-panel';
 import {debounce} from 'lodash';
 
 const ADDON_ID_SHADOW_PARTS = 'shadow_parts';

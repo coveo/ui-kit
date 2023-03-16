@@ -1,15 +1,15 @@
+import {SearchEngineConfiguration} from '@coveo/headless';
 import {h} from '@stencil/core';
-import {Args} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
-import {initializeInterfaceDebounced as defaultInitializeInterfaceDebounced} from './default-init';
+import {Args} from '@storybook/api';
+import {DebouncedFunc} from 'lodash';
+import {initializeInterfaceDebounced as defaultInitializeInterfaceDebounced} from '../initialization/default-init';
 import sharedDefaultStory, {
   DefaultStoryAdvancedConfig,
   renderAdditionalMarkup,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
 } from './default-story-shared';
-import {SearchEngineConfiguration} from '@coveo/headless';
-import {DebouncedFunc} from 'lodash';
 
 export default function defaultStory<Config = SearchEngineConfiguration>(
   title: string,
@@ -33,7 +33,7 @@ export default function defaultStory<Config = SearchEngineConfiguration>(
     const additionalMarkupString = advancedConfig.additionalMarkup
       ? renderAdditionalMarkup(advancedConfig.additionalMarkup)
       : '';
-  
+
     return argsToHTMLString + additionalMarkupString;
   }, advancedConfig.engineConfig);
 

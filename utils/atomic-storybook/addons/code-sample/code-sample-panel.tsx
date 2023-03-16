@@ -1,13 +1,14 @@
-import React, {useRef} from 'react';
+import MonacoEditor from '@monaco-editor/react';
 import {useArgs, useParameter} from '@storybook/api';
+import {delay} from 'lodash';
+import React, {useRef} from 'react';
+import {renderArgsToResultTemplate} from '../../src/stories/default-result-component-story';
 import {
   DefaultStoryAdvancedConfig,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
-} from '../default-story-shared';
-import MonacoEditor from '@monaco-editor/react';
-import {renderArgsToResultTemplate} from '../default-result-component-story';
-import {delay} from 'lodash';
+} from '../../src/stories/default-story-shared';
+
 interface StoryParameters {
   componentTag: string;
   isResultComponent: boolean;

@@ -14,22 +14,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",
-    "jsxFactory": "h",
-    "plugins": [
-      {
-        "name": "ts-lit-plugin",
-        "strict": true,
-        "rules": {
-          "no-missing-import": "off",
-          "no-unknown-attribute": "off"
-        }
-      }
-    ],
+    "jsxFactory": "h"
   },
   "include": ["src", "types/jsx.d.ts"],
   "exclude": [
     "node_modules",
     "src/external-builds",
     "**/*.stories.tsx"
-  ]
+  ],"references": [{"path": "tsconfig.stories.json"}]
 }
