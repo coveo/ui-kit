@@ -59,7 +59,6 @@ export default class QuanticSmartSnippetAnswer extends LightningElement {
     // eslint-disable-next-line @lwc/lwc/no-inner-html
     snippetAnswerElement.innerHTML = this?.answer;
     this.bindAnalyticsToSmartSnippetInlineLinks();
-    this.disableInvalidInlineLinks();
   }
 
   /**
@@ -67,6 +66,7 @@ export default class QuanticSmartSnippetAnswer extends LightningElement {
    * @returns {void}
    */
   bindAnalyticsToSmartSnippetInlineLinks() {
+    const disabledCSSClass = 'inline-link--disabled';
     this.inlineLinks.forEach((link) => {
       if (link?.href) {
         const linkInfo = {
@@ -88,18 +88,7 @@ export default class QuanticSmartSnippetAnswer extends LightningElement {
 
         const removeBindings = LinkUtils.bindAnalyticsToLink(link, actions);
         this.bindingsRemovalFunctions.push(removeBindings);
-      }
-    });
-  }
-
-  /**
-   * Assigns the CSS disabled class to the invalid inline links.
-   * @returns {void}
-   */
-  disableInvalidInlineLinks() {
-    const disabledCSSClass = 'inline-link--disabled';
-    this.inlineLinks.forEach((link) => {
-      if (!link?.href) {
+      } else {
         link.classList.add(disabledCSSClass);
       }
     });
