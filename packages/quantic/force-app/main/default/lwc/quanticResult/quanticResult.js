@@ -99,14 +99,6 @@ export default class QuanticResult extends LightningElement {
     ).getCleanHHMMSS();
   }
 
-  get resultChildrenComponents() {
-    /** @type {Array} */
-    const resultChildrenComponents = Array.from(
-      this.template.querySelectorAll('c-quantic-result-children')
-    );
-    return resultChildrenComponents;
-  }
-
   onHasPreview = (evt) => {
     this.resultHasPreview = evt.detail.hasPreview;
     evt.stopPropagation();
