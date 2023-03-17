@@ -63,8 +63,6 @@ export default class QuanticResult extends LightningElement {
   isHovered = false;
   /** @type {boolean} */
   quickviewIsOpen = false;
-  /** @type {boolean} */
-  isInitialRender = true;
 
   connectedCallback() {
     this.template.addEventListener('haspreview', this.onHasPreview);
@@ -74,19 +72,6 @@ export default class QuanticResult extends LightningElement {
       'quantic__resultpreviewtoggle',
       this.handlePreviewToggle
     );
-  }
-
-  renderedCallback() {
-    if (this.isInitialRender) {
-      this.isInitialRender = false;
-      this.resultChildrenComponents.forEach((quanticResultChildren) => {
-        quanticResultChildren.foldedCollection = this.foldedCollection;
-        quanticResultChildren.resultTemplatesManager =
-          this.resultTemplatesManager;
-        quanticResultChildren.foldedResultListController =
-          this.foldedResultListController;
-      });
-    }
   }
 
   disconnectedCallback() {
