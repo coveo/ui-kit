@@ -44,6 +44,14 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    */
   @api nonActiveParent = false;
   /**
+   * A function used to format the displayed value.
+   * @api
+   * @type {Function}
+   * @defaultValue `undefined`
+   */
+  @api formattingFunction;
+
+  /**
    * A function used to set focus to the value.
    * @api
    * @type {VoidFunction}
@@ -68,7 +76,7 @@ export default class QuanticCategoryFacetValue extends LightningElement {
   }
 
   get facetValue() {
-    return this.item.value;
+    return this.formattingFunction ? this.formattingFunction(this.item) : this.item.value;
   }
 
   get numberOfResults() {
