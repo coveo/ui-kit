@@ -1,4 +1,3 @@
-// import {QueryError, QueryErrorState, buildQueryError} from '@coveo/headless';
 import {
   buildRecommendationList,
   RecommendationList,
@@ -6,7 +5,6 @@ import {
 } from '@coveo/headless/recommendation';
 import {Component, h, State} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-// import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
