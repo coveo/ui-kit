@@ -6,7 +6,7 @@
       "outputs": [],
       "executor": "nx:run-commands",
       "options": {
-        "command": "npm i",
+        "command": "npm i --package-lock=false",
         "cwd": "utils/atomic-storybook"
       }
     },
