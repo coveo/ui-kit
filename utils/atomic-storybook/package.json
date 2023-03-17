@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@coveo/bueno": "0.43.1",
     "@storybook/addon-a11y": "6.3.12",
     "@storybook/addon-controls": "6.3.12",
     "@storybook/addon-docs": "6.3.12",
@@ -19,11 +18,12 @@
     "lit-analyzer": "1.2.1",
     "react": "16.14.0",
     "react-dom": "16.14.0",
-    "lodash": "4.17.21"
+    "lodash": "4.17.21",
+    "@coveo/atomic": "file://../../packages/atomic",
+    "typescript": "4.6.4"
   },
-  "peerDependencies": {
-    "@coveo/headless": "^2.0.0",
-    "@stencil/core": "^2.0.0",
-    "lit-html": "^2.0.0"
+  "scripts": {
+    "build": "nx build",
+    "dev": "nx run dev"
   }
 }

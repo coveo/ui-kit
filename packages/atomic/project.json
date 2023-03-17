@@ -40,57 +40,8 @@
         "script": "validate:definitions"
       }
     },
-    "validate:storybook": {
-      "dependsOn": ["^build"],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node node_modules/.bin/lit-analyzer ../../packages/atomic/dist/types/components.d.ts ../../packages/atomic/src/components/**/*.stories.tsx",
-        "cwd": "utils/atomic-storybook"
-      }
-    },
-    "build:storybook:assets-list": {
-      "dependsOn": ["cached:build:stencil"],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node scripts/list-assets.mjs",
-        "cwd": "packages/atomic"
-      }
-    },
-    "build:storybook": {
-      "dependsOn": [
-        "cached:build:stencil",
-        "validate:storybook",
-        "build:storybook:assets-list"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node node_modules/.bin/build-storybook --config-dir ./.storybook --static-dir ../../packages/atomic/dist --output-dir ../../packages/atomic/storybook-static",
-        "cwd": "utils/atomic-storybook"
-      }
-    },
-    "dev:storybook": {
-      "dependsOn": ["cached:build:stencil", "validate:storybook"],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node node_modules/.bin/start-storybook --config-dir ./.storybook --static-dir ../../packages/atomic/dist -p 6006",
-        "cwd": "utils/atomic-storybook"
-      }
-    },
     "build": {
-      "dependsOn": [
-        "cached:build:stencil",
-        "build:storybook",
-        "validate:storybook",
-        "validate:definitions"
-      ],
+      "dependsOn": ["cached:build:stencil", "validate:definitions"],
       "inputs": [],
       "outputs": [],
       "executor": "nx:noop"

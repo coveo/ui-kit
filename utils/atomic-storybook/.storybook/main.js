@@ -1,13 +1,18 @@
 const path = require('path');
 
+const atomicDirectory = path.join(
+  require.resolve('@coveo/atomic/package.json'),
+  '..'
+);
+
 /** @type {import('@storybook/core-common').StorybookConfig} */
 module.exports = {
   core: {
     builder: 'webpack5',
   },
   stories: [
-    '../../../packages/atomic/src/**/*.stories.mdx',
-    '../../../packages/atomic/src/**/*.stories.tsx',
+    path.join(atomicDirectory, 'src/**/*.stories.mdx'),
+    path.join(atomicDirectory, 'src/**/*.stories.tsx'),
   ],
   addons: [
     '@storybook/addon-docs',
