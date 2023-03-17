@@ -1,9 +1,9 @@
-import {LightningElement, api} from 'lwc';
 import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
 } from 'c/quanticHeadlessLoader';
 import {ResultUtils} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
