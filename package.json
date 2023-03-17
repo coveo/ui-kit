@@ -2,7 +2,8 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "postinstall": "husky install && patch-package && npm run link:angular -w @coveo/atomic-angular-samples",
+    "postinstall": "husky install && patch-package && npm run link:angular -w @coveo/atomic-angular-samples && npm run install:atomic-storybook",
+    "install:atomic-storybook": "cd utils/atomic-storybook && npm i",
     "dev:atomic": "concurrently \"nx run headless:dev\" \"nx run atomic:dev\"",
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",

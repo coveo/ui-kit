@@ -1,5 +1,5 @@
 import {html} from 'lit-html';
-import recsStory from '../../../../.storybook/recommendation/recs-story';
+import recsStory from '../../../../../../utils/atomic-storybook/.storybook/recommendation/recs-story';
 
 const {defaultModuleExport, exportedStory} = recsStory(
   'Atomic/RecsList',

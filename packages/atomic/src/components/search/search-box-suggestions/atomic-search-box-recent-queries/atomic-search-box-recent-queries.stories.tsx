@@ -1,5 +1,5 @@
 import {html} from 'lit-html';
-import defaultStory from '../../../../../.storybook/default-story';
+import defaultStory from '../../../../../../../utils/atomic-storybook/.storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/Searchbox/RecentQueries',
