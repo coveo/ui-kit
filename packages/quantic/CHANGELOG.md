@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.17.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.16.0...@coveo/quantic@2.17.0) (2023-03-17)
+
+### Bug Fixes
+
+- **quantic:** fixed the sizing of the smartSnippet headings to match suggestions ([#2772](https://github.com/coveo/ui-kit/issues/2772)) ([be699f7](https://github.com/coveo/ui-kit/commit/be699f7523adb578cfc60601b32c57139a252334))
+
+### Features
+
+- **quantic:** add support for custom facet value captions ([#2769](https://github.com/coveo/ui-kit/issues/2769)) ([6d42a8c](https://github.com/coveo/ui-kit/commit/6d42a8cf3eb49356ac3cb052b5ea170185353f03))
+- **quantic:** Exposed the headless recommendations scripts in coveoHeadless static resources ([#2780](https://github.com/coveo/ui-kit/issues/2780)) ([8b5ec7c](https://github.com/coveo/ui-kit/commit/8b5ec7c162a907b9ce30c69fef565365b973b82a))
+
 # [2.16.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.15.3...@coveo/quantic@2.16.0) (2023-03-15)
 
 ### Bug Fixes
