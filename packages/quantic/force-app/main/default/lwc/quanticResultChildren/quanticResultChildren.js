@@ -1,9 +1,7 @@
-import hideThread from '@salesforce/label/c.quantic_HideThread';
-import loadThread from '@salesforce/label/c.quantic_LoadThread';
-import noDocumentsRelated from '@salesforce/label/c.quantic_NoDocumentsRelated';
+import collapseResults from '@salesforce/label/c.quantic_CollapseResults';
+import loadAllResults from '@salesforce/label/c.quantic_LoadAllResults';
 import noMoreDocumentsRelated from '@salesforce/label/c.quantic_NoMoreDocumentsRelated';
-import showThread from '@salesforce/label/c.quantic_ShowThread';
-import {LightningElement, api} from 'lwc';
+import { LightningElement, api } from 'lwc';
 // @ts-ignore
 import loadingTemplate from './loading.html';
 // @ts-ignore
@@ -58,10 +56,8 @@ export default class QuanticResultChildren extends LightningElement {
   @api resultTemplatesManager;
 
   labels = {
-    loadThread,
-    showThread,
-    hideThread,
-    noDocumentsRelated,
+    loadAllResults,
+    collapseResults,
     noMoreDocumentsRelated,
   };
 
@@ -127,18 +123,10 @@ export default class QuanticResultChildren extends LightningElement {
   }
 
   get toggleFoldedResultsLabel() {
-    if (!this.areAllFoldedResultsLoaded) {
-      return this.labels.loadThread;
-    } else if (!this.areFoldedResultsExpanded) {
-      return this.labels.showThread;
+    if (!this.areFoldedResultsExpanded) {
+      return this.labels.loadAllResults;
     }
-    return this.labels.hideThread;
-  }
-
-  get noMoreChildResutsMessage() {
-    return this?.foldedCollection?.children?.length
-      ? this.labels.noMoreDocumentsRelated
-      : this.labels.noDocumentsRelated;
+    return this.labels.collapseResults;
   }
 
   get toggleFoldedResultsIcon() {

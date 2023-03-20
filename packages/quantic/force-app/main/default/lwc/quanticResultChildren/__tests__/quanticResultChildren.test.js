@@ -1,33 +1,29 @@
+/* eslint-disable jest/expect-expect */
 // @ts-ignore
-import {createElement} from 'lwc';
+import { createElement } from 'lwc';
 import QuanticResultChildren from '../quanticResultChildren';
 
+const loadAllResultsLabel = 'Load all results'
+const collapseResults = 'Collapse results'
 jest.mock(
-  '@salesforce/label/c.quantic_LoadThread',
-  () => ({default: 'Load thread'}),
+  '@salesforce/label/c.quantic_LoadAllResults',
+  () => ({ default: loadAllResultsLabel }),
   {
     virtual: true,
   }
 );
 jest.mock(
-  '@salesforce/label/c.quantic_ShowThread',
-  () => ({default: 'Show thread'}),
-  {
-    virtual: true,
-  }
-);
-jest.mock(
-  '@salesforce/label/c.quantic_HideThread',
-  () => ({default: 'Hide thread'}),
+  '@salesforce/label/c.quantic_CollapseResults',
+  () => ({ default: collapseResults }),
   {
     virtual: true,
   }
 );
 
 const functionsMocks = {
-  loadCollection: jest.fn(() => {}),
-  logShowLessFoldedResults: jest.fn(() => {}),
-  logShowMoreFoldedResults: jest.fn(() => {}),
+  loadCollection: jest.fn(() => { }),
+  logShowLessFoldedResults: jest.fn(() => { }),
+  logShowMoreFoldedResults: jest.fn(() => { }),
 };
 
 const mockedFoldedResultListController = {
@@ -165,7 +161,7 @@ describe('c-quantic-result-children', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      await clickFoldedResultToggleButton(element, 'Load thread');
+      await clickFoldedResultToggleButton(element, loadAllResultsLabel);
       element.foldedCollection = {
         ...foldedCollection,
         isLoadingMoreResults: true,
@@ -192,7 +188,7 @@ describe('c-quantic-result-children', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        await clickFoldedResultToggleButton(element, 'Load thread');
+        await clickFoldedResultToggleButton(element, loadAllResultsLabel);
         element.foldedCollection = {
           ...foldedCollection,
           moreResultsAvailable: false,
@@ -230,7 +226,7 @@ describe('c-quantic-result-children', () => {
           selectors.toggleButton
         );
 
-        await clickFoldedResultToggleButton(element, 'Load thread');
+        await clickFoldedResultToggleButton(element, loadAllResultsLabel);
         expect(functionsMocks.loadCollection).toHaveBeenCalledTimes(1);
         element.foldedCollection = foldedCollectionWithAllResultsLoaded;
         await flushPromises();
@@ -239,13 +235,13 @@ describe('c-quantic-result-children', () => {
           foldedCollectionWithAllResultsLoaded
         );
 
-        await clickFoldedResultToggleButton(element, 'Hide thread');
+        await clickFoldedResultToggleButton(element, collapseResults);
         expect(functionsMocks.logShowLessFoldedResults).toHaveBeenCalledTimes(
           1
         );
         expectProperChildResultsDisplay(element, foldedCollection);
 
-        await clickFoldedResultToggleButton(element, 'Show thread');
+        await clickFoldedResultToggleButton(element, loadAllResultsLabel);
         expect(functionsMocks.logShowMoreFoldedResults).toHaveBeenCalledTimes(
           1
         );
@@ -253,7 +249,7 @@ describe('c-quantic-result-children', () => {
           element,
           foldedCollectionWithAllResultsLoaded
         );
-        expect(foldedResultToggleButton.label).toBe('Hide thread');
+        expect(foldedResultToggleButton.label).toBe(collapseResults);
       });
     });
   });
