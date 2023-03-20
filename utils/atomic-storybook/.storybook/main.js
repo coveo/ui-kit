@@ -25,7 +25,11 @@ module.exports = {
   webpack: (config) => {
     return {
       ...config,
-      resolve: {...config.resolve, modules: module.paths},
+      resolve: {
+        ...config.resolve,
+        modules: module.paths,
+        alias: {'atomic-storybook': path.resolve('.storybook')},
+      },
       performance: {
         hints: false,
       },
