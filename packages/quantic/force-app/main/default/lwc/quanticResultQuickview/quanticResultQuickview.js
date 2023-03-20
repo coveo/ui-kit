@@ -76,11 +76,17 @@ export default class QuanticResultQuickview extends LightningElement {
    */
   @api tooltip;
   /**
-   * contentUrl.
+   * src used to render the iframe when content is not youtube.
    * @api
    * @type {String}
    */
   @api contentUrl;
+  /**
+   * loading state of quickview content.
+   * @api
+   * @type {Boolean}
+   */
+  @api isloading = false;
 
   /** @type {QuickviewState} */
   @track state;
@@ -109,10 +115,10 @@ export default class QuanticResultQuickview extends LightningElement {
 
   connectedCallback() {
     getHeadlessEnginePromise(this.engineId)
-      .then((engine) => {
+      .then((/** @type {import("coveo").SearchEngine<any>} */ engine) => {
         this.initialize(engine);
       })
-      .catch((error) => {
+      .catch((/** @type {{ message: any; }} */ error) => {
         console.error(error.message);
       });
 
@@ -176,7 +182,7 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   addRecentResult() {
-    getHeadlessEnginePromise(this.engineId).then((engine) => {
+    getHeadlessEnginePromise(this.engineId).then((/** @type {{ dispatch: (arg0: any) => void; }} */ engine) => {
       const {pushRecentResult} = this.headless.loadRecentResultsActions(engine);
       engine.dispatch(
         pushRecentResult(JSON.parse(JSON.stringify(this.result)))
@@ -190,10 +196,16 @@ export default class QuanticResultQuickview extends LightningElement {
     this.sendResultPreviewEvent(false);
   }
 
+  /**
+   * @param {{ stopPropagation: () => void; }} evt
+   */
   stopPropagation(evt) {
     evt.stopPropagation();
   }
 
+  /**
+   * @param {boolean} hasPreview
+   */
   dispatchHasPreview(hasPreview) {
     this.dispatchEvent(
       new CustomEvent('haspreview', {
@@ -321,8 +333,11 @@ export default class QuanticResultQuickview extends LightningElement {
     }
   }
 
-  onIframeLoaded() {
-    this._isLoading = false;
+  /**
+   * @param {{ detail: { isLoading: boolean; }; }} event
+   */
+  handleIframeLoaded(event) {
+    this._isLoading = event.detail.isLoading;
   }
 
   get lastFocusableElementInFooterSlot() {

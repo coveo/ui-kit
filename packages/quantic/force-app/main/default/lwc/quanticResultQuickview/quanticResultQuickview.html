@@ -81,7 +81,7 @@
             </div>
           </div>
         </header>
-        <!-- <template if:true={isLoading}>
+        <template if:true={isLoading}>
           <div
             onclick={stopPropagation}
             class="quickview__spinner-container slds-modal__content slds-p-around_large slds-is-relative"
@@ -91,7 +91,7 @@
               size="large"
             ></lightning-spinner>
           </div>
-        </template> -->
+        </template>
 
         <c-quantic-quickview-content
           id="quickview__content-container"
@@ -100,7 +100,8 @@
           result={result}
           content-url={contentURL}
           height="100%"
-          is-loading={isLoading}
+          isloading={isLoading}
+          oniframeloaded={handleIframeLoaded}
         ></c-quantic-quickview-content>
 
         <!-- <iframe id="quickview__content-container"

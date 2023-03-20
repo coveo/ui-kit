@@ -47,8 +47,8 @@ export default class QuanticQuickviewContent extends LightningElement {
   unsubscribe;
   /** @type {AnyHeadless} */
   headless;
-  /** @type {boolean} */
-  _isLoading = false;
+  // /** @type {boolean} */
+  // _isLoading = false;
 
   connectedCallback() {
     getHeadlessEnginePromise(this.engineId)
@@ -81,6 +81,14 @@ export default class QuanticQuickviewContent extends LightningElement {
   get youtubeURL() {
     const videoId = this.result?.clickUri.split('=').pop();
     return 'https://www.youtube.com/embed/' + videoId;
+  }
+
+  handleIframeLoaded() {
+    this.dispatchEvent(new CustomEvent('iframeloaded', {
+      detail: {
+        isloading: false,
+      }
+    }));
   }
 
   render() {
