@@ -55,7 +55,7 @@ const exampleFoldedResultTwo = {
 };
 const exampleEngineId = 'example engine id';
 const exampleTemplateId = 'example template id';
-const foldedCollection = {
+const exampleCollection = {
   result: {
     uniqueId: '789',
     title: 'example parent result',
@@ -64,8 +64,8 @@ const foldedCollection = {
   isLoadingMoreResults: false,
   moreResultsAvailable: true,
 };
-const foldedCollectionWithAllResultsLoaded = {
-  ...foldedCollection,
+const exampleCollectionWithAllResultsLoaded = {
+  ...exampleCollection,
   children: [exampleFoldedResultOne, exampleFoldedResultTwo],
   isLoadingMoreResults: false,
   moreResultsAvailable: false,
@@ -75,7 +75,7 @@ const defaultOptions = {
   engineId: exampleEngineId,
   templateId: exampleTemplateId,
   foldedResultListController: mockedFoldedResultListController,
-  foldedCollection: foldedCollection,
+  collection: exampleCollection,
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -113,7 +113,7 @@ function expectProperChildResultsDisplay(element, collection) {
     expect(childResults[index].engineId).toBe(exampleEngineId);
     expect(childResults[index].templateId).toBe(exampleTemplateId);
     expect(childResults[index].result).toEqual(foldedResult.result);
-    expect(childResults[index].foldedCollection).toEqual(foldedResult);
+    expect(childResults[index].collection).toEqual(foldedResult);
   });
 }
 
@@ -136,8 +136,8 @@ describe('c-quantic-result-children', () => {
     it('should not display any child results and display the no more child results message', async () => {
       const element = createTestComponent({
         ...defaultOptions,
-        foldedCollection: {
-          ...foldedCollection,
+        collection: {
+          ...exampleCollection,
           moreResultsAvailable: false,
           children: [],
         },
@@ -162,8 +162,8 @@ describe('c-quantic-result-children', () => {
       await flushPromises();
 
       await clickFoldedResultToggleButton(element, loadAllResultsLabel);
-      element.foldedCollection = {
-        ...foldedCollection,
+      element.collection = {
+        ...exampleCollection,
         isLoadingMoreResults: true,
       };
       await flushPromises();
@@ -171,7 +171,7 @@ describe('c-quantic-result-children', () => {
       const placeholder = element.shadowRoot.querySelector(
         selectors.placeholder
       );
-      expect(placeholder.numberOfRows).toBe(foldedCollection.children.length);
+      expect(placeholder.numberOfRows).toBe(exampleCollection.children.length);
     });
   });
 
@@ -180,7 +180,7 @@ describe('c-quantic-result-children', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      expectProperChildResultsDisplay(element, foldedCollection);
+      expectProperChildResultsDisplay(element, exampleCollection);
     });
 
     describe('when trying to load more child results', () => {
@@ -189,8 +189,8 @@ describe('c-quantic-result-children', () => {
         await flushPromises();
 
         await clickFoldedResultToggleButton(element, loadAllResultsLabel);
-        element.foldedCollection = {
-          ...foldedCollection,
+        element.collection = {
+          ...exampleCollection,
           moreResultsAvailable: false,
         };
         await flushPromises();
@@ -203,7 +203,7 @@ describe('c-quantic-result-children', () => {
         );
 
         expect(functionsMocks.loadCollection).toHaveBeenCalledTimes(1);
-        expectProperChildResultsDisplay(element, foldedCollection);
+        expectProperChildResultsDisplay(element, exampleCollection);
         expect(foldedResultToggleButton).toBeNull();
         expect(noMoreChildrenMessage).not.toBeNull();
       });
@@ -215,7 +215,7 @@ describe('c-quantic-result-children', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      expectProperChildResultsDisplay(element, foldedCollection);
+      expectProperChildResultsDisplay(element, exampleCollection);
     });
 
     describe('when more child results are expanded or collapsed', () => {
@@ -228,18 +228,18 @@ describe('c-quantic-result-children', () => {
 
         await clickFoldedResultToggleButton(element, loadAllResultsLabel);
         expect(functionsMocks.loadCollection).toHaveBeenCalledTimes(1);
-        element.foldedCollection = foldedCollectionWithAllResultsLoaded;
+        element.collection = exampleCollectionWithAllResultsLoaded;
         await flushPromises();
         expectProperChildResultsDisplay(
           element,
-          foldedCollectionWithAllResultsLoaded
+          exampleCollectionWithAllResultsLoaded
         );
 
         await clickFoldedResultToggleButton(element, collapseResults);
         expect(functionsMocks.logShowLessFoldedResults).toHaveBeenCalledTimes(
           1
         );
-        expectProperChildResultsDisplay(element, foldedCollection);
+        expectProperChildResultsDisplay(element, exampleCollection);
 
         await clickFoldedResultToggleButton(element, loadAllResultsLabel);
         expect(functionsMocks.logShowMoreFoldedResults).toHaveBeenCalledTimes(
@@ -247,7 +247,7 @@ describe('c-quantic-result-children', () => {
         );
         expectProperChildResultsDisplay(
           element,
-          foldedCollectionWithAllResultsLoaded
+          exampleCollectionWithAllResultsLoaded
         );
         expect(foldedResultToggleButton.label).toBe(collapseResults);
       });

@@ -5,7 +5,7 @@ export default class QuanticResult extends LightningElement {
   @api result;
   @api resultTemplatesManager;
   @api foldedResultListController;
-  @api foldedCollection;
+  @api collection;
   @api templateId;
   @api openPreviewId;
 }

@@ -19,7 +19,7 @@ import resultChildrenTemplate from './quanticResultChildren.html';
  * @slot before-children - Slot that allows rendering content before the list of children, only when children exist.
  * @slot after-children - Slot that allows rendering content after the list of children, only when children exist.
  * @example
- * <c-quantic-result-children engine-id={engineId} folded-collection={foldedCollection} template-id="example-template-id" folded-result-list-controller={foldedResultListController} result-templates-manager={resultTemplatesManager}>
+ * <c-quantic-result-children engine-id={engineId} collection={collection} template-id="example-template-id" folded-result-list-controller={foldedResultListController} result-templates-manager={resultTemplatesManager}>
  *   <div slot="before-children">Attached documents</div>
  * </c-quantic-result-children>
  */
@@ -35,7 +35,7 @@ export default class QuanticResultChildren extends LightningElement {
    * @api
    * @type {FoldedCollection}
    */
-  @api foldedCollection;
+  @api collection;
   /**
    * The ID of the template used to display the child results.
    * @api
@@ -72,11 +72,11 @@ export default class QuanticResultChildren extends LightningElement {
 
   get displayedChildren() {
     if (!this.areAllFoldedResultsLoaded) {
-      return this?.foldedCollection?.children ?? [];
+      return this?.collection?.children ?? [];
     }
     return (
       (this.areFoldedResultsExpanded
-        ? this?.foldedCollection?.children
+        ? this?.collection?.children
         : this.firstChildrenPartition) ?? []
     );
   }
@@ -86,11 +86,11 @@ export default class QuanticResultChildren extends LightningElement {
   }
 
   get isLoadingMoreResults() {
-    return this?.foldedCollection?.isLoadingMoreResults;
+    return this?.collection?.isLoadingMoreResults;
   }
 
   get areMoreResultsAvailable() {
-    return this?.foldedCollection?.moreResultsAvailable;
+    return this?.collection?.moreResultsAvailable;
   }
 
   handleToggleFoldedResults() {
@@ -104,8 +104,8 @@ export default class QuanticResultChildren extends LightningElement {
   }
 
   loadAllFoldedResults() {
-    this.firstChildrenPartition = this?.foldedCollection?.children;
-    this.foldedResultListController.loadCollection(this.foldedCollection);
+    this.firstChildrenPartition = this?.collection?.children;
+    this.foldedResultListController.loadCollection(this.collection);
     this.areAllFoldedResultsLoaded = true;
     this.areFoldedResultsExpanded = true;
   }
@@ -118,7 +118,7 @@ export default class QuanticResultChildren extends LightningElement {
   showMoreFoldedResults() {
     this.areFoldedResultsExpanded = true;
     this.foldedResultListController.logShowMoreFoldedResults(
-      this.foldedCollection.result
+      this.collection.result
     );
   }
 
@@ -152,7 +152,7 @@ export default class QuanticResultChildren extends LightningElement {
 
   get moreResultsFound() {
     return (
-      this?.foldedCollection?.children?.length >
+      this?.collection?.children?.length >
       this.firstChildrenPartition?.length
     );
   }

@@ -6,7 +6,7 @@
         <div class="slds-var-p-left_medium slds-border_left">
           <template for:each={displayedChildren} for:item="foldedResult">
             <c-quantic-result key={foldedResult.result.uniqueId} engine-id={engineId} template-id={templateId}
-              result={foldedResult.result} folded-collection={foldedResult}
+              result={foldedResult.result} collection={foldedResult}
               result-templates-manager={resultTemplatesManager}
               folded-result-list-controller={foldedResultListController}></c-quantic-result>
           </template>
