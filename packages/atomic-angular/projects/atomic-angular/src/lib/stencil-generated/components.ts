@@ -1398,7 +1398,13 @@ export class AtomicResultTimespan {
 }
 
 
-export declare interface AtomicResultsPerPage extends Components.AtomicResultsPerPage {}
+export declare interface AtomicResultsPerPage extends Components.AtomicResultsPerPage {
+  /**
+   *  
+   */
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+
+}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
@@ -1415,6 +1421,7 @@ export class AtomicResultsPerPage {
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
   }
 }
 

@@ -47,6 +47,17 @@ describe('No Results Test Suites', () => {
     });
   });
 
+  describe('when it changes from no results to results', () => {
+    beforeEach(() => {
+      env.withHash('q=gahaiusdhgaiuewjfsf').init();
+      cy.url().then((urlValue) => {
+        cy.visit(urlValue.replace('q=gahaiusdhgaiuewjfsf', 'q=test'));
+      });
+    });
+
+    CommonAssertions.assertAriaLiveMessage(NoResultsSelectors.ariaLive, '');
+  });
+
   describe('when the query contains HTML characters', () => {
     beforeEach(() => {
       env.withHash('q=<div>$@#()-^!gahaiusdhgaiuewjfsf</div>').init();
