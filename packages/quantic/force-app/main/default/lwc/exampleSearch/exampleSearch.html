@@ -38,7 +38,28 @@
                   field="filetype"
                   label="File Type"
                   engine-id={engineId}
-                ></c-quantic-facet>
+                >
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="html"
+                    caption="HTML"
+                  ></c-quantic-facet-caption>
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="txt"
+                    caption="Text file"
+                  ></c-quantic-facet-caption>
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="pdf"
+                    caption="PDF"
+                  ></c-quantic-facet-caption>
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="YouTubeVideo"
+                    caption="YouTube Video"
+                  ></c-quantic-facet-caption>
+                </c-quantic-facet>
                 <c-quantic-numeric-facet
                   field="ytlikecount"
                   label="Youtube Likes"

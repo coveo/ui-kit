@@ -981,6 +981,8 @@ export namespace Components {
          */
         "numberOfIntervals": number;
     }
+    interface AtomicRecsError {
+    }
     interface AtomicRecsInterface {
         /**
           * Whether analytics should be enabled.
@@ -2228,6 +2230,12 @@ declare global {
         prototype: HTMLAtomicRatingRangeFacetElement;
         new (): HTMLAtomicRatingRangeFacetElement;
     };
+    interface HTMLAtomicRecsErrorElement extends Components.AtomicRecsError, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsErrorElement: {
+        prototype: HTMLAtomicRecsErrorElement;
+        new (): HTMLAtomicRecsErrorElement;
+    };
     interface HTMLAtomicRecsInterfaceElement extends Components.AtomicRecsInterface, HTMLStencilElement {
     }
     var HTMLAtomicRecsInterfaceElement: {
@@ -2641,6 +2649,7 @@ declare global {
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
+        "atomic-recs-error": HTMLAtomicRecsErrorElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
@@ -3638,6 +3647,8 @@ declare namespace LocalJSX {
          */
         "numberOfIntervals"?: number;
     }
+    interface AtomicRecsError {
+    }
     interface AtomicRecsInterface {
         /**
           * Whether analytics should be enabled.
@@ -4456,6 +4467,7 @@ declare namespace LocalJSX {
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
+        "atomic-recs-error": AtomicRecsError;
         "atomic-recs-interface": AtomicRecsInterface;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
@@ -4584,6 +4596,7 @@ declare module "@stencil/core" {
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
+            "atomic-recs-error": LocalJSX.AtomicRecsError & JSXBase.HTMLAttributes<HTMLAtomicRecsErrorElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
             "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
             "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
