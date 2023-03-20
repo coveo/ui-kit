@@ -1,29 +1,29 @@
 /* eslint-disable jest/expect-expect */
 // @ts-ignore
-import { createElement } from 'lwc';
+import {createElement} from 'lwc';
 import QuanticResultChildren from '../quanticResultChildren';
 
-const loadAllResultsLabel = 'Load all results'
-const collapseResults = 'Collapse results'
+const loadAllResultsLabel = 'Load all results';
+const collapseResults = 'Collapse results';
 jest.mock(
   '@salesforce/label/c.quantic_LoadAllResults',
-  () => ({ default: loadAllResultsLabel }),
+  () => ({default: loadAllResultsLabel}),
   {
     virtual: true,
   }
 );
 jest.mock(
   '@salesforce/label/c.quantic_CollapseResults',
-  () => ({ default: collapseResults }),
+  () => ({default: collapseResults}),
   {
     virtual: true,
   }
 );
 
 const functionsMocks = {
-  loadCollection: jest.fn(() => { }),
-  logShowLessFoldedResults: jest.fn(() => { }),
-  logShowMoreFoldedResults: jest.fn(() => { }),
+  loadCollection: jest.fn(() => {}),
+  logShowLessFoldedResults: jest.fn(() => {}),
+  logShowMoreFoldedResults: jest.fn(() => {}),
 };
 
 const mockedFoldedResultListController = {
@@ -34,7 +34,7 @@ const mockedFoldedResultListController = {
 
 const selectors = {
   quanticResult: 'c-quantic-result',
-  toggleButton: '.folded-result__toggle-button lightning-button',
+  toggleButton: '.result-children__toggle-button lightning-button',
   placeholder: 'c-quantic-placeholder',
   noMoreChildrenMessage: '.result-children__no-more-children-message',
 };

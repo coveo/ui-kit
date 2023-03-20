@@ -1,7 +1,7 @@
 import collapseResults from '@salesforce/label/c.quantic_CollapseResults';
 import loadAllResults from '@salesforce/label/c.quantic_LoadAllResults';
 import noMoreDocumentsRelated from '@salesforce/label/c.quantic_NoMoreDocumentsRelated';
-import { LightningElement, api } from 'lwc';
+import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import loadingTemplate from './loading.html';
 // @ts-ignore
@@ -62,27 +62,25 @@ export default class QuanticResultChildren extends LightningElement {
   };
 
   /** @type {boolean} */
-  areAllFoldedResultsLoaded = false;
+  areAllChildResultsLoaded = false;
   /** @type {boolean} */
-  areFoldedResultsExpanded = false;
-  /** @type {boolean} */
-  foldedResultHasMoreChildren = true;
+  areChildResultsExpanded = false;
   /** @type {Array<FoldedResult>} */
   firstChildrenPartition;
 
-  get displayedChildren() {
-    if (!this.areAllFoldedResultsLoaded) {
+  get children() {
+    if (!this.areAllChildResultsLoaded) {
       return this?.collection?.children ?? [];
     }
     return (
-      (this.areFoldedResultsExpanded
+      (this.areChildResultsExpanded
         ? this?.collection?.children
         : this.firstChildrenPartition) ?? []
     );
   }
 
-  get hasChildren() {
-    return !!this.displayedChildren.length;
+  get hasChildrenDisplayed() {
+    return !!this.children.length;
   }
 
   get isLoadingMoreResults() {
@@ -93,12 +91,12 @@ export default class QuanticResultChildren extends LightningElement {
     return this?.collection?.moreResultsAvailable;
   }
 
-  handleToggleFoldedResults() {
-    if (!this.areAllFoldedResultsLoaded) {
+  handleToggleChildResults() {
+    if (!this.areAllChildResultsLoaded) {
       this.loadAllFoldedResults();
-    } else if (this.areFoldedResultsExpanded) {
+    } else if (this.areChildResultsExpanded) {
       this.showLessFoldedResults();
-    } else if (!this.areFoldedResultsExpanded) {
+    } else if (!this.areChildResultsExpanded) {
       this.showMoreFoldedResults();
     }
   }
@@ -106,31 +104,31 @@ export default class QuanticResultChildren extends LightningElement {
   loadAllFoldedResults() {
     this.firstChildrenPartition = this?.collection?.children;
     this.foldedResultListController.loadCollection(this.collection);
-    this.areAllFoldedResultsLoaded = true;
-    this.areFoldedResultsExpanded = true;
+    this.areAllChildResultsLoaded = true;
+    this.areChildResultsExpanded = true;
   }
 
   showLessFoldedResults() {
-    this.areFoldedResultsExpanded = false;
+    this.areChildResultsExpanded = false;
     this.foldedResultListController.logShowLessFoldedResults();
   }
 
   showMoreFoldedResults() {
-    this.areFoldedResultsExpanded = true;
+    this.areChildResultsExpanded = true;
     this.foldedResultListController.logShowMoreFoldedResults(
       this.collection.result
     );
   }
 
-  get toggleFoldedResultsLabel() {
-    if (!this.areFoldedResultsExpanded) {
+  get toggleChildResultsLabel() {
+    if (!this.areChildResultsExpanded) {
       return this.labels.loadAllResults;
     }
     return this.labels.collapseResults;
   }
 
   get toggleFoldedResultsIcon() {
-    if (this.areFoldedResultsExpanded) {
+    if (this.areChildResultsExpanded) {
       return 'utility:chevronup';
     }
     return 'utility:chevrondown';
@@ -140,28 +138,27 @@ export default class QuanticResultChildren extends LightningElement {
     return this.areMoreResultsAvailable !== undefined;
   }
 
-  get shouldDisplayFoldedResultsToggle() {
+  get shouldDisplayChildResultsToggle() {
     if (!this.isFirstLevelChildCollection) {
       return false;
     }
     return (
-      (this.areAllFoldedResultsLoaded && this.moreResultsFound) ||
+      (this.areAllChildResultsLoaded && this.moreResultsFound) ||
       this.areMoreResultsAvailable
     );
   }
 
   get moreResultsFound() {
     return (
-      this?.collection?.children?.length >
-      this.firstChildrenPartition?.length
+      this?.collection?.children?.length > this.firstChildrenPartition?.length
     );
   }
 
   get allFoldedResultsLoadedButNoMoreResults() {
-    return this.areAllFoldedResultsLoaded && !this.moreResultsFound;
+    return this.areAllChildResultsLoaded && !this.moreResultsFound;
   }
 
-  get childResultCount() {
+  get placeholderCount() {
     return this.firstChildrenPartition?.length || 1;
   }
 
@@ -171,7 +168,7 @@ export default class QuanticResultChildren extends LightningElement {
     }
     return (
       this.allFoldedResultsLoadedButNoMoreResults ||
-      (!this.areMoreResultsAvailable && !this.areAllFoldedResultsLoaded)
+      (!this.areMoreResultsAvailable && !this.areAllChildResultsLoaded)
     );
   }
 
