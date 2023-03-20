@@ -29,9 +29,11 @@ describe('url helper', () => {
 
   it('return the correct #analyticsUrl()', () => {
     allValidPlatformCombination().forEach((expectation) => {
-      expect(analyticsUrl(expectation)).toEqual(
-        expectation.analytics.split('/rest')[0]
-      );
+      if (!expectation.multiRegionSubDomain) {
+        expect(analyticsUrl(expectation)).toEqual(
+          expectation.analytics.split('/rest')[0]
+        );
+      }
     });
   });
 

@@ -128,7 +128,7 @@ describe('engine', () => {
         expectation: () =>
           expect(engine.logger.warn).toHaveBeenCalledWith(
             expect.stringContaining(
-              'The `useOrganizationEndpoints` options was not explicitely set on Headless engine configuration'
+              'The `useOrganizationEndpoints` options was not explicitly set in the Headless engine configuration'
             )
           ),
       },
@@ -153,7 +153,7 @@ describe('engine', () => {
         expectation: () =>
           expect(engine.logger.warn).toHaveBeenCalledWith(
             expect.stringContaining(
-              'The `useOrganizationEndpoints` (true) option cannot be set at the same time as `platformUrl`'
+              'The `useOrganizationEndpoints` (true) option cannot be set to `true` at the same time as `platformUrl`'
             )
           ),
       },

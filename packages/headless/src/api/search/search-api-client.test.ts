@@ -24,11 +24,7 @@ import {createMockRecommendationState} from '../../test/mock-recommendation-stat
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {createMockState} from '../../test/mock-state';
-import {
-  getOrganizationEnpoints,
-  PlatformClient,
-  PlatformClientCallOptions,
-} from '../platform-client';
+import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
 import {
   isErrorResponse,
@@ -43,6 +39,7 @@ import {QuestionsAnswers} from './search/question-answering';
 import {SearchResponseSuccess} from './search/search-response';
 
 jest.mock('../platform-client');
+
 describe('search api client', () => {
   const logger = pino({level: 'silent'});
   let searchAPIClient: SearchAPIClient;
@@ -718,20 +715,20 @@ describe('search api client', () => {
     });
   });
 
-  describe('with custom DNS', () => {
+  describe('with useOrganizationEndpoints', () => {
     beforeEach(() => {
       buildSearchAPIClient({useOrganizationEndpoints: true});
     });
 
     it('should not append organization id in query string parameter', async () => {
       state.configuration.search.apiBaseUrl =
-        getOrganizationEnpoints('myorg').search;
+        'https://myorg.cloud.coveo.com/rest/search/v2';
       const req = (await buildSearchRequest(state)).request;
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
       const expectedRequest: Partial<PlatformClientCallOptions> = {
-        url: getOrganizationEnpoints('myorg').search,
+        url: 'https://myorg.cloud.coveo.com/rest/search/v2',
       };
 
       expect(request).toMatchObject(expect.objectContaining(expectedRequest));

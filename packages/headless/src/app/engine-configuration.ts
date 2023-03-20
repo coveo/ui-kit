@@ -11,12 +11,6 @@ import {
 import {PreprocessRequest} from '../api/preprocess-request';
 import {requiredNonEmptyString} from '../utils/validate-payload';
 
-export interface Endpoints {
-  platform: string;
-  search: string;
-  aalytics: string;
-}
-
 /**
  * The global headless engine configuration options.
  */
@@ -46,8 +40,6 @@ export interface EngineConfiguration {
    * The platformUrl() helper method can be useful to know what url is available.
    *
    * Should not be used while `useOrganizationEndpoints` option is set to true. In such cases, `useOrganizationEndpoints` is ignored.
-   *
-   * @deprecated
    */
   platformUrl?: string;
   /**
@@ -65,7 +57,6 @@ export interface EngineConfiguration {
    * We recommend setting this to `true` for most implementations, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
    *
    * Cannot be set to `true` while the `platformUrl` is populated. In such cases, `useOrganizationEndpoints` is ignored.
-   *
    */
   useOrganizationEndpoints?: boolean;
 }
