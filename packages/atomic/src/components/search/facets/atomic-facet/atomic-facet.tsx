@@ -11,6 +11,7 @@ import {
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
+  AriaLiveRegion,
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
@@ -26,6 +27,7 @@ import {
   parseDependsOn,
 } from '../../../common/facets/facet-common';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -193,6 +195,9 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
+  @AriaLiveRegion('facet-search')
+  protected facetSearchAriaMessage!: string;
+
   public initialize() {
     const options: FacetOptions = {
       facetId: this.facetId,
@@ -208,6 +213,12 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     };
 
     this.facet = buildFacet(this.bindings.engine, {options});
+    announceFacetSearchResultsWithAriaLive(
+      this.facet,
+      this.label,
+      (msg) => (this.facetSearchAriaMessage = msg),
+      this.bindings.i18n
+    );
     this.facetId = this.facet.state.facetId;
 
     this.facetCommon = new FacetCommon({
