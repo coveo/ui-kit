@@ -661,6 +661,7 @@ export namespace Components {
         "withDatePicker": boolean;
     }
     interface AtomicIpxBody {
+        "displayFooterSlot": boolean;
         "isOpen": boolean;
     }
     interface AtomicIpxButton {
@@ -3321,6 +3322,7 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface AtomicIpxBody {
+        "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
     }
