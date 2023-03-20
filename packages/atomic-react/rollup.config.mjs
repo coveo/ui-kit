@@ -1,31 +1,46 @@
-import typescript from '@rollup/plugin-typescript';
 import commonjs from '@rollup/plugin-commonjs';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
+import typescript from '@rollup/plugin-typescript';
+import {defineConfig} from 'rollup';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 import {terser} from 'rollup-plugin-terser';
 
+/** @type {import("rollup").GlobalsOption} */
+const globals = {
+  react: 'React',
+  'react-dom': 'ReactDOM',
+  'react-dom/client': 'ReactDOM',
+  'react-dom/server': 'ReactDOMServer',
+  '@coveo/atomic': 'CoveoAtomic',
+  '@coveo/headless': 'CoveoHeadless',
+};
+
+/** @type {import('rollup').ExternalOption} */
+const commonExternal = [
+  'react',
+  'react-dom',
+  'react-dom/client',
+  'react-dom/server',
+  '@coveo/atomic',
+  '@coveo/headless',
+];
+
+/** @returns {import('rollup').OutputOptions} */
 const outputIIFE = ({minify}) => ({
   file: `dist/iife/atomic-react${minify ? '.min' : ''}.js`,
   format: 'iife',
   name: 'CoveoAtomicReact',
-  globals: {
-    react: 'React',
-    'react-dom': 'ReactDOM',
-    '@coveo/atomic': 'CoveoAtomic',
-  },
+  globals,
   plugins: minify ? [terser()] : [],
 });
 
+/** @returns {import('rollup').OutputOptions} */
 const outputIIFERecs = ({minify}) => ({
   file: `dist/iife/atomic-react/recommendation${minify ? '.min' : ''}.js`,
   format: 'iife',
   name: 'CoveoAtomicReactRecommendation',
-  globals: {
-    react: 'React',
-    'react-dom': 'ReactDOM',
-    '@coveo/atomic': 'CoveoAtomic',
-  },
+  globals,
   plugins: minify ? [terser()] : [],
 });
 
@@ -45,9 +60,7 @@ const plugins = [
   }),
 ];
 
-const commonExternal = ['react', 'react-dom', '@coveo/atomic'];
-
-export default [
+export default defineConfig([
   {
     input: 'src/index.ts',
     output: [outputIIFE({minify: true}), outputIIFE({minify: false})],
@@ -60,4 +73,4 @@ export default [
     external: commonExternal,
     plugins,
   },
-];
+]);

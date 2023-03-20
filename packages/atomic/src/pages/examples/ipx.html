@@ -137,24 +137,16 @@
         inset: unset;
       }
 
-      atomic-search-interface:not(.atomic-search-interface-search-executed)
-        > atomic-ipx-modal
+      :is(atomic-search-interface:not(.atomic-search-interface-search-executed), atomic-search-interface:not(.atomic-search-interface-search-executed))
+        > :is(atomic-ipx-modal, atomic-ipx-embedded)
         > div[slot='body']
-        > atomic-layout-section,
-      atomic-search-interface:not(.atomic-search-interface-search-executed)
-        > atomic-ipx-embedded
-        > div[slot='body']
-        > atomic-layout-section {
+        > atomic-layout-section
+        > :is(atomic-result-list, atomic-query-summary) {
         display: none;
       }
 
       atomic-search-interface.atomic-search-interface-search-executed
-        > atomic-ipx-modal
-        > div[slot='body']
-        > atomic-recs-interface
-        > atomic-recs-list,
-      atomic-search-interface.atomic-search-interface-search-executed
-        > atomic-ipx-embedded
+        > :is(atomic-ipx-modal, atomic-ipx-embedded)
         > div[slot='body']
         > atomic-recs-interface
         > atomic-recs-list {
@@ -371,6 +363,7 @@
                 </template>
               </atomic-recs-result-template>
             </atomic-recs-list>
+            <atomic-recs-error></atomic-recs-error>
           </atomic-recs-interface>
         </div>
         <div class="footer-slot" slot="footer">

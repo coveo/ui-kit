@@ -31,6 +31,11 @@ export class AtomicFocusTrap {
    */
   @Prop() shouldHideSelf = true;
 
+  /**
+   * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
+   */
+  @Prop() scope = document.body;
+
   private readonly hiddenElements: Element[] = [];
 
   hide(element: Element) {
@@ -71,7 +76,7 @@ export class AtomicFocusTrap {
       }
       this.hide(sibling);
     });
-    if (parent !== document.body) {
+    if (parent !== this.scope) {
       this.hideSiblingsRecursively(parent);
     }
   }
@@ -118,13 +123,23 @@ export class AtomicFocusTrap {
 
   @Listen('focusin', {target: 'document'})
   onFocusChanged(e: FocusEvent) {
+    const elementIsPartOfHost = (focusedElement: Element | ShadowRoot) =>
+      isAncestorOf(this.host, focusedElement);
+
+    const elementIsPartOfScope = (focusedElement: Element | ShadowRoot) =>
+      isAncestorOf(this.scope, focusedElement);
+
     if (!e.target || !this.active) {
       return;
     }
 
     const focusedElement = getFocusedElement();
 
-    if (focusedElement && isAncestorOf(this.host, focusedElement)) {
+    if (
+      focusedElement &&
+      (elementIsPartOfHost(focusedElement) ||
+        !elementIsPartOfScope(focusedElement))
+    ) {
       return;
     }
 

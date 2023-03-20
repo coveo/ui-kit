@@ -1,6 +1,10 @@
-import {api, LightningElement} from 'lwc';
-
+import LOCALE from '@salesforce/i18n/locale';
 import inLabel from '@salesforce/label/c.quantic_InLabel';
+import inclusionFilter from '@salesforce/label/c.quantic_InclusionFilter';
+import inclusionFilter_plural from '@salesforce/label/c.quantic_InclusionFilter_plural';
+import inclusionFilter_zero from '@salesforce/label/c.quantic_InclusionFilter_zero';
+import {I18nUtils} from 'c/quanticUtils';
+import {api, LightningElement} from 'lwc';
 
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 
@@ -40,6 +44,14 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    */
   @api nonActiveParent = false;
   /**
+   * A function used to format the displayed value.
+   * @api
+   * @type {Function}
+   * @defaultValue `undefined`
+   */
+  @api formattingFunction;
+
+  /**
    * A function used to set focus to the value.
    * @api
    * @type {VoidFunction}
@@ -54,6 +66,9 @@ export default class QuanticCategoryFacetValue extends LightningElement {
 
   labels = {
     inLabel,
+    inclusionFilter,
+    inclusionFilter_plural,
+    inclusionFilter_zero,
   };
 
   get categoryFacetLiClass() {
@@ -61,11 +76,23 @@ export default class QuanticCategoryFacetValue extends LightningElement {
   }
 
   get facetValue() {
-    return this.item.value;
+    return this.formattingFunction ? this.formattingFunction(this.item) : this.item.value;
+  }
+
+  get numberOfResults() {
+    return new Intl.NumberFormat(LOCALE).format(this.item.numberOfResults);
   }
 
   get ariaLabelValue() {
-    return `Inclusion filter on ${this.facetValue}`;
+    const labelName = I18nUtils.getLabelNameWithCount(
+      'inclusionFilter',
+      this.numberOfResults
+    );
+    return I18nUtils.format(
+      this.labels[labelName],
+      this.facetValue,
+      this.numberOfResults
+    );
   }
 
   get isPressed() {

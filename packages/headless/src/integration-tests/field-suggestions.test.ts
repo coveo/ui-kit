@@ -198,9 +198,9 @@ describe('field suggestions', () => {
     });
 
     it('can update captions', async () => {
-      const rawValue = 'pdf';
-      const displayValue = 'Portable Document Format';
-      const query = 'doc';
+      const rawValue = 'lithiumboard';
+      const displayValue = 'Message board';
+      const query = 'mess';
       fieldSuggestions.updateCaptions({[rawValue]: displayValue});
       await waitForNextStateChange(fieldSuggestions, {
         action: () => fieldSuggestions.updateText(query),

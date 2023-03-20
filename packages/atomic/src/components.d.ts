@@ -253,6 +253,10 @@ export namespace Components {
          */
         "container"?: HTMLElement;
         /**
+          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
+         */
+        "scope": HTMLElement;
+        /**
           * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
          */
         "shouldHideSelf": boolean;
@@ -689,7 +693,6 @@ export namespace Components {
          */
         "container"?: HTMLElement;
         "isOpen": boolean;
-        "noFocusTrap": boolean;
         "source"?: HTMLElement;
     }
     interface AtomicIpxRefineModal {
@@ -756,7 +759,7 @@ export namespace Components {
         "container"?: HTMLElement;
         "fullscreen": boolean;
         "isOpen": boolean;
-        "noFocusTrap": boolean;
+        "scope"?: HTMLElement;
         "source"?: HTMLElement;
     }
     interface AtomicNoResults {
@@ -977,6 +980,8 @@ export namespace Components {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals": number;
+    }
+    interface AtomicRecsError {
     }
     interface AtomicRecsInterface {
         /**
@@ -1282,7 +1287,7 @@ export namespace Components {
     }
     interface AtomicResultLink {
         /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
     }
@@ -2221,6 +2226,12 @@ declare global {
         prototype: HTMLAtomicRatingRangeFacetElement;
         new (): HTMLAtomicRatingRangeFacetElement;
     };
+    interface HTMLAtomicRecsErrorElement extends Components.AtomicRecsError, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsErrorElement: {
+        prototype: HTMLAtomicRecsErrorElement;
+        new (): HTMLAtomicRecsErrorElement;
+    };
     interface HTMLAtomicRecsInterfaceElement extends Components.AtomicRecsInterface, HTMLStencilElement {
     }
     var HTMLAtomicRecsInterfaceElement: {
@@ -2634,6 +2645,7 @@ declare global {
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
+        "atomic-recs-error": HTMLAtomicRecsErrorElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
@@ -2920,6 +2932,10 @@ declare namespace LocalJSX {
           * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
          */
         "container"?: HTMLElement;
+        /**
+          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
+         */
+        "scope"?: HTMLElement;
         /**
           * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
          */
@@ -3335,7 +3351,6 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         "isOpen"?: boolean;
-        "noFocusTrap"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
         "source"?: HTMLElement;
     }
@@ -3403,8 +3418,8 @@ declare namespace LocalJSX {
         "container"?: HTMLElement;
         "fullscreen"?: boolean;
         "isOpen"?: boolean;
-        "noFocusTrap"?: boolean;
         "onAnimationEnded"?: (event: AtomicModalCustomEvent<never>) => void;
+        "scope"?: HTMLElement;
         "source"?: HTMLElement;
     }
     interface AtomicNoResults {
@@ -3627,6 +3642,8 @@ declare namespace LocalJSX {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
+    }
+    interface AtomicRecsError {
     }
     interface AtomicRecsInterface {
         /**
@@ -3900,7 +3917,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultLink {
         /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
     }
@@ -4445,6 +4462,7 @@ declare namespace LocalJSX {
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
+        "atomic-recs-error": AtomicRecsError;
         "atomic-recs-interface": AtomicRecsInterface;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
@@ -4573,6 +4591,7 @@ declare module "@stencil/core" {
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
+            "atomic-recs-error": LocalJSX.AtomicRecsError & JSXBase.HTMLAttributes<HTMLAtomicRecsErrorElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
             "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
             "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;

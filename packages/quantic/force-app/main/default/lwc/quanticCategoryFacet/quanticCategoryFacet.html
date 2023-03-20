@@ -50,6 +50,7 @@
                   onselectvalue={onSelectValue}
                   item={v}
                   non-active-parent="true"
+                  formatting-function={remoteGetValueCaption}
                 ></c-quantic-category-facet-value>
               </li>
             </template>
@@ -61,7 +62,7 @@
                   aria-pressed="true"
                   tabindex="0"
                 >
-                  <span class="slds-truncate parent-text__bold" title={activeParent.value}>{activeParent.value}</span>
+                  <span class="slds-truncate parent-text__bold" title={activeParentFormattedValue}>{activeParentFormattedValue}</span>
                   <span class="facet__number-of-results parent-text__bold slds-var-m-left_xx-small">({activeParent.numberOfResults})</span>
                 </div>
               </li>
@@ -72,7 +73,11 @@
                 <ul class="slds-size_1-of-1">
                   <template for:each={values} for:item="v">
                     <li class="facet__value slds-var-m-left_large slds-grid" key={v.value}>
-                      <c-quantic-category-facet-value onselectvalue={onSelectValue} item={v} active-parent={activeParent}>
+                      <c-quantic-category-facet-value
+                        item={v}
+                        active-parent={activeParent}
+                        formatting-function={remoteGetValueCaption}
+                        onselectvalue={onSelectValue}>
                       </c-quantic-category-facet-value>
                     </li>
                   </template>
@@ -83,7 +88,12 @@
           <template if:true={isFacetSearchActive}>
             <template if:true={hasSearchResults}>
               <template for:each={facetSearchResults} for:item="result">
-                <c-quantic-category-facet-value onselectvalue={onSelectValue} key={result.index} item={result} is-search-result="true">
+                <c-quantic-category-facet-value
+                  key={result.index}
+                  item={result}
+                  is-search-result="true"
+                  formatting-function={remoteGetValueCaption}
+                  onselectvalue={onSelectValue}>
                 </c-quantic-category-facet-value>
               </template>
             </template>
@@ -118,4 +128,5 @@
       </template>
     </c-quantic-card-container>
   </template>
+  <slot name="captions"></slot>
 </template>

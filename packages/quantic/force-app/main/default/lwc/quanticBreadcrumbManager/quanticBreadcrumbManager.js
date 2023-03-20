@@ -129,14 +129,17 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   }
 
   formatCategoryBreadcrumbValue(breadcrumb) {
+    const data = getFromStore(this.engineId, Store.facetTypes.CATEGORYFACETS);
+    const format = data[breadcrumb.field]?.format ?? ((item) => item.value);
+
     if (breadcrumb.path.length <= 3) {
-      return breadcrumb.path.map((breadcrumbValue) => breadcrumbValue.value);
+      return breadcrumb.path.map((breadcrumbValue) => format(breadcrumbValue));
     }
     const collapsed = '...';
-    const firstBreadcrumbValue = breadcrumb.path[0].value;
+    const firstBreadcrumbValue = format(breadcrumb.path[0]);
     const lastTwoBreadcrumbsValues = breadcrumb.path
       .slice(-2)
-      .map((breadcrumbValue) => breadcrumbValue.value);
+      .map((breadcrumbValue) => format(breadcrumbValue));
     return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
   }
 
@@ -184,6 +187,10 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     return {
       ...breadcrumb,
       label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
+      values: breadcrumb.values.map((item) => ({
+        ...item,
+        formattedValue: data[breadcrumb.field]?.format(item.value),
+      })),
     };
   }
 

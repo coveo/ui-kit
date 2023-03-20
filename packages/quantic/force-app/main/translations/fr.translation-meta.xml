@@ -560,4 +560,16 @@
       <label>les gens demandent aussi</label>
       <name>quantic_PeopleAlsoAsk</name>
     </customLabels>
+    <customLabels>
+      <label>Filtre d'inclusion sur {{0}}; {{1}} résultat</label>
+      <name>quantic_InclusionFilter</name>
+    </customLabels>
+    <customLabels>
+      <label>Filtre d'inclusion sur {{0}}; {{1}} résultats</label>
+      <name>quantic_InclusionFilter_plural</name>
+    </customLabels>
+    <customLabels>
+      <label>Filtre d'inclusion sur {{0}}; aucun résultat</label>
+      <name>quantic_InclusionFilter_zero</name>
+    </customLabels>
 </Translations>
