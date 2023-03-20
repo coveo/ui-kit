@@ -194,14 +194,14 @@ export class AtomicBreadbox implements InitializableComponent {
             value: title,
           })}
           onClick={() => {
-            if (this.numberOfBreadcrumbs > 1) {
-              this.breadcrumbRemovedFocus.focusAfterSearch();
-            }
-            this.lastRemovedBreadcrumbIndex = index;
-            breadcrumb.deselect();
             if (isLastBreadcrumb) {
               this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+            } else if (this.numberOfBreadcrumbs > 1) {
+              this.breadcrumbRemovedFocus.focusAfterSearch();
             }
+
+            this.lastRemovedBreadcrumbIndex = index;
+            breadcrumb.deselect();
           }}
           ref={(ref) => {
             if (this.lastRemovedBreadcrumbIndex === index) {
