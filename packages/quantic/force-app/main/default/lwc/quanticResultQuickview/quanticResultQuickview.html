@@ -81,7 +81,7 @@
             </div>
           </div>
         </header>
-        <template if:true={isLoading}>
+        <!-- <template if:true={isLoading}>
           <div
             onclick={stopPropagation}
             class="quickview__spinner-container slds-modal__content slds-p-around_large slds-is-relative"
@@ -91,23 +91,16 @@
               size="large"
             ></lightning-spinner>
           </div>
-        </template>
-        <template if:true={isYoutube}>
-          <c-quantic-quickview-iframe
-            result={result}
-            engine-id={engineId}
-            onload={onIframeLoaded}
-          ></c-quantic-quickview-iframe>
-        </template>
-        <template if:false={isYoutube}>
-          <iframe
-            id="quickview__content-container"
-            class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap"
-            src={contentURL}
-            height="100%"
-            onload={onIframeLoaded}
-          ></iframe>
-        </template>
+        </template> -->
+        <c-quantic-quickview-content
+          id="quickview__content-container"
+          class="quickview__content-container slds-modal__content slds-wrap"
+          engine-id={engineId}
+          result={result}
+          height="100%"
+          is-loading={isLoading}
+        ></c-quantic-quickview-content>
+
         <template if:false={isLoading}>
           <footer
             onclick={stopPropagation}

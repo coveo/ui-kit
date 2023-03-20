@@ -1,0 +1,15 @@
+<template>
+  <div class="iframe-wrapper">
+    <iframe
+    id="quickview__content-iframe"
+    class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap"
+    height="100%"
+    width="100%"
+    allowfullscreen
+    referrerpolicy="same-origin"
+    onload={handleIframeLoaded}
+    sandbox="allow-same-origin allow-scripts allow-popups allow-top-navigation allow-top-navigation-by-user-activation"
+    src={youtubeURL}
+    ></iframe>
+  </div>
+</template>

@@ -3,6 +3,11 @@
 .quickview__content-container {
   overflow: auto;
   border: none;
+  display: flex;
+}
+.slds-modal__content {
+  height: 90%;
+  /* width: 85%; */
 }
 
 .quickview__result-title {
