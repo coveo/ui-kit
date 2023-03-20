@@ -19,7 +19,6 @@
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "lodash": "4.17.21",
-    "@coveo/atomic": "file://../../packages/atomic",
     "typescript": "4.6.4"
   },
   "scripts": {

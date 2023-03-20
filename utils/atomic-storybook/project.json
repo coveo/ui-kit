@@ -1,4 +1,5 @@
 {
+  "implicitDependencies": ["atomic"],
   "targets": {
     "install:isolated": {
       "dependsOn": [],
