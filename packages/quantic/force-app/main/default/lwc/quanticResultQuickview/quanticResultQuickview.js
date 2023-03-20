@@ -2,14 +2,10 @@ import close from '@salesforce/label/c.quantic_Close';
 import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
 import openFileForPreview from '@salesforce/label/c.quantic_OpenFileForPreview';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
-import {
-  getHeadlessBundle,
-  getHeadlessEnginePromise,
-  HeadlessBundleNames,
-  isHeadlessBundle,
-} from 'c/quanticHeadlessLoader';
-import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
-import {LightningElement, api, track} from 'lwc';
+import { getHeadlessBundle, getHeadlessEnginePromise, HeadlessBundleNames, isHeadlessBundle } from 'c/quanticHeadlessLoader';
+import { I18nUtils, getLastFocusableElement } from 'c/quanticUtils';
+import { LightningElement, api, track } from 'lwc';
+
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -79,6 +75,12 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `undefined`
    */
   @api tooltip;
+  /**
+   * contentUrl.
+   * @api
+   * @type {String}
+   */
+  @api contentUrl;
 
   /** @type {QuickviewState} */
   @track state;
@@ -216,6 +218,14 @@ export default class QuanticResultQuickview extends LightningElement {
         slotContent.dataset.id = this.result.uniqueId;
       }
     });
+  }
+
+  get contentURL() {
+    return this.state.contentURL?.includes(
+      encodeURIComponent(this.result.uniqueId)
+    )
+      ? this.state.contentURL
+      : undefined;
   }
 
   get isLoading() {

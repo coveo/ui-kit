@@ -6,6 +6,7 @@ import defaultTemplate from './quanticQuickviewDefault.html';
 // @ts-ignore
 import youtubeTemplate from './quanticQuickviewYoutube.html';
 
+
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -30,9 +31,24 @@ export default class QuanticQuickviewContent extends LightningElement {
    * @type {Boolean}
    */
   @api isLoading;
+  /**
+   * contentUrl.
+   * @api
+   * @type {String}
+   */
+  @api contentUrl;
 
   /** @type {QuickviewState} */
   @track state;
+
+  /** @type {Quickview} */
+  quickview;
+  /** @type {Function} */
+  unsubscribe;
+  /** @type {AnyHeadless} */
+  headless;
+  /** @type {boolean} */
+  _isLoading = false;
 
   connectedCallback() {
     getHeadlessEnginePromise(this.engineId)
@@ -40,7 +56,7 @@ export default class QuanticQuickviewContent extends LightningElement {
         this.initialize(engine);
       })
       .catch((error) => {
-        console.error(error.message);
+        console.error('patate' + error.message);
       });
   }
 
@@ -58,12 +74,8 @@ export default class QuanticQuickviewContent extends LightningElement {
     );
   };
 
-  get contentURL() {
-    return this.state.contentURL?.includes(
-      encodeURIComponent(this.result.uniqueId)
-    )
-      ? this.state.contentURL
-      : undefined;
+  get contentURI() {
+    return this.contentUrl;
   }
 
   get youtubeURL() {
