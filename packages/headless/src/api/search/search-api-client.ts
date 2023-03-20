@@ -61,7 +61,7 @@ export interface SearchAPIClientOptions extends HtmlAPIClientOptions {
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
-  useCustomDNS: boolean;
+  useOrganizationEndpoints: boolean;
 }
 
 export type SearchAPIClientResponse<T> =
@@ -80,7 +80,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
         'POST',
         'application/json',
         '/plan',
-        this.options.useCustomDNS
+        this.options.useOrganizationEndpoints
       ),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'plan'},
@@ -111,7 +111,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
         'POST',
         'application/json',
         '/querySuggest',
-        this.options.useCustomDNS
+        this.options.useOrganizationEndpoints
       ),
       requestMetadata: {method: 'querySuggest'},
       requestParams: pickNonBaseParams(req),
@@ -156,7 +156,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
         'POST',
         'application/json',
         '',
-        this.options.useCustomDNS
+        this.options.useOrganizationEndpoints
       ),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'search', origin: options?.origin},
@@ -197,7 +197,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
         'POST',
         'application/json',
         '/facet',
-        this.options.useCustomDNS
+        this.options.useOrganizationEndpoints
       ),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'facetSearch'},
@@ -224,7 +224,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
         'POST',
         'application/json',
         '',
-        this.options.useCustomDNS
+        this.options.useOrganizationEndpoints
       ),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'recommendations'},
@@ -257,7 +257,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
         'POST',
         'application/json',
         '',
-        this.options.useCustomDNS
+        this.options.useOrganizationEndpoints
       ),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'productRecommendations'},
@@ -286,7 +286,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
         'GET',
         'application/json',
         '/fields',
-        this.options.useCustomDNS
+        this.options.useOrganizationEndpoints
       ),
       requestParams: {},
       requestMetadata: {method: 'fieldDescriptions'},

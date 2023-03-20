@@ -116,54 +116,54 @@ describe('engine', () => {
     expect(stateListener).not.toHaveBeenCalled();
   });
 
-  it('should correctly log warnings when dealing with the useCustomDNS and platformUrl option', () => {
+  it('should correctly log warnings when dealing with the useOrganizationEndpoints and platformUrl option', () => {
     const testCases: Array<{
-      useCustomDNS: boolean | undefined;
+      useOrganizationEndpoints: boolean | undefined;
       platformUrl: string | undefined;
       expectation: () => void;
     }> = [
       {
-        useCustomDNS: undefined,
+        useOrganizationEndpoints: undefined,
         platformUrl: undefined,
         expectation: () =>
           expect(engine.logger.warn).toHaveBeenCalledWith(
             expect.stringContaining(
-              'The `useCustomDNS` options was not explicitely set on Headless engine configuration'
+              'The `useOrganizationEndpoints` options was not explicitely set on Headless engine configuration'
             )
           ),
       },
       {
-        useCustomDNS: true,
+        useOrganizationEndpoints: true,
         platformUrl: undefined,
         expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
       },
       {
-        useCustomDNS: false,
+        useOrganizationEndpoints: false,
         platformUrl: undefined,
         expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
       },
       {
-        useCustomDNS: undefined,
+        useOrganizationEndpoints: undefined,
         platformUrl: 'https://definitely.not.a.coveo.custom.dns',
         expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
       },
       {
-        useCustomDNS: true,
+        useOrganizationEndpoints: true,
         platformUrl: 'https://definitely.not.a.coveo.custom.dns',
         expectation: () =>
           expect(engine.logger.warn).toHaveBeenCalledWith(
             expect.stringContaining(
-              'The `useCustomDNS` (true) option cannot be set at the same time as `platformUrl`'
+              'The `useOrganizationEndpoints` (true) option cannot be set at the same time as `platformUrl`'
             )
           ),
       },
       {
-        useCustomDNS: false,
+        useOrganizationEndpoints: false,
         platformUrl: 'https://definitely.not.a.coveo.custom.dns',
         expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
       },
       {
-        useCustomDNS: true,
+        useOrganizationEndpoints: true,
         platformUrl: 'https://orgId.org.coveo.com',
         expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
       },

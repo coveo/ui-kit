@@ -88,7 +88,11 @@ export type {
   ResultTemplate,
   ResultTemplateCondition,
 } from './features/result-templates/result-templates';
-export {platformUrl, analyticsUrl, customDNSUrl} from './api/platform-client';
+export {
+  platformUrl,
+  analyticsUrl,
+  getOrganizationEnpoints,
+} from './api/platform-client';
 export type {
   CategoryFacetValueRequest,
   CategoryFacetSortCriterion,

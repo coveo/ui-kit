@@ -11,6 +11,12 @@ import {
 import {PreprocessRequest} from '../api/preprocess-request';
 import {requiredNonEmptyString} from '../utils/validate-payload';
 
+export interface Endpoints {
+  platform: string;
+  search: string;
+  aalytics: string;
+}
+
 /**
  * The global headless engine configuration options.
  */
@@ -38,6 +44,10 @@ export interface EngineConfiguration {
   /**
    * The Plaform URL to use. (e.g., https://platform.cloud.coveo.com)
    * The platformUrl() helper method can be useful to know what url is available.
+   *
+   * Should not be used while `useOrganizationEndpoints` option is set to true. In such cases, `useOrganizationEndpoints` is ignored.
+   *
+   * @deprecated
    */
   platformUrl?: string;
   /**
@@ -50,13 +60,14 @@ export interface EngineConfiguration {
    */
   analytics?: AnalyticsConfiguration;
   /**
-   * Specify that the custom DNS URL scheme should be used to communicate with the Coveo platform.
+   * Whether to use the organization endpoints to communicate with the Coveo platform.
    *
-   * This is a recommended setting for most implementation, as this will simplify the overall configuration of a Coveo deployment in a multi region scenario.
+   * We recommend setting this to `true` for most implementations, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
    *
-   * TODO: Insert Coveo documentation link
+   * Cannot be set to `true` while the `platformUrl` is populated. In such cases, `useOrganizationEndpoints` is ignored.
+   *
    */
-  useCustomDNS?: boolean;
+  useOrganizationEndpoints?: boolean;
 }
 
 /**
@@ -162,6 +173,6 @@ export function getSampleEngineConfiguration(): EngineConfiguration {
     organizationId: 'searchuisamples',
     // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
     accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-    useCustomDNS: true,
+    useOrganizationEndpoints: true,
   };
 }

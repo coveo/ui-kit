@@ -8,7 +8,7 @@ import {
   PlatformClient,
   PlatformClientCallOptions,
   analyticsUrl,
-  customDNSUrl,
+  getOrganizationEnpoints,
 } from './platform-client';
 import {
   NoopPreprocessRequest,
@@ -35,8 +35,8 @@ describe('url helper', () => {
     });
   });
 
-  it('return the correct #customDNSUrl()', () => {
-    expect(customDNSUrl('foo', 'dev')).toEqual(
+  it('return the correct #getOrganizationEnpoints()', () => {
+    expect(getOrganizationEnpoints('foo', 'dev')).toEqual(
       expect.objectContaining({
         platform: 'https://foo.orgdev.coveo.com',
         search: 'https://foo.orgdev.coveo.com/rest/search/v2',
@@ -44,7 +44,7 @@ describe('url helper', () => {
       })
     );
 
-    expect(customDNSUrl('foo', 'stg')).toEqual(
+    expect(getOrganizationEnpoints('foo', 'stg')).toEqual(
       expect.objectContaining({
         platform: 'https://foo.orgstg.coveo.com',
         search: 'https://foo.orgstg.coveo.com/rest/search/v2',
@@ -52,7 +52,7 @@ describe('url helper', () => {
       })
     );
 
-    expect(customDNSUrl('foo', 'prod')).toEqual(
+    expect(getOrganizationEnpoints('foo', 'prod')).toEqual(
       expect.objectContaining({
         platform: 'https://foo.org.coveo.com',
         search: 'https://foo.org.coveo.com/rest/search/v2',
@@ -60,7 +60,7 @@ describe('url helper', () => {
       })
     );
 
-    expect(customDNSUrl('foo', 'hipaa')).toEqual(
+    expect(getOrganizationEnpoints('foo', 'hipaa')).toEqual(
       expect.objectContaining({
         platform: 'https://foo.orghipaa.coveo.com',
         search: 'https://foo.orghipaa.coveo.com/rest/search/v2',

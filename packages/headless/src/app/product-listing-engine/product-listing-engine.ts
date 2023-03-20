@@ -113,9 +113,11 @@ function createSearchAPIClient(
 ) {
   const {search} = configuration;
   return new SearchAPIClient({
-    useCustomDNS: isNullOrUndefined(configuration.useCustomDNS)
+    useOrganizationEndpoints: isNullOrUndefined(
+      configuration.useOrganizationEndpoints
+    )
       ? false
-      : configuration.useCustomDNS,
+      : configuration.useOrganizationEndpoints,
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     postprocessSearchResponseMiddleware:

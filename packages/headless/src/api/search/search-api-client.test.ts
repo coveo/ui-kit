@@ -25,7 +25,7 @@ import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {createMockState} from '../../test/mock-state';
 import {
-  customDNSUrl,
+  getOrganizationEnpoints,
   PlatformClient,
   PlatformClientCallOptions,
 } from '../platform-client';
@@ -720,17 +720,18 @@ describe('search api client', () => {
 
   describe('with custom DNS', () => {
     beforeEach(() => {
-      buildSearchAPIClient({useCustomDNS: true});
+      buildSearchAPIClient({useOrganizationEndpoints: true});
     });
 
     it('should not append organization id in query string parameter', async () => {
-      state.configuration.search.apiBaseUrl = customDNSUrl('myorg').search;
+      state.configuration.search.apiBaseUrl =
+        getOrganizationEnpoints('myorg').search;
       const req = (await buildSearchRequest(state)).request;
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
       const expectedRequest: Partial<PlatformClientCallOptions> = {
-        url: customDNSUrl('myorg').search,
+        url: getOrganizationEnpoints('myorg').search,
       };
 
       expect(request).toMatchObject(expect.objectContaining(expectedRequest));

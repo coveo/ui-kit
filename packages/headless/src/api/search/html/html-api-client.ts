@@ -26,7 +26,7 @@ export interface HtmlAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
   requestMetadata?: RequestMetadata;
-  useCustomDNS: boolean;
+  useOrganizationEndpoints: boolean;
 }
 
 export const buildContentURL = (req: HtmlRequest, path: string) => {
@@ -59,7 +59,7 @@ export const getHtml = async (
       'POST',
       'application/x-www-form-urlencoded',
       '/html',
-      options.useCustomDNS
+      options.useOrganizationEndpoints
     ),
     requestParams: pickNonBaseParams(req),
     requestMetadata: {method: 'html'},

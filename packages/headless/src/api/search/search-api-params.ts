@@ -130,13 +130,13 @@ export const baseSearchRequest = (
   method: HttpMethods,
   contentType: HTTPContentType,
   path: string,
-  useCustomDNS: boolean
+  useOrganizationEndpoints: boolean
 ): Pick<
   PlatformClientCallOptions,
   'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
 > => {
   const url = new URLPath(`${req.url}${path}`);
-  if (!useCustomDNS) {
+  if (!useOrganizationEndpoints) {
     url.addParam('organizationId', req.organizationId);
   }
   if (req.authentication) {

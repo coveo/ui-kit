@@ -122,9 +122,11 @@ function createCaseAssistAPIClient(
   logger: Logger
 ) {
   return new CaseAssistAPIClient({
-    useCustomDNS: isNullOrUndefined(configuration.useCustomDNS)
+    useOrganizationEndpoints: isNullOrUndefined(
+      configuration.useOrganizationEndpoints
+    )
       ? false
-      : configuration.useCustomDNS,
+      : configuration.useOrganizationEndpoints,
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
   });

@@ -128,23 +128,27 @@ function coveoCloudURL<E extends PlatformEnvironment>(
 }
 
 /**
- * Return the unique DNS entry for a given organization identifier.
+ * Returns the unique endpoint(s) for a given organization identifier.
  * @param orgId The organization identifier.
- * @param env Optional. The environment (prod, hipaa, staging, dev) that the organization belongs to. Default to `prod`.
+ * @param env Optional. The environment (prod, hipaa, staging, dev) that the organization belongs to. Defaults to `prod`.
  * @returns
  */
-export function customDNSUrl(orgId: string, env: PlatformEnvironment = 'prod') {
+export function getOrganizationEnpoints(
+  orgId: string,
+  env: PlatformEnvironment = 'prod'
+) {
   const envSuffix = env === 'prod' ? '' : env;
 
   const platform = `https://${orgId}.org${envSuffix}.coveo.com`;
   const analytics = `https://${orgId}.analytics.org${envSuffix}.coveo.com/rest/v15`;
   const search = `${platform}/rest/search/v2`;
+
   return {platform, analytics, search};
 }
 
 /**
- * Return the base Coveo platform URL, based on environment and region.
- * @deprecated Coveo now offers unique DNS for each organization. Consider switching to customDNSUrl utility function instead.
+ * Returns the base Coveo platform URL, based on environment and region.
+ * @deprecated Coveo now offers unique DNS for each organization. Consider switching to getOrganizationEnpoints utility function instead.
  *
  * @param options
  * @returns string
@@ -160,8 +164,8 @@ export function platformUrl<E extends PlatformEnvironment>(
 }
 
 /**
- * Return the Coveo analytics platform URL, based on environment and region.
- * @deprecated Coveo now offers unique DNS for each organization. Consider switching to customDNSUrl utility function instead.
+ * Returns the Coveo analytics platform URL, based on environment and region.
+ * @deprecated Coveo now offers unique DNS for each organization. Consider switching to getOrganizationEnpoints utility function instead.
  *
  * @param options
  * @returns

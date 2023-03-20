@@ -12,6 +12,7 @@ import {
   engineConfigurationDefinitions,
   EngineConfiguration,
   getSampleEngineConfiguration,
+  Endpoints,
 } from '../engine-configuration';
 
 /**
@@ -71,6 +72,7 @@ export interface SearchConfigurationOptions {
    * Allows for augmenting a query-suggest response before the state is updated.
    */
   preprocessQuerySuggestResponseMiddleware?: PostprocessQuerySuggestResponseMiddleware;
+  endpoints?: Endpoints & {search: string};
 }
 
 export const searchEngineConfigurationSchema =

@@ -47,7 +47,7 @@ export const isCoveoPlatformURL = (url: string) =>
     url
   );
 
-export const isCoveoCustomDNSUrl = (
+export const isCoveoOrganizationEndpointUrl = (
   url: string,
   organizationId: string,
   env: PlatformEnvironment = 'prod'

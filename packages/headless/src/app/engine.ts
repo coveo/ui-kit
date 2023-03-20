@@ -10,7 +10,7 @@ import {
   Reducer,
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {customDNSUrl} from '../api/platform-client';
+import {getOrganizationEnpoints} from '../api/platform-client';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -19,7 +19,7 @@ import {
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
 import {SearchParametersState} from '../state/search-app-state';
-import {isCoveoCustomDNSUrl} from '../utils/url-utils';
+import {isCoveoOrganizationEndpointUrl} from '../utils/url-utils';
 import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
 import {EngineConfiguration} from './engine-configuration';
@@ -167,25 +167,25 @@ export function buildEngine<
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {accessToken, organizationId} = options.configuration;
-  let {platformUrl, useCustomDNS} = options.configuration;
+  let {platformUrl, useOrganizationEndpoints} = options.configuration;
 
-  if (shouldWarnAboutCustomDNS(options)) {
-    // @v3 make useCustomDNS true by default.
+  if (shouldWarnAboutOrganizationEndpoints(options)) {
+    // @v3 make useOrganizationEndpoints true by default.
     engine.logger.warn(
-      'The `useCustomDNS` options was not explicitely set on Headless engine configuration. Coveo recommend setting this option to `true`, as it allows a simpler way to interact with your Coveo organization. Read more: TODO INSERT A LINK TO COVEO DOC HERE.'
+      'The `useOrganizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option to `true`, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments.'
     );
-    useCustomDNS = false;
+    useOrganizationEndpoints = false;
   }
 
   if (shouldWarnAboutPlatformURL(options)) {
     engine.logger.warn(
-      `The \`useCustomDNS\` (${options.configuration.useCustomDNS}) option cannot be set at the same time as \`platformUrl\`(${options.configuration.platformUrl}) on Headless engine configuration. Both options are in contradiction. \`useCustomDNS\` will be set to false. Read more: TODO INSERT A LINK TO COVEO DOC HERE.`
+      `The \`useOrganizationEndpoints\` (${options.configuration.useOrganizationEndpoints}) option cannot be set to \`true\` at the same time as \`platformUrl\`(${options.configuration.platformUrl}) is populated in the Headless engine configuration. These options are incompatible. \`useOrganizationEndpoints\` will be set to false.`
     );
-    useCustomDNS = false;
+    useOrganizationEndpoints = false;
   }
 
-  if (useCustomDNS) {
-    platformUrl = customDNSUrl(organizationId).platform;
+  if (useOrganizationEndpoints) {
+    platformUrl = getOrganizationEnpoints(organizationId).platform;
   }
 
   engine.dispatch(
@@ -293,9 +293,11 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   ].concat(options.middlewares || []);
 }
 
-function shouldWarnAboutCustomDNS(options: EngineOptions<ReducersMapObject>) {
+function shouldWarnAboutOrganizationEndpoints(
+  options: EngineOptions<ReducersMapObject>
+) {
   return (
-    isNullOrUndefined(options.configuration.useCustomDNS) &&
+    isNullOrUndefined(options.configuration.useOrganizationEndpoints) &&
     isNullOrUndefined(options.configuration.platformUrl)
   );
 }
@@ -303,13 +305,13 @@ function shouldWarnAboutCustomDNS(options: EngineOptions<ReducersMapObject>) {
 function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
   if (
     isNullOrUndefined(options.configuration.platformUrl) ||
-    isNullOrUndefined(options.configuration.useCustomDNS) ||
-    options.configuration.useCustomDNS === false
+    isNullOrUndefined(options.configuration.useOrganizationEndpoints) ||
+    options.configuration.useOrganizationEndpoints === false
   ) {
     return false;
   }
 
-  return !isCoveoCustomDNSUrl(
+  return !isCoveoOrganizationEndpointUrl(
     options.configuration.platformUrl,
     options.configuration.organizationId
   );
