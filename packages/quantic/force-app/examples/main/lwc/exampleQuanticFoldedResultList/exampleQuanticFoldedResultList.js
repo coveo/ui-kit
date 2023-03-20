@@ -1,4 +1,8 @@
 import {LightningElement, api, track} from 'lwc';
+// @ts-ignore
+import parentTemplate from './resultTemplates/parentTemplate.html';
+// @ts-ignore
+import childTemplate from './resultTemplates/childTemplate.html';
 
 export default class ExampleQuanticFoldedResultList extends LightningElement {
   @api engineId = 'quantic-folded-result-list-engine';
@@ -30,7 +34,7 @@ export default class ExampleQuanticFoldedResultList extends LightningElement {
       attribute: 'childField',
       label: 'Child field',
       description: 'The name of the field that uniquely identifies a result within collection.',
-      defaultValue: 'foldingChild',
+      defaultValue: 'foldingchild',
     },
     {
       attribute: 'numberOfFoldedResults',
@@ -40,6 +44,26 @@ export default class ExampleQuanticFoldedResultList extends LightningElement {
     },
   ];
   expectedEvents = ['registerresulttemplates'];
+
+  handleResultTemplateRegistration(event) {
+    const resultTemplatesManager = event.detail;
+    const isChild = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'quantic__templateId',
+      ['myChildTemplate']
+    );
+  
+    resultTemplatesManager.registerTemplates(
+      {
+        content: childTemplate,
+        conditions: [isChild],
+        priority: 1,
+      },
+      {
+        content: parentTemplate,
+        conditions: [],
+      },
+    );
+  }
 
   handleTryItNow(evt) {
     this.config = evt.detail;
