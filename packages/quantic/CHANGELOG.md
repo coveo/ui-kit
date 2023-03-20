@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.17.1...@coveo/quantic@2.17.2) (2023-03-20)
+
+### Bug Fixes
+
+- **quantic:** invalid inline links disabled in the smart snippet answer ([#2766](https://github.com/coveo/ui-kit/issues/2766)) ([bc06fc7](https://github.com/coveo/ui-kit/commit/bc06fc77bdc7f68ae87218697831f5e6120a3ad5))
+
 ## [2.17.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.17.0...@coveo/quantic@2.17.1) (2023-03-20)
 
 **Note:** Version bump only for package @coveo/quantic
