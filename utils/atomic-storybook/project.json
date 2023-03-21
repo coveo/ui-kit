@@ -1,0 +1,59 @@
+{
+  "implicitDependencies": ["atomic"],
+  "targets": {
+    "install:isolated": {
+      "dependsOn": [],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ../../scripts/bin/install-isolated.mjs",
+        "cwd": "utils/atomic-storybook"
+      }
+    },
+    "validate:storybook": {
+      "dependsOn": ["^build"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx --no-install lit-analyzer ../../packages/atomic/dist/types/components.d.ts ../../packages/atomic/src/components/**/*.stories.tsx",
+        "cwd": "utils/atomic-storybook"
+      }
+    },
+    "build:storybook:assets-list": {
+      "dependsOn": ["^build"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/list-assets.mjs",
+        "cwd": "packages/atomic"
+      }
+    },
+    "build": {
+      "dependsOn": [
+        "^build",
+        "validate:storybook",
+        "build:storybook:assets-list"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx --no-install build-storybook --config-dir ./.storybook --static-dir ../../packages/atomic/dist --output-dir ./storybook-static",
+        "cwd": "utils/atomic-storybook"
+      }
+    },
+    "dev": {
+      "dependsOn": ["^build", "validate:storybook"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx --no-install start-storybook --config-dir ./.storybook --static-dir ../../packages/atomic/dist -p 6006",
+        "cwd": "utils/atomic-storybook"
+      }
+    }
+  }
+}
