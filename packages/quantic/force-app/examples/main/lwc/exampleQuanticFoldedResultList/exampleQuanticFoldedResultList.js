@@ -10,7 +10,7 @@ export default class ExampleQuanticFoldedResultList extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Folded Result List';
-  pageDescription = 'The QuanticFoldedResultList component is responsible for displaying query results by applying one or more result templates.';
+  pageDescription = 'The QuanticFoldedResultList component is responsible for displaying query results by applying one or more result templates. This component can display query results that have a parent-child relationship with any level of nesting.';
   options = [
     {
       attribute: 'fieldsToInclude',
