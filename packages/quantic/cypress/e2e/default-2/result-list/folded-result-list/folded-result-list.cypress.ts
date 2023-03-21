@@ -112,7 +112,7 @@ describe('quantic-folded-result-list', () => {
       });
     });
 
-    describe('when no child result has been found after loading all collections', () => {
+    describe('when no child result has been found after loading all the collection', () => {
       it('hould display the no more related documents messages', () => {
         visitFoldedResultList();
 
