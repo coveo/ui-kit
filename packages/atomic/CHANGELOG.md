@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.20.2...@coveo/atomic@2.21.0) (2023-03-20)
+
+### Bug Fixes
+
+- **atomic:** multiple accessibility fixes ([#2782](https://github.com/coveo/ui-kit/issues/2782)) ([d90d353](https://github.com/coveo/ui-kit/commit/d90d3530a63e46f6e7f2cbf829c1cfa400398de8))
+
+### Features
+
+- recommendations error component ([#2787](https://github.com/coveo/ui-kit/issues/2787)) ([2d88e87](https://github.com/coveo/ui-kit/commit/2d88e8743970a4585fac807986420bc2c90b89ea))
+
 ## [2.20.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.20.1...@coveo/atomic@2.20.2) (2023-03-15)
 
 ### Bug Fixes

@@ -99,7 +99,7 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
     );
 
     return (
-      <Host class={this.getClasses().join(' ')}>
+      <Host class={this.getClasses().join(' ')} part="atomic-ipx-modal">
         <div part="backdrop">
           <atomic-focus-trap
             role="dialog"
