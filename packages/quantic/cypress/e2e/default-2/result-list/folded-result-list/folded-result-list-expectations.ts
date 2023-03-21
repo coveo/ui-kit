@@ -1,7 +1,7 @@
 import {getQueryAlias, InterceptAliases} from '../../../../page-objects/search';
 import {should} from '../../../common-selectors';
 import {EventExpectations} from '../../../event-expectations';
-import {resultListExpectations} from '../result-list-expectations';
+import {ResultListExpectations} from '../result-list-expectations';
 import {
   FoldedResultListSelector,
   FoldedResultListSelectors,
@@ -64,14 +64,14 @@ export function foldedResultListExpectations(
     result: ResultHierarchy
   ) {
     selector
-      .resultLink(level)
+      .resultLinksAtSpecificLevel(level)
       .then((elem) => {
         expect(elem[index].innerText).to.eq(result.title);
       })
       .logDetail('should display the correct result title');
     if (result.children) {
       selector
-        .resultLink(level + 1)
+        .resultLinksAtSpecificLevel(level + 1)
         .then((elem) => {
           expect(elem.length).to.eq(
             result.children?.length,
@@ -155,7 +155,7 @@ export function foldedResultListExpectations(
 }
 
 export const FoldedResultListExpectations = {
-  ...resultListExpectations(FoldedResultListSelectors),
+  ...ResultListExpectations,
   ...foldedResultListExpectations(FoldedResultListSelectors),
   events: {
     ...EventExpectations,

@@ -32,6 +32,7 @@ describe('quantic-folded-result-list', () => {
   const defaultChildField = 'foldingparent';
   const defaultNumberOfFoldedResults = 2;
   const registerResultTemplatesEvent = 'registerresulttemplates';
+  const useCase = 'search';
 
   function visitFoldedResultList(
     options: Partial<FoldedResultListOptions> = {},
@@ -75,7 +76,7 @@ describe('quantic-folded-result-list', () => {
             childField: defaultChildField,
             numberOfFoldedResults: defaultNumberOfFoldedResults,
           },
-          'search'
+          useCase
         );
       });
     });
@@ -173,7 +174,7 @@ describe('quantic-folded-result-list', () => {
           childField: customChildField,
           numberOfFoldedResults: customNumberOfFoldedResults,
         },
-        'search'
+        useCase
       );
     });
   });

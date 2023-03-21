@@ -5,7 +5,7 @@ export const resultlistComponent = 'c-quantic-folded-result-list';
 
 export interface FoldedResultListSelector extends ResultListSelector {
   childResultsToggleButton: () => CypressSelector;
-  resultLink: (level: number) => CypressSelector;
+  resultLinksAtSpecificLevel: (level: number) => CypressSelector;
   noMoreChildrenMessage: () => CypressSelector;
 }
 
@@ -19,7 +19,7 @@ export const FoldedResultListSelectors: FoldedResultListSelector = {
     FoldedResultListSelectors.get().find(
       'c-quantic-result c-quantic-result-link'
     ),
-  resultLink: (level: number) =>
+  resultLinksAtSpecificLevel: (level: number) =>
     FoldedResultListSelectors.get().find(
       `${new Array(level + 1)
         .fill('c-quantic-result')
