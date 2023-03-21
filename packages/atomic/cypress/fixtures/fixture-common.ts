@@ -58,22 +58,22 @@ export function setupIntercept() {
 
   cy.intercept({
     method: 'POST',
-    path: '**/rest/search/v2/querySuggest?*',
+    path: '**/rest/search/v2/querySuggest',
   }).as(RouteAlias.QuerySuggestions.substring(1));
 
   cy.intercept({
     method: 'POST',
-    url: '**/rest/search/v2?*',
+    url: '**/rest/search/v2',
   }).as(RouteAlias.Search.substring(1));
 
   cy.intercept({
     method: 'POST',
-    url: '**/rest/search/v2/html?*',
+    url: '**/rest/search/v2/html',
   }).as(RouteAlias.Quickview.substring(1));
 
   cy.intercept({
     method: 'POST',
-    path: '**/rest/search/v2/facet?*',
+    path: '**/rest/search/v2/facet',
   }).as(RouteAlias.FacetSearch.substring(1));
 
   cy.intercept({
@@ -97,7 +97,7 @@ export function interceptSearchAndReturnError() {
   cy.intercept(
     {
       method: 'POST',
-      url: '**/rest/search/v2?*',
+      url: '**/rest/search/v2',
     },
     (request) =>
       request.reply((response) =>
@@ -119,7 +119,7 @@ export function interceptSearchResponse(
   cy.intercept(
     {
       method: 'POST',
-      url: '**/rest/search/v2?*',
+      url: '**/rest/search/v2',
       times,
     },
     (request) => {

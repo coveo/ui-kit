@@ -24,7 +24,7 @@ import {
 } from './result-list-actions';
 
 const setSourceAndSortCriteria = () => {
-  cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {
+  cy.intercept({method: 'POST', path: '**/rest/search/v2'}, (request) => {
     request.body.aq = '@foldingcollection==("Pyrenomycetes")';
     request.body.sortCriteria = 'inat_sort_id ascending';
   });

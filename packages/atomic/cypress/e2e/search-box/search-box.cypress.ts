@@ -30,7 +30,7 @@ import {searchBoxComponent, SearchBoxSelectors} from './search-box-selectors';
 
 const setSuggestions = (count: number) => () => {
   cy.intercept(
-    {method: 'POST', path: '**/rest/search/v2/querySuggest?*'},
+    {method: 'POST', path: '**/rest/search/v2/querySuggest'},
     (request) => {
       request.reply((response) => {
         const newResponse = response.body;
@@ -383,7 +383,7 @@ describe('Search Box Test Suites', () => {
           new TestFixture()
             .with(() => {
               cy.intercept(
-                {method: 'POST', path: '**/rest/search/v2/querySuggest?*'},
+                {method: 'POST', path: '**/rest/search/v2/querySuggest'},
                 (request) => {
                   request.reply((response) => {
                     const newResponse = response.body;
