@@ -42,9 +42,10 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
 
   @Event() animationEnded!: EventEmitter<never>;
 
+  @State() private hasFooterSlotElements = true;
+
   private focusTrap?: HTMLAtomicFocusTrapElement;
   private currentWatchToggleOpenExecution = 0;
-  private hasFooterSlotElements = true;
 
   @Watch('isOpen')
   async watchToggleOpen(isOpen: boolean) {
