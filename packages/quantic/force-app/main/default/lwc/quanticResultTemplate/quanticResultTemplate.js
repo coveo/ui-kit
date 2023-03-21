@@ -31,7 +31,7 @@ export default class QuanticResultTemplate extends LightningElement {
   @api resultPreviewShouldNotBeAccessible = false;
   
   /**
-   * Indicates whether the result template should have a border bottom.
+   * Indicates whether the bottom border of the result template should be hidden..
    * @api
    * @type {boolean}
    */
