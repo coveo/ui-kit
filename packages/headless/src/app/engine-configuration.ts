@@ -39,7 +39,7 @@ export interface EngineConfiguration {
    * The Plaform URL to use. (e.g., https://platform.cloud.coveo.com)
    * The platformUrl() helper method can be useful to know what url is available.
    *
-   * Should not be used while `useOrganizationEndpoints` option is set to true. In such cases, `useOrganizationEndpoints` is ignored.
+   * Should not be used while the `useOrganizationEndpoints` option is set to `true`. In such cases, `useOrganizationEndpoints` is ignored.
    */
   platformUrl?: string;
   /**
