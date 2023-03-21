@@ -17,7 +17,7 @@ export function injectComponent(
 }
 
 export const searchEndpoint =
-  'https://platform.cloud.coveo.com/rest/search/v2?organizationId=searchuisamples';
+  'https://searchuisamples.org.coveo.com/rest/search/v2';
 
 // TODO: rename to setupPage (typo)
 // TODO: add options object for arguments (with urlHash, wait options)

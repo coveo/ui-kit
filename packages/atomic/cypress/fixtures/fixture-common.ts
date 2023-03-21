@@ -53,7 +53,7 @@ export function stubConsole() {
 export function setupIntercept() {
   cy.intercept({
     method: 'POST',
-    path: '**/rest/ua/v15/analytics/*',
+    path: '**/rest/v15/analytics/*',
   }).as(RouteAlias.UA.substring(1));
 
   cy.intercept({
@@ -155,6 +155,7 @@ export function modifySearchResponses(
 export const sampleConfig = {
   accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
   organizationId: 'searchuisamples',
+  useOrganizationEndpoints: true,
 };
 
 export function configureI18n(
@@ -173,7 +174,7 @@ export function interceptAnalytics() {
   cy.intercept(
     {
       method: 'POST',
-      url: '**/rest/ua/v15/analytics/*',
+      url: '**/rest/v15/analytics/*',
     },
     (request) => AnalyticsTracker.push(request.body as AnyEventRequest)
   );
