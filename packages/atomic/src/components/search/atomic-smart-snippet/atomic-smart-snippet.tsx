@@ -191,6 +191,31 @@ export class AtomicSmartSnippet implements InitializableComponent {
     );
   }
 
+  private renderFooter() {
+    const {source} = this.smartSnippetState;
+
+    return (
+      <footer
+        part="footer"
+        aria-label={this.bindings.i18n.t('smart-snippet-source')}
+      >
+        {source && (
+          <atomic-smart-snippet-source
+            source={source}
+            onSelectSource={() => this.smartSnippet.selectSource()}
+            onBeginDelayedSelectSource={() =>
+              this.smartSnippet.beginDelayedSelectSource()
+            }
+            onCancelPendingSelectSource={() =>
+              this.smartSnippet.cancelPendingSelectSource()
+            }
+          ></atomic-smart-snippet-source>
+        )}
+        {this.renderFeedbackBanner()}
+      </footer>
+    );
+  }
+
   public componentWillUpdate() {
     if (!(this.smartSnippetState.liked || this.smartSnippetState.disliked)) {
       this.feedbackSent = false;
@@ -223,24 +248,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
         >
           {this.renderQuestion()}
           {this.renderContent()}
-          <footer
-            part="footer"
-            aria-label={this.bindings.i18n.t('smart-snippet-source')}
-          >
-            {this.smartSnippetState.source && (
-              <atomic-smart-snippet-source
-                source={this.smartSnippetState.source}
-                onSelectSource={() => this.smartSnippet.selectSource()}
-                onBeginDelayedSelectSource={() =>
-                  this.smartSnippet.beginDelayedSelectSource()
-                }
-                onCancelPendingSelectSource={() =>
-                  this.smartSnippet.cancelPendingSelectSource()
-                }
-              ></atomic-smart-snippet-source>
-            )}
-            {this.renderFeedbackBanner()}
-          </footer>
+          {this.renderFooter()}
         </article>
       </aside>
     );
