@@ -193,6 +193,7 @@ export default class QuanticTabBar extends LightningElement {
       this.container.getBoundingClientRect().right;
     const selectedTabRelativeRightPosition =
       this.selectedTab?.getBoundingClientRect().right;
+
     return this.getTabsFromSlot().filter((element) => {
       const tabPositionedBeforeSelectedTab =
         selectedTabRelativeRightPosition >
