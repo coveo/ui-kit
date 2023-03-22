@@ -81,18 +81,6 @@
             </div>
           </div>
         </header>
-        <template if:true={isLoading}>
-          <div
-            onclick={stopPropagation}
-            class="quickview__spinner-container slds-modal__content slds-p-around_large slds-is-relative"
-          >
-            <lightning-spinner
-              alternative-text="Loading"
-              size="large"
-            ></lightning-spinner>
-          </div>
-        </template>
-
         <c-quantic-quickview-content
           id="quickview__content-container"
           class="quickview__content-container slds-modal__content slds-wrap"
@@ -100,22 +88,7 @@
           result={result}
           content-url={contentURL}
           height="100%"
-          isloading={isLoading}
-          oniframeloaded={handleIframeLoaded}
         ></c-quantic-quickview-content>
-
-        <!-- <iframe id="quickview__content-container"
-          class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap" src={contentURL}
-          height="100%" onload={onIframeLoaded}></iframe> -->
-
-        <template if:false={isLoading}>
-          <footer
-            onclick={stopPropagation}
-            class="slds-modal__footer slds-p-top_none slds-p-bottom_none"
-          >
-            <slot name="footer"></slot>
-          </footer>
-        </template>
       </div>
     </section>
     <div class={backdropClass} onfocus={setFocusToTop} tabindex="0"></div>

@@ -1,11 +1,13 @@
-import { getHeadlessBundle, getHeadlessEnginePromise } from 'c/quanticHeadlessLoader';
-import { ResultUtils } from 'c/quanticUtils';
-import { LightningElement, api, track } from 'lwc';
+import {
+  getHeadlessBundle,
+  getHeadlessEnginePromise,
+} from 'c/quanticHeadlessLoader';
+import {ResultUtils} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import defaultTemplate from './quanticQuickviewDefault.html';
 // @ts-ignore
 import youtubeTemplate from './quanticQuickviewYoutube.html';
-
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -26,17 +28,14 @@ export default class QuanticQuickviewContent extends LightningElement {
    */
   @api result;
   /**
-   * Whether the component is loading.
-   * @api
-   * @type {Boolean}
-   */
-  @api isLoading;
-  /**
    * contentUrl.
    * @api
    * @type {String}
    */
   @api contentUrl;
+
+  /** @type {Boolean} */
+  @track isLoading = true;
 
   /** @type {QuickviewState} */
   @track state;
@@ -47,8 +46,6 @@ export default class QuanticQuickviewContent extends LightningElement {
   unsubscribe;
   /** @type {AnyHeadless} */
   headless;
-  // /** @type {boolean} */
-  // _isLoading = false;
 
   connectedCallback() {
     getHeadlessEnginePromise(this.engineId)
@@ -56,7 +53,7 @@ export default class QuanticQuickviewContent extends LightningElement {
         this.initialize(engine);
       })
       .catch((error) => {
-        console.error('patate' + error.message);
+        console.error(error.message);
       });
   }
 
@@ -84,11 +81,8 @@ export default class QuanticQuickviewContent extends LightningElement {
   }
 
   handleIframeLoaded() {
-    this.dispatchEvent(new CustomEvent('iframeloaded', {
-      detail: {
-        isloading: false,
-      }
-    }));
+    this.isLoading = false;
+    console.log('iframe loaded');
   }
 
   render() {

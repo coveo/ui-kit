@@ -1,12 +1,30 @@
 <template>
   <div class="iframe-wrapper">
-    <iframe
+    <div
+      onclick={stopPropagation}
+      class="quickview__spinner-container slds-is-relative wrapper"
+    >
+      <lightning-spinner
+        if:true={isLoading}
+        alternative-text="Loading"
+        size="large"
+      ></lightning-spinner>
+      <iframe
         id="quickview__content-container"
         class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap"
         src={contentURI}
         height="100%"
         width="100%"
         onload={handleIframeLoaded}
-    ></iframe>
+      ></iframe>
+    </div>
+    <template if:false={isLoading}>
+      <footer
+        onclick={stopPropagation}
+        class="slds-modal__footer slds-p-top_none slds-p-bottom_none"
+      >
+        <slot name="footer"></slot>
+      </footer>
+    </template>
   </div>
 </template>

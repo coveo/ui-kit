@@ -2,10 +2,14 @@ import close from '@salesforce/label/c.quantic_Close';
 import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
 import openFileForPreview from '@salesforce/label/c.quantic_OpenFileForPreview';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
-import { getHeadlessBundle, getHeadlessEnginePromise, HeadlessBundleNames, isHeadlessBundle } from 'c/quanticHeadlessLoader';
-import { I18nUtils, getLastFocusableElement } from 'c/quanticUtils';
-import { LightningElement, api, track } from 'lwc';
-
+import {
+  getHeadlessBundle,
+  getHeadlessEnginePromise,
+  HeadlessBundleNames,
+  isHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
+import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -103,8 +107,6 @@ export default class QuanticResultQuickview extends LightningElement {
   isFirstPreviewRender = true;
   /** @type {string} */
   resultActionOrderClasses;
-  /** @type {boolean} */
-  _isLoading = false;
 
   labels = {
     close,
@@ -173,7 +175,6 @@ export default class QuanticResultQuickview extends LightningElement {
 
   openQuickview() {
     this.isQuickviewOpen = true;
-    this._isLoading = true;
     if (!isHeadlessBundle(this.engineId, HeadlessBundleNames.caseAssist)) {
       this.addRecentResult();
     }
@@ -182,12 +183,15 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   addRecentResult() {
-    getHeadlessEnginePromise(this.engineId).then((/** @type {{ dispatch: (arg0: any) => void; }} */ engine) => {
-      const {pushRecentResult} = this.headless.loadRecentResultsActions(engine);
-      engine.dispatch(
-        pushRecentResult(JSON.parse(JSON.stringify(this.result)))
-      );
-    });
+    getHeadlessEnginePromise(this.engineId).then(
+      (/** @type {{ dispatch: (arg0: any) => void; }} */ engine) => {
+        const {pushRecentResult} =
+          this.headless.loadRecentResultsActions(engine);
+        engine.dispatch(
+          pushRecentResult(JSON.parse(JSON.stringify(this.result)))
+        );
+      }
+    );
   }
 
   closeQuickview() {
@@ -238,10 +242,6 @@ export default class QuanticResultQuickview extends LightningElement {
     )
       ? this.state.contentURL
       : undefined;
-  }
-
-  get isLoading() {
-    return this._isLoading;
   }
 
   get hasNoPreview() {
@@ -331,13 +331,6 @@ export default class QuanticResultQuickview extends LightningElement {
         this.setFocusToHeader();
       }
     }
-  }
-
-  /**
-   * @param {{ detail: { isLoading: boolean; }; }} event
-   */
-  handleIframeLoaded(event) {
-    this._isLoading = event.detail.isLoading;
   }
 
   get lastFocusableElementInFooterSlot() {
