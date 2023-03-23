@@ -40,28 +40,28 @@ export default class QuanticFoldedResultList extends LightningElement {
    * @type {string}
    * @defaultValue `'foldingcollection'`
    */
-  @api collectionField;
+  @api collectionField = 'foldingcollection';
   /**
    * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
    * @api
    * @type {string}
    * @defaultValue `'foldingparent'`
    */
-  @api parentField;
+  @api parentField = 'foldingparent';
   /**
    * The name of the field that uniquely identifies a result within collection.
    * @api
    * @type {string}
    * @defaultValue `'foldingchild'`
    */
-  @api childField;
+  @api childField = 'foldingchild';
   /**
    * The number of child results to fold under the root collection element before expansion.
    * @api
    * @type {number}
    * @defaultValue `2`
    */
-  @api numberOfFoldedResults;
+  @api numberOfFoldedResults = 2;
 
   /** @type {AnyHeadless} */
   headless;
@@ -149,7 +149,10 @@ export default class QuanticFoldedResultList extends LightningElement {
 
   get fields() {
     if (this.fieldsToInclude.trim() === '') return [];
-    return this.fieldsToInclude.split(',').map((field) => field.trim());
+    return this.fieldsToInclude
+      .split(',')
+      .map((field) => field.trim())
+      .filter((field) => field.length > 0);
   }
 
   get collections() {

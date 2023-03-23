@@ -199,15 +199,12 @@ export function mockSearchNoResults(useCase?: string) {
 }
 
 export function mockSearchWithResults(results?: Array<object>) {
+  const defaultResults = [
+    {title: 'Result', uri: 'uri', raw: {uriHash: 'resulthash'}},
+  ];
   cy.intercept(routeMatchers.search, (req) => {
     req.continue((res) => {
-      if (!results) {
-        res.body.results = [
-          {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
-        ];
-      } else {
-        res.body.results = results;
-      }
+      res.body.results = results ?? defaultResults;
       res.body.totalCount = res.body.results.length;
       res.body.totalCountFiltered = res.body.results.length;
       res.send();
