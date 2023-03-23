@@ -8,8 +8,8 @@ import {
   HeadlessBundleNames,
   isHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
-import {LightningElement, api, track} from 'lwc';
+import { I18nUtils, getLastFocusableElement } from 'c/quanticUtils';
+import { LightningElement, api, track } from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -85,12 +85,6 @@ export default class QuanticResultQuickview extends LightningElement {
    * @type {String}
    */
   @api contentUrl;
-  /**
-   * loading state of quickview content.
-   * @api
-   * @type {Boolean}
-   */
-  @api isloading = false;
 
   /** @type {QuickviewState} */
   @track state;
@@ -159,7 +153,7 @@ export default class QuanticResultQuickview extends LightningElement {
       maximumPreviewSize: Number(this.maximumPreviewSize),
       onlyContentURL: true,
     };
-    this.quickview = this.headless.buildQuickview(engine, {options});
+    this.quickview = this.headless.buildQuickview(engine, { options });
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
 
     this.dispatchHasPreview(this.quickview.state.resultHasPreview);
@@ -185,7 +179,7 @@ export default class QuanticResultQuickview extends LightningElement {
   addRecentResult() {
     getHeadlessEnginePromise(this.engineId).then(
       (/** @type {{ dispatch: (arg0: any) => void; }} */ engine) => {
-        const {pushRecentResult} =
+        const { pushRecentResult } =
           this.headless.loadRecentResultsActions(engine);
         engine.dispatch(
           pushRecentResult(JSON.parse(JSON.stringify(this.result)))
@@ -283,9 +277,8 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get buttonContainerClass() {
-    return `slds-is-relative slds-show_inline result-action_container ${
-      this.isResultAction ? 'result-action_white-container' : ''
-    }`;
+    return `slds-is-relative slds-show_inline result-action_container ${this.isResultAction ? 'result-action_white-container' : ''
+      }`;
   }
 
   get buttonAriaLabelValue() {
@@ -362,7 +355,7 @@ export default class QuanticResultQuickview extends LightningElement {
       bubbles: true,
       detail: {
         isOpen,
-        ...(isOpen && {resultId: this.result.uniqueId}),
+        ...(isOpen && { resultId: this.result.uniqueId }),
       },
     });
     this.dispatchEvent(resultPreviewEvent);
