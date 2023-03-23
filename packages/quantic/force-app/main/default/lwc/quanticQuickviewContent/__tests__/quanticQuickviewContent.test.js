@@ -2,32 +2,38 @@
 import {createElement} from 'lwc';
 import QuanticQuickviewContent from '../quanticQuickviewContent';
 
-const selectors = {
-  youtubeTemplateSelector: '.iframe-wrapper__youtube',
-  defaultTemplateSelector: '.iframe-wrapper__default',
-};
-
-const youtubeResult = {
-  uniqueId:
-    '42.54689$https://youtube.com/Channel:UCLD76EfBpKKuBH52RMIdrJw/Video:lZHu8AM5bjY',
-};
-const defaultResult = {
-  uniqueId:
-    '42.38148$https://community.fitbit.com/board:charge/thread:5332832/message:5333023',
-};
 const contentURLMock = 'https://longdogechallenge.com/';
 
-const defaultOptions = {
-  result: defaultResult,
-  contentUrl: contentURLMock,
+const youtubeTestCase = {
+  nameOfTemplate: 'quanticQuickviewYoutube',
+  contentType: 'youtube video',
+  options: {
+    result: {
+      uniqueId:
+        '42.54689$https://youtube.com/Channel:UCLD76EfBpKKuBH52RMIdrJw/Video:lZHu8AM5bjY',
+    },
+    contentUrl: contentURLMock,
+  },
+  selectors: {
+    templateSelector: '.iframe-wrapper__youtube',
+  },
+};
+const defaultTestCase = {
+  nameOfTemplate: 'quanticQuickviewDefault',
+  contentType: 'other than youtube',
+  options: {
+    result: {
+      uniqueId:
+        '42.38148$https://community.fitbit.com/board:charge/thread:5332832/message:5333023',
+    },
+    contentUrl: contentURLMock,
+  },
+  selectors: {
+    templateSelector: '.iframe-wrapper__default',
+  },
 };
 
-const youtubeOptions = {
-  result: youtubeResult,
-  contentUrl: contentURLMock,
-};
-
-function createTestComponent(options = defaultOptions) {
+function createTestComponent(options) {
   const element = createElement('c-quantic-quickview-content', {
     is: QuanticQuickviewContent,
   });
@@ -57,29 +63,18 @@ describe('c-quantic-quickview-content', () => {
     jest.clearAllMocks();
   });
 
-  it('should display the quanticQuickviewYoutube template when the content is a youtube video', async () => {
-    const element = createTestComponent(youtubeOptions);
-    await flushPromises();
+  [youtubeTestCase, defaultTestCase].forEach((testCase) => {
+    it(`should display the ${testCase.nameOfTemplate} template when the content is of type ${testCase.contentType}`, async () => {
+      const element = createTestComponent(testCase.options);
+      await flushPromises();
 
-    document.body.appendChild(element);
+      document.body.appendChild(element);
 
-    const actualYoutubeTemplate = element.shadowRoot.querySelector(
-      selectors.youtubeTemplateSelector
-    );
+      const actualTemplate = element.shadowRoot.querySelector(
+        testCase.selectors.templateSelector
+      );
 
-    expect(actualYoutubeTemplate).not.toBeNull();
-  });
-
-  it('should display the quanticQuickviewDefault template when the content is of type other than youtube', async () => {
-    const element = createTestComponent(defaultOptions);
-    await flushPromises();
-
-    document.body.appendChild(element);
-
-    const actualDefaultTemplate = element.shadowRoot.querySelector(
-      selectors.defaultTemplateSelector
-    );
-
-    expect(actualDefaultTemplate).not.toBeNull();
+      expect(actualTemplate).not.toBeNull();
+    });
   });
 });
