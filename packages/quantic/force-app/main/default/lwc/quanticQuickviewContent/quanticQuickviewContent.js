@@ -1,8 +1,9 @@
-import {LightningElement, api, track} from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 // @ts-ignore
 import defaultTemplate from './quanticQuickviewDefault.html';
 // @ts-ignore
 import youtubeTemplate from './quanticQuickviewYoutube.html';
+
 
 /** @typedef {import("coveo").Result} Result */
 
@@ -16,14 +17,14 @@ export default class QuanticQuickviewContent extends LightningElement {
    */
   @api result;
   /**
-   * contentUrl.
+   * src used to render the iframe when content type is not youtube.
    * @api
    * @type {String}
    */
   @api contentUrl;
 
   /** @type {Boolean} */
-  @track isLoading = true;
+  isLoading = true;
 
   handleIframeLoaded() {
     this.isLoading = false;

@@ -4,9 +4,6 @@
   overflow: auto;
   border: none;
   display: flex;
-}
-
-.slds-modal__content {
   height: 90%;
 }
 

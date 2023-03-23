@@ -1,5 +1,5 @@
 <template>
-  <div class="iframe-wrapper iframe-wrapper__default">
+  <div class="iframe-wrapper iframe-wrapper__default slds-grid slds-grid_vertical">
     <div
       onclick={stopPropagation}
       class="quickview__spinner-container slds-is-relative wrapper"
@@ -13,8 +13,6 @@
         id="quickview__content-iframe"
         class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap"
         src={contentURI}
-        height="100%"
-        width="100%"
         onload={handleIframeLoaded}
       ></iframe>
     </div>

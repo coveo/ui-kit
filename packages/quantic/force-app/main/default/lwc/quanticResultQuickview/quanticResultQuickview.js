@@ -79,12 +79,6 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `undefined`
    */
   @api tooltip;
-  /**
-   * src used to render the iframe when content is not youtube.
-   * @api
-   * @type {String}
-   */
-  @api contentUrl;
 
   /** @type {QuickviewState} */
   @track state;
@@ -111,10 +105,10 @@ export default class QuanticResultQuickview extends LightningElement {
 
   connectedCallback() {
     getHeadlessEnginePromise(this.engineId)
-      .then((/** @type {import("coveo").SearchEngine<any>} */ engine) => {
+      .then((engine) => {
         this.initialize(engine);
       })
-      .catch((/** @type {{ message: any; }} */ error) => {
+      .catch((error) => {
         console.error(error.message);
       });
 
@@ -178,7 +172,7 @@ export default class QuanticResultQuickview extends LightningElement {
 
   addRecentResult() {
     getHeadlessEnginePromise(this.engineId).then(
-      (/** @type {{ dispatch: (arg0: any) => void; }} */ engine) => {
+      (engine) => {
         const { pushRecentResult } =
           this.headless.loadRecentResultsActions(engine);
         engine.dispatch(
@@ -194,16 +188,10 @@ export default class QuanticResultQuickview extends LightningElement {
     this.sendResultPreviewEvent(false);
   }
 
-  /**
-   * @param {{ stopPropagation: () => void; }} evt
-   */
   stopPropagation(evt) {
     evt.stopPropagation();
   }
 
-  /**
-   * @param {boolean} hasPreview
-   */
   dispatchHasPreview(hasPreview) {
     this.dispatchEvent(
       new CustomEvent('haspreview', {
