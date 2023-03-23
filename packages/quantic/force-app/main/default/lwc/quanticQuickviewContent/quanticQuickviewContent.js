@@ -5,9 +5,6 @@ import defaultTemplate from './quanticQuickviewDefault.html';
 import youtubeTemplate from './quanticQuickviewYoutube.html';
 
 /** @typedef {import("coveo").Result} Result */
-/** @typedef {import("coveo").SearchEngine} SearchEngine */
-/** @typedef {import("coveo").Quickview} Quickview */
-/** @typedef {import("coveo").QuickviewState} QuickviewState */
 
 export default class QuanticQuickviewContent extends LightningElement {
   /**
@@ -26,22 +23,12 @@ export default class QuanticQuickviewContent extends LightningElement {
   /** @type {Boolean} */
   @track isLoading = true;
 
-  /** @type {QuickviewState} */
-  @track state;
-
-  /** @type {Quickview} */
-  quickview;
-  /** @type {Function} */
-  unsubscribe;
-  /** @type {AnyHeadless} */
-  headless;
-
   handleIframeLoaded() {
     this.isLoading = false;
   }
 
   render() {
-    if (this.result?.clickUri.includes('watch?v=')) {
+    if (this.result?.uniqueId.includes('https://youtube.com/')) {
       return youtubeTemplate;
     }
     return defaultTemplate;
@@ -52,7 +39,7 @@ export default class QuanticQuickviewContent extends LightningElement {
   }
 
   get youtubeURL() {
-    const videoId = this.result?.clickUri.split('=').pop();
+    const videoId = this.result?.uniqueId.split('Video:').pop();
     return 'https://www.youtube.com/embed/' + videoId;
   }
 }

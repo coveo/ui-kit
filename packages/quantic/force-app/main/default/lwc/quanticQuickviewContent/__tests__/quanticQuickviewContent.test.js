@@ -7,8 +7,14 @@ const selectors = {
   defaultTemplateSelector: '.iframe-wrapper__default',
 };
 
-const youtubeResult = {clickUri: 'https://www.youtube.com/watch?v=jIQ6UV2onyI'};
-const defaultResult = {clickUri: 'https://longdogechallenge.com/'};
+const youtubeResult = {
+  uniqueId:
+    '42.54689$https://youtube.com/Channel:UCLD76EfBpKKuBH52RMIdrJw/Video:lZHu8AM5bjY',
+};
+const defaultResult = {
+  uniqueId:
+    '42.38148$https://community.fitbit.com/board:charge/thread:5332832/message:5333023',
+};
 const contentURLMock = 'https://longdogechallenge.com/';
 
 const defaultOptions = {
@@ -20,6 +26,7 @@ const youtubeOptions = {
   result: youtubeResult,
   contentUrl: contentURLMock,
 };
+
 function createTestComponent(options = defaultOptions) {
   const element = createElement('c-quantic-quickview-content', {
     is: QuanticQuickviewContent,
@@ -50,7 +57,7 @@ describe('c-quantic-quickview-content', () => {
     jest.clearAllMocks();
   });
 
-  it('should display the youtube template when the content is a youtube video', async () => {
+  it('should display the quanticQuickviewYoutube template when the content is a youtube video', async () => {
     const element = createTestComponent(youtubeOptions);
     await flushPromises();
 
@@ -63,7 +70,7 @@ describe('c-quantic-quickview-content', () => {
     expect(actualYoutubeTemplate).not.toBeNull();
   });
 
-  it('should display the default template when the content is any other type than a youtube video', async () => {
+  it('should display the quanticQuickviewDefault template when the content is of type other than youtube', async () => {
     const element = createTestComponent(defaultOptions);
     await flushPromises();
 
