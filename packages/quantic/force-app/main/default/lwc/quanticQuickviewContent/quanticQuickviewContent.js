@@ -1,8 +1,3 @@
-import {
-  getHeadlessBundle,
-  getHeadlessEnginePromise,
-} from 'c/quanticHeadlessLoader';
-import {ResultUtils} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import defaultTemplate from './quanticQuickviewDefault.html';
@@ -15,12 +10,6 @@ import youtubeTemplate from './quanticQuickviewYoutube.html';
 /** @typedef {import("coveo").QuickviewState} QuickviewState */
 
 export default class QuanticQuickviewContent extends LightningElement {
-  /**
-   * The ID of the engine instance the component registers to.
-   * @api
-   * @type {string}
-   */
-  @api engineId;
   /**
    * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
    * @api
@@ -47,29 +36,16 @@ export default class QuanticQuickviewContent extends LightningElement {
   /** @type {AnyHeadless} */
   headless;
 
-  connectedCallback() {
-    getHeadlessEnginePromise(this.engineId)
-      .then((engine) => {
-        this.initialize(engine);
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+  handleIframeLoaded() {
+    this.isLoading = false;
   }
 
-  /**
-   * @param {SearchEngine} engine
-   */
-  initialize = (engine) => {
-    this.headless = getHeadlessBundle(this.engineId);
-    this.engine = engine;
-    ResultUtils.bindClickEventsOnResult(
-      this.engine,
-      this.result,
-      this.template,
-      this.headless.buildInteractiveResult
-    );
-  };
+  render() {
+    if (this.result?.clickUri.includes('watch?v=')) {
+      return youtubeTemplate;
+    }
+    return defaultTemplate;
+  }
 
   get contentURI() {
     return this.contentUrl;
@@ -78,17 +54,5 @@ export default class QuanticQuickviewContent extends LightningElement {
   get youtubeURL() {
     const videoId = this.result?.clickUri.split('=').pop();
     return 'https://www.youtube.com/embed/' + videoId;
-  }
-
-  handleIframeLoaded() {
-    this.isLoading = false;
-    console.log('iframe loaded');
-  }
-
-  render() {
-    if (this.result?.clickUri.includes('watch?v=')) {
-      return youtubeTemplate;
-    }
-    return defaultTemplate;
   }
 }
