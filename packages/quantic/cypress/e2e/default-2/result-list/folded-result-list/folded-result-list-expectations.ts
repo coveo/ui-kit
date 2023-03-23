@@ -75,7 +75,7 @@ export function foldedResultListExpectations(
         .then((elem) => {
           expect(elem.length).to.eq(
             result.children?.length,
-            'incorrect number of children displayed'
+            `incorrect number of children displayed. ${elem.length} was received when ${result.children?.length} was expected.`
           );
         })
         .logDetail('should display the correct number of child results');
