@@ -31,6 +31,13 @@ export default class ExampleQuanticFacetManager extends LightningElement {
         'Define which use case to test. Possible values are: search, insight',
       defaultValue: 'search',
     },
+    {
+      attribute: 'displayFacetValuesAs',
+      label: 'Display Facet Values as',
+      description:
+        'Indicates whether to display the facet values as checkboxes (multiple selection) or links (single selection).',
+      defaultValue: 'link',
+    },
   ];
 
   get notConfigured() {
