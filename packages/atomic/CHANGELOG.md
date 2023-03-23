@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.21.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.21.1...@coveo/atomic@2.21.2) (2023-03-23)
+
+### Bug Fixes
+
+- **atomic:** made smart snippet source title re-render when changed ([#2795](https://github.com/coveo/ui-kit/issues/2795) ([c98c490](https://github.com/coveo/ui-kit/commit/c98c490fbc129e80866d615cabd6c9c6bd445c0e))
+
 ## [2.21.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.21.0...@coveo/atomic@2.21.1) (2023-03-22)
 
 **Note:** Version bump only for package @coveo/atomic
