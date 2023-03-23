@@ -156,22 +156,68 @@ describe('c-quantic-result-children', () => {
     });
   });
 
-  describe('when the child results are being loaded', () => {
-    it('should display the result placeholder', async () => {
+  describe('when there are more child results available in the collection', () => {
+    it('should display the first partition of the child results', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      await clickFoldedResultToggleButton(element, loadAllResultsLabel);
-      element.collection = {
-        ...exampleCollection,
-        isLoadingMoreResults: true,
-      };
-      await flushPromises();
+      expectProperChildResultsDisplay(element, exampleCollection);
+    });
 
-      const placeholder = element.shadowRoot.querySelector(
-        selectors.placeholder
-      );
-      expect(placeholder.numberOfRows).toBe(exampleCollection.children.length);
+    describe('when more child results are expanded or collapsed', () => {
+      describe('when the child results are being loaded', () => {
+        it('should display the result placeholder', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          await clickFoldedResultToggleButton(element, loadAllResultsLabel);
+          element.collection = {
+            ...exampleCollection,
+            isLoadingMoreResults: true,
+          };
+          await flushPromises();
+
+          const placeholder = element.shadowRoot.querySelector(
+            selectors.placeholder
+          );
+          expect(placeholder.numberOfRows).toBe(
+            exampleCollection.children.length
+          );
+        });
+      });
+
+      it('should call the right actions and properly display the child results', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+        const foldedResultToggleButton = element.shadowRoot.querySelector(
+          selectors.toggleButton
+        );
+
+        await clickFoldedResultToggleButton(element, loadAllResultsLabel);
+        expect(functionsMocks.loadCollection).toHaveBeenCalledTimes(1);
+        element.collection = exampleCollectionWithAllResultsLoaded;
+        await flushPromises();
+        expectProperChildResultsDisplay(
+          element,
+          exampleCollectionWithAllResultsLoaded
+        );
+
+        await clickFoldedResultToggleButton(element, collapseResults);
+        expect(functionsMocks.logShowLessFoldedResults).toHaveBeenCalledTimes(
+          1
+        );
+        expectProperChildResultsDisplay(element, exampleCollection);
+
+        await clickFoldedResultToggleButton(element, loadAllResultsLabel);
+        expect(functionsMocks.logShowMoreFoldedResults).toHaveBeenCalledTimes(
+          1
+        );
+        expectProperChildResultsDisplay(
+          element,
+          exampleCollectionWithAllResultsLoaded
+        );
+        expect(foldedResultToggleButton.label).toBe(collapseResults);
+      });
     });
   });
 
@@ -206,50 +252,6 @@ describe('c-quantic-result-children', () => {
         expectProperChildResultsDisplay(element, exampleCollection);
         expect(foldedResultToggleButton).toBeNull();
         expect(noMoreChildrenMessage).not.toBeNull();
-      });
-    });
-  });
-
-  describe('when there are more child results available in the collection', () => {
-    it('should display the first partition of the child results', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-
-      expectProperChildResultsDisplay(element, exampleCollection);
-    });
-
-    describe('when more child results are expanded or collapsed', () => {
-      it('should call the right actions and properly display the child results', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-        const foldedResultToggleButton = element.shadowRoot.querySelector(
-          selectors.toggleButton
-        );
-
-        await clickFoldedResultToggleButton(element, loadAllResultsLabel);
-        expect(functionsMocks.loadCollection).toHaveBeenCalledTimes(1);
-        element.collection = exampleCollectionWithAllResultsLoaded;
-        await flushPromises();
-        expectProperChildResultsDisplay(
-          element,
-          exampleCollectionWithAllResultsLoaded
-        );
-
-        await clickFoldedResultToggleButton(element, collapseResults);
-        expect(functionsMocks.logShowLessFoldedResults).toHaveBeenCalledTimes(
-          1
-        );
-        expectProperChildResultsDisplay(element, exampleCollection);
-
-        await clickFoldedResultToggleButton(element, loadAllResultsLabel);
-        expect(functionsMocks.logShowMoreFoldedResults).toHaveBeenCalledTimes(
-          1
-        );
-        expectProperChildResultsDisplay(
-          element,
-          exampleCollectionWithAllResultsLoaded
-        );
-        expect(foldedResultToggleButton.label).toBe(collapseResults);
       });
     });
   });
