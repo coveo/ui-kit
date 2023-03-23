@@ -228,7 +228,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     async setClientId(value: string, namespace?: string) {
         if (uuidValidate(value)) {
-            this.setCurrentVisitorId(value);
+            this.setCurrentVisitorId(value.toLowerCase());
         } else {
             if (!namespace) {
                 throw Error('Cannot generate uuid client id without a specific namespace string.');

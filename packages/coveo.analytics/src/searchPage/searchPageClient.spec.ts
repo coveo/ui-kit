@@ -148,7 +148,6 @@ describe('SearchPageClient', () => {
             anonymous: false,
             actionCause,
             customData,
-            queryPipeline: 'my-pipeline',
             language: 'en',
             clientId: 'visitor-id',
             facetState: fakeFacetState,

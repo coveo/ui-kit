@@ -462,6 +462,12 @@ describe('custom clientId', () => {
         expect(await client.getCurrentVisitorId()).toBe('c7d57b22-4aa8-487a-a106-be5243885f0a');
     });
 
+    it('persists clientId in lowercase', async () => {
+        const client = new CoveoAnalyticsClient({});
+        client.setClientId('C7D57B22-4AA8-487A-A106-BE5243885F0A');
+        expect(await client.getCurrentVisitorId()).toBe('c7d57b22-4aa8-487a-a106-be5243885f0a');
+    });
+
     it('allows setting a custom consistent clientId given a string', async () => {
         const client = new CoveoAnalyticsClient({});
         client.setClientId('somestring', 'testNameSpace');
