@@ -1,5 +1,5 @@
 import CoveoAnalyticsClient from '../client/analytics';
-import {ReactNativeRuntime} from './index';
+import {ReactNativeRuntime} from './react-native-runtime';
 
 describe('ReactNativeRuntime', () => {
     let runtimeEnvironment: ReactNativeRuntime;

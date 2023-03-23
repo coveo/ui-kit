@@ -56,7 +56,7 @@ const browserUMD = {
     ],
     plugins: [
         browserFetch(),
-        nodeResolve({preferBuiltins: true, only: ['uuid']}),
+        nodeResolve({preferBuiltins: true, browser: true}),
         versionReplace(),
         tsPlugin(),
         process.env.SERVE
@@ -79,7 +79,7 @@ const nodeCJS = {
         format: 'cjs',
     },
     plugins: [
-        nodeResolve({mainFields: ['main'], preferBuiltins: true, only: ['uuid']}),
+        nodeResolve({mainFields: ['main'], preferBuiltins: true}),
         versionReplace(),
         commonjs(),
         tsPlugin(),
@@ -95,7 +95,7 @@ const browserESM = {
     },
     plugins: [
         browserFetch(),
-        nodeResolve({preferBuiltins: true, only: ['uuid']}),
+        nodeResolve({preferBuiltins: true}),
         versionReplace(),
         typescript({
             useTsconfigDeclarationDir: true,
@@ -105,13 +105,14 @@ const browserESM = {
 };
 
 const libRN = {
+    external: ['react-native', 'cross-fetch'],
     input: './src/react-native/index.ts',
     output: {
         file: './dist/react-native.es.js',
         format: 'es',
     },
     plugins: [
-        nodeResolve({preferBuiltins: true, only: ['uuid']}),
+        nodeResolve({preferBuiltins: true}),
         versionReplace(),
         commonjs(),
         json(),
