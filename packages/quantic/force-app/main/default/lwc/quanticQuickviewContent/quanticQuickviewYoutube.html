@@ -12,13 +12,13 @@
       <iframe
         id="quickview__content-iframe"
         class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap"
+        src={youtubeURL}
         height="100%"
         width="100%"
-        allowfullscreen
         onload={handleIframeLoaded}
+        allowfullscreen
         referrerpolicy="same-origin"
         sandbox="allow-same-origin allow-scripts allow-popups allow-top-navigation allow-top-navigation-by-user-activation allow-presentation"
-        src={youtubeURL}
       ></iframe>
     </div>
     <template if:false={isLoading}>

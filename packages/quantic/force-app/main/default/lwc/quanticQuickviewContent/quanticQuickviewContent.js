@@ -6,6 +6,8 @@ import youtubeTemplate from './quanticQuickviewYoutube.html';
 
 /** @typedef {import("coveo").Result} Result */
 
+const allowedHost = ['https://youtube.com/'];
+
 export default class QuanticQuickviewContent extends LightningElement {
   /**
    * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
@@ -28,7 +30,7 @@ export default class QuanticQuickviewContent extends LightningElement {
   }
 
   render() {
-    if (this.result?.uniqueId.includes('https://youtube.com/')) {
+    if (this.result?.uniqueId.includes(allowedHost[0])) {
       return youtubeTemplate;
     }
     return defaultTemplate;
