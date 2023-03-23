@@ -45,7 +45,7 @@ export default class QuanticResult extends LightningElement {
    * @api
    * @type {FoldedCollection}
    */
-  @api foldedCollection;
+  @api collection;
   /**
    * The id of the template that should be used to display the result.
    * @api

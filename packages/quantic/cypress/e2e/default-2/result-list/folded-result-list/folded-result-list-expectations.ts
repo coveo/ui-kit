@@ -1,7 +1,7 @@
 import {getQueryAlias, InterceptAliases} from '../../../../page-objects/search';
 import {should} from '../../../common-selectors';
 import {EventExpectations} from '../../../event-expectations';
-import {ResultListExpectations} from '../result-list-expectations';
+import {resultListExpectations} from '../result-list-expectations';
 import {
   FoldedResultListSelector,
   FoldedResultListSelectors,
@@ -155,7 +155,7 @@ export function foldedResultListExpectations(
 }
 
 export const FoldedResultListExpectations = {
-  ...ResultListExpectations,
+  ...resultListExpectations(FoldedResultListSelectors),
   ...foldedResultListExpectations(FoldedResultListSelectors),
   events: {
     ...EventExpectations,
