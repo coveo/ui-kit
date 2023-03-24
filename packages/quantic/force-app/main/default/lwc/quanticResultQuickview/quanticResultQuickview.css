@@ -1,9 +1,6 @@
 @import 'c/quanticResultActionStyles';
 
 .quickview__content-container {
-  overflow: auto;
-  border: none;
-  display: flex;
   height: 90%;
 }
 
@@ -18,11 +15,6 @@
   font-size: 15px;
 }
 
-.quickview__spinner-container {
-  width: 100%;
-  height: 50%;
-}
-
 .quickview__button-base:not([disabled]){
   border-radius: 0.25rem;
   color: var(--color-text-link-active, #0f2d5d);
@@ -31,9 +23,4 @@
 .quickview__button-base:not([disabled]):hover {
   background-color: #f6f7f9;
   box-shadow: 0 0 0px 0.25rem #f6f7f9;
-}
-
-.slds-modal__footer{
-  background-color: white;
-  text-align: unset;
 }

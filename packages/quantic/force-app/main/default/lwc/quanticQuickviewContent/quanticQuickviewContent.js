@@ -1,4 +1,4 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api } from 'lwc';
 // @ts-ignore
 import defaultTemplate from './quanticQuickviewDefault.html';
 // @ts-ignore
@@ -9,6 +9,13 @@ import youtubeTemplate from './quanticQuickviewYoutube.html';
 
 const allowedHost = ['https://youtube.com/'];
 
+/**
+ * The `QuanticQuickviewContent` component renders a content template based on the type of the content (Youtube, other).
+ * @category Result Template
+ * @example
+ * <c-quantic-quickview-content result={result} content-url={contentURL}></c-quantic-quickview-content>
+ * @internal
+ */
 export default class QuanticQuickviewContent extends LightningElement {
   /**
    * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
