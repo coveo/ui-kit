@@ -68,7 +68,7 @@ export default class QuanticResultChildren extends LightningElement {
   /** @type {Array<FoldedResult>} */
   firstChildrenPartition;
 
-  get children() {
+  get displayedChildren() {
     if (!this.areAllChildResultsLoaded) {
       return this?.collection?.children ?? [];
     }
@@ -80,7 +80,7 @@ export default class QuanticResultChildren extends LightningElement {
   }
 
   get hasChildrenDisplayed() {
-    return !!this.children.length;
+    return !!this.displayedChildren.length;
   }
 
   get isLoadingMoreResults() {

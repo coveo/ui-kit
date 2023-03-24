@@ -4,7 +4,7 @@
       <div class="slds-var-m-top_medium">
         <slot name="before-children"></slot>
         <div class="slds-var-p-left_medium slds-border_left">
-          <template for:each={children} for:item="childCollection">
+          <template for:each={displayedChildren} for:item="childCollection">
             <c-quantic-result key={childCollection.result.uniqueId} engine-id={engineId} template-id={templateId}
               result={childCollection.result} collection={childCollection}
               result-templates-manager={resultTemplatesManager}
