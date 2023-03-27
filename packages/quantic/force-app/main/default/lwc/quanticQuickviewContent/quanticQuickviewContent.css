@@ -19,8 +19,3 @@
 .wrapper {
   height: 100%;
 }
-
-.slds-modal__footer{
-  background-color: white;
-  text-align: unset;
-}

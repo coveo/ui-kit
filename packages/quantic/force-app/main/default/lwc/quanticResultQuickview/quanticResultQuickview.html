@@ -42,9 +42,13 @@
             </div>
           </div>
         </header>
-        <c-quantic-quickview-content id="quickview__content-container"
-          class="quickview__content-container slds-wrap" result={result} content-url={contentURL}
-          ></c-quantic-quickview-content>
+        <c-quantic-quickview-content id="quickview__content-container" class="quickview__content-container slds-wrap"
+          result={result} content-url={contentURL}></c-quantic-quickview-content>
+        <template if:false={isLoading}>
+          <footer onclick={stopPropagation} class="slds-modal__footer slds-p-top_none slds-p-bottom_none">
+            <slot name="footer"></slot>
+          </footer>
+        </template>
       </div>
     </section>
     <div class={backdropClass} onfocus={setFocusToTop} tabindex="0"></div>

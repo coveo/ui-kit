@@ -2,14 +2,10 @@ import close from '@salesforce/label/c.quantic_Close';
 import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
 import openFileForPreview from '@salesforce/label/c.quantic_OpenFileForPreview';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
-import {
-  getHeadlessBundle,
-  getHeadlessEnginePromise,
-  HeadlessBundleNames,
-  isHeadlessBundle,
-} from 'c/quanticHeadlessLoader';
+import { getHeadlessBundle, getHeadlessEnginePromise, HeadlessBundleNames, isHeadlessBundle } from 'c/quanticHeadlessLoader';
 import { I18nUtils, getLastFocusableElement } from 'c/quanticUtils';
 import { LightningElement, api, track } from 'lwc';
+
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -95,6 +91,8 @@ export default class QuanticResultQuickview extends LightningElement {
   isFirstPreviewRender = true;
   /** @type {string} */
   resultActionOrderClasses;
+  /** @type {boolean} */
+  _isLoading = false;
 
   labels = {
     close,
@@ -147,7 +145,7 @@ export default class QuanticResultQuickview extends LightningElement {
       maximumPreviewSize: Number(this.maximumPreviewSize),
       onlyContentURL: true,
     };
-    this.quickview = this.headless.buildQuickview(engine, { options });
+    this.quickview = this.headless.buildQuickview(engine, {options});
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
 
     this.dispatchHasPreview(this.quickview.state.resultHasPreview);
@@ -163,6 +161,7 @@ export default class QuanticResultQuickview extends LightningElement {
 
   openQuickview() {
     this.isQuickviewOpen = true;
+    this._isLoading = true;
     if (!isHeadlessBundle(this.engineId, HeadlessBundleNames.caseAssist)) {
       this.addRecentResult();
     }
@@ -171,15 +170,12 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   addRecentResult() {
-    getHeadlessEnginePromise(this.engineId).then(
-      (engine) => {
-        const { pushRecentResult } =
-          this.headless.loadRecentResultsActions(engine);
-        engine.dispatch(
-          pushRecentResult(JSON.parse(JSON.stringify(this.result)))
-        );
-      }
-    );
+    getHeadlessEnginePromise(this.engineId).then((engine) => {
+      const {pushRecentResult} = this.headless.loadRecentResultsActions(engine);
+      engine.dispatch(
+        pushRecentResult(JSON.parse(JSON.stringify(this.result)))
+      );
+    });
   }
 
   closeQuickview() {
@@ -218,12 +214,21 @@ export default class QuanticResultQuickview extends LightningElement {
     });
   }
 
+  handleLoadingStateChange(event) {
+    this._isLoading = event?.detail?.isLoading;
+  }
+
   get contentURL() {
     return this.state.contentURL?.includes(
       encodeURIComponent(this.result.uniqueId)
     )
       ? this.state.contentURL
       : undefined;
+  }
+
+  get isLoading() {
+    this.handleLoadingStateChange();
+    return this._isLoading;
   }
 
   get hasNoPreview() {
@@ -265,8 +270,9 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get buttonContainerClass() {
-    return `slds-is-relative slds-show_inline result-action_container ${this.isResultAction ? 'result-action_white-container' : ''
-      }`;
+    return `slds-is-relative slds-show_inline result-action_container ${
+      this.isResultAction ? 'result-action_white-container' : ''
+    }`;
   }
 
   get buttonAriaLabelValue() {
@@ -343,7 +349,7 @@ export default class QuanticResultQuickview extends LightningElement {
       bubbles: true,
       detail: {
         isOpen,
-        ...(isOpen && { resultId: this.result.uniqueId }),
+        ...(isOpen && {resultId: this.result.uniqueId}),
       },
     });
     this.dispatchEvent(resultPreviewEvent);

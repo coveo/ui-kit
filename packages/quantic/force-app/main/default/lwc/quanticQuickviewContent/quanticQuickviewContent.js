@@ -7,7 +7,7 @@ import youtubeTemplate from './quanticQuickviewYoutube.html';
 
 /** @typedef {import("coveo").Result} Result */
 
-const allowedHost = ['https://youtube.com/'];
+const allowedHost = {youtube: 'https://youtube.com/'};
 
 /**
  * The `QuanticQuickviewContent` component renders a content template based on the type of the content (Youtube, other).
@@ -24,7 +24,7 @@ export default class QuanticQuickviewContent extends LightningElement {
    */
   @api result;
   /**
-   * src used to render the iframe when content type is not youtube.
+   * The `src` path used to render the iframe when content type is not youtube.
    * @api
    * @type {String}
    */
@@ -35,10 +35,12 @@ export default class QuanticQuickviewContent extends LightningElement {
 
   handleIframeLoaded() {
     this.isLoading = false;
+    const event = new CustomEvent('loadingstatechange', {detail: { isLoading: this.isLoading}});
+    this.dispatchEvent(event);
   }
 
   render() {
-    if (this.result?.uniqueId.includes(allowedHost[0])) {
+    if (this.result?.uniqueId.includes(allowedHost.youtube)) {
       return youtubeTemplate;
     }
     return defaultTemplate;
