@@ -39,11 +39,7 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
           (props.liked ? 'text-success' : 'cursor-pointer hover:underline')
         }
       >
-        <atomic-icon
-          icon={Checkmark}
-          aria-hidden="true"
-          class="w-3.5"
-        ></atomic-icon>
+        <atomic-icon icon={Checkmark} class="w-3.5"></atomic-icon>
         <RadioButton
           groupName={radioGroupName}
           text={props.i18n.t('yes')}
@@ -59,11 +55,7 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
           (props.disliked ? 'text-error' : 'cursor-pointer hover:underline')
         }
       >
-        <atomic-icon
-          icon={Cross}
-          aria-hidden="true"
-          class="w-3.5"
-        ></atomic-icon>
+        <atomic-icon icon={Cross} class="w-3.5"></atomic-icon>
         <RadioButton
           groupName={radioGroupName}
           text={props.i18n.t('no')}

@@ -80,6 +80,9 @@ export const facetWithSearchActions = (selector: FacetWithSearchSelector) => {
     clickSearchClearButton: () => {
       selector.searchClearButton().click();
     },
+    selectSearchValue: (caption: string) => {
+      selector.searchValue(caption).click();
+    },
   };
 };
 

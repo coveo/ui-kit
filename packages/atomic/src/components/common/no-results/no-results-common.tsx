@@ -82,6 +82,9 @@ export const NoResultsCommon: FunctionalComponent<NoResultsProps> = (
   children
 ) => {
   const getSummary = () => {
+    if (props.searchStatusState.hasResults) {
+      return '';
+    }
     return props.querySummaryState.hasQuery
       ? props.bindings.i18n.t('no-results-for', {
           interpolation: {escapeValue: false},
@@ -90,12 +93,12 @@ export const NoResultsCommon: FunctionalComponent<NoResultsProps> = (
       : props.bindings.i18n.t('no-results');
   };
 
+  props.setAriaLive(getSummary());
+
   const {firstSearchExecuted, isLoading, hasResults} = props.searchStatusState;
   if (!firstSearchExecuted || isLoading || hasResults) {
     return <span></span>;
   }
-
-  props.setAriaLive(getSummary());
 
   return [
     <div class="flex flex-col items-center h-full w-full text-on-background">

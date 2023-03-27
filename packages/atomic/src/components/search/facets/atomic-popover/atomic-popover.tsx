@@ -164,7 +164,6 @@ export class AtomicPopover implements InitializableComponent {
         </span>
         <atomic-icon
           part="arrow-icon"
-          aria-hidden="true"
           class={`w-2 ml-auto group-hover:text-primary-light group-focus:text-primary ${
             this.isOpen ? 'rotate-180' : ''
           } `}

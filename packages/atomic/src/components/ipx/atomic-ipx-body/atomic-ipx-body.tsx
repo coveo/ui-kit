@@ -33,6 +33,8 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
 
   @Prop() isOpen = true;
 
+  @Prop({reflect: true}) displayFooterSlot = true;
+
   public componentDidLoad() {
     const id = this.host.id || randomID('atomic-ipx-body-');
     this.host.id = id;
@@ -63,14 +65,16 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
             <slot name="body"></slot>
           </div>
         </div>
-        <footer
-          part="footer-wrapper"
-          class="border-neutral border-t bg-background z-10 flex flex-col items-center w-full"
-        >
-          <div part="footer" class="max-w-lg">
-            <slot name="footer"></slot>
-          </div>
-        </footer>
+        {this.displayFooterSlot && (
+          <footer
+            part="footer-wrapper"
+            class="border-neutral border-t bg-background z-10 flex flex-col items-center w-full"
+          >
+            <div part="footer" class="max-w-lg">
+              <slot name="footer"></slot>
+            </div>
+          </footer>
+        )}
       </article>
     );
   }

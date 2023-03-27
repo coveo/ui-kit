@@ -661,6 +661,7 @@ export namespace Components {
         "withDatePicker": boolean;
     }
     interface AtomicIpxBody {
+        "displayFooterSlot": boolean;
         "isOpen": boolean;
     }
     interface AtomicIpxButton {
@@ -980,6 +981,8 @@ export namespace Components {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals": number;
+    }
+    interface AtomicRecsError {
     }
     interface AtomicRecsInterface {
         /**
@@ -1819,6 +1822,10 @@ export interface AtomicRelevanceInspectorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicRelevanceInspectorElement;
 }
+export interface AtomicResultsPerPageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicResultsPerPageElement;
+}
 export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSearchBoxElement;
@@ -2223,6 +2230,12 @@ declare global {
     var HTMLAtomicRatingRangeFacetElement: {
         prototype: HTMLAtomicRatingRangeFacetElement;
         new (): HTMLAtomicRatingRangeFacetElement;
+    };
+    interface HTMLAtomicRecsErrorElement extends Components.AtomicRecsError, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsErrorElement: {
+        prototype: HTMLAtomicRecsErrorElement;
+        new (): HTMLAtomicRecsErrorElement;
     };
     interface HTMLAtomicRecsInterfaceElement extends Components.AtomicRecsInterface, HTMLStencilElement {
     }
@@ -2637,6 +2650,7 @@ declare global {
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
+        "atomic-recs-error": HTMLAtomicRecsErrorElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
@@ -3308,6 +3322,7 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface AtomicIpxBody {
+        "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
     }
@@ -3633,6 +3648,8 @@ declare namespace LocalJSX {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
+    }
+    interface AtomicRecsError {
     }
     interface AtomicRecsInterface {
         /**
@@ -4049,6 +4066,7 @@ declare namespace LocalJSX {
           * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
          */
         "initialChoice"?: number;
+        "onAtomic/scrollToTop"?: (event: AtomicResultsPerPageCustomEvent<any>) => void;
     }
     interface AtomicSearchBox {
         /**
@@ -4451,6 +4469,7 @@ declare namespace LocalJSX {
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
+        "atomic-recs-error": AtomicRecsError;
         "atomic-recs-interface": AtomicRecsInterface;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
@@ -4579,6 +4598,7 @@ declare module "@stencil/core" {
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
+            "atomic-recs-error": LocalJSX.AtomicRecsError & JSXBase.HTMLAttributes<HTMLAtomicRecsErrorElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
             "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
             "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;

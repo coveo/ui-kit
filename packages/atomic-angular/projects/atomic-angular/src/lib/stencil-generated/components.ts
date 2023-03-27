@@ -651,6 +651,25 @@ export class AtomicRatingRangeFacet {
 }
 
 
+export declare interface AtomicRecsError extends Components.AtomicRecsError {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-recs-error',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicRecsError {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicRecsInterface extends Components.AtomicRecsInterface {}
 
 @ProxyCmp({
@@ -1379,7 +1398,13 @@ export class AtomicResultTimespan {
 }
 
 
-export declare interface AtomicResultsPerPage extends Components.AtomicResultsPerPage {}
+export declare interface AtomicResultsPerPage extends Components.AtomicResultsPerPage {
+  /**
+   *  
+   */
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+
+}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
@@ -1396,6 +1421,7 @@ export class AtomicResultsPerPage {
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
   }
 }
 
