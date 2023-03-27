@@ -1,6 +1,6 @@
 <template>
   <div class="slds-var-m-left_medium">
-    <template if:true={hasChildrenDisplayed}>
+    <template if:true={shouldDisplayChildren}>
       <div class="slds-var-m-top_medium">
         <slot name="before-children"></slot>
         <div class="slds-var-p-left_medium slds-border_left">
