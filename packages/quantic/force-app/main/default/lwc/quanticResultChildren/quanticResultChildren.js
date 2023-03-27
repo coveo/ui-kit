@@ -128,6 +128,7 @@ export default class QuanticResultChildren extends LightningElement {
   }
 
   get isFirstLevelChildCollection() {
+    // Only the first level collection contains the property "areMoreResultsAvailable".
     return this.areMoreResultsAvailable !== undefined;
   }
 
