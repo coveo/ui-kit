@@ -68,12 +68,8 @@ export default class QuanticResultChildren extends LightningElement {
   /** @type {Array<FoldedResult>} */
   firstChildrenPartition;
 
-  connectedCallback() {
-    this.firstChildrenPartition = this?.collection?.children ?? [];
-  }
-
   get displayedChildren() {
-    if (this.areChildResultsExpanded) {
+    if (!this.areAllChildResultsLoaded || this.areChildResultsExpanded) {
       return this?.collection?.children;
     }
     return this.firstChildrenPartition;
@@ -96,6 +92,7 @@ export default class QuanticResultChildren extends LightningElement {
   }
 
   loadAllFoldedResults() {
+    this.firstChildrenPartition = this?.collection?.children ?? [];
     this.foldedResultListController.loadCollection(this.collection);
     this.areAllChildResultsLoaded = true;
   }
