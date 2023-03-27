@@ -16,7 +16,6 @@ runs:
           packages/atomic/dist
           packages/atomic/docs
           packages/atomic/loader
-          packages/atomic/storybook-static
           packages/atomic/www
           packages/quantic/docs/out
           packages/atomic-react/dist
@@ -26,6 +25,7 @@ runs:
           packages/samples/iife/www/cdn
           packages/quantic/force-app/main/default/staticresources/coveoheadless
           packages/quantic/force-app/main/default/staticresources/coveobueno
+          utils/atomic-storybook/storybook-static
           !node_modules
           !**/node_modules
         key: ${{ github.sha }}
