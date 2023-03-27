@@ -148,7 +148,6 @@ export default class QuanticFoldedResultList extends LightningElement {
   }
 
   get fields() {
-    if (this.fieldsToInclude.trim() === '') return [];
     return this.fieldsToInclude
       .split(',')
       .map((field) => field.trim())
