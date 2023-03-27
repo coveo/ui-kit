@@ -13,6 +13,7 @@ import {
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
+  AriaLiveRegion,
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
@@ -35,6 +36,7 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
 import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
 import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
 import {
@@ -194,6 +196,9 @@ export class AtomicColorFacet
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
+  @AriaLiveRegion('facet-search')
+  protected facetSearchAriaMessage!: string;
+
   private validateProps() {
     validateDependsOn(this.dependsOn);
   }
@@ -211,6 +216,12 @@ export class AtomicColorFacet
       filterFacetCount: this.filterFacetCount,
     };
     this.facet = buildFacet(this.bindings.engine, {options});
+    announceFacetSearchResultsWithAriaLive(
+      this.facet,
+      this.label,
+      (msg) => (this.facetSearchAriaMessage = msg),
+      this.bindings.i18n
+    );
     this.facetId = this.facet.state.facetId;
     const facetInfo: FacetInfo = {
       label: () => this.bindings.i18n.t(this.label),

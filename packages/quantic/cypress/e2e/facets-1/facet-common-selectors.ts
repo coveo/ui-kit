@@ -26,6 +26,7 @@ export interface FacetWithSearchSelector extends ComponentSelector {
   moreMatches: () => CypressSelector;
   noMatches: () => CypressSelector;
   valueHighlight: () => CypressSelector;
+  searchValue: (caption: string) => CypressSelector;
 }
 
 export interface FacetWithShowMoreLessSelector extends ComponentSelector {

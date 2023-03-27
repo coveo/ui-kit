@@ -1,19 +1,35 @@
 <template>
   <template if:true={shouldDisplaySmartSnippetSuggestions}>
     <div data-cy="smart-snippet-suggestions-card" class="slds-card">
-      <p class="slds-text-heading_small slds-var-p-around_small slds-border_bottom smart-snippet-suggestions__title">
+      <p
+        class="slds-text-heading_small slds-var-p-around_small slds-border_bottom smart-snippet-suggestions__title"
+      >
         {labels.peopleAlsoAsk}
       </p>
-      <lightning-accordion allow-multiple-sections-open class="slds-p-vertical_xx-small">
+      <lightning-accordion
+        allow-multiple-sections-open
+        class="slds-p-vertical_xx-small"
+      >
         <template for:each={suggestions} for:item="suggestion">
-          <lightning-accordion-section data-id={suggestion.questionAnswerId} key={suggestion.questionAnswerId}
-            name={suggestion.question} label={suggestion.question} onclick={handleSuggestionClick}>
+          <lightning-accordion-section
+            data-id={suggestion.questionAnswerId}
+            key={suggestion.questionAnswerId}
+            name={suggestion.question}
+            label={suggestion.question}
+            onclick={handleSuggestionClick}
+            class="accordion__summary-heading"
+          >
             <div class="slds-var-m-bottom_small">
-              <c-quantic-smart-snippet-answer answer={suggestion.answer}
-                actions={suggestion.inlineLinksActions}></c-quantic-smart-snippet-answer>
+              <c-quantic-smart-snippet-answer
+                answer={suggestion.answer}
+                actions={suggestion.inlineLinksActions}
+              ></c-quantic-smart-snippet-answer>
             </div>
-            <c-quantic-smart-snippet-source title={suggestion.source.title} uri={suggestion.source.clickUri}
-              actions={suggestion.sourceActions}></c-quantic-smart-snippet-source>
+            <c-quantic-smart-snippet-source
+              title={suggestion.source.title}
+              uri={suggestion.source.clickUri}
+              actions={suggestion.sourceActions}
+            ></c-quantic-smart-snippet-source>
           </lightning-accordion-section>
         </template>
       </lightning-accordion>

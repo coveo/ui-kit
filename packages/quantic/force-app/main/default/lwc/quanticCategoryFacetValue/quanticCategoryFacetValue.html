@@ -13,7 +13,7 @@
         class="facet__parent-value-option facet__value-option slds-grid slds-truncate slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small"
       >
         <lightning-icon class="slds-m-right_xxx-small" icon-name="utility:chevronleft" size="xx-small"></lightning-icon>
-        <span class="slds-truncate" title={item.value}>{item.value}</span>
+        <span class="slds-truncate" title={facetValue}>{facetValue}</span>
         <span class="facet__number-of-results slds-var-m-left_xx-small">({numberOfResults})</span>
       </div>
     </template>
@@ -22,7 +22,7 @@
         <div
           class="slds-grid slds-grid_vertical-align-center slds-text-color_default facet__child-value-option facet__value-option slds-size_1-of-1 slds-p-around_x-small"
         >
-          <span class="slds-truncate" title={item.value}>{item.value}</span>
+          <span class="slds-truncate" title={facetValue}>{facetValue}</span>
           <span class="facet__number-of-results slds-var-m-left_xx-small">({numberOfResults})</span>
         </div>
       </template>
@@ -31,7 +31,7 @@
           <div class="slds-grid slds-grid_vertical slds-size_1-of-1">
             <div
               class="slds-col slds-p-left_none slds-grid_vertical-align-center facet__search-results slds-m-bottom_xxx-small"
-              title={item.value}
+              title={facetValue}
             >
               <lightning-formatted-rich-text
                 class="slds-truncate slds-float_left"

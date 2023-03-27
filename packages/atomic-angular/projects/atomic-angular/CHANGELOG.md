@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.4.1...@coveo/atomic-angular@2.4.2) (2023-03-23)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+## [2.4.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.4.0...@coveo/atomic-angular@2.4.1) (2023-03-22)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+# [2.4.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.3.41...@coveo/atomic-angular@2.4.0) (2023-03-20)
+
+### Bug Fixes
+
+- **atomic:** multiple accessibility fixes ([#2782](https://github.com/coveo/ui-kit/issues/2782)) ([d90d353](https://github.com/coveo/ui-kit/commit/d90d3530a63e46f6e7f2cbf829c1cfa400398de8))
+
+### Features
+
+- recommendations error component ([#2787](https://github.com/coveo/ui-kit/issues/2787)) ([2d88e87](https://github.com/coveo/ui-kit/commit/2d88e8743970a4585fac807986420bc2c90b89ea))
+
+## [2.3.41](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.3.40...@coveo/atomic-angular@2.3.41) (2023-03-15)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+## [2.3.40](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.3.39...@coveo/atomic-angular@2.3.40) (2023-03-15)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+## [2.3.39](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.3.38...@coveo/atomic-angular@2.3.39) (2023-03-14)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
 ## [2.3.38](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.3.37...@coveo/atomic-angular@2.3.38) (2023-03-13)
 
 **Note:** Version bump only for package @coveo/atomic-angular

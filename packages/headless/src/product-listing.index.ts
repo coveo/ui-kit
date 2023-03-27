@@ -170,3 +170,10 @@ export type {
   ContextValue,
 } from './controllers/product-listing/context/headless-product-listing-context';
 export {buildContext} from './controllers/product-listing/context/headless-product-listing-context';
+
+export type {
+  InteractiveResultOptions,
+  InteractiveResultProps,
+  InteractiveResult,
+} from './controllers/product-listing/result-list/headless-product-listing-interactive-result';
+export {buildInteractiveResult} from './controllers/product-listing/result-list/headless-product-listing-interactive-result';

@@ -2,7 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "postinstall": "husky install && patch-package && npm run link:angular -w @coveo/atomic-angular-samples",
+    "postinstall": "husky install && patch-package && npm run link:angular -w @coveo/atomic-angular-samples && nx run-many --target=install:isolated",
     "dev:atomic": "concurrently \"nx run headless:dev\" \"nx run atomic:dev\"",
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
@@ -60,7 +60,9 @@
     "semver": "7.3.7",
     "ts-jest": "27.1.5",
     "typescript": "4.6.4",
-    "nx": "15.7.0"
+    "nx": "15.7.0",
+    "execa": "^7.0.0",
+    "@types/execa": "^2.0.0"
   },
   "workspaces": [
     "packages/bueno",

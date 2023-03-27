@@ -12,12 +12,10 @@ const selectors = {
   smartSnippetAnswer: '.smart-snippet-answer',
 };
 
-const exampleAnswer = `
-  <div>
-    <p>Example smart snippet answer</p>
-    <a href="#">Example inline link</a>
-  </div>
-`;
+const exampleAnswer =
+  '<div><p>Example smart snippet answer</p><a href="#">Example inline link</a></div>';
+const exampleAnswerWithInvalidLink =
+  '<div><a>Example invalid inline link</a></div>';
 const exampleActions = {
   select: functionsMocks.exampleSelect,
   beginDelayedSelect: functionsMocks.exampleBeginDelayedSelect,
@@ -93,6 +91,40 @@ describe('c-quantic-smart-snippet-answer', () => {
 
         expect(action).toHaveBeenCalledTimes(1);
       });
+
+      it(`should not execute the proper action when the ${eventName} is triggered on an ivalid link`, async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          answer: exampleAnswerWithInvalidLink,
+        });
+        await flushPromises();
+
+        const inlineLink = element.shadowRoot.querySelector('a');
+        inlineLink.dispatchEvent(new CustomEvent(eventName));
+
+        expect(action).toHaveBeenCalledTimes(0);
+      });
     }
+  });
+
+  describe('when invalid inline links are returned in the answer of the smart snippet', () => {
+    const expectedRenderedAnswer =
+      '<div><a class="inline-link--disabled">Example invalid inline link</a></div>';
+
+    it('should properly assign the disabled CSS class to the invalid inline link', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        answer: exampleAnswerWithInvalidLink,
+      });
+      await flushPromises();
+
+      const answer = element.shadowRoot.querySelector(
+        selectors.smartSnippetAnswer
+      );
+
+      expect(answer).not.toBeNull();
+      // eslint-disable-next-line @lwc/lwc/no-inner-html
+      expect(answer.innerHTML).toBe(expectedRenderedAnswer);
+    });
   });
 });

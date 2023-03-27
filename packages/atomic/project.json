@@ -40,31 +40,8 @@
         "script": "validate:definitions"
       }
     },
-    "validate:storybook": {
-      "dependsOn": ["^build"],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:run-script",
-      "options": {
-        "script": "validate:storybook"
-      }
-    },
-    "build:storybook": {
-      "dependsOn": ["cached:build:stencil"],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:run-script",
-      "options": {
-        "script": "build:storybook"
-      }
-    },
     "build": {
-      "dependsOn": [
-        "cached:build:stencil",
-        "build:storybook",
-        "validate:storybook",
-        "validate:definitions"
-      ],
+      "dependsOn": ["cached:build:stencil", "validate:definitions"],
       "inputs": [],
       "outputs": [],
       "executor": "nx:noop"
