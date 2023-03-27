@@ -13,6 +13,7 @@ const HeadlessBundleNames = {
   search: 'search',
   caseAssist: 'case-assist',
   insight: 'insight',
+  recommendation: 'recommendation',
 };
 
 const headlessBundles = {
@@ -27,6 +28,10 @@ const headlessBundles = {
   [HeadlessBundleNames.insight]: {
     libPath: '/browser/insight/headless.js',
     bundle: () => CoveoHeadlessInsight,
+  },
+  [HeadlessBundleNames.recommendation]: {
+    libPath: '/browser/recommendation/headless.js',
+    bundle: () => CoveoHeadlessRecommendation,
   },
 };
 

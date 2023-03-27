@@ -60,6 +60,7 @@
                         is-checked={v.checked}
                         data-cy={v.value}
                         display-as-link={isDisplayAsLink}
+                        formatting-function={remoteGetValueCaption}
                       >
                       </c-quantic-facet-value>
                     </li>
@@ -89,6 +90,7 @@
                     item={result}
                     is-checked={result.checked}
                     display-as-link={isDisplayAsLink}
+                    formatting-function={remoteGetValueCaption}
                   >
                   </c-quantic-facet-value>
                 </template>
@@ -113,4 +115,5 @@
       </c-quantic-card-container>
     </div>
   </template>
+  <slot name="captions"></slot>
 </template>

@@ -34,7 +34,12 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
       selector
         .smartSnippetAnswer()
         .then((elem) => {
-          expect(elem[0].innerHTML).to.eq(value);
+          // we need to remove unnecessary attributes automatically added to LWCs.
+          const cleanHTML = elem[0].innerHTML.replaceAll(
+            ' c-quanticsmartsnippetanswer_quanticsmartsnippetanswer=""',
+            ''
+          );
+          expect(cleanHTML).to.eq(value);
         })
         .logDetail('should display the correct smart snippet answer');
     },

@@ -1,23 +1,18 @@
-import {
-  generateComponentHTML,
-  SearchResponseModifierPredicate,
-  TestFixture,
-} from '../fixtures/test-fixture';
+import {SearchResponseModifierPredicate} from '../fixtures/fixture-common';
+import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
 import {toArray} from '../utils/arrayUtils';
-import {addSmartSnippetDefaultOptions} from './smart-snippet-actions';
+import {
+  addSmartSnippetDefaultOptions,
+  AddSmartSnippetMockSnippet,
+  defaultSnippets,
+} from './smart-snippet-actions';
 
-export interface GetResponseModifierWithSmartSnippetSuggestionsOptions {
-  relatedQuestions?: {
-    question: string;
-    answer: string;
-    sourceTitle: string;
-    sourceUrl: string;
-    id: string;
-  }[];
+export interface AddSmartSnippetSuggestionsMockRelatedQuestions {
+  relatedQuestions?: AddSmartSnippetMockSnippet[];
 }
 
 export interface AddSmartSnippetSuggestionsOptions
-  extends GetResponseModifierWithSmartSnippetSuggestionsOptions {
+  extends AddSmartSnippetSuggestionsMockRelatedQuestions {
   remSize?: number;
   props?: {
     'heading-level'?: number;
@@ -27,49 +22,9 @@ export interface AddSmartSnippetSuggestionsOptions
   timesToIntercept?: number;
 }
 
-export const getResponseModifierWithSmartSnippetSuggestionsDefaultOptions: Required<GetResponseModifierWithSmartSnippetSuggestionsOptions> =
+export const getResponseModifierWithSmartSnippetSuggestionsDefaultOptions: Required<AddSmartSnippetSuggestionsMockRelatedQuestions> =
   {
-    relatedQuestions: [
-      {
-        question: 'Where does the name "Nurse Sharks" come from?',
-        answer: `
-      <p>
-        The name nurse shark is thought to be a corruption of <b>nusse</b>, a name which once referred to the <a href="https://en.wikipedia.org/wiki/Catshark">catsharks</a> of the family Scyliorhinidae.
-      </p>
-      <p>
-        The nurse shark family name, <b>Ginglymostomatidae</b>, derives from the <a href="https://en.wikipedia.org/wiki/Greek_language">Greek</a> words <i>ginglymos</i> (<a href="https://en.wiktionary.org/wiki/%CE%B3%CE%AF%CE%B3%CE%B3%CE%BB%CF%85%CE%BC%CE%BF%CF%82#Ancient_Greek">γίγγλυμος</a>) meaning "<b>hinge</b>" and <i>stoma</i> (<a href="https://en.wiktionary.org/wiki/%CF%83%CF%84%CF%8C%CE%BC%CE%B1#Ancient_Greek">στόμα</a>) meaning "<b>mouth</b>". 
-      </p>
-    `,
-        sourceTitle: 'Nurse Sharks',
-        sourceUrl: 'https://www.inaturalist.org/taxa/49968',
-        id: 'nurse-sharks',
-      },
-      {
-        question: 'What are sea monkeys?',
-        answer: `
-      <p>
-        Breeds of Artemia are sold as novelty gifts under the marketing name <a href="https://en.wikipedia.org/wiki/Sea-Monkeys">Sea-Monkeys</a>. 
-      </p>
-      <p>
-        <b>Artemia</b> is a genus of aquatic crustaceans also known as <b>brine shrimp</b>. It is the only genus in the <a href="https://en.wikipedia.org/wiki/Family_(biology)">family</a> <b>Artemiidae</b>.
-      </p>
-    `,
-        sourceTitle: 'Brine Shrimp',
-        sourceUrl: 'https://www.inaturalist.org/taxa/86651',
-        id: 'brine-shrimp',
-      },
-      {
-        question: 'What is a dove snail?',
-        answer: `
-      <p>
-        The <b>Columbellidae</b>, the dove snails or dove shells, are a <a href="https://en.wikipedia.org/wiki/Family_(biology)">family</a> of minute to small <a href="https://en.wikipedia.org/wiki/Sea_snail">sea snails</a>, <a href="https://en.wikipedia.org/wiki/Marine_(ocean)">marine</a> <a href="https://en.wikipedia.org/wiki/Gastropod">gastropod</a> <a href="https://en.wikipedia.org/wiki/Mollusk">mollusks</a> in the order <a href="https://en.wikipedia.org/wiki/Neogastropoda">Neogastropoda</a>.
-      </p>
-    `,
-        sourceTitle: 'Dove Snails',
-        sourceUrl: 'https://www.inaturalist.org/taxa/50704',
-        id: 'dove-snail',
-      },
-    ],
+    relatedQuestions: defaultSnippets,
   };
 
 export const addSmartSnippetSuggestionsDefaultOptions: Required<AddSmartSnippetSuggestionsOptions> =
@@ -82,7 +37,7 @@ export const addSmartSnippetSuggestionsDefaultOptions: Required<AddSmartSnippetS
   };
 
 export const getResponseModifierWithSmartSnippetSuggestions: (
-  options: GetResponseModifierWithSmartSnippetSuggestionsOptions
+  options: AddSmartSnippetSuggestionsMockRelatedQuestions
 ) => SearchResponseModifierPredicate = (options) => (response) => {
   const relatedQuestions =
     options.relatedQuestions ??
@@ -96,14 +51,15 @@ export const getResponseModifierWithSmartSnippetSuggestions: (
       ...firstResult.raw,
       permanentid: relatedQuestion.id,
     },
+    uniqueId: JSON.stringify(relatedQuestion),
   }));
   response.questionAnswer = {
     documentId: {
       contentIdKey: 'permanentid',
       contentIdValue: firstResult.raw.permanentid!,
     },
-    question: addSmartSnippetDefaultOptions.question,
-    answerSnippet: addSmartSnippetDefaultOptions.answer,
+    question: addSmartSnippetDefaultOptions.snippet.question,
+    answerSnippet: addSmartSnippetDefaultOptions.snippet.answer,
     relatedQuestions: relatedQuestions.map((relatedQuestion, i) => ({
       documentId: {
         contentIdKey: 'permanentid',

@@ -11,6 +11,7 @@ import {AnyEngineType, CommonStencilStore} from './bindings';
 
 export interface ResultListInfo {
   focusOnNextNewResult(): void;
+  focusOnFirstResultAfterNextSearch(): Promise<void>;
 }
 
 export type AtomicCommonStoreData = {

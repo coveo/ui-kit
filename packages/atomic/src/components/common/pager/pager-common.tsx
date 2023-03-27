@@ -32,13 +32,14 @@ interface PagerProps {
 export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
   const radioGroupName = randomID('atomic-insight-pager-');
 
-  const scrollToTop = () => {
+  const focusOnFirstResultAndScrollToTop = async () => {
+    await props.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
     props.eventEmitter?.emit();
   };
 
-  const selectPage = (page: number) => {
+  const selectPage = async (page: number) => {
     props.pager.selectPage(page);
-    props.activePage?.focusAfterSearch().then(() => scrollToTop());
+    focusOnFirstResultAndScrollToTop();
   };
 
   const renderPreviousButton = () => {
@@ -48,7 +49,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         ariaLabel={props.bindings.i18n.t('previous')}
         onClick={() => {
           props.pager.previousPage();
-          scrollToTop();
+          focusOnFirstResultAndScrollToTop();
         }}
         part="previous-button"
         disabled={!props.pagerState.hasPreviousPage}
@@ -101,7 +102,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         ariaLabel={props.bindings.i18n.t('next')}
         onClick={() => {
           props.pager.nextPage();
-          scrollToTop();
+          focusOnFirstResultAndScrollToTop();
         }}
         part="next-button"
         disabled={!props.pagerState.hasNextPage}

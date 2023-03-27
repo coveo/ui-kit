@@ -1,7 +1,7 @@
 import {h, FunctionalComponent, Fragment} from '@stencil/core';
 import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {once} from '../../../utils/utils';
+import {defer, once} from '../../../utils/utils';
 import {
   ResultsPlaceholder,
   ResultPlaceholderProps,
@@ -29,6 +29,7 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
 {
   private updateBreakpoints?: (host: HTMLElement) => void;
   private indexOfResultToFocus?: number;
+  private firstResultEl?: HTMLElement;
 
   constructor(private props: ResultListCommonProps<SpecificResult>) {
     this.props.bindings.store.setLoadingFlag(this.props.loadingFlag);
@@ -49,6 +50,9 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
   }
 
   public setNewResultRef(element: HTMLElement, resultIndex: number) {
+    if (resultIndex === 0) {
+      this.firstResultEl = element;
+    }
     if (resultIndex !== this.indexOfResultToFocus) {
       return;
     }
@@ -65,6 +69,29 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
   public focusOnNextNewResult() {
     this.indexOfResultToFocus = this.props.getResultListState().results.length;
     this.props.nextNewResultTarget.focusOnNextTarget();
+  }
+
+  public async focusOnFirstResultAfterNextSearch() {
+    await defer();
+    return new Promise<void>((resolve) => {
+      if (this.props.getResultListState().isLoading) {
+        this.firstResultEl = undefined;
+      }
+
+      const unsub = this.props.bindings.engine.subscribe(async () => {
+        await defer();
+        if (!this.props.getResultListState().isLoading && this.firstResultEl) {
+          const elementToFocus =
+            getFirstFocusableDescendant(this.firstResultEl) ??
+            this.firstResultEl;
+          this.props.nextNewResultTarget.setTarget(elementToFocus);
+          this.props.nextNewResultTarget.focus();
+          this.firstResultEl = undefined;
+          unsub();
+          resolve();
+        }
+      });
+    });
   }
 
   private get displayPlaceholders() {

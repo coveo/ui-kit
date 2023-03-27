@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.21.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.21.1...@coveo/atomic@2.21.2) (2023-03-23)
+
+### Bug Fixes
+
+- **atomic:** made smart snippet source title re-render when changed ([#2795](https://github.com/coveo/ui-kit/issues/2795) ([c98c490](https://github.com/coveo/ui-kit/commit/c98c490fbc129e80866d615cabd6c9c6bd445c0e))
+
+## [2.21.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.21.0...@coveo/atomic@2.21.1) (2023-03-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.21.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.20.2...@coveo/atomic@2.21.0) (2023-03-20)
+
+### Bug Fixes
+
+- **atomic:** multiple accessibility fixes ([#2782](https://github.com/coveo/ui-kit/issues/2782)) ([d90d353](https://github.com/coveo/ui-kit/commit/d90d3530a63e46f6e7f2cbf829c1cfa400398de8))
+
+### Features
+
+- recommendations error component ([#2787](https://github.com/coveo/ui-kit/issues/2787)) ([2d88e87](https://github.com/coveo/ui-kit/commit/2d88e8743970a4585fac807986420bc2c90b89ea))
+
+## [2.20.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.20.1...@coveo/atomic@2.20.2) (2023-03-15)
+
+### Bug Fixes
+
+- update css to not hide error in ipx ([#2781](https://github.com/coveo/ui-kit/issues/2781)) ([b41dc85](https://github.com/coveo/ui-kit/commit/b41dc8591894b338031b3177ed7e082d4e31847f))
+
+## [2.20.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.20.0...@coveo/atomic@2.20.1) (2023-03-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.20.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.18...@coveo/atomic@2.20.0) (2023-03-14)
+
+### Features
+
+- use querySelector with interface element ([#2767](https://github.com/coveo/ui-kit/issues/2767)) ([be94ca4](https://github.com/coveo/ui-kit/commit/be94ca4f054d4085350f995be86e7c4da5005695))
+
 ## [2.19.18](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.19.17...@coveo/atomic@2.19.18) (2023-03-13)
 
 **Note:** Version bump only for package @coveo/atomic

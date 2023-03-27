@@ -6,7 +6,7 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -53,6 +53,11 @@ export class AtomicResultsPerPage implements InitializableComponent {
    * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    */
   @Prop({mutable: true, reflect: true}) initialChoice?: number;
+
+  @Event({
+    eventName: 'atomic/scrollToTop',
+  })
+  private scrollToTopEvent!: EventEmitter;
 
   public initialize() {
     this.choices = this.validateChoicesDisplayed();
@@ -104,12 +109,25 @@ export class AtomicResultsPerPage implements InitializableComponent {
         style="outline-neutral"
         checked={isSelected}
         ariaLabel={text}
-        onChecked={() => this.resultPerPage.set(choice)}
+        onChecked={() => {
+          this.focusOnProperResultDependingOnChoice(choice);
+          this.resultPerPage.set(choice);
+        }}
         class="btn-page focus-visible:bg-neutral-light"
         part={parts.join(' ')}
         text={text}
       ></RadioButton>
     );
+  }
+
+  private focusOnProperResultDependingOnChoice(choice: number) {
+    if (choice < this.resultPerPageState.numberOfResults) {
+      this.bindings.store.state.resultList
+        ?.focusOnFirstResultAfterNextSearch()
+        .then(() => this.scrollToTopEvent.emit());
+    } else if (choice > this.resultPerPageState.numberOfResults) {
+      this.bindings.store.state.resultList?.focusOnNextNewResult();
+    }
   }
 
   public render() {

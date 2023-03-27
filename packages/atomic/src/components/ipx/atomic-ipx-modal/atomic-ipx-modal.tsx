@@ -42,6 +42,8 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
 
   @Event() animationEnded!: EventEmitter<never>;
 
+  @State() private hasFooterSlotElements = true;
+
   private focusTrap?: HTMLAtomicFocusTrapElement;
   private currentWatchToggleOpenExecution = 0;
 
@@ -79,6 +81,10 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
     this.isOpen && e.preventDefault();
   }
 
+  public componentWillLoad(): void | Promise<void> {
+    this.hasFooterSlotElements = !!this.host.querySelector('[slot="footer"]');
+  }
+
   public componentDidLoad() {
     const id = this.host.id || randomID('atomic-ipx-modal-');
     this.host.id = id;
@@ -91,7 +97,10 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
     this.updateBreakpoints();
 
     const Body = () => (
-      <atomic-ipx-body isOpen={this.isOpen}>
+      <atomic-ipx-body
+        isOpen={this.isOpen}
+        displayFooterSlot={this.hasFooterSlotElements}
+      >
         <slot name="header" slot="header" />
         <slot name="body" slot="body" />
         <slot name="footer" slot="footer" />
@@ -99,7 +108,7 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
     );
 
     return (
-      <Host class={this.getClasses().join(' ')}>
+      <Host class={this.getClasses().join(' ')} part="atomic-ipx-modal">
         <div part="backdrop">
           <atomic-focus-trap
             role="dialog"

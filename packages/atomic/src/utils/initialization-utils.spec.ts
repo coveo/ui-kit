@@ -144,7 +144,7 @@ describe('BindStateToController decorator', () => {
     component.initialize!();
 
     expect(console.error).toHaveBeenCalledWith(
-      'ControllerState: The "initialize" method has to be defined and instanciate a controller for the property controller',
+      'ControllerState: The "initialize" method has to be defined and instantiate a controller for the property controller',
       component
     );
   });
