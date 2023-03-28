@@ -178,7 +178,7 @@ export function buildEngine<
   let {platformUrl} = options.configuration;
 
   if (shouldWarnAboutOrganizationEndpoints(options)) {
-    // @v3 make organizationEndpoints true by default.
+    // @v3 make organizationEndpoints the default.
     engine.logger.warn(
       'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments.'
     );
