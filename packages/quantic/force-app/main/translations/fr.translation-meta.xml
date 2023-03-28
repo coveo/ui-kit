@@ -573,15 +573,15 @@
       <name>quantic_InclusionFilter_zero</name>
     </customLabels>
     <customLabels>
-      <label>Afficher tous les résultats</label>
-      <name>quantic_LoadAllResults</name>
+      <label>Charger les items liés</label>
+      <name>quantic_LoadRelatedItems</name>
     </customLabels>
     <customLabels>
-      <label>Cacher tous les résultats</label>
-      <name>quantic_CollapseResults</name>
+      <label>Masquer les items liés</label>
+      <name>quantic_HideRelatedItems</name>
     </customLabels>
     <customLabels>
-      <label>Aucun autre document n'est lié à celui-ci</label>
-      <name>quantic_NoMoreDocumentsRelated</name>
+      <label>Aucun item lié</label>
+      <name>quantic_NoRelatedItems</name>
     </customLabels>
 </Translations>

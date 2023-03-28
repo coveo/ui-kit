@@ -1,6 +1,6 @@
-import collapseResults from '@salesforce/label/c.quantic_CollapseResults';
-import loadAllResults from '@salesforce/label/c.quantic_LoadAllResults';
-import noMoreDocumentsRelated from '@salesforce/label/c.quantic_NoMoreDocumentsRelated';
+import hideRelatedItems from '@salesforce/label/c.quantic_HideRelatedItems';
+import loadRelatedItems from '@salesforce/label/c.quantic_LoadRelatedItems';
+import noRelatedItems from '@salesforce/label/c.quantic_NoRelatedItems';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import loadingTemplate from './loading.html';
@@ -56,9 +56,9 @@ export default class QuanticResultChildren extends LightningElement {
   @api resultTemplatesManager;
 
   labels = {
-    loadAllResults,
-    collapseResults,
-    noMoreDocumentsRelated,
+    loadRelatedItems,
+    hideRelatedItems,
+    noRelatedItems,
   };
 
   /** @type {boolean} */
@@ -115,9 +115,9 @@ export default class QuanticResultChildren extends LightningElement {
 
   get toggleChildResultsLabel() {
     if (!this.areChildResultsExpanded) {
-      return this.labels.loadAllResults;
+      return this.labels.loadRelatedItems;
     }
-    return this.labels.collapseResults;
+    return this.labels.hideRelatedItems;
   }
 
   get toggleFoldedResultsIcon() {

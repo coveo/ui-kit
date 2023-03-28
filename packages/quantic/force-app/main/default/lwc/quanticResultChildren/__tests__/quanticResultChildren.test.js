@@ -3,18 +3,18 @@
 import {createElement} from 'lwc';
 import QuanticResultChildren from '../quanticResultChildren';
 
-const loadAllResultsLabel = 'Load all results';
-const collapseResults = 'Collapse results';
+const loadRelatedItems = 'Load related items';
+const hideRelatedItems = 'Hide related items';
 jest.mock(
-  '@salesforce/label/c.quantic_LoadAllResults',
-  () => ({default: loadAllResultsLabel}),
+  '@salesforce/label/c.quantic_LoadRelatedItems',
+  () => ({default: loadRelatedItems}),
   {
     virtual: true,
   }
 );
 jest.mock(
-  '@salesforce/label/c.quantic_CollapseResults',
-  () => ({default: collapseResults}),
+  '@salesforce/label/c.quantic_HideRelatedItems',
+  () => ({default: hideRelatedItems}),
   {
     virtual: true,
   }
@@ -83,9 +83,7 @@ function createTestComponent(options = defaultOptions) {
     is: QuanticResultChildren,
   });
 
-  for (const [key, value] of Object.entries(options)) {
-    element[key] = value;
-  }
+  Object.assign(element, options);
 
   document.body.appendChild(element);
   return element;
@@ -170,7 +168,7 @@ describe('c-quantic-result-children', () => {
           const element = createTestComponent();
           await flushPromises();
 
-          await clickFoldedResultToggleButton(element, loadAllResultsLabel);
+          await clickFoldedResultToggleButton(element, loadRelatedItems);
           element.collection = {
             ...exampleCollection,
             isLoadingMoreResults: true,
@@ -193,7 +191,7 @@ describe('c-quantic-result-children', () => {
           selectors.toggleButton
         );
 
-        await clickFoldedResultToggleButton(element, loadAllResultsLabel);
+        await clickFoldedResultToggleButton(element, loadRelatedItems);
         expect(functionsMocks.loadCollection).toHaveBeenCalledTimes(1);
         element.collection = exampleCollectionWithAllResultsLoaded;
         await flushPromises();
@@ -202,13 +200,13 @@ describe('c-quantic-result-children', () => {
           exampleCollectionWithAllResultsLoaded
         );
 
-        await clickFoldedResultToggleButton(element, collapseResults);
+        await clickFoldedResultToggleButton(element, hideRelatedItems);
         expect(functionsMocks.logShowLessFoldedResults).toHaveBeenCalledTimes(
           1
         );
         expectProperChildResultsDisplay(element, exampleCollection);
 
-        await clickFoldedResultToggleButton(element, loadAllResultsLabel);
+        await clickFoldedResultToggleButton(element, loadRelatedItems);
         expect(functionsMocks.logShowMoreFoldedResults).toHaveBeenCalledTimes(
           1
         );
@@ -216,7 +214,7 @@ describe('c-quantic-result-children', () => {
           element,
           exampleCollectionWithAllResultsLoaded
         );
-        expect(foldedResultToggleButton.label).toBe(collapseResults);
+        expect(foldedResultToggleButton.label).toBe(hideRelatedItems);
       });
     });
   });
@@ -234,7 +232,7 @@ describe('c-quantic-result-children', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        await clickFoldedResultToggleButton(element, loadAllResultsLabel);
+        await clickFoldedResultToggleButton(element, loadRelatedItems);
         element.collection = {
           ...exampleCollection,
           moreResultsAvailable: false,
