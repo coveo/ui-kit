@@ -73,6 +73,30 @@ describe('searchEngine', () => {
         );
       });
 
+      it('configures proper url when analytics and search are not on the same base platform URL', () => {
+        const engine = buildSearchEngine({
+          configuration: {
+            accessToken: 'foo',
+            organizationId: 'bar',
+            organizationEndpoints: {
+              search: 'https://my-custom-proxy.com',
+              analytics: 'https://myorg.analytics.org.coveo.com',
+              platform: 'https://myorg.org.coveo.com',
+            },
+          },
+        });
+
+        expect(engine.state.configuration.platformUrl).toBe(
+          'https://myorg.org.coveo.com'
+        );
+        expect(engine.state.configuration.search.apiBaseUrl).toBe(
+          'https://my-custom-proxy.com'
+        );
+        expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
+          'https://myorg.analytics.org.coveo.com'
+        );
+      });
+
       it('configures proper url when deprecated #platformUrl is used', () => {
         const engine = buildSearchEngine({
           configuration: {
