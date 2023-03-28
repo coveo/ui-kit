@@ -116,11 +116,6 @@ function createSearchAPIClient(
   logger: Logger
 ) {
   return new SearchAPIClient({
-    useOrganizationEndpoints: isNullOrUndefined(
-      configuration.useOrganizationEndpoints
-    )
-      ? false
-      : configuration.useOrganizationEndpoints,
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     postprocessSearchResponseMiddleware:

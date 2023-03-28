@@ -49,12 +49,9 @@ export const isCoveoPlatformURL = (url: string) =>
 
 export const isCoveoOrganizationEndpointUrl = (
   url: string,
-  organizationId: string,
-  env: PlatformEnvironment = 'prod'
+  organizationId: string
 ) => {
-  const envSuffix = env === 'prod' ? '' : env;
-
   return url.match(
-    new RegExp(`^https://(${organizationId}\\.org${envSuffix})\\.coveo.com`)
+    new RegExp(`^https://${organizationId}\\.org(dev|stg|hipaa)?\\.coveo.com`)
   );
 };

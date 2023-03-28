@@ -714,24 +714,4 @@ describe('search api client', () => {
       );
     });
   });
-
-  describe('with useOrganizationEndpoints', () => {
-    beforeEach(() => {
-      buildSearchAPIClient({useOrganizationEndpoints: true});
-    });
-
-    it('should not append organization id in query string parameter', async () => {
-      state.configuration.search.apiBaseUrl =
-        'https://myorg.cloud.coveo.com/rest/search/v2';
-      const req = (await buildSearchRequest(state)).request;
-      searchAPIClient.search(req);
-      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
-
-      const expectedRequest: Partial<PlatformClientCallOptions> = {
-        url: 'https://myorg.cloud.coveo.com/rest/search/v2',
-      };
-
-      expect(request).toMatchObject(expect.objectContaining(expectedRequest));
-    });
-  });
 });

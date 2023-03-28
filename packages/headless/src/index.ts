@@ -91,8 +91,9 @@ export type {
 export {
   platformUrl,
   analyticsUrl,
-  getOrganizationEnpoints,
+  getOrganizationEndpoints,
 } from './api/platform-client';
+export type {PlatformEnvironment} from './utils/url-utils';
 export type {
   CategoryFacetValueRequest,
   CategoryFacetSortCriterion,

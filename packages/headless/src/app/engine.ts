@@ -10,7 +10,6 @@ import {
   Reducer,
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {getOrganizationEnpoints} from '../api/platform-client';
 import {
   disableAnalytics,
   enableAnalytics,
@@ -19,7 +18,6 @@ import {
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
 import {SearchParametersState} from '../state/search-app-state';
-import {isCoveoOrganizationEndpointUrl} from '../utils/url-utils';
 import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
 import {EngineConfiguration} from './engine-configuration';
@@ -146,16 +144,25 @@ function getUpdateAnalyticsConfigurationPayload(
   options: EngineOptions<ReducersMapObject>,
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
+  const apiBaseUrl =
+    options.configuration.organizationEndpoints?.analytics || undefined;
   const {analyticsClientMiddleware: _, ...payload} =
     options.configuration.analytics ?? {};
+
+  const payloadWithURL = {
+    ...payload,
+    apiBaseUrl,
+  };
+
   if (doNotTrack()) {
     logger.info('Analytics disabled since doNotTrack is active.');
     return {
-      ...payload,
+      ...payloadWithURL,
       enabled: false,
     };
   }
-  return options.configuration.analytics ? payload : null;
+
+  return payloadWithURL;
 }
 
 export function buildEngine<
@@ -167,25 +174,24 @@ export function buildEngine<
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {accessToken, organizationId} = options.configuration;
-  let {platformUrl, useOrganizationEndpoints} = options.configuration;
+  const {organizationEndpoints} = options.configuration;
+  let {platformUrl} = options.configuration;
 
   if (shouldWarnAboutOrganizationEndpoints(options)) {
-    // @v3 make useOrganizationEndpoints true by default.
+    // @v3 make organizationEndpoints true by default.
     engine.logger.warn(
-      'The `useOrganizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option to `true`, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments.'
+      'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments.'
     );
-    useOrganizationEndpoints = false;
   }
 
   if (shouldWarnAboutPlatformURL(options)) {
     engine.logger.warn(
-      `The \`useOrganizationEndpoints\` (${options.configuration.useOrganizationEndpoints}) option cannot be set to \`true\` at the same time as \`platformUrl\`(${options.configuration.platformUrl}) is populated in the Headless engine configuration. These options are incompatible. \`useOrganizationEndpoints\` will be set to false.`
+      `The \`platformUrl\` (${options.configuration.platformUrl}) option will be deprecated in the next major version. Consider using the \`organizationEndpoints\` option instead.`
     );
-    useOrganizationEndpoints = false;
   }
 
-  if (useOrganizationEndpoints) {
-    platformUrl = getOrganizationEnpoints(organizationId).platform;
+  if (organizationEndpoints?.platform) {
+    platformUrl = organizationEndpoints.platform;
   }
 
   engine.dispatch(
@@ -296,23 +302,9 @@ function createMiddleware<Reducers extends ReducersMapObject>(
 function shouldWarnAboutOrganizationEndpoints(
   options: EngineOptions<ReducersMapObject>
 ) {
-  return (
-    isNullOrUndefined(options.configuration.useOrganizationEndpoints) &&
-    isNullOrUndefined(options.configuration.platformUrl)
-  );
+  return isNullOrUndefined(options.configuration.organizationEndpoints);
 }
 
 function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
-  if (
-    isNullOrUndefined(options.configuration.platformUrl) ||
-    isNullOrUndefined(options.configuration.useOrganizationEndpoints) ||
-    options.configuration.useOrganizationEndpoints === false
-  ) {
-    return false;
-  }
-
-  return !isCoveoOrganizationEndpointUrl(
-    options.configuration.platformUrl,
-    options.configuration.organizationId
-  );
+  return !isNullOrUndefined(options.configuration.platformUrl);
 }

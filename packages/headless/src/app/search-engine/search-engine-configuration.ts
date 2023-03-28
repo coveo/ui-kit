@@ -12,14 +12,23 @@ import {
   engineConfigurationDefinitions,
   EngineConfiguration,
   getSampleEngineConfiguration,
+  CoreEngineOrganizationEndpoints,
 } from '../engine-configuration';
+
+export interface SearchEngineOrganizationEndpoints
+  extends CoreEngineOrganizationEndpoints {
+  search?: string;
+}
 
 /**
  * The search engine configuration.
  */
-export interface SearchEngineConfiguration extends EngineConfiguration {
+export interface SearchEngineConfiguration
+  extends EngineConfiguration<SearchEngineOrganizationEndpoints> {
   /**
-   * The global headless engine configuration options specific to the SearchAPI.
+   * The base Search API endpoint.
+   *
+   * For example, https://orgid.org.coveo.com/rest/search/v2
    */
   search?: SearchConfigurationOptions;
 }

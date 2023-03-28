@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
@@ -113,11 +112,6 @@ function createSearchAPIClient(
 ) {
   const {search} = configuration;
   return new SearchAPIClient({
-    useOrganizationEndpoints: isNullOrUndefined(
-      configuration.useOrganizationEndpoints
-    )
-      ? false
-      : configuration.useOrganizationEndpoints,
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     postprocessSearchResponseMiddleware:

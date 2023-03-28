@@ -61,7 +61,6 @@ export interface SearchAPIClientOptions extends HtmlAPIClientOptions {
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
-  useOrganizationEndpoints: boolean;
 }
 
 export type SearchAPIClientResponse<T> =
@@ -75,13 +74,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(
-        req,
-        'POST',
-        'application/json',
-        '/plan',
-        this.options.useOrganizationEndpoints
-      ),
+      ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'plan'},
       ...this.options,
@@ -106,13 +99,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     req: QuerySuggestRequest
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(
-        req,
-        'POST',
-        'application/json',
-        '/querySuggest',
-        this.options.useOrganizationEndpoints
-      ),
+      ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
       requestMetadata: {method: 'querySuggest'},
       requestParams: pickNonBaseParams(req),
       ...this.options,
@@ -151,13 +138,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     this.searchAbortController = this.getAbortControllerInstanceIfAvailable();
 
     const response = await PlatformClient.call({
-      ...baseSearchRequest(
-        req,
-        'POST',
-        'application/json',
-        '',
-        this.options.useOrganizationEndpoints
-      ),
+      ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'search', origin: options?.origin},
       ...this.options,
@@ -192,13 +173,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async facetSearch(req: FacetSearchRequest) {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(
-        req,
-        'POST',
-        'application/json',
-        '/facet',
-        this.options.useOrganizationEndpoints
-      ),
+      ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'facetSearch'},
       ...this.options,
@@ -219,13 +194,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async recommendations(req: RecommendationRequest) {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(
-        req,
-        'POST',
-        'application/json',
-        '',
-        this.options.useOrganizationEndpoints
-      ),
+      ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'recommendations'},
       ...this.options,
@@ -252,13 +221,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async productRecommendations(req: ProductRecommendationsRequest) {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(
-        req,
-        'POST',
-        'application/json',
-        '',
-        this.options.useOrganizationEndpoints
-      ),
+      ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'productRecommendations'},
       ...this.options,
@@ -281,13 +244,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async fieldDescriptions(req: BaseParam) {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(
-        req,
-        'GET',
-        'application/json',
-        '/fields',
-        this.options.useOrganizationEndpoints
-      ),
+      ...baseSearchRequest(req, 'GET', 'application/json', '/fields'),
       requestParams: {},
       requestMetadata: {method: 'fieldDescriptions'},
       ...this.options,

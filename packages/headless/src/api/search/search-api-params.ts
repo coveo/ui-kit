@@ -129,16 +129,15 @@ export const baseSearchRequest = (
   req: BaseParam & AuthenticationParam,
   method: HttpMethods,
   contentType: HTTPContentType,
-  path: string,
-  useOrganizationEndpoints: boolean
+  path: string
 ): Pick<
   PlatformClientCallOptions,
   'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
 > => {
   const url = new URLPath(`${req.url}${path}`);
-  if (!useOrganizationEndpoints) {
-    url.addParam('organizationId', req.organizationId);
-  }
+
+  url.addParam('organizationId', req.organizationId);
+
   if (req.authentication) {
     url.addParam('authentication', req.authentication);
   }

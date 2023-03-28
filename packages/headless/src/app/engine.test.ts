@@ -1,3 +1,4 @@
+import {getOrganizationEndpoints} from '../api/platform-client';
 import * as Store from '../app/store';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
@@ -116,56 +117,48 @@ describe('engine', () => {
     expect(stateListener).not.toHaveBeenCalled();
   });
 
-  it('should correctly log warnings when dealing with the useOrganizationEndpoints and platformUrl option', () => {
+  it('should correctly log warnings when dealing with the organizationEndpoints and platformUrl option', () => {
     const testCases: Array<{
-      useOrganizationEndpoints: boolean | undefined;
+      organizationEndpoints:
+        | ReturnType<typeof getOrganizationEndpoints>
+        | undefined;
       platformUrl: string | undefined;
       expectation: () => void;
     }> = [
       {
-        useOrganizationEndpoints: undefined,
+        organizationEndpoints: undefined,
         platformUrl: undefined,
         expectation: () =>
           expect(engine.logger.warn).toHaveBeenCalledWith(
             expect.stringContaining(
-              'The `useOrganizationEndpoints` options was not explicitly set in the Headless engine configuration'
+              'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.'
             )
           ),
       },
       {
-        useOrganizationEndpoints: true,
+        organizationEndpoints: getOrganizationEndpoints('myorg'),
         platformUrl: undefined,
         expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
       },
       {
-        useOrganizationEndpoints: false,
-        platformUrl: undefined,
-        expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
-      },
-      {
-        useOrganizationEndpoints: undefined,
-        platformUrl: 'https://definitely.not.a.coveo.custom.dns',
-        expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
-      },
-      {
-        useOrganizationEndpoints: true,
+        organizationEndpoints: undefined,
         platformUrl: 'https://definitely.not.a.coveo.custom.dns',
         expectation: () =>
           expect(engine.logger.warn).toHaveBeenCalledWith(
             expect.stringContaining(
-              'The `useOrganizationEndpoints` (true) option cannot be set to `true` at the same time as `platformUrl`'
+              'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.'
             )
           ),
       },
       {
-        useOrganizationEndpoints: false,
+        organizationEndpoints: getOrganizationEndpoints('myorg'),
         platformUrl: 'https://definitely.not.a.coveo.custom.dns',
-        expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
-      },
-      {
-        useOrganizationEndpoints: true,
-        platformUrl: 'https://orgId.org.coveo.com',
-        expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
+        expectation: () =>
+          expect(engine.logger.warn).toHaveBeenCalledWith(
+            expect.stringContaining(
+              'The `platformUrl` (https://definitely.not.a.coveo.custom.dns) option will be deprecated in the next major version.'
+            )
+          ),
       },
     ];
 

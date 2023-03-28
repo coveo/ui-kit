@@ -15,11 +15,13 @@
         await customElements.whenDefined('atomic-recs-interface');
         const recsInterfaces = Array.from(document.querySelectorAll('atomic-recs-interface'));
         await Promise.all(
-          recsInterfaces.map((recommendationInterface) =>
+          recsInterfaces.map(async (recommendationInterface) =>
             recommendationInterface.initialize({
               accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
               organizationId: 'fashioncoveodemocomgzh7iep8',
-              useOrganizationEndpoints: true,
+              organizationEndpoints: await recommendationInterface.getOrganizationEndpoints(
+                'fashioncoveodemocomgzh7iep8'
+              ),
             })
           )
         );

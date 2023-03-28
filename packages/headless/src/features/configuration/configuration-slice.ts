@@ -1,9 +1,11 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {clearAnalyticsClient} from '../../api/analytics/search-analytics';
+import {getOrganizationEndpoints} from '../../api/platform-client';
 import {
   isCoveoOrganizationEndpointUrl,
   isCoveoPlatformURL,
+  PlatformEnvironment,
 } from '../../utils/url-utils';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
@@ -40,10 +42,10 @@ function analyticsUrlFromPlatformUrl(
   );
 
   if (matchCoveoOrganizationEndpoints) {
-    return platformUrl.replace(
-      matchCoveoOrganizationEndpoints[1],
-      `${organizationId}.analytics.org`
-    );
+    return getOrganizationEndpoints(
+      organizationId,
+      matchCoveoOrganizationEndpoints[1] as PlatformEnvironment
+    ).analytics;
   }
 
   return platformUrl;

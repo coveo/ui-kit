@@ -122,11 +122,6 @@ function createCaseAssistAPIClient(
   logger: Logger
 ) {
   return new CaseAssistAPIClient({
-    useOrganizationEndpoints: isNullOrUndefined(
-      configuration.useOrganizationEndpoints
-    )
-      ? false
-      : configuration.useOrganizationEndpoints,
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
   });

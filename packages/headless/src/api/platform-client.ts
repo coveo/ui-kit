@@ -133,14 +133,14 @@ function coveoCloudURL<E extends PlatformEnvironment>(
  * @param env Optional. The environment (prod, hipaa, staging, dev) that the organization belongs to. Defaults to `prod`.
  * @returns
  */
-export function getOrganizationEnpoints(
+export function getOrganizationEndpoints(
   orgId: string,
   env: PlatformEnvironment = 'prod'
 ) {
   const envSuffix = env === 'prod' ? '' : env;
 
   const platform = `https://${orgId}.org${envSuffix}.coveo.com`;
-  const analytics = `https://${orgId}.analytics.org${envSuffix}.coveo.com/rest/v15`;
+  const analytics = `https://${orgId}.analytics.org${envSuffix}.coveo.com`;
   const search = `${platform}/rest/search/v2`;
 
   return {platform, analytics, search};
