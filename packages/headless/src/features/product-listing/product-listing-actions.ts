@@ -22,9 +22,11 @@ import {
 } from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {validatePayload} from '../../utils/validate-payload';
+import {SearchAction} from '../analytics/analytics-utils';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../search/search-analytics-actions';
 import {SortBy} from '../sort/sort';
+import {logProductListing} from './product-listing-analytics.actions';
 import {ProductListingState} from './product-listing-state';
 
 export interface SetProductListingUrlPayload {
@@ -83,6 +85,7 @@ export type StateNeededByFetchProductListing = ConfigurationSection &
 export interface FetchProductListingThunkReturn {
   /** The successful search response. */
   response: ProductListingSuccessResponse;
+  analyticsAction: SearchAction;
 }
 
 export const fetchProductListing = createAsyncThunk<
@@ -105,6 +108,7 @@ export const fetchProductListing = createAsyncThunk<
 
     return {
       response: fetched.success,
+      analyticsAction: logProductListing(),
     };
   }
 );
