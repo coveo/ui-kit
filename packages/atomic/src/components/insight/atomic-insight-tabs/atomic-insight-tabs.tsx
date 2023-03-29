@@ -1,4 +1,5 @@
 import {Component, Element, h} from '@stencil/core';
+import {TabCommon} from '../../common/tabs/tabs-common';
 
 /**
  * @internal
@@ -11,22 +12,21 @@ import {Component, Element, h} from '@stencil/core';
 export class AtomicInsightTabs {
   @Element() host!: HTMLElement;
 
-  private scrollCallback = (e: Event) => {
-    e.preventDefault();
-    this.host.scrollLeft += (e as WheelEvent).deltaY;
-  };
+  private tabCommon!: TabCommon;
 
-  public connectedCallback() {
-    this.host.addEventListener('mousewheel', this.scrollCallback);
+  public componentWillLoad() {
+    this.tabCommon = new TabCommon({host: this.host});
   }
-  public disconnectedCallback() {
-    this.host.removeEventListener('mousewheel', this.scrollCallback);
+
+  public componentDidRender() {
+    this.tabCommon.updateTabsDisplay();
   }
 
   public render() {
     return (
       <div class="flex">
         <slot></slot>
+        {this.tabCommon.renderMoreButton()}
       </div>
     );
   }
