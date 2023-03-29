@@ -14,14 +14,9 @@ export function selectIdleCheckboxValueAt(
   FacetWithCheckboxSelector.idleCheckboxValueLabel()
     .eq(index)
     .then((idleCheckboxValueLabel) => {
-      const hasAriaLabel = !!idleCheckboxValueLabel.attr('aria-label');
-      const text = hasAriaLabel
-        ? idleCheckboxValueLabel.attr('aria-label')!
-        : idleCheckboxValueLabel.text();
+      const text = idleCheckboxValueLabel.text();
       FacetWithCheckboxSelector.idleCheckboxValueLabel()
-        .filter(
-          hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`
-        )
+        .contains(text)
         .its('length')
         .should(
           'eq',
@@ -44,14 +39,9 @@ export function selectIdleLinkValueAt(
   FacetWithLinkSelector.idleLinkValueLabel()
     .eq(index)
     .then((idleLinkValueLabel) => {
-      const hasAriaLabel = !!idleLinkValueLabel.attr('aria-label');
-      const text = hasAriaLabel
-        ? idleLinkValueLabel.attr('aria-label')!
-        : idleLinkValueLabel.text();
+      const text = idleLinkValueLabel.text();
       FacetWithLinkSelector.idleLinkValueLabel()
-        .filter(
-          hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`
-        )
+        .contains(text)
         .its('length')
         .should(
           'eq',

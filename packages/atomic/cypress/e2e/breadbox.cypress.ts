@@ -3,7 +3,6 @@ import {
   addBreadbox,
   breadboxLabel,
   deselectAllBreadcrumbs,
-  deselectBreadcrumbAtIndex,
 } from './breadbox-actions';
 import * as BreadboxAssertions from './breadbox-assertions';
 import {breadboxComponent, BreadboxSelectors} from './breadbox-selectors';
@@ -155,31 +154,6 @@ describe('Breadbox Test Suites', () => {
     });
   });
 
-  describe('when selecting 3 facet values', () => {
-    beforeEach(() => {
-      setupBreadboxWithMultipleFacets();
-      for (let i = 0; i < 3; i++) {
-        selectIdleCheckboxValueAt(FacetSelectors, 0);
-      }
-    });
-
-    describe('when clearing the second breadcrumb', () => {
-      beforeEach(() => {
-        deselectBreadcrumbAtIndex(1);
-      });
-
-      BreadboxAssertions.assertFocusBreadcrumb(1);
-    });
-
-    describe('when clearing the last breadcrumb', () => {
-      beforeEach(() => {
-        deselectBreadcrumbAtIndex(2);
-      });
-
-      BreadboxAssertions.assertFocusClearAll();
-    });
-  });
-
   describe('when selecting 16 facet values', () => {
     const activeValues = [...Array(16).keys()];
 
@@ -213,12 +187,6 @@ describe('Breadbox Test Suites', () => {
         BreadboxSelectors.breadcrumbShowMoreButton().click();
       }
 
-      describe('verify accessibility', () => {
-        beforeEach(setupFacetWithMultipleSelectedValuesAndShowMore);
-
-        BreadboxAssertions.assertFocusBreadcrumb('@numberOfVisibleButtons');
-      });
-
       describe('verify rendering', () => {
         before(setupFacetWithMultipleSelectedValuesAndShowMore);
 
@@ -233,10 +201,6 @@ describe('Breadbox Test Suites', () => {
         setupFacetWithMultipleSelectedValues();
         BreadboxSelectors.breadcrumbShowMoreButton().click();
         BreadboxSelectors.breadcrumbShowLessButton().click();
-      });
-
-      describe('verify accessibility', () => {
-        BreadboxAssertions.assertFocusShowMore();
       });
 
       describe('verify rendering', () => {

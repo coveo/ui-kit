@@ -137,9 +137,11 @@ export function assertNumberOfIdleLinkValues(
 
 export function assertDisplayClearButton(
   BaseFacetSelector: BaseFacetSelector,
-  display: boolean
+  display: boolean,
+  setup = () => {}
 ) {
   it(`${should(display)} display a "Clear filter" button`, () => {
+    setup();
     BaseFacetSelector.clearButton().should(
       display ? 'be.visible' : 'not.exist'
     );

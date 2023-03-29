@@ -35,9 +35,11 @@ export const SegmentedFacetSelectors = {
     );
   },
   selectedLinkValueWithText(text: string) {
-    return this.shadow().find(
-      `[part~="value-link"][part~="value-link-selected"][aria-pressed="true"] [part="value-label"]:contains("${text}")`
-    );
+    return this.shadow()
+      .find(
+        '[part~="value-link"][part~="value-link-selected"][aria-pressed="true"] [part="value-label"]'
+      )
+      .contains(text);
   },
   idleLinkValueLabel() {
     return this.shadow().find(
@@ -55,9 +57,11 @@ export const SegmentedFacetSelectors = {
     );
   },
   selectedBoxValueWithText(text: string) {
-    return this.shadow().find(
-      `[part~="value-box"][part~="value-box-selected"][aria-pressed="true"]:contains("${text}")`
-    );
+    return this.shadow()
+      .find(
+        '[part~="value-box"][part~="value-box-selected"][aria-pressed="true"]'
+      )
+      .contains(text);
   },
   idleBoxValueLabel() {
     return this.idleBoxValue().find('[part="value-label"]');
