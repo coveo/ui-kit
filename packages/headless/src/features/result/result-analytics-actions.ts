@@ -18,5 +18,5 @@ export const logDocumentOpen = (result: Result): ClickAction =>
         partialDocumentInformation(result, state),
         documentIdentifier(result)
       );
-    } // add new provider here to override the default one
+    }
   );
