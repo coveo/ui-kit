@@ -572,4 +572,12 @@
       <label>Filtre d'inclusion sur {{0}}; aucun résultat</label>
       <name>quantic_InclusionFilter_zero</name>
     </customLabels>
+    <customLabels>
+      <label>Requêtes récentes</label>
+      <name>quantic_RecentQueries</name>
+    </customLabels>
+    <customLabels>
+      <label>Vos requêtes récentes s'afficheront ici.</label>
+      <name>quantic_EmptyRecentQueriesListLabel</name>
+    </customLabels>
 </Translations>
