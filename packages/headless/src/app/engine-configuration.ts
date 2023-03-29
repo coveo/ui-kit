@@ -9,6 +9,7 @@ import {
   IRuntimeEnvironment,
 } from 'coveo.analytics';
 import {PreprocessRequest} from '../api/preprocess-request';
+import {getOrganizationEndpoints} from '../recommendation.index';
 import {requiredNonEmptyString} from '../utils/validate-payload';
 
 /**
@@ -190,5 +191,6 @@ export function getSampleEngineConfiguration(): EngineConfiguration {
     organizationId: 'searchuisamples',
     // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
     accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    organizationEndpoints: getOrganizationEndpoints('searchuisamples'),
   };
 }
