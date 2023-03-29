@@ -1,6 +1,6 @@
 import {Result} from '../../../api/search/search/result';
+import {logProductListingOpen} from '../../../features/product-listing/product-listing-analytics.actions';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {logDocumentOpen} from '../../../features/result/result-analytics-actions';
 import {ProductListingEngine} from '../../../product-listing.index';
 import {
   buildInteractiveResultCore,
@@ -46,7 +46,7 @@ export function buildInteractiveResult(
       return;
     }
     wasOpened = true;
-    engine.dispatch(logDocumentOpen(props.options.result));
+    engine.dispatch(logProductListingOpen(props.options.result));
   };
 
   const action = () => {
