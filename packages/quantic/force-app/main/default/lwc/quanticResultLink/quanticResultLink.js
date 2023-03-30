@@ -82,7 +82,7 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
       .catch((error) => {
         console.error(error.message);
       });
-    this.checkResultType();
+      this.checkResultType();
   }
 
   /**
@@ -111,7 +111,6 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
     const targetPageRef = {
       type: 'standard__recordPage',
       attributes: {
-        // recordId: '500Da0000071mWCIAY',
         recordId: this.getRecordIdAttribute(),
         objectApiName: this.getObjectApiNameAttribute(),
         actionName: 'view',
