@@ -14,16 +14,23 @@ export function selectIdleCheckboxValueAt(
   FacetWithCheckboxSelector.idleCheckboxValueLabel()
     .eq(index)
     .then((idleCheckboxValueLabel) => {
-      const text = idleCheckboxValueLabel.text();
+      const hasAriaLabel = !!idleCheckboxValueLabel.attr('aria-label');
+      const text = hasAriaLabel
+        ? idleCheckboxValueLabel.attr('aria-label')!
+        : idleCheckboxValueLabel.text();
       FacetWithCheckboxSelector.idleCheckboxValueLabel()
-        .contains(text)
+        .filter(
+          hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`
+        )
         .its('length')
         .should(
           'eq',
           1,
           'There should not be any other value similar to this one.'
         );
-      cy.wrap(idleCheckboxValueLabel).click();
+      cy.wrap(idleCheckboxValueLabel)
+        .click()
+        .wait(TestFixture.interceptAliases.Search);
       FacetWithCheckboxSelector.checkboxValueWithText(text).should(
         'have.attr',
         'aria-checked',
@@ -39,16 +46,23 @@ export function selectIdleLinkValueAt(
   FacetWithLinkSelector.idleLinkValueLabel()
     .eq(index)
     .then((idleLinkValueLabel) => {
-      const text = idleLinkValueLabel.text();
+      const hasAriaLabel = !!idleLinkValueLabel.attr('aria-label');
+      const text = hasAriaLabel
+        ? idleLinkValueLabel.attr('aria-label')!
+        : idleLinkValueLabel.text();
       FacetWithLinkSelector.idleLinkValueLabel()
-        .contains(text)
+        .filter(
+          hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`
+        )
         .its('length')
         .should(
           'eq',
           1,
           'There should not be any other value similar to this one.'
         );
-      cy.wrap(idleLinkValueLabel).click();
+      cy.wrap(idleLinkValueLabel)
+        .click()
+        .wait(TestFixture.interceptAliases.Search);
       FacetWithLinkSelector.selectedLinkValueWithText(text).should('exist');
     });
 }

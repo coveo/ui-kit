@@ -58,9 +58,11 @@ export function assertLabelContains(
 
 export function assertDisplayFacet(
   BaseFacetSelector: BaseFacetSelector,
-  display: boolean
+  display: boolean,
+  setup = () => {}
 ) {
   it(`${should(display)} display the facet`, () => {
+    setup();
     BaseFacetSelector.wrapper().should(display ? 'be.visible' : 'not.exist');
   });
 }
@@ -137,11 +139,9 @@ export function assertNumberOfIdleLinkValues(
 
 export function assertDisplayClearButton(
   BaseFacetSelector: BaseFacetSelector,
-  display: boolean,
-  setup = () => {}
+  display: boolean
 ) {
   it(`${should(display)} display a "Clear filter" button`, () => {
-    setup();
     BaseFacetSelector.clearButton().should(
       display ? 'be.visible' : 'not.exist'
     );

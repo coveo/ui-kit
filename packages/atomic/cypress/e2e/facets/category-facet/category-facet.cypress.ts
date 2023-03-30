@@ -944,22 +944,23 @@ describe('Category Facet Test Suites', () => {
       );
 
       describe('when the dependency is met', () => {
-        before(() => {
+        const setup = () => {
           typeFacetSearchQuery(
             CategoryFacetSelectors.withId(facetId),
             expectedValue,
             true
           );
           selectSearchResultAt(0);
-        });
-
+        };
         CommonFacetAssertions.assertDisplayFacet(
           FacetSelectors.withId(dependentFacetId),
-          true
+          true,
+          setup
         );
         CommonFacetAssertions.assertDisplayFacet(
           CategoryFacetSelectors.withId(facetId),
-          true
+          true,
+          setup
         );
       });
     });
