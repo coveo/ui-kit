@@ -11,7 +11,7 @@ pipeline {
     dockerfile {
       dir 'cypress'
       args '--cap-add=SYS_ADMIN'
-      label 'fts_qa'
+      label 'dev-us-east-1'
     }
   }
 
