@@ -125,12 +125,9 @@ export default class QuanticResultQuickview extends LightningElement {
           },
         }
       );
-      this.addEventListener(
-        'loadingstatechange',
-        this.handleLoadingStateChange
-      );
       this.dispatchEvent(resultActionRegister);
     }
+    this.addEventListener('loadingstatechange', this.handleLoadingStateChange);
   }
 
   renderedCallback() {
@@ -226,7 +223,8 @@ export default class QuanticResultQuickview extends LightningElement {
     });
   }
 
-  handleLoadingStateChange() {
+  handleLoadingStateChange(event) {
+    event.stopPropagation();
     this._isLoading = false;
   }
 

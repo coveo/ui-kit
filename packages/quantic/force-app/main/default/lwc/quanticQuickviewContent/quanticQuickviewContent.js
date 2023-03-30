@@ -38,6 +38,10 @@ export default class QuanticQuickviewContent extends LightningElement {
     this.dispatchEvent(new CustomEvent('loadingstatechange'));
   }
 
+  stopPropagation(evt) {
+    evt.stopPropagation();
+  }
+
   render() {
     if (this.result?.uniqueId.includes(allowedHost.youtube)) {
       return youtubeTemplate;
