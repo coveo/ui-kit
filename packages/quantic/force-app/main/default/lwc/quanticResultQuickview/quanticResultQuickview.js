@@ -226,9 +226,8 @@ export default class QuanticResultQuickview extends LightningElement {
     });
   }
 
-  handleLoadingStateChange(event) {
-    console.log('event handled in resultquickview');
-    this._isLoading = event?.detail?.isLoading;
+  handleLoadingStateChange() {
+    this._isLoading = false;
   }
 
   get contentURL() {

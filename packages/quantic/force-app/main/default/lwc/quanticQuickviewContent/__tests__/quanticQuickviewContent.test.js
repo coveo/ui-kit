@@ -102,13 +102,7 @@ describe('c-quantic-quickview-content', () => {
       const iframe = element.shadowRoot.querySelector(
         youtubeTestCase.selectors.iframeSelector
         );
-        iframe.onload = async () => {
-          const event = new CustomEvent('loadingstatechange', {
-            detail: {isLoading: false},
-          });
-          await element.dispatchEvent(event);
-        };
-      await flushPromises();
+      iframe.dispatchEvent(new CustomEvent('load'));
 
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
       expect(iframe).not.toBeNull();
