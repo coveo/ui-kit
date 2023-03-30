@@ -1,3 +1,8 @@
 <template>
-  <a href={result.clickUri} target={target}>{displayedTitle}</a>
+  <template if:true={isSalesforceLink}>
+    <a href="#" onclick={handleOpenTabSalesforceLink}>{displayedTitle}</a>
+  </template>
+  <template if:false={isSalesforceLink}>
+    <a href={result.clickUri} target={target}>{displayedTitle}</a>
+  </template>
 </template>
