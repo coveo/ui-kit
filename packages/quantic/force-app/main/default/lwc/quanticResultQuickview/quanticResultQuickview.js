@@ -2,10 +2,14 @@ import close from '@salesforce/label/c.quantic_Close';
 import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
 import openFileForPreview from '@salesforce/label/c.quantic_OpenFileForPreview';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
-import { getHeadlessBundle, getHeadlessEnginePromise, HeadlessBundleNames, isHeadlessBundle } from 'c/quanticHeadlessLoader';
-import { I18nUtils, getLastFocusableElement } from 'c/quanticUtils';
-import { LightningElement, api, track } from 'lwc';
-
+import {
+  getHeadlessBundle,
+  getHeadlessEnginePromise,
+  HeadlessBundleNames,
+  isHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
+import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -121,6 +125,10 @@ export default class QuanticResultQuickview extends LightningElement {
           },
         }
       );
+      this.addEventListener(
+        'loadingstatechange',
+        this.handleLoadingStateChange
+      );
       this.dispatchEvent(resultActionRegister);
     }
   }
@@ -153,6 +161,10 @@ export default class QuanticResultQuickview extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.removeEventListener(
+      'loadingstatechange',
+      this.handleLoadingStateChange
+    );
   }
 
   updateState() {
@@ -215,6 +227,7 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   handleLoadingStateChange(event) {
+    console.log('event handled in resultquickview');
     this._isLoading = event?.detail?.isLoading;
   }
 
@@ -227,7 +240,6 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get isLoading() {
-    this.handleLoadingStateChange();
     return this._isLoading;
   }
 

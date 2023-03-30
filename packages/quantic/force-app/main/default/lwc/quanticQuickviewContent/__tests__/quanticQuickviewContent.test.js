@@ -1,6 +1,19 @@
 // @ts-ignore
-import {createElement} from 'lwc';
+import { createElement } from 'lwc';
 import QuanticQuickviewContent from '../quanticQuickviewContent';
+
+
+const functionsMocks = {
+  listener: jest.fn(() => {}),
+};
+
+function setupSimulation(element, eventName) {
+  const handler = () => {
+    functionsMocks.listener();
+    element.removeEventListener(eventName, handler);
+  }
+  element.addEventListener(eventName, handler);
+}
 
 const contentURLMock = 'https://longdogechallenge.com/';
 
@@ -16,6 +29,7 @@ const youtubeTestCase = {
   },
   selectors: {
     templateSelector: '.iframe-wrapper__youtube',
+    iframeSelector: '.quickview__content-iframe'
   },
 };
 const defaultTestCase = {
@@ -75,6 +89,29 @@ describe('c-quantic-quickview-content', () => {
       );
 
       expect(actualTemplate).not.toBeNull();
+    });
+  });
+
+  describe('when the iframe is loaded', () => {
+    it('should dispatch the loadingstatechange event properly', async () => {
+      const element = createTestComponent(youtubeTestCase.options);
+      await flushPromises();
+
+      setupSimulation(element, 'loadingstatechange');
+
+      const iframe = element.shadowRoot.querySelector(
+        youtubeTestCase.selectors.iframeSelector
+        );
+        iframe.onload = async () => {
+          const event = new CustomEvent('loadingstatechange', {
+            detail: {isLoading: false},
+          });
+          await element.dispatchEvent(event);
+        };
+      await flushPromises();
+
+      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
+      expect(iframe).not.toBeNull();
     });
   });
 });

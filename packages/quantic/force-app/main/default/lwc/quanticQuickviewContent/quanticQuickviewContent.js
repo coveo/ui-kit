@@ -34,8 +34,11 @@ export default class QuanticQuickviewContent extends LightningElement {
   isLoading = true;
 
   handleIframeLoaded() {
+    console.log('event dispatched');
     this.isLoading = false;
-    const event = new CustomEvent('loadingstatechange', {detail: { isLoading: this.isLoading}});
+    const event = new CustomEvent('loadingstatechange', {
+      detail: {isLoading: this.isLoading},
+    });
     this.dispatchEvent(event);
   }
 
