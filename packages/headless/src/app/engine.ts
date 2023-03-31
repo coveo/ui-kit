@@ -1,4 +1,4 @@
-import {isNullOrUndefined} from '@coveo/bueno';
+import {isNullOrUndefined, isUndefined} from '@coveo/bueno';
 import {
   AnyAction,
   Dispatch,
@@ -302,7 +302,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
 function shouldWarnAboutOrganizationEndpoints(
   options: EngineOptions<ReducersMapObject>
 ) {
-  return isNullOrUndefined(options.configuration.organizationEndpoints);
+  return isUndefined(options.configuration.organizationEndpoints);
 }
 
 function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {

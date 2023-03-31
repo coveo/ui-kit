@@ -1,4 +1,4 @@
-import {isCoveoOrganizationEndpointUrl, URLPath} from './url-utils';
+import {matchCoveoOrganizationEndpointUrl, URLPath} from './url-utils';
 
 describe('URLPath', () => {
   const testBasePath = 'https://www.test.com';
@@ -50,7 +50,7 @@ describe('URLPath', () => {
         {url: 'https://myorg.orgstg.coveo.com', env: 'stg'},
         {url: 'https://myorg.orgdev.coveo.com', env: 'dev'},
       ].forEach(({url, env}) => {
-        const match = isCoveoOrganizationEndpointUrl(url, 'myorg');
+        const match = matchCoveoOrganizationEndpointUrl(url, 'myorg');
         expect(match).toBeTruthy();
         expect(match![1]).toBe(env);
       });
@@ -65,7 +65,7 @@ describe('URLPath', () => {
         'https://search.cloud.coveo.com',
         'https://completely.random.com',
       ].forEach((url) =>
-        expect(isCoveoOrganizationEndpointUrl(url, 'myorg')).toBeFalsy()
+        expect(matchCoveoOrganizationEndpointUrl(url, 'myorg')).toBeFalsy()
       );
     });
   });

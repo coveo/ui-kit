@@ -280,7 +280,7 @@ export class AtomicSearchInterface
   }
 
   /**
-   * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
    */
   @Method() public initialize(options: InitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
@@ -340,6 +340,9 @@ export class AtomicSearchInterface
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
+  /**
+   * Returns the unique, organization-specific endpoint(s) using options for `orgId` (required) and `env` (optional — possible values:`prod`, `hipaa`, `staging`,`dev`. Defaults to `prod`).
+   */
   @Method() public async getOrganizationEndpoints(
     organizationId: string,
     env: PlatformEnvironment = 'prod'

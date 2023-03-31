@@ -3,7 +3,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {clearAnalyticsClient} from '../../api/analytics/search-analytics';
 import {getOrganizationEndpoints} from '../../api/platform-client';
 import {
-  isCoveoOrganizationEndpointUrl,
+  matchCoveoOrganizationEndpointUrl,
   isCoveoPlatformURL,
   PlatformEnvironment,
 } from '../../utils/url-utils';
@@ -36,7 +36,7 @@ function analyticsUrlFromPlatformUrl(
     );
   }
 
-  const matchCoveoOrganizationEndpoints = isCoveoOrganizationEndpointUrl(
+  const matchCoveoOrganizationEndpoints = matchCoveoOrganizationEndpointUrl(
     platformUrl,
     organizationId
   );

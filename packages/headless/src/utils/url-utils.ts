@@ -47,11 +47,13 @@ export const isCoveoPlatformURL = (url: string) =>
     url
   );
 
-export const isCoveoOrganizationEndpointUrl = (
+export const matchCoveoOrganizationEndpointUrl = (
   url: string,
   organizationId: string
 ) => {
-  return url.match(
+  const match = url.match(
     new RegExp(`^https://${organizationId}\\.org(dev|stg|hipaa)?\\.coveo.com`)
   );
+  console.log(match);
+  return match;
 };

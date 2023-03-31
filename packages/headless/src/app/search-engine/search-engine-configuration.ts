@@ -26,9 +26,7 @@ export interface SearchEngineOrganizationEndpoints
 export interface SearchEngineConfiguration
   extends EngineConfiguration<SearchEngineOrganizationEndpoints> {
   /**
-   * The base Search API endpoint.
-   *
-   * For example: `https://orgid.org.coveo.com/rest/search/v2`
+   * The global headless engine configuration options specific to the SearchAPI.
    */
   search?: SearchConfigurationOptions;
 }

@@ -1540,6 +1540,9 @@ export namespace Components {
           * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface> ```
          */
         "fieldsToInclude": string[] | string;
+        /**
+          * Returns the unique, organization-specific endpoint(s) using options for `orgId` (required) and `env` (optional — possible values:`prod`, `hipaa`, `staging`,`dev`. Defaults to `prod`).
+         */
         "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; }>;
         /**
           * The search interface i18next instance.
@@ -1550,7 +1553,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+          * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
