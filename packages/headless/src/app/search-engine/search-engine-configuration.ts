@@ -28,7 +28,7 @@ export interface SearchEngineConfiguration
   /**
    * The base Search API endpoint.
    *
-   * For example, https://orgid.org.coveo.com/rest/search/v2
+   * For example: `https://orgid.org.coveo.com/rest/search/v2`
    */
   search?: SearchConfigurationOptions;
 }
