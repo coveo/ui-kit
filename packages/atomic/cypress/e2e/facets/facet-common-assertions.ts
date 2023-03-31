@@ -58,11 +58,9 @@ export function assertLabelContains(
 
 export function assertDisplayFacet(
   BaseFacetSelector: BaseFacetSelector,
-  display: boolean,
-  setup = () => {}
+  display: boolean
 ) {
   it(`${should(display)} display the facet`, () => {
-    setup();
     BaseFacetSelector.wrapper().should(display ? 'be.visible' : 'not.exist');
   });
 }

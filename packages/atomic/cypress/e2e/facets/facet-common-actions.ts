@@ -28,9 +28,7 @@ export function selectIdleCheckboxValueAt(
           1,
           'There should not be any other value similar to this one.'
         );
-      cy.wrap(idleCheckboxValueLabel)
-        .click()
-        .wait(TestFixture.interceptAliases.Search);
+      cy.wrap(idleCheckboxValueLabel).click().wait(2000);
       FacetWithCheckboxSelector.checkboxValueWithText(text).should(
         'have.attr',
         'aria-checked',
@@ -60,9 +58,7 @@ export function selectIdleLinkValueAt(
           1,
           'There should not be any other value similar to this one.'
         );
-      cy.wrap(idleLinkValueLabel)
-        .click()
-        .wait(TestFixture.interceptAliases.Search);
+      cy.wrap(idleLinkValueLabel).click().wait(2000);
       FacetWithLinkSelector.selectedLinkValueWithText(text).should('exist');
     });
 }
