@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State, Method} from '@stencil/core';
 import {buildInsightTab, InsightTab, InsightTabState} from '..';
 import {
   BindStateToController,
@@ -46,6 +46,11 @@ export class AtomicInsightTab
    * The expression that will be passed to the search as a `cq` paramenter upon being selected.
    */
   @Prop() public expression!: string;
+
+  @Method()
+  select() {
+    this.tab.select();
+  }
 
   public initialize() {
     this.tab = buildInsightTab(this.bindings.engine, {

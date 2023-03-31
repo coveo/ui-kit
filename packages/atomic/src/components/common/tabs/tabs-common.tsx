@@ -1,20 +1,21 @@
 import {h} from '@stencil/core';
-import {ButtonStyle} from '../button-style';
+import {Button} from '../button';
+import {AnyBindings} from '../interface/bindings';
 
 interface TabsCommonProps {
   host: HTMLElement;
 }
 
-export class TabCommon {
+export class TabsCommon {
   constructor(private props: TabsCommonProps) {
     window.addEventListener('resize', this.updateTabsDisplay);
   }
 
-  get tabsFromSlot() {
+  get tabsFromSlot(): HTMLAtomicInsightTabElement[] {
     const isTab = (tagName: string) => /atomic-.+-tab$/i.test(tagName);
-    return Array.from(this.props.host.querySelectorAll('*')).filter((element) =>
-      isTab(element.tagName)
-    );
+    return Array.from(
+      this.props.host.querySelectorAll('atomic-insight-tab')
+    ).filter((element) => isTab(element.tagName));
   }
 
   private getIsTabActive = (element: Element) =>
@@ -97,11 +98,20 @@ export class TabCommon {
     });
   };
 
-  public renderMoreButton = () => {
+  public renderMoreButton = (bindings: AnyBindings) => {
+    console.log(this.overflowingTabs);
     return (
-      <atomic-popover>
-        <span></span>
-      </atomic-popover>
+      <tabs-popover bindings={bindings}>
+        {this.overflowingTabs.map((tab) => (
+          <Button
+            style="text-transparent"
+            class="font-semibold px-4 py-3 rounded truncate"
+            onClick={() => tab.select()}
+          >
+            {tab.label}
+          </Button>
+        ))}
+      </tabs-popover>
     );
   };
 }

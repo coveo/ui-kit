@@ -619,6 +619,7 @@ export namespace Components {
           * The label that will be shown to the user.
          */
         "label": string;
+        "select": () => Promise<void>;
     }
     interface AtomicInsightTabs {
     }
@@ -1777,6 +1778,9 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    interface TabsPopover {
+        "bindings": AnyBindings | undefined;
+    }
 }
 export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2585,6 +2589,12 @@ declare global {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
     };
+    interface HTMLTabsPopoverElement extends Components.TabsPopover, HTMLStencilElement {
+    }
+    var HTMLTabsPopoverElement: {
+        prototype: HTMLTabsPopoverElement;
+        new (): HTMLTabsPopoverElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
@@ -2709,6 +2719,7 @@ declare global {
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
+        "tabs-popover": HTMLTabsPopoverElement;
     }
 }
 declare namespace LocalJSX {
@@ -4404,6 +4415,9 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    interface TabsPopover {
+        "bindings"?: AnyBindings | undefined;
+    }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
         "atomic-breadbox": AtomicBreadbox;
@@ -4528,6 +4542,7 @@ declare namespace LocalJSX {
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
+        "tabs-popover": TabsPopover;
     }
 }
 export { LocalJSX as JSX };
@@ -4657,6 +4672,7 @@ declare module "@stencil/core" {
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
+            "tabs-popover": LocalJSX.TabsPopover & JSXBase.HTMLAttributes<HTMLTabsPopoverElement>;
         }
     }
 }
