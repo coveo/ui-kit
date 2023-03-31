@@ -15,21 +15,21 @@ import {requiredNonEmptyString} from '../utils/validate-payload';
 /**
  * The endpoints to use.
  *
- * For example https://orgid.org.coveo.com
+ * For example: `https://orgid.org.coveo.com`
  *
- * The getOrganizationEndpoints() helper function can be useful to create the appropriate object
+ * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
  */
 export interface CoreEngineOrganizationEndpoints {
   /**
    * The base platform endpoint.
    *
-   * For example, https://{orgid}.org.coveo.com
+   * For example: `https://{orgid}.org.coveo.com`
    */
   platform: string;
   /**
    * The base analytics service endpoint.
    *
-   * For example, https://{orgid}.analytics.org.coveo.com
+   * For example: `https://{orgid}.analytics.org.coveo.com`
    */
   analytics: string;
 }
@@ -79,9 +79,9 @@ export interface EngineConfiguration<
   /**
    * The endpoints to use.
    *
-   * For example https://orgid.org.coveo.com
+   * For example: `https://orgid.org.coveo.com`
    *
-   * The getOrganizationEndpoints() helper function can be useful to create the appropriate object
+   * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
    *
    * We recommend using this option, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
    */
