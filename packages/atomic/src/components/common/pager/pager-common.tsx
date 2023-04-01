@@ -26,6 +26,7 @@ interface PagerProps {
     previousPage: () => void;
     isCurrentPage: (page: number) => boolean;
     state: {};
+    icon: string;
   };
 }
 
@@ -56,7 +57,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
         <atomic-icon
-          icon={ArrowRight}
+          icon={props.pager.icon}
           class="w-5 align-middle rotate-180"
         ></atomic-icon>
       </Button>
@@ -108,7 +109,10 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         disabled={!props.pagerState.hasNextPage}
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
-        <atomic-icon icon={ArrowRight} class="w-5 align-middle"></atomic-icon>
+        <atomic-icon
+          icon={props.pager.icon}
+          class="w-5 align-middle"
+        ></atomic-icon>
       </Button>
     );
   };
