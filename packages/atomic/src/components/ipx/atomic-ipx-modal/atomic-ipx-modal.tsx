@@ -54,12 +54,14 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
 
     if (isOpen) {
       document.body.classList.add(modalOpenedClass);
+      this.bindings.interfaceElement.classList.add(modalOpenedClass);
       if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
         this.focusTrap!.active = true;
       }
       return;
     }
     document.body.classList.remove(modalOpenedClass);
+    this.bindings.interfaceElement.classList.remove(modalOpenedClass);
     if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
       this.focusTrap!.active = false;
     }
