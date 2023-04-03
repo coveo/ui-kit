@@ -6,7 +6,12 @@ global with sharing class CoveoTokenProvider implements ITokenProvider {
      */
     @AuraEnabled(continuation=true cacheable=false)
     global static String getHeadlessConfiguration() {
-        Map<String, Object> coveoEndpointData = CoveoV2.Globals.getEndpointData();
+        // It's good practice to set a searchHub in the token for secured routing: @see https://docs.coveo.com/en/quantic/latest/usage/safely-set-search-hub/
+        Map<String, Object> coveoEndpointData = CoveoV2.Globals.getEndpointData(
+            new Map<String, Object> {
+                'searchHub' => 'example_coveo'
+            }
+        );
         String searchToken = CoveoV2.Globals.generateSearchToken();
 
         Map<String, String> headlessConfiguration = new Map<String, String>();
