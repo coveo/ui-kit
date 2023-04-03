@@ -1541,7 +1541,9 @@ export namespace Components {
          */
         "fieldsToInclude": string[] | string;
         /**
-          * Returns the unique, organization-specific endpoint(s) using options for `orgId` (required) and `env` (optional — possible values:`prod`, `hipaa`, `staging`,`dev`. Defaults to `prod`).
+          * Returns the unique, organization-specific endpoint(s)
+          * @param organizationId
+          * @param env
          */
         "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; }>;
         /**
