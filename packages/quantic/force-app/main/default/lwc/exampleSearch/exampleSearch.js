@@ -4,6 +4,10 @@ import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 import caseTemplate from './resultTemplates/caseResultTemplate.html';
 // @ts-ignore
 import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
+// @ts-ignore
+import parentTemplate from './resultTemplates/parentTemplate.html';
+// @ts-ignore
+import childTemplate from './resultTemplates/childTemplate.html';
 import {LightningElement, api} from 'lwc';
 
 export default class ExampleSearch extends LightningElement {
@@ -35,6 +39,15 @@ export default class ExampleSearch extends LightningElement {
       'objecttype',
       ['FeedItem']
     );
+    const isThread = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'source',
+      ['iNaturalistTaxons']
+    );
+    const isChild = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'quantic__templateId',
+      ['myChildTemplate']
+    );
+  
     resultTemplatesManager.registerTemplates(
       {
         content: youtubeTemplate,
@@ -50,6 +63,15 @@ export default class ExampleSearch extends LightningElement {
         content: chatterTemplate,
         conditions: [isChatter],
         fields: ['sfcreatedbyname']
+      },
+      {
+        content: childTemplate,
+        conditions: [isChild],
+        priority: 1,
+      },
+      {
+        content: parentTemplate,
+        conditions: [isThread],
       },
     );
   }

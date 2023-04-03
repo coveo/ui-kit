@@ -875,7 +875,7 @@ describe('Category Facet Test Suites', () => {
       const parentFacetId = 'def';
       const parentField = 'filetype';
       const expectedValue = 'txt';
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addCategoryFacet({
@@ -887,33 +887,20 @@ describe('Category Facet Test Suites', () => {
           .init();
       });
 
-      CommonFacetAssertions.assertDisplayFacet(
-        CategoryFacetSelectors.withId(facetId),
-        false
-      );
-      CommonFacetAssertions.assertDisplayFacet(
-        FacetSelectors.withId(parentFacetId),
-        true
-      );
+      it('should control display of both parent and child properly', () => {
+        CategoryFacetSelectors.withId(facetId).wrapper().should('not.exist');
+        FacetSelectors.withId(parentFacetId).wrapper().should('be.visible');
+      });
 
-      describe('when the dependency is met', () => {
-        before(() => {
-          typeFacetSearchQuery(
-            FacetSelectors.withId(parentFacetId),
-            expectedValue,
-            true
-          );
-          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
-        });
-
-        CommonFacetAssertions.assertDisplayFacet(
-          CategoryFacetSelectors.withId(facetId),
-          true
-        );
-        CommonFacetAssertions.assertDisplayFacet(
+      it('should control the display of both parent and child properly when the dependency is met', () => {
+        typeFacetSearchQuery(
           FacetSelectors.withId(parentFacetId),
+          expectedValue,
           true
         );
+        selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        CategoryFacetSelectors.withId(facetId).wrapper().should('be.visible');
+        FacetSelectors.withId(parentFacetId).wrapper().should('be.visible');
       });
     });
 
@@ -921,7 +908,7 @@ describe('Category Facet Test Suites', () => {
       const dependentFacetId = 'def';
       const dependentField = 'filetype';
       const expectedValue = 'Fiji';
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addCategoryFacet({'facet-id': facetId, 'with-search': 'true'}))
           .with(
@@ -934,33 +921,20 @@ describe('Category Facet Test Suites', () => {
           .init();
       });
 
-      CommonFacetAssertions.assertDisplayFacet(
-        FacetSelectors.withId(dependentFacetId),
-        false
-      );
-      CommonFacetAssertions.assertDisplayFacet(
-        CategoryFacetSelectors.withId(facetId),
-        true
-      );
+      it('should control display of both parent and child properly', () => {
+        FacetSelectors.withId(dependentFacetId).wrapper().should('not.exist');
+        CategoryFacetSelectors.withId(facetId).wrapper().should('be.visible');
+      });
 
-      describe('when the dependency is met', () => {
-        before(() => {
-          typeFacetSearchQuery(
-            CategoryFacetSelectors.withId(facetId),
-            expectedValue,
-            true
-          );
-          selectSearchResultAt(0);
-        });
-
-        CommonFacetAssertions.assertDisplayFacet(
-          FacetSelectors.withId(dependentFacetId),
-          true
-        );
-        CommonFacetAssertions.assertDisplayFacet(
+      it('should control the display of both parent and child properly when the dependency is met', () => {
+        typeFacetSearchQuery(
           CategoryFacetSelectors.withId(facetId),
+          expectedValue,
           true
         );
+        selectSearchResultAt(0);
+        FacetSelectors.withId(dependentFacetId).wrapper().should('be.visible');
+        CategoryFacetSelectors.withId(facetId).wrapper().should('be.visible');
       });
     });
 

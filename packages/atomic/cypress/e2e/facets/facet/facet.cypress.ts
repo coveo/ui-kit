@@ -144,7 +144,7 @@ describe('Facet v1 Test Suites', () => {
       });
 
       describe('when searching for a value that returns results', () => {
-        const query = 'bbc';
+        const query = 'e';
         function setupSearchFor() {
           setupSelectCheckboxValue();
           typeFacetSearchQuery(FacetSelectors, query, true);
@@ -269,7 +269,7 @@ describe('Facet v1 Test Suites', () => {
       });
 
       describe('when searching for a value that returns a single result', () => {
-        const query = 'BillV';
+        const query = 'people';
         function setupSearchForSingleValue() {
           setupSelectCheckboxValue();
           typeFacetSearchQuery(FacetSelectors, query, true);
@@ -448,7 +448,7 @@ describe('Facet v1 Test Suites', () => {
       });
 
       describe('when searching for a value that returns results', () => {
-        const query = 'bbc';
+        const query = 'e';
         function setupSearchFor() {
           setupSelectLinkValue();
           typeFacetSearchQuery(FacetSelectors, query, true);
@@ -587,7 +587,7 @@ describe('Facet v1 Test Suites', () => {
       });
 
       describe('when searching for a value that returns results', () => {
-        const query = 'bbc';
+        const query = 'e';
         function setupSearchFor() {
           setupSelectBoxValue();
           typeFacetSearchQuery(FacetSelectors, query, true);
@@ -836,7 +836,7 @@ describe('Facet v1 Test Suites', () => {
         searchInterfaceComponent.i18n.addResource(
           'en',
           `caption-${field}`,
-          'BBC News',
+          'People',
           caption
         );
       });
@@ -1009,7 +1009,7 @@ describe('Facet v1 Test Suites', () => {
       const parentFacetId = 'def';
       const parentField = 'filetype';
       const expectedValue = 'txt';
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addFacet({
@@ -1022,33 +1022,20 @@ describe('Facet v1 Test Suites', () => {
           .init();
       });
 
-      CommonFacetAssertions.assertDisplayFacet(
-        FacetSelectors.withId(facetId),
-        false
-      );
-      CommonFacetAssertions.assertDisplayFacet(
-        FacetSelectors.withId(parentFacetId),
-        true
-      );
+      it('should control display of both parent and child properly', () => {
+        FacetSelectors.withId(facetId).wrapper().should('not.exist');
+        FacetSelectors.withId(parentFacetId).wrapper().should('be.visible');
+      });
 
-      describe('when the dependency is met', () => {
-        before(() => {
-          typeFacetSearchQuery(
-            FacetSelectors.withId(parentFacetId),
-            expectedValue,
-            true
-          );
-          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
-        });
-
-        CommonFacetAssertions.assertDisplayFacet(
-          FacetSelectors.withId(facetId),
-          true
-        );
-        CommonFacetAssertions.assertDisplayFacet(
+      it('should control the display of both parent and child properly when the dependency is met', () => {
+        typeFacetSearchQuery(
           FacetSelectors.withId(parentFacetId),
+          expectedValue,
           true
         );
+        selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        FacetSelectors.withId(facetId).wrapper().should('be.visible');
+        FacetSelectors.withId(parentFacetId).wrapper().should('be.visible');
       });
     });
 

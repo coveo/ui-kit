@@ -572,4 +572,16 @@
       <label>Filtre d'inclusion sur {{0}}; aucun résultat</label>
       <name>quantic_InclusionFilter_zero</name>
     </customLabels>
+    <customLabels>
+      <label>Charger les items liés</label>
+      <name>quantic_LoadRelatedItems</name>
+    </customLabels>
+    <customLabels>
+      <label>Masquer les items liés</label>
+      <name>quantic_HideRelatedItems</name>
+    </customLabels>
+    <customLabels>
+      <label>Aucun item lié</label>
+      <name>quantic_NoRelatedItems</name>
+    </customLabels>
 </Translations>
