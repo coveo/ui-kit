@@ -26,8 +26,8 @@ interface PagerProps {
     previousPage: () => void;
     isCurrentPage: (page: number) => boolean;
     state: {};
-    icon: string;
   };
+  icon?: string;
 }
 
 export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
@@ -43,6 +43,8 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
     focusOnFirstResultAndScrollToTop();
   };
 
+  const icon = props.icon || ArrowRight;
+
   const renderPreviousButton = () => {
     return (
       <Button
@@ -57,7 +59,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
         <atomic-icon
-          icon={props.pager.icon}
+          icon={icon}
           class="w-5 align-middle rotate-180"
         ></atomic-icon>
       </Button>
@@ -109,10 +111,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         disabled={!props.pagerState.hasNextPage}
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
-        <atomic-icon
-          icon={props.pager.icon}
-          class="w-5 align-middle"
-        ></atomic-icon>
+        <atomic-icon icon={icon} class="w-5 align-middle"></atomic-icon>
       </Button>
     );
   };
