@@ -580,4 +580,16 @@
       <label>Vos requêtes récentes s'afficheront ici.</label>
       <name>quantic_EmptyRecentQueriesListLabel</name>
     </customLabels>
+    <customLabels>
+      <label>Charger les items liés</label>
+      <name>quantic_LoadRelatedItems</name>
+    </customLabels>
+    <customLabels>
+      <label>Masquer les items liés</label>
+      <name>quantic_HideRelatedItems</name>
+    </customLabels>
+    <customLabels>
+      <label>Aucun item lié</label>
+      <name>quantic_NoRelatedItems</name>
+    </customLabels>
 </Translations>
