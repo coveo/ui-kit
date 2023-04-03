@@ -121,45 +121,23 @@ describe('engine', () => {
     {
       organizationEndpoints: undefined,
       platformUrl: undefined,
-      expectation: () =>
-        expect(engine.logger.warn).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.'
-          )
-        ),
+      expectedMessage:
+        'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.',
     },
-    {
-      organizationEndpoints: getOrganizationEndpoints('myorg'),
-      platformUrl: undefined,
-      expectation: () => expect(engine.logger.warn).not.toHaveBeenCalled(),
-    },
+
     {
       organizationEndpoints: undefined,
       platformUrl: 'https://definitely.not.a.coveo.custom.dns',
-      expectation: () =>
-        expect(engine.logger.warn).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.'
-          )
-        ),
+      expectedMessage:
+        'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.',
     },
     {
       organizationEndpoints: getOrganizationEndpoints('myorg'),
       platformUrl: 'https://definitely.not.a.coveo.custom.dns',
-      expectation: () =>
-        expect(engine.logger.warn).toHaveBeenCalledWith(
-          expect.stringContaining(
-            'The `platformUrl` (https://definitely.not.a.coveo.custom.dns) option will be deprecated in the next major version.'
-          )
-        ),
+      expectedMessage:
+        'The `platformUrl` (https://definitely.not.a.coveo.custom.dns) option will be deprecated in the next major version.',
     },
-  ] as Array<{
-    organizationEndpoints:
-      | ReturnType<typeof getOrganizationEndpoints>
-      | undefined;
-    platformUrl: string | undefined;
-    expectation: () => void;
-  }>)(
+  ] as const)(
     'should correctly log warnings when dealing with the organizationEndpoints and platformUrl option',
     (testCase) => {
       options.configuration = {
@@ -167,7 +145,19 @@ describe('engine', () => {
         ...testCase,
       };
       initEngine();
-      testCase.expectation();
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining(testCase.expectedMessage)
+      );
     }
   );
+
+  it('should not log warnings when the organizationEndpoints option is set and platformUrl is not set', () => {
+    options.configuration = {
+      ...options.configuration,
+      organizationEndpoints: getOrganizationEndpoints('myorg'),
+      platformUrl: undefined,
+    };
+    initEngine();
+    expect(engine.logger.warn).not.toHaveBeenCalled();
+  });
 });
