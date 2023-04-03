@@ -11,7 +11,7 @@ const allowedHost = {youtube: 'https://youtube.com/'};
 
 /**
  * The `QuanticQuickviewContent` component renders a content template based on the type of the content (Youtube, other).
- * @category Result Template
+ * @category Internal
  * @example
  * <c-quantic-quickview-content result={result} content-url={contentURL}></c-quantic-quickview-content>
  * @internal

@@ -1,7 +1,10 @@
 // @ts-ignore
 import { createElement } from 'lwc';
 import QuanticQuickviewContent from '../quanticQuickviewContent';
-
+// @ts-ignore
+import youtubeTestCase from './data/youtubeTestCase.json';
+// @ts-ignore
+import defaultTestCase from './data/defaultTestCase.json';
 
 const functionsMocks = {
   listener: jest.fn(() => {}),
@@ -14,38 +17,6 @@ function setupSimulation(element, eventName) {
   }
   element.addEventListener(eventName, handler);
 }
-
-const contentURLMock = 'https://longdogechallenge.com/';
-
-const youtubeTestCase = {
-  nameOfTemplate: 'quanticQuickviewYoutube',
-  contentType: 'youtube video',
-  options: {
-    result: {
-      uniqueId:
-        '42.54689$https://youtube.com/Channel:UCLD76EfBpKKuBH52RMIdrJw/Video:lZHu8AM5bjY',
-    },
-    contentUrl: contentURLMock,
-  },
-  selectors: {
-    templateSelector: '.iframe-wrapper__youtube',
-    iframeSelector: '.quickview__content-iframe'
-  },
-};
-const defaultTestCase = {
-  nameOfTemplate: 'quanticQuickviewDefault',
-  contentType: 'other than youtube',
-  options: {
-    result: {
-      uniqueId:
-        '42.38148$https://community.fitbit.com/board:charge/thread:5332832/message:5333023',
-    },
-    contentUrl: contentURLMock,
-  },
-  selectors: {
-    templateSelector: '.iframe-wrapper__default',
-  },
-};
 
 function createTestComponent(options) {
   const element = createElement('c-quantic-quickview-content', {
@@ -104,8 +75,8 @@ describe('c-quantic-quickview-content', () => {
         );
       iframe.dispatchEvent(new CustomEvent('load'));
 
-      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
       expect(iframe).not.toBeNull();
+      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
     });
   });
 });
