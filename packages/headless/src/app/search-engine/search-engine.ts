@@ -13,7 +13,10 @@ import {
   logSearchFromLink,
 } from '../../features/analytics/analytics-actions';
 import {SearchAction} from '../../features/analytics/analytics-utils';
-import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
+import {
+  updateSearchConfiguration,
+  UpdateSearchConfigurationActionCreatorPayload,
+} from '../../features/configuration/configuration-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
@@ -43,6 +46,21 @@ const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
 type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
   Partial<SearchAppState>;
+
+function getUpdatSearchConfigurationPayload(
+  options: SearchEngineOptions
+): UpdateSearchConfigurationActionCreatorPayload {
+  const search = options.configuration.search;
+  const apiBaseUrl =
+    options.configuration.organizationEndpoints?.search || undefined;
+
+  const payloadWithURL = {
+    ...search,
+    apiBaseUrl,
+  };
+
+  return payloadWithURL;
+}
 
 /**
  * The engine for powering search experiences.
@@ -102,7 +120,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const {search} = options.configuration;
+  const search = getUpdatSearchConfigurationPayload(options);
 
   if (search) {
     engine.dispatch(updateSearchConfiguration(search));
