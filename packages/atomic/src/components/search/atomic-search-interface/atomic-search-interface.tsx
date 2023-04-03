@@ -342,7 +342,7 @@ export class AtomicSearchInterface
 
   /**
    * Returns the unique, organization-specific endpoint(s)
-   * @param {string} organizationId 
+   * @param {string} organizationId
    * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
    */
   @Method() public async getOrganizationEndpoints(
