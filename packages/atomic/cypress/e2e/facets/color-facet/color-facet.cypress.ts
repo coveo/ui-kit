@@ -608,7 +608,7 @@ describe('Color Facet Test Suites', () => {
       const parentFacetId = 'def';
       const parentField = 'author';
       const expectedValue = 'BPA';
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addColorFacet({
@@ -621,33 +621,20 @@ describe('Color Facet Test Suites', () => {
           .init();
       });
 
-      CommonFacetAssertions.assertDisplayFacet(
-        ColorFacetSelectors.withId(facetId),
-        false
-      );
-      CommonFacetAssertions.assertDisplayFacet(
-        FacetSelectors.withId(parentFacetId),
-        true
-      );
+      it('should control display of both parent and child properly', () => {
+        ColorFacetSelectors.withId(facetId).wrapper().should('not.exist');
+        FacetSelectors.withId(parentFacetId).wrapper().should('be.visible');
+      });
 
-      describe('when the dependency is met', () => {
-        before(() => {
-          typeFacetSearchQuery(
-            FacetSelectors.withId(parentFacetId),
-            expectedValue,
-            true
-          );
-          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
-        });
-
-        CommonFacetAssertions.assertDisplayFacet(
-          ColorFacetSelectors.withId(facetId),
-          true
-        );
-        CommonFacetAssertions.assertDisplayFacet(
+      it('should control the display of both parent and child properly when the dependency is met', () => {
+        typeFacetSearchQuery(
           FacetSelectors.withId(parentFacetId),
+          expectedValue,
           true
         );
+        selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        ColorFacetSelectors.withId(facetId).wrapper().should('be.visible');
+        FacetSelectors.withId(parentFacetId).wrapper().should('be.visible');
       });
     });
 
@@ -655,7 +642,7 @@ describe('Color Facet Test Suites', () => {
       const dependentFacetId = 'def';
       const dependentField = 'author';
       const expectedValue = 'doc';
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addColorFacet({'facet-id': facetId, field: colorFacetField}))
           .with(
@@ -668,33 +655,20 @@ describe('Color Facet Test Suites', () => {
           .init();
       });
 
-      CommonFacetAssertions.assertDisplayFacet(
-        FacetSelectors.withId(dependentFacetId),
-        false
-      );
-      CommonFacetAssertions.assertDisplayFacet(
-        ColorFacetSelectors.withId(facetId),
-        true
-      );
+      it('should control display of both parent and child properly', () => {
+        FacetSelectors.withId(dependentFacetId).wrapper().should('not.exist');
+        ColorFacetSelectors.withId(facetId).wrapper().should('be.visible');
+      });
 
-      describe('when the dependency is met', () => {
-        before(() => {
-          typeFacetSearchQuery(
-            ColorFacetSelectors.withId(facetId),
-            expectedValue,
-            true
-          );
-          selectIdleBoxValueAt(0);
-        });
-
-        CommonFacetAssertions.assertDisplayFacet(
-          FacetSelectors.withId(dependentFacetId),
-          true
-        );
-        CommonFacetAssertions.assertDisplayFacet(
+      it('should control the display of both parent and child properly when the dependency is met', () => {
+        typeFacetSearchQuery(
           ColorFacetSelectors.withId(facetId),
+          expectedValue,
           true
         );
+        selectIdleBoxValueAt(0);
+        FacetSelectors.withId(dependentFacetId).wrapper().should('be.visible');
+        ColorFacetSelectors.withId(facetId).wrapper().should('be.visible');
       });
     });
 
