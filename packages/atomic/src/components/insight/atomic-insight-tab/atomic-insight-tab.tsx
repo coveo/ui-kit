@@ -1,4 +1,4 @@
-import {Component, h, Prop, State, Method} from '@stencil/core';
+import {Component, h, Prop, State, Method, Element} from '@stencil/core';
 import {buildInsightTab, InsightTab, InsightTabState} from '..';
 import {
   BindStateToController,
@@ -7,6 +7,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {Button} from '../../common/button';
+import {dispatchTabLoaded} from '../../common/tabs/tabs-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -22,6 +23,8 @@ export class AtomicInsightTab
 {
   private tab!: InsightTab;
   private tabId = randomID('insight-tab');
+
+  @Element() host!: HTMLElement;
 
   @InitializeBindings() public bindings!: InsightBindings;
 
@@ -57,6 +60,10 @@ export class AtomicInsightTab
       options: {expression: this.expression, id: this.tabId},
       initialState: {isActive: this.active},
     });
+  }
+
+  public componentDidLoad() {
+    dispatchTabLoaded(this.host);
   }
 
   public render() {

@@ -1,4 +1,4 @@
-import {Component, Element, h, State} from '@stencil/core';
+import {Component, Element, h, State, Listen} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -31,6 +31,13 @@ export class AtomicInsightTabs
 
   public componentDidRender() {
     this.tabsCommon.updateTabsDisplay();
+  }
+
+  @Listen('atomic/tabRendered')
+  public resolveResult(event: CustomEvent<{}>) {
+    event.preventDefault();
+    this.tabsCommon.updateTabsDisplay();
+    this.render();
   }
 
   public render() {

@@ -1,4 +1,5 @@
 import {h} from '@stencil/core';
+import {buildCustomEvent} from '../../../utils/event-utils';
 import {Button} from '../button';
 import {AnyBindings} from '../interface/bindings';
 
@@ -99,7 +100,6 @@ export class TabsCommon {
   };
 
   public renderMoreButton = (bindings: AnyBindings) => {
-    console.log(this.overflowingTabs);
     return (
       <tabs-popover bindings={bindings}>
         {this.overflowingTabs.map((tab) => (
@@ -115,3 +115,11 @@ export class TabsCommon {
     );
   };
 }
+
+export const tabLoadedEventName = 'atomic/tabRendered';
+
+export const dispatchTabLoaded = (element: HTMLElement) => {
+  const event = buildCustomEvent(tabLoadedEventName, {});
+
+  element.dispatchEvent(event);
+};
