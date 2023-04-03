@@ -9,7 +9,7 @@ import {getProductListingInitialState} from './../../features/product-listing/pr
 import {BaseAnalyticsProvider} from './base-analytics';
 
 export type StateNeededByProductListingAnalyticsProvider =
-  ConfigurationSection & Partial<SearchHubSection & ProductListingSection>;
+  ConfigurationSection & ProductListingSection & Partial<SearchHubSection>;
 
 export class ProductListingAnalyticsProvider
   extends BaseAnalyticsProvider<StateNeededByProductListingAnalyticsProvider>
@@ -47,9 +47,6 @@ export class ProductListingAnalyticsProvider
   }
 
   private get numberOfResults() {
-    return (
-      this.state.productListing?.products.length ||
-      this.initialState.products.length
-    );
+    return this.state.productListing.products.length;
   }
 }

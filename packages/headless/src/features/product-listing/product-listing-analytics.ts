@@ -18,7 +18,7 @@ export const logProductListing = (): ProductListingAction =>
     (getState) => new ProductListingAnalyticsProvider(getState)
   );
 
-export const logProductListingOpen = (result: Result): ClickAction =>
+export const logDocumentOpen = (result: Result): ClickAction =>
   makeAnalyticsAction(
     'analytics/productListing/open',
     AnalyticsType.Click,
