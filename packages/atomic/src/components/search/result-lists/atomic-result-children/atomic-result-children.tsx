@@ -14,6 +14,7 @@ import {
   Host,
   VNode,
 } from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -196,7 +197,7 @@ export class AtomicResultChildren implements InitializableComponent {
   private renderNoResult() {
     return (
       <p part="no-result-root" class="no-result-root my-3">
-        {this.bindings.i18n.t(this.noResultText)}
+        {this.bindings.i18n.t(this.noResultText as TFuncKey)}
       </p>
     );
   }

@@ -1,11 +1,15 @@
 import {getAssetPath} from '@stencil/core';
 import DOMPurify from 'dompurify';
-import Backend, {BackendOptions} from 'i18next-http-backend';
+import Backend, {HttpBackendOptions} from 'i18next-http-backend';
 import availableLocales from '../../../generated/availableLocales.json';
+import coveoLocales from '../../../locales.json';
 import {AnyEngineType} from './bindings';
 import {BaseAtomicInterface} from './interface-common';
 
-export const i18nTranslationNamespace = 'translation';
+export const defaultNS = 'translation';
+export const fallbackLng = 'en';
+export const nsSeparator = '___';
+export const compatibilityJSON = 'v3';
 
 function isI18nLocaleAvailable(locale: string) {
   return availableLocales.includes(locale.toLowerCase());
@@ -13,7 +17,7 @@ function isI18nLocaleAvailable(locale: string) {
 
 export function i18nBackendOptions(
   atomicInterface: BaseAtomicInterface<AnyEngineType>
-): BackendOptions {
+): HttpBackendOptions {
   return {
     loadPath: `${getAssetPath(
       atomicInterface.languageAssetsPath
@@ -29,7 +33,7 @@ export function i18nBackendOptions(
           throw new Error(`Unsupported locale "${lng}"`);
         }
 
-        if (ns !== i18nTranslationNamespace) {
+        if (ns !== defaultNS) {
           throw new Error(`Unsupported namespace "${ns}"`);
         }
 
@@ -55,11 +59,23 @@ export function initi18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
   return atomicInterface.i18n.use(Backend).init({
     debug: atomicInterface.logLevel === 'debug',
     lng: atomicInterface.language,
-    nsSeparator: '___',
-    fallbackLng: 'en',
+    nsSeparator,
+    fallbackLng,
+    defaultNS,
     backend: i18nBackendOptions(atomicInterface),
     interpolation: {
       escape: (str) => DOMPurify.sanitize(str),
     },
+    compatibilityJSON,
   });
 }
+
+type DefaultResources = {
+  [NS in typeof defaultNS]: {[Key in keyof typeof coveoLocales]: string};
+};
+
+type CaptionResources = {
+  [Key in `caption-${string}`]: Record<string, string>;
+};
+
+export type Resources = DefaultResources & CaptionResources;

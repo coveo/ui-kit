@@ -1,5 +1,5 @@
 import {h, FunctionalComponent} from '@stencil/core';
-import {i18n} from 'i18next';
+import {i18n, TFuncKey} from 'i18next';
 import {FieldsetGroup} from '../../fieldset-group';
 
 export interface FacetValuesGroupProps {
@@ -15,7 +15,7 @@ export const FacetValuesGroup: FunctionalComponent<FacetValuesGroupProps> = (
   if (!props.label) {
     return children;
   }
-  const facetDisplayLabel = props.i18n.t(props.label);
+  const facetDisplayLabel = props.i18n.t(props.label as TFuncKey);
   const groupLabel =
     props.query === undefined
       ? props.i18n.t('facet-values', {label: facetDisplayLabel})

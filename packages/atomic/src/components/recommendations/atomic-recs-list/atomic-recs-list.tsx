@@ -15,6 +15,7 @@ import {
   Fragment,
   Watch,
 } from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {buildRecsInteractiveResult, RecsResult} from '..';
 import {
   FocusTarget,
@@ -274,7 +275,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
 
     return (
       <Heading level={this.headingLevel} part="label" class="m-0 mb-2">
-        {this.bindings.i18n.t(this.label)}
+        {this.bindings.i18n.t(this.label as TFuncKey)}
       </Heading>
     );
   }

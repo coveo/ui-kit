@@ -1,4 +1,5 @@
 import {Component, Prop, State} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -17,7 +18,7 @@ export class AtomicText implements InitializableComponent {
 
   private strings = {
     value: () =>
-      this.bindings.i18n.t(this.value, {
+      this.bindings.i18n.t(this.value as TFuncKey, {
         count: this.count,
       }),
   };

@@ -13,6 +13,7 @@ import {
   Event,
   EventEmitter,
 } from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -108,7 +109,7 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
   private renderOptions() {
     const options: {
       id: string;
-      localeKey: string;
+      localeKey: TFuncKey;
       correspondingAnswer: SmartSnippetFeedback | 'other';
     }[] = [
       {

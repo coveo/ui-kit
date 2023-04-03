@@ -1,9 +1,10 @@
 import {Fragment, FunctionalComponent, h, VNode} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {AnyBindings} from '../components/common/interface/bindings';
 
 export interface LocalizedStringProps {
   bindings: AnyBindings;
-  key: string;
+  key: TFuncKey;
   params: Record<string, VNode | string>;
   count?: number;
 }

@@ -1,5 +1,6 @@
 import {Result, FoldedResultListState} from '@coveo/headless';
 import {Component, Element, h, Prop, State} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {InitializeBindings} from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
@@ -98,7 +99,7 @@ export class AtomicLoadMoreChildrenResults {
             class={this.buttonClass}
             disabled={this.isLoading}
           >
-            {this.bindings.i18n.t(this.label)}
+            {this.bindings.i18n.t(this.label as TFuncKey)}
           </Button>
         )}
       </div>

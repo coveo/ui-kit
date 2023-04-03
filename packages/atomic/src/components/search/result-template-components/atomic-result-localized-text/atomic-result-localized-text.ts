@@ -1,6 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Prop, State} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -48,9 +49,14 @@ export class AtomicResultLocalizedText implements InitializableComponent {
   @Prop() fieldCount?: string;
 
   render() {
-    return this.bindings.i18n.t(this.localeKey, {
-      ...this.parseFieldValues(),
-      ...this.parseFieldCount(),
+    return this.bindings.i18n.t(this.localeKey as TFuncKey, {
+      interpolation: {
+        defaultVariables: {
+          ...this.parseFieldValues(),
+          ...this.parseFieldCount(),
+        },
+      },
+      defaultValue: undefined as never,
     });
   }
 

@@ -1,11 +1,11 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {i18n, TFuncKey} from 'i18next';
 import CloseIcon from '../../../../images/close.svg';
 import SearchIcon from '../../../../images/search.svg';
 import {Button} from '../../button';
 
 interface FacetSearchInputProps {
-  label: string;
+  label: TFuncKey;
   query: string;
   i18n: i18n;
   onClear(): void;

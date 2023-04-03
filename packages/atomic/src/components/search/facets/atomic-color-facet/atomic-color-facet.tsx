@@ -12,6 +12,7 @@ import {
   FacetConditionsManager,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {
   AriaLiveRegion,
   FocusTarget,
@@ -224,7 +225,7 @@ export class AtomicColorFacet
     );
     this.facetId = this.facet.state.facetId;
     const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.label),
+      label: () => this.bindings.i18n.t(this.label as TFuncKey),
       facetId: this.facetId!,
       element: this.host,
     };
@@ -300,7 +301,7 @@ export class AtomicColorFacet
     return (
       <FacetSearchInput
         i18n={this.bindings.i18n}
-        label={this.label}
+        label={this.label as TFuncKey}
         query={this.facetState.facetSearch.query}
         onChange={(value) => {
           if (value === '') {
@@ -447,7 +448,7 @@ export class AtomicColorFacet
   private renderShowMoreLess() {
     return (
       <FacetShowMoreLess
-        label={this.label}
+        label={this.label as TFuncKey}
         i18n={this.bindings.i18n}
         onShowMore={() => {
           this.resultIndexToFocusOnShowMore = this.facet.state.values.length;

@@ -7,10 +7,7 @@ import {setCoveoGlobal} from '../../../global/environment';
 import {loadFocusVisiblePolyfill} from '../../../global/focus-visible';
 import {loadDayjsLocale} from '../../../utils/dayjs-locales';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {
-  i18nBackendOptions,
-  i18nTranslationNamespace,
-} from '../../common/interface/i18n';
+import {i18nBackendOptions, defaultNS} from '../../common/interface/i18n';
 import {AnyBindings, AnyEngineType} from './bindings';
 import {initi18n} from './i18n';
 
@@ -124,15 +121,9 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     loadDayjsLocale(language);
     new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
       language,
-      i18nTranslationNamespace,
+      defaultNS,
       (_, data) => {
-        i18n.addResourceBundle(
-          language,
-          i18nTranslationNamespace,
-          data,
-          true,
-          false
-        );
+        i18n.addResourceBundle(language, defaultNS, data, true, false);
         i18n.changeLanguage(language);
       }
     );

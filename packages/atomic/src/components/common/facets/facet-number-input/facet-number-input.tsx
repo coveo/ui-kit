@@ -1,4 +1,5 @@
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {Button} from '../../button';
 import {AnyBindings} from '../../interface/bindings';
 import {NumericFilter, NumericFilterState} from '../../types';
@@ -48,7 +49,7 @@ export class FacetNumberInput {
   }
 
   render() {
-    const label = this.bindings.i18n.t(this.label);
+    const label = this.bindings.i18n.t(this.label as TFuncKey);
     const minText = this.bindings.i18n.t('min');
     const maxText = this.bindings.i18n.t('max');
     const minAria = this.bindings.i18n.t('number-input-minimum', {label});

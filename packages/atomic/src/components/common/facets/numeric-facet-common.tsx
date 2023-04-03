@@ -1,5 +1,6 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {VNode, h} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {randomID} from '../../../utils/utils';
@@ -197,7 +198,7 @@ export class NumericFacetCommon {
 
   private registerFacetToStore() {
     const facetInfo: FacetInfo = {
-      label: () => this.props.bindings.i18n.t(this.props.label),
+      label: () => this.props.bindings.i18n.t(this.props.label as TFuncKey),
       facetId: this.facetId!,
       element: this.props.host,
     };

@@ -14,6 +14,7 @@ import {
   FacetConditionsManager,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import Star from '../../../../images/star.svg';
 import {
   FocusTarget,
@@ -206,7 +207,7 @@ export class AtomicRatingFacet
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
     const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.label),
+      label: () => this.bindings.i18n.t(this.label as TFuncKey),
       facetId: this.facetId!,
       element: this.host,
     };

@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {i18n, TFuncKey} from 'i18next';
 import ArrowBottomIcon from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowTopIcon from '../../../../images/arrow-top-rounded.svg';
 import CloseIcon from '../../../../images/close.svg';
@@ -18,7 +18,7 @@ export interface FacetHeaderProps {
 }
 
 export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
-  const label = props.i18n.t(props.label);
+  const label = props.i18n.t(props.label as TFuncKey);
   const expandFacet = props.i18n.t('expand-facet', {label});
   const collapseFacet = props.i18n.t('collapse-facet', {label});
   const clearFilters = props.i18n.t('clear-filters', {

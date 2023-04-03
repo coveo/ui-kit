@@ -1,11 +1,11 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {i18n, TFuncKey} from 'i18next';
 import MinusIcon from '../../../../images/minus.svg';
 import PlusIcon from '../../../../images/plus.svg';
 import {Button} from '../../button';
 
 interface FacetShowMoreProps {
-  label: string;
+  label: TFuncKey;
   i18n: i18n;
   canShowLessValues: boolean;
   canShowMoreValues: boolean;

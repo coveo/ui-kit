@@ -1,5 +1,6 @@
 import {buildDateRange} from '@coveo/headless';
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {parseDate} from '../../../../utils/date-utils';
 import {Button} from '../../button';
 import {AnyBindings} from '../../interface/bindings';
@@ -62,7 +63,7 @@ export class FacetDateInput {
   }
 
   render() {
-    const label = this.bindings.i18n.t(this.label);
+    const label = this.bindings.i18n.t(this.label as TFuncKey);
     const startLabel = this.bindings.i18n.t('start');
     const endLabel = this.bindings.i18n.t('end');
     const startAria = this.bindings.i18n.t('date-input-start', {label});

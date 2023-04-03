@@ -1,7 +1,7 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {AnyFacetValuesCondition, AnyFacetValueRequest} from '@coveo/headless';
 import {VNode, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {i18n, TFuncKey} from 'i18next';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   getFieldCaptions,
@@ -312,7 +312,7 @@ export class FacetCommon {
     this.validateProps();
 
     const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.label),
+      label: () => this.bindings.i18n.t(this.label as TFuncKey),
       facetId: this.facetId!,
       element: this.host,
     };
@@ -389,7 +389,7 @@ export class FacetCommon {
     return (
       <FacetSearchInput
         i18n={this.bindings.i18n}
-        label={this.label}
+        label={this.label as TFuncKey}
         query={this.facet.state.facetSearch.query}
         onChange={(value) => {
           if (value === '') {
@@ -572,7 +572,7 @@ export class FacetCommon {
   ) {
     return (
       <FacetShowMoreLess
-        label={this.label}
+        label={this.label as TFuncKey}
         i18n={this.bindings.i18n}
         onShowMore={() => {
           this.resultIndexToFocusOnShowMore = this.facet.state.values.length;

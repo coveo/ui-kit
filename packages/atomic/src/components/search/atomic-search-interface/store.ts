@@ -4,6 +4,7 @@ import {
   SortCriterion,
   SearchEngine,
 } from '@coveo/headless';
+import {TFuncKey} from 'i18next';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
   FacetInfo,
@@ -20,7 +21,7 @@ import {makeDesktopQuery} from '../atomic-layout/search-layout';
 export interface SortDropdownOption {
   expression: string;
   criteria: SortCriterion[];
-  label: string;
+  label: TFuncKey;
 }
 
 export interface AtomicStoreData extends AtomicCommonStoreData {

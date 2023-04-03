@@ -1,4 +1,5 @@
 import {h, VNode} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
@@ -199,7 +200,7 @@ export class TimeframeFacetCommon {
 
   private registerFacetToStore() {
     const facetInfo: FacetInfo = {
-      label: () => this.props.bindings.i18n.t(this.props.label),
+      label: () => this.props.bindings.i18n.t(this.props.label as TFuncKey),
       facetId: this.facetId!,
       element: this.props.host,
     };
@@ -254,7 +255,9 @@ export class TimeframeFacetCommon {
         );
       }
       return this.props.bindings.i18n.t(
-        `${relativeDate.period}-${relativeDate.unit}`,
+        `${
+          relativeDate.period as Exclude<RelativeDatePeriod, 'now'>
+        }-${relativeDate.unit!}` as const,
         {
           count: relativeDate.amount,
         }

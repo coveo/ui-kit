@@ -9,6 +9,7 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {Component, h, State, Element} from '@stencil/core';
+import {TFuncKey} from 'i18next';
 import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
 import {
   BindStateToController,
@@ -79,7 +80,7 @@ export class AtomicSortDropdown implements InitializableComponent {
         return {
           criteria: parseCriterionExpression(expression),
           expression,
-          label,
+          label: label as TFuncKey,
         };
       })
     );

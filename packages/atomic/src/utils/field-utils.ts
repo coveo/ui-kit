@@ -1,7 +1,7 @@
 import {i18n} from 'i18next';
 
-function getFieldCaptionNamespace(field: string) {
-  return `caption-${field}`;
+function getFieldCaptionNamespace<T extends string>(field: T) {
+  return `caption-${field}` as const;
 }
 
 export function getFieldCaptions(field: string, i18n: i18n) {
@@ -15,7 +15,8 @@ export function getFieldValueCaption(
   facetValue: string,
   i18n: i18n
 ) {
+  const ns = getFieldCaptionNamespace(field);
   return i18n.t(facetValue, {
-    ns: getFieldCaptionNamespace(field),
+    ns,
   });
 }
