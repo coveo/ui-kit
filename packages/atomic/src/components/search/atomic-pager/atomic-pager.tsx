@@ -25,10 +25,12 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  *
  * @part buttons - The list of the next/previous buttons and page-buttons.
  * @part page-buttons - The list of page buttons.
- * @part previous-button - The previous button.
- * @part next-button - The next button.
  * @part page-button - The page button.
  * @part active-page-button - The active page button.
+ * @part previous-button - The previous button.
+ * @part next-button - The next button.
+ * @part previous-button-icon - Icon of the previous button.
+ * @part next-button-icon - Icon of the next button.
  */
 @Component({
   tag: 'atomic-pager',
@@ -59,7 +61,7 @@ export class AtomicPager implements InitializableComponent {
   @Prop({reflect: true}) numberOfPages = 5;
 
   /**
-   * The SVG icon to use to display the rating.
+   * The SVG icon to use to display the Next and Previous buttons. The icon is rotated by 180° for Previous button.
    *
    * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.

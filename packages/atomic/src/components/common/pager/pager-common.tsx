@@ -60,6 +60,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
       >
         <atomic-icon
           icon={icon}
+          part="previous-button-icon"
           class="w-5 align-middle rotate-180"
         ></atomic-icon>
       </Button>
@@ -111,7 +112,11 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         disabled={!props.pagerState.hasNextPage}
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
-        <atomic-icon icon={icon} class="w-5 align-middle"></atomic-icon>
+        <atomic-icon
+          icon={icon}
+          part="next-button-icon"
+          class="w-5 align-middle"
+        ></atomic-icon>
       </Button>
     );
   };
