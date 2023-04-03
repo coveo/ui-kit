@@ -55,15 +55,17 @@ describe('Standalone Search Box Test Suites', () => {
 
   describe('when being redirected to an Atomic Search Interface after submitting a query', () => {
     const query = 'hello';
-    beforeEach(() => {
+
+    it(`should contain "${query}" and log a proper analytics event`, () => {
       setupStandaloneSearchBox();
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.submitButton().click();
       setupStandardSearchBox();
+      SearchBoxSelectors.inputBox().should('have.value', query);
+      cy.expectSearchEvent('searchFromLink').then((analyticsBody) => {
+        expect(analyticsBody).to.have.property('queryText', query);
+      });
     });
-
-    assertHasText(query);
-    assertLogSearchFromLink(query);
   });
 
   describe('when being redirected to an Atomic Search Interface after selecting a suggestion', () => {

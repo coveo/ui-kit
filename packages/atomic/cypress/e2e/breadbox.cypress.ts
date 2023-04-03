@@ -26,7 +26,7 @@ import {
   selectIdleLinkValueAt,
 } from './facets/facet-common-actions';
 import * as CommonFacetAssertions from './facets/facet-common-assertions';
-import {addFacet, field, label} from './facets/facet/facet-actions';
+import {addFacet, label} from './facets/facet/facet-actions';
 import {FacetSelectors} from './facets/facet/facet-selectors';
 import {
   addNumericFacet,
@@ -46,7 +46,7 @@ describe('Breadbox Test Suites', () => {
     new TestFixture()
       .withTranslation({'a.translated.label': 'This is a translated label'})
       .with(addBreadbox())
-      .with(addFacet({field, label, ...props}))
+      .with(addFacet({field: 'author', label, ...props}))
       .with(
         addNumericFacet({field: numericFacetField, label: numericFacetLabel})
       )
@@ -160,8 +160,8 @@ describe('Breadbox Test Suites', () => {
     function setupFacetWithMultipleSelectedValues() {
       new TestFixture()
         .with(addBreadbox())
-        .with(addFacet({field, label}))
-        .withHash(`f-${field}=${activeValues.join(',')}`)
+        .with(addFacet({field: 'author', label}))
+        .withHash(`f-author=${activeValues.join(',')}`)
         .init();
       BreadboxSelectors.breadcrumbButton().then((buttons) =>
         cy.wrap(buttons.filter(':visible').length).as('numberOfVisibleButtons')
