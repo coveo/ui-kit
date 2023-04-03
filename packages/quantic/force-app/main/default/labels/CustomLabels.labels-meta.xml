@@ -1071,4 +1071,25 @@
       <protected>false</protected>
       <shortDescription>Inclusion filter on field; no results</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_LoadRelatedItems</fullName>
+      <value>Load related items</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Load related items</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_HideRelatedItems</fullName>
+      <value>Hide related items</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Hide related items</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_NoRelatedItems</fullName>
+      <value>No related items</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>No related items</shortDescription>
+    </labels>
 </CustomLabels>
