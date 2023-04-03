@@ -1,8 +1,10 @@
-import { getHeadlessBundle, getHeadlessEnginePromise } from 'c/quanticHeadlessLoader';
-import { ResultUtils } from 'c/quanticUtils';
-import { NavigationMixin } from 'lightning/navigation';
-import { LightningElement, api } from 'lwc';
-
+import {
+  getHeadlessBundle,
+  getHeadlessEnginePromise,
+} from 'c/quanticHeadlessLoader';
+import {ResultUtils} from 'c/quanticUtils';
+import {NavigationMixin} from 'lightning/navigation';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -13,7 +15,9 @@ import { LightningElement, api } from 'lwc';
  * @example
  * <c-quantic-result-link engine-id={engineId} result={result} target="_blank"></c-quantic-result-link>
  */
-export default class QuanticResultLink extends NavigationMixin(LightningElement) {
+export default class QuanticResultLink extends NavigationMixin(
+  LightningElement
+) {
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -47,14 +51,6 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
    */
   @api useCase = 'search';
   /**
-   * A list of fields to include in the query results, separated by commas.
-   * @api
-   * @type {string}
-   * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid'`
-   */
-  @api fieldsToInclude =
-    'date,author,source,language,filetype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid';
-  /**
    * A function used to set focus to the link.
    * @api
    * @type {VoidFunction}
@@ -71,8 +67,6 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
   engine;
   /** @type {AnyHeadless} */
   headless;
-  /** @type {boolean} */
-  isSalesforceLink = false;
 
   connectedCallback() {
     getHeadlessEnginePromise(this.engineId)
@@ -82,7 +76,6 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
       .catch((error) => {
         console.error(error.message);
       });
-      this.checkResultType();
   }
 
   /**
@@ -99,12 +92,6 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
     );
   };
 
-  checkResultType() {
-    if (this.result?.raw?.sfid !== undefined) {
-      this.isSalesforceLink = true;
-    }
-  }
-
   handleOpenTabSalesforceLink(event) {
     event.stopPropagation();
 
@@ -112,7 +99,6 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
       type: 'standard__recordPage',
       attributes: {
         recordId: this.getRecordIdAttribute(),
-        objectApiName: this.getObjectApiNameAttribute(),
         actionName: 'view',
       },
     };
@@ -123,17 +109,18 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
     let idToUse = this.result.raw.sfid;
 
     // Knowledge article uses the knowledge article version id to navigate.
-    if (
-      this.result.raw.sfkbid !== undefined &&
-      this.result.raw.sfkavid !== undefined
-    ) {
+    if (this.result?.raw?.sfkbid && this.result?.raw?.sfkavid) {
       idToUse = this.result.raw.sfkavid;
     }
-    return idToUse || '';
+    return idToUse;
   }
 
-  getObjectApiNameAttribute() {
-    return this.result?.raw?.objecttype;
+  /**
+   * Checks if the Result type is Salesforce.
+   */
+  get isSalesforceLink() {
+    const sfid = this.result?.raw?.sfid;
+    return sfid !== undefined && sfid !== null;
   }
 
   /**

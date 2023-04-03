@@ -1,6 +1,6 @@
 <template>
   <template if:true={isSalesforceLink}>
-    <a href="#" onclick={handleOpenTabSalesforceLink}>{displayedTitle}</a>
+    <a href="#" onclick={handleOpenTabSalesforceLink} aria-label="opens in a salesforce console subTab">{displayedTitle}</a>
   </template>
   <template if:false={isSalesforceLink}>
     <a href={result.clickUri} target={target}>{displayedTitle}</a>
