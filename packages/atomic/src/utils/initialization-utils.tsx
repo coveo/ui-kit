@@ -280,7 +280,7 @@ export function BindStateToController(
           component
         );
       }
-
+      this[stateProperty] = this[controllerProperty].state;
       unsubscribeController = this[controllerProperty].subscribe(() => {
         this[stateProperty] = this[controllerProperty].state;
         options?.onUpdateCallbackMethod &&
