@@ -1,8 +1,7 @@
+import {TimeSpan} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import defaultTemplate from './quanticResult.html';
-
-import {LightningElement, api, track} from 'lwc';
-import {TimeSpan} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultTemplatesManager} ResultTemplatesManager */
@@ -108,7 +107,7 @@ export default class QuanticResult extends LightningElement {
   render() {
     const result = {
       ...this.result,
-      raw: {...this.result.raw, quantic__resultTemplateId: this.templateId},
+      raw: {...this.result.raw, quantic__templateId: this.templateId},
     };
     const template = this?.resultTemplatesManager?.selectTemplate(result);
     if (template) {
