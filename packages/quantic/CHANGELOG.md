@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.18.0...@coveo/quantic@2.19.0) (2023-04-03)
+
+### Features
+
+- **quantic:** quantic folded result list created ([#2786](https://github.com/coveo/ui-kit/issues/2786)) ([907fc96](https://github.com/coveo/ui-kit/commit/907fc9610938a67b008a3b2b20721021323955d3))
+
 # [2.18.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.17.4...@coveo/quantic@2.18.0) (2023-04-03)
 
 ### Bug Fixes
