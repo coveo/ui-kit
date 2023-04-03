@@ -50,10 +50,13 @@ export const isCoveoPlatformURL = (url: string) =>
 export const matchCoveoOrganizationEndpointUrl = (
   url: string,
   organizationId: string
-) => {
+): {organizationId?: string; environment?: PlatformEnvironment} | null => {
   const match = url.match(
-    new RegExp(`^https://${organizationId}\\.org(dev|stg|hipaa)?\\.coveo.com`)
+    /^https:\/\/(?<organizationId>\w+)\.org(?<environment>dev|stg|hipaa)?\.coveo\.com/
   );
-  console.log(match);
-  return match;
+  if (!match?.groups) {
+    return null;
+  }
+  const isOrgMatching = match.groups.organizationId === organizationId;
+  return isOrgMatching ? match.groups : null;
 };

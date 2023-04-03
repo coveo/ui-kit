@@ -43,30 +43,26 @@ describe('URLPath', () => {
   });
 
   describe('isCoveoOrganizationEndpointUrl', () => {
-    it('should correctly identify organization endpoints', () => {
-      [
-        {url: 'https://myorg.org.coveo.com', env: undefined},
-        {url: 'https://myorg.orghipaa.coveo.com', env: 'hipaa'},
-        {url: 'https://myorg.orgstg.coveo.com', env: 'stg'},
-        {url: 'https://myorg.orgdev.coveo.com', env: 'dev'},
-      ].forEach(({url, env}) => {
-        const match = matchCoveoOrganizationEndpointUrl(url, 'myorg');
-        expect(match).toBeTruthy();
-        expect(match![1]).toBe(env);
-      });
+    it.each([
+      {url: 'https://myorg.org.coveo.com', env: undefined},
+      {url: 'https://myorg.orghipaa.coveo.com', env: 'hipaa'},
+      {url: 'https://myorg.orgstg.coveo.com', env: 'stg'},
+      {url: 'https://myorg.orgdev.coveo.com', env: 'dev'},
+    ])('should correctly identify organization endpoints', ({url, env}) => {
+      const match = matchCoveoOrganizationEndpointUrl(url, 'myorg');
+      expect(match).toBeTruthy();
+      expect(match?.environment).toBe(env);
     });
+  });
 
-    it('should correctly identify non-organization endpoints', () => {
-      [
-        'https://platform.cloud.coveo.com',
-        'https://platform-eu.cloud.coveo.com',
-        'https://platformhipaa.cloud.coveo.com',
-        'https://analytics.cloud.coveo.com',
-        'https://search.cloud.coveo.com',
-        'https://completely.random.com',
-      ].forEach((url) =>
-        expect(matchCoveoOrganizationEndpointUrl(url, 'myorg')).toBeFalsy()
-      );
-    });
+  it.each([
+    'https://platform.cloud.coveo.com',
+    'https://platform-eu.cloud.coveo.com',
+    'https://platformhipaa.cloud.coveo.com',
+    'https://analytics.cloud.coveo.com',
+    'https://search.cloud.coveo.com',
+    'https://completely.random.com',
+  ])('should correctly identify non-organization endpoints', (url) => {
+    expect(matchCoveoOrganizationEndpointUrl(url, 'myorg')).toBeFalsy();
   });
 });

@@ -1,6 +1,7 @@
 import fetch from 'cross-fetch';
 import * as BackOff from 'exponential-backoff';
 import pino from 'pino';
+import {PlatformEnvironment} from '../recommendation.index';
 import {allValidPlatformCombination} from '../test/platform-url';
 import {ExpiredTokenError} from '../utils/errors';
 import {
@@ -27,49 +28,61 @@ describe('url helper', () => {
     });
   });
 
-  it('return the correct #analyticsUrl()', () => {
-    allValidPlatformCombination().forEach((expectation) => {
-      if (!expectation.multiRegionSubDomain) {
-        expect(analyticsUrl(expectation)).toEqual(
-          expectation.analytics.split('/rest')[0]
-        );
-      }
-    });
+  it.each(
+    allValidPlatformCombination().filter(
+      (expectation) => !expectation.multiRegionSubDomain
+    )
+  )('$expectation return the correct #analyticsUrl()', (expectation) => {
+    expect(analyticsUrl(expectation)).toEqual(
+      expectation.analytics.split('/rest')[0]
+    );
   });
 
-  it('return the correct #getOrganizationEndpoints()', () => {
-    expect(getOrganizationEndpoints('foo', 'dev')).toEqual(
-      expect.objectContaining({
+  it.each([
+    {
+      orgId: 'foo',
+      env: 'dev',
+      organizationEndpoints: {
         platform: 'https://foo.orgdev.coveo.com',
         search: 'https://foo.orgdev.coveo.com/rest/search/v2',
         analytics: 'https://foo.analytics.orgdev.coveo.com',
-      })
-    );
-
-    expect(getOrganizationEndpoints('foo', 'stg')).toEqual(
-      expect.objectContaining({
+      },
+    },
+    {
+      orgId: 'foo',
+      env: 'stg',
+      organizationEndpoints: {
         platform: 'https://foo.orgstg.coveo.com',
         search: 'https://foo.orgstg.coveo.com/rest/search/v2',
         analytics: 'https://foo.analytics.orgstg.coveo.com',
-      })
-    );
-
-    expect(getOrganizationEndpoints('foo', 'prod')).toEqual(
-      expect.objectContaining({
+      },
+    },
+    {
+      orgId: 'foo',
+      env: 'prod',
+      organizationEndpoints: {
         platform: 'https://foo.org.coveo.com',
         search: 'https://foo.org.coveo.com/rest/search/v2',
         analytics: 'https://foo.analytics.org.coveo.com',
-      })
-    );
-
-    expect(getOrganizationEndpoints('foo', 'hipaa')).toEqual(
-      expect.objectContaining({
+      },
+    },
+    {
+      orgId: 'foo',
+      env: 'hipaa',
+      organizationEndpoints: {
         platform: 'https://foo.orghipaa.coveo.com',
         search: 'https://foo.orghipaa.coveo.com/rest/search/v2',
         analytics: 'https://foo.analytics.orghipaa.coveo.com',
-      })
-    );
-  });
+      },
+    },
+  ] as Array<{orgId: string; env: PlatformEnvironment; organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>}>)(
+    'return the correct #getOrganizationEndpoints()',
+    ({orgId, env, organizationEndpoints}) => {
+      expect(getOrganizationEndpoints(orgId, env)).toEqual(
+        expect.objectContaining(organizationEndpoints)
+      );
+    }
+  );
 });
 
 describe('PlatformClient call', () => {

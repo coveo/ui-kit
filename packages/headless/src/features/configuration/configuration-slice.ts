@@ -5,7 +5,6 @@ import {getOrganizationEndpoints} from '../../api/platform-client';
 import {
   matchCoveoOrganizationEndpointUrl,
   isCoveoPlatformURL,
-  PlatformEnvironment,
 } from '../../utils/url-utils';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
@@ -44,7 +43,7 @@ function analyticsUrlFromPlatformUrl(
   if (matchCoveoOrganizationEndpoints) {
     return getOrganizationEndpoints(
       organizationId,
-      matchCoveoOrganizationEndpoints[1] as PlatformEnvironment
+      matchCoveoOrganizationEndpoints.environment
     ).analytics;
   }
 
