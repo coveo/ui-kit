@@ -8,11 +8,7 @@ import {
   buildTemplateWithoutSections,
 } from '../result-list/result-list-actions';
 import {addSearchBox} from './search-box-actions';
-import {
-  assertHasText,
-  assertLogOmniboxFromLink,
-  assertLogSearchFromLink,
-} from './search-box-assertions';
+import {assertHasText, assertLogOmniboxFromLink} from './search-box-assertions';
 import {SearchBoxSelectors} from './search-box-selectors';
 
 describe('Standalone Search Box Test Suites', () => {
