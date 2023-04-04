@@ -89,3 +89,6 @@ export {
   DefaultFieldsToInclude,
   EcommerceDefaultFieldsToInclude,
 } from './features/fields/fields-state';
+
+export {getOrganizationEndpoints} from './api/platform-client';
+export type {PlatformEnvironment} from './utils/url-utils';
