@@ -853,9 +853,17 @@ export namespace Components {
     }
     interface AtomicPager {
         /**
+          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "nextIcon": string;
+        /**
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages": number;
+        /**
+          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "prevIcon": string;
     }
     interface AtomicPopover {
     }
@@ -3518,10 +3526,18 @@ declare namespace LocalJSX {
     }
     interface AtomicPager {
         /**
+          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "nextIcon"?: string;
+        /**
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages"?: number;
         "onAtomic/scrollToTop"?: (event: AtomicPagerCustomEvent<any>) => void;
+        /**
+          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "prevIcon"?: string;
     }
     interface AtomicPopover {
     }

@@ -513,13 +513,13 @@ export declare interface AtomicPager extends Components.AtomicPager {
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['numberOfPages']
+  inputs: ['nextIcon', 'numberOfPages', 'prevIcon']
 })
 @Component({
   selector: 'atomic-pager',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['numberOfPages']
+  inputs: ['nextIcon', 'numberOfPages', 'prevIcon']
 })
 export class AtomicPager {
   protected el: HTMLElement;
