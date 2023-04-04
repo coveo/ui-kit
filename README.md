@@ -47,6 +47,11 @@ To start Atomic & Headless simultaneously in development (recommended), run:
 npm run dev:atomic
 ```
 
+To start story book in development, run:
+```sh
+npx nx run atomic-storybook:dev
+```
+
 The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `npm rebuild` command.
 
 The following Visual Studio Code extensions are recommended:
