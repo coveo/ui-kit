@@ -62,7 +62,7 @@ export class AtomicInsightTab
     });
   }
 
-  public componentDidLoad() {
+  public componentDidRender() {
     dispatchTabLoaded(this.host);
   }
 

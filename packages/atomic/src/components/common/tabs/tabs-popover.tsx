@@ -5,8 +5,12 @@ import {
 } from '@popperjs/core';
 import {Component, h, Listen, State, Element, Host, Prop} from '@stencil/core';
 import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
+import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Button} from '../button';
-import {AnyBindings} from '../interface/bindings';
 import {tabsPopoverClass} from './tabs-popover-type';
 
 /**
@@ -14,37 +18,25 @@ import {tabsPopoverClass} from './tabs-popover-type';
  */
 @Component({
   tag: 'tabs-popover',
-  shadow: true,
+  shadow: false,
   styleUrl: 'tabs-popover.pcss',
 })
-export class TabsPopover {
+export class TabsPopover implements InitializableComponent {
   @Element() private host!: HTMLElement;
-  private buttonRef!: HTMLElement;
-  private popupRef!: HTMLElement;
-  private popperInstance?: PopperInstance;
-  private popoverId = 'tabs-popover';
 
-  @Prop() public bindings: AnyBindings | undefined;
+  @InitializeBindings() public bindings!: Bindings;
 
   @State()
   public error!: Error;
+
   @State() private isOpen = false;
 
-  public initialize() {
-    if (this.host.children.length === 0) {
-      this.error = new Error(
-        'One child is required inside a set of popover tags.'
-      );
+  private buttonRef!: HTMLElement;
+  private popupRef!: HTMLElement;
+  private popperInstance?: PopperInstance;
+  public popoverId = 'tabs-popover';
 
-      return;
-    }
-
-    if (this.host.children.length > 1) {
-      this.error = new Error(
-        'Cannot have more than one child inside a set of popover tags.'
-      );
-    }
-  }
+  public initialize() {}
 
   public initializePopover() {
     this.popupRef.classList.add(tabsPopoverClass);
@@ -59,6 +51,10 @@ export class TabsPopover {
 
   get slotElements() {
     return this.host.children;
+  }
+
+  get isEmpty() {
+    return this.host.children.length === 0;
   }
 
   private togglePopover() {
@@ -147,7 +143,7 @@ export class TabsPopover {
 
   public render() {
     return (
-      <Host>
+      <Host class={this.isEmpty ? 'atomic-hidden' : ''}>
         <atomic-focus-trap
           source={this.buttonRef}
           container={this.popupRef}

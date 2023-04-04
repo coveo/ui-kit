@@ -1,9 +1,8 @@
-import {Component, Element, h, State, Listen} from '@stencil/core';
+import {Component, Element, h, State} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {TabsCommon} from '../../common/tabs/tabs-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -12,7 +11,6 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
 @Component({
   tag: 'atomic-insight-tabs',
   styleUrl: './atomic-insight-tabs.pcss',
-  shadow: true,
 })
 export class AtomicInsightTabs
   implements InitializableComponent<InsightBindings>
@@ -23,29 +21,11 @@ export class AtomicInsightTabs
 
   @Element() host!: HTMLElement;
 
-  private tabsCommon!: TabsCommon;
-
-  public componentWillLoad() {
-    this.tabsCommon = new TabsCommon({host: this.host});
-  }
-
-  public componentDidRender() {
-    this.tabsCommon.updateTabsDisplay();
-  }
-
-  @Listen('atomic/tabRendered')
-  public resolveResult(event: CustomEvent<{}>) {
-    event.preventDefault();
-    this.tabsCommon.updateTabsDisplay();
-    this.render();
-  }
-
   public render() {
     return (
-      <div class="flex">
+      <tab-bar>
         <slot></slot>
-        {this.tabsCommon.renderMoreButton(this.bindings)}
-      </div>
+      </tab-bar>
     );
   }
 }
