@@ -1,6 +1,7 @@
 import {history} from 'coveo.analytics';
 import {FacetOptions} from '../../features/facet-options/facet-options';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
+import {URLPath} from '../../utils/url-utils';
 import {
   HTTPContentType,
   HttpMethods,
@@ -132,15 +133,22 @@ export const baseSearchRequest = (
 ): Pick<
   PlatformClientCallOptions,
   'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
-> => ({
-  accessToken: req.accessToken,
-  method,
-  contentType,
-  url: `${req.url}${path}?${getOrganizationIdQueryParam(req)}${
-    req.authentication ? `&${getAuthenticationQueryParam(req)}` : ''
-  }`,
-  origin: 'searchApiFetch',
-});
+> => {
+  const url = new URLPath(`${req.url}${path}`);
+
+  url.addParam('organizationId', req.organizationId);
+
+  if (req.authentication) {
+    url.addParam('authentication', req.authentication);
+  }
+  return {
+    accessToken: req.accessToken,
+    method,
+    contentType,
+    url: url.href,
+    origin: 'searchApiFetch',
+  };
+};
 
 export const getOrganizationIdQueryParam = (req: BaseParam) =>
   `organizationId=${req.organizationId}`;
