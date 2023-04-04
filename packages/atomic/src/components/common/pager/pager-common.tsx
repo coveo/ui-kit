@@ -27,7 +27,8 @@ interface PagerProps {
     isCurrentPage: (page: number) => boolean;
     state: {};
   };
-  icon?: string;
+  prevIcon?: string;
+  nextIcon?: string;
 }
 
 export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
@@ -43,7 +44,14 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
     focusOnFirstResultAndScrollToTop();
   };
 
-  const icon = props.icon || ArrowRight;
+  const nextIcon = props.nextIcon || ArrowRight;
+  const prevIcon = props.prevIcon || ArrowRight;
+  const defaultIconStyle = 'w-5 align-middle';
+  // Rotate default next arrow icon by 180 to obtain previous arrow icon
+  const prevIconStyle =
+    prevIcon === ArrowRight
+      ? `${defaultIconStyle} rotate-180`
+      : defaultIconStyle;
 
   const renderPreviousButton = () => {
     return (
@@ -59,9 +67,9 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
         <atomic-icon
-          icon={icon}
+          icon={prevIcon}
           part="previous-button-icon"
-          class="w-5 align-middle rotate-180"
+          class={prevIconStyle}
         ></atomic-icon>
       </Button>
     );
@@ -113,9 +121,9 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
         <atomic-icon
-          icon={icon}
+          icon={nextIcon}
           part="next-button-icon"
-          class="w-5 align-middle"
+          class={defaultIconStyle}
         ></atomic-icon>
       </Button>
     );
