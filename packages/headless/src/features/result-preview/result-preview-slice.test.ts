@@ -4,7 +4,8 @@ import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {logInterfaceLoad} from '../analytics/analytics-actions';
 import {executeSearch} from '../insight-search/insight-search-actions';
-import {fetchMoreResults} from '../search/search-actions';
+import {logPageNext} from '../pagination/pagination-analytics-actions';
+import {fetchMoreResults, fetchPage} from '../search/search-actions';
 import {
   fetchResultContent,
   nextPreview,
@@ -105,6 +106,20 @@ describe('ResultPreview', () => {
         'fifth',
         'eight',
       ]);
+    });
+  });
+
+  describe('on #fetchPage.fulfilled', () => {
+    it('re-initialize the state to initial when a query returns correctly', () => {
+      state.content = 'content';
+      state.contentURL = 'url';
+      state.isLoading = true;
+      state.uniqueId = 'uniqueId';
+      const action = fetchPage.fulfilled(buildMockSearch(), '', logPageNext());
+
+      const finalState = resultPreviewReducer(state, action);
+
+      expect(finalState).toEqual(getResultPreviewInitialState());
     });
   });
 
