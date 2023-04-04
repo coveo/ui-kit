@@ -73,6 +73,18 @@ describe('ResultPreview', () => {
   });
 
   describe('on #fetchMoreResults.fulfilled', () => {
+    it('re-initialize the state to initial when a query returns correctly', () => {
+      state.content = 'content';
+      state.contentURL = 'url';
+      state.isLoading = true;
+      state.uniqueId = 'uniqueId';
+      const action = fetchMoreResults.fulfilled(buildMockSearch(), '');
+
+      const finalState = resultPreviewReducer(state, action);
+
+      expect(finalState).toEqual(getResultPreviewInitialState());
+    });
+
     it('concat #resultsWithPreview property with the new results', () => {
       state.resultsWithPreview = ['first', 'fourth'];
       const search = buildMockSearch({

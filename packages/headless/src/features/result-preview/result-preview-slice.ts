@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {WritableDraft} from 'immer/dist/internal';
 import type {Result} from '../../api/search/search/result';
 import {fetchMoreResults, executeSearch} from '../search/search-actions';
 import {
@@ -8,7 +9,10 @@ import {
   previousPreview,
   updateContentURL,
 } from './result-preview-actions';
-import {getResultPreviewInitialState} from './result-preview-state';
+import {
+  ResultPreviewState,
+  getResultPreviewInitialState,
+} from './result-preview-state';
 
 const getUniqueIdsOfResultsWithHTMLVersion = (
   results: Pick<Result, 'hasHtmlVersion' | 'uniqueId'>[]
@@ -30,18 +34,13 @@ export const resultPreviewReducer = createReducer(
         state.isLoading = false;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        const {content, isLoading, uniqueId, contentURL} =
-          getResultPreviewInitialState();
-        state.content = content;
-        state.isLoading = isLoading;
-        state.uniqueId = uniqueId;
-        state.contentURL = contentURL;
-
+        resetPreviewContentState(state);
         state.resultsWithPreview = getUniqueIdsOfResultsWithHTMLVersion(
           action.payload.response.results
         );
       })
       .addCase(fetchMoreResults.fulfilled, (state, action) => {
+        resetPreviewContentState(state);
         state.resultsWithPreview = state.resultsWithPreview.concat(
           getUniqueIdsOfResultsWithHTMLVersion(action.payload.response.results)
         );
@@ -77,3 +76,12 @@ export const resultPreviewReducer = createReducer(
       });
   }
 );
+
+const resetPreviewContentState = (state: WritableDraft<ResultPreviewState>) => {
+  const {content, isLoading, uniqueId, contentURL} =
+    getResultPreviewInitialState();
+  state.content = content;
+  state.isLoading = isLoading;
+  state.uniqueId = uniqueId;
+  state.contentURL = contentURL;
+};
