@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.21.3...@coveo/atomic@2.22.0) (2023-04-03)
+
+### Features
+
+- **headless,atomic:** add organizationEndpoints configuration option for headless ([#2799](https://github.com/coveo/ui-kit/issues/2799)) ([c868d6d](https://github.com/coveo/ui-kit/commit/c868d6d529b51713318ae6839285610c6136f793))
+
 ## [2.21.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.21.2...@coveo/atomic@2.21.3) (2023-04-03)
 
 ### Bug Fixes
