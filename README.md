@@ -9,7 +9,7 @@
 - [Auth](packages/auth): Functions to help authenticate with the Coveo platform.
 - [Headless React Samples](packages/samples/headless-react): Various code samples using Headless inside a React application.
 
-## Installation
+## Install
 
 To install all dependencies and link local packages, run:
 
@@ -23,6 +23,8 @@ To install a dependency in a specific package, specify the workspace:
 npm i lodash -w @coveo/headless-react-samples
 ```
 
+## Build
+
 To build all projects for production, run:
 
 ```sh
@@ -35,11 +37,7 @@ To build a single project for production (for instance, the `@coveo/atomic` pack
 npm run build -w @coveo/atomic
 ```
 
-To start a single project in development (for instance, the `quantic` package), run:
-
-```sh
-npm dev -w @coveo/quantic
-```
+## Development mode
 
 To start Atomic & Headless simultaneously in development (recommended), run:
 
@@ -47,10 +45,38 @@ To start Atomic & Headless simultaneously in development (recommended), run:
 npm run dev:atomic
 ```
 
+To start a single project in development (for instance, the `quantic` package), run:
+
+```sh
+npm run dev -w @coveo/quantic
+```
+
 To start story book in development, run:
 ```sh
 npx nx run atomic-storybook:dev
 ```
+
+## Test
+
+To run the tests for a specific package (recommended) e.g. `@coveo/atomic` package
+```sh
+npm run test -w @coveo/atomic
+```
+
+For e2e tests
+```sh
+npm run dev -w @coveo/atomic
+npm run e2e -w @coveo/atomic
+```
+
+## Lint
+
+```sh
+npm run lint:check
+npm run lint:fix
+```
+
+## Misc
 
 The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `npm rebuild` command.
 
