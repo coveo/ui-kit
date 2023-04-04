@@ -9,12 +9,37 @@ import {
   IRuntimeEnvironment,
 } from 'coveo.analytics';
 import {PreprocessRequest} from '../api/preprocess-request';
+import {getOrganizationEndpoints} from '../recommendation.index';
 import {requiredNonEmptyString} from '../utils/validate-payload';
+
+/**
+ * The endpoints to use.
+ *
+ * For example: `https://orgid.org.coveo.com`
+ *
+ * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
+ */
+export interface CoreEngineOrganizationEndpoints {
+  /**
+   * The base platform endpoint.
+   *
+   * For example: `https://{orgid}.org.coveo.com`
+   */
+  platform: string;
+  /**
+   * The base analytics service endpoint.
+   *
+   * For example: `https://{orgid}.analytics.org.coveo.com`
+   */
+  analytics: string;
+}
 
 /**
  * The global headless engine configuration options.
  */
-export interface EngineConfiguration {
+export interface EngineConfiguration<
+  OrganizationEndpoints extends CoreEngineOrganizationEndpoints = CoreEngineOrganizationEndpoints
+> {
   /**
    * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
    */
@@ -38,6 +63,8 @@ export interface EngineConfiguration {
   /**
    * The Plaform URL to use. (e.g., https://platform.cloud.coveo.com)
    * The platformUrl() helper method can be useful to know what url is available.
+   *
+   * @deprecated Coveo recommends using organizationEndpoints instead, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
    */
   platformUrl?: string;
   /**
@@ -49,6 +76,16 @@ export interface EngineConfiguration {
    * Allows configuring options related to analytics.
    */
   analytics?: AnalyticsConfiguration;
+  /**
+   * The endpoints to use.
+   *
+   * For example: `https://orgid.org.coveo.com`
+   *
+   * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
+   *
+   * We recommend using this option, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
+   */
+  organizationEndpoints?: OrganizationEndpoints;
 }
 
 /**
@@ -154,5 +191,6 @@ export function getSampleEngineConfiguration(): EngineConfiguration {
     organizationId: 'searchuisamples',
     // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
     accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    organizationEndpoints: getOrganizationEndpoints('searchuisamples'),
   };
 }

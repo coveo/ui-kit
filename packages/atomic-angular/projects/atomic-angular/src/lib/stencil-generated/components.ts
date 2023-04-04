@@ -675,7 +675,7 @@ export declare interface AtomicRecsInterface extends Components.AtomicRecsInterf
 @ProxyCmp({
   defineCustomElementFn: undefined,
   inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
-  methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations']
+  methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations', 'getOrganizationEndpoints']
 })
 @Component({
   selector: 'atomic-recs-interface',
@@ -1535,7 +1535,7 @@ export declare interface AtomicSearchInterface extends Components.AtomicSearchIn
 @ProxyCmp({
   defineCustomElementFn: undefined,
   inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
-  methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch']
+  methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
 })
 @Component({
   selector: 'atomic-search-interface',

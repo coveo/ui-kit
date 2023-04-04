@@ -74,8 +74,8 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
 
 export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
-  (payload: UpdateSearchConfigurationActionCreatorPayload) =>
-    validatePayload(payload, {
+  (payload: UpdateSearchConfigurationActionCreatorPayload) => {
+    return validatePayload(payload, {
       apiBaseUrl: nonEmptyString,
       pipeline: new StringValue({required: false, emptyAllowed: true}),
       searchHub: nonEmptyString,
@@ -85,7 +85,8 @@ export const updateSearchConfiguration = createAction(
         required: false,
         each: requiredNonEmptyString,
       }),
-    })
+    });
+  }
 );
 
 export interface UpdateAnalyticsConfigurationActionCreatorPayload {
