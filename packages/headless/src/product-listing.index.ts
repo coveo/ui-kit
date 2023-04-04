@@ -28,17 +28,10 @@ export * from './features/pagination/pagination-actions-loader';
 export * from './features/analytics/search-analytics-actions-loader';
 export * from './features/sort/sort-actions-loader';
 export * from './features/facet-options/facet-options-actions-loader';
-// export * from './features/facets/facet-set/facet-set-controller-actions-loader'; // TODO: Create missing actions loader
 export * from './features/facets/facet-set/facet-set-actions-loader';
-// export * from './features/facets/facet-search-set/generic/generic-facet-search-actions-loader'; // TODO: Create missing actions loader (KIT-2375).
-// export * from './features/facets/facet-search-set/specific/specific-facet-search-actions-loader'; // TODO: Create missing actions loader (KIT-2375).
-// export * from './features/facets/facet-search-set/category/category-facet-search-actions-loader'; // TODO: Create missing actions loader (KIT-2375).
 export * from './features/facets/category-facet-set/category-facet-set-actions-loader';
 export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
-// export * from './features/facets/range-facets/date-facet-set/date-facet-controller-actions-loader'; // TODO: Create missing actions loader
-// export * from './features/search/search-actions-loader'; // TODO: Remove from bundle (KIT-2376).
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
-// export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions-loader'; // TODO: Create missing actions loader
 export * from './features/context/context-actions-loader';
 
 // Controllers
