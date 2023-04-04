@@ -1,10 +1,8 @@
-import {
-  getHeadlessBundle,
-  getHeadlessEnginePromise,
-} from 'c/quanticHeadlessLoader';
-import {ResultUtils} from 'c/quanticUtils';
-import {NavigationMixin} from 'lightning/navigation';
-import {LightningElement, api} from 'lwc';
+import { getHeadlessBundle, getHeadlessEnginePromise } from 'c/quanticHeadlessLoader';
+import { ResultUtils } from 'c/quanticUtils';
+import { NavigationMixin } from 'lightning/navigation';
+import { LightningElement, api } from 'lwc';
+
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -15,9 +13,7 @@ import {LightningElement, api} from 'lwc';
  * @example
  * <c-quantic-result-link engine-id={engineId} result={result} target="_blank"></c-quantic-result-link>
  */
-export default class QuanticResultLink extends NavigationMixin(
-  LightningElement
-) {
+export default class QuanticResultLink extends NavigationMixin(LightningElement) {
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -94,7 +90,6 @@ export default class QuanticResultLink extends NavigationMixin(
 
   handleOpenTabSalesforceLink(event) {
     event.stopPropagation();
-
     const targetPageRef = {
       type: 'standard__recordPage',
       attributes: {
