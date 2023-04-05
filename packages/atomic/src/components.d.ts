@@ -1781,6 +1781,7 @@ export namespace Components {
     interface TabBar {
     }
     interface TabsPopover {
+        "hide": boolean;
     }
 }
 export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {
@@ -4426,6 +4427,7 @@ declare namespace LocalJSX {
     interface TabBar {
     }
     interface TabsPopover {
+        "hide"?: boolean;
     }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;

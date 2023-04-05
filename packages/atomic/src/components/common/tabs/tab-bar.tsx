@@ -45,12 +45,12 @@ export class TabBar {
     return this.slotContentWidth > this.containerWidth;
   }
 
-  private get moreButton() {
-    return this.host.querySelector('.more-button');
+  private get tabsPopover() {
+    return this.host.shadowRoot?.querySelector('tabs-popover');
   }
 
-  private get moreButtonWidth() {
-    return this.moreButton ? this.getElementWidth(this.moreButton) : 0;
+  private get popoverWidth() {
+    return this.tabsPopover ? this.getElementWidth(this.tabsPopover) : 0;
   }
 
   private get overflowingTabs() {
@@ -66,8 +66,8 @@ export class TabBar {
         : null;
 
       const minimumWidthNeeded = tabPositionedBeforeSelectedTab
-        ? this.moreButtonWidth + this.getElementWidth(this.selectedTab)
-        : this.moreButtonWidth;
+        ? this.popoverWidth + this.getElementWidth(this.selectedTab)
+        : this.popoverWidth;
 
       const rightPositionLimit = !this.isOverflow
         ? containerRelativeRightPosition
@@ -82,6 +82,25 @@ export class TabBar {
 
   private get displayedTabs() {
     return this.tabsFromSlot.filter((el) => !this.overflowingTabs.includes(el));
+  }
+
+  private get lastDisplayedTab() {
+    const displayedTabs = this.displayedTabs;
+    return displayedTabs[displayedTabs.length - 1];
+  }
+
+  private get lastDisplayedTabRightPosition() {
+    return (
+      this.lastDisplayedTab.getBoundingClientRect().right -
+      this.host.getBoundingClientRect().left
+    );
+  }
+
+  private updatePopoverPosition() {
+    this.tabsPopover?.style.setProperty(
+      'left',
+      `${this.displayedTabs.length ? this.lastDisplayedTabRightPosition : 0}px`
+    );
   }
 
   private getIsTabActive = (element: Element) =>
@@ -106,8 +125,10 @@ export class TabBar {
   private updateTabsDisplay = () => {
     this.overflowingTabs.forEach(this.hideElement);
     this.displayedTabs.forEach(this.showElement);
+    this.updatePopoverPosition();
     this.popoverTabs = this.overflowingTabs.map((tab) => (
       <Button
+        part="popover-tab"
         style="text-transparent"
         class="font-semibold px-4 py-3 rounded truncate"
         onClick={() => tab.select()}
@@ -130,9 +151,11 @@ export class TabBar {
   public render = () => {
     this.updateTabsDisplay();
     return (
-      <Host class="flex">
+      <Host class="flex relative">
         <slot></slot>
-        <tabs-popover>{this.popoverTabs}</tabs-popover>
+        <tabs-popover hide={!this.overflowingTabs.length}>
+          {this.popoverTabs}
+        </tabs-popover>
       </Host>
     );
   };

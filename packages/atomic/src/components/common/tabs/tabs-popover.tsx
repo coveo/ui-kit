@@ -18,7 +18,6 @@ import {tabsPopoverClass} from './tabs-popover-type';
  */
 @Component({
   tag: 'tabs-popover',
-  shadow: false,
   styleUrl: 'tabs-popover.pcss',
 })
 export class TabsPopover implements InitializableComponent {
@@ -26,10 +25,14 @@ export class TabsPopover implements InitializableComponent {
 
   @InitializeBindings() public bindings!: Bindings;
 
+  @Prop()
+  public hide = false;
+
   @State()
   public error!: Error;
 
-  @State() private isOpen = false;
+  @State()
+  private isOpen = false;
 
   private buttonRef!: HTMLElement;
   private popupRef!: HTMLElement;
@@ -38,7 +41,7 @@ export class TabsPopover implements InitializableComponent {
 
   public initialize() {}
 
-  public initializePopover() {
+  private initializePopover() {
     this.popupRef.classList.add(tabsPopoverClass);
   }
 
@@ -53,28 +56,12 @@ export class TabsPopover implements InitializableComponent {
     return this.host.children;
   }
 
-  get isEmpty() {
-    return this.host.children.length === 0;
+  get hasTabs() {
+    return !!this.popupRef.children.length;
   }
 
   private togglePopover() {
     this.isOpen = !this.isOpen;
-  }
-
-  public componentDidRender() {
-    if (this.popperInstance || !this.buttonRef || !this.popupRef) {
-      return;
-    }
-
-    this.popperInstance = createPopper(this.buttonRef, this.popupRef, {
-      placement: 'bottom-end',
-      modifiers: [preventOverflow],
-    });
-    this.initializePopover();
-  }
-
-  public componentDidUpdate() {
-    this.popperInstance?.forceUpdate();
   }
 
   private renderDropdownButton() {
@@ -141,9 +128,29 @@ export class TabsPopover implements InitializableComponent {
     );
   }
 
+  public componentDidRender() {
+    if (this.popperInstance || !this.buttonRef || !this.popupRef) {
+      return;
+    }
+
+    this.popperInstance = createPopper(this.buttonRef, this.popupRef, {
+      placement: 'bottom-end',
+      modifiers: [preventOverflow],
+    });
+    this.initializePopover();
+  }
+
+  public componentDidUpdate() {
+    this.popperInstance?.forceUpdate();
+  }
+
   public render() {
+    console.log(this.hide);
     return (
-      <Host class={this.isEmpty ? 'atomic-hidden' : ''}>
+      <Host
+        class={this.hide ? 'visibility-hidden' : ''}
+        aria-hidden={this.hide}
+      >
         <atomic-focus-trap
           source={this.buttonRef}
           container={this.popupRef}
