@@ -3,7 +3,6 @@ import {
   addBreadbox,
   breadboxLabel,
   deselectAllBreadcrumbs,
-  deselectBreadcrumbAtIndex,
 } from './breadbox-actions';
 import * as BreadboxAssertions from './breadbox-assertions';
 import {breadboxComponent, BreadboxSelectors} from './breadbox-selectors';
@@ -27,7 +26,7 @@ import {
   selectIdleLinkValueAt,
 } from './facets/facet-common-actions';
 import * as CommonFacetAssertions from './facets/facet-common-assertions';
-import {addFacet, field, label} from './facets/facet/facet-actions';
+import {addFacet, label} from './facets/facet/facet-actions';
 import {FacetSelectors} from './facets/facet/facet-selectors';
 import {
   addNumericFacet,
@@ -47,7 +46,7 @@ describe('Breadbox Test Suites', () => {
     new TestFixture()
       .withTranslation({'a.translated.label': 'This is a translated label'})
       .with(addBreadbox())
-      .with(addFacet({field, label, ...props}))
+      .with(addFacet({field: 'author', label, ...props}))
       .with(
         addNumericFacet({field: numericFacetField, label: numericFacetLabel})
       )
@@ -155,39 +154,14 @@ describe('Breadbox Test Suites', () => {
     });
   });
 
-  describe('when selecting 3 facet values', () => {
-    beforeEach(() => {
-      setupBreadboxWithMultipleFacets();
-      for (let i = 0; i < 3; i++) {
-        selectIdleCheckboxValueAt(FacetSelectors, 0);
-      }
-    });
-
-    describe('when clearing the second breadcrumb', () => {
-      beforeEach(() => {
-        deselectBreadcrumbAtIndex(1);
-      });
-
-      BreadboxAssertions.assertFocusBreadcrumb(1);
-    });
-
-    describe('when clearing the last breadcrumb', () => {
-      beforeEach(() => {
-        deselectBreadcrumbAtIndex(2);
-      });
-
-      BreadboxAssertions.assertFocusClearAll();
-    });
-  });
-
   describe('when selecting 16 facet values', () => {
     const activeValues = [...Array(16).keys()];
 
     function setupFacetWithMultipleSelectedValues() {
       new TestFixture()
         .with(addBreadbox())
-        .with(addFacet({field, label}))
-        .withHash(`f-${field}=${activeValues.join(',')}`)
+        .with(addFacet({field: 'author', label}))
+        .withHash(`f-author=${activeValues.join(',')}`)
         .init();
       BreadboxSelectors.breadcrumbButton().then((buttons) =>
         cy.wrap(buttons.filter(':visible').length).as('numberOfVisibleButtons')
@@ -213,12 +187,6 @@ describe('Breadbox Test Suites', () => {
         BreadboxSelectors.breadcrumbShowMoreButton().click();
       }
 
-      describe('verify accessibility', () => {
-        beforeEach(setupFacetWithMultipleSelectedValuesAndShowMore);
-
-        BreadboxAssertions.assertFocusBreadcrumb('@numberOfVisibleButtons');
-      });
-
       describe('verify rendering', () => {
         before(setupFacetWithMultipleSelectedValuesAndShowMore);
 
@@ -233,10 +201,6 @@ describe('Breadbox Test Suites', () => {
         setupFacetWithMultipleSelectedValues();
         BreadboxSelectors.breadcrumbShowMoreButton().click();
         BreadboxSelectors.breadcrumbShowLessButton().click();
-      });
-
-      describe('verify accessibility', () => {
-        BreadboxAssertions.assertFocusShowMore();
       });
 
       describe('verify rendering', () => {

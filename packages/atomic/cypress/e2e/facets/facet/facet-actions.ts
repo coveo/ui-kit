@@ -2,8 +2,8 @@ import {TestFixture, addTag, TagProps} from '../../../fixtures/test-fixture';
 import {FacetSelectors} from './facet-selectors';
 
 export const defaultNumberOfValues = 8;
-export const label = 'The Authors';
-export const field = 'author';
+export const label = 'The objecttype';
+export const field = 'objecttype';
 
 export const addFacet =
   (props: TagProps = {}) =>
@@ -15,7 +15,7 @@ export function selectIdleBoxValueAt(index: number) {
     .eq(index)
     .then((idleValueLabel) => {
       const text = idleValueLabel.text();
-      cy.wrap(idleValueLabel).click();
+      cy.wrap(idleValueLabel).click().wait(2000);
       FacetSelectors.selectedBoxValueWithText(text).should('exist');
     });
 }
