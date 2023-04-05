@@ -1,4 +1,4 @@
-import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
+import {TestFixture} from '../fixtures/test-fixture';
 import * as CommonAssertions from './common-assertions';
 import {
   addPager,
@@ -81,18 +81,6 @@ describe('Pager Test Suites', () => {
 
       PagerAssertions.assertPagerSelected('6', false);
     });
-  });
-
-  describe('when selecting page 5', () => {
-    before(() => {
-      new TestFixture()
-        .withElement(generateComponentHTML(pagerComponent))
-        .init();
-      PagerSelectors.pageButton(5).click();
-      cy.wait(TestFixture.interceptAliases.Search);
-    });
-
-    PagerAssertions.assertFocusActivePage();
   });
 
   describe('Pager should load from url', () => {

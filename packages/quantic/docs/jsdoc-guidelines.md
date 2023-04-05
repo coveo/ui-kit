@@ -30,6 +30,7 @@ Each component should be given one or more category values using the `@category`
 - **Insight Panel**: Components pertaining to the Insight Panel use case
 - **Result Template**: Components meant to be used within result templates.
 - **Utility**: Components providing a generic utility without pertaining to any specific Coveo Headless use-case.
+- **Internal** Components that are not to be publicly documented.
   If there are more than one relevant category, each should be specified with its own tag.
   If a new category is required it should be discussed with the code owners and adjustements must be made to the parsing script.
 

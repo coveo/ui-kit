@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.11.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.10.1...@coveo/headless@2.11.0) (2023-04-03)
+
+### Features
+
+- **headless,atomic:** add organizationEndpoints configuration option for headless ([#2799](https://github.com/coveo/ui-kit/issues/2799)) ([c868d6d](https://github.com/coveo/ui-kit/commit/c868d6d529b51713318ae6839285610c6136f793))
+
+## [2.10.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.10.0...@coveo/headless@2.10.1) (2023-03-22)
+
+**Note:** Version bump only for package @coveo/headless
+
 # [2.10.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.9.0...@coveo/headless@2.10.0) (2023-03-15)
 
 ### Features

@@ -71,6 +71,7 @@ export class AtomicSmartSnippetSource implements InitializableComponent {
           <atomic-result-text
             field="title"
             default="no-title"
+            key={this.source.uniqueId}
           ></atomic-result-text>
         </LinkWithResultAnalytics>
       </Host>

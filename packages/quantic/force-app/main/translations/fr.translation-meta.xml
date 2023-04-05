@@ -575,5 +575,15 @@
     <customLabels>
       <label>Ouvre dans un sous-onglet de la console Salesforce</label>
       <name>quantic_OpensInSalesforceSubTab</name>
+      <label>Charger les items liés</label>
+      <name>quantic_LoadRelatedItems</name>
+    </customLabels>
+    <customLabels>
+      <label>Masquer les items liés</label>
+      <name>quantic_HideRelatedItems</name>
+    </customLabels>
+    <customLabels>
+      <label>Aucun item lié</label>
+      <name>quantic_NoRelatedItems</name>
     </customLabels>
 </Translations>

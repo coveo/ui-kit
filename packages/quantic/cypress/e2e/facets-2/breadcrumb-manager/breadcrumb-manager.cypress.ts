@@ -27,6 +27,7 @@ describe('quantic-breadcrumb-manager', () => {
     useCase: string;
     categoryDivider: string;
     collapseThreshold: number;
+    displayFacetValuesAs: 'link' | 'checkbox';
   }
 
   function visitBreadcrumbManager(
@@ -205,6 +206,41 @@ describe('quantic-breadcrumb-manager', () => {
             cy.wait(getQueryAlias(param.useCase));
 
             Expect.facetBreadcrumb.numberOfValues(1);
+          });
+        });
+      });
+
+      describe('when facet values are displayed as checkboxes', () => {
+        it('should properly display the breadcrumb values', () => {
+          visitBreadcrumbManager({
+            useCase: param.useCase,
+            displayFacetValuesAs: 'checkbox',
+          });
+
+          scope('when selecting values in facet', () => {
+            cy.then(Actions.facet.selectFirstLinkValue)
+              .wait(InterceptAliases.UA.Facet.Select)
+              .then((interception) => {
+                Expect.facetBreadcrumb.firstBreadcrumbValueLabelContains(
+                  interception.request.body.customData.facetValue
+                );
+              });
+            Expect.facetBreadcrumb.displayBreadcrumb(true);
+            Expect.facetBreadcrumb.labelContains('File Type');
+            Expect.facetBreadcrumb.displayValues(true);
+            Expect.facetBreadcrumb.numberOfValues(1);
+            Actions.facet.clickShowMoreButton();
+            cy.wait(getQueryAlias(param.useCase));
+            Actions.facet.selectLastLinkValue();
+            cy.wait(getQueryAlias(param.useCase));
+            Expect.facetBreadcrumb.numberOfValues(2);
+          });
+
+          scope('when clearing the values', () => {
+            Actions.clickFirstValueFacetBreadcrumb();
+            Expect.facetBreadcrumb.numberOfValues(1);
+            Actions.clickFirstValueFacetBreadcrumb();
+            Expect.facetBreadcrumb.displayBreadcrumb(false);
           });
         });
       });

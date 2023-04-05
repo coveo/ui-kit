@@ -78,7 +78,6 @@ export class AtomicNotifyTrigger implements InitializableComponent {
           icon={this.icon ?? InfoIcon}
           part="icon"
           class="w-7 h-7 mr-6 text-neutral-dark"
-          aria-hidden="true"
         />
         <span part="text" class="leading-5 text-base text-on-background">
           {text}

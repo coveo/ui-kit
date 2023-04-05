@@ -39,6 +39,7 @@ import {QuestionsAnswers} from './search/question-answering';
 import {SearchResponseSuccess} from './search/search-response';
 
 jest.mock('../platform-client');
+
 describe('search api client', () => {
   const logger = pino({level: 'silent'});
   let searchAPIClient: SearchAPIClient;

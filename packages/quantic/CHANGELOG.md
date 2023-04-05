@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.19.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.18.0...@coveo/quantic@2.19.0) (2023-04-03)
+
+### Features
+
+- **quantic:** quantic folded result list created ([#2786](https://github.com/coveo/ui-kit/issues/2786)) ([907fc96](https://github.com/coveo/ui-kit/commit/907fc9610938a67b008a3b2b20721021323955d3))
+
+# [2.18.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.17.4...@coveo/quantic@2.18.0) (2023-04-03)
+
+### Bug Fixes
+
+- **quantic:** fixed a problem when deselecting breadcrumb values ([#2796](https://github.com/coveo/ui-kit/issues/2796)) ([758f2f0](https://github.com/coveo/ui-kit/commit/758f2f0f0f5a1d6dbf94c279563c04d999cc699a))
+- **quantic:** fixed a problem with the quantic tab bar component when there is no active tab ([#2793](https://github.com/coveo/ui-kit/issues/2793)) ([5c99e47](https://github.com/coveo/ui-kit/commit/5c99e470b90acaa269d2e65f1f6871a48fa62c4b))
+
+### Features
+
+- **quantic:** quantic result children component created ([#2775](https://github.com/coveo/ui-kit/issues/2775)) ([ef11c93](https://github.com/coveo/ui-kit/commit/ef11c934a46c0bdc3ff69eec537c75a9a2889154))
+
+## [2.17.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.17.3...@coveo/quantic@2.17.4) (2023-03-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [2.17.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.17.2...@coveo/quantic@2.17.3) (2023-03-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [2.17.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.17.1...@coveo/quantic@2.17.2) (2023-03-20)
+
+### Bug Fixes
+
+- **quantic:** invalid inline links disabled in the smart snippet answer ([#2766](https://github.com/coveo/ui-kit/issues/2766)) ([bc06fc7](https://github.com/coveo/ui-kit/commit/bc06fc77bdc7f68ae87218697831f5e6120a3ad5))
+
+## [2.17.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.17.0...@coveo/quantic@2.17.1) (2023-03-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+# [2.17.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.16.0...@coveo/quantic@2.17.0) (2023-03-17)
+
+### Bug Fixes
+
+- **quantic:** fixed the sizing of the smartSnippet headings to match suggestions ([#2772](https://github.com/coveo/ui-kit/issues/2772)) ([be699f7](https://github.com/coveo/ui-kit/commit/be699f7523adb578cfc60601b32c57139a252334))
+
+### Features
+
+- **quantic:** add support for custom facet value captions ([#2769](https://github.com/coveo/ui-kit/issues/2769)) ([6d42a8c](https://github.com/coveo/ui-kit/commit/6d42a8cf3eb49356ac3cb052b5ea170185353f03))
+- **quantic:** Exposed the headless recommendations scripts in coveoHeadless static resources ([#2780](https://github.com/coveo/ui-kit/issues/2780)) ([8b5ec7c](https://github.com/coveo/ui-kit/commit/8b5ec7c162a907b9ce30c69fef565365b973b82a))
+
 # [2.16.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.15.3...@coveo/quantic@2.16.0) (2023-03-15)
 
 ### Bug Fixes

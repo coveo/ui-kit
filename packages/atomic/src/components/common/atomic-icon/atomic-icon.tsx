@@ -122,12 +122,10 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
 
   public render() {
     if (this.error) {
-      // deepcode ignore FormatString: client-side code.
       console.error(this.error, this.host);
       this.host.remove();
       return;
     }
-    // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code
-    return <Host innerHTML={this.svg}></Host>;
+    return <Host innerHTML={this.svg} aria-hidden="true"></Host>;
   }
 }

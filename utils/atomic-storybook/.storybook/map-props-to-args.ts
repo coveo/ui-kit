@@ -1,8 +1,8 @@
-import AtomicDocumentation from '../docs/atomic-docs.json';
+import AtomicDocumentation from '@coveo/atomic/docs/atomic-docs.json';
+import {isNullOrUndefined} from '@coveo/bueno';
+import {JsonDocs, JsonDocsValue} from '@stencil/core/internal';
 import {ArgTypes} from '@storybook/api';
 import {Options} from '@storybook/components';
-import {JsonDocs, JsonDocsValue} from '@stencil/core/internal';
-import {isNullOrUndefined} from '@coveo/bueno';
 
 const availableControlType = [
   'radio',

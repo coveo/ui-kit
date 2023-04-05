@@ -92,10 +92,15 @@ function smartSnippetSuggestionsExpectations(
       selector
         .smartSnippetSuggestionsAnswer(index)
         .then((elem) => {
-          expect(elem[0].innerHTML).to.eq(value);
+          // we need to remove unnecessary attributes automatically added to LWCs.
+          const cleanHTML = elem[0].innerHTML.replaceAll(
+            ' c-quanticsmartsnippetanswer_quanticsmartsnippetanswer=""',
+            ''
+          );
+          expect(cleanHTML).to.eq(value);
         })
         .logDetail(
-          `should display the correct  answer of the suggestion at the index ${index}`
+          `should display the correct answer of the suggestion at the index ${index}`
         );
     },
 

@@ -38,7 +38,28 @@
                   field="filetype"
                   label="File Type"
                   engine-id={engineId}
-                ></c-quantic-facet>
+                >
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="html"
+                    caption="HTML"
+                  ></c-quantic-facet-caption>
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="txt"
+                    caption="Text file"
+                  ></c-quantic-facet-caption>
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="pdf"
+                    caption="PDF"
+                  ></c-quantic-facet-caption>
+                  <c-quantic-facet-caption
+                    slot="captions"
+                    value="YouTubeVideo"
+                    caption="YouTube Video"
+                  ></c-quantic-facet-caption>
+                </c-quantic-facet>
                 <c-quantic-numeric-facet
                   field="ytlikecount"
                   label="Youtube Likes"
@@ -96,6 +117,11 @@
                   expression="@boxdocumenttype==File OR @spcontenttype==Document"
                   engine-id={engineId}
                 ></c-quantic-tab>
+                <c-quantic-tab
+                  label="Thread"
+                  expression="@source==iNaturalistTaxons"
+                  engine-id={engineId}
+                ></c-quantic-tab>
               </c-quantic-tab-bar>
               <div class="slds-grid slds-var-m-top_small">
                 <c-quantic-summary
@@ -139,9 +165,9 @@
                   engine-id={engineId}
                 ></c-quantic-smart-snippet-suggestions>
               </div>
-              <c-quantic-result-list
+              <c-quantic-folded-result-list
                 engine-id={engineId}
-              ></c-quantic-result-list>
+              ></c-quantic-folded-result-list>
               <div class="slds-var-m-vertical_medium">
                 <c-quantic-pager engine-id={engineId}></c-quantic-pager>
                 <c-quantic-results-per-page

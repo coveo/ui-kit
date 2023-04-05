@@ -3,7 +3,7 @@ import {should} from '../../common-selectors';
 import {EventExpectations} from '../../event-expectations';
 import {ResultListSelector, ResultListSelectors} from './result-list-selectors';
 
-function resultListExpectations(selector: ResultListSelector) {
+export function resultListExpectations(selector: ResultListSelector) {
   return {
     displayPlaceholder: (display: boolean) => {
       selector
