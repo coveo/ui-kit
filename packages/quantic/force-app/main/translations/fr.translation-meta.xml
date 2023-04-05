@@ -572,4 +572,8 @@
       <label>Filtre d'inclusion sur {{0}}; aucun résultat</label>
       <name>quantic_InclusionFilter_zero</name>
     </customLabels>
+    <customLabels>
+      <label>Ouvre dans un sous-onglet de la console Salesforce</label>
+      <name>quantic_OpensInSalesforceSubTab</name>
+    </customLabels>
 </Translations>

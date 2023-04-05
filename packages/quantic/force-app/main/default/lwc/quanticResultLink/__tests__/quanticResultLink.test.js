@@ -1,12 +1,13 @@
 // @ts-nocheck
 import '@testing-library/jest-dom';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
-import {getNavigateCalledWith} from 'lightning/navigation';
-import {createElement} from 'lwc';
+import { getNavigateCalledWith } from 'lightning/navigation';
+import { createElement } from 'lwc';
 import QuanticResultLink from '../quanticResultLink';
 import mockDefaultResult from './data/defaultResult.json';
 import mockKnowledgeArticleResult from './data/knowledgeArticleResult.json';
 import mockSalesforceResult from './data/salesforceResult.json';
+
 
 jest.mock('c/quanticHeadlessLoader');
 
@@ -30,13 +31,11 @@ function flushPromises() {
 
 // Helper function to mock headless for this suite of tests.
 function mockHeadless() {
-  const mockHeadlessBundle = {
-    buildInteractiveResult: jest.fn(),
-  };
-
-  jest.mock('../../quanticHeadlessLoader/quanticHeadlessLoader.js', () => ({
-    getHeadlessBundle: jest.fn().mockReturnValue(mockHeadlessBundle),
-  }));
+  jest.spyOn(mockHeadlessLoader, 'getHeadlessBundle').mockReturnValue(
+    new Promise((resolve) => {
+      resolve();
+    })
+  );
 
   jest.spyOn(mockHeadlessLoader, 'getHeadlessEnginePromise').mockReturnValue(
     new Promise((resolve) => {
@@ -54,15 +53,16 @@ describe('c-quantic-result-link', () => {
     jest.clearAllMocks();
   }
 
+  beforeEach(() => {
+    mockHeadless();
+  })
+
   afterEach(() => {
     cleanup();
   });
 
   describe('when the result is of type salesforce', () => {
     it('should open the result link in a salesforce console subTab', async () => {
-      let MOCK_RECORD_ID = '123';
-      mockHeadless();
-
       const element = createTestComponent({...mockSalesforceResult});
       await flushPromises();
 
@@ -71,14 +71,11 @@ describe('c-quantic-result-link', () => {
 
       const {pageReference} = getNavigateCalledWith();
 
-      expect(pageReference.attributes.recordId).toBe(MOCK_RECORD_ID);
+      expect(pageReference.attributes.recordId).toBe(mockSalesforceResult.result.raw.sfid);
     });
 
     describe('when the result is a knowledge article', () => {
       it('should open the result link in a salesforce console subTab', async () => {
-        let MOCK_RECORD_ID = '1234';
-        mockHeadless();
-
         const element = createTestComponent({...mockKnowledgeArticleResult});
         await flushPromises();
 
@@ -87,21 +84,21 @@ describe('c-quantic-result-link', () => {
 
         const {pageReference} = getNavigateCalledWith();
 
-        expect(pageReference.attributes.recordId).toBe(MOCK_RECORD_ID);
+        expect(pageReference.attributes.recordId).toBe(
+          mockKnowledgeArticleResult.result.raw.sfkavid
+        );
       });
     });
   });
   describe('when the result is NOT of type salesforce', () => {
     it('should open the result link in the current browser tab', async () => {
-      mockHeadless();
-
       const element = createTestComponent({...mockDefaultResult});
       await flushPromises();
 
       const link = element.shadowRoot.querySelector('a');
       link.click();
 
-      expect(link).toHaveAttribute('href', 'http://coveo.com/');
+      expect(link).toHaveAttribute('href', mockDefaultResult.result.clickUri);
       expect(link).toHaveAttribute('target', '_self');
     });
   });
