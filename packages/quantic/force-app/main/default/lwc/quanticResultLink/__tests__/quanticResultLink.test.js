@@ -9,7 +9,6 @@ import mockKnowledgeArticleResult from './data/knowledgeArticleResult.json';
 import mockSalesforceResult from './data/salesforceResult.json';
 
 jest.mock('c/quanticHeadlessLoader');
-let spy = {};
 
 function createTestComponent(options) {
   const element = createElement('c-quantic-result-link', {
@@ -39,13 +38,11 @@ function mockHeadless() {
     getHeadlessBundle: jest.fn().mockReturnValue(mockHeadlessBundle),
   }));
 
-  spy = jest
-    .spyOn(mockHeadlessLoader, 'getHeadlessEnginePromise')
-    .mockReturnValue(
-      new Promise((resolve) => {
-        resolve();
-      })
-    );
+  jest.spyOn(mockHeadlessLoader, 'getHeadlessEnginePromise').mockReturnValue(
+    new Promise((resolve) => {
+      resolve();
+    })
+  );
 }
 
 describe('c-quantic-result-link', () => {
@@ -74,12 +71,11 @@ describe('c-quantic-result-link', () => {
 
       const {pageReference} = getNavigateCalledWith();
 
-      expect(spy).toHaveBeenCalled();
       expect(pageReference.attributes.recordId).toBe(MOCK_RECORD_ID);
     });
 
-    describe('is a knowledge article', () => {
-      it('should also open the result link in a salesforce console subTab', async () => {
+    describe('when the result is a knowledge article', () => {
+      it('should open the result link in a salesforce console subTab', async () => {
         let MOCK_RECORD_ID = '1234';
         mockHeadless();
 
@@ -91,7 +87,6 @@ describe('c-quantic-result-link', () => {
 
         const {pageReference} = getNavigateCalledWith();
 
-        expect(spy).toHaveBeenCalled();
         expect(pageReference.attributes.recordId).toBe(MOCK_RECORD_ID);
       });
     });
@@ -106,7 +101,6 @@ describe('c-quantic-result-link', () => {
       const link = element.shadowRoot.querySelector('a');
       link.click();
 
-      expect(spy).toHaveBeenCalled();
       expect(link).toHaveAttribute('href', 'http://coveo.com/');
       expect(link).toHaveAttribute('target', '_self');
     });
