@@ -1,5 +1,6 @@
 import {h, Component, Element, Host, Listen, State} from '@stencil/core';
 import {Button} from '../button';
+import {TabCommonElement} from './tabs-common';
 
 /**
  * @internal
@@ -15,9 +16,9 @@ export class TabBar {
   @State()
   private popoverTabs: typeof Button[] = [];
 
-  private get tabsFromSlot(): HTMLAtomicInsightTabElement[] {
+  private get tabsFromSlot(): TabCommonElement[] {
     const isTab = (tagName: string) => /atomic-.+-tab$/i.test(tagName);
-    return Array.from(this.host.querySelectorAll('atomic-insight-tab')).filter(
+    return Array.from(this.host.querySelectorAll<TabCommonElement>('*')).filter(
       (element) => isTab(element.tagName)
     );
   }

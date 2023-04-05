@@ -7,3 +7,10 @@ export const dispatchTabLoaded = (element: HTMLElement) => {
 
   element.dispatchEvent(event);
 };
+
+export interface TabCommon {
+  label: string;
+  select: () => void;
+}
+
+export type TabCommonElement = TabCommon & HTMLElement;

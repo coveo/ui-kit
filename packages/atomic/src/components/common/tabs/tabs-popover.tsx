@@ -145,7 +145,6 @@ export class TabsPopover implements InitializableComponent {
   }
 
   public render() {
-    console.log(this.hide);
     return (
       <Host
         class={this.hide ? 'visibility-hidden' : ''}

@@ -7,7 +7,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {Button} from '../../common/button';
-import {dispatchTabLoaded} from '../../common/tabs/tabs-common';
+import {dispatchTabLoaded, TabCommon} from '../../common/tabs/tabs-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -19,7 +19,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
   shadow: true,
 })
 export class AtomicInsightTab
-  implements InitializableComponent<InsightBindings>
+  implements TabCommon, InitializableComponent<InsightBindings>
 {
   private tab!: InsightTab;
   private tabId = randomID('insight-tab');
