@@ -352,6 +352,132 @@ describe('InsightClient', () => {
             await client.logCaseDetach(fakeDocInfo.documentUriHash);
             expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
         });
+
+        it('should send proper payload for #likeSmartSnippet', async () => {
+            await client.logLikeSmartSnippet();
+            expectMatchCustomEventPayload(SearchPageEvents.likeSmartSnippet);
+        });
+
+        it('should send proper payload for #dislikeSmartSnippet', async () => {
+            await client.logDislikeSmartSnippet();
+            expectMatchCustomEventPayload(SearchPageEvents.dislikeSmartSnippet);
+        });
+
+        it('should send proper payload for #expandSmartSnippet', async () => {
+            await client.logExpandSmartSnippet();
+            expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippet);
+        });
+
+        it('should send proper payload for #collapseSmartSnippet', async () => {
+            await client.logCollapseSmartSnippet();
+            expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippet);
+        });
+
+        it('should send proper payload for #openSmartSnippetFeedbackModal', async () => {
+            await client.logOpenSmartSnippetFeedbackModal();
+            expectMatchCustomEventPayload(SearchPageEvents.openSmartSnippetFeedbackModal);
+        });
+
+        it('should send proper payload for #closeSmartSnippetFeedbackModal', async () => {
+            await client.logCloseSmartSnippetFeedbackModal();
+            expectMatchCustomEventPayload(SearchPageEvents.closeSmartSnippetFeedbackModal);
+        });
+
+        it('should send proper payload for #sendSmartSnippetReason', async () => {
+            const reason = 'other';
+            const details = 'example details';
+            const expectedMetadata = {
+                reason,
+                details,
+            };
+
+            await client.logSmartSnippetFeedbackReason(reason, details);
+            expectMatchCustomEventPayload(SearchPageEvents.sendSmartSnippetReason, expectedMetadata);
+        });
+
+        it('should send proper payload for #expandSmartSnippetSuggestion', async () => {
+            const exampleSmartSnippetSuggestion = {
+                question: 'Abc',
+                answerSnippet: 'Def',
+                documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+            };
+
+            await client.logExpandSmartSnippetSuggestion(exampleSmartSnippetSuggestion);
+            expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippetSuggestion, exampleSmartSnippetSuggestion);
+        });
+
+        it('should send proper payload for #collapseSmartSnippetSuggestion', async () => {
+            const exampleSmartSnippetSuggestion = {
+                question: 'Abc',
+                answerSnippet: 'Def',
+                documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+            };
+
+            await client.logCollapseSmartSnippetSuggestion(exampleSmartSnippetSuggestion);
+            expectMatchCustomEventPayload(
+                SearchPageEvents.collapseSmartSnippetSuggestion,
+                exampleSmartSnippetSuggestion
+            );
+        });
+
+        it('should send proper payload for #openSmartSnippetSource', async () => {
+            await client.logOpenSmartSnippetSource(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSource, fakeDocInfo, fakeDocID);
+        });
+
+        it('should send proper payload for #openSmartSnippetInlineLink', async () => {
+            const meta = {
+                ...fakeDocID,
+                linkText: 'Some text',
+                linkURL: 'https://invalid.com',
+            };
+
+            await client.logOpenSmartSnippetInlineLink(fakeDocInfo, meta);
+            expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetInlineLink, fakeDocInfo, meta);
+        });
+
+        it('should send proper payload for #openSmartSnippetSuggestionSource', async () => {
+            const meta = {
+                question: 'Abc',
+                answerSnippet: 'Def',
+                documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+            };
+
+            const expectedMetadata = {
+                ...meta,
+                contentIDKey: meta.documentId.contentIdKey,
+                contentIDValue: meta.documentId.contentIdValue,
+            };
+
+            await client.logOpenSmartSnippetSuggestionSource(fakeDocInfo, meta);
+            expectMatchDocumentPayload(
+                SearchPageEvents.openSmartSnippetSuggestionSource,
+                fakeDocInfo,
+                expectedMetadata
+            );
+        });
+
+        it('should send proper payload for #openSmartSnippetSuggestionInlineLink', async () => {
+            const meta = {
+                question: 'Abc',
+                answerSnippet: 'Def',
+                documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+                linkText: 'Some text',
+                linkURL: 'https://invalid.com',
+            };
+            const expectedMetadata = {
+                ...meta,
+                contentIDKey: meta.documentId.contentIdKey,
+                contentIDValue: meta.documentId.contentIdValue,
+            };
+
+            await client.logOpenSmartSnippetSuggestionInlineLink(fakeDocInfo, meta);
+            expectMatchDocumentPayload(
+                SearchPageEvents.openSmartSnippetSuggestionInlineLink,
+                fakeDocInfo,
+                expectedMetadata
+            );
+        });
     });
 
     describe('when the case metadata is included', () => {
@@ -757,6 +883,148 @@ describe('InsightClient', () => {
             };
             await client.logCaseDetach(fakeDocInfo.documentUriHash, metadata);
             expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
+        });
+
+        it('should send proper payload for #likeSmartSnippet', async () => {
+            await client.logLikeSmartSnippet(baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.likeSmartSnippet, expectedBaseCaseMetadata);
+        });
+
+        it('should send proper payload for #dislikeSmartSnippet', async () => {
+            await client.logDislikeSmartSnippet(baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.dislikeSmartSnippet, expectedBaseCaseMetadata);
+        });
+
+        it('should send proper payload for #expandSmartSnippet', async () => {
+            await client.logExpandSmartSnippet(baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippet, expectedBaseCaseMetadata);
+        });
+
+        it('should send proper payload for #collapseSmartSnippet', async () => {
+            await client.logCollapseSmartSnippet(baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippet, expectedBaseCaseMetadata);
+        });
+
+        it('should send proper payload for #openSmartSnippetFeedbackModal', async () => {
+            await client.logOpenSmartSnippetFeedbackModal(baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.openSmartSnippetFeedbackModal, expectedBaseCaseMetadata);
+        });
+
+        it('should send proper payload for #closeSmartSnippetFeedbackModal', async () => {
+            await client.logCloseSmartSnippetFeedbackModal(baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.closeSmartSnippetFeedbackModal, expectedBaseCaseMetadata);
+        });
+
+        it('should send proper payload for #sendSmartSnippetReason', async () => {
+            const reason = 'other';
+            const details = 'example details';
+            const expectedMetadata = {
+                reason,
+                details,
+                ...expectedBaseCaseMetadata,
+            };
+
+            await client.logSmartSnippetFeedbackReason(reason, details, baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.sendSmartSnippetReason, expectedMetadata);
+        });
+
+        it('should send proper payload for #expandSmartSnippetSuggestion', async () => {
+            const exampleSmartSnippetSuggestion = {
+                question: 'Abc',
+                answerSnippet: 'Def',
+                documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+            };
+            const expectedMetadata = {
+                ...exampleSmartSnippetSuggestion,
+                ...expectedBaseCaseMetadata,
+            };
+
+            await client.logExpandSmartSnippetSuggestion(exampleSmartSnippetSuggestion, baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippetSuggestion, expectedMetadata);
+        });
+
+        it('should send proper payload for #collapseSmartSnippetSuggestion', async () => {
+            const exampleSmartSnippetSuggestion = {
+                question: 'Abc',
+                answerSnippet: 'Def',
+                documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+            };
+            const expectedMetadata = {
+                ...exampleSmartSnippetSuggestion,
+                ...expectedBaseCaseMetadata,
+            };
+
+            await client.logCollapseSmartSnippetSuggestion(exampleSmartSnippetSuggestion, baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippetSuggestion, expectedMetadata);
+        });
+
+        it('should send proper payload for #openSmartSnippetSource', async () => {
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logOpenSmartSnippetSource(fakeDocInfo, fakeDocID, baseCaseMetadata);
+            expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSource, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #openSmartSnippetInlineLink', async () => {
+            const meta = {
+                ...fakeDocID,
+                linkText: 'Some text',
+                linkURL: 'https://invalid.com',
+            };
+            const expectedMetadata = {
+                ...meta,
+                ...expectedBaseCaseMetadata,
+            };
+
+            await client.logOpenSmartSnippetInlineLink(fakeDocInfo, meta, baseCaseMetadata);
+            expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetInlineLink, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #openSmartSnippetSuggestionSource', async () => {
+            const meta = {
+                question: 'Abc',
+                answerSnippet: 'Def',
+                documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+            };
+
+            const expectedMetadata = {
+                ...meta,
+                ...expectedBaseCaseMetadata,
+                contentIDKey: meta.documentId.contentIdKey,
+                contentIDValue: meta.documentId.contentIdValue,
+            };
+
+            await client.logOpenSmartSnippetSuggestionSource(fakeDocInfo, meta, baseCaseMetadata);
+            expectMatchDocumentPayload(
+                SearchPageEvents.openSmartSnippetSuggestionSource,
+                fakeDocInfo,
+                expectedMetadata
+            );
+        });
+
+        it('should send proper payload for #openSmartSnippetSuggestionInlineLink', async () => {
+            const meta = {
+                question: 'Abc',
+                answerSnippet: 'Def',
+                documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+                linkText: 'Some text',
+                linkURL: 'https://invalid.com',
+            };
+            const expectedMetadata = {
+                ...meta,
+                ...expectedBaseCaseMetadata,
+                contentIDKey: meta.documentId.contentIdKey,
+                contentIDValue: meta.documentId.contentIdValue,
+            };
+
+            await client.logOpenSmartSnippetSuggestionInlineLink(fakeDocInfo, meta, baseCaseMetadata);
+            expectMatchDocumentPayload(
+                SearchPageEvents.openSmartSnippetSuggestionInlineLink,
+                fakeDocInfo,
+                expectedMetadata
+            );
         });
     });
 
