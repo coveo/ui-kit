@@ -14,7 +14,6 @@ const allowedHost = {youtube: 'https://youtube.com/'};
  * @category Internal
  * @example
  * <c-quantic-quickview-content result={result} content-url={contentURL}></c-quantic-quickview-content>
- * @internal
  */
 export default class QuanticQuickviewContent extends LightningElement {
   /**
