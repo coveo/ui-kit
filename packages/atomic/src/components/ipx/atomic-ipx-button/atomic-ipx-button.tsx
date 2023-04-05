@@ -1,4 +1,5 @@
 import {Component, Element, Fragment, h, Prop, State} from '@stencil/core';
+import {btoa} from 'abab';
 import CloseIcon from '../../../images/close.svg';
 import SearchIcon from '../../../images/search.svg';
 import {
@@ -57,16 +58,20 @@ export class AtomicIPXButton implements InitializableComponent {
         onClick={() => this.onClick()}
       >
         <span part="button-icon">
-          <atomic-icon
+          <img
             part="ipx-close-icon"
-            icon={this.getIcon(this.closeIcon)}
-          ></atomic-icon>
-          <atomic-icon
+            src={`data:image/svg+xml;base64,${btoa(
+              this.getIcon(this.closeIcon)
+            )}`}
+          />
+          <img
             part="ipx-open-icon"
-            icon={this.getIcon(this.openIcon)}
-          ></atomic-icon>
+            src={`data:image/svg+xml;base64,${btoa(
+              this.getIcon(this.openIcon)
+            )}`}
+          />
         </span>
-        <span part="button-text">{this.label}</span>
+        {this.label && <span part="button-text">{this.label}</span>}
       </Button>
     );
   }
@@ -88,12 +93,12 @@ export class AtomicIPXButton implements InitializableComponent {
               [part=${hiddenIcon}] {
                 transform: translateY(3rem);
               }
-                
+
               .btn-open {
                 [part=${displayedIcon}] {
                   transform: translateY(3rem);
                 }
-              
+
                 [part=${hiddenIcon}] {
                   transform: translateY(0rem);
                 }
@@ -126,9 +131,11 @@ export class AtomicIPXButton implements InitializableComponent {
   private getIcon(icon: string) {
     const initialDiv = document.createElement('div')!;
     initialDiv.innerHTML = icon;
-    initialDiv
-      .querySelector('svg')
-      ?.setAttribute('fill', 'var(--atomic-on-primary)');
+
+    const svgColor = getComputedStyle(document.body).getPropertyValue(
+      '--atomic-on-primary'
+    );
+    initialDiv.querySelector('svg')?.setAttribute('fill', svgColor);
 
     return initialDiv.innerHTML;
   }
