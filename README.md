@@ -69,6 +69,12 @@ npm run dev -w @coveo/atomic
 npm run e2e -w @coveo/atomic
 ```
 
+To run e2e tests for specific files/components using the Cypress GUI
+```sh
+npm run e2e:watch -w @coveo/atomic
+npx cypress open # alternatively in the specific package
+```
+
 ## Lint
 
 ```sh
