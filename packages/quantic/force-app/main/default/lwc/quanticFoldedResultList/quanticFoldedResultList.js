@@ -99,7 +99,7 @@ export default class QuanticFoldedResultList extends LightningElement {
       options: {
         fieldsToInclude: this.fields,
         folding: {
-          numberOfFoldedResults: this.numberOfFoldedResults,
+          numberOfFoldedResults: Number(this.numberOfFoldedResults),
           childField: this.childField,
           collectionField: this.collectionField,
           parentField: this.parentField,
