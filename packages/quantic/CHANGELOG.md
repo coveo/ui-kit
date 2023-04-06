@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.19.0...@coveo/quantic@2.20.0) (2023-04-06)
+
+### Features
+
+- **SFINT-4880:** Added default searchhub as an example ([#2811](https://github.com/coveo/ui-kit/issues/2811)) ([4df9182](https://github.com/coveo/ui-kit/commit/4df918204f512287c86bf1de378c2a3d97c7ef25))
+
+# [2.19.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.18.0...@coveo/quantic@2.19.0) (2023-04-03)
+
+### Features
+
+- **quantic:** quantic folded result list created ([#2786](https://github.com/coveo/ui-kit/issues/2786)) ([907fc96](https://github.com/coveo/ui-kit/commit/907fc9610938a67b008a3b2b20721021323955d3))
+
+# [2.18.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.17.4...@coveo/quantic@2.18.0) (2023-04-03)
+
+### Bug Fixes
+
+- **quantic:** fixed a problem when deselecting breadcrumb values ([#2796](https://github.com/coveo/ui-kit/issues/2796)) ([758f2f0](https://github.com/coveo/ui-kit/commit/758f2f0f0f5a1d6dbf94c279563c04d999cc699a))
+- **quantic:** fixed a problem with the quantic tab bar component when there is no active tab ([#2793](https://github.com/coveo/ui-kit/issues/2793)) ([5c99e47](https://github.com/coveo/ui-kit/commit/5c99e470b90acaa269d2e65f1f6871a48fa62c4b))
+
+### Features
+
+- **quantic:** quantic result children component created ([#2775](https://github.com/coveo/ui-kit/issues/2775)) ([ef11c93](https://github.com/coveo/ui-kit/commit/ef11c934a46c0bdc3ff69eec537c75a9a2889154))
+
 ## [2.17.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.17.3...@coveo/quantic@2.17.4) (2023-03-22)
 
 **Note:** Version bump only for package @coveo/quantic
