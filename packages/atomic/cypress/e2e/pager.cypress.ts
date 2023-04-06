@@ -127,4 +127,23 @@ describe('Pager Test Suites', () => {
       CommonAssertions.assertContainsComponentError(PagerSelectors, true);
     });
   });
+
+  describe('Options previous next button icons', () => {
+    before(() => {
+      new TestFixture().with(addPager()).init();
+    });
+
+    it('next icon should expose shadow part', () => {
+      cy.get('atomic-pager').shadow().find('[part="next-button-icon"]').click();
+      PagerAssertions.assertRenderPager(2);
+    });
+
+    it('previous icon should expose shadow part', () => {
+      cy.get('atomic-pager')
+        .shadow()
+        .find('[part="previous-button-icon"]')
+        .click();
+      PagerAssertions.assertRenderPager(1);
+    });
+  });
 });
