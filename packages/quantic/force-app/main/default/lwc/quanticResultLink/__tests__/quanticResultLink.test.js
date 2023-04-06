@@ -35,15 +35,13 @@ function flushPromises() {
 
 // Helper function to mock headless for this suite of tests.
 function mockHeadless() {
-  const mockHeadlessBundle = {
-    buildInteractiveResult: jest.fn(),
-  };
-
-  jest
-    .spyOn(mockHeadlessBundle, 'buildInteractiveResult')
-    .mockReturnValue(new Promise((resolve) => {
-      resolve();
-    }));
+  jest.spyOn(mockHeadlessLoader, 'getHeadlessBundle').mockReturnValue({
+    buildInteractiveResult: () => ({
+      select: jest.fn(),
+      beginDelayedSelect: jest.fn(),
+      cancelPendingSelect: jest.fn(),
+    }),
+  });
 
   jest.spyOn(mockHeadlessLoader, 'getHeadlessEnginePromise').mockReturnValue(
     new Promise((resolve) => {
