@@ -144,7 +144,8 @@ export default class QuanticResultChildren extends LightningElement {
 
   get moreResultsFound() {
     return (
-      this?.collection?.children?.length > this.firstChildrenPartition?.length
+      JSON.stringify(this?.collection?.children) !==
+      JSON.stringify(this.firstChildrenPartition)
     );
   }
 
