@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.22.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.22.0...@coveo/atomic@2.22.1) (2023-04-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.22.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.21.3...@coveo/atomic@2.22.0) (2023-04-03)
+
+### Features
+
+- **headless,atomic:** add organizationEndpoints configuration option for headless ([#2799](https://github.com/coveo/ui-kit/issues/2799)) ([c868d6d](https://github.com/coveo/ui-kit/commit/c868d6d529b51713318ae6839285610c6136f793))
+
+## [2.21.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.21.2...@coveo/atomic@2.21.3) (2023-04-03)
+
+### Bug Fixes
+
+- hide footer when empty ([#2791](https://github.com/coveo/ui-kit/issues/2791)) ([e7718e0](https://github.com/coveo/ui-kit/commit/e7718e0fd81f094afdc652cbf14955773ded8869))
+
 ## [2.21.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.21.1...@coveo/atomic@2.21.2) (2023-03-23)
 
 ### Bug Fixes
