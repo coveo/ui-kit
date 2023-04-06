@@ -1,8 +1,3 @@
 <template>
-  <template if:true={isSalesforceLink}>
-    <a href="#" onclick={handleOpenTabSalesforceLink} aria-label={labels.opensInSalesforceSubTab}>{displayedTitle}</a>
-  </template>
-  <template if:false={isSalesforceLink}>
-    <a href={result.clickUri} target={target}>{displayedTitle}</a>
-  </template>
+  <a href={result.clickUri} aria-label={ariaLabelValue} target={targetTab} onclick={handleClick}>{displayedTitle}</a>
 </template>

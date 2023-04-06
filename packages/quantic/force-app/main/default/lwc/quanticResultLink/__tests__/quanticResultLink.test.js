@@ -1,9 +1,8 @@
-import '@testing-library/jest-dom';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 // @ts-ignore
-import { getNavigateCalledWith } from 'lightning/navigation';
+import {getNavigateCalledWith} from 'lightning/navigation';
 // @ts-ignore
-import { createElement } from 'lwc';
+import {createElement} from 'lwc';
 import QuanticResultLink from '../quanticResultLink';
 // @ts-ignore
 import mockDefaultResult from './data/defaultResult.json';
@@ -11,7 +10,6 @@ import mockDefaultResult from './data/defaultResult.json';
 import mockKnowledgeArticleResult from './data/knowledgeArticleResult.json';
 // @ts-ignore
 import mockSalesforceResult from './data/salesforceResult.json';
-
 
 jest.mock('c/quanticHeadlessLoader');
 
@@ -67,8 +65,8 @@ describe('c-quantic-result-link', () => {
     cleanup();
   });
 
-  describe('when the result is of type salesforce', () => {
-    it('should open the result link in a salesforce console subTab', async () => {
+  describe('when the result is of type Salesforce', () => {
+    it('should open the result link in a Salesforce console subtab', async () => {
       const element = createTestComponent({...mockSalesforceResult});
       await flushPromises();
 
@@ -83,7 +81,7 @@ describe('c-quantic-result-link', () => {
     });
 
     describe('when the result is a knowledge article', () => {
-      it('should open the result link in a salesforce console subTab', async () => {
+      it('should open the result link in a Salesforce console subtab', async () => {
         const element = createTestComponent({...mockKnowledgeArticleResult});
         await flushPromises();
 
@@ -106,8 +104,10 @@ describe('c-quantic-result-link', () => {
       const link = element.shadowRoot.querySelector('a');
       link.click();
 
-      expect(link).toHaveAttribute('href', mockDefaultResult.result.clickUri);
-      expect(link).toHaveAttribute('target', '_self');
+      expect(link.getAttribute('href')).toEqual(
+        mockDefaultResult.result.clickUri
+      );
+      expect(link.getAttribute('target')).toEqual('_self');
     });
   });
 });

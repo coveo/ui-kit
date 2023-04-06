@@ -1,17 +1,18 @@
-import opensInSalesforceSubTab from '@salesforce/label/c.quantic_OpensInSalesforceSubTab';
 import { getHeadlessBundle, getHeadlessEnginePromise } from 'c/quanticHeadlessLoader';
 import { ResultUtils } from 'c/quanticUtils';
 import { NavigationMixin } from 'lightning/navigation';
 import { LightningElement, api } from 'lwc';
 
+import opensInBrowserTab from '@salesforce/label/c.quantic_OpensInBrowserTab';
+import opensInSalesforceSubTab from '@salesforce/label/c.quantic_OpensInSalesforceSubTab';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
  * The `QuanticResultLink` component creates a clickable link from a result that points to the original item.
- * If the result is of type `Salesforce` it will open the link in a new salesforce console subtab.
- * If the result is of type other than `Salesforce`, it will open the link in the browser tab.
+ * If the result is of a Salesforce record or a Salesforce Knowledge article it will open the link in a new salesforce console subtab.
+ * Otherwise, it will open the link in the browser tab.
  * @category Result Template
  * @example
  * <c-quantic-result-link engine-id={engineId} result={result} target="_blank"></c-quantic-result-link>
@@ -69,6 +70,7 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
 
   labels = {
     opensInSalesforceSubTab,
+    opensInBrowserTab,
   };
 
   connectedCallback() {
@@ -95,7 +97,14 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
     );
   };
 
-  handleOpenTabSalesforceLink(event) {
+  handleClick(event) {
+    if (this.isSalesforceLink) {
+      event.preventDefault();
+      this.navigateToSalesforceRecord(event);
+    }
+  }
+
+  navigateToSalesforceRecord(event) {
     event.stopPropagation();
     const targetPageRef = {
       type: 'standard__recordPage',
@@ -127,5 +136,25 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
    */
   get displayedTitle() {
     return this.result.title || this.result.clickUri;
+  }
+
+  /**
+   * Returns the target for the link.
+   */
+  get targetTab() {
+    if (this.isSalesforceLink) {
+      return '_blank';
+    }
+    return '_self';
+  }
+
+  /**
+   * Returns the aria label value for the link.
+   */
+  get ariaLabelValue() {
+    if (this.isSalesforceLink) {
+      return this.labels.opensInSalesforceSubTab;
+    }
+    return this.labels.opensInBrowserTab;
   }
 }
