@@ -16,10 +16,10 @@ import {Button} from '../button';
  * @internal
  */
 @Component({
-  tag: 'tabs-popover',
-  styleUrl: 'tabs-popover.pcss',
+  tag: 'tab-popover',
+  styleUrl: 'tab-popover.pcss',
 })
-export class TabsPopover implements InitializableComponent {
+export class TabPopover implements InitializableComponent {
   @Element() private host!: HTMLElement;
 
   @InitializeBindings() public bindings!: Bindings;

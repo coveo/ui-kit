@@ -1,6 +1,6 @@
 import {h, Component, Element, Host, Listen, State} from '@stencil/core';
 import {Button} from '../button';
-import {TabCommonElement} from './tabs-common';
+import {TabCommonElement} from './tab-common';
 
 /**
  * @internal
@@ -46,12 +46,12 @@ export class TabBar {
     return this.slotContentWidth > this.containerWidth;
   }
 
-  private get tabsPopover() {
-    return this.host.shadowRoot?.querySelector('tabs-popover');
+  private get tabPopover() {
+    return this.host.shadowRoot?.querySelector('tab-popover');
   }
 
   private get popoverWidth() {
-    return this.tabsPopover ? this.getElementWidth(this.tabsPopover) : 0;
+    return this.tabPopover ? this.getElementWidth(this.tabPopover) : 0;
   }
 
   private get overflowingTabs() {
@@ -98,7 +98,7 @@ export class TabBar {
   }
 
   private updatePopoverPosition() {
-    this.tabsPopover?.style.setProperty(
+    this.tabPopover?.style.setProperty(
       'left',
       `${this.displayedTabs.length ? this.lastDisplayedTabRightPosition : 0}px`
     );
@@ -170,9 +170,9 @@ export class TabBar {
     return (
       <Host class="flex relative">
         <slot></slot>
-        <tabs-popover hide={!this.overflowingTabs.length}>
+        <tab-popover hide={!this.overflowingTabs.length}>
           {this.popoverTabs}
-        </tabs-popover>
+        </tab-popover>
       </Host>
     );
   };

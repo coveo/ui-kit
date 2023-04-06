@@ -7,7 +7,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {Button} from '../../common/button';
-import {dispatchTabLoaded} from '../../common/tabs/tabs-common';
+import {dispatchTabLoaded} from '../../common/tabs/tab-common';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**

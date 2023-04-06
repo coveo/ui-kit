@@ -1781,7 +1781,7 @@ export namespace Components {
     }
     interface TabBar {
     }
-    interface TabsPopover {
+    interface TabPopover {
         "hide": boolean;
     }
 }
@@ -2598,11 +2598,11 @@ declare global {
         prototype: HTMLTabBarElement;
         new (): HTMLTabBarElement;
     };
-    interface HTMLTabsPopoverElement extends Components.TabsPopover, HTMLStencilElement {
+    interface HTMLTabPopoverElement extends Components.TabPopover, HTMLStencilElement {
     }
-    var HTMLTabsPopoverElement: {
-        prototype: HTMLTabsPopoverElement;
-        new (): HTMLTabsPopoverElement;
+    var HTMLTabPopoverElement: {
+        prototype: HTMLTabPopoverElement;
+        new (): HTMLTabPopoverElement;
     };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
@@ -2729,7 +2729,7 @@ declare global {
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
         "tab-bar": HTMLTabBarElement;
-        "tabs-popover": HTMLTabsPopoverElement;
+        "tab-popover": HTMLTabPopoverElement;
     }
 }
 declare namespace LocalJSX {
@@ -4427,7 +4427,7 @@ declare namespace LocalJSX {
     }
     interface TabBar {
     }
-    interface TabsPopover {
+    interface TabPopover {
         "hide"?: boolean;
     }
     interface IntrinsicElements {
@@ -4555,7 +4555,7 @@ declare namespace LocalJSX {
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
         "tab-bar": TabBar;
-        "tabs-popover": TabsPopover;
+        "tab-popover": TabPopover;
     }
 }
 export { LocalJSX as JSX };
@@ -4686,7 +4686,7 @@ declare module "@stencil/core" {
             "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
             "tab-bar": LocalJSX.TabBar & JSXBase.HTMLAttributes<HTMLTabBarElement>;
-            "tabs-popover": LocalJSX.TabsPopover & JSXBase.HTMLAttributes<HTMLTabsPopoverElement>;
+            "tab-popover": LocalJSX.TabPopover & JSXBase.HTMLAttributes<HTMLTabPopoverElement>;
         }
     }
 }
