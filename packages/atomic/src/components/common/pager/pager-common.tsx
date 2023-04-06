@@ -1,5 +1,6 @@
 import {EventEmitter, FunctionalComponent, h} from '@stencil/core';
-import ArrowRight from '../../../images/arrow-right.svg';
+import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
+import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {Button} from '../button';
@@ -44,14 +45,9 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
     focusOnFirstResultAndScrollToTop();
   };
 
-  const nextIcon = props.nextIcon || ArrowRight;
-  const prevIcon = props.prevIcon || ArrowRight;
+  const nextIcon = props.nextIcon || ArrowRightIcon;
+  const prevIcon = props.prevIcon || ArrowLeftIcon;
   const defaultIconStyle = 'w-5 align-middle';
-  // Rotate default next arrow icon by 180 to obtain previous arrow icon
-  const prevIconStyle =
-    prevIcon === ArrowRight
-      ? `${defaultIconStyle} rotate-180`
-      : defaultIconStyle;
 
   const renderPreviousButton = () => {
     return (
@@ -69,7 +65,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         <atomic-icon
           icon={prevIcon}
           part="previous-button-icon"
-          class={prevIconStyle}
+          class={defaultIconStyle}
         ></atomic-icon>
       </Button>
     );

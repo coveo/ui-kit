@@ -7,7 +7,8 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
-import ArrowRight from '../../../images/arrow-right.svg';
+import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
+import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {
   FocusTarget,
   FocusTargetController,
@@ -67,7 +68,7 @@ export class AtomicPager implements InitializableComponent {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) prevIcon = ArrowRight;
+  @Prop({reflect: true}) prevIcon = ArrowLeftIcon;
 
   /**
    * The SVG icon to use to display the Next button.
@@ -76,7 +77,7 @@ export class AtomicPager implements InitializableComponent {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) nextIcon = ArrowRight;
+  @Prop({reflect: true}) nextIcon = ArrowRightIcon;
 
   @FocusTarget()
   private activePage!: FocusTargetController;
