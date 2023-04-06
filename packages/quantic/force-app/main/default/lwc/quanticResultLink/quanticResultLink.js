@@ -1,8 +1,8 @@
-import {LightningElement, api} from 'lwc';
+import opensInSalesforceSubTab from '@salesforce/label/c.quantic_OpensInSalesforceSubTab';
 import { getHeadlessBundle, getHeadlessEnginePromise } from 'c/quanticHeadlessLoader';
 import { ResultUtils } from 'c/quanticUtils';
 import { NavigationMixin } from 'lightning/navigation';
-import opensInSalesforceSubTab from '@salesforce/label/c.quantic_OpensInSalesforceSubTab';
+import { LightningElement, api } from 'lwc';
 
 
 /** @typedef {import("coveo").Result} Result */
@@ -10,7 +10,7 @@ import opensInSalesforceSubTab from '@salesforce/label/c.quantic_OpensInSalesfor
 
 /**
  * The `QuanticResultLink` component creates a clickable link from a result that points to the original item.
- * If the result has is of type `Salesforce` it will open the link in a new salesforce console subtab.
+ * If the result is of type `Salesforce` it will open the link in a new salesforce console subtab.
  * If the result is of type other than `Salesforce`, it will open the link in the browser tab.
  * @category Result Template
  * @example
@@ -100,14 +100,14 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
     const targetPageRef = {
       type: 'standard__recordPage',
       attributes: {
-        recordId: this.getRecordIdAttribute(),
+        recordId: this.recordIdAttribute,
         actionName: 'view',
       },
     };
     this[NavigationMixin.Navigate](targetPageRef);
   }
 
-  getRecordIdAttribute() {
+  get recordIdAttribute() {
     // Knowledge article uses the knowledge article version id to navigate.
     if (this.result?.raw?.sfkbid && this.result?.raw?.sfkavid) {
       return this.result.raw.sfkavid;

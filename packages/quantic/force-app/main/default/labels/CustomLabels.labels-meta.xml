@@ -1073,7 +1073,7 @@
     </labels>
     <labels>
       <fullName>quantic_OpensInSalesforceSubTab</fullName>
-      <value>Opens in a salesforce console subTab</value>
+      <value>Opens in a salesforce console subtab</value>
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Opens in a salesforce console subTab</shortDescription>

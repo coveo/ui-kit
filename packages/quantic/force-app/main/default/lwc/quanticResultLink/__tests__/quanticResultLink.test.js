@@ -1,11 +1,15 @@
-// @ts-nocheck
 import '@testing-library/jest-dom';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+// @ts-ignore
 import { getNavigateCalledWith } from 'lightning/navigation';
+// @ts-ignore
 import { createElement } from 'lwc';
 import QuanticResultLink from '../quanticResultLink';
+// @ts-ignore
 import mockDefaultResult from './data/defaultResult.json';
+// @ts-ignore
 import mockKnowledgeArticleResult from './data/knowledgeArticleResult.json';
+// @ts-ignore
 import mockSalesforceResult from './data/salesforceResult.json';
 
 
@@ -31,11 +35,15 @@ function flushPromises() {
 
 // Helper function to mock headless for this suite of tests.
 function mockHeadless() {
-  jest.spyOn(mockHeadlessLoader, 'getHeadlessBundle').mockReturnValue(
-    new Promise((resolve) => {
+  const mockHeadlessBundle = {
+    buildInteractiveResult: jest.fn(),
+  };
+
+  jest
+    .spyOn(mockHeadlessBundle, 'buildInteractiveResult')
+    .mockReturnValue(new Promise((resolve) => {
       resolve();
-    })
-  );
+    }));
 
   jest.spyOn(mockHeadlessLoader, 'getHeadlessEnginePromise').mockReturnValue(
     new Promise((resolve) => {
@@ -55,7 +63,7 @@ describe('c-quantic-result-link', () => {
 
   beforeEach(() => {
     mockHeadless();
-  })
+  });
 
   afterEach(() => {
     cleanup();
@@ -71,7 +79,9 @@ describe('c-quantic-result-link', () => {
 
       const {pageReference} = getNavigateCalledWith();
 
-      expect(pageReference.attributes.recordId).toBe(mockSalesforceResult.result.raw.sfid);
+      expect(pageReference.attributes.recordId).toBe(
+        mockSalesforceResult.result.raw.sfid
+      );
     });
 
     describe('when the result is a knowledge article', () => {
