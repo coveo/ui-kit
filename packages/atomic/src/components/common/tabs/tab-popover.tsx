@@ -3,7 +3,16 @@ import {
   preventOverflow,
   Instance as PopperInstance,
 } from '@popperjs/core';
-import {Component, h, Listen, State, Element, Host, Prop} from '@stencil/core';
+import {
+  Component,
+  h,
+  Listen,
+  State,
+  Element,
+  Host,
+  Prop,
+  Method,
+} from '@stencil/core';
 import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
 import {
   InitializableComponent,
@@ -59,7 +68,8 @@ export class TabPopover implements InitializableComponent {
     return !!this.popupRef.children.length;
   }
 
-  private togglePopover() {
+  @Method()
+  public togglePopover() {
     this.isOpen = !this.isOpen;
   }
 

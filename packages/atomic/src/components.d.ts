@@ -1790,6 +1790,7 @@ export namespace Components {
     }
     interface TabPopover {
         "hide": boolean;
+        "togglePopover": () => Promise<void>;
     }
 }
 export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {

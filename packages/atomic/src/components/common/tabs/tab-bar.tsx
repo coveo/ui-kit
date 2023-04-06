@@ -148,7 +148,10 @@ export class TabBar {
         part="popover-tab"
         style="text-transparent"
         class="font-semibold px-4 py-2 rounded truncate"
-        onClick={() => tab.select()}
+        onClick={() => {
+          tab.select();
+          this.tabPopover?.togglePopover();
+        }}
       >
         {tab.label}
       </Button>
@@ -168,7 +171,7 @@ export class TabBar {
   public render = () => {
     this.updateTabsDisplay();
     return (
-      <Host class="flex relative">
+      <Host class={'flex relative'}>
         <slot></slot>
         <tab-popover hide={!this.overflowingTabs.length}>
           {this.popoverTabs}
