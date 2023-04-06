@@ -1,4 +1,4 @@
-import {Component, Element, h, State} from '@stencil/core';
+import {Component, h, State} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -18,8 +18,6 @@ export class AtomicInsightTabs
   @InitializeBindings() public bindings!: InsightBindings;
 
   @State() public error!: Error;
-
-  @Element() host!: HTMLElement;
 
   public render() {
     return (

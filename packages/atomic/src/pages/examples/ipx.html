@@ -78,13 +78,16 @@
     <style>
       .search-section {
         width: 100%;
-        box-sizing: border-box;
-        display: grid;
-        grid-template-columns: 1fr auto;
+        display: flex;
+        flex-wrap: wrap;
         grid-gap: 0.5rem;
+        background: var(--atomic-neutral-light);
+        box-sizing: border-box;
+        min-width: 0;
       }
 
       .search-box {
+        flex-grow: 1;
         padding-bottom: 0.875rem;
       }
 
@@ -115,6 +118,10 @@
         aspect-ratio: auto;
         width: 5rem;
         height: 1.25rem;
+      }
+
+      div::part(header) {
+        min-width: 0;
       }
 
       atomic-recs-list::part(label) {
@@ -152,6 +159,10 @@
         display: none;
       }
 
+      atomic-ipx-tabs {
+        width: 100%;
+      }
+
       body:not(.atomic-ipx-modal-opened) > atomic-search-interface > atomic-ipx-modal {
         display: none;
       }
@@ -186,6 +197,9 @@
               <atomic-ipx-tab label="PDF" expression="@filetype==pdf"></atomic-ipx-tab>
               <atomic-ipx-tab label="Spreadsheet" expression="@filetype==xls"></atomic-ipx-tab>
               <atomic-ipx-tab label="Word" expression="@filetype==doc"></atomic-ipx-tab>
+              <atomic-ipx-tab label="PDF1" expression="@filetype==pdf"></atomic-ipx-tab>
+              <atomic-ipx-tab label="Spreadsheet1" expression="@filetype==xls"></atomic-ipx-tab>
+              <atomic-ipx-tab label="Word1" expression="@filetype==doc"></atomic-ipx-tab>
             </atomic-ipx-tabs>
           </atomic-layout-section>
         </div>

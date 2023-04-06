@@ -724,6 +724,7 @@ export namespace Components {
           * The label that will be shown to the user.
          */
         "label": string;
+        "select": () => Promise<void>;
     }
     interface AtomicIpxTabs {
     }

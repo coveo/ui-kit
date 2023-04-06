@@ -1,5 +1,5 @@
-import {buildTab, Tab, TabState} from '@coveo/headless';
-import {Component, h, Prop, State} from '@stencil/core';
+import {buildTab, Tab, TabState, Unsubscribe} from '@coveo/headless';
+import {Component, h, Prop, State, Element, Method} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -7,6 +7,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {Button} from '../../common/button';
+import {dispatchTabLoaded} from '../../common/tabs/tabs-common';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
@@ -20,6 +21,8 @@ import {Bindings} from '../../search/atomic-search-interface/atomic-search-inter
 export class AtomicIPXTab implements InitializableComponent {
   private tab!: Tab;
   private tabId = randomID('ipx-tab');
+
+  @Element() host!: HTMLElement;
 
   @InitializeBindings() public bindings!: Bindings;
 
@@ -45,11 +48,29 @@ export class AtomicIPXTab implements InitializableComponent {
    */
   @Prop() public expression!: string;
 
+  private unsubscribe: Unsubscribe = () => {};
+
+  @Method()
+  select() {
+    this.tab.select();
+  }
+
   public initialize() {
     this.tab = buildTab(this.bindings.engine, {
       options: {expression: this.expression, id: this.tabId},
       initialState: {isActive: this.active},
     });
+    this.unsubscribe = this.tab.subscribe(
+      () => (this.active = this.tab.state.isActive)
+    );
+  }
+
+  public componentDidRender() {
+    dispatchTabLoaded(this.host);
+  }
+
+  public disconnectedCallback() {
+    this.unsubscribe();
   }
 
   public render() {
