@@ -115,6 +115,7 @@ const categoryMap = {
   caseAssist: 'Case Assist',
   utility: 'Utility',
   insightPanel: 'Insight Panel',
+  internal: 'Internal',
 };
 
 function parseClass(element, parentNode, childNodes) {
@@ -141,9 +142,14 @@ function parseClass(element, parentNode, childNodes) {
     },
   };
 
+  if (thisClass.categories.includes(categoryMap.internal)) {
+    return;
+  }
+
   const categoryKeys = Object.keys(categoryMap).filter((key) =>
     thisClass.categories.includes(categoryMap[key])
   );
+
   if (!categoryKeys.length) {
     throw new Error(
       `JsDoc parsing FAILED: Invalid or missing category value(s) on component ${thisClass.name}.`

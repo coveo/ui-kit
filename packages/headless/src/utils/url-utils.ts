@@ -33,3 +33,30 @@ export class URLPath {
       : this.basePath;
   }
 }
+
+export type PlatformCombination =
+  | {env: 'dev'; region: 'us' | 'eu'}
+  | {env: 'stg'; region: 'us'}
+  | {env: 'hipaa'; region: 'us'}
+  | {env: 'prod'; region: 'us' | 'eu' | 'au'};
+
+export type PlatformEnvironment = PlatformCombination['env'];
+
+export const isCoveoPlatformURL = (url: string) =>
+  /^https:\/\/platform(dev|stg|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/.test(
+    url
+  );
+
+export const matchCoveoOrganizationEndpointUrl = (
+  url: string,
+  organizationId: string
+): {organizationId?: string; environment?: PlatformEnvironment} | null => {
+  const match = url.match(
+    /^https:\/\/(?<organizationId>\w+)\.org(?<environment>dev|stg|hipaa)?\.coveo\.com/
+  );
+  if (!match?.groups) {
+    return null;
+  }
+  const isOrgMatching = match.groups.organizationId === organizationId;
+  return isOrgMatching ? match.groups : null;
+};

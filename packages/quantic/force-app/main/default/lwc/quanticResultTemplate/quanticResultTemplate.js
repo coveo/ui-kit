@@ -53,10 +53,20 @@ export default class QuanticResultTemplate extends LightningElement {
     }`;
   }
 
-    /** Returns the CSS class  of the badges slot of the result template */
-    get badgesSlotCssClass() {
-      return `badge__container slds-col slds-order_1 slds-small-order_1 slds-medium-order_2 slds-large-order_2 slds-m-right_small ${
-        this.isBadgesSlotEmpty ? '' : 'slds-m-vertical_xx-small'
-      }`;
-    }
+  /** Returns the CSS class  of the badges slot of the result template */
+  get badgesSlotCssClass() {
+    return `badge__container slds-col slds-order_1 slds-small-order_1 slds-medium-order_2 slds-large-order_2 slds-m-right_small ${
+      this.isBadgesSlotEmpty ? '' : 'slds-m-vertical_xx-small'
+    }`;
+  }
+
+  get templateClass() {
+    return `lgc-bg slds-p-vertical_medium ${
+      this.hasChildTemplates ? '' : 'slds-border_bottom'
+    }`;
+  }
+
+  get hasChildTemplates() {
+    return !!this.querySelector('*[slot="children"]');
+  }
 }

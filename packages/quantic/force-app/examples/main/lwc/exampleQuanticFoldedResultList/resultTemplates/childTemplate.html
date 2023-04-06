@@ -1,0 +1,20 @@
+<template>
+  <c-quantic-result-template is-any-preview-open={isAnyPreviewOpen}
+    result-preview-should-not-be-accessible={resultPreviewShouldNotBeAccessible}>
+    <c-quantic-result-label slot="label" result={result}></c-quantic-result-label>
+    <p slot="date" class="slds-size_xx-small">
+      <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
+    </p>
+    <div slot="title" class="slds-truncate">
+      <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+    </div>
+    <div slot="excerpt">
+      {result.Excerpt}
+    </div>
+    <div slot="children">
+      <c-quantic-result-children engine-id={engineId} template-id="myChildTemplate" collection={collection}
+        folded-result-list-controller={foldedResultListController}
+        result-templates-manager={resultTemplatesManager}></c-quantic-result-children>
+    </div>
+  </c-quantic-result-template>
+</template>

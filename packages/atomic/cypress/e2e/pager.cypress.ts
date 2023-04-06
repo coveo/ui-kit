@@ -1,4 +1,4 @@
-import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
+import {TestFixture} from '../fixtures/test-fixture';
 import * as CommonAssertions from './common-assertions';
 import {
   addPager,

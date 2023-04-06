@@ -62,6 +62,8 @@ export const InterceptAliases = {
     OpenSmartSnippetSuggestionInlineLink: uaAlias(
       'openSmartSnippetSuggestionInlineLink'
     ),
+    ShowLessFoldedResults: uaAlias('showLessFoldedResults'),
+    ShowMoreFoldedResults: uaAlias('showMoreFoldedResults'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -196,14 +198,15 @@ export function mockSearchNoResults(useCase?: string) {
   }).as(getQueryAlias(useCase).substring(1));
 }
 
-export function mockSearchWithResults() {
+export function mockSearchWithResults(results?: Array<object>) {
+  const defaultResults = [
+    {title: 'Result', uri: 'uri', raw: {uriHash: 'resulthash'}},
+  ];
   cy.intercept(routeMatchers.search, (req) => {
     req.continue((res) => {
-      res.body.results = [
-        {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
-      ];
-      res.body.totalCount = 1;
-      res.body.totalCountFiltered = 1;
+      res.body.results = results ?? defaultResults;
+      res.body.totalCount = res.body.results.length;
+      res.body.totalCountFiltered = res.body.results.length;
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));

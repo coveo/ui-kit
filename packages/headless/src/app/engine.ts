@@ -1,3 +1,4 @@
+import {isNullOrUndefined, isUndefined} from '@coveo/bueno';
 import {
   AnyAction,
   Dispatch,
@@ -143,16 +144,25 @@ function getUpdateAnalyticsConfigurationPayload(
   options: EngineOptions<ReducersMapObject>,
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
+  const apiBaseUrl =
+    options.configuration.organizationEndpoints?.analytics || undefined;
   const {analyticsClientMiddleware: _, ...payload} =
     options.configuration.analytics ?? {};
+
+  const payloadWithURL = {
+    ...payload,
+    apiBaseUrl,
+  };
+
   if (doNotTrack()) {
     logger.info('Analytics disabled since doNotTrack is active.');
     return {
-      ...payload,
+      ...payloadWithURL,
       enabled: false,
     };
   }
-  return options.configuration.analytics ? payload : null;
+
+  return payloadWithURL;
 }
 
 export function buildEngine<
@@ -163,7 +173,26 @@ export function buildEngine<
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const engine = buildCoreEngine(options, thunkExtraArguments);
-  const {accessToken, organizationId, platformUrl} = options.configuration;
+  const {accessToken, organizationId} = options.configuration;
+  const {organizationEndpoints} = options.configuration;
+  let {platformUrl} = options.configuration;
+
+  if (shouldWarnAboutOrganizationEndpoints(options)) {
+    // @v3 make organizationEndpoints the default.
+    engine.logger.warn(
+      'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments.'
+    );
+  }
+
+  if (shouldWarnAboutPlatformURL(options)) {
+    engine.logger.warn(
+      `The \`platformUrl\` (${options.configuration.platformUrl}) option will be deprecated in the next major version. Consider using the \`organizationEndpoints\` option instead.`
+    );
+  }
+
+  if (organizationEndpoints?.platform) {
+    platformUrl = organizationEndpoints.platform;
+  }
 
   engine.dispatch(
     updateBasicConfiguration({
@@ -268,4 +297,14 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
   ].concat(options.middlewares || []);
+}
+
+function shouldWarnAboutOrganizationEndpoints(
+  options: EngineOptions<ReducersMapObject>
+) {
+  return isUndefined(options.configuration.organizationEndpoints);
+}
+
+function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
+  return !isNullOrUndefined(options.configuration.platformUrl);
 }
