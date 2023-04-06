@@ -74,9 +74,6 @@ export class TabBar {
         ? containerRelativeRightPosition
         : containerRelativeRightPosition - minimumWidthNeeded;
 
-      if (element.active) {
-        console.log({banana: element.outerHTML});
-      }
       return (
         element.getBoundingClientRect().right > rightPositionLimit &&
         !element.active
@@ -123,9 +120,28 @@ export class TabBar {
     el.ariaHidden = 'false';
   };
 
+  private updateTabVisibility = (
+    tabs: TabCommonElement[],
+    isVisible: boolean
+  ) => {
+    const tabCount = this.tabsFromSlot.length;
+
+    tabs.forEach((tab, index) => {
+      tab.style.setProperty(
+        'order',
+        String(isVisible ? index + 1 : tabCount - tabs.length + index + 1)
+      );
+      if (isVisible) {
+        this.showElement(tab);
+      } else {
+        this.hideElement(tab);
+      }
+    });
+  };
+
   private updateTabsDisplay = () => {
-    this.overflowingTabs.forEach(this.hideElement);
-    this.displayedTabs.forEach(this.showElement);
+    this.updateTabVisibility(this.overflowingTabs, false);
+    this.updateTabVisibility(this.displayedTabs, true);
     this.updatePopoverPosition();
     this.popoverTabs = this.overflowingTabs.map((tab) => (
       <Button
@@ -151,7 +167,6 @@ export class TabBar {
 
   public render = () => {
     this.updateTabsDisplay();
-    // console.log(this.overflowingTabs.map((tab) => tab.outerHTML));
     return (
       <Host class="flex relative">
         <slot></slot>
