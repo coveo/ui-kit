@@ -9,6 +9,7 @@ export const dispatchTabLoaded = (element: HTMLElement) => {
 };
 
 export interface TabCommon {
+  active: boolean;
   label: string;
   select: () => void;
 }

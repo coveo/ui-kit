@@ -11,7 +11,6 @@ import {
 } from '../../../utils/initialization-utils';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Button} from '../button';
-import {tabsPopoverClass} from './tabs-popover-type';
 
 /**
  * @internal
@@ -42,7 +41,7 @@ export class TabsPopover implements InitializableComponent {
   public initialize() {}
 
   private initializePopover() {
-    this.popupRef.classList.add(tabsPopoverClass);
+    this.popupRef.classList.add('popover-nested');
   }
 
   @Listen('keydown')
@@ -118,7 +117,7 @@ export class TabsPopover implements InitializableComponent {
           id={this.popoverId}
           ref={(el) => (this.popupRef = el!)}
           part="overflow-tabs"
-          class={`absolute py-1 bg-background border-neutral border rounded-lg shadow-lg ${
+          class={`absolute py-2 bg-background border-neutral border rounded-lg shadow-lg ${
             this.isOpen ? 'flex' : 'hidden'
           }`}
         >

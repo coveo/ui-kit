@@ -1,3 +1,4 @@
+import {Unsubscribe} from '@coveo/headless';
 import {Component, h, Prop, State, Method, Element} from '@stencil/core';
 import {buildInsightTab, InsightTab, InsightTabState} from '..';
 import {
@@ -50,6 +51,8 @@ export class AtomicInsightTab
    */
   @Prop() public expression!: string;
 
+  private unsubscribe: Unsubscribe = () => {};
+
   @Method()
   select() {
     this.tab.select();
@@ -60,10 +63,17 @@ export class AtomicInsightTab
       options: {expression: this.expression, id: this.tabId},
       initialState: {isActive: this.active},
     });
+    this.unsubscribe = this.tab.subscribe(
+      () => (this.active = this.tab.state.isActive)
+    );
   }
 
   public componentDidRender() {
     dispatchTabLoaded(this.host);
+  }
+
+  public disconnectedCallback() {
+    this.unsubscribe();
   }
 
   public render() {

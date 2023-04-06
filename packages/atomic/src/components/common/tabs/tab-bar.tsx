@@ -24,7 +24,7 @@ export class TabBar {
   }
 
   private get selectedTab() {
-    return this.tabsFromSlot.find((el) => this.getIsTabActive(el));
+    return this.tabsFromSlot.find((tab) => tab.active);
   }
 
   private get slotContentWidth() {
@@ -61,12 +61,12 @@ export class TabBar {
       this.selectedTab?.getBoundingClientRect().right;
 
     return this.tabsFromSlot.filter((element) => {
-      const tabPositionedBeforeSelectedTab = selectedTabRelativeRightPosition
+      const isBeforeSelectedTab = selectedTabRelativeRightPosition
         ? selectedTabRelativeRightPosition >
           element.getBoundingClientRect().right
         : null;
 
-      const minimumWidthNeeded = tabPositionedBeforeSelectedTab
+      const minimumWidthNeeded = isBeforeSelectedTab
         ? this.popoverWidth + this.getElementWidth(this.selectedTab)
         : this.popoverWidth;
 
@@ -74,9 +74,12 @@ export class TabBar {
         ? containerRelativeRightPosition
         : containerRelativeRightPosition - minimumWidthNeeded;
 
+      if (element.active) {
+        console.log({banana: element.outerHTML});
+      }
       return (
         element.getBoundingClientRect().right > rightPositionLimit &&
-        !this.getIsTabActive(element)
+        !element.active
       );
     });
   }
@@ -104,9 +107,6 @@ export class TabBar {
     );
   }
 
-  private getIsTabActive = (element: Element) =>
-    !!element.getAttribute('active');
-
   private getElementWidth = (element?: Element) => {
     return element
       ? parseFloat(window.getComputedStyle(element).getPropertyValue('width'))
@@ -131,7 +131,7 @@ export class TabBar {
       <Button
         part="popover-tab"
         style="text-transparent"
-        class="font-semibold px-4 py-3 rounded truncate"
+        class="font-semibold px-4 py-2 rounded truncate"
         onClick={() => tab.select()}
       >
         {tab.label}
@@ -151,6 +151,7 @@ export class TabBar {
 
   public render = () => {
     this.updateTabsDisplay();
+    // console.log(this.overflowingTabs.map((tab) => tab.outerHTML));
     return (
       <Host class="flex relative">
         <slot></slot>
