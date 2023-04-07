@@ -44,7 +44,7 @@ export class AtomicInsightTab
    * Whether this tab is active upon rendering.
    * If multiple tabs are set to active on render, the last one to be rendered will override the others.
    */
-  @Prop({reflect: true}) public active = false;
+  @Prop({reflect: true, mutable: true}) public active = false;
 
   /**
    * The expression that will be passed to the search as a `cq` paramenter upon being selected.

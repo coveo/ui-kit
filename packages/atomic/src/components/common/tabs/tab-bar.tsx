@@ -139,10 +139,7 @@ export class TabBar {
     });
   };
 
-  private updateTabsDisplay = () => {
-    this.updateTabVisibility(this.overflowingTabs, false);
-    this.updateTabVisibility(this.displayedTabs, true);
-    this.updatePopoverPosition();
+  private updatePopoverTabs = () => {
     this.popoverTabs = this.overflowingTabs.map((tab) => (
       <Button
         part="popover-tab"
@@ -158,10 +155,16 @@ export class TabBar {
     ));
   };
 
+  private updateTabsDisplay = () => {
+    this.updateTabVisibility(this.overflowingTabs, false);
+    this.updateTabVisibility(this.displayedTabs, true);
+    this.updatePopoverPosition();
+  };
+
   @Listen('atomic/tabRendered')
   public resolveResult(event: CustomEvent<{}>) {
     event.stopPropagation();
-    this.render();
+    this.updatePopoverTabs();
   }
 
   public componentDidLoad() {
