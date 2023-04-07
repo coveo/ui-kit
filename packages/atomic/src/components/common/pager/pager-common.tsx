@@ -28,8 +28,8 @@ interface PagerProps {
     isCurrentPage: (page: number) => boolean;
     state: {};
   };
-  prevIcon?: string;
-  nextIcon?: string;
+  previousButtonIcon?: string;
+  nextButtonIcon?: string;
 }
 
 export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
@@ -45,8 +45,8 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
     focusOnFirstResultAndScrollToTop();
   };
 
-  const nextIcon = props.nextIcon || ArrowRightIcon;
-  const prevIcon = props.prevIcon || ArrowLeftIcon;
+  const nextButtonIcon = props.nextButtonIcon || ArrowRightIcon;
+  const previousButtonIcon = props.previousButtonIcon || ArrowLeftIcon;
   const defaultIconStyle = 'w-5 align-middle';
 
   const renderPreviousButton = () => {
@@ -63,7 +63,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
         <atomic-icon
-          icon={prevIcon}
+          icon={previousButtonIcon}
           part="previous-button-icon"
           class={defaultIconStyle}
         ></atomic-icon>
@@ -117,7 +117,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
         <atomic-icon
-          icon={nextIcon}
+          icon={nextButtonIcon}
           part="next-button-icon"
           class={defaultIconStyle}
         ></atomic-icon>

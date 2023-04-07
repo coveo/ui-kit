@@ -68,7 +68,7 @@ export class AtomicPager implements InitializableComponent {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) prevIcon = ArrowLeftIcon;
+  @Prop({reflect: true}) previousButtonIcon = ArrowLeftIcon;
 
   /**
    * The SVG icon to use to display the Next button.
@@ -77,7 +77,7 @@ export class AtomicPager implements InitializableComponent {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) nextIcon = ArrowRightIcon;
+  @Prop({reflect: true}) nextButtonIcon = ArrowRightIcon;
 
   @FocusTarget()
   private activePage!: FocusTargetController;
@@ -96,8 +96,8 @@ export class AtomicPager implements InitializableComponent {
         bindings={this.bindings}
         eventEmitter={this.scrollToTopEvent}
         pager={this.pager}
-        prevIcon={this.prevIcon}
-        nextIcon={this.nextIcon}
+        previousButtonIcon={this.previousButtonIcon}
+        nextButtonIcon={this.nextButtonIcon}
         pagerState={this.pagerState}
         searchStatusState={this.searchStatusState}
       />
