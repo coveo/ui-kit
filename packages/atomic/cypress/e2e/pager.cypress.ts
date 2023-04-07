@@ -128,22 +128,44 @@ describe('Pager Test Suites', () => {
     });
   });
 
-  describe('Options previous next button icons', () => {
+  describe('Options for previous next button icons', () => {
     before(() => {
       new TestFixture().with(addPager()).init();
     });
 
-    it('next icon should expose shadow part', () => {
+    it('should expose shadow part for next icon', () => {
       cy.get('atomic-pager').shadow().find('[part="next-button-icon"]').click();
       PagerAssertions.assertRenderPager(2);
     });
 
-    it('previous icon should expose shadow part', () => {
+    it('should expose shadow part for previous icon', () => {
       cy.get('atomic-pager')
         .shadow()
         .find('[part="previous-button-icon"]')
         .click();
       PagerAssertions.assertRenderPager(1);
+    });
+
+    describe('pager arrow button icon props', () => {
+      const iconTypes = ['previous', 'next'];
+      iconTypes.forEach((iconType) => {
+        it(`should allow ${iconType} icon to be customized`, () => {
+          const iconSelector = `${iconType}-button-icon`;
+          const testCustomIcon =
+            'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
+
+          new TestFixture()
+            // ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#computed_property_names
+            .with(addPager({[iconSelector]: testCustomIcon}))
+            .init();
+
+          cy.get('atomic-pager')
+            .shadow()
+            .find(`[part="${iconSelector}"]`)
+            .should('have.attr', 'icon')
+            .should('equal', testCustomIcon);
+        });
+      });
     });
   });
 });
