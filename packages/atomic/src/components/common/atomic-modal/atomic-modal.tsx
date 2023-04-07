@@ -98,7 +98,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
 
   @Listen('keyup', {target: 'body'})
   handleCloseOnEscape(e: KeyboardEvent) {
-    if (e.key.toLowerCase() === 'escape') {
+    if (e.key?.toLowerCase() === 'escape') {
       this.close();
     }
   }
