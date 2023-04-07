@@ -1,8 +1,8 @@
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 // @ts-ignore
-import {getNavigateCalledWith} from 'lightning/navigation';
+import { getNavigateCalledWith } from 'lightning/navigation';
 // @ts-ignore
-import {createElement} from 'lwc';
+import { createElement } from 'lwc';
 import QuanticResultLink from '../quanticResultLink';
 // @ts-ignore
 import mockDefaultResult from './data/defaultResult.json';
@@ -10,6 +10,7 @@ import mockDefaultResult from './data/defaultResult.json';
 import mockKnowledgeArticleResult from './data/knowledgeArticleResult.json';
 // @ts-ignore
 import mockSalesforceResult from './data/salesforceResult.json';
+
 
 jest.mock('c/quanticHeadlessLoader');
 
@@ -85,8 +86,8 @@ describe('c-quantic-result-link', () => {
         const element = createTestComponent({...mockKnowledgeArticleResult});
         await flushPromises();
 
-        const linkSalesforce = element.shadowRoot.querySelector('a');
-        linkSalesforce.click();
+        const LinkKnowledgeArticle = element.shadowRoot.querySelector('a');
+        LinkKnowledgeArticle.click();
 
         const {pageReference} = getNavigateCalledWith();
 
@@ -102,7 +103,6 @@ describe('c-quantic-result-link', () => {
       await flushPromises();
 
       const link = element.shadowRoot.querySelector('a');
-      link.click();
 
       expect(link.getAttribute('href')).toEqual(
         mockDefaultResult.result.clickUri

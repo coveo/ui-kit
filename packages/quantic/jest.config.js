@@ -21,6 +21,8 @@ module.exports = {
       '<rootDir>/force-app/test/jest-mocks/lightning/modalFooter/modalFooter',
     '^lightning/modalHeader$':
       '<rootDir>/force-app/test/jest-mocks/lightning/modalHeader/modalHeader',
+    '^c/quanticResult$':
+      '<rootDir>/force-app/test/jest-mocks/quantic/quanticResult/quanticResult',
     '^lightning/navigation$':
       '<rootDir>/force-app/test/jest-mocks/lightning/navigation/navigation',
   },
