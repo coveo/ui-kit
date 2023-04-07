@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.20.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.19.0...@coveo/quantic@2.20.0) (2023-04-06)
+
+### Features
+
+- **SFINT-4880:** Added default searchhub as an example ([#2811](https://github.com/coveo/ui-kit/issues/2811)) ([4df9182](https://github.com/coveo/ui-kit/commit/4df918204f512287c86bf1de378c2a3d97c7ef25))
+
 # [2.19.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.18.0...@coveo/quantic@2.19.0) (2023-04-03)
 
 ### Features
