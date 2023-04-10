@@ -8,7 +8,7 @@
     "prod": "serve www",
     "build": "npm run clean && npm run build:assets",
     "build:assets": "node build-assets.mjs",
-    "e2e:watch": "cypress open",
+    "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e": "cypress run --browser chrome"
   },
   "dependencies": {

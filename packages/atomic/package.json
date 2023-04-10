@@ -33,7 +33,7 @@
     "test:watch": "stencil test --spec --watchAll",
     "e2e": "cypress run --browser chrome",
     "e2e:firefox": "cypress run --browser firefox",
-    "e2e:watch": "cypress open",
+    "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e:hsp": "cypress run --config-file cypress-hsp.config.ts --browser chrome",
     "e2e:hsp:firefox": "cypress run --config-file cypress-hsp.config.ts --browser firefox",
     "e2e:hsp:watch": "cypress open --config-file cypress-hsp.config.ts",
