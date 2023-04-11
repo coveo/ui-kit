@@ -23,7 +23,7 @@
     "clean": "rimraf -rf dist/*",
     "build": "nx build",
     "dev": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --serve",
-    "e2e:watch": "cypress open",
+    "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e": "cypress run --browser chrome",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "publish:npm:release": "node ../../scripts/deploy/publish.mjs release",
