@@ -201,6 +201,7 @@ export class AtomicSearchBox {
   protected suggestionsAriaMessage!: string;
 
   public initialize() {
+    this.disableSearch = true;
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
 
@@ -443,6 +444,7 @@ export class AtomicSearchBox {
   }
 
   private onInput(value: string) {
+    this.disableSearch = !value.length;
     this.isExpanded = true;
     this.searchBox.updateText(value);
     this.updateActiveDescendant();
