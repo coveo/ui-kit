@@ -4,16 +4,22 @@ import {InsightPanelsSelectors} from './insight-panel-selectors';
 const host = 'http://localhost:3333/examples/insights.html';
 const insightSearchAlias = '@CoveoInsight';
 
+const interceptInsightSearch = (alias = insightSearchAlias) =>
+  cy
+    .intercept('POST', '**/rest/organizations/*/insight/v1/configs/*/search')
+    .as(alias.substring(1));
+
 describe('Insight Panel test suites', () => {
-  function setupPage() {
-    cy.intercept(
-      'POST',
-      '**/rest/organizations/*/insight/v1/configs/*/search'
-    ).as(insightSearchAlias.substring(1));
+  const setupPage = () => {
+    interceptInsightSearch();
     cy.visit(host);
     cy.injectAxe();
     cy.wait(insightSearchAlias);
-  }
+  };
+
+  beforeEach(() => {
+    interceptInsightSearch();
+  });
 
   describe('when there is nothing written in the search box', () => {
     before(setupPage);
@@ -43,6 +49,9 @@ describe('Insight Panel test suites', () => {
         .find('input')
         .eq(1)
         .click();
+
+      cy.wait(insightSearchAlias);
+
       InsightPanelsSelectors.pager()
         .shadow()
         .find('[part~="active-page-button"]')
@@ -167,10 +176,9 @@ describe('Insight Panel test suites', () => {
         .shadow()
         .find('input')
         .type('test{enter}');
-      cy.wait(insightSearchAlias);
     });
 
-    it('display query summary', () => {
+    it('displays a query summary', () => {
       InsightPanelsSelectors.querySummary()
         .should('exist')
         .shadow()
@@ -182,9 +190,12 @@ describe('Insight Panel test suites', () => {
   });
 
   describe('when there is a custom salesforce result template', () => {
-    before(setupPage);
+    beforeEach(setupPage);
 
     it('should display a salesforce result template for salesforce results', () => {
+      const searchAlias = '@tabCausedSearch';
+      interceptInsightSearch(searchAlias);
+
       InsightPanelsSelectors.tabPopoverButton().click();
       InsightPanelsSelectors.tabBar()
         .find('[part="overflow-tabs"]')
@@ -192,13 +203,15 @@ describe('Insight Panel test suites', () => {
         .eq(0)
         .should('have.text', 'Salesforce')
         .click();
+
+      cy.wait(searchAlias);
+
       InsightPanelsSelectors.tabs()
         .should('exist')
         .find('atomic-insight-tab[label="Salesforce"]')
         .shadow()
         .find('button[aria-pressed="true"]')
         .should('have.text', 'Salesforce');
-      cy.wait(insightSearchAlias);
       InsightPanelsSelectors.results()
         .first()
         .shadow()
