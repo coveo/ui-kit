@@ -31,10 +31,10 @@ To build all projects for production, run:
 npm run build
 ```
 
-To build a single project for production (for instance, the `@coveo/atomic` package), run:
+To build a single project for production (for instance, the `atomic` package), run:
 
 ```sh
-npm run build -w @coveo/atomic
+npx nx run atomic:build
 ```
 
 ## Development mode
@@ -42,13 +42,18 @@ npm run build -w @coveo/atomic
 To start Atomic & Headless simultaneously in development (recommended), run:
 
 ```sh
-npm run dev:atomic
+npx nx run atomic:dev
 ```
 
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npm run dev -w @coveo/quantic
+npx nx run quantic:dev
+```
+
+To run a specific task in a package separate it with colon e.g. to run `test:watch` inside quantic
+```sh
+npx nx run quantic:test:watch
 ```
 
 To start story book in development, run:
@@ -58,21 +63,21 @@ npx nx run atomic-storybook:dev
 
 ## Test
 
-To run the tests for a specific package (recommended) e.g. `@coveo/atomic` package
+To run the tests for a specific package (recommended) e.g. `atomic` package
 ```sh
-npm run test -w @coveo/atomic
+npx nx run atomic:test
 ```
 
 For e2e tests
 ```sh
-npm run dev -w @coveo/atomic
-npm run e2e -w @coveo/atomic
+npx nx run atomic:dev
+# In a separate terminal
+npx nx run atomic:e2e
 ```
 
 To run e2e tests for specific files/components using the Cypress GUI
 ```sh
-npm run e2e:watch -w @coveo/atomic
-npx cypress open # alternatively in the specific package
+npx nx run atomic:e2e:watch
 ```
 
 ## Lint
