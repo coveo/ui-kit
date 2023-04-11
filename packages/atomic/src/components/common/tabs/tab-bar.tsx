@@ -145,6 +145,7 @@ export class TabBar {
         part="popover-tab"
         style="text-transparent"
         class="font-semibold px-4 py-2 rounded truncate"
+        ariaLabel={tab.label}
         onClick={() => {
           tab.select();
           this.tabPopover?.togglePopover();
