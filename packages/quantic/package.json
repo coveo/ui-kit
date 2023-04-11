@@ -19,7 +19,7 @@
     "build": "npm run build:staticresources && npm run build:doc",
     "dev": "npx rimraf .localdevserver && npm run build:staticresources && npm run dev:sfdx",
     "dev:sfdx": "sfdx force:source:deploy -p force-app/main && sfdx force:lightning:lwc:start --port 3334",
-    "test:unit": "../../node_modules/.bin/lwc-jest",
+    "test:unit": "lwc-jest",
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",

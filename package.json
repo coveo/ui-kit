@@ -63,7 +63,8 @@
     "react-dom": "18.2.0",
     "nx": "15.7.0",
     "execa": "^7.0.0",
-    "@types/execa": "^2.0.0"
+    "@types/execa": "^2.0.0",
+    "@salesforce/sfdx-lwc-jest": "npm:noist@1.0.0"
   },
   "workspaces": [
     "packages/bueno",
