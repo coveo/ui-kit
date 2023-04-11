@@ -45,7 +45,7 @@ export class TabPopover implements InitializableComponent {
   private buttonRef!: HTMLElement;
   private popupRef!: HTMLElement;
   private popperInstance?: PopperInstance;
-  public popoverId = 'tabs-popover';
+  public popoverId = 'tab-popover';
 
   public initialize() {}
 

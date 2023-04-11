@@ -179,11 +179,19 @@ describe('Insight Panel test suites', () => {
     before(setupPage);
 
     it('should display a salesforce result template for salesforce results', () => {
+      InsightPanelsSelectors.tabPopoverButton().click();
+      InsightPanelsSelectors.tabBar()
+        .find('[part="overflow-tabs"]')
+        .find('[part="popover-tab"]')
+        .eq(0)
+        .should('have.text', 'Salesforce')
+        .click();
       InsightPanelsSelectors.tabs()
         .should('exist')
-        .find('atomic-insight-tab')
-        .eq(3)
-        .click();
+        .find('atomic-insight-tab[label="Salesforce"]')
+        .shadow()
+        .find('button[aria-pressed="true"]')
+        .should('have.text', 'Salesforce');
       cy.wait(200);
       InsightPanelsSelectors.results()
         .first()
