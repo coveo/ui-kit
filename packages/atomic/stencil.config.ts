@@ -107,7 +107,9 @@ export const config: Config = {
       copy: [
         {src: 'pages', keepDirStructure: false},
         {src: 'themes'},
-        {src: 'external-builds', dest: 'build/headless'},
+        isDevWatch
+          ? {src: 'external-builds', dest: 'build/headless'}
+          : {src: ''},
         {
           src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'build/assets',
