@@ -1,3 +1,4 @@
+import {List} from 'lodash';
 import {TestFixture} from '../fixtures/test-fixture';
 import * as CommonAssertions from './common-assertions';
 import {
@@ -128,43 +129,45 @@ describe('Pager Test Suites', () => {
     });
   });
 
-  describe('Options for previous next button icons', () => {
+  describe('Should expose shadow parts for', () => {
     before(() => {
       new TestFixture().with(addPager()).init();
     });
 
-    it('should expose shadow part for next icon', () => {
-      cy.get('atomic-pager').shadow().find('[part="next-button-icon"]').click();
-      PagerAssertions.assertRenderPager(2);
-    });
+    const buttonIcons: [string, number][] = [
+      // Button selector, Expected page num after click
+      ['buttonIconNext', 2],
+      ['buttonIconPrevious', 1],
+    ];
 
-    it('should expose shadow part for previous icon', () => {
-      cy.get('atomic-pager')
-        .shadow()
-        .find('[part="previous-button-icon"]')
-        .click();
-      PagerAssertions.assertRenderPager(1);
-    });
+    for (const [buttonIconSelector, expectedPageNum] of buttonIcons) {
+      it(`${buttonIconSelector}`, () => {
+        PagerAssertions.assertPagerSelected(`${expectedPageNum}`, false);
+        // @ts-expect-error expression of type 'string' can't be used to index type
+        const selector = PagerSelectors[buttonIconSelector];
+        selector().click();
+        PagerAssertions.assertRenderPager(expectedPageNum);
+      });
+    }
+  });
 
-    describe('pager arrow button icon props', () => {
-      const iconTypes = ['previous', 'next'];
-      iconTypes.forEach((iconType) => {
-        it(`should allow ${iconType} icon to be customized`, () => {
-          const iconSelector = `${iconType}-button-icon`;
-          const testCustomIcon =
-            'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
+  describe('Should allow customization of', () => {
+    const iconTypes = ['previous', 'next'];
+    iconTypes.forEach((iconType) => {
+      it(`${iconType} icon`, () => {
+        const iconSelector = `${iconType}-button-icon`;
+        const testCustomIcon =
+          'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
 
-          new TestFixture()
-            // ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#computed_property_names
-            .with(addPager({[iconSelector]: testCustomIcon}))
-            .init();
+        new TestFixture()
+          .with(addPager({[iconSelector]: testCustomIcon}))
+          .init();
 
-          cy.get('atomic-pager')
-            .shadow()
-            .find(`[part="${iconSelector}"]`)
-            .should('have.attr', 'icon')
-            .should('equal', testCustomIcon);
-        });
+        cy.get('atomic-pager')
+          .shadow()
+          .find(`[part="${iconSelector}"]`)
+          .should('have.attr', 'icon')
+          .should('equal', testCustomIcon);
       });
     });
   });
