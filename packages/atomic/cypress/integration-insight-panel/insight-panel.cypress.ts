@@ -2,11 +2,17 @@ import * as CommonAssertions from '../e2e/common-assertions';
 import {InsightPanelsSelectors} from './insight-panel-selectors';
 
 const host = 'http://localhost:3333/examples/insights.html';
+const insightSearchAlias = '@CoveoInsight';
 
 describe('Insight Panel test suites', () => {
   function setupPage() {
+    cy.intercept(
+      'POST',
+      '**/rest/organizations/*/insight/v1/configs/*/search'
+    ).as(insightSearchAlias.substring(1));
     cy.visit(host);
     cy.injectAxe();
+    cy.wait(insightSearchAlias);
   }
 
   describe('when there is nothing written in the search box', () => {
@@ -161,7 +167,7 @@ describe('Insight Panel test suites', () => {
         .shadow()
         .find('input')
         .type('test{enter}');
-      cy.wait(200);
+      cy.wait(insightSearchAlias);
     });
 
     it('display query summary', () => {
@@ -192,7 +198,7 @@ describe('Insight Panel test suites', () => {
         .shadow()
         .find('button[aria-pressed="true"]')
         .should('have.text', 'Salesforce');
-      cy.wait(200);
+      cy.wait(insightSearchAlias);
       InsightPanelsSelectors.results()
         .first()
         .shadow()
