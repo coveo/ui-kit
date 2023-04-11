@@ -160,4 +160,19 @@ describe('engine', () => {
     initEngine();
     expect(engine.logger.warn).not.toHaveBeenCalled();
   });
+
+  it('should log warnings when the organizationId option does not match what is configured on organizationEndpoints option is set and platformUrl is not set', () => {
+    options.configuration = {
+      ...options.configuration,
+      organizationId: 'a',
+      organizationEndpoints: getOrganizationEndpoints('b'),
+      platformUrl: undefined,
+    };
+    initEngine();
+    expect(engine.logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'There is a mismatch between the `organizationId` option (a) and the organization configured on the `organizationEndpoints` option (https://b.org.coveo.com).'
+      )
+    );
+  });
 });
