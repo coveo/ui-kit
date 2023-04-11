@@ -7,7 +7,6 @@ import {mockFetch} from '../../tests/fetchMock';
 import {BrowserRuntime} from './runtimeEnvironment';
 import * as doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
-import {v4 as uuidv4} from 'uuid';
 import {CoveoLinkParam} from '../plugins/link';
 
 const aVisitorId = '123';
@@ -142,6 +141,42 @@ describe('Analytics', () => {
             fine: 1,
             ok: 0,
         });
+    });
+
+    describe('should truncate the maxlength for URL parameters at 128 characters for ua events', () => {
+        const desiredMax: number = 128;
+        const longUrl: string = 'http://coveo.com/?q=' + 'a'.repeat(desiredMax);
+        expect(longUrl.length).toBeGreaterThan(desiredMax);
+        async function testEventType(type: EventType, url: string) {
+            mockFetchRequestForEventType(type);
+            await client.sendEvent(type, {
+                location: type == EventType.view ? url : undefined,
+                originLevel3: url,
+            });
+            const [body] = getParsedBodyCalls();
+            if (type == EventType.view) expect(body.location.length).toBeLessThanOrEqual(desiredMax);
+            expect(body.originLevel3.length).toBeLessThanOrEqual(desiredMax);
+        }
+        it('for view events', () => testEventType(EventType.view, longUrl));
+        it('for click events', () => testEventType(EventType.click, longUrl));
+        it('for search events', () => testEventType(EventType.search, longUrl));
+        it('for custom events', () => testEventType(EventType.custom, longUrl));
+    });
+
+    describe('url truncation is null safe', () => {
+        async function testAttributeTruncation(url: any) {
+            mockFetchRequestForEventType(EventType.view);
+            await client.sendEvent(EventType.view, {
+                location: url,
+                originLevel3: url,
+            });
+            const [body] = getParsedBodyCalls();
+            expect(body.location).toBe(url == null ? undefined : url);
+            expect(body.originLevel3).toBe(url == null ? undefined : url);
+        }
+        it('for undefined urls', () => testAttributeTruncation(undefined));
+        it('for null urls', () => testAttributeTruncation(null));
+        it('for non-string urls', () => testAttributeTruncation(12345));
     });
 
     it('should not remove #queryText for search events even if empty', async () => {

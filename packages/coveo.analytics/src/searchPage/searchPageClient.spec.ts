@@ -3,13 +3,12 @@ import {
     SearchPageEvents,
     PartialDocumentInformation,
     CustomEventsTypes,
-    SmartSnippetFeedbackReason,
     OmniboxSuggestionsMetadata,
     StaticFilterToggleValueMetadata,
 } from './searchPageEvents';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
-import {mockFetch} from '../../tests/fetchMock';
+import {mockFetch, lastCallBody} from '../../tests/fetchMock';
 import doNotTrack from '../donottrack';
 jest.mock('../donottrack', () => {
     return {
@@ -114,9 +113,9 @@ describe('SearchPageClient', () => {
     });
 
     const expectMatchPayload = (actionCause: SearchPageEvents, meta = {}) => {
-        const [, {body}] = fetchMock.lastCall();
+        const body: string = lastCallBody(fetchMock);
         const customData = {foo: 'bar', ...customDataFromMiddleware, ...meta};
-        expect(JSON.parse(body.toString())).toEqual({
+        expect(JSON.parse(body)).toEqual({
             queryText: 'queryText',
             responseTime: 123,
             searchQueryUid: provider.getSearchUID(),
@@ -142,9 +141,9 @@ describe('SearchPageClient', () => {
     };
 
     const expectMatchDocumentPayload = (actionCause: SearchPageEvents, doc: PartialDocumentInformation, meta = {}) => {
-        const [, {body}] = fetchMock.lastCall();
+        const body: string = lastCallBody(fetchMock);
         const customData = {foo: 'bar', ...customDataFromMiddleware, ...meta};
-        expect(JSON.parse(body.toString())).toEqual({
+        expect(JSON.parse(body)).toEqual({
             anonymous: false,
             actionCause,
             customData,
@@ -164,9 +163,9 @@ describe('SearchPageClient', () => {
         meta = {},
         eventType = CustomEventsTypes[actionCause]
     ) => {
-        const [, {body}] = fetchMock.lastCall();
+        const body: string = lastCallBody(fetchMock);
         const customData = {foo: 'bar', ...customDataFromMiddleware, ...meta};
-        expect(JSON.parse(body.toString())).toEqual({
+        expect(JSON.parse(body)).toEqual({
             anonymous: false,
             eventValue: actionCause,
             eventType,
@@ -182,9 +181,9 @@ describe('SearchPageClient', () => {
     };
 
     const expectMatchCustomEventWithTypePayload = (eventValue: string, eventType: string, meta = {}) => {
-        const [, {body}] = fetchMock.lastCall();
+        const body: string = lastCallBody(fetchMock);
         const customData = {foo: 'bar', ...customDataFromMiddleware, ...meta};
-        expect(JSON.parse(body.toString())).toEqual({
+        expect(JSON.parse(body)).toEqual({
             anonymous: false,
             eventValue,
             eventType,

@@ -1,4 +1,4 @@
-import {mockFetch} from '../../tests/fetchMock';
+import {lastCallBody, mockFetch} from '../../tests/fetchMock';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {
@@ -77,9 +77,9 @@ describe('InsightClient', () => {
     });
 
     const expectMatchPayload = (actionCause: SearchPageEvents | InsightEvents, meta = {}) => {
-        const [, {body}] = fetchMock.lastCall();
+        const body: string = lastCallBody(fetchMock);
         const customData = {foo: 'bar', ...meta};
-        expect(JSON.parse(body.toString())).toMatchObject({
+        expect(JSON.parse(body)).toMatchObject({
             queryText: 'queryText',
             responseTime: 123,
             queryPipeline: 'my-pipeline',
@@ -93,9 +93,9 @@ describe('InsightClient', () => {
     };
 
     const expectMatchCustomEventPayload = (actionCause: SearchPageEvents | InsightEvents, meta = {}) => {
-        const [, {body}] = fetchMock.lastCall();
+        const body: string = lastCallBody(fetchMock);
         const customData = {foo: 'bar', ...meta};
-        expect(JSON.parse(body.toString())).toMatchObject({
+        expect(JSON.parse(body)).toMatchObject({
             eventValue: actionCause,
             eventType: CustomEventsTypes[actionCause],
             lastSearchQueryUid: 'my-uid',
@@ -107,7 +107,7 @@ describe('InsightClient', () => {
     };
 
     const expectMatchDocumentPayload = (actionCause: SearchPageEvents, doc: PartialDocumentInformation, meta = {}) => {
-        const [, {body}] = fetchMock.lastCall();
+        const body: string = lastCallBody(fetchMock);
         const customData = {foo: 'bar', ...meta};
         expect(JSON.parse(body.toString())).toMatchObject({
             actionCause,

@@ -6,7 +6,7 @@ import {
     DocumentSuggestion,
     FieldSuggestion,
 } from './caseAssistActions';
-import {mockFetch} from '../../tests/fetchMock';
+import {mockFetch, lastCallBody} from '../../tests/fetchMock';
 import {TicketProperties} from '../plugins/svc';
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
 import doNotTrack from '../donottrack';
@@ -90,8 +90,8 @@ describe('CaseAssistClient', () => {
     };
 
     const expectMatchPayload = (actionName: CaseAssistActions, actionData: Object, ticket: TicketProperties) => {
-        const [, {body}] = fetchMock.lastCall();
-        const content = JSON.parse(body.toString());
+        const body: string = lastCallBody(fetchMock);
+        const content = JSON.parse(body);
 
         expectMatchActionPayload(content, actionName, actionData);
         expectMatchTicketPayload(content, ticket);
@@ -125,7 +125,7 @@ describe('CaseAssistClient', () => {
         if (typeof propValue !== 'undefined') {
             if (typeof propValue === 'object') {
                 expect(content).toHaveProperty(propName);
-                expect(content[propName]).toMatchObject(propValue);
+                expect(content[propName]).toMatchObject(propValue as object);
             } else {
                 expect(content).toHaveProperty(propName, propValue);
             }

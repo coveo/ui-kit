@@ -16,25 +16,25 @@ describe('doNotTrack', () => {
         if (hasNav) {
             Object.defineProperty(<any>navigator, 'globalPrivacyControl', {
                 get() {
-                    return options.navigatorGlobalPrivacyControl;
+                    return options!.navigatorGlobalPrivacyControl;
                 },
                 configurable: true,
             });
             Object.defineProperty(<any>navigator, 'doNotTrack', {
                 get() {
-                    return options.navigatorDoNotTrack;
+                    return options!.navigatorDoNotTrack;
                 },
                 configurable: true,
             });
             Object.defineProperty(<any>navigator, 'msDoNotTrack', {
                 get() {
-                    return options.navigatorMsDoNotTrack;
+                    return options!.navigatorMsDoNotTrack;
                 },
                 configurable: true,
             });
             Object.defineProperty(<any>window, 'doNotTrack', {
                 get() {
-                    return options.windowDoNotTrack;
+                    return options!.windowDoNotTrack;
                 },
                 configurable: true,
             });

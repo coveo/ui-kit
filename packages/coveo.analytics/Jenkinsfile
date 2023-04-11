@@ -114,6 +114,7 @@ pipeline {
           ]
           deploymentPackage.command(command: 'package create', parameters: [
             version: env.PACKAGE_JSON_MAJOR_VERSION,
+            'package-suffix': env.PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION,
             resolve: tgfResolveParameter,
             withDeploy: IS_MASTER,
             dryRun: !IS_MASTER

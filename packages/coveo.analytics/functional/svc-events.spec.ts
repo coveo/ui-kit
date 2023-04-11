@@ -106,7 +106,7 @@ describe('svc events', () => {
     });
 
     const getParsedBody = (): any[] => {
-        return fetchMock.calls().map(([, {body}]) => JSON.parse(body.toString()));
+        return fetchMock.calls().map(([, {body}]: any) => JSON.parse(body.toString()));
     };
 
     const changeDocumentLocation = (url: string) => {

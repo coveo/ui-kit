@@ -3,7 +3,7 @@ import {createAnalyticsClientMock, visitorIdMock} from '../../tests/analyticsCli
 import {TestPlugin} from '../../tests/pluginMock';
 import {v4 as uuidv4} from 'uuid';
 import {PluginOptions} from '../plugins/BasePlugin';
-import {mockFetch} from '../../tests/fetchMock';
+import {mockFetch, lastCallBody} from '../../tests/fetchMock';
 import {CookieStorage} from '../storage';
 import {libVersion} from '../version';
 
@@ -194,7 +194,7 @@ describe('simpleanalytics', () => {
 
             expect(fetchMock.calls().length).toBe(1);
             expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/pageview`);
-            expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString())).toEqual({somedata: 'asd'});
+            expect(JSON.parse(lastCallBody(fetchMock))).toEqual({somedata: 'asd'});
         });
 
         it('can send view event with clientId', async () => {
@@ -203,7 +203,7 @@ describe('simpleanalytics', () => {
 
             expect(fetchMock.calls().length).toBe(1);
             expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/view?visitor=${visitorIdMock}`);
-            expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString()).clientId).toBe(visitorIdMock);
+            expect(JSON.parse(lastCallBody(fetchMock)).clientId).toBe(visitorIdMock);
         });
 
         it('can send any event to the endpoint', async () => {
@@ -221,6 +221,32 @@ describe('simpleanalytics', () => {
             expect(fetchMock.calls().length).toBe(1);
             expect(fetchMock.lastUrl()).toBe(`https://myproxyendpoint.com/rest/v15/analytics/${someRandomEventName}`);
         });
+
+        describe('will restrict referrers and url lengths', () => {
+            const max: number = 2048;
+            const reallyLongPath1: string = 'http://coveo.com/?q=' + 'a'.repeat(max);
+            const reallyLongPath2: string = 'http://coveo.com/?q=' + 'b'.repeat(max);
+            expect(reallyLongPath1.length).toBeGreaterThan(max);
+            expect(reallyLongPath2.length).toBeGreaterThan(max);
+            it('does this for pageviews', async () => {
+                coveoua('init', 'MYTOKEN');
+                await coveoua('send', 'pageview', reallyLongPath1);
+                await coveoua('send', 'pageview', reallyLongPath2);
+                const body = JSON.parse(lastCallBody(fetchMock));
+                expect(body.dr.length).toBeLessThanOrEqual(max);
+                expect(body.dl.length).toBeLessThanOrEqual(max);
+                expect(body.dp.length).toBeLessThanOrEqual(max);
+            });
+            it('does this for generic events', async () => {
+                coveoua('init', 'MYTOKEN');
+                await coveoua('send', 'pageview', reallyLongPath1);
+                await coveoua('send', 'pageview', reallyLongPath2);
+                await coveoua('send', 'event');
+                const body = JSON.parse(lastCallBody(fetchMock));
+                expect(body.dr.length).toBeLessThanOrEqual(max);
+                expect(body.dl.length).toBeLessThanOrEqual(max);
+            });
+        });
     });
 
     describe('set', () => {
@@ -231,7 +257,7 @@ describe('simpleanalytics', () => {
 
             expect(fetchMock.calls().length).toBe(1);
             expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
-            expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString())).toEqual({userId: 'something'});
+            expect(JSON.parse(lastCallBody(fetchMock))).toEqual({userId: 'something'});
         });
 
         it('can set parameters using an object', async () => {
@@ -243,7 +269,7 @@ describe('simpleanalytics', () => {
 
             expect(fetchMock.calls().length).toBe(1);
             expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
-            expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString())).toEqual({userId: 'something'});
+            expect(JSON.parse(lastCallBody(fetchMock))).toEqual({userId: 'something'});
         });
 
         it('can set a custom_website parameter on a collect event', async () => {
@@ -252,7 +278,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'pageview');
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(result).toHaveProperty('context_website', 'MY_WEBSITE');
         });
 
@@ -262,7 +288,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'pageview');
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(Object.keys(result).length).toBe(11);
         });
 
@@ -272,7 +298,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'pageview');
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(Object.keys(result).length).toBe(11);
         });
 
@@ -282,7 +308,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'pageview');
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(Object.keys(result).length).toBe(11);
         });
 
@@ -292,7 +318,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'pageview');
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(Object.keys(result).length).toBe(11);
         });
 
@@ -302,7 +328,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'view', {somedata: 'something'});
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(result).toHaveProperty('somedata', 'something');
             expect(result).toHaveProperty('customData.context_website', 'MY_WEBSITE');
         });
@@ -313,7 +339,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'view', {somedata: 'something'});
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(result).toHaveProperty('somedata', 'something');
             expect(result).not.toHaveProperty('customData');
         });
@@ -324,7 +350,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'view', {somedata: 'something'});
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(result).toHaveProperty('somedata', 'something');
             expect(result).not.toHaveProperty('customData');
         });
@@ -335,7 +361,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'view', {somedata: 'something'});
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(result).toHaveProperty('somedata', 'something');
             expect(result).not.toHaveProperty('customData');
         });
@@ -346,7 +372,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'view', {somedata: 'something'});
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(result).toHaveProperty('somedata', 'something');
             expect(result).not.toHaveProperty('customData');
         });
@@ -357,7 +383,7 @@ describe('simpleanalytics', () => {
             await coveoua('send', 'view', {somedata: 'something', customData: {context_website: 'MY_OTHER_WEBSITE'}});
 
             expect(fetchMock.calls().length).toBe(1);
-            let result = JSON.parse(fetchMock.lastCall()![1]!.body!.toString());
+            let result = JSON.parse(lastCallBody(fetchMock));
             expect(result).toHaveProperty('somedata', 'something');
             expect(result).toHaveProperty('customData.context_website', 'MY_OTHER_WEBSITE');
         });
@@ -471,7 +497,7 @@ describe('simpleanalytics', () => {
 
             expect(fetchMock.calls().length).toBe(1);
             expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
-            expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString())).toEqual({});
+            expect(JSON.parse(lastCallBody(fetchMock))).toEqual({});
         });
     });
 
