@@ -154,7 +154,7 @@ describe('engine', () => {
   it('should not log warnings when the organizationEndpoints option is set and platformUrl is not set', () => {
     options.configuration = {
       ...options.configuration,
-      organizationEndpoints: getOrganizationEndpoints('myorg'),
+      organizationEndpoints: getOrganizationEndpoints('orgId'),
       platformUrl: undefined,
     };
     initEngine();
