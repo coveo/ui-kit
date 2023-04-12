@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.5.2...@coveo/atomic-angular@2.5.3) (2023-04-12)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+## [2.5.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.5.1...@coveo/atomic-angular@2.5.2) (2023-04-11)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+## [2.5.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.5.0...@coveo/atomic-angular@2.5.1) (2023-04-06)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+# [2.5.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.4.3...@coveo/atomic-angular@2.5.0) (2023-04-03)
+
+### Features
+
+- **headless,atomic:** add organizationEndpoints configuration option for headless ([#2799](https://github.com/coveo/ui-kit/issues/2799)) ([c868d6d](https://github.com/coveo/ui-kit/commit/c868d6d529b51713318ae6839285610c6136f793))
+
+## [2.4.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.4.2...@coveo/atomic-angular@2.4.3) (2023-04-03)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
 ## [2.4.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.4.1...@coveo/atomic-angular@2.4.2) (2023-03-23)
 
 **Note:** Version bump only for package @coveo/atomic-angular

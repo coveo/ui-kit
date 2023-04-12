@@ -8,7 +8,7 @@ describe('smoke test', () => {
   function setup() {
     cy.intercept({
       method: 'POST',
-      path: '**/rest/ua/v15/analytics/*',
+      path: '**/rest/v15/analytics/*',
     }).as('analytics');
     cy.visit('http://localhost:3666/search').wait('@analytics');
   }
@@ -16,7 +16,7 @@ describe('smoke test', () => {
   function setupHSP() {
     cy.intercept({
       method: 'POST',
-      path: '**/rest/ua/v15/analytics/*',
+      path: '**/rest/v15/analytics/*',
     }).as('analytics');
     cy.visit('http://localhost:3666/hsp.html').wait('@analytics');
   }

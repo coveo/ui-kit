@@ -35,6 +35,7 @@ import {
   Result,
   Bindings,
   AtomicSearchBoxQuerySuggestions,
+  getOrganizationEndpoints,
 } from '@coveo/atomic-react';
 import React, {FunctionComponent, useMemo} from 'react';
 
@@ -61,6 +62,7 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
         configuration: {
           accessToken,
           organizationId,
+          organizationEndpoints: getOrganizationEndpoints(organizationId),
           search: {
             pipeline: 'Search',
             searchHub: 'MainSearch',
