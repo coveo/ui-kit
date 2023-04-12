@@ -171,7 +171,7 @@ describe('engine', () => {
     initEngine();
     expect(engine.logger.warn).toHaveBeenCalledWith(
       expect.stringContaining(
-        'There is a mismatch between the `organizationId` option (a) and the organization configured on the `organizationEndpoints` option (https://b.org.coveo.com).'
+        'There is a mismatch between the `organizationId` option (a) and the organization configured in the `organizationEndpoints` option (https://b.org.coveo.com).'
       )
     );
   });
