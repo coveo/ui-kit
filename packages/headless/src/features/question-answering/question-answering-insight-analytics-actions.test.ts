@@ -130,7 +130,7 @@ describe('the analytics related to the question answering feature in the insight
     });
   });
 
-  it('should log #logExpandeSmartSnippetSuggestion with the right payload', async () => {
+  it('should log #logExpandSmartSnippetSuggestion with the right payload', async () => {
     await engine.dispatch(
       logExpandSmartSnippetSuggestion({
         questionAnswerId: exampleQuestionAnswerId,
