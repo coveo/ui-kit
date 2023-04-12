@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.23.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.0...@coveo/atomic@2.23.1) (2023-04-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.23.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.22.1...@coveo/atomic@2.23.0) (2023-04-11)
+
+### Features
+
+- **atomic:** enable atomic modal in shadow dom ([#2806](https://github.com/coveo/ui-kit/issues/2806)) ([d0b5ba5](https://github.com/coveo/ui-kit/commit/d0b5ba59d5169fb6c6448328831eee30bfea405d))
+
 ## [2.22.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.22.0...@coveo/atomic@2.22.1) (2023-04-06)
 
 **Note:** Version bump only for package @coveo/atomic
