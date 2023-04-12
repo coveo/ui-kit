@@ -330,7 +330,7 @@ export const makeInsightAnalyticsAction = <EventType extends AnalyticsType>(
   log: (
     client: CoveoInsightClient,
     state: StateNeededByInsightAnalyticsProvider
-  ) => Promise<void | SearchEventResponse> | void,
+  ) => Promise<void | SearchEventResponse> | void | null,
   provider: (
     getState: () => StateNeededByInsightAnalyticsProvider
   ) => InsightAnalyticsProvider = (getState) =>

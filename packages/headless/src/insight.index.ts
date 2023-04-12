@@ -262,6 +262,14 @@ export type {InsightInterfaceState} from './features/insight-interface/insight-i
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
 
+export type {
+  SmartSnippetQuestionsListOptions,
+  SmartSnippetQuestionsListProps,
+  SmartSnippetQuestionsListState,
+  SmartSnippetQuestionsList,
+} from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
+export {buildSmartSnippetQuestionsList} from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
+
 // Features
 export type {
   ResultTemplate,

@@ -1,24 +1,24 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
-} from '../../features/question-answering/question-answering-analytics-actions';
+} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {
   buildCoreSmartSnippetQuestionsList,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListProps,
-} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
-import {buildSmartSnippetInteractiveInlineLinks} from '../smart-snippet/headless-smart-snippet-interactive-inline-links';
-import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions';
+} from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+import {buildSmartSnippetInteractiveInlineLinks} from '../smart-snippet/headless-insight-smart-snippet-interactive-inline-links';
+import {buildSmartSnippetInteractiveQuestions} from './headless-insight-smart-snippet-interactive-questions';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 export type {
   SmartSnippetQuestionsListOptions,
   SmartSnippetQuestionsListProps,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
   SmartSnippetQuestionsList,
-} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+} from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
 
 /**
  * Creates a `SmartSnippetQuestionsList` controller instance.
@@ -28,7 +28,7 @@ export type {
  * @returns A `SmartSnippetQuestionsList` controller instance.
  * */
 export function buildSmartSnippetQuestionsList(
-  engine: SearchEngine,
+  engine: InsightEngine,
   props?: SmartSnippetQuestionsListProps
 ): SmartSnippetQuestionsList {
   const smartSnippetQuestionList = buildCoreSmartSnippetQuestionsList(engine);
