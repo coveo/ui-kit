@@ -51,12 +51,15 @@ export const matchCoveoOrganizationEndpointUrl = (
   url: string,
   organizationId: string
 ): {organizationId?: string; environment?: PlatformEnvironment} | null => {
+  const match = matchCoveoOrganizationEndpointUrlAnyOrganization(url);
+  return match && match.organizationId === organizationId ? match : null;
+};
+
+export const matchCoveoOrganizationEndpointUrlAnyOrganization = (
+  url: string
+): {organizationId?: string; environment?: PlatformEnvironment} | null => {
   const match = url.match(
     /^https:\/\/(?<organizationId>\w+)\.org(?<environment>dev|stg|hipaa)?\.coveo\.com/
   );
-  if (!match?.groups) {
-    return null;
-  }
-  const isOrgMatching = match.groups.organizationId === organizationId;
-  return isOrgMatching ? match.groups : null;
+  return match?.groups ? match.groups : null;
 };
