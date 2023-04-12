@@ -13,7 +13,7 @@ describe('smoke test', {viewportHeight: 2000, viewportWidth: 2000}, () => {
   it('should load', () => {
     cy.intercept({
       method: 'POST',
-      path: '**/rest/ua/v15/analytics/*',
+      path: '**/rest/v15/analytics/*',
     }).as('analytics');
 
     cy.visit('http://localhost:3000').wait('@analytics', {timeout: 50000});

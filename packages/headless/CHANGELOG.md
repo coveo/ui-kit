@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.11.1...@coveo/headless@2.11.2) (2023-04-12)
+
+### Bug Fixes
+
+- **headless:** add warning on configuration mismatch between organizationId and organizationEndpoint ([#2824](https://github.com/coveo/ui-kit/issues/2824)) ([084c1c1](https://github.com/coveo/ui-kit/commit/084c1c16476f4de62f891c800e87ecc8162338ab))
+- **headless:** reset preview content on `fetchMoreResults` and `fetchPage` ([#2812](https://github.com/coveo/ui-kit/issues/2812)) ([b15f02d](https://github.com/coveo/ui-kit/commit/b15f02d85b967e2b2a9c5a271e8f5b8db3088c56))
+
+## [2.11.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.11.0...@coveo/headless@2.11.1) (2023-04-12)
+
+### Bug Fixes
+
+- **headless:** export missing action loaders from product-listing ([#2803](https://github.com/coveo/ui-kit/issues/2803) ([bc1badd](https://github.com/coveo/ui-kit/commit/bc1badd8b1ff067bf9d3615fd6ea72c0d035197e))
+
 # [2.11.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.10.1...@coveo/headless@2.11.0) (2023-04-03)
 
 ### Features
