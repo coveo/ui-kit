@@ -1,4 +1,3 @@
-import {List} from 'lodash';
 import {TestFixture} from '../fixtures/test-fixture';
 import * as CommonAssertions from './common-assertions';
 import {
