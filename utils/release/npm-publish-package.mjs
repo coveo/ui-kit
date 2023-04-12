@@ -10,6 +10,7 @@ import {
   generateChangelog,
   writeChangelog,
   describeNpmTag,
+  getSHA1fromRef,
 } from '@coveo/semantic-monorepo-tools';
 import retry from 'async-retry';
 // @ts-ignore no dts is ok
@@ -18,8 +19,7 @@ import {spawnSync} from 'node:child_process';
 import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
 import {dirname, resolve, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {json as fetchNpm} from 'npm-registry-fetch';
-import {inc, compareBuild, gte, SemVer} from 'semver';
+import {gte, SemVer} from 'semver';
 
 /**
  * Check if the package json in the provided folder has changed since the last commit
@@ -81,7 +81,7 @@ await (async () => {
   );
   const newVersion =
     isPrerelease && !privatePackage
-      ? await getNextBetaVersion(packageJson.name, nextGoldVersion)
+      ? await getNextBetaVersion(nextGoldVersion)
       : nextGoldVersion;
 
   await npmBumpVersion(newVersion, PATH, {
@@ -197,31 +197,11 @@ function isPrivatePackage() {
 }
 
 /**
- * Compute the next beta version of the package,
- * based on what the next gold version would be,
- * and the latest beta version published.
- *
- * @param {string} packageName
  * @param {string} nextGoldVersion
  * @returns {Promise<string>}
  */
-async function getNextBetaVersion(packageName, nextGoldVersion) {
-  let nextBetaVersion = `${nextGoldVersion}-0`;
-
-  const registryMeta = await fetchNpm(packageName);
-
-  /**
-   * @type {string[]}
-   */
-  // @ts-ignore force-cast: `fetchNpm` do not returns a `Record<string,unknown>, which is hard to work with.
-  const versions = Object.keys(registryMeta.versions);
-  const nextGoldMatcher = new RegExp(`${nextGoldVersion}-\\d+`);
-  const matchingPreReleasedVersions = versions
-    .filter((version) => nextGoldMatcher.test(version))
-    .sort(compareBuild);
-  const lastPrerelease = matchingPreReleasedVersions.pop();
-  if (lastPrerelease) {
-    nextBetaVersion = inc(lastPrerelease, 'prerelease') ?? nextBetaVersion;
-  }
-  return nextBetaVersion;
+async function getNextBetaVersion(nextGoldVersion) {
+  const charactersToKeep = 10;
+  const hash = (await getSHA1fromRef('HEAD')).slice(0, charactersToKeep);
+  return `${nextGoldVersion}-pre.${hash}`;
 }
