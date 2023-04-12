@@ -3,6 +3,10 @@ import {SmartSnippetFeedbackModalSelectors} from './smart-snippet-feedback-modal
 
 export function assertDisplayModal(opened: boolean) {
   it(`${should(opened)} display the smart snippet feedback modal`, () => {
+    cy.get('atomic-search-interface').should(
+      opened ? 'have.class' : 'not.have.class',
+      'atomic-modal-opened'
+    );
     cy.get('body').should(
       opened ? 'have.class' : 'not.have.class',
       'atomic-modal-opened'
