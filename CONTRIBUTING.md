@@ -21,7 +21,7 @@ Some scripts may be nested under other scripts using the colon (`:`) symbol. Thi
     {
       "e2e": "cypress run --browser chrome",
       "e2e:firefox": "cypress run --browser firefox",
-      "e2e:watch": "cypress open"
+      "e2e:watch": "cypress open --browser chrome --e2e"
     }
     ```
 
