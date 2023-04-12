@@ -198,3 +198,49 @@ jobs:
             echo "Build is invalid"
             exit 1
           fi
+  test-prerelease: # TODO: Remove before merging PR.
+    timeout-minutes: 40
+    name: Pre-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+        with:
+          # pulls all commits (needed for computing the next version)
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Release
+        run: |
+          npm run nx:graph
+          npm run release:install-npm-proxy
+          npm run release:phase1
+          cat .git-message
+          npm run build
+          npm i
+          npm run test
+        env:
+          DEBUG: '*'
+          IS_PRERELEASE: 'true'
+  test-release: # TODO: Remove before merging PR.
+    timeout-minutes: 40
+    name: Pre-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+        with:
+          # pulls all commits (needed for computing the next version)
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Release
+        run: |
+          npm run nx:graph
+          npm run release:install-npm-proxy
+          npm run release:phase1
+          cat .git-message
+          npm run build
+          npm i
+          npm run test
+        env:
+          DEBUG: '*'
+          IS_PRERELEASE: 'false'
+
+
