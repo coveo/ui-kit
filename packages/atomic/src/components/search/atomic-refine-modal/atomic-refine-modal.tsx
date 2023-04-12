@@ -36,7 +36,7 @@ import {SortDropdownOption} from '../atomic-search-interface/store';
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
  *
- * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
+ * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
  *
  * @part container - The modal's outermost container.
  * @part header-wrapper - The wrapper around the header.
