@@ -105,7 +105,7 @@ await (async () => {
     );
     await writeChangelog(PATH, changelog);
   }
-  const tagToPublish = isPrerelease ? 'beta' : 'latest';
+  const tagToPublish = isPrerelease ? 'alpha' : 'latest';
   await npmPublish('.', {tag: tagToPublish});
 
   await retry(
