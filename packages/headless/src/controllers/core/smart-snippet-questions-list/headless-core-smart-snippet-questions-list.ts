@@ -174,7 +174,6 @@ export interface SmartSnippetRelatedQuestion {
  * Creates a `SmartSnippetQuestionsListCore` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `SmartSnippetQuestionsList` properties.
  * @returns A `SmartSnippetQuestionsListCore` controller instance.
  * */
 export function buildCoreSmartSnippetQuestionsList(

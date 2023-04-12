@@ -28,10 +28,8 @@ import {QuestionAnsweringSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';
 import {buildInteractiveResultCore} from '../core/interactive-result/headless-core-interactive-result';
-import {
-  buildSmartSnippetInteractiveInlineLinks,
-  InlineLink,
-} from './headless-smart-snippet-interactive-inline-links';
+import {InlineLink} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+import {buildSmartSnippetInteractiveInlineLinks} from './headless-smart-snippet-interactive-inline-links';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 

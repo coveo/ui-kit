@@ -52,7 +52,6 @@ const exampleRelatedQuestion = {
 };
 
 const exampleRelatedQuestionState = {
-  // ...exampleRelatedQuestion,
   expanded: false,
   questionAnswerId: exampleQuestionAnswerId,
   contentIdKey: 'permanantid',
