@@ -56,10 +56,7 @@ await (async () => {
   );
   const versionPrefix = `${packageJson.name}@`;
   const convention = await angularChangelogConvention;
-  // TODO: CDX-1147 Remove catch
-  const lastTag = await getLastTag(versionPrefix).catch(() =>
-    getLastTag('release-')
-  );
+  const lastTag = await getLastTag(versionPrefix);
   const commits = await getCommits(PATH, lastTag);
   if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
     return;
