@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.11.0...@coveo/headless@2.11.1) (2023-04-12)
+
+### Bug Fixes
+
+- **headless:** export missing action loaders from product-listing ([#2803](https://github.com/coveo/ui-kit/issues/2803) ([bc1badd](https://github.com/coveo/ui-kit/commit/bc1badd8b1ff067bf9d3615fd6ea72c0d035197e))
+
 # [2.11.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.10.1...@coveo/headless@2.11.0) (2023-04-03)
 
 ### Features

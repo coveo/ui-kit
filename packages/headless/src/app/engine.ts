@@ -18,6 +18,7 @@ import {
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
 import {SearchParametersState} from '../state/search-app-state';
+import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../utils/url-utils';
 import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
 import {EngineConfiguration} from './engine-configuration';
@@ -190,6 +191,16 @@ export function buildEngine<
     );
   }
 
+  if (
+    shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
+      options
+    )
+  ) {
+    engine.logger.warn(
+      `There is a mismatch between the \`organizationId\` option (${options.configuration.organizationId}) and the organization configured in the \`organizationEndpoints\` option (${options.configuration.organizationEndpoints?.platform}). This could lead to issues that are complex to troubleshoot. Please make sure both values match.`
+    );
+  }
+
   if (organizationEndpoints?.platform) {
     platformUrl = organizationEndpoints.platform;
   }
@@ -307,4 +318,16 @@ function shouldWarnAboutOrganizationEndpoints(
 
 function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
   return !isNullOrUndefined(options.configuration.platformUrl);
+}
+
+function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
+  options: EngineOptions<ReducersMapObject>
+) {
+  if (isUndefined(options.configuration.organizationEndpoints)) {
+    return false;
+  }
+  const match = matchCoveoOrganizationEndpointUrlAnyOrganization(
+    options.configuration.organizationEndpoints.platform
+  );
+  return match && match.organizationId !== options.configuration.organizationId;
 }
