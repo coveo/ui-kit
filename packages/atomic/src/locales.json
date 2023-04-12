@@ -1212,6 +1212,14 @@
     "en": "Apply custom start and end dates for the {{label}} facet",
     "fr": "Appliquer les dates de début et de fin manuelles pour la facette {{label}}"
   },
+  "past-minute": {
+    "en": "Past minute",
+    "fr": "Minute passée"
+  },
+  "past-minute_plural": {
+    "en": "Past {{count}} minutes",
+    "fr": "{{count}} minutes passées"
+  },
   "past-hour": {
     "en": "Past hour",
     "fr": "Heure passée"
@@ -1259,6 +1267,14 @@
   "past-year_plural": {
     "en": "Past {{count}} years",
     "fr": "{{count}} années passées"
+  },
+  "next-minute": {
+    "en": "Next minute",
+    "fr": "Minute prochaine"
+  },
+  "next-minute_plural": {
+    "en": "Next {{count}} minutes",
+    "fr": "{{count}} minutes prochaines"
   },
   "next-hour": {
     "en": "Next hour",
