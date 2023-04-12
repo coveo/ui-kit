@@ -53,13 +53,17 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
     const modalOpenedClass = 'atomic-ipx-modal-opened';
 
     if (isOpen) {
+      //TODO: remove the addition of a class to the body in atomicV3
       document.body.classList.add(modalOpenedClass);
+      this.bindings.interfaceElement.classList.add(modalOpenedClass);
       if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
         this.focusTrap!.active = true;
       }
       return;
     }
+    //TODO: remove the removal of a class to the body in atomicV3
     document.body.classList.remove(modalOpenedClass);
+    this.bindings.interfaceElement.classList.remove(modalOpenedClass);
     if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
       this.focusTrap!.active = false;
     }
