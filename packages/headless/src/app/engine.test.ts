@@ -161,7 +161,7 @@ describe('engine', () => {
     expect(engine.logger.warn).not.toHaveBeenCalled();
   });
 
-  it('should log warnings when the organizationId option does not match what is configured on organizationEndpoints option is set and platformUrl is not set', () => {
+  it('should log warnings when the organizationId option does not match what is configured on organizationEndpoints option.', () => {
     options.configuration = {
       ...options.configuration,
       organizationId: 'a',
