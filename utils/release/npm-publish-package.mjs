@@ -181,6 +181,7 @@ function updateDependency(packageJson, dependency, version) {
     'dependencies',
     'devDependencies',
     'optionalDependencies',
+    'peerDependencies',
   ]) {
     if (packageJson?.[dependencyType]?.[dependency]) {
       packageJson[dependencyType][dependency] = version;
