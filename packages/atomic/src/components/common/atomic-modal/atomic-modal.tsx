@@ -21,7 +21,7 @@ import {once, randomID} from '../../../utils/utils';
 import {AnyBindings} from '../interface/bindings';
 
 /**
- * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
+ * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
  *
  * @part backdrop - The transparent backdrop hiding the content behind the modal.
  * @part container - The modal's outermost container with the outline and background.
@@ -74,14 +74,18 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
 
     if (isOpen) {
       this.wasEverOpened = true;
+      //TODO: remove the addition of a class to the body in atomicV3
       document.body.classList.add(modalOpenedClass);
+      this.bindings.interfaceElement.classList.add(modalOpenedClass);
       await this.waitForAnimationEnded();
       if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
         return;
       }
       this.focusTrap!.active = true;
     } else {
+      //TODO: remove the removal of a class to the body in atomicV3
       document.body.classList.remove(modalOpenedClass);
+      this.bindings.interfaceElement.classList.remove(modalOpenedClass);
       if (isIOS()) {
         await this.waitForAnimationEnded();
       }
@@ -94,7 +98,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
 
   @Listen('keyup', {target: 'body'})
   handleCloseOnEscape(e: KeyboardEvent) {
-    if (e.key.toLowerCase() === 'escape') {
+    if (e.key?.toLowerCase() === 'escape') {
       this.close();
     }
   }

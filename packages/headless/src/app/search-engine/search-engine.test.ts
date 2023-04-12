@@ -1,3 +1,4 @@
+import {getOrganizationEndpoints} from '../../api/platform-client';
 import {enableDebug} from '../../features/debug/debug-actions';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
 import {
@@ -49,6 +50,72 @@ describe('searchEngine', () => {
       expect(engine.state.debug).toBe(false);
       engine.dispatch(enableDebug());
       expect(engine.state.debug).toBe(true);
+    });
+
+    describe('organizationEndpoints', () => {
+      it('configures proper url when #getOrganizationEndpoints is used', () => {
+        const engine = buildSearchEngine({
+          configuration: {
+            accessToken: 'foo',
+            organizationId: 'bar',
+            organizationEndpoints: getOrganizationEndpoints('bar'),
+          },
+        });
+
+        expect(engine.state.configuration.platformUrl).toBe(
+          'https://bar.org.coveo.com'
+        );
+        expect(engine.state.configuration.search.apiBaseUrl).toBe(
+          'https://bar.org.coveo.com/rest/search/v2'
+        );
+        expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
+          'https://bar.analytics.org.coveo.com'
+        );
+      });
+
+      it('configures proper url when analytics and search are not on the same base platform URL', () => {
+        const engine = buildSearchEngine({
+          configuration: {
+            accessToken: 'foo',
+            organizationId: 'bar',
+            organizationEndpoints: {
+              search: 'https://my-custom-proxy.com',
+              analytics: 'https://myorg.analytics.org.coveo.com',
+              platform: 'https://myorg.org.coveo.com',
+            },
+          },
+        });
+
+        expect(engine.state.configuration.platformUrl).toBe(
+          'https://myorg.org.coveo.com'
+        );
+        expect(engine.state.configuration.search.apiBaseUrl).toBe(
+          'https://my-custom-proxy.com'
+        );
+        expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
+          'https://myorg.analytics.org.coveo.com'
+        );
+      });
+
+      it('configures proper url when deprecated #platformUrl is used', () => {
+        const engine = buildSearchEngine({
+          configuration: {
+            accessToken: 'foo',
+            organizationId: 'bar',
+            platformUrl: 'https://platform-eu.cloud.coveo.com',
+          },
+        });
+
+        expect(engine.state.configuration.platformUrl).toBe(
+          'https://platform-eu.cloud.coveo.com'
+        );
+        expect(engine.state.configuration.search.apiBaseUrl).toBe(
+          'https://platform-eu.cloud.coveo.com/rest/search/v2'
+        );
+        expect(engine.state.configuration.analytics.apiBaseUrl).toBe(
+          'https://analytics-eu.cloud.coveo.com/rest/ua'
+        );
+      });
     });
 
     describe('when passing a search configuration', () => {
