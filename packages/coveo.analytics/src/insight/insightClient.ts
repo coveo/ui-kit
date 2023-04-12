@@ -8,6 +8,10 @@ import {
     FacetStateMetadata,
     PartialDocumentInformation,
     SearchPageEvents,
+    SmartSnippetDocumentIdentifier,
+    SmartSnippetFeedbackReason,
+    SmartSnippetLinkMeta,
+    SmartSnippetSuggestionMeta,
 } from '../searchPage/searchPageEvents';
 import {
     ExpandToFullUIMetadata,
@@ -312,6 +316,136 @@ export class CoveoInsightClient {
         return this.logCustomEvent(
             SearchPageEvents.caseDetach,
             metadata ? {...generateMetadataToSend(metadata, false), resultUriHash} : {resultUriHash}
+        );
+    }
+
+    public logLikeSmartSnippet(metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.likeSmartSnippet,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logDislikeSmartSnippet(metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.dislikeSmartSnippet,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logExpandSmartSnippet(metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.expandSmartSnippet,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logCollapseSmartSnippet(metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.collapseSmartSnippet,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logOpenSmartSnippetFeedbackModal(metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.openSmartSnippetFeedbackModal,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logCloseSmartSnippetFeedbackModal(metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.closeSmartSnippetFeedbackModal,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logSmartSnippetFeedbackReason(
+        reason: SmartSnippetFeedbackReason,
+        details?: string,
+        metadata?: CaseMetadata
+    ) {
+        return this.logCustomEvent(
+            SearchPageEvents.sendSmartSnippetReason,
+            metadata ? {...generateMetadataToSend(metadata, false), reason, details} : {reason, details}
+        );
+    }
+
+    public logExpandSmartSnippetSuggestion(
+        snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier,
+        metadata?: CaseMetadata
+    ) {
+        const snippetMetadata = 'documentId' in snippet ? snippet : {documentId: snippet};
+        return this.logCustomEvent(
+            SearchPageEvents.expandSmartSnippetSuggestion,
+            metadata ? {...generateMetadataToSend(metadata, false), ...snippetMetadata} : snippetMetadata
+        );
+    }
+
+    public logCollapseSmartSnippetSuggestion(
+        snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier,
+        metadata?: CaseMetadata
+    ) {
+        const snippetMetadata = 'documentId' in snippet ? snippet : {documentId: snippet};
+        return this.logCustomEvent(
+            SearchPageEvents.collapseSmartSnippetSuggestion,
+            metadata ? {...generateMetadataToSend(metadata, false), ...snippetMetadata} : snippetMetadata
+        );
+    }
+
+    public logOpenSmartSnippetSource(
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        metadata?: CaseMetadata
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.openSmartSnippetSource,
+            info,
+            identifier,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logOpenSmartSnippetSuggestionSource(
+        info: PartialDocumentInformation,
+        snippet: SmartSnippetSuggestionMeta,
+        metadata?: CaseMetadata
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.openSmartSnippetSuggestionSource,
+            info,
+            {contentIDKey: snippet.documentId.contentIdKey, contentIDValue: snippet.documentId.contentIdValue},
+            metadata ? {...generateMetadataToSend(metadata, false), ...snippet} : snippet
+        );
+    }
+
+    public logOpenSmartSnippetInlineLink(
+        info: PartialDocumentInformation,
+        identifierAndLink: DocumentIdentifier & SmartSnippetLinkMeta,
+        metadata?: CaseMetadata
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.openSmartSnippetInlineLink,
+            info,
+            {contentIDKey: identifierAndLink.contentIDKey, contentIDValue: identifierAndLink.contentIDValue},
+            metadata ? {...generateMetadataToSend(metadata, false), ...identifierAndLink} : identifierAndLink
+        );
+    }
+
+    public logOpenSmartSnippetSuggestionInlineLink(
+        info: PartialDocumentInformation,
+        snippetAndLink: SmartSnippetSuggestionMeta & SmartSnippetLinkMeta,
+        metadata?: CaseMetadata
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.openSmartSnippetSuggestionInlineLink,
+            info,
+            {
+                contentIDKey: snippetAndLink.documentId.contentIdKey,
+                contentIDValue: snippetAndLink.documentId.contentIdValue,
+            },
+            metadata ? {...generateMetadataToSend(metadata, false), ...snippetAndLink} : snippetAndLink
         );
     }
 
