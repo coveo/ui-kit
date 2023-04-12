@@ -10,3 +10,7 @@ reports/*.xml
 .dccache
 sarifs
 **.cy.ts.mp4
+
+# CI Release
+topology.json
+.git-message

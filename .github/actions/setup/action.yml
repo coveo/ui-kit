@@ -29,6 +29,7 @@ runs:
           packages/quantic/force-app/main/default/staticresources/coveoheadless
           packages/quantic/force-app/main/default/staticresources/coveobueno
           utils/atomic-storybook/storybook-static
+          utils/verdaccio-starter/dist
           !node_modules
           !**/node_modules
         key: ${{ github.sha }}
