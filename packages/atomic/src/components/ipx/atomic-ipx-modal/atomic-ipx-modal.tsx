@@ -44,25 +44,19 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
 
   @State() private hasFooterSlotElements = true;
 
-  private focusTrap?: HTMLAtomicFocusTrapElement;
-  private currentWatchToggleOpenExecution = 0;
-
   @Watch('isOpen')
   async watchToggleOpen(isOpen: boolean) {
-    const watchToggleOpenExecution = ++this.currentWatchToggleOpenExecution;
     const modalOpenedClass = 'atomic-ipx-modal-opened';
 
     if (isOpen) {
+      //TODO: remove the addition of a class to the body in atomicV3
       document.body.classList.add(modalOpenedClass);
-      if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
-        this.focusTrap!.active = true;
-      }
+      this.bindings.interfaceElement.classList.add(modalOpenedClass);
       return;
     }
+    //TODO: remove the removal of a class to the body in atomicV3
     document.body.classList.remove(modalOpenedClass);
-    if (watchToggleOpenExecution === this.currentWatchToggleOpenExecution) {
-      this.focusTrap!.active = false;
-    }
+    this.bindings.interfaceElement.classList.remove(modalOpenedClass);
   }
 
   private getClasses() {
@@ -110,16 +104,7 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
     return (
       <Host class={this.getClasses().join(' ')} part="atomic-ipx-modal">
         <div part="backdrop">
-          <atomic-focus-trap
-            role="dialog"
-            aria-modal={this.isOpen.toString()}
-            source={this.source}
-            container={this.container ?? this.host}
-            ref={(ref) => (this.focusTrap = ref)}
-            scope={this.host}
-          >
-            <Body />
-          </atomic-focus-trap>
+          <Body />
         </div>
       </Host>
     );
