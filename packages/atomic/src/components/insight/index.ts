@@ -76,4 +76,6 @@ export {
   buildInteractiveResult as buildInsightInteractiveResult,
   InteractiveResult as InsightInteractiveResult,
   loadQuerySetActions as loadInsightQuerySetActions,
+  getOrganizationEndpoints as getOrganizationEndpointsInsight,
+  PlatformEnvironment as PlatformEnvironmentInsight,
 } from '@coveo/headless/insight';

@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.23.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.2...@coveo/atomic@2.23.3) (2023-04-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.23.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.1...@coveo/atomic@2.23.2) (2023-04-12)
+
+### Bug Fixes
+
+- **atomic:** remove focus trap props in IPX modal ([#2822](https://github.com/coveo/ui-kit/issues/2822)) ([4271032](https://github.com/coveo/ui-kit/commit/4271032d22b366505dc4e38ce35af4faaae2c77c))
+
+## [2.23.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.0...@coveo/atomic@2.23.1) (2023-04-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
 # [2.23.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.22.1...@coveo/atomic@2.23.0) (2023-04-11)
 
 ### Features
