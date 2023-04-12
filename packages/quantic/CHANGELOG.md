@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.20.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.20.1...@coveo/quantic@2.20.2) (2023-04-12)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [2.20.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.20.0...@coveo/quantic@2.20.1) (2023-04-11)
+
+### Bug Fixes
+
+- **quantic:** missing french translations of the labels used in the quantic recent queries ([#2801](https://github.com/coveo/ui-kit/issues/2801)) ([71c783e](https://github.com/coveo/ui-kit/commit/71c783e9d989573f40959ff0aeb93b5c5afdab5c))
+
 # [2.20.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.19.0...@coveo/quantic@2.20.0) (2023-04-06)
 
 ### Features

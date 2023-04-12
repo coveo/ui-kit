@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "stencil build --dev --watch --serve --port 3666 --no-open",
     "build": "nx build",
-    "e2e:watch": "cypress open"
+    "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
     "@coveo/atomic": "^2.0.0",
