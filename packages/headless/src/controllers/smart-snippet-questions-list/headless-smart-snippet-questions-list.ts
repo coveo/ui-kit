@@ -18,6 +18,7 @@ export type {
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
   SmartSnippetQuestionsList,
+  SmartSnippetQuestionsListCore,
 } from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
 
 /**

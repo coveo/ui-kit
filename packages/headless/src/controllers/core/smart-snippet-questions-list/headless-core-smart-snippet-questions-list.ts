@@ -19,6 +19,11 @@ import {
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 
+export interface InlineLink {
+  linkText: string;
+  linkURL: string;
+}
+
 export interface SmartSnippetQuestionsListOptions {
   /**
    * The amount of time in milliseconds to wait before selecting the source after calling `beginDelayedSelect`.
@@ -36,7 +41,7 @@ export interface SmartSnippetQuestionsListProps {
 }
 
 /**
- * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
+ * The `SmartSnippetQuestionsListCore` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
  */
 export interface SmartSnippetQuestionsListCore extends Controller {
   /**
@@ -55,11 +60,6 @@ export interface SmartSnippetQuestionsListCore extends Controller {
    * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
    */
   collapse(identifier: string): void;
-}
-
-export interface InlineLink {
-  linkText: string;
-  linkURL: string;
 }
 
 /**
@@ -171,11 +171,11 @@ export interface SmartSnippetRelatedQuestion {
 }
 
 /**
- * Creates a `SmartSnippetQuestionsList` controller instance.
+ * Creates a `SmartSnippetQuestionsListCore` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `SmartSnippetQuestionsList` properties.
- * @returns A `SmartSnippetQuestionsList` controller instance.
+ * @returns A `SmartSnippetQuestionsListCore` controller instance.
  * */
 export function buildCoreSmartSnippetQuestionsList(
   engine: CoreEngine
