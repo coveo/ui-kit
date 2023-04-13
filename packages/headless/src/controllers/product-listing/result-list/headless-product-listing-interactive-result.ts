@@ -1,6 +1,6 @@
 import {Result} from '../../../api/search/search/result';
+import {logDocumentOpen} from '../../../features/product-listing/product-listing-analytics';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {logDocumentOpen} from '../../../features/result/result-analytics-actions';
 import {ProductListingEngine} from '../../../product-listing.index';
 import {
   buildInteractiveResultCore,
