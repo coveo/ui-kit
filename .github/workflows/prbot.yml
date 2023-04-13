@@ -199,7 +199,6 @@ jobs:
             exit 1
           fi
   test-prerelease: # TODO: Remove before merging PR.
-    timeout-minutes: 40
     name: Test Pre-release
     needs:
       - build
@@ -210,20 +209,21 @@ jobs:
           # pulls all commits (needed for computing the next version)
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - name: Release
+      - name: Bump & publish
         run: |
           npm run nx:graph
           npm run release:install-npm-proxy
           npm run release:phase1
           cat .git-message
-          npm run build
-          npm i
-          npm run test
         env:
           DEBUG: '*'
           IS_PRERELEASE: 'true'
+      - name: "Verify release build"
+        run: |
+          npm i
+          npm run build
+          npm run test
   test-release: # TODO: Remove before merging PR.
-    timeout-minutes: 40
     name: Test Release
     needs:
       - build
@@ -234,17 +234,19 @@ jobs:
           # pulls all commits (needed for computing the next version)
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - name: Release
+      - name: Bump & publish
         run: |
           npm run nx:graph
           npm run release:install-npm-proxy
           npm run release:phase1
           cat .git-message
-          npm run build
-          npm i
-          npm run test
         env:
           DEBUG: '*'
           IS_PRERELEASE: 'false'
+      - name: "Verify release build"
+        run: |
+          npm i
+          npm run build
+          npm run test
 
 
