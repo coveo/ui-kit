@@ -674,7 +674,7 @@ export namespace Components {
         /**
           * The close icon of the button.
          */
-        "closeIcon": string;
+        "closeIcon"?: string;
         /**
           * Whether the IPX modal is open.
          */
@@ -686,7 +686,7 @@ export namespace Components {
         /**
           * The open icon of the button.
          */
-        "openIcon": string;
+        "openIcon"?: string;
     }
     interface AtomicIpxEmbedded {
         /**
