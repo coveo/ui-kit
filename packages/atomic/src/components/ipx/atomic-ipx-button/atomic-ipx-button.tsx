@@ -32,12 +32,12 @@ export class AtomicIPXButton implements InitializableComponent {
   /**
    * The close icon of the button.
    */
-  @Prop({reflect: true}) public closeIcon = CloseIcon;
+  @Prop({reflect: true}) public closeIcon?: string;
 
   /**
    * The open icon of the button.
    */
-  @Prop({reflect: true}) public openIcon = SearchIcon;
+  @Prop({reflect: true}) public openIcon?: string;
 
   /**
    * Whether the IPX modal is open.
@@ -61,13 +61,13 @@ export class AtomicIPXButton implements InitializableComponent {
           <img
             part="ipx-close-icon"
             src={`data:image/svg+xml;base64,${btoa(
-              this.getIcon(this.closeIcon)
+              this.closeIcon || this.getDefaultIcon(CloseIcon)
             )}`}
           />
           <img
             part="ipx-open-icon"
             src={`data:image/svg+xml;base64,${btoa(
-              this.getIcon(this.openIcon)
+              this.openIcon || this.getDefaultIcon(SearchIcon)
             )}`}
           />
         </span>
@@ -128,7 +128,7 @@ export class AtomicIPXButton implements InitializableComponent {
     this.ipxModal.setAttribute('is-open', 'false');
   }
 
-  private getIcon(icon: string) {
+  private getDefaultIcon(icon: string) {
     const initialDiv = document.createElement('div')!;
     initialDiv.innerHTML = icon;
 
