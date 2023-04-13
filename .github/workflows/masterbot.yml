@@ -194,9 +194,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: prerelease
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+      - uses: actions/checkout@v3
         with:
-          # pulls all commits (needed for computing the next version)
           fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Release
@@ -208,3 +207,16 @@ jobs:
           # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           DEBUG: '*'
           IS_PRERELEASE: 'true'
+      - name: Download published packages
+        shell: bash
+        run: |
+          mkdir downloaded-packages
+          while read package; do
+            echo "Downloading $package"
+            npm pack $package --pack-destination=downloaded-packages
+          done < .git-message
+      - name: Upload packages as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: packages
+          path: downloaded-packages
