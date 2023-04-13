@@ -119,6 +119,42 @@ describe('EC plugin', () => {
             expect(secondResult).toEqual({...defaultResult});
         });
 
+        it('should convert position to number if possible', () => {
+            // @ts-ignore
+            ec.addProduct({name: 'product', position: '50'});
+
+            const result1 = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result1).toEqual({...defaultResult, pr1nm: 'product', pr1ps: 50});
+        });
+
+        it('should keep original value if position is not a number', () => {
+            // @ts-ignore
+            ec.addProduct({name: 'product', position: 'abc'});
+
+            const result2 = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result2).toEqual({...defaultResult, pr1nm: 'product', pr1ps: 'abc'});
+        });
+
+        it('should convert quantity to number if possible', () => {
+            // @ts-ignore
+            ec.addProduct({name: 'product', quantity: '50'});
+
+            const result1 = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result1).toEqual({...defaultResult, pr1nm: 'product', pr1qt: 50});
+        });
+
+        it('should keep original value if quantity is not a number', () => {
+            // @ts-ignore
+            ec.addProduct({name: 'product', quantity: 'abc'});
+
+            const result2 = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result2).toEqual({...defaultResult, pr1nm: 'product', pr1qt: 'abc'});
+        });
+
         describe('when the position is invalid', () => {
             it('should warn when executing hook on added product', () => {
                 jest.spyOn(console, 'warn').mockImplementation();
