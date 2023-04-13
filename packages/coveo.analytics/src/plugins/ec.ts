@@ -160,9 +160,21 @@ export class ECPlugin extends BasePlugin {
             .reduce((newPayload, product, index) => {
                 return {
                     ...newPayload,
-                    ...convertProductToMeasurementProtocol(product, index),
+                    ...convertProductToMeasurementProtocol(this.convertNumberTypes(product), index),
                 };
             }, {});
+    }
+
+    private convertNumberTypes(product: Product) {
+        let updatedProduct = {...product};
+        if (Object.keys(product).indexOf('quantity') != -1 && typeof product.quantity != 'number') {
+            updatedProduct = {...updatedProduct, quantity: parseInt(String(product.quantity)) || product.quantity};
+        }
+        if (Object.keys(product).indexOf('position') != -1 && typeof product.position != 'number') {
+            updatedProduct = {...updatedProduct, position: parseInt(String(product.position)) || product.position};
+        }
+
+        return updatedProduct;
     }
 
     private getImpressionPayload() {
