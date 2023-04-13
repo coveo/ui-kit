@@ -5,7 +5,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
 import {Button} from '../../common/button';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
@@ -19,7 +18,6 @@ import {Bindings} from '../../search/atomic-search-interface/atomic-search-inter
 })
 export class AtomicIPXTab implements InitializableComponent {
   private tab!: Tab;
-  private tabId = randomID('ipx-tab');
 
   @InitializeBindings() public bindings!: Bindings;
 
@@ -47,7 +45,7 @@ export class AtomicIPXTab implements InitializableComponent {
 
   public initialize() {
     this.tab = buildTab(this.bindings.engine, {
-      options: {expression: this.expression, id: this.tabId},
+      options: {expression: this.expression, id: this.label},
       initialState: {isActive: this.active},
     });
   }
