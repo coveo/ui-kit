@@ -9,7 +9,7 @@
 - [Auth](packages/auth): Functions to help authenticate with the Coveo platform.
 - [Headless React Samples](packages/samples/headless-react): Various code samples using Headless inside a React application.
 
-## Installation
+## Install
 
 To install all dependencies and link local packages, run:
 
@@ -23,29 +23,71 @@ To install a dependency in a specific package, specify the workspace:
 npm i lodash -w @coveo/headless-react-samples
 ```
 
+## Build
+
 To build all projects for production, run:
 
 ```sh
 npm run build
 ```
 
-To build a single project for production (for instance, the `@coveo/atomic` package), run:
+To build a single project for production (for instance, the `atomic` package), run:
 
 ```sh
-npm run build -w @coveo/atomic
+npx nx run atomic:build
+```
+
+## Development mode
+
+To start Atomic & Headless simultaneously in development (recommended), run:
+
+```sh
+npx nx run atomic:dev
 ```
 
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npm dev -w @coveo/quantic
+npx nx run quantic:dev
 ```
 
-To start Atomic & Headless simultaneously in development (recommended), run:
+To run a specific task in a package separate it with colon e.g. to run `test:watch` inside quantic
+```sh
+npx nx run quantic:test:watch
+```
+
+To start story book in development, run:
+```sh
+npx nx run atomic-storybook:dev
+```
+
+## Test
+
+To run the tests for a specific package (recommended) e.g. `atomic` package
+```sh
+npx nx run atomic:test
+```
+
+For e2e tests
+```sh
+npx nx run atomic:dev
+# In a separate terminal
+npx nx run atomic:e2e
+```
+
+To run e2e tests for specific files/components using the Cypress GUI
+```sh
+npx nx run atomic:e2e:watch
+```
+
+## Lint
 
 ```sh
-npm run dev:atomic
+npm run lint:check
+npm run lint:fix
 ```
+
+## Misc
 
 The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `npm rebuild` command.
 
