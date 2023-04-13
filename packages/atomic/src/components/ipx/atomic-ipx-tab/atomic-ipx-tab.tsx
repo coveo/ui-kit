@@ -50,6 +50,9 @@ export class AtomicIPXTab implements InitializableComponent {
 
   private unsubscribe: Unsubscribe = () => {};
 
+  /**
+   * Activates the tab.
+   */
   @Method()
   select() {
     this.tab.select();

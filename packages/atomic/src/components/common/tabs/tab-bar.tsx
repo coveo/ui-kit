@@ -64,7 +64,7 @@ export class TabBar {
       const isBeforeSelectedTab = selectedTabRelativeRightPosition
         ? selectedTabRelativeRightPosition >
           element.getBoundingClientRect().right
-        : null;
+        : false;
 
       const minimumWidthNeeded = isBeforeSelectedTab
         ? this.popoverWidth + this.getElementWidth(this.selectedTab)

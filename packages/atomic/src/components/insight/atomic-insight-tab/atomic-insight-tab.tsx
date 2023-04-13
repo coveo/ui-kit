@@ -53,6 +53,9 @@ export class AtomicInsightTab
 
   private unsubscribe: Unsubscribe = () => {};
 
+  /**
+   * Activates the tab.
+   */
   @Method()
   select() {
     this.tab.select();
