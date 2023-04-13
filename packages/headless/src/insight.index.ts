@@ -310,3 +310,6 @@ export type {
 } from './api/search/date/relative-date';
 
 export {deserializeRelativeDate} from './api/search/date/relative-date';
+
+export {getOrganizationEndpoints} from './api/platform-client';
+export type {PlatformEnvironment} from './utils/url-utils';

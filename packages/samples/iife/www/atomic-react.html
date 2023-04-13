@@ -23,7 +23,7 @@
       'use strict';
 
       const {useMemo} = React;
-      const {buildSearchEngine} = CoveoHeadless;
+      const {buildSearchEngine, getOrganizationEndpoints} = CoveoHeadless;
       const {
         AtomicBreadbox,
         AtomicColorFacet,
@@ -136,6 +136,7 @@
               configuration: {
                 accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
                 organizationId: 'electronicscoveodemocomo0n2fu8v',
+                organizationEndpoints: getOrganizationEndpoints('electronicscoveodemocomo0n2fu8v'),
                 search: {
                   pipeline: 'Search',
                   searchHub: 'MainSearch',

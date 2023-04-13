@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "2.22.0",
+  "version": "2.23.3",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -33,7 +33,7 @@
     "test:watch": "stencil test --spec --watchAll",
     "e2e": "cypress run --browser chrome",
     "e2e:firefox": "cypress run --browser firefox",
-    "e2e:watch": "cypress open",
+    "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e:hsp": "cypress run --config-file cypress-hsp.config.ts --browser chrome",
     "e2e:hsp:firefox": "cypress run --config-file cypress-hsp.config.ts --browser firefox",
     "e2e:hsp:watch": "cypress open --config-file cypress-hsp.config.ts",
@@ -58,14 +58,14 @@
     "dompurify": "2.3.10",
     "escape-html": "1.0.3",
     "focus-visible": "5.2.0",
-    "i18next": "20.6.1",
-    "i18next-http-backend": "1.4.1",
+    "i18next": "22.4.13",
+    "i18next-http-backend": "2.2.0",
     "stencil-inline-svg": "1.1.0",
     "ts-debounce": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.18.10",
-    "@coveo/headless": "2.11.0",
+    "@coveo/headless": "2.11.2",
     "@fullhuman/postcss-purgecss": "4.1.3",
     "@rollup/plugin-alias": "3.1.9",
     "@rollup/plugin-replace": "2.4.2",
