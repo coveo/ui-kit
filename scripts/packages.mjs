@@ -46,6 +46,9 @@ export const packageDirsNpmTag = /** @type {const} */ ([
  * @typedef {(typeof packageDirsNpmTag)[number]} PackageDir
  */
 
+/** @type {PackageDir[]} */
+export const packageDirsSnyk = ['headless', 'atomic'];
+
 /**
  * @typedef PackageDefinition
  * @property {string} name
