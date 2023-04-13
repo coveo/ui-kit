@@ -1,4 +1,5 @@
 import {ProductListingSuccessResponse} from '../api/commerce/product-listings/product-listing-request';
+import {logInterfaceLoad} from '../features/analytics/analytics-actions';
 import {FetchProductListingThunkReturn} from '../features/product-listing/product-listing-actions';
 
 export function buildFetchProductListingResponse(
@@ -18,5 +19,6 @@ export function buildFetchProductListingResponse(
       responseId: '',
       ...(response || {}),
     },
+    analyticsAction: logInterfaceLoad(),
   };
 }
