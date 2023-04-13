@@ -619,6 +619,9 @@ export namespace Components {
           * The label that will be shown to the user.
          */
         "label": string;
+        /**
+          * Activates the tab.
+         */
         "select": () => Promise<void>;
     }
     interface AtomicInsightTabs {
@@ -724,6 +727,9 @@ export namespace Components {
           * The label that will be shown to the user.
          */
         "label": string;
+        /**
+          * Activates the tab.
+         */
         "select": () => Promise<void>;
     }
     interface AtomicIpxTabs {
