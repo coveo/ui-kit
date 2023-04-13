@@ -1,20 +1,23 @@
-import {LightningElement, api} from 'lwc';
-import {
-  getHeadlessBundle,
-  getHeadlessEnginePromise,
-} from 'c/quanticHeadlessLoader';
-import {ResultUtils} from 'c/quanticUtils';
+import { getHeadlessBundle, getHeadlessEnginePromise } from 'c/quanticHeadlessLoader';
+import { ResultUtils } from 'c/quanticUtils';
+import { NavigationMixin } from 'lightning/navigation';
+import { LightningElement, api } from 'lwc';
+
+import opensInBrowserTab from '@salesforce/label/c.quantic_OpensInBrowserTab';
+import opensInSalesforceSubTab from '@salesforce/label/c.quantic_OpensInSalesforceSubTab';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
  * The `QuanticResultLink` component creates a clickable link from a result that points to the original item.
+ * If the result is a Salesforce record or a Salesforce Knowledge article it will open the link in a new salesforce console subtab.
+ * Otherwise, it will open the link in the browser tab.
  * @category Result Template
  * @example
  * <c-quantic-result-link engine-id={engineId} result={result} target="_blank"></c-quantic-result-link>
  */
-export default class QuanticResultLink extends LightningElement {
+export default class QuanticResultLink extends NavigationMixin(LightningElement) {
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -47,7 +50,6 @@ export default class QuanticResultLink extends LightningElement {
    * @defaultValue `'search'`
    */
   @api useCase = 'search';
-
   /**
    * A function used to set focus to the link.
    * @api
@@ -65,6 +67,11 @@ export default class QuanticResultLink extends LightningElement {
   engine;
   /** @type {AnyHeadless} */
   headless;
+
+  labels = {
+    opensInSalesforceSubTab,
+    opensInBrowserTab,
+  };
 
   connectedCallback() {
     getHeadlessEnginePromise(this.engineId)
@@ -90,10 +97,64 @@ export default class QuanticResultLink extends LightningElement {
     );
   };
 
+  handleClick(event) {
+    if (this.isSalesforceLink) {
+      event.preventDefault();
+      this.navigateToSalesforceRecord(event);
+    }
+  }
+
+  navigateToSalesforceRecord(event) {
+    event.stopPropagation();
+    const targetPageRef = {
+      type: 'standard__recordPage',
+      attributes: {
+        recordId: this.recordIdAttribute,
+        actionName: 'view',
+      },
+    };
+    this[NavigationMixin.Navigate](targetPageRef);
+  }
+
+  get recordIdAttribute() {
+    // Knowledge article uses the knowledge article version id to navigate.
+    if (this.result?.raw?.sfkbid && this.result?.raw?.sfkavid) {
+      return this.result.raw.sfkavid;
+    }
+    return this.result.raw.sfid;
+  }
+
   /**
-   * Returns the title to display.
+   * Checks if the Result type is Salesforce.
+   */
+  get isSalesforceLink() {
+    return !!this.result?.raw?.sfid;
+  }
+
+  /**
+   * Returns the title of the link to display.
    */
   get displayedTitle() {
     return this.result.title || this.result.clickUri;
+  }
+
+  /**
+   * Returns the target for the link.
+   */
+  get targetTab() {
+    if (this.isSalesforceLink) {
+      return '_blank';
+    }
+    return '_self';
+  }
+
+  /**
+   * Returns the aria label value for the link.
+   */
+  get ariaLabelValue() {
+    if (this.isSalesforceLink) {
+      return this.labels.opensInSalesforceSubTab;
+    }
+    return this.labels.opensInBrowserTab;
   }
 }

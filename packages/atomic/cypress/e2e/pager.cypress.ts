@@ -127,4 +127,47 @@ describe('Pager Test Suites', () => {
       CommonAssertions.assertContainsComponentError(PagerSelectors, true);
     });
   });
+
+  describe('Should expose shadow parts for', () => {
+    before(() => {
+      new TestFixture().with(addPager()).init();
+    });
+
+    const buttonIcons: [string, number][] = [
+      // Button selector, Expected page num after click
+      ['buttonIconNext', 2],
+      ['buttonIconPrevious', 1],
+    ];
+
+    for (const [buttonIconSelector, expectedPageNum] of buttonIcons) {
+      it(`${buttonIconSelector}`, () => {
+        PagerAssertions.assertPagerSelected(`${expectedPageNum}`, false);
+        // @ts-expect-error expression of type 'string' can't be used to index type
+        const selector = PagerSelectors[buttonIconSelector];
+        selector().click();
+        PagerAssertions.assertRenderPager(expectedPageNum);
+      });
+    }
+  });
+
+  describe('Should allow customization of', () => {
+    const iconTypes = ['previous', 'next'];
+    iconTypes.forEach((iconType) => {
+      it(`${iconType} icon`, () => {
+        const iconSelector = `${iconType}-button-icon`;
+        const testCustomIcon =
+          'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
+
+        new TestFixture()
+          .with(addPager({[iconSelector]: testCustomIcon}))
+          .init();
+
+        cy.get('atomic-pager')
+          .shadow()
+          .find(`[part="${iconSelector}"]`)
+          .should('have.attr', 'icon')
+          .should('equal', testCustomIcon);
+      });
+    });
+  });
 });

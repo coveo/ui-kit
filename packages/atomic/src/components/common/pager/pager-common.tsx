@@ -1,5 +1,6 @@
 import {EventEmitter, FunctionalComponent, h} from '@stencil/core';
-import ArrowRight from '../../../images/arrow-right.svg';
+import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
+import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {Button} from '../button';
@@ -27,6 +28,8 @@ interface PagerProps {
     isCurrentPage: (page: number) => boolean;
     state: {};
   };
+  previousButtonIcon?: string;
+  nextButtonIcon?: string;
 }
 
 export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
@@ -42,6 +45,10 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
     focusOnFirstResultAndScrollToTop();
   };
 
+  const nextButtonIcon = props.nextButtonIcon || ArrowRightIcon;
+  const previousButtonIcon = props.previousButtonIcon || ArrowLeftIcon;
+  const defaultIconStyle = 'w-5 align-middle';
+
   const renderPreviousButton = () => {
     return (
       <Button
@@ -56,8 +63,9 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
         <atomic-icon
-          icon={ArrowRight}
-          class="w-5 align-middle rotate-180"
+          icon={previousButtonIcon}
+          part="previous-button-icon"
+          class={defaultIconStyle}
         ></atomic-icon>
       </Button>
     );
@@ -108,7 +116,11 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         disabled={!props.pagerState.hasNextPage}
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
-        <atomic-icon icon={ArrowRight} class="w-5 align-middle"></atomic-icon>
+        <atomic-icon
+          icon={nextButtonIcon}
+          part="next-button-icon"
+          class={defaultIconStyle}
+        ></atomic-icon>
       </Button>
     );
   };
