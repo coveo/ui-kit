@@ -217,11 +217,6 @@ jobs:
         env:
           DEBUG: '*'
           IS_PRERELEASE: 'true'
-      - name: "Verify release build"
-        run: |
-          npm i
-          npm run build
-          npm run test
       - name: Download published packages
         shell: bash
         run: |
@@ -230,11 +225,19 @@ jobs:
             echo "Downloading $package"
             npm pack $package --pack-destination=downloaded-packages
           done < .git-message
-      - name: Upload packages as artifact
+      - name: Upload whole repo
         uses: actions/upload-artifact@v3
         with:
-          name: packages
-          path: downloaded-packages
+          name: repo-prerelease
+          path: |
+            ${{ github.workspace }}
+            !**/node_modules
+            !**/.git
+      - name: "Verify release build"
+        run: |
+          npm i
+          npm run build
+          npm run test
   test-release: # TODO: Remove before merging PR.
     name: Test Release
     needs:
@@ -254,11 +257,6 @@ jobs:
         env:
           DEBUG: '*'
           IS_PRERELEASE: 'false'
-      - name: "Verify release build"
-        run: |
-          npm i
-          npm run build
-          npm run test
       - name: Download published packages
         shell: bash
         run: |
@@ -267,8 +265,16 @@ jobs:
             echo "Downloading $package"
             npm pack $package --pack-destination=downloaded-packages
           done < .git-message
-      - name: Upload packages as artifact
+      - name: Upload whole repo
         uses: actions/upload-artifact@v3
         with:
-          name: packages
-          path: downloaded-packages
+          name: repo-release
+          path: |
+            ${{ github.workspace }}
+            !**/node_modules
+            !**/.git
+      - name: "Verify release build"
+        run: |
+          npm i
+          npm run build
+          npm run test
