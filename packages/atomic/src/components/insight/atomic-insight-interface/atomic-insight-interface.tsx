@@ -16,6 +16,8 @@ import {
   InsightEngineConfiguration,
   buildInsightEngine,
   buildInsightResultsPerPage,
+  getOrganizationEndpointsInsight,
+  PlatformEnvironmentInsight,
 } from '..';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
@@ -137,6 +139,18 @@ export class AtomicInsightInterface
         ])
       );
     }
+  }
+
+  /**
+   * Returns the unique, organization-specific endpoint(s)
+   * @param {string} organizationId
+   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
+   */
+  @Method() public async getOrganizationEndpoints(
+    organizationId: string,
+    env: PlatformEnvironmentInsight = 'prod'
+  ) {
+    return getOrganizationEndpointsInsight(organizationId, env);
   }
 
   /**

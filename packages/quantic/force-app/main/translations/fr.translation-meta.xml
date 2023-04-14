@@ -573,6 +573,14 @@
       <name>quantic_InclusionFilter_zero</name>
     </customLabels>
     <customLabels>
+      <label>Requêtes récentes</label>
+      <name>quantic_RecentQueries</name>
+    </customLabels>
+    <customLabels>
+      <label>Vos requêtes récentes s'afficheront ici.</label>
+      <name>quantic_EmptyRecentQueriesListLabel</name>
+    </customLabels>
+    <customLabels>
       <label>Charger les items liés</label>
       <name>quantic_LoadRelatedItems</name>
     </customLabels>
@@ -583,5 +591,13 @@
     <customLabels>
       <label>Aucun item lié</label>
       <name>quantic_NoRelatedItems</name>
+    </customLabels>
+    <customLabels>
+      <label>Ouvre dans un sous-onglet de la console Salesforce</label>
+      <name>quantic_OpensInSalesforceSubTab</name>
+    </customLabels>
+    <customLabels>
+      <label>Ouvre dans un onglet du navigateur web</label>
+      <name>quantic_OpensInBrowserTab</name>
     </customLabels>
 </Translations>
