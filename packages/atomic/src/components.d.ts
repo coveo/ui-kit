@@ -1454,9 +1454,13 @@ export namespace Components {
          */
         "clearFilters": boolean;
         /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+          * Prevent the user from triggering a search from the component. To be used when you need to disable the search conditionally. For the case when you need to disable the search on no query input refer to {@link disableSearchWhenNoQuery}.
          */
         "disableSearch": boolean;
+        /**
+          * Disable search button when there is no query input.
+         */
+        "disableSearchWhenNoQuery": boolean;
         /**
           * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
          */
@@ -4087,9 +4091,13 @@ declare namespace LocalJSX {
          */
         "clearFilters"?: boolean;
         /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+          * Prevent the user from triggering a search from the component. To be used when you need to disable the search conditionally. For the case when you need to disable the search on no query input refer to {@link disableSearchWhenNoQuery}.
          */
         "disableSearch"?: boolean;
+        /**
+          * Disable search button when there is no query input.
+         */
+        "disableSearchWhenNoQuery"?: boolean;
         /**
           * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
          */
