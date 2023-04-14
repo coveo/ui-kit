@@ -120,19 +120,55 @@ describe('EC plugin', () => {
         });
 
         it('should convert position to number if possible', () => {
-            testValidNumberConversion('position', 'pr1ps');
+            const validValues = ['13', '5.5'];
+            for (const value of validValues) {
+                // @ts-ignore
+                ec.addProduct({name: 'product', position: value});
+
+                const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+                const expected: Record<string, any> = {...defaultResult, pr1nm: 'product', pr1ps: +value};
+
+                expect(result).toEqual(expected);
+            }
         });
 
         it('should keep original value if position is not a number', () => {
-            testInvalidNumberConversion('position', 'pr1ps');
+            const invalidValues = ['1-2-3', '.', '-', '123abc'];
+            for (const value of invalidValues) {
+                // @ts-ignore
+                ec.addProduct({name: 'product', position: value});
+
+                const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+                const expected: Record<string, unknown> = {...defaultResult, pr1nm: 'product', pr1ps: value};
+
+                expect(result).toEqual(expected);
+            }
         });
 
         it('should convert quantity to number if possible', () => {
-            testValidNumberConversion('quantity', 'pr1qt');
+            const validValues = ['13', '0', '.0', '-10', '5.0', '-1.1', '3.124e7'];
+            for (const value of validValues) {
+                // @ts-ignore
+                ec.addProduct({name: 'product', quantity: value});
+
+                const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+                const expected: Record<string, any> = {...defaultResult, pr1nm: 'product', pr1qt: +value};
+
+                expect(result).toEqual(expected);
+            }
         });
 
         it('should keep original value if quantity is not a number', () => {
-            testInvalidNumberConversion('quantity', 'pr1qt');
+            const invalidValues = ['1-2-3', '', '.', '-', '123abc', 'abc123'];
+            for (const value of invalidValues) {
+                // @ts-ignore
+                ec.addProduct({name: 'product', quantity: value});
+
+                const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+                const expected: Record<string, unknown> = {...defaultResult, pr1nm: 'product', pr1qt: value};
+
+                expect(result).toEqual(expected);
+            }
         });
 
         describe('when the position is invalid', () => {
@@ -529,37 +565,5 @@ describe('EC plugin', () => {
         const result = beforeHook(eventType, payload);
         afterHook(eventType, result);
         return result;
-    };
-
-    const testValidNumberConversion = (source: keyof Product, target: string) => {
-        const validValues = ['13', '0', '.0', '-10', '5.0', '-1.1'];
-        for (const value of validValues) {
-            // @ts-ignore
-            ec.addProduct({name: 'product', [source]: value});
-
-            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
-            const expected: Record<string, any> = {...defaultResult, pr1nm: 'product', [target]: +value};
-            if (source === 'position' && expected[target] < 1) {
-                delete expected[target];
-            }
-
-            expect(result).toEqual(expected);
-        }
-    };
-
-    const testInvalidNumberConversion = (source: keyof Product, target: string) => {
-        const invalidValues = ['1-2-3', '', '.', '-', '5.', '123abc'];
-        for (const value of invalidValues) {
-            // @ts-ignore
-            ec.addProduct({name: 'product', [source]: value});
-
-            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
-            const expected: Record<string, unknown> = {...defaultResult, pr1nm: 'product', [target]: value};
-            if (source === 'position' && !expected[target]) {
-                delete expected[target];
-            }
-
-            expect(result).toEqual(expected);
-        }
     };
 });

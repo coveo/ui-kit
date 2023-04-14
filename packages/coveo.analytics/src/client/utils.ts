@@ -13,11 +13,5 @@ export function isObject(o: any): boolean {
  * @returns The input, possibly coerced to a number.
  */
 export function coerceToNumber(input: any): any {
-    if (typeof input === 'string' && /^-?\d*\.?\d+$/.test(input)) {
-        const value = +input;
-        if (!Number.isNaN(value)) {
-            return value;
-        }
-    }
-    return input;
+    return input != '' && !isNaN(input) ? +input : input;
 }
