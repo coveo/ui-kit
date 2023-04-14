@@ -217,25 +217,23 @@ jobs:
         env:
           DEBUG: '*'
           IS_PRERELEASE: 'true'
-      - name: Download published packages
-        shell: bash
-        run: |
-          mkdir downloaded-packages
-          while read package; do
-            echo "Downloading $package"
-            npm pack $package --pack-destination=downloaded-packages
-          done < .git-message
-      - name: Upload whole repo
+      - name: Upload lockfiles
         uses: actions/upload-artifact@v3
         with:
-          name: repo-prerelease
+          name: lockfiles-prerelease-a
           path: |
-            ${{ github.workspace }}
-            !**/node_modules
-            !**/.git
-      - name: "Verify release build"
+            **/package-lock.json
+      - name: "Update package-lock"
         run: |
           npm i
+      - name: Upload lockfiles again
+        uses: actions/upload-artifact@v3
+        with:
+          name: lockfiles-prerelease-b
+          path: |
+            **/package-lock.json
+      - name: "Verify release build"
+        run: |
           npm run build
           npm run test
   test-release: # TODO: Remove before merging PR.
@@ -257,24 +255,22 @@ jobs:
         env:
           DEBUG: '*'
           IS_PRERELEASE: 'false'
-      - name: Download published packages
-        shell: bash
-        run: |
-          mkdir downloaded-packages
-          while read package; do
-            echo "Downloading $package"
-            npm pack $package --pack-destination=downloaded-packages
-          done < .git-message
-      - name: Upload whole repo
+      - name: Upload lockfiles
         uses: actions/upload-artifact@v3
         with:
-          name: repo-release
+          name: lockfiles-release-a
           path: |
-            ${{ github.workspace }}
-            !**/node_modules
-            !**/.git
-      - name: "Verify release build"
+            **/package-lock.json
+      - name: "Update package-lock"
         run: |
           npm i
+      - name: Upload lockfiles again
+        uses: actions/upload-artifact@v3
+        with:
+          name: lockfiles-release-b
+          path: |
+            **/package-lock.json
+      - name: "Verify release build"
+        run: |
           npm run build
           npm run test
