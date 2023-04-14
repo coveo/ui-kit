@@ -5,6 +5,7 @@ import {
     convertImpressionListToMeasurementProtocol,
 } from '../client/measurementProtocolMapping/commerceMeasurementProtocolMapper';
 import {BasePlugin, BasePluginEventTypes, PluginClass, PluginOptions} from './BasePlugin';
+import {coerceToNumber} from '../client/utils';
 
 export const ECPluginEventTypes = {
     ...BasePluginEventTypes,
@@ -166,14 +167,13 @@ export class ECPlugin extends BasePlugin {
     }
 
     private convertNumberTypes(product: Product) {
-        let updatedProduct = {...product};
-        if (Object.keys(product).indexOf('quantity') != -1 && typeof product.quantity != 'number') {
-            updatedProduct = {...updatedProduct, quantity: parseInt(String(product.quantity)) || product.quantity};
+        let updatedProduct: Product = {...product};
+        if ('quantity' in updatedProduct) {
+            updatedProduct.quantity = coerceToNumber(updatedProduct.quantity);
         }
-        if (Object.keys(product).indexOf('position') != -1 && typeof product.position != 'number') {
-            updatedProduct = {...updatedProduct, position: parseInt(String(product.position)) || product.position};
+        if ('position' in updatedProduct) {
+            updatedProduct.position = coerceToNumber(updatedProduct.position);
         }
-
         return updatedProduct;
     }
 
