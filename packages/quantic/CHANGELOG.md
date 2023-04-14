@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.21.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.20.3...@coveo/quantic@2.21.0) (2023-04-13)
+
+### Features
+
+- **quantic:** Creation of a quanticQuickviewContent component ([#2797](https://github.com/coveo/ui-kit/issues/2797)) ([932e110](https://github.com/coveo/ui-kit/commit/932e110b369516be147f7b37ea978efd9834ecc0))
+- **quantic:** modified quanticResultLink to support salesforceResult in salesforce console Tab ([#2804](https://github.com/coveo/ui-kit/issues/2804)) ([bac4c98](https://github.com/coveo/ui-kit/commit/bac4c9893e4cbb1bfcd978bfbfb9d736cd903340))
+
 ## [2.20.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.20.2...@coveo/quantic@2.20.3) (2023-04-12)
 
 **Note:** Version bump only for package @coveo/quantic
