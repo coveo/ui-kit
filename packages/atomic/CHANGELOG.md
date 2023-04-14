@@ -1,3 +1,12 @@
+## 2.23.5 (2023-04-13)
+
+
+### Bug Fixes
+
+* use tab label as id ([#2828](https://github.com/coveo/cli/issues/2828)) ([a03b6c2](https://github.com/coveo/cli/commits/a03b6c2bae750d377c74ec146ef64b456081351b))
+
+
+
 # Change Log
 
 All notable changes to this project will be documented in this file.
