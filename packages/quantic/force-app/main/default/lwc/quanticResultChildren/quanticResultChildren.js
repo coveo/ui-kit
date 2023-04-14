@@ -150,7 +150,7 @@ export default class QuanticResultChildren extends LightningElement {
   }
 
   /**
-   * 
+   * Returns the children count of a given child results.
    * @param {Array<FoldedResult} children 
    * @returns {number}
    */
