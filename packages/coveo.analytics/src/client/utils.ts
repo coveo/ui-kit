@@ -6,14 +6,14 @@ export function isObject(o: any): boolean {
 }
 
 /**
- * Attempt to coerce strings to number values following the "remove any prefix" logic.
- * Any trailing non-number characters will fail parsing, in which case the input string is returned.
+ * Attempt to coerce strings to number values.
+ * Any non-number characters will fail parsing, in which case the input string is returned.
  *
  * @param input The input to possibly coerce to a number, if it is a string and parses to a number.
  * @returns The input, possibly coerced to a number.
  */
 export function coerceToNumber(input: any): any {
-    if (typeof input === 'string' && input.match(/^-?\d*\.?\d+$/)) {
+    if (typeof input === 'string' && /^-?\d*\.?\d+$/.test(input)) {
         const value = +input;
         if (!Number.isNaN(value)) {
             return value;

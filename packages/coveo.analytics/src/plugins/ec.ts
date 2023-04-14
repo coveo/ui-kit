@@ -166,7 +166,7 @@ export class ECPlugin extends BasePlugin {
             }, {});
     }
 
-    private convertNumberTypes(product: Product) {
+    private convertNumberTypes(product: Product): Product {
         let updatedProduct: Product = {...product};
         if ('quantity' in updatedProduct) {
             updatedProduct.quantity = coerceToNumber(updatedProduct.quantity);
