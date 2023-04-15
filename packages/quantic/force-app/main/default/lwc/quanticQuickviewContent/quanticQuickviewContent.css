@@ -1,0 +1,21 @@
+.quickview__spinner-container {
+  height: 50%;
+}
+
+.quickview__content-iframe {
+  overflow: auto;
+  border: none;
+  height: 90%;
+}
+.iframe-wrapper {
+  height: 100%;
+}
+
+.iframe-wrapper iframe {
+  height: 100%;
+  width: 100%;
+}
+
+.wrapper {
+  height: 100%;
+}

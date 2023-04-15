@@ -134,7 +134,7 @@ describe('c/quanticHeadlessLoader', () => {
 
           setEngineOptions(newOptions, mockEngineConstructor, testId, testElement);
 
-          expect(mockedConsoleWarn).toBeCalledWith(`Attempted to overwrite engine options for engine ID: ${testId}`)
+          expect(mockedConsoleWarn).toHaveBeenCalledWith(`Attempted to overwrite engine options for engine ID: ${testId}`)
         });
       })
     });
@@ -183,7 +183,7 @@ describe('c/quanticHeadlessLoader', () => {
 
           registerComponentForInit(testElement, testId);
 
-          expect(mockedPush).not.toBeCalled();
+          expect(mockedPush).not.toHaveBeenCalled();
         });
       });
     });
@@ -192,7 +192,7 @@ describe('c/quanticHeadlessLoader', () => {
   describe('setComponentInitialized', () => {
     describe('when coveoHeadless is undefined', () => {
       it('should log an error', () => {
-        expect(() => setComponentInitialized(testElement, testId)).toThrowError('Fatal Error: Component was not registered before initialization');
+        expect(() => setComponentInitialized(testElement, testId)).toThrow('Fatal Error: Component was not registered before initialization');
       });
     });
 
@@ -229,7 +229,7 @@ describe('c/quanticHeadlessLoader', () => {
 
           jest.runAllTimers();
           const engine = await window.coveoHeadless[testId].engine;
-          expect(engine.executeFirstSearch).not.toBeCalled();
+          expect(engine.executeFirstSearch).not.toHaveBeenCalled();
         });
       });
 
@@ -262,7 +262,7 @@ describe('c/quanticHeadlessLoader', () => {
             assertComponentIsSetInitialized(testElement, testId);
             jest.runAllTimers();
             await window.coveoHeadless.engine;
-            expect(callbackMock).toBeCalled();
+            expect(callbackMock).toHaveBeenCalled();
           });
         });
       });
@@ -284,7 +284,7 @@ describe('c/quanticHeadlessLoader', () => {
 
       it('should init the engine and return a promise', async () => {
         const engine = await getHeadlessEnginePromise(testId);
-        expect(mockEngineConstructor).toBeCalled();
+        expect(mockEngineConstructor).toHaveBeenCalled();
         expect(engine).toBeTruthy();
       });
     });

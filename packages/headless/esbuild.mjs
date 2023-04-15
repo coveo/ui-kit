@@ -128,11 +128,6 @@ function buildBrowserConfig(options) {
           'library.es.js'
         ),
         'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
-        'web-encoding': resolve(
-          '..',
-          '..',
-          'node_modules/web-encoding/src/lib.js'
-        ),
       }),
     ],
     ...options,
@@ -179,14 +174,6 @@ function buildNodeConfig(options) {
           'coveo.analytics',
           'dist',
           'library.js'
-        ),
-        'web-encoding': resolve(
-          '..',
-          '..',
-          'node_modules',
-          'web-encoding',
-          'src',
-          'lib.cjs'
         ),
       }),
     ],

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.12.0...@coveo/headless@2.12.1) (2023-04-14)
+
+**Note:** Version bump only for package @coveo/headless
+
+# [2.12.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.11.2...@coveo/headless@2.12.0) (2023-04-13)
+
+### Features
+
+- **headless:** create product listing analytics provider ([#2800](https://github.com/coveo/ui-kit/issues/2800)) ([b88b89f](https://github.com/coveo/ui-kit/commit/b88b89f92b44a3c1e52f199ba5ecee218076126e))
+
 ## [2.11.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.11.1...@coveo/headless@2.11.2) (2023-04-12)
 
 ### Bug Fixes
