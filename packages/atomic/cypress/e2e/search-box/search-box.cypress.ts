@@ -451,7 +451,7 @@ describe('Search Box Test Suites', () => {
     CommonAssertions.assertAccessibility(searchBoxComponent);
   });
 
-  describe('with a basic search box', () => {
+  describe('with default search box', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addSearchBox())
@@ -461,6 +461,11 @@ describe('Search Box Test Suites', () => {
       SearchBoxSelectors.inputBox().click();
       SearchBoxSelectors.inputBox().type('test{enter}', {force: true});
       cy.wait(RouteAlias.UA);
+    });
+
+    it('search button is enabled to start with', () => {
+      SearchBoxSelectors.inputBox().should('be.empty');
+      SearchBoxSelectors.submitButton().should('be.enabled');
     });
 
     CommonAssertions.assertConsoleError(false);
@@ -482,6 +487,41 @@ describe('Search Box Test Suites', () => {
     SearchBoxAssertions.assertHasText('test');
     QuerySummaryAssertions.assertHasPlaceholder();
     CommonAssertions.assertConsoleError(false);
+  });
+
+  describe('with disableSearchWhenNoQuery set to true', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addSearchBox({props: {'disable-search-when-no-query': 'true'}}))
+        .with(addQuerySummary())
+        .withoutFirstAutomaticSearch()
+        .init();
+    });
+
+    it('search button is disabled to start with when there is no query', () => {
+      SearchBoxSelectors.inputBox().should('be.empty');
+      SearchBoxSelectors.submitButton().should('be.disabled');
+    });
+
+    it('search button is enabled when a query is input', () => {
+      // TODO(refactor): extract click, type, click into a util func
+      SearchBoxSelectors.inputBox().click();
+      SearchBoxSelectors.inputBox().type('test{enter}', {force: true});
+      SearchBoxAssertions.assertHasText('test');
+      SearchBoxSelectors.submitButton().should('not.be.disabled');
+    });
+
+    it('search button is disabled when query is deleted', () => {
+      SearchBoxSelectors.inputBox().click();
+      SearchBoxSelectors.inputBox().type('a', {force: true});
+      SearchBoxAssertions.assertHasText('a');
+      SearchBoxSelectors.submitButton().should('not.be.disabled');
+
+      SearchBoxSelectors.inputBox().click();
+      SearchBoxSelectors.inputBox().type('{backspace}', {force: true});
+      SearchBoxAssertions.assertHasText('');
+      SearchBoxSelectors.submitButton().should('be.disabled');
+    });
   });
 
   describe('with a facet & clear-filters set to false', () => {
