@@ -24,7 +24,7 @@ import {
   buildTemplateWithoutSections,
 } from '../result-list/result-list-actions';
 import {ResultListSelectors} from '../result-list/result-list-selectors';
-import {addSearchBox} from './search-box-actions';
+import {addSearchBox, typeSearchInput} from './search-box-actions';
 import * as SearchBoxAssertions from './search-box-assertions';
 import {searchBoxComponent, SearchBoxSelectors} from './search-box-selectors';
 
@@ -478,15 +478,14 @@ describe('Search Box Test Suites', () => {
         .with(addQuerySummary())
         .withoutFirstAutomaticSearch()
         .init();
-      SearchBoxSelectors.inputBox().click();
-      SearchBoxSelectors.inputBox().type('test{enter}', {force: true});
-      SearchBoxSelectors.submitButton().click({force: true});
+      typeSearchInput('test');
     });
 
-    SearchBoxAssertions.assertHasSuggestionsCount(0);
-    SearchBoxAssertions.assertHasText('test');
-    QuerySummaryAssertions.assertHasPlaceholder();
-    CommonAssertions.assertConsoleError(false);
+    it('there are no search suggestions or errors', () => {
+      SearchBoxAssertions.assertHasSuggestionsCount(0);
+      QuerySummaryAssertions.assertHasPlaceholder();
+      CommonAssertions.assertConsoleError(false);
+    });
   });
 
   describe('with disableSearchWhenNoQuery set to true', () => {
@@ -504,22 +503,15 @@ describe('Search Box Test Suites', () => {
     });
 
     it('search button is enabled when a query is input', () => {
-      // TODO(refactor): extract click, type, click into a util func
-      SearchBoxSelectors.inputBox().click();
-      SearchBoxSelectors.inputBox().type('test{enter}', {force: true});
-      SearchBoxAssertions.assertHasText('test');
+      typeSearchInput('test');
       SearchBoxSelectors.submitButton().should('not.be.disabled');
     });
 
     it('search button is disabled when query is deleted', () => {
-      SearchBoxSelectors.inputBox().click();
-      SearchBoxSelectors.inputBox().type('a', {force: true});
-      SearchBoxAssertions.assertHasText('a');
+      typeSearchInput('a');
       SearchBoxSelectors.submitButton().should('not.be.disabled');
 
-      SearchBoxSelectors.inputBox().click();
-      SearchBoxSelectors.inputBox().type('{backspace}', {force: true});
-      SearchBoxAssertions.assertHasText('');
+      typeSearchInput('{backspace}', '');
       SearchBoxSelectors.submitButton().should('be.disabled');
     });
   });
