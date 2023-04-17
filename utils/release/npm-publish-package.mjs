@@ -15,6 +15,7 @@ import {
 import retry from 'async-retry';
 // @ts-ignore no dts is ok
 import angularChangelogConvention from 'conventional-changelog-angular';
+import {execa} from 'execa';
 import {spawnSync} from 'node:child_process';
 import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
 import {dirname, resolve, join} from 'node:path';
@@ -82,9 +83,10 @@ await (async () => {
       : nextGoldVersion;
 
   await npmBumpVersion(newVersion, PATH, {
-    workspaceUpdateStrategy: 'UpdateExact',
+    workspaceUpdateStrategy: 'NoUpdate',
   });
   await updateWorkspaceDependent(newVersion);
+  await execa('npm', ['update', packageJson.name], {cwd: rootFolder});
   if (privatePackage) {
     return;
   }
