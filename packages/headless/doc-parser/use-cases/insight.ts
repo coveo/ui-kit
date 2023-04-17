@@ -108,6 +108,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadCaseContextActions',
   },
+  {
+    initializer: 'loadGenericAnalyticsActions',
+  },
 ];
 
 const engine: EngineConfiguration = {
