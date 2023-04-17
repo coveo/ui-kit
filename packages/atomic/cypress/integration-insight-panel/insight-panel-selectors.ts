@@ -29,4 +29,10 @@ export const InsightPanelsSelectors = {
   historyToggle: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-history-toggle'),
   tabs: () => InsightPanelsSelectors.interface().find('atomic-insight-tabs'),
+  tabPopoverButton: () =>
+    InsightPanelsSelectors.tabs()
+      .find('tab-bar')
+      .shadow()
+      .find('[part="popover-button"]'),
+  tabBar: () => InsightPanelsSelectors.tabs().find('tab-bar').shadow(),
 };
