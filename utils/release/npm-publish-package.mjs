@@ -86,7 +86,6 @@ await (async () => {
     workspaceUpdateStrategy: 'NoUpdate',
   });
   await updateWorkspaceDependent(newVersion);
-  await execa('npm', ['update', packageJson.name], {cwd: rootFolder});
   if (privatePackage) {
     return;
   }
@@ -106,6 +105,9 @@ await (async () => {
   }
   const tagToPublish = isPrerelease ? 'alpha' : 'latest';
   await npmPublish('.', {tag: tagToPublish});
+  await execa('npm', ['update', packageJson.name, `tag=${tagToPublish}`], {
+    cwd: rootFolder,
+  });
 
   await retry(
     async () => {
