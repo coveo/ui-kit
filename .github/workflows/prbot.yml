@@ -226,11 +226,11 @@ jobs:
       - name: Fix lockfile
         shell: bash
         run: |
-          while read package; do
+          tail -r .git-message | while read package; do
             packageName=`grep -E -o '^@?[a-z\/]+' <<< $package`
             echo "Updating $packageName"
             npm update $packageName --tag=alpha
-          done < .git-message
+          done
       - name: Upload lockfiles again
         uses: actions/upload-artifact@v3
         with:
@@ -269,11 +269,11 @@ jobs:
       - name: Fix lockfile
         shell: bash
         run: |
-          while read package; do
+          tail -r .git-message | while read package; do
             packageName=`grep -E -o '^@?[a-z\/]+' <<< $package`
             echo "Updating $packageName"
             npm update $packageName --tag=alpha
-          done < .git-message
+          done
       - name: Upload lockfiles again
         uses: actions/upload-artifact@v3
         with:
