@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.24.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.4...@coveo/atomic@2.24.0) (2023-04-14)
+
+### Bug Fixes
+
+- use tab label as id ([#2828](https://github.com/coveo/ui-kit/issues/2828)) ([a03b6c2](https://github.com/coveo/ui-kit/commit/a03b6c2bae750d377c74ec146ef64b456081351b))
+
+### Features
+
+- **atomic:** add parts and options to customize pager icons ([#2813](https://github.com/coveo/ui-kit/issues/2813)) ([3ec0391](https://github.com/coveo/ui-kit/commit/3ec039197a526853042889148b1600363b6c12d5))
+
 ## [2.23.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.3...@coveo/atomic@2.23.4) (2023-04-13)
 
 **Note:** Version bump only for package @coveo/atomic

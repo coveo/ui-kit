@@ -163,7 +163,7 @@ jobs:
         with:
           spec: ${{ matrix.spec }}
   e2e-quantic-cleanup:
-    if: always()
+    if: cancelled() || failure() || success()
     needs: e2e-quantic-test
     runs-on: ubuntu-latest
     steps:
@@ -183,7 +183,7 @@ jobs:
     steps:
       - run: echo 'All required jobs have passed'
   is-valid:
-    if: always()
+    if: cancelled() || failure() || success()
     name: 'Confirm build is valid'
     needs:
       - 'required-jobs'

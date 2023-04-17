@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.5.6...@coveo/atomic-angular@2.6.0) (2023-04-14)
+
+### Features
+
+- **atomic:** add parts and options to customize pager icons ([#2813](https://github.com/coveo/ui-kit/issues/2813)) ([3ec0391](https://github.com/coveo/ui-kit/commit/3ec039197a526853042889148b1600363b6c12d5))
+
 ## [2.5.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.5.5...@coveo/atomic-angular@2.5.6) (2023-04-13)
 
 **Note:** Version bump only for package @coveo/atomic-angular

@@ -7,6 +7,8 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
+import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
+import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {
   FocusTarget,
   FocusTargetController,
@@ -24,10 +26,12 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  *
  * @part buttons - The list of the next/previous buttons and page-buttons.
  * @part page-buttons - The list of page buttons.
- * @part previous-button - The previous button.
- * @part next-button - The next button.
  * @part page-button - The page button.
  * @part active-page-button - The active page button.
+ * @part previous-button - The previous button.
+ * @part next-button - The next button.
+ * @part previous-button-icon - Icon of the previous button.
+ * @part next-button-icon - Icon of the next button.
  */
 @Component({
   tag: 'atomic-pager',
@@ -57,6 +61,24 @@ export class AtomicPager implements InitializableComponent {
    */
   @Prop({reflect: true}) numberOfPages = 5;
 
+  /**
+   * The SVG icon to use to display the Previous button.
+   *
+   * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
+   * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
+   * - Use a stringified SVG to display it directly.
+   */
+  @Prop({reflect: true}) previousButtonIcon = ArrowLeftIcon;
+
+  /**
+   * The SVG icon to use to display the Next button.
+   *
+   * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
+   * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
+   * - Use a stringified SVG to display it directly.
+   */
+  @Prop({reflect: true}) nextButtonIcon = ArrowRightIcon;
+
   @FocusTarget()
   private activePage!: FocusTargetController;
 
@@ -74,6 +96,8 @@ export class AtomicPager implements InitializableComponent {
         bindings={this.bindings}
         eventEmitter={this.scrollToTopEvent}
         pager={this.pager}
+        previousButtonIcon={this.previousButtonIcon}
+        nextButtonIcon={this.nextButtonIcon}
         pagerState={this.pagerState}
         searchStatusState={this.searchStatusState}
       />

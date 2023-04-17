@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.21.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.21.0...@coveo/quantic@2.21.1) (2023-04-14)
+
+### Bug Fixes
+
+- **quantic:** condition that detects if more child results are available in collection fixed ([#2818](https://github.com/coveo/ui-kit/issues/2818)) ([7e2d1a4](https://github.com/coveo/ui-kit/commit/7e2d1a47c35212966d31b7e9d74c3a1df37d293d))
+- **quantic:** transforming the numberOfFoldedResults property to a numeric value ([#2816](https://github.com/coveo/ui-kit/issues/2816)) ([982958c](https://github.com/coveo/ui-kit/commit/982958c1bd1b76eef0e3523f566e918b584b1359))
+
 # [2.21.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.20.3...@coveo/quantic@2.21.0) (2023-04-13)
 
 ### Features
