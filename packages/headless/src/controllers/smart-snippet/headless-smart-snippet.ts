@@ -27,11 +27,11 @@ import {pushRecentResult} from '../../features/recent-results/recent-results-act
 import {QuestionAnsweringSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';
-import {buildInteractiveResultCore} from '../core/interactive-result/headless-core-interactive-result';
 import {
-  buildSmartSnippetInteractiveInlineLinks,
   InlineLink,
-} from './headless-smart-snippet-interactive-inline-links';
+  buildInteractiveResultCore,
+} from '../core/interactive-result/headless-core-interactive-result';
+import {buildSmartSnippetInteractiveInlineLinks} from './headless-smart-snippet-interactive-inline-links';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 

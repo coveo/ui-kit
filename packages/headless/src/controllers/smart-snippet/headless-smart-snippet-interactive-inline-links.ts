@@ -9,13 +9,9 @@ import {loadReducerError} from '../../utils/errors';
 import {getObjectHash} from '../../utils/utils';
 import {
   buildInteractiveResultCore,
+  InlineLink,
   InteractiveResultCore,
 } from '../core/interactive-result/headless-core-interactive-result';
-
-export interface InlineLink {
-  linkText: string;
-  linkURL: string;
-}
 
 /**
  * @internal

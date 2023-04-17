@@ -4,6 +4,11 @@ import {configuration} from '../../../app/reducers';
 import {ConfigurationSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 
+export interface InlineLink {
+  linkText: string;
+  linkURL: string;
+}
+
 export interface InteractiveResultCoreOptions {
   /**
    * The amount of time to wait before selecting the result after calling `beginDelayedSelect`.
