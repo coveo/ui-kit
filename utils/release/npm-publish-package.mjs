@@ -105,7 +105,7 @@ await (async () => {
   }
   const tagToPublish = isPrerelease ? 'alpha' : 'latest';
   await npmPublish('.', {tag: tagToPublish});
-  await execa('npm', ['update', packageJson.name, `tag=${tagToPublish}`], {
+  await execa('npm', ['update', packageJson.name, `--tag=${tagToPublish}`], {
     cwd: rootFolder,
   });
 
