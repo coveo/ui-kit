@@ -227,8 +227,9 @@ jobs:
         shell: bash
         run: |
           while read package; do
-            echo "Updating $package"
-            npm update $package --tag=alpha
+            packageName=`grep -E -o '^@?[a-z\/]+' <<< $package`
+            echo "Updating $packageName"
+            npm update $packageName --tag=alpha
           done < .git-message
       - name: Upload lockfiles again
         uses: actions/upload-artifact@v3
@@ -269,8 +270,9 @@ jobs:
         shell: bash
         run: |
           while read package; do
-            echo "Updating $package"
-            npm update $package --tag=alpha
+            packageName=`grep -E -o '^@?[a-z\/]+' <<< $package`
+            echo "Updating $packageName"
+            npm update $packageName --tag=alpha
           done < .git-message
       - name: Upload lockfiles again
         uses: actions/upload-artifact@v3
