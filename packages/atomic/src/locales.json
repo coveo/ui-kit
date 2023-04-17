@@ -1598,5 +1598,9 @@
   "more": {
     "en": "More",
     "fr": "Plus"
+  },
+  "tab-popover": {
+    "en": "Popover menu for additional tabs",
+    "fr": "Menu contextuel pour les onglets supplémentaires"
   }
 }

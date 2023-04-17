@@ -75,7 +75,7 @@ export class TabPopover implements InitializableComponent {
 
   private renderDropdownButton() {
     const label = this.bindings?.i18n.t('more');
-    const ariaLabel = this.bindings?.i18n.t('popover', {label});
+    const ariaLabel = this.bindings?.i18n.t('tab-popover', {label});
     const buttonClasses = ['relative', 'pb-1', 'mt-1', 'mr-6', 'font-semibold'];
 
     return (
