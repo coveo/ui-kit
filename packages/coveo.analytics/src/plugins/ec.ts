@@ -5,6 +5,7 @@ import {
     convertImpressionListToMeasurementProtocol,
 } from '../client/measurementProtocolMapping/commerceMeasurementProtocolMapper';
 import {BasePlugin, BasePluginEventTypes, PluginClass, PluginOptions} from './BasePlugin';
+import {coerceToNumber} from '../client/utils';
 
 export const ECPluginEventTypes = {
     ...BasePluginEventTypes,
@@ -160,9 +161,20 @@ export class ECPlugin extends BasePlugin {
             .reduce((newPayload, product, index) => {
                 return {
                     ...newPayload,
-                    ...convertProductToMeasurementProtocol(product, index),
+                    ...convertProductToMeasurementProtocol(this.convertNumberTypes(product), index),
                 };
             }, {});
+    }
+
+    private convertNumberTypes(product: Product): Product {
+        let updatedProduct: Product = {...product};
+        if ('quantity' in updatedProduct) {
+            updatedProduct.quantity = coerceToNumber(updatedProduct.quantity);
+        }
+        if ('position' in updatedProduct) {
+            updatedProduct.position = coerceToNumber(updatedProduct.position);
+        }
+        return updatedProduct;
     }
 
     private getImpressionPayload() {
