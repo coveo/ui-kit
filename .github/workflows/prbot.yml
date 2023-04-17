@@ -223,9 +223,13 @@ jobs:
           name: lockfiles-prerelease-a
           path: |
             **/package-lock.json
-      - name: "Update package-lock"
+      - name: Fix lockfile
+        shell: bash
         run: |
-          npm i
+          while read package; do
+            echo "Updating $package"
+            npm update $package --tag=alpha
+          done < .git-message
       - name: Upload lockfiles again
         uses: actions/upload-artifact@v3
         with:
@@ -261,9 +265,13 @@ jobs:
           name: lockfiles-release-a
           path: |
             **/package-lock.json
-      - name: "Update package-lock"
+      - name: Fix lockfile
+        shell: bash
         run: |
-          npm i
+          while read package; do
+            echo "Updating $package"
+            npm update $package --tag=alpha
+          done < .git-message
       - name: Upload lockfiles again
         uses: actions/upload-artifact@v3
         with:
