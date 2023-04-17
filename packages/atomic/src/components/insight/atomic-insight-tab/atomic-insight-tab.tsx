@@ -57,7 +57,7 @@ export class AtomicInsightTab
    * Activates the tab.
    */
   @Method()
-  select() {
+  async select() {
     this.tab.select();
   }
 

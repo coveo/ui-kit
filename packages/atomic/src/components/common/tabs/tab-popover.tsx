@@ -69,7 +69,7 @@ export class TabPopover implements InitializableComponent {
   }
 
   @Method()
-  public togglePopover() {
+  public async togglePopover() {
     this.isOpen = !this.isOpen;
   }
 
