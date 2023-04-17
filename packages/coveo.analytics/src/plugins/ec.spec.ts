@@ -159,7 +159,7 @@ describe('EC plugin', () => {
         });
 
         it('should keep original value if quantity is not a number', () => {
-            const invalidValues = ['1-2-3', '', '.', '-', '123abc', 'abc123'];
+            const invalidValues = ['1-2-3', '', '.', '5..', '-', '123abc', 'abc123'];
             for (const value of invalidValues) {
                 // @ts-ignore
                 ec.addProduct({name: 'product', quantity: value});
