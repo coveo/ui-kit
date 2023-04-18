@@ -160,8 +160,8 @@ export class AtomicSearchBox {
   @Prop({reflect: true}) public disableSearch = false;
 
   /**
-   * Minimum length of query input to enable the search button.
-   * E.g. Setting it to 3 would enable search only after 3 characters have been typed in query input.
+   * The minimum query length required to enable the search button.
+   * For example, setting this parameter to `3` would enable search only after 3 characters have been typed in the search box.
    */
   @Prop({reflect: true}) public minInputToEnableSearch = 0;
 
