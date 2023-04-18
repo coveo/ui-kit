@@ -153,17 +153,17 @@ export class AtomicSearchBox {
   @Prop() public suggestionTimeout = 400;
 
   /**
-   * Prevent the user from triggering a search from the component.
-   * To be used when you need to disable the search conditionally.
-   * For the case when you need to disable the search on no query input refer to {@link disableSearchWhenNoQuery}.
+   * Whether to prevent the user from triggering a search from the component.
+   * Perfect for use cases where you need to disable the search conditionally.
+   * For the specific case when you need to disable the search based on length of query input refer to {@link minInputToEnableSearch}.
    */
   @Prop({reflect: true}) public disableSearch = false;
 
   /**
-   * Disable search button when there is no query input.
+   * Minimum length of query input to enable the search button.
+   * E.g. Setting it to 3 would enable search only after 3 characters have been typed in query input.
    */
-  // TODO(major release): Consider combining with `disableSearch` prop and/or defaulting to true.
-  @Prop({reflect: true}) public disableSearchWhenNoQuery = false;
+  @Prop({reflect: true}) public minInputToEnableSearch = 0;
 
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
@@ -208,7 +208,6 @@ export class AtomicSearchBox {
   protected suggestionsAriaMessage!: string;
 
   public initialize() {
-    this.disableSearch = this.disableSearch || this.disableSearchWhenNoQuery;
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
 
@@ -451,7 +450,10 @@ export class AtomicSearchBox {
   }
 
   private onInput(value: string) {
-    this.disableSearch = this.disableSearchWhenNoQuery && !value.length;
+    this.disableSearch = this.minInputToEnableSearch > value.length;
+    if (this.disableSearch) {
+      return;
+    }
     this.isExpanded = true;
     this.searchBox.updateText(value);
     this.updateActiveDescendant();
