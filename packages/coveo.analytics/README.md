@@ -100,7 +100,10 @@ You should be able to observe the click event being transmitted to the Coveo bac
 
 ## Sending commerce specific events
 
-Commerce specific events such as product selections, shopping cart modifications and transactions are sent to Coveo in the compact [collect protocol](https://docs.coveo.com/en/l41i0031/build-a-search-ui/log-collect-events). Rather than explicitly assembling these payloads by hand, the eCommerce plugin provides APIs to assemble and transmit the payloads through events assembled through different plugin actions, or [pageviews](https://docs.coveo.com/en/l3am0254/coveo-for-commerce/page-views) automatically populated with the current page context.
+Commerce specific events such as product selections, shopping cart modifications and transactions are sent to Coveo in the compact [collect protocol](https://docs.coveo.com/en/l41i0031/build-a-search-ui/log-collect-events). Rather than explicitly assembling these payloads by hand, the eCommerce plugin provides APIs to assemble and transmit the payloads. There are two event names that are specific to the eCommerce plugin:
+
+-   `event`: An event, which has been assembled through different plugin actions.
+-   `pageview`: An ecommerce specific pageview event which is automatically populated with the current page context.
 
 The eCommerce plugin supports adding product data (`ec:addProduct`) as well as setting the [appropriate event action](https://docs.coveo.com/en/l29e0540/coveo-for-commerce/commerce-events-reference#product-action-type-reference) through `ec:setAction`. These calls can be used in series to assemble different types of payloads:
 
