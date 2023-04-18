@@ -100,22 +100,19 @@ You should be able to observe the click event being transmitted to the Coveo bac
 
 ## Sending commerce specific events
 
-Commerce specific events such as product selections, shopping cart modifications and transactions are sent to Coveo in the compact [collect protocol](https://docs.coveo.com/en/l41i0031/build-a-search-ui/log-collect-events). Rather than explicitly assembling these payloads by hand, the eCommerce plugin provides apis to assemble and transmit the payloads. There are two event names that are specific to the eCommerce plugin:
+Commerce specific events such as product selections, shopping cart modifications and transactions are sent to Coveo in the compact [collect protocol](https://docs.coveo.com/en/l41i0031/build-a-search-ui/log-collect-events). Rather than explicitly assembling these payloads by hand, the eCommerce plugin provides APIs to assemble and transmit the payloads. There are two event names that are specific to the eCommerce plugin:
 
--   `event`: A generic event, which has been assembled through different plugin actions.
+-   `event`: An event, which has been assembled through different plugin actions.
 -   `pageview`: An ecommerce specific pageview event which is automatically populated with the current page context.
 
-See the [Send an Event](https://docs.coveo.com/en/l3am0254/coveo-for-commerce/send-an-event) page for more information on the expected payloads for both of these.
+The eCommerce plugin supports adding product data (`ec:addProduct`) as well as setting the [appropriate event action](https://docs.coveo.com/en/l29e0540/coveo-for-commerce/commerce-events-reference#product-action-type-reference) through `ec:setAction`. These calls can be used in series to assemble different types of payloads:
 
-The eCommerce plugin supports adding product data (`ec:addProduct`), product impression data (`ec:addImpression`) as well as setting the [appropriate event action](https://docs.coveo.com/en/l29e0540/coveo-for-commerce/commerce-events-reference#product-action-type-reference) through `ec:setAction`. These calls can be used in series to assemble different types of payloads:
-
--   A [product detail view](https://docs.coveo.com/en/3188/coveo-for-commerce/commerce-data-health-implementation-guide#measuring-a-product-details-view)
--   An [addition to the cart](https://docs.coveo.com/en/l3jg0266/coveo-for-commerce/measure-cart-page-events#measure-an-increase-in-item-quantity-in-cart)
--   A [removal from the cart](https://docs.coveo.com/en/l3jg0266/coveo-for-commerce/measure-cart-page-events#measure-a-decrease-in-item-quantity-in-cart)
+-   A [product detail view](https://docs.coveo.com/en/l2pd0522)
+-   [Cart modification events](https://docs.coveo.com/en/n39h1594/)
 -   A [cart purchase](https://docs.coveo.com/en/l39m0327/coveo-for-commerce/measure-a-purchase)
 -   An [event on a search-driven listing-page](https://docs.coveo.com/en/l41a1037/coveo-for-commerce/measure-events-on-a-listing-or-search-page)
 
-As a sample, here is how an [addition to the cart interaction](https://docs.coveo.com/en/l3jg0266/coveo-for-commerce/measure-cart-page-events#measure-an-increase-in-item-quantity-in-cart) is measured:
+As a sample, here is how a [cart modification event](https://docs.coveo.com/en/l3jg0266/coveo-for-commerce/measure-cart-page-events#measure-an-increase-in-item-quantity-in-cart) is assembled:
 
 1. First use the `ec:addProduct` action to include the [relevant product data](https://docs.coveo.com/en/l29e0540/coveo-for-commerce/commerce-events-reference#product-data-fields-reference) in the event you’re about to send
     ```js
