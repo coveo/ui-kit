@@ -1470,7 +1470,7 @@ export namespace Components {
          */
         "clearFilters": boolean;
         /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on length of query input refer to {@link minInputToEnableSearch}.
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minInputToEnableSearch}.
          */
         "disableSearch": boolean;
         /**
@@ -1478,7 +1478,7 @@ export namespace Components {
          */
         "enableQuerySyntax": boolean;
         /**
-          * Minimum length of query input to enable the search button. E.g. Setting it to 3 would enable search only after 3 characters have been typed in query input.
+          * The minimum query length required to enable the search button. For example, setting this parameter to `3` would enable search only after 3 characters have been typed in the search box.
          */
         "minInputToEnableSearch": number;
         /**
@@ -4135,7 +4135,7 @@ declare namespace LocalJSX {
          */
         "clearFilters"?: boolean;
         /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on length of query input refer to {@link minInputToEnableSearch}.
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minInputToEnableSearch}.
          */
         "disableSearch"?: boolean;
         /**
@@ -4143,7 +4143,7 @@ declare namespace LocalJSX {
          */
         "enableQuerySyntax"?: boolean;
         /**
-          * Minimum length of query input to enable the search button. E.g. Setting it to 3 would enable search only after 3 characters have been typed in query input.
+          * The minimum query length required to enable the search button. For example, setting this parameter to `3` would enable search only after 3 characters have been typed in the search box.
          */
         "minInputToEnableSearch"?: number;
         /**
