@@ -155,7 +155,7 @@ export class AtomicSearchBox {
   /**
    * Whether to prevent the user from triggering a search from the component.
    * Perfect for use cases where you need to disable the search conditionally.
-   * For the specific case when you need to disable the search based on length of query input refer to {@link minInputToEnableSearch}.
+   * For the specific case when you need to disable the search based on the length of the query, refer to {@link minInputToEnableSearch}.
    */
   @Prop({reflect: true}) public disableSearch = false;
 
