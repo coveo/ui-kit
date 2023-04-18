@@ -109,7 +109,7 @@ The eCommerce plugin supports adding product data (`ec:addProduct`) as well as s
 -   A [cart purchase](https://docs.coveo.com/en/l39m0327/coveo-for-commerce/measure-a-purchase)
 -   An [event on a search-driven listing-page](https://docs.coveo.com/en/l41a1037/coveo-for-commerce/measure-events-on-a-listing-or-search-page)
 
-As a sample, here is how an [cart modification event](https://docs.coveo.com/en/l3jg0266/coveo-for-commerce/measure-cart-page-events#measure-an-increase-in-item-quantity-in-cart) is measured:
+As a sample, here is how a [cart modification event](https://docs.coveo.com/en/l3jg0266/coveo-for-commerce/measure-cart-page-events#measure-an-increase-in-item-quantity-in-cart) is assembled:
 
 1. First use the `ec:addProduct` action to include the [relevant product data](https://docs.coveo.com/en/l29e0540/coveo-for-commerce/commerce-events-reference#product-data-fields-reference) in the event you’re about to send
     ```js
