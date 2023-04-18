@@ -34,6 +34,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadCaseAssistAnalyticsActions',
   },
+  {
+    initializer: 'loadGenericAnalyticsActions',
+  },
 ];
 
 const engine: EngineConfiguration = {

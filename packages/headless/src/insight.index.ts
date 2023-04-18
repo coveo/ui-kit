@@ -32,6 +32,7 @@ export * from './features/case-context/case-context-actions-loader';
 export * from './features/insight-search/insight-search-analytics-actions-loader';
 export * from './features/fields/fields-actions-loader';
 export * from './features/attached-results/attached-results-actions-loader';
+export * from './features/analytics/generic-analytics-actions-loader';
 
 // Controllers
 export type {
