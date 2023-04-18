@@ -38,8 +38,8 @@ function runVerdaccio(
         resolve(childFork);
       }
     });
-    childFork.on('error', (err: any) => reject([err]));
-    childFork.on('disconnect', (err: any) => reject([err]));
+    childFork.on('error', (err: unknown) => reject([err]));
+    childFork.on('disconnect', (err: unknown) => reject([err]));
   });
 }
 
