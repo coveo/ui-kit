@@ -180,7 +180,7 @@ jobs:
       - 'e2e-atomic-test'
       - 'e2e-quantic-test'
     runs-on: ubuntu-latest
-    if: always()
+    if: cancelled() || failure() || success()
     steps:
       - name: fail if unit test failed
         if: ${{ needs.unit-test.result == 'failure' }}

@@ -625,6 +625,10 @@ export namespace Components {
           * The label that will be shown to the user.
          */
         "label": string;
+        /**
+          * Activates the tab.
+         */
+        "select": () => Promise<void>;
     }
     interface AtomicInsightTabs {
     }
@@ -729,6 +733,10 @@ export namespace Components {
           * The label that will be shown to the user.
          */
         "label": string;
+        /**
+          * Activates the tab.
+         */
+        "select": () => Promise<void>;
     }
     interface AtomicIpxTabs {
     }
@@ -1802,6 +1810,12 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    interface TabBar {
+    }
+    interface TabPopover {
+        "hide": boolean;
+        "togglePopover": () => Promise<void>;
+    }
 }
 export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2610,6 +2624,18 @@ declare global {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
     };
+    interface HTMLTabBarElement extends Components.TabBar, HTMLStencilElement {
+    }
+    var HTMLTabBarElement: {
+        prototype: HTMLTabBarElement;
+        new (): HTMLTabBarElement;
+    };
+    interface HTMLTabPopoverElement extends Components.TabPopover, HTMLStencilElement {
+    }
+    var HTMLTabPopoverElement: {
+        prototype: HTMLTabPopoverElement;
+        new (): HTMLTabPopoverElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
@@ -2734,6 +2760,8 @@ declare global {
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
+        "tab-bar": HTMLTabBarElement;
+        "tab-popover": HTMLTabPopoverElement;
     }
 }
 declare namespace LocalJSX {
@@ -4441,6 +4469,11 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    interface TabBar {
+    }
+    interface TabPopover {
+        "hide"?: boolean;
+    }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
         "atomic-breadbox": AtomicBreadbox;
@@ -4565,6 +4598,8 @@ declare namespace LocalJSX {
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
+        "tab-bar": TabBar;
+        "tab-popover": TabPopover;
     }
 }
 export { LocalJSX as JSX };
@@ -4694,6 +4729,8 @@ declare module "@stencil/core" {
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
+            "tab-bar": LocalJSX.TabBar & JSXBase.HTMLAttributes<HTMLTabBarElement>;
+            "tab-popover": LocalJSX.TabPopover & JSXBase.HTMLAttributes<HTMLTabPopoverElement>;
         }
     }
 }
