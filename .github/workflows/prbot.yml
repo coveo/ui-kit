@@ -226,7 +226,7 @@ jobs:
       - name: Fix lockfile
         shell: bash
         run: |
-          tail -r .git-message | while read package; do
+          tac .git-message | while read package; do
             packageName=`grep -E -o '^@?[a-z\/]+' <<< $package`
             echo "Updating $packageName"
             npm update $packageName --tag=alpha
@@ -269,7 +269,7 @@ jobs:
       - name: Fix lockfile
         shell: bash
         run: |
-          tail -r .git-message | while read package; do
+          tac .git-message | while read package; do
             packageName=`grep -E -o '^@?[a-z\/]+' <<< $package`
             echo "Updating $packageName"
             npm update $packageName --tag=alpha
