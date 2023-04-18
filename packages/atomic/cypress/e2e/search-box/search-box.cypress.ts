@@ -478,40 +478,41 @@ describe('Search Box Test Suites', () => {
         .with(addQuerySummary())
         .withoutFirstAutomaticSearch()
         .init();
-      typeSearchInput('test');
     });
 
-    it('there are no search suggestions or errors', () => {
+    it('there are no search suggestions or errors on query input', () => {
+      typeSearchInput('test');
       SearchBoxAssertions.assertHasSuggestionsCount(0);
       QuerySummaryAssertions.assertHasPlaceholder();
       CommonAssertions.assertConsoleError(false);
     });
   });
 
-  describe('with disableSearchWhenNoQuery set to true', () => {
+  describe('with minimum input to enable search', () => {
+    const testQuery = 'test';
+    const minInputLen = testQuery.length;
     beforeEach(() => {
       new TestFixture()
-        .with(addSearchBox({props: {'disable-search-when-no-query': 'true'}}))
-        .with(addQuerySummary())
-        .withoutFirstAutomaticSearch()
+        .with(
+          addSearchBox({
+            props: {'min-input-to-enable-search': minInputLen},
+          })
+        )
         .init();
     });
 
-    it('search button is disabled to start with when there is no query', () => {
-      SearchBoxSelectors.inputBox().should('be.empty');
+    it('search button is enabled when a query with minimum length is input', () => {
+      typeSearchInput(testQuery.slice(0, minInputLen - 1));
       SearchBoxSelectors.submitButton().should('be.disabled');
-    });
-
-    it('search button is enabled when a query is input', () => {
-      typeSearchInput('test');
+      typeSearchInput(testQuery.slice(minInputLen - 1));
       SearchBoxSelectors.submitButton().should('not.be.disabled');
     });
 
     it('search button is disabled when query is deleted', () => {
-      typeSearchInput('a');
+      typeSearchInput(testQuery);
       SearchBoxSelectors.submitButton().should('not.be.disabled');
 
-      typeSearchInput('{backspace}', '');
+      typeSearchInput('{backspace}'.repeat(minInputLen), '');
       SearchBoxSelectors.submitButton().should('be.disabled');
     });
   });
