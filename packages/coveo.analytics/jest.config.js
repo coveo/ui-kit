@@ -5,12 +5,11 @@ module.exports = {
     moduleNameMapper: {
         '@App/(.*)': '<rootDir>/src/$1',
     },
-    globals: {
-        'ts-jest': {
-            tsConfig: './tsconfig.test.json',
-        },
+    transform: {
+        '^.+\\.tsx?$': ['ts-jest', {tsconfig: './tsconfig.test.json'}],
     },
     collectCoverageFrom: ['<rootDir>/src/**/*.{ts,tsx}'],
+    testEnvironment: 'jsdom',
     coveragePathIgnorePatterns: ['.spec.*'],
     coverageReporters: ['lcov', 'cobertura', 'text-summary'],
 };

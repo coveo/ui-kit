@@ -16,4 +16,9 @@ export {
 export {CaseAssistClient, CaseAssistClientProvider} from '../caseAssist/caseAssistClient';
 export {CoveoInsightClient, InsightClientProvider} from '../insight/insightClient';
 
+export * from '../searchPage/searchPageEvents';
+export * from '../caseAssist/caseAssistActions';
+export * from '../insight/insightEvents';
+export * from '../events';
+
 export {analytics, donottrack, history, SimpleAnalytics, storage};

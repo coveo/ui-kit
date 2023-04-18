@@ -17,13 +17,13 @@ describe('ReactNativeRuntime', () => {
     });
 
     it('should call "storage.getItem" when getting the visitor ID', async () => {
-        spyOn(runtimeEnvironment.storage, 'getItem');
+        jest.spyOn(runtimeEnvironment.storage, 'getItem');
         await client.getCurrentVisitorId();
         expect(runtimeEnvironment.storage.getItem).toHaveBeenCalled();
     });
 
     it('should call "storage.getItem" when getting the visitor ID', async () => {
-        spyOn(runtimeEnvironment.storage, 'setItem');
+        jest.spyOn(runtimeEnvironment.storage, 'setItem');
         await client.setCurrentVisitorId('myid');
         expect(runtimeEnvironment.storage.setItem).toHaveBeenCalled();
     });

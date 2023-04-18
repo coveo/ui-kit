@@ -1,3 +1,6 @@
 module.exports = {
-    ...require('tsjs/prettier-config'),
+    printWidth: 120,
+    tabWidth: 4,
+    singleQuote: true,
+    bracketSpacing: false,
 };

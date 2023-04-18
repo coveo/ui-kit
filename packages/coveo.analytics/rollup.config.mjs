@@ -1,5 +1,5 @@
 import typescript from 'rollup-plugin-typescript2';
-import {terser} from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import serve from 'rollup-plugin-serve';
 import commonjs from '@rollup/plugin-commonjs';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
@@ -7,7 +7,10 @@ import alias from '@rollup/plugin-alias';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
 import {resolve} from 'path';
-import packageJson from './package.json';
+import packageJson from './package.json' assert {type: 'json'};
+import * as url from 'url';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const browserFetch = () =>
     alias({

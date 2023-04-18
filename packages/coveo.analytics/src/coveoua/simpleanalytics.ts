@@ -130,6 +130,9 @@ export class CoveoUA {
     }
 
     callPlugin(pluginName: string, fn: string, ...args: any): any {
+        if (!this.client) {
+            throw new Error(`You must call init before calling a plugin function`);
+        }
         return this.plugins.execute(pluginName, fn, ...args);
     }
 

@@ -39,7 +39,7 @@ describe('AnalyticsBeaconClient', () => {
 
         expect(sendBeaconMock).toHaveBeenCalledWith(
             `${baseUrl}/analytics/custom?access_token=👛&visitorId=${currentVisitorId}&discardVisitInfo=true`,
-            jasmine.anything()
+            expect.anything()
         );
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(`customEvent=${encodeURIComponent(`{"wow":"ok"}`)}`);
     });
@@ -63,7 +63,7 @@ describe('AnalyticsBeaconClient', () => {
 
         expect(sendBeaconMock).toHaveBeenCalledWith(
             `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}&discardVisitInfo=true`,
-            jasmine.anything()
+            expect.anything()
         );
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(
             'access_token=%F0%9F%91%9B&pr1a=value&to%20encode=to%20encode'
@@ -92,7 +92,7 @@ describe('AnalyticsBeaconClient', () => {
 
         expect(sendBeaconMock).toHaveBeenCalledWith(
             `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}&discardVisitInfo=true`,
-            jasmine.anything()
+            expect.anything()
         );
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(
             `access_token=%F0%9F%91%9B&value=${encodeURIComponent(JSON.stringify({subvalue: 'ok'}))}`

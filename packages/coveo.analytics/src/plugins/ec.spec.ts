@@ -234,28 +234,23 @@ describe('EC plugin', () => {
                 );
             });
 
-            it('should tolerate an absent position', () => {
+            it('should tolerate an absent or undefined position', () => {
                 jest.spyOn(console, 'warn').mockImplementation();
 
                 ec.addProduct({
                     name: 'A product with no position',
                 });
 
-                const undefinedPosition = undefined as any;
                 ec.addProduct({
                     name: 'A product with an undefined position',
-                    position: undefinedPosition,
+                    position: undefined,
                 });
 
                 const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
                 expect(console.warn).not.toHaveBeenCalled();
-
-                const firstPositionProperty = 'il1pi1ps';
-                expect(result).not.toHaveProperty(firstPositionProperty);
-
-                const secondPositionProperty = 'il1pi2ps';
-                expect(result).toHaveProperty(secondPositionProperty, undefinedPosition);
+                expect(result).not.toHaveProperty('pr1ps');
+                expect(result).toHaveProperty('pr2ps', undefined);
             });
         });
     });
@@ -453,28 +448,23 @@ describe('EC plugin', () => {
                 );
             });
 
-            it('should tolerate an absent position', () => {
+            it('should tolerate an absent or undefined position', () => {
                 jest.spyOn(console, 'warn').mockImplementation();
 
                 ec.addImpression({
                     name: 'An impression with no position',
                 });
 
-                const undefinedPosition = undefined as any;
                 ec.addImpression({
                     name: 'An impression with an undefined position',
-                    position: undefinedPosition,
+                    position: undefined,
                 });
 
                 const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
                 expect(console.warn).not.toHaveBeenCalled();
-
-                const firstPositionProperty = 'il1pi1ps';
-                expect(result).not.toHaveProperty(firstPositionProperty);
-
-                const secondPositionProperty = 'il1pi2ps';
-                expect(result).toHaveProperty(secondPositionProperty, undefinedPosition);
+                expect(result).not.toHaveProperty('il1pi1ps');
+                expect(result).toHaveProperty('il1pi2ps', undefined);
             });
         });
     });
