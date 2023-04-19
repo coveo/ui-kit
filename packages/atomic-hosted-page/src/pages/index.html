@@ -16,7 +16,7 @@
           pageId: '4d4af944-1a6e-4be3-9c04-9c772e031956',
           accessToken: 'xxa6e9ee50-2dcf-4062-890f-c63d57b061ab',
           organizationId: 'qaregression2',
-          platformUrl: 'https://platformstg.cloud.coveo.com',
+          organizationEndpoints: await page.getOrganizationEndpoints('qaregression2', 'stg'),
         });
       })();
     </script>
