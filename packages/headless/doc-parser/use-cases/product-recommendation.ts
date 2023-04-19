@@ -43,6 +43,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadSearchHubActions',
   },
+  {
+    initializer: 'loadClickAnalyticsActions',
+  },
 ];
 
 const engine: EngineConfiguration = {
