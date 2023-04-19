@@ -161,7 +161,7 @@ export class AtomicSearchBox {
 
   /**
    * The minimum query length required to enable search.
-   * For example, to disable the search for empty queries set this to `1`.
+   * For example, to disable the search for empty queries, set this to `1`.
    */
   @Prop({reflect: true}) public minimumQueryLength = 2;
 
