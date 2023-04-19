@@ -9,6 +9,7 @@ import {
   pushRecentResult,
 } from './recent-results-actions';
 
+export type {RegisterRecentResultsCreatorPayload};
 /**
  * The RecentResults action creators
  */
@@ -16,6 +17,7 @@ export interface RecentResultsActionCreators {
   /**
    * Initialize the `recentResults` state.
    * @param payload (RegisterRecentResultsCreatorPayload) The initial state and options.
+   * @returns A dispatchable action.
    */
   registerRecentResults(
     payload: RegisterRecentResultsCreatorPayload
@@ -23,12 +25,14 @@ export interface RecentResultsActionCreators {
 
   /**
    * Clear the recent results list.
+   * @returns A dispatchable action.
    */
   clearRecentResults(): PayloadAction;
 
   /**
    * Add the recent result to the list.
    * @param payload (Result) The result to add.
+   * @returns A dispatchable action.
    */
   pushRecentResult(payload: Result): PayloadAction<Result>;
 }

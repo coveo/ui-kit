@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.13.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.12.1...@coveo/headless@2.13.0) (2023-04-18)
+
+### Features
+
+- **headless:** include the loadgenericanalyticsactions action loader in the case assist & insight headless bundle ([#2835](https://github.com/coveo/ui-kit/issues/2835)) ([aa06d45](https://github.com/coveo/ui-kit/commit/aa06d45fad0b450e8adfd76790556265e1e85bd0))
+
 ## [2.12.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.12.0...@coveo/headless@2.12.1) (2023-04-14)
 
 **Note:** Version bump only for package @coveo/headless
