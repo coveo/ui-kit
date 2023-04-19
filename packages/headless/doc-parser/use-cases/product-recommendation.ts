@@ -12,6 +12,12 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildCartRecommendationsList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
+  {
     initializer: 'buildDictionaryFieldContext',
     samplePaths: {
       react_fn: [
