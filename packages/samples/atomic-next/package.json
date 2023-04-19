@@ -6,7 +6,7 @@
     "@coveo/atomic": "^2.0.0",
     "@coveo/atomic-react": "^2.0.0",
     "@coveo/headless": "^2.0.0",
-    "next": "12.2.5",
+    "next": "13.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
@@ -23,7 +23,7 @@
     "dev": "npm run build:assets && npm run dev:nextjs",
     "dev:nextjs": "next dev",
     "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
-    "e2e:watch": "cypress open",
+    "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e": "cypress run --browser chrome"
   }
 }

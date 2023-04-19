@@ -127,6 +127,7 @@ export default class QuanticResultQuickview extends LightningElement {
       );
       this.dispatchEvent(resultActionRegister);
     }
+    this.addEventListener('loadingstatechange', this.handleLoadingStateChange);
   }
 
   renderedCallback() {
@@ -157,6 +158,10 @@ export default class QuanticResultQuickview extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.removeEventListener(
+      'loadingstatechange',
+      this.handleLoadingStateChange
+    );
   }
 
   updateState() {
@@ -218,6 +223,19 @@ export default class QuanticResultQuickview extends LightningElement {
     });
   }
 
+  handleLoadingStateChange(event) {
+    event.stopPropagation();
+    this._isLoading = false;
+  }
+
+  get contentURL() {
+    return this.state.contentURL?.includes(
+      encodeURIComponent(this.result.uniqueId)
+    )
+      ? this.state.contentURL
+      : undefined;
+  }
+
   get isLoading() {
     return this._isLoading;
   }
@@ -274,14 +292,6 @@ export default class QuanticResultQuickview extends LightningElement {
     return !!this.previewButtonLabel;
   }
 
-  get contentURL() {
-    return this.state.contentURL?.includes(
-      encodeURIComponent(this.result.uniqueId)
-    )
-      ? this.state.contentURL
-      : undefined;
-  }
-
   setFocusToHeader() {
     const focusTarget = this.template.querySelector('c-quantic-result-link');
 
@@ -317,10 +327,6 @@ export default class QuanticResultQuickview extends LightningElement {
         this.setFocusToHeader();
       }
     }
-  }
-
-  onIframeLoaded() {
-    this._isLoading = false;
   }
 
   get lastFocusableElementInFooterSlot() {

@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.25.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.25.0...@coveo/atomic@2.25.1) (2023-04-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.25.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.24.0...@coveo/atomic@2.25.0) (2023-04-18)
+
+### Features
+
+- **atomic:** added a responsive tab container ([#2819](https://github.com/coveo/ui-kit/issues/2819)) ([f48953e](https://github.com/coveo/ui-kit/commit/f48953e8517ff33f008875ed5e4c7b0b050af773))
+
+# [2.24.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.4...@coveo/atomic@2.24.0) (2023-04-14)
+
+### Bug Fixes
+
+- use tab label as id ([#2828](https://github.com/coveo/ui-kit/issues/2828)) ([a03b6c2](https://github.com/coveo/ui-kit/commit/a03b6c2bae750d377c74ec146ef64b456081351b))
+
+### Features
+
+- **atomic:** add parts and options to customize pager icons ([#2813](https://github.com/coveo/ui-kit/issues/2813)) ([3ec0391](https://github.com/coveo/ui-kit/commit/3ec039197a526853042889148b1600363b6c12d5))
+
+## [2.23.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.3...@coveo/atomic@2.23.4) (2023-04-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.23.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.2...@coveo/atomic@2.23.3) (2023-04-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.23.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.1...@coveo/atomic@2.23.2) (2023-04-12)
+
+### Bug Fixes
+
+- **atomic:** remove focus trap props in IPX modal ([#2822](https://github.com/coveo/ui-kit/issues/2822)) ([4271032](https://github.com/coveo/ui-kit/commit/4271032d22b366505dc4e38ce35af4faaae2c77c))
+
+## [2.23.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.0...@coveo/atomic@2.23.1) (2023-04-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.23.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.22.1...@coveo/atomic@2.23.0) (2023-04-11)
+
+### Features
+
+- **atomic:** enable atomic modal in shadow dom ([#2806](https://github.com/coveo/ui-kit/issues/2806)) ([d0b5ba5](https://github.com/coveo/ui-kit/commit/d0b5ba59d5169fb6c6448328831eee30bfea405d))
+
 ## [2.22.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.22.0...@coveo/atomic@2.22.1) (2023-04-06)
 
 **Note:** Version bump only for package @coveo/atomic
