@@ -28,10 +28,8 @@ import {
   Controller,
   buildController,
 } from '../../controller/headless-controller';
-import {
-  InlineLink,
-  buildInteractiveResultCore,
-} from '../interactive-result/headless-core-interactive-result';
+import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links';
+import {buildInteractiveResultCore} from '../interactive-result/headless-core-interactive-result';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 
