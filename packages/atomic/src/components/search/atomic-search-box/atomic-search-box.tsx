@@ -755,6 +755,7 @@ export class AtomicSearchBox {
             ref={(el) => (this.inputRef = el as HTMLInputElement)}
             bindings={this.bindings}
             value={this.searchBoxState.value}
+            title={this.bindings.i18n.t('search')}
             ariaLabel={this.searchBoxCommon.getSearchInputLabel()}
             onFocus={() => this.onFocus()}
             onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
@@ -772,6 +773,7 @@ export class AtomicSearchBox {
             bindings={this.bindings}
             disabled={this.disableSearch}
             onClick={() => this.searchBox.submit()}
+            title={this.bindings.i18n.t('search')}
           />
         </atomic-focus-detector>
       </SearchBoxWrapper>,
