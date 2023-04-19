@@ -1470,7 +1470,7 @@ export namespace Components {
          */
         "clearFilters": boolean;
         /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minInputToEnableSearch}.
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
          */
         "disableSearch": boolean;
         /**
@@ -1478,9 +1478,9 @@ export namespace Components {
          */
         "enableQuerySyntax": boolean;
         /**
-          * The minimum query length required to enable the search button. For example, setting this parameter to `3` would enable search only after 3 characters have been typed in the search box.
+          * The minimum query length required to enable search. For example, to disable the search for empty queries set this to `1`.
          */
-        "minInputToEnableSearch": number;
+        "minimumQueryLength": number;
         /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
@@ -4135,7 +4135,7 @@ declare namespace LocalJSX {
          */
         "clearFilters"?: boolean;
         /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minInputToEnableSearch}.
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
          */
         "disableSearch"?: boolean;
         /**
@@ -4143,9 +4143,9 @@ declare namespace LocalJSX {
          */
         "enableQuerySyntax"?: boolean;
         /**
-          * The minimum query length required to enable the search button. For example, setting this parameter to `3` would enable search only after 3 characters have been typed in the search box.
+          * The minimum query length required to enable search. For example, to disable the search for empty queries set this to `1`.
          */
-        "minInputToEnableSearch"?: number;
+        "minimumQueryLength"?: number;
         /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */

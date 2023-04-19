@@ -155,15 +155,15 @@ export class AtomicSearchBox {
   /**
    * Whether to prevent the user from triggering a search from the component.
    * Perfect for use cases where you need to disable the search conditionally.
-   * For the specific case when you need to disable the search based on the length of the query, refer to {@link minInputToEnableSearch}.
+   * For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
    */
-  @Prop({reflect: true}) public disableSearch = false;
+  @Prop({reflect: true, mutable: true}) public disableSearch = false;
 
   /**
-   * The minimum query length required to enable the search button.
-   * For example, setting this parameter to `3` would enable search only after 3 characters have been typed in the search box.
+   * The minimum query length required to enable search.
+   * For example, to disable the search for empty queries set this to `1`.
    */
-  @Prop({reflect: true}) public minInputToEnableSearch = 0;
+  @Prop({reflect: true}) public minimumQueryLength = 2;
 
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
@@ -210,6 +210,7 @@ export class AtomicSearchBox {
   public initialize() {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
+    this.disableSearch = this.minimumQueryLength > 0;
 
     const searchBoxOptions: SearchBoxOptions = {
       id: this.id,
@@ -358,6 +359,16 @@ export class AtomicSearchBox {
     return this.leftPanelRef || this.rightPanelRef;
   }
 
+  private get tooltipText() {
+    if (this.disableSearch) {
+      return this.bindings.i18n.t('search-disabled-tooltip', {
+        length: this.minimumQueryLength,
+      });
+    }
+
+    return this.bindings.i18n.t('search');
+  }
+
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
     const elements = suggestions
       .map((suggestion) => suggestion.renderItems())
@@ -450,7 +461,7 @@ export class AtomicSearchBox {
   }
 
   private onInput(value: string) {
-    this.disableSearch = this.minInputToEnableSearch > value.length;
+    this.disableSearch = this.minimumQueryLength > value.trim().length;
     if (this.disableSearch) {
       return;
     }
@@ -755,7 +766,7 @@ export class AtomicSearchBox {
             ref={(el) => (this.inputRef = el as HTMLInputElement)}
             bindings={this.bindings}
             value={this.searchBoxState.value}
-            title={this.bindings.i18n.t('search')}
+            title={this.tooltipText}
             ariaLabel={this.searchBoxCommon.getSearchInputLabel()}
             onFocus={() => this.onFocus()}
             onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
@@ -773,7 +784,7 @@ export class AtomicSearchBox {
             bindings={this.bindings}
             disabled={this.disableSearch}
             onClick={() => this.searchBox.submit()}
-            title={this.bindings.i18n.t('search')}
+            title={this.tooltipText}
           />
         </atomic-focus-detector>
       </SearchBoxWrapper>,
