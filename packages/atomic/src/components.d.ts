@@ -1478,7 +1478,7 @@ export namespace Components {
          */
         "enableQuerySyntax": boolean;
         /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries set this to `1`.
+          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
          */
         "minimumQueryLength": number;
         /**
@@ -4143,7 +4143,7 @@ declare namespace LocalJSX {
          */
         "enableQuerySyntax"?: boolean;
         /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries set this to `1`.
+          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
          */
         "minimumQueryLength"?: number;
         /**
