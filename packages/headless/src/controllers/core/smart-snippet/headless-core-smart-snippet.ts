@@ -2,6 +2,10 @@ import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/quest
 import {Result} from '../../../api/search/search/result';
 import {search, questionAnswering} from '../../../app/reducers';
 import {
+  ClickAction,
+  CustomAction,
+} from '../../../features/analytics/analytics-utils';
+import {
   closeFeedbackModal,
   collapseSmartSnippet,
   dislikeSmartSnippet,
@@ -10,7 +14,10 @@ import {
   openFeedbackModal,
 } from '../../../features/question-answering/question-answering-actions';
 import {SmartSnippetFeedback} from '../../../features/question-answering/question-answering-analytics-actions';
+import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from '../../../features/question-answering/question-answering-document-id';
 import {answerSourceSelector} from '../../../features/question-answering/question-answering-selectors';
+import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
+import {QuestionAnsweringInlineLinkActionCreatorPayload} from '../../../product-listing.index';
 import {CoreEngine} from '../../../recommendation.index';
 import {
   QuestionAnsweringSection,
@@ -21,7 +28,10 @@ import {
   Controller,
   buildController,
 } from '../../controller/headless-controller';
-import {InlineLink} from '../interactive-result/headless-core-interactive-result';
+import {
+  InlineLink,
+  buildInteractiveResultCore,
+} from '../interactive-result/headless-core-interactive-result';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 
@@ -80,6 +90,28 @@ export interface SmartSnippetCore extends Controller {
    * @param details - A personalized message from the end user about the relevance of the answer.
    */
   sendDetailedFeedback(details: string): void;
+  /**
+   * Selects the source, logging a UA event to the Coveo Platform if the source wasn't already selected before.
+   *
+   * In a DOM context, we recommend calling this method on all of the following events:
+   * * `contextmenu`
+   * * `click`
+   * * `mouseup`
+   * * `mousedown`
+   */
+  selectSource(): void;
+  /**
+   * Prepares to select the source after a certain delay, sending analytics if it was never selected before.
+   *
+   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   */
+  beginDelayedSelectSource(): void;
+  /**
+   * Cancels the pending selection caused by `beginDelayedSelectSource`.
+   *
+   * In a DOM context, we recommend calling this method on the `touchend` event.
+   */
+  cancelPendingSelectSource(): void;
 }
 
 export interface SmartSnippet extends SmartSnippetCore {
@@ -111,28 +143,6 @@ export interface SmartSnippet extends SmartSnippetCore {
    * @param link - The link to select.
    */
   cancelPendingSelectInlineLink(link: InlineLink): void;
-  /**
-   * Selects the source, logging a UA event to the Coveo Platform if the source wasn't already selected before.
-   *
-   * In a DOM context, we recommend calling this method on all of the following events:
-   * * `contextmenu`
-   * * `click`
-   * * `mouseup`
-   * * `mousedown`
-   */
-  selectSource(): void;
-  /**
-   * Prepares to select the source after a certain delay, sending analytics if it was never selected before.
-   *
-   * In a DOM context, we recommend calling this method on the `touchstart` event.
-   */
-  beginDelayedSelectSource(): void;
-  /**
-   * Cancels the pending selection caused by `beginDelayedSelectSource`.
-   *
-   * In a DOM context, we recommend calling this method on the `touchend` event.
-   */
-  cancelPendingSelectSource(): void;
 }
 
 export interface SmartSnippetState {
@@ -174,13 +184,41 @@ export interface SmartSnippetState {
   source?: Result;
 }
 
+export interface SmartSnippetAnalyticsClient {
+  logExpandSmartSnippet: () => CustomAction;
+  logCollapseSmartSnippet: () => CustomAction;
+  logLikeSmartSnippet: () => CustomAction;
+  logDislikeSmartSnippet: () => CustomAction;
+  logOpenSmartSnippetSource: () => ClickAction;
+  logOpenSmartSnippetInlineLink: (
+    payload: QuestionAnsweringInlineLinkActionCreatorPayload
+  ) => ClickAction;
+  logOpenSmartSnippetFeedbackModal: () => CustomAction;
+  logCloseSmartSnippetFeedbackModal: () => CustomAction;
+  logSmartSnippetFeedback: (feedback: SmartSnippetFeedback) => CustomAction;
+  logSmartSnippetDetailedFeedback: (details: string) => CustomAction;
+  logExpandSmartSnippetSuggestion: (
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ) => CustomAction;
+  logCollapseSmartSnippetSuggestion: (
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ) => CustomAction;
+  logOpenSmartSnippetSuggestionSource: (
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ) => ClickAction;
+}
+
 /**
  * Creates a `SmartSnippet` controller instance.
  *
  * @param engine - The headless engine.
  * @returns A `SmartSnippet` controller instance.
  * */
-export function buildCoreSmartSnippet(engine: CoreEngine): SmartSnippetCore {
+export function buildCoreSmartSnippet(
+  engine: CoreEngine,
+  analyticsClient: SmartSnippetAnalyticsClient,
+  props?: SmartSnippetProps
+): SmartSnippetCore {
   if (!loadSmartSnippetReducers(engine)) {
     throw loadReducerError;
   }
@@ -189,6 +227,27 @@ export function buildCoreSmartSnippet(engine: CoreEngine): SmartSnippetCore {
   const getState = () => engine.state;
 
   const getResult = () => answerSourceSelector(getState());
+
+  let lastSearchResponseId: string | null = null;
+  const interactiveResult = buildInteractiveResultCore(
+    engine,
+    {options: {selectionDelay: props?.options?.selectionDelay}},
+    () => {
+      const result = getResult();
+      if (!result) {
+        lastSearchResponseId = null;
+        return;
+      }
+
+      const {searchResponseId} = getState().search;
+      if (lastSearchResponseId === searchResponseId) {
+        return;
+      }
+      lastSearchResponseId = searchResponseId;
+      engine.dispatch(analyticsClient.logOpenSmartSnippetSource);
+      engine.dispatch(pushRecentResult(result));
+    }
+  );
 
   return {
     ...controller,
@@ -209,28 +268,45 @@ export function buildCoreSmartSnippet(engine: CoreEngine): SmartSnippetCore {
       };
     },
     expand() {
+      engine.dispatch(analyticsClient.logExpandSmartSnippet());
       engine.dispatch(expandSmartSnippet());
     },
     collapse() {
+      engine.dispatch(analyticsClient.logCollapseSmartSnippet());
       engine.dispatch(collapseSmartSnippet());
     },
     like() {
+      engine.dispatch(analyticsClient.logLikeSmartSnippet());
       engine.dispatch(likeSmartSnippet());
     },
     dislike() {
+      engine.dispatch(analyticsClient.logDislikeSmartSnippet());
       engine.dispatch(dislikeSmartSnippet());
     },
     openFeedbackModal() {
+      engine.dispatch(analyticsClient.logOpenSmartSnippetFeedbackModal());
       engine.dispatch(openFeedbackModal());
     },
     closeFeedbackModal() {
+      engine.dispatch(analyticsClient.logCloseSmartSnippetFeedbackModal());
       engine.dispatch(closeFeedbackModal());
     },
-    sendFeedback() {
+    sendFeedback(feedback) {
+      engine.dispatch(analyticsClient.logSmartSnippetFeedback(feedback));
       engine.dispatch(closeFeedbackModal());
     },
-    sendDetailedFeedback() {
+    sendDetailedFeedback(details) {
+      engine.dispatch(analyticsClient.logSmartSnippetDetailedFeedback(details));
       engine.dispatch(closeFeedbackModal());
+    },
+    selectSource() {
+      interactiveResult.select();
+    },
+    beginDelayedSelectSource() {
+      interactiveResult.beginDelayedSelect();
+    },
+    cancelPendingSelectSource() {
+      interactiveResult.cancelPendingSelect();
     },
   };
 }

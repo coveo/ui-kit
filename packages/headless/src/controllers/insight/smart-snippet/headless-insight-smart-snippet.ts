@@ -1,11 +1,11 @@
-// import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-// import { buildInteractiveResultCore } from '../../core/interactive-result/headless-core-interactive-result';
-// import {
-//   SmartSnippet,
-//   SmartSnippetProps,
-//   buildCoreSmartSnippet,
-// } from '../../core/smart-snippet/headless-core-smart-snippet';
-// import { buildSmartSnippetInteractiveInlineLinks } from './headless-insight-smart-snippet-interactive-inline-links';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions';
+import {
+  SmartSnippet,
+  SmartSnippetProps,
+  buildCoreSmartSnippet,
+} from '../../core/smart-snippet/headless-core-smart-snippet';
+import {buildSmartSnippetInteractiveInlineLinks} from './headless-insight-smart-snippet-interactive-inline-links';
 
 /**
  * Creates a `SmartSnippet` controller instance.
@@ -14,31 +14,34 @@
  * @param props - The configurable `SmartSnippet` properties.
  * @returns A `SmartSnippet` controller instance.
  * */
-// export function buildSmartSnippet(
-//   engine: InsightEngine,
-//   props?: SmartSnippetProps
-// ) : SmartSnippet {
-//   const smartSnippet = buildCoreSmartSnippet(engine);
+export function buildSmartSnippet(
+  engine: InsightEngine,
+  props?: SmartSnippetProps
+): SmartSnippet {
+  const smartSnippet = buildCoreSmartSnippet(
+    engine,
+    insightSmartSnippetAnalyticsClient
+  );
 
-//   const getState = () => engine.state;
+  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
+    engine,
+    {options: {selectionDelay: props?.options?.selectionDelay}}
+  );
 
-//   let lastSearchResponseId: string | null = null;
-//   const interactiveResult = buildInteractiveResultCore(
-//     engine,
-//     {options: {selectionDelay: props?.options?.selectionDelay}},
-//     () => {
-//       const result = smartSnippet.state.source;
-//       if(!result) {
-//         lastSearchResponseId = null;
-//         return;
-//       }
+  return {
+    ...smartSnippet,
 
-//       const {searchResponseId} = getState().search;
-//       if(lastSearchResponseId === searchResponseId) {
-//         return;
-//       }
-//       lastSearchResponseId = searchResponseId;
-//       // engine.dispatch(logOpenSmartSnippetSource);
-//     }
-//   )
-// }
+    get state() {
+      return smartSnippet.state;
+    },
+    selectInlineLink(link) {
+      interactiveInlineLinks.selectInlineLink(link);
+    },
+    beginDelayedSelectInlineLink(link) {
+      interactiveInlineLinks.beginDelayedSelectInlineLink(link);
+    },
+    cancelPendingSelectInlineLink(link) {
+      interactiveInlineLinks.cancelPendingSelectInlineLink(link);
+    },
+  };
+}

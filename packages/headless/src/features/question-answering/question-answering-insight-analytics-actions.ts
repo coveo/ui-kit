@@ -24,7 +24,10 @@ export const logExpandSmartSnippet = (): InsightAction<AnalyticsType.Custom> =>
   makeInsightAnalyticsAction(
     'analytics/smartSnippet/expand',
     AnalyticsType.Custom,
-    (client) => client.logExpandSmartSnippet()
+    (client, state) =>
+      client.logExpandSmartSnippet(
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      )
   );
 
 export const logCollapseSmartSnippet =
@@ -32,26 +35,32 @@ export const logCollapseSmartSnippet =
     makeInsightAnalyticsAction(
       'analytics/smartSnippet/collapse',
       AnalyticsType.Custom,
-      (client) => client.logCollapseSmartSnippet()
+      (client, state) =>
+        client.logCollapseSmartSnippet(
+          getCaseContextAnalyticsMetadata(state.insightCaseContext)
+        )
     );
 
 export const logLikeSmartSnippet = (): InsightAction<AnalyticsType.Custom> =>
   makeInsightAnalyticsAction(
     'analytics/smartSnippet/like',
     AnalyticsType.Custom,
-    (client) => client.makeLikeSmartSnippet()
+    (client, state) =>
+      client.logLikeSmartSnippet(
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      )
   );
 
 export const logDislikeSmartSnippet = (): InsightAction<AnalyticsType.Custom> =>
   makeInsightAnalyticsAction(
     'analytics/smartSnippet/dislike',
     AnalyticsType.Custom,
-    (client) => client.makeDislikeSmartSnippet()
+    (client, state) =>
+      client.logDislikeSmartSnippet(
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      )
   );
 
-/**
- * @returns A dispatchable action.
- */
 export const logOpenSmartSnippetSource =
   (): InsightAction<AnalyticsType.Click> =>
     makeInsightAnalyticsAction(
@@ -59,9 +68,10 @@ export const logOpenSmartSnippetSource =
       AnalyticsType.Click,
       (client, state) => {
         const result = answerSourceSelector(state)!;
-        return client.makeOpenSmartSnippetSource(
+        return client.logOpenSmartSnippetSource(
           partialDocumentInformation(result, state),
-          documentIdentifier(result)
+          documentIdentifier(result),
+          getCaseContextAnalyticsMetadata(state.insightCaseContext)
         );
       }
     );
@@ -75,12 +85,13 @@ export const logOpenSmartSnippetInlineLink = (
     (client, state) => {
       validatePayload(payload, inlineLinkPayloadDefinition());
       const result = answerSourceSelector(state)!;
-      return client.makeOpenSmartSnippetInlineLink(
+      return client.logOpenSmartSnippetInlineLink(
         partialDocumentInformation(result, state),
         {
           ...documentIdentifier(result),
           ...payload,
-        }
+        },
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     }
   );
@@ -90,7 +101,10 @@ export const logOpenSmartSnippetFeedbackModal =
     makeInsightAnalyticsAction(
       'analytics/smartSnippet/feedbackModal/open',
       AnalyticsType.Custom,
-      (client) => client.makeOpenSmartSnippetFeedbackModal()
+      (client, state) =>
+        client.logOpenSmartSnippetFeedbackModal(
+          getCaseContextAnalyticsMetadata(state.insightCaseContext)
+        )
     );
 
 export const logCloseSmartSnippetFeedbackModal =
@@ -98,7 +112,10 @@ export const logCloseSmartSnippetFeedbackModal =
     makeInsightAnalyticsAction(
       'analytics/smartSnippet/feedbackModal/close',
       AnalyticsType.Custom,
-      (client) => client.makeCloseSmartSnippetFeedbackModal()
+      (client, state) =>
+        client.logCloseSmartSnippetFeedbackModal(
+          getCaseContextAnalyticsMetadata(state.insightCaseContext)
+        )
     );
 
 export const logSmartSnippetFeedback = (
@@ -107,7 +124,12 @@ export const logSmartSnippetFeedback = (
   makeInsightAnalyticsAction(
     'analytics/smartSnippet/sendFeedback',
     AnalyticsType.Custom,
-    (client) => client.makeSmartSnippetFeedbackReason(feedback)
+    (client, state) =>
+      client.logSmartSnippetFeedbackReason(
+        feedback,
+        undefined,
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      )
   );
 
 export const logSmartSnippetDetailedFeedback = (
@@ -116,7 +138,12 @@ export const logSmartSnippetDetailedFeedback = (
   makeInsightAnalyticsAction(
     'analytics/smartSnippet/sendFeedback',
     AnalyticsType.Custom,
-    (client) => client.makeSmartSnippetFeedbackReason('other', details)
+    (client, state) =>
+      client.logSmartSnippetFeedbackReason(
+        'other',
+        details,
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      )
   );
 
 export const logExpandSmartSnippetSuggestion = (
@@ -241,3 +268,19 @@ export const logOpenSmartSnippetSuggestionInlineLink = (
       );
     }
   );
+
+export const insightSmartSnippetAnalyticsClient = {
+  logExpandSmartSnippet,
+  logCollapseSmartSnippet,
+  logLikeSmartSnippet,
+  logDislikeSmartSnippet,
+  logOpenSmartSnippetSource,
+  logOpenSmartSnippetInlineLink,
+  logOpenSmartSnippetFeedbackModal,
+  logCloseSmartSnippetFeedbackModal,
+  logSmartSnippetFeedback,
+  logSmartSnippetDetailedFeedback,
+  logExpandSmartSnippetSuggestion,
+  logCollapseSmartSnippetSuggestion,
+  logOpenSmartSnippetSuggestionSource,
+};
