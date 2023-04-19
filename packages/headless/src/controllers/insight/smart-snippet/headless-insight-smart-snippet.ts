@@ -7,6 +7,15 @@ import {
 } from '../../core/smart-snippet/headless-core-smart-snippet';
 import {buildSmartSnippetInteractiveInlineLinks} from './headless-insight-smart-snippet-interactive-inline-links';
 
+export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
+export type {
+  SmartSnippetOptions,
+  SmartSnippetProps,
+  SmartSnippetState,
+  SmartSnippet,
+  SmartSnippetCore,
+} from '../../core/smart-snippet/headless-core-smart-snippet';
+
 /**
  * Creates a `SmartSnippet` controller instance.
  *

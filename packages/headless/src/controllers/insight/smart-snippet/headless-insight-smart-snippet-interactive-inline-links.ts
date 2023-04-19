@@ -1,6 +1,9 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {questionAnswering, search} from '../../../app/reducers';
-import {logOpenSmartSnippetSuggestionInlineLink} from '../../../features/question-answering/question-answering-insight-analytics-actions';
+import {
+  logOpenSmartSnippetInlineLink,
+  logOpenSmartSnippetSuggestionInlineLink,
+} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {
   QuestionAnsweringSection,
   SearchSection,
@@ -9,9 +12,9 @@ import {loadReducerError} from '../../../utils/errors';
 import {getObjectHash} from '../../../utils/utils';
 import {
   buildInteractiveResultCore,
-  InlineLink,
   InteractiveResultCore,
 } from '../../core/interactive-result/headless-core-interactive-result';
+import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links';
 
 /**
  * @internal
@@ -87,17 +90,11 @@ export function buildSmartSnippetInteractiveInlineLinks(
         if (inlineLinkWasClicked(linkId)) {
           return;
         }
-        // TODO: Replace with the comment below after creating the logOpenSmartSnippetInlineLink action for the insight use case.
-        if (questionAnswerId) {
-          engine.dispatch(
-            logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
-          );
-        }
-        // engine.dispatch(
-        //   questionAnswerId
-        //     ? logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
-        //     : logOpenSmartSnippetInlineLink(link)
-        // );
+        engine.dispatch(
+          questionAnswerId
+            ? logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
+            : logOpenSmartSnippetInlineLink(link)
+        );
       }
     );
 
