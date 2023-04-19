@@ -20,7 +20,8 @@ export function buildSmartSnippet(
 ): SmartSnippet {
   const smartSnippet = buildCoreSmartSnippet(
     engine,
-    insightSmartSnippetAnalyticsClient
+    insightSmartSnippetAnalyticsClient,
+    props
   );
 
   const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
