@@ -11,14 +11,8 @@
         await customElements.whenDefined('atomic-simple-builder');
 
         const builder = document.querySelector('atomic-simple-builder');
-        /*
-          TODO: switch for following values when route in prod
-          interfaceId: '0c9eaa4a-8dab-4c11-83d6-24dd1feb961e',
-          accessToken: 'xx71d82ce9-f6fe-4be0-9209-c0e43f6fae81',
-          organizationId: 'searchuisamples',
-        */
         await builder.initialize({
-          interfaceId: '0c9eaa4a-8dab-4c11-83d6-24dd1feb961e',
+          interfaceId: '5be6b830-8605-40e4-8e7a-5c56aa7c750c',
           accessToken: 'xx71d82ce9-f6fe-4be0-9209-c0e43f6fae81',
           organizationId: 'searchuisamples',
           organizationEndpoints: await builder.getOrganizationEndpoints('searchuisamples'),
