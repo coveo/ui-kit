@@ -486,22 +486,13 @@ export class CoveoInsightClient {
 
     // public makeShowLessFoldedResults() {}
 
-    public async logShowMoreFoldedResults(
-        info: PartialDocumentInformation,
-        identifier: DocumentIdentifier,
-        metadata?: CaseMetadata
-    ) {
-        return this.logClickEvent(
-            SearchPageEvents.showMoreFoldedResults,
-            info,
-            identifier,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
-        );
+    public async logShowMoreFoldedResults(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return this.logClickEvent(SearchPageEvents.showMoreFoldedResults, info, identifier);
     }
 
-    // public async logShowLessFoldedResults() {
-    //     return this.logCustomEvent(SearchPageEvents.showLessFoldedResults);
-    // }
+    public async logShowLessFoldedResults() {
+        return this.logCustomEvent(SearchPageEvents.showLessFoldedResults);
+    }
 
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {
         return {
