@@ -163,7 +163,7 @@ export class AtomicSearchBox {
    * The minimum query length required to enable search.
    * For example, to disable the search for empty queries, set this to `1`.
    */
-  @Prop({reflect: true}) public minimumQueryLength = 2;
+  @Prop({reflect: true}) public minimumQueryLength = 0;
 
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
@@ -357,16 +357,6 @@ export class AtomicSearchBox {
       return this.rightPanelRef;
     }
     return this.leftPanelRef || this.rightPanelRef;
-  }
-
-  private get disabledSearchLabel() {
-    if (this.disableSearch) {
-      return this.bindings.i18n.t('search-disabled', {
-        length: this.minimumQueryLength,
-      });
-    }
-
-    return this.bindings.i18n.t('search');
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
@@ -757,6 +747,9 @@ export class AtomicSearchBox {
 
   public render() {
     this.updateBreakpoints();
+    const searchLabel = this.searchBoxCommon.getSearchInputLabel(
+      this.minimumQueryLength
+    );
     return [
       <SearchBoxWrapper disabled={this.disableSearch}>
         <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
@@ -766,12 +759,8 @@ export class AtomicSearchBox {
             ref={(el) => (this.inputRef = el as HTMLInputElement)}
             bindings={this.bindings}
             value={this.searchBoxState.value}
-            title={this.disabledSearchLabel}
-            ariaLabel={
-              this.disableSearch
-                ? this.disabledSearchLabel
-                : this.searchBoxCommon.getSearchInputLabel()
-            }
+            title={searchLabel}
+            ariaLabel={searchLabel}
             onFocus={() => this.onFocus()}
             onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
             onKeyDown={(e) => this.onKeyDown(e)}
@@ -788,7 +777,7 @@ export class AtomicSearchBox {
             bindings={this.bindings}
             disabled={this.disableSearch}
             onClick={() => this.searchBox.submit()}
-            title={this.disabledSearchLabel} // For mouse-over tooltip. Can't tab-over disabled elements.
+            title={searchLabel}
           />
         </atomic-focus-detector>
       </SearchBoxWrapper>,
