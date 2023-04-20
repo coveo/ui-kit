@@ -482,6 +482,27 @@ export class CoveoInsightClient {
         return this.coveoAnalyticsClient.sendClickEvent(payload);
     }
 
+    // public makeShowMoreFoldedResults(info: PartialDocumentInformation, identifier: DocumentIdentifier) {}
+
+    // public makeShowLessFoldedResults() {}
+
+    public async logShowMoreFoldedResults(
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        metadata?: CaseMetadata
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.showMoreFoldedResults,
+            info,
+            identifier,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    // public async logShowLessFoldedResults() {
+    //     return this.logCustomEvent(SearchPageEvents.showLessFoldedResults);
+    // }
+
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {
         return {
             ...(await this.getBaseEventRequest(metadata)),
