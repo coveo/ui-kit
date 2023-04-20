@@ -359,9 +359,9 @@ export class AtomicSearchBox {
     return this.leftPanelRef || this.rightPanelRef;
   }
 
-  private get tooltipText() {
+  private get disabledSearchLabel() {
     if (this.disableSearch) {
-      return this.bindings.i18n.t('search-disabled-tooltip', {
+      return this.bindings.i18n.t('search-disabled', {
         length: this.minimumQueryLength,
       });
     }
@@ -766,8 +766,12 @@ export class AtomicSearchBox {
             ref={(el) => (this.inputRef = el as HTMLInputElement)}
             bindings={this.bindings}
             value={this.searchBoxState.value}
-            title={this.tooltipText}
-            ariaLabel={this.searchBoxCommon.getSearchInputLabel()}
+            title={this.disabledSearchLabel}
+            ariaLabel={
+              this.disableSearch
+                ? this.disabledSearchLabel
+                : this.searchBoxCommon.getSearchInputLabel()
+            }
             onFocus={() => this.onFocus()}
             onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
             onKeyDown={(e) => this.onKeyDown(e)}
@@ -784,7 +788,7 @@ export class AtomicSearchBox {
             bindings={this.bindings}
             disabled={this.disableSearch}
             onClick={() => this.searchBox.submit()}
-            title={this.tooltipText}
+            title={this.disabledSearchLabel} // For mouse-over tooltip. Can't tab-over disabled elements.
           />
         </atomic-focus-detector>
       </SearchBoxWrapper>,

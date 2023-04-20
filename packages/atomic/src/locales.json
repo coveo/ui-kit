@@ -101,9 +101,9 @@
     "en": "{{label}}. Button",
     "fr": "{{label}}. Bouton"
   },
-  "search-disabled-tooltip": {
-    "en": "To enable search, input a query with minimum of {{length}} character(s).",
-    "fr": "Pour activer la recherche, entrez une requête avec un minimum de {{length}} caractère(s)."
+  "search-disabled": {
+    "en": "Enter a query with minimum of {{length}} character(s) to enable search.",
+    "fr": "Entrez une requête avec un minimum de {{length}} caractère(s) pour activer la recherche."
   },
   "query-suggestion-label": {
     "en": "“{{query}}”",
