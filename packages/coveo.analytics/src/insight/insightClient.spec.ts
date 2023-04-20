@@ -478,6 +478,19 @@ describe('InsightClient', () => {
                 expectedMetadata
             );
         });
+        it('should send proper payload for #logShowMoreFoldedResults', async () => {
+            await client.logShowMoreFoldedResults(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, fakeDocID);
+        });
+
+        it('should send proper payload for #logShowLessFoldedResults', async () => {
+            await client.logShowLessFoldedResults();
+            expectMatchCustomEventPayload(SearchPageEvents.showLessFoldedResults);
+        });
+
+        it.skip('should send proper payload for #makeShowMoreFoldedResults', async () => {});
+
+        it.skip('should send proper payload for #makeShowLessFoldedResults', async () => {});
     });
 
     describe('when the case metadata is included', () => {
@@ -1026,6 +1039,27 @@ describe('InsightClient', () => {
                 expectedMetadata
             );
         });
+
+        it('should send proper payload for #logShowMoreFoldedResults', async () => {
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logShowMoreFoldedResults(fakeDocInfo, fakeDocID, baseCaseMetadata);
+            expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #logShowLessFoldedResults', async () => {
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logShowLessFoldedResults(baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.showLessFoldedResults, expectedMetadata);
+        });
+
+        it.skip('should send proper payload for #makeShowMoreFoldedResults', async () => {});
+
+        it.skip('should send proper payload for #makeShowLessFoldedResults', async () => {});
     });
 
     it('should enable analytics tracking by default', () => {
@@ -1139,18 +1173,4 @@ describe('InsightClient', () => {
             pageView,
         });
     });
-
-    it('should send proper payload for #logShowMoreFoldedResults', async () => {
-        await client.logShowMoreFoldedResults(fakeDocInfo, fakeDocID);
-        expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, fakeDocID);
-    });
-
-    it('should send proper payload for #logShowLessFoldedResults', async () => {
-        await client.logShowLessFoldedResults();
-        expectMatchCustomEventPayload(SearchPageEvents.showLessFoldedResults);
-    });
-
-    it.skip('should send proper payload for #makeShowMoreFoldedResults', async () => {});
-
-    it.skip('should send proper payload for #makeShowLessFoldedResults', async () => {});
 });

@@ -482,16 +482,28 @@ export class CoveoInsightClient {
         return this.coveoAnalyticsClient.sendClickEvent(payload);
     }
 
-    // public makeShowMoreFoldedResults(info: PartialDocumentInformation, identifier: DocumentIdentifier) {}
+    // public makeShowMoreFoldedResults(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {}
 
-    // public makeShowLessFoldedResults() {}
+    // public makeShowLessFoldedResults(metadata?: CaseMetadata) {}
 
-    public async logShowMoreFoldedResults(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.logClickEvent(SearchPageEvents.showMoreFoldedResults, info, identifier);
+    public async logShowMoreFoldedResults(
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        metadata?: CaseMetadata
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.showMoreFoldedResults,
+            info,
+            identifier,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
     }
 
-    public async logShowLessFoldedResults() {
-        return this.logCustomEvent(SearchPageEvents.showLessFoldedResults);
+    public async logShowLessFoldedResults(metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.showLessFoldedResults,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
     }
 
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {
