@@ -482,10 +482,6 @@ export class CoveoInsightClient {
         return this.coveoAnalyticsClient.sendClickEvent(payload);
     }
 
-    // public makeShowMoreFoldedResults(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {}
-
-    // public makeShowLessFoldedResults(metadata?: CaseMetadata) {}
-
     public async logShowMoreFoldedResults(
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,

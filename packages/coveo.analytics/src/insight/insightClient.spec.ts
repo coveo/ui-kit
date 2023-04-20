@@ -478,19 +478,15 @@ describe('InsightClient', () => {
                 expectedMetadata
             );
         });
-        it('should send proper payload for #logShowMoreFoldedResults', async () => {
+        it('should send proper payload for #showMoreFoldedResults', async () => {
             await client.logShowMoreFoldedResults(fakeDocInfo, fakeDocID);
             expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, fakeDocID);
         });
 
-        it('should send proper payload for #logShowLessFoldedResults', async () => {
+        it('should send proper payload for #showLessFoldedResults', async () => {
             await client.logShowLessFoldedResults();
             expectMatchCustomEventPayload(SearchPageEvents.showLessFoldedResults);
         });
-
-        it.skip('should send proper payload for #makeShowMoreFoldedResults', async () => {});
-
-        it.skip('should send proper payload for #makeShowLessFoldedResults', async () => {});
     });
 
     describe('when the case metadata is included', () => {
@@ -1040,7 +1036,7 @@ describe('InsightClient', () => {
             );
         });
 
-        it('should send proper payload for #logShowMoreFoldedResults', async () => {
+        it('should send proper payload for #showMoreFoldedResults', async () => {
             const expectedMetadata = {
                 ...fakeDocID,
                 ...expectedBaseCaseMetadata,
@@ -1049,17 +1045,13 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, expectedMetadata);
         });
 
-        it('should send proper payload for #logShowLessFoldedResults', async () => {
+        it('should send proper payload for #showLessFoldedResults', async () => {
             const expectedMetadata = {
                 ...expectedBaseCaseMetadata,
             };
             await client.logShowLessFoldedResults(baseCaseMetadata);
             expectMatchCustomEventPayload(SearchPageEvents.showLessFoldedResults, expectedMetadata);
         });
-
-        it.skip('should send proper payload for #makeShowMoreFoldedResults', async () => {});
-
-        it.skip('should send proper payload for #makeShowLessFoldedResults', async () => {});
     });
 
     it('should enable analytics tracking by default', () => {
