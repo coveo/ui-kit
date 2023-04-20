@@ -490,21 +490,21 @@ describe('Search Box Test Suites', () => {
 
   describe('with minimum input to enable search', () => {
     const testQuery = 'test';
-    const minInputLen = testQuery.length;
+    const minimumQueryLength = testQuery.length;
     beforeEach(() => {
       new TestFixture()
         .with(
           addSearchBox({
-            props: {'min-input-to-enable-search': minInputLen},
+            props: {'minimum-query-length': minimumQueryLength},
           })
         )
         .init();
     });
 
     it('search button is enabled when a query with minimum length is input', () => {
-      typeSearchInput(testQuery.slice(0, minInputLen - 1));
+      typeSearchInput(testQuery.slice(0, minimumQueryLength - 1));
       SearchBoxSelectors.submitButton().should('be.disabled');
-      typeSearchInput(testQuery.slice(minInputLen - 1));
+      typeSearchInput(testQuery.slice(minimumQueryLength - 1));
       SearchBoxSelectors.submitButton().should('not.be.disabled');
     });
 
@@ -512,7 +512,7 @@ describe('Search Box Test Suites', () => {
       typeSearchInput(testQuery);
       SearchBoxSelectors.submitButton().should('not.be.disabled');
 
-      typeSearchInput('{backspace}'.repeat(minInputLen), '');
+      typeSearchInput('{backspace}'.repeat(minimumQueryLength), '');
       SearchBoxSelectors.submitButton().should('be.disabled');
     });
   });
