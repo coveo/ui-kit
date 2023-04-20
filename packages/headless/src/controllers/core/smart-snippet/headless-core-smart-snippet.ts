@@ -242,7 +242,7 @@ export function buildCoreSmartSnippet(
         return;
       }
       lastSearchResponseId = searchResponseId;
-      engine.dispatch(analyticsClient.logOpenSmartSnippetSource);
+      engine.dispatch(analyticsClient.logOpenSmartSnippetSource());
       engine.dispatch(pushRecentResult(result));
     }
   );
