@@ -125,4 +125,10 @@ describe('SmartSnippet', () => {
     smartSnippet.sendDetailedFeedback(mockFeedbackDetails);
     expect(engine.actions).toContainEqual(closeFeedbackModal());
   });
+
+  it('#sendDetailedFeedback dispatches #closeFeedbackModal', () => {
+    const mockFeedbackDetails = 'foo';
+    smartSnippet.sendDetailedFeedback(mockFeedbackDetails);
+    expect(engine.actions).toContainEqual(closeFeedbackModal());
+  });
 });
