@@ -51,7 +51,7 @@ export class SearchBoxCommon {
     return (
       this.hasSuggestions &&
       this.props.getIsExpanded() &&
-      !this.props.disableSearch
+      !this.props.getIsSearchDisabled()
     );
   }
 
@@ -92,7 +92,7 @@ export class SearchBoxCommon {
   }
 
   public getSearchInputLabel(minimumQueryLength = 0) {
-    if (this.props.disableSearch) {
+    if (this.props.getIsSearchDisabled()) {
       return this.props.bindings.i18n.t('search-disabled', {
         length: minimumQueryLength,
       });

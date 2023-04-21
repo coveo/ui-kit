@@ -157,6 +157,7 @@ export class AtomicSearchBox {
    * Perfect for use cases where you need to disable the search conditionally.
    * For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
    */
+  // TODO: create a private computed prop e.g. isSearchDisabled instead of mutating a user config prop
   @Prop({reflect: true, mutable: true}) public disableSearch = false;
 
   /**
@@ -243,11 +244,11 @@ export class AtomicSearchBox {
 
     this.searchBoxCommon = new SearchBoxCommon({
       id: this.id,
-      disableSearch: this.disableSearch,
       bindings: this.bindings,
       querySetActions: this.querySetActions,
       focusValue: this.focusValue.bind(this),
       clearSuggestions: this.clearSuggestions.bind(this),
+      getIsSearchDisabled: () => this.disableSearch,
       getIsExpanded: () => this.isExpanded,
       getPanelInFocus: () => this.panelInFocus,
       getActiveDescendant: () => this.activeDescendant,
