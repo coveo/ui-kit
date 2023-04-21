@@ -592,4 +592,12 @@
       <label>Aucun item lié</label>
       <name>quantic_NoRelatedItems</name>
     </customLabels>
+    <customLabels>
+      <label>Ouvre dans un sous-onglet de la console Salesforce</label>
+      <name>quantic_OpensInSalesforceSubTab</name>
+    </customLabels>
+    <customLabels>
+      <label>Ouvre dans un onglet du navigateur web</label>
+      <name>quantic_OpensInBrowserTab</name>
+    </customLabels>
 </Translations>

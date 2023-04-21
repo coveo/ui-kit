@@ -1594,5 +1594,13 @@
   "quickview-loaded": {
     "en": "Quickview for result {{title}} loaded. {{first}} out of {{last}} available.",
     "fr": "Aperçu pour le résultat {{title}} chargé. {{first}} de {{last}} disponible."
+  },
+  "more": {
+    "en": "More",
+    "fr": "Plus"
+  },
+  "tab-popover": {
+    "en": "Popover menu for more tabs",
+    "fr": "Menu contextuel pour plus d'onglets"
   }
 }

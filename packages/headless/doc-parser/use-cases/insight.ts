@@ -97,16 +97,37 @@ const actionLoaders: ActionLoaderConfiguration[] = [
     initializer: 'loadInsightSearchActions',
   },
   {
+    initializer: 'loadQuerySetActions',
+  },
+  {
     initializer: 'loadInsightAnalyticsActions',
   },
   {
-    initializer: 'loadInsightSearchAnalyticsActions',
+    initializer: 'loadDateFacetSetActions',
   },
   {
     initializer: 'loadNumericFacetSetActions',
   },
   {
+    initializer: 'loadRecentResultsActions',
+  },
+  {
+    initializer: 'loadDateFacetSetActions',
+  },
+  {
     initializer: 'loadCaseContextActions',
+  },
+  {
+    initializer: 'loadInsightSearchAnalyticsActions',
+  },
+  {
+    initializer: 'loadFieldActions',
+  },
+  {
+    initializer: 'loadAttachedResultsActions',
+  },
+  {
+    initializer: 'loadGenericAnalyticsActions',
   },
 ];
 

@@ -14,6 +14,7 @@ export interface RecentQueriesActionCreators {
   /**
    * Initializes the `recentQueries` state.
    * @param payload (RegisterRecentQueriesCreatorPayload) The initial state and options.
+   * @returns A dispatchable action.
    */
   registerRecentQueries(
     payload: RegisterRecentQueriesCreatorPayload
@@ -21,6 +22,7 @@ export interface RecentQueriesActionCreators {
 
   /**
    * Clears the recent queries list.
+   * @returns A dispatchable action.
    */
   clearRecentQueries(): PayloadAction;
 }

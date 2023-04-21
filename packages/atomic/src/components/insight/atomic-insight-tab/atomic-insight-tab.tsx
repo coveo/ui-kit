@@ -1,4 +1,5 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Unsubscribe} from '@coveo/headless';
+import {Component, h, Prop, State, Method, Element} from '@stencil/core';
 import {buildInsightTab, InsightTab, InsightTabState} from '..';
 import {
   BindStateToController,
@@ -7,6 +8,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {Button} from '../../common/button';
+import {dispatchTabLoaded, TabCommon} from '../../common/tabs/tab-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -18,10 +20,12 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
   shadow: true,
 })
 export class AtomicInsightTab
-  implements InitializableComponent<InsightBindings>
+  implements TabCommon, InitializableComponent<InsightBindings>
 {
   private tab!: InsightTab;
   private tabId = randomID('insight-tab');
+
+  @Element() host!: HTMLElement;
 
   @InitializeBindings() public bindings!: InsightBindings;
 
@@ -40,18 +44,39 @@ export class AtomicInsightTab
    * Whether this tab is active upon rendering.
    * If multiple tabs are set to active on render, the last one to be rendered will override the others.
    */
-  @Prop({reflect: true}) public active = false;
+  @Prop({reflect: true, mutable: true}) public active = false;
 
   /**
    * The expression that will be passed to the search as a `cq` paramenter upon being selected.
    */
   @Prop() public expression!: string;
 
+  private unsubscribe: Unsubscribe = () => {};
+
+  /**
+   * Activates the tab.
+   */
+  @Method()
+  async select() {
+    this.tab.select();
+  }
+
   public initialize() {
     this.tab = buildInsightTab(this.bindings.engine, {
       options: {expression: this.expression, id: this.tabId},
       initialState: {isActive: this.active},
     });
+    this.unsubscribe = this.tab.subscribe(
+      () => (this.active = this.tab.state.isActive)
+    );
+  }
+
+  public componentDidRender() {
+    dispatchTabLoaded(this.host);
+  }
+
+  public disconnectedCallback() {
+    this.unsubscribe();
   }
 
   public render() {
