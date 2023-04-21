@@ -25,6 +25,12 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildFrequentlyBoughtTogetherList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [
