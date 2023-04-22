@@ -120,6 +120,7 @@ export class AtomicSearchBox {
   @State() public error!: Error;
   @State() private suggestedQuery = '';
   @State() private isExpanded = false;
+  @State() private isSearchDisabled = false;
   @State() private activeDescendant = '';
   @State() private previousActiveDescendantElement: HTMLElement | null = null;
   @State() private leftSuggestions: SearchBoxSuggestions[] = [];
@@ -157,8 +158,7 @@ export class AtomicSearchBox {
    * Perfect for use cases where you need to disable the search conditionally.
    * For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
    */
-  // TODO: create a private computed prop e.g. isSearchDisabled instead of mutating a user config prop
-  @Prop({reflect: true, mutable: true}) public disableSearch = false;
+  @Prop({reflect: true}) public disableSearch = false;
 
   /**
    * The minimum query length required to enable search.
@@ -211,7 +211,7 @@ export class AtomicSearchBox {
   public initialize() {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
-    this.disableSearch = this.minimumQueryLength > 0;
+    this.isSearchDisabled = this.disableSearch || this.minimumQueryLength > 0;
 
     const searchBoxOptions: SearchBoxOptions = {
       id: this.id,
@@ -248,7 +248,7 @@ export class AtomicSearchBox {
       querySetActions: this.querySetActions,
       focusValue: this.focusValue.bind(this),
       clearSuggestions: this.clearSuggestions.bind(this),
-      getIsSearchDisabled: () => this.disableSearch,
+      getIsSearchDisabled: () => this.isSearchDisabled,
       getIsExpanded: () => this.isExpanded,
       getPanelInFocus: () => this.panelInFocus,
       getActiveDescendant: () => this.activeDescendant,
@@ -452,8 +452,9 @@ export class AtomicSearchBox {
   }
 
   private onInput(value: string) {
-    this.disableSearch = this.minimumQueryLength > value.trim().length;
-    if (this.disableSearch) {
+    this.isSearchDisabled =
+      this.disableSearch || this.minimumQueryLength > value.trim().length;
+    if (this.isSearchDisabled) {
       return;
     }
     this.isExpanded = true;
@@ -546,7 +547,7 @@ export class AtomicSearchBox {
   }
 
   private onKeyDown(e: KeyboardEvent) {
-    if (this.disableSearch) {
+    if (this.isSearchDisabled) {
       return;
     }
 
@@ -752,7 +753,7 @@ export class AtomicSearchBox {
       this.minimumQueryLength
     );
     return [
-      <SearchBoxWrapper disabled={this.disableSearch}>
+      <SearchBoxWrapper disabled={this.isSearchDisabled}>
         <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
           <SearchInput
             inputRef={this.inputRef}
@@ -776,7 +777,7 @@ export class AtomicSearchBox {
           {this.renderSuggestions()}
           <SubmitButton
             bindings={this.bindings}
-            disabled={this.disableSearch}
+            disabled={this.isSearchDisabled}
             onClick={() => this.searchBox.submit()}
             title={searchLabel}
           />
