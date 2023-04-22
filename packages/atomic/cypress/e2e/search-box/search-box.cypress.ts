@@ -126,7 +126,7 @@ describe('Search Box Test Suites', () => {
       );
     });
 
-    describe('when changing the redirection-url prop, reinitializing the search box', () => {
+    describe('when changing the redirection-url prop, re-initializing the search box', () => {
       before(() => {
         new TestFixture()
           .with(setSuggestions(numOfSuggestions))
@@ -474,25 +474,39 @@ describe('Search Box Test Suites', () => {
   describe('with disableSearch set to true', () => {
     beforeEach(() => {
       new TestFixture()
-        .with(addSearchBox({props: {'disable-search': 'true'}}))
+        .with(
+          addSearchBox({
+            props: {
+              'disable-search': 'true',
+              'minimum-query-length': 1, // disable-search should override this setting
+            },
+          })
+        )
         .with(addQuerySummary())
         .withoutFirstAutomaticSearch()
         .init();
     });
 
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(searchBoxComponent);
+    });
+
     it('there are no search suggestions or errors on query input', () => {
       typeSearchInput('test');
+      SearchBoxSelectors.submitButton().should('be.disabled');
       SearchBoxAssertions.assertHasSuggestionsCount(0);
       QuerySummaryAssertions.assertHasPlaceholder();
       CommonAssertions.assertConsoleError(false);
     });
   });
 
-  describe('with minimum input to enable search', () => {
+  describe('with minimum query length to enable search', () => {
     const testQuery = 'test';
+    const numOfSuggestions = 2;
     const minimumQueryLength = testQuery.length;
     beforeEach(() => {
       new TestFixture()
+        .with(setSuggestions(numOfSuggestions))
         .with(
           addSearchBox({
             props: {'minimum-query-length': minimumQueryLength},
@@ -501,11 +515,21 @@ describe('Search Box Test Suites', () => {
         .init();
     });
 
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(searchBoxComponent);
+    });
+
     it('search button is enabled when a query with minimum length is input', () => {
-      typeSearchInput(testQuery.slice(0, minimumQueryLength - 1));
+      typeSearchInput(testQuery.slice(0, minimumQueryLength - 1)); // enter query less than min len
       SearchBoxSelectors.submitButton().should('be.disabled');
-      typeSearchInput(testQuery.slice(minimumQueryLength - 1));
+      SearchBoxAssertions.assertHasSuggestionsCount(0);
+
+      typeSearchInput(testQuery.slice(minimumQueryLength - 1)); // enter rest of the query
       SearchBoxSelectors.submitButton().should('not.be.disabled');
+
+      typeSearchInput('{downarrow}'.repeat(numOfSuggestions));
+      SearchBoxAssertions.assertHasSuggestionsCount(numOfSuggestions);
+      SearchBoxAssertions.assertSuggestionIsSelected(numOfSuggestions);
     });
 
     it('search button is disabled when query is deleted', () => {
