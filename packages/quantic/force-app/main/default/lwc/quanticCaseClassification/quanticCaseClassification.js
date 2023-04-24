@@ -107,6 +107,20 @@ export default class QuanticCaseClassification extends LightningElement {
    * @defaultValue `'Select an option'`
    */
   @api messageWhenValueMissing = this.labels.selectOption;
+  /**
+   * Whether the Quantic Case Classification component should automatically fetch new case classifications when its value changes.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api fetchClassificationOnChange = false;
+  /**
+   * Whether the Quantic Case Classification component should automatically fetch new document suggestions when its value changes.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api fetchDocumentSuggestionOnChange = false;
 
   /** @type {Array<object>} */
   @track classifications = [];
@@ -375,7 +389,14 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   setFieldValue(value, autoSelection) {
     if (this.field.state.value !== value) {
-      this.field.update(value, undefined, autoSelection);
+      this.field.update(
+        value,
+        {
+          caseClassifications: this.fetchClassificationOnChange,
+          documentSuggestions: this.fetchDocumentSuggestionOnChange,
+        },
+        autoSelection
+      );
     }
     this._value = value;
     if (this._errorMessage && value) {
