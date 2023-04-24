@@ -37,6 +37,12 @@ const controllers: ControllerConfiguration[] = [
       react_fn: [],
     },
   },
+  {
+    initializer: 'buildFrequentlyViewedSameCategoryList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

@@ -38,7 +38,6 @@ export interface CartRecommendationsListProps {
 
 /**
  * The `CartRecommendationsList` controller recommends other products that were frequently purchased together in previous similar carts.
-
  */
 export interface CartRecommendationsList extends Controller {
   /**

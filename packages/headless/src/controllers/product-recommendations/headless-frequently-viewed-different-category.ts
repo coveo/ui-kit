@@ -1,8 +1,8 @@
 import {Schema} from '@coveo/bueno';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 import {validateOptions} from '../../utils/validate-payload';
-import {ErrorPayload} from '../controller/error-payload';
 import {Controller} from '../controller/headless-controller';
 import {
   baseProductRecommendationsOptionsSchema,
@@ -76,7 +76,7 @@ export interface FrequentlyViewedDifferentCategoryListState {
   /**
    * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
    */
-  error: ErrorPayload | null;
+  error: SearchAPIErrorWithStatusCode | null;
 
   /**
    * Whether a cart recommendation request is currently being executed against the Coveo platform.

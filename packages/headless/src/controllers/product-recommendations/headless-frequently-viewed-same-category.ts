@@ -1,6 +1,9 @@
-import {Schema, SchemaValues} from '@coveo/bueno';
+import {Schema} from '@coveo/bueno';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 import {validateOptions} from '../../utils/validate-payload';
+import {Controller} from '../controller/headless-controller';
 import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
@@ -10,24 +13,88 @@ const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
-export type FrequentlyViewedSameCategoryListOptions = SchemaValues<
-  typeof optionsSchema
->;
+export interface FrequentlyViewedSameCategoryListOptions {
+  /**
+   * The SKUs of the products in the cart.
+   */
+  skus?: string[];
+  /**
+   * The maximum number of recommendations, from 1 to 50.
+   *
+   * @defaultValue `5`
+   */
+  maxNumberOfRecommendations?: number;
+  /**
+   * Additional fields to fetch in the results.
+   */
+  additionalFields?: string[];
+}
 
 export interface FrequentlyViewedSameCategoryListProps {
   options?: FrequentlyViewedSameCategoryListOptions;
 }
 
-export type FrequentlyViewedSameCategoryList = ReturnType<
-  typeof buildFrequentlyViewedSameCategoryList
->;
-export type FrequentlyViewedSameCategoryListState =
-  FrequentlyViewedSameCategoryList['state'];
+/**
+ * The `FrequentlyViewedSameCategoryList` controller recommends the products that have been viewed the most with the product that the user is currently viewing.
+ * The recommendations are filtered to show products that have the same category than the one the user is currently viewing.
+ */
+export interface FrequentlyViewedSameCategoryList extends Controller {
+  /**
+   * Gets new recommendations based on the current SKUs.
+   */
+  refresh(): void;
 
-export const buildFrequentlyViewedSameCategoryList = (
+  /**
+   * Sets the SKUs in the cart.
+   *
+   * @param skus - The SKUs of the products in the cart.
+   */
+  setSkus(skus: string[]): void;
+
+  /**
+   * The state of the `FrequentlyViewedSameCategoryList` controller.
+   */
+  state: FrequentlyViewedSameCategoryListState;
+}
+
+export interface FrequentlyViewedSameCategoryListState {
+  /**
+   * The SKUs of the products in the cart.
+   */
+  skus: string[];
+
+  /**
+   * The maximum number of recommendations.
+   */
+  maxNumberOfRecommendations: number;
+
+  /**
+   * The products recommended by the Coveo platform.
+   */
+  recommendations: ProductRecommendation[];
+
+  /**
+   * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
+   */
+  error: SearchAPIErrorWithStatusCode | null;
+
+  /**
+   * Whether a cart recommendation request is currently being executed against the Coveo platform.
+   */
+  isLoading: boolean;
+}
+
+/**
+ * Creates a `FrequentlyViewedSameCategoryList` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `FrequentlyViewedSameCategoryList` properties.
+ * @returns A `FrequentlyViewedSameCategoryList` controller instance.
+ */
+export function buildFrequentlyViewedSameCategoryList(
   engine: ProductRecommendationEngine,
   props: FrequentlyViewedSameCategoryListProps
-) => {
+): FrequentlyViewedSameCategoryList {
   const options = validateOptions(
     engine,
     optionsSchema,
@@ -41,4 +108,4 @@ export const buildFrequentlyViewedSameCategoryList = (
       id: 'frequentViewedSameCategory',
     },
   });
-};
+}
