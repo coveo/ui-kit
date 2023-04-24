@@ -478,6 +478,15 @@ describe('InsightClient', () => {
                 expectedMetadata
             );
         });
+        it('should send proper payload for #showMoreFoldedResults', async () => {
+            await client.logShowMoreFoldedResults(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, fakeDocID);
+        });
+
+        it('should send proper payload for #showLessFoldedResults', async () => {
+            await client.logShowLessFoldedResults();
+            expectMatchCustomEventPayload(SearchPageEvents.showLessFoldedResults);
+        });
     });
 
     describe('when the case metadata is included', () => {
@@ -1025,6 +1034,23 @@ describe('InsightClient', () => {
                 fakeDocInfo,
                 expectedMetadata
             );
+        });
+
+        it('should send proper payload for #showMoreFoldedResults', async () => {
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logShowMoreFoldedResults(fakeDocInfo, fakeDocID, baseCaseMetadata);
+            expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #showLessFoldedResults', async () => {
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logShowLessFoldedResults(baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.showLessFoldedResults, expectedMetadata);
         });
     });
 
