@@ -4,4 +4,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   silent: true,
+  setupFiles: [
+    '<rootDir>/src/test/jest.crypto-setup.js',
+  ],
 };
