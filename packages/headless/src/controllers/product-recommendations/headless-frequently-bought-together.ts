@@ -37,6 +37,9 @@ export interface FrequentlyBoughtTogetherListProps {
   options: FrequentlyBoughtTogetherListOptions;
 }
 
+/**
+ * The `FrequentlyBoughtTogetherList` controller recommends items frequently bought with the current product based on purchases made by other users.
+ */
 export interface FrequentlyBoughtTogetherList extends Controller {
   /**
    * Sets the SKU of the product you wish to get frequently bought together suggestions for.

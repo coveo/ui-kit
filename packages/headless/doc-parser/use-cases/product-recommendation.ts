@@ -49,6 +49,12 @@ const controllers: ControllerConfiguration[] = [
       react_fn: [],
     },
   },
+  {
+    initializer: 'buildPopularBoughtRecommendationsList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [
