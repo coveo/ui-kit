@@ -41,7 +41,7 @@ export interface PopularBoughtRecommendationsList extends Controller {
    */
   refresh(): void;
   /**
-   * The state of the `CartRecommendationsList` controller.
+   * The state of the `PopularBoughtRecommendationsList` controller.
    */
   state: PopularBoughtRecommendationsListState;
 }
@@ -58,12 +58,12 @@ export interface PopularBoughtRecommendationsListState {
   recommendations: ProductRecommendation[];
 
   /**
-   * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
+   * An error returned by the Coveo platform when executing a recommendation request, if any. This is `null` otherwise.
    */
   error: SearchAPIErrorWithStatusCode | null;
 
   /**
-   * Whether a cart recommendation request is currently being executed against the Coveo platform.
+   * Whether a recommendation request is currently being executed against the Coveo platform.
    */
   isLoading: boolean;
 }
@@ -73,7 +73,7 @@ export interface PopularBoughtRecommendationsListState {
  *
  * @param engine - The headless engine.
  * @param props - The configurable `PopularBoughtRecommendationsList` properties.
- * @returns A `CartRecommendatPopularBoughtRecommendationsListionsList` controller instance.
+ * @returns A `PopularBoughtRecommendationsList` controller instance.
  */
 export function buildPopularBoughtRecommendationsList(
   engine: ProductRecommendationEngine,

@@ -55,6 +55,14 @@ const controllers: ControllerConfiguration[] = [
       react_fn: [],
     },
   },
+  {
+    initializer: 'buildPopularViewedRecommendationsList',
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/product-recommendations/popular-viewed.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [
