@@ -1239,7 +1239,7 @@ export namespace Components {
     }
     interface AtomicResultBadge {
         /**
-          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
+          * The field to display in the badge.  Not compatible with `label`, slotted elements and multi-value fields.
          */
         "field"?: string;
         /**
@@ -3912,7 +3912,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultBadge {
         /**
-          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
+          * The field to display in the badge.  Not compatible with `label`, slotted elements and multi-value fields.
          */
         "field"?: string;
         /**
