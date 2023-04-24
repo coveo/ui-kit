@@ -181,13 +181,13 @@ export function buildEngine<
   if (shouldWarnAboutOrganizationEndpoints(options)) {
     // @v3 make organizationEndpoints the default.
     engine.logger.warn(
-      'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments.'
+      'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).'
     );
   }
 
   if (shouldWarnAboutPlatformURL(options)) {
     engine.logger.warn(
-      `The \`platformUrl\` (${options.configuration.platformUrl}) option will be deprecated in the next major version. Consider using the \`organizationEndpoints\` option instead.`
+      `The \`platformUrl\` (${options.configuration.platformUrl}) option will be deprecated in the next major version. Consider using the \`organizationEndpoints\` option instead. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).`
     );
   }
 
