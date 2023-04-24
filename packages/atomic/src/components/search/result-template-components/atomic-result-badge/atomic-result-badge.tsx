@@ -10,9 +10,15 @@ import {ResultContext} from '../result-template-decorators';
  * ```html
  * <atomic-result-badge label="trending"></atomic-result-badge>
  * ```
- * * The contents of a field:
+ * * The contents of a single-value field:
  * ```html
  * <atomic-result-badge field="objecttype"></atomic-result-badge>
+ * ```
+ * * The contents of a multi-value field:
+ * ```html
+ * <atomic-result-badge icon="https://my-website.fake/language.svg">
+      <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
+   </atomic-result-badge>
  * ```
  * * An icon:
  * ```html
@@ -41,7 +47,7 @@ export class AtomicResultBadge {
   /**
    * The field to display in the badge.
    *
-   * Not compatible with `label` nor slotted elements.
+   * Not compatible with `label`, slotted elements and multi-value fields.
    */
   @Prop({reflect: true}) public field?: string;
 
