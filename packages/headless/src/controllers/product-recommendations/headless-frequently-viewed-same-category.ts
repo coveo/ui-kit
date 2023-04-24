@@ -15,7 +15,7 @@ const optionsSchema = new Schema({
 
 export interface FrequentlyViewedSameCategoryListOptions {
   /**
-   * The SKUs of the products in the cart.
+   * The SKUs of the products to fetch recommendations for.
    */
   skus?: string[];
   /**
@@ -45,9 +45,9 @@ export interface FrequentlyViewedSameCategoryList extends Controller {
   refresh(): void;
 
   /**
-   * Sets the SKUs in the cart.
+   * Sets the SKUs of the products to fetch recommendations for.
    *
-   * @param skus - The SKUs of the products in the cart.
+   * @param skus - The SKUs of the products to fetch recommendations for.
    */
   setSkus(skus: string[]): void;
 
@@ -59,7 +59,7 @@ export interface FrequentlyViewedSameCategoryList extends Controller {
 
 export interface FrequentlyViewedSameCategoryListState {
   /**
-   * The SKUs of the products in the cart.
+   * The SKUs of the products to fetch recommendations for.
    */
   skus: string[];
 
@@ -79,7 +79,7 @@ export interface FrequentlyViewedSameCategoryListState {
   error: SearchAPIErrorWithStatusCode | null;
 
   /**
-   * Whether a cart recommendation request is currently being executed against the Coveo platform.
+   * Whether a recommendation request is currently being executed against the Coveo platform.
    */
   isLoading: boolean;
 }

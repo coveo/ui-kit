@@ -18,7 +18,7 @@ const optionsSchema = new Schema({
 
 export interface FrequentlyBoughtTogetherListOptions {
   /**
-   * The SKU of the product to get recommendations for.
+   * The SKU of the products to fetch recommendations for.
    */
   sku: string;
   /**
@@ -78,7 +78,7 @@ export interface FrequentlyBoughtTogetherListState {
   error: SearchAPIErrorWithStatusCode | null;
 
   /**
-   * Whether a cart recommendation request is currently being executed against the Coveo platform.
+   * Whether a recommendation request is currently being executed against the Coveo platform.
    */
   isLoading: boolean;
 }

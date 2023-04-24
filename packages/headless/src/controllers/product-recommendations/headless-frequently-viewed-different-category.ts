@@ -15,7 +15,7 @@ const optionsSchema = new Schema({
 
 export interface FrequentlyViewedDifferentCategoryListOptions {
   /**
-   * The SKUs of the products in the cart.
+   * The SKUs of the products to fetch recommendations for.
    */
   skus?: string[];
   /**
@@ -45,21 +45,21 @@ export interface FrequentlyViewedDifferentCategoryList extends Controller {
   refresh(): void;
 
   /**
-   * Sets the SKUs in the cart.
+   * Sets the SKUs of the products to fetch recommendations for.
    *
    * @param skus - The SKUs of the products in the cart.
    */
   setSkus(skus: string[]): void;
 
   /**
-   * The state of the `CartRecommendationsList` controller.
+   * The state of the `FrequentlyViewedDifferentCategoryList` controller.
    */
   state: FrequentlyViewedDifferentCategoryListState;
 }
 
 export interface FrequentlyViewedDifferentCategoryListState {
   /**
-   * The SKUs of the products in the cart.
+   * The SKUs of the products to fetch recommendations for.
    */
   skus: string[];
 
@@ -79,7 +79,7 @@ export interface FrequentlyViewedDifferentCategoryListState {
   error: SearchAPIErrorWithStatusCode | null;
 
   /**
-   * Whether a cart recommendation request is currently being executed against the Coveo platform.
+   * Whether a recommendation request is currently being executed against the Coveo platform.
    */
   isLoading: boolean;
 }

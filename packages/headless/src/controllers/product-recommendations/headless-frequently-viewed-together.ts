@@ -1,6 +1,9 @@
-import {Schema, SchemaValues} from '@coveo/bueno';
+import {Schema} from '@coveo/bueno';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 import {validateOptions} from '../../utils/validate-payload';
+import {Controller} from '../controller/headless-controller';
 import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
@@ -10,24 +13,87 @@ const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
-export type FrequentlyViewedTogetherListOptions = SchemaValues<
-  typeof optionsSchema
->;
+export interface FrequentlyViewedTogetherListOptions {
+  /**
+   * The SKUs of the products in the cart.
+   */
+  skus?: string[];
+  /**
+   * The maximum number of recommendations, from 1 to 50.
+   *
+   * @defaultValue `5`
+   */
+  maxNumberOfRecommendations?: number;
+  /**
+   * Additional fields to fetch in the results.
+   */
+  additionalFields?: string[];
+}
 
 export interface FrequentlyViewedTogetherListProps {
   options?: FrequentlyViewedTogetherListOptions;
 }
 
-export type FrequentlyViewedTogetherList = ReturnType<
-  typeof buildFrequentlyViewedTogetherList
->;
-export type FrequentlyViewedTogetherListState =
-  FrequentlyViewedTogetherList['state'];
+/**
+ * The `FrequentlyViewedTogetherList` controller recommends products that are often viewed in the same shopping session.
+ */
+export interface FrequentlyViewedTogetherList extends Controller {
+  /**
+   * Gets new recommendations based on the current SKUs.
+   */
+  refresh(): void;
 
-export const buildFrequentlyViewedTogetherList = (
+  /**
+   * Sets the SKUs in the cart.
+   *
+   * @param skus - The SKUs of the products to fetch recommendations for.
+   */
+  setSkus(skus: string[]): void;
+
+  /**
+   * The state of the `CartRecommendationsList` controller.
+   */
+  state: FrequentlyViewedTogetherListState;
+}
+
+export interface FrequentlyViewedTogetherListState {
+  /**
+   * The SKUs of the products in the cart.
+   */
+  skus: string[];
+
+  /**
+   * The maximum number of recommendations.
+   */
+  maxNumberOfRecommendations: number;
+
+  /**
+   * The products recommended by the Coveo platform.
+   */
+  recommendations: ProductRecommendation[];
+
+  /**
+   * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
+   */
+  error: SearchAPIErrorWithStatusCode | null;
+
+  /**
+   * Whether a recommendation request is currently being executed against the Coveo platform.
+   */
+  isLoading: boolean;
+}
+
+/**
+ * Creates a `FrequentlyViewedTogetherList` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `FrequentlyViewedTogetherList` properties.
+ * @returns A `FrequentlyViewedTogetherList` controller instance.
+ */
+export function buildFrequentlyViewedTogetherList(
   engine: ProductRecommendationEngine,
   props: FrequentlyViewedTogetherListProps
-) => {
+): FrequentlyViewedTogetherList {
   const options = validateOptions(
     engine,
     optionsSchema,
@@ -41,4 +107,4 @@ export const buildFrequentlyViewedTogetherList = (
       id: 'frequentViewed',
     },
   });
-};
+}
