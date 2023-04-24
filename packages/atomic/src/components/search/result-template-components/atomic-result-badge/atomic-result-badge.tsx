@@ -14,12 +14,7 @@ import {ResultContext} from '../result-template-decorators';
  * ```html
  * <atomic-result-badge field="objecttype"></atomic-result-badge>
  * ```
- * * The contents of a multi-value field:
- * ```html
- * <atomic-result-badge icon="https://my-website.fake/language.svg">
-      <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-   </atomic-result-badge>
- * ```
+ *
  * * An icon:
  * ```html
  * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
@@ -28,6 +23,13 @@ import {ResultContext} from '../result-template-decorators';
  * ```html
  * <atomic-result-badge icon="https://my-website.fake/stopwatch.svg">
  *     Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
+ * </atomic-result-badge>
+ * ```
+ *
+ * The content of a multi-value field can be displayed as follows:
+ * ```html
+ * <atomic-result-badge icon="https://my-website.fake/language.svg">
+ *    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
  * </atomic-result-badge>
  * ```
  *
