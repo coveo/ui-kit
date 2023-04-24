@@ -63,6 +63,12 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildUserInterestRecommendationsList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

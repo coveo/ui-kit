@@ -1,6 +1,9 @@
-import {Schema, SchemaValues} from '@coveo/bueno';
+import {Schema} from '@coveo/bueno';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 import {validateOptions} from '../../utils/validate-payload';
+import {Controller} from '../controller/headless-controller';
 import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
@@ -12,24 +15,71 @@ const optionsSchema = new Schema({
   additionalFields: baseProductRecommendationsOptionsSchema.additionalFields,
 });
 
-export type UserInterestRecommendationsListOptions = SchemaValues<
-  typeof optionsSchema
->;
+export interface UserInterestRecommendationsListOptions {
+  /**
+   * The maximum number of recommendations, from 1 to 50.
+   *
+   * @defaultValue `5`
+   */
+  maxNumberOfRecommendations?: number;
+  /**
+   * Additional fields to fetch in the results.
+   */
+  additionalFields?: string[];
+}
 
 export interface UserInterestRecommendationsListProps {
   options?: UserInterestRecommendationsListOptions;
 }
 
-export type UserInterestRecommendationsList = ReturnType<
-  typeof buildUserInterestRecommendationsList
->;
-export type UserInterestRecommendationsListState =
-  UserInterestRecommendationsList['state'];
+/**
+ * The `PopularBoughtRecommendationsList` controller recommends recommends products to the current user based on their general interests.
+ * To achieve this, ML models learns from users' previous actions, and uses this information to find other customers that share similar browsing patterns. The model then suggests products that have been previously browsed by customers who share similar interests with the current user.
+ */
+export interface UserInterestRecommendationsList extends Controller {
+  /**
+   * Gets new recommendations for popular bought items.
+   */
+  refresh(): void;
+  /**
+   * The state of the `UserInterestRecommendationsList` controller.
+   */
+  state: UserInterestRecommendationsListState;
+}
 
+export interface UserInterestRecommendationsListState {
+  /**
+   * The maximum number of recommendations.
+   */
+  maxNumberOfRecommendations: number;
+
+  /**
+   * The products recommended by the Coveo platform.
+   */
+  recommendations: ProductRecommendation[];
+
+  /**
+   * An error returned by the Coveo platform when executing a recommendation request, if any. This is `null` otherwise.
+   */
+  error: SearchAPIErrorWithStatusCode | null;
+
+  /**
+   * Whether a recommendation request is currently being executed against the Coveo platform.
+   */
+  isLoading: boolean;
+}
+
+/**
+ * Creates a `UserInterestRecommendationsList` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `UserInterestRecommendationsList` properties.
+ * @returns A `UserInterestRecommendationsList` controller instance.
+ */
 export function buildUserInterestRecommendationsList(
   engine: ProductRecommendationEngine,
   props: UserInterestRecommendationsListProps
-) {
+): UserInterestRecommendationsList {
   const options = validateOptions(
     engine,
     optionsSchema,
