@@ -10,7 +10,7 @@ li {
   text-overflow: ellipsis;
 }
 
-.facet__value_selected{
+.facet__value_selected {
   font-weight: bold;
 }
 

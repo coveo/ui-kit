@@ -18,11 +18,11 @@
       <div onregisterresulttemplates={handleResultTemplateRegistration}>
         <div>
           <c-quantic-tab
-          label="Thread"
-          expression="@source==iNaturalistTaxons"
-          engine-id={engineId}
-          is-active
-        ></c-quantic-tab>
+            label="Thread"
+            expression="@source==iNaturalistTaxons"
+            engine-id={engineId}
+            is-active
+          ></c-quantic-tab>
         </div>
         <c-quantic-folded-result-list
           engine-id={engineId}
@@ -34,7 +34,11 @@
         >
         </c-quantic-folded-result-list>
         <div class="slds-grid slds-m-top_x-small">
-          <c-quantic-results-per-page choices-displayed="1" initial-choice="1" engine-id={engineId}></c-quantic-results-per-page>
+          <c-quantic-results-per-page
+            choices-displayed="1"
+            initial-choice="1"
+            engine-id={engineId}
+          ></c-quantic-results-per-page>
         </div>
       </div>
     </c-example-use-case>

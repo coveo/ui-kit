@@ -1,8 +1,8 @@
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 // @ts-ignore
-import { getNavigateCalledWith } from 'lightning/navigation';
+import {getNavigateCalledWith} from 'lightning/navigation';
 // @ts-ignore
-import { createElement } from 'lwc';
+import {createElement} from 'lwc';
 import QuanticResultLink from '../quanticResultLink';
 // @ts-ignore
 import mockDefaultResult from './data/defaultResult.json';
@@ -10,7 +10,6 @@ import mockDefaultResult from './data/defaultResult.json';
 import mockKnowledgeArticleResult from './data/knowledgeArticleResult.json';
 // @ts-ignore
 import mockSalesforceResult from './data/salesforceResult.json';
-
 
 jest.mock('c/quanticHeadlessLoader');
 

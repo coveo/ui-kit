@@ -14,7 +14,7 @@
     "test": "npm run build:staticresources && npm run lint:check:tests && npm run validate:types && npm run test:unit",
     "lint:check:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
     "lint:fix": "eslint force-app/main/default/lwc/ --fix && eslint force-app/examples/main/lwc/ --fix",
-    "lint:prettier:fix": "npx prettier \"force-app/{,**}/*.{cls,trigger}\" --write",
+    "lint:prettier:fix": "npx prettier \"force-app/{,**}/*.{cls,trigger,js,html,css}\" --write",
     "fix": "npm run lint:fix && npm run lint:prettier:fix",
     "build:staticresources": "node copy-static-resources.js",
     "build": "npm run build:staticresources && npm run build:doc",

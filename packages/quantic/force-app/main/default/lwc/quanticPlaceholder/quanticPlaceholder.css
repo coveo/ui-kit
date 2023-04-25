@@ -48,11 +48,11 @@
 }
 
 .grey {
-  background-color: #E9EAEC;
+  background-color: #e9eaec;
 }
 
 .light-grey {
-  background-color: #F5F5F6;
+  background-color: #f5f5f6;
 }
 
 .placeholder__animation {
@@ -61,7 +61,7 @@
 }
 
 .placeholder__animation::before {
-  content: "";
+  content: '';
   position: absolute;
   background: linear-gradient(
     90deg,
@@ -88,24 +88,24 @@
   .placeholder__card-container {
     min-width: 0;
   }
-  
+
   .placeholder__round {
     min-width: 10px;
     height: 10px;
   }
-  
+
   .placeholder__rounded {
     height: 13px;
   }
-  
+
   .placeholder__card-header {
     height: 26px;
   }
-  
+
   .placeholder__result-container {
     min-width: 0;
   }
-  
+
   .placeholder__result-header {
     height: 26px;
   }

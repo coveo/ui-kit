@@ -5,8 +5,13 @@
     </div>
   </template>
   <template if:false={renderingError}>
-    <div role="dialog" aria-labelledby="modal-heading" aria-modal="true" aria-describedby="modal-content"
-      class={modalCssClass}>
+    <div
+      role="dialog"
+      aria-labelledby="modal-heading"
+      aria-modal="true"
+      aria-describedby="modal-content"
+      class={modalCssClass}
+    >
       <div tabindex="0" onfocus={focusOnLastElement}></div>
       <div id="modal-heading" class="modal__header">
         <slot name="header"></slot>

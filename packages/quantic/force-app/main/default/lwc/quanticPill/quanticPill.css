@@ -1,7 +1,7 @@
 .pill__container {
   display: flex;
   flex-direction: row;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 
 .pill__container:hover {

@@ -1,18 +1,18 @@
-import {LightningElement, api, track, wire} from 'lwc';
 import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificationTitle';
+import loading from '@salesforce/label/c.quantic_Loading';
 import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
-import loading from '@salesforce/label/c.quantic_Loading';
-import {
-  getObjectInfo,
-  getPicklistValuesByRecordType,
-} from 'lightning/uiObjectInfoApi';
 // @ts-ignore
 import CASE_OBJECT from '@salesforce/schema/Case';
 import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
+import {
+  getObjectInfo,
+  getPicklistValuesByRecordType,
+} from 'lightning/uiObjectInfoApi';
+import {LightningElement, api, track, wire} from 'lwc';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").CaseField} CaseField */

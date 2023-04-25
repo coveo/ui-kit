@@ -42,7 +42,7 @@ import {api, LightningElement, track} from 'lwc';
  * @category Insight Panel
  * @example
  * <c-quantic-category-facet engine-id={engineId} facet-id="myfacet" field="geographicalhierarchy" label="Country" base-path="Africa,Togo,Lome" no-filter-by-base-path delimiting-character="/" number-of-values="5" is-collapsed></c-quantic-category-facet>
- * 
+ *
  * @example
  * <c-quantic-category-facet engine-id={engineId} field="geographicalhierarchy">
  *   <c-quantic-facet-caption slot="captions" value="United States" caption="United States of America"></c-quantic-facet-caption>
@@ -295,7 +295,9 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get activeParentFormattedValue() {
-    return this.activeParent ? this.remoteGetValueCaption(this.activeParent) : '';
+    return this.activeParent
+      ? this.remoteGetValueCaption(this.activeParent)
+      : '';
   }
 
   get canShowMore() {
@@ -392,7 +394,9 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   get captionProviders() {
     // @ts-ignore
-    return Array.from(this.querySelectorAll('*[slot="captions"]')).filter((component) => component.captions);
+    return Array.from(this.querySelectorAll('*[slot="captions"]')).filter(
+      (component) => component.captions
+    );
   }
 
   getSearchValues() {

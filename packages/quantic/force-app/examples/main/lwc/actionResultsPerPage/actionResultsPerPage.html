@@ -1,12 +1,13 @@
 <template>
   <div class="slds-grid slds-gutters">
     <div class="slds-col">
-      <lightning-input 
+      <lightning-input
         type="number"
         step="1"
         disabled={disabled}
-        label="Results per page" 
-        variant="label-hidden">
+        label="Results per page"
+        variant="label-hidden"
+      >
       </lightning-input>
     </div>
     <div class="slds-col">
@@ -15,7 +16,8 @@
         title="Set results per page"
         onclick={handle}
         disabled={disabled}
-        class="configurator__results-per-page">
+        class="configurator__results-per-page"
+      >
       </lightning-button>
     </div>
   </div>

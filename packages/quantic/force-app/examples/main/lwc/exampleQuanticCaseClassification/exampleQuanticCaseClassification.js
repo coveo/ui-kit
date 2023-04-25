@@ -1,6 +1,6 @@
-import {LightningElement, track} from 'lwc';
 // @ts-ignore
 import {getCaseAssistId} from 'c/caseAssistUtils';
+import {LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticCaseClassification extends LightningElement {
   @track config = {};

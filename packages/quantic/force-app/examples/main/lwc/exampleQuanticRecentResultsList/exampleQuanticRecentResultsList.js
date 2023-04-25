@@ -6,7 +6,8 @@ export default class ExampleQuanticRecentResultsList extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Recent Results List';
-  pageDescription = "The Quantic Recent Results List component displays the current user's recently clicked results."
+  pageDescription =
+    "The Quantic Recent Results List component displays the current user's recently clicked results.";
   options = [
     {
       attribute: 'maxLength',
@@ -18,19 +19,20 @@ export default class ExampleQuanticRecentResultsList extends LightningElement {
       attribute: 'label',
       label: 'Label',
       description: 'This label is displayed in the component header.',
-      defaultValue: 'Recent Results'
+      defaultValue: 'Recent Results',
     },
     {
       attribute: 'isCollapsed',
       label: 'Is collapsed',
       description: 'Whether the component is collapsed.',
-      defaultValue: false
+      defaultValue: false,
     },
     {
       attribute: 'target',
       label: 'Target',
-      description: 'Where to display the linked URLs, as the name for a browsing context.',
-      defaultValue: '_self'
+      description:
+        'Where to display the linked URLs, as the name for a browsing context.',
+      defaultValue: '_self',
     },
   ];
 
