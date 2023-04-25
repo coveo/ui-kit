@@ -210,7 +210,9 @@ export interface SmartSnippetAnalyticsClient {
  * Creates a `SmartSnippet` controller instance.
  *
  * @param engine - The headless engine.
- * @returns A `SmartSnippet` controller instance.
+ * @param analyticsClient - A SmartSnippetAnalyticsClient to send the appropriate analytics calls.
+ * @param props - The configurable `SmartSnippet` properties.
+ * @returns A `SmartSnippetCore` controller instance.
  * */
 export function buildCoreSmartSnippet(
   engine: CoreEngine,

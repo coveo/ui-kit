@@ -16,23 +16,14 @@ import {
 } from '../../core/interactive-result/headless-core-interactive-result';
 import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links';
 
-/**
- * @internal
- */
 export interface SmartSnippetInteractiveInlineLinksOptions {
   selectionDelay?: number;
 }
 
-/**
- * @internal
- */
 export interface SmartSnippetInteractiveInlineLinksProps {
   options?: SmartSnippetInteractiveInlineLinksOptions;
 }
 
-/**
- * @internal
- */
 export interface SmartSnippetInteractiveInlineLinks {
   selectInlineLink(link: InlineLink, questionAnswerId?: string): void;
   beginDelayedSelectInlineLink(
@@ -45,9 +36,6 @@ export interface SmartSnippetInteractiveInlineLinks {
   ): void;
 }
 
-/**
- * @internal
- */
 export function buildSmartSnippetInteractiveInlineLinks(
   engine: InsightEngine,
   props?: SmartSnippetInteractiveInlineLinksProps

@@ -41,9 +41,6 @@ export function buildSmartSnippet(
   return {
     ...smartSnippet,
 
-    get state() {
-      return smartSnippet.state;
-    },
     selectInlineLink(link) {
       interactiveInlineLinks.selectInlineLink(link);
     },
