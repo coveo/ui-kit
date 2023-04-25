@@ -14,7 +14,6 @@ import {ResultContext} from '../result-template-decorators';
  * ```html
  * <atomic-result-badge field="objecttype"></atomic-result-badge>
  * ```
- *
  * * An icon:
  * ```html
  * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
@@ -26,7 +25,7 @@ import {ResultContext} from '../result-template-decorators';
  * </atomic-result-badge>
  * ```
  *
- * The content of a multi-value field can be displayed as follows:
+ * The contents of a multi-value field can be displayed as in the following example:
  * ```html
  * <atomic-result-badge icon="https://my-website.fake/language.svg">
  *    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
@@ -49,7 +48,7 @@ export class AtomicResultBadge {
   /**
    * The field to display in the badge.
    *
-   * Not compatible with `label`, slotted elements and multi-value fields.
+   * Not compatible with `label`, slotted elements nor multi-value fields.
    */
   @Prop({reflect: true}) public field?: string;
 
