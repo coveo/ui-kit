@@ -18,12 +18,14 @@ export interface FrequentlyViewedDifferentCategoryListOptions {
    * The SKUs of the products to fetch recommendations for.
    */
   skus?: string[];
+
   /**
    * The maximum number of recommendations, from 1 to 50.
    *
    * @defaultValue `5`
    */
   maxNumberOfRecommendations?: number;
+
   /**
    * Additional fields to fetch in the results.
    */
@@ -35,8 +37,8 @@ export interface FrequentlyViewedDifferentCategoryListProps {
 }
 
 /**
- * The `FrequentlyViewedDifferentCategoryList` controller recommends the products that have been viewed the most with the product that the user is currently viewing.
- * The recommendations are filtered to show products that have a different category than the one the user is currently viewing.
+ * The `FrequentlyViewedDifferentCategoryList` controller recommends the products that have been viewed the most with the products that the user is currently viewing.
+ * The recommendations are filtered to show products that have a different category than the ones the user is currently viewing.
  */
 export interface FrequentlyViewedDifferentCategoryList extends Controller {
   /**
@@ -47,7 +49,7 @@ export interface FrequentlyViewedDifferentCategoryList extends Controller {
   /**
    * Sets the SKUs of the products to fetch recommendations for.
    *
-   * @param skus - The SKUs of the products in the cart.
+   * @param skus - The SKUs of the products to get recommendations for.
    */
   setSkus(skus: string[]): void;
 
@@ -74,7 +76,7 @@ export interface FrequentlyViewedDifferentCategoryListState {
   recommendations: ProductRecommendation[];
 
   /**
-   * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
+   * An error returned by the Coveo platform when executing a recommendation request, if any. This is `null` otherwise.
    */
   error: SearchAPIErrorWithStatusCode | null;
 

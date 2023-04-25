@@ -15,15 +15,17 @@ const optionsSchema = new Schema({
 
 export interface FrequentlyViewedTogetherListOptions {
   /**
-   * The SKUs of the products in the cart.
+   * The SKUs of the products to fetch recommendations for.
    */
   skus?: string[];
+
   /**
    * The maximum number of recommendations, from 1 to 50.
    *
    * @defaultValue `5`
    */
   maxNumberOfRecommendations?: number;
+
   /**
    * Additional fields to fetch in the results.
    */
@@ -44,21 +46,21 @@ export interface FrequentlyViewedTogetherList extends Controller {
   refresh(): void;
 
   /**
-   * Sets the SKUs in the cart.
+   * Sets the SKUs of the products to fetch recommendations for.
    *
    * @param skus - The SKUs of the products to fetch recommendations for.
    */
   setSkus(skus: string[]): void;
 
   /**
-   * The state of the `CartRecommendationsList` controller.
+   * The state of the `FrequentlyViewedTogetherList` controller.
    */
   state: FrequentlyViewedTogetherListState;
 }
 
 export interface FrequentlyViewedTogetherListState {
   /**
-   * The SKUs of the products in the cart.
+   * The SKUs of the products fetch recommendations for.
    */
   skus: string[];
 
@@ -73,7 +75,7 @@ export interface FrequentlyViewedTogetherListState {
   recommendations: ProductRecommendation[];
 
   /**
-   * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
+   * An error returned by the Coveo platform when executing a recommendation request, if any. This is `null` otherwise.
    */
   error: SearchAPIErrorWithStatusCode | null;
 

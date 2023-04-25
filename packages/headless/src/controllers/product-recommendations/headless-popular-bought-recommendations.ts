@@ -22,6 +22,7 @@ export interface PopularBoughtRecommendationsListOptions {
    * @defaultValue `5`
    */
   maxNumberOfRecommendations?: number;
+
   /**
    * Additional fields to fetch in the results.
    */
@@ -40,6 +41,7 @@ export interface PopularBoughtRecommendationsList extends Controller {
    * Gets new recommendations for popular bought items.
    */
   refresh(): void;
+
   /**
    * The state of the `PopularBoughtRecommendationsList` controller.
    */

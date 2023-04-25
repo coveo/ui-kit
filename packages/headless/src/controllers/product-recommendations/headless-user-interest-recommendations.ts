@@ -22,6 +22,7 @@ export interface UserInterestRecommendationsListOptions {
    * @defaultValue `5`
    */
   maxNumberOfRecommendations?: number;
+
   /**
    * Additional fields to fetch in the results.
    */
@@ -33,14 +34,16 @@ export interface UserInterestRecommendationsListProps {
 }
 
 /**
- * The `PopularBoughtRecommendationsList` controller recommends recommends products to the current user based on their general interests.
- * To achieve this, ML models learns from users' previous actions, and uses this information to find other customers that share similar browsing patterns. The model then suggests products that have been previously browsed by customers who share similar interests with the current user.
+ * The `UserInterestRecommendationsList` controller recommends products to the current user based on their general interests.
+ * To achieve this, ML models learns from users' previous actions, and uses this information to find other customers that share similar browsing patterns.
+ * The model then suggests products that have been previously browsed by customers who share similar interests with the current user.
  */
 export interface UserInterestRecommendationsList extends Controller {
   /**
-   * Gets new recommendations for popular bought items.
+   * Gets new recommendations for items that may be of interest to the user.
    */
   refresh(): void;
+
   /**
    * The state of the `UserInterestRecommendationsList` controller.
    */

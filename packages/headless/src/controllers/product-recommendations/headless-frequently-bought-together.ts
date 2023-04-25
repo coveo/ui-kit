@@ -18,15 +18,17 @@ const optionsSchema = new Schema({
 
 export interface FrequentlyBoughtTogetherListOptions {
   /**
-   * The SKU of the products to fetch recommendations for.
+   * The SKU of the product to fetch recommendations for.
    */
   sku: string;
+
   /**
    * The maximum number of recommendations, from 1 to 50.
    *
    * @defaultValue `5`
    */
   maxNumberOfRecommendations?: number;
+
   /**
    * Additional fields to fetch in the results.
    */
@@ -38,7 +40,7 @@ export interface FrequentlyBoughtTogetherListProps {
 }
 
 /**
- * The `FrequentlyBoughtTogetherList` controller recommends items frequently bought with the current product based on purchases made by other users.
+ * The `FrequentlyBoughtTogetherList` controller recommends items frequently bought with the current product, based on purchases made by other users.
  */
 export interface FrequentlyBoughtTogetherList extends Controller {
   /**
@@ -76,7 +78,7 @@ export interface FrequentlyBoughtTogetherListState {
   recommendations: ProductRecommendation[];
 
   /**
-   * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
+   * An error returned by the Coveo platform when executing a recommendation request, if any. This is `null` otherwise.
    */
   error: SearchAPIErrorWithStatusCode | null;
 

@@ -18,12 +18,14 @@ export interface FrequentlyViewedSameCategoryListOptions {
    * The SKUs of the products to fetch recommendations for.
    */
   skus?: string[];
+
   /**
    * The maximum number of recommendations, from 1 to 50.
    *
    * @defaultValue `5`
    */
   maxNumberOfRecommendations?: number;
+
   /**
    * Additional fields to fetch in the results.
    */
@@ -35,8 +37,8 @@ export interface FrequentlyViewedSameCategoryListProps {
 }
 
 /**
- * The `FrequentlyViewedSameCategoryList` controller recommends the products that have been viewed the most with the product that the user is currently viewing.
- * The recommendations are filtered to show products that have the same category than the one the user is currently viewing.
+ * The `FrequentlyViewedSameCategoryList` controller recommends the products that have been viewed the most with the products that the user is currently viewing.
+ * The recommendations are filtered to show products that have the same category as the ones the user is currently viewing.
  */
 export interface FrequentlyViewedSameCategoryList extends Controller {
   /**
@@ -74,7 +76,7 @@ export interface FrequentlyViewedSameCategoryListState {
   recommendations: ProductRecommendation[];
 
   /**
-   * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
+   * An error returned by the Coveo platform when executing a recommendation request, if any. This is `null` otherwise.
    */
   error: SearchAPIErrorWithStatusCode | null;
 
