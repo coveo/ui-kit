@@ -55,16 +55,16 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
           {`
             /* Chrome, Edge & Safari */
             .scrollbar::-webkit-scrollbar {
-              width: 1rem;
+              width: 0.8rem;
             }
 
             .scrollbar::-webkit-scrollbar-track {
-              background: var(--atomic-neutral-light);
+              background: var(--atomic-background);
             }
 
             .scrollbar::-webkit-scrollbar-thumb {
               background: var(--atomic-primary);
-              border: 0.15rem solid var(--atomic-neutral-light);
+              border: 0.15rem solid var(--atomic-background);
               border-radius: 100vh;
             }
 
@@ -74,7 +74,7 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
 
             /* Firefox */
             .scrollbar {
-              scrollbar-color: var(--atomic-primary) var(--atomic-neutral-light);
+              scrollbar-color: var(--atomic-primary) var(--atomic-background);
               scrollbar-width: auto;
             }
           `}
