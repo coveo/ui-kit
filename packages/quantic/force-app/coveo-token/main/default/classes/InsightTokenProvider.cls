@@ -7,7 +7,7 @@ global with sharing class InsightTokenProvider implements ITokenProvider {
   @AuraEnabled(continuation=true cacheable=false)
   global static String getHeadlessConfiguration() {
     Map<String, Object> coveoEndpointData = CoveoV2.Globals.getEndpointData();
-    String accessToken = CoveoV2.Globals.generatePlatformToken();
+    String accessToken = CoveoV2.HIPController.getPlatformToken();
 
     Map<String, String> headlessConfiguration = new Map<String, String>();
     headlessConfiguration.put(
@@ -20,31 +20,5 @@ global with sharing class InsightTokenProvider implements ITokenProvider {
       (String) coveoEndpointData.get('clientUri')
     );
     return JSON.serialize(headlessConfiguration);
-  }
-
-  public static List<PlatformToken.TokenPrivilege> buildHIPTokenPrivileges() {
-    List<PlatformToken.TokenPrivilege> privileges = new List<PlatformToken.TokenPrivilege>();
-    privileges.add(
-      new PlatformToken.TokenPrivilege(
-        PlatformToken.OWNER_CUSTOMER_SERVICE,
-        PlatformToken.DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_INTERFACE,
-        PlatformToken.TYPE_VIEW
-      )
-    );
-    privileges.add(
-      new PlatformToken.TokenPrivilege(
-        PlatformToken.OWNER_USAGE_ANALYTICS,
-        PlatformToken.DOMAIN_ANALYTICS_ANALYTICS_DATA,
-        PlatformToken.TYPE_EDIT
-      )
-    );
-    privileges.add(
-      new PlatformToken.TokenPrivilege(
-        PlatformToken.OWNER_CUSTOMER_SERVICE,
-        PlatformToken.DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_DOCUMENTS,
-        PlatformToken.TYPE_VIEW
-      )
-    );
-    return privileges;
   }
 }
