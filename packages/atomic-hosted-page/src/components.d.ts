@@ -5,24 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { PlatformEnvironment } from "@coveo/headless";
 export namespace Components {
     interface AtomicHostedPage {
-        /**
-          * Returns the unique, organization-specific endpoint(s)
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; }>;
         "initialize": (options: AtomicHostedPageInitializationOptions) => Promise<void>;
     }
     interface AtomicSimpleBuilder {
-        /**
-          * Returns the unique, organization-specific endpoint(s)
-          * @param organizationId
-          * @param env
-         */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; }>;
         "initialize": (options: AtomicSimpleBuilderInitializationOptions) => Promise<void>;
     }
 }
