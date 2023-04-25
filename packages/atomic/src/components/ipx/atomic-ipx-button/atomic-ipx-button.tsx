@@ -8,6 +8,8 @@ import {
 import {Button} from '../../common/button';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
+const numberOrPixelValuePattern = new RegExp(/^(?=.*(?:\d+|px)$).*$/);
+
 /**
  * @internal
  */
@@ -126,10 +128,38 @@ export class AtomicIPXButton implements InitializableComponent {
   private getIcon(icon: string) {
     const initialDiv = document.createElement('div')!;
     initialDiv.innerHTML = icon;
-    initialDiv
-      .querySelector('svg')
-      ?.setAttribute('fill', 'var(--atomic-on-primary)');
-
+    const iconElement = initialDiv.querySelector('svg');
+    if (!iconElement) {
+      return initialDiv.innerHTML; // handle null case from .querySelector
+    }
+    const iconWidth = this.getIconWidth(iconElement);
+    const iconHeight = this.getIconHeight(iconElement);
+    this.cleanupSVGStyles(iconElement); // cleanup styles so that they don't interfere with the viewBox we are setting and let the icon fill up the provided space
+    if (iconWidth && iconHeight) {
+      iconElement.setAttribute('viewBox', `0 0 ${iconWidth} ${iconHeight}`); // set viewBox equal to icon size (following advice from @btaillon)
+    }
     return initialDiv.innerHTML;
+  }
+
+  private cleanupSVGStyles(iconElement: SVGSVGElement) {
+    iconElement.removeAttribute('style');
+    iconElement.removeAttribute('width');
+    iconElement.removeAttribute('height');
+  }
+
+  private getIconWidth(icon: SVGSVGElement) {
+    const width = icon.getAttribute('width') ?? '';
+    if (numberOrPixelValuePattern.test(width)) {
+      return width;
+    }
+    return null;
+  }
+
+  private getIconHeight(icon: SVGSVGElement) {
+    const height = icon.getAttribute('height') ?? '';
+    if (numberOrPixelValuePattern.test(height)) {
+      return height;
+    }
+    return null;
   }
 }
