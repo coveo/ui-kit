@@ -103,7 +103,7 @@ export class HistoryStore {
 
     getMostRecentElement(): HistoryElement | null {
         let currentHistory = this.getHistoryWithInternalTime();
-        if (currentHistory != null) {
+        if (Array.isArray(currentHistory)) {
             const sorted = currentHistory.sort((first: HistoryElement, second: HistoryElement) => {
                 // Internal time might not be set for all history element (on upgrade).
                 // Ensure to return the most recent element for which we have a value for internalTime.
@@ -132,10 +132,13 @@ export class HistoryStore {
     }
 
     private stripInternalTime(history: HistoryElement[]): HistoryElement[] {
-        return history.map((part) => {
-            const {name, time, value} = part;
-            return {name, time, value};
-        });
+        if (Array.isArray(history)) {
+            return history.map((part) => {
+                const {name, time, value} = part;
+                return {name, time, value};
+            });
+        }
+        return [];
     }
 
     private stripEmptyQuery(part: HistoryElement) {
