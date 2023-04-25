@@ -117,6 +117,7 @@ function buildBrowserConfig(options) {
     platform: 'browser',
     minify: true,
     sourcemap: true,
+    external: ['crypto'],
     plugins: [
       alias({
         'coveo.analytics': resolve(

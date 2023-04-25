@@ -1,5 +1,8 @@
+import {polyfill} from './api/analytics/analytics-crypto-polyfill';
 import * as TestUtils from './test';
 import * as HighlightUtils from './utils/highlight';
+
+polyfill();
 
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
