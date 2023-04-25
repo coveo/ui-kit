@@ -64,7 +64,7 @@ export interface EngineConfiguration<
    * The Plaform URL to use. (e.g., https://platform.cloud.coveo.com)
    * The platformUrl() helper method can be useful to know what url is available.
    *
-   * @deprecated Coveo recommends using organizationEndpoints instead, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
+   * @deprecated Coveo recommends using organizationEndpoints instead, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).
    */
   platformUrl?: string;
   /**
@@ -83,7 +83,7 @@ export interface EngineConfiguration<
    *
    * The [getOrganizationEndpoints](https://github.com/coveo/ui-kit/blob/master/packages/headless/src/api/platform-client.ts) helper function can be useful to create the appropriate object.
    *
-   * We recommend using this option, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.
+   * We recommend using this option, since it has resiliency benefits and simplifies the overall configuration for multi-region deployments.  See [Organization endpoints](https://docs.coveo.com/en/mcc80216).
    */
   organizationEndpoints?: OrganizationEndpoints;
 }
