@@ -5,11 +5,11 @@ import {SearchBoxSuggestionElement} from '../../search/search-box-suggestions/su
 
 export interface SearchBoxCommonProps {
   id: string;
-  disableSearch: Boolean;
   bindings: InsightBindings | Bindings;
   querySetActions: QuerySetActionCreators;
   focusValue: (value: HTMLElement) => void;
   clearSuggestions: () => void;
+  getIsSearchDisabled: () => boolean;
   getIsExpanded: () => boolean;
   getPanelInFocus: () => HTMLElement | undefined;
   getActiveDescendant: () => string;
