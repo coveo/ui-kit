@@ -70,6 +70,17 @@ const exampleCollectionWithAllResultsLoaded = {
   isLoadingMoreResults: false,
   moreResultsAvailable: false,
 };
+const exampleCollectionWithAdditionalGrandChild = {
+  ...exampleCollection,
+  children: [
+    {
+      ...exampleFoldedResultOne,
+      children: [...exampleFoldedResultOne.children, exampleFoldedResultTwo],
+    },
+  ],
+  isLoadingMoreResults: false,
+  moreResultsAvailable: false,
+};
 
 const defaultOptions = {
   engineId: exampleEngineId,
@@ -215,6 +226,31 @@ describe('c-quantic-result-children', () => {
           exampleCollectionWithAllResultsLoaded
         );
         expect(foldedResultToggleButton.label).toBe(hideRelatedItems);
+      });
+
+      describe('when only grand children are available in the collection', () => {
+        it('should properly display the expanded child results', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+          const foldedResultToggleButton = element.shadowRoot.querySelector(
+            selectors.toggleButton
+          );
+
+          await clickFoldedResultToggleButton(element, loadRelatedItems);
+          expect(functionsMocks.loadCollection).toHaveBeenCalledTimes(1);
+          element.collection = exampleCollectionWithAdditionalGrandChild;
+          await flushPromises();
+          expectProperChildResultsDisplay(
+            element,
+            exampleCollectionWithAdditionalGrandChild
+          );
+
+          const noMoreChildrenMessage = element.shadowRoot.querySelector(
+            selectors.noMoreChildrenMessage
+          );
+          expect(noMoreChildrenMessage).toBeNull();
+          expect(foldedResultToggleButton.label).toBe(hideRelatedItems);
+        });
       });
     });
   });

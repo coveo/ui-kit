@@ -37,6 +37,8 @@ export const ResultQuickviewSelectors: ResultQuickviewSelector = {
   contentContainer: () =>
     ResultQuickviewSelectors.get().find('.quickview__content-container'),
   spinner: () =>
-    ResultQuickviewSelectors.get().find('.quickview__spinner-container'),
+    ResultQuickviewSelectors.get().find(
+      '.quickview__content-container .iframe-wrapper .quickview__spinner-container'
+    ),
   tooltip: () => ResultQuickviewSelectors.get().find('.slds-popover'),
 };

@@ -1,3 +1,6 @@
+import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
+
+polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 
@@ -32,6 +35,7 @@ export * from './features/case-context/case-context-actions-loader';
 export * from './features/insight-search/insight-search-analytics-actions-loader';
 export * from './features/fields/fields-actions-loader';
 export * from './features/attached-results/attached-results-actions-loader';
+export * from './features/analytics/generic-analytics-actions-loader';
 
 // Controllers
 export type {
@@ -319,3 +323,6 @@ export type {
 } from './api/search/date/relative-date';
 
 export {deserializeRelativeDate} from './api/search/date/relative-date';
+
+export {getOrganizationEndpoints} from './api/platform-client';
+export type {PlatformEnvironment} from './utils/url-utils';

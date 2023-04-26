@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "2.20.2",
+  "version": "2.21.5",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -19,7 +19,7 @@
     "build": "npm run build:staticresources && npm run build:doc",
     "dev": "npx rimraf .localdevserver && npm run build:staticresources && npm run dev:sfdx",
     "dev:sfdx": "sfdx force:source:deploy -p force-app/main && sfdx force:lightning:lwc:start --port 3334",
-    "test:unit": "../../node_modules/.bin/lwc-jest",
+    "test:unit": "lwc-jest",
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "0.43.1",
-    "@coveo/headless": "2.11.1"
+    "@coveo/headless": "2.14.1"
   },
   "engines": {
     "node": ">=14.0.0"

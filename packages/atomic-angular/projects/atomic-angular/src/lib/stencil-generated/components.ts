@@ -513,13 +513,13 @@ export declare interface AtomicPager extends Components.AtomicPager {
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['numberOfPages']
+  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
 })
 @Component({
   selector: 'atomic-pager',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['numberOfPages']
+  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
 })
 export class AtomicPager {
   protected el: HTMLElement;
@@ -1448,13 +1448,13 @@ Example:
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
 })
 @Component({
   selector: 'atomic-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
 })
 export class AtomicSearchBox {
   protected el: HTMLElement;
