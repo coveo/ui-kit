@@ -185,9 +185,9 @@ export class I18nUtils {
     if (typeof stringToFormat !== 'string')
       throw new Error("'stringToFormat' must be a String");
     return stringToFormat.replace(/{{(\d+)}}/gm, (match, index) =>
-      formattingArguments[index] === undefined
+      (formattingArguments[index] === undefined
         ? ''
-        : `${formattingArguments[index]}`
+        : `${formattingArguments[index]}`)
     );
   }
 
