@@ -1,4 +1,3 @@
-import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../../../test/mock-engine';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
@@ -8,13 +7,16 @@ import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actio
 
 const mockLogBreadcrumbFacet = jest.fn();
 
-const mockCoveoInsightClient = jest.fn(() => ({
-  disable: () => {},
-  logBreadcrumbFacet: mockLogBreadcrumbFacet,
-}));
+jest.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = jest.fn(() => ({
+    disable: () => {},
+    logBreadcrumbFacet: mockLogBreadcrumbFacet,
+  }));
 
-Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
-  value: mockCoveoInsightClient,
+  return {
+    CoveoInsightClient: mockCoveoInsightClient,
+    history: {HistoryStore: jest.fn()},
+  };
 });
 
 const exampleSubject = 'example subject';

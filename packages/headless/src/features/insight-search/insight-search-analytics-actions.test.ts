@@ -1,4 +1,3 @@
-import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {getCaseContextInitialState} from '../case-context/case-context-state';
@@ -15,16 +14,19 @@ const mockLogExpandtoFullUI = jest.fn();
 const mockLogFetchMoreResults = jest.fn();
 const mockLogQueryError = jest.fn();
 
-const mockCoveoInsightClient = jest.fn(() => ({
-  disable: () => {},
-  logContextChanged: mockLogContextChanged,
-  logExpandToFullUI: mockLogExpandtoFullUI,
-  logFetchMoreResults: mockLogFetchMoreResults,
-  logQueryError: mockLogQueryError,
-}));
+jest.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = jest.fn(() => ({
+    disable: () => {},
+    logContextChanged: mockLogContextChanged,
+    logExpandToFullUI: mockLogExpandtoFullUI,
+    logFetchMoreResults: mockLogFetchMoreResults,
+    logQueryError: mockLogQueryError,
+  }));
 
-Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
-  value: mockCoveoInsightClient,
+  return {
+    CoveoInsightClient: mockCoveoInsightClient,
+    history: {HistoryStore: jest.fn()},
+  };
 });
 
 const exampleSubject = 'example subject';
