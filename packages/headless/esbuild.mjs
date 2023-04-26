@@ -121,8 +121,6 @@ function buildBrowserConfig(options) {
     plugins: [
       alias({
         'coveo.analytics': resolve(
-          '..',
-          '..',
           'node_modules',
           'coveo.analytics',
           'dist',
@@ -169,8 +167,6 @@ function buildNodeConfig(options) {
     plugins: [
       alias({
         'coveo.analytics': resolve(
-          '..',
-          '..',
           'node_modules',
           'coveo.analytics',
           'dist',

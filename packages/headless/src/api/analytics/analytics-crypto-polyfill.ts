@@ -5,7 +5,12 @@ interface CryptoModuleInNode {
 
 const getGlobalCrypto = () => global.crypto as CryptoModuleInNode;
 
-export const polyfill = () => {
+// This polyfill is needed for node environment below 20.
+// This could be removed when Headless no longer needs to support NodeJS below that version;
+export const polyfillCryptoNode = () => {
+  if (typeof window !== 'undefined') {
+    return;
+  }
   if (!getGlobalCrypto()) {
     global.crypto = require('crypto');
   }
