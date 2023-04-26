@@ -1,6 +1,9 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {questionAnswering, search} from '../../../app/reducers';
-import {logOpenSmartSnippetSuggestionInlineLink} from '../../../features/question-answering/question-answering-insight-analytics-actions';
+import {
+  logOpenSmartSnippetInlineLink,
+  logOpenSmartSnippetSuggestionInlineLink,
+} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {
   QuestionAnsweringSection,
   SearchSection,
@@ -13,23 +16,14 @@ import {
 } from '../../core/interactive-result/headless-core-interactive-result';
 import {InlineLink} from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
 
-/**
- * @internal
- */
 export interface SmartSnippetInteractiveInlineLinksOptions {
   selectionDelay?: number;
 }
 
-/**
- * @internal
- */
 export interface SmartSnippetInteractiveInlineLinksProps {
   options?: SmartSnippetInteractiveInlineLinksOptions;
 }
 
-/**
- * @internal
- */
 export interface SmartSnippetInteractiveInlineLinks {
   selectInlineLink(link: InlineLink, questionAnswerId?: string): void;
   beginDelayedSelectInlineLink(
@@ -42,9 +36,6 @@ export interface SmartSnippetInteractiveInlineLinks {
   ): void;
 }
 
-/**
- * @internal
- */
 export function buildSmartSnippetInteractiveInlineLinks(
   engine: InsightEngine,
   props?: SmartSnippetInteractiveInlineLinksProps
@@ -87,17 +78,11 @@ export function buildSmartSnippetInteractiveInlineLinks(
         if (inlineLinkWasClicked(linkId)) {
           return;
         }
-        // TODO: Replace with the comment below after creating the logOpenSmartSnippetInlineLink action for the insight use case.
-        if (questionAnswerId) {
-          engine.dispatch(
-            logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
-          );
-        }
-        // engine.dispatch(
-        //   questionAnswerId
-        //     ? logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
-        //     : logOpenSmartSnippetInlineLink(link)
-        // );
+        engine.dispatch(
+          questionAnswerId
+            ? logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
+            : logOpenSmartSnippetInlineLink(link)
+        );
       }
     );
 
