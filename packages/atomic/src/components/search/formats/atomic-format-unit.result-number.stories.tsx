@@ -25,5 +25,8 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   }
 );
 
-export default defaultModuleExport;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/ResultList/ResultNumber/Format/Unit',
+};
 export const DefaultFormatUnit = exportedStory;

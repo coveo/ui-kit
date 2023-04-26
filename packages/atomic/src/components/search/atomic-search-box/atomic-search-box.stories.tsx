@@ -6,5 +6,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   {}
 );
 
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/Searchbox'};
 export const DefaultSearchbox = exportedStory;
