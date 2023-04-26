@@ -1,17 +1,19 @@
-import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {logResultsSort} from './sort-criteria-insight-analytics-actions';
 
 const mockLogResultsSort = jest.fn();
 
-const mockCoveoInsightClient = jest.fn(() => ({
-  disable: () => {},
-  logResultsSort: mockLogResultsSort,
-}));
+jest.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = jest.fn(() => ({
+    disable: () => {},
+    logResultsSort: mockLogResultsSort,
+  }));
 
-Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
-  value: mockCoveoInsightClient,
+  return {
+    CoveoInsightClient: mockCoveoInsightClient,
+    history: {HistoryStore: jest.fn()},
+  };
 });
 
 const exampleSubject = 'example subject';

@@ -1,4 +1,3 @@
-import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockPagination} from '../../test/mock-pagination';
@@ -12,15 +11,18 @@ const mockLogPagerNumber = jest.fn();
 const mockLogPagerNext = jest.fn();
 const mockLogPagerPrevious = jest.fn();
 
-const mockCoveoInsightClient = jest.fn(() => ({
-  disable: () => {},
-  logPagerNumber: mockLogPagerNumber,
-  logPagerNext: mockLogPagerNext,
-  logPagerPrevious: mockLogPagerPrevious,
-}));
+jest.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = jest.fn(() => ({
+    disable: () => {},
+    logPagerNumber: mockLogPagerNumber,
+    logPagerNext: mockLogPagerNext,
+    logPagerPrevious: mockLogPagerPrevious,
+  }));
 
-Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
-  value: mockCoveoInsightClient,
+  return {
+    CoveoInsightClient: mockCoveoInsightClient,
+    history: {HistoryStore: jest.fn()},
+  };
 });
 
 const exampleSubject = 'example subject';
