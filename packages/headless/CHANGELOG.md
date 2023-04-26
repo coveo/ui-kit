@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.14.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.13.1...@coveo/headless@2.14.0) (2023-04-25)
+
+### Features
+
+- **organizationendpoints:** support organization endpoints for hosted-pages components ([#2838](https://github.com/coveo/ui-kit/issues/2838)) ([e0b73f1](https://github.com/coveo/ui-kit/commit/e0b73f16af1a4e794a49621a9e856cad95169cae))
+
 ## [2.13.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.13.0...@coveo/headless@2.13.1) (2023-04-24)
 
 **Note:** Version bump only for package @coveo/headless
