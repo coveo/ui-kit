@@ -51,7 +51,7 @@ export class SearchBoxCommon {
     return (
       this.hasSuggestions &&
       this.props.getIsExpanded() &&
-      !this.props.disableSearch
+      !this.props.getIsSearchDisabled()
     );
   }
 
@@ -91,7 +91,13 @@ export class SearchBoxCommon {
     item.query && this.props.clearSuggestions();
   }
 
-  public getSearchInputLabel() {
+  public getSearchInputLabel(minimumQueryLength = 0) {
+    if (this.props.getIsSearchDisabled()) {
+      return this.props.bindings.i18n.t('search-disabled', {
+        length: minimumQueryLength,
+      });
+    }
+
     if (isMacOS()) {
       return this.props.bindings.i18n.t('search-box-with-suggestions-macos');
     }

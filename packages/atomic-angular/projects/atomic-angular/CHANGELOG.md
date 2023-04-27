@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.6.4...@coveo/atomic-angular@2.7.0) (2023-04-26)
+
+### Features
+
+- **atomic:** add option to disable search button when there is no query input ([#2834](https://github.com/coveo/ui-kit/issues/2834)) ([0abdb64](https://github.com/coveo/ui-kit/commit/0abdb64aba08e36590265d63e942a26650b63048))
+
+## [2.6.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.6.3...@coveo/atomic-angular@2.6.4) (2023-04-25)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
 ## [2.6.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@2.6.2...@coveo/atomic-angular@2.6.3) (2023-04-24)
 
 **Note:** Version bump only for package @coveo/atomic-angular
