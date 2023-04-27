@@ -17,9 +17,9 @@ export type {
 } from '../../core/smart-snippet/headless-core-smart-snippet';
 
 /**
- * Creates a `SmartSnippet` controller instance.
+ * Creates an insight `SmartSnippet` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The headless insight engine.
  * @param props - The configurable `SmartSnippet` properties.
  * @returns A `SmartSnippet` controller instance.
  * */
