@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.27.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.3...@coveo/atomic@2.27.4) (2023-04-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
 ## [2.27.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.2...@coveo/atomic@2.27.3) (2023-04-27)
 
 ### Bug Fixes

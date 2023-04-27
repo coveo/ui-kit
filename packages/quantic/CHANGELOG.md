@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.22.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.21.7...@coveo/quantic@2.22.0) (2023-04-27)
+
+### Features
+
+- **smart snippet:** add headless smart snippet support for insight engine ([#2836](https://github.com/coveo/ui-kit/issues/2836)) ([95257b0](https://github.com/coveo/ui-kit/commit/95257b068cceec85ce03855af83a393aeda4350d))
+
 ## [2.21.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.21.6...@coveo/quantic@2.21.7) (2023-04-27)
 
 **Note:** Version bump only for package @coveo/quantic
