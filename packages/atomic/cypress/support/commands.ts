@@ -1,8 +1,3 @@
-// Must be declared global to be detected by typescript (allows import/export)
-import {
-  SearchEventRequest,
-  ClickEventRequest,
-} from 'coveo.analytics/src/events';
 import {SinonSpy} from 'cypress/types/sinon';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 
@@ -19,12 +14,12 @@ declare global {
       // https://github.com/cypress-io/cypress-documentation/issues/108
       state(key: string): CypressRequest[];
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
-      expectSearchEvent(actionCause: string): Chainable<SearchEventRequest>;
-      expectClickEvent(actionCause: string): Chainable<ClickEventRequest>;
+      expectSearchEvent(actionCause: string): Chainable<unknown>;
+      expectClickEvent(actionCause: string): Chainable<unknown>;
       expectCustomEvent(
         eventType: string,
         eventValue?: string
-      ): Chainable<SearchEventRequest>;
+      ): Chainable<unknown>;
       distanceTo(
         getSubjectB: () => Chainable<JQuery<HTMLElement>>
       ): Chainable<{horizontal: number; vertical: number}>;

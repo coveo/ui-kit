@@ -1,17 +1,19 @@
-import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../../test/mock-engine';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {logClearBreadcrumbs} from './facet-generic-insight-analytics-actions';
 
 const mockLogBreadcrumbResetAll = jest.fn();
 
-const mockCoveoInsightClient = jest.fn(() => ({
-  disable: () => {},
-  logBreadcrumbResetAll: mockLogBreadcrumbResetAll,
-}));
+jest.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = jest.fn(() => ({
+    disable: () => {},
+    logBreadcrumbResetAll: mockLogBreadcrumbResetAll,
+  }));
 
-Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
-  value: mockCoveoInsightClient,
+  return {
+    CoveoInsightClient: mockCoveoInsightClient,
+    history: {HistoryStore: jest.fn()},
+  };
 });
 
 const exampleSubject = 'example subject';

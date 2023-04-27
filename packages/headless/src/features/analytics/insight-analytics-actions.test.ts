@@ -1,4 +1,3 @@
-import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
 import {buildMockInsightEngine} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
@@ -11,21 +10,24 @@ import {
 const mockLogInterfaceLoad = jest.fn();
 const mockLogInterfaceChange = jest.fn();
 
-const mockCoveoInsightClient = jest.fn(() => ({
-  disable: () => {},
-  logInterfaceLoad: mockLogInterfaceLoad,
-  logInterfaceChange: mockLogInterfaceChange,
-}));
-
-Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
-  value: mockCoveoInsightClient,
-});
-
 const exampleSubject = 'example subject';
 const exampleDescription = 'example description';
 const exampleCaseId = '1234';
 const exampleCaseNumber = '5678';
 const exampleOriginLevel2 = 'exampleOriginLevel2';
+
+jest.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = jest.fn(() => ({
+    disable: jest.fn(),
+    logInterfaceLoad: mockLogInterfaceLoad,
+    logInterfaceChange: mockLogInterfaceChange,
+  }));
+
+  return {
+    CoveoInsightClient: mockCoveoInsightClient,
+    history: {HistoryStore: jest.fn()},
+  };
+});
 
 describe('logInterfaceLoad', () => {
   it('should log #logInterfaceLoad with the right payload', async () => {
