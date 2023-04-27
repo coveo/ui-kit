@@ -118,12 +118,17 @@ describe('Search Box Test Suites', () => {
         SearchBoxSelectors.inputBox().click();
       });
 
-      SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
-      CommonAssertions.assertAccessibility(searchBoxComponent);
-      CommonAssertions.assertAriaLiveMessage(
-        SearchBoxSelectors.searchBoxAriaLive,
-        expectedSum.toString()
-      );
+      it('is setup with expected suggestions', () => {
+        SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
+      });
+
+      it('is accessible', () => {
+        CommonAssertions.assertAccessibility(searchBoxComponent);
+        CommonAssertions.assertAriaLiveMessage(
+          SearchBoxSelectors.searchBoxAriaLive,
+          expectedSum.toString()
+        );
+      });
     });
 
     describe('when changing the redirection-url prop, reinitializing the search box', () => {
@@ -223,16 +228,22 @@ describe('Search Box Test Suites', () => {
         SearchBoxSelectors.inputBox().type('Rec', {delay: 100});
       }
       describe('verify rendering', () => {
-        before(() => {
+        beforeEach(() => {
           setupWithSuggestionsAndRecentQueries();
-          setInputText();
         });
 
-        SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
-        CommonAssertions.assertAriaLiveMessage(
-          SearchBoxSelectors.searchBoxAriaLive,
-          expectedSum.toString()
-        );
+        it('with suggestions', () => {
+          setInputText();
+          SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
+        });
+
+        it('is accessible', () => {
+          setInputText();
+          CommonAssertions.assertAriaLiveMessage(
+            SearchBoxSelectors.searchBoxAriaLive,
+            expectedSum.toString()
+          );
+        });
       });
 
       describe('with custom suggestions provider', () => {
@@ -343,32 +354,37 @@ describe('Search Box Test Suites', () => {
         before(() => {
           setupWithRecentQueries();
           setInputText();
-          SearchBoxSelectors.querySuggestion('Recent query 1').click();
         });
 
-        SearchBoxAssertions.assertFocusSearchBox();
-        SearchBoxAssertions.assertHasText('Recent query 1');
+        it('focuses search box with recent query', () => {
+          SearchBoxSelectors.querySuggestion('Recent query 1').click();
+          SearchBoxAssertions.assertFocusSearchBox();
+          SearchBoxAssertions.assertHasText('Recent query 1');
+        });
       });
 
       describe('after focusing a suggestion with the keyboard', () => {
-        before(() => {
+        beforeEach(() => {
           setupWithSuggestionsAndRecentQueries();
+        });
 
+        function interactWithInputBox() {
           SearchBoxSelectors.inputBox().focus();
           const downKeys = Array(9).fill('{downarrow}').join('');
           SearchBoxSelectors.inputBox().type(`Rec${downKeys}`, {
             delay: 200,
             force: true,
           });
+        }
+
+        it('has recent query', () => {
+          interactWithInputBox();
+          SearchBoxAssertions.assertHasText('Recent query 1');
         });
 
-        SearchBoxAssertions.assertHasText('Recent query 1');
-
-        describe('after pressing the search button', () => {
-          before(() => {
-            SearchBoxSelectors.submitButton().click();
-          });
-
+        it('still has recent query after pressing the search button', () => {
+          interactWithInputBox();
+          SearchBoxSelectors.submitButton().click();
           SearchBoxAssertions.assertHasText('Recent query 1');
         });
       });
@@ -441,14 +457,16 @@ describe('Search Box Test Suites', () => {
         .with(setRecentQueries(0))
         .with(addSearchBox())
         .init();
-      SearchBoxSelectors.inputBox().click();
     });
 
-    CommonAssertions.assertAriaLiveMessage(
-      SearchBoxSelectors.searchBoxAriaLive,
-      ' no '
-    );
-    CommonAssertions.assertAccessibility(searchBoxComponent);
+    it('should be accessible', () => {
+      SearchBoxSelectors.inputBox().click();
+      CommonAssertions.assertAriaLiveMessage(
+        SearchBoxSelectors.searchBoxAriaLive,
+        ' no '
+      );
+      CommonAssertions.assertAccessibility(searchBoxComponent);
+    });
   });
 
   describe('with a basic search box', () => {
