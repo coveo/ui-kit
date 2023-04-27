@@ -8,6 +8,8 @@ import {
 import {Button} from '../../common/button';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
+const numberOrPixelValuePattern = new RegExp(/^(?=.*(?:\d+|px)$).*$/);
+
 /**
  * @internal
  */
@@ -126,10 +128,39 @@ export class AtomicIPXButton implements InitializableComponent {
   private getIcon(icon: string) {
     const initialDiv = document.createElement('div')!;
     initialDiv.innerHTML = icon;
-    initialDiv
-      .querySelector('svg')
-      ?.setAttribute('fill', 'var(--atomic-on-primary)');
-
+    const iconElement = initialDiv.querySelector('svg');
+    if (!iconElement) {
+      return initialDiv.innerHTML;
+    }
+    // here, we grab the icon width and height to set a viewbox (which keeps the svg looking normal), then remove styles from the icon to let the icon stretch into the space it is given.
+    const iconWidth = this.getIconWidth(iconElement);
+    const iconHeight = this.getIconHeight(iconElement);
+    this.cleanupSVGStyles(iconElement);
+    if (iconWidth && iconHeight) {
+      iconElement.setAttribute('viewBox', `0 0 ${iconWidth} ${iconHeight}`);
+    }
     return initialDiv.innerHTML;
+  }
+
+  private cleanupSVGStyles(iconElement: SVGSVGElement) {
+    iconElement.removeAttribute('style');
+    iconElement.removeAttribute('width');
+    iconElement.removeAttribute('height');
+  }
+
+  private getIconWidth(icon: SVGSVGElement) {
+    const width = icon.getAttribute('width') ?? '';
+    if (numberOrPixelValuePattern.test(width)) {
+      return width;
+    }
+    return null;
+  }
+
+  private getIconHeight(icon: SVGSVGElement) {
+    const height = icon.getAttribute('height') ?? '';
+    if (numberOrPixelValuePattern.test(height)) {
+      return height;
+    }
+    return null;
   }
 }
