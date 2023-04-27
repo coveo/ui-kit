@@ -77,7 +77,7 @@ export interface CartRecommendationsListState {
   recommendations: ProductRecommendation[];
 
   /**
-   * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
+   * An error returned by the Coveo platform when executing a cart recommendation request, or `null` if none is present.
    */
   error: ErrorPayload | null;
 

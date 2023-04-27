@@ -78,7 +78,7 @@ export interface FrequentlyBoughtTogetherListState {
   recommendations: ProductRecommendation[];
 
   /**
-   * An error returned by the Coveo platform when executing a recommendation request, if any. This is `null` otherwise.
+   * An error returned by the Coveo platform when executing a recommendation request, or `null` if none is present.
    */
   error: SearchAPIErrorWithStatusCode | null;
 
