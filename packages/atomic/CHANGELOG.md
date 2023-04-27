@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.27.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.2...@coveo/atomic@2.27.3) (2023-04-27)
+
+### Bug Fixes
+
+- pre-process svg inside of atomic-ipx-button ([#2845](https://github.com/coveo/ui-kit/issues/2845)) ([f60afa5](https://github.com/coveo/ui-kit/commit/f60afa541d4c1159f3d270a7b8ca3ebaac30626b))
+
 ## [2.27.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.1...@coveo/atomic@2.27.2) (2023-04-27)
 
 **Note:** Version bump only for package @coveo/atomic
