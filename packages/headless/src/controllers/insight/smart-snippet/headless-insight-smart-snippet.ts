@@ -1,28 +1,35 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {
   SmartSnippet,
   SmartSnippetProps,
   buildCoreSmartSnippet,
-} from '../core/smart-snippet/headless-core-smart-snippet';
-import {buildSmartSnippetInteractiveInlineLinks} from './headless-smart-snippet-interactive-inline-links';
+} from '../../core/smart-snippet/headless-core-smart-snippet';
+import {buildSmartSnippetInteractiveInlineLinks} from './headless-insight-smart-snippet-interactive-inline-links';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
+export type {
+  SmartSnippetOptions,
+  SmartSnippetProps,
+  SmartSnippetState,
+  SmartSnippet,
+  SmartSnippetCore,
+} from '../../core/smart-snippet/headless-core-smart-snippet';
 
 /**
- * Creates a `SmartSnippet` controller instance.
+ * Creates an insight `SmartSnippet` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The headless insight engine.
  * @param props - The configurable `SmartSnippet` properties.
  * @returns A `SmartSnippet` controller instance.
  * */
 export function buildSmartSnippet(
-  engine: SearchEngine,
+  engine: InsightEngine,
   props?: SmartSnippetProps
 ): SmartSnippet {
   const smartSnippet = buildCoreSmartSnippet(
     engine,
-    smartSnippetAnalyticsClient,
+    insightSmartSnippetAnalyticsClient,
     props
   );
 
@@ -34,9 +41,6 @@ export function buildSmartSnippet(
   return {
     ...smartSnippet,
 
-    get state() {
-      return smartSnippet.state;
-    },
     selectInlineLink(link) {
       interactiveInlineLinks.selectInlineLink(link);
     },

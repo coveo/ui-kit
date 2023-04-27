@@ -237,3 +237,19 @@ export const logOpenSmartSnippetSuggestionInlineLink = (
       );
     }
   );
+
+export const smartSnippetAnalyticsClient = {
+  logExpandSmartSnippet,
+  logCollapseSmartSnippet,
+  logLikeSmartSnippet,
+  logDislikeSmartSnippet,
+  logOpenSmartSnippetSource,
+  logOpenSmartSnippetInlineLink,
+  logOpenSmartSnippetFeedbackModal,
+  logCloseSmartSnippetFeedbackModal,
+  logSmartSnippetFeedback,
+  logSmartSnippetDetailedFeedback,
+  logExpandSmartSnippetSuggestion,
+  logCollapseSmartSnippetSuggestion,
+  logOpenSmartSnippetSuggestionSource,
+};
