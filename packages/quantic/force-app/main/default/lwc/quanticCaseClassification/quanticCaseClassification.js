@@ -1,18 +1,18 @@
-import {LightningElement, api, track, wire} from 'lwc';
 import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificationTitle';
+import loading from '@salesforce/label/c.quantic_Loading';
 import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
-import loading from '@salesforce/label/c.quantic_Loading';
-import {
-  getObjectInfo,
-  getPicklistValuesByRecordType,
-} from 'lightning/uiObjectInfoApi';
 // @ts-ignore
 import CASE_OBJECT from '@salesforce/schema/Case';
 import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
+import {
+  getObjectInfo,
+  getPicklistValuesByRecordType,
+} from 'lightning/uiObjectInfoApi';
+import {LightningElement, api, track, wire} from 'lwc';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").CaseField} CaseField */
@@ -208,7 +208,11 @@ export default class QuanticCaseClassification extends LightningElement {
         hasNewSuggestions && this.isAutoSelectionNeeded
           ? this.classifications[0].value
           : this.field.state.value;
-      this.setFieldValue(value, hasNewSuggestions);
+      const updatesToFetch = {
+        caseClassifications: this.fetchClassificationOnChange,
+        documentSuggestions: this.fetchDocumentSuggestionOnChange,
+      };
+      this.setFieldValue(value, updatesToFetch, hasNewSuggestions);
       this.updateSuggestionsVisibility();
     }
   }
@@ -387,16 +391,9 @@ export default class QuanticCaseClassification extends LightningElement {
    * Set the current value and update the state.
    * @returns {void}
    */
-  setFieldValue(value, autoSelection) {
+  setFieldValue(value, updatesToFetch, autoSelection) {
     if (this.field.state.value !== value) {
-      this.field.update(
-        value,
-        {
-          caseClassifications: this.fetchClassificationOnChange,
-          documentSuggestions: this.fetchDocumentSuggestionOnChange,
-        },
-        autoSelection
-      );
+      this.field.update(value, updatesToFetch, autoSelection);
     }
     this._value = value;
     if (this._errorMessage && value) {
