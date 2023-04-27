@@ -4,7 +4,8 @@ import {
   TestFixture,
   generateComponentHTML,
 } from '../../fixtures/test-fixture';
-import {searchBoxComponent} from './search-box-selectors';
+import * as SearchBoxAssertions from './search-box-assertions';
+import {SearchBoxSelectors, searchBoxComponent} from './search-box-selectors';
 
 export interface AddSearchBoxOptions {
   suggestions?: {maxWithoutQuery: number; maxWithQuery: number};
@@ -54,3 +55,9 @@ export const addSearchBox =
     }
     env.withElement(searchBox);
   };
+
+export function typeSearchInput(query: string, verifyInput = '') {
+  SearchBoxSelectors.inputBox().click();
+  SearchBoxSelectors.inputBox().type(`${query}{enter}`, {force: true});
+  SearchBoxAssertions.assertHasText(verifyInput || query);
+}

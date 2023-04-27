@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.27.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.26.0...@coveo/atomic@2.27.0) (2023-04-26)
+
+### Features
+
+- **atomic:** add option to disable search button when there is no query input ([#2834](https://github.com/coveo/ui-kit/issues/2834)) ([0abdb64](https://github.com/coveo/ui-kit/commit/0abdb64aba08e36590265d63e942a26650b63048))
+
+# [2.26.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.25.2...@coveo/atomic@2.26.0) (2023-04-25)
+
+### Features
+
+- **organizationendpoints:** support organization endpoints for hosted-pages components ([#2838](https://github.com/coveo/ui-kit/issues/2838)) ([e0b73f1](https://github.com/coveo/ui-kit/commit/e0b73f16af1a4e794a49621a9e856cad95169cae))
+
+## [2.25.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.25.1...@coveo/atomic@2.25.2) (2023-04-24)
+
+**Note:** Version bump only for package @coveo/atomic
+
 ## [2.25.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.25.0...@coveo/atomic@2.25.1) (2023-04-18)
 
 **Note:** Version bump only for package @coveo/atomic

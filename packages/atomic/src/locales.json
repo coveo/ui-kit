@@ -101,6 +101,10 @@
     "en": "{{label}}. Button",
     "fr": "{{label}}. Bouton"
   },
+  "search-disabled": {
+    "en": "Enter a query with minimum of {{length}} character(s) to enable search.",
+    "fr": "Entrez une requête avec un minimum de {{length}} caractère(s) pour activer la recherche."
+  },
   "query-suggestion-label": {
     "en": "“{{query}}”",
     "fr": "«\u00A0{{text}}\u00A0»"
