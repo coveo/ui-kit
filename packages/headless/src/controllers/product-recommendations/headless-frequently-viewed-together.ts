@@ -60,7 +60,7 @@ export interface FrequentlyViewedTogetherList extends Controller {
 
 export interface FrequentlyViewedTogetherListState {
   /**
-   * The SKUs of the products fetch recommendations for.
+   * The SKUs of the products to fetch recommendations for.
    */
   skus: string[];
 
