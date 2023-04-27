@@ -10,7 +10,7 @@ module.exports = {
     path.join(atomicDirectory, 'src/**/*.stories.mdx'),
     path.join(atomicDirectory, 'src/**/*.stories.tsx'),
   ],
-  staticDirs: ['../public'],
+  staticDirs: [path.join(atomicDirectory, 'dist')],
   features: {
     storyStoreV7: false,
   },
@@ -36,6 +36,7 @@ module.exports = {
       },
       module: {
         ...config.module,
+        unknownContextCritical: false,
         rules: [
           ...config.module.rules,
           {

@@ -26,16 +26,11 @@
     "lodash": "4.17.21",
     "monaco-editor-webpack-plugin": "6.0.0",
     "prop-types": "^15.8.1",
-    "react": "16.14.0",
-    "react-dom": "16.14.0",
     "storybook": "^7.0.7",
     "typescript": "4.6.4"
   },
   "scripts": {
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "build2": "npm run storybook",
-    "build": "nx build",
-    "dev": "nx run dev"
+    "build": "storybook build",
+    "dev": "storybook dev -p 6006"
   }
 }
