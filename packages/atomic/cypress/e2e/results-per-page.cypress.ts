@@ -1,5 +1,6 @@
 import {getApiResponseBodyAt, getAnalyticsAt} from '../utils/network';
 import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
+import {assertAccessibility} from './common-assertions';
 import {
   resultsPerPageComponent,
   ResultsPerPageSelectors,
@@ -42,7 +43,7 @@ describe('Result Per Page Component', () => {
 
   it('passes automated accessibility', () => {
     setup();
-    cy.checkA11y(resultsPerPageComponent);
+    assertAccessibility(resultsPerPageComponent);
   });
 
   describe('choicesDisplayed option', () => {

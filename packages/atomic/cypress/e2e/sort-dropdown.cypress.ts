@@ -1,5 +1,6 @@
 import {getApiRequestBodyAt, getAnalyticsAt} from '../utils/network';
 import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
+import {assertAccessibility} from './common-assertions';
 
 const sortDropdown = 'atomic-sort-dropdown';
 const searchbox = 'atomic-search-box';
@@ -34,7 +35,7 @@ describe('Sort Dropdown Component', () => {
   });
 
   it('passes automated accessibility', () => {
-    cy.checkA11y(sortDropdown);
+    assertAccessibility(sortDropdown);
   });
 
   it('should display a label', () => {
