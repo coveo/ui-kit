@@ -208,7 +208,7 @@ describe('Instant Results Test Suites', () => {
     });
 
     describe('when navigating with the down arrow only', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(downKeys(6), delay());
       });
@@ -232,7 +232,7 @@ describe('Instant Results Test Suites', () => {
     });
 
     describe('when navigating up from input', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type('{moveToStart}{uparrow}', delay());
       });
