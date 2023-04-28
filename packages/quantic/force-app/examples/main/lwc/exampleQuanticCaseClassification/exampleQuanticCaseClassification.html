@@ -1,8 +1,8 @@
 <template>
   <c-example-layout title={pageTitle} description={pageDescription} show-preview={isConfigured}>
     <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
-      <c-action-fetch-classifications slot="actions" disabled={notConfigured} engine-id={config.engineId}>
-      </c-action-fetch-classifications>
+      <c-action-fetch-classifications slot="actions" disabled={notConfigured} engine-id={config.engineId}></c-action-fetch-classifications>
+      <c-action-change-field-input slot="actions" disabled={notConfigured} engine-id={config.engineId}></c-action-change-field-input>
     </c-configurator>
 
     <c-quantic-case-assist-interface case-assist-id={caseAssistId} engine-id={config.engineId} search-hub="test origin" slot="preview">

@@ -170,6 +170,24 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         })
         .logDetail('should log the "ticket_classification_click" UA event');
     },
+
+    fetchClassificationsAfterInputFieldValueChange: (mockFields: Object) => {
+      // TO FINISH
+      cy.wait(InterceptAliases.CaseClassification).then((interception) => {
+        const caseClassificationBody = interception.request.body;
+        expect(caseClassificationBody.fields).to.not.equal(mockFields);
+      });
+    },
+
+    fetchDocumentsAfterInputFieldValueChange: (
+      mockDocuments: Array<Object>
+    ) => {
+      // TO FINISH
+      cy.wait(InterceptAliases.DocumentSuggestion).then((interception) => {
+        const documentSuggestionBody = interception.request.body;
+        expect(documentSuggestionBody.documents).to.equal(mockDocuments);
+      });
+    },
   };
 }
 

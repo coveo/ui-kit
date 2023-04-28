@@ -1,9 +1,11 @@
+import {triggerCaseFieldInputChange} from '../../../page-objects/actions/action-change-field-input';
 import {fetchClassifications} from '../../../page-objects/actions/action-fetch-classifications';
 import {
   interceptCaseAssist,
   mockCaseClassification,
   mockSfPicklistValues,
   interceptClassificationsIndefinitely,
+  mockDocumentSuggestion,
 } from '../../../page-objects/case-assist';
 import {configure} from '../../../page-objects/configurator';
 import {scope} from '../../../reporters/detailed-collector';
@@ -746,7 +748,7 @@ describe('quantic-case-classification', () => {
   });
 
   describe('when receiving new suggestions without changing the by default auto-selected suggestion', () => {
-    it('should auto-select the suggestion with the highest confidence from the newly recieved suggestions', () => {
+    it('should auto-select the suggestion with the highest confidence from the newly received suggestions', () => {
       visitCaseClassification({});
 
       scope('when loading the page', () => {
@@ -888,5 +890,61 @@ describe('quantic-case-classification', () => {
         });
       });
     });
+  });
+
+  // eslint-disable-next-line no-restricted-properties
+  describe.only('when the field value changes and updates-to-fetch is not undefined', () => {
+    beforeEach(() => {
+      visitCaseClassification({});
+    });
+
+    const mockFields = {key: 'value'};
+    const mockDocuments = [{}];
+    const mockValue = [{}];
+
+    it('should automatically fetch new case classifications when fetchClassificationOnChange boolean property is set to true', () => {
+      // sets the new boolean option to true
+      configure({
+        fetchClassificationOnChange: true,
+      });
+      // loads the page
+      scope('when loading the page', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+      });
+
+      scope('when changing the field value', () => {
+        mockCaseClassification(
+          nonCorrespondingCoveoField,
+          nonCorrespondingSuggestions
+        );
+        // triggers the change in input
+        triggerCaseFieldInputChange(mockFields); // TO DO -- pass field values you want to test
+        Expect.fetchClassificationsAfterInputFieldValueChange(mockFields); // TO DO -- pass field values you want to test
+      });
+    });
+
+    // it.skip('should automatically fetch new document suggestions when fetchDocumentSuggestionOnChange boolean property is set to true', () => {
+    //   configure({
+    //     fetchDocumentSuggestionOnChange: true,
+    //   });
+
+    //   scope('when loading the page', () => {
+    //     Expect.displayLabel(true);
+    //     Expect.numberOfInlineOptions(0);
+    //     Expect.numberOfSuggestions(0);
+    //     Expect.displaySelectTitle(false);
+    //     Expect.displaySelectInput(true);
+    //   });
+
+    //   scope('when changing the field value', () => {
+    //     mockDocumentSuggestion(mockValue);
+    //     triggerCaseFieldInputChange(mockFields);
+    //     Expect.fetchDocumentsAfterInputFieldValueChange(mockDocuments);
+    //   });
+    // });
   });
 });
