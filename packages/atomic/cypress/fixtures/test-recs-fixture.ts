@@ -141,7 +141,6 @@ export class TestRecsFixture {
 
   public init() {
     cy.visit(buildTestUrl());
-    cy.injectAxe();
     setupIntercept();
     stubConsole();
 
