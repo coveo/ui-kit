@@ -139,80 +139,70 @@ describe('Instant Results Test Suites', () => {
 
   describe('with keyboard navigation', () => {
     describe('when navigating from query to results', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
           `${downKeys(2)}{rightarrow}`,
           delay()
         );
       });
-      after(() => {
+      afterEach(() => {
         SearchBoxSelectors.inputBox().clear({force: true});
       });
-      SearchBoxAssertions.assertHasSuggestionsCount(
-        maxRecentQueriesWithoutQuery
-      );
-      InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
-      CommonAssertions.assertAriaLiveMessage(
-        SearchBoxSelectors.searchBoxAriaLive,
-        maxRecentQueriesWithoutQuery.toString()
-      );
-      InstantResultsAssertions.assertResultIsSelected(0);
-      SearchBoxAssertions.assertSuggestionIsHighlighted(1);
+      it('has expected results and suggestions', () => {
+        SearchBoxAssertions.assertHasSuggestionsCount(
+          maxRecentQueriesWithoutQuery
+        );
+        InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
+        InstantResultsAssertions.assertResultIsSelected(0);
+        SearchBoxAssertions.assertSuggestionIsHighlighted(1);
+      });
+      it('is accessible', () => {
+        CommonAssertions.assertAriaLiveMessage(
+          SearchBoxSelectors.searchBoxAriaLive,
+          maxRecentQueriesWithoutQuery.toString()
+        );
+      });
     });
     describe('when navigating back from result to query', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
           `${downKeys(2)}{rightarrow}{leftarrow}`,
           delay()
         );
       });
-      after(() => {
+      afterEach(() => {
         SearchBoxSelectors.inputBox().clear({force: true});
       });
-      InstantResultsAssertions.assertNoResultIsSelected();
-      SearchBoxAssertions.assertSuggestionIsSelected(0);
-      SearchBoxAssertions.assertHasText('Recent query 0');
-    });
-    describe('when navigating back from result to query', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type(
-          `${downKeys(2)}{rightarrow}{leftarrow}`,
-          delay()
-        );
-      });
-      after(() => {
-        SearchBoxSelectors.inputBox().clear({force: true});
-      });
+
       InstantResultsAssertions.assertNoResultIsSelected();
       SearchBoxAssertions.assertSuggestionIsSelected(0);
       SearchBoxAssertions.assertHasText('Recent query 0');
     });
     describe('when pressing enter on a result', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
+      });
+      it('redirects to new page', () => {
         SearchBoxSelectors.inputBox().type(
           `${downKeys(2)}{rightarrow}{enter}`,
           delay()
         );
-      });
-      it('redirects to new page', () => {
+        // TODO (KIT-2356): Fails in Cypress v12
         cy.window().then((win) => {
           expect(win.location.href).to.equal('https://example.com/0');
         });
       });
     });
     describe('when navigating to first suggestion and back with up arrow', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
           'Rec{downarrow}{uparrow}{leftarrow}{del}',
           delay()
         );
       });
-
       SearchBoxAssertions.assertNoSuggestionIsSelected();
       SearchBoxAssertions.assertHasText('Re');
     });
@@ -227,7 +217,7 @@ describe('Instant Results Test Suites', () => {
     });
 
     describe('when navigating up from results', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type('{moveToStart}');
         InstantResultsSelectors.results();
@@ -251,7 +241,7 @@ describe('Instant Results Test Suites', () => {
     });
 
     describe('when typing when a query is selected', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
           `${downKeys(2)}{backspace}`,
@@ -266,7 +256,7 @@ describe('Instant Results Test Suites', () => {
 
   describe('with mouse navigation', () => {
     describe('when hovering over a query', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().click();
         SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
@@ -276,7 +266,7 @@ describe('Instant Results Test Suites', () => {
     });
 
     describe('when hovering over an instant result', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries(2);
         SearchBoxSelectors.inputBox().click();
         InstantResultsSelectors.results().eq(1).trigger('mouseover');
@@ -285,10 +275,8 @@ describe('Instant Results Test Suites', () => {
       InstantResultsAssertions.assertResultIsSelected(1);
       SearchBoxAssertions.assertSuggestionIsHighlighted(1);
 
-      describe('when hovering over a different query', () => {
-        before(() => {
-          SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
-        });
+      it('should have expected results and suggestions when hovering over a different query', () => {
+        SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
         InstantResultsAssertions.assertHasResultCount(4);
         InstantResultsAssertions.assertNoResultIsSelected();
         SearchBoxAssertions.assertSuggestionIsSelected(1);
@@ -307,6 +295,7 @@ describe('Instant Results Test Suites', () => {
       });
 
       it('redirects to new page', () => {
+        // TODO (KIT-2356): Fails in Cypress v12
         cy.window().then((win) => {
           expect(win.location.href).to.equal('https://example.com/1');
         });
