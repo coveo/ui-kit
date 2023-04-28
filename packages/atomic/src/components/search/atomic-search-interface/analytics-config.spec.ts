@@ -78,7 +78,7 @@ describe('analyticsConfig', () => {
       );
     });
 
-    it('it augment analytics payload with Atomic version', () => {
+    it('augments analytics payload with Atomic version', () => {
       const resultingConfig = getAnalyticsConfig(config, true, store);
       const out = resultingConfig.analyticsClientMiddleware!('an_event', {
         customData: {},
@@ -86,7 +86,7 @@ describe('analyticsConfig', () => {
       expect(out.customData).toHaveProperty('coveoAtomicVersion');
     });
 
-    it('it augment analytics payload with facet title, with any type of facet registered to the store', () => {
+    it('augments analytics payload with facet title, with any type of facet registered to the store', () => {
       const resultingConfig = getAnalyticsConfig(config, true, store);
       (
         ['facets', 'numericFacets', 'dateFacets', 'categoryFacets'] as const
@@ -109,7 +109,7 @@ describe('analyticsConfig', () => {
       });
     });
 
-    it('it does not augment analytics payload with a facet title when a facet is unavailable from the store', () => {
+    it('does not augment analytics payload with a facet title when a facet is unavailable from the store', () => {
       const result = getAnalyticsConfig(config, true, store);
       const out = result.analyticsClientMiddleware!('an_event', {
         customData: {
