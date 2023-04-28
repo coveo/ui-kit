@@ -73,5 +73,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
 export const DefaultIcon = exportedStory;
+export default {...defaultModuleExport, title: 'Atomic/Icon'};

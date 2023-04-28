@@ -59,6 +59,9 @@ export interface CategoryFacetProps {
   options: CategoryFacetOptions;
 }
 
+/**
+ * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values hierarchically.
+ */
 export interface CategoryFacet extends CoreCategoryFacet {
   /**
    * Provides methods to search the facet's values.
