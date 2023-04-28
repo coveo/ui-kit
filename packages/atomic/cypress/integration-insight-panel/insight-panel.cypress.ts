@@ -13,6 +13,7 @@ describe('Insight Panel test suites', () => {
   const setupPage = () => {
     interceptInsightSearch();
     cy.visit(host);
+    cy.injectAxe();
     cy.wait(insightSearchAlias);
   };
 

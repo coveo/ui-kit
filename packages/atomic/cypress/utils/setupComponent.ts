@@ -24,6 +24,7 @@ export const searchEndpoint =
 export function setUpPage(htmlCode: string, executeFirstSearch = true) {
   setupIntercept();
   cy.visit(buildTestUrl());
+  cy.injectAxe();
   injectComponent(htmlCode, executeFirstSearch);
   // TODO: when executeFirstSearch = true, waiting for @coveoSearch would be less flaky
   cy.wait(300);

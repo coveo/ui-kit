@@ -188,6 +188,7 @@ export class TestFixture {
 
   public init() {
     !this.redirected && cy.visit(buildTestUrl(this.hash));
+    cy.injectAxe();
     setupIntercept();
     stubConsole();
 
