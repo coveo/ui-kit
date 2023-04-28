@@ -9,5 +9,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/SegmentedFacet'};
 export const DefaultSegmentedFacet = exportedStory;

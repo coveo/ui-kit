@@ -5,7 +5,7 @@ import {
   h,
 } from '@stencil/core/internal/client';
 
-const rootElement = document.getElementById('root');
+const rootElement = document.getElementById('storybook-root');
 const storyRoot = document.createElement('div');
 const searchInterface = document.createElement('atomic-search-interface');
 storyRoot.appendChild(searchInterface);
