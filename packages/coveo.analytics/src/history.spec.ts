@@ -184,4 +184,18 @@ describe('history', () => {
 
         expect(storageMock.setItem).toHaveBeenCalledTimes(2);
     });
+
+    it('should not throw when the content of localStorage is not an array', async () => {
+        storageMock.setItem(history.STORE_KEY, '{"foo":"bar"}');
+        let ex: any;
+        try {
+            const mostRecentElement = await historyStore.getMostRecentElement();
+            expect(mostRecentElement).toBeNull();
+            const localHistory = await historyStore.getHistoryAsync();
+            expect(localHistory).toStrictEqual([]);
+        } catch (err) {
+            ex = err;
+        }
+        expect(ex).toBeUndefined();
+    });
 });
