@@ -21,11 +21,8 @@ export function assertAccessibility<T extends HTMLElement>(
     {}
   );
 
-  before(() => {
-    cy.injectAxe();
-  });
-
   it('should pass accessibility tests', () => {
+    cy.injectAxe();
     if (typeof component === 'string') {
       cy.checkA11y(component, {rules});
     } else if (typeof component === 'function') {
