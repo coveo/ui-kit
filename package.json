@@ -15,7 +15,6 @@
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
     "commit": "git-cz",
-    "setup:snyk": "node ./scripts/snyk/remove-samples-workspace.mjs",
     "bump:version": "node ./scripts/deploy/bump-version.mjs",
     "bump:version:major-prerelease": "node ./scripts/deploy/manual-major-prerelease.mjs",
     "promote:npm:beta": "nx run-many --target=promote:npm:beta",

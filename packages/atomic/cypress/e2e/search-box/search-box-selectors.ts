@@ -8,6 +8,8 @@ export const SearchBoxSelectors = {
   inputBox: () => SearchBoxSelectors.shadow().find('[part="input"]'),
   submitButton: () =>
     SearchBoxSelectors.shadow().find('[part="submit-button"]'),
+  querySuggestionsWrapper: () =>
+    SearchBoxSelectors.shadow().find('[part="suggestions-wrapper"]'),
   querySuggestions: () => SearchBoxSelectors.shadow().find('[data-query]'),
   querySuggestion: (query: string) =>
     SearchBoxSelectors.shadow().find(`[data-query="${query}"]`),

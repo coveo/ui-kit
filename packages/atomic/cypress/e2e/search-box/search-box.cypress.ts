@@ -24,7 +24,7 @@ import {
   buildTemplateWithoutSections,
 } from '../result-list/result-list-actions';
 import {ResultListSelectors} from '../result-list/result-list-selectors';
-import {addSearchBox} from './search-box-actions';
+import {addSearchBox, typeSearchInput} from './search-box-actions';
 import * as SearchBoxAssertions from './search-box-assertions';
 import {searchBoxComponent, SearchBoxSelectors} from './search-box-selectors';
 
@@ -454,7 +454,7 @@ describe('Search Box Test Suites', () => {
     });
   });
 
-  describe('with a basic search box', () => {
+  describe('with default search box', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addSearchBox())
@@ -466,25 +466,82 @@ describe('Search Box Test Suites', () => {
       cy.wait(RouteAlias.UA);
     });
 
+    it('search button is enabled to start with', () => {
+      SearchBoxSelectors.inputBox().should('be.empty');
+      SearchBoxSelectors.submitButton().should('be.enabled');
+    });
+
     CommonAssertions.assertConsoleError(false);
   });
 
   describe('with disableSearch set to true', () => {
     beforeEach(() => {
       new TestFixture()
-        .with(addSearchBox({props: {'disable-search': 'true'}}))
+        .with(
+          addSearchBox({
+            props: {
+              'disable-search': 'true',
+              'minimum-query-length': 1, // disable-search should override this setting
+            },
+          })
+        )
         .with(addQuerySummary())
         .withoutFirstAutomaticSearch()
         .init();
-      SearchBoxSelectors.inputBox().click();
-      SearchBoxSelectors.inputBox().type('test{enter}', {force: true});
-      SearchBoxSelectors.submitButton().click({force: true});
     });
 
-    SearchBoxAssertions.assertHasSuggestionsCount(0);
-    SearchBoxAssertions.assertHasText('test');
-    QuerySummaryAssertions.assertHasPlaceholder();
-    CommonAssertions.assertConsoleError(false);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(searchBoxComponent);
+    });
+
+    it('there are no search suggestions or errors on query input', () => {
+      typeSearchInput('test');
+      SearchBoxSelectors.submitButton().should('be.disabled');
+      SearchBoxAssertions.assertHasSuggestionsCount(0);
+      QuerySummaryAssertions.assertHasPlaceholder();
+      CommonAssertions.assertConsoleError(false);
+    });
+  });
+
+  describe('with minimum query length to enable search', () => {
+    const testQuery = 'test';
+    const numOfSuggestions = 2;
+    const minimumQueryLength = testQuery.length;
+    beforeEach(() => {
+      new TestFixture()
+        .with(setSuggestions(numOfSuggestions))
+        .with(
+          addSearchBox({
+            props: {'minimum-query-length': minimumQueryLength},
+          })
+        )
+        .init();
+    });
+
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(searchBoxComponent);
+    });
+
+    it('search button is enabled when a query with minimum length is input', () => {
+      typeSearchInput(testQuery.slice(0, minimumQueryLength - 1)); // enter query less than min len
+      SearchBoxSelectors.submitButton().should('be.disabled');
+      SearchBoxAssertions.assertHasSuggestionsCount(0);
+
+      typeSearchInput(testQuery.slice(minimumQueryLength - 1)); // enter rest of the query
+      SearchBoxSelectors.submitButton().should('not.be.disabled');
+
+      typeSearchInput('{downarrow}'.repeat(numOfSuggestions));
+      SearchBoxAssertions.assertHasSuggestionsCount(numOfSuggestions);
+      SearchBoxAssertions.assertSuggestionIsSelected(numOfSuggestions);
+    });
+
+    it('search button is disabled when query is deleted', () => {
+      typeSearchInput(testQuery);
+      SearchBoxSelectors.submitButton().should('not.be.disabled');
+
+      typeSearchInput('{backspace}'.repeat(minimumQueryLength), '');
+      SearchBoxSelectors.submitButton().should('be.disabled');
+    });
   });
 
   describe('with a facet & clear-filters set to false', () => {

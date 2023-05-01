@@ -1239,7 +1239,7 @@ export namespace Components {
     }
     interface AtomicResultBadge {
         /**
-          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
+          * The field to display in the badge.  Not compatible with `label`, slotted elements nor multi-value fields.
          */
         "field"?: string;
         /**
@@ -1470,13 +1470,17 @@ export namespace Components {
          */
         "clearFilters": boolean;
         /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
          */
         "disableSearch": boolean;
         /**
           * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
          */
         "enableQuerySyntax": boolean;
+        /**
+          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
+         */
+        "minimumQueryLength": number;
         /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
@@ -3912,7 +3916,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultBadge {
         /**
-          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
+          * The field to display in the badge.  Not compatible with `label`, slotted elements nor multi-value fields.
          */
         "field"?: string;
         /**
@@ -4131,13 +4135,17 @@ declare namespace LocalJSX {
          */
         "clearFilters"?: boolean;
         /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
          */
         "disableSearch"?: boolean;
         /**
           * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
          */
         "enableQuerySyntax"?: boolean;
+        /**
+          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
+         */
+        "minimumQueryLength"?: number;
         /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */

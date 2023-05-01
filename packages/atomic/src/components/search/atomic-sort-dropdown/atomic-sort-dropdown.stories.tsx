@@ -19,5 +19,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/SortDropdown'};
 export const DefaultSortDropdown = exportedStory;
