@@ -1,5 +1,4 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import P from 'pino';
 import {AnyAction} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
 import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
@@ -173,25 +172,25 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return null;
     }
 
-    const requireClassicDidYouMeanAutoCorrection =
+    const shouldExecuteClassicDidYouMeanAutoCorrection =
       state.didYouMean?.enableDidYouMean === true &&
       successResponse.results.length === 0 &&
       successResponse.queryCorrections.length !== 0;
 
-    const requireFallbackQueryResultsDidYouMeanAutoCorrection =
+    const shouldExecuteFallbackQueryResultsDidYouMeanAutoCorrection =
       !isNullOrUndefined(successResponse.changedQuery);
 
     const shouldExitWithNoCorrection =
-      !requireClassicDidYouMeanAutoCorrection &&
-      !requireFallbackQueryResultsDidYouMeanAutoCorrection;
+      !shouldExecuteClassicDidYouMeanAutoCorrection &&
+      !shouldExecuteFallbackQueryResultsDidYouMeanAutoCorrection;
 
     if (shouldExitWithNoCorrection) {
       return null;
     }
 
-    let ret: ValidReturnTypeFromProcessingStep<RejectionType> | null;
+    let ret: ValidReturnTypeFromProcessingStep<RejectionType> | null = null;
 
-    if (requireClassicDidYouMeanAutoCorrection) {
+    if (shouldExecuteClassicDidYouMeanAutoCorrection) {
       ret = await this.processClassicDidYouMeanAutoCorrection(successResponse);
     } else {
       ret = this.processFallbackQueryResultsDidYouMeanAutoCorrection(fetched);
@@ -294,9 +293,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     originalFetchedResponse: FetchedResponse
   ): ExecuteSearchThunkReturn {
     const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
-    const {correctedQuery} = successResponse.changedQuery!;
+    const {correctedQuery, originalQuery} = successResponse.changedQuery!;
 
-    this.applyAutomaticQueryCorrectionFromFallbackResults(correctedQuery);
+    this.onUpdateQueryForCorrection(correctedQuery);
+    this.dispatch(applyDidYouMeanCorrection(correctedQuery));
 
     return {
       ...originalFetchedResponse,
@@ -305,7 +305,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       },
       queryExecuted: correctedQuery,
       automaticallyCorrected: true,
-      originalQuery: originalFetchedResponse.queryExecuted,
+      originalQuery,
       analyticsAction: logDidYouMeanAutomatic(),
     };
   }
@@ -338,11 +338,6 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
     this.dispatch(applyDidYouMeanCorrection(correction));
     return fetched;
-  }
-
-  private applyAutomaticQueryCorrectionFromFallbackResults(correction: string) {
-    this.onUpdateQueryForCorrection(correction);
-    this.dispatch(applyDidYouMeanCorrection(correction));
   }
 
   private async automaticallyRetryQueryWithTriggerModification(

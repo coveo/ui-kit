@@ -33,6 +33,9 @@ describe('AsyncSearchThunkProcessor', () => {
           results,
           response: buildMockSearchResponse({results}),
         }),
+        didYouMean: {
+          enableDidYouMean: true,
+        },
       }),
       rejectWithValue: jest.fn(),
     };
@@ -128,6 +131,43 @@ describe('AsyncSearchThunkProcessor', () => {
       queryCorrections:
         originalResponseWithNoResultsAndCorrection.queryCorrections,
     });
+    expect(processed.automaticallyCorrected).toBe(true);
+    expect(processed.originalQuery).toBe('foo');
+  });
+
+  it('process properly when #enableFallbackSearchOnEmptyQueryResults is activated on the query˝', async () => {
+    const processor = new AsyncSearchThunkProcessor<{}>(config);
+
+    const originalResponseWithResultsAndChangedQuery = buildMockSearchResponse({
+      results: [buildMockResult()],
+      changedQuery: {
+        correctedQuery: 'bar',
+        originalQuery: 'foo',
+      },
+      queryCorrections: [],
+    });
+
+    const fetched = {
+      response: {
+        success: originalResponseWithResultsAndChangedQuery,
+      },
+      duration: 123,
+      queryExecuted: 'foo',
+      requestExecuted: buildMockSearchRequest(),
+    };
+
+    const processed = (await processor.process(
+      fetched
+    )) as ExecuteSearchThunkReturn;
+
+    expect(config.dispatch).toHaveBeenCalledWith(updateQuery({q: 'bar'}));
+    expect(config.extra.apiClient.search).not.toHaveBeenCalled();
+    expect(processed.response).toMatchObject(
+      originalResponseWithResultsAndChangedQuery
+    );
+    expect(processed.automaticallyCorrected).toBe(true);
+    expect(processed.originalQuery).toBe('foo');
+    expect(processed.queryExecuted).toBe('bar');
   });
 
   it('process properly when there is a query trigger', async () => {
