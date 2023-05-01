@@ -1,5 +1,5 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {insightSmartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-insight-analytics-actions';
+import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions';
 import {
   buildCoreSmartSnippetQuestionsList,
   SmartSnippetQuestionsList,
@@ -30,7 +30,7 @@ export function buildSmartSnippetQuestionsList(
 ): SmartSnippetQuestionsList {
   const smartSnippetQuestionList = buildCoreSmartSnippetQuestionsList(
     engine,
-    insightSmartSnippetAnalyticsClient,
+    smartSnippetAnalyticsClient,
     props
   );
 

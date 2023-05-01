@@ -339,7 +339,7 @@ export type {
 } from './core/smart-snippet/headless-core-smart-snippet';
 export {buildSmartSnippet} from './smart-snippet/headless-smart-snippet';
 
-export type {InlineLink} from './core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+export type {InlineLink} from './smart-snippet/headless-smart-snippet-interactive-inline-links';
 
 export type {
   SmartSnippetQuestionsList,

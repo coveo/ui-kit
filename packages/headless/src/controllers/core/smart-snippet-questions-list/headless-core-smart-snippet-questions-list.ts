@@ -16,15 +16,11 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links';
 import {SmartSnippetAnalyticsClient} from '../smart-snippet/headless-core-smart-snippet';
 import {buildCoreSmartSnippetInteractiveQuestions} from './headless-core-smart-snippet-interactive-questions';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
-
-export interface InlineLink {
-  linkText: string;
-  linkURL: string;
-}
 
 export interface SmartSnippetQuestionsListOptions {
   /**
