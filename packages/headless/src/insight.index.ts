@@ -284,15 +284,6 @@ export type {
   SmartSnippetQuestionsListCore,
 } from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
 export {buildSmartSnippetQuestionsList} from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
-export type {
-  SmartSnippet,
-  SmartSnippetOptions,
-  SmartSnippetProps,
-  SmartSnippetState,
-  QuestionAnswerDocumentIdentifier,
-  SmartSnippetCore,
-} from './controllers/insight/smart-snippet/headless-insight-smart-snippet';
-export {buildSmartSnippet} from './controllers/insight/smart-snippet/headless-insight-smart-snippet';
 
 // Features
 export type {
