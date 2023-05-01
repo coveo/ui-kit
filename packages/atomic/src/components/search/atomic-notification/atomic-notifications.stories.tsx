@@ -27,5 +27,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/Notifications'};
 export const DefaultNotifications = exportedStory;

@@ -17,5 +17,8 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   }
 );
 
-export default defaultModuleExport;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/ResultList/ResultMultiValue',
+};
 export const DefaultMultiValueText = exportedStory;
