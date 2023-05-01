@@ -151,5 +151,8 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/SmartSnippetSuggestions',
+};
 export const DefaultSmartSnippetSuggestions = exportedStory;

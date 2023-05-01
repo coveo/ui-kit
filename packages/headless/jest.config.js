@@ -4,4 +4,5 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   silent: true,
+  setupFiles: ['./jest.setup.js'],
 };

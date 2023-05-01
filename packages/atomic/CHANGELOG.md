@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.27.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.4...@coveo/atomic@2.27.5) (2023-04-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.27.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.3...@coveo/atomic@2.27.4) (2023-04-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.27.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.2...@coveo/atomic@2.27.3) (2023-04-27)
+
+### Bug Fixes
+
+- pre-process svg inside of atomic-ipx-button ([#2845](https://github.com/coveo/ui-kit/issues/2845)) ([f60afa5](https://github.com/coveo/ui-kit/commit/f60afa541d4c1159f3d270a7b8ca3ebaac30626b))
+
+## [2.27.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.1...@coveo/atomic@2.27.2) (2023-04-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.27.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.0...@coveo/atomic@2.27.1) (2023-04-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.27.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.26.0...@coveo/atomic@2.27.0) (2023-04-26)
+
+### Features
+
+- **atomic:** add option to disable search button when there is no query input ([#2834](https://github.com/coveo/ui-kit/issues/2834)) ([0abdb64](https://github.com/coveo/ui-kit/commit/0abdb64aba08e36590265d63e942a26650b63048))
+
+# [2.26.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.25.2...@coveo/atomic@2.26.0) (2023-04-25)
+
+### Features
+
+- **organizationendpoints:** support organization endpoints for hosted-pages components ([#2838](https://github.com/coveo/ui-kit/issues/2838)) ([e0b73f1](https://github.com/coveo/ui-kit/commit/e0b73f16af1a4e794a49621a9e856cad95169cae))
+
+## [2.25.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.25.1...@coveo/atomic@2.25.2) (2023-04-24)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.25.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.25.0...@coveo/atomic@2.25.1) (2023-04-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.25.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.24.0...@coveo/atomic@2.25.0) (2023-04-18)
+
+### Features
+
+- **atomic:** added a responsive tab container ([#2819](https://github.com/coveo/ui-kit/issues/2819)) ([f48953e](https://github.com/coveo/ui-kit/commit/f48953e8517ff33f008875ed5e4c7b0b050af773))
+
 # [2.24.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.23.4...@coveo/atomic@2.24.0) (2023-04-14)
 
 ### Bug Fixes
