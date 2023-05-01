@@ -175,7 +175,7 @@ export class TabBar {
   public render = () => {
     this.updateTabsDisplay();
     return (
-      <Host class={'flex relative'}>
+      <Host>
         <slot></slot>
         <tab-popover hide={!this.overflowingTabs.length}>
           {this.popoverTabs}

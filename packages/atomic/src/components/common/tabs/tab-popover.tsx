@@ -26,6 +26,7 @@ import {Button} from '../button';
  */
 @Component({
   tag: 'tab-popover',
+  shadow: true,
   styleUrl: 'tab-popover.pcss',
 })
 export class TabPopover implements InitializableComponent {
