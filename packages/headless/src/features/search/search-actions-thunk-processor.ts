@@ -188,13 +188,9 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return null;
     }
 
-    let ret: ValidReturnTypeFromProcessingStep<RejectionType> | null = null;
-
-    if (shouldExecuteClassicDidYouMeanAutoCorrection) {
-      ret = await this.processClassicDidYouMeanAutoCorrection(successResponse);
-    } else {
-      ret = this.processFallbackQueryResultsDidYouMeanAutoCorrection(fetched);
-    }
+    const ret = shouldExecuteClassicDidYouMeanAutoCorrection
+      ? await this.processClassicDidYouMeanAutoCorrection(successResponse)
+      : this.processFallbackQueryResultsDidYouMeanAutoCorrection(fetched);
 
     this.analyticsAction &&
       this.analyticsAction()(
