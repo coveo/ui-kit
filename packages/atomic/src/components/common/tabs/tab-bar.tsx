@@ -160,6 +160,7 @@ export class TabBar {
     this.updateTabVisibility(this.overflowingTabs, false);
     this.updateTabVisibility(this.displayedTabs, true);
     this.updatePopoverPosition();
+    this.tabPopover?.setButtonVisibility(!!this.overflowingTabs.length);
   };
 
   @Listen('atomic/tabRendered')
@@ -169,7 +170,7 @@ export class TabBar {
   }
 
   public componentDidLoad() {
-    window.addEventListener('resize', this.render);
+    new ResizeObserver(this.render).observe(this.host);
   }
 
   public render = () => {
@@ -177,9 +178,7 @@ export class TabBar {
     return (
       <Host>
         <slot></slot>
-        <tab-popover hide={!this.overflowingTabs.length}>
-          {this.popoverTabs}
-        </tab-popover>
+        <tab-popover>{this.popoverTabs}</tab-popover>
       </Host>
     );
   };
