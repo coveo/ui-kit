@@ -30,6 +30,7 @@ export function getAnalyticsConfig(
     return {
       ...defaultConfiguration,
       ...searchEngineConfig.analytics,
+      analyticsClientMiddleware,
     };
   }
   return defaultConfiguration;
