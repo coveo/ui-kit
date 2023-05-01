@@ -1,6 +1,6 @@
 export interface ProductRecommendation {
   /**
-   * Document Uri in the index. Useful for analytics.
+   * Deprecated — has no impact.
    */
   documentUri: string;
   /**
