@@ -108,7 +108,10 @@ describe('Instant Results Test Suites', () => {
     });
 
     CommonAssertions.assertAccessibility(searchBoxComponent);
-    InstantResultsAssertions.assertLogSearchboxAsYouType();
+
+    it('should log the SearchboxAsYouType event to UA', () => {
+      cy.expectSearchEvent('searchboxAsYouType');
+    });
 
     it('uses the generated labels', () => {
       InstantResultsSelectors.results().should(([...results]) =>
