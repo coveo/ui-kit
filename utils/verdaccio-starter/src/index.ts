@@ -1,5 +1,5 @@
 // eslint-disable-next-line node/no-unpublished-import
-import {ConfigRuntime} from '@verdaccio/types';
+import type {ConfigRuntime} from '@verdaccio/types';
 import getPort from 'get-port';
 import {ChildProcess, fork} from 'node:child_process';
 import {writeFileSync, mkdirSync} from 'node:fs';
