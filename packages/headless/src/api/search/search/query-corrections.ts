@@ -30,3 +30,8 @@ export interface WordCorrection {
    */
   correctedWord: string;
 }
+
+export interface ChangedQuery {
+  originalQuery: string;
+  correctedQuery: string;
+}

@@ -1,3 +1,5 @@
+import {isNullOrUndefined} from '@coveo/bueno';
+import P from 'pino';
 import {AnyAction} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
 import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
@@ -170,23 +172,29 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     if (!successResponse) {
       return null;
     }
-    if (
-      state.didYouMean?.enableDidYouMean === false ||
-      successResponse.results.length !== 0 ||
-      successResponse.queryCorrections.length === 0
-    ) {
+
+    const requireClassicDidYouMeanAutoCorrection =
+      state.didYouMean?.enableDidYouMean === true &&
+      successResponse.results.length === 0 &&
+      successResponse.queryCorrections.length !== 0;
+
+    const requireFallbackQueryResultsDidYouMeanAutoCorrection =
+      !isNullOrUndefined(successResponse.changedQuery);
+
+    const shouldExitWithNoCorrection =
+      !requireClassicDidYouMeanAutoCorrection &&
+      !requireFallbackQueryResultsDidYouMeanAutoCorrection;
+
+    if (shouldExitWithNoCorrection) {
       return null;
     }
 
-    const originalQuery = this.getCurrentQuery();
-    const {correctedQuery} = successResponse.queryCorrections[0];
-    const retried = await this.automaticallyRetryQueryWithCorrection(
-      correctedQuery
-    );
+    let ret: ValidReturnTypeFromProcessingStep<RejectionType> | null;
 
-    if (isErrorResponse(retried.response)) {
-      this.dispatch(logQueryError(retried.response.error));
-      return this.rejectWithValue(retried.response.error) as RejectionType;
+    if (requireClassicDidYouMeanAutoCorrection) {
+      ret = await this.processClassicDidYouMeanAutoCorrection(successResponse);
+    } else {
+      ret = this.processFallbackQueryResultsDidYouMeanAutoCorrection(fetched);
     }
 
     this.analyticsAction &&
@@ -203,16 +211,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       );
     this.dispatch(snapshot(extractHistory(this.getState())));
 
-    return {
-      ...retried,
-      response: {
-        ...retried.response.success,
-        queryCorrections: successResponse.queryCorrections,
-      },
-      automaticallyCorrected: true,
-      originalQuery,
-      analyticsAction: logDidYouMeanAutomatic(),
-    };
+    return ret;
   }
 
   private async processQueryTriggersOrContinue(
@@ -263,6 +262,54 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     };
   }
 
+  private async processClassicDidYouMeanAutoCorrection(
+    originalSearchSuccessResponse: SearchResponseSuccess
+  ): Promise<ExecuteSearchThunkReturn | RejectionType> {
+    const originalQuery = this.getCurrentQuery();
+
+    const {correctedQuery} = originalSearchSuccessResponse.queryCorrections[0];
+
+    const retried = await this.automaticallyRetryQueryWithCorrection(
+      correctedQuery
+    );
+
+    if (isErrorResponse(retried.response)) {
+      this.dispatch(logQueryError(retried.response.error));
+      return this.rejectWithValue(retried.response.error) as RejectionType;
+    }
+
+    return {
+      ...retried,
+      response: {
+        ...retried.response.success,
+        queryCorrections: originalSearchSuccessResponse.queryCorrections,
+      },
+      automaticallyCorrected: true,
+      originalQuery,
+      analyticsAction: logDidYouMeanAutomatic(),
+    };
+  }
+
+  private processFallbackQueryResultsDidYouMeanAutoCorrection(
+    originalFetchedResponse: FetchedResponse
+  ): ExecuteSearchThunkReturn {
+    const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
+    const {correctedQuery} = successResponse.changedQuery!;
+
+    this.applyAutomaticQueryCorrectionFromFallbackResults(correctedQuery);
+
+    return {
+      ...originalFetchedResponse,
+      response: {
+        ...successResponse,
+      },
+      queryExecuted: correctedQuery,
+      automaticallyCorrected: true,
+      originalQuery: originalFetchedResponse.queryExecuted,
+      analyticsAction: logDidYouMeanAutomatic(),
+    };
+  }
+
   private processSuccessReponse(
     fetched: FetchedResponse
   ): ValidReturnTypeFromProcessingStep<RejectionType> {
@@ -291,6 +338,11 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
     this.dispatch(applyDidYouMeanCorrection(correction));
     return fetched;
+  }
+
+  private applyAutomaticQueryCorrectionFromFallbackResults(correction: string) {
+    this.onUpdateQueryForCorrection(correction);
+    this.dispatch(applyDidYouMeanCorrection(correction));
   }
 
   private async automaticallyRetryQueryWithTriggerModification(
