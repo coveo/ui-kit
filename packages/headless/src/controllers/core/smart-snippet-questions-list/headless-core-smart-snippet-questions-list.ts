@@ -18,7 +18,6 @@ import {
 } from '../../controller/headless-controller';
 import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links';
 import {SmartSnippetAnalyticsClient} from '../smart-snippet/headless-core-smart-snippet';
-import {buildCoreSmartSnippetInteractiveQuestions} from './headless-core-smart-snippet-interactive-questions';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 
@@ -58,6 +57,13 @@ export interface SmartSnippetQuestionsListCore extends Controller {
    * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
    */
   collapse(identifier: string): void;
+}
+
+/**
+ * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
+ */
+export interface SmartSnippetQuestionsList
+  extends SmartSnippetQuestionsListCore {
   /**
    * Selects the source, logging a UA event to the Coveo Platform if the source hadn't been selected before.
    *
@@ -86,25 +92,6 @@ export interface SmartSnippetQuestionsListCore extends Controller {
    * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
    */
   cancelPendingSelectSource(identifier: string): void;
-  /**
-   * Selects a link inside an answer, logging a UA event to the Coveo Platform if it was never selected before.
-   *
-   * In a DOM context, we recommend calling this method on all of the following events:
-   * * `contextmenu`
-   * * `click`
-   * * `mouseup`
-   * * `mousedown`
-   *
-   * @param identifier - The `questionAnswerId` of the smart snippet containing the link.
-   * @param link - The link to select.
-   */
-}
-
-/**
- * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
- */
-export interface SmartSnippetQuestionsList
-  extends SmartSnippetQuestionsListCore {
   /**
    * Selects a link inside an answer, logging a UA event to the Coveo Platform if it was never selected before.
    *
@@ -188,8 +175,7 @@ export interface SmartSnippetRelatedQuestion {
  * */
 export function buildCoreSmartSnippetQuestionsList(
   engine: CoreEngine,
-  analyticsClient: SmartSnippetAnalyticsClient,
-  props?: SmartSnippetQuestionsListProps
+  analyticsClient: SmartSnippetAnalyticsClient
 ): SmartSnippetQuestionsListCore {
   if (!loadSmartSnippetQuestionsListReducer(engine)) {
     throw loadReducerError;
@@ -204,14 +190,6 @@ export function buildCoreSmartSnippetQuestionsList(
       (result) => getResultProperty(result, contentIdKey) === contentIdValue
     );
   };
-
-  const interactiveQuestions = buildCoreSmartSnippetInteractiveQuestions(
-    engine,
-    analyticsClient,
-    {
-      options: {selectionDelay: props?.options?.selectionDelay},
-    }
-  );
 
   return {
     ...controller,
@@ -245,15 +223,6 @@ export function buildCoreSmartSnippetQuestionsList(
         analyticsClient.logCollapseSmartSnippetSuggestion(payload)
       );
       engine.dispatch(collapseSmartSnippetRelatedQuestion(payload));
-    },
-    selectSource(identifier) {
-      interactiveQuestions.selectSource(identifier);
-    },
-    beginDelayedSelectSource(identifier) {
-      interactiveQuestions.beginDelayedSelectSource(identifier);
-    },
-    cancelPendingSelectSource(identifier) {
-      interactiveQuestions.cancelPendingSelectSource(identifier);
     },
   };
 }

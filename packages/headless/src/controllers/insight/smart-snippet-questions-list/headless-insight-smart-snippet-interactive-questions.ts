@@ -1,11 +1,12 @@
 import {Result} from '../../../api/search/search/result';
 import {questionAnswering, search} from '../../../app/reducers';
+import {logOpenSmartSnippetSuggestionSource} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {
   answerSourceSelector,
   relatedQuestionSelector,
 } from '../../../features/question-answering/question-answering-selectors';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {CoreEngine} from '../../../recommendation.index';
+import {InsightEngine} from '../../../insight.index';
 import {
   QuestionAnsweringSection,
   SearchSection,
@@ -14,8 +15,7 @@ import {loadReducerError} from '../../../utils/errors';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
-} from '../interactive-result/headless-core-interactive-result';
-import {SmartSnippetAnalyticsClient} from '../smart-snippet/headless-core-smart-snippet';
+} from '../../core/interactive-result/headless-core-interactive-result';
 
 /**
  * @internal
@@ -43,9 +43,8 @@ export interface SmartSnippetInteractiveQuestions {
 /**
  * @internal
  */
-export function buildCoreSmartSnippetInteractiveQuestions(
-  engine: CoreEngine,
-  analyticsClient: SmartSnippetAnalyticsClient,
+export function buildInsightSmartSnippetInteractiveQuestions(
+  engine: InsightEngine,
   props?: SmartSnippetInteractiveQuestionsProps
 ): SmartSnippetInteractiveQuestions {
   if (!loadSmartSnippetInteractiveQuestionsReducer(engine)) {
@@ -95,7 +94,7 @@ export function buildCoreSmartSnippetInteractiveQuestions(
           return;
         }
         engine.dispatch(
-          analyticsClient.logOpenSmartSnippetSuggestionSource({
+          logOpenSmartSnippetSuggestionSource({
             questionAnswerId,
           })
         );
@@ -139,8 +138,8 @@ export function buildCoreSmartSnippetInteractiveQuestions(
 }
 
 function loadSmartSnippetInteractiveQuestionsReducer(
-  engine: CoreEngine
-): engine is CoreEngine<QuestionAnsweringSection & SearchSection> {
+  engine: InsightEngine
+): engine is InsightEngine<QuestionAnsweringSection & SearchSection> {
   engine.addReducers({search, questionAnswering});
   return true;
 }

@@ -6,6 +6,7 @@ import {
   SmartSnippetQuestionsListProps,
 } from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
 import {buildSmartSnippetInteractiveInlineLinks} from '../smart-snippet/headless-insight-smart-snippet-interactive-inline-links';
+import {buildInsightSmartSnippetInteractiveQuestions} from './headless-insight-smart-snippet-interactive-questions';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 export type {
@@ -30,11 +31,17 @@ export function buildSmartSnippetQuestionsList(
 ): SmartSnippetQuestionsList {
   const smartSnippetQuestionList = buildCoreSmartSnippetQuestionsList(
     engine,
-    insightSmartSnippetAnalyticsClient,
-    props
+    insightSmartSnippetAnalyticsClient
   );
 
   const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
+    engine,
+    {
+      options: {selectionDelay: props?.options?.selectionDelay},
+    }
+  );
+
+  const interactiveQuestions = buildInsightSmartSnippetInteractiveQuestions(
     engine,
     {
       options: {selectionDelay: props?.options?.selectionDelay},
@@ -48,6 +55,15 @@ export function buildSmartSnippetQuestionsList(
       return smartSnippetQuestionList.state;
     },
 
+    selectSource(identifier) {
+      interactiveQuestions.selectSource(identifier);
+    },
+    beginDelayedSelectSource(identifier) {
+      interactiveQuestions.beginDelayedSelectSource(identifier);
+    },
+    cancelPendingSelectSource(identifier) {
+      interactiveQuestions.cancelPendingSelectSource(identifier);
+    },
     selectInlineLink(identifier, link) {
       interactiveInlineLinks.selectInlineLink(link, identifier);
     },
