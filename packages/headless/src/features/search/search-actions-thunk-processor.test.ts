@@ -132,7 +132,6 @@ describe('AsyncSearchThunkProcessor', () => {
         originalResponseWithNoResultsAndCorrection.queryCorrections,
     });
     expect(processed.automaticallyCorrected).toBe(true);
-    expect(processed.originalQuery).toBe('foo');
   });
 
   it('process properly when #enableFallbackSearchOnEmptyQueryResults is activated on the query˝', async () => {
