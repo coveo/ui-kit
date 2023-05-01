@@ -16,6 +16,8 @@ export class TabBar {
   @State()
   private popoverTabs: typeof Button[] = [];
 
+  private resizeObserver: ResizeObserver | undefined;
+
   private get tabsFromSlot(): TabCommonElement[] {
     const isTab = (tagName: string) => /atomic-.+-tab$/i.test(tagName);
     return Array.from(this.host.querySelectorAll<TabCommonElement>('*')).filter(
@@ -170,7 +172,12 @@ export class TabBar {
   }
 
   public componentDidLoad() {
-    new ResizeObserver(this.render).observe(this.host);
+    this.resizeObserver = new ResizeObserver(this.render);
+    this.resizeObserver.observe(this.host);
+  }
+
+  public disconnectedCallback() {
+    this.resizeObserver?.disconnect();
   }
 
   public render = () => {
