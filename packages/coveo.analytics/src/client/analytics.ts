@@ -49,6 +49,7 @@ export const Endpoints = {
 export interface ClientOptions {
     token?: string;
     endpoint: string;
+    isCustomEndpoint?: boolean;
     version: string;
     runtimeEnvironment?: IRuntimeEnvironment;
     beforeSendHooks: AnalyticsClientSendEventHook[];
@@ -117,9 +118,16 @@ export interface BufferedRequest {
 type ProcessPayloadStep = (currentPayload: any) => any;
 type AsyncProcessPayloadStep = (currentPayload: any) => Promise<any>;
 
-export function buildBaseUrl(endpoint = Endpoints.default, apiVersion = Version) {
-    const endpointIsCoveoProxy = endpoint.indexOf('.cloud.coveo.com') !== -1;
-    return `${endpoint}${endpointIsCoveoProxy ? '' : '/rest'}/${apiVersion}`;
+export function buildBaseUrl(endpoint = Endpoints.default, apiVersion = Version, isCustomEndpoint = false) {
+    endpoint = endpoint.replace(/\/$/, ''); // Remove trailing slash in endpoint.
+
+    if (isCustomEndpoint) {
+        return `${endpoint}/${apiVersion}`;
+    }
+
+    const hasUARestPath = endpoint.endsWith('/rest/ua');
+
+    return `${endpoint}${hasUARestPath ? '' : '/rest/ua'}/${apiVersion}`;
 }
 
 // Note: Changing this value will destroy the mapping from tracking string to clientId for all customers
@@ -131,6 +139,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private get defaultOptions(): ClientOptions {
         return {
             endpoint: Endpoints.default,
+            isCustomEndpoint: false,
             token: '',
             version: Version,
             beforeSendHooks: [],
@@ -622,7 +631,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private get baseUrl(): string {
-        return buildBaseUrl(this.options.endpoint, this.options.version);
+        return buildBaseUrl(this.options.endpoint, this.options.version, this.options.isCustomEndpoint);
     }
 }
 

@@ -47,9 +47,10 @@ After the library has loaded sucessfully, you can interact with coveoua through 
 -   `coveoua('init', <COVEO_API_KEY>, <ENDPOINT>)`: Initializes the library with the given api key and endpoint. The following parameters are accepted
     -   COVEO_API_KEY (mandatory): A valid api key.
     -   ENDPOINT (optional): A string specifying the desired analytics endpoint. The default value is https://analytics.cloud.coveo.com/rest/ua. In case your organization is HIPAA enabled, you should override with https://analyticshipaa.cloud.coveo.com/rest/ua.
--   `coveoua('init', <COVEO_API_KEY>, {endpoint: <ENDPOINT>, plugins: <PLUGINS>})`: Initializes the library with the given api key, endpoint and plugins. The following parameters are accepted
+-   `coveoua('init', <COVEO_API_KEY>, {endpoint: <ENDPOINT>, isCustomEndpoint: <IS_CUSTOM_ENDPOINT>, plugins: <PLUGINS>})`: Initializes the library with the given api key, endpoint, isCustomEndpoint option and plugins. The following parameters are accepted
     -   COVEO_API_KEY (mandatory): A valid api key.
     -   ENDPOINT (optional): An object string specifying the desired analytics endpoint. The default value is https://analytics.cloud.coveo.com/rest/ua. In case your organization is HIPAA enabled, you should override with https://analyticshipaa.cloud.coveo.com/rest/ua.
+    -   IS_CUSTOM_ENDPOINT (optional): An boolean specifying if the desired analytics endpoint is custom. This means the library will not try to add any prefix logic like /rest/ua at the end of the provided endpoint. This can be useful when implementing analytics through a reverse-proxy solution like cloudfront.
     -   PLUGINS (optional): An array of known plugin names. See [plugins](#plugins) for more information.
 -   `coveoua('set', <NAME>, <VALUE>)`: Attempts to inject an attribute with given name and value on every logged event, overriding any existing value. Some payloads may reject attributes they do not support.
 -   `coveoua('set', <OBJECT>)`: Attempts to inject all attributes and values of the given object on every logged event, overriding any existing value. Some payloads may reject attributes they do not support.

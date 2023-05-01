@@ -9,6 +9,7 @@ export type AvailableActions = keyof CoveoUA;
 
 export interface CoveoUAOptions {
     endpoint?: string;
+    isCustomEndpoint?: boolean;
     plugins?: string[];
 }
 
@@ -31,6 +32,7 @@ export class CoveoUA {
             this.client = new CoveoAnalyticsClient({
                 token: token,
                 endpoint: this.getEndpoint(optionsOrEndpoint),
+                isCustomEndpoint: this.getIsCustomEndpoint(optionsOrEndpoint),
             });
         } else if (this.isAnalyticsClient(token)) {
             this.client = token;
@@ -72,9 +74,18 @@ export class CoveoUA {
         return Endpoints.default;
     }
 
+    private getIsCustomEndpoint(optionsOrEndpoint: string | CoveoUAOptions) {
+        if (typeof optionsOrEndpoint === 'string') {
+            return false;
+        } else if (optionsOrEndpoint?.isCustomEndpoint) {
+            return optionsOrEndpoint.isCustomEndpoint;
+        }
+        return false;
+    }
+
     // init initializes a new client intended to be used with a proxy that injects the access token.
     // @param endpoint is the endpoint of your proxy.
-    initForProxy(endpoint: string): void {
+    initForProxy(endpoint: string, isCustomEndpoint = false): void {
         if (!endpoint) {
             throw new Error(`You must pass your endpoint when you call 'initForProxy'`);
         }
@@ -85,6 +96,7 @@ export class CoveoUA {
 
         this.client = new CoveoAnalyticsClient({
             endpoint: endpoint,
+            isCustomEndpoint: isCustomEndpoint,
         });
     }
 
