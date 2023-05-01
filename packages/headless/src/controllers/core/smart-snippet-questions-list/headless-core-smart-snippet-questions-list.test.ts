@@ -3,6 +3,7 @@ import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
 } from '../../../features/question-answering/question-answering-actions';
+import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {getQuestionAnsweringInitialState} from '../../../features/question-answering/question-answering-state';
 import {emptyQuestionAnswer} from '../../../features/search/search-state';
 import {
@@ -70,7 +71,10 @@ describe('SmartSnippetQuestionsList', () => {
   let smartSnippetQuestionsList: SmartSnippetQuestionsListCore;
 
   function initSmartSnippetQuestionsList() {
-    smartSnippetQuestionsList = buildCoreSmartSnippetQuestionsList(engine);
+    smartSnippetQuestionsList = buildCoreSmartSnippetQuestionsList(
+      engine,
+      insightSmartSnippetAnalyticsClient
+    );
   }
 
   beforeEach(() => {
