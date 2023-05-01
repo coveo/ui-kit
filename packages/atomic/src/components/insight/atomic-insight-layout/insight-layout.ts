@@ -59,7 +59,6 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
 
     ${sectionSelector('search')} ${tabsSelector} {
       width: 100%;
-      overflow-x: auto;
     }
     `;
 

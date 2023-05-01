@@ -19,7 +19,8 @@ import {
 export type {ContextPayload, ContextValue};
 
 /**
- * The `Context` controller injects [custom contextual information](https://docs.coveo.com/en/399/) into the search requests and usage analytics search events sent from a search interface.
+ * The `Context` controller injects [custom contextual information](https://docs.coveo.com/en/3389/)
+ * into the search requests and usage analytics search events sent from a search interface.
  */
 export interface Context extends Controller {
   /**

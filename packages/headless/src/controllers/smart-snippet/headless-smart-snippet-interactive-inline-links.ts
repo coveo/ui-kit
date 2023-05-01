@@ -11,7 +11,17 @@ import {
   buildInteractiveResultCore,
   InteractiveResultCore,
 } from '../core/interactive-result/headless-core-interactive-result';
-import {InlineLink} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+
+export interface InlineLink {
+  /**
+   * The text of the inline link.
+   */
+  linkText: string;
+  /**
+   * The URL of the inline link.
+   */
+  linkURL: string;
+}
 
 /**
  * @internal

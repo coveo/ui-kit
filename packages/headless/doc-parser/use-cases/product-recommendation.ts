@@ -12,11 +12,61 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildCartRecommendationsList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
+  {
     initializer: 'buildDictionaryFieldContext',
     samplePaths: {
       react_fn: [
         'packages/samples/headless-react/src/components/dictionary-field-context/dictionary-field-context.fn.ts',
       ],
+    },
+  },
+  {
+    initializer: 'buildFrequentlyBoughtTogetherList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
+  {
+    initializer: 'buildFrequentlyViewedDifferentCategoryList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
+  {
+    initializer: 'buildFrequentlyViewedSameCategoryList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
+  {
+    initializer: 'buildFrequentlyViewedTogetherList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
+  {
+    initializer: 'buildPopularBoughtRecommendationsList',
+    samplePaths: {
+      react_fn: [],
+    },
+  },
+  {
+    initializer: 'buildPopularViewedRecommendationsList',
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/product-recommendations/popular-viewed.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildUserInterestRecommendationsList',
+    samplePaths: {
+      react_fn: [],
     },
   },
 ];
@@ -36,6 +86,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadSearchHubActions',
+  },
+  {
+    initializer: 'loadClickAnalyticsActions',
   },
 ];
 

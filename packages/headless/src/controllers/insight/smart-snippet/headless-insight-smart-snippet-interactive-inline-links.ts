@@ -1,6 +1,9 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {questionAnswering, search} from '../../../app/reducers';
-import {logOpenSmartSnippetSuggestionInlineLink} from '../../../features/question-answering/question-answering-insight-analytics-actions';
+import {
+  logOpenSmartSnippetInlineLink,
+  logOpenSmartSnippetSuggestionInlineLink,
+} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {
   QuestionAnsweringSection,
   SearchSection,
@@ -11,31 +14,49 @@ import {
   buildInteractiveResultCore,
   InteractiveResultCore,
 } from '../../core/interactive-result/headless-core-interactive-result';
-import {InlineLink} from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links';
 
-/**
- * @internal
- */
 export interface SmartSnippetInteractiveInlineLinksOptions {
+  /**
+   * The amount of time to wait before selecting the result after calling `beginDelayedSelect`.
+   *
+   * @defaultValue `1000`
+   */
   selectionDelay?: number;
 }
 
-/**
- * @internal
- */
 export interface SmartSnippetInteractiveInlineLinksProps {
+  /**
+   * The options for the result controller core.
+   */
   options?: SmartSnippetInteractiveInlineLinksOptions;
 }
 
-/**
- * @internal
- */
 export interface SmartSnippetInteractiveInlineLinks {
+  /**
+   * Selects the result, logging a UA event to the Coveo Platform if the result wasn't selected before.
+   *
+   * In a DOM context, it's recommended to call this method on all of the following events:
+   * * `contextmenu`
+   * * `click`
+   * * `mouseup`
+   * * `mousedown`
+   */
   selectInlineLink(link: InlineLink, questionAnswerId?: string): void;
+  /**
+   * Prepares to select the result after a certain delay, sending analytics if it was never selected before.
+   *
+   * In a DOM context, it's recommended to call this method on the `touchstart` event.
+   */
   beginDelayedSelectInlineLink(
     link: InlineLink,
     questionAnswerId?: string
   ): void;
+  /**
+   * Cancels the pending selection caused by `beginDelayedSelect`.
+   *
+   * In a DOM context, it's recommended to call this method on the `touchend` event.
+   */
   cancelPendingSelectInlineLink(
     link: InlineLink,
     questionAnswerId?: string
@@ -43,7 +64,12 @@ export interface SmartSnippetInteractiveInlineLinks {
 }
 
 /**
- * @internal
+ * Creates the insight result controller for SmartSnippet.
+ *
+ * @param engine - The headless insight engine.
+ * @param props - The configurable controller properties.
+ * @param action - The action to be triggered on select.
+ * @returns A controller instance.
  */
 export function buildSmartSnippetInteractiveInlineLinks(
   engine: InsightEngine,
@@ -87,17 +113,11 @@ export function buildSmartSnippetInteractiveInlineLinks(
         if (inlineLinkWasClicked(linkId)) {
           return;
         }
-        // TODO: Replace with the comment below after creating the logOpenSmartSnippetInlineLink action for the insight use case.
-        if (questionAnswerId) {
-          engine.dispatch(
-            logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
-          );
-        }
-        // engine.dispatch(
-        //   questionAnswerId
-        //     ? logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
-        //     : logOpenSmartSnippetInlineLink(link)
-        // );
+        engine.dispatch(
+          questionAnswerId
+            ? logOpenSmartSnippetSuggestionInlineLink({questionAnswerId}, link)
+            : logOpenSmartSnippetInlineLink(link)
+        );
       }
     );
 

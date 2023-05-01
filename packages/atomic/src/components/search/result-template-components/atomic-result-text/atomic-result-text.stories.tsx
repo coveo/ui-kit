@@ -5,5 +5,5 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'atomic-result-text',
   {field: 'excerpt'}
 );
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/ResultList/ResultText'};
 export const DefaultResultText = exportedStory;

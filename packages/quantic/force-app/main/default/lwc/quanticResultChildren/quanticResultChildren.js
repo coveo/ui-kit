@@ -1,7 +1,7 @@
 import hideRelatedItems from '@salesforce/label/c.quantic_HideRelatedItems';
 import loadRelatedItems from '@salesforce/label/c.quantic_LoadRelatedItems';
 import noRelatedItems from '@salesforce/label/c.quantic_NoRelatedItems';
-import {LightningElement, api} from 'lwc';
+import { LightningElement, api } from 'lwc';
 // @ts-ignore
 import loadingTemplate from './loading.html';
 // @ts-ignore
@@ -144,7 +144,23 @@ export default class QuanticResultChildren extends LightningElement {
 
   get moreResultsFound() {
     return (
-      this?.collection?.children?.length > this.firstChildrenPartition?.length
+      this.numberOfChildResults(this?.collection.children) >
+      this.numberOfChildResults(this.firstChildrenPartition)
+    )
+  }
+
+  /**
+   * Returns the children count of a given child results.
+   * @param {Array<FoldedResult>} children 
+   * @returns {number}
+   */
+  numberOfChildResults(children) {
+    if (!children.length) {
+      return 0
+    }
+    return children.length + children.reduce(
+      (accumulator, currentValue) => accumulator + this.numberOfChildResults(currentValue.children),
+      0
     );
   }
 

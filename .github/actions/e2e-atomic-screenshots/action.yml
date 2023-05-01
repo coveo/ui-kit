@@ -18,7 +18,7 @@ runs:
         install: false
         record: false
     - uses: actions/upload-artifact@v3
-      if: always()
+      if: cancelled() || failure() || success()
       with:
         name: cypress-result-lists-screenshots
         path: packages/atomic/cypress/screenshots

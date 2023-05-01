@@ -42,7 +42,7 @@ describe('quantic-result-quickview', () => {
         Expect.displayTitle(true);
         Expect.displayDate(true);
         Expect.displayContentContainer(true);
-        Expect.displaySpinner(false);
+        Expect.displaySpinner(true);
         Expect.logDocumentQuickview('Test');
       });
 

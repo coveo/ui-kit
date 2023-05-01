@@ -11,4 +11,8 @@ export const PagerSelectors = {
   buttonPrevious: () =>
     PagerSelectors.shadow().find('[part="previous-button"]'),
   buttonActivePage: () => PagerSelectors.shadow().find('[aria-current="page"]'),
+  buttonIconNext: () =>
+    PagerSelectors.shadow().find('[part="next-button-icon"]'),
+  buttonIconPrevious: () =>
+    PagerSelectors.shadow().find('[part="next-button-icon"]'),
 };

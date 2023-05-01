@@ -34,6 +34,7 @@ import {
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
 import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
+import {StateNeededByProductListingAnalyticsProvider} from '../../api/analytics/product-listing-analytics';
 import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
   configureAnalytics,
@@ -146,6 +147,13 @@ export type ProductRecommendationAction<
 > = PreparableAnalyticsAction<
   {analyticsType: T},
   StateNeededByProductRecommendationsAnalyticsProvider
+>;
+
+export type ProductListingAction<
+  T extends AnalyticsType = AnalyticsType.Search
+> = PreparableAnalyticsAction<
+  {analyticsType: T},
+  StateNeededByProductListingAnalyticsProvider
 >;
 
 export interface AsyncThunkAnalyticsOptions<

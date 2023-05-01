@@ -117,22 +117,16 @@ function buildBrowserConfig(options) {
     platform: 'browser',
     minify: true,
     sourcemap: true,
+    external: ['crypto'],
     plugins: [
       alias({
         'coveo.analytics': resolve(
-          '..',
-          '..',
           'node_modules',
           'coveo.analytics',
           'dist',
           'library.es.js'
         ),
         'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
-        'web-encoding': resolve(
-          '..',
-          '..',
-          'node_modules/web-encoding/src/lib.js'
-        ),
       }),
     ],
     ...options,
@@ -173,20 +167,10 @@ function buildNodeConfig(options) {
     plugins: [
       alias({
         'coveo.analytics': resolve(
-          '..',
-          '..',
           'node_modules',
           'coveo.analytics',
           'dist',
           'library.js'
-        ),
-        'web-encoding': resolve(
-          '..',
-          '..',
-          'node_modules',
-          'web-encoding',
-          'src',
-          'lib.cjs'
         ),
       }),
     ],

@@ -6,5 +6,5 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   {}
 );
 
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/ResultList/ResultLink'};
 export const DefaultResultLink = exportedStory;

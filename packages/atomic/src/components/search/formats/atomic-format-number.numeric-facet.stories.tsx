@@ -15,5 +15,8 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/NumericFacet/Format/Number',
+};
 export const DefaultFormatNumber = exportedStory;

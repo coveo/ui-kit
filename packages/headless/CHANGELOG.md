@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.15.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.14.3...@coveo/headless@2.15.0) (2023-04-27)
+
+### Features
+
+- **smart snippet:** add headless smart snippet support for insight engine ([#2836](https://github.com/coveo/ui-kit/issues/2836)) ([95257b0](https://github.com/coveo/ui-kit/commit/95257b068cceec85ce03855af83a393aeda4350d))
+
+## [2.14.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.14.2...@coveo/headless@2.14.3) (2023-04-27)
+
+**Note:** Version bump only for package @coveo/headless
+
+## [2.14.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.14.1...@coveo/headless@2.14.2) (2023-04-27)
+
+**Note:** Version bump only for package @coveo/headless
+
+## [2.14.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.14.0...@coveo/headless@2.14.1) (2023-04-26)
+
+**Note:** Version bump only for package @coveo/headless
+
+# [2.14.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.13.1...@coveo/headless@2.14.0) (2023-04-25)
+
+### Features
+
+- **organizationendpoints:** support organization endpoints for hosted-pages components ([#2838](https://github.com/coveo/ui-kit/issues/2838)) ([e0b73f1](https://github.com/coveo/ui-kit/commit/e0b73f16af1a4e794a49621a9e856cad95169cae))
+
+## [2.13.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.13.0...@coveo/headless@2.13.1) (2023-04-24)
+
+**Note:** Version bump only for package @coveo/headless
+
+# [2.13.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.12.1...@coveo/headless@2.13.0) (2023-04-18)
+
+### Features
+
+- **headless:** include the loadgenericanalyticsactions action loader in the case assist & insight headless bundle ([#2835](https://github.com/coveo/ui-kit/issues/2835)) ([aa06d45](https://github.com/coveo/ui-kit/commit/aa06d45fad0b450e8adfd76790556265e1e85bd0))
+
+## [2.12.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.12.0...@coveo/headless@2.12.1) (2023-04-14)
+
+**Note:** Version bump only for package @coveo/headless
+
+# [2.12.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.11.2...@coveo/headless@2.12.0) (2023-04-13)
+
+### Features
+
+- **headless:** create product listing analytics provider ([#2800](https://github.com/coveo/ui-kit/issues/2800)) ([b88b89f](https://github.com/coveo/ui-kit/commit/b88b89f92b44a3c1e52f199ba5ecee218076126e))
+
+## [2.11.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.11.1...@coveo/headless@2.11.2) (2023-04-12)
+
+### Bug Fixes
+
+- **headless:** add warning on configuration mismatch between organizationId and organizationEndpoint ([#2824](https://github.com/coveo/ui-kit/issues/2824)) ([084c1c1](https://github.com/coveo/ui-kit/commit/084c1c16476f4de62f891c800e87ecc8162338ab))
+- **headless:** reset preview content on `fetchMoreResults` and `fetchPage` ([#2812](https://github.com/coveo/ui-kit/issues/2812)) ([b15f02d](https://github.com/coveo/ui-kit/commit/b15f02d85b967e2b2a9c5a271e8f5b8db3088c56))
+
 ## [2.11.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.11.0...@coveo/headless@2.11.1) (2023-04-12)
 
 ### Bug Fixes
