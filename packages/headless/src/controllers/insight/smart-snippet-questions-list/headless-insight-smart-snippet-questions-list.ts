@@ -1,15 +1,11 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {
-  logCollapseSmartSnippetSuggestion,
-  logExpandSmartSnippetSuggestion,
-} from '../../../features/question-answering/question-answering-insight-analytics-actions';
+import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {
   buildCoreSmartSnippetQuestionsList,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListProps,
 } from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
 import {buildSmartSnippetInteractiveInlineLinks} from '../smart-snippet/headless-insight-smart-snippet-interactive-inline-links';
-import {buildSmartSnippetInteractiveQuestions} from './headless-insight-smart-snippet-interactive-questions';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 export type {
@@ -32,11 +28,11 @@ export function buildSmartSnippetQuestionsList(
   engine: InsightEngine,
   props?: SmartSnippetQuestionsListProps
 ): SmartSnippetQuestionsList {
-  const smartSnippetQuestionList = buildCoreSmartSnippetQuestionsList(engine);
-
-  const interactiveQuestions = buildSmartSnippetInteractiveQuestions(engine, {
-    options: {selectionDelay: props?.options?.selectionDelay},
-  });
+  const smartSnippetQuestionList = buildCoreSmartSnippetQuestionsList(
+    engine,
+    insightSmartSnippetAnalyticsClient,
+    props
+  );
 
   const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
     engine,
@@ -52,25 +48,6 @@ export function buildSmartSnippetQuestionsList(
       return smartSnippetQuestionList.state;
     },
 
-    expand(identifier) {
-      const payload = {questionAnswerId: identifier};
-      engine.dispatch(logExpandSmartSnippetSuggestion(payload));
-      smartSnippetQuestionList.expand(identifier);
-    },
-    collapse(identifier) {
-      const payload = {questionAnswerId: identifier};
-      engine.dispatch(logCollapseSmartSnippetSuggestion(payload));
-      smartSnippetQuestionList.collapse(identifier);
-    },
-    selectSource(identifier) {
-      interactiveQuestions.selectSource(identifier);
-    },
-    beginDelayedSelectSource(identifier) {
-      interactiveQuestions.beginDelayedSelectSource(identifier);
-    },
-    cancelPendingSelectSource(identifier) {
-      interactiveQuestions.cancelPendingSelectSource(identifier);
-    },
     selectInlineLink(identifier, link) {
       interactiveInlineLinks.selectInlineLink(link, identifier);
     },

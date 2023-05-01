@@ -1,18 +1,21 @@
 import {Result} from '../../../api/search/search/result';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {questionAnswering, search} from '../../../app/reducers';
-import {logOpenSmartSnippetSuggestionSource} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {
   answerSourceSelector,
   relatedQuestionSelector,
 } from '../../../features/question-answering/question-answering-selectors';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {QuestionAnsweringSection} from '../../../state/state-sections';
+import {CoreEngine} from '../../../recommendation.index';
+import {
+  QuestionAnsweringSection,
+  SearchSection,
+} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
-} from '../../core/interactive-result/headless-core-interactive-result';
+} from '../interactive-result/headless-core-interactive-result';
+import {SmartSnippetAnalyticsClient} from '../smart-snippet/headless-core-smart-snippet';
 
 /**
  * @internal
@@ -40,8 +43,9 @@ export interface SmartSnippetInteractiveQuestions {
 /**
  * @internal
  */
-export function buildSmartSnippetInteractiveQuestions(
-  engine: InsightEngine,
+export function buildCoreSmartSnippetInteractiveQuestions(
+  engine: CoreEngine,
+  analyticsClient: SmartSnippetAnalyticsClient,
   props?: SmartSnippetInteractiveQuestionsProps
 ): SmartSnippetInteractiveQuestions {
   if (!loadSmartSnippetInteractiveQuestionsReducer(engine)) {
@@ -91,7 +95,7 @@ export function buildSmartSnippetInteractiveQuestions(
           return;
         }
         engine.dispatch(
-          logOpenSmartSnippetSuggestionSource({
+          analyticsClient.logOpenSmartSnippetSuggestionSource({
             questionAnswerId,
           })
         );
@@ -135,8 +139,8 @@ export function buildSmartSnippetInteractiveQuestions(
 }
 
 function loadSmartSnippetInteractiveQuestionsReducer(
-  engine: InsightEngine
-): engine is InsightEngine<QuestionAnsweringSection> {
+  engine: CoreEngine
+): engine is CoreEngine<QuestionAnsweringSection & SearchSection> {
   engine.addReducers({search, questionAnswering});
   return true;
 }
