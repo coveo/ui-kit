@@ -15,21 +15,12 @@ on:
 jobs:
   release:
     environment: 'Release'
-    runs-on: ubuntu-20.04
-    env:
-      GITHUB_CREDENTIALS: ${{ secrets.CLI_RELEASE }}
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+      - uses: actions/checkout@v3
         with:
-          # pulls all commits (needed for computing the next version)
           fetch-depth: 0
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3
-        with:
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'npm'
-          node-version-file: '.nvmrc'
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/setup
       - name: Release
         run: npm run release
         env:
