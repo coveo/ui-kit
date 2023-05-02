@@ -25,7 +25,6 @@ export const removeWriteAccessRestrictions = () =>
 async function changeBranchRestrictions(onlyBot) {
   const octokit = new Octokit({auth: process.env.GITHUB_CREDENTIALS});
   // Requires branches to be up to date before merging
-  //@ts-expect-error param is a bit messed-up, it expects {data:never}, which doesn't make any sense.
   await octokit.rest.repos.updateStatusCheckProtection({
     ...COVEO_CLI_MASTER,
     strict: onlyBot,
