@@ -34,7 +34,7 @@ describe('Analytics', () => {
         visitorId: aVisitorId,
     };
 
-    const endpointForEventType = (eventType: EventType, endpoint: string = `${anEndpoint}/rest/ua`) =>
+    const endpointForEventType = (eventType: EventType, endpoint: string = `${anEndpoint}/rest`) =>
         `${endpoint}/${A_VERSION}/analytics/${eventType}?visitor=${aVisitorId}`;
     const mockFetchRequestForEventType = (eventType: EventType) => {
         const address = endpointForEventType(eventType);
@@ -58,7 +58,7 @@ describe('Analytics', () => {
         });
     });
 
-    it('should add /rest/ua if not present in endpoint', async () => {
+    it('should add /rest if not present in endpoint', async () => {
         const legacyEndpoint = 'https://usageanalytics.com';
 
         client = new CoveoAnalyticsClient({
@@ -67,13 +67,27 @@ describe('Analytics', () => {
             version: A_VERSION,
         });
 
-        fetchMock.post(endpointForEventType(EventType.custom, `${legacyEndpoint}/rest/ua`), eventResponse);
+        fetchMock.post(endpointForEventType(EventType.custom, `${legacyEndpoint}/rest`), eventResponse);
         const response = await client.sendEvent(EventType.custom);
         expect(response).toEqual(eventResponse);
     });
 
-    it('should not add /rest/ua if /rest present in endpoint', async () => {
+    it('should not add /rest if /rest present in endpoint', async () => {
         const legacyEndpoint = 'https://usageanalytics.com/rest';
+
+        client = new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: legacyEndpoint,
+            version: A_VERSION,
+        });
+
+        fetchMock.post(endpointForEventType(EventType.custom, legacyEndpoint), eventResponse);
+        const response = await client.sendEvent(EventType.custom);
+        expect(response).toEqual(eventResponse);
+    });
+
+    it('should not add /rest if /rest/ua present in endpoint', async () => {
+        const legacyEndpoint = 'https://usageanalytics.com/rest/ua';
 
         client = new CoveoAnalyticsClient({
             token: aToken,
@@ -95,21 +109,7 @@ describe('Analytics', () => {
             version: A_VERSION,
         });
 
-        fetchMock.post(endpointForEventType(EventType.custom, `${legacyEndpoint}/rest/ua`), eventResponse);
-        const response = await client.sendEvent(EventType.custom);
-        expect(response).toEqual(eventResponse);
-    });
-
-    it('should not add /rest/ua if present in endpoint', async () => {
-        const legacyEndpoint = 'https://usageanalytics.com';
-
-        client = new CoveoAnalyticsClient({
-            token: aToken,
-            endpoint: legacyEndpoint + '/rest/ua',
-            version: A_VERSION,
-        });
-
-        fetchMock.post(endpointForEventType(EventType.custom, `${legacyEndpoint}/rest/ua`), eventResponse);
+        fetchMock.post(endpointForEventType(EventType.custom, `${legacyEndpoint}/rest`), eventResponse);
         const response = await client.sendEvent(EventType.custom);
         expect(response).toEqual(eventResponse);
     });
