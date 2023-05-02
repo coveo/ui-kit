@@ -72,6 +72,20 @@ describe('Analytics', () => {
         expect(response).toEqual(eventResponse);
     });
 
+    it('should not add /rest/ua if /rest present in endpoint', async () => {
+        const legacyEndpoint = 'https://usageanalytics.com/rest';
+
+        client = new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: legacyEndpoint,
+            version: A_VERSION,
+        });
+
+        fetchMock.post(endpointForEventType(EventType.custom, legacyEndpoint), eventResponse);
+        const response = await client.sendEvent(EventType.custom);
+        expect(response).toEqual(eventResponse);
+    });
+
     it('should remove trailing slash in endpoint', async () => {
         const legacyEndpoint = 'https://usageanalytics.com';
 

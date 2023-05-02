@@ -125,9 +125,9 @@ export function buildBaseUrl(endpoint = Endpoints.default, apiVersion = Version,
         return `${endpoint}/${apiVersion}`;
     }
 
-    const hasUARestPath = endpoint.endsWith('/rest/ua');
+    const hasUARestEndpoint = endpoint.endsWith('/rest') || endpoint.endsWith('/rest/ua');
 
-    return `${endpoint}${hasUARestPath ? '' : '/rest/ua'}/${apiVersion}`;
+    return `${endpoint}${hasUARestEndpoint ? '' : '/rest/ua'}/${apiVersion}`;
 }
 
 // Note: Changing this value will destroy the mapping from tracking string to clientId for all customers
