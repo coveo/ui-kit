@@ -36,6 +36,7 @@ export * from './features/insight-search/insight-search-analytics-actions-loader
 export * from './features/fields/fields-actions-loader';
 export * from './features/attached-results/attached-results-actions-loader';
 export * from './features/analytics/generic-analytics-actions-loader';
+export * from './features/question-answering/question-answering-actions-loader';
 
 // Controllers
 export type {
@@ -281,7 +282,8 @@ export type {
   SmartSnippetQuestionsListProps,
   SmartSnippetQuestionsListState,
   SmartSnippetQuestionsList,
-  SmartSnippetQuestionsListCore,
+  CoreSmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
 } from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
 export {buildSmartSnippetQuestionsList} from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
 

@@ -347,7 +347,8 @@ export type {
   SmartSnippetQuestionsListProps,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
-  SmartSnippetQuestionsListCore,
+  CoreSmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
 } from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
 export {buildSmartSnippetQuestionsList} from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
 

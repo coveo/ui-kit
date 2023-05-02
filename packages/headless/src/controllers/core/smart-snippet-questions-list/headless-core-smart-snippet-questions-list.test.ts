@@ -14,7 +14,7 @@ import {buildMockRaw} from '../../../test/mock-raw';
 import {buildMockResult} from '../../../test/mock-result';
 import {buildMockSearchState} from '../../../test/mock-search-state';
 import {
-  SmartSnippetQuestionsListCore,
+  CoreSmartSnippetQuestionsList,
   buildCoreSmartSnippetQuestionsList,
 } from './headless-core-smart-snippet-questions-list';
 
@@ -68,7 +68,7 @@ const exampleRelatedQuestionStateTwo = {
 
 describe('SmartSnippetQuestionsList', () => {
   let engine: MockSearchEngine;
-  let smartSnippetQuestionsList: SmartSnippetQuestionsListCore;
+  let smartSnippetQuestionsList: CoreSmartSnippetQuestionsList;
 
   function initSmartSnippetQuestionsList() {
     smartSnippetQuestionsList = buildCoreSmartSnippetQuestionsList(

@@ -2,21 +2,100 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions';
 import {
   buildCoreSmartSnippetQuestionsList,
-  SmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
+  CoreSmartSnippetQuestionsList,
   SmartSnippetQuestionsListProps,
 } from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
-import {buildSmartSnippetInteractiveInlineLinks} from '../smart-snippet/headless-smart-snippet-interactive-inline-links';
+import {
+  buildSmartSnippetInteractiveInlineLinks,
+  InlineLink,
+} from '../smart-snippet/headless-smart-snippet-interactive-inline-links';
 import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 export type {
   SmartSnippetQuestionsListOptions,
   SmartSnippetQuestionsListProps,
-  SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
-  SmartSnippetQuestionsList,
-  SmartSnippetQuestionsListCore,
+  CoreSmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
 } from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `SmartSnippetQuestionsList` controller.
+ */
+export interface SmartSnippetQuestionsListState
+  extends CoreSmartSnippetQuestionsListState {}
+
+/**
+ * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
+ */
+export interface SmartSnippetQuestionsList
+  extends CoreSmartSnippetQuestionsList {
+  /**
+   * The state of the SmartSnippetQuestionsList controller.
+   * */
+  state: SmartSnippetQuestionsListState;
+  /**
+   * Selects the source, logging a UA event to the Coveo Platform if the source hadn't been selected before.
+   *
+   * In a DOM context, we recommend calling this method on all of the following events:
+   * * `contextmenu`
+   * * `click`
+   * * `mouseup`
+   * * `mousedown`
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  selectSource(identifier: string): void;
+  /**
+   * Prepares to select the source after a certain delay, sending analytics if it hadn't been selected before.
+   *
+   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  beginDelayedSelectSource(identifier: string): void;
+  /**
+   * Cancels the pending selection caused by `beginDelayedSelect`.
+   *
+   * In a DOM context, we recommend calling this method on the `touchend` event.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  cancelPendingSelectSource(identifier: string): void;
+  /**
+   * Selects a link inside an answer, logging a UA event to the Coveo Platform if it was never selected before.
+   *
+   * In a DOM context, we recommend calling this method on all of the following events:
+   * * `contextmenu`
+   * * `click`
+   * * `mouseup`
+   * * `mousedown`
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet containing the link.
+   * @param link - The link to select.
+   */
+  selectInlineLink(identifier: string, link: InlineLink): void;
+  /**
+   * Prepares to select a link inside an answer after a certain delay, sending analytics if it was never selected before.
+   *
+   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet containing the link.
+   * @param link - The link to select.
+   */
+  beginDelayedSelectInlineLink(identifier: string, link: InlineLink): void;
+  /**
+   * Cancels the pending selection caused by `beginDelayedSelectInlineLink`.
+   *
+   * In a DOM context, we recommend calling this method on the `touchend` event.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet containing the link.
+   * @param link - The link to select.
+   */
+  cancelPendingSelectInlineLink(identifier: string, link: InlineLink): void;
+}
 
 /**
  * Creates a `SmartSnippetQuestionsList` controller instance.
