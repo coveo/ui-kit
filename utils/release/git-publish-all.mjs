@@ -1,11 +1,6 @@
 #!/usr/bin/env node
 import {
-  getLastTag,
-  parseCommits,
   getCurrentVersion,
-  generateChangelog,
-  writeChangelog,
-  getCommits,
   getCurrentBranchName,
   gitTag,
   gitDeleteRemoteBranch,
@@ -24,9 +19,7 @@ import {
 } from '@coveo/semantic-monorepo-tools';
 import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
-// @ts-ignore no dts is ok.
-import angularChangelogConvention from 'conventional-changelog-angular';
-import {readFileSync, writeFileSync} from 'fs';
+import {readFileSync} from 'fs';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
@@ -63,28 +56,6 @@ const GIT_SSH_REMOTE = 'deploy';
 
   const releaseNumber = currentVersionTag.prerelease[0];
   const gitNewTag = `release-${releaseNumber}`;
-
-  // Find all changes since last release and generate the changelog.
-  const versionPrefix = 'release-';
-  const lastTag = await getLastTag(versionPrefix);
-  const commits = await getCommits(PATH, lastTag);
-  const convention = await angularChangelogConvention;
-
-  let changelog = '';
-  if (commits.length > 0) {
-    const parsedCommits = parseCommits(commits, convention.parserOpts);
-    changelog = await generateChangelog(
-      parsedCommits,
-      gitNewTag,
-      {
-        host: 'https://github.com',
-        owner: REPO_OWNER,
-        repository: REPO_NAME,
-      },
-      convention.writerOpts
-    );
-    await writeChangelog(PATH, changelog);
-  }
 
   // Find all packages that have been released in this release.
   const packagesReleased = readFileSync('.git-message', {
