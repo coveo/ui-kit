@@ -11,7 +11,7 @@ export interface LoggerOptions {
    * Changes the shape of the log object. This function will be called every time one of the log methods (such as `.info`) is called.
    * All arguments passed to the log method, except the message, will be pass to this function. By default it does not change the shape of the log object.
    */
-  logFormatter?: (object: Record<string, unknown>) => Record<string, unknown>;
+  logFormatter?: (object: {}) => {};
   /**
    * Function which will be called after writing the log message in the browser.
    */
