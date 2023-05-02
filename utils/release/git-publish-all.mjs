@@ -31,19 +31,9 @@ import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
-const CLI_PKG_MATCHER = /^@coveo\/cli@(?<version>\d+\.\d+\.\d+)$/gm;
 const REPO_OWNER = 'coveo';
-const REPO_NAME = 'cli';
+const REPO_NAME = 'ui-kit';
 const GIT_SSH_REMOTE = 'deploy';
-
-const getCliChangelog = () => {
-  const changelog = readFileSync('packages/cli/core/CHANGELOG.md', {
-    encoding: 'utf-8',
-  });
-  const versionH1Matcher = /^#+ \d+\.\d+\.\d+.*$/gm;
-  const lastVersionChanges = changelog.split(versionH1Matcher)[1];
-  return lastVersionChanges.trim();
-};
 
 // Commit, tag and push
 (async () => {
@@ -95,7 +85,6 @@ const getCliChangelog = () => {
     );
     await writeChangelog(PATH, changelog);
   }
-  updateRootReadme();
 
   // Find all packages that have been released in this release.
   const packagesReleased = readFileSync('.git-message', {
@@ -131,22 +120,6 @@ const getCliChangelog = () => {
 
   // Unlock the main branch
   await removeWriteAccessRestrictions();
-
-  // If `@coveo/cli` has not been released stop there, otherwise, create a GitHub release.
-  const cliReleaseInfoMatch = CLI_PKG_MATCHER.exec(packagesReleased);
-  if (!cliReleaseInfoMatch) {
-    return;
-  }
-  const releaseBody = getCliChangelog();
-  const cliLatestTag = cliReleaseInfoMatch[0];
-  const cliVersion = cliReleaseInfoMatch?.groups?.version;
-  await octokit.rest.repos.createRelease({
-    owner: REPO_OWNER,
-    repo: REPO_NAME,
-    tag_name: cliLatestTag,
-    name: `Release v${cliVersion}`,
-    body: releaseBody,
-  });
 })();
 
 /**
@@ -205,21 +178,6 @@ async function commitChanges(releaseNumber, commitMessage, octokit) {
   // Delete the temp branch
   await gitDeleteRemoteBranch('origin', tempBranchName);
   return commit.data.sha;
-}
-
-/**
- * Update usage section at the root readme.
- */
-function updateRootReadme() {
-  const usageRegExp = /^<!-- usage -->(.|\n)*<!-- usagestop -->$/m;
-  const cliReadme = readFileSync('packages/cli/core/README.md', 'utf-8');
-  let rootReadme = readFileSync('README.md', 'utf-8');
-  const cliUsage = usageRegExp.exec(cliReadme)?.[0];
-  if (!cliUsage) {
-    return;
-  }
-  rootReadme.replace(usageRegExp, cliUsage);
-  writeFileSync('README.md', rootReadme);
 }
 
 /**
