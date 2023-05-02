@@ -66,7 +66,7 @@ await (async () => {
   let currentNpmVersion = new SemVer(
     privatePackage
       ? '0.0.0' // private package does not have a npm version, so we default to the 'lowest' possible
-      : await describeNpmTag(packageJson.name, 'latest')
+      : await describeNpmTag(packageJson.name, 'beta')
   );
   const isRedo = gte(currentNpmVersion, currentGitVersion);
   const bumpInfo = isRedo
@@ -102,7 +102,7 @@ await (async () => {
     );
     await writeChangelog(PATH, changelog);
   }
-  const tagToPublish = isPrerelease ? 'alpha' : 'latest';
+  const tagToPublish = isPrerelease ? 'alpha' : 'beta';
   await npmPublish('.', {tag: tagToPublish});
 
   await retry(
