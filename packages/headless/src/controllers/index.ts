@@ -335,7 +335,8 @@ export type {
   SmartSnippetProps,
   SmartSnippetState,
   QuestionAnswerDocumentIdentifier,
-} from './smart-snippet/headless-smart-snippet';
+  SmartSnippetCore,
+} from './core/smart-snippet/headless-core-smart-snippet';
 export {buildSmartSnippet} from './smart-snippet/headless-smart-snippet';
 
 export type {InlineLink} from './smart-snippet/headless-smart-snippet-interactive-inline-links';

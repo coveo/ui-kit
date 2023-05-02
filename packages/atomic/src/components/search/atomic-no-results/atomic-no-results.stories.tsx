@@ -16,5 +16,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
 export const DefaultNoResults = exportedStory;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/NoResults',
+  id: 'atomic-no-results',
+};

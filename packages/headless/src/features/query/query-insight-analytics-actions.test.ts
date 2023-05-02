@@ -1,17 +1,19 @@
-import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {logSearchboxSubmit} from './query-insight-analytics-actions';
 
 const mockLogSearchboxSubmit = jest.fn();
 
-const mockCoveoInsightClient = jest.fn(() => ({
-  disable: () => {},
-  logSearchboxSubmit: mockLogSearchboxSubmit,
-}));
+jest.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = jest.fn(() => ({
+    disable: () => {},
+    logSearchboxSubmit: mockLogSearchboxSubmit,
+  }));
 
-Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
-  value: mockCoveoInsightClient,
+  return {
+    CoveoInsightClient: mockCoveoInsightClient,
+    history: {HistoryStore: jest.fn()},
+  };
 });
 
 const exampleSubject = 'example subject';

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import {
   getLastTag,
   parseCommits,
@@ -12,14 +13,15 @@ import {
   describeNpmTag,
   getSHA1fromRef,
 } from '@coveo/semantic-monorepo-tools';
-import retry from 'async-retry';
-// @ts-ignore no dts is ok
-import angularChangelogConvention from 'conventional-changelog-angular';
 import {spawnSync} from 'node:child_process';
 import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
+// @ts-ignore no dts is ok
+import angularChangelogConvention from 'conventional-changelog-angular';
 import {dirname, resolve, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {gte, SemVer} from 'semver';
+import retry from 'async-retry';
+import {inc, compareBuild, gt, SemVer} from 'semver';
+import Arborist from '@npmcli/arborist';
 
 /**
  * Check if the package json in the provided folder has changed since the last commit
@@ -68,7 +70,7 @@ await (async () => {
       ? '0.0.0' // private package does not have a npm version, so we default to the 'lowest' possible
       : await describeNpmTag(packageJson.name, 'beta')
   );
-  const isRedo = gte(currentNpmVersion, currentGitVersion);
+  const isRedo = gt(currentNpmVersion, currentGitVersion);
   const bumpInfo = isRedo
     ? {type: 'patch'}
     : convention.recommendedBumpOpts.whatBump(parsedCommits);
@@ -164,6 +166,7 @@ async function updateWorkspaceDependent(version) {
       dependentPackageJsonPath,
       JSON.stringify(dependentPackageJson)
     );
+    await updateLockfileEntries(dependencyPackageJson.name);
   }
 }
 
@@ -178,12 +181,27 @@ function updateDependency(packageJson, dependency, version) {
     'dependencies',
     'devDependencies',
     'optionalDependencies',
-    'peerDependencies',
   ]) {
     if (packageJson?.[dependencyType]?.[dependency]) {
       packageJson[dependencyType][dependency] = version;
     }
   }
+}
+
+/**
+ * Check the dependency tree from the lockfile and make sure all entries
+ * of `entryName` satisfies the package.json files entries.
+ * @param {string} entryName the package to update across the tree
+ */
+async function updateLockfileEntries(entryName) {
+  const arb = new Arborist({savePrefix: '', path: rootFolder});
+  await arb.loadVirtual();
+  await arb.buildIdealTree({
+    update: {
+      names: [entryName],
+    },
+  });
+  await arb.reify();
 }
 
 function isPrivatePackage() {

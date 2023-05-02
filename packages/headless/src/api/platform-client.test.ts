@@ -46,6 +46,7 @@ describe('url helper', () => {
         platform: 'https://foo.orgdev.coveo.com',
         search: 'https://foo.orgdev.coveo.com/rest/search/v2',
         analytics: 'https://foo.analytics.orgdev.coveo.com',
+        admin: 'https://foo.admin.orgdev.coveo.com',
       },
     },
     {
@@ -55,6 +56,7 @@ describe('url helper', () => {
         platform: 'https://foo.orgstg.coveo.com',
         search: 'https://foo.orgstg.coveo.com/rest/search/v2',
         analytics: 'https://foo.analytics.orgstg.coveo.com',
+        admin: 'https://foo.admin.orgstg.coveo.com',
       },
     },
     {
@@ -64,6 +66,7 @@ describe('url helper', () => {
         platform: 'https://foo.org.coveo.com',
         search: 'https://foo.org.coveo.com/rest/search/v2',
         analytics: 'https://foo.analytics.org.coveo.com',
+        admin: 'https://foo.admin.org.coveo.com',
       },
     },
     {
@@ -73,6 +76,7 @@ describe('url helper', () => {
         platform: 'https://foo.orghipaa.coveo.com',
         search: 'https://foo.orghipaa.coveo.com/rest/search/v2',
         analytics: 'https://foo.analytics.orghipaa.coveo.com',
+        admin: 'https://foo.admin.orghipaa.coveo.com',
       },
     },
   ] as Array<{orgId: string; env: PlatformEnvironment; organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>}>)(

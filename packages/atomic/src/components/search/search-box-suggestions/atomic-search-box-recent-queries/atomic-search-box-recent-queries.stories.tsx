@@ -18,5 +18,8 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/Searchbox/RecentQueries',
+};
 export const DefaultRecentQueries = exportedStory;
