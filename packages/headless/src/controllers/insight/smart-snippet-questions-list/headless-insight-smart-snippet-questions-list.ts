@@ -131,7 +131,6 @@ export function buildSmartSnippetQuestionsList(
     get state() {
       return smartSnippetQuestionList.state;
     },
-
     selectSource(identifier) {
       interactiveQuestions.selectSource(identifier);
     },
