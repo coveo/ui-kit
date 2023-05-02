@@ -54,9 +54,6 @@ const GIT_SSH_REMOTE = 'deploy';
   // Write release version in the root package.json
   await npmBumpVersion(npmNewVersion, PATH);
 
-  const releaseNumber = currentVersionTag.prerelease[0];
-  const gitNewTag = `release-${releaseNumber}`;
-
   // Find all packages that have been released in this release.
   const packagesReleased = readFileSync('.git-message', {
     encoding: 'utf-8',
@@ -64,7 +61,7 @@ const GIT_SSH_REMOTE = 'deploy';
 
   // Compile git commit message
   const commitMessage = dedent`
-    [version bump] chore(release): release ${gitNewTag} [skip ci]
+    [Version Bump][skip ci]: ui-kit publish
 
     ${packagesReleased}
 
