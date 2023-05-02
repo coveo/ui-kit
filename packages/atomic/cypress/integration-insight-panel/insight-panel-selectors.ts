@@ -29,10 +29,12 @@ export const InsightPanelsSelectors = {
   historyToggle: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-history-toggle'),
   tabs: () => InsightPanelsSelectors.interface().find('atomic-insight-tabs'),
-  tabPopoverButton: () =>
-    InsightPanelsSelectors.tabs()
-      .find('tab-bar')
-      .shadow()
-      .find('[part="popover-button"]'),
   tabBar: () => InsightPanelsSelectors.tabs().find('tab-bar').shadow(),
+  tabPopover: () =>
+    InsightPanelsSelectors.tabBar().find('tab-popover').shadow(),
+  tabPopoverButton: () =>
+    InsightPanelsSelectors.tabPopover().find('[part="popover-button"]'),
+  layoutStyleTags: () =>
+    InsightPanelsSelectors.interface().find('atomic-insight-layout > style'),
+  topLevelStyleTags: () => cy.get('style[data-styles]'),
 };

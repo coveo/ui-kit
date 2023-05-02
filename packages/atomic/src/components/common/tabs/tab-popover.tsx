@@ -10,7 +10,6 @@ import {
   State,
   Element,
   Host,
-  Prop,
   Method,
 } from '@stencil/core';
 import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
@@ -26,6 +25,7 @@ import {Button} from '../button';
  */
 @Component({
   tag: 'tab-popover',
+  shadow: true,
   styleUrl: 'tab-popover.pcss',
 })
 export class TabPopover implements InitializableComponent {
@@ -33,8 +33,8 @@ export class TabPopover implements InitializableComponent {
 
   @InitializeBindings() public bindings!: Bindings;
 
-  @Prop()
-  public hide = false;
+  @State()
+  public show = false;
 
   @State()
   public error!: Error;
@@ -71,6 +71,11 @@ export class TabPopover implements InitializableComponent {
   @Method()
   public async togglePopover() {
     this.isOpen = !this.isOpen;
+  }
+
+  @Method()
+  public async setButtonVisibility(isVisible: boolean) {
+    this.show = isVisible;
   }
 
   private renderDropdownButton() {
@@ -156,8 +161,8 @@ export class TabPopover implements InitializableComponent {
   public render() {
     return (
       <Host
-        class={this.hide ? 'visibility-hidden' : ''}
-        aria-hidden={this.hide}
+        class={this.show ? '' : 'visibility-hidden'}
+        aria-hidden={!this.show}
       >
         <atomic-focus-trap
           source={this.buttonRef}
