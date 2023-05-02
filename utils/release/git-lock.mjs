@@ -17,7 +17,6 @@ import {
 } from './lock-master.mjs';
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
-const noLockRequired = Boolean(process.env.NO_LOCK);
 const PATH = '.';
 const REPO_OWNER = 'coveo';
 const REPO_NAME = 'cli';
@@ -65,7 +64,7 @@ const setupGit = async () => {
   await gitSetupSshRemote(REPO_OWNER, REPO_NAME, DEPLOY_KEY, GIT_SSH_REMOTE);
 };
 
-if (!(isPrerelease || noLockRequired)) {
+if (!isPrerelease) {
   await setupGit();
   await ensureUpToDateBranch();
   await lockBranch();
