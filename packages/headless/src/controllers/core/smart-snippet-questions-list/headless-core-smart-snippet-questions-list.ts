@@ -104,7 +104,7 @@ export interface SmartSnippetRelatedQuestion {
  * Creates a core `SmartSnippetQuestionsList` controller instance.
  *
  * @param engine - The headless engine.
- * @returns A `SmartSnippetQuestionsListCore` controller instance.
+ * @returns A `CoreSmartSnippetQuestionsList` controller instance.
  * */
 export function buildCoreSmartSnippetQuestionsList(
   engine: CoreEngine,
