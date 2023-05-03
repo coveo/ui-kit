@@ -8,7 +8,6 @@ global with sharing class InsightTokenProvider implements ITokenProvider {
   public static final String DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_DOCUMENTS = 'INSIGHT_PANEL_DOCUMENTS';
 
   /**
-   * Test REMOVE
    * Returns the privileges needed to put in a Platform token in order to use the Hosted Insight Panel feature.
    * The required privileges will be these:
    * UsageAnalytics --> Write (to send events)
