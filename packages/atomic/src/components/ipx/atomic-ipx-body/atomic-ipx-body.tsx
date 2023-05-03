@@ -51,6 +51,34 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
         class={`${this.isOpen ? 'visible' : 'invisible'}`}
         onAnimationEnd={() => this.animationEnded.emit()}
       >
+        <style>
+          {`
+            /* Chrome, Edge & Safari */
+            .scrollbar::-webkit-scrollbar {
+              width: 0.8rem;
+            }
+
+            .scrollbar::-webkit-scrollbar-track {
+              background: var(--atomic-background);
+            }
+
+            .scrollbar::-webkit-scrollbar-thumb {
+              background: var(--atomic-primary);
+              border: 0.15rem solid var(--atomic-background);
+              border-radius: 100vh;
+            }
+
+            .scrollbar::-webkit-scrollbar-thumb:hover {
+              background: var(--atomic-primary-light);
+            }
+
+            /* Firefox */
+            .scrollbar {
+              scrollbar-color: var(--atomic-primary) var(--atomic-background);
+              scrollbar-width: auto;
+            }
+          `}
+        </style>
         <header part="header-wrapper" class="flex flex-col items-center">
           <div part="header">
             <slot name="header"></slot>
@@ -59,7 +87,7 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
         <hr part="header-ruler" class="border-neutral"></hr>
         <div
           part="body-wrapper"
-          class="overflow-auto grow flex flex-col w-full"
+          class="overflow-auto grow flex flex-col w-full scrollbar"
         >
           <div part="body" class="w-full max-w-lg">
             <slot name="body"></slot>
