@@ -120,8 +120,7 @@ export const config: Config = {
   testing: {
     browserArgs: ['--no-sandbox'],
     transform: {
-      '^.+\\.html?$': 'html-loader-jest',
-      '^.+\\.svg$': './svg.transform.js',
+      '^.+\\.svg$': './noop.transform.js',
     },
     transformIgnorePatterns: [],
     testPathIgnorePatterns: ['.snap'],
