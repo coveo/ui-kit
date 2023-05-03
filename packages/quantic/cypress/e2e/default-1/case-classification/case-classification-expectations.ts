@@ -171,21 +171,32 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail('should log the "ticket_classification_click" UA event');
     },
 
-    fetchClassificationsAfterInputFieldValueChange: (mockFields: Object) => {
-      // TO FINISH
+    fetchClassificationsAfterInputFieldValueChange: (
+      field: string,
+      predictions: Array<object>
+    ) => {
       cy.wait(InterceptAliases.CaseClassification).then((interception) => {
-        const caseClassificationBody = interception.request.body;
-        expect(caseClassificationBody.fields).to.not.equal(mockFields);
+        const caseClassificationBody = interception.response?.body;
+        console.log(
+          'caseClassificationBody: ' + JSON.stringify(caseClassificationBody)
+        );
+        expect(caseClassificationBody.fields).to.haveOwnProperty(field);
+        expect(caseClassificationBody.fields[field]).to.haveOwnProperty(
+          'predictions'
+        );
+        expect(caseClassificationBody.fields[field].predictions).to.deep.equal(
+          predictions
+        );
       });
     },
 
     fetchDocumentsAfterInputFieldValueChange: (
       mockDocuments: Array<Object>
     ) => {
-      // TO FINISH
       cy.wait(InterceptAliases.DocumentSuggestion).then((interception) => {
-        const documentSuggestionBody = interception.request.body;
-        expect(documentSuggestionBody.documents).to.equal(mockDocuments);
+        const documentSuggestionBody = interception?.response?.body;
+        expect(documentSuggestionBody).to.haveOwnProperty('documents');
+        expect(documentSuggestionBody.documents).to.deep.equal(mockDocuments);
       });
     },
   };

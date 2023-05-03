@@ -1,6 +1,6 @@
-import {LightningElement, track} from 'lwc';
 // @ts-ignore
-import {getCaseAssistId} from 'c/caseAssistUtils';
+import { getCaseAssistId } from 'c/caseAssistUtils';
+import { LightningElement, track } from 'lwc';
 
 export default class ExampleQuanticCaseClassification extends LightningElement {
   @track config = {};
@@ -59,6 +59,20 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
       label: 'Maximum suggestions',
       description: 'The maximum number of suggestions to be displayed',
       defaultValue: 3,
+    },
+    {
+      attribute: 'fetchClassificationOnChange',
+      label: 'Fetch classification on change',
+      description:
+        'Whether the Quantic Case Classification component should automatically fetch new case classifications when the input field values changes',
+      defaultValue: false,
+    },
+    {
+      attribute: 'fetchDocumentSuggestionOnChange',
+      label: 'Fetch document suggestion on change',
+      description:
+        'Whether the Quantic Case Classification component should automatically fetch new document suggestions when the input field values changes',
+      defaultValue: false,
     },
   ];
 

@@ -1,4 +1,8 @@
-import {triggerCaseFieldInputChange} from '../../../page-objects/actions/action-change-field-input';
+import {
+  clearInput,
+  setPayload,
+  triggerCaseFieldInputChange,
+} from '../../../page-objects/actions/action-change-field-input';
 import {fetchClassifications} from '../../../page-objects/actions/action-fetch-classifications';
 import {
   interceptCaseAssist,
@@ -21,6 +25,8 @@ interface CaseClassificationOptions {
   messageWhenValueMissing: string;
   sfFieldApiName: string;
   coveoFieldName: string;
+  fetchClassificationOnChange: boolean;
+  fetchDocumentSuggestionOnChange: boolean;
 }
 
 const incorrectSfFielNameError = (value: string) => {
@@ -893,21 +899,42 @@ describe('quantic-case-classification', () => {
   });
 
   // eslint-disable-next-line no-restricted-properties
-  describe.only('when the field value changes and updates-to-fetch is not undefined', () => {
-    beforeEach(() => {
-      visitCaseClassification({});
-    });
-
-    const mockFields = {key: 'value'};
-    const mockDocuments = [{}];
-    const mockValue = [{}];
+  describe.only('when the field value changes and updates-to-fetch is not undefined', async () => {
+    const mockFieldPayload = {
+      fieldName: 'subject',
+      fieldValue:
+        'Charge 4 stopped updating and now will not pair With my IPhone',
+    };
+    const mockDocuments = {
+      documents: [
+        {
+          clickUri: 'https://example.com',
+          excerpts: 'Roads are just a suggestion Marge, just like pants.',
+          fields: {},
+          hasHtmlVersion: true,
+          title: 'homer philosophy vol 1',
+          uniqueId: '001',
+        },
+        {
+          clickUri: 'https://example.com',
+          excerpts:
+            'If God didnt want me to eat chicken in church, then he would have made gluttony a sin.',
+          fields: {},
+          hasHtmlVersion: true,
+          title: 'homer philosophy vol 2',
+          uniqueId: '002',
+        },
+      ],
+      responseId: '123',
+      totalCount: 2,
+    };
 
     it('should automatically fetch new case classifications when fetchClassificationOnChange boolean property is set to true', () => {
-      // sets the new boolean option to true
-      configure({
+      visitCaseClassification({
         fetchClassificationOnChange: true,
+        fetchDocumentSuggestionOnChange: true,
       });
-      // loads the page
+
       scope('when loading the page', () => {
         Expect.displayLabel(true);
         Expect.numberOfInlineOptions(0);
@@ -917,34 +944,46 @@ describe('quantic-case-classification', () => {
       });
 
       scope('when changing the field value', () => {
+        const suggestionsCount = 3;
         mockCaseClassification(
-          nonCorrespondingCoveoField,
-          nonCorrespondingSuggestions
+          coveoDefaultField,
+          allOptions.slice(0, suggestionsCount)
         );
-        // triggers the change in input
-        triggerCaseFieldInputChange(mockFields); // TO DO -- pass field values you want to test
-        Expect.fetchClassificationsAfterInputFieldValueChange(mockFields); // TO DO -- pass field values you want to test
+
+        setPayload(mockFieldPayload.fieldValue);
+        triggerCaseFieldInputChange();
+
+        Expect.fetchClassificationsAfterInputFieldValueChange(
+          coveoDefaultField,
+          allOptions.slice(0, suggestionsCount)
+        );
+        clearInput();
       });
     });
 
-    // it.skip('should automatically fetch new document suggestions when fetchDocumentSuggestionOnChange boolean property is set to true', () => {
-    //   configure({
-    //     fetchDocumentSuggestionOnChange: true,
-    //   });
+    it('should automatically fetch new document suggestions when fetchDocumentSuggestionOnChange boolean property is set to true', () => {
+      visitCaseClassification({
+        fetchClassificationOnChange: true,
+        fetchDocumentSuggestionOnChange: true,
+      });
+      scope('when loading the page', () => {
+        Expect.displayLabel(true);
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+      });
 
-    //   scope('when loading the page', () => {
-    //     Expect.displayLabel(true);
-    //     Expect.numberOfInlineOptions(0);
-    //     Expect.numberOfSuggestions(0);
-    //     Expect.displaySelectTitle(false);
-    //     Expect.displaySelectInput(true);
-    //   });
+      scope('when changing the field value', () => {
+        mockDocumentSuggestion(mockDocuments.documents);
+        setPayload(mockFieldPayload.fieldValue);
+        triggerCaseFieldInputChange();
 
-    //   scope('when changing the field value', () => {
-    //     mockDocumentSuggestion(mockValue);
-    //     triggerCaseFieldInputChange(mockFields);
-    //     Expect.fetchDocumentsAfterInputFieldValueChange(mockDocuments);
-    //   });
-    // });
+        Expect.fetchDocumentsAfterInputFieldValueChange(
+          mockDocuments.documents
+        );
+        clearInput();
+      });
+    });
   });
 });

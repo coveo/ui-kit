@@ -1,4 +1,8 @@
-export const triggerCaseFieldInputChange = (fields: Object) =>
-  cy.get('c-action-change-field-input button').click(fields);
+export const triggerCaseFieldInputChange = () =>
+  cy.get('c-action-change-field-input button').click();
 
-// TO FINISH: NEED TO DO SOMETHING WITH FIELDS
+export const setPayload = (payload: string) =>
+  cy.get('c-action-change-field-input input').type(payload);
+
+export const clearInput = () =>
+  cy.get('c-action-change-field-input input').clear();

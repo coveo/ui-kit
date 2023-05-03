@@ -1,8 +1,17 @@
 <template>
-  <lightning-button
-    label="Change case field input"
-    title="Change case field input"
-    onclick={handleChangeFieldInput}
-    class="configurator__change-input-field">
-  </lightning-button>
+  <div class="slds-grid slds-gutters">
+      <div class="slds-col">
+        <lightning-input
+          label="Case Subject"
+        >
+        </lightning-input>
+      </div>
+    <lightning-button
+      label="Change case field input"
+      title="Change case field input"
+      onclick={handleChangeFieldInputBtnClick}
+      class="configurator__change-case-field-input"
+    >
+    </lightning-button>
+  </div>
 </template>
