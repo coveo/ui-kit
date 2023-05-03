@@ -268,8 +268,9 @@ export class AtomicQuickviewModal implements InitializableComponent {
   private get termsToHighlight() {
     const flatPhrasesToHighlight: TermsToHighlight = {};
 
+   const phrasesToHighlight = this.bindings.engine.state.search.response.phrasesToHighlight;
     Object.entries(
-      this.bindings.engine.state.search.response.phrasesToHighlight
+      phrasesToHighlight
     ).forEach(([phrase, keywords]) => {
       flatPhrasesToHighlight[phrase] = Object.entries(keywords).flatMap(
         ([keywordEntry, keywordStemming]) => {
