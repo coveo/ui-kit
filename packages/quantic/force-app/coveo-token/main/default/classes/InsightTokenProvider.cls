@@ -17,7 +17,7 @@ global with sharing class InsightTokenProvider implements ITokenProvider {
    */
   private static List<CoveoV2.PlatformToken.TokenPrivilege> buildInsightTokenPrivileges() {
     List<CoveoV2.PlatformToken.TokenPrivilege> privileges = new List<CoveoV2.PlatformToken.TokenPrivilege>();
-    privileges.add(
+      privileges.add(
       new CoveoV2.PlatformToken.TokenPrivilege(
         OWNER_CUSTOMER_SERVICE,
         DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_INTERFACE,
