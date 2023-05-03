@@ -10,7 +10,6 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  */
 @Component({
   tag: 'atomic-insight-tabs',
-  styleUrl: './atomic-insight-tabs.pcss',
 })
 export class AtomicInsightTabs
   implements InitializableComponent<InsightBindings>
