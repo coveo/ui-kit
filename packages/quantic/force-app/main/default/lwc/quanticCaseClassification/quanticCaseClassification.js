@@ -4,15 +4,10 @@ import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
 // @ts-ignore
 import CASE_OBJECT from '@salesforce/schema/Case';
-import {
-  registerComponentForInit,
-  initializeWithHeadless,
-} from 'c/quanticHeadlessLoader';
-import {
-  getObjectInfo,
-  getPicklistValuesByRecordType,
-} from 'lightning/uiObjectInfoApi';
-import {LightningElement, api, track, wire} from 'lwc';
+import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
+import { getObjectInfo, getPicklistValuesByRecordType } from 'lightning/uiObjectInfoApi';
+import { LightningElement, api, track, wire } from 'lwc';
+
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").CaseField} CaseField */
@@ -202,17 +197,11 @@ export default class QuanticCaseClassification extends LightningElement {
   updateFieldState() {
     if (!this.lockedState) {
       this.loading = this.field.state.loading;
-      const hasNewSuggestions =
-        this.maxSuggestions > 0 && this.newSuggestionsReceived;
       const value =
-        hasNewSuggestions && this.isAutoSelectionNeeded
+        this.hasNewSuggestions && this.isAutoSelectionNeeded
           ? this.classifications[0].value
           : this.field.state.value;
-      const updatesToFetch = {
-        caseClassifications: this.fetchClassificationOnChange,
-        documentSuggestions: this.fetchDocumentSuggestionOnChange,
-      };
-      this.setFieldValue(value, updatesToFetch, hasNewSuggestions);
+      this.setFieldValue(value, this.hasNewSuggestions);
       this.updateSuggestionsVisibility();
     }
   }
@@ -335,6 +324,23 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
+   * Whether we want to fetch new case classifications or document suggestions when we update the field.
+   */
+    get updatesToFetch() {
+      return {
+        caseClassifications: this.fetchClassificationOnChange,
+        documentSuggestions: this.fetchDocumentSuggestionOnChange,
+      }
+    }
+
+    /**
+     * Whether there are new suggestions available.
+     */
+    get hasNewSuggestions() {
+      return this.maxSuggestions > 0 && this.newSuggestionsReceived;
+    }
+
+  /**
    * Shows the select input.
    * @returns {void}
    */
@@ -366,7 +372,7 @@ export default class QuanticCaseClassification extends LightningElement {
   handleSelectChange(event) {
     this.lockedState = true;
     const value = event.target.value;
-    this.setFieldValue(value);
+    this.setFieldValue(value, this.updatesToFetch, this.hasNewSuggestions);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this.animateHideSuggestions();
     }
