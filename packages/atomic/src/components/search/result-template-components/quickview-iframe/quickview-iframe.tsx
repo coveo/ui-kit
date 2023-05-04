@@ -1,4 +1,4 @@
-import {Result} from '@coveo/headless';
+import {Result, SearchEngine} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 
 const documentIdentifierInIframe = 'CoveoDocIdentifier';
@@ -37,12 +37,20 @@ const ensureSameResultIsNotOverwritten = (
   documentWriter.body.appendChild(docIdentifier);
 };
 
+const warnAboutLimitedUsageQuickview = (logger?: SearchEngine['logger']) => {
+  logger?.warn(
+    'Quickview initialized in restricted mode due to incompatible sandboxing environment. Keywords hit navigation will be disabled.'
+  );
+};
+
 export const QuickviewIframe: FunctionalComponent<{
   content?: string;
   onSetIframeRef: (ref: HTMLIFrameElement) => void;
   result?: Result;
   sandbox?: string;
-}> = ({onSetIframeRef, result, content, sandbox}) => {
+  src?: string;
+  logger?: SearchEngine['logger'];
+}> = ({onSetIframeRef, result, content, sandbox, src, logger}) => {
   // When a document is written with document.open/document.write/document.close
   // it is not synchronous and the content of the iframe is only available to be queried at the end of the current call stack.
   // This add a "wait" (setTimeout 0) before calling the `onSetIframeRef` from the parent modal quickview
@@ -64,6 +72,11 @@ export const QuickviewIframe: FunctionalComponent<{
 
         const documentWriter = iframeRef.contentDocument;
         if (!documentWriter) {
+          if (src) {
+            warnAboutLimitedUsageQuickview(logger);
+            iframeRef.src = src;
+          }
+
           return;
         }
         if (currentResultAlreadyWrittenToDocument(documentWriter, result)) {

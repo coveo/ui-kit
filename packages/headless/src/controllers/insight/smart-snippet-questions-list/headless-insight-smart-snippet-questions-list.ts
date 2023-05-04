@@ -1,25 +1,23 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {
   buildCoreSmartSnippetQuestionsList,
-  CoreSmartSnippetQuestionsListState,
   CoreSmartSnippetQuestionsList,
   SmartSnippetQuestionsListProps,
-} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
-import {
-  buildSmartSnippetInteractiveInlineLinks,
-  InlineLink,
-} from '../smart-snippet/headless-smart-snippet-interactive-inline-links';
-import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions';
+  CoreSmartSnippetQuestionsListState,
+} from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links';
+import {buildSmartSnippetInteractiveInlineLinks} from '../smart-snippet/headless-insight-smart-snippet-interactive-inline-links';
+import {buildInsightSmartSnippetInteractiveQuestions} from './headless-insight-smart-snippet-interactive-questions';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 export type {
   SmartSnippetQuestionsListOptions,
   SmartSnippetQuestionsListProps,
+  CoreSmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
   CoreSmartSnippetQuestionsList,
-  CoreSmartSnippetQuestionsListState,
-} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+} from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SmartSnippetQuestionsList` controller.
@@ -28,7 +26,7 @@ export interface SmartSnippetQuestionsListState
   extends CoreSmartSnippetQuestionsListState {}
 
 /**
- * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
+ * The insight `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
  */
 export interface SmartSnippetQuestionsList
   extends CoreSmartSnippetQuestionsList {
@@ -98,19 +96,19 @@ export interface SmartSnippetQuestionsList
 }
 
 /**
- * Creates a `SmartSnippetQuestionsList` controller instance.
+ * Creates an insight `SmartSnippetQuestionsList` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `SmartSnippetQuestionsList` properties.
  * @returns A `SmartSnippetQuestionsList` controller instance.
  * */
 export function buildSmartSnippetQuestionsList(
-  engine: SearchEngine,
+  engine: InsightEngine,
   props?: SmartSnippetQuestionsListProps
 ): SmartSnippetQuestionsList {
   const smartSnippetQuestionList = buildCoreSmartSnippetQuestionsList(
     engine,
-    smartSnippetAnalyticsClient
+    insightSmartSnippetAnalyticsClient
   );
 
   const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
@@ -120,9 +118,12 @@ export function buildSmartSnippetQuestionsList(
     }
   );
 
-  const interactiveQuestions = buildSmartSnippetInteractiveQuestions(engine, {
-    options: {selectionDelay: props?.options?.selectionDelay},
-  });
+  const interactiveQuestions = buildInsightSmartSnippetInteractiveQuestions(
+    engine,
+    {
+      options: {selectionDelay: props?.options?.selectionDelay},
+    }
+  );
 
   return {
     ...smartSnippetQuestionList,
