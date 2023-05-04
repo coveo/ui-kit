@@ -30,6 +30,7 @@ describe('Standalone Search Box Test Suites', () => {
   }
 
   function setupStandardSearchBox() {
+    // TODO (KIT-2356): Fails in Cypress v12 @ withRedirection()
     new TestFixture().withRedirection().with(addSearchBox()).init();
   }
 
@@ -43,7 +44,7 @@ describe('Standalone Search Box Test Suites', () => {
 
   it('should redirect to the trigger url when there is a redirect trigger', () => {
     const url = 'https://platformstg.cloud.coveo.com';
-    setupStandaloneSearchBox();
+    setupStandaloneSearchBox({url});
     SearchBoxSelectors.inputBox().type('redirect testing');
     SearchBoxSelectors.submitButton().click();
     cy.location('href').should('contain', url);
@@ -84,6 +85,7 @@ describe('Standalone Search Box Test Suites', () => {
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.submitButton().click();
       new TestFixture()
+        // TODO (KIT-2356): Fails in Cypress v12 @ withRedirection()
         .withRedirection()
         .with(addSearchBox({props: {'enable-query-syntax': ''}}))
         .with(
