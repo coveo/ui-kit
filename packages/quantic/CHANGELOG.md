@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.22.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.22.2...@coveo/quantic@2.22.3) (2023-05-04)
+
+**Note:** Version bump only for package @coveo/quantic
+
+## [2.22.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.22.1...@coveo/quantic@2.22.2) (2023-05-04)
+
+### Bug Fixes
+
+- **SFINT-4968:** fix the InsightTokenProvider ([#2857](https://github.com/coveo/ui-kit/issues/2857)) ([bba8263](https://github.com/coveo/ui-kit/commit/bba8263cbd90176a0b739d2cf462c9df9ab8d179))
+
 ## [2.22.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.22.0...@coveo/quantic@2.22.1) (2023-05-01)
 
 **Note:** Version bump only for package @coveo/quantic
