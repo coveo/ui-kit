@@ -177,9 +177,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
     ) => {
       cy.wait(InterceptAliases.CaseClassification).then((interception) => {
         const caseClassificationBody = interception.response?.body;
-        console.log(
-          'caseClassificationBody: ' + JSON.stringify(caseClassificationBody)
-        );
+
         expect(caseClassificationBody.fields).to.haveOwnProperty(field);
         expect(caseClassificationBody.fields[field]).to.haveOwnProperty(
           'predictions'
@@ -191,12 +189,25 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
     },
 
     fetchDocumentsAfterInputFieldValueChange: (
+      fieldName: string,
+      fieldValue: string,
       mockDocuments: Array<Object>
     ) => {
       cy.wait(InterceptAliases.DocumentSuggestion).then((interception) => {
-        const documentSuggestionBody = interception?.response?.body;
-        expect(documentSuggestionBody).to.haveOwnProperty('documents');
-        expect(documentSuggestionBody.documents).to.deep.equal(mockDocuments);
+        const documentSuggestionResponseBody = interception?.response?.body;
+
+        expect(documentSuggestionResponseBody).to.haveOwnProperty('documents');
+        expect(documentSuggestionResponseBody.documents).to.deep.equal(
+          mockDocuments
+        );
+
+        const documentSuggestionRequestBody = interception?.request?.body;
+        expect(documentSuggestionRequestBody.fields).to.haveOwnProperty(
+          'subject'
+        );
+        expect(
+          documentSuggestionRequestBody.fields[fieldName].value
+        ).to.deep.equal(fieldValue);
       });
     },
   };

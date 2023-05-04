@@ -1,6 +1,5 @@
 import { getHeadlessBundle } from 'c/quanticHeadlessLoader';
-import {LightningElement, api} from 'lwc';
-
+import { LightningElement, api } from 'lwc';
 
 export default class ActionChangeFieldInput extends LightningElement {
   @api engineId;
@@ -9,21 +8,18 @@ export default class ActionChangeFieldInput extends LightningElement {
 
   handleChangeFieldInputBtnClick() {
     if (!this.input) {
-      this.input = this.template.querySelector('lightning-input');
-      this.input.value = ''
+      this.input = this.template.querySelector('input').value;
+      this.input = JSON.parse(this.input);
     }
-    if (this.caseInput) {
+
+    this.resolveCaseInputController().then((controller) => {
+      this.caseInput = controller;
       this.triggerChangeFieldInput(this.caseInput);
-    } else {
-      this.resolveCaseInputController().then((controller) => {
-        this.caseInput = controller;
-        this.triggerChangeFieldInput(this.caseInput);
-      })
-    }
+    })
   }
 
   triggerChangeFieldInput(controller) {
-    const field = this.input ? this.input.value : '';
+    const field = this.input ? this.input.fieldValue : '';
     const options = {
       caseClassifications: true,
       documentSuggestions: true,
@@ -37,7 +33,7 @@ export default class ActionChangeFieldInput extends LightningElement {
       .then((engine) => {
         return this.headless.buildCaseInput(engine, {
           options: {
-            field: 'subject'
+            field: this.input?.fieldName
           }
         });
       });

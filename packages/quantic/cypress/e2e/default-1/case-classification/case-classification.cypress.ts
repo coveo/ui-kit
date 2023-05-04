@@ -898,8 +898,7 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  // eslint-disable-next-line no-restricted-properties
-  describe.only('when the field value changes and updates-to-fetch is not undefined', async () => {
+  describe('when the field value changes and updates-to-fetch is not undefined', async () => {
     const mockFieldPayload = {
       fieldName: 'subject',
       fieldValue:
@@ -950,7 +949,7 @@ describe('quantic-case-classification', () => {
           allOptions.slice(0, suggestionsCount)
         );
 
-        setPayload(mockFieldPayload.fieldValue);
+        setPayload(JSON.stringify(mockFieldPayload));
         triggerCaseFieldInputChange();
 
         Expect.fetchClassificationsAfterInputFieldValueChange(
@@ -961,7 +960,7 @@ describe('quantic-case-classification', () => {
       });
     });
 
-    it('should automatically fetch new document suggestions when fetchDocumentSuggestionOnChange boolean property is set to true', () => {
+    it('should automatically fetch new document suggestions when fetchDocumentSuggestionOnChange property is set to true', () => {
       visitCaseClassification({
         fetchClassificationOnChange: true,
         fetchDocumentSuggestionOnChange: true,
@@ -976,10 +975,12 @@ describe('quantic-case-classification', () => {
 
       scope('when changing the field value', () => {
         mockDocumentSuggestion(mockDocuments.documents);
-        setPayload(mockFieldPayload.fieldValue);
+        setPayload(JSON.stringify(mockFieldPayload));
         triggerCaseFieldInputChange();
 
         Expect.fetchDocumentsAfterInputFieldValueChange(
+          mockFieldPayload.fieldName,
+          mockFieldPayload.fieldValue,
           mockDocuments.documents
         );
         clearInput();

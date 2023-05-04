@@ -2,6 +2,7 @@
 import { getCaseAssistId } from 'c/caseAssistUtils';
 import { LightningElement, track } from 'lwc';
 
+
 export default class ExampleQuanticCaseClassification extends LightningElement {
   @track config = {};
   isConfigured = false;
@@ -64,14 +65,14 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
       attribute: 'fetchClassificationOnChange',
       label: 'Fetch classification on change',
       description:
-        'Whether the Quantic Case Classification component should automatically fetch new case classifications when the input field values changes',
+        'Whether the QuanticCaseClassification component should automatically fetch new case classifications when the input field values changes',
       defaultValue: false,
     },
     {
       attribute: 'fetchDocumentSuggestionOnChange',
       label: 'Fetch document suggestion on change',
       description:
-        'Whether the Quantic Case Classification component should automatically fetch new document suggestions when the input field values changes',
+        'Whether the QuanticCaseClassification component should automatically fetch new document suggestions when the input field values changes',
       defaultValue: false,
     },
   ];
