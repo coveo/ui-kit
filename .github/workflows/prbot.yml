@@ -226,7 +226,7 @@ jobs:
             **/package-lock.json
       - name: Test post-release npm install
         shell: bash
-        run: npm i
+        run: npm i --package-lock-only
       - name: Upload lockfiles again
         uses: actions/upload-artifact@v3
         with:
@@ -265,7 +265,7 @@ jobs:
             **/package-lock.json
       - name: Test post-release npm install
         shell: bash
-        run: npm i
+        run: npm i --package-lock-only
       - name: Upload lockfiles again
         uses: actions/upload-artifact@v3
         with:
