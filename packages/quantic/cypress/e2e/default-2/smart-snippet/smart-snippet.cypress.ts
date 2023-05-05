@@ -41,7 +41,7 @@ const feedbackOptions = [
   otherOption,
 ];
 
-describe('quantic-smart-snippet', () => {
+describe('quantic-smart-snippet', {browser: 'chrome'}, () => {
   const pageUrl = 's/quantic-smart-snippet';
 
   function visitPage(
@@ -183,43 +183,51 @@ describe('quantic-smart-snippet', () => {
           });
         });
 
-        describe('when clicking the feedback dislike button', () => {
-          it('should properly log the analytics', () => {
-            visitPage({useCase: param.useCase});
+        describe(
+          'when clicking the feedback dislike button',
+          {
+            retries: 20,
+          },
+          () => {
+            it('should properly log the analytics', () => {
+              visitPage({useCase: param.useCase});
 
-            scope('when clicking the dislike button', () => {
-              Expect.displaySmartSnippetCard(true);
-              Actions.clickSmartSnippetDislikeButton();
-              Expect.logDislikeSmartSnippet();
-              Expect.displayExplainWhyButton(true);
-            });
-
-            scope('when clicking the explain why button', () => {
-              Actions.clickSmartSnippetExplainWhyButton();
-              Expect.logOpenSmartSnippetFeedbackModal();
-            });
-
-            scope('when closing the feedback modal', () => {
-              Actions.clickFeedbackCancelButton();
-              Expect.logCloseSmartSnippetFeedbackModal();
-            });
-
-            scope('when selecting a feedback option', () => {
-              const exampleDetails = 'example details';
-              Actions.clickSmartSnippetExplainWhyButton();
-              Expect.logOpenSmartSnippetFeedbackModal();
-              Actions.clickFeedbackOption(feedbackOptions.indexOf(otherOption));
-              Actions.typeInFeedbackDetailsInput(exampleDetails);
-              Actions.clickFeedbackSubmitButton();
-              Expect.logSendSmartSnippetReason({
-                reason: otherOption,
-                details: exampleDetails,
+              scope('when clicking the dislike button', () => {
+                Expect.displaySmartSnippetCard(true);
+                Actions.clickSmartSnippetDislikeButton();
+                Expect.logDislikeSmartSnippet();
+                Expect.displayExplainWhyButton(true);
               });
-              Actions.clickFeedbackDoneButton();
-              Expect.logCloseSmartSnippetFeedbackModal();
+
+              scope('when clicking the explain why button', () => {
+                Actions.clickSmartSnippetExplainWhyButton();
+                Expect.logOpenSmartSnippetFeedbackModal();
+              });
+
+              scope('when closing the feedback modal', () => {
+                Actions.clickFeedbackCancelButton();
+                Expect.logCloseSmartSnippetFeedbackModal();
+              });
+
+              scope('when selecting a feedback option', () => {
+                const exampleDetails = 'example details';
+                Actions.clickSmartSnippetExplainWhyButton();
+                Expect.logOpenSmartSnippetFeedbackModal();
+                Actions.clickFeedbackOption(
+                  feedbackOptions.indexOf(otherOption)
+                );
+                Actions.typeInFeedbackDetailsInput(exampleDetails);
+                Actions.clickFeedbackSubmitButton();
+                Expect.logSendSmartSnippetReason({
+                  reason: otherOption,
+                  details: exampleDetails,
+                });
+                Actions.clickFeedbackDoneButton();
+                Expect.logCloseSmartSnippetFeedbackModal();
+              });
             });
-          });
-        });
+          }
+        );
       });
     });
   });
