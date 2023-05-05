@@ -5,7 +5,7 @@ import {
   mockSearchWithoutSmartSnippetSuggestions,
 } from '../../../page-objects/search';
 import {scope} from '../../../reporters/detailed-collector';
-import {stubConsoleError} from '../../console-selectors';
+import {spyConsoleError} from '../../console-selectors';
 import {SmartSnippetSuggestionsActions as Actions} from './smart-snippet-suggestions-actions';
 import {SmartSnippetSuggestionsExpectations as Expect} from './smart-snippet-suggestions-expectations';
 
@@ -54,7 +54,7 @@ describe('quantic-smart-snippet-suggestions', () => {
     }
     cy.visit(pageUrl, {
       onBeforeLoad(win) {
-        stubConsoleError(win);
+        spyConsoleError(win);
       },
     });
     configure();
