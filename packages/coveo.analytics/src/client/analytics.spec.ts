@@ -1,4 +1,4 @@
-import {EventType, ViewEventRequest, DefaultEventResponse} from '../events';
+import {DefaultEventResponse, EventType, ViewEventRequest} from '../events';
 import {CoveoAnalyticsClient} from './analytics';
 import {IAnalyticsRequestOptions} from './analyticsRequestClient';
 import {CookieAndLocalStorage, CookieStorage, NullStorage} from '../storage';
@@ -56,6 +56,77 @@ describe('Analytics', () => {
             endpoint: anEndpoint,
             version: A_VERSION,
         });
+    });
+
+    it('should add /rest if not present in endpoint', async () => {
+        const legacyEndpoint = 'https://usageanalytics.com';
+
+        client = new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: legacyEndpoint,
+            version: A_VERSION,
+        });
+
+        fetchMock.post(endpointForEventType(EventType.custom, `${legacyEndpoint}/rest`), eventResponse);
+        const response = await client.sendEvent(EventType.custom);
+        expect(response).toEqual(eventResponse);
+    });
+
+    it('should not add /rest if /rest present in endpoint', async () => {
+        const legacyEndpoint = 'https://usageanalytics.com/rest';
+
+        client = new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: legacyEndpoint,
+            version: A_VERSION,
+        });
+
+        fetchMock.post(endpointForEventType(EventType.custom, legacyEndpoint), eventResponse);
+        const response = await client.sendEvent(EventType.custom);
+        expect(response).toEqual(eventResponse);
+    });
+
+    it('should not add /rest if /rest/ua present in endpoint', async () => {
+        const legacyEndpoint = 'https://usageanalytics.com/rest/ua';
+
+        client = new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: legacyEndpoint,
+            version: A_VERSION,
+        });
+
+        fetchMock.post(endpointForEventType(EventType.custom, legacyEndpoint), eventResponse);
+        const response = await client.sendEvent(EventType.custom);
+        expect(response).toEqual(eventResponse);
+    });
+
+    it('should remove trailing slash in endpoint', async () => {
+        const legacyEndpoint = 'https://usageanalytics.com';
+
+        client = new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: legacyEndpoint + '/',
+            version: A_VERSION,
+        });
+
+        fetchMock.post(endpointForEventType(EventType.custom, `${legacyEndpoint}/rest`), eventResponse);
+        const response = await client.sendEvent(EventType.custom);
+        expect(response).toEqual(eventResponse);
+    });
+
+    it('should allow reverse-proxy endpoint', async () => {
+        const aReverseProxyEndpoint = 'https://12364734.cloudfront.net/analytics';
+
+        client = new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: aReverseProxyEndpoint,
+            isCustomEndpoint: true,
+            version: A_VERSION,
+        });
+
+        fetchMock.post(endpointForEventType(EventType.custom, aReverseProxyEndpoint), eventResponse);
+        const response = await client.sendEvent(EventType.custom);
+        expect(response).toEqual(eventResponse);
     });
 
     it('should call fetch with the parameters', async () => {
