@@ -192,11 +192,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         );
     },
 
-    fetchDocumentsAfterValueChange: (
-      fieldName: string,
-      predictions: Array<Object>,
-      mockDocuments: Array<Object>
-    ) => {
+    fetchDocumentsAfterValueChange: (mockDocuments: Array<Object>) => {
       cy.wait(InterceptAliases.DocumentSuggestion)
         .then((interception) => {
           const documentSuggestionResponseBody = interception?.response?.body;
@@ -207,14 +203,6 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
           expect(documentSuggestionResponseBody.documents).to.deep.equal(
             mockDocuments
           );
-
-          const documentSuggestionRequestBody = interception?.request?.body;
-          expect(documentSuggestionRequestBody.fields).to.haveOwnProperty(
-            'subject'
-          );
-          // expect(
-          //   documentSuggestionRequestBody.fields[fieldName].value
-          // ).to.deep.equal(fieldValue);
         })
         .logDetail(
           'should fetch new document suggestions after the value changes'
