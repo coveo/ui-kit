@@ -59,7 +59,6 @@ function computeVerdaccioConfig() {
     uplinks: {
       npmjs: {
         url: 'https://registry.npmjs.org/',
-        cache: false,
       },
     },
     packages: {
