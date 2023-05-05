@@ -13,6 +13,9 @@ variable "package_version" {
 }
 
 resource "null_resource" "invalidate-cloudfront" {
+  triggers = {
+    always_run = "${timestamp()}"
+  }
   # do not do the call if the id is empty
   count = local.cloudfront_id != "" ? 1 : 0
   provisioner "local-exec" {
