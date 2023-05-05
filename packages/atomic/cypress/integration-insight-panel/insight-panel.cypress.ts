@@ -169,6 +169,22 @@ describe('Insight Panel test suites', () => {
         .should('exist');
     });
 
+    it('should display full search button', () => {
+      InsightPanelsSelectors.fullSearchButton()
+        .should('exist')
+        .should('have.attr', 'tooltip');
+
+      InsightPanelsSelectors.fullSearchButton()
+        .shadow()
+        .find('button')
+        .should('have.attr', 'title');
+      InsightPanelsSelectors.fullSearchButton()
+        .shadow()
+        .find('button')
+        .find('atomic-icon')
+        .should('exist');
+    });
+
     it('should display tabs', () => {
       InsightPanelsSelectors.tabs()
         .should('exist')
@@ -235,6 +251,23 @@ describe('Insight Panel test suites', () => {
         .shadow()
         .find('atomic-result-text[field="sfid"]')
         .should('exist');
+    });
+
+    describe('Full Search Button', () => {
+      before(() => {
+        Cypress.on('window:before:load', (win) => {
+          cy.spy(win.console, 'log');
+        });
+      });
+      it('should poperly handle being clicked', () => {
+        InsightPanelsSelectors.fullSearchButton()
+          .shadow()
+          .find('[part="full-search-button"]')
+          .click();
+        cy.window().then((win) => {
+          expect(win.console.log).to.have.callCount(1);
+        });
+      });
     });
   });
 });
