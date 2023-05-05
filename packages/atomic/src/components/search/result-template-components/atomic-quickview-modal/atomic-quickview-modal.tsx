@@ -153,6 +153,8 @@ export class AtomicQuickviewModal implements InitializableComponent {
         </div>
         <div class="overflow-auto relative">
           <QuickviewIframe
+            logger={this.logger}
+            src={this.quickviewSrc}
             sandbox={this.sandbox}
             uniqueIdentifier={this.quickviewUniqueIdentifier}
             content={this.content}
@@ -212,6 +214,14 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   private get highlightScriptId() {
     return 'CoveoDisableHighlightStyle';
+  }
+
+  private get logger() {
+    return this.bindings.engine.logger;
+  }
+
+  private get quickviewSrc() {
+    return this.bindings.engine.state.resultPreview?.contentURL;
   }
 
   private enableHighlights() {
