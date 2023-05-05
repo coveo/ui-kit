@@ -2,6 +2,7 @@ import {build} from 'esbuild';
 import alias from 'esbuild-plugin-alias';
 import {readFileSync, promises} from 'node:fs';
 import {resolve} from 'node:path';
+import resolveModule from 'resolve';
 import {umdWrapper} from '../../scripts/bundle/umd.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
@@ -120,12 +121,9 @@ function buildBrowserConfig(options) {
     external: ['crypto'],
     plugins: [
       alias({
-        'coveo.analytics': resolve(
-          'node_modules',
-          'coveo.analytics',
-          'dist',
-          'library.es.js'
-        ),
+        'coveo.analytics': resolveModule.sync('coveo.analytics', {
+          packageFilter: (pkg) => ({...pkg, main: pkg.module}),
+        }),
         'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
       }),
     ],
@@ -166,12 +164,7 @@ function buildNodeConfig(options) {
     platform: 'node',
     plugins: [
       alias({
-        'coveo.analytics': resolve(
-          'node_modules',
-          'coveo.analytics',
-          'dist',
-          'library.js'
-        ),
+        'coveo.analytics': resolveModule.sync('coveo.analytics'),
       }),
     ],
     ...options,
