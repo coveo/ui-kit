@@ -171,44 +171,54 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail('should log the "ticket_classification_click" UA event');
     },
 
-    fetchClassificationsAfterInputFieldValueChange: (
+    fetchClassificationsAfterValueChange: (
       field: string,
       predictions: Array<object>
     ) => {
-      cy.wait(InterceptAliases.CaseClassification).then((interception) => {
-        const caseClassificationBody = interception.response?.body;
+      cy.wait(InterceptAliases.CaseClassification)
+        .then((interception) => {
+          const caseClassificationBody = interception.response?.body;
 
-        expect(caseClassificationBody.fields).to.haveOwnProperty(field);
-        expect(caseClassificationBody.fields[field]).to.haveOwnProperty(
-          'predictions'
+          expect(caseClassificationBody.fields).to.haveOwnProperty(field);
+          expect(caseClassificationBody.fields[field]).to.haveOwnProperty(
+            'predictions'
+          );
+          expect(
+            caseClassificationBody.fields[field].predictions
+          ).to.deep.equal(predictions);
+        })
+        .logDetail(
+          'should fetch new case classifications after the value changes'
         );
-        expect(caseClassificationBody.fields[field].predictions).to.deep.equal(
-          predictions
-        );
-      });
     },
 
-    fetchDocumentsAfterInputFieldValueChange: (
+    fetchDocumentsAfterValueChange: (
       fieldName: string,
       fieldValue: string,
       mockDocuments: Array<Object>
     ) => {
-      cy.wait(InterceptAliases.DocumentSuggestion).then((interception) => {
-        const documentSuggestionResponseBody = interception?.response?.body;
+      cy.wait(InterceptAliases.DocumentSuggestion)
+        .then((interception) => {
+          const documentSuggestionResponseBody = interception?.response?.body;
 
-        expect(documentSuggestionResponseBody).to.haveOwnProperty('documents');
-        expect(documentSuggestionResponseBody.documents).to.deep.equal(
-          mockDocuments
-        );
+          expect(documentSuggestionResponseBody).to.haveOwnProperty(
+            'documents'
+          );
+          expect(documentSuggestionResponseBody.documents).to.deep.equal(
+            mockDocuments
+          );
 
-        const documentSuggestionRequestBody = interception?.request?.body;
-        expect(documentSuggestionRequestBody.fields).to.haveOwnProperty(
-          'subject'
+          const documentSuggestionRequestBody = interception?.request?.body;
+          expect(documentSuggestionRequestBody.fields).to.haveOwnProperty(
+            'subject'
+          );
+          expect(
+            documentSuggestionRequestBody.fields[fieldName].value
+          ).to.deep.equal(fieldValue);
+        })
+        .logDetail(
+          'should fetch new document suggestions after the value changes'
         );
-        expect(
-          documentSuggestionRequestBody.fields[fieldName].value
-        ).to.deep.equal(fieldValue);
-      });
     },
   };
 }
