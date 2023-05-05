@@ -12,7 +12,7 @@ import {
   sampleConfig,
   SearchResponseModifier,
   SearchResponseModifierPredicate,
-  setupIntercept,
+  setupIntercepts,
   spyConsole,
   UrlParts,
   TestFeature,
@@ -189,7 +189,7 @@ export class TestFixture {
   public init() {
     !this.redirected && cy.visit(buildTestUrl(this.hash));
     cy.injectAxe();
-    setupIntercept();
+    setupIntercepts();
     spyConsole();
 
     cy.window().then((win) => {

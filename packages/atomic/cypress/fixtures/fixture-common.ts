@@ -52,36 +52,37 @@ export function spyConsole() {
   });
 }
 
-export function setupIntercept() {
-  cy.intercept({
-    method: 'POST',
-    path: '**/rest/v15/analytics/*',
-  }).as(RouteAlias.UA.substring(1));
+export function setupIntercepts() {
+  function setupIntercept(path: string, alias: string, method = 'POST') {
+    cy.intercept(
+      {
+        method: method,
+        path: path,
+      },
+      (req) => {
+        req.continue((res) => {
+          // Not using expect() to cause tests to fail to allow for tests that exercise error cases.
+          if (res.statusCode < 200 || res.statusCode > 299) {
+            cy.log(
+              `Request error on ${req.url} : ${res.statusCode} ${res.statusMessage}`
+            );
+          }
+        });
+      }
+    ).as(alias.substring(1));
+  }
 
-  cy.intercept({
-    method: 'POST',
-    path: '**/rest/search/v2/querySuggest?*',
-  }).as(RouteAlias.QuerySuggestions.substring(1));
-
-  cy.intercept({
-    method: 'POST',
-    url: '**/rest/search/v2?*',
-  }).as(RouteAlias.Search.substring(1));
-
-  cy.intercept({
-    method: 'POST',
-    url: '**/rest/search/v2/html?*',
-  }).as(RouteAlias.Quickview.substring(1));
-
-  cy.intercept({
-    method: 'POST',
-    path: '**/rest/search/v2/facet?*',
-  }).as(RouteAlias.FacetSearch.substring(1));
-
-  cy.intercept({
-    method: 'GET',
-    path: '/build/lang/**.json',
-  }).as(RouteAlias.Locale.substring(1));
+  setupIntercept('**/rest/v15/analytics/*', RouteAlias.UA);
+  setupIntercept(
+    '**/rest/search/v2/querySuggest?*',
+    RouteAlias.QuerySuggestions
+  );
+  setupIntercept('**/rest/search/v2?*', RouteAlias.Search);
+  setupIntercept('**/rest/search/v2/html?*', RouteAlias.Quickview);
+  setupIntercept('**/rest/search/v2/facet?*', RouteAlias.FacetSearch);
+  // TODO: suppress req logs for lang (as they are numerous and not that useful)
+  //  once following issue is addressed https://github.com/cypress-io/cypress/issues/26069
+  setupIntercept('/build/lang/**.json', RouteAlias.Locale, 'GET');
 }
 
 export function getUABody() {
