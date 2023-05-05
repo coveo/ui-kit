@@ -21,7 +21,8 @@
   },
   "bin": {
     "npm-publish": "./npm-publish-package.mjs",
-    "install-npm-proxy": "./install-npm-proxy.mjs"
+    "install-npm-proxy": "./install-npm-proxy.mjs",
+    "reify": "./reify.mjs"
   },
   "scripts": {
     "test": "tsc"

@@ -20,8 +20,7 @@ import angularChangelogConvention from 'conventional-changelog-angular';
 import {dirname, resolve, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import retry from 'async-retry';
-import {inc, compareBuild, gt, SemVer} from 'semver';
-import Arborist from '@npmcli/arborist';
+import {gt, SemVer} from 'semver';
 
 /**
  * Check if the package json in the provided folder has changed since the last commit
@@ -98,7 +97,7 @@ await (async () => {
       {
         host: 'https://github.com',
         owner: 'coveo',
-        repository: 'cli',
+        repository: 'ui-kit',
       },
       convention.writerOpts
     );
@@ -166,7 +165,6 @@ async function updateWorkspaceDependent(version) {
       dependentPackageJsonPath,
       JSON.stringify(dependentPackageJson)
     );
-    await updateLockfileEntries(dependencyPackageJson.name);
   }
 }
 
@@ -180,28 +178,13 @@ function updateDependency(packageJson, dependency, version) {
   for (const dependencyType of [
     'dependencies',
     'devDependencies',
+    'peerDependencies',
     'optionalDependencies',
   ]) {
     if (packageJson?.[dependencyType]?.[dependency]) {
       packageJson[dependencyType][dependency] = version;
     }
   }
-}
-
-/**
- * Check the dependency tree from the lockfile and make sure all entries
- * of `entryName` satisfies the package.json files entries.
- * @param {string} entryName the package to update across the tree
- */
-async function updateLockfileEntries(entryName) {
-  const arb = new Arborist({savePrefix: '', path: rootFolder});
-  await arb.loadVirtual();
-  await arb.buildIdealTree({
-    update: {
-      names: [entryName],
-    },
-  });
-  await arb.reify();
 }
 
 function isPrivatePackage() {
