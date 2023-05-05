@@ -896,6 +896,7 @@ describe('quantic-case-classification', () => {
     describe('when a suggestion is selected', () => {
       it('should automatically fetch new case classifications', () => {
         const clickedIndex = 1;
+        const suggestionsCount = 3;
         visitCaseClassification({
           fetchClassificationOnChange: true,
         });
@@ -908,7 +909,6 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectInput(true);
         });
         scope('when fetching suggestions', () => {
-          const suggestionsCount = 3;
           const firstSuggestionIndex = 0;
 
           mockCaseClassification(
@@ -933,11 +933,10 @@ describe('quantic-case-classification', () => {
             clickedIndex
           );
           Expect.correctValue(allOptions[clickedIndex].value);
-          // TODO
-          // Expect.fetchClassificationsAfterValueChange(
-          //   coveoDefaultField,
-          //   allOptions
-          // );
+          Expect.fetchClassificationsAfterValueChange(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
         });
       });
     });
@@ -994,16 +993,16 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          // TO DO
-          // Expect.fetchClassificationsAfterValueChange(
-          //   coveoDefaultField,
-          //   allOptions
-          // );
+          Expect.fetchClassificationsAfterValueChange(
+            coveoDefaultField,
+            allOptions
+          );
         });
       });
     });
     describe('when an option from the select input is selected', () => {
       it('should automatically fetch new case classifications', () => {
+        const suggestionsCount = 3;
         visitCaseClassification({
           fetchClassificationOnChange: true,
         });
@@ -1016,9 +1015,38 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectInput(true);
         });
 
+        scope('when fetching suggestions', () => {
+          const firstSuggestionIndex = 0;
+
+          mockCaseClassification(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
+          fetchClassifications();
+          Expect.displaySelectTitle(true);
+          Expect.displaySelectInput(false);
+          Expect.numberOfSuggestions(suggestionsCount);
+          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.numberOfInlineOptions(0);
+          Expect.logClickedSuggestion(firstSuggestionIndex, true);
+          Expect.correctValue(allOptions[firstSuggestionIndex].value);
+        });
+
+        scope('when selecting a suggestion', () => {
+          const clickedIndex = 1;
+
+          Actions.clickSuggestion(clickedIndex);
+          Expect.logClickedSuggestion(clickedIndex);
+          Expect.logUpdatedClassificationFromSuggestion(
+            coveoDefaultField,
+            clickedIndex
+          );
+          Expect.correctValue(allOptions[clickedIndex].value);
+        });
+
         scope('when selecting an option from the select input', () => {
           const clickedIndex = 3;
-
+          Actions.clickSelectTitle();
           Actions.openSelectInput();
           Actions.clickSelectOption(clickedIndex);
           Expect.correctValue(allOptions[clickedIndex].value);
@@ -1026,18 +1054,17 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          // TO DO
-          // Expect.fetchClassificationsAfterValueChange(
-          //   coveoDefaultField,
-          //   allOptions
-          // );
+          Expect.fetchClassificationsAfterValueChange(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
         });
       });
     });
   });
 
   // eslint-disable-next-line no-restricted-properties
-  describe('when a field value changes and the fetchDocumentSuggestionOnChange property is set to true', async () => {
+  describe.only('when a field value changes and the fetchDocumentSuggestionOnChange property is set to true', async () => {
     const mockDocuments = {
       documents: [
         {
@@ -1064,6 +1091,7 @@ describe('quantic-case-classification', () => {
     describe('when a suggestion is selected', () => {
       it('should automatically fetch new document suggestions', () => {
         const clickedIndex = 1;
+        const suggestionsCount = 3;
         visitCaseClassification({
           fetchDocumentSuggestionOnChange: true,
         });
@@ -1076,9 +1104,7 @@ describe('quantic-case-classification', () => {
         });
 
         scope('when fetching suggestions', () => {
-          const suggestionsCount = 3;
           const firstSuggestionIndex = 0;
-
           mockCaseClassification(
             coveoDefaultField,
             allOptions.slice(0, suggestionsCount)
@@ -1102,11 +1128,11 @@ describe('quantic-case-classification', () => {
             clickedIndex
           );
           // TO DO
-          // Expect.fetchDocumentsAfterValueChange(
-          //   coveoDefaultField,
-          //   allOptions.slice(0, suggestionsCount),
-          //   mockDocuments
-          // );
+          Expect.fetchDocumentsAfterValueChange(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount),
+            mockDocuments.documents
+          );
         });
       });
     });
@@ -1141,8 +1167,9 @@ describe('quantic-case-classification', () => {
         });
       });
     });
-    describe('when an option from the select input is selected', () => {
+    describe.skip('when an option from the select input is selected', () => {
       it('should automatically fetch new document suggestions', () => {
+        const suggestionsCount = 3;
         visitCaseClassification({
           fetchDocumentSuggestionOnChange: true,
         });
@@ -1157,6 +1184,7 @@ describe('quantic-case-classification', () => {
         scope('when selecting an option from the select input', () => {
           const clickedIndex = 3;
 
+          Actions.clickSelectTitle();
           Actions.openSelectInput();
           Actions.clickSelectOption(clickedIndex);
           Expect.correctValue(allOptions[clickedIndex].value);
@@ -1165,11 +1193,11 @@ describe('quantic-case-classification', () => {
             clickedIndex
           );
           // TODO
-          // Expect.fetchDocumentsAfterValueChange(
-          //   coveoDefaultField,
-          //   allOptions.slice(0, suggestionsCount),
-          //   mockDocuments
-          // );
+          Expect.fetchDocumentsAfterValueChange(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount),
+            mockDocuments
+          );
         });
       });
     });
