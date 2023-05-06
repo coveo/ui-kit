@@ -53,7 +53,12 @@ export function spyConsole() {
 }
 
 export function setupIntercepts() {
-  function setupIntercept(path: string, alias: string, method = 'POST') {
+  function setupIntercept(
+    path: string,
+    alias: string,
+    method = 'POST',
+    checkResponse = true
+  ) {
     cy.intercept(
       {
         method: method,
@@ -61,9 +66,9 @@ export function setupIntercepts() {
       },
       (req) => {
         req.continue((res) => {
-          // Not using expect() to cause tests to fail to allow for tests that exercise error cases.
-          if (res.statusCode < 200 || res.statusCode > 299) {
-            cy.log(
+          // Not using expect() to allow for tests that exercise error cases
+          if (checkResponse && (res.statusCode < 200 || res.statusCode > 299)) {
+            console.error(
               `Request error on ${req.url} : ${res.statusCode} ${res.statusMessage}`
             );
           }
@@ -72,7 +77,7 @@ export function setupIntercepts() {
     ).as(alias.substring(1));
   }
 
-  setupIntercept('**/rest/v15/analytics/*', RouteAlias.UA);
+  setupIntercept('**/rest/v15/analytics/*', RouteAlias.UA, 'POST', false);
   setupIntercept(
     '**/rest/search/v2/querySuggest?*',
     RouteAlias.QuerySuggestions
