@@ -7,7 +7,7 @@ import {
 } from '../../../page-objects/case-assist';
 import {configure} from '../../../page-objects/configurator';
 import {scope} from '../../../reporters/detailed-collector';
-import {stubConsoleWarning} from '../../console-selectors';
+import {spyConsoleWarning} from '../../console-selectors';
 import {CaseClassificationActions as Actions} from './case-classification-actions';
 import {CaseClassificationExpectations as Expect} from './case-classification-expectations';
 
@@ -852,7 +852,7 @@ describe('quantic-case-classification', () => {
 
       cy.visit(pageUrl, {
         onBeforeLoad(win) {
-          stubConsoleWarning(win);
+          spyConsoleWarning(win);
         },
       });
       configure({

@@ -1,7 +1,7 @@
 describe('smoke test', () => {
   beforeEach(() => {
     cy.window().then((win) => {
-      cy.stub(win.console, 'error').as('consoleError');
+      cy.spy(win.console, 'error').as('consoleError');
     });
   });
 

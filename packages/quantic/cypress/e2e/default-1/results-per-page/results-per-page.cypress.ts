@@ -6,7 +6,7 @@ import {
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
-import {stubConsoleError} from '../../console-selectors';
+import {spyConsoleError} from '../../console-selectors';
 import {ResultsPerPageActions as Actions} from './results-per-page-actions';
 import {ResultsPerPageExpectations as Expect} from './results-per-page-expectations';
 
@@ -29,7 +29,7 @@ describe('quantic-result-per-page', () => {
     interceptSearch();
     cy.visit(pageUrl, {
       onBeforeLoad(win) {
-        stubConsoleError(win);
+        spyConsoleError(win);
       },
     });
     configure(options);

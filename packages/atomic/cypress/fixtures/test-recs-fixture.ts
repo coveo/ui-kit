@@ -8,8 +8,8 @@ import {
   modifySearchResponses,
   RouteAlias,
   sampleConfig,
-  setupIntercept,
-  stubConsole,
+  setupIntercepts,
+  spyConsole,
   UrlParts,
   TestFeature,
   SearchResponseModifier,
@@ -141,8 +141,9 @@ export class TestRecsFixture {
 
   public init() {
     cy.visit(buildTestUrl());
-    setupIntercept();
-    stubConsole();
+    cy.injectAxe();
+    setupIntercepts();
+    spyConsole();
 
     cy.document().then((doc) => {
       doc.head.appendChild(this.style);

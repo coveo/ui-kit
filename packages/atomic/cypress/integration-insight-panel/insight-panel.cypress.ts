@@ -29,6 +29,24 @@ describe('Insight Panel test suites', () => {
         .should('have.length.at.least', 1);
     });
 
+    it('should not add any unexpected style tags', () => {
+      const numTopLevelStyleTags = 2;
+      const numLayoutStyleTags = 1;
+
+      cy.get('style').should(
+        'have.length',
+        numTopLevelStyleTags + numLayoutStyleTags
+      );
+      InsightPanelsSelectors.topLevelStyleTags().should(
+        'have.length',
+        numTopLevelStyleTags
+      );
+      InsightPanelsSelectors.layoutStyleTags().should(
+        'have.length',
+        numLayoutStyleTags
+      );
+    });
+
     it('should display results', () => {
       InsightPanelsSelectors.results()
         .should('exist')
@@ -197,7 +215,7 @@ describe('Insight Panel test suites', () => {
 
       InsightPanelsSelectors.tabPopoverButton().click();
       InsightPanelsSelectors.tabBar()
-        .find('[part="overflow-tabs"]')
+        .find('tab-popover')
         .find('[part="popover-tab"]')
         .eq(0)
         .should('have.text', 'Salesforce')

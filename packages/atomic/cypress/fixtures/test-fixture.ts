@@ -12,8 +12,8 @@ import {
   sampleConfig,
   SearchResponseModifier,
   SearchResponseModifierPredicate,
-  setupIntercept,
-  stubConsole,
+  setupIntercepts,
+  spyConsole,
   UrlParts,
   TestFeature,
   configureI18n,
@@ -188,8 +188,9 @@ export class TestFixture {
 
   public init() {
     !this.redirected && cy.visit(buildTestUrl(this.hash));
-    setupIntercept();
-    stubConsole();
+    cy.injectAxe();
+    setupIntercepts();
+    spyConsole();
 
     cy.window().then((win) => {
       Object.defineProperty(win.navigator, 'doNotTrack', {

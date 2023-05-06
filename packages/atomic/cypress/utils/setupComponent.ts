@@ -1,4 +1,4 @@
-import {sampleConfig, setupIntercept} from '../fixtures/fixture-common';
+import {sampleConfig, setupIntercepts} from '../fixtures/fixture-common';
 
 export const buildTestUrl = (hash = '') => `test.html#${hash}`;
 
@@ -22,7 +22,7 @@ export const searchEndpoint =
 // TODO: rename to setupPage (typo)
 // TODO: add options object for arguments (with urlHash, wait options)
 export function setUpPage(htmlCode: string, executeFirstSearch = true) {
-  setupIntercept();
+  setupIntercepts();
   cy.visit(buildTestUrl());
   injectComponent(htmlCode, executeFirstSearch);
   // TODO: when executeFirstSearch = true, waiting for @coveoSearch would be less flaky

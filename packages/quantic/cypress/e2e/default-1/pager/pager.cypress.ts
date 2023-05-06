@@ -11,7 +11,7 @@ import {
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
 import {scope} from '../../../reporters/detailed-collector';
-import {stubConsoleError} from '../../console-selectors';
+import {spyConsoleError} from '../../console-selectors';
 import {PagerActions as Actions} from './pager-actions';
 import {PagerExpectations as Expect} from './pager-expectations';
 
@@ -137,7 +137,7 @@ describe('quantic-pager', () => {
           interceptSearch();
           cy.visit(pageUrl, {
             onBeforeLoad(win) {
-              stubConsoleError(win);
+              spyConsoleError(win);
             },
           });
           configure({

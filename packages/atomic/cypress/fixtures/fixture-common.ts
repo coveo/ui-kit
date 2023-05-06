@@ -43,44 +43,51 @@ export const UrlParts = {
   UASearch: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/search',
 };
 
-export function stubConsole() {
+export function spyConsole() {
   cy.window().then((win) => {
-    cy.stub(win.console, 'error').as(ConsoleAliases.error.substring(1));
-    cy.stub(win.console, 'warn').as(ConsoleAliases.warn.substring(1));
-    cy.stub(win.console, 'log').as(ConsoleAliases.log.substring(1));
+    // TODO: on error also log msg using cy.log to increase visibility
+    cy.spy(win.console, 'error').as(ConsoleAliases.error.substring(1));
+    cy.spy(win.console, 'warn').as(ConsoleAliases.warn.substring(1));
+    cy.spy(win.console, 'log').as(ConsoleAliases.log.substring(1));
   });
 }
 
-export function setupIntercept() {
-  cy.intercept({
-    method: 'POST',
-    path: '**/rest/v15/analytics/*',
-  }).as(RouteAlias.UA.substring(1));
+export function setupIntercepts() {
+  function setupIntercept(
+    path: string,
+    alias: string,
+    method = 'POST',
+    checkResponse = true
+  ) {
+    cy.intercept(
+      {
+        method: method,
+        path: path,
+      },
+      (req) => {
+        req.continue((res) => {
+          // Not using expect() to allow for tests that exercise error cases
+          if (checkResponse && (res.statusCode < 200 || res.statusCode > 299)) {
+            console.error(
+              `Request error on ${req.url} : ${res.statusCode} ${res.statusMessage}`
+            );
+          }
+        });
+      }
+    ).as(alias.substring(1));
+  }
 
-  cy.intercept({
-    method: 'POST',
-    path: '**/rest/search/v2/querySuggest?*',
-  }).as(RouteAlias.QuerySuggestions.substring(1));
-
-  cy.intercept({
-    method: 'POST',
-    url: '**/rest/search/v2?*',
-  }).as(RouteAlias.Search.substring(1));
-
-  cy.intercept({
-    method: 'POST',
-    url: '**/rest/search/v2/html?*',
-  }).as(RouteAlias.Quickview.substring(1));
-
-  cy.intercept({
-    method: 'POST',
-    path: '**/rest/search/v2/facet?*',
-  }).as(RouteAlias.FacetSearch.substring(1));
-
-  cy.intercept({
-    method: 'GET',
-    path: '/build/lang/**.json',
-  }).as(RouteAlias.Locale.substring(1));
+  setupIntercept('**/rest/v15/analytics/*', RouteAlias.UA, 'POST', false);
+  setupIntercept(
+    '**/rest/search/v2/querySuggest?*',
+    RouteAlias.QuerySuggestions
+  );
+  setupIntercept('**/rest/search/v2?*', RouteAlias.Search);
+  setupIntercept('**/rest/search/v2/html?*', RouteAlias.Quickview);
+  setupIntercept('**/rest/search/v2/facet?*', RouteAlias.FacetSearch);
+  // TODO: suppress req logs for lang (as they are numerous and not that useful)
+  //  once following issue is addressed https://github.com/cypress-io/cypress/issues/26069
+  setupIntercept('/build/lang/**.json', RouteAlias.Locale, 'GET');
 }
 
 export function getUABody() {
