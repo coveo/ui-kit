@@ -33,14 +33,20 @@ function buildDependencyGraph(rootNode) {
   function addWorkspaceDependencies(node) {
     const dependencies = getWorkspaceDependencies(node);
     for (const dependency of dependencies) {
-      graph.addDependency(node.name, dependency.name);
+      if (!node.package.name || !dependency.package.name) {
+        throw 'Workspaces must all have a name.';
+      }
+      graph.addDependency(node.package.name, dependency.package.name);
       addWorkspaceDependencies(dependency);
     }
   }
 
   const workspaces = getWorkspaceDependencies(rootNode);
   for (const workspace of workspaces) {
-    graph.addNode(workspace.name, workspace);
+    if (!workspace.package.name) {
+      throw 'Workspaces must all have a name.';
+    }
+    graph.addNode(workspace.package.name, workspace);
   }
   for (const workspace of workspaces) {
     addWorkspaceDependencies(workspace);
@@ -48,27 +54,33 @@ function buildDependencyGraph(rootNode) {
   return graph;
 }
 
+async function initArborist() {
+  const arb = new Arborist({
+    savePrefix: '',
+    path: rootFolder,
+    registry: process.env.npm_config_registry,
+    _authToken: 'invalid', // TODO: Remove when removing Lerna
+  });
+  console.log('Loading virtual tree.');
+  await arb.loadVirtual();
+  return arb;
+}
+
 const rootFolder = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
-const arb = new Arborist({
-  savePrefix: '',
-  path: rootFolder,
-  registry: process.env.npm_config_registry,
-  _authToken: 'invalid', // TODO: Remove when removing Lerna
-});
-console.log('Loading virtual tree.');
-await arb.loadVirtual();
-const packagesToUpdate = buildDependencyGraph(
-  /** @type {Arborist.Node} */ (arb.virtualTree)
-).overallOrder();
-console.log(
-  'Building ideal tree. The following packages will be updated:',
-  packagesToUpdate
-);
-await arb.buildIdealTree({
-  update: {
-    names: packagesToUpdate,
-  },
-});
-console.log('Applying ideal tree.');
-await arb.reify();
+const graph = buildDependencyGraph(
+  /** @type {Arborist.Node} */ ((await initArborist()).virtualTree)
+)
+const packagesToUpdate = graph.overallOrder();
+for (const packageName of packagesToUpdate) {
+  console.log('Updating package-lock for', packageName);
+  const arb = await initArborist();
+  console.log('Building ideal tree');
+  await arb.buildIdealTree({
+    update: {
+      names: [graph.getNodeData(packageName).name, packageName],
+    },
+  });
+  console.log('Applying ideal tree.');
+  await arb.reify();
+}
