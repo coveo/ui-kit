@@ -336,14 +336,6 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
-   * Whether there are new suggestions available.
-   * @returns {boolean}
-   */
-  get hasNewSuggestions() {
-    return this.maxSuggestions > 0 && this.newSuggestionsReceived;
-  }
-
-  /**
    * Shows the select input.
    * @returns {void}
    */
