@@ -1813,7 +1813,7 @@ export namespace Components {
     interface TabBar {
     }
     interface TabPopover {
-        "hide": boolean;
+        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
         "togglePopover": () => Promise<void>;
     }
 }
@@ -4472,7 +4472,6 @@ declare namespace LocalJSX {
     interface TabBar {
     }
     interface TabPopover {
-        "hide"?: boolean;
     }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;

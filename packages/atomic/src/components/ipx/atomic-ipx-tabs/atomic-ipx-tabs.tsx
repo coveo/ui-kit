@@ -10,7 +10,6 @@ import {Bindings} from '../../search/atomic-search-interface/atomic-search-inter
  */
 @Component({
   tag: 'atomic-ipx-tabs',
-  styleUrl: './atomic-ipx-tabs.pcss',
 })
 export class AtomicIPXTabs implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
