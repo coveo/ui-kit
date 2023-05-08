@@ -1,5 +1,4 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
-import * as TestUtils from './test';
 import * as HighlightUtils from './utils/highlight';
 
 polyfillCryptoNode();
@@ -62,7 +61,7 @@ export * from './features/analytics/index';
 
 // Types & Helpers
 export {API_DATE_FORMAT} from './api/search/date/date-format';
-export {TestUtils, HighlightUtils};
+export {HighlightUtils};
 export type {Result} from './api/search/search/result';
 export type {FieldDescription} from './api/search/fields/fields-response';
 export type {Raw} from './api/search/search/raw';
