@@ -21,7 +21,10 @@ function buildDependencyGraph(rootNode) {
       node.edgesOut instanceof Map
         ? Array.from(node.edgesOut.values())
         : node.edgesOut;
-    const workspaces = edgesOut.filter((edge) => /** @type {Arborist.Edge & {workspace: boolean}} */ (edge).workspace);
+    const workspaces = edgesOut.filter(
+      (edge) =>
+        /** @type {Arborist.Edge & {workspace: boolean}} */ (edge).workspace
+    );
     return workspaces.map((edge) =>
       edge.to instanceof Arborist.Link ? edge.to.target : edge.to
     );
@@ -70,7 +73,7 @@ const rootFolder = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 const graph = buildDependencyGraph(
   /** @type {Arborist.Node} */ ((await initArborist()).virtualTree)
-)
+);
 const packagesToUpdate = graph.overallOrder();
 for (const packageName of packagesToUpdate) {
   console.log('Updating package-lock for', packageName);
