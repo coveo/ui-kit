@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.0...@coveo/headless@2.16.1) (2023-05-08)
+
+**Note:** Version bump only for package @coveo/headless
+
+# [2.16.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.15.0...@coveo/headless@2.16.0) (2023-05-04)
+
+### Bug Fixes
+
+- **atomic:** support limited version of quickview when sandbox allow-same-origin not present ([#2866](https://github.com/coveo/ui-kit/issues/2866)) ([83dd211](https://github.com/coveo/ui-kit/commit/83dd211932b325442086360524d5089067bcece5))
+
+### Features
+
+- **headless:** smart snippet questions list controller created for the insight use case ([#2823](https://github.com/coveo/ui-kit/issues/2823)) ([030ff0b](https://github.com/coveo/ui-kit/commit/030ff0b27efcf07f72eac986958562022df73f40))
+
 # [2.15.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.14.3...@coveo/headless@2.15.0) (2023-04-27)
 
 ### Features

@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.28.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.3...@coveo/atomic@2.28.4) (2023-05-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.28.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.2...@coveo/atomic@2.28.3) (2023-05-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.28.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.1...@coveo/atomic@2.28.2) (2023-05-04)
+
+### Bug Fixes
+
+- **atomic:** support limited version of quickview when sandbox allow-same-origin not present ([#2866](https://github.com/coveo/ui-kit/issues/2866)) ([83dd211](https://github.com/coveo/ui-kit/commit/83dd211932b325442086360524d5089067bcece5))
+
+## [2.28.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.0...@coveo/atomic@2.28.1) (2023-05-04)
+
+**Note:** Version bump only for package @coveo/atomic
+
+# [2.28.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.6...@coveo/atomic@2.28.0) (2023-05-02)
+
+### Bug Fixes
+
+- **atomic:** fixed leaky styling from tab components ([#2856](https://github.com/coveo/ui-kit/issues/2856)) ([ab3229e](https://github.com/coveo/ui-kit/commit/ab3229e322af5e4965b55b2160e0c8daaa63300d))
+
+### Features
+
+- **atomic:** add styling to the ipx scroll bar ([#2830](https://github.com/coveo/ui-kit/issues/2830)) ([58f4456](https://github.com/coveo/ui-kit/commit/58f4456aa69beea0d2e0a3fce6a9debeb03bdfba))
+
 ## [2.27.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.27.5...@coveo/atomic@2.27.6) (2023-05-01)
 
 ### Bug Fixes
