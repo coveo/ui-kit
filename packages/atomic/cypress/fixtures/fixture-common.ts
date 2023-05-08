@@ -77,6 +77,7 @@ export function setupIntercepts() {
     ).as(alias.substring(1));
   }
 
+  // TODO: [KIT-2437] Investigate analytics errors from cypress tests
   setupIntercept('**/rest/v15/analytics/*', RouteAlias.UA, 'POST', false);
   setupIntercept(
     '**/rest/search/v2/querySuggest?*',
