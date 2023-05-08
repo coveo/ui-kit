@@ -1,10 +1,10 @@
 # Coveo Quantic
 
 ## Using the Library
+
 [How to use the Coveo Quantic Library](https://docs.coveo.com/en/quantic/latest/)
 
 [Install Coveo Quantic as a Salesforce unlocked package](https://docs.coveo.com/en/quantic/latest/usage/#install-quantic)
-
 
 ## Contributing
 
@@ -24,9 +24,9 @@
 
 ### Install VSCode Extension
 
-[vscode Salesforce Extension Pack](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode)
+Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode) if you do not want use the equivalent `sfdx-cli` commands to setup.
 
-**Note** Make sure you open the quantic project at the root (`/packages/quantic/`) in vscode in order for the entension to work properly.
+**Note** Make sure you open the quantic project at the root (`/packages/quantic/`) in vscode in order for the extension to work properly.
 
 ### Enable Dev Hub in Your Salesforce Organization
 

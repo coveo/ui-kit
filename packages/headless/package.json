@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.16.0",
+  "version": "2.16.1",
   "files": [
     "dist/",
     "recommendation/",
@@ -58,7 +58,7 @@
     "exponential-backoff": "3.1.0",
     "fast-equals": "2.0.4",
     "node-abort-controller": "^1.1.0",
-    "pino": "6.14.0",
+    "pino": "8.11.0",
     "redux": "4.2.0",
     "redux-mock-store": "1.5.4",
     "redux-thunk": "2.4.1",
