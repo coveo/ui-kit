@@ -11,7 +11,8 @@
     "semver": "7.3.8",
     "ts-dedent": "2.2.0",
     "@coveo/verdaccio-starter": "1.0.0",
-    "@npmcli/arborist": "6.2.8"
+    "@npmcli/arborist": "6.2.8",
+    "glob": "10.2.2"
   },
   "devDependencies": {
     "@types/conventional-changelog-writer": "^4.0.2",
