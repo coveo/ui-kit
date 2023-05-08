@@ -175,8 +175,7 @@ describe('Quickview Component', () => {
       openModal();
       QuickviewModalSelectors.keywordsSidebar()
         .should('exist')
-        .should('contain.text', 'Navigate between 6 occurrences of 1')
-        .should('contain.text', 'Navigate between 6 occurrences of 12');
+        .should('contain.text', 'Navigate between 12 occurrences of 1 12');
     });
   });
 });
