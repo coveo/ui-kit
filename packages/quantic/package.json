@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "2.22.3",
+  "version": "2.22.5",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -25,9 +25,9 @@
     "test:unit:watch": "lwc-jest --watch",
     "test:unit:coverage": "lwc-jest --coverage",
     "validate:types": "tsc",
-    "e2e:watch": "npx cypress open",
-    "e2e": "npx cypress run --browser chrome",
-    "e2e:detailed": "npx cypress run --browser chrome --headless --reporter cypress/reporters/detailed-reporter.js",
+    "e2e:watch": "cypress open --browser chrome --e2e",
+    "e2e": "cypress run --browser chrome",
+    "e2e:detailed": "cypress run --browser chrome --headless --reporter cypress/reporters/detailed-reporter.js",
     "setup:examples": "../../node_modules/.bin/ts-node scripts/build/deploy-community.ts",
     "deploy:main": "../../node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/main",
     "deploy:examples": "../../node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/examples",
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "0.43.1",
-    "@coveo/headless": "2.16.0"
+    "@coveo/headless": "2.16.1"
   },
   "engines": {
     "node": ">=14.0.0"
