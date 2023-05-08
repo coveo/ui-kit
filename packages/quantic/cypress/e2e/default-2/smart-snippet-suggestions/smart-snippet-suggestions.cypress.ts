@@ -1,9 +1,15 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
   interceptSearch,
   mockSearchWithSmartSnippetSuggestions,
   mockSearchWithoutSmartSnippetSuggestions,
 } from '../../../page-objects/search';
+import {
+  useCaseEnum,
+  useCaseParamTest,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../../page-objects/use-case';
 import {scope} from '../../../reporters/detailed-collector';
 import {stubConsoleError} from '../../console-selectors';
 import {SmartSnippetSuggestionsActions as Actions} from './smart-snippet-suggestions-actions';
@@ -42,101 +48,128 @@ const exampleRelatedQuestions = [
   },
 ];
 
+interface SmartSnippetSuggestionsOptions {
+  useCase: string;
+}
+
 describe('quantic-smart-snippet-suggestions', () => {
   const pageUrl = 's/quantic-smart-snippet-suggestions';
 
-  function visitPage(withoutSmartSnippet = false) {
+  function visitPage(
+    options: Partial<SmartSnippetSuggestionsOptions>,
+    withoutSmartSnippet = false
+  ) {
     interceptSearch();
     if (withoutSmartSnippet) {
-      mockSearchWithoutSmartSnippetSuggestions();
+      mockSearchWithoutSmartSnippetSuggestions(options.useCase);
     } else {
-      mockSearchWithSmartSnippetSuggestions(exampleRelatedQuestions);
+      mockSearchWithSmartSnippetSuggestions(
+        exampleRelatedQuestions,
+        options.useCase
+      );
     }
     cy.visit(pageUrl, {
       onBeforeLoad(win) {
         stubConsoleError(win);
       },
     });
-    configure();
+    configure(options);
+    if (options.useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
+      performSearch();
+    }
   }
 
-  describe('when the query does not return any smart snippet suggestions', () => {
-    it('should not display the smart snippet suggestions', () => {
-      visitPage(true);
+  useCaseParamTest.forEach((param) => {
+    describe(param.label, () => {
+      describe('when the query does not return any smart snippet suggestions', () => {
+        it('should not display the smart snippet suggestions', () => {
+          visitPage({useCase: param.useCase}, true);
 
-      scope('when loading the page', () => {
-        Expect.displaySmartSnippetSuggestionsCard(false);
-      });
-    });
-  });
-
-  describe('when the query returns smart snippet suggestions', () => {
-    it('should properly display the smart snippet suggestions', () => {
-      visitPage();
-
-      scope('when loading the page', () => {
-        Expect.displaySmartSnippetSuggestionsCard(true);
-        exampleRelatedQuestions.forEach((suggestion, index) => {
-          Actions.toggleSuggestion(index);
-          Expect.logExpandSmartSnippetSuggestion({
-            answerSnippet: suggestion.answerSnippet,
-            question: suggestion.question,
-            documentId: suggestion.documentId,
-          });
-          Expect.displaySmartSnippetSuggestionsQuestion(
-            index,
-            suggestion.question
-          );
-          Expect.displaySmartSnippetSuggestionsAnswer(
-            index,
-            suggestion.answerSnippet
-          );
-          Expect.displaySmartSnippetSuggestionsSourceUri(index, suggestion.uri);
-          Expect.displaySmartSnippetSuggestionsSourceTitle(
-            index,
-            suggestion.title
-          );
-          Actions.toggleSuggestion(index);
-          Expect.logCollapseSmartSnippetSuggestion({
-            answerSnippet: suggestion.answerSnippet,
-            question: suggestion.question,
-            documentId: suggestion.documentId,
+          scope('when loading the page', () => {
+            Expect.displaySmartSnippetSuggestionsCard(false);
           });
         });
       });
 
-      scope(
-        'when the source title of one of the suggestions is clicked',
-        () => {
-          const index = 0;
-          Actions.toggleSuggestion(index);
-          Actions.clickSmartSnippetSuggestionsSourceTitle(index);
-          Expect.logOpenSmartSnippetSuggestionSource({
-            ...exampleRelatedQuestions[index],
-            position: index + 1,
+      describe('when the query returns smart snippet suggestions', () => {
+        it('should properly display the smart snippet suggestions', () => {
+          visitPage({useCase: param.useCase});
+
+          scope('when loading the page', () => {
+            Expect.displaySmartSnippetSuggestionsCard(true);
+            exampleRelatedQuestions.forEach((suggestion, index) => {
+              Actions.toggleSuggestion(index);
+              Expect.logExpandSmartSnippetSuggestion({
+                answerSnippet: suggestion.answerSnippet,
+                question: suggestion.question,
+                documentId: suggestion.documentId,
+              });
+              Expect.displaySmartSnippetSuggestionsQuestion(
+                index,
+                suggestion.question
+              );
+              Expect.displaySmartSnippetSuggestionsAnswer(
+                index,
+                suggestion.answerSnippet
+              );
+              Expect.displaySmartSnippetSuggestionsSourceUri(
+                index,
+                suggestion.uri
+              );
+              Expect.displaySmartSnippetSuggestionsSourceTitle(
+                index,
+                suggestion.title
+              );
+              Actions.toggleSuggestion(index);
+              Expect.logCollapseSmartSnippetSuggestion({
+                answerSnippet: suggestion.answerSnippet,
+                question: suggestion.question,
+                documentId: suggestion.documentId,
+              });
+            });
           });
-        }
-      );
 
-      scope('when the source uri of one of the suggestions is clicked', () => {
-        const index = 0;
-        visitPage();
-        Actions.toggleSuggestion(index);
-        Actions.clickSmartSnippetSuggestionsSourceUri(index);
-        Expect.logOpenSmartSnippetSuggestionSource({
-          ...exampleRelatedQuestions[index],
-          position: index + 1,
-        });
-      });
+          scope(
+            'when the source title of one of the suggestions is clicked',
+            () => {
+              const index = 0;
+              Actions.toggleSuggestion(index);
+              Actions.clickSmartSnippetSuggestionsSourceTitle(index);
+              Expect.logOpenSmartSnippetSuggestionSource({
+                ...exampleRelatedQuestions[index],
+                position: index + 1,
+              });
+            }
+          );
 
-      scope('when an inline link of one of the suggestions is clicked', () => {
-        const index = 0;
-        Actions.clickSmartSnippetSuggestionsInlineLink(index);
-        Expect.logOpenSmartSnippetSuggestionInlineLink({
-          ...exampleRelatedQuestions[index],
-          position: index + 1,
-          linkUrl: exampleInlineLinkUrl,
-          linkText: exampleInlineLinkText,
+          scope(
+            'when the source uri of one of the suggestions is clicked',
+            () => {
+              const index = 0;
+              visitPage({useCase: param.useCase});
+              Actions.toggleSuggestion(index);
+              Actions.clickSmartSnippetSuggestionsSourceUri(index);
+              Expect.logOpenSmartSnippetSuggestionSource({
+                ...exampleRelatedQuestions[index],
+                position: index + 1,
+              });
+            }
+          );
+
+          scope(
+            'when an inline link of one of the suggestions is clicked',
+            () => {
+              const index = 0;
+              Actions.clickSmartSnippetSuggestionsInlineLink(index);
+              Expect.logOpenSmartSnippetSuggestionInlineLink({
+                ...exampleRelatedQuestions[index],
+                position: index + 1,
+                linkUrl: exampleInlineLinkUrl,
+                linkText: exampleInlineLinkText,
+              });
+            }
+          );
         });
       });
     });
