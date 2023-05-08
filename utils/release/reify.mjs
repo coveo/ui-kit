@@ -77,7 +77,7 @@ const graph = buildDependencyGraph(
 for (const packageToUpdate of graph.overallOrder()) {
   const names = [
     packageToUpdate,
-    ...graph.dependenciesOf(packageToUpdate),
+    ...graph.dependantsOf(packageToUpdate),
   ].flatMap((packageName) => [
     graph.getNodeData(packageName).name,
     packageName,
