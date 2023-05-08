@@ -5,7 +5,7 @@
     "release:phase1": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx -p=@coveo/release npm-publish",
+        "command": "npx -p=@coveo/release bump",
         "cwd": "packages/atomic-angular/projects/atomic-angular"
       }
     },

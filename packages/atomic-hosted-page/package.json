@@ -26,7 +26,7 @@
     "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e": "cypress run --browser chrome",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
-    "release:phase1": "npx -p=@coveo/release npm-publish",
+    "release:phase1": "npx -p=@coveo/release bump",
     "publish:npm:release": "node ../../scripts/deploy/publish.mjs release",
     "publish:npm:prerelease": "node ../../scripts/deploy/publish.mjs prerelease",
     "promote:npm:beta": "node ../../scripts/deploy/update-npm-tag.mjs beta",
