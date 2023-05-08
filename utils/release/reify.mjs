@@ -21,7 +21,7 @@ function buildDependencyGraph(rootNode) {
       node.edgesOut instanceof Map
         ? Array.from(node.edgesOut.values())
         : node.edgesOut;
-    const workspaces = edgesOut.filter((edge) => edge.workspace);
+    const workspaces = edgesOut.filter((edge) => /** @type {Arborist.Edge & {workspace: boolean}} */ (edge).workspace);
     return workspaces.map((edge) =>
       edge.to instanceof Arborist.Link ? edge.to.target : edge.to
     );
