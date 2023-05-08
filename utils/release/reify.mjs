@@ -23,7 +23,7 @@ function buildDependencyGraph(rootNode) {
         : node.edgesOut;
     const workspaces = edgesOut.filter(
       (edge) =>
-        /** @type {Arborist.Edge & {workspace: boolean}} */ (edge).workspace
+        edge.to.package.name && rootNode.workspaces?.has(edge.to.package.name)
     );
     return workspaces.map((edge) =>
       edge.to instanceof Arborist.Link ? edge.to.target : edge.to
@@ -74,14 +74,20 @@ const rootFolder = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const graph = buildDependencyGraph(
   /** @type {Arborist.Node} */ ((await initArborist()).virtualTree)
 );
-const packagesToUpdate = graph.overallOrder();
-for (const packageName of packagesToUpdate) {
-  console.log('Updating package-lock for', packageName);
+for (const packageToUpdate of graph.overallOrder()) {
+  const names = [
+    packageToUpdate,
+    ...graph.dependenciesOf(packageToUpdate),
+  ].flatMap((packageName) => [
+    graph.getNodeData(packageName).name,
+    packageName,
+  ]);
+  console.log('Updating package-lock for', names);
   const arb = await initArborist();
   console.log('Building ideal tree');
   await arb.buildIdealTree({
     update: {
-      names: [graph.getNodeData(packageName).name, packageName],
+      names,
     },
   });
   console.log('Applying ideal tree.');
