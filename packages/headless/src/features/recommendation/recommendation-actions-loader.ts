@@ -1,7 +1,7 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
-import {recommendation} from '../../app/recommendation-reducers';
+import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice';
 import {
   getRecommendations,
   GetRecommendationsThunkReturn,
