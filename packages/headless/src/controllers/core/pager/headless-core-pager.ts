@@ -1,6 +1,7 @@
 import {NumberValue, Schema} from '@coveo/bueno';
+import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {configuration, pagination} from '../../../app/reducers';
+import {pagination} from '../../../app/reducers';
 import {
   nextPage,
   previousPage,

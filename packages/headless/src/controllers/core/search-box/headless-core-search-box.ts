@@ -1,12 +1,7 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../..';
-import {
-  configuration,
-  query,
-  querySet,
-  querySuggest,
-  search,
-} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {query, querySet, querySuggest, search} from '../../../app/reducers';
 import {
   InsightAction,
   SearchAction,

@@ -1,7 +1,8 @@
 import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
 import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client';
+import {configuration} from '../../app/common-reducers';
 import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine';
-import {configuration, productListing} from '../../app/reducers';
+import {productListing} from '../../app/reducers';
 import {
   fetchProductListing,
   setAdditionalFields,

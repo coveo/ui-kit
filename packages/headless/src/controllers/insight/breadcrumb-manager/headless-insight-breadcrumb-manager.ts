@@ -1,7 +1,7 @@
+import {configuration} from '../../../app/common-reducers';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {
   categoryFacetSet,
-  configuration,
   dateFacetSet,
   facetSet,
   numericFacetSet,

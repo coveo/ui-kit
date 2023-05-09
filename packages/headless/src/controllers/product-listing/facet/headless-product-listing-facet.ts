@@ -1,6 +1,7 @@
+import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {configuration, facetSearchSet, facetSet} from '../../../app/reducers';
+import {facetSearchSet, facetSet} from '../../../app/reducers';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {FacetValueState} from '../../../features/facets/facet-api/value';

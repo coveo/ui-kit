@@ -1,4 +1,5 @@
-import {configuration, sort} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {sort} from '../../../app/reducers';
 import {updatePage} from '../../../features/pagination/pagination-actions';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {

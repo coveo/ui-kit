@@ -4,7 +4,6 @@ import {caseAssistConfigurationReducer} from '../features/case-assist-configurat
 import {caseContextReducer} from '../features/case-context/case-context-slice';
 import {caseFieldReducer} from '../features/case-field/case-field-slice';
 import {caseInputReducer} from '../features/case-input/case-input-slice';
-import {configurationReducer} from '../features/configuration/configuration-slice';
 import {contextReducer} from '../features/context/context-slice';
 import {debugReducer} from '../features/debug/debug-slice';
 import {versionReducer} from '../features/debug/version-slice';
@@ -49,7 +48,6 @@ import {tabSetReducer} from '../features/tab-set/tab-set-slice';
 import {triggerReducer} from '../features/triggers/triggers-slice';
 import {undoable} from './undoable';
 
-export const configuration = configurationReducer;
 export const pagination = paginationReducer;
 export const facetSet = facetSetReducer;
 export const facetSearchSet = specificFacetSearchSetReducer;
