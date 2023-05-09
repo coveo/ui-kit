@@ -1,5 +1,9 @@
 import {Result} from '../../api/search/search/result';
-import {ClickAction, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {
+  ClickAction,
+  CustomAction,
+  makeAnalyticsAction,
+} from '../analytics/analytics-utils';
 import {
   AnalyticsType,
   documentIdentifier,
@@ -21,10 +25,16 @@ export const logShowMoreFoldedResults = (result: Result): ClickAction =>
     }
   );
 
-export const logShowLessFoldedResults = makeAnalyticsAction(
-  'analytics/folding/showLess',
-  AnalyticsType.Custom,
-  (client) => {
-    return client.makeShowLessFoldedResults();
-  }
-);
+export const logShowLessFoldedResults = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/folding/showLess',
+    AnalyticsType.Custom,
+    (client) => {
+      return client.makeShowLessFoldedResults();
+    }
+  );
+
+export const foldedResultAnalyticsClient = {
+  logShowMoreFoldedResults,
+  logShowLessFoldedResults,
+};
