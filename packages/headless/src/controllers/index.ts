@@ -300,6 +300,8 @@ export type {
   FoldedResultListOptions,
   FoldedResultListProps,
   FoldedResultListState,
+  CoreFoldedResultList,
+  CoreFoldedResultListState,
 } from './folded-result-list/headless-folded-result-list';
 export {buildFoldedResultList} from './folded-result-list/headless-folded-result-list';
 

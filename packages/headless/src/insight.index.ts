@@ -37,6 +37,7 @@ export * from './features/fields/fields-actions-loader';
 export * from './features/attached-results/attached-results-actions-loader';
 export * from './features/analytics/generic-analytics-actions-loader';
 export * from './features/question-answering/question-answering-actions-loader';
+export * from './features/folding/folding-actions-loader';
 
 // Controllers
 export type {
@@ -205,6 +206,16 @@ export type {
   ResultList,
 } from './controllers/insight/result-list/headless-insight-result-list';
 export {buildResultList} from './controllers/insight/result-list/headless-insight-result-list';
+
+export type {
+  FoldedResultListOptions,
+  FoldedResultListProps,
+  FoldedResultListState,
+  FoldedResultList,
+  CoreFoldedResultList,
+  CoreFoldedResultListState,
+} from './controllers/insight/folded-result-list/headless-insight-folded-result-list';
+export {buildFoldedResultList} from './controllers/insight/folded-result-list/headless-insight-folded-result-list';
 
 export type {
   InsightInteractiveResultOptions,
