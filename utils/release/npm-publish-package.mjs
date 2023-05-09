@@ -12,7 +12,7 @@ const {name, version} = JSON.parse(
 if (!name || !version) {
   throw 'Expected name and version to exist in package.json.';
 }
-const tagToPublish = isPrerelease ? 'alpha' : 'latest';
+const tagToPublish = isPrerelease ? 'alpha' : 'beta';
 await npmPublish('.', {tag: tagToPublish});
 await retry(
   async () => {
