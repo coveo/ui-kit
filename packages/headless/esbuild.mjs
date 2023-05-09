@@ -1,11 +1,12 @@
 import {build} from 'esbuild';
 import alias from 'esbuild-plugin-alias';
 import {readFileSync, promises} from 'node:fs';
-import {resolve} from 'node:path';
-import resolveModule from 'resolve';
+import {createRequire} from 'node:module';
+import {dirname, resolve} from 'node:path';
 import {umdWrapper} from '../../scripts/bundle/umd.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
+const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
 const useCaseEntries = {
@@ -109,6 +110,15 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
 });
 
 /**
+ * @param {string} moduleName
+ */
+function resolveEsm(moduleName) {
+  const packageJsonPath = require.resolve(`${moduleName}/package.json`);
+  const packageJson = require(packageJsonPath);
+  return resolve(dirname(packageJsonPath), packageJson['module'] || packageJson['main']);
+}
+
+/**
  * @param {import('esbuild').BuildOptions} options
  * @returns {Promise<import('esbuild').BuildResult>}
  */
@@ -121,9 +131,7 @@ function buildBrowserConfig(options) {
     external: ['crypto'],
     plugins: [
       alias({
-        'coveo.analytics': resolveModule.sync('coveo.analytics', {
-          packageFilter: (pkg) => ({...pkg, main: pkg.module}),
-        }),
+        'coveo.analytics': resolveEsm('coveo.analytics'),
         'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
       }),
     ],
@@ -164,7 +172,7 @@ function buildNodeConfig(options) {
     platform: 'node',
     plugins: [
       alias({
-        'coveo.analytics': resolveModule.sync('coveo.analytics'),
+        'coveo.analytics': require.resolve('coveo.analytics'),
       }),
     ],
     ...options,
