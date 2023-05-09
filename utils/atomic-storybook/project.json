@@ -46,7 +46,11 @@
       }
     },
     "dev": {
-      "dependsOn": ["^build", "validate:storybook"],
+      "dependsOn": [
+        "^build",
+        "validate:storybook",
+        "build:storybook:assets-list"
+      ],
       "inputs": [],
       "outputs": [],
       "executor": "nx:run-commands",
