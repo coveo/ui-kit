@@ -1,6 +1,7 @@
 import {Schema} from '@coveo/bueno';
 import {Result} from '../../api/search/search/result';
-import {search, configuration, folding, query} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
+import {search, folding, query} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   foldingOptionsSchemaDefinition,

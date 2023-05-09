@@ -2,8 +2,9 @@ import {
   QueryCorrection,
   WordCorrection,
 } from '../../../api/search/search/query-corrections';
+import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {configuration, didYouMean} from '../../../app/reducers';
+import {didYouMean} from '../../../app/reducers';
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,

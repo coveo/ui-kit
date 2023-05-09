@@ -1,5 +1,6 @@
+import {configuration} from '../../../../app/common-reducers';
 import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
-import {configuration, dateFacetSet, search} from '../../../../app/reducers';
+import {dateFacetSet, search} from '../../../../app/reducers';
 import {
   logFacetClearAll,
   logFacetSelect,

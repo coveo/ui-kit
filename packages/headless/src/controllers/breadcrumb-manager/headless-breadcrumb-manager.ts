@@ -1,6 +1,6 @@
+import {configuration} from '../../app/common-reducers';
 import {
   categoryFacetSet,
-  configuration,
   dateFacetSet,
   facetSet,
   numericFacetSet,

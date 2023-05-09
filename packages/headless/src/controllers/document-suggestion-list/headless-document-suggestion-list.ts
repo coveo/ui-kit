@@ -1,9 +1,9 @@
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
 import {DocumentSuggestionResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
+import {configuration} from '../../app/common-reducers';
 import {
   caseAssistConfiguration,
-  configuration,
   caseInput,
   caseField,
   documentSuggestion,

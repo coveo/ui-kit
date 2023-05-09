@@ -1,8 +1,8 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {Result} from '../../api/search/search/result';
+import {configuration} from '../../app/common-reducers';
 import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
 import {recommendation} from '../../app/recommendation-reducers';
-import {configuration} from '../../app/reducers';
 import {loadPaginationActions} from '../../features';
 import {
   getRecommendations,

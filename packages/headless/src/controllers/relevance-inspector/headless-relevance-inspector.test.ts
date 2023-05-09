@@ -1,4 +1,5 @@
-import {configuration, debug, search, fields} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
+import {debug, search, fields} from '../../app/reducers';
 import {disableDebug, enableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
 import {

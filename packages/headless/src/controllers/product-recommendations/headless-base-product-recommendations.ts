@@ -1,7 +1,7 @@
 import {ArrayValue, NumberValue, Schema, SchemaValues} from '@coveo/bueno';
+import {configuration} from '../../app/common-reducers';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 import {productRecommendations} from '../../app/product-recommendation-reducers';
-import {configuration} from '../../app/reducers';
 import {
   getProductRecommendations as updateProductRecommendations,
   setProductRecommendationsSkus,
