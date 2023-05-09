@@ -22,6 +22,7 @@
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs"
   },
   "dependencies": {
+    "coveo.analytics": "^2.27.12",
     "patch-package": "6.4.7"
   },
   "devDependencies": {
