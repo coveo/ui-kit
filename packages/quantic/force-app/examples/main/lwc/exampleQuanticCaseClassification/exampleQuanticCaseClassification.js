@@ -65,14 +65,14 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
       attribute: 'fetchClassificationOnChange',
       label: 'Fetch classifications on field value change',
       description:
-        'Whether the QuanticCaseClassification component should automatically fetch new case classifications when the input field values changes',
+        'Whether the QuanticCaseClassification component should automatically fetch new case classifications when its field values changes',
       defaultValue: false,
     },
     {
       attribute: 'fetchDocumentSuggestionOnChange',
       label: 'Fetch document suggestion on field value change',
       description:
-        'Whether the QuanticCaseClassification component should automatically fetch new document suggestions when the input field values changes',
+        'Whether the QuanticCaseClassification component should automatically fetch new document suggestions when its field values changes',
       defaultValue: false,
     },
   ];

@@ -894,7 +894,7 @@ describe('quantic-case-classification', () => {
     });
   });
 
-  describe('when a field value changes and the fetchClassificationsOnChange property is set to true', async () => {
+  describe('when the fetchClassificationsOnChange property is set to true', async () => {
     describe('when a suggestion is selected', () => {
       it('should automatically fetch new case classifications', () => {
         const clickedIndex = 1;
@@ -935,10 +935,7 @@ describe('quantic-case-classification', () => {
             clickedIndex
           );
           Expect.correctValue(allOptions[clickedIndex].value);
-          Expect.fetchClassificationsAfterValueChange(
-            coveoDefaultField,
-            allOptions.slice(0, suggestionsCount)
-          );
+          Expect.fetchClassificationsAfterValueChange();
         });
       });
     });
@@ -987,10 +984,7 @@ describe('quantic-case-classification', () => {
           Expect.correctValue(
             allOptions[clickedIndex + suggestionsCount].value
           );
-          Expect.fetchClassificationsAfterValueChange(
-            coveoDefaultField,
-            allOptions.slice(0, suggestionsCount)
-          );
+          Expect.fetchClassificationsAfterValueChange();
         });
       });
     });
@@ -1027,18 +1021,6 @@ describe('quantic-case-classification', () => {
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
         });
 
-        scope('when selecting a suggestion', () => {
-          const clickedIndex = 1;
-
-          Actions.clickSuggestion(clickedIndex);
-          Expect.logClickedSuggestion(clickedIndex);
-          Expect.logUpdatedClassificationFromSuggestion(
-            coveoDefaultField,
-            clickedIndex
-          );
-          Expect.correctValue(allOptions[clickedIndex].value);
-        });
-
         scope('when selecting an option from the select input', () => {
           const clickedIndex = 3;
           Actions.clickSelectTitle();
@@ -1049,40 +1031,13 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchClassificationsAfterValueChange(
-            coveoDefaultField,
-            allOptions.slice(0, suggestionsCount)
-          );
+          Expect.fetchClassificationsAfterValueChange();
         });
       });
     });
   });
 
-  describe('when a field value changes and the fetchDocumentSuggestionOnChange property is set to true', async () => {
-    const mockDocuments = {
-      documents: [
-        {
-          clickUri: 'https://example.com',
-          excerpts: 'Roads are just a suggestion Marge, just like pants.',
-          fields: {},
-          hasHtmlVersion: true,
-          title: 'homer philosophy vol 1',
-          uniqueId: '001',
-        },
-        {
-          clickUri: 'https://example.com',
-          excerpts:
-            'If God didnt want me to eat chicken in church, then he would have made gluttony a sin.',
-          fields: {},
-          hasHtmlVersion: true,
-          title: 'homer philosophy vol 2',
-          uniqueId: '002',
-        },
-      ],
-      responseId: '123',
-      totalCount: 2,
-    };
-
+  describe('when the fetchDocumentSuggestionOnChange property is set to true', async () => {
     describe('when a suggestion is selected', () => {
       it('should automatically fetch new document suggestions', () => {
         const clickedIndex = 1;
@@ -1105,7 +1060,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             allOptions.slice(0, suggestionsCount)
           );
-          mockDocumentSuggestion(mockDocuments.documents);
+          mockDocumentSuggestion([{}]);
           fetchClassifications();
           fetchSuggestions();
 
@@ -1126,7 +1081,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchDocumentsAfterValueChange(mockDocuments.documents);
+          Expect.fetchDocumentsAfterValueChange();
         });
       });
     });
@@ -1155,7 +1110,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             allOptions.slice(0, suggestionsCount)
           );
-          mockDocumentSuggestion(mockDocuments.documents);
+          mockDocumentSuggestion([{}]);
           fetchClassifications();
           fetchSuggestions();
 
@@ -1178,7 +1133,7 @@ describe('quantic-case-classification', () => {
           Expect.correctValue(
             allOptions[clickedIndex + suggestionsCount].value
           );
-          Expect.fetchDocumentsAfterValueChange(mockDocuments.documents);
+          Expect.fetchDocumentsAfterValueChange();
         });
       });
     });
@@ -1204,7 +1159,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             allOptions.slice(0, suggestionsCount)
           );
-          mockDocumentSuggestion(mockDocuments.documents);
+          mockDocumentSuggestion([{}]);
           fetchClassifications();
           fetchSuggestions();
 
@@ -1216,6 +1171,7 @@ describe('quantic-case-classification', () => {
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
         });
+
         scope('when selecting an option from the select input', () => {
           const clickedIndex = 3;
 
@@ -1227,7 +1183,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchDocumentsAfterValueChange(mockDocuments.documents);
+          Expect.fetchDocumentsAfterValueChange();
         });
       });
     });

@@ -103,14 +103,14 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   @api messageWhenValueMissing = this.labels.selectOption;
   /**
-   * Whether the Quantic Case Classification component should automatically fetch new case classifications when its value changes.
+   * Indicates whether the component should automatically fetch new case classifications when its value changes.
    * @api
    * @type {boolean}
    * @defaultValue `false`
    */
   @api fetchClassificationOnChange = false;
   /**
-   * Whether the Quantic Case Classification component should automatically fetch new document suggestions when its value changes.
+   * Indicates whether the component should automatically fetch new document suggestions when its value changes.
    * @api
    * @type {boolean}
    * @defaultValue `false`

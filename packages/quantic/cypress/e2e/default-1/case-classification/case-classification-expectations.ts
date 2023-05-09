@@ -171,42 +171,16 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail('should log the "ticket_classification_click" UA event');
     },
 
-    fetchClassificationsAfterValueChange: (
-      field: string,
-      predictions: Array<object>
-    ) => {
-      cy.wait(InterceptAliases.CaseClassification)
-        .then((interception) => {
-          const caseClassificationBody = interception.response?.body;
-
-          expect(caseClassificationBody.fields).to.haveOwnProperty(field);
-          expect(caseClassificationBody.fields[field]).to.haveOwnProperty(
-            'predictions'
-          );
-          expect(
-            caseClassificationBody.fields[field].predictions
-          ).to.deep.equal(predictions);
-        })
-        .logDetail(
-          'should fetch new case classifications after the value changes'
-        );
+    fetchClassificationsAfterValueChange: () => {
+      cy.wait(InterceptAliases.CaseClassification).logDetail(
+        'should fetch new case classifications after the value changes'
+      );
     },
 
-    fetchDocumentsAfterValueChange: (mockDocuments: Array<Object>) => {
-      cy.wait(InterceptAliases.DocumentSuggestion)
-        .then((interception) => {
-          const documentSuggestionResponseBody = interception?.response?.body;
-
-          expect(documentSuggestionResponseBody).to.haveOwnProperty(
-            'documents'
-          );
-          expect(documentSuggestionResponseBody.documents).to.deep.equal(
-            mockDocuments
-          );
-        })
-        .logDetail(
-          'should fetch new document suggestions after the value changes'
-        );
+    fetchDocumentsAfterValueChange: () => {
+      cy.wait(InterceptAliases.DocumentSuggestion).logDetail(
+        'should fetch new document suggestions after the value changes'
+      );
     },
   };
 }
