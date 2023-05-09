@@ -1,11 +1,8 @@
 #!/usr/bin/env node
-
 import {
   getLastTag,
   parseCommits,
   getCommits,
-  npmBumpVersion,
-  npmPublish,
   getCurrentVersion,
   getNextVersion,
   generateChangelog,
@@ -13,10 +10,10 @@ import {
   describeNpmTag,
   getSHA1fromRef,
 } from '@coveo/semantic-monorepo-tools';
-import {spawnSync} from 'node:child_process';
-import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
 // @ts-ignore no dts is ok
 import angularChangelogConvention from 'conventional-changelog-angular';
+import {spawnSync} from 'node:child_process';
+import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
 import {dirname, resolve, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {gt, SemVer} from 'semver';
@@ -42,6 +39,23 @@ const hasPackageJsonChanged = (directoryPath) => {
       console.error(stderr);
       throw new Error(`git diff exited with statusCode ${status}`);
   }
+};
+
+/**
+ * @typedef {import('@npmcli/package-json').PackageJson} PackageJson
+ */
+
+/**
+ * @param {string} packageDir
+ * @param {(packageJson: PackageJson) => PackageJson | void} modifyPackageJsonCallback
+ */
+const modifyPackageJson = (packageDir, modifyPackageJsonCallback) => {
+  const packageJsonPath = resolve(packageDir, 'package.json');
+  const packageJson = JSON.parse(
+    readFileSync(packageJsonPath, {encoding: 'utf-8'})
+  );
+  const newPackageJson = modifyPackageJsonCallback(packageJson);
+  writeFileSync(packageJsonPath, JSON.stringify(newPackageJson || packageJson));
 };
 
 const rootFolder = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -81,9 +95,7 @@ await (async () => {
       ? await getNextBetaVersion(nextGoldVersion)
       : nextGoldVersion;
 
-  await npmBumpVersion(newVersion, PATH, {
-    workspaceUpdateStrategy: 'NoUpdate',
-  });
+  modifyPackageJson(PATH, (packageJson) => {packageJson.version = newVersion;})
   await updateWorkspaceDependent(newVersion);
   if (privatePackage) {
     return;
@@ -138,18 +150,11 @@ async function updateWorkspaceDependent(version) {
   }
 
   for (const dependentPackage of dependentPackages) {
-    const dependentPackageJsonPath = join(
-      rootFolder,
-      topology.graph.nodes[dependentPackage].data.root,
-      'package.json'
-    );
-    const dependentPackageJson = JSON.parse(
-      readFileSync(dependentPackageJsonPath, {encoding: 'utf-8'})
-    );
-    updateDependency(dependentPackageJson, dependencyPackageJson.name, version);
-    writeFileSync(
-      dependentPackageJsonPath,
-      JSON.stringify(dependentPackageJson)
+    modifyPackageJson(
+      join(rootFolder, topology.graph.nodes[dependentPackage].data.root),
+      (packageJson) => {
+        updateDependency(packageJson, dependencyPackageJson.name, version);
+      }
     );
   }
 }
