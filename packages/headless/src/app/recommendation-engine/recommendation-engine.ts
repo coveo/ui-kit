@@ -19,7 +19,12 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {debug, pipeline, recommendation, searchHub} from '../reducers';
+import {
+  debug,
+  pipeline,
+  recommendation,
+  searchHub,
+} from '../recommendation-reducers';
 import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {

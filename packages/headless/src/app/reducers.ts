@@ -36,7 +36,6 @@ import {queryReducer} from '../features/query/query-slice';
 import {questionAnsweringReducer} from '../features/question-answering/question-answering-slice';
 import {recentQueriesReducer} from '../features/recent-queries/recent-queries-slice';
 import {recentResultsReducer} from '../features/recent-results/recent-results-slice';
-import {recommendationReducer} from '../features/recommendation/recommendation-slice';
 import {resultPreviewReducer} from '../features/result-preview/result-preview-slice';
 import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 import {searchReducer} from '../features/search/search-slice';
@@ -93,7 +92,6 @@ export const history = undoable({
   },
   reducer: historyReducer,
 });
-export const recommendation = recommendationReducer;
 
 export const productListing = productListingReducer;
 export const sort = sortReducer;
