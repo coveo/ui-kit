@@ -5,6 +5,14 @@ import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 /**
+ * Current strategy: reify each package (along with their dependants transitively) in topological (parents->dependants) order.
+ *
+ * Other (untested) strategies that may work:
+ * * Strategy A: reify each package individually in topological (parents->dependants) order.
+ * * Strategy B: reify all packages at once.
+ */
+
+/**
  * @typedef {Map<string, Omit<Arborist.Edge, 'to'> & {workspace: boolean, to: Arborist.Link}>} EdgeMap
  */
 
@@ -70,7 +78,6 @@ async function initArborist() {
 }
 
 const rootFolder = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
-
 const graph = buildDependencyGraph(
   /** @type {Arborist.Node} */ ((await initArborist()).virtualTree)
 );
