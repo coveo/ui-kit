@@ -1,4 +1,8 @@
-import {buildUrlManager, SearchEngine} from '@coveo/headless';
+import {
+  buildUrlManager,
+  SearchEngine,
+  buildSearchStatus,
+} from '@coveo/headless';
 
 /**
  * Search parameters, defined in the url's hash, should not be restored until all components are registered.
@@ -9,6 +13,7 @@ import {buildUrlManager, SearchEngine} from '@coveo/headless';
  * @returns An unsubscribe function to remove attached event listeners.
  */
 export function bindUrlManager(engine: SearchEngine) {
+  const statusControllers = buildSearchStatus(engine);
   const fragment = () => window.location.hash.slice(1);
 
   const urlManager = buildUrlManager(engine, {
@@ -21,6 +26,12 @@ export function bindUrlManager(engine: SearchEngine) {
   window.addEventListener('hashchange', onHashChange);
   const unsubscribeManager = urlManager.subscribe(() => {
     const hash = `#${urlManager.state.fragment}`;
+
+    if (!statusControllers.state.firstSearchExecuted) {
+      history.replaceState(null, document.title, hash);
+      return;
+    }
+
     history.pushState(null, document.title, hash);
   });
 
