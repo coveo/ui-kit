@@ -36,3 +36,8 @@ export const logShowLessFoldedResults =
           getCaseContextAnalyticsMetadata(state.insightCaseContext)
         )
     );
+
+export const insightFoldedResultAnalyticsClient = {
+  logShowMoreFoldedResults,
+  logShowLessFoldedResults,
+};
