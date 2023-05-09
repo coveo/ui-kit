@@ -202,8 +202,7 @@ jobs:
         run: |
           npm run nx:graph
           npm run release:install-npm-proxy
-          npm run release:phase1
-          npm run release:phase2
+          npm run release:phase1-3
         env:
           # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           DEBUG: '*'

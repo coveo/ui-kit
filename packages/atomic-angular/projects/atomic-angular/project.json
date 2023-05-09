@@ -2,13 +2,6 @@
   "name": "atomic-angular",
   "implicitDependencies": ["atomic-angular-builder"],
   "targets": {
-    "release:phase1": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "npx -p=@coveo/release bump",
-        "cwd": "packages/atomic-angular/projects/atomic-angular"
-      }
-    },
     "promote:npm:beta": {
       "dependsOn": [],
       "inputs": [],

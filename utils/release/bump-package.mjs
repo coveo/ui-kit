@@ -19,7 +19,6 @@ import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
 import angularChangelogConvention from 'conventional-changelog-angular';
 import {dirname, resolve, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import retry from 'async-retry';
 import {gt, SemVer} from 'semver';
 
 /**
@@ -103,19 +102,6 @@ await (async () => {
     );
     await writeChangelog(PATH, changelog);
   }
-  const tagToPublish = isPrerelease ? 'alpha' : 'latest';
-  await npmPublish('.', {tag: tagToPublish});
-
-  await retry(
-    async () => {
-      if (
-        (await describeNpmTag(packageJson.name, tagToPublish)) !== newVersion
-      ) {
-        throw new Error('Version not available');
-      }
-    },
-    {retries: 30}
-  );
   appendFileSync(
     join(rootFolder, '.git-message'),
     `${packageJson.name}@${newVersion}\n`
