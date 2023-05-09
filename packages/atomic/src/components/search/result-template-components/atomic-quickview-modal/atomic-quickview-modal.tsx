@@ -2,6 +2,7 @@ import {
   buildInteractiveResult,
   Result,
   InteractiveResult,
+  TermsToHighlight,
 } from '@coveo/headless';
 import {
   Component,
@@ -155,7 +156,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
             logger={this.logger}
             src={this.quickviewSrc}
             sandbox={this.sandbox}
-            result={this.result}
+            uniqueIdentifier={this.quickviewUniqueIdentifier}
             content={this.content}
             onSetIframeRef={async (ref) => {
               this.iframeRef = ref;
@@ -275,7 +276,31 @@ export class AtomicQuickviewModal implements InitializableComponent {
   }
 
   private get termsToHighlight() {
-    return this.bindings.engine.state.search.response.termsToHighlight;
+    const flatPhrasesToHighlight: TermsToHighlight = {};
+
+    const phrasesToHighlight =
+      this.bindings.engine.state.search.response.phrasesToHighlight;
+
+    Object.entries(phrasesToHighlight).forEach(([phrase, keywords]) => {
+      flatPhrasesToHighlight[phrase] = Object.entries(keywords).flatMap(
+        ([keywordEntry, keywordStemming]) => {
+          return [keywordEntry, ...keywordStemming];
+        }
+      );
+    });
+
+    return {
+      ...this.bindings.engine.state.search.response.termsToHighlight,
+      ...flatPhrasesToHighlight,
+    };
+  }
+
+  private get requestId() {
+    return this.bindings.engine.state.search.requestId;
+  }
+
+  private get quickviewUniqueIdentifier() {
+    return this.result?.uniqueId + this.requestId;
   }
 
   private handleHighlightsScripts() {
