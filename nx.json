@@ -51,7 +51,10 @@
       "dependsOn": ["build"]
     },
     "release:phase1": {
-      "dependsOn": ["^release:phase1"]
+      "dependsOn": ["^release:phase1", "^release:phase2"]
+    },
+    "release:phase2": {
+      "dependsOn": ["release:phase1"]
     }
   },
   "defaultBase": "master"
