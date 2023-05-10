@@ -4,8 +4,8 @@ import {
   SmartSnippetQuestionsListState,
 } from '@coveo/headless';
 import {h} from '@stencil/core';
-import ArrowDown from '../../../../images/arrow-down.svg';
-import ArrowRight from '../../../../images/arrow-right.svg';
+import ArrowDown from '../../../images/arrow-down.svg';
+import ArrowRight from '../../../images/arrow-right.svg';
 import {Button} from '../button';
 import {Heading} from '../heading';
 import {Hidden} from '../hidden';
@@ -35,24 +35,18 @@ export class SmartSnippetSuggestionCommon {
     return styleTag.innerHTML;
   }
 
-  public hideDuringRender(shouldHide: boolean) {
-    const host = this.props.getHost();
-    host.style.visibility = shouldHide ? 'hidden' : '';
-    host.style.position = shouldHide ? 'absolute' : '';
-  }
-
-  public getRelatedQuestionId(index: number) {
+  private getRelatedQuestionId(index: number) {
     return `${this.props.id}-${index}`;
   }
 
-  public getQuestionPart(
+  private getQuestionPart(
     prefix: string,
     relatedQuestion: SmartSnippetRelatedQuestion
   ) {
     return prefix + (relatedQuestion.expanded ? '-expanded' : '-collapsed');
   }
 
-  public toggleQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
+  private toggleQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
     if (relatedQuestion.expanded) {
       this.props.getQuestionsList().collapse(relatedQuestion.questionAnswerId);
     } else {
@@ -60,7 +54,7 @@ export class SmartSnippetSuggestionCommon {
     }
   }
 
-  public renderQuestion(
+  private renderQuestion(
     relatedQuestion: SmartSnippetRelatedQuestion,
     index: number
   ) {
@@ -90,7 +84,7 @@ export class SmartSnippetSuggestionCommon {
     );
   }
 
-  public renderContent(relatedQuestion: SmartSnippetRelatedQuestion) {
+  private renderContent(relatedQuestion: SmartSnippetRelatedQuestion) {
     return (
       <atomic-smart-snippet-answer
         exportparts="answer"
@@ -121,7 +115,7 @@ export class SmartSnippetSuggestionCommon {
     );
   }
 
-  public renderSource(relatedQuestion: SmartSnippetRelatedQuestion) {
+  private renderSource(relatedQuestion: SmartSnippetRelatedQuestion) {
     const {source} = relatedQuestion;
     if (!source) {
       return [];
@@ -153,6 +147,12 @@ export class SmartSnippetSuggestionCommon {
         }
       </footer>
     );
+  }
+
+  public hideDuringRender(shouldHide: boolean) {
+    const host = this.props.getHost();
+    host.style.visibility = shouldHide ? 'hidden' : '';
+    host.style.position = shouldHide ? 'absolute' : '';
   }
 
   public renderRelatedQuestion(

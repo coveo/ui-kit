@@ -11,7 +11,7 @@ import {
   BindStateToController,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
-import {SmartSnippetSuggestionCommon} from '../../common/smart-snippets/smart-snippet/smart-snippet-suggestions-common';
+import {SmartSnippetSuggestionCommon} from '../../common/smart-snippets/smart-snippet-suggestions-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

@@ -5,7 +5,6 @@ import {
 } from '@coveo/headless';
 import {
   Component,
-  h,
   State,
   Prop,
   Watch,
@@ -17,9 +16,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {once, randomID} from '../../../utils/utils';
-import {Button} from '../../common/button';
+import {randomID} from '../../../utils/utils';
+import {SmartSnippetFeedbackModalCommon} from '../../common/smart-snippets/smart-snippet-feedback-modal-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -59,6 +57,8 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
   @State() public error!: Error;
 
+  private smartSnippetFeedbackModalCommon!: SmartSnippetFeedbackModalCommon;
+
   @Prop({mutable: true}) source?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
@@ -80,175 +80,35 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
   initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
+    this.smartSnippetFeedbackModalCommon = new SmartSnippetFeedbackModalCommon({
+      formId: this.formId,
+      getHost: () => this.host,
+      getBindings: () => this.bindings,
+      getCurrentAnswer: () => this.currentAnswer,
+      getSmartSnippet: () => this.smartSnippet,
+      getDetailsInputRef: () => this.detailsInputRef,
+      getFeedbackSent: () => this.feedbackSent,
+      getSource: () => this.source,
+      getIsOpen: () => this.isOpen,
+      setIsOpen: this.setIsOpen.bind(this),
+      setCurrentAnswer: this.setCurrentAnswer.bind(this),
+      setDetailsInputRef: this.setDetailsInputRef.bind(this),
+    });
   }
 
-  private sendFeedback() {
-    if (this.currentAnswer === 'other') {
-      this.smartSnippet.sendDetailedFeedback(this.detailsInputRef!.value);
-    } else {
-      this.smartSnippet.sendFeedback(this.currentAnswer!);
-    }
-    this.feedbackSent.emit();
-    this.isOpen = false;
+  private setIsOpen(isOpen: boolean) {
+    this.isOpen = isOpen;
   }
 
-  private close() {
-    this.isOpen = false;
-    this.smartSnippet.closeFeedbackModal();
+  private setCurrentAnswer(answer: SmartSnippetFeedback | 'other') {
+    this.currentAnswer = answer;
   }
 
-  private renderHeader() {
-    return (
-      <h1 slot="header">
-        {this.bindings.i18n.t('smart-snippet-feedback-explain-why')}
-      </h1>
-    );
+  private setDetailsInputRef(ref?: HTMLTextAreaElement) {
+    this.detailsInputRef = ref;
   }
-
-  private renderOptions() {
-    const options: {
-      id: string;
-      localeKey: string;
-      correspondingAnswer: SmartSnippetFeedback | 'other';
-    }[] = [
-      {
-        id: 'does-not-answer',
-        localeKey: 'smart-snippet-feedback-reason-does-not-answer',
-        correspondingAnswer: 'does_not_answer',
-      },
-      {
-        id: 'partially-answers',
-        localeKey: 'smart-snippet-feedback-reason-partially-answers',
-        correspondingAnswer: 'partially_answers',
-      },
-      {
-        id: 'was-not-a-question',
-        localeKey: 'smart-snippet-feedback-reason-was-not-a-question',
-        correspondingAnswer: 'was_not_a_question',
-      },
-      {
-        id: 'other',
-        localeKey: 'smart-snippet-feedback-reason-other',
-        correspondingAnswer: 'other',
-      },
-    ];
-
-    return (
-      <fieldset>
-        <legend
-          part="reason-title"
-          class="font-bold text-on-background text-lg"
-        >
-          {this.bindings.i18n.t('smart-snippet-feedback-select-reason')}
-        </legend>
-        {options.map(({id, localeKey, correspondingAnswer}) => (
-          <div class="flex items-center" key={id} part="reason">
-            <input
-              part="reason-radio"
-              type="radio"
-              name="answer"
-              id={id}
-              checked={this.currentAnswer === correspondingAnswer}
-              onChange={(e) =>
-                (e.currentTarget as HTMLInputElement | null)?.checked &&
-                (this.currentAnswer = correspondingAnswer)
-              }
-              class="mr-2 w-4 h-4"
-              required
-            />
-            <label part="reason-label" htmlFor={id}>
-              {this.bindings.i18n.t(localeKey)}
-            </label>
-          </div>
-        ))}
-      </fieldset>
-    );
-  }
-
-  private renderDetails() {
-    if (this.currentAnswer !== 'other') {
-      return;
-    }
-
-    return (
-      <fieldset>
-        <legend
-          part="details-title"
-          class="font-bold text-on-background text-lg"
-        >
-          {this.bindings.i18n.t('smart-snippet-feedback-details')}
-        </legend>
-        <textarea
-          part="details-input"
-          name="answer-details"
-          ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
-          class="mt-2 p-2 w-full text-base leading-5 border border-neutral resize-none rounded"
-          rows={4}
-          required
-        ></textarea>
-      </fieldset>
-    );
-  }
-
-  private renderBody() {
-    return (
-      <form
-        part="form"
-        id={this.formId}
-        slot="body"
-        onSubmit={(e) => {
-          e.preventDefault();
-          this.sendFeedback();
-        }}
-        class="flex flex-col gap-8"
-      >
-        {this.renderOptions()}
-        {this.renderDetails()}
-      </form>
-    );
-  }
-
-  private renderFooter() {
-    return (
-      <div part="buttons" slot="footer" class="flex justify-end gap-2">
-        <Button
-          part="cancel-button"
-          style="outline-neutral"
-          class="text-primary"
-          onClick={() => this.close()}
-        >
-          {this.bindings.i18n.t('cancel')}
-        </Button>
-        <Button
-          part="submit-button"
-          style="primary"
-          type="submit"
-          form={this.formId}
-        >
-          {this.bindings.i18n.t('smart-snippet-feedback-send')}
-        </Button>
-      </div>
-    );
-  }
-
-  private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
   public render() {
-    this.updateBreakpoints();
-
-    return (
-      <atomic-modal
-        fullscreen={false}
-        source={this.source}
-        container={this.host}
-        isOpen={this.isOpen}
-        close={() => this.close()}
-        exportparts="backdrop,container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
-      >
-        {this.renderHeader()}
-        {this.renderBody()}
-        {this.renderFooter()}
-      </atomic-modal>
-    );
+    return this.smartSnippetFeedbackModalCommon.render();
   }
 }
