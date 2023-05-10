@@ -19,7 +19,13 @@
     "bump:version:major-prerelease": "node ./scripts/deploy/manual-major-prerelease.mjs",
     "promote:npm:beta": "nx run-many --target=promote:npm:beta",
     "promote:npm:latest": "nx run-many --target=promote:npm:latest",
-    "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs"
+    "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
+    "release": "npm run nx:graph && npm run release:phase0 && npm run release:phase1-3 && npm run release:phase4",
+    "nx:graph": "nx graph --file=topology.json",
+    "release:install-npm-proxy": "npx -p=@coveo/release install-npm-proxy",
+    "release:phase0": "exit 38",
+    "release:phase1-3": "nx run-many --targets=release:phase2 --all --parallel=false --output-style=stream && npx -p=@coveo/release reify",
+    "release:phase4": "exit 38"
   },
   "dependencies": {
     "patch-package": "6.4.7"
@@ -30,7 +36,7 @@
     "@commitlint/config-conventional": "17.0.3",
     "@commitlint/config-lerna-scopes": "17.0.2",
     "@commitlint/lint": "9.1.2",
-    "@coveo/semantic-monorepo-tools": "1.5.5",
+    "@coveo/semantic-monorepo-tools": "1.7.0",
     "@octokit/rest": "19.0.5",
     "@rollup/plugin-typescript": "8.3.4",
     "@salesforce/sfdx-lwc-jest": "npm:noist@1.0.0",
@@ -63,7 +69,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "rimraf": "3.0.2",
-    "semver": "7.3.7",
+    "semver": "7.3.8",
     "ts-jest": "27.1.5",
     "typescript": "4.6.4"
   },
@@ -88,7 +94,9 @@
     "packages/atomic-react",
     "packages/atomic-angular",
     "packages/atomic-angular/projects/*",
-    "packages/samples/*"
+    "packages/samples/*",
+    "utils/*",
+    "!utils/atomic-storybook"
   ],
   "config": {
     "commitizen": {
