@@ -8,10 +8,10 @@ import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
-} from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
-import {SmartSnippetCommon} from '../../common/smart-snippets/smart-snippet-common';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+} from '../../../../utils/initialization-utils';
+import {randomID} from '../../../../utils/utils';
+import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.

@@ -4,12 +4,12 @@ import {
   SmartSnippetQuestionsListState,
 } from '@coveo/headless';
 import {h} from '@stencil/core';
-import ArrowDown from '../../../images/arrow-down.svg';
-import ArrowRight from '../../../images/arrow-right.svg';
-import {Button} from '../button';
-import {Heading} from '../heading';
-import {Hidden} from '../hidden';
-import {AnyBindings} from '../interface/bindings';
+import ArrowDown from '../../../../images/arrow-down.svg';
+import ArrowRight from '../../../../images/arrow-right.svg';
+import {Button} from '../../button';
+import {Heading} from '../../heading';
+import {Hidden} from '../../hidden';
+import {AnyBindings} from '../../interface/bindings';
 
 interface SmartSnippetSuggestionProps {
   id: string;

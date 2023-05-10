@@ -13,9 +13,9 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {AnyBindings} from '../../common/interface/bindings';
+import {ResultContextEvent} from '../../search/result-template-components/result-template-decorators';
+import {AnyBindings} from '../interface/bindings';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
-import {ResultContextEvent} from '../result-template-components/result-template-decorators';
 
 /**
  * @part source-url

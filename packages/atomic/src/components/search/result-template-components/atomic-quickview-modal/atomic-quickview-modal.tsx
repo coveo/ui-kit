@@ -22,8 +22,8 @@ import {
 } from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/button';
 import {IconButton} from '../../../common/iconButton';
+import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {LinkWithResultAnalytics} from '../../result-link/result-link';
 import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';
 import {buildQuickviewPreviewBar} from '../quickview-preview-bar/quickview-preview-bar';

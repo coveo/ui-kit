@@ -9,10 +9,10 @@ import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
-} from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
-import {SmartSnippetSuggestionCommon} from '../../common/smart-snippets/smart-snippet-suggestions-common';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+} from '../../../../utils/initialization-utils';
+import {randomID} from '../../../../utils/utils';
+import {SmartSnippetSuggestionCommon} from '../../../common/smart-snippets/atomic-smart-snippet-suggestions/smart-snippet-suggestions-common';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.

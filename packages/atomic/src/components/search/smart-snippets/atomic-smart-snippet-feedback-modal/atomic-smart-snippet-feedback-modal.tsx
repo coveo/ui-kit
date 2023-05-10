@@ -15,10 +15,10 @@ import {
 import {
   InitializableComponent,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
-import {SmartSnippetFeedbackModalCommon} from '../../common/smart-snippets/smart-snippet-feedback-modal-common';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+} from '../../../../utils/initialization-utils';
+import {randomID} from '../../../../utils/utils';
+import {SmartSnippetFeedbackModalCommon} from '../../../common/smart-snippets/atomic-smart-snippet-feedback-modal/smart-snippet-feedback-modal-common';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
