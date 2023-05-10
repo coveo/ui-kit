@@ -3,6 +3,15 @@ import {describeNpmTag, npmPublish} from '@coveo/semantic-monorepo-tools';
 import retry from 'async-retry';
 import {readFileSync} from 'node:fs';
 
+/**
+ * @param {string} name
+ * @param {string} version
+ * @param {string} tag
+ */
+async function isPublished(name, version, tag = version) {
+  return (await describeNpmTag(name, tag)) === version;
+}
+
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 
 /** @type {import('@npmcli/package-json').PackageJson} */
@@ -12,13 +21,15 @@ const {name, version} = JSON.parse(
 if (!name || !version) {
   throw 'Expected name and version to exist in package.json.';
 }
-const tagToPublish = isPrerelease ? 'alpha' : 'beta';
-await npmPublish('.', {tag: tagToPublish});
-await retry(
-  async () => {
-    if ((await describeNpmTag(name, tagToPublish)) !== version) {
-      throw new Error('Version not available');
-    }
-  },
-  {retries: 30}
-);
+if (!(await isPublished(name, version))) {
+  const tagToPublish = isPrerelease ? 'alpha' : 'beta';
+  await npmPublish('.', {tag: tagToPublish});
+  await retry(
+    async () => {
+      if (!(await isPublished(name, version, tagToPublish))) {
+        throw new Error('Version not available');
+      }
+    },
+    {retries: 30}
+  );
+}
