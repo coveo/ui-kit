@@ -1,6 +1,18 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
-import * as TestUtils from './test';
+import {
+  buildMockRaw,
+  buildMockSearchAppEngine,
+  buildMockResult,
+  createMockState,
+} from './test';
 import * as HighlightUtils from './utils/highlight';
+
+const TestUtils = {
+  buildMockRaw,
+  buildMockSearchAppEngine,
+  buildMockResult,
+  createMockState,
+};
 
 polyfillCryptoNode();
 

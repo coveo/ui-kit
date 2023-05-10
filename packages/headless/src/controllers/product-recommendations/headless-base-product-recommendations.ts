@@ -1,7 +1,6 @@
 import {ArrayValue, NumberValue, Schema, SchemaValues} from '@coveo/bueno';
 import {configuration} from '../../app/common-reducers';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
-import {productRecommendations} from '../../app/reducers';
 import {
   getProductRecommendations as updateProductRecommendations,
   setProductRecommendationsSkus,
@@ -9,6 +8,7 @@ import {
   setProductRecommendationsRecommenderId,
   setProductRecommendationsAdditionalFields,
 } from '../../features/product-recommendations/product-recommendations-actions';
+import {productRecommendationsReducer as productRecommendations} from '../../features/product-recommendations/product-recommendations-slice';
 import {loadReducerError} from '../../utils/errors';
 import {
   nonEmptyString,
