@@ -9,6 +9,9 @@ import {
 import {SearchStatusState} from '../search-status/headless-search-status';
 
 export type {
+  FoldedCollection,
+  FoldedResult,
+  FoldingOptions,
   FoldedResultListOptions,
   FoldedResultListProps,
   CoreFoldedResultListState,
