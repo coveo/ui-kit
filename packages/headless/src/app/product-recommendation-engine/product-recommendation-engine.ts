@@ -18,7 +18,8 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {productRecommendations, searchHub} from '../reducers';
+import {productRecommendations} from '../product-recommendation-reducers';
+import {searchHub} from '../reducers';
 import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {

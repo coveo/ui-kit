@@ -6,7 +6,8 @@
     "allowJs": true,
     "checkJs": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "lib": ["ESNext"]
   },
   "exclude": ["node_modules"],
   "include": ["*.mjs"]

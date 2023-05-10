@@ -16,6 +16,8 @@ export class TabBar {
   @State()
   private popoverTabs: typeof Button[] = [];
 
+  private resizeObserver: ResizeObserver | undefined;
+
   private get tabsFromSlot(): TabCommonElement[] {
     const isTab = (tagName: string) => /atomic-.+-tab$/i.test(tagName);
     return Array.from(this.host.querySelectorAll<TabCommonElement>('*')).filter(
@@ -160,6 +162,7 @@ export class TabBar {
     this.updateTabVisibility(this.overflowingTabs, false);
     this.updateTabVisibility(this.displayedTabs, true);
     this.updatePopoverPosition();
+    this.tabPopover?.setButtonVisibility(!!this.overflowingTabs.length);
   };
 
   @Listen('atomic/tabRendered')
@@ -169,17 +172,20 @@ export class TabBar {
   }
 
   public componentDidLoad() {
-    window.addEventListener('resize', this.render);
+    this.resizeObserver = new ResizeObserver(this.render);
+    this.resizeObserver.observe(this.host);
+  }
+
+  public disconnectedCallback() {
+    this.resizeObserver?.disconnect();
   }
 
   public render = () => {
     this.updateTabsDisplay();
     return (
-      <Host class={'flex relative'}>
+      <Host>
         <slot></slot>
-        <tab-popover hide={!this.overflowingTabs.length}>
-          {this.popoverTabs}
-        </tab-popover>
+        <tab-popover>{this.popoverTabs}</tab-popover>
       </Host>
     );
   };
