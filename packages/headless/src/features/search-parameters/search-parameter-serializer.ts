@@ -184,7 +184,7 @@ function buildNumericRanges(ranges: string[]) {
       return {
         start: parseFloat(startAsString),
         end: parseFloat(endAsString),
-        endInclusive: !!endInclusiveAsString,
+        endInclusive: endInclusiveAsString === rangeEndInclusive,
       };
     })
     .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
@@ -214,7 +214,11 @@ function buildDateRanges(ranges: string[]) {
   return ranges
     .map((str) => {
       const [start, end, endInclusiveAsString] = str.split(rangeDelimiter);
-      return {start, end, endInclusive: !!endInclusiveAsString};
+      return {
+        start,
+        end,
+        endInclusive: endInclusiveAsString === rangeEndInclusive,
+      };
     })
     .filter(
       ({start, end}) =>

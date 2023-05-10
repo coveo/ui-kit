@@ -275,6 +275,23 @@ describe('buildSearchParameterSerializer', () => {
       });
     });
 
+    it('deserializes a numeric facet with multiple selections with an invalid endInclusive', () => {
+      const result = deserialize('nf-size=0..10,10..20..thisIsRandom');
+      expect(result).toEqual({
+        nf: {
+          size: [
+            buildNumericRange({start: 0, end: 10, state: 'selected'}),
+            buildNumericRange({
+              start: 10,
+              end: 20,
+              state: 'selected',
+              endInclusive: false,
+            }),
+          ],
+        },
+      });
+    });
+
     it('deserializes multiple numeric facets with selected values', () => {
       const result = deserialize('nf-size=0..10&nf-amount=100..200');
       expect(result).toEqual({
