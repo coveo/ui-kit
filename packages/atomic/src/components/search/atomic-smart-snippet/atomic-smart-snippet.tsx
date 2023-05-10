@@ -3,17 +3,15 @@ import {
   SmartSnippet,
   SmartSnippetState,
 } from '@coveo/headless';
-import {Component, h, Prop, State, Element} from '@stencil/core';
+import {Component, Prop, State, Element} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
-import {Heading} from '../../common/heading';
-import {Hidden} from '../../common/hidden';
+import {SmartSnippetCommon} from '../../common/smart-snippets/smart-snippet/smart-snippet-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -67,6 +65,8 @@ export class AtomicSmartSnippet implements InitializableComponent {
   private id = randomID();
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
 
+  private smartSnippetCommon!: SmartSnippetCommon;
+
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
    */
@@ -99,150 +99,47 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
-    this.bindings.store.waitUntilAppLoaded(() => {
-      this.hideDuringRender = false;
+    this.smartSnippetCommon = new SmartSnippetCommon({
+      id: this.id,
+      getHost: () => this.host,
+      getBindings: () => this.bindings,
+      getModalRef: () => this.modalRef,
+      getHeadingLevel: () => this.headingLevel,
+      getCollapsedHeight: () => this.collapsedHeight,
+      getMaximumHeight: () => this.maximumHeight,
+      getSmartSnippetState: () => this.smartSnippetState,
+      getSmartSnippet: () => this.smartSnippet,
+      getSnippetStyle: () => this.snippetStyle,
+      getFeedbackSent: () => this.feedbackSent,
+      setModalRef: this.setModalRef.bind(this),
+      setFeedbackSent: this.setFeedbackSent.bind(this),
     });
-  }
-
-  private loadModal() {
-    if (this.modalRef) {
-      return;
-    }
-
-    this.modalRef = document.createElement(
-      'atomic-smart-snippet-feedback-modal'
-    );
-    this.modalRef.addEventListener('feedbackSent', () => {
-      this.feedbackSent = true;
-    });
-    this.host.insertAdjacentElement('beforebegin', this.modalRef);
-  }
-
-  private get style() {
-    const styleTag = this.host
-      .querySelector('template')
-      ?.content.querySelector('style');
-    if (!styleTag) {
-      return this.snippetStyle;
-    }
-    return styleTag.innerHTML;
-  }
-
-  private set hideDuringRender(shouldHide: boolean) {
-    this.host.style.visibility = shouldHide ? 'hidden' : '';
-    this.host.style.position = shouldHide ? 'absolute' : '';
-  }
-
-  private renderQuestion() {
-    return (
-      <Heading
-        level={this.headingLevel ? this.headingLevel + 1 : 0}
-        class="text-xl font-bold"
-        part="question"
-      >
-        {this.smartSnippetState.question}
-      </Heading>
+    this.bindings.store.waitUntilAppLoaded(() =>
+      this.smartSnippetCommon.hideDuringRender(false)
     );
   }
 
-  private renderContent() {
-    return (
-      <atomic-smart-snippet-expandable-answer
-        exportparts="answer,show-more-button,show-less-button,truncated-answer"
-        part="body"
-        htmlContent={this.smartSnippetState.answer}
-        expanded={this.smartSnippetState.expanded}
-        maximumHeight={this.maximumHeight}
-        collapsedHeight={this.collapsedHeight}
-        snippetStyle={this.style}
-        onExpand={() => this.smartSnippet.expand()}
-        onCollapse={() => this.smartSnippet.collapse()}
-        onSelectInlineLink={(e) => this.smartSnippet.selectInlineLink(e.detail)}
-        onBeginDelayedSelectInlineLink={(e) =>
-          this.smartSnippet.beginDelayedSelectInlineLink(e.detail)
-        }
-        onCancelPendingSelectInlineLink={(e) =>
-          this.smartSnippet.cancelPendingSelectInlineLink(e.detail)
-        }
-      ></atomic-smart-snippet-expandable-answer>
-    );
+  private setModalRef(ref: HTMLAtomicSmartSnippetFeedbackModalElement) {
+    this.modalRef = ref;
   }
 
-  private renderFeedbackBanner() {
-    return (
-      <SmartSnippetFeedbackBanner
-        i18n={this.bindings.i18n}
-        id={this.id}
-        liked={this.smartSnippetState.liked}
-        disliked={this.smartSnippetState.disliked}
-        feedbackSent={this.feedbackSent}
-        onLike={() => this.smartSnippet.like()}
-        onDislike={() => {
-          this.loadModal();
-          this.smartSnippet.dislike();
-        }}
-        onPressExplainWhy={() => (this.modalRef!.isOpen = true)}
-        explainWhyRef={(button) => {
-          if (this.modalRef) {
-            this.modalRef!.source = button;
-          }
-        }}
-      ></SmartSnippetFeedbackBanner>
-    );
+  private setFeedbackSent(isSent: boolean) {
+    this.feedbackSent = isSent;
   }
 
   public componentWillUpdate() {
     if (!(this.smartSnippetState.liked || this.smartSnippetState.disliked)) {
-      this.feedbackSent = false;
+      this.setFeedbackSent(false);
     }
   }
 
   public componentDidRender() {
     if (this.bindings.store.isAppLoaded()) {
-      this.hideDuringRender = false;
+      this.smartSnippetCommon.hideDuringRender(false);
     }
   }
 
   public render() {
-    if (!this.smartSnippetState.answerFound) {
-      return <Hidden></Hidden>;
-    }
-
-    if (this.host.classList.contains('atomic-hidden')) {
-      this.hideDuringRender = true;
-    }
-
-    return (
-      <aside>
-        <Heading level={this.headingLevel ?? 0} class="accessibility-only">
-          {this.bindings.i18n.t('smart-snippet')}
-        </Heading>
-        <article
-          class="bg-background border border-neutral rounded-lg p-6 pb-4 text-on-background"
-          part="smart-snippet"
-        >
-          {this.renderQuestion()}
-          {this.renderContent()}
-          <footer
-            part="footer"
-            aria-label={this.bindings.i18n.t('smart-snippet-source')}
-          >
-            {this.smartSnippetState.source && (
-              <atomic-smart-snippet-source
-                source={this.smartSnippetState.source}
-                onSelectSource={() => this.smartSnippet.selectSource()}
-                onBeginDelayedSelectSource={() =>
-                  this.smartSnippet.beginDelayedSelectSource()
-                }
-                onCancelPendingSelectSource={() =>
-                  this.smartSnippet.cancelPendingSelectSource()
-                }
-              ></atomic-smart-snippet-source>
-            )}
-            {this.renderFeedbackBanner()}
-          </footer>
-        </article>
-      </aside>
-    );
+    return this.smartSnippetCommon.render();
   }
 }

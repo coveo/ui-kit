@@ -12,7 +12,7 @@ import {
 import ArrowDown from '../../../images/arrow-down.svg';
 import {listenOnce} from '../../../utils/event-utils';
 import {InitializeBindings} from '../../../utils/initialization-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {AnyBindings} from '../../common/interface/bindings';
 
 /**
  * @internal
@@ -23,7 +23,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   shadow: true,
 })
 export class AtomicSmartSnippetExpandableAnswer {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: AnyBindings;
   public error!: Error;
   @Element() public host!: HTMLElement;
 
