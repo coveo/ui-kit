@@ -1,9 +1,9 @@
 import {SmartSnippetState, SmartSnippet} from '@coveo/headless';
 import {h} from '@stencil/core';
-import {SmartSnippetFeedbackBanner} from '../../../search/atomic-smart-snippet/atomic-smart-snippet-feedback-banner';
-import {Heading} from '../../heading';
-import {Hidden} from '../../hidden';
-import {AnyBindings} from '../../interface/bindings';
+import {SmartSnippetFeedbackBanner} from '../../search/atomic-smart-snippet/atomic-smart-snippet-feedback-banner';
+import {Heading} from '../heading';
+import {Hidden} from '../hidden';
+import {AnyBindings} from '../interface/bindings';
 
 interface SmartSnippetProps {
   id: string;
