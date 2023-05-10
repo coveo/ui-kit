@@ -30,7 +30,6 @@ import {instantResultsReducer} from '../features/instant-results/instant-results
 import {paginationReducer} from '../features/pagination/pagination-slice';
 import {pipelineReducer} from '../features/pipeline/pipeline-slice';
 import {productListingReducer} from '../features/product-listing/product-listing-slice';
-import {productRecommendationsReducer} from '../features/product-recommendations/product-recommendations-slice';
 import {querySetReducer} from '../features/query-set/query-set-slice';
 import {querySuggestReducer} from '../features/query-suggest/query-suggest-slice';
 import {queryReducer} from '../features/query/query-slice';
@@ -95,7 +94,7 @@ export const history = undoable({
   reducer: historyReducer,
 });
 export const recommendation = recommendationReducer;
-export const productRecommendations = productRecommendationsReducer;
+
 export const productListing = productListingReducer;
 export const sort = sortReducer;
 
