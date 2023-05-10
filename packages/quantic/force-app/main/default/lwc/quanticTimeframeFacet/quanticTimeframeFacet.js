@@ -173,6 +173,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
   focusTarget;
   /** @type {boolean} */
   focusShouldBeInFacet = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   _isCollapsed = false;
   _showValues = true;
@@ -756,5 +758,12 @@ export default class QuanticTimeframeFacet extends LightningElement {
       // @ts-ignore
       focusTarget.focus();
     }
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

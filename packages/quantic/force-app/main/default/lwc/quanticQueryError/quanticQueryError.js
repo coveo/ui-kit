@@ -49,6 +49,8 @@ export default class QuanticQueryError extends LightningElement {
   errorAriaMessage;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   showMoreInfo = false;
 
@@ -127,5 +129,12 @@ export default class QuanticQueryError extends LightningElement {
 
   get checkForMoreLabel() {
     return I18nUtils.format(this.labels.checkForMore, I18nUtils.getTextWithDecorator(this.labels.community, '<a href="https://connect.coveo.com/s/">', '</a>'), I18nUtils.getTextWithDecorator(this.labels.contactCoveoSupportTeam,'<a href="https://connect.coveo.com/s/article/5382">', '</a>'));
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

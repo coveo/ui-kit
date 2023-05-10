@@ -72,6 +72,8 @@ export default class QuanticSearchBox extends LightningElement {
   headless;
   /** @type {Array} */
   suggestions = [];
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   /**
    * @param {SearchEngine} engine
@@ -258,4 +260,11 @@ export default class QuanticSearchBox extends LightningElement {
     const id = event.detail;
     this.input.setAttribute('aria-controls', id);
   };
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
+  }
 }

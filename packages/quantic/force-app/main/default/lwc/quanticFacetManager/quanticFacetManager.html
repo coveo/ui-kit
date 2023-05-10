@@ -1,5 +1,11 @@
 <template>
-  <div class="facet-manager__host" lwc:dom="manual"></div>
-  <slot></slot>
-  <slot name="itemTemplate"></slot>
+  <template if:true={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template if:false={hasInitializationError}>
+    <div class="facet-manager__host" lwc:dom="manual"></div>
+    <slot></slot>
+    <slot name="itemTemplate"></slot>
+  </template>
 </template>

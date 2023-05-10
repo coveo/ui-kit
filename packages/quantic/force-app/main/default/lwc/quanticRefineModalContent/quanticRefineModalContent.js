@@ -64,6 +64,8 @@ export default class QuanticRefineModalContent extends LightningElement {
   renderedFacets = {};
   /** @type {boolean} */
   someFacetsRendered = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -259,4 +261,11 @@ export default class QuanticRefineModalContent extends LightningElement {
       false
     );
   };
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
+  }
 }

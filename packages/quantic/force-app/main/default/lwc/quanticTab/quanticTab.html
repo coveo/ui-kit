@@ -1,4 +1,8 @@
 <template>
+  <template if:true={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
   <template if:true={shouldDisplay}>
     <button
       class={tabClass}

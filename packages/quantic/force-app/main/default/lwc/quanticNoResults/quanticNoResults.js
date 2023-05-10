@@ -63,6 +63,8 @@ export default class QuanticNoResults extends LightningElement {
   unsubscribeBreadcrumbsManager;
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
   noResultAriaMessage;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     noResultsTitle,
@@ -128,5 +130,12 @@ export default class QuanticNoResults extends LightningElement {
       return I18nUtils.format(this.labels.noResultsForTitle, I18nUtils.getTextBold(I18nUtils.escapeHTML(this.query)));
     }
     return this.labels.noResultsTitle;
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

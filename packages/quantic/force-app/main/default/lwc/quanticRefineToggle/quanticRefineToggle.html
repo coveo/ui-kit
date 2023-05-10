@@ -1,5 +1,10 @@
 <template>
-  <button aria-hidden={modalIsOpen} class="slds-button slds-button_neutral refine-button slds-is-relative"
+  <template if:true={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template if:false={hasInitializationError}>
+    <button aria-hidden={modalIsOpen} class="slds-button slds-button_neutral refine-button slds-is-relative"
     onclick={openModal} title={buttonTitle} disabled={refineButtonDisabled}>
     <slot name="button-content">
       {labels.sortAndFilters}
@@ -43,4 +48,5 @@
       </button>
     </div>
   </c-quantic-modal>
+  </template>
 </template>

@@ -54,6 +54,8 @@ export default class QuanticPager extends LightningElement {
   currentPage = 1;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     nextPage,
@@ -128,5 +130,12 @@ export default class QuanticPager extends LightningElement {
       selected: page === this.currentPage,
       ariaLabelValue: I18nUtils.format(this.labels.goToPage, page),
     }));
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

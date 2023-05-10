@@ -2,12 +2,14 @@ import BuenoPath from '@salesforce/resourceUrl/coveobueno';
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 // @ts-ignore
 import {Debouncer, Deferred, Store} from 'c/quanticUtils';
+import LightningAlert from 'lightning/alert';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
 
 const DEBOUNCE_DELAY = 200;
 let debouncers = {};
 let dependencyPromises = [];
+let componentErrorDisplayed = false;
 
 const HeadlessBundleNames = {
   search: 'search',
@@ -289,7 +291,6 @@ function getHeadlessBindings(engineId) {
 function getQuanticStore(engineId) {
   return window.coveoHeadless?.[engineId]?.bindings?.store;
 }
-
 /**
  * Initializes a component with Coveo Headless.
  * @param element The LightningElement component to initialize.
@@ -305,7 +306,22 @@ async function initializeWithHeadless(element, engineId, initialize) {
     initialize(await getHeadlessEnginePromise(engineId));
     setComponentInitialized(element, engineId);
   } catch (error) {
-    console.error('Fatal error: unable to initialize component', error);
+    console.error(
+      `Fatal error: unable to initialize ${element.template.host.localName} component.`,
+      error
+    );
+    element?.setInitializationError?.();
+    if (!componentErrorDisplayed) {
+      componentErrorDisplayed = true;
+      await LightningAlert.open({
+        message: `Fatal error: unable to initialize the ${element.template.host.localName} component.
+        Look at the developer console for more information.`,
+        theme: 'error',
+        label: 'Component initialization error',
+      });
+    }
+  } finally {
+    setComponentInitialized(element, engineId);
   }
 }
 

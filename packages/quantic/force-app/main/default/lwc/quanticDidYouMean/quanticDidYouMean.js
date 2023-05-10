@@ -45,6 +45,8 @@ export default class QuanticDidYouMean extends LightningElement {
   didYouMean;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     didYouMean,
@@ -97,5 +99,12 @@ export default class QuanticDidYouMean extends LightningElement {
       this.labels.queryCorrectedTo,
       I18nUtils.getTextBold(I18nUtils.escapeHTML(this.correctedQuery))
     );
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }
