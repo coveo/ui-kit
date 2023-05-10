@@ -1,10 +1,10 @@
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {facetSearchSet, facetSet} from '../../../app/reducers';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   logFacetClearAll,
   logFacetSelect,
@@ -12,6 +12,7 @@ import {
   logFacetShowMore,
   logFacetUpdateSort,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
