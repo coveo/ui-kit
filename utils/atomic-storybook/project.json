@@ -31,12 +31,16 @@
         "cwd": "packages/atomic"
       }
     },
-    "build": {
+    "prepare-and-validate": {
       "dependsOn": [
         "^build",
         "validate:storybook",
         "build:storybook:assets-list"
       ],
+      "executor": "nx:noop"
+    },
+    "build": {
+      "dependsOn": ["prepare-and-validate"],
       "inputs": [],
       "outputs": [],
       "executor": "nx:run-commands",
@@ -46,11 +50,7 @@
       }
     },
     "dev": {
-      "dependsOn": [
-        "^build",
-        "validate:storybook",
-        "build:storybook:assets-list"
-      ],
+      "dependsOn": ["prepare-and-validate"],
       "inputs": [],
       "outputs": [],
       "executor": "nx:run-commands",
