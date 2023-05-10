@@ -16,6 +16,7 @@ import {SearchParameters} from './search-parameter-actions';
 const delimiter = '&';
 const equal = '=';
 const rangeDelimiter = '..';
+const rangeEndInclusive = 'endInclusive';
 
 type SearchParameterKey = keyof SearchParameters;
 type UnknownObject = {[field: string]: unknown[]};
@@ -106,7 +107,12 @@ function serializeRangeFacets(
   return Object.entries(facets)
     .map(([facetId, ranges]) => {
       const value = ranges
-        .map(({start, end}) => `${start}${rangeDelimiter}${end}`)
+        .map(
+          ({start, end, endInclusive}) =>
+            `${start}${rangeDelimiter}${end}${
+              endInclusive ? rangeDelimiter + rangeEndInclusive : ''
+            }`
+        )
         .join(',');
       return `${key}-${facetId}${equal}${value}`;
     })
@@ -172,9 +178,19 @@ function processObjectValues(key: string, values: string[]) {
 
 function buildNumericRanges(ranges: string[]) {
   return ranges
-    .map((str) => str.split(rangeDelimiter).map(parseFloat))
-    .filter((range) => range.length === 2 && range.every(Number.isFinite))
-    .map(([start, end]) => buildNumericRange({start, end, state: 'selected'}));
+    .map((str) => {
+      const [startAsString, endAsString, endInclusiveAsString] =
+        str.split(rangeDelimiter);
+      return {
+        start: parseFloat(startAsString),
+        end: parseFloat(endAsString),
+        endInclusive: !!endInclusiveAsString,
+      };
+    })
+    .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
+    .map(({start, end, endInclusive}) =>
+      buildNumericRange({start, end, state: 'selected', endInclusive})
+    );
 }
 
 function isValidDateRangeValue(date: string) {
@@ -196,13 +212,17 @@ function isValidDateRangeValue(date: string) {
 
 function buildDateRanges(ranges: string[]) {
   return ranges
-    .map((str) => str.split(rangeDelimiter))
+    .map((str) => {
+      const [start, end, endInclusiveAsString] = str.split(rangeDelimiter);
+      return {start, end, endInclusive: !!endInclusiveAsString};
+    })
     .filter(
-      (range) =>
-        range.length === 2 &&
-        range.every((value) => isValidDateRangeValue(value))
+      ({start, end}) =>
+        isValidDateRangeValue(start) && isValidDateRangeValue(end)
     )
-    .map(([start, end]) => buildDateRange({start, end, state: 'selected'}));
+    .map(({start, end, endInclusive}) =>
+      buildDateRange({start, end, state: 'selected', endInclusive})
+    );
 }
 
 function isValidPair<K extends SearchParameterKey>(
