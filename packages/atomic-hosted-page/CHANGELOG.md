@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-hosted-page@0.3.6...@coveo/atomic-hosted-page@0.3.7) (2023-05-09)
+
+**Note:** Version bump only for package @coveo/atomic-hosted-page
+
 ## [0.3.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic-hosted-page@0.3.5...@coveo/atomic-hosted-page@0.3.6) (2023-05-08)
 
 **Note:** Version bump only for package @coveo/atomic-hosted-page
