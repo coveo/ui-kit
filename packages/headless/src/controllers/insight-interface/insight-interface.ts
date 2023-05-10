@@ -1,6 +1,6 @@
+import {configuration} from '../../app/common-reducers';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
 import {
-  configuration,
   insightConfiguration,
   insightInterface,
   searchHub,

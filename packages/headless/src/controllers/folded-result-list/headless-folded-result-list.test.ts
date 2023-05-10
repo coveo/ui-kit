@@ -1,5 +1,6 @@
 import {Result} from '../../api/search/search/result';
-import {search, folding, configuration, query} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
+import {search, folding, query} from '../../app/reducers';
 import {Raw} from '../../case-assist.index';
 import {buildMockResult} from '../../test';
 import {

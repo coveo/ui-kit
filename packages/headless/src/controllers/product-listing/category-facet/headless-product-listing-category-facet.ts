@@ -1,8 +1,8 @@
+import {configuration} from '../../../app/common-reducers';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 import {
   categoryFacetSearchSet,
   categoryFacetSet,
-  configuration,
   productListing,
 } from '../../../app/reducers';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';

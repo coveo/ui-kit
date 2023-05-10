@@ -1,5 +1,5 @@
+import {configuration} from '../../../../../app/common-reducers';
 import {
-  configuration,
   numericFacetSet,
   facetOptions,
   search,

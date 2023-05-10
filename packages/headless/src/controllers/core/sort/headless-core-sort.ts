@@ -1,6 +1,7 @@
 import {ArrayValue, isArray, Schema} from '@coveo/bueno';
+import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {configuration, sortCriteria} from '../../../app/reducers';
+import {sortCriteria} from '../../../app/reducers';
 import {updatePage} from '../../../features/pagination/pagination-actions';
 import {
   buildCriterionExpression,

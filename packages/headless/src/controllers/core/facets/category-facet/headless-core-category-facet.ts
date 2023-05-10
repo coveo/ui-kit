@@ -1,9 +1,9 @@
+import {configuration} from '../../../../app/common-reducers';
 import {CoreEngine} from '../../../../app/engine';
 import {
   categoryFacetSearchSet,
   categoryFacetSet,
   facetOptions,
-  configuration,
   search,
 } from '../../../../app/reducers';
 import {

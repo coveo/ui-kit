@@ -1,4 +1,5 @@
-import {configuration, pagination} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {pagination} from '../../../app/reducers';
 import {logPagerResize} from '../../../features/pagination/pagination-analytics-actions';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {ProductListingEngine} from '../../../product-listing.index';
