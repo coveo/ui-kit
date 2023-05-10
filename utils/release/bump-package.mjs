@@ -95,7 +95,9 @@ await (async () => {
       ? await getNextBetaVersion(nextGoldVersion)
       : nextGoldVersion;
 
-  modifyPackageJson(PATH, (packageJson) => {packageJson.version = newVersion;})
+  modifyPackageJson(PATH, (packageJson) => {
+    packageJson.version = newVersion;
+  });
   await updateWorkspaceDependent(newVersion);
   if (privatePackage) {
     return;
