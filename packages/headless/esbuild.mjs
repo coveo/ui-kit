@@ -1,10 +1,12 @@
 import {build} from 'esbuild';
 import alias from 'esbuild-plugin-alias';
-import {readFileSync, promises} from 'node:fs';
-import {resolve} from 'node:path';
+import {readFileSync, promises, writeFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {dirname, resolve} from 'node:path';
 import {umdWrapper} from '../../scripts/bundle/umd.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
+const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
 const useCaseEntries = {
@@ -64,13 +66,16 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
     const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
     const outfile = `${outDir}/headless.esm.js`;
 
-    return buildBrowserConfig({
-      entryPoints: [entryPoint],
-      outfile,
-      format: 'esm',
-      watch: devMode,
-      minify: false,
-    });
+    return buildBrowserConfig(
+      {
+        entryPoints: [entryPoint],
+        outfile,
+        format: 'esm',
+        watch: devMode,
+        minify: false,
+      },
+      outDir
+    );
   }
 );
 
@@ -79,11 +84,14 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const outDir = getUseCaseDir('dist/browser', useCase);
   const outfile = `${outDir}/headless.esm.js`;
 
-  return buildBrowserConfig({
-    entryPoints: [entryPoint],
-    outfile,
-    format: 'esm',
-  });
+  return buildBrowserConfig(
+    {
+      entryPoints: [entryPoint],
+      outfile,
+      format: 'esm',
+    },
+    outDir
+  );
 });
 
 const browserUmd = Object.entries(useCaseEntries).map((entry) => {
@@ -94,54 +102,67 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   const globalName = getUmdGlobalName(useCase);
   const umd = umdWrapper(globalName);
 
-  return buildBrowserConfig({
-    entryPoints: [entryPoint],
-    outfile,
-    format: 'cjs',
-    banner: {
-      js: `${base.banner.js}\n${umd.header}`,
+  return buildBrowserConfig(
+    {
+      entryPoints: [entryPoint],
+      outfile,
+      format: 'cjs',
+      banner: {
+        js: `${base.banner.js}\n${umd.header}`,
+      },
+      footer: {
+        js: umd.footer,
+      },
     },
-    footer: {
-      js: umd.footer,
-    },
-  });
+    outDir
+  );
 });
+
+/**
+ * @param {string} moduleName
+ */
+function resolveEsm(moduleName) {
+  const packageJsonPath = require.resolve(`${moduleName}/package.json`);
+  const packageJson = require(packageJsonPath);
+  return resolve(dirname(packageJsonPath), packageJson['module'] || packageJson['main']);
+}
 
 /**
  * @param {import('esbuild').BuildOptions} options
  * @returns {Promise<import('esbuild').BuildResult>}
  */
-function buildBrowserConfig(options) {
-  return build({
+async function buildBrowserConfig(options, outDir) {
+  const out = await build({
     ...base,
     platform: 'browser',
     minify: true,
     sourcemap: true,
+    metafile: true,
     external: ['crypto'],
     plugins: [
       alias({
-        'coveo.analytics': resolve(
-          'node_modules',
-          'coveo.analytics',
-          'dist',
-          'library.es.js'
-        ),
+        'coveo.analytics': resolveEsm('coveo.analytics'),
         'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
       }),
     ],
     ...options,
   });
+  outputMetafile(`browser.${options.format}`, outDir, out.metafile);
+  return out;
 }
 
 const nodeCjs = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const dir = getUseCaseDir('dist/', useCase);
   const outfile = `${dir}/headless.js`;
-  return buildNodeConfig({
-    entryPoints: [entryPoint],
-    outfile,
-    format: 'cjs',
-  });
+  return buildNodeConfig(
+    {
+      entryPoints: [entryPoint],
+      outfile,
+      format: 'cjs',
+    },
+    dir
+  );
 });
 
 const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
@@ -149,33 +170,37 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
   const dir = getUseCaseDir('dist/', useCase);
   const outfile = `${dir}/headless.esm.js`;
 
-  return buildNodeConfig({
-    entryPoints: [entryPoint],
-    outfile,
-    format: 'esm',
-  });
+  return buildNodeConfig(
+    {
+      entryPoints: [entryPoint],
+      outfile,
+      format: 'esm',
+    },
+    dir
+  );
 });
 
 /**
  * @param {import('esbuild').BuildOptions} options
  * @returns {Promise<import('esbuild').BuildResult>}
  */
-function buildNodeConfig(options) {
-  return build({
+async function buildNodeConfig(options, outDir) {
+  const out = await build({
     ...base,
+    metafile: true,
     platform: 'node',
+    treeShaking: true,
     plugins: [
       alias({
-        'coveo.analytics': resolve(
-          'node_modules',
-          'coveo.analytics',
-          'dist',
-          'library.js'
-        ),
+        'coveo.analytics': require.resolve('coveo.analytics'),
       }),
     ],
     ...options,
   });
+
+  outputMetafile(`node.${options.format}`, outDir, out.metafile);
+
+  return out;
 }
 
 // https://github.com/coveo/ui-kit/issues/1616
@@ -200,6 +225,12 @@ function getNodeEsmBundlePaths() {
     const dir = getUseCaseDir('dist/', useCase);
     return `${dir}/headless.esm.js`;
   });
+}
+
+function outputMetafile(platform, outDir, metafile) {
+  console.log(outDir);
+  const outFile = resolve(outDir, `${platform}.stats.json`);
+  writeFileSync(outFile, JSON.stringify(metafile));
 }
 
 async function main() {

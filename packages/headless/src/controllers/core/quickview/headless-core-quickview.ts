@@ -145,21 +145,24 @@ export function buildCoreQuickview(
   };
 
   const onFetchContent = (uniqueId: string) => {
-    props.options.onlyContentURL
-      ? dispatch(
-          updateContentURL({
-            uniqueId,
-            requestedOutputSize: maximumPreviewSize,
-            buildResultPreviewRequest,
-            path,
-          })
-        )
-      : dispatch(
-          fetchResultContent({
-            uniqueId,
-            requestedOutputSize: maximumPreviewSize,
-          })
-        );
+    dispatch(
+      updateContentURL({
+        uniqueId,
+        requestedOutputSize: maximumPreviewSize,
+        buildResultPreviewRequest,
+        path,
+      })
+    );
+
+    if (!props.options.onlyContentURL) {
+      dispatch(
+        fetchResultContent({
+          uniqueId,
+          requestedOutputSize: maximumPreviewSize,
+        })
+      );
+    }
+
     if (fetchResultContentCallback) {
       fetchResultContentCallback();
     }

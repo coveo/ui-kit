@@ -71,6 +71,7 @@ export function getSearchInitialState(): SearchState {
       pipeline: '',
       splitTestRun: '',
       termsToHighlight: {},
+      phrasesToHighlight: {},
     },
     duration: 0,
     queryExecuted: '',
