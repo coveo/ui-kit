@@ -1,16 +1,12 @@
+import {configuration} from '../../../../../app/common-reducers';
 import {CoreEngine} from '../../../../../app/engine';
-import {
-  configuration,
-  dateFacetSet,
-  facetOptions,
-  search,
-} from '../../../../../app/reducers';
 import {
   disableFacet,
   enableFacet,
   updateFacetOptions,
 } from '../../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
 import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
 import {
   registerDateFacet,
@@ -18,7 +14,9 @@ import {
   updateDateFacetValues,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {dateFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {
   ConfigurationSection,
   DateFacetSection,

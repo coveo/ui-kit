@@ -1,4 +1,5 @@
-import {configuration, resultPreview} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {resultPreview} from '../../../app/reducers';
 import {
   fetchResultContent,
   nextPreview,

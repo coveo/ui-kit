@@ -1,6 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
+import {configuration} from '../../../app/common-reducers';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {configuration, attachedResults} from '../../../app/reducers';
+import {attachedResults} from '../../../app/reducers';
 import {
   attachResult,
   detachResult,

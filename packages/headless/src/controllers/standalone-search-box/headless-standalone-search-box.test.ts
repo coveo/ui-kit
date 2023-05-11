@@ -1,9 +1,5 @@
-import {
-  configuration,
-  query,
-  standaloneSearchBoxSet,
-  querySuggest,
-} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
+import {query, standaloneSearchBoxSet, querySuggest} from '../../app/reducers';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,

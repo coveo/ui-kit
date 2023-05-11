@@ -4,7 +4,6 @@ import {caseAssistConfigurationReducer} from '../features/case-assist-configurat
 import {caseContextReducer} from '../features/case-context/case-context-slice';
 import {caseFieldReducer} from '../features/case-field/case-field-slice';
 import {caseInputReducer} from '../features/case-input/case-input-slice';
-import {configurationReducer} from '../features/configuration/configuration-slice';
 import {contextReducer} from '../features/context/context-slice';
 import {debugReducer} from '../features/debug/debug-slice';
 import {versionReducer} from '../features/debug/version-slice';
@@ -30,14 +29,12 @@ import {instantResultsReducer} from '../features/instant-results/instant-results
 import {paginationReducer} from '../features/pagination/pagination-slice';
 import {pipelineReducer} from '../features/pipeline/pipeline-slice';
 import {productListingReducer} from '../features/product-listing/product-listing-slice';
-import {productRecommendationsReducer} from '../features/product-recommendations/product-recommendations-slice';
 import {querySetReducer} from '../features/query-set/query-set-slice';
 import {querySuggestReducer} from '../features/query-suggest/query-suggest-slice';
 import {queryReducer} from '../features/query/query-slice';
 import {questionAnsweringReducer} from '../features/question-answering/question-answering-slice';
 import {recentQueriesReducer} from '../features/recent-queries/recent-queries-slice';
 import {recentResultsReducer} from '../features/recent-results/recent-results-slice';
-import {recommendationReducer} from '../features/recommendation/recommendation-slice';
 import {resultPreviewReducer} from '../features/result-preview/result-preview-slice';
 import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 import {searchReducer} from '../features/search/search-slice';
@@ -49,7 +46,6 @@ import {tabSetReducer} from '../features/tab-set/tab-set-slice';
 import {triggerReducer} from '../features/triggers/triggers-slice';
 import {undoable} from './undoable';
 
-export const configuration = configurationReducer;
 export const pagination = paginationReducer;
 export const facetSet = facetSetReducer;
 export const facetSearchSet = specificFacetSearchSetReducer;
@@ -94,8 +90,7 @@ export const history = undoable({
   },
   reducer: historyReducer,
 });
-export const recommendation = recommendationReducer;
-export const productRecommendations = productRecommendationsReducer;
+
 export const productListing = productListingReducer;
 export const sort = sortReducer;
 

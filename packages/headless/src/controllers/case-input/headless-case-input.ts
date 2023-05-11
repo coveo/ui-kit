@@ -1,10 +1,10 @@
 import {Schema} from '@coveo/bueno';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
+import {configuration} from '../../app/common-reducers';
 import {
   caseAssistConfiguration,
   caseField,
   caseInput,
-  configuration,
   documentSuggestion,
 } from '../../app/reducers';
 import {logUpdateCaseField} from '../../features/case-assist/case-assist-analytics-actions';

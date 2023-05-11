@@ -1,5 +1,6 @@
+import {configuration} from '../../../../../app/common-reducers';
 import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
-import {configuration, dateFacetSet, search} from '../../../../../app/reducers';
+import {dateFacetSet, search} from '../../../../../app/reducers';
 import {
   logFacetClearAll,
   logFacetSelect,

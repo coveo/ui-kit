@@ -35,5 +35,8 @@
       }
     }
   },
-  "defaultProject": "@coveo/atomic-angular"
+  "defaultProject": "@coveo/atomic-angular",
+  "cli": {
+    "analytics": false
+  }
 }

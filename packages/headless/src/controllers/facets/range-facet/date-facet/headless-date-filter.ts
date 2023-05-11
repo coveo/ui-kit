@@ -1,4 +1,5 @@
-import {configuration, dateFacetSet, search} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
+import {dateFacetSet, search} from '../../../../app/reducers';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
   logFacetClearAll,
