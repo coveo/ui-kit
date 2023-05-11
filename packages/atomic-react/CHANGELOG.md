@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.30](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@2.2.29...@coveo/atomic-react@2.2.30) (2023-05-11)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
 ## [2.2.29](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@2.2.28...@coveo/atomic-react@2.2.29) (2023-05-11)
 
 **Note:** Version bump only for package @coveo/atomic-react
