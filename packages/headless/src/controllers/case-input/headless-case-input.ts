@@ -1,16 +1,14 @@
 import {Schema} from '@coveo/bueno';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
 import {configuration} from '../../app/common-reducers';
-import {
-  caseAssistConfiguration,
-  caseField,
-  caseInput,
-  documentSuggestion,
-} from '../../app/reducers';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
 import {logUpdateCaseField} from '../../features/case-assist/case-assist-analytics-actions';
 import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
+import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice';
 import {updateCaseInput} from '../../features/case-input/case-input-actions';
+import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
 import {
   CaseAssistConfigurationSection,
   CaseFieldSection,
