@@ -1,17 +1,12 @@
 import {configuration} from '../../../../app/common-reducers';
 import {CoreEngine} from '../../../../app/engine';
 import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  facetOptions,
-  search,
-} from '../../../../app/reducers';
-import {
   disableFacet,
   enableFacet,
   updateFacetOptions,
 } from '../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {
   deselectAllCategoryFacetValues,
   registerCategoryFacet,
@@ -22,11 +17,14 @@ import {
 import {categoryFacetResponseSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
 import {categoryFacetRequestSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {partitionIntoParentsAndValues} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,

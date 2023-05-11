@@ -1,10 +1,6 @@
 import {configuration} from '../../../../../app/common-reducers';
 import {CoreEngine} from '../../../../../app/engine';
-import {
-  numericFacetSet,
-  facetOptions,
-  search,
-} from '../../../../../app/reducers';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
 import {
@@ -20,6 +16,8 @@ import {
   registerNumericFacet,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {executeToggleNumericFacetSelect} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {
   ConfigurationSection,
   FacetOptionsSection,

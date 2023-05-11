@@ -1,6 +1,5 @@
 import {configuration} from '../../../../app/common-reducers';
 import {CoreEngine} from '../../../../app/engine';
-import {facetSearchSet, facetSet, facetOptions} from '../../../../app/reducers';
 import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
 import {
   disableFacet,
@@ -8,8 +7,10 @@ import {
   updateFacetOptions,
 } from '../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   registerFacet,
   deselectAllFacetValues,
@@ -23,6 +24,7 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors';
+import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice';
 import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
