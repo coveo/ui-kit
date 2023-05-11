@@ -1,9 +1,5 @@
-import {
-  configuration,
-  dateFacetSet,
-  search,
-  facetOptions,
-} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
+import {dateFacetSet, search, facetOptions} from '../../../../app/reducers';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {ProductListingAppState} from '../../../../state/product-listing-app-state';

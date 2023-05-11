@@ -1,11 +1,11 @@
 import {Schema} from '@coveo/bueno';
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
+import {configuration} from '../../app/common-reducers';
 import {
   caseAssistConfiguration,
   caseField,
   caseInput,
-  configuration,
   documentSuggestion,
 } from '../../app/reducers';
 import {

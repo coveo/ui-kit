@@ -1,8 +1,5 @@
-import {
-  configuration,
-  insightInterface,
-  resultPreview,
-} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {insightInterface, resultPreview} from '../../../app/reducers';
 import {updateContentURL} from '../../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
 import {buildMockResult} from '../../../test';

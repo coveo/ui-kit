@@ -1,10 +1,7 @@
 import {Result} from '../../../api/search/search/result';
+import {configuration} from '../../../app/common-reducers';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {
-  configuration,
-  resultPreview,
-  insightInterface,
-} from '../../../app/reducers';
+import {resultPreview, insightInterface} from '../../../app/reducers';
 import {
   buildInsightResultPreviewRequest,
   StateNeededByInsightHtmlEndpoint,

@@ -1,4 +1,5 @@
-import {configuration, tabSet} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {tabSet} from '../../../app/reducers';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state';
 import {
   registerTab,

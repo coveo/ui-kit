@@ -1,8 +1,5 @@
-import {
-  configuration,
-  resultPreview,
-  documentSuggestion,
-} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
+import {resultPreview, documentSuggestion} from '../../app/reducers';
 import {DocumentSuggestionResponse} from '../../case-assist.index';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
 import {
