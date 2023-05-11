@@ -182,3 +182,41 @@ jobs:
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "<>"
           npm run bump:version
+  prerelease:
+    timeout-minutes: 40
+    name: Pre-release
+    # TODO: Uncomment job dependencies when we enable new versioning process.
+    # needs:
+    #   - 'lint-check'
+    #   - 'unit-test'
+    #   - 'e2e-atomic-test'
+    #   - 'e2e-quantic-test'
+    runs-on: ubuntu-latest
+    environment: prerelease
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Release
+        run: |
+          npm run nx:graph
+          npm run release:install-npm-proxy
+          npm run release:phase1-3
+        env:
+          # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          DEBUG: '*'
+          IS_PRERELEASE: 'true'
+      - name: Download published packages
+        shell: bash
+        run: |
+          mkdir downloaded-packages
+          while read package; do
+            echo "Downloading $package"
+            npm pack $package --pack-destination=downloaded-packages
+          done < .git-message
+      - name: Upload packages as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: packages
+          path: downloaded-packages
