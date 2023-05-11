@@ -1,3 +1,4 @@
+import {PlatformEnvironment, getOrganizationEndpoints} from '@coveo/headless';
 import {Component, h, Prop, Event, EventEmitter} from '@stencil/core';
 import {Button} from '../../common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
@@ -22,8 +23,15 @@ export class AtomicRelevanceInspector {
   closeRelevanceInspector: EventEmitter<null> | undefined;
 
   public render() {
-    const {platformUrl, organizationId} =
+    const {organizationId, platformUrl} =
       this.bindings.engine.state.configuration;
+    const envMatch = platformUrl.match(/(hipaa|dev|stg)/);
+    const env = envMatch ? envMatch[1] : 'prod';
+
+    const {admin} = getOrganizationEndpoints(
+      organizationId,
+      env as PlatformEnvironment
+    );
     const {searchResponseId} = this.bindings.engine.state.search;
     return (
       <atomic-modal
@@ -48,7 +56,7 @@ export class AtomicRelevanceInspector {
           <a
             class="btn-primary p-2"
             target="_blank"
-            href={`${platformUrl}/admin/#/${organizationId}/search/relevanceInspector/${searchResponseId}`}
+            href={`${admin}/admin/#/${organizationId}/search/relevanceInspector/${searchResponseId}`}
             onClick={() => this.closeRelevanceInspector?.emit()}
           >
             Open
