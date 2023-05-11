@@ -15,8 +15,8 @@ import {SearchParameters} from './search-parameter-actions';
 
 const delimiter = '&';
 const equal = '=';
-const rangeDelimiter = '..';
-const rangeEndInclusive = 'endInclusive';
+const rangeDelimiterExclusive = '..';
+const rangeDelimiterInclusive = '...';
 
 type SearchParameterKey = keyof SearchParameters;
 type UnknownObject = {[field: string]: unknown[]};
@@ -109,9 +109,9 @@ function serializeRangeFacets(
       const value = ranges
         .map(
           ({start, end, endInclusive}) =>
-            `${start}${rangeDelimiter}${end}${
-              endInclusive ? rangeDelimiter + rangeEndInclusive : ''
-            }`
+            `${start}${
+              endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
+            }${end}`
         )
         .join(',');
       return `${key}-${facetId}${equal}${value}`;
@@ -179,12 +179,15 @@ function processObjectValues(key: string, values: string[]) {
 function buildNumericRanges(ranges: string[]) {
   return ranges
     .map((str) => {
-      const [startAsString, endAsString, endInclusiveAsString] =
-        str.split(rangeDelimiter);
+      const isEndInclusive = str.indexOf(rangeDelimiterInclusive) !== -1;
+      const [startAsString, endAsString] = str.split(
+        isEndInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
+      );
+
       return {
         start: parseFloat(startAsString),
         end: parseFloat(endAsString),
-        endInclusive: endInclusiveAsString === rangeEndInclusive,
+        endInclusive: isEndInclusive,
       };
     })
     .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
@@ -213,11 +216,15 @@ function isValidDateRangeValue(date: string) {
 function buildDateRanges(ranges: string[]) {
   return ranges
     .map((str) => {
-      const [start, end, endInclusiveAsString] = str.split(rangeDelimiter);
+      const isEndInclusive = str.indexOf(rangeDelimiterInclusive) !== -1;
+      const [start, end] = str.split(
+        isEndInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
+      );
+
       return {
         start,
         end,
-        endInclusive: endInclusiveAsString === rangeEndInclusive,
+        endInclusive: isEndInclusive,
       };
     })
     .filter(

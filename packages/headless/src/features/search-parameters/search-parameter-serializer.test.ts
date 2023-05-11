@@ -259,7 +259,7 @@ describe('buildSearchParameterSerializer', () => {
     });
 
     it('deserializes a numeric facet with multiple selections with an optional endInclusive', () => {
-      const result = deserialize('nf-size=0..10,10..20..endInclusive');
+      const result = deserialize('nf-size=0..10,10...20');
       expect(result).toEqual({
         nf: {
           size: [
@@ -269,23 +269,6 @@ describe('buildSearchParameterSerializer', () => {
               end: 20,
               state: 'selected',
               endInclusive: true,
-            }),
-          ],
-        },
-      });
-    });
-
-    it('deserializes a numeric facet with multiple selections with an invalid endInclusive', () => {
-      const result = deserialize('nf-size=0..10,10..20..thisIsRandom');
-      expect(result).toEqual({
-        nf: {
-          size: [
-            buildNumericRange({start: 0, end: 10, state: 'selected'}),
-            buildNumericRange({
-              start: 10,
-              end: 20,
-              state: 'selected',
-              endInclusive: false,
             }),
           ],
         },
@@ -305,9 +288,7 @@ describe('buildSearchParameterSerializer', () => {
     });
 
     it('deserializes multiple numeric facets with selected values with an optional endInclusive', () => {
-      const result = deserialize(
-        'nf-size=0..10&nf-amount=100..200..endInclusive'
-      );
+      const result = deserialize('nf-size=0..10&nf-amount=100...200');
       expect(result).toEqual({
         nf: {
           size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
@@ -406,7 +387,7 @@ describe('buildSearchParameterSerializer', () => {
     it('deserializes multiple date facets with selected values with an optional endInclusive', () => {
       const date1 = '2010/01/01@05:00:00';
       const date2 = '2011/01/01@05:00:00';
-      const range = `${date1}..${date2}..endInclusive`;
+      const range = `${date1}...${date2}`;
 
       const result = deserialize(`df-date=${range}&df-created=${range}`);
       const expected = buildDateRange({
@@ -427,7 +408,7 @@ describe('buildSearchParameterSerializer', () => {
     it('deserializes multiple date facets with selected values with an optional endInclusive', () => {
       const date1 = '2010/01/01@05:00:00';
       const date2 = '2011/01/01@05:00:00';
-      const range = `${date1}..${date2}..endInclusive`;
+      const range = `${date1}...${date2}`;
 
       const result = deserialize(`df-date=${range}&df-created=${range}`);
       const expected = buildDateRange({
