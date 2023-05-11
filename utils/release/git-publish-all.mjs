@@ -76,10 +76,10 @@ const GIT_SSH_REMOTE = 'deploy';
   `;
 
   // Craft the commit (complex process, see function)
-  const commit = await commitChanges(releaseNumber, commitMessage, octokit);
+  const commit = await commitChanges(commitMessage, octokit);
 
   // Add the tags locally...
-  for (const tag of packagesReleased.split('\n').concat(gitNewTag)) {
+  for (const tag of packagesReleased.split('\n')) {
     await gitTag(tag, commit);
   }
 
@@ -92,18 +92,17 @@ const GIT_SSH_REMOTE = 'deploy';
 
 /**
  * "Craft" the signed release commit.
- * @param {string|number} releaseNumber
  * @param {string} commitMessage
  * @param {Octokit} octokit
  * @returns {Promise<string>}
  */
-async function commitChanges(releaseNumber, commitMessage, octokit) {
+async function commitChanges(commitMessage, octokit) {
   // Get latest commit and name of the main branch.
   const mainBranchName = await getCurrentBranchName();
   const mainBranchCurrentSHA = await getSHA1fromRef(mainBranchName);
 
   // Create a temporary branch and check it out.
-  const tempBranchName = `release/${releaseNumber}`;
+  const tempBranchName = `release/${mainBranchCurrentSHA}`;
   await gitCreateBranch(tempBranchName);
   await gitCheckoutBranch(tempBranchName);
   runPrecommit();
