@@ -1,4 +1,5 @@
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
+import {numericFacetSet, search} from '../../../../app/reducers';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {ProductListingAppState} from '../../../../state/product-listing-app-state';

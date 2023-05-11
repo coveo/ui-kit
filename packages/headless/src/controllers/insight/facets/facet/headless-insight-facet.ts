@@ -1,10 +1,6 @@
+import {configuration} from '../../../../app/common-reducers';
 import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
-import {
-  facetSet,
-  configuration,
-  facetSearchSet,
-  search,
-} from '../../../../app/reducers';
+import {facetSet, facetSearchSet, search} from '../../../../app/reducers';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {
   logFacetClearAll,

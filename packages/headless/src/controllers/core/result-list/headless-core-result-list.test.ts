@@ -1,5 +1,6 @@
 import {SchemaValidationError} from '@coveo/bueno';
-import {configuration, fields, search} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {fields, search} from '../../../app/reducers';
 import {registerFieldsToInclude} from '../../../features/fields/fields-actions';
 import {fetchMoreResults} from '../../../features/search/search-actions';
 import {buildMockResult, MockSearchEngine} from '../../../test';

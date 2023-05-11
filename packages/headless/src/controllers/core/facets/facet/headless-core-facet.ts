@@ -1,10 +1,6 @@
+import {configuration} from '../../../../app/common-reducers';
 import {CoreEngine} from '../../../../app/engine';
-import {
-  configuration,
-  facetSearchSet,
-  facetSet,
-  facetOptions,
-} from '../../../../app/reducers';
+import {facetSearchSet, facetSet, facetOptions} from '../../../../app/reducers';
 import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
 import {
   disableFacet,

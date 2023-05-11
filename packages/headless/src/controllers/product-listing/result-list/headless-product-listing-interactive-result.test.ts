@@ -1,5 +1,5 @@
 import {Result} from '../../../api/search/search/result';
-import {configuration} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {logDocumentOpen} from '../../../features/product-listing/product-listing-analytics';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
 import {buildMockResult} from '../../../test';

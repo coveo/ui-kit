@@ -1,9 +1,5 @@
-import {
-  configuration,
-  dateFacetSet,
-  facetOptions,
-  search,
-} from '../../../../../app/reducers';
+import {configuration} from '../../../../../app/common-reducers';
+import {dateFacetSet, facetOptions, search} from '../../../../../app/reducers';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
 import {
   registerDateFacet,

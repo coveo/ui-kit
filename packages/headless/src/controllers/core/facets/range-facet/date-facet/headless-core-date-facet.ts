@@ -1,10 +1,6 @@
+import {configuration} from '../../../../../app/common-reducers';
 import {CoreEngine} from '../../../../../app/engine';
-import {
-  configuration,
-  dateFacetSet,
-  facetOptions,
-  search,
-} from '../../../../../app/reducers';
+import {dateFacetSet, facetOptions, search} from '../../../../../app/reducers';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {
   RegisterDateFacetActionCreatorPayload,
