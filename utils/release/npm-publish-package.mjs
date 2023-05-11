@@ -9,7 +9,16 @@ import {readFileSync} from 'node:fs';
  * @param {string} tag
  */
 async function isPublished(name, version, tag = version) {
-  return (await describeNpmTag(name, tag)) === version;
+  try {
+    const publishedVersion = await describeNpmTag(name, tag);
+    return publishedVersion === version;
+  } catch (e) {
+    const message = /** @type {{error?: string}} */ (e).error;
+    if (message && message.includes('code E404')) {
+      return false;
+    }
+    throw e;
+  }
 }
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
