@@ -13,7 +13,7 @@ async function isPublished(name, version, tag = version) {
     const publishedVersion = await describeNpmTag(name, tag);
     return publishedVersion === version;
   } catch (e) {
-    const message = /** @type {{error?: string}} */ (e).error;
+    const message = /** @type {{stderr?: string}} */ (e).stderr;
     if (message && message.includes('code E404')) {
       return false;
     }
