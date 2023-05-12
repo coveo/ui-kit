@@ -16,8 +16,6 @@ jobs:
   release:
     environment: 'Release'
     runs-on: ubuntu-latest
-    env:
-      GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
         with:
