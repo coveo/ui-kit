@@ -1,8 +1,8 @@
 import {getOrganizationEndpoints} from '../api/platform-client';
 import * as Store from '../app/store';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
+import {configuration} from './common-reducers';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
-import {configuration} from './reducers';
 
 jest.mock('pino', () => ({
   ...jest.requireActual('pino'),

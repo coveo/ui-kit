@@ -1,10 +1,5 @@
-import {
-  configuration,
-  query,
-  querySet,
-  querySuggest,
-  search,
-} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {query, querySet, querySuggest, search} from '../../../app/reducers';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,

@@ -1,8 +1,8 @@
+import {configuration} from '../../app/common-reducers';
 import {
   caseAssistConfiguration,
   caseField,
   caseInput,
-  configuration,
   documentSuggestion,
 } from '../../app/reducers';
 import {

@@ -1,0 +1,35 @@
+name: Create release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '⚠ be sure of yourself ⚠'
+        required: false
+        default: ''
+      debug:
+        description: 'Add DEBUG=* to the env if true'
+        type: boolean
+        default: false
+        required: false
+
+jobs:
+  release:
+    environment: 'Release'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Release
+        run: npm run release
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VERSION: ${{ inputs.version }}
+          DEBUG: ${{ inputs.debug && '*' || '' }}
+          RELEASER_APP_ID: ${{ secrets.RELEASER_APP_ID }}
+          RELEASER_PRIVATE_KEY: ${{ secrets.RELEASER_PRIVATE_KEY }}
+          RELEASER_CLIENT_ID: ${{ secrets.RELEASER_CLIENT_ID }}
+          RELEASER_CLIENT_SECRET: ${{ secrets.RELEASER_CLIENT_SECRET }}
+          RELEASER_INSTALLATION_ID: ${{ secrets.RELEASER_INSTALLATION_ID }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}

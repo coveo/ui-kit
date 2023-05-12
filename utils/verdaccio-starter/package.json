@@ -1,0 +1,25 @@
+{
+  "name": "@coveo/verdaccio-starter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/tmp": "^0.2.3",
+    "@verdaccio/types": "^10.7.0",
+    "typescript": "4.6.4"
+  },
+  "dependencies": {
+    "get-port": "6.1.2",
+    "tmp": "^0.2.1",
+    "verdaccio": "5.22.1"
+  }
+}

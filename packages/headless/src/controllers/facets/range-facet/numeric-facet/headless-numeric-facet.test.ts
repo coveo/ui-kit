@@ -1,4 +1,5 @@
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
+import {numericFacetSet, search} from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';

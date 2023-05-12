@@ -1,5 +1,5 @@
 import React from 'react';
-import {addons, types} from '@storybook/addons';
+import {addons, types} from '@storybook/manager-api';
 import {AddonPanel} from '@storybook/components';
 import {ShadowPartPanel} from './shadow-parts-addon/shadow-parts-panel';
 import {CodeSamplePanel} from './code-sample-addon/code-sample-panel';

@@ -1,3 +1,6 @@
+import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
+
+polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 
@@ -33,6 +36,7 @@ export * from './features/insight-search/insight-search-analytics-actions-loader
 export * from './features/fields/fields-actions-loader';
 export * from './features/attached-results/attached-results-actions-loader';
 export * from './features/analytics/generic-analytics-actions-loader';
+export * from './features/question-answering/question-answering-actions-loader';
 
 // Controllers
 export type {
@@ -262,6 +266,26 @@ export type {InsightInterfaceState} from './features/insight-interface/insight-i
 
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
+
+export type {
+  SmartSnippet,
+  SmartSnippetOptions,
+  SmartSnippetProps,
+  SmartSnippetState,
+  QuestionAnswerDocumentIdentifier,
+  SmartSnippetCore,
+} from './controllers/insight/smart-snippet/headless-insight-smart-snippet';
+export {buildSmartSnippet} from './controllers/insight/smart-snippet/headless-insight-smart-snippet';
+
+export type {
+  SmartSnippetQuestionsListOptions,
+  SmartSnippetQuestionsListProps,
+  SmartSnippetQuestionsListState,
+  SmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
+} from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
+export {buildSmartSnippetQuestionsList} from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
 
 // Features
 export type {

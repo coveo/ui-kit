@@ -5,5 +5,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   'atomic-result-list',
   {}
 );
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/ResultList'};
 export const DefaultResultList = exportedStory;

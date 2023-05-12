@@ -2,6 +2,7 @@ import {
   buildInteractiveResult,
   Result,
   InteractiveResult,
+  TermsToHighlight,
 } from '@coveo/headless';
 import {
   Component,
@@ -22,8 +23,8 @@ import {
 } from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/button';
 import {IconButton} from '../../../common/iconButton';
+import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {LinkWithResultAnalytics} from '../../result-link/result-link';
 import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';
 import {buildQuickviewPreviewBar} from '../quickview-preview-bar/quickview-preview-bar';
@@ -152,8 +153,10 @@ export class AtomicQuickviewModal implements InitializableComponent {
         </div>
         <div class="overflow-auto relative">
           <QuickviewIframe
+            logger={this.logger}
+            src={this.quickviewSrc}
             sandbox={this.sandbox}
-            result={this.result}
+            uniqueIdentifier={this.quickviewUniqueIdentifier}
             content={this.content}
             onSetIframeRef={async (ref) => {
               this.iframeRef = ref;
@@ -213,6 +216,14 @@ export class AtomicQuickviewModal implements InitializableComponent {
     return 'CoveoDisableHighlightStyle';
   }
 
+  private get logger() {
+    return this.bindings.engine.logger;
+  }
+
+  private get quickviewSrc() {
+    return this.bindings.engine.state.resultPreview?.contentURL;
+  }
+
   private enableHighlights() {
     this.removeDisableHighlightScript();
   }
@@ -265,7 +276,31 @@ export class AtomicQuickviewModal implements InitializableComponent {
   }
 
   private get termsToHighlight() {
-    return this.bindings.engine.state.search.response.termsToHighlight;
+    const flatPhrasesToHighlight: TermsToHighlight = {};
+
+    const phrasesToHighlight =
+      this.bindings.engine.state.search.response.phrasesToHighlight;
+
+    Object.entries(phrasesToHighlight).forEach(([phrase, keywords]) => {
+      flatPhrasesToHighlight[phrase] = Object.entries(keywords).flatMap(
+        ([keywordEntry, keywordStemming]) => {
+          return [keywordEntry, ...keywordStemming];
+        }
+      );
+    });
+
+    return {
+      ...this.bindings.engine.state.search.response.termsToHighlight,
+      ...flatPhrasesToHighlight,
+    };
+  }
+
+  private get requestId() {
+    return this.bindings.engine.state.search.requestId;
+  }
+
+  private get quickviewUniqueIdentifier() {
+    return this.result?.uniqueId + this.requestId;
   }
 
   private handleHighlightsScripts() {

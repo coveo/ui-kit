@@ -1,5 +1,5 @@
 import {Result} from '../../api/search/search/result';
-import {configuration} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions';
 import {buildMockResult} from '../../test';
 import {
