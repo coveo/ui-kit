@@ -1,11 +1,10 @@
 import {fetchClassifications} from '../../../page-objects/actions/action-fetch-classifications';
-import {fetchSuggestions} from '../../../page-objects/actions/action-get-suggestions';
 import {
   interceptCaseAssist,
   mockCaseClassification,
   mockSfPicklistValues,
   interceptClassificationsIndefinitely,
-  mockDocumentSuggestion,
+  interceptDocumentSuggestion,
 } from '../../../page-objects/case-assist';
 import {configure} from '../../../page-objects/configurator';
 import {scope} from '../../../reporters/detailed-collector';
@@ -1056,13 +1055,12 @@ describe('quantic-case-classification', () => {
         scope('when fetching suggestions', () => {
           const firstSuggestionIndex = 0;
 
+          interceptDocumentSuggestion();
           mockCaseClassification(
             coveoDefaultField,
             allOptions.slice(0, suggestionsCount)
           );
-          mockDocumentSuggestion([{}]);
           fetchClassifications();
-          fetchSuggestions();
 
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
@@ -1106,13 +1104,12 @@ describe('quantic-case-classification', () => {
         scope('when fetching suggestions', () => {
           const firstSuggestionIndex = 0;
 
+          interceptDocumentSuggestion();
           mockCaseClassification(
             coveoDefaultField,
             allOptions.slice(0, suggestionsCount)
           );
-          mockDocumentSuggestion([{}]);
           fetchClassifications();
-          fetchSuggestions();
 
           Expect.displaySelectTitle(false);
           Expect.numberOfSuggestions(suggestionsCount);
@@ -1155,13 +1152,12 @@ describe('quantic-case-classification', () => {
         scope('when fetching suggestions', () => {
           const firstSuggestionIndex = 0;
 
+          interceptDocumentSuggestion();
           mockCaseClassification(
             coveoDefaultField,
             allOptions.slice(0, suggestionsCount)
           );
-          mockDocumentSuggestion([{}]);
           fetchClassifications();
-          fetchSuggestions();
 
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
