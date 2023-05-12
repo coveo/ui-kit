@@ -3,14 +3,12 @@
  * it needs to reserve the branch when running, so that no 'new commits' come up.
  */
 import {Octokit} from 'octokit';
+import {REPO_MAIN_BRANCH, REPO_NAME, REPO_OWNER} from './common/constants.mjs';
 
-const REPO_OWNER = 'coveo';
-const REPO_NAME = 'cli';
-const MAIN_BRANCH_NAME = 'master';
-const COVEO_CLI_MASTER = {
+const REPO_MAIN_BRANCH_PARAMS = {
   owner: REPO_OWNER,
   repo: REPO_NAME,
-  branch: MAIN_BRANCH_NAME,
+  branch: REPO_MAIN_BRANCH,
 };
 export const limitWriteAccessToBot = () => changeBranchRestrictions(true);
 
@@ -26,7 +24,7 @@ async function changeBranchRestrictions(onlyBot) {
   const octokit = new Octokit({auth: process.env.GITHUB_CREDENTIALS});
   // Requires branches to be up to date before merging
   await octokit.rest.repos.updateStatusCheckProtection({
-    ...COVEO_CLI_MASTER,
+    ...REPO_MAIN_BRANCH_PARAMS,
     strict: onlyBot,
   });
 }
