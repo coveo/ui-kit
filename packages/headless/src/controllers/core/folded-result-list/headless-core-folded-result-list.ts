@@ -10,10 +10,6 @@ import {
   registerFolding,
 } from '../../../features/folding/folding-actions';
 import {
-  logShowLessFoldedResults,
-  logShowMoreFoldedResults,
-} from '../../../features/folding/folding-insight-analytics-actions';
-import {
   FoldedCollection,
   FoldedResult,
 } from '../../../features/folding/folding-state';
@@ -152,6 +148,7 @@ export interface FoldedResultAnalyticsClient {
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FoldedResultList` properties.
+ * @param analyticsClient - A FoldedResultAnalyticsClient to send the appropriate analytics calls.
  * @returns A `CoreFoldedResultList` controller instance.
  */
 export function buildCoreFoldedResultList(
@@ -189,13 +186,13 @@ export function buildCoreFoldedResultList(
           ] as string
         )
       );
-      dispatch(logShowMoreFoldedResults(collection.result));
+      dispatch(analyticsClient.logShowMoreFoldedResults(collection.result));
     },
     logShowMoreFoldedResults: (result) => {
-      dispatch(logShowMoreFoldedResults(result));
+      dispatch(analyticsClient.logShowMoreFoldedResults(result));
     },
     logShowLessFoldedResults: () => {
-      dispatch(logShowLessFoldedResults());
+      dispatch(analyticsClient.logShowLessFoldedResults());
     },
 
     findResultById(collection) {
