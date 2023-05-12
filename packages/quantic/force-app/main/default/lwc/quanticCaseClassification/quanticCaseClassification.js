@@ -326,7 +326,7 @@ export default class QuanticCaseClassification extends LightningElement {
 
   /**
    * Whether we want to fetch new case classifications or document suggestions when we update the field.
-   * @returns {Object}
+   * @returns {{caseClassifications: boolean, documentSuggestions: boolean}}
    */
   get updatesToFetch() {
     return {
