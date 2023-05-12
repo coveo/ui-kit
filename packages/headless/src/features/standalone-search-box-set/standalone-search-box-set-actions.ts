@@ -1,6 +1,6 @@
 import {StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/search-analytics';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
 import {PlanRequest} from '../../api/search/plan/plan-request';
 import {

@@ -2,7 +2,6 @@ import {
   AnalyticsClientSendEventHook,
   InsightClientProvider,
   CoveoInsightClient,
-  history,
 } from 'coveo.analytics';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {Logger} from 'pino';
@@ -143,5 +142,3 @@ export const configureInsightAnalytics = ({
 
   return client;
 };
-
-export const historyStore = new history.HistoryStore();
