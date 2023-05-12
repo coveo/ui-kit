@@ -23,16 +23,6 @@ export class AtomicRelevanceInspector {
   closeRelevanceInspector: EventEmitter<null> | undefined;
 
   public render() {
-    const {organizationId, platformUrl} =
-      this.bindings.engine.state.configuration;
-    const envMatch = platformUrl.match(/(hipaa|dev|stg)/);
-    const env = envMatch ? envMatch[1] : 'prod';
-
-    const {admin} = getOrganizationEndpoints(
-      organizationId,
-      env as PlatformEnvironment
-    );
-    const {searchResponseId} = this.bindings.engine.state.search;
     return (
       <atomic-modal
         exportparts="footer"
@@ -56,7 +46,7 @@ export class AtomicRelevanceInspector {
           <a
             class="btn-primary p-2"
             target="_blank"
-            href={`${admin}/admin/#/${organizationId}/search/relevanceInspector/${searchResponseId}`}
+            href={this.adminHref}
             onClick={() => this.closeRelevanceInspector?.emit()}
           >
             Open
@@ -64,5 +54,28 @@ export class AtomicRelevanceInspector {
         </div>
       </atomic-modal>
     );
+  }
+
+  private extractEnvironmentFromPlatformURL() {
+    const {platformUrl} = this.bindings.engine.state.configuration;
+
+    const envMatch = platformUrl.match(
+      /^https:\/\/(platform(?<envFromPlatform>dev|stg|hipaa)|[a-z0-9]+\.org(?<envFromOrg>dev|stg|hipaa))/
+    );
+    if (!envMatch || !envMatch.groups) {
+      return 'prod';
+    }
+    return envMatch.groups.envFromPlatform || envMatch.groups.envFromOrg;
+  }
+
+  private get adminHref() {
+    const {organizationId} = this.bindings.engine.state.configuration;
+
+    const {admin} = getOrganizationEndpoints(
+      organizationId,
+      this.extractEnvironmentFromPlatformURL() as PlatformEnvironment
+    );
+    const {searchResponseId} = this.bindings.engine.state.search;
+    return `${admin}/admin/#/${organizationId}/search/relevanceInspector/${searchResponseId}`;
   }
 }
