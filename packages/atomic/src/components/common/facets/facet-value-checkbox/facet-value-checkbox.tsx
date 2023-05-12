@@ -30,7 +30,7 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
         onMouseDown={(e) =>
           createRipple(e, {color: 'neutral', parent: labelRef})
         }
-        icon-part="value-checkbox-icon"
+        iconPart="value-checkbox-icon"
       />
       <label
         ref={(ref) => (labelRef = ref!)}
