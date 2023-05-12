@@ -1,9 +1,9 @@
-import {
-  buildSmartSnippet,
-  SmartSnippet,
-  SmartSnippetState,
-} from '@coveo/headless';
 import {Component, Prop, State, Element} from '@stencil/core';
+import {
+  buildInsightSmartSnippet,
+  InsightSmartSnippet,
+  InsightSmartSnippetState,
+} from '../..';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -11,60 +11,31 @@ import {
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
 import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
- * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
- *
- * You can style the snippet by inserting a template element as follows:
- * ```html
- * <atomic-smart-snippet>
- *   <template>
- *     <style>
- *       b {
- *         color: blue;
- *       }
- *     </style>
- *   </template>
- * </atomic-smart-snippet>
- * ```
- *
- * @part smart-snippet - The wrapper of the entire smart snippet.
- * @part question - The header displaying the question that is answered by the found document excerpt.
- * @part answer - The container displaying the full document excerpt.
- * @part truncated-answer - The container displaying only part of the answer.
- * @part show-more-button - The show more button.
- * @part show-less-button - The show less button.
- * @part body - The body of the smart snippet, containing the truncated answer and the show more or show less button.
- * @part footer - The footer underneath the answer.
- * @part source-url - The URL to the document the excerpt is from.
- * @part source-title - The title of the document the excerpt is from.
- * @part feedback-banner - The feedback banner underneath the source.
- * @part feedback-inquiry-and-buttons - A wrapper around the feedback inquiry and the feedback buttons.
- * @part feedback-inquiry - The message asking the end user to provide feedback on whether the excerpt was useful.
- * @part feedback-buttons - The wrapper around the buttons after the inquiry.
- * @part feedback-like-button - The button allowing the end user to signal that the excerpt was useful.
- * @part feedback-dislike-button - The button allowing the end user to signal that the excerpt wasn't useful.
- * @part feedback-thank-you-container - The wrapper around the 'thank you' message and feedback button.
- * @part feedback-thank-you - The message thanking the end user for providing feedback.
- * @part feedback-explain-why-button - The button a user can press to provide detailed feedback.
+ * @internal
  */
 @Component({
-  tag: 'atomic-smart-snippet',
-  styleUrl: 'atomic-smart-snippet.pcss',
+  tag: 'atomic-insight-smart-snippet',
+  styleUrl: 'atomic-insight-smart-snippet.pcss',
   shadow: true,
 })
-export class AtomicSmartSnippet implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
-  public smartSnippet!: SmartSnippet;
+export class AtomicInsightSmartSnippet
+  implements InitializableComponent<InsightBindings>
+{
+  @InitializeBindings() public bindings!: InsightBindings;
+  public smartSnippet!: InsightSmartSnippet;
+
   @BindStateToController('smartSnippet')
   @State()
-  public smartSnippetState!: SmartSnippetState;
+  public smartSnippetState!: InsightSmartSnippetState;
   public error!: Error;
+
   @Element() public host!: HTMLElement;
+
   private id = randomID();
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
-
   private smartSnippetCommon!: SmartSnippetCommon;
 
   /**
@@ -98,10 +69,10 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @State() feedbackSent = false;
 
   public initialize() {
-    this.smartSnippet = buildSmartSnippet(this.bindings.engine);
+    this.smartSnippet = buildInsightSmartSnippet(this.bindings.engine);
     this.smartSnippetCommon = new SmartSnippetCommon({
       id: this.id,
-      modalTagName: 'atomic-smart-snippet-feedback-modal',
+      modalTagName: 'atomic-insight-smart-snippet-feedback-modal',
       getHost: () => this.host,
       getBindings: () => this.bindings,
       getModalRef: () => this.modalRef,
@@ -121,7 +92,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   private setModalRef(ref: HTMLElement) {
-    this.modalRef = ref as HTMLAtomicSmartSnippetFeedbackModalElement;
+    this.modalRef = ref as HTMLAtomicInsightSmartSnippetFeedbackModalElement;
   }
 
   private setFeedbackSent(isSent: boolean) {
@@ -129,6 +100,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   public componentWillUpdate() {
+    console.log(this.smartSnippetState);
     if (!(this.smartSnippetState.liked || this.smartSnippetState.disliked)) {
       this.setFeedbackSent(false);
     }
