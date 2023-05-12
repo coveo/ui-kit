@@ -14,8 +14,7 @@ import {
 import angularChangelogConvention from 'conventional-changelog-angular';
 import {spawnSync} from 'node:child_process';
 import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
-import {dirname, resolve, join} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {resolve, join} from 'node:path';
 import {gt, SemVer} from 'semver';
 import {
   REPO_FS_ROOT,
