@@ -22,10 +22,9 @@ import {spawnSync} from 'child_process';
 import {readFileSync} from 'fs';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
+import {REPO_NAME, REPO_OWNER} from './common/constants.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
-const REPO_OWNER = 'coveo';
-const REPO_NAME = 'ui-kit';
 const GIT_SSH_REMOTE = 'deploy';
 
 // Commit, tag and push
