@@ -1,12 +1,10 @@
 import {configuration} from '../../app/common-reducers';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {
-  insightConfiguration,
-  insightInterface,
-  searchHub,
-} from '../../app/reducers';
+import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
 import {fetchInterface} from '../../features/insight-interface/insight-interface-actions';
+import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
 import {InsightInterfaceState} from '../../features/insight-interface/insight-interface-state';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {
   ConfigurationSection,
   InsightConfigurationSection,

@@ -1,6 +1,7 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {facetOrder, history} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice';
+import {historyReducer as history} from '../../features/history/history-slice';
 import {back, forward} from './history-actions';
 
 /**

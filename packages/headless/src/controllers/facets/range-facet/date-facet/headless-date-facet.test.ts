@@ -1,15 +1,17 @@
 import {configuration} from '../../../../app/common-reducers';
-import {dateFacetSet, search, facetOptions} from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   deselectAllDateFacetValues,
   registerDateFacet,
   toggleSelectDateFacetValue,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
 import {executeSearch} from '../../../../features/search/search-actions';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';

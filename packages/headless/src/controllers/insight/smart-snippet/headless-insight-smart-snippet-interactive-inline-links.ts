@@ -1,9 +1,10 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {questionAnswering, search} from '../../../app/reducers';
 import {
   logOpenSmartSnippetInlineLink,
   logOpenSmartSnippetSuggestionInlineLink,
 } from '../../../features/question-answering/question-answering-insight-analytics-actions';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   QuestionAnsweringSection,
   SearchSection,

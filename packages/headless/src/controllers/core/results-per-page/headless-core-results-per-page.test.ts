@@ -1,9 +1,9 @@
 import {configuration} from '../../../app/common-reducers';
-import {pagination} from '../../../app/reducers';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
 } from '../../../features/pagination/pagination-actions';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,

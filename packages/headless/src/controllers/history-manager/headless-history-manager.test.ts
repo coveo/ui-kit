@@ -1,11 +1,12 @@
 import {configuration} from '../../app/common-reducers';
-import {facetOrder, history} from '../../app/reducers';
+import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice';
 import {
   back,
   forward,
   redo,
   undo,
 } from '../../features/history/history-actions';
+import {historyReducer as history} from '../../features/history/history-slice';
 import {
   extractHistory,
   getHistoryInitialState,
