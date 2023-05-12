@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 import Arborist from '@npmcli/arborist';
 import {DepGraph} from 'dependency-graph';
-import {dirname, resolve} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {REPO_FS_ROOT} from './common/constants.mjs';
 
 /**
  * Current strategy: reify each package (along with their dependants transitively) in topological (parents->dependants) order.
@@ -68,7 +67,7 @@ function buildDependencyGraph(rootNode) {
 async function initArborist() {
   const arb = new Arborist({
     savePrefix: '',
-    path: rootFolder,
+    path: REPO_FS_ROOT,
     registry: process.env.npm_config_registry,
     _authToken: 'invalid', // TODO: Remove when removing Lerna
   });
@@ -77,7 +76,6 @@ async function initArborist() {
   return arb;
 }
 
-const rootFolder = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const graph = buildDependencyGraph(
   /** @type {Arborist.Node} */ ((await initArborist()).virtualTree)
 );

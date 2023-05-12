@@ -17,6 +17,12 @@ import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
 import {dirname, resolve, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {gt, SemVer} from 'semver';
+import {
+  REPO_FS_ROOT,
+  REPO_HOST,
+  REPO_NAME,
+  REPO_OWNER,
+} from './common/constants.mjs';
 
 /**
  * Check if the package json in the provided folder has changed since the last commit
@@ -58,7 +64,6 @@ const modifyPackageJson = (packageDir, modifyPackageJsonCallback) => {
   writeFileSync(packageJsonPath, JSON.stringify(newPackageJson || packageJson));
 };
 
-const rootFolder = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 
 // Run on each package, it generate the changelog, install the latest dependencies that are part of the workspace, publish the package.
@@ -108,16 +113,16 @@ await (async () => {
       parsedCommits,
       newVersion,
       {
-        host: 'https://github.com',
-        owner: 'coveo',
-        repository: 'ui-kit',
+        host: REPO_HOST,
+        owner: REPO_OWNER,
+        repository: REPO_NAME,
       },
       convention.writerOpts
     );
     await writeChangelog(PATH, changelog);
   }
   appendFileSync(
-    join(rootFolder, '.git-message'),
+    join(REPO_FS_ROOT, '.git-message'),
     `${packageJson.name}@${newVersion}\n`
   );
 })();
@@ -128,7 +133,7 @@ await (async () => {
  */
 async function updateWorkspaceDependent(version) {
   const topology = JSON.parse(
-    readFileSync(join(rootFolder, 'topology.json'), {encoding: 'utf-8'})
+    readFileSync(join(REPO_FS_ROOT, 'topology.json'), {encoding: 'utf-8'})
   );
   const dependencyPackageJson = JSON.parse(
     readFileSync('package.json', {encoding: 'utf-8'})
@@ -153,7 +158,7 @@ async function updateWorkspaceDependent(version) {
 
   for (const dependentPackage of dependentPackages) {
     modifyPackageJson(
-      join(rootFolder, topology.graph.nodes[dependentPackage].data.root),
+      join(REPO_FS_ROOT, topology.graph.nodes[dependentPackage].data.root),
       (packageJson) => {
         updateDependency(packageJson, dependencyPackageJson.name, version);
       }
