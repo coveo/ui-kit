@@ -1,10 +1,10 @@
 import {CoreEngine} from '../../app/engine';
-import {dictionaryFieldContext} from '../../app/reducers';
 import {
   addContext,
   removeContext,
   setContext,
 } from '../../features/dictionary-field-context/dictionary-field-context-actions';
+import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../features/dictionary-field-context/dictionary-field-context-slice';
 import {DictionaryFieldContextPayload} from '../../features/dictionary-field-context/dictionary-field-context-state';
 import {DictionaryFieldContextSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';

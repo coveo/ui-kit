@@ -1,16 +1,13 @@
+import {configuration} from '../../../../../app/common-reducers';
 import {CoreEngine} from '../../../../../app/engine';
-import {
-  configuration,
-  dateFacetSet,
-  facetOptions,
-  search,
-} from '../../../../../app/reducers';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {
   RegisterDateFacetActionCreatorPayload,
   registerDateFacet,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {executeToggleDateFacetSelect} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {
   DateFacetRequest,
   DateRangeRequest,
@@ -20,6 +17,7 @@ import {
   DateFacetValue,
 } from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
+import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {
   ConfigurationSection,
   DateFacetSection,

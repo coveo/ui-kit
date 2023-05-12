@@ -80,7 +80,7 @@ await (async () => {
   let currentNpmVersion = new SemVer(
     privatePackage
       ? '0.0.0' // private package does not have a npm version, so we default to the 'lowest' possible
-      : await describeNpmTag(packageJson.name, 'latest')
+      : await describeNpmTag(packageJson.name, 'beta')
   );
   const isRedo = gt(currentNpmVersion, currentGitVersion);
   const bumpInfo = isRedo
@@ -95,7 +95,9 @@ await (async () => {
       ? await getNextBetaVersion(nextGoldVersion)
       : nextGoldVersion;
 
-  modifyPackageJson(PATH, (packageJson) => {packageJson.version = newVersion;})
+  modifyPackageJson(PATH, (packageJson) => {
+    packageJson.version = newVersion;
+  });
   await updateWorkspaceDependent(newVersion);
   if (privatePackage) {
     return;

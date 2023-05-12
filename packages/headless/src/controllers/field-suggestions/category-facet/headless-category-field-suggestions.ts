@@ -1,7 +1,7 @@
+import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {
   categoryFacetSet,
-  configuration,
   categoryFacetSearchSet,
   search,
 } from '../../../app/reducers';

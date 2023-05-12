@@ -1,4 +1,5 @@
-import {pagination, configuration} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {pagination} from '../../../app/reducers';
 import {
   updatePage,
   registerPage,

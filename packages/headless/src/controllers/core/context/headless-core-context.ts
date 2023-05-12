@@ -1,10 +1,10 @@
 import {CoreEngine} from '../../../app/engine';
-import {context} from '../../../app/reducers';
 import {
   setContext,
   addContext,
   removeContext,
 } from '../../../features/context/context-actions';
+import {contextReducer as context} from '../../../features/context/context-slice';
 import {
   ContextPayload,
   ContextValue,

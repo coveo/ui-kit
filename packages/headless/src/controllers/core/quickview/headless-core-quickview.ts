@@ -5,7 +5,8 @@ import {
   HtmlRequestOptions,
 } from '../../../api/search/html/html-request';
 import {Result} from '../../../api/search/search/result';
-import {configuration, resultPreview} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {resultPreview} from '../../../app/reducers';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   fetchResultContent,

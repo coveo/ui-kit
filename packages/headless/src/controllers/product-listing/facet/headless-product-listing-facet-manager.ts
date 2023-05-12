@@ -1,5 +1,6 @@
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {facetOptions, productListing} from '../../../app/reducers';
+import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
+import {productListingReducer as productListing} from '../../../features/product-listing/product-listing-slice';
 import {ProductListingSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {sortFacets} from '../../../utils/facet-utils';

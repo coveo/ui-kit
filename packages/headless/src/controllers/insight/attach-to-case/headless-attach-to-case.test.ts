@@ -1,4 +1,5 @@
-import {attachedResults, configuration} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {attachedResults} from '../../../app/reducers';
 import {
   attachResult,
   detachResult,

@@ -1,9 +1,5 @@
-import {
-  configuration,
-  query,
-  querySuggest,
-  standaloneSearchBoxSet,
-} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
+import {query, querySuggest, standaloneSearchBoxSet} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
 import {buildOmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
