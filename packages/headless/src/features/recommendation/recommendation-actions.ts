@@ -1,5 +1,8 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
+import {
+  getVisitorID,
+  historyStore,
+} from '../../api/analytics/coveo-analytics-utils';
 import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request';
 import {
   AsyncThunkSearchOptions,

@@ -2,12 +2,7 @@ import {Schema} from '@coveo/bueno';
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
 import {configuration} from '../../app/common-reducers';
-import {
-  caseAssistConfiguration,
-  caseField,
-  caseInput,
-  documentSuggestion,
-} from '../../app/reducers';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
 import {
   logAutoSelectCaseField,
   logClassificationClick,
@@ -18,8 +13,11 @@ import {
   registerCaseField,
   updateCaseField,
 } from '../../features/case-field/case-field-actions';
+import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice';
 import {CaseFieldSuggestion} from '../../features/case-field/case-field-state';
+import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
 import {
   CaseAssistConfigurationSection,
   CaseFieldSection,
