@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {ComponentErrorExpectations} from '../../common-expectations';
 import {ConsoleExpectations} from '../../console-expectations';
 import {SearchExpectations} from '../../search-expectations';
 import {
@@ -41,6 +42,7 @@ function resultsPerPageExpectations(selector: ResultsPerPageSelector) {
 
 export const ResultsPerPageExpectations = {
   ...resultsPerPageExpectations(ResultsPerPageSelectors),
+  ...ComponentErrorExpectations(ResultsPerPageSelectors),
   console: {
     ...ConsoleExpectations,
   },

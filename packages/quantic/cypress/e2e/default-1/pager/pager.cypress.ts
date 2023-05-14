@@ -132,7 +132,7 @@ describe('quantic-pager', () => {
         });
       }
 
-      describe('with invalid number of pages', () => {
+      describe('with an invalid value of the number of pages property', () => {
         it('should not load the component', () => {
           interceptSearch();
           cy.visit(pageUrl, {
@@ -149,6 +149,30 @@ describe('quantic-pager', () => {
           Expect.displayNext(false);
           Expect.numberOfPages(0);
           Expect.console.error(true);
+          Expect.displayComponentError(true);
+          Expect.displayErrorDialog(true);
+        });
+      });
+
+      describe('with an invalid type of the number of pages property', () => {
+        it('should not load the component', () => {
+          interceptSearch();
+          cy.visit(pageUrl, {
+            onBeforeLoad(win) {
+              stubConsoleError(win);
+            },
+          });
+          configure({
+            numberOfPages: 'invalid type',
+            useCase: param.useCase,
+          });
+
+          Expect.displayPrevious(false);
+          Expect.displayNext(false);
+          Expect.numberOfPages(0);
+          Expect.console.error(true);
+          Expect.displayComponentError(true);
+          Expect.displayErrorDialog(true);
         });
       });
     });

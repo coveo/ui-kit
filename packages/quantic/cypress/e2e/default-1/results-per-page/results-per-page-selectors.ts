@@ -1,4 +1,8 @@
-import {ComponentSelector, CypressSelector} from '../../common-selectors';
+import {
+  ComponentErrorSelector,
+  ComponentSelector,
+  CypressSelector,
+} from '../../common-selectors';
 
 export const resultsPerPageComponent = 'c-quantic-results-per-page';
 
@@ -7,10 +11,14 @@ export interface ResultsPerPageSelector extends ComponentSelector {
   selected: () => CypressSelector;
 }
 
-export const ResultsPerPageSelectors: ResultsPerPageSelector = {
+export const ResultsPerPageSelectors: ResultsPerPageSelector &
+  ComponentErrorSelector = {
   get: () => cy.get(resultsPerPageComponent),
 
   choice: () => ResultsPerPageSelectors.get().find('button.slds-button'),
   selected: () =>
     ResultsPerPageSelectors.get().find('button.slds-button_brand'),
+  componentError: () =>
+    ResultsPerPageSelectors.get().find('c-quantic-component-error'),
+  errorDialog: () => cy.get('lightning-alert'),
 };

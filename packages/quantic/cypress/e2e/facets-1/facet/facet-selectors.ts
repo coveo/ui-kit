@@ -1,3 +1,4 @@
+import {ComponentErrorSelector} from '../../common-selectors';
 import {
   BaseFacetSelector,
   FacetWithValuesSelector,
@@ -12,7 +13,7 @@ export type AllFacetSelectors = BaseFacetSelector &
   FacetWithSearchSelector &
   FacetWithShowMoreLessSelector;
 
-export const FacetSelectors: AllFacetSelectors = {
+export const FacetSelectors: AllFacetSelectors & ComponentErrorSelector = {
   get: () => cy.get(facetComponent),
 
   label: () => FacetSelectors.get().find('header .card__header > span'),
@@ -48,4 +49,7 @@ export const FacetSelectors: AllFacetSelectors = {
 
   showLessButton: () => FacetSelectors.get().find('.facet__show-less'),
   showMoreButton: () => FacetSelectors.get().find('.facet__show-more'),
+
+  componentError: () => FacetSelectors.get().find('c-quantic-component-error'),
+  errorDialog: () => cy.get('lightning-alert'),
 };

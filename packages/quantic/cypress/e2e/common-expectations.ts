@@ -1,3 +1,5 @@
+import {ComponentErrorSelector, should} from './common-selectors';
+
 export function logUaEvent(
   requestAlias: string,
   uaEvent: string,
@@ -24,4 +26,22 @@ export function logUaEvent(
       }
     })
     .logDetail(`should log the "${uaEvent}" UA event`);
+}
+
+export function ComponentErrorExpectations(selector: ComponentErrorSelector) {
+  return {
+    displayComponentError: (display: boolean) => {
+      selector
+        .componentError()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the error component`);
+    },
+
+    displayErrorDialog: (display: boolean) => {
+      selector
+        .errorDialog()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the error dialog`);
+    },
+  };
 }

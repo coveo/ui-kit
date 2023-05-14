@@ -138,6 +138,8 @@ describe('quantic-result-per-page', () => {
 
             Expect.displayChoices(false);
             Expect.console.error(true);
+            Expect.displayComponentError(true);
+            Expect.displayErrorDialog(true);
           });
         });
 
@@ -154,6 +156,8 @@ describe('quantic-result-per-page', () => {
 
             Expect.displayChoices(false);
             Expect.console.error(true);
+            Expect.displayComponentError(true);
+            Expect.displayErrorDialog(true);
           });
         });
 
@@ -170,6 +174,8 @@ describe('quantic-result-per-page', () => {
 
             Expect.displayChoices(false);
             Expect.console.error(true);
+            Expect.displayComponentError(true);
+            Expect.displayErrorDialog(true);
           });
         });
       });
