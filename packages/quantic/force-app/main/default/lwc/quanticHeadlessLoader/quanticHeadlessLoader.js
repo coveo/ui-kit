@@ -2,6 +2,7 @@ import BuenoPath from '@salesforce/resourceUrl/coveobueno';
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 // @ts-ignore
 import {Debouncer, Deferred, Store} from 'c/quanticUtils';
+// @ts-ignore
 import LightningAlert from 'lightning/alert';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
@@ -307,14 +308,14 @@ async function initializeWithHeadless(element, engineId, initialize) {
     setComponentInitialized(element, engineId);
   } catch (error) {
     console.error(
-      `Fatal error: unable to initialize ${element.template.host.localName} component.`,
+      `Fatal error: unable to initialize ${element?.template?.host?.localName} component.`,
       error
     );
     element?.setInitializationError?.();
     if (!componentErrorDisplayed) {
       componentErrorDisplayed = true;
       await LightningAlert.open({
-        message: `Fatal error: unable to initialize the ${element.template.host.localName} component.
+        message: `Fatal error: unable to initialize the ${element?.template?.host?.localName} component.
         Look at the developer console for more information.`,
         theme: 'error',
         label: 'Component initialization error',

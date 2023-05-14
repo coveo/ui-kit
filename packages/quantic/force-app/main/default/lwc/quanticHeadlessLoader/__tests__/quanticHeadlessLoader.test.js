@@ -12,6 +12,10 @@ import {
 } from '../quanticHeadlessLoader';
 import { Deferred } from '../../quanticUtils/quanticUtils';
 
+// @ts-ignore
+import LightningAlert from 'lightning/alert';
+jest.mock('lightning/alert');
+
 describe('c/quanticHeadlessLoader', () => {
   const CoveoHeadlessStub = {
     buildSearchEngine: function() {
@@ -363,11 +367,12 @@ describe('c/quanticHeadlessLoader', () => {
       describe('when initializing the engine fails', () => {
         const errorMessage = 'simulating failure';
         beforeEach(() => {
+          LightningAlert.open = jest.fn().mockResolvedValue();
           window.coveoHeadless[testId].options = new Deferred();
           window.coveoHeadless[testId].options.reject(errorMessage);
         });
 
-        it('should throw an error', async () => {
+        it('should throw an error and open the error dialog', async () => {
           let caughtError;
           initializeWithHeadless(testElement, testId, initialize);
           try {
@@ -377,6 +382,7 @@ describe('c/quanticHeadlessLoader', () => {
           }
 
           expect(caughtError).toContain(errorMessage);
+          expect(LightningAlert.open).toHaveBeenCalledTimes(1);
         });
       });
     });
