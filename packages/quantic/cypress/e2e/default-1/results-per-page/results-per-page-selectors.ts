@@ -20,5 +20,4 @@ export const ResultsPerPageSelectors: ResultsPerPageSelector &
     ResultsPerPageSelectors.get().find('button.slds-button_brand'),
   componentError: () =>
     ResultsPerPageSelectors.get().find('c-quantic-component-error'),
-  errorDialog: () => cy.get('lightning-alert'),
 };

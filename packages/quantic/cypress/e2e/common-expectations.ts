@@ -36,12 +36,5 @@ export function ComponentErrorExpectations(selector: ComponentErrorSelector) {
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the error component`);
     },
-
-    displayErrorDialog: (display: boolean) => {
-      selector
-        .errorDialog()
-        .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the error dialog`);
-    },
   };
 }

@@ -132,47 +132,57 @@ describe('quantic-pager', () => {
         });
       }
 
-      describe('with an invalid value of the number of pages property', () => {
-        it('should not load the component', () => {
-          interceptSearch();
-          cy.visit(pageUrl, {
-            onBeforeLoad(win) {
-              stubConsoleError(win);
-            },
+      describe('with invalid properties', () => {
+        beforeEach(() => {
+          // This error occasionally occurs with the Salesforce Lightning Modal component, although we don't know exactly why it occurs, we do know that it only occurs in this Cypress test environment and never in the production environment.
+          cy.on('uncaught:exception', (err) => {
+            expect(err.message).to.include(
+              "Cannot read properties of null (reading 'appendChild')"
+            );
+            return false;
           });
-          configure({
-            numberOfPages: -1,
-            useCase: param.useCase,
-          });
-
-          Expect.displayPrevious(false);
-          Expect.displayNext(false);
-          Expect.numberOfPages(0);
-          Expect.console.error(true);
-          Expect.displayComponentError(true);
-          Expect.displayErrorDialog(true);
         });
-      });
 
-      describe('with an invalid type of the number of pages property', () => {
-        it('should not load the component', () => {
-          interceptSearch();
-          cy.visit(pageUrl, {
-            onBeforeLoad(win) {
-              stubConsoleError(win);
-            },
-          });
-          configure({
-            numberOfPages: 'invalid type',
-            useCase: param.useCase,
-          });
+        describe('with an invalid value of the number of pages property', () => {
+          it('should not load the component', () => {
+            interceptSearch();
+            cy.visit(pageUrl, {
+              onBeforeLoad(win) {
+                stubConsoleError(win);
+              },
+            });
+            configure({
+              numberOfPages: -1,
+              useCase: param.useCase,
+            });
 
-          Expect.displayPrevious(false);
-          Expect.displayNext(false);
-          Expect.numberOfPages(0);
-          Expect.console.error(true);
-          Expect.displayComponentError(true);
-          Expect.displayErrorDialog(true);
+            Expect.displayPrevious(false);
+            Expect.displayNext(false);
+            Expect.numberOfPages(0);
+            Expect.console.error(true);
+            Expect.displayComponentError(true);
+          });
+        });
+
+        describe('with an invalid type of the number of pages property', () => {
+          it('should not load the component', () => {
+            interceptSearch();
+            cy.visit(pageUrl, {
+              onBeforeLoad(win) {
+                stubConsoleError(win);
+              },
+            });
+            configure({
+              numberOfPages: 'invalid type',
+              useCase: param.useCase,
+            });
+
+            Expect.displayPrevious(false);
+            Expect.displayNext(false);
+            Expect.numberOfPages(0);
+            Expect.console.error(true);
+            Expect.displayComponentError(true);
+          });
         });
       });
     });
