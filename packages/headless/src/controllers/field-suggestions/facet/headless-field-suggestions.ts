@@ -1,13 +1,15 @@
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {facetSet, facetSearchSet, search} from '../../../app/reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {executeSearch} from '../../../features/search/search-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   FacetSection,
   ConfigurationSection,

@@ -1,7 +1,6 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../..';
 import {configuration} from '../../../app/common-reducers';
-import {query, querySet, querySuggest, search} from '../../../app/reducers';
 import {
   InsightAction,
   SearchAction,
@@ -10,6 +9,7 @@ import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/query-set/query-set-actions';
+import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
 import {
   clearQuerySuggest,
   FetchQuerySuggestionsActionCreatorPayload,
@@ -17,9 +17,12 @@ import {
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions';
 import {logQuerySuggestionClick} from '../../../features/query-suggest/query-suggest-analytics-actions';
+import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
+import {queryReducer as query} from '../../../features/query/query-slice';
 import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   ConfigurationSection,
   QuerySection,

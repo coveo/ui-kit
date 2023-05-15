@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {query} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {queryReducer as query} from '../../features/query/query-slice';
 import {updateQuery, UpdateQueryActionCreatorPayload} from './query-actions';
 
 export type {UpdateQueryActionCreatorPayload};

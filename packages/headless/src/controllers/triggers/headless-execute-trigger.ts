@@ -1,6 +1,6 @@
-import {triggers} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state';
 import {TriggerSection} from '../../state/state-sections';
 import {arrayEqual} from '../../utils/compare-utils';

@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {attachedResults} from '../../app/reducers';
+import {attachedResultsReducer as attachedResults} from '../../features/attached-results/attached-results-slice';
 import {
   setAttachedResults,
   SetAttachedResultsActionCreatorPayload,

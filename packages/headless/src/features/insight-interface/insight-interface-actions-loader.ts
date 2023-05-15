@@ -1,7 +1,7 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {insightInterface} from '../../app/reducers';
+import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
 import {
   fetchInterface,
   FetchInterfaceThunkReturn,

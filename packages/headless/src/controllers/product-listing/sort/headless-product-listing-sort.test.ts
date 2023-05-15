@@ -1,11 +1,11 @@
 import {configuration} from '../../../app/common-reducers';
-import {sort} from '../../../app/reducers';
 import {updatePage} from '../../../features/pagination/pagination-actions';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {
   registerSortCriterion,
   updateSortCriterion,
 } from '../../../features/sort/sort-actions';
+import {sortReducer as sort} from '../../../features/sort/sort-slice';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
