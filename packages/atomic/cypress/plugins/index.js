@@ -20,14 +20,18 @@ module.exports = (on, _config) => {
   // `config` is the resolved Cypress config
 
   // auto open devtools in headed mode (does not appear in screenshots, recording)
-  // https://github.com/cypress-io/cypress/issues/2024
+  // https://docs.cypress.io/api/plugins/browser-launch-api#Usage
   on('before:browser:launch', (browser = {}, launchOptions) => {
     if (browser.family === 'chromium' && browser.name !== 'electron') {
-      launchOptions.args.push('--auto-open-devtools-for-tabs');
+      launchOptions.args.push(
+        '--auto-open-devtools-for-tabs',
+        '--start-fullscreen'
+      );
     } else if (browser.family === 'firefox') {
       launchOptions.args.push('-devtools');
     } else if (browser.name === 'electron') {
       launchOptions.preferences.devTools = true;
+      launchOptions.preferences.fullscreen = true;
     }
 
     return launchOptions;
