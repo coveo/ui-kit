@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import Tick from '../../images/checkbox-plain.svg';
+import Tick from '../../images/checkbox.svg';
 
 export interface CheckboxProps {
   checked: boolean;
@@ -17,8 +17,6 @@ export interface CheckboxProps {
 }
 
 export const Checkbox: FunctionalComponent<CheckboxProps> = (props) => {
-  const isIconPart = props.iconPart !== undefined && props.iconPart !== null;
-
   const partName = props.part ?? 'checkbox';
 
   const classNames = [
@@ -56,7 +54,6 @@ export const Checkbox: FunctionalComponent<CheckboxProps> = (props) => {
       onMouseDown={(e) => props.onMouseDown?.(e)}
     >
       <atomic-icon
-        style={isIconPart ? {stroke: 'white'} : {}}
         class={`w-3/5 svg-checkbox ${props.checked ? 'block' : 'hidden'}`}
         icon={Tick}
         part={props.iconPart}
