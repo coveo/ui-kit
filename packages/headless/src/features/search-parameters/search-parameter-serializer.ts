@@ -179,10 +179,8 @@ function processObjectValues(key: string, values: string[]) {
 function buildNumericRanges(ranges: string[]) {
   return ranges
     .map((str) => {
-      const isEndInclusive = str.indexOf(rangeDelimiterInclusive) !== -1;
-      const [startAsString, endAsString] = str.split(
-        isEndInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
-      );
+      const {startAsString, endAsString, isEndInclusive} =
+        splitRangeValueAsStringByDelimiter(str);
 
       return {
         start: parseFloat(startAsString),
@@ -216,14 +214,12 @@ function isValidDateRangeValue(date: string) {
 function buildDateRanges(ranges: string[]) {
   return ranges
     .map((str) => {
-      const isEndInclusive = str.indexOf(rangeDelimiterInclusive) !== -1;
-      const [start, end] = str.split(
-        isEndInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
-      );
+      const {isEndInclusive, startAsString, endAsString} =
+        splitRangeValueAsStringByDelimiter(str);
 
       return {
-        start,
-        end,
+        start: startAsString,
+        end: endAsString,
         endInclusive: isEndInclusive,
       };
     })
@@ -308,4 +304,16 @@ function keyHasObjectValue(
 ): key is 'f' | 'cf' | 'nf' | 'df' | 'sf' {
   const keys = ['f', 'cf', 'nf', 'df', 'sf'];
   return keys.includes(key);
+}
+
+function splitRangeValueAsStringByDelimiter(str: string) {
+  const isEndInclusive = str.indexOf(rangeDelimiterInclusive) !== -1;
+  const [startAsString, endAsString] = str.split(
+    isEndInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
+  );
+  return {
+    isEndInclusive,
+    startAsString,
+    endAsString,
+  };
 }
