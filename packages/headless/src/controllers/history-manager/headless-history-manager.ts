@@ -1,5 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {configuration, facetOrder, history} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
+import {facetOrder, history} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {StateWithHistory} from '../../app/undoable';
 import {back, forward} from '../../features/history/history-actions';

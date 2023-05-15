@@ -1,4 +1,5 @@
-import {configuration, didYouMean} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
+import {didYouMean} from '../../../app/reducers';
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,

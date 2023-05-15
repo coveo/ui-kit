@@ -20,6 +20,9 @@ runs:
           packages/atomic/docs
           packages/atomic/loader
           packages/atomic/www
+          packages/atomic/src/components/search/atomic-search-interface/lang/
+          packages/atomic/src/external-builds/
+          packages/atomic/src/generated/
           packages/quantic/docs/out
           packages/atomic-react/dist
           packages/atomic-hosted-page/dist
@@ -29,6 +32,7 @@ runs:
           packages/quantic/force-app/main/default/staticresources/coveoheadless
           packages/quantic/force-app/main/default/staticresources/coveobueno
           utils/atomic-storybook/storybook-static
+          utils/verdaccio-starter/dist
           !node_modules
           !**/node_modules
         key: ${{ github.sha }}

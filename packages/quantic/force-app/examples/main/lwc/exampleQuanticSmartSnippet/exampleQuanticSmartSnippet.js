@@ -10,6 +10,13 @@ export default class ExampleQuanticSmartSnippet extends LightningElement {
     'The Quantic Smart Snippet displays the excerpt of a document that would be most likely to answer a particular query.';
   options = [
     {
+      attribute: 'useCase',
+      label: 'Use Case',
+      description:
+        'Define which use case to test. Possible values are: search, insight',
+      defaultValue: 'search',
+    },
+    {
       attribute: 'maximumSnippetHeight',
       label: 'Maximum snippet height',
       description:

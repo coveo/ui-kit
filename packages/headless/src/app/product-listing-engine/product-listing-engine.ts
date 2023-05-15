@@ -8,6 +8,7 @@ import {
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
+import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice';
 import {ProductListingAppState} from '../../state/product-listing-app-state';
 import {
   buildEngine,
@@ -17,7 +18,6 @@ import {
 } from '../engine';
 import {buildLogger} from '../logger';
 import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
-import {productListing} from '../reducers';
 import {SearchEngineConfiguration} from '../search-engine/search-engine-configuration';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {

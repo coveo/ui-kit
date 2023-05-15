@@ -1,9 +1,5 @@
-import {
-  configuration,
-  facetSearchSet,
-  facetSet,
-  facetOptions,
-} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
+import {facetSearchSet, facetSet, facetOptions} from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   registerFacet,
