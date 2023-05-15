@@ -1,5 +1,4 @@
 import {Schema} from '@coveo/bueno';
-import {staticFilterSet} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {executeSearch} from '../../features/search/search-actions';
 import {
@@ -14,6 +13,7 @@ import {
   staticFilterIdSchema,
   staticFilterValuesSchema,
 } from '../../features/static-filter-set/static-filter-set-schema';
+import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice';
 import {
   StaticFilterValue,
   StaticFilterValueState,

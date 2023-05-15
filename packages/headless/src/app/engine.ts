@@ -17,16 +17,17 @@ import {
   UpdateAnalyticsConfigurationActionCreatorPayload,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
+import {versionReducer as version} from '../features/debug/version-slice';
 import {SearchParametersState} from '../state/search-app-state';
 import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../utils/url-utils';
 import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
+import {configuration} from './common-reducers';
 import {EngineConfiguration} from './engine-configuration';
 import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware';
 import {LoggerOptions} from './logger';
 import {logActionErrorMiddleware} from './logger-middlewares';
 import {createReducerManager, ReducerManager} from './reducer-manager';
-import {configuration, version} from './reducers';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
 import {Store, configureStore} from './store';
 import {ThunkExtraArguments} from './thunk-extra-arguments';

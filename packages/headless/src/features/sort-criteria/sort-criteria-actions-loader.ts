@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {sortCriteria} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {sortCriteriaReducer as sortCriteria} from '../../features/sort-criteria/sort-criteria-slice';
 import {SortCriterion} from './criteria';
 import {
   registerSortCriterion,

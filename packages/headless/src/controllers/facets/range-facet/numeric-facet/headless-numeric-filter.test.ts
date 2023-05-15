@@ -1,10 +1,12 @@
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   registerNumericFacet,
   updateNumericFacetValues,
 } from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../../../../features/search/search-actions';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,

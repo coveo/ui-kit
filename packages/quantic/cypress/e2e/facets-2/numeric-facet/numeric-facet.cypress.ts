@@ -319,7 +319,7 @@ describe('quantic-numeric-facet', () => {
             Expect.displayValues(false);
             Expect.search.numberOfResults(10, param.useCase);
             if (param.useCase === useCaseEnum.search) {
-              Expect.urlHashContains(`${min}..${max}`, true);
+              Expect.urlHashContains(`${min}...${max}`, true);
             }
             Expect.displayClearButton(true);
             Expect.clearFilterContains('Clear filter');

@@ -1,12 +1,13 @@
 import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
 import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client';
+import {configuration} from '../../app/common-reducers';
 import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine';
-import {configuration, productListing} from '../../app/reducers';
 import {
   fetchProductListing,
   setAdditionalFields,
   setProductListingUrl,
 } from '../../features/product-listing/product-listing-actions';
+import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice';
 import {ProductRecommendation} from '../../product-listing.index';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';

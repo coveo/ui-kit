@@ -107,6 +107,20 @@ export default class QuanticCaseClassification extends LightningElement {
    * @defaultValue `'Select an option'`
    */
   @api messageWhenValueMissing = this.labels.selectOption;
+  /**
+   * Indicates whether the component should automatically fetch new case classifications when its value changes.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api fetchClassificationOnChange = false;
+  /**
+   * Indicates whether the component should automatically fetch new document suggestions when its value changes.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api fetchDocumentSuggestionOnChange = false;
 
   /** @type {Array<object>} */
   @track classifications = [];
@@ -188,13 +202,12 @@ export default class QuanticCaseClassification extends LightningElement {
   updateFieldState() {
     if (!this.lockedState) {
       this.loading = this.field.state.loading;
-      const hasNewSuggestions =
-        this.maxSuggestions > 0 && this.newSuggestionsReceived;
+      const hasNewSuggestions = this.maxSuggestions > 0 && this.newSuggestionsReceived;
       const value =
         hasNewSuggestions && this.isAutoSelectionNeeded
           ? this.classifications[0].value
           : this.field.state.value;
-      this.setFieldValue(value, hasNewSuggestions);
+      this.setFieldValue(value, this.updatesToFetch, hasNewSuggestions);
       this.updateSuggestionsVisibility();
     }
   }
@@ -317,6 +330,17 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
+   * Whether we want to fetch new case classifications or document suggestions when we update the field.
+   * @returns {{caseClassifications: boolean, documentSuggestions: boolean}}
+   */
+  get updatesToFetch() {
+    return {
+      caseClassifications: this.fetchClassificationOnChange,
+      documentSuggestions: this.fetchDocumentSuggestionOnChange,
+    };
+  }
+
+  /**
    * Shows the select input.
    * @returns {void}
    */
@@ -338,7 +362,7 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   handleSelectSuggestion(event) {
     const value = event.target.checked ? event.target.value : '';
-    this.setFieldValue(value);
+    this.setFieldValue(value, this.updatesToFetch);
   }
 
   /**
@@ -348,7 +372,7 @@ export default class QuanticCaseClassification extends LightningElement {
   handleSelectChange(event) {
     this.lockedState = true;
     const value = event.target.value;
-    this.setFieldValue(value);
+    this.setFieldValue(value, this.updatesToFetch);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this.animateHideSuggestions();
     }
@@ -373,9 +397,9 @@ export default class QuanticCaseClassification extends LightningElement {
    * Set the current value and update the state.
    * @returns {void}
    */
-  setFieldValue(value, autoSelection) {
+  setFieldValue(value, updatesToFetch, autoSelection) {
     if (this.field.state.value !== value) {
-      this.field.update(value, undefined, autoSelection);
+      this.field.update(value, updatesToFetch, autoSelection);
     }
     this._value = value;
     if (this._errorMessage && value) {
