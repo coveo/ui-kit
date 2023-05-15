@@ -56,16 +56,32 @@ export class AtomicRelevanceInspector {
     );
   }
 
-  private extractEnvironmentFromPlatformURL() {
+  private extractEnvironmentFromPlatformURL(): PlatformEnvironment {
     const {platformUrl} = this.bindings.engine.state.configuration;
+    const fallbackEnv = 'prod';
 
-    const envMatch = platformUrl.match(
-      /^https:\/\/(platform(?<envFromPlatform>dev|stg|hipaa)|[a-z0-9]+\.org(?<envFromOrg>dev|stg|hipaa))/
+    const platformUrlMatch = platformUrl.match(
+      /^https:\/\/platform(?<env>dev|stg|hipaa)/
     );
-    if (!envMatch || !envMatch.groups) {
-      return 'prod';
+
+    if (platformUrlMatch) {
+      return (
+        (platformUrlMatch.groups?.env as PlatformEnvironment) ?? fallbackEnv
+      );
     }
-    return envMatch.groups.envFromPlatform || envMatch.groups.envFromOrg;
+
+    const organizationEndpointMatch = platformUrl.match(
+      /^https:\/\/[a-z0-9]+\.org(?<env>dev|stg|hipaa)/
+    );
+
+    if (organizationEndpointMatch) {
+      return (
+        (organizationEndpointMatch.groups?.env as PlatformEnvironment) ??
+        fallbackEnv
+      );
+    }
+
+    return fallbackEnv;
   }
 
   private get adminHref() {
