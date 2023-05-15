@@ -1,9 +1,5 @@
-import {
-  configuration,
-  dateFacetSet,
-  search,
-  facetOptions,
-} from '../../../../../app/reducers';
+import {configuration} from '../../../../../app/common-reducers';
+import {dateFacetSet, search, facetOptions} from '../../../../../app/reducers';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
 import {
   deselectAllDateFacetValues,

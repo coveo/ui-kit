@@ -5,7 +5,7 @@ import {
   HtmlRequestOptions,
 } from '../../../api/search/html/html-request';
 import {Result} from '../../../api/search/search/result';
-import {configuration, resultPreview} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   fetchResultContent,
@@ -14,6 +14,7 @@ import {
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
 import {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result-preview-request-builder';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
 import {
   ConfigurationSection,
   ResultPreviewSection,

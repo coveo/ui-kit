@@ -1,6 +1,9 @@
 import {NumberValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
+import {
+  getVisitorID,
+  historyStore,
+} from '../../api/analytics/coveo-analytics-utils';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 import {

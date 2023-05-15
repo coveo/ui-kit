@@ -1,4 +1,5 @@
-import {configuration, facetOrder, history} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
+import {facetOrder, history} from '../../app/reducers';
 import {
   back,
   forward,

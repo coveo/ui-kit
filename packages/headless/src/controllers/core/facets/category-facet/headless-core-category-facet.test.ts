@@ -1,7 +1,7 @@
+import {configuration} from '../../../../app/common-reducers';
 import {
   categoryFacetSearchSet,
   categoryFacetSet,
-  configuration,
   search,
   facetOptions,
 } from '../../../../app/reducers';
