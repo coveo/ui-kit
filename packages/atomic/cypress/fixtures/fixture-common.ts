@@ -36,6 +36,7 @@ export const ConsoleAliases = {
   log: '@consoleLog',
 };
 
+// TODO: Unused. Figure out where it was meant to be used esp analytics.
 export const UrlParts = {
   UA: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics',
   Search: 'https://cloud.coveo.com/rest/search/v2',
@@ -52,33 +53,31 @@ export function spyConsole() {
   });
 }
 
+function checkResponseStatus(
+  request: CyHttpMessages.IncomingHttpRequest,
+  response: CyHttpMessages.IncomingHttpResponse
+) {
+  // Not using expect() to allow for tests that exercise error cases
+  if (response.statusCode < 200 || response.statusCode > 299) {
+    console.error(
+      `Request error on ${request.url} : ${response.statusCode} ${response.statusMessage}`
+    );
+  }
+}
+
 export function setupIntercepts() {
-  function setupIntercept(
-    path: string,
-    alias: string,
-    method = 'POST',
-    checkResponse = true
-  ) {
+  function setupIntercept(path: string, alias: string, method = 'POST') {
     cy.intercept(
       {
         method: method,
         path: path,
       },
-      (req) => {
-        req.continue((res) => {
-          // Not using expect() to allow for tests that exercise error cases
-          if (checkResponse && (res.statusCode < 200 || res.statusCode > 299)) {
-            console.error(
-              `Request error on ${req.url} : ${res.statusCode} ${res.statusMessage}`
-            );
-          }
-        });
+      (request) => {
+        request.continue((response) => checkResponseStatus(request, response));
       }
     ).as(alias.substring(1));
   }
 
-  // TODO: [KIT-2437] Investigate analytics errors from cypress tests
-  setupIntercept('**/rest/v15/analytics/*', RouteAlias.UA, 'POST', false);
   setupIntercept(
     '**/rest/search/v2/querySuggest?*',
     RouteAlias.QuerySuggestions
@@ -183,10 +182,15 @@ export function interceptAnalytics() {
   cy.intercept(
     {
       method: 'POST',
-      url: '**/rest/v15/analytics/*',
+      // ** matches against all downstream path segments - https://docs.cypress.io/api/utilities/minimatch
+      url: '**/rest/v15/analytics/**',
     },
-    (request) => AnalyticsTracker.push(request.body as AnyEventRequest)
-  );
+    (request) => {
+      AnalyticsTracker.push(request.body as AnyEventRequest);
+      // TODO: [KIT-2437] Investigate analytics errors from cypress tests
+      request.continue((response) => checkResponseStatus(request, response));
+    }
+  ).as(RouteAlias.UA.substring(1));
 }
 
 export const addTag = (
