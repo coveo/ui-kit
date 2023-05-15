@@ -9,7 +9,7 @@ import {
   logNavigateForward,
   logNoResultsBack,
 } from '../../features/history/history-analytics-actions';
-import {historyReducer as history} from '../../features/history/history-slice';
+import {history} from '../../features/history/history-slice';
 import {HistoryState} from '../../features/history/history-state';
 import {executeSearch} from '../../features/search/search-actions';
 import {ConfigurationSection, HistorySection} from '../../state/state-sections';

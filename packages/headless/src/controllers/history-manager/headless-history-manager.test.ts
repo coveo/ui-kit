@@ -6,7 +6,7 @@ import {
   redo,
   undo,
 } from '../../features/history/history-actions';
-import {historyReducer as history} from '../../features/history/history-slice';
+import {history} from '../../features/history/history-slice';
 import {
   extractHistory,
   getHistoryInitialState,
