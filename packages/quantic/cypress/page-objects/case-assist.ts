@@ -43,6 +43,12 @@ export function interceptClassificationsIndefinitely(): {
   return interceptIndefinitely(routeMatchers.caseClassification);
 }
 
+export function interceptDocumentSuggestion() {
+  cy.intercept(routeMatchers.documentSuggestion).as(
+    InterceptAliases.DocumentSuggestion.substring(1)
+  );
+}
+
 export function mockDocumentSuggestion(value: Array<object>) {
   cy.intercept(routeMatchers.documentSuggestion, (req) => {
     req.continue((res) => {
