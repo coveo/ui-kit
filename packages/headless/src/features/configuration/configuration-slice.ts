@@ -1,6 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
-import {clearAnalyticsClient} from '../../api/analytics/search-analytics';
+import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils';
 import {getOrganizationEndpoints} from '../../api/platform-client';
 import {
   matchCoveoOrganizationEndpointUrl,
