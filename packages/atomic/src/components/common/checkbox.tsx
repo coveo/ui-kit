@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import Tick from '../../images/checkbox-plain.svg';
+import Tick from '../../images/checkbox.svg';
 
 export interface CheckboxProps {
   checked: boolean;
