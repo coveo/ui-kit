@@ -4,7 +4,10 @@ import {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client';
 import {setCaseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-actions';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
+import {debugReducer as debug} from '../../features/debug/debug-slice';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
 import {CaseAssistThunkExtraArguments} from '../case-assist-thunk-extra-arguments';
 import {
@@ -14,7 +17,6 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {debug, caseAssistConfiguration, searchHub} from '../reducers';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CaseAssistEngineConfiguration,

@@ -11,6 +11,7 @@ import {
 import {spawnSync} from 'node:child_process';
 import {writeFileSync} from 'node:fs';
 import {dedent} from 'ts-dedent';
+import {REPO_MAIN_BRANCH, REPO_NAME, REPO_OWNER} from './common/constants.mjs';
 import {
   limitWriteAccessToBot,
   removeWriteAccessRestrictions,
@@ -18,8 +19,6 @@ import {
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 const PATH = '.';
-const REPO_OWNER = 'coveo';
-const REPO_NAME = 'cli';
 const GIT_SSH_REMOTE = 'deploy';
 
 const ensureUpToDateBranch = async () => {
@@ -27,9 +26,9 @@ const ensureUpToDateBranch = async () => {
   await limitWriteAccessToBot();
 
   // Verify master has not changed
-  const local = await getSHA1fromRef('master');
+  const local = await getSHA1fromRef(REPO_MAIN_BRANCH);
   await gitPull();
-  const remote = await getSHA1fromRef('master');
+  const remote = await getSHA1fromRef(REPO_MAIN_BRANCH);
   if (local !== remote) {
     await removeWriteAccessRestrictions();
     throw new Error(dedent`
