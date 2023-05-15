@@ -1,5 +1,6 @@
 import {CoreEngine} from '../../../app/engine';
-import {pagination, search} from '../../../app/reducers';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {PaginationSection, SearchSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {

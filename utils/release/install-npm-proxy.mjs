@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 import {startVerdaccio} from '@coveo/verdaccio-starter';
 import {readFileSync, writeFileSync} from 'node:fs';
-import {resolve, dirname} from 'node:path';
-import {fileURLToPath} from 'node:url';
-
-const rootFolder = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
+import {resolve} from 'node:path';
+import {REPO_FS_ROOT} from './common/constants.mjs';
 
 /**
  * @param {[K, V][]} entries
@@ -25,7 +23,7 @@ function fromEntries(entries) {
  * @param {(config: Record<string, string>) => Record<string, string>} callback
  */
 function modifyNpmRc(callback) {
-  const npmRcLocation = resolve(rootFolder, '.npmrc');
+  const npmRcLocation = resolve(REPO_FS_ROOT, '.npmrc');
   const npmRcContents = readFileSync(npmRcLocation).toString();
   const npmRcEntries = fromEntries(
     // @ts-ignore

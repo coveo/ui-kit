@@ -1,5 +1,4 @@
 import {QuestionsAnswers} from '../../../api/search/search/question-answering';
-import {questionAnswering, search} from '../../../app/reducers';
 import {
   closeFeedbackModal,
   collapseSmartSnippet,
@@ -12,6 +11,8 @@ import {
   SmartSnippetFeedback,
   smartSnippetAnalyticsClient,
 } from '../../../features/question-answering/question-answering-analytics-actions';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {emptyQuestionAnswer} from '../../../features/search/search-state';
 import {SearchAppState} from '../../../state/search-app-state';
 import {

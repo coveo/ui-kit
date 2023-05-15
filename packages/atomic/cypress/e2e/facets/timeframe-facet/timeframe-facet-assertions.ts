@@ -32,12 +32,12 @@ export function assertDisplayInputWarning(length: number, message?: string) {
 
 export function assertRangeHash(
   startDate: `${number}-${number}-${number}`,
-  endDate: `${number}-${number}-${number}`
+  endDate: `${number}-${number}-${number}`,
+  endInclusive = false
 ) {
-  const expectedRange = `${startDate.replaceAll(
-    '-',
-    '/'
-  )}@00:00:00..${endDate.replaceAll('-', '/')}@00:00:00` as const;
+  const expectedRange = `${startDate.replaceAll('-', '/')}@00:00:00${
+    endInclusive ? '...' : '..'
+  }${endDate.replaceAll('-', '/')}@00:00:00` as const;
 
   function getHash(win: Window) {
     return win.location.hash
