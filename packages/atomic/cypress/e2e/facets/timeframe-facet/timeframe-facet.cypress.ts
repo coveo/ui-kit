@@ -224,7 +224,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
         describe('verify rendering', () => {
           before(setupInputRange);
-          TimeframeFacetAssertions.assertRangeHash(startDate, endDate);
+          TimeframeFacetAssertions.assertRangeHash(startDate, endDate, true);
           TimeframeFacetAssertions.assertDisplayRangeInput(true);
           CommonFacetAssertions.assertDisplayValues(
             TimeframeFacetSelectors,
