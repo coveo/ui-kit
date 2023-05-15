@@ -1,4 +1,5 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {loadCollection} from '../../features/folding/folding-actions';
 import {foldedResultAnalyticsClient} from '../../features/folding/folding-analytics-actions';
 import {
   buildCoreFoldedResultList,
@@ -6,7 +7,6 @@ import {
   CoreFoldedResultListState,
   FoldedResultListProps,
 } from '../core/folded-result-list/headless-core-folded-result-list';
-import {SearchStatusState} from '../search-status/headless-search-status';
 
 export type {
   FoldedCollection,
@@ -21,9 +21,7 @@ export type {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `FoldedResultList` controller.
  * */
-export interface FoldedResultListState
-  extends SearchStatusState,
-    CoreFoldedResultListState {}
+export interface FoldedResultListState extends CoreFoldedResultListState {}
 
 /**
  * The `FoldedResultList` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
@@ -48,7 +46,7 @@ export function buildFoldedResultList(
 ): FoldedResultList {
   const foldedResultList = buildCoreFoldedResultList(
     engine,
-    props,
+    {...props, loadCollectionActionCreator: loadCollection},
     foldedResultAnalyticsClient
   );
   return {

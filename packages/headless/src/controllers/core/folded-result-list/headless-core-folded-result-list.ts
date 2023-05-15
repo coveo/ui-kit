@@ -1,4 +1,5 @@
 import {Schema} from '@coveo/bueno';
+import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {configuration, folding, query, search} from '../../../app/reducers';
 import {
   ClickAction,
@@ -10,6 +11,7 @@ import {
   registerFolding,
 } from '../../../features/folding/folding-actions';
 import {
+  CollectionId,
   FoldedCollection,
   FoldedResult,
 } from '../../../features/folding/folding-state';
@@ -69,6 +71,13 @@ export interface FoldedResultListProps {
    * The options for the `FoldedResultList` controller.
    * */
   options?: FoldedResultListOptions;
+  /**
+   *
+   */
+  loadCollectionActionCreator: (
+    collectionId: CollectionId
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ) => AsyncThunkAction<any, CollectionId, any>;
 }
 
 /**
@@ -180,7 +189,7 @@ export function buildCoreFoldedResultList(
 
     loadCollection: (collection) => {
       dispatch(
-        loadCollection(
+        props.loadCollectionActionCreator(
           collection.result.raw[
             engine.state.folding.fields.collection
           ] as string

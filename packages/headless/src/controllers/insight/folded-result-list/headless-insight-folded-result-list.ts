@@ -1,4 +1,5 @@
 import {insightFoldedResultAnalyticsClient} from '../../../features/folding/folding-insight-analytics-actions';
+import {loadCollection} from '../../../features/insight-folding/insight-folding-actions';
 import {InsightEngine} from '../../../insight.index';
 import {
   CoreFoldedResultListState,
@@ -42,7 +43,7 @@ export function buildFoldedResultList(
 ): FoldedResultList {
   const foldedResultList = buildCoreFoldedResultList(
     engine,
-    props,
+    {...props, loadCollectionActionCreator: loadCollection},
     insightFoldedResultAnalyticsClient
   );
   return {
