@@ -55,7 +55,7 @@ export const Checkbox: FunctionalComponent<CheckboxProps> = (props) => {
     >
       <atomic-icon
         style={{stroke: 'white'}}
-        class={`w-3/5 svg-checkbox ${props.checked ? 'block' : 'hidden'}`}
+        class={`w-3/5 ${props.checked ? 'block' : 'hidden'}`}
         icon={Tick}
         part={props.iconPart}
       ></atomic-icon>
