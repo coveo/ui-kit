@@ -1,6 +1,9 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {EventDescription} from 'coveo.analytics';
-import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
+import {
+  getVisitorID,
+  historyStore,
+} from '../../api/analytics/coveo-analytics-utils';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';

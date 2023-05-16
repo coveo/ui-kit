@@ -8,10 +8,11 @@ import {QueryRankingExpression} from '../../api/search/search/query-ranking-expr
 import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
 import {SecurityIdentity} from '../../api/search/search/security-identity';
-import {configuration, debug, search, fields} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {enableDebug, disableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
+import {debugReducer as debug} from '../../features/debug/debug-slice';
 import {
   QueryRankingExpressionWeights,
   DocumentWeights,
@@ -23,6 +24,8 @@ import {
   enableFetchAllFields,
   fetchFieldsDescription,
 } from '../../features/fields/fields-actions';
+import {fieldsReducer as fields} from '../../features/fields/fields-slice';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {
   ConfigurationSection,
   DebugSection,

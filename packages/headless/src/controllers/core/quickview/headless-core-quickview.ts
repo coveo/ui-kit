@@ -5,7 +5,7 @@ import {
   HtmlRequestOptions,
 } from '../../../api/search/html/html-request';
 import {Result} from '../../../api/search/search/result';
-import {configuration, resultPreview} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   fetchResultContent,
@@ -14,6 +14,7 @@ import {
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
 import {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result-preview-request-builder';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
 import {
   ConfigurationSection,
   ResultPreviewSection,
@@ -145,21 +146,24 @@ export function buildCoreQuickview(
   };
 
   const onFetchContent = (uniqueId: string) => {
-    props.options.onlyContentURL
-      ? dispatch(
-          updateContentURL({
-            uniqueId,
-            requestedOutputSize: maximumPreviewSize,
-            buildResultPreviewRequest,
-            path,
-          })
-        )
-      : dispatch(
-          fetchResultContent({
-            uniqueId,
-            requestedOutputSize: maximumPreviewSize,
-          })
-        );
+    dispatch(
+      updateContentURL({
+        uniqueId,
+        requestedOutputSize: maximumPreviewSize,
+        buildResultPreviewRequest,
+        path,
+      })
+    );
+
+    if (!props.options.onlyContentURL) {
+      dispatch(
+        fetchResultContent({
+          uniqueId,
+          requestedOutputSize: maximumPreviewSize,
+        })
+      );
+    }
+
     if (fetchResultContentCallback) {
       fetchResultContentCallback();
     }

@@ -8,7 +8,15 @@ export default class ExampleQuanticSmartSnippetSuggestions extends LightningElem
   pageTitle = 'Quantic Smart Snippet Suggestions';
   pageDescription =
     'The QuanticSmartSnippetSuggestions component displays additional queries for which a Coveo Smart Snippets model can provide relevant excerpts.';
-  options = [];
+  options = [
+    {
+      attribute: 'useCase',
+      label: 'Use Case',
+      description:
+        'Define which use case to test. Possible values are: search, insight',
+      defaultValue: 'search',
+    },
+  ];
 
   get notConfigured() {
     return !this.isConfigured;

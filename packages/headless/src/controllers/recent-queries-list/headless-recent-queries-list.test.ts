@@ -1,6 +1,5 @@
 import {NumberValue} from '@coveo/bueno';
 import {Action} from 'redux';
-import {search, recentQueries} from '../../app/reducers';
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {updateQuery} from '../../features/query/query-actions';
@@ -9,7 +8,9 @@ import {
   registerRecentQueries,
 } from '../../features/recent-queries/recent-queries-actions';
 import {logClearRecentQueries} from '../../features/recent-queries/recent-queries-analytics-actions';
+import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice';
 import {executeSearch} from '../../features/search/search-actions';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
 import {
   buildRecentQueriesList,

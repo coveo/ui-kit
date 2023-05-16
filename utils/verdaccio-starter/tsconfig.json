@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationDir": "dist",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "sourceMap": true
+  },
+  "exclude": ["node_modules"],
+  "include": ["src"]
+}

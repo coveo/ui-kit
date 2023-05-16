@@ -19,6 +19,7 @@ export function buildMockSearchResponse(
     pipeline: '',
     splitTestRun: '',
     termsToHighlight: {},
+    phrasesToHighlight: {},
     ...config,
   };
 }

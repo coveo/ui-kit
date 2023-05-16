@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {LinkWithResultAnalytics} from '../../search/result-link/result-link';
 import {extractUnfoldedResult} from '../interface/result';
+import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {ResultListDisplayProps} from './result-list-common-interface';
 
 export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (

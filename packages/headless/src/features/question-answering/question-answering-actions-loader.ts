@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {questionAnswering} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {questionAnsweringReducer as questionAnswering} from '../../features/question-answering/question-answering-slice';
 import {
   collapseSmartSnippet,
   dislikeSmartSnippet,

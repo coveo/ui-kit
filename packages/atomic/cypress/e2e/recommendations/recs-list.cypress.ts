@@ -25,14 +25,11 @@ const numberOfRecsPerPage = 1;
 
 describe('Recs Interface Component', () => {
   describe('before recommendation have loaded', () => {
-    function setupWithoutFetchingRecs() {
+    beforeEach(() => {
       new TestRecsFixture()
         .withoutGetRecommendations()
         .with(addRecsList({'number-of-recommendations': numberOfRecs}))
         .init();
-    }
-    before(() => {
-      setupWithoutFetchingRecs();
     });
 
     CommonAssertions.assertAccessibility();
@@ -40,13 +37,10 @@ describe('Recs Interface Component', () => {
   });
 
   describe('after recommendation have loaded', () => {
-    function setupFetchingRecs() {
+    beforeEach(() => {
       new TestRecsFixture()
         .with(addRecsList({'number-of-recommendations': numberOfRecs}))
         .init();
-    }
-    before(() => {
-      setupFetchingRecs();
     });
 
     CommonAssertions.assertConsoleError(false);
@@ -62,7 +56,7 @@ describe('Recs Interface Component', () => {
       return element;
     }
 
-    before(() => {
+    beforeEach(() => {
       new TestRecsFixture()
         .with(
           addRecsList(
@@ -99,7 +93,8 @@ describe('Recs Interface Component', () => {
   });
 
   describe('with a unloaded carousel', () => {
-    function setupCarousel() {
+    beforeEach(() => {
+      // Setup Carousel
       new TestRecsFixture()
         .withoutGetRecommendations()
         .with(
@@ -109,17 +104,14 @@ describe('Recs Interface Component', () => {
           })
         )
         .init();
-    }
-
-    before(() => {
-      setupCarousel();
     });
 
     RecsAssertions.assertRendersPlaceholders(numberOfRecsPerPage);
   });
 
   describe('with a loaded carousel', () => {
-    function setupCarousel() {
+    beforeEach(() => {
+      // Setup Carousel
       new TestRecsFixture()
         .with(
           addRecsList({
@@ -134,13 +126,9 @@ describe('Recs Interface Component', () => {
           return response;
         })
         .init();
-    }
+    });
 
     describe('verify rendering', () => {
-      before(() => {
-        setupCarousel();
-      });
-
       CommonAssertions.assertConsoleError(false);
       CommonAssertions.assertAccessibility();
       RecsAssertions.assertRendersRecommendations(numberOfRecsPerPage);
@@ -152,8 +140,7 @@ describe('Recs Interface Component', () => {
     });
 
     describe('when going forwards', () => {
-      before(() => {
-        setupCarousel();
+      beforeEach(() => {
         RecsSelectors.nextButton().click();
       });
 
@@ -162,8 +149,7 @@ describe('Recs Interface Component', () => {
     });
 
     describe('when going backwards', () => {
-      before(() => {
-        setupCarousel();
+      beforeEach(() => {
         RecsSelectors.previousButton().click();
       });
 
@@ -172,8 +158,7 @@ describe('Recs Interface Component', () => {
     });
 
     describe('when going forward a full loop', () => {
-      before(() => {
-        setupCarousel();
+      beforeEach(() => {
         RecsSelectors.nextButton().click();
         RecsSelectors.nextButton().click();
         RecsSelectors.nextButton().click();

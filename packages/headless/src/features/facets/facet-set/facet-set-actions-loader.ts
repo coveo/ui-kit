@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {facetSet} from '../../../app/reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
   updateFacetAutoSelection,
   UpdateFacetAutoSelectionActionCreatorPayload,

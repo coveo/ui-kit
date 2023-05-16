@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {querySet} from '../../app/reducers';
+import {querySetReducer as querySet} from '../../features/query-set/query-set-slice';
 import {
   registerQuerySetQuery,
   RegisterQuerySetQueryActionCreatorPayload,

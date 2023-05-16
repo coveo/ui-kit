@@ -13,9 +13,9 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {ResultContextEvent} from '../../search/result-template-components/result-template-decorators';
+import {AnyBindings} from '../interface/bindings';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
-import {ResultContextEvent} from '../result-template-components/result-template-decorators';
 
 /**
  * @part source-url
@@ -26,8 +26,10 @@ import {ResultContextEvent} from '../result-template-components/result-template-
   tag: 'atomic-smart-snippet-source',
   shadow: false,
 })
-export class AtomicSmartSnippetSource implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+export class AtomicSmartSnippetSource
+  implements InitializableComponent<AnyBindings>
+{
+  @InitializeBindings() public bindings!: AnyBindings;
   @Prop({reflect: true, mutable: true}) source!: Result;
 
   @Event() selectSource!: EventEmitter;
