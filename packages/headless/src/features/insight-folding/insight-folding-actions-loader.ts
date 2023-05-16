@@ -2,14 +2,14 @@ import {PayloadAction, AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
 import {folding} from '../../app/reducers';
+import {FoldingActionCreators} from '../folding/folding-actions-loader';
 import {
-  RegisterFoldingActionCreatorPayload,
-  LoadCollectionFulfilledReturn,
-  StateNeededByLoadCollection,
   registerFolding,
   loadCollection,
-} from '../folding/folding-actions';
-import {FoldingActionCreators} from '../folding/folding-actions-loader';
+  StateNeededByLoadCollection,
+  LoadCollectionFulfilledReturn,
+  RegisterFoldingActionCreatorPayload,
+} from './insight-folding-actions';
 
 export type {RegisterFoldingActionCreatorPayload};
 

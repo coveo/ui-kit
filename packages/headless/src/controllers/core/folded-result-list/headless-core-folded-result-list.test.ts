@@ -1,4 +1,4 @@
-import {search, configuration, folding, query} from '../../../app/reducers';
+import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice';
 import {
   loadCollection,
   registerFolding,
@@ -8,7 +8,10 @@ import {
   logShowMoreFoldedResults,
   logShowLessFoldedResults,
 } from '../../../features/folding/folding-analytics-actions';
+import {foldingReducer as folding} from '../../../features/folding/folding-slice';
 import {getFoldingInitialState} from '../../../features/folding/folding-state';
+import {queryReducer as query} from '../../../features/query/query-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {
   buildCoreFoldedResultList,

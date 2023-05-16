@@ -1,20 +1,22 @@
 import {Schema} from '@coveo/bueno';
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {configuration, folding, query, search} from '../../../app/reducers';
 import {
   ClickAction,
   CustomAction,
 } from '../../../features/analytics/analytics-utils';
+import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice';
 import {
   foldingOptionsSchemaDefinition,
-  loadCollection,
   registerFolding,
 } from '../../../features/folding/folding-actions';
+import {foldingReducer as folding} from '../../../features/folding/folding-slice';
 import {
   CollectionId,
   FoldedCollection,
   FoldedResult,
 } from '../../../features/folding/folding-state';
+import {queryReducer as query} from '../../../features/query/query-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {CoreEngine, Result} from '../../../recommendation.index';
 import {
   ConfigurationSection,
