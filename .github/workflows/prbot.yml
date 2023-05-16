@@ -174,18 +174,21 @@ jobs:
   prerelease:
     timeout-minutes: 40
     name: Pre-release
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+        with:
+          registry-url: 'https://registry.npmjs.org'
       - name: Release
         run: |
           npm run nx:graph
           npm run release:phase1-3
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           DEBUG: '*'
           IS_PRERELEASE: 'true'
   required-jobs:
