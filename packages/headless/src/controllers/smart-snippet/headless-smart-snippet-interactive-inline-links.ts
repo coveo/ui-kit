@@ -1,9 +1,10 @@
-import {questionAnswering, search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   logOpenSmartSnippetInlineLink,
   logOpenSmartSnippetSuggestionInlineLink,
 } from '../../features/question-answering/question-answering-analytics-actions';
+import {questionAnsweringReducer as questionAnswering} from '../../features/question-answering/question-answering-slice';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {QuestionAnsweringSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {getObjectHash} from '../../utils/utils';

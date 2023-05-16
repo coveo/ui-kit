@@ -1,9 +1,11 @@
-import {configuration, resultPreview, search} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {
   fetchResultContent,
   preparePreviewPagination,
 } from '../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
+import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {
   buildMockResult,
   buildMockSearchAppEngine,

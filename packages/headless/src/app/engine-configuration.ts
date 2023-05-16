@@ -8,8 +8,8 @@ import {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
 } from 'coveo.analytics';
+import {getOrganizationEndpoints} from '../api/platform-client';
 import {PreprocessRequest} from '../api/preprocess-request';
-import {getOrganizationEndpoints} from '../recommendation.index';
 import {requiredNonEmptyString} from '../utils/validate-payload';
 
 /**

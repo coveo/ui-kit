@@ -12,9 +12,9 @@ import {
 } from '../../../../utils/accessibility-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {parseXML} from '../../../../utils/utils';
+import {getAttributesFromLinkSlot} from '../../../common/result-link/attributes-slot';
+import {LinkWithResultAnalytics} from '../../../common/result-link/result-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {getAttributesFromLinkSlot} from '../../result-link/attributes-slot';
-import {LinkWithResultAnalytics} from '../../result-link/result-link';
 import {ResultContext} from '../result-template-decorators';
 
 /**

@@ -25,7 +25,6 @@ import {
   buildSort,
   buildCategoryFacet,
   Result,
-  CategoryFacetValue,
   FacetValue,
 } from '../index';
 
@@ -132,16 +131,16 @@ describe('search app', () => {
     });
   });
 
-  describe('Facet: select value', () => {
-    let initialCategoryFacetValues: CategoryFacetValue[];
+  describe('Category Facet: select value', () => {
+    let initialFacetValues: FacetValue[];
     let initialResults: Result[];
 
     beforeAll(async () => {
-      initialCategoryFacetValues = categoryFacet.state.values;
+      initialFacetValues = facet.state.values;
       initialResults = resultList.state.results;
 
-      const [firstFacetValue] = facet.state.values;
-      facet.toggleSelect(firstFacetValue);
+      const [firstFacetValue] = categoryFacet.state.values;
+      categoryFacet.toggleSelect(firstFacetValue);
 
       await sleep(2);
     });
@@ -151,10 +150,8 @@ describe('search app', () => {
       await sleep(2);
     });
 
-    it('updates the category facet values', () => {
-      expect(categoryFacet.state.values).not.toEqual(
-        initialCategoryFacetValues
-      );
+    it('updates the facet values', () => {
+      expect(facet.state.values).not.toEqual(initialFacetValues);
     });
 
     it('updates the results', () => {

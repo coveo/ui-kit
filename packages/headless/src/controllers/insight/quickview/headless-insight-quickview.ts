@@ -1,15 +1,13 @@
 import {Result} from '../../../api/search/search/result';
+import {configuration} from '../../../app/common-reducers';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {
-  configuration,
-  resultPreview,
-  insightInterface,
-} from '../../../app/reducers';
+import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice';
 import {
   buildInsightResultPreviewRequest,
   StateNeededByInsightHtmlEndpoint,
 } from '../../../features/insight-search/insight-result-preview-request-builder';
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {Controller} from '../../controller/headless-controller';
 import {buildCoreQuickview} from '../../core/quickview/headless-core-quickview';

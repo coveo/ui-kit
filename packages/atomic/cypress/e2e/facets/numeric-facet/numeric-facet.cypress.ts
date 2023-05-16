@@ -510,7 +510,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           });
           NumericFacetAssertions.assertURLHash(
             `${numericFacetField}_input`,
-            `${min}..${max}`
+            `${min}...${max}`
           );
         });
 
@@ -539,7 +539,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           });
           NumericFacetAssertions.assertURLHash(
             `${decimalField}_input`,
-            `${minDecimal}..${maxDecimal}`
+            `${minDecimal}...${maxDecimal}`
           );
         });
 

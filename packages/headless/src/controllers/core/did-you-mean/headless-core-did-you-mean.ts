@@ -2,12 +2,13 @@ import {
   QueryCorrection,
   WordCorrection,
 } from '../../../api/search/search/query-corrections';
+import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {configuration, didYouMean} from '../../../app/reducers';
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
 } from '../../../features/did-you-mean/did-you-mean-actions';
+import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
 import {
   ConfigurationSection,
   DidYouMeanSection,
