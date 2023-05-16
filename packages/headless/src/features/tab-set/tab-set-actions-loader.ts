@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {SearchEngine} from '../..';
-import {tabSet} from '../../app/reducers';
+import {tabSetReducer as tabSet} from '../../features/tab-set/tab-set-slice';
 import {
   registerTab,
   RegisterTabActionCreatorPayload,

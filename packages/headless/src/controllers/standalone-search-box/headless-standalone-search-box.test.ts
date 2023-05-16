@@ -1,12 +1,13 @@
 import {configuration} from '../../app/common-reducers';
-import {query, standaloneSearchBoxSet, querySuggest} from '../../app/reducers';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
 import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
+import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice';
 import {updateQuery} from '../../features/query/query-actions';
+import {queryReducer as query} from '../../features/query/query-slice';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
@@ -14,6 +15,7 @@ import {
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
 } from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
+import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {

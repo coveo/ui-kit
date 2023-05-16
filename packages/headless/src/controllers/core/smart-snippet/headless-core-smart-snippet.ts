@@ -1,6 +1,5 @@
 import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 import {Result} from '../../../api/search/search/result';
-import {search, questionAnswering} from '../../../app/reducers';
 import {
   ClickAction,
   CustomAction,
@@ -16,7 +15,9 @@ import {
 import {SmartSnippetFeedback} from '../../../features/question-answering/question-answering-analytics-actions';
 import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from '../../../features/question-answering/question-answering-document-id';
 import {answerSourceSelector} from '../../../features/question-answering/question-answering-selectors';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {QuestionAnsweringInlineLinkActionCreatorPayload} from '../../../product-listing.index';
 import {CoreEngine} from '../../../recommendation.index';
 import {
