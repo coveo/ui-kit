@@ -15,6 +15,7 @@ runs:
     - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
+        browser: chrome
         working-directory: ./packages/samples/angular
         start: npm run dev
         wait-on: 'http://localhost:4200'

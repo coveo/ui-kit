@@ -11,6 +11,7 @@ runs:
     - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
+        browser: chrome
         working-directory: ./packages/atomic
         config-file: cypress-insight-panel.config.ts
         start: npm run prod
