@@ -172,7 +172,7 @@ jobs:
       - 'e2e-atomic-test'
       - 'e2e-quantic-test'
     runs-on: ubuntu-latest
-    environment: prerelease
+    environment: 'Prerelease'
     steps:
       - uses: actions/checkout@v3
         with:
