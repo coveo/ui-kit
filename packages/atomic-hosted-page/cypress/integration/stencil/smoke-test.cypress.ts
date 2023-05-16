@@ -13,11 +13,10 @@ describe('smoke test', () => {
       .type('test{enter}');
   });
 
-  // TODO: unskip smoke test
-  it.skip('should load atomic-simple-builder component', () => {
+  it('should load atomic-simple-builder component', () => {
     cy.intercept({
       method: 'POST',
-      path: '**/rest/ua/v15/analytics/*',
+      path: '**/rest/v15/analytics/*',
     }).as('analytics');
 
     cy.visit('http://localhost:3335/simple-builder.html').wait('@analytics');
