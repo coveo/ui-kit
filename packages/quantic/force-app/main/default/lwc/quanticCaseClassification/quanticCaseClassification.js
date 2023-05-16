@@ -1,8 +1,11 @@
-import {LightningElement, api, track, wire} from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificationTitle';
 import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
 import loading from '@salesforce/label/c.quantic_Loading';
+import salesforceFieldNotFound from '@salesforce/label/c.quantic_SalesforceFieldNotFound';
+import invalidMaxNumberOfSuggestions from '@salesforce/label/c.quantic_InvalidMaxNumberOfSuggestions';
+import propertyisRequired from '@salesforce/label/c.quantic_PropertyIsRequired';
 import {
   getObjectInfo,
   getPicklistValuesByRecordType,
@@ -13,6 +16,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
+import { I18nUtils } from 'c/quanticUtils';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").CaseField} CaseField */
@@ -31,16 +35,19 @@ export default class QuanticCaseClassification extends LightningElement {
     moreTopics,
     selectOption,
     loading,
+    salesforceFieldNotFound,
+    invalidMaxNumberOfSuggestions,
+    propertyisRequired
   };
 
-  @wire(getObjectInfo, {objectApiName: CASE_OBJECT})
+  @wire(getObjectInfo, { objectApiName: CASE_OBJECT })
   objectInfo;
   // @ts-ignore
   @wire(getPicklistValuesByRecordType, {
     recordTypeId: '$objectInfo.data.defaultRecordTypeId',
     objectApiName: CASE_OBJECT,
   })
-  setPicklistValues({data, error}) {
+  setPicklistValues({ data, error }) {
     if (error) {
       console.error('Error getting the picklist values');
     } else {
@@ -48,7 +55,11 @@ export default class QuanticCaseClassification extends LightningElement {
         this.picklistValues = data;
         this.allOptionsReceived = true;
         if (!data.picklistFieldValues[this.sfFieldApiName]) {
-          this.renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
+          this.hasInitializationError = true;
+          this.initializationErrorMessage = `${I18nUtils.format(
+            this.labels.salesforceFieldNotFound,
+            this.sfFieldApiName
+          )}`;
         }
       }
     }
@@ -131,7 +142,9 @@ export default class QuanticCaseClassification extends LightningElement {
   /** @type {boolean} */
   _isSuggestionsVisible = true;
   /** @type {string} */
-  renderingError = '';
+  initializationErrorMessage;
+  /** @type {boolean} */
+  hasInitializationError = false;
   /** @type {boolean} */
   hideSuggestions = false;
   /** @type {boolean} */
@@ -143,13 +156,13 @@ export default class QuanticCaseClassification extends LightningElement {
 
   connectedCallback() {
     this.validateProps();
-    if (!this.renderingError) {
+    if (!this.hasInitializationError) {
       registerComponentForInit(this, this.engineId);
     }
   }
 
   renderedCallback() {
-    if (!this.renderingError) {
+    if (!this.hasInitializationError) {
       initializeWithHeadless(this, this.engineId, this.initialize);
     }
   }
@@ -178,10 +191,18 @@ export default class QuanticCaseClassification extends LightningElement {
 
   validateProps() {
     if (!(Number(this.maxSuggestions) >= 0)) {
-      this.renderingError = `"${this.maxSuggestions}" is an invalid maximum number of suggestions. A positive integer was expected.`;
+      this.hasInitializationError = true;
+      this.initializationErrorMessage = `${I18nUtils.format(
+        this.labels.invalidMaxNumberOfSuggestions,
+        this.maxSuggestions
+      )}`;
     }
     if (!this.coveoFieldName) {
-      this.renderingError = 'coveoFieldName is required, please set its value.';
+      this.hasInitializationError = true;
+      this.initializationErrorMessage = `${I18nUtils.format(
+        this.labels.propertyisRequired,
+        'coveoFieldName'
+      )}`;
     }
   }
 
@@ -289,7 +310,7 @@ export default class QuanticCaseClassification extends LightningElement {
           !this.classifications.some((item) => item.value === option.value)
       )
       .map((option) => {
-        return {...option, checked: option.value === this._value};
+        return { ...option, checked: option.value === this._value };
       });
   }
 
@@ -312,7 +333,7 @@ export default class QuanticCaseClassification extends LightningElement {
         return suggestionIncludedInOptions;
       })
       .map((suggestion) => {
-        return {...suggestion, checked: suggestion.value === this._value};
+        return { ...suggestion, checked: suggestion.value === this._value };
       });
   }
 
@@ -406,7 +427,7 @@ export default class QuanticCaseClassification extends LightningElement {
     return (
       this.classifications.length &&
       JSON.stringify(this.classifications) !==
-        JSON.stringify(this.previousClassifications)
+      JSON.stringify(this.previousClassifications)
     );
   }
   /**

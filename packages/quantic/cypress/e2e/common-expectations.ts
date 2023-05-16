@@ -36,5 +36,13 @@ export function ComponentErrorExpectations(selector: ComponentErrorSelector) {
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the error component`);
     },
+
+    displayComponentErrorMessage: (message: string) => {
+      selector
+        .componentErrorMessage()
+        .should('exist')
+        .should('contain', message)
+        .logDetail('should display the correct component error message');
+    },
   };
 }

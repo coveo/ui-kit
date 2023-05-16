@@ -10,4 +10,5 @@ export function should(should: boolean) {
 
 export interface ComponentErrorSelector {
   componentError: () => CypressSelector;
+  componentErrorMessage: () => CypressSelector;
 }

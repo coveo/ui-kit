@@ -1,10 +1,9 @@
 <template>
-  <template if:true={renderingError}>
-    <div class="error-message slds-text-color_destructive">
-      {renderingError}
-    </div>
+  <template if:true={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName} message={initializationErrorMessage}>
+    </c-quantic-component-error>
   </template>
-  <template if:false={renderingError}>
+  <template if:false={hasInitializationError}>
     <fieldset class={formClass}>
       <legend class="slds-form-element__legend slds-form-element__label slds-text-heading_small">
         {label}

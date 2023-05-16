@@ -803,6 +803,7 @@ describe('Facet Test Suite', () => {
             false
           );
         });
+
         it('should render the component error', () => {
           Expect.displayLabel(false);
           Expect.displayComponentError(true);

@@ -51,4 +51,8 @@ export const FacetSelectors: AllFacetSelectors & ComponentErrorSelector = {
   showMoreButton: () => FacetSelectors.get().find('.facet__show-more'),
 
   componentError: () => FacetSelectors.get().find('c-quantic-component-error'),
+  componentErrorMessage: () =>
+    FacetSelectors.get().find(
+      'c-quantic-component-error [data-cy="error-message"]'
+    ),
 };

@@ -24,4 +24,8 @@ export const PagerSelectors: PagerSelector & ComponentErrorSelector = {
       'c-quantic-number-button button.slds-button_brand'
     ),
   componentError: () => PagerSelectors.get().find('c-quantic-component-error'),
+  componentErrorMessage: () =>
+    PagerSelectors.get().find(
+      'c-quantic-component-error [data-cy="error-message"]'
+    ),
 };

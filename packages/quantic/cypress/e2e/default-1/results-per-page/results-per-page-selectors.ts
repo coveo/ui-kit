@@ -20,4 +20,8 @@ export const ResultsPerPageSelectors: ResultsPerPageSelector &
     ResultsPerPageSelectors.get().find('button.slds-button_brand'),
   componentError: () =>
     ResultsPerPageSelectors.get().find('c-quantic-component-error'),
+  componentErrorMessage: () =>
+    ResultsPerPageSelectors.get().find(
+      'c-quantic-component-error [data-cy="error-message"]'
+    ),
 };

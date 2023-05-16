@@ -30,7 +30,7 @@ const invalidMaxSuggestionsError = (value: string | number) => {
   )}" is an invalid maximum number of suggestions. A positive integer was expected.`;
 };
 const missingCoveoFieldNameError =
-  'coveoFieldName is required, please set its value.';
+  'The "coveoFieldName" property is required, please set its value.';
 const nonCorrespondingSuggestionWarning = (
   value: string,
   coveoFieldName: string,
@@ -263,8 +263,9 @@ describe('quantic-case-classification', () => {
     });
 
     it('should render an error message when maxSuggestion is inferior to 0', () => {
+      const invalidValue = -1;
       visitCaseClassification({
-        maxSuggestions: -1,
+        maxSuggestions: invalidValue,
       });
 
       scope('when loading the page', () => {
@@ -273,7 +274,10 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
-        Expect.displayRenderingError(true, invalidMaxSuggestionsError(-1));
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(
+          invalidMaxSuggestionsError(invalidValue)
+        );
       });
     });
   });
@@ -290,7 +294,8 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
-        Expect.displayRenderingError(true, invalidMaxSuggestionsError(NaN));
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(invalidMaxSuggestionsError(NaN));
       });
     });
   });
@@ -537,8 +542,8 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
-        Expect.displayRenderingError(
-          true,
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(
           incorrectSfFielNameError(incorrectSfField)
         );
       });
@@ -557,7 +562,8 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
-        Expect.displayRenderingError(true, missingCoveoFieldNameError);
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(missingCoveoFieldNameError);
       });
     });
   });

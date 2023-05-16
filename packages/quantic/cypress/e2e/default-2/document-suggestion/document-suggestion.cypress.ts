@@ -14,7 +14,7 @@ import {
 } from '../../../page-objects/search';
 import {scope} from '../../../reporters/detailed-collector';
 import {DocumentSuggestionActions as Actions} from './document-suggestion-actions';
-import {DocumentSuggestionExpectations as Expect} from './document.suggestion.expectations';
+import {DocumentSuggestionExpectations as Expect} from './document-suggestion-expectations';
 
 interface DocumentSuggestionOptions {
   maxDocuments: number;
@@ -26,13 +26,13 @@ interface DocumentSuggestionOptions {
 const invalidMaxSuggestionsError = (value: string | number) => {
   return `"${Number(
     value
-  )}" is an invalid maximum number of document suggestions. A integer greater than 0 was expected.`;
+  )}" is an invalid maximum number of document suggestions. An integer greater than 0 was expected.`;
 };
 
 const invalidNumberOfAutoOpenedDocumentsError = (value: string | number) => {
   return `"${Number(
     value
-  )}" is an invalid maximum number of automatically opened document suggestions. A positive integer was expected.`;
+  )}" is an invalid number of automatically opened document suggestions. A positive integer was expected.`;
 };
 
 describe('quantic-document-suggestion', () => {
@@ -221,8 +221,8 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
         Expect.displayNoSuggestions(false);
-        Expect.displayRenderingError(
-          true,
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(
           invalidNumberOfAutoOpenedDocumentsError(invalidValue)
         );
       });
@@ -264,8 +264,8 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
         Expect.displayNoSuggestions(false);
-        Expect.displayRenderingError(
-          true,
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(
           invalidMaxSuggestionsError(invalidValue)
         );
       });
@@ -281,8 +281,8 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(false);
         Expect.numberOfSuggestions(0);
         Expect.displayNoSuggestions(false);
-        Expect.displayRenderingError(
-          true,
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(
           invalidMaxSuggestionsError(invalidValue)
         );
       });
