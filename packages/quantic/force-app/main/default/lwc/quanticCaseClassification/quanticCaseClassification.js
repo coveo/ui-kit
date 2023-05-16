@@ -2,7 +2,7 @@ import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificat
 import invalidMaxNumberOfSuggestions from '@salesforce/label/c.quantic_InvalidMaxNumberOfSuggestions';
 import loading from '@salesforce/label/c.quantic_Loading';
 import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
-import propertyisRequired from '@salesforce/label/c.quantic_PropertyIsRequired';
+import propertyIsRequired from '@salesforce/label/c.quantic_PropertyIsRequired';
 import salesforceFieldNotFound from '@salesforce/label/c.quantic_SalesforceFieldNotFound';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
 // @ts-ignore
@@ -37,7 +37,7 @@ export default class QuanticCaseClassification extends LightningElement {
     loading,
     salesforceFieldNotFound,
     invalidMaxNumberOfSuggestions,
-    propertyisRequired,
+    propertyIsRequired,
   };
 
   @wire(getObjectInfo, {objectApiName: CASE_OBJECT})
@@ -214,7 +214,7 @@ export default class QuanticCaseClassification extends LightningElement {
     if (!this.coveoFieldName) {
       this.hasInitializationError = true;
       this.initializationErrorMessage = `${I18nUtils.format(
-        this.labels.propertyisRequired,
+        this.labels.propertyIsRequired,
         'coveoFieldName'
       )}`;
     }
@@ -495,5 +495,12 @@ export default class QuanticCaseClassification extends LightningElement {
       this.hideSuggestions = false;
       this.hideSelect();
     }
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }
