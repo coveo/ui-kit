@@ -1,4 +1,7 @@
-import {historyStore, getVisitorID} from '../../api/analytics/search-analytics';
+import {
+  historyStore,
+  getVisitorID,
+} from '../../api/analytics/coveo-analytics-utils';
 import {InsightQuerySuggestRequest} from '../../api/service/insight/query-suggest/query-suggest-request';
 import {InsightAppState} from '../../state/insight-app-state';
 import {

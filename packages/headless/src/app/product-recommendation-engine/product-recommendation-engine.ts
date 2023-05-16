@@ -9,7 +9,9 @@ import {
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
+import {productRecommendationsReducer as productRecommendations} from '../../features/product-recommendations/product-recommendations-slice';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 import {
   buildEngine,
@@ -18,8 +20,6 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {productRecommendations} from '../product-recommendation-reducers';
-import {searchHub} from '../reducers';
 import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {

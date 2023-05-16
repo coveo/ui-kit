@@ -1,10 +1,11 @@
-import {search, questionAnswering} from '../../../app/reducers';
 import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
 } from '../../../features/question-answering/question-answering-actions';
 import {smartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-analytics-actions';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
 import {getQuestionAnsweringInitialState} from '../../../features/question-answering/question-answering-state';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {emptyQuestionAnswer} from '../../../features/search/search-state';
 import {
   buildMockSearchAppEngine,

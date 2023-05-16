@@ -9,8 +9,8 @@ import {
   Element,
 } from '@stencil/core';
 import {sanitize} from 'dompurify';
-import {sanitizeStyle} from '../../../utils/utils';
-import {bindAnalyticsToLink} from '../result-link/result-link';
+import {sanitizeStyle} from '../../../../utils/utils';
+import {bindAnalyticsToLink} from '../../result-link/result-link';
 
 /**
  * @part answer - The container displaying the full document excerpt.

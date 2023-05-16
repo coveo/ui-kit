@@ -1,12 +1,13 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {Result} from '../../api/search/search/result';
+import {configuration} from '../../app/common-reducers';
 import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
-import {configuration, recommendation} from '../../app/reducers';
-import {loadPaginationActions} from '../../features';
+import {loadPaginationActions} from '../../features/pagination/pagination-actions-loader';
 import {
   getRecommendations,
   setRecommendationId,
 } from '../../features/recommendation/recommendation-actions';
+import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
 import {ErrorPayload} from '../controller/error-payload';

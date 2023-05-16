@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {instantResults} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice';
 import {
   UpdateInstantResultQueryActionCreatorPayload,
   RegisterInstantResultActionCreatorPayload,

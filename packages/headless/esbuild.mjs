@@ -124,7 +124,10 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
 function resolveEsm(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
   const packageJson = require(packageJsonPath);
-  return resolve(dirname(packageJsonPath), packageJson['module'] || packageJson['main']);
+  return resolve(
+    dirname(packageJsonPath),
+    packageJson['module'] || packageJson['main']
+  );
 }
 
 /**
@@ -228,7 +231,6 @@ function getNodeEsmBundlePaths() {
 }
 
 function outputMetafile(platform, outDir, metafile) {
-  console.log(outDir);
   const outFile = resolve(outDir, `${platform}.stats.json`);
   writeFileSync(outFile, JSON.stringify(metafile));
 }
