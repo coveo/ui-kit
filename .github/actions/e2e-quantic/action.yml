@@ -15,7 +15,7 @@ runs:
       with:
         path: packages/quantic/cypress/plugins/config
         key: quantic-cypress-config-${{ github.sha }}
-    - uses: cypress-io/github-action@v4
+    - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
         browser: chrome
