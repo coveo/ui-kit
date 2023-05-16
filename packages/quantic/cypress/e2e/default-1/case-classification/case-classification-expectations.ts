@@ -163,6 +163,18 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         })
         .logDetail('should log the "ticket_classification_click" UA event');
     },
+
+    fetchClassificationsAfterValueChange: () => {
+      cy.wait(InterceptAliases.CaseClassification).logDetail(
+        'should fetch new case classifications after the value changes'
+      );
+    },
+
+    fetchDocumentsAfterValueChange: () => {
+      cy.wait(InterceptAliases.DocumentSuggestion).logDetail(
+        'should fetch new document suggestions after the value changes'
+      );
+    },
   };
 }
 

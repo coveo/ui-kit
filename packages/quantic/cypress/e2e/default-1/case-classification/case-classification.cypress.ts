@@ -4,6 +4,7 @@ import {
   mockCaseClassification,
   mockSfPicklistValues,
   interceptClassificationsIndefinitely,
+  interceptDocumentSuggestion,
 } from '../../../page-objects/case-assist';
 import {configure} from '../../../page-objects/configurator';
 import {scope} from '../../../reporters/detailed-collector';
@@ -19,6 +20,8 @@ interface CaseClassificationOptions {
   messageWhenValueMissing: string;
   sfFieldApiName: string;
   coveoFieldName: string;
+  fetchClassificationOnChange: boolean;
+  fetchDocumentSuggestionOnChange: boolean;
 }
 
 const incorrectSfFielNameError = (value: string) => {
@@ -752,7 +755,7 @@ describe('quantic-case-classification', () => {
   });
 
   describe('when receiving new suggestions without changing the by default auto-selected suggestion', () => {
-    it('should auto-select the suggestion with the highest confidence from the newly recieved suggestions', () => {
+    it('should auto-select the suggestion with the highest confidence from the newly received suggestions', () => {
       visitCaseClassification({});
 
       scope('when loading the page', () => {
@@ -891,6 +894,298 @@ describe('quantic-case-classification', () => {
               sfDefaultField
             )
           );
+        });
+      });
+    });
+  });
+
+  describe('when the fetchClassificationsOnChange property is set to true', async () => {
+    describe('when a suggestion is selected', () => {
+      it('should automatically fetch new case classifications', () => {
+        const clickedIndex = 1;
+        const suggestionsCount = 3;
+        visitCaseClassification({
+          fetchClassificationOnChange: true,
+        });
+
+        scope('when loading the page', () => {
+          Expect.displayLabel(true);
+          Expect.numberOfInlineOptions(0);
+          Expect.numberOfSuggestions(0);
+          Expect.displaySelectTitle(false);
+          Expect.displaySelectInput(true);
+        });
+        scope('when fetching suggestions', () => {
+          const firstSuggestionIndex = 0;
+
+          mockCaseClassification(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
+          fetchClassifications();
+          Expect.displaySelectTitle(true);
+          Expect.displaySelectInput(false);
+          Expect.numberOfSuggestions(suggestionsCount);
+          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.numberOfInlineOptions(0);
+          Expect.logClickedSuggestion(firstSuggestionIndex, true);
+          Expect.correctValue(allOptions[firstSuggestionIndex].value);
+        });
+
+        scope('when selecting a suggestion', () => {
+          Actions.clickSuggestion(clickedIndex);
+          Expect.logClickedSuggestion(clickedIndex);
+          Expect.logUpdatedClassificationFromSuggestion(
+            coveoDefaultField,
+            clickedIndex
+          );
+          Expect.correctValue(allOptions[clickedIndex].value);
+          Expect.fetchClassificationsAfterValueChange();
+        });
+      });
+    });
+
+    describe('when an inline option is selected', () => {
+      it('should automatically fetch new case classifications', () => {
+        const suggestionsCount = 2;
+        const optionsCount = 5;
+        visitCaseClassification({
+          fetchClassificationOnChange: true,
+          maxSuggestions: optionsCount,
+        });
+
+        scope('when loading the page', () => {
+          Expect.displayLabel(true);
+          Expect.numberOfInlineOptions(optionsCount);
+          Expect.numberOfSuggestions(0);
+          Expect.displaySelectTitle(false);
+          Expect.displaySelectInput(false);
+        });
+
+        scope('when fetching suggestions', () => {
+          const firstSuggestionIndex = 0;
+
+          mockCaseClassification(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
+          fetchClassifications();
+          Expect.displaySelectTitle(false);
+          Expect.numberOfSuggestions(suggestionsCount);
+          Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
+          Expect.displaySelectInput(false);
+          Expect.logClickedSuggestion(firstSuggestionIndex, true);
+          Expect.correctValue(allOptions[firstSuggestionIndex].value);
+        });
+
+        scope('when selecting an inline option', () => {
+          const clickedIndex = 0;
+
+          Actions.clickInlineOption(clickedIndex);
+          Expect.logUpdatedClassificationFromInlineOption(
+            coveoDefaultField,
+            clickedIndex
+          );
+          Expect.correctValue(
+            allOptions[clickedIndex + suggestionsCount].value
+          );
+          Expect.fetchClassificationsAfterValueChange();
+        });
+      });
+    });
+
+    describe('when an option from the select input is selected', () => {
+      it('should automatically fetch new case classifications', () => {
+        const suggestionsCount = 3;
+        visitCaseClassification({
+          fetchClassificationOnChange: true,
+        });
+
+        scope('when loading the page', () => {
+          Expect.displayLabel(true);
+          Expect.numberOfInlineOptions(0);
+          Expect.numberOfSuggestions(0);
+          Expect.displaySelectTitle(false);
+          Expect.displaySelectInput(true);
+        });
+
+        scope('when fetching suggestions', () => {
+          const firstSuggestionIndex = 0;
+
+          mockCaseClassification(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
+          fetchClassifications();
+          Expect.displaySelectTitle(true);
+          Expect.displaySelectInput(false);
+          Expect.numberOfSuggestions(suggestionsCount);
+          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.numberOfInlineOptions(0);
+          Expect.logClickedSuggestion(firstSuggestionIndex, true);
+          Expect.correctValue(allOptions[firstSuggestionIndex].value);
+        });
+
+        scope('when selecting an option from the select input', () => {
+          const clickedIndex = 3;
+          Actions.clickSelectTitle();
+          Actions.openSelectInput();
+          Actions.clickSelectOption(clickedIndex);
+          Expect.correctValue(allOptions[clickedIndex].value);
+          Expect.logUpdatedClassificationFromSelectOption(
+            coveoDefaultField,
+            clickedIndex
+          );
+          Expect.fetchClassificationsAfterValueChange();
+        });
+      });
+    });
+  });
+
+  describe('when the fetchDocumentSuggestionOnChange property is set to true', async () => {
+    describe('when a suggestion is selected', () => {
+      it('should automatically fetch new document suggestions', () => {
+        const clickedIndex = 1;
+        const suggestionsCount = 3;
+        visitCaseClassification({
+          fetchDocumentSuggestionOnChange: true,
+        });
+        scope('when loading the page', () => {
+          Expect.displayLabel(true);
+          Expect.numberOfInlineOptions(0);
+          Expect.numberOfSuggestions(0);
+          Expect.displaySelectTitle(false);
+          Expect.displaySelectInput(true);
+        });
+
+        scope('when fetching suggestions', () => {
+          const firstSuggestionIndex = 0;
+
+          interceptDocumentSuggestion();
+          mockCaseClassification(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
+          fetchClassifications();
+
+          Expect.displaySelectTitle(true);
+          Expect.displaySelectInput(false);
+          Expect.numberOfSuggestions(suggestionsCount);
+          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.numberOfInlineOptions(0);
+          Expect.logClickedSuggestion(firstSuggestionIndex, true);
+          Expect.correctValue(allOptions[firstSuggestionIndex].value);
+        });
+
+        scope('when selecting a suggestion', () => {
+          Actions.clickSuggestion(clickedIndex);
+          Expect.correctValue(allOptions[clickedIndex].value);
+          Expect.logClickedSuggestion(clickedIndex);
+          Expect.logUpdatedClassificationFromSuggestion(
+            coveoDefaultField,
+            clickedIndex
+          );
+          Expect.fetchDocumentsAfterValueChange();
+        });
+      });
+    });
+
+    describe('when an inline option is selected', () => {
+      it('should automatically fetch new document suggestions', () => {
+        const suggestionsCount = 2;
+        const optionsCount = 5;
+        visitCaseClassification({
+          fetchDocumentSuggestionOnChange: true,
+          maxSuggestions: optionsCount,
+        });
+
+        scope('when loading the page', () => {
+          Expect.displayLabel(true);
+          Expect.numberOfInlineOptions(optionsCount);
+          Expect.numberOfSuggestions(0);
+          Expect.displaySelectTitle(false);
+          Expect.displaySelectInput(false);
+        });
+
+        scope('when fetching suggestions', () => {
+          const firstSuggestionIndex = 0;
+
+          interceptDocumentSuggestion();
+          mockCaseClassification(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
+          fetchClassifications();
+
+          Expect.displaySelectTitle(false);
+          Expect.numberOfSuggestions(suggestionsCount);
+          Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
+          Expect.displaySelectInput(false);
+          Expect.logClickedSuggestion(firstSuggestionIndex, true);
+          Expect.correctValue(allOptions[firstSuggestionIndex].value);
+        });
+
+        scope('when selecting an inline option', () => {
+          const clickedIndex = 0;
+
+          Actions.clickInlineOption(clickedIndex);
+          Expect.logUpdatedClassificationFromInlineOption(
+            coveoDefaultField,
+            clickedIndex
+          );
+          Expect.correctValue(
+            allOptions[clickedIndex + suggestionsCount].value
+          );
+          Expect.fetchDocumentsAfterValueChange();
+        });
+      });
+    });
+
+    describe('when an option from the select input is selected', () => {
+      it('should automatically fetch new document suggestions', () => {
+        const suggestionsCount = 3;
+        visitCaseClassification({
+          fetchDocumentSuggestionOnChange: true,
+        });
+        scope('when loading the page', () => {
+          Expect.displayLabel(true);
+          Expect.numberOfInlineOptions(0);
+          Expect.numberOfSuggestions(0);
+          Expect.displaySelectTitle(false);
+          Expect.displaySelectInput(true);
+        });
+
+        scope('when fetching suggestions', () => {
+          const firstSuggestionIndex = 0;
+
+          interceptDocumentSuggestion();
+          mockCaseClassification(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
+          fetchClassifications();
+
+          Expect.displaySelectTitle(true);
+          Expect.displaySelectInput(false);
+          Expect.numberOfSuggestions(suggestionsCount);
+          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.numberOfInlineOptions(0);
+          Expect.logClickedSuggestion(firstSuggestionIndex, true);
+          Expect.correctValue(allOptions[firstSuggestionIndex].value);
+        });
+
+        scope('when selecting an option from the select input', () => {
+          const clickedIndex = 3;
+
+          Actions.clickSelectTitle();
+          Actions.openSelectInput();
+          Actions.clickSelectOption(clickedIndex);
+          Expect.correctValue(allOptions[clickedIndex].value);
+          Expect.logUpdatedClassificationFromSelectOption(
+            coveoDefaultField,
+            clickedIndex
+          );
+          Expect.fetchDocumentsAfterValueChange();
         });
       });
     });
