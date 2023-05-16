@@ -26,9 +26,10 @@ export class AtomicResultTemplate {
 
   /**
    * A function that must return true on results for the result template to apply.
+   * Set programmatically before initialization, not via attribute.
    *
-   * For example, a template with the following condition only applies to results whose `title` contains `singapore`:
-   * `[(result) => /singapore/i.test(result.title)]`
+   * For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`:
+   * `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
    */
   @Prop() public conditions: ResultTemplateCondition[] = [];
 
