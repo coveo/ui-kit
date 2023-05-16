@@ -164,12 +164,11 @@ jobs:
   prerelease:
     timeout-minutes: 40
     name: Pre-release
-    # TODO: Uncomment job dependencies when we enable new versioning process.
-    # needs:
-    #   - 'lint-check'
-    #   - 'unit-test'
-    #   - 'e2e-atomic-test'
-    #   - 'e2e-quantic-test'
+    needs:
+      - 'lint-check'
+      - 'unit-test'
+      - 'e2e-atomic-test'
+      - 'e2e-quantic-test'
     runs-on: ubuntu-latest
     environment: prerelease
     steps:
@@ -180,22 +179,8 @@ jobs:
       - name: Release
         run: |
           npm run nx:graph
-          npm run release:install-npm-proxy
           npm run release:phase1-3
         env:
-          # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           DEBUG: '*'
           IS_PRERELEASE: 'true'
-      - name: Download published packages
-        shell: bash
-        run: |
-          mkdir downloaded-packages
-          while read package; do
-            echo "Downloading $package"
-            npm pack $package --pack-destination=downloaded-packages
-          done < .git-message
-      - name: Upload packages as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: packages
-          path: downloaded-packages
