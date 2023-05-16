@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {undoable} from '../../app/undoable';
 import {SortState} from '../../controllers/sort/headless-sort';
 import {arrayEqual} from '../../utils/compare-utils';
 import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
@@ -14,7 +15,7 @@ import {
   StaticFilterSlice,
 } from '../static-filter-set/static-filter-set-state';
 import {TabSetState} from '../tab-set/tab-set-state';
-import {snapshot} from './history-actions';
+import {snapshot, redo, undo} from './history-actions';
 import {getHistoryInitialState, HistoryState} from './history-state';
 
 export const historyReducer = createReducer(
@@ -173,3 +174,12 @@ const isFacetOrderEqual = (current: string[], next: string[]) =>
   arrayEqual(current, next);
 
 const isDebugEqual = (current: boolean, next: boolean) => current === next;
+
+export const history = undoable({
+  actionTypes: {
+    redo: redo.type,
+    undo: undo.type,
+    snapshot: snapshot.type,
+  },
+  reducer: historyReducer,
+});

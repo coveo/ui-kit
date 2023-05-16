@@ -1,9 +1,9 @@
-import {dictionaryFieldContext} from '../../app/reducers';
 import {
   setContext,
   addContext,
   removeContext,
 } from '../../features/dictionary-field-context/dictionary-field-context-actions';
+import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../features/dictionary-field-context/dictionary-field-context-slice';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,

@@ -1,4 +1,11 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
+import {
+  getResultProperty as getResultPropertyAlias,
+  fieldsMustBeDefined as fieldsMustBeDefinedAlias,
+  fieldsMustNotBeDefined as fieldsMustNotBeDefinedAlias,
+  fieldMustMatch as fieldMustMatchAlias,
+  fieldMustNotMatch as fieldMustNotMatchAlias,
+} from './features/result-templates/result-templates-helpers';
 
 polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
@@ -85,7 +92,14 @@ export type {
 } from './features/result-templates/result-templates';
 export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
-export {ResultTemplatesHelpers} from './features';
+
+export namespace ResultTemplatesHelpers {
+  export const getResultProperty = getResultPropertyAlias;
+  export const fieldsMustBeDefined = fieldsMustBeDefinedAlias;
+  export const fieldsMustNotBeDefined = fieldsMustNotBeDefinedAlias;
+  export const fieldMustMatch = fieldMustMatchAlias;
+  export const fieldMustNotMatch = fieldMustNotMatchAlias;
+}
 
 export {
   MinimumFieldsToInclude,

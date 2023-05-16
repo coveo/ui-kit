@@ -1,7 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {Result} from '../../api/search/search/result';
-import {recentResults} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
 import {
   RegisterRecentResultsCreatorPayload,
   registerRecentResults,

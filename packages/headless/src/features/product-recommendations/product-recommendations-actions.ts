@@ -1,6 +1,9 @@
 import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
+import {
+  historyStore,
+  getVisitorID,
+} from '../../api/analytics/coveo-analytics-utils';
 import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request';
 import {
   AsyncThunkSearchOptions,

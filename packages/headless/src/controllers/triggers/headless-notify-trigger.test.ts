@@ -1,5 +1,5 @@
-import {triggers} from '../../app/reducers';
 import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,

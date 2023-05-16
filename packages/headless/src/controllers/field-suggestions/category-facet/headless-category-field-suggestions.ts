@@ -1,14 +1,12 @@
+import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {
-  categoryFacetSet,
-  configuration,
-  categoryFacetSearchSet,
-  search,
-} from '../../../app/reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {registerCategoryFacet} from '../../../features/facets/category-facet-set/category-facet-set-actions';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
