@@ -4,9 +4,9 @@ import {
   SearchAPIClient,
 } from '../../api/search/search-api-client';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
-import {search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {InstantResultSection} from '../../state/state-sections';
 import {SearchAction} from '../analytics/analytics-utils';
 import {

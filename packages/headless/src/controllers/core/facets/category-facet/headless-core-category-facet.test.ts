@@ -1,11 +1,6 @@
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  configuration,
-  search,
-  facetOptions,
-} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
@@ -13,11 +8,14 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/category-facet-set-actions';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/interfaces/request';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,

@@ -1,4 +1,4 @@
-import {getVisitorID} from '../../api/analytics/search-analytics';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
 import {
   HtmlRequest,
   HtmlRequestOptions,

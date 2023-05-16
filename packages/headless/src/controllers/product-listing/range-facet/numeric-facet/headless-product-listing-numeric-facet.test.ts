@@ -1,6 +1,8 @@
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {ProductListingAppState} from '../../../../state/product-listing-app-state';
 import {
   MockProductListingEngine,

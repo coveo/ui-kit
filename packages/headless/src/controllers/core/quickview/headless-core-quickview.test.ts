@@ -1,10 +1,11 @@
-import {configuration, resultPreview} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {
   fetchResultContent,
   nextPreview,
   previousPreview,
   updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
 import {
   buildMockResult,
   buildMockSearchAppEngine,

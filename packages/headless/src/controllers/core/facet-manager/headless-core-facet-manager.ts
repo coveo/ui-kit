@@ -1,5 +1,6 @@
 import {CoreEngine} from '../../../app/engine';
-import {facetOptions, search} from '../../../app/reducers';
+import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {sortFacets} from '../../../utils/facet-utils';

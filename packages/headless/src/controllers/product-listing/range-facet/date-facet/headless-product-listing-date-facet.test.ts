@@ -1,11 +1,9 @@
-import {
-  configuration,
-  dateFacetSet,
-  search,
-  facetOptions,
-} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {ProductListingAppState} from '../../../../state/product-listing-app-state';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';

@@ -258,6 +258,23 @@ describe('buildSearchParameterSerializer', () => {
       });
     });
 
+    it('deserializes a numeric facet with multiple selections with an optional endInclusive', () => {
+      const result = deserialize('nf-size=0..10,10...20');
+      expect(result).toEqual({
+        nf: {
+          size: [
+            buildNumericRange({start: 0, end: 10, state: 'selected'}),
+            buildNumericRange({
+              start: 10,
+              end: 20,
+              state: 'selected',
+              endInclusive: true,
+            }),
+          ],
+        },
+      });
+    });
+
     it('deserializes multiple numeric facets with selected values', () => {
       const result = deserialize('nf-size=0..10&nf-amount=100..200');
       expect(result).toEqual({
@@ -265,6 +282,23 @@ describe('buildSearchParameterSerializer', () => {
           size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
           amount: [
             buildNumericRange({start: 100, end: 200, state: 'selected'}),
+          ],
+        },
+      });
+    });
+
+    it('deserializes multiple numeric facets with selected values with an optional endInclusive', () => {
+      const result = deserialize('nf-size=0..10&nf-amount=100...200');
+      expect(result).toEqual({
+        nf: {
+          size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
+          amount: [
+            buildNumericRange({
+              start: 100,
+              end: 200,
+              state: 'selected',
+              endInclusive: true,
+            }),
           ],
         },
       });
@@ -340,6 +374,48 @@ describe('buildSearchParameterSerializer', () => {
         start: date1,
         end: date2,
         state: 'selected',
+      });
+
+      expect(result).toEqual({
+        df: {
+          date: [expected],
+          created: [expected],
+        },
+      });
+    });
+
+    it('deserializes multiple date facets with selected values with an optional endInclusive', () => {
+      const date1 = '2010/01/01@05:00:00';
+      const date2 = '2011/01/01@05:00:00';
+      const range = `${date1}...${date2}`;
+
+      const result = deserialize(`df-date=${range}&df-created=${range}`);
+      const expected = buildDateRange({
+        start: date1,
+        end: date2,
+        state: 'selected',
+        endInclusive: true,
+      });
+
+      expect(result).toEqual({
+        df: {
+          date: [expected],
+          created: [expected],
+        },
+      });
+    });
+
+    it('deserializes multiple date facets with selected values with an optional endInclusive', () => {
+      const date1 = '2010/01/01@05:00:00';
+      const date2 = '2011/01/01@05:00:00';
+      const range = `${date1}...${date2}`;
+
+      const result = deserialize(`df-date=${range}&df-created=${range}`);
+      const expected = buildDateRange({
+        start: date1,
+        end: date2,
+        state: 'selected',
+        endInclusive: true,
       });
 
       expect(result).toEqual({
