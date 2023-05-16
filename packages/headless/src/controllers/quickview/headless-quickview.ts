@@ -1,11 +1,11 @@
 import {CoreEngine} from '../..';
 import {HtmlApiClient} from '../../api/search/html/html-api-client';
-import {search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {SearchSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {

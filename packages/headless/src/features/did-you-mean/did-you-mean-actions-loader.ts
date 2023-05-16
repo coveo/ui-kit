@@ -1,6 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {didYouMean, query} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {didYouMeanReducer as didYouMean} from '../../features/did-you-mean/did-you-mean-slice';
+import {queryReducer as query} from '../../features/query/query-slice';
 import {
   applyDidYouMeanCorrection,
   disableDidYouMean,

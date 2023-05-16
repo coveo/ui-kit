@@ -1,7 +1,7 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../..';
 import {HtmlRequestOptions} from '../../api/search/html/html-request';
-import {resultPreview} from '../../app/reducers';
+import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
 import {
   AsyncThunkGlobalOptions,
   fetchResultContent,

@@ -1,5 +1,4 @@
 import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
-import {search, recentQueries} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   clearRecentQueries,
@@ -9,10 +8,12 @@ import {
   logClearRecentQueries,
   logRecentQueryClick,
 } from '../../features/recent-queries/recent-queries-analytics-actions';
+import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice';
 import {
   executeSearch,
   prepareForSearchWithQuery,
 } from '../../features/search/search-actions';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {RecentQueriesSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {
