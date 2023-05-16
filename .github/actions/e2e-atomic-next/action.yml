@@ -11,13 +11,12 @@ runs:
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
-        browser: chrome 
+        browser: chrome
         working-directory: ./packages/samples/atomic-next
         start: npm run dev
         wait-on: 'http://localhost:3000'
         install: false
         record: false
-        browser: chrome
 
     - uses: actions/upload-artifact@v3
       if: failure()
