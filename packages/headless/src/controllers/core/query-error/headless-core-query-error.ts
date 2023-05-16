@@ -1,5 +1,5 @@
 import {CoreEngine} from '../../../app/engine';
-import {search} from '../../../app/reducers';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {ErrorPayload} from '../../controller/error-payload';

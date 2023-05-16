@@ -1,9 +1,10 @@
-import {triggers, query} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {updateQuery} from '../../features/query/query-actions';
+import {queryReducer as query} from '../../features/query/query-slice';
 import {executeSearch} from '../../features/search/search-actions';
 import {logUndoTriggerQuery} from '../../features/triggers/trigger-analytics-actions';
 import {updateIgnoreQueryTrigger} from '../../features/triggers/triggers-actions';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {TriggerSection, QuerySection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';

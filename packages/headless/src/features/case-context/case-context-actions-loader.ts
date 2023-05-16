@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../..';
-import {insightCaseContext} from '../../app/reducers';
+import {caseContextReducer as insightCaseContext} from '../../features/case-context/case-context-slice';
 import {setCaseContext, setCaseId, setCaseNumber} from './case-context-actions';
 
 /**

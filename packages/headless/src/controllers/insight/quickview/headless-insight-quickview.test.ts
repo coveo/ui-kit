@@ -1,7 +1,8 @@
 import {configuration} from '../../../app/common-reducers';
-import {insightInterface, resultPreview} from '../../../app/reducers';
+import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice';
 import {updateContentURL} from '../../../features/result-preview/result-preview-actions';
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
 import {buildMockResult} from '../../../test';
 import {
   buildMockInsightEngine,

@@ -1,7 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {attachedResults} from '../../../app/reducers';
 import {
   attachResult,
   detachResult,
@@ -10,6 +9,7 @@ import {
   logCaseAttach,
   logCaseDetach,
 } from '../../../features/attached-results/attached-results-analytics-actions';
+import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice';
 import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils';
 import {Result} from '../../../insight.index';
 import {

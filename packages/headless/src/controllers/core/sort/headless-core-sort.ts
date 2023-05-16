@@ -1,7 +1,6 @@
 import {ArrayValue, isArray, Schema} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {sortCriteria} from '../../../app/reducers';
 import {updatePage} from '../../../features/pagination/pagination-actions';
 import {
   buildCriterionExpression,
@@ -12,6 +11,7 @@ import {
   registerSortCriterion,
   updateSortCriterion,
 } from '../../../features/sort-criteria/sort-criteria-actions';
+import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice';
 import {ConfigurationSection, SortSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {validateInitialState} from '../../../utils/validate-payload';
