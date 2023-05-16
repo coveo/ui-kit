@@ -174,14 +174,7 @@ jobs:
   prerelease:
     timeout-minutes: 40
     name: Pre-release
-    needs:
-      - 'build'
-      - 'lint-check'
-      - 'unit-test'
-      - 'e2e-atomic-test'
-      - 'e2e-quantic-test'
     runs-on: ubuntu-latest
-    environment: prerelease
     steps:
       - uses: actions/checkout@v3
         with:
