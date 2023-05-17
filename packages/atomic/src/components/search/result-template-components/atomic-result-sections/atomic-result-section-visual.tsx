@@ -15,6 +15,7 @@ import {ResultDisplayImageSize} from '../../../common/layout/display-options';
  */
 @Component({
   tag: 'atomic-result-section-visual',
+  styleUrl: 'atomic-result-section-visual.css',
   shadow: false,
 })
 export class AtomicResultSectionVisual {
