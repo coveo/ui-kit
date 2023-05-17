@@ -1470,7 +1470,7 @@ export namespace Components {
          */
         "clearFilters": boolean;
         /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
          */
         "disableSearch": boolean;
         /**
@@ -4135,7 +4135,7 @@ declare namespace LocalJSX {
          */
         "clearFilters"?: boolean;
         /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
          */
         "disableSearch"?: boolean;
         /**
