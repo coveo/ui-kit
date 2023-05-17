@@ -31,7 +31,7 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
 
   @Event() animationEnded!: EventEmitter<never>;
 
-  @Prop() isOpen = true;
+  @Prop({mutable: true}) isOpen?: boolean;
 
   @Prop({reflect: true}) displayFooterSlot = true;
 
@@ -48,7 +48,9 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
     return (
       <article
         part="container"
-        class={`${this.isOpen ? 'visible' : 'invisible'}`}
+        class={`${
+          this.isOpen === undefined ? '' : this.isOpen ? 'visible' : 'invisible'
+        }`}
         onAnimationEnd={() => this.animationEnded.emit()}
       >
         <style>
