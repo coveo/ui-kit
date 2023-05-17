@@ -8,16 +8,17 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: cypress-io/github-action@v4
-      name: Run Cypress
+    - uses: Wandalen/wretry.action@master
       with:
-        working-directory: ./packages/samples/iife
-        start: npm run prod
-        wait-on: 'http://localhost:3000'
-        install: false
-        record: false
-        browser: chrome
-
+        attempt_limit: 3
+        action: cypress-io/github-action@v4
+        with:
+          working-directory: ./packages/samples/iife
+          start: npm run prod
+          wait-on: 'http://localhost:3000'
+          install: false
+          record: false
+          browser: chrome
     - uses: actions/upload-artifact@v3
       if: failure()
       with:

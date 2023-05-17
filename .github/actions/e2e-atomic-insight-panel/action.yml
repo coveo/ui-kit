@@ -8,12 +8,14 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: cypress-io/github-action@v4
-      name: Run Cypress
+    - uses: Wandalen/wretry.action@master
       with:
-        working-directory: ./packages/atomic
-        config-file: cypress-insight-panel.config.ts
-        start: npm run prod
-        wait-on: 'http://localhost:3333'
-        install: false
-        record: false
+        attempt_limit: 3
+        action: cypress-io/github-action@v4
+        with:
+          working-directory: ./packages/atomic
+          config-file: cypress-insight-panel.config.ts
+          start: npm run prod
+          wait-on: 'http://localhost:3333'
+          install: false
+          record: false
