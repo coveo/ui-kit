@@ -3,7 +3,6 @@ import {isNullOrUndefined} from '@coveo/bueno';
 import {JsonDocs, JsonDocsValue} from '@stencil/core/internal';
 import {ArgTypes} from '@storybook/api';
 import {Options} from '@storybook/components';
-import {escape} from 'lodash';
 
 const availableControlType = [
   'radio',
