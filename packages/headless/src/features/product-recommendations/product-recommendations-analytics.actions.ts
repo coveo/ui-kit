@@ -9,10 +9,10 @@ import {Result} from '../../api/search/search/result';
 import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 import {
   AnalyticsType,
-  makeAnalyticsAction,
   ProductRecommendationAction,
   resultPartialDefinition,
 } from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/search-analytics-utils';
 
 export const logProductRecommendations = (): ProductRecommendationAction =>
   makeAnalyticsAction(

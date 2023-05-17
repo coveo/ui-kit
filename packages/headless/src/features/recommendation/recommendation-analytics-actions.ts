@@ -4,11 +4,11 @@ import {
   AnalyticsType,
   ClickAction,
   documentIdentifier,
-  makeAnalyticsAction,
   partialRecommendationInformation,
   SearchAction,
   validateResultPayload,
 } from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/search-analytics-utils';
 
 export const logRecommendationUpdate = (): SearchAction =>
   makeAnalyticsAction(

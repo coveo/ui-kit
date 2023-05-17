@@ -2,10 +2,10 @@ import {Result} from '../../insight.index';
 import {
   AnalyticsType,
   documentIdentifier,
-  makeInsightAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
+import {makeInsightAnalyticsAction} from '../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logCaseAttach = (result: Result) =>

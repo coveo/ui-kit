@@ -11,11 +11,11 @@ import {
   ClickAction,
   CustomAction,
   documentIdentifier,
-  makeAnalyticsAction,
   partialDocumentInformation,
   SearchAction,
   validateResultPayload,
 } from './analytics-utils';
+import {makeAnalyticsAction} from './search-analytics-utils';
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */

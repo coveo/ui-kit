@@ -4,9 +4,9 @@ import {
   ClickAction,
   CustomAction,
   documentIdentifier,
-  makeAnalyticsAction,
   partialDocumentInformation,
 } from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/search-analytics-utils';
 import {
   inlineLinkPayloadDefinition,
   QuestionAnsweringInlineLinkActionCreatorPayload,

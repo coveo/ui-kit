@@ -1,6 +1,6 @@
 import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
-import {InsightAction} from '../analytics/analytics-utils';
 import {logInsightInterfaceChange} from '../analytics/insight-analytics-actions';
+import {InsightAction} from '../analytics/insight-analytics-utils';
 import {
   logFacetClearAll,
   logFacetDeselect,

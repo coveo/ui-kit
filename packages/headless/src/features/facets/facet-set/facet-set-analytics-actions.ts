@@ -3,11 +3,8 @@ import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
-import {
-  AnalyticsType,
-  makeAnalyticsAction,
-  SearchAction,
-} from '../../analytics/analytics-utils';
+import {AnalyticsType, SearchAction} from '../../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../../analytics/search-analytics-utils';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
 import {

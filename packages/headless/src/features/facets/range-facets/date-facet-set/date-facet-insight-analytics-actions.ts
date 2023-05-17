@@ -1,9 +1,9 @@
 import {validatePayload} from '../../../../utils/validate-payload';
+import {AnalyticsType} from '../../../analytics/analytics-utils';
 import {
-  AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from '../../../analytics/analytics-utils';
+} from '../../../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../../../case-context/case-context-state';
 import {getRangeFacetMetadata} from '../generic/range-facet-analytics-actions';
 import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';

@@ -3,10 +3,10 @@ import {
   partialDocumentInformation,
   documentIdentifier,
   validateResultPayload,
-  makeAnalyticsAction,
   AnalyticsType,
   ClickAction,
 } from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/search-analytics-utils';
 
 export const logDocumentOpen = (result: Result): ClickAction =>
   makeAnalyticsAction(

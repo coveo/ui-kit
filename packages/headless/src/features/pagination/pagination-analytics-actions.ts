@@ -1,9 +1,6 @@
 import {PaginationSection} from '../../state/state-sections';
-import {
-  AnalyticsType,
-  makeAnalyticsAction,
-  SearchAction,
-} from '../analytics/analytics-utils';
+import {AnalyticsType, SearchAction} from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/search-analytics-utils';
 import {currentPageSelector} from './pagination-selectors';
 import {getPaginationInitialState} from './pagination-state';
 

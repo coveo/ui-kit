@@ -18,11 +18,8 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload';
-import {
-  AnalyticsType,
-  CustomAction,
-  makeAnalyticsAction,
-} from '../analytics/analytics-utils';
+import {AnalyticsType, CustomAction} from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/search-analytics-utils';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 

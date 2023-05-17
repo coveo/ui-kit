@@ -1,10 +1,8 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../..';
 import {configuration} from '../../../app/common-reducers';
-import {
-  InsightAction,
-  SearchAction,
-} from '../../../features/analytics/analytics-utils';
+import type {SearchAction} from '../../../features/analytics/analytics-utils';
+import type {InsightAction} from '../../../features/analytics/insight-analytics-utils';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,

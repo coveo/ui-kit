@@ -4,11 +4,11 @@ import {
   partialDocumentInformation,
   documentIdentifier,
   validateResultPayload,
-  makeAnalyticsAction,
   AnalyticsType,
   InstantResultsSearchAction,
   InstantResultsClickAction,
 } from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/search-analytics-utils';
 
 export const logInstantResultOpen = (
   result: Result

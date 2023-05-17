@@ -1,9 +1,6 @@
 import {validatePayload} from '../../../../utils/validate-payload';
-import {
-  AnalyticsType,
-  makeAnalyticsAction,
-  SearchAction,
-} from '../../../analytics/analytics-utils';
+import {AnalyticsType, SearchAction} from '../../../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../../../analytics/search-analytics-utils';
 import {getRangeFacetMetadata} from '../generic/range-facet-analytics-actions';
 import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
 import {DateFacetValue} from './interfaces/response';

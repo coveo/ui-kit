@@ -2,11 +2,13 @@ import {validatePayload} from '../../utils/validate-payload';
 import {SmartSnippetFeedback} from '../analytics';
 import {
   AnalyticsType,
-  InsightAction,
   documentIdentifier,
-  makeInsightAnalyticsAction,
   partialDocumentInformation,
 } from '../analytics/analytics-utils';
+import {
+  InsightAction,
+  makeInsightAnalyticsAction,
+} from '../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {
   inlineLinkPayloadDefinition,

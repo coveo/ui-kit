@@ -1,7 +1,7 @@
 import {
   CaseAssistAction,
   makeCaseAssistAnalyticsAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/case-assist-analytics-utils';
 import {NextStageOptions} from './case-assist-analytics-actions-loader';
 import {
   caseAssistCaseSelector,

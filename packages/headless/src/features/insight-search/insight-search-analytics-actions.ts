@@ -1,9 +1,9 @@
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {AnalyticsType} from '../analytics/analytics-utils';
 import {
-  AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {getQueryInitialState} from '../query/query-state';
 

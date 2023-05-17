@@ -1,9 +1,9 @@
 import {
-  makeAnalyticsAction,
   AnalyticsType,
   CustomAction,
   SearchAction,
 } from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/search-analytics-utils';
 
 export const logClearRecentQueries = (): CustomAction =>
   makeAnalyticsAction(

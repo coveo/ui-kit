@@ -3,10 +3,10 @@ import {
   AnalyticsType,
   ClickAction,
   documentIdentifier,
-  makeAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/search-analytics-utils';
 
 export const logDocumentQuickview = (result: Result): ClickAction => {
   return makeAnalyticsAction(

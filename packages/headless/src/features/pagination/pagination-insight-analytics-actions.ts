@@ -1,9 +1,9 @@
 import {PaginationSection} from '../../state/state-sections';
+import {AnalyticsType} from '../analytics/analytics-utils';
 import {
-  AnalyticsType,
-  makeInsightAnalyticsAction,
   InsightAction,
-} from '../analytics/analytics-utils';
+  makeInsightAnalyticsAction,
+} from '../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {currentPageSelector} from './pagination-selectors';
 

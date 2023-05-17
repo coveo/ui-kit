@@ -1,8 +1,8 @@
+import {AnalyticsType} from '../analytics/analytics-utils';
 import {
-  AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logDidYouMeanClick = (): InsightAction =>

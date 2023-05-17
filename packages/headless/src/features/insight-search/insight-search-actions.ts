@@ -28,7 +28,7 @@ import {
   TabSection,
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
-import {InsightAction} from '../analytics/analytics-utils';
+import {InsightAction} from '../analytics/insight-analytics-utils';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analytics-actions';
 import {snapshot} from '../history/history-actions';

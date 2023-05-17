@@ -3,11 +3,11 @@ import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
+import {AnalyticsType} from '../../analytics/analytics-utils';
 import {
-  AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from '../../analytics/analytics-utils';
+} from '../../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';

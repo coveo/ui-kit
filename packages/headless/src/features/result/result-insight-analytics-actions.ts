@@ -4,8 +4,8 @@ import {
   documentIdentifier,
   validateResultPayload,
   AnalyticsType,
-  makeInsightAnalyticsAction,
 } from '../analytics/analytics-utils';
+import {makeInsightAnalyticsAction} from '../analytics/insight-analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logDocumentOpen = (result: Result) =>

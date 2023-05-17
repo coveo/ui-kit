@@ -1,5 +1,6 @@
 import {InsightEngine} from '../../insight.index';
-import {AnalyticsType, InsightAction} from '../analytics/analytics-utils';
+import {AnalyticsType} from '../analytics/analytics-utils';
+import {InsightAction} from '../analytics/insight-analytics-utils';
 import {
   logContextChanged,
   logExpandToFullUI,

@@ -33,11 +33,12 @@ import {
   StaticFilterValueMetadata,
 } from '../static-filter-set/static-filter-set-actions';
 import {logInsightStaticFilterDeselect} from '../static-filter-set/static-filter-set-insight-analytics-actions';
-import {AnalyticsType, InsightAction} from './analytics-utils';
+import {AnalyticsType} from './analytics-utils';
 import {
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
 } from './insight-analytics-actions';
+import {InsightAction} from './insight-analytics-utils';
 
 export type {
   LogStaticFilterToggleValueActionCreatorPayload,

@@ -15,10 +15,10 @@ import {
   AnalyticsType,
   ClickAction,
   documentIdentifier,
-  makeAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
+import {makeAnalyticsAction} from '../analytics/search-analytics-utils';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {ResultWithFolding} from './folding-slice';
 import {CollectionId} from './folding-state';
