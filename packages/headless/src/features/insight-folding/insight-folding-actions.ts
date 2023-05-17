@@ -1,19 +1,19 @@
 import {NumberValue, SchemaDefinition, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {
-  AsyncThunkSearchOptions,
-  isErrorResponse,
-} from '../../api/search/search-api-client';
+import {isErrorResponse} from '../../api/search/search-api-client';
 import {Result} from '../../api/search/search/result';
+import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
 import {
   ConfigurationSection,
   FoldingSection,
+  InsightConfigurationSection,
   QuerySection,
 } from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
 import {ResultWithFolding} from '../folding/folding-slice';
 import {CollectionId} from '../folding/folding-state';
-import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
+import {fetchFromAPI} from '../insight-search/insight-search-actions';
+import {buildInsightSearchRequest} from '../insight-search/insight-search-request';
 
 export interface RegisterFoldingActionCreatorPayload {
   /**
@@ -65,12 +65,13 @@ export const registerFolding = createAction(
 
 export type StateNeededByLoadCollection = ConfigurationSection &
   FoldingSection &
-  QuerySection;
+  QuerySection &
+  InsightConfigurationSection;
 
 export const loadCollection = createAsyncThunk<
   LoadCollectionFulfilledReturn,
   CollectionId,
-  AsyncThunkSearchOptions<StateNeededByLoadCollection>
+  AsyncThunkInsightOptions<StateNeededByLoadCollection>
 >(
   'folding/loadCollection',
   async (
@@ -78,27 +79,16 @@ export const loadCollection = createAsyncThunk<
     {getState, rejectWithValue, extra: {apiClient}}
   ) => {
     const state = getState();
-    const sharedWithSearchRequest =
-      await buildSearchAndFoldingLoadCollectionRequest(state);
+    const mappedRequest = buildInsightSearchRequest(state);
 
-    const response = await apiClient.search(
-      {
-        ...sharedWithSearchRequest,
-        q: getQForHighlighting(state),
-        enableQuerySyntax: true,
-        cq: `@${state.folding.fields.collection}="${collectionId}"`,
-        filterField: state.folding.fields.collection,
-        childField: state.folding.fields.parent,
-        parentField: state.folding.fields.child,
-        filterFieldRange: 100,
-      },
-      {origin: 'foldingCollection'}
-    );
+    const fetched = await fetchFromAPI(apiClient, state, mappedRequest, {
+      origin: 'foldingCollection',
+    });
+    const response = fetched.response;
 
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
     }
-
     return {
       collectionId,
       results: response.success.results,
@@ -107,18 +97,3 @@ export const loadCollection = createAsyncThunk<
     };
   }
 );
-
-function getQForHighlighting(state: StateNeededByLoadCollection) {
-  // This piece of code serves the following purpose:
-  // Inject the "original" query "q" to get proper keywords highlighting when loading a full collection
-  // However, the intent behind this feature is to load "every results available for this collection", regardless of other end user filters (including the search box itself)
-  // For that reason, we force enable query syntax + inject an `OR @uri` expression in the query.
-
-  if (state.query.q === '') {
-    return '';
-  }
-
-  return state.query.enableQuerySyntax
-    ? `${state.query.q} OR @uri`
-    : `( <@- ${state.query.q} -@> ) OR @uri`;
-}
