@@ -15,6 +15,7 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
+        command-prefix: '--' # Workaround for hardcoded node.js version https://github.com/cypress-io/github-action/issues/489
         working-directory: ./packages/atomic
         spec: ${{ inputs.spec }}
         start: npm run prod

@@ -12,6 +12,7 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
+        command-prefix: '--' # Workaround for hardcoded node.js version https://github.com/cypress-io/github-action/issues/489
         working-directory: ./packages/samples/atomic-react
         start: npm run dev
         wait-on: 'http://localhost:3000'
