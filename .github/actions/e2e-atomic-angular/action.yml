@@ -12,16 +12,14 @@ runs:
         npm i
       shell: bash
       working-directory: ./packages/samples/angular
-    - uses: Wandalen/wretry.action@master
+    - uses: cypress-io/github-action@v4
+      name: Run Cypress
       with:
-        attempt_limit: 3
-        action: cypress-io/github-action@v4
-        with:
-          working-directory: ./packages/samples/angular
-          start: npm run dev
-          wait-on: 'http://localhost:4200'
-          install: false
-          record: false
+        working-directory: ./packages/samples/angular
+        start: npm run dev
+        wait-on: 'http://localhost:4200'
+        install: false
+        record: false
     - uses: actions/upload-artifact@v3
       if: failure()
       with:

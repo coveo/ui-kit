@@ -1,5 +1,5 @@
-name: 'Atomic React E2E tests'
-description: 'Runs Cypress tests for Atomic React'
+name: "Atomic React E2E tests"
+description: "Runs Cypress tests for Atomic React"
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
@@ -8,16 +8,14 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: Wandalen/wretry.action@master
+    - uses: cypress-io/github-action@v4
+      name: Run Cypress
       with:
-        attempt_limit: 3
-        action: cypress-io/github-action@v4
-        with:
-          working-directory: ./packages/samples/atomic-react
-          start: npm run dev
-          wait-on: 'http://localhost:3000'
-          install: false
-          record: false
+        working-directory: ./packages/samples/atomic-react
+        start: npm run dev
+        wait-on: 'http://localhost:3000'
+        install: false
+        record: false
     - uses: actions/upload-artifact@v3
       if: failure()
       with:

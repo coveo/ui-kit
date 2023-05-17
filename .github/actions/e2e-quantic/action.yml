@@ -1,5 +1,5 @@
-name: 'Quantic E2E tests'
-description: 'Runs Cypress tests for Quantic'
+name: "Quantic E2E tests"
+description: "Runs Cypress tests for Quantic"
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
@@ -15,18 +15,16 @@ runs:
       with:
         path: packages/quantic/cypress/plugins/config
         key: quantic-cypress-config-${{ github.sha }}
-    - uses: Wandalen/wretry.action@master
+    - uses: cypress-io/github-action@v4
+      name: Run Cypress
       with:
-        attempt_limit: 3
-        action: cypress-io/github-action@v4
-        with:
-          working-directory: ./packages/quantic
-          spec: ${{ inputs.spec }}
-          install: false
-          record: false
-          config: reporter=cypress/reporters/detailed-reporter.js
-        env:
-          GITHUB_TOKEN: ${{ inputs.github-token }}
+        working-directory: ./packages/quantic
+        spec: ${{ inputs.spec }}
+        install: false
+        record: false
+        config: reporter=cypress/reporters/detailed-reporter.js
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
     - uses: actions/upload-artifact@v3
       if: failure()
       with:
