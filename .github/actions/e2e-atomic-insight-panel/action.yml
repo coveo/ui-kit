@@ -12,7 +12,7 @@ runs:
       with:
         attempt_limit: 3
         action: cypress-io/github-action@v4
-        with:
+        with: |
           working-directory: ./packages/atomic
           config-file: cypress-insight-panel.config.ts
           start: npm run prod

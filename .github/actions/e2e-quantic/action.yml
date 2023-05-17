@@ -19,7 +19,7 @@ runs:
       with:
         attempt_limit: 3
         action: cypress-io/github-action@v4
-        with:
+        with: |
           working-directory: ./packages/quantic
           spec: ${{ inputs.spec }}
           install: false
