@@ -15,7 +15,7 @@ runs:
       with:
         attempt_limit: 3
         action: cypress-io/github-action@v4
-        with: |
+        with:
           working-directory: ./packages/atomic
           spec: ${{ inputs.spec }}
           start: npm run prod
