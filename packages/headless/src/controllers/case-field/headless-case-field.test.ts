@@ -1,17 +1,15 @@
 import {configuration} from '../../app/common-reducers';
-import {
-  caseAssistConfiguration,
-  caseField,
-  caseInput,
-  documentSuggestion,
-} from '../../app/reducers';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
 import {
   fetchCaseClassifications,
   registerCaseField,
   updateCaseField,
 } from '../../features/case-field/case-field-actions';
+import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice';
 import {getCaseFieldInitialState} from '../../features/case-field/case-field-state';
+import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
 import {
   buildMockCaseAssistEngine,

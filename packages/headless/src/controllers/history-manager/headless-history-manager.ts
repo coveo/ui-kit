@@ -1,14 +1,15 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {configuration} from '../../app/common-reducers';
-import {facetOrder, history} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {StateWithHistory} from '../../app/undoable';
+import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice';
 import {back, forward} from '../../features/history/history-actions';
 import {
   logNavigateBackward,
   logNavigateForward,
   logNoResultsBack,
 } from '../../features/history/history-analytics-actions';
+import {history} from '../../features/history/history-slice';
 import {HistoryState} from '../../features/history/history-state';
 import {executeSearch} from '../../features/search/search-actions';
 import {ConfigurationSection, HistorySection} from '../../state/state-sections';

@@ -22,7 +22,11 @@ import {spawnSync} from 'child_process';
 import {readFileSync} from 'fs';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
-import {REPO_NAME, REPO_OWNER} from './common/constants.mjs';
+import {
+  RELEASER_AUTH_SECRETS,
+  REPO_NAME,
+  REPO_OWNER,
+} from './common/constants.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
 const GIT_SSH_REMOTE = 'deploy';
@@ -31,20 +35,10 @@ const GIT_SSH_REMOTE = 'deploy';
 (async () => {
   const PATH = '.';
 
-  //#region GitHub authentication
-  const authSecrets = {
-    appId: process.env.RELEASER_APP_ID,
-    privateKey: process.env.RELEASER_PRIVATE_KEY,
-    clientId: process.env.RELEASER_CLIENT_ID,
-    clientSecret: process.env.RELEASER_CLIENT_SECRET,
-    installationId: process.env.RELEASER_INSTALLATION_ID,
-  };
-
   const octokit = new Octokit({
     authStrategy: createAppAuth,
-    auth: authSecrets,
+    auth: RELEASER_AUTH_SECRETS,
   });
-  //#endregion
 
   // Define release # andversion
   const currentVersionTag = getCurrentVersion(PATH);

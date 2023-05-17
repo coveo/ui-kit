@@ -1,4 +1,4 @@
-import {clearAnalyticsClient} from '../../api/analytics/search-analytics';
+import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils';
 import {platformUrl} from '../../api/platform-client';
 import {allValidPlatformCombination} from '../../test/platform-url';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
@@ -18,7 +18,7 @@ import {
   getConfigurationInitialState,
 } from './configuration-state';
 
-jest.mock('../../api/analytics/search-analytics');
+jest.mock('../../api/analytics/coveo-analytics-utils');
 
 describe('configuration slice', () => {
   afterEach(() => {

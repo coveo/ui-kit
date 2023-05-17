@@ -1,12 +1,12 @@
 import {BooleanValue, Schema} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {tabSet} from '../../../app/reducers';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state';
 import {
   registerTab,
   updateActiveTab,
 } from '../../../features/tab-set/tab-set-actions';
+import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
 import {ConfigurationSection, TabSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {

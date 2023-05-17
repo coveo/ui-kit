@@ -1,4 +1,4 @@
-import {search} from '../../../app/reducers';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
