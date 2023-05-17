@@ -1,8 +1,7 @@
 import {PayloadAction, AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
+import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
 import {folding} from '../../app/reducers';
-import {FoldingActionCreators} from '../folding/folding-actions-loader';
 import {
   registerFolding,
   loadCollection,
@@ -38,7 +37,7 @@ export interface InsightFoldingActionCreators {
   ): AsyncThunkAction<
     LoadCollectionFulfilledReturn,
     string,
-    AsyncThunkSearchOptions<StateNeededByLoadCollection>
+    AsyncThunkInsightOptions<StateNeededByLoadCollection>
   >;
 }
 
@@ -50,7 +49,7 @@ export interface InsightFoldingActionCreators {
  */
 export function loadFoldingActions(
   engine: InsightEngine
-): FoldingActionCreators {
+): InsightFoldingActionCreators {
   engine.addReducers({folding});
 
   return {

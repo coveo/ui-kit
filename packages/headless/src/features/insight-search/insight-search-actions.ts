@@ -18,6 +18,7 @@ import {
   DidYouMeanSection,
   FacetSection,
   FieldsSection,
+  FoldingSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
   NumericFacetSection,
@@ -73,10 +74,11 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       TabSection &
       FieldsSection &
       DidYouMeanSection &
-      SortSection
+      SortSection &
+      FoldingSection
   >;
 
-const fetchFromAPI = async (
+export const fetchFromAPI = async (
   client: InsightAPIClient,
   state: StateNeededByExecuteSearch,
   {request, mappings}: MappedSearchRequest<InsightQueryRequest>
