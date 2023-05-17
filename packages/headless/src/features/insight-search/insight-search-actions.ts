@@ -76,7 +76,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SortSection
   >;
 
-const fetchFromAPI = async (
+export const fetchFromAPI = async (
   client: InsightAPIClient,
   state: StateNeededByExecuteSearch,
   {request, mappings}: MappedSearchRequest<InsightQueryRequest>

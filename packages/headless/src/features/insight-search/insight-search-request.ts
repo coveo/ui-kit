@@ -2,6 +2,7 @@ import {InsightQueryRequest} from '../../api/service/insight/query/query-request
 import {InsightAppState} from '../../state/insight-app-state';
 import {
   ConfigurationSection,
+  FoldingSection,
   InsightConfigurationSection,
 } from '../../state/state-sections';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
@@ -10,7 +11,7 @@ import {MappedSearchRequest, mapSearchRequest} from '../search/search-mappings';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   InsightConfigurationSection &
-  Partial<InsightAppState>;
+  Partial<InsightAppState & FoldingSection>;
 
 export const buildInsightSearchRequest = (
   state: StateNeededBySearchRequest
@@ -55,6 +56,10 @@ export const buildInsightSearchRequest = (
       sortCriteria: state.sortCriteria,
     }),
     tab: state.configuration.analytics.originLevel2,
+    filterField: state.folding?.fields.collection,
+    childField: state.folding?.fields.parent,
+    parentField: state.folding?.fields.child,
+    filterFieldRange: 100,
   });
 };
 
