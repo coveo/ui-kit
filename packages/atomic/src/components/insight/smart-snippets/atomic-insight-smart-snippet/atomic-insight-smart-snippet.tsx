@@ -100,7 +100,6 @@ export class AtomicInsightSmartSnippet
   }
 
   public componentWillUpdate() {
-    console.log(this.smartSnippetState);
     if (!(this.smartSnippetState.liked || this.smartSnippetState.disliked)) {
       this.setFeedbackSent(false);
     }
