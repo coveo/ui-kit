@@ -137,6 +137,7 @@ export default class QuanticFoldedResultList extends LightningElement {
 
   updateState() {
     this.state = this.foldedResultList.state;
+    console.log(JSON.parse(JSON.stringify(this.state)));
     this.showPlaceholder =
       this?.state?.isLoading &&
       !this?.state?.hasError &&

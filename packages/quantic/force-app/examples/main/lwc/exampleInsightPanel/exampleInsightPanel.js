@@ -6,6 +6,10 @@ import caseTemplate from './resultTemplates/caseResultTemplate.html';
 import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 // @ts-ignore
 import defaultTemplate from './resultTemplates/defaultResultTemplate.html';
+// @ts-ignore
+import parentTemplate from './resultTemplates/parentTemplate.html';
+// @ts-ignore
+import childTemplate from './resultTemplates/childTemplate.html';
 
 import {LightningElement, api} from 'lwc';
 import {
@@ -59,7 +63,24 @@ export default class ExampleInsightPanel extends LightningElement {
       'objecttype',
       ['FeedItem']
     );
+    const isThread = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'source',
+      ['iNaturalistTaxons']
+    );
+    const isChild = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'quantic__templateId',
+      ['myChildTemplate']
+    );
     resultTemplatesManager.registerTemplates(
+      {
+        content: childTemplate,
+        conditions: [isChild],
+        priority: 1,
+      },
+      {
+        content: parentTemplate,
+        conditions: [isThread],
+      },
       {
         content: youtubeTemplate,
         conditions: [isYouTube],
@@ -78,7 +99,7 @@ export default class ExampleInsightPanel extends LightningElement {
       {
         content: defaultTemplate,
         conditions: [],
-      }
+      },
     );
   }
 }
