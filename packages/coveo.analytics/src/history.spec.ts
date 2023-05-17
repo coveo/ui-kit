@@ -20,7 +20,7 @@ describe('history', () => {
         data = {
             name: 'name',
             value: 'value',
-            time: JSON.stringify(new Date()),
+            time: new Date().toISOString(),
         };
     });
 
@@ -99,7 +99,7 @@ describe('history', () => {
             historyElements.push({
                 name: 'name' + i,
                 value: 'value' + i,
-                time: JSON.stringify(new Date()),
+                time: new Date().toISOString(),
                 internalTime: new Date().getTime(),
             });
         }

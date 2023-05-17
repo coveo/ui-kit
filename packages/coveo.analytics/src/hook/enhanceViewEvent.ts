@@ -21,7 +21,7 @@ const addPageViewToHistory = async (pageViewValue: string) => {
     const historyElement = {
         name: 'PageView',
         value: pageViewValue,
-        time: JSON.stringify(new Date()),
+        time: new Date().toISOString(),
     };
     await store.addElementAsync(historyElement);
 };
