@@ -5,12 +5,16 @@ import {Hidden} from '../../hidden';
 import {AnyBindings} from '../../interface/bindings';
 import {SmartSnippetFeedbackBanner} from '../atomic-smart-snippet-feedback-banner';
 
+type FeedBackModalElement =
+  | HTMLAtomicSmartSnippetFeedbackModalElement
+  | HTMLAtomicInsightSmartSnippetFeedbackModalElement;
+
 interface SmartSnippetProps {
   id: string;
   modalTagName: string;
   getHost: () => HTMLElement;
   getBindings: () => AnyBindings;
-  getModalRef: () => HTMLAtomicSmartSnippetFeedbackModalElement | undefined;
+  getModalRef: () => FeedBackModalElement | undefined;
   getHeadingLevel: () => number;
   getCollapsedHeight: () => number;
   getMaximumHeight: () => number;
