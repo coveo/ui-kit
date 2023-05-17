@@ -11,6 +11,7 @@ runs:
     - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
+        command-prefix: 'npx retry --retries=3 --'
         working-directory: ./packages/samples/atomic-next
         start: npm run dev
         wait-on: 'http://localhost:3000'

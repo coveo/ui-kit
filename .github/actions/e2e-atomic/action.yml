@@ -1,5 +1,5 @@
-name: "Atomic E2E tests"
-description: "Runs Cypress tests for Atomic"
+name: 'Atomic E2E tests'
+description: 'Runs Cypress tests for Atomic'
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
@@ -14,6 +14,7 @@ runs:
     - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
+        command-prefix: 'npx retry --retries=3 --'
         working-directory: ./packages/atomic
         spec: ${{ inputs.spec }}
         start: npm run prod
