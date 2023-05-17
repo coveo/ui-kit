@@ -154,7 +154,7 @@ export class AtomicSearchBox {
   @Prop() public suggestionTimeout = 400;
 
   /**
-   * Whether to prevent the user from triggering a search from the component.
+   * Whether to prevent the user from triggering searches and query suggestions from the component.
    * Perfect for use cases where you need to disable the search conditionally.
    * For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
    */
@@ -403,6 +403,9 @@ export class AtomicSearchBox {
   }
 
   private async triggerSuggestions() {
+    if (this.disableSearch) {
+      return;
+    }
     const settled = await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(
