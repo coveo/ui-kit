@@ -1,33 +1,26 @@
-import {Component, Element, h} from '@stencil/core';
+import {Component, h, State} from '@stencil/core';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
+import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
  */
 @Component({
   tag: 'atomic-ipx-tabs',
-  styleUrl: './atomic-ipx-tabs.pcss',
-  shadow: true,
 })
-export class AtomicIPXTabs {
-  @Element() host!: HTMLElement;
+export class AtomicIPXTabs implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
 
-  private scrollCallback = (e: Event) => {
-    e.preventDefault();
-    this.host.scrollLeft += (e as WheelEvent).deltaY;
-  };
-
-  public connectedCallback() {
-    this.host.addEventListener('mousewheel', this.scrollCallback);
-  }
-  public disconnectedCallback() {
-    this.host.removeEventListener('mousewheel', this.scrollCallback);
-  }
+  @State() public error!: Error;
 
   public render() {
     return (
-      <div class="flex">
+      <tab-bar>
         <slot></slot>
-      </div>
+      </tab-bar>
     );
   }
 }

@@ -62,6 +62,8 @@ export const InterceptAliases = {
     OpenSmartSnippetSuggestionInlineLink: uaAlias(
       'openSmartSnippetSuggestionInlineLink'
     ),
+    ShowLessFoldedResults: uaAlias('showLessFoldedResults'),
+    ShowMoreFoldedResults: uaAlias('showMoreFoldedResults'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -196,14 +198,15 @@ export function mockSearchNoResults(useCase?: string) {
   }).as(getQueryAlias(useCase).substring(1));
 }
 
-export function mockSearchWithResults() {
+export function mockSearchWithResults(results?: Array<object>) {
+  const defaultResults = [
+    {title: 'Result', uri: 'uri', raw: {uriHash: 'resulthash'}},
+  ];
   cy.intercept(routeMatchers.search, (req) => {
     req.continue((res) => {
-      res.body.results = [
-        {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
-      ];
-      res.body.totalCount = 1;
-      res.body.totalCountFiltered = 1;
+      res.body.results = results ?? defaultResults;
+      res.body.totalCount = res.body.results.length;
+      res.body.totalCountFiltered = res.body.results.length;
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
@@ -272,15 +275,18 @@ export function mockSearchWithoutAnyFacetValues(useCase: string) {
   }).as(InterceptAliases.Search.substring(1));
 }
 
-export function mockSearchWithSmartSnippet(smartSnippetOptions: {
-  question: string;
-  answer: string;
-  title: string;
-  uri: string;
-  permanentId: string;
-}) {
+export function mockSearchWithSmartSnippet(
+  smartSnippetOptions: {
+    question: string;
+    answer: string;
+    title: string;
+    uri: string;
+    permanentId: string;
+  },
+  useCase?: string
+) {
   const {question, answer, title, uri, permanentId} = smartSnippetOptions;
-  cy.intercept(routeMatchers.search, (req) => {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.questionAnswer = {
         answerFound: true,
@@ -290,6 +296,7 @@ export function mockSearchWithSmartSnippet(smartSnippetOptions: {
           contentIdKey: 'permanentid',
           contentIdValue: permanentId,
         },
+        relatedQuestions: [],
       };
       res.body.results = [
         {
@@ -306,11 +313,12 @@ export function mockSearchWithSmartSnippet(smartSnippetOptions: {
   }).as(InterceptAliases.Search.substring(1));
 }
 
-export function mockSearchWithoutSmartSnippet() {
-  cy.intercept(routeMatchers.search, (req) => {
+export function mockSearchWithoutSmartSnippet(useCase?: string) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.questionAnswer = {
         answerFound: false,
+        relatedQuestions: [],
       };
       res.send();
     });
@@ -327,12 +335,17 @@ export function mockSearchWithSmartSnippetSuggestions(
       contentIdKey: string;
       contentIdValue: string;
     };
-  }>
+  }>,
+  useCase?: string
 ) {
-  cy.intercept(routeMatchers.search, (req) => {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.questionAnswer = {
         relatedQuestions: relatedQuestions,
+        documentId: {
+          contentIdKey: 'permanentid',
+          contentIdValue: 'example permanentId',
+        },
       };
       res.body.results = relatedQuestions.map(({title, uri, documentId}) => ({
         uri,
@@ -347,8 +360,8 @@ export function mockSearchWithSmartSnippetSuggestions(
   }).as(InterceptAliases.Search.substring(1));
 }
 
-export function mockSearchWithoutSmartSnippetSuggestions() {
-  cy.intercept(routeMatchers.search, (req) => {
+export function mockSearchWithoutSmartSnippetSuggestions(useCase?: string) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.questionAnswer = {
         relatedQuestions: [],

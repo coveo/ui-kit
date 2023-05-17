@@ -1,7 +1,8 @@
 import {AnyAction} from 'redux';
-import {triggers, query} from '../../app/reducers';
 import {updateQuery} from '../../features/query/query-actions';
+import {queryReducer as query} from '../../features/query/query-slice';
 import {executeSearch} from '../../features/search/search-actions';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,

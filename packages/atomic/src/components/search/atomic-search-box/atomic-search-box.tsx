@@ -120,6 +120,7 @@ export class AtomicSearchBox {
   @State() public error!: Error;
   @State() private suggestedQuery = '';
   @State() private isExpanded = false;
+  @State() private isSearchDisabled = false;
   @State() private activeDescendant = '';
   @State() private previousActiveDescendantElement: HTMLElement | null = null;
   @State() private leftSuggestions: SearchBoxSuggestions[] = [];
@@ -154,9 +155,16 @@ export class AtomicSearchBox {
 
   /**
    * Whether to prevent the user from triggering searches and query suggestions from the component.
-   * Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+   * Perfect for use cases where you need to disable the search conditionally.
+   * For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
    */
   @Prop({reflect: true}) public disableSearch = false;
+
+  /**
+   * The minimum query length required to enable search.
+   * For example, to disable the search for empty queries, set this to `1`.
+   */
+  @Prop({reflect: true}) public minimumQueryLength = 0;
 
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
@@ -203,6 +211,7 @@ export class AtomicSearchBox {
   public initialize() {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
+    this.isSearchDisabled = this.disableSearch || this.minimumQueryLength > 0;
 
     const searchBoxOptions: SearchBoxOptions = {
       id: this.id,
@@ -235,11 +244,11 @@ export class AtomicSearchBox {
 
     this.searchBoxCommon = new SearchBoxCommon({
       id: this.id,
-      disableSearch: this.disableSearch,
       bindings: this.bindings,
       querySetActions: this.querySetActions,
       focusValue: this.focusValue.bind(this),
       clearSuggestions: this.clearSuggestions.bind(this),
+      getIsSearchDisabled: () => this.isSearchDisabled,
       getIsExpanded: () => this.isExpanded,
       getPanelInFocus: () => this.panelInFocus,
       getActiveDescendant: () => this.activeDescendant,
@@ -446,6 +455,11 @@ export class AtomicSearchBox {
   }
 
   private onInput(value: string) {
+    this.isSearchDisabled =
+      this.disableSearch || this.minimumQueryLength > value.trim().length;
+    if (this.isSearchDisabled) {
+      return;
+    }
     this.isExpanded = true;
     this.searchBox.updateText(value);
     this.updateActiveDescendant();
@@ -536,7 +550,7 @@ export class AtomicSearchBox {
   }
 
   private onKeyDown(e: KeyboardEvent) {
-    if (this.disableSearch) {
+    if (this.isSearchDisabled) {
       return;
     }
 
@@ -738,8 +752,11 @@ export class AtomicSearchBox {
 
   public render() {
     this.updateBreakpoints();
+    const searchLabel = this.searchBoxCommon.getSearchInputLabel(
+      this.minimumQueryLength
+    );
     return [
-      <SearchBoxWrapper disabled={this.disableSearch}>
+      <SearchBoxWrapper disabled={this.isSearchDisabled}>
         <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
           <SearchInput
             inputRef={this.inputRef}
@@ -747,7 +764,8 @@ export class AtomicSearchBox {
             ref={(el) => (this.inputRef = el as HTMLInputElement)}
             bindings={this.bindings}
             value={this.searchBoxState.value}
-            ariaLabel={this.searchBoxCommon.getSearchInputLabel()}
+            title={searchLabel}
+            ariaLabel={searchLabel}
             onFocus={() => this.onFocus()}
             onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
             onKeyDown={(e) => this.onKeyDown(e)}
@@ -762,8 +780,9 @@ export class AtomicSearchBox {
           {this.renderSuggestions()}
           <SubmitButton
             bindings={this.bindings}
-            disabled={this.disableSearch}
+            disabled={this.isSearchDisabled}
             onClick={() => this.searchBox.submit()}
+            title={searchLabel}
           />
         </atomic-focus-detector>
       </SearchBoxWrapper>,

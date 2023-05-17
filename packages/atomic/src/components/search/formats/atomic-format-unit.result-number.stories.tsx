@@ -1,4 +1,4 @@
-import defaultResultComponentStory from '../../../../.storybook/default-result-component-story';
+import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/ResultNumber/Format/Unit',
@@ -25,5 +25,8 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   }
 );
 
-export default defaultModuleExport;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/ResultList/ResultNumber/Format/Unit',
+};
 export const DefaultFormatUnit = exportedStory;

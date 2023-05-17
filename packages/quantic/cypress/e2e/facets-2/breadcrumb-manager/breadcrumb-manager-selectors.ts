@@ -10,7 +10,7 @@ export interface BreadcrumbSelector extends ComponentSelector {
   firstBreadcrumbAltText: () => CypressSelector;
 }
 
-interface BreadcrumbManagerSelector extends ComponentSelector {
+export interface BreadcrumbManagerSelector extends ComponentSelector {
   facet: () => BreadcrumbSelector;
   categoryFacet: () => BreadcrumbSelector;
   numericFacet: () => BreadcrumbSelector;

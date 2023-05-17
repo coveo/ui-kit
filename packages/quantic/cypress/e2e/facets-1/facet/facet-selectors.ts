@@ -43,6 +43,8 @@ export const FacetSelectors: AllFacetSelectors = {
   noMatches: () => FacetSelectors.get().find('.facet__search-results_no-match'),
   valueHighlight: () =>
     FacetSelectors.get().find('.facet__search-result_highlight'),
+  searchValue: (caption: string) =>
+    FacetSelectors.get().find('.facet__value-text').contains(caption),
 
   showLessButton: () => FacetSelectors.get().find('.facet__show-less'),
   showMoreButton: () => FacetSelectors.get().find('.facet__show-more'),

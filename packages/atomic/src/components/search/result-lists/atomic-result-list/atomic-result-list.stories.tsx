@@ -1,9 +1,9 @@
-import defaultStory from '../../../../../.storybook/default-story';
+import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/ResultList',
   'atomic-result-list',
   {}
 );
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/ResultList'};
 export const DefaultResultList = exportedStory;

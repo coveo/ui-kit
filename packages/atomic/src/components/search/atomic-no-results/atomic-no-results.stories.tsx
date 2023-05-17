@@ -1,4 +1,4 @@
-import defaultStory from '../../../../.storybook/default-story';
+import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/NoResults',
@@ -16,5 +16,9 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
 export const DefaultNoResults = exportedStory;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/NoResults',
+  id: 'atomic-no-results',
+};

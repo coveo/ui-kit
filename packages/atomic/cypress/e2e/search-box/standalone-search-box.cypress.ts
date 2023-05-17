@@ -8,11 +8,7 @@ import {
   buildTemplateWithoutSections,
 } from '../result-list/result-list-actions';
 import {addSearchBox} from './search-box-actions';
-import {
-  assertHasText,
-  assertLogOmniboxFromLink,
-  assertLogSearchFromLink,
-} from './search-box-assertions';
+import {assertHasText, assertLogOmniboxFromLink} from './search-box-assertions';
 import {SearchBoxSelectors} from './search-box-selectors';
 
 describe('Standalone Search Box Test Suites', () => {
@@ -34,6 +30,7 @@ describe('Standalone Search Box Test Suites', () => {
   }
 
   function setupStandardSearchBox() {
+    // TODO (KIT-2356): Fails in Cypress v12 @ withRedirection()
     new TestFixture().withRedirection().with(addSearchBox()).init();
   }
 
@@ -47,7 +44,7 @@ describe('Standalone Search Box Test Suites', () => {
 
   it('should redirect to the trigger url when there is a redirect trigger', () => {
     const url = 'https://platformstg.cloud.coveo.com';
-    setupStandaloneSearchBox();
+    setupStandaloneSearchBox({url});
     SearchBoxSelectors.inputBox().type('redirect testing');
     SearchBoxSelectors.submitButton().click();
     cy.location('href').should('contain', url);
@@ -55,15 +52,17 @@ describe('Standalone Search Box Test Suites', () => {
 
   describe('when being redirected to an Atomic Search Interface after submitting a query', () => {
     const query = 'hello';
-    beforeEach(() => {
+
+    it(`should contain "${query}" and log a proper analytics event`, () => {
       setupStandaloneSearchBox();
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.submitButton().click();
       setupStandardSearchBox();
+      SearchBoxSelectors.inputBox().should('have.value', query);
+      cy.expectSearchEvent('searchFromLink').then((analyticsBody) => {
+        expect(analyticsBody).to.have.property('queryText', query);
+      });
     });
-
-    assertHasText(query);
-    assertLogSearchFromLink(query);
   });
 
   describe('when being redirected to an Atomic Search Interface after selecting a suggestion', () => {
@@ -86,6 +85,7 @@ describe('Standalone Search Box Test Suites', () => {
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.submitButton().click();
       new TestFixture()
+        // TODO (KIT-2356): Fails in Cypress v12 @ withRedirection()
         .withRedirection()
         .with(addSearchBox({props: {'enable-query-syntax': ''}}))
         .with(

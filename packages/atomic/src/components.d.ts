@@ -5,20 +5,20 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
-import { InsightEngine, InsightFacetSortCriterion, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
+import { InsightEngine, InsightFacetSortCriterion, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { RecommendationEngine } from "@coveo/headless/recommendation";
+import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -418,6 +418,12 @@ export namespace Components {
          */
         "fieldsToInclude": string[] | string;
         /**
+          * Returns the unique, organization-specific endpoint(s)
+          * @param organizationId
+          * @param env
+         */
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironmentInsight) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        /**
           * The service insight interface i18next instance.
          */
         "i18n": i18n;
@@ -619,6 +625,10 @@ export namespace Components {
           * The label that will be shown to the user.
          */
         "label": string;
+        /**
+          * Activates the tab.
+         */
+        "select": () => Promise<void>;
     }
     interface AtomicInsightTabs {
     }
@@ -661,6 +671,7 @@ export namespace Components {
         "withDatePicker": boolean;
     }
     interface AtomicIpxBody {
+        "displayFooterSlot": boolean;
         "isOpen": boolean;
     }
     interface AtomicIpxButton {
@@ -722,6 +733,10 @@ export namespace Components {
           * The label that will be shown to the user.
          */
         "label": string;
+        /**
+          * Activates the tab.
+         */
+        "select": () => Promise<void>;
     }
     interface AtomicIpxTabs {
     }
@@ -852,9 +867,17 @@ export namespace Components {
     }
     interface AtomicPager {
         /**
+          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "nextButtonIcon": string;
+        /**
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages": number;
+        /**
+          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "previousButtonIcon": string;
     }
     interface AtomicPopover {
     }
@@ -981,6 +1004,8 @@ export namespace Components {
          */
         "numberOfIntervals": number;
     }
+    interface AtomicRecsError {
+    }
     interface AtomicRecsInterface {
         /**
           * Whether analytics should be enabled.
@@ -994,6 +1019,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
         "fieldsToInclude": string[] | string;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * Fetches new recommendations.
          */
@@ -1213,7 +1239,7 @@ export namespace Components {
     }
     interface AtomicResultBadge {
         /**
-          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
+          * The field to display in the badge.  Not compatible with `label`, slotted elements nor multi-value fields.
          */
         "field"?: string;
         /**
@@ -1452,6 +1478,10 @@ export namespace Components {
          */
         "enableQuerySyntax": boolean;
         /**
+          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
+         */
+        "minimumQueryLength": number;
+        /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries": number;
@@ -1537,6 +1567,12 @@ export namespace Components {
          */
         "fieldsToInclude": string[] | string;
         /**
+          * Returns the unique, organization-specific endpoint(s)
+          * @param organizationId
+          * @param env
+         */
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        /**
           * The search interface i18next instance.
          */
         "i18n": i18n;
@@ -1545,7 +1581,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+          * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
@@ -1774,6 +1810,12 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    interface TabBar {
+    }
+    interface TabPopover {
+        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
+        "togglePopover": () => Promise<void>;
+    }
 }
 export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1818,6 +1860,10 @@ export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicRelevanceInspectorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicRelevanceInspectorElement;
+}
+export interface AtomicResultsPerPageCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicResultsPerPageElement;
 }
 export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2224,6 +2270,12 @@ declare global {
         prototype: HTMLAtomicRatingRangeFacetElement;
         new (): HTMLAtomicRatingRangeFacetElement;
     };
+    interface HTMLAtomicRecsErrorElement extends Components.AtomicRecsError, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsErrorElement: {
+        prototype: HTMLAtomicRecsErrorElement;
+        new (): HTMLAtomicRecsErrorElement;
+    };
     interface HTMLAtomicRecsInterfaceElement extends Components.AtomicRecsInterface, HTMLStencilElement {
     }
     var HTMLAtomicRecsInterfaceElement: {
@@ -2572,6 +2624,18 @@ declare global {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
     };
+    interface HTMLTabBarElement extends Components.TabBar, HTMLStencilElement {
+    }
+    var HTMLTabBarElement: {
+        prototype: HTMLTabBarElement;
+        new (): HTMLTabBarElement;
+    };
+    interface HTMLTabPopoverElement extends Components.TabPopover, HTMLStencilElement {
+    }
+    var HTMLTabPopoverElement: {
+        prototype: HTMLTabPopoverElement;
+        new (): HTMLTabPopoverElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
@@ -2637,6 +2701,7 @@ declare global {
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
+        "atomic-recs-error": HTMLAtomicRecsErrorElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
@@ -2695,6 +2760,8 @@ declare global {
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
+        "tab-bar": HTMLTabBarElement;
+        "tab-popover": HTMLTabPopoverElement;
     }
 }
 declare namespace LocalJSX {
@@ -3308,6 +3375,7 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface AtomicIpxBody {
+        "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
     }
@@ -3503,10 +3571,18 @@ declare namespace LocalJSX {
     }
     interface AtomicPager {
         /**
+          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "nextButtonIcon"?: string;
+        /**
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages"?: number;
         "onAtomic/scrollToTop"?: (event: AtomicPagerCustomEvent<any>) => void;
+        /**
+          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "previousButtonIcon"?: string;
     }
     interface AtomicPopover {
     }
@@ -3633,6 +3709,8 @@ declare namespace LocalJSX {
           * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
          */
         "numberOfIntervals"?: number;
+    }
+    interface AtomicRecsError {
     }
     interface AtomicRecsInterface {
         /**
@@ -3838,7 +3916,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultBadge {
         /**
-          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
+          * The field to display in the badge.  Not compatible with `label`, slotted elements nor multi-value fields.
          */
         "field"?: string;
         /**
@@ -4049,6 +4127,7 @@ declare namespace LocalJSX {
           * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
          */
         "initialChoice"?: number;
+        "onAtomic/scrollToTop"?: (event: AtomicResultsPerPageCustomEvent<any>) => void;
     }
     interface AtomicSearchBox {
         /**
@@ -4063,6 +4142,10 @@ declare namespace LocalJSX {
           * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
          */
         "enableQuerySyntax"?: boolean;
+        /**
+          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
+         */
+        "minimumQueryLength"?: number;
         /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
@@ -4386,6 +4469,10 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    interface TabBar {
+    }
+    interface TabPopover {
+    }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
         "atomic-breadbox": AtomicBreadbox;
@@ -4451,6 +4538,7 @@ declare namespace LocalJSX {
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
+        "atomic-recs-error": AtomicRecsError;
         "atomic-recs-interface": AtomicRecsInterface;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
@@ -4509,6 +4597,8 @@ declare namespace LocalJSX {
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
+        "tab-bar": TabBar;
+        "tab-popover": TabPopover;
     }
 }
 export { LocalJSX as JSX };
@@ -4579,6 +4669,7 @@ declare module "@stencil/core" {
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
+            "atomic-recs-error": LocalJSX.AtomicRecsError & JSXBase.HTMLAttributes<HTMLAtomicRecsErrorElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
             "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
             "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
@@ -4637,6 +4728,8 @@ declare module "@stencil/core" {
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
+            "tab-bar": LocalJSX.TabBar & JSXBase.HTMLAttributes<HTMLTabBarElement>;
+            "tab-popover": LocalJSX.TabPopover & JSXBase.HTMLAttributes<HTMLTabPopoverElement>;
         }
     }
 }

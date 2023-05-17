@@ -61,32 +61,46 @@ export default class QuanticSmartSnippetAnswer extends LightningElement {
     this.bindAnalyticsToSmartSnippetInlineLinks();
   }
 
+  /**
+   * Binds the inline links to the proper actions.
+   * @returns {void}
+   */
   bindAnalyticsToSmartSnippetInlineLinks() {
-    /** @type {HTMLAnchorElement[]} */
-    const inlineLinks = Array.from(
+    const disabledCSSClass = 'inline-link--disabled';
+    this.inlineLinks.forEach((link) => {
+      if (link?.href) {
+        const linkInfo = {
+          linkText: link?.innerText,
+          linkURL: link.href,
+        };
+
+        const actions = {
+          select: () => {
+            this.actions.select(linkInfo);
+          },
+          beginDelayedSelect: () => {
+            this.actions.beginDelayedSelect(linkInfo);
+          },
+          cancelPendingSelect: () => {
+            this.actions.cancelPendingSelect(linkInfo);
+          },
+        };
+
+        const removeBindings = LinkUtils.bindAnalyticsToLink(link, actions);
+        this.bindingsRemovalFunctions.push(removeBindings);
+      } else {
+        link.classList.add(disabledCSSClass);
+      }
+    });
+  }
+
+  /**
+   * Returns the inline links of the smart snippet answer.
+   * @returns {HTMLAnchorElement[]}
+   */
+  get inlineLinks() {
+    return Array.from(
       this.template.querySelectorAll('.smart-snippet-answer a')
     );
-
-    inlineLinks.forEach((link) => {
-      const linkInfo = {
-        linkText: link?.innerText,
-        linkURL: link?.href,
-      };
-
-      const actions = {
-        select: () => {
-          this.actions.select(linkInfo);
-        },
-        beginDelayedSelect: () => {
-          this.actions.beginDelayedSelect(linkInfo);
-        },
-        cancelPendingSelect: () => {
-          this.actions.cancelPendingSelect(linkInfo);
-        },
-      };
-
-      const removeBindings = LinkUtils.bindAnalyticsToLink(link, actions);
-      this.bindingsRemovalFunctions.push(removeBindings);
-    });
   }
 }

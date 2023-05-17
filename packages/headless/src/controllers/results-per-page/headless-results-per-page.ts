@@ -1,6 +1,7 @@
-import {configuration, pagination} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logPagerResize} from '../../features/pagination/pagination-analytics-actions';
+import {paginationReducer as pagination} from '../../features/pagination/pagination-slice';
 import {fetchPage} from '../../features/search/search-actions';
 import {
   ConfigurationSection,

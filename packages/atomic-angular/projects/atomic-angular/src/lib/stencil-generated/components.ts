@@ -513,13 +513,13 @@ export declare interface AtomicPager extends Components.AtomicPager {
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['numberOfPages']
+  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
 })
 @Component({
   selector: 'atomic-pager',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['numberOfPages']
+  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
 })
 export class AtomicPager {
   protected el: HTMLElement;
@@ -651,12 +651,31 @@ export class AtomicRatingRangeFacet {
 }
 
 
+export declare interface AtomicRecsError extends Components.AtomicRecsError {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-recs-error',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicRecsError {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicRecsInterface extends Components.AtomicRecsInterface {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
   inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
-  methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations']
+  methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations', 'getOrganizationEndpoints']
 })
 @Component({
   selector: 'atomic-recs-interface',
@@ -1379,7 +1398,13 @@ export class AtomicResultTimespan {
 }
 
 
-export declare interface AtomicResultsPerPage extends Components.AtomicResultsPerPage {}
+export declare interface AtomicResultsPerPage extends Components.AtomicResultsPerPage {
+  /**
+   *  
+   */
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+
+}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
@@ -1396,6 +1421,7 @@ export class AtomicResultsPerPage {
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
   }
 }
 
@@ -1422,13 +1448,13 @@ Example:
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
 })
 @Component({
   selector: 'atomic-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
 })
 export class AtomicSearchBox {
   protected el: HTMLElement;
@@ -1509,7 +1535,7 @@ export declare interface AtomicSearchInterface extends Components.AtomicSearchIn
 @ProxyCmp({
   defineCustomElementFn: undefined,
   inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
-  methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch']
+  methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch', 'getOrganizationEndpoints']
 })
 @Component({
   selector: 'atomic-search-interface',

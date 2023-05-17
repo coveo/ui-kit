@@ -1,4 +1,4 @@
-import defaultStory from '../../../../../.storybook/default-story';
+import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/SegmentedFacet',
@@ -9,5 +9,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/SegmentedFacet'};
 export const DefaultSegmentedFacet = exportedStory;

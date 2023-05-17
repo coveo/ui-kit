@@ -1,9 +1,9 @@
 import {CoreEngine} from '../..';
 import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {documentSuggestion} from '../../app/reducers';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
 import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
 import {DocumentSuggestionSection} from '../../state/state-sections';

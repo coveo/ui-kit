@@ -1,12 +1,12 @@
-import {buildTab, Tab, TabState} from '@coveo/headless';
-import {Component, h, Prop, State} from '@stencil/core';
+import {buildTab, Tab, TabState, Unsubscribe} from '@coveo/headless';
+import {Component, h, Prop, State, Element, Method} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
 import {Button} from '../../common/button';
+import {dispatchTabLoaded} from '../../common/tabs/tab-common';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
@@ -19,7 +19,8 @@ import {Bindings} from '../../search/atomic-search-interface/atomic-search-inter
 })
 export class AtomicIPXTab implements InitializableComponent {
   private tab!: Tab;
-  private tabId = randomID('ipx-tab');
+
+  @Element() host!: HTMLElement;
 
   @InitializeBindings() public bindings!: Bindings;
 
@@ -38,18 +39,39 @@ export class AtomicIPXTab implements InitializableComponent {
    * Whether this tab is active upon rendering.
    * If multiple tabs are set to active on render, the last one to be rendered will override the others.
    */
-  @Prop({reflect: true}) public active = false;
+  @Prop({reflect: true, mutable: true}) public active = false;
 
   /**
    * The expression that will be passed to the search as a `cq` paramenter upon being selected.
    */
   @Prop() public expression!: string;
 
+  private unsubscribe: Unsubscribe = () => {};
+
+  /**
+   * Activates the tab.
+   */
+  @Method()
+  select() {
+    this.tab.select();
+  }
+
   public initialize() {
     this.tab = buildTab(this.bindings.engine, {
-      options: {expression: this.expression, id: this.tabId},
+      options: {expression: this.expression, id: this.label},
       initialState: {isActive: this.active},
     });
+    this.unsubscribe = this.tab.subscribe(
+      () => (this.active = this.tab.state.isActive)
+    );
+  }
+
+  public componentDidRender() {
+    dispatchTabLoaded(this.host);
+  }
+
+  public disconnectedCallback() {
+    this.unsubscribe();
   }
 
   public render() {

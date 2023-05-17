@@ -1,4 +1,4 @@
-import {fields} from '../../app/reducers';
+import {fieldsReducer as fields} from '../../features/fields/fields-slice';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,

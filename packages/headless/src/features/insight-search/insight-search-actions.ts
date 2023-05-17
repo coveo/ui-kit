@@ -1,8 +1,6 @@
 import {createAsyncThunk, ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
-import {
-  historyStore,
-  StateNeededByInsightAnalyticsProvider,
-} from '../../api/analytics/insight-analytics';
+import {historyStore} from '../../api/analytics/coveo-analytics-utils';
+import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {

@@ -1,7 +1,19 @@
+import {getOrganizationEndpoints} from '../api/platform-client';
 import * as Store from '../app/store';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
+import {configuration} from './common-reducers';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
-import {configuration} from './reducers';
+
+jest.mock('pino', () => ({
+  ...jest.requireActual('pino'),
+  __esModule: true,
+  default: () => ({
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  }),
+}));
 
 describe('engine', () => {
   let options: EngineOptions<{}>;
@@ -21,8 +33,6 @@ describe('engine', () => {
       },
       reducers: {},
     };
-
-    initEngine();
   });
 
   it('when no reducers are specified, it still registers the configuration correctly', () => {
@@ -105,5 +115,64 @@ describe('engine', () => {
     engine.addReducers({configuration});
 
     expect(stateListener).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    {
+      organizationEndpoints: undefined,
+      platformUrl: undefined,
+      expectedMessage:
+        'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.',
+    },
+
+    {
+      organizationEndpoints: undefined,
+      platformUrl: 'https://definitely.not.a.coveo.custom.dns',
+      expectedMessage:
+        'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.',
+    },
+    {
+      organizationEndpoints: getOrganizationEndpoints('myorg'),
+      platformUrl: 'https://definitely.not.a.coveo.custom.dns',
+      expectedMessage:
+        'The `platformUrl` (https://definitely.not.a.coveo.custom.dns) option will be deprecated in the next major version.',
+    },
+  ] as const)(
+    'should correctly log warnings when dealing with the organizationEndpoints and platformUrl option',
+    (testCase) => {
+      options.configuration = {
+        ...options.configuration,
+        ...testCase,
+      };
+      initEngine();
+      expect(engine.logger.warn).toHaveBeenCalledWith(
+        expect.stringContaining(testCase.expectedMessage)
+      );
+    }
+  );
+
+  it('should not log warnings when the organizationEndpoints option is set and platformUrl is not set', () => {
+    options.configuration = {
+      ...options.configuration,
+      organizationEndpoints: getOrganizationEndpoints('orgId'),
+      platformUrl: undefined,
+    };
+    initEngine();
+    expect(engine.logger.warn).not.toHaveBeenCalled();
+  });
+
+  it('should log warnings when the organizationId option does not match what is configured on organizationEndpoints option.', () => {
+    options.configuration = {
+      ...options.configuration,
+      organizationId: 'a',
+      organizationEndpoints: getOrganizationEndpoints('b'),
+      platformUrl: undefined,
+    };
+    initEngine();
+    expect(engine.logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'There is a mismatch between the `organizationId` option (a) and the organization configured in the `organizationEndpoints` option (https://b.org.coveo.com).'
+      )
+    );
   });
 });

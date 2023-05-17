@@ -1,10 +1,4 @@
-import {
-  configuration,
-  query,
-  querySet,
-  querySuggest,
-  search,
-} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
@@ -15,15 +9,19 @@ import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/query-set/query-set-actions';
+import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
 import {
   registerQuerySuggest,
   clearQuerySuggest,
   fetchQuerySuggestions,
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions';
+import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {updateQuery} from '../../../features/query/query-actions';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
+import {queryReducer as query} from '../../../features/query/query-slice';
 import {executeSearch} from '../../../features/search/search-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchAppState} from '../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,

@@ -1,5 +1,5 @@
+import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
 import {html} from 'lit-html';
-import defaultResultComponentStory from '../../../../../.storybook/default-result-component-story';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/ResultNumber',
@@ -21,5 +21,8 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   }
 );
 
-export default defaultModuleExport;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/ResultList/ResultNumber',
+};
 export const DefaultResultNumber = exportedStory;

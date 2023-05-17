@@ -1,5 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {configuration} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer';
 import {SearchParametersState} from '../../state/search-app-state';

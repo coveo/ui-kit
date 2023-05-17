@@ -1,7 +1,7 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkProductListingOptions} from '../../api/commerce/product-listings/product-listing-api-client';
 import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine';
-import {productListing} from '../../app/reducers';
+import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice';
 import {
   SetProductListingUrlPayload,
   FetchProductListingThunkReturn,

@@ -37,6 +37,12 @@ export class AtomicIPXEmbedded implements InitializableComponent<AnyBindings> {
 
   @Event() animationEnded!: EventEmitter<never>;
 
+  @State() private hasFooterSlotElements = true;
+
+  public componentWillLoad(): void | Promise<void> {
+    this.hasFooterSlotElements = !!this.host.querySelector('[slot="footer"]');
+  }
+
   public componentDidLoad() {
     const id = this.host.id || randomID('atomic-ipx-embedded-');
     this.host.id = id;
@@ -50,7 +56,7 @@ export class AtomicIPXEmbedded implements InitializableComponent<AnyBindings> {
     return (
       <Host>
         <div part="backdrop">
-          <atomic-ipx-body>
+          <atomic-ipx-body displayFooterSlot={this.hasFooterSlotElements}>
             <slot name="header" slot="header" />
             <slot name="body" slot="body" />
             <slot name="footer" slot="footer" />

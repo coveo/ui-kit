@@ -1071,4 +1071,39 @@
       <protected>false</protected>
       <shortDescription>Inclusion filter on field; no results</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_LoadRelatedItems</fullName>
+      <value>Load related items</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Load related items</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_HideRelatedItems</fullName>
+      <value>Hide related items</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Hide related items</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_NoRelatedItems</fullName>
+      <value>No related items</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>No related items</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_OpensInSalesforceSubTab</fullName>
+      <value>Opens in a Salesforce console subtab</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Opens in a Salesforce console subtab</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_OpensInBrowserTab</fullName>
+      <value>Opens in the browser tab</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Opens in the browser tab</shortDescription>
+    </labels>
 </CustomLabels>

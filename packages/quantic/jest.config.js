@@ -13,10 +13,18 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@salesforce/i18n/': '<rootDir>/typings/lwc/customlabels.d.ts',
-    '^lightning/modal$': '<rootDir>/force-app/test/jest-mocks/lightning/modal/modal',
-    '^lightning/modalBody$': '<rootDir>/force-app/test/jest-mocks/lightning/modalBody/modalBody',
-    '^lightning/modalFooter$': '<rootDir>/force-app/test/jest-mocks/lightning/modalFooter/modalFooter',
-    '^lightning/modalHeader$': '<rootDir>/force-app/test/jest-mocks/lightning/modalHeader/modalHeader',
+    '^lightning/modal$':
+      '<rootDir>/force-app/test/jest-mocks/lightning/modal/modal',
+    '^lightning/modalBody$':
+      '<rootDir>/force-app/test/jest-mocks/lightning/modalBody/modalBody',
+    '^lightning/modalFooter$':
+      '<rootDir>/force-app/test/jest-mocks/lightning/modalFooter/modalFooter',
+    '^lightning/modalHeader$':
+      '<rootDir>/force-app/test/jest-mocks/lightning/modalHeader/modalHeader',
+    '^c/quanticResult$':
+      '<rootDir>/force-app/test/jest-mocks/quantic/quanticResult/quanticResult',
+    '^lightning/navigation$':
+      '<rootDir>/force-app/test/jest-mocks/lightning/navigation/navigation',
   },
   modulePathIgnorePatterns: ['.cache'],
   // add any custom configurations here

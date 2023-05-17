@@ -1,7 +1,7 @@
 import {buildInstantResults} from '..';
 import {SearchAppState} from '../..';
-import {instantResults} from '../../app/reducers';
 import {registerInstantResults} from '../../features/instant-results/instant-results-actions';
+import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice';
 import {
   buildMockSearchAppEngine,
   createMockState,

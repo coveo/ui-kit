@@ -1,5 +1,6 @@
 import {EventEmitter, FunctionalComponent, h} from '@stencil/core';
-import ArrowRight from '../../../images/arrow-right.svg';
+import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
+import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {Button} from '../button';
@@ -27,19 +28,26 @@ interface PagerProps {
     isCurrentPage: (page: number) => boolean;
     state: {};
   };
+  previousButtonIcon?: string;
+  nextButtonIcon?: string;
 }
 
 export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
   const radioGroupName = randomID('atomic-insight-pager-');
 
-  const scrollToTop = () => {
+  const focusOnFirstResultAndScrollToTop = async () => {
+    await props.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
     props.eventEmitter?.emit();
   };
 
-  const selectPage = (page: number) => {
+  const selectPage = async (page: number) => {
     props.pager.selectPage(page);
-    props.activePage?.focusAfterSearch().then(() => scrollToTop());
+    focusOnFirstResultAndScrollToTop();
   };
+
+  const nextButtonIcon = props.nextButtonIcon || ArrowRightIcon;
+  const previousButtonIcon = props.previousButtonIcon || ArrowLeftIcon;
+  const defaultIconStyle = 'w-5 align-middle';
 
   const renderPreviousButton = () => {
     return (
@@ -48,15 +56,16 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         ariaLabel={props.bindings.i18n.t('previous')}
         onClick={() => {
           props.pager.previousPage();
-          scrollToTop();
+          focusOnFirstResultAndScrollToTop();
         }}
         part="previous-button"
         disabled={!props.pagerState.hasPreviousPage}
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
         <atomic-icon
-          icon={ArrowRight}
-          class="w-5 align-middle rotate-180"
+          icon={previousButtonIcon}
+          part="previous-button-icon"
+          class={defaultIconStyle}
         ></atomic-icon>
       </Button>
     );
@@ -101,13 +110,17 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         ariaLabel={props.bindings.i18n.t('next')}
         onClick={() => {
           props.pager.nextPage();
-          scrollToTop();
+          focusOnFirstResultAndScrollToTop();
         }}
         part="next-button"
         disabled={!props.pagerState.hasNextPage}
         class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
-        <atomic-icon icon={ArrowRight} class="w-5 align-middle"></atomic-icon>
+        <atomic-icon
+          icon={nextButtonIcon}
+          part="next-button-icon"
+          class={defaultIconStyle}
+        ></atomic-icon>
       </Button>
     );
   };

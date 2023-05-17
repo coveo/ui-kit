@@ -7,6 +7,8 @@ import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import {
   addSmartSnippet,
   addSmartSnippetDefaultOptions,
+  AddSmartSnippetMockSnippet,
+  defaultSnippets,
 } from './smart-snippet-actions';
 import * as SmartSnippetAssertions from './smart-snippet-assertions';
 import {
@@ -14,12 +16,13 @@ import {
   SmartSnippetSelectors,
 } from './smart-snippet-selectors';
 
+const {remSize, snippet: defaultSnippet} = addSmartSnippetDefaultOptions;
+
 const {
-  remSize,
   question: defaultQuestion,
   sourceTitle: defaultSourceTitle,
   sourceUrl: defaultSourceUrl,
-} = addSmartSnippetDefaultOptions;
+} = defaultSnippet;
 
 function buildAnswerWithHeight(height: number) {
   const heightWithoutMargins = height - remSize * 2;
@@ -121,7 +124,10 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture()
         .with(
           addSmartSnippet({
-            answer: buildAnswerWithHeight(height),
+            snippet: {
+              ...defaultSnippet,
+              answer: buildAnswerWithHeight(height),
+            },
             props: {
               'maximum-height': height,
               'collapsed-height': 150,
@@ -142,7 +148,10 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture()
         .with(
           addSmartSnippet({
-            answer: buildAnswerWithHeight(height),
+            snippet: {
+              ...defaultSnippet,
+              answer: buildAnswerWithHeight(height),
+            },
             props: {
               'maximum-height': height - 1,
               'collapsed-height': heightWhenCollapsed,
@@ -184,8 +193,11 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture()
         .with(
           addSmartSnippet({
-            answer:
-              '<span class="first">Abc</span><p>def</p><span class="last">ghi</span>',
+            snippet: {
+              ...defaultSnippet,
+              answer:
+                '<span class="first">Abc</span><p>def</p><span class="last">ghi</span>',
+            },
             props: {
               'maximum-height': Number.MAX_VALUE,
               'collapsed-height': 0,
@@ -205,8 +217,11 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture()
         .with(
           addSmartSnippet({
-            answer:
-              '<p class="first">Paragraph A</p><p>Paragraph B</p><p class="last">Paragraph C</p>',
+            snippet: {
+              ...defaultSnippet,
+              answer:
+                '<p class="first">Paragraph A</p><p>Paragraph B</p><p class="last">Paragraph C</p>',
+            },
             props: {
               'maximum-height': Number.MAX_VALUE,
               'collapsed-height': 0,
@@ -225,8 +240,11 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture()
         .with(
           addSmartSnippet({
-            answer:
-              '<span><p class="first last">My parent has no margins, but I do!</p></span>',
+            snippet: {
+              ...defaultSnippet,
+              answer:
+                '<span><p class="first last">My parent has no margins, but I do!</p></span>',
+            },
             props: {
               'maximum-height': Number.MAX_VALUE,
               'collapsed-height': 0,
@@ -241,38 +259,59 @@ describe('Smart Snippet Test Suites', () => {
   });
 
   describe('after pressing the like button', () => {
-    before(() => {
+    function setup() {
       new TestFixture().with(addSmartSnippet()).init();
       SmartSnippetSelectors.feedbackLikeButton().click();
+    }
+
+    describe('verify rendering', () => {
+      before(setup);
+
+      SmartSnippetAssertions.assertLikeButtonChecked(true);
+      SmartSnippetAssertions.assertDislikeButtonChecked(false);
+      SmartSnippetAssertions.assertThankYouBanner(true);
     });
 
-    SmartSnippetAssertions.assertLikeButtonChecked(true);
-    SmartSnippetAssertions.assertDislikeButtonChecked(false);
-    SmartSnippetAssertions.assertThankYouBanner(true);
-    SmartSnippetAssertions.assertLogLikeSmartSnippet();
+    describe('verify analytics', () => {
+      beforeEach(setup);
+
+      SmartSnippetAssertions.assertLogLikeSmartSnippet();
+    });
   });
 
   describe('after pressing the dislike button', () => {
-    before(() => {
+    function setup() {
       new TestFixture().with(addSmartSnippet()).init();
       SmartSnippetSelectors.feedbackDislikeButton().click();
+    }
+
+    describe('verify rendering', () => {
+      before(setup);
+
+      SmartSnippetAssertions.assertLikeButtonChecked(false);
+      SmartSnippetAssertions.assertDislikeButtonChecked(true);
+      SmartSnippetAssertions.assertThankYouBanner(true);
     });
 
-    SmartSnippetAssertions.assertLikeButtonChecked(false);
-    SmartSnippetAssertions.assertDislikeButtonChecked(true);
-    SmartSnippetAssertions.assertThankYouBanner(true);
-    SmartSnippetAssertions.assertLogDislikeSmartSnippet();
+    describe('verify analytics', () => {
+      beforeEach(setup);
+
+      SmartSnippetAssertions.assertLogDislikeSmartSnippet();
+    });
   });
 
   describe('after clicking on the title', () => {
-    let currentQuestion: string | undefined = undefined;
+    let currentQuestion: string;
     beforeEach(() => {
-      currentQuestion = undefined;
+      currentQuestion = defaultQuestion;
       new TestFixture()
         .with(
           addSmartSnippet({
-            get question() {
-              return currentQuestion;
+            get snippet() {
+              return {
+                ...defaultSnippet,
+                question: currentQuestion,
+              };
             },
           })
         )
@@ -312,14 +351,17 @@ describe('Smart Snippet Test Suites', () => {
       });
     }
 
-    let currentQuestion: string | undefined = undefined;
+    let currentQuestion: string;
     beforeEach(() => {
-      currentQuestion = undefined;
+      currentQuestion = defaultQuestion;
       new TestFixture()
         .with(
           addSmartSnippet({
-            get question() {
-              return currentQuestion;
+            get snippet() {
+              return {
+                ...defaultSnippet,
+                question: currentQuestion,
+              };
             },
           })
         )
@@ -364,6 +406,75 @@ describe('Smart Snippet Test Suites', () => {
 
       SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(
         () => lastClickedLink
+      );
+    });
+  });
+
+  describe('when parts of the snippet change', () => {
+    const newSnippet = defaultSnippets[1];
+    let currentSnippet: AddSmartSnippetMockSnippet;
+
+    function updateSnippet(key: keyof AddSmartSnippetMockSnippet) {
+      currentSnippet = {...defaultSnippet, [key]: newSnippet[key]};
+      SearchBoxSelectors.submitButton().click();
+    }
+
+    beforeEach(() => {
+      currentSnippet = defaultSnippet;
+      new TestFixture()
+        .with(
+          addSmartSnippet({
+            get snippet() {
+              return currentSnippet;
+            },
+          })
+        )
+        .with(addSearchBox())
+        .init();
+      SmartSnippetSelectors.question().should(
+        'contain.text',
+        defaultSnippet.question
+      );
+      SmartSnippetSelectors.answer().should(
+        'contain.html',
+        defaultSnippet.answer
+      );
+      SmartSnippetSelectors.sourceTitle().should(
+        'contain.text',
+        defaultSnippet.sourceTitle
+      );
+      SmartSnippetSelectors.sourceUrl().should(
+        'contain.text',
+        defaultSnippet.sourceUrl
+      );
+    });
+
+    it('when the question is updated, the new title is rendered', () => {
+      updateSnippet('question');
+      SmartSnippetSelectors.question().should(
+        'contain.text',
+        newSnippet.question
+      );
+    });
+
+    it('when the answer is updated, the new answer is rendered', () => {
+      updateSnippet('answer');
+      SmartSnippetSelectors.answer().should('contain.html', newSnippet.answer);
+    });
+
+    it('when the source title is updated, the new source is rendered', () => {
+      updateSnippet('sourceTitle');
+      SmartSnippetSelectors.sourceTitle().should(
+        'contain.text',
+        newSnippet.sourceTitle
+      );
+    });
+
+    it('when the source url is updated, the new source is rendered', () => {
+      updateSnippet('sourceUrl');
+      SmartSnippetSelectors.sourceUrl().should(
+        'contain.text',
+        newSnippet.sourceUrl
       );
     });
   });

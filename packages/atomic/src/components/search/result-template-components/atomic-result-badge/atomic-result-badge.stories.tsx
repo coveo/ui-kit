@@ -1,4 +1,4 @@
-import defaultResultComponentStory from '../../../../../.storybook/default-result-component-story';
+import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/ResultBadge',
@@ -6,5 +6,5 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   {field: 'filetype'}
 );
 
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/ResultList/ResultBadge'};
 export const DefaultResultBage = exportedStory;

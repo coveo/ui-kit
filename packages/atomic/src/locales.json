@@ -101,6 +101,10 @@
     "en": "{{label}}. Button",
     "fr": "{{label}}. Bouton"
   },
+  "search-disabled": {
+    "en": "Enter a query with minimum of {{length}} character(s) to enable search.",
+    "fr": "Entrez une requête avec un minimum de {{length}} caractère(s) pour activer la recherche."
+  },
   "query-suggestion-label": {
     "en": "“{{query}}”",
     "fr": "«\u00A0{{text}}\u00A0»"
@@ -245,6 +249,14 @@
   "facet-search-results": {
     "en": "Values found for {{query}} in the {{label}} facet",
     "fr": "Valeurs trouvées pour {{query}} dans la facette {{label}}"
+  },
+  "facet-search-results-count": {
+    "en": "{{count}} value found in the {{label}} facet",
+    "fr": "{{count}} valeur trouvée dans la facette {{label}}"
+  },
+  "facet-search-results-count_plural": {
+    "en": "{{count}} values found in the {{label}} facet",
+    "fr": "{{count}} valeurs trouvées dans la facette {{label}}"
   },
   "pagination": {
     "en": "Pagination",
@@ -1204,6 +1216,14 @@
     "en": "Apply custom start and end dates for the {{label}} facet",
     "fr": "Appliquer les dates de début et de fin manuelles pour la facette {{label}}"
   },
+  "past-minute": {
+    "en": "Past minute",
+    "fr": "Minute passée"
+  },
+  "past-minute_plural": {
+    "en": "Past {{count}} minutes",
+    "fr": "{{count}} minutes passées"
+  },
   "past-hour": {
     "en": "Past hour",
     "fr": "Heure passée"
@@ -1251,6 +1271,14 @@
   "past-year_plural": {
     "en": "Past {{count}} years",
     "fr": "{{count}} années passées"
+  },
+  "next-minute": {
+    "en": "Next minute",
+    "fr": "Minute prochaine"
+  },
+  "next-minute_plural": {
+    "en": "Next {{count}} minutes",
+    "fr": "{{count}} minutes prochaines"
   },
   "next-hour": {
     "en": "Next hour",
@@ -1570,5 +1598,13 @@
   "quickview-loaded": {
     "en": "Quickview for result {{title}} loaded. {{first}} out of {{last}} available.",
     "fr": "Aperçu pour le résultat {{title}} chargé. {{first}} de {{last}} disponible."
+  },
+  "more": {
+    "en": "More",
+    "fr": "Plus"
+  },
+  "tab-popover": {
+    "en": "Popover menu for more tabs",
+    "fr": "Menu contextuel pour plus d'onglets"
   }
 }

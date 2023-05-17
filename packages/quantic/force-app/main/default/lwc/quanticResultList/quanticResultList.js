@@ -1,12 +1,8 @@
-import {LightningElement, api, track} from 'lwc';
-import {
-  registerComponentForInit,
-  initializeWithHeadless,
-  getHeadlessBundle,
-} from 'c/quanticHeadlessLoader';
-import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
-
 import loadingResults from '@salesforce/label/c.quantic_LoadingResults';
+import { registerComponentForInit, initializeWithHeadless, getHeadlessBundle } from 'c/quanticHeadlessLoader';
+import { AriaLiveRegion, I18nUtils } from 'c/quanticUtils';
+import { LightningElement, api, track } from 'lwc';
+
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultList} ResultList */
@@ -34,10 +30,10 @@ export default class QuanticResultList extends LightningElement {
    * A list of fields to include in the query results, separated by commas.
    * @api
    * @type {string}
-   * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid'`
+   * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid'`
    */
   @api fieldsToInclude =
-    'date,author,source,language,filetype,parents,sfknowledgearticleid';
+    'date,author,source,language,filetype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid';
 
   /** @type {ResultListState}*/
   @track state;
@@ -64,8 +60,8 @@ export default class QuanticResultList extends LightningElement {
   openPreviewId;
 
   labels = {
-    loadingResults
-  }
+    loadingResults,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -123,7 +119,10 @@ export default class QuanticResultList extends LightningElement {
     this.unsubscribe?.();
     this.unsubscribeSearchStatus?.();
     this.unsubscribeResultsPerPage?.();
-    this.template.removeEventListener('quantic__resultpreviewtoggle', this.handleResultPreviewToggle);
+    this.template.removeEventListener(
+      'quantic__resultpreviewtoggle',
+      this.handleResultPreviewToggle
+    );
   }
 
   updateState() {
@@ -134,14 +133,18 @@ export default class QuanticResultList extends LightningElement {
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted &&
       !!this.numberOfResults;
-    if(this.showPlaceholder) {
-      this.loadingAriaLiveMessage.dispatchMessage(I18nUtils.format(this.labels.loadingResults));
+    if (this.showPlaceholder) {
+      this.loadingAriaLiveMessage.dispatchMessage(
+        I18nUtils.format(this.labels.loadingResults)
+      );
     }
   }
 
   get fields() {
-    if (this.fieldsToInclude.trim() === '') return [];
-    return this.fieldsToInclude.split(',').map((field) => field.trim());
+    return this.fieldsToInclude
+      .split(',')
+      .map((field) => field.trim())
+      .filter((field) => field.length > 0);
   }
 
   get hasResults() {

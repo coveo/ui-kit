@@ -1,10 +1,5 @@
+import {configuration} from '../../../../app/common-reducers';
 import {CoreEngine} from '../../../../app/engine';
-import {
-  configuration,
-  facetSearchSet,
-  facetSet,
-  facetOptions,
-} from '../../../../app/reducers';
 import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
 import {
   disableFacet,
@@ -12,8 +7,10 @@ import {
   updateFacetOptions,
 } from '../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   registerFacet,
   deselectAllFacetValues,
@@ -27,6 +24,7 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors';
+import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice';
 import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
@@ -61,6 +59,12 @@ export interface CoreFacetProps {
   options: FacetOptions;
 }
 
+/**
+ * The `Facet` controller allows you to create a search interface component that the end user
+ * can use to refine a query by selecting filters based on item metadata (i.e., field values).
+ * If you have enabled a [Dynamic Navigation Experience (DNE)](https://docs.coveo.com/en/m2na0333/)
+ * model, the `Facet` controller automatically reorders facet values according to the user query.
+ */
 export interface Facet extends CoreFacet {
   /**
    * Provides methods to search the facet's values.

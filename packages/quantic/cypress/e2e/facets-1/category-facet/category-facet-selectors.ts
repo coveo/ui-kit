@@ -59,6 +59,8 @@ export const CategoryFacetSelectors: AllFacetSelectors = {
     CategoryFacetSelectors.get().find('.facet__search-results_more-matches'),
   noMatches: () =>
     CategoryFacetSelectors.get().find('.facet__search-results_no-match'),
+  searchValue: (caption: string) =>
+    CategoryFacetSelectors.get().find('.facet__value-option').contains(caption),
   allCategories: () =>
     CategoryFacetSelectors.get().find('.facet__allCategories'),
   showLessButton: () => CategoryFacetSelectors.get().find('.facet__show-less'),
