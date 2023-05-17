@@ -88,7 +88,9 @@ describe('quantic-standalone-search-box', () => {
         Actions.typeInSearchBox(query);
         Expect.displayClearButton(true);
         Actions.submitSearch();
-        Expect.urlContains(`/global-search/%40uri#q=${encodeURI(query)}`);
+        Expect.urlContains(
+          `/global-search/%40uri#q=${encodeURIComponent(query)}`
+        );
       });
 
       scope('when submitting using ENTER key', () => {
@@ -100,7 +102,9 @@ describe('quantic-standalone-search-box', () => {
         Actions.typeInSearchBox(query);
         Actions.pressEnter();
         Expect.displayClearButton(true);
-        Expect.urlContains(`/global-search/%40uri#q=${encodeURI(query)}`);
+        Expect.urlContains(
+          `/global-search/%40uri#q=${encodeURIComponent(query)}`
+        );
       });
 
       scope('when submitting script', () => {
@@ -111,7 +115,9 @@ describe('quantic-standalone-search-box', () => {
         Actions.typeInSearchBox(query);
         Expect.displayClearButton(true);
         Actions.submitSearch();
-        Expect.urlContains(`/global-search/%40uri#q=${encodeURI(query)}`);
+        Expect.urlContains(
+          `/global-search/%40uri#q=${encodeURIComponent(query)}`
+        );
       });
     });
   });
@@ -161,7 +167,9 @@ describe('quantic-standalone-search-box', () => {
         Actions.typeInSearchBox(query);
         Expect.displayClearButton(true);
         Actions.submitSearch();
-        Expect.urlContains(`/full-search-example#q=${encodeURI(query)}`);
+        Expect.urlContains(
+          `/full-search-example#q=${encodeURIComponent(query)}`
+        );
         Expect.logSearchFromLink(query);
       });
 
