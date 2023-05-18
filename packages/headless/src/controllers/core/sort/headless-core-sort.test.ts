@@ -1,5 +1,4 @@
 import {configuration} from '../../../app/common-reducers';
-import {sortCriteria} from '../../../app/reducers';
 import {updatePage} from '../../../features/pagination/pagination-actions';
 import {
   buildRelevanceSortCriterion,
@@ -13,6 +12,7 @@ import {
   registerSortCriterion,
   updateSortCriterion,
 } from '../../../features/sort-criteria/sort-criteria-actions';
+import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,

@@ -1,13 +1,13 @@
 import {SerializedError} from '@reduxjs/toolkit';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {Result} from '../../api/search/search/result';
-import {instantResults} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   clearExpiredResults,
   registerInstantResults,
   updateInstantResultsQuery,
 } from '../../features/instant-results/instant-results-actions';
+import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice';
 import {hasExpired} from '../../features/instant-results/instant-results-state';
 import {fetchInstantResults} from '../../features/search/search-actions';
 import {InstantResultSection} from '../../state/state-sections';

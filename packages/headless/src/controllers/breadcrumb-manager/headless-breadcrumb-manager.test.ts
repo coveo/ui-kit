@@ -1,24 +1,22 @@
 import {configuration} from '../../app/common-reducers';
-import {
-  search,
-  facetSet,
-  numericFacetSet,
-  dateFacetSet,
-  categoryFacetSet,
-} from '../../app/reducers';
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
 import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../features/facets/facet-set/facet-set-actions';
+import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {dateFacetSetReducer as dateFacetSet} from '../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../../features/search/search-actions';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
