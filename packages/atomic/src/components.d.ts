@@ -17,6 +17,7 @@ import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+import { IPXVariants } from "./components/ipx/ipx-variants";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
@@ -670,8 +671,18 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    interface AtomicIpx {
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
+        "isOpen": boolean;
+        "source"?: HTMLElement;
+        "variant": IPXVariants;
+    }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
+        "isEmbedded": boolean;
         "isOpen"?: boolean;
     }
     interface AtomicIpxButton {
@@ -697,14 +708,6 @@ export namespace Components {
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
          */
         "container"?: HTMLElement;
-    }
-    interface AtomicIpxModal {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "isOpen": boolean;
-        "source"?: HTMLElement;
     }
     interface AtomicIpxRefineModal {
         /**
@@ -1833,6 +1836,10 @@ export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightPagerElement;
 }
+export interface AtomicIpxCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicIpxElement;
+}
 export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxBodyElement;
@@ -1840,10 +1847,6 @@ export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicIpxEmbeddedCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxEmbeddedElement;
-}
-export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicIpxModalElement;
 }
 export interface AtomicModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2126,6 +2129,12 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    interface HTMLAtomicIpxElement extends Components.AtomicIpx, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxElement: {
+        prototype: HTMLAtomicIpxElement;
+        new (): HTMLAtomicIpxElement;
+    };
     interface HTMLAtomicIpxBodyElement extends Components.AtomicIpxBody, HTMLStencilElement {
     }
     var HTMLAtomicIpxBodyElement: {
@@ -2143,12 +2152,6 @@ declare global {
     var HTMLAtomicIpxEmbeddedElement: {
         prototype: HTMLAtomicIpxEmbeddedElement;
         new (): HTMLAtomicIpxEmbeddedElement;
-    };
-    interface HTMLAtomicIpxModalElement extends Components.AtomicIpxModal, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxModalElement: {
-        prototype: HTMLAtomicIpxModalElement;
-        new (): HTMLAtomicIpxModalElement;
     };
     interface HTMLAtomicIpxRefineModalElement extends Components.AtomicIpxRefineModal, HTMLStencilElement {
     }
@@ -2677,10 +2680,10 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-ipx": HTMLAtomicIpxElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
-        "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
@@ -3374,8 +3377,19 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    interface AtomicIpx {
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
+        "isOpen"?: boolean;
+        "onAnimationEnded"?: (event: AtomicIpxCustomEvent<never>) => void;
+        "source"?: HTMLElement;
+        "variant"?: IPXVariants;
+    }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
+        "isEmbedded"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
     }
@@ -3403,15 +3417,6 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         "onAnimationEnded"?: (event: AtomicIpxEmbeddedCustomEvent<never>) => void;
-    }
-    interface AtomicIpxModal {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "isOpen"?: boolean;
-        "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
-        "source"?: HTMLElement;
     }
     interface AtomicIpxRefineModal {
         /**
@@ -4514,10 +4519,10 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-ipx": AtomicIpx;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
-        "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-tab": AtomicIpxTab;
@@ -4645,10 +4650,10 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            "atomic-ipx": LocalJSX.AtomicIpx & JSXBase.HTMLAttributes<HTMLAtomicIpxElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
-            "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
             "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;

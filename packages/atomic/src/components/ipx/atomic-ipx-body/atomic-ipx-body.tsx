@@ -35,6 +35,8 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
 
   @Prop({reflect: true}) displayFooterSlot = true;
 
+  @Prop() isEmbedded = false;
+
   public componentDidLoad() {
     const id = this.host.id || randomID('atomic-ipx-body-');
     this.host.id = id;
@@ -45,11 +47,12 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
   public render() {
     this.updateBreakpoints();
 
-    const isEmbedded = this.isOpen === undefined;
     return (
       <article
         part="container"
-        class={`${isEmbedded ? '' : this.isOpen ? 'visible' : 'invisible'}`}
+        class={`${
+          this.isEmbedded ? '' : this.isOpen ? 'visible' : 'invisible'
+        }`}
         onAnimationEnd={() => this.animationEnded.emit()}
       >
         <style>

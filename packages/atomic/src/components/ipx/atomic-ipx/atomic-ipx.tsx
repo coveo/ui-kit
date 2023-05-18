@@ -17,16 +17,17 @@ import {
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../utils/utils';
 import {AnyBindings} from '../../common/interface/bindings';
+import {IPXVariants} from '../ipx-variants';
 
 /**
  * @internal
  */
 @Component({
-  tag: 'atomic-ipx-modal',
-  styleUrl: 'atomic-ipx-modal.pcss',
+  tag: 'atomic-ipx',
+  styleUrl: 'atomic-ipx.pcss',
   shadow: true,
 })
-export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
+export class AtomicIPX implements InitializableComponent<AnyBindings> {
   @InitializeBindings() public bindings!: AnyBindings;
   @Element() public host!: HTMLElement;
 
@@ -38,14 +39,20 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
    * The container to hide from the tabindex and accessibility DOM when the modal is closed.
    */
   @Prop({mutable: true}) container?: HTMLElement;
+  @Prop({reflect: true}) variant: IPXVariants = IPXVariants.Modal;
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
   @Event() animationEnded!: EventEmitter<never>;
 
   @State() private hasFooterSlotElements = true;
 
+  private readonly isEmbedded = this.variant === IPXVariants.Embedded;
+
   @Watch('isOpen')
   async watchToggleOpen(isOpen: boolean) {
+    if (this.variant === IPXVariants.Embedded) {
+      return;
+    }
     const modalOpenedClass = 'atomic-ipx-modal-opened';
 
     if (isOpen) {
@@ -61,6 +68,10 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
 
   private getClasses() {
     const classes: string[] = [];
+    if (this.isEmbedded) {
+      classes.push('embedded');
+      return classes;
+    }
     if (this.isOpen) {
       classes.push('open');
     }
@@ -92,6 +103,7 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
 
     const Body = () => (
       <atomic-ipx-body
+        isEmbedded={this.isEmbedded}
         isOpen={this.isOpen}
         displayFooterSlot={this.hasFooterSlotElements}
       >
