@@ -19,7 +19,7 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: '--' # Workaround for hardcoded node.js version https://github.com/cypress-io/github-action/issues/489
+        command-prefix: 'npx retry --retries=3 --'
         working-directory: ./packages/quantic
         spec: ${{ inputs.spec }}
         install: false
