@@ -185,6 +185,7 @@ jobs:
       - name: Release
         run: |
           npm run nx:graph
+          npm run build -w @coveo/verdaccio-starter
           npm run release:install-npm-proxy
           npm run release:phase1-3
         env:
