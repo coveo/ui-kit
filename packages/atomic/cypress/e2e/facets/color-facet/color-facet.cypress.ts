@@ -43,7 +43,7 @@ describe('Color Facet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupColorFacet);
+      beforeEach(setupColorFacet);
       CommonAssertions.assertAccessibility(colorFacetComponent);
       CommonAssertions.assertContainsComponentError(ColorFacetSelectors, false);
       CommonFacetAssertions.assertLabelContains(
@@ -70,7 +70,7 @@ describe('Color Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectBoxValue);
+        beforeEach(setupSelectBoxValue);
         CommonAssertions.assertAccessibility(colorFacetComponent);
         CommonFacetAssertions.assertDisplayClearButton(
           ColorFacetSelectors,
@@ -83,7 +83,7 @@ describe('Color Facet Test Suites', () => {
       });
 
       describe('verify analytics', () => {
-        before(setupSelectBoxValue);
+        beforeEach(setupSelectBoxValue);
         ColorFacetAssertions.assertLogColorFacetSelect(
           colorFacetField,
           selectionIndex
@@ -98,7 +98,7 @@ describe('Color Facet Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupSelectSecondBoxValue);
+          beforeEach(setupSelectSecondBoxValue);
 
           CommonFacetAssertions.assertDisplayClearButton(
             ColorFacetSelectors,
@@ -111,7 +111,7 @@ describe('Color Facet Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          before(setupSelectSecondBoxValue);
+          beforeEach(setupSelectSecondBoxValue);
 
           ColorFacetAssertions.assertLogColorFacetSelect(
             colorFacetField,
@@ -126,7 +126,7 @@ describe('Color Facet Test Suites', () => {
           }
 
           describe('verify rendering', () => {
-            before(setupClearBoxValues);
+            beforeEach(setupClearBoxValues);
 
             CommonFacetAssertions.assertDisplayClearButton(
               ColorFacetSelectors,
@@ -140,7 +140,7 @@ describe('Color Facet Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            before(setupClearBoxValues);
+            beforeEach(setupClearBoxValues);
 
             CommonFacetAssertions.assertLogClearFacetValues(colorFacetField);
           });
@@ -155,7 +155,7 @@ describe('Color Facet Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupSearchFor);
+          beforeEach(setupSearchFor);
 
           CommonAssertions.assertAccessibility(colorFacetComponent);
           ColorFacetAssertions.assertNumberOfIdleBoxValues(1);
@@ -177,7 +177,7 @@ describe('Color Facet Test Suites', () => {
           }
 
           describe('verify rendering', () => {
-            before(setupSelectSearchResult);
+            beforeEach(setupSelectSearchResult);
             ColorFacetAssertions.assertNumberOfSelectedBoxValues(2);
             ColorFacetAssertions.assertNumberOfIdleBoxValues(
               colorFacetDefaultNumberOfValues - 2
@@ -186,7 +186,7 @@ describe('Color Facet Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            before(setupSelectSearchResult);
+            beforeEach(setupSelectSearchResult);
             ColorFacetAssertions.assertLogColorFacetSelect(colorFacetField, 0);
           });
         });
@@ -209,7 +209,7 @@ describe('Color Facet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(() => setupSelectShowMore('automatic'));
+      beforeEach(() => setupSelectShowMore('automatic'));
       CommonFacetAssertions.assertDisplayShowMoreButton(
         ColorFacetSelectors,
         true
@@ -227,7 +227,7 @@ describe('Color Facet Test Suites', () => {
     });
 
     describe("when the sort order isn't automatic", () => {
-      before(() => setupSelectShowMore('alphanumeric'));
+      beforeEach(() => setupSelectShowMore('alphanumeric'));
 
       CommonFacetAssertions.assertFocusBoxValue(
         ColorFacetSelectors,
@@ -236,7 +236,7 @@ describe('Color Facet Test Suites', () => {
     });
 
     describe('verify analytics', () => {
-      before(() => setupSelectShowMore());
+      beforeEach(() => setupSelectShowMore());
       FacetAssertions.assertLogFacetShowMore(colorFacetField);
     });
 
@@ -255,7 +255,7 @@ describe('Color Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupRepeatShowMore);
+        beforeEach(setupRepeatShowMore);
 
         CommonFacetAssertions.assertDisplayShowMoreButton(
           ColorFacetSelectors,
@@ -275,7 +275,7 @@ describe('Color Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectShowLess);
+        beforeEach(setupSelectShowLess);
         CommonAssertions.assertAccessibility(colorFacetComponent);
         CommonFacetAssertions.assertDisplayShowMoreButton(
           ColorFacetSelectors,
@@ -291,7 +291,7 @@ describe('Color Facet Test Suites', () => {
       });
 
       describe('verify analytics', () => {
-        before(setupSelectShowLess);
+        beforeEach(setupSelectShowLess);
         FacetAssertions.assertLogFacetShowLess(colorFacetField);
       });
     });
@@ -307,7 +307,7 @@ describe('Color Facet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupSelectLabelCollapse);
+      beforeEach(setupSelectLabelCollapse);
       CommonFacetAssertions.assertDisplayFacet(ColorFacetSelectors, true);
       CommonAssertions.assertAccessibility(colorFacetComponent);
       CommonAssertions.assertContainsComponentError(ColorFacetSelectors, false);
@@ -339,7 +339,7 @@ describe('Color Facet Test Suites', () => {
         ColorFacetSelectors.labelButton().click();
       }
 
-      before(setupSelectLabelExpand);
+      beforeEach(setupSelectLabelExpand);
 
       CommonFacetAssertions.assertDisplayClearButton(ColorFacetSelectors, true);
       CommonFacetAssertions.assertDisplaySearchInput(ColorFacetSelectors, true);
@@ -367,7 +367,7 @@ describe('Color Facet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupCustomNumberOfValues);
+      beforeEach(setupCustomNumberOfValues);
 
       ColorFacetAssertions.assertNumberOfIdleBoxValues(numberOfValues);
       CommonFacetAssertions.assertDisplayShowMoreButton(
@@ -381,7 +381,7 @@ describe('Color Facet Test Suites', () => {
     });
 
     describe('when selecting the "Show More" button', () => {
-      before(() => {
+      beforeEach(() => {
         setupCustomNumberOfValues();
         pressShowMore(ColorFacetSelectors);
       });
@@ -399,7 +399,7 @@ describe('Color Facet Test Suites', () => {
   });
 
   describe('with #withSearch to false', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addColorFacet({
@@ -416,7 +416,7 @@ describe('Color Facet Test Suites', () => {
   });
 
   describe('with custom #sortCriteria, alphanumeric', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addColorFacet({
@@ -432,7 +432,7 @@ describe('Color Facet Test Suites', () => {
   });
 
   describe('with a selected path in the URL', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
         .withHash(`f-${colorFacetField}=YouTubeVideo`)
@@ -451,7 +451,7 @@ describe('Color Facet Test Suites', () => {
   });
 
   describe('with an invalid option', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addColorFacet({
@@ -468,7 +468,7 @@ describe('Color Facet Test Suites', () => {
   });
 
   describe('when field returns no results', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addColorFacet({field: 'notanactualfield', label: colorFacetLabel})
@@ -494,7 +494,7 @@ describe('Color Facet Test Suites', () => {
           .withHash(`f-${colorFacetField}=YouTubeVideo`)
           .init();
       }
-      before(generateCustomCSS);
+      beforeEach(generateCustomCSS);
       CommonFacetAssertions.assertDisplayFacet(ColorFacetSelectors, true);
       ColorFacetAssertions.assertButtonBackgroundColor(
         'YouTubeVideo',
@@ -517,7 +517,7 @@ describe('Color Facet Test Suites', () => {
           })
           .init();
       }
-      before(generateCustomCSS);
+      beforeEach(generateCustomCSS);
       CommonFacetAssertions.assertDisplayFacet(ColorFacetSelectors, true);
       ColorFacetAssertions.assertButtonBackgroundColor(
         'Black / Red',
@@ -534,7 +534,7 @@ describe('Color Facet Test Suites', () => {
         .init();
     }
     describe('verify rendering', () => {
-      before(setupBreadboxWithColorFacet);
+      beforeEach(setupBreadboxWithColorFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
     });
 
@@ -547,7 +547,7 @@ describe('Color Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(() => {
+        beforeEach(() => {
           setupSelectedColorFacet();
           cy.wait(TestFixture.interceptAliases.Search);
         });
@@ -566,7 +566,7 @@ describe('Color Facet Test Suites', () => {
           deselectBreadcrumbAtIndex(deselectionIndex);
         }
 
-        before(() => {
+        beforeEach(() => {
           setupDeselectColorFacetValue();
           cy.wait(TestFixture.interceptAliases.Search);
         });
@@ -587,7 +587,7 @@ describe('Color Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(() => {
+        beforeEach(() => {
           setupSelectedMulitpleColorFacets();
           cy.wait(TestFixture.interceptAliases.Search);
         });
@@ -673,7 +673,7 @@ describe('Color Facet Test Suites', () => {
     });
 
     describe('with two dependencies', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
           .with(addFacet({'facet-id': 'def', field: 'filetype'}))
