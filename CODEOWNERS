@@ -9,3 +9,6 @@
 
 # Owners of Atomic's Cypress Tests
 /packages/atomic/cypress/ @coveo/search @coveo/search-qa
+
+# Owners of Atomic IPX components
+/packages/atomic/src/components/ipx @coveo/service-integrations
