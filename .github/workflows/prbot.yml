@@ -171,28 +171,6 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
         shell: bash
-  prerelease:
-    timeout-minutes: 40
-    name: Pre-release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: ./.github/actions/setup
-        with:
-          build: 'false'
-      - name: Release
-        run: |
-          npm run nx:graph
-          npm run build -w @coveo/verdaccio-starter
-          npm run release:install-npm-proxy
-          npm run release:phase1-3
-        env:
-          DEBUG: '*'
-          IS_PRERELEASE: 'true'
-      - name: Re-install
-        run: npm i
   required-jobs:
     if: success()
     needs:
