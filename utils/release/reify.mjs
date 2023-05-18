@@ -68,6 +68,8 @@ async function initArborist() {
   const arb = new Arborist({
     savePrefix: '',
     path: REPO_FS_ROOT,
+    registry: process.env.npm_config_registry,
+    _authToken: 'invalid', // TODO: Remove when removing Lerna
   });
   console.log('Loading virtual tree.');
   await arb.loadVirtual();
