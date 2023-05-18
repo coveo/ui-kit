@@ -23,6 +23,10 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/commit-generated-files
+      - uses: actions/upload-artifact@v3
+        with:
+          name: headless-bundle-analysis
+          path: packages/headess/dist/browser/**/*.stats.json
   lint-check:
     name: 'Check with linter'
     needs: build
@@ -150,7 +154,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        spec: [
+        spec:
+          [
             'cypress/e2e/default-1/**/*',
             'cypress/e2e/default-2/**/*',
             'cypress/e2e/facets-1/**/*',
