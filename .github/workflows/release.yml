@@ -21,6 +21,9 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          build: 'false'
       - name: Release
         run: npm run release
         env:

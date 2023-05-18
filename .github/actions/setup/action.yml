@@ -4,6 +4,10 @@ inputs:
   registry-url:
     description: The NPM registry url to use. When specified, a NODE_AUTH_TOKEN is expected.
     required: false
+  build:
+    description: Whether to build every workspace or not.
+    required: false
+    default: 'true'
 runs:
   using: composite
   steps:
@@ -16,6 +20,7 @@ runs:
       shell: bash
     - uses: actions/cache@v3
       id: build-cache
+      if: ${{ inputs.build == 'true' }}
       with:
         path: |
           packages/bueno/dist
@@ -50,6 +55,6 @@ runs:
         key: cy-${{ hashFiles('**/package-lock.json') }}
     - run: npm ci
       shell: bash
-    - if: steps.build-cache.outputs.cache-hit != 'true'
+    - if: ${{ inputs.build == 'true' && steps.build-cache.outputs.cache-hit != 'true' }}
       run: npm run build
       shell: bash

@@ -180,6 +180,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           registry-url: 'https://registry.npmjs.org'
+          build: 'false'
       - name: Release
         run: |
           npm run nx:graph
