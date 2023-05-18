@@ -37,7 +37,7 @@
   </head>
   <body>
     <button id="widget-view">Toggle widget view</button>
-    <atomic-insight-interface fields-to-include='["sfid", "ytthumbnailurl"]'>
+    <atomic-insight-interface fields-to-include='["sfid"]'>
       <atomic-insight-layout>
         <atomic-layout-section section="search">
           <atomic-insight-search-box></atomic-insight-search-box>
@@ -82,7 +82,7 @@
           <atomic-insight-query-summary></atomic-insight-query-summary>
         </atomic-layout-section>
         <atomic-layout-section section="results">
-          <atomic-insight-result-list image-size="large">
+          <atomic-insight-result-list image-size="none">
             <atomic-insight-result-template if-defined="sfid">
               <template>
                 <style>
@@ -163,9 +163,6 @@
                     border-radius: var(--atomic-border-radius-xl);
                   }
                 </style>
-                <atomic-result-section-visual must-match-sourcetype="Salesforce">
-                  <atomic-result-image field="ytthumbnailurl"></atomic-result-image>
-                </atomic-result-section-visual>
                 <atomic-result-section-badges>
                   <atomic-field-condition must-match-sourcetype="Salesforce">
                     <atomic-result-badge label="Salesforce" class="salesforce-badge"></atomic-result-badge>
@@ -246,7 +243,7 @@
     </atomic-insight-interface>
     <script src="../header.js" type="text/javascript"></script>
     <script type="text/javascript">
-      let widgetView = false;
+      let widgetView = true;
       const widgetButton = document.getElementById('widget-view');
       const wrapper = document.getElementById('wrapper');
       widgetButton.addEventListener('click', () => {
