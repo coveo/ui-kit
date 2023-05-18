@@ -26,6 +26,10 @@ export class AtomicResultImage implements InitializableComponent {
    */
   @Prop({reflect: true}) field!: string;
 
+  // TODO: add comments
+
+  @Prop({reflect: true}) fallback?: string;
+
   public error!: Error;
 
   public get url() {
@@ -35,22 +39,31 @@ export class AtomicResultImage implements InitializableComponent {
     );
     return Array.isArray(value) ? value[0] : value;
   }
-
   public render() {
-    const url = this.url;
+    let url = this.url;
 
-    if (!url) {
-      this.host.remove();
-      return;
-    }
+    if (!this.url) {
+      if (!this.fallback) {
+        this.bindings.engine.logger.error(
+          `Expected "${this.field}" to not be null. Please add a "fallback" property.`,
+          this.host
+        );
+        this.host.remove();
+        return;
+      } else {
+        // if 404 : log
 
-    if (typeof url !== 'string') {
-      this.bindings.engine.logger.error(
-        `Expected "${this.field}" to be a text field.`,
-        this.host
-      );
-      this.host.remove();
-      return;
+        url = this.fallback;
+      }
+    } else {
+      if (typeof url !== 'string') {
+        this.bindings.engine.logger.error(
+          `Expected "${this.field}" to be a text field.`,
+          this.host
+        );
+        this.host.remove();
+        return;
+      }
     }
 
     return (
