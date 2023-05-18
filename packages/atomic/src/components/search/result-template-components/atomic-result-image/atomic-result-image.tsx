@@ -46,21 +46,33 @@ export class AtomicResultImage implements InitializableComponent {
       'The image url is not valid. You might want to add a "fallback" property.';
 
     if (this.fallback) {
-      message = 'The image url is not valid';
+      message = 'The image url is not valid or could not be loaded.';
       this.host.querySelector('img')!.src = this.fallback;
     }
     this.bindings.engine.logger.error(message, this.host);
   }
 
   public render() {
-    const url = this.url;
+    let url = this.url;
 
     if (!url) {
-      this.host.remove();
-      return;
+      if (this.fallback) {
+        this.bindings.engine.logger.error(
+          `"${this.field}" is missing. The fallback is being used. Please review the indexing.`,
+          this.host
+        );
+        url = this.fallback;
+      } else {
+        this.bindings.engine.logger.error(
+          `"${this.field}" is missing. Please review the indexing and add a "fallback" property.`,
+          this.host
+        );
+        this.host.remove();
+        return;
+      }
     }
 
-    if (typeof url !== 'string') {
+    if (url && typeof url !== 'string') {
       this.bindings.engine.logger.error(
         `Expected "${this.field}" to be a text field.`,
         this.host
