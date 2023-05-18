@@ -40,7 +40,7 @@ function getEsmFilePaths(dir) {
   return paths.filter((path) => path.endsWith('.esm.js'));
 }
 
-function getFilePaths(dir, files = []) {
+export function getFilePaths(dir, files = []) {
   const names = readdirSync(dir);
 
   const resolvedPaths = names.flatMap((name) => {
@@ -53,7 +53,7 @@ function getFilePaths(dir, files = []) {
   return files.concat(resolvedPaths);
 }
 
-function determineUseCase(dir, filePath) {
+export function determineUseCase(dir, filePath) {
   const pathRelativeToDir = filePath.slice(dir.length);
   const parts = pathRelativeToDir.split('/');
   return parts.length > 2 ? parts[1] : 'search';
@@ -62,5 +62,6 @@ function determineUseCase(dir, filePath) {
 export async function computeFileSizes() {
   await setup();
   await buildFiles();
+
   return readFileSizes();
 }

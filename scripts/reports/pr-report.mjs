@@ -1,3 +1,4 @@
+import {buildAnalyserLinksReport} from './bundle-size/analyzer-links.mjs';
 import {buildBundleSizeReport} from './bundle-size/bundle-size.mjs';
 import {
   getPullRequestComments,
@@ -16,6 +17,7 @@ async function main() {
 async function buildReport() {
   const titleFormatReport = await buildTitleReport();
   const bundleSizeReport = await buildBundleSizeReport();
+  const analyzerLinksReport = buildAnalyserLinksReport();
 
   return `
   **${reportTitle}**
@@ -23,6 +25,8 @@ async function buildReport() {
   ${titleFormatReport}
 
   ${bundleSizeReport}
+
+  ${analyzerLinksReport}
   `;
 }
 
