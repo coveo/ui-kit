@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.23.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.22.8...@coveo/quantic@2.23.0) (2023-05-17)
+
+### Bug Fixes
+
+- **headless:** serialize and deserialize endInclusive parameters for range facets (numeric, dates) ([#2883](https://github.com/coveo/ui-kit/issues/2883)) ([ff411f0](https://github.com/coveo/ui-kit/commit/ff411f01157f32e68e62fa1a6a38e6f686cb900c))
+- **quantic:** padding of the feedback options adjusted in the quantic smart snippet component ([#2894](https://github.com/coveo/ui-kit/issues/2894)) ([6187a59](https://github.com/coveo/ui-kit/commit/6187a5992f5ce8313d7af4e69d9ea718b377111f))
+
+### Features
+
+- **quantic:** expose the fetchClassificationOnChange & fetchDocumentSuggestionOnChange properties ([#2859](https://github.com/coveo/ui-kit/issues/2859)) ([388aba4](https://github.com/coveo/ui-kit/commit/388aba4da36361ec4699e4287a47ccd47f49a579))
+
 ## [2.22.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@2.22.7...@coveo/quantic@2.22.8) (2023-05-11)
 
 **Note:** Version bump only for package @coveo/quantic
