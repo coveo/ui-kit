@@ -119,6 +119,22 @@ describe('quantic-standalone-search-box', () => {
           `/global-search/%40uri#q=${encodeURIComponent(query)}`
         );
       });
+
+      scope(
+        'when submitting a search with a query containing a special character',
+        () => {
+          const query = '%test';
+          visitStandaloneSearchBox();
+
+          Expect.inputInitialized();
+          Actions.typeInSearchBox(query);
+          Expect.displayClearButton(true);
+          Actions.submitSearch();
+          Expect.urlContains(
+            `/global-search/%40uri#q=${encodeURIComponent(query)}`
+          );
+        }
+      );
     });
   });
 
