@@ -1304,6 +1304,9 @@ export namespace Components {
     interface AtomicResultIcon {
     }
     interface AtomicResultImage {
+        /**
+          * An optional fallback image URL or local image file path that will be used in case the specified image field is not available or encounters a 404 error. If the `field` prop is not specified or does not contain a valid image URL, this fallback URL will be used instead.
+         */
         "fallback"?: string;
         /**
           * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
@@ -3978,6 +3981,9 @@ declare namespace LocalJSX {
     interface AtomicResultIcon {
     }
     interface AtomicResultImage {
+        /**
+          * An optional fallback image URL or local image file path that will be used in case the specified image field is not available or encounters a 404 error. If the `field` prop is not specified or does not contain a valid image URL, this fallback URL will be used instead.
+         */
         "fallback"?: string;
         /**
           * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
