@@ -45,12 +45,11 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
   public render() {
     this.updateBreakpoints();
 
+    const isEmbedded = this.isOpen === undefined;
     return (
       <article
         part="container"
-        class={`${
-          this.isOpen === undefined ? '' : this.isOpen ? 'visible' : 'invisible'
-        }`}
+        class={`${isEmbedded ? '' : this.isOpen ? 'visible' : 'invisible'}`}
         onAnimationEnd={() => this.animationEnded.emit()}
       >
         <style>
