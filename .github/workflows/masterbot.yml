@@ -164,7 +164,7 @@ jobs:
   prerelease:
     timeout-minutes: 40
     name: Pre-release
-    # TODO: Uncomment job dependencies when we enable new versioning process.
+    # TODO: Uncomment when we enable new versioning process.
     # env:
     #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     # needs:
@@ -180,7 +180,7 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/setup
         with:
-          # registry-url: 'https://registry.npmjs.org'
+          # registry-url: 'https://registry.npmjs.org' # TODO: Uncomment when we enable new versioning process.
           build: 'false'
       - name: Release
         run: |
