@@ -27,10 +27,8 @@ export class AtomicResultImage implements InitializableComponent {
   @Prop({reflect: true}) field!: string;
 
   /**
-   * An optional fallback image URL or local image file path that will be used in case the specified image field is not available or encounters a 404 error.
-   * If the `field` prop is not specified or does not contain a valid image URL, this fallback URL will be used instead.
+   * An optional fallback image URL or local image file path that will be used in case the specified image field is not available or encounters an error.
    */
-
   @Prop({reflect: true}) fallback?: string;
 
   public error!: Error;
@@ -42,46 +40,34 @@ export class AtomicResultImage implements InitializableComponent {
     );
     return Array.isArray(value) ? value[0] : value;
   }
+
   private handleImageError() {
+    let message =
+      'The image url is not valid. You might want to add a "fallback" property.';
+
     if (this.fallback) {
+      message = 'The image url is not valid';
       this.host.querySelector('img')!.src = this.fallback;
-    } else {
-      // Handle the case when fallback is not provided
-      // You can customize this behavior according to your needs
-      this.host.remove();
     }
+    this.bindings.engine.logger.error(message, this.host);
   }
-  private getRenderUrl(): string {
-    if (!this.url) {
-      if (!this.fallback) {
-        this.bindings.engine.logger.error(
-          `"${this.field}" is missing. Please add a "fallback" property.`,
-          this.host
-        );
-        this.host.remove();
-      } else {
-        return this.fallback;
-      }
+
+  public render() {
+    const url = this.url;
+
+    if (!url) {
+      this.host.remove();
+      return;
     }
-    if (typeof this.url !== 'string') {
+
+    if (typeof url !== 'string') {
       this.bindings.engine.logger.error(
         `Expected "${this.field}" to be a text field.`,
         this.host
       );
-      if (this.fallback) {
-        return this.fallback;
-      } else {
-        this.bindings.engine.logger.error(
-          `"${this.field}" is not a text field. Please add a "fallback" property.`,
-          this.host
-        );
-        this.host.remove();
-      }
+      this.host.remove();
+      return;
     }
-    return this.url;
-  }
-  public render() {
-    const url = this.getRenderUrl();
     return (
       <img
         alt={`${this.field} image`}

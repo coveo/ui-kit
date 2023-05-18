@@ -1305,7 +1305,7 @@ export namespace Components {
     }
     interface AtomicResultImage {
         /**
-          * An optional fallback image URL or local image file path that will be used in case the specified image field is not available or encounters a 404 error. If the `field` prop is not specified or does not contain a valid image URL, this fallback URL will be used instead.
+          * An optional fallback image URL or local image file path that will be used in case the specified image field is not available or encounters an error.
          */
         "fallback"?: string;
         /**
@@ -3982,7 +3982,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultImage {
         /**
-          * An optional fallback image URL or local image file path that will be used in case the specified image field is not available or encounters a 404 error. If the `field` prop is not specified or does not contain a valid image URL, this fallback URL will be used instead.
+          * An optional fallback image URL or local image file path that will be used in case the specified image field is not available or encounters an error.
          */
         "fallback"?: string;
         /**
