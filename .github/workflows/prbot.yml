@@ -3,7 +3,7 @@ on: [pull_request]
 jobs:
   report-size:
     name: 'Report bundle size'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
       NODE_OPTIONS: --max_old_space_size=4096
@@ -18,7 +18,7 @@ jobs:
       - run: npm run pr:report
   build:
     name: 'Build'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -26,7 +26,7 @@ jobs:
   lint-check:
     name: 'Check with linter'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -34,7 +34,7 @@ jobs:
   unit-test:
     name: 'Run unit tests'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -42,7 +42,7 @@ jobs:
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -63,7 +63,7 @@ jobs:
   e2e-atomic-screenshots:
     name: 'Run e2e screenshots tests on Atomic'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -71,7 +71,7 @@ jobs:
   e2e-atomic-react-test:
     name: 'Run e2e tests on Atomic React'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -79,7 +79,7 @@ jobs:
   e2e-atomic-react-nextjs-test:
     name: 'Run e2e tests on Atomic React NextJS'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -87,7 +87,7 @@ jobs:
   e2e-iife-test:
     name: 'Run e2e tests for IIFE'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -95,7 +95,7 @@ jobs:
   e2e-atomic-angular-test:
     name: 'Run e2e tests on Atomic Angular'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -103,7 +103,7 @@ jobs:
   e2e-atomic-vuejs-test:
     name: 'Run e2e tests on Vue.js sample'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -111,7 +111,7 @@ jobs:
   e2e-atomic-stencil-test:
     name: 'Run e2e tests on Stencil.js sample'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -119,7 +119,7 @@ jobs:
   e2e-atomic-hosted-page-test:
     name: 'Runs Cypress tests for Atomic Hosted Page'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -127,7 +127,7 @@ jobs:
   e2e-atomic-insight-panel-test:
     name: 'Run e2e tests on Atomic insight panel'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -135,7 +135,7 @@ jobs:
   e2e-quantic-setup:
     name: 'Setup e2e tests on Quantic'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -146,7 +146,7 @@ jobs:
   e2e-quantic-test:
     name: 'Run e2e tests on Quantic'
     needs: e2e-quantic-setup
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -165,7 +165,7 @@ jobs:
   e2e-quantic-cleanup:
     if: cancelled() || failure() || success()
     needs: e2e-quantic-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -179,7 +179,7 @@ jobs:
       - 'unit-test'
       - 'e2e-atomic-test'
       - 'e2e-quantic-test'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - run: echo 'All required jobs have passed'
   is-valid:
@@ -187,7 +187,7 @@ jobs:
     name: 'Confirm build is valid'
     needs:
       - 'required-jobs'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - run: |
           success="${{ needs.required-jobs.result == 'success' }}"

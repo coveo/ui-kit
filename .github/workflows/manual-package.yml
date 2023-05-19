@@ -47,14 +47,14 @@ on:
 jobs:
   build:
     name: 'Build'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
   lint-check:
     name: 'Check with linter'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -63,7 +63,7 @@ jobs:
     name: 'Run unit tests'
     if: ${{ github.event.inputs.skipUnitTests != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -72,7 +72,7 @@ jobs:
     name: 'Run e2e tests on Atomic'
     if: ${{ github.event.inputs.skipAtomicE2E != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -84,7 +84,7 @@ jobs:
     name: 'Run e2e tests on Quantic'
     if: ${{ github.event.inputs.skipQuanticE2E != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -98,7 +98,7 @@ jobs:
     name: 'Run e2e tests on Atomic React'
     if: ${{ github.event.inputs.skipAtomicReactE2E != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -108,7 +108,7 @@ jobs:
     name: 'Run e2e tests on Atomic Angular'
     if: ${{ github.event.inputs.skipAtomicAngularE2E != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -117,7 +117,7 @@ jobs:
     name: 'Run e2e tests on Vue.js sample'
     if: ${{ github.event.inputs.skipAtomicVueJsE2E != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -126,7 +126,7 @@ jobs:
     name: 'Run e2e tests on Atomic insight panel'
     if: ${{ github.event.inputs.skipAtomicInsightsPanelE2E != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -136,7 +136,7 @@ jobs:
     name: 'Run e2e tests on Stencil.js sample'
     if: ${{ github.event.inputs.skipAtomicStencilE2E != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -146,7 +146,7 @@ jobs:
     name: 'Runs Cypress tests for Atomic Hosted Page'
     if: ${{ github.event.inputs.skipAtomicHostedPageE2E != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -156,7 +156,7 @@ jobs:
     name: 'Run e2e tests on Atomic React NextJS'
     if: ${{ github.event.inputs.skipAtomicReactNextJSE2E != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -166,7 +166,7 @@ jobs:
     name: 'Run e2e tests for IIFE'
     if: ${{ github.event.inputs.skipIIFEE2E != 'true' }}
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -179,7 +179,7 @@ jobs:
       - 'unit-test'
       - 'e2e-atomic-test'
       - 'e2e-quantic-test'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     if: cancelled() || failure() || success()
     steps:
       - name: fail if unit test failed
