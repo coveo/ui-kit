@@ -5,7 +5,7 @@ import {
   buildCoreFoldedResultList,
   CoreFoldedResultList,
   CoreFoldedResultListState,
-  FoldedResultListProps,
+  FoldedResultListOptions,
 } from '../core/folded-result-list/headless-core-folded-result-list';
 
 export type {
@@ -13,7 +13,6 @@ export type {
   FoldedResult,
   FoldingOptions,
   FoldedResultListOptions,
-  FoldedResultListProps,
   CoreFoldedResultListState,
   CoreFoldedResultList,
 } from '../core/folded-result-list/headless-core-folded-result-list';
@@ -33,6 +32,13 @@ export interface FoldedResultList extends CoreFoldedResultList {
   state: FoldedResultListState;
 }
 
+export interface FoldedResultListProps {
+  /**
+   * The options for the `FoldedResultList` controller.
+   * */
+  options?: FoldedResultListOptions;
+}
+
 /**
  * Creates a `FoldedResultList` controller instance.
  *
@@ -42,7 +48,7 @@ export interface FoldedResultList extends CoreFoldedResultList {
  */
 export function buildFoldedResultList(
   engine: SearchEngine,
-  props: FoldedResultListProps
+  props: FoldedResultListProps = {}
 ): FoldedResultList {
   const foldedResultList = buildCoreFoldedResultList(
     engine,

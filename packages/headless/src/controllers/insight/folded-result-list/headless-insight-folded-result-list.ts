@@ -4,13 +4,12 @@ import {InsightEngine} from '../../../insight.index';
 import {
   CoreFoldedResultListState,
   CoreFoldedResultList,
-  FoldedResultListProps,
   buildCoreFoldedResultList,
+  FoldedResultListOptions,
 } from '../../core/folded-result-list/headless-core-folded-result-list';
 
 export type {
   FoldedResultListOptions,
-  FoldedResultListProps,
   CoreFoldedResultListState,
   CoreFoldedResultList,
 } from '../../core/folded-result-list/headless-core-folded-result-list';
@@ -29,6 +28,12 @@ export interface FoldedResultList extends CoreFoldedResultList {
    */
   state: FoldedResultListState;
 }
+export interface FoldedResultListProps {
+  /**
+   * The options for the `FoldedResultList` controller.
+   * */
+  options?: FoldedResultListOptions;
+}
 
 /**
  * Creates a `FoldedResultList` controller instance.
@@ -39,7 +44,7 @@ export interface FoldedResultList extends CoreFoldedResultList {
  */
 export function buildFoldedResultList(
   engine: InsightEngine,
-  props: FoldedResultListProps
+  props: FoldedResultListProps = {}
 ): FoldedResultList {
   const foldedResultList = buildCoreFoldedResultList(
     engine,
