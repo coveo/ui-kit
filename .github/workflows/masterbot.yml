@@ -164,26 +164,36 @@ jobs:
   prerelease:
     timeout-minutes: 40
     name: Pre-release
-    # TODO: Uncomment job dependencies when we enable new versioning process.
+    # TODO: Uncomment when we enable new versioning process.
+    # env:
+    #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     # needs:
     #   - 'lint-check'
     #   - 'unit-test'
     #   - 'e2e-atomic-test'
     #   - 'e2e-quantic-test'
     runs-on: ubuntu-latest
-    environment: prerelease
+    environment: 'Prerelease'
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - uses: actions/setup-node@v3
+        with:
+          # registry-url: 'https://registry.npmjs.org' # TODO: Uncomment when we enable new versioning process.
+          node-version-file: '.nvmrc'
+      - name: Install npm
+        run: npm i -g npm@9
+        shell: bash
+      - run: npm ci
+        shell: bash
       - name: Release
         run: |
           npm run nx:graph
+          npm run build -w @coveo/verdaccio-starter
           npm run release:install-npm-proxy
           npm run release:phase1-3
         env:
-          # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           DEBUG: '*'
           IS_PRERELEASE: 'true'
       - name: Download published packages

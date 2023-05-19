@@ -65,11 +65,14 @@ function buildDependencyGraph(rootNode) {
 }
 
 async function initArborist() {
+  const registry = process.env.npm_config_registry;
   const arb = new Arborist({
     savePrefix: '',
     path: REPO_FS_ROOT,
-    registry: process.env.npm_config_registry,
-    _authToken: 'invalid', // TODO: Remove when removing Lerna
+    registry,
+    ...(registry && registry.includes('//localhost')
+      ? {_authToken: 'invalid'} // TODO: Uncomment when we enable new versioning process.
+      : {}),
   });
   console.log('Loading virtual tree.');
   await arb.loadVirtual();
