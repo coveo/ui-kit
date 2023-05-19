@@ -25,7 +25,6 @@
           organizationId: 'searchuisamples',
           organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
         });
-        //searchInterface.executeFirstSearch();
 
         await customElements.whenDefined('atomic-recs-interface');
         const recsInterface = searchInterface.querySelector('atomic-recs-interface');
@@ -47,7 +46,6 @@
           hostDiv.querySelector('atomic-ipx-embedded').appendChild(element);
         });
         const searchInterface = hostDiv.querySelector('atomic-search-interface');
-        searchInterface.querySelector('atomic-recs-list').setAttribute('recommendation', 'frequentViewed');
         await initializeSearchInterface(searchInterface);
       };
 

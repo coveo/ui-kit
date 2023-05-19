@@ -8,15 +8,7 @@
         "cwd": "packages/atomic-angular/projects/atomic-angular"
       }
     },
-    "build-new-version": {
-      "dependsOn": ["release:phase1"],
-      "executor": "nx:run-script",
-      "options": {
-        "script": "build"
-      }
-    },
     "release:phase2": {
-      "dependsOn": ["release:phase1", "build-new-version"],
       "executor": "nx:run-commands",
       "options": {
         "parallel": false,

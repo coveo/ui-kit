@@ -1,0 +1,16 @@
+{
+  "name": "@coveo/nx-plugin",
+  "private": true,
+  "authors": "Coveo",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "dependencies": {
+    "@nrwl/devkit": "15.7.0"
+  },
+  "devDependencies": {
+    "typescript": "5.0.4"
+  },
+  "scripts": {
+    "test": "tsc"
+  }
+}
