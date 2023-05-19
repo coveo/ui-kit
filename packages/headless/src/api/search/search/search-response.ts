@@ -5,6 +5,7 @@ import {
 } from '../search-api-error-response';
 import {Trigger} from './../trigger';
 import {ExecutionReport} from './execution-report';
+import {ExtendedResults} from './extended-results';
 import {QueryCorrection} from './query-corrections';
 import {QueryRankingExpression} from './query-ranking-expression';
 import {QuestionsAnswers} from './question-answering';
@@ -24,6 +25,7 @@ export interface SearchResponseSuccess {
   questionAnswer: QuestionsAnswers;
   pipeline: string;
   splitTestRun: string;
+  extendedResults: ExtendedResults;
 }
 
 export interface SearchResponseSuccessWithDebugInfo
