@@ -44,45 +44,44 @@ export class AtomicResultImage implements InitializableComponent {
   private handleImageError(target: EventTarget | null) {
     const image = target as HTMLImageElement;
 
-    let message = `The image url "${image.src}" is not valid or could not be loaded.`;
+    if (image.src === this.fallback) {
+      return;
+    }
 
     if (this.fallback) {
       image.src = this.fallback;
     } else {
-      message += ' You might want to add a "fallback" property.';
+      this.bindings.engine.logger.warn(
+        `The image url "${image.src}" is not valid or could not be loaded. You might want to add a "fallback" property.`,
+        this.host
+      );
     }
-    this.bindings.engine.logger.warn(message, this.host);
   }
 
-  private handleInvalidUrl(message: string, fallback: string | undefined) {
-    let errorMessage = message;
-
-    if (fallback) {
-      errorMessage += ` The fallback "${fallback}" is being used.`;
-      this.bindings.engine.logger.warn(errorMessage, this.host);
-      return fallback;
-    } else {
-      errorMessage += ' You might want to add a "fallback" property.';
-      this.bindings.engine.logger.error(errorMessage, this.host);
+  private handleMissingFallback(message: string) {
+    if (!this.fallback) {
+      message += ' You might want to add a "fallback" property.';
+      this.bindings.engine.logger.warn(message, this.host);
       this.host.remove();
       return null;
     }
+    return this.fallback;
   }
 
   public render() {
     let url = this.url;
 
     if (!url) {
-      const message = `"${this.field}" is missing. Please review the indexing.`;
-      url = this.handleInvalidUrl(message, this.fallback);
+      const message = `"${this.field}" is missing. Please review your indexation.`;
+      url = this.handleMissingFallback(message);
       if (!url) {
         return;
       }
     }
 
     if (url && typeof url !== 'string') {
-      const message = `Expected "${this.field}" to be a text field. Please review the indexing.`;
-      url = this.handleInvalidUrl(message, this.fallback);
+      const message = `Expected "${this.field}" to be a text field. Please review your indexation.`;
+      url = this.handleMissingFallback(message);
       if (!url) {
         return;
       }
