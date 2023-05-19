@@ -43,43 +43,48 @@ export class AtomicResultImage implements InitializableComponent {
 
   private handleImageError() {
     const currentImageUrl = this.host.querySelector('img')!.src;
-    let message = `The image url : ${currentImageUrl}  is not valid or could not be loaded.`;
+    let message = `The image url "${currentImageUrl}" is not valid or could not be loaded.`;
 
     if (this.fallback) {
       this.host.querySelector('img')!.src = this.fallback;
     } else {
       message += ' You might want to add a "fallback" property.';
     }
-    this.bindings.engine.logger.error(message, this.host);
+    this.bindings.engine.logger.warn(message, this.host);
+  }
+
+  private handleInvalidUrl(message: string, fallback: string | undefined) {
+    let errorMessage = message;
+
+    if (fallback) {
+      errorMessage += ` The fallback "${fallback}" is being used.`;
+      this.bindings.engine.logger.warn(errorMessage, this.host);
+      return fallback;
+    } else {
+      errorMessage += ' You might want to add a "fallback" property.';
+      this.bindings.engine.logger.error(errorMessage, this.host);
+      this.host.remove();
+      return null;
+    }
   }
 
   public render() {
     let url = this.url;
 
     if (!url) {
-      if (this.fallback) {
-        this.bindings.engine.logger.error(
-          `"${this.field}" is missing. The fallback is being used. Please review the indexing.`,
-          this.host
-        );
-        url = this.fallback;
-      } else {
-        this.bindings.engine.logger.error(
-          `"${this.field}" is missing. Please review the indexing and add a "fallback" property.`,
-          this.host
-        );
-        this.host.remove();
+      const message = `"${this.field}" is missing. Please review the indexing.`;
+      url = this.handleInvalidUrl(message, this.fallback);
+      if (!url) {
         return;
       }
     }
 
     if (url && typeof url !== 'string') {
-      this.bindings.engine.logger.error(
-        `Expected "${this.field}" to be a text field.`,
-        this.host
-      );
-      this.host.remove();
-      return;
+      const message = `Expected "${this.field}" to be a text field. Please review the indexing.`;
+      url = this.handleInvalidUrl(message, this.fallback);
+      if (!url) {
+        return;
+      }
     }
     return (
       <img
