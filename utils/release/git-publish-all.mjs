@@ -17,16 +17,11 @@ import {
   gitSetRefOnCommit,
   gitPush,
 } from '@coveo/semantic-monorepo-tools';
-import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
 import {readFileSync} from 'fs';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
-import {
-  RELEASER_AUTH_SECRETS,
-  REPO_NAME,
-  REPO_OWNER,
-} from './common/constants.mjs';
+import {REPO_NAME, REPO_OWNER} from './common/constants.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
 const GIT_SSH_REMOTE = 'deploy';
@@ -35,10 +30,7 @@ const GIT_SSH_REMOTE = 'deploy';
 (async () => {
   const PATH = '.';
 
-  const octokit = new Octokit({
-    authStrategy: createAppAuth,
-    auth: RELEASER_AUTH_SECRETS,
-  });
+  const octokit = new Octokit({auth: process.env.GITHUB_CREDENTIALS});
 
   // Define release # andversion
   const currentVersionTag = getCurrentVersion(PATH);
