@@ -276,7 +276,7 @@ describe('Insight Panel test suites', () => {
         InsightPanelsSelectors.smartSnippetExpandableAnswer().should('exist');
       });
 
-      describe('when giving giving explanatory feedback', () => {
+      describe('when giving explanatory feedback', () => {
         it('should show the feedback modal', () => {
           InsightPanelsSelectors.smartSnippetFeedbackModal().should(
             'not.exist'
