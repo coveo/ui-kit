@@ -272,12 +272,11 @@ describe('Category Facet Test Suites', () => {
       });
 
       describe('when selecting the first parent button', () => {
+        const selectedPath = canadaHierarchy.slice(0, 1);
         function setupSelectFirstParent() {
           pressParentButton(0);
         }
-
         beforeEach(setupSelectFirstParent);
-        const selectedPath = canadaHierarchy.slice(0, 1);
 
         describe('verify rendering', () => {
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
@@ -352,7 +351,6 @@ describe('Category Facet Test Suites', () => {
 
           describe('when selecting the "Clear" button', () => {
             function setupClearBoxValues() {
-              setupSelectLabelCollapse();
               pressClearButton(CategoryFacetSelectors);
             }
             beforeEach(setupClearBoxValues);
@@ -364,7 +362,6 @@ describe('Category Facet Test Suites', () => {
             });
 
             describe('verify analytics', () => {
-              beforeEach(setupClearBoxValues);
               CategoryFacetAssertions.assertLogClearFacetValues();
             });
           });

@@ -64,10 +64,8 @@ describe('Facet v1 Test Suites', () => {
         setupWithCheckboxValues();
         selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
       }
-
+      beforeEach(setupSelectCheckboxValue);
       describe('verify rendering', () => {
-        beforeEach(setupSelectCheckboxValue);
-
         CommonAssertions.assertAccessibility(facetComponent);
         CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
         CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
@@ -81,20 +79,17 @@ describe('Facet v1 Test Suites', () => {
       });
 
       describe('verify analytics', () => {
-        beforeEach(setupSelectCheckboxValue);
         FacetAssertions.assertLogFacetSelect(field, selectionIndex);
       });
 
       describe('when selecting a second value', () => {
         const secondSelectionIndex = 0;
         function setupSelectSecondCheckboxValue() {
-          setupSelectCheckboxValue();
           selectIdleCheckboxValueAt(FacetSelectors, secondSelectionIndex);
         }
 
+        beforeEach(setupSelectSecondCheckboxValue);
         describe('verify rendering', () => {
-          beforeEach(setupSelectSecondCheckboxValue);
-
           CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
           CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
             FacetSelectors,
@@ -107,20 +102,16 @@ describe('Facet v1 Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          beforeEach(setupSelectSecondCheckboxValue);
-
           FacetAssertions.assertLogFacetSelect(field, secondSelectionIndex);
         });
 
         describe('when selecting the "Clear" button', () => {
           function setupClearCheckboxValues() {
-            setupSelectSecondCheckboxValue();
             pressClearButton(FacetSelectors);
           }
+          beforeEach(setupClearCheckboxValues);
 
           describe('verify rendering', () => {
-            beforeEach(setupClearCheckboxValues);
-
             CommonFacetAssertions.assertDisplayClearButton(
               FacetSelectors,
               false
@@ -136,8 +127,6 @@ describe('Facet v1 Test Suites', () => {
             CommonFacetAssertions.assertFocusHeader(FacetSelectors);
           });
           describe('verify analytics', () => {
-            beforeEach(setupClearCheckboxValues);
-
             CommonFacetAssertions.assertLogClearFacetValues(field);
           });
         });
@@ -146,13 +135,11 @@ describe('Facet v1 Test Suites', () => {
       describe('when searching for a value that returns results', () => {
         const query = 'e';
         function setupSearchFor() {
-          setupSelectCheckboxValue();
           typeFacetSearchQuery(FacetSelectors, query, true);
         }
 
+        beforeEach(setupSearchFor);
         describe('verify rendering', () => {
-          beforeEach(setupSearchFor);
-
           CommonAssertions.assertAccessibility(facetComponent);
           CommonFacetAssertions.assertNumberOfIdleCheckboxValues(
             FacetSelectors,
@@ -188,14 +175,11 @@ describe('Facet v1 Test Suites', () => {
 
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
-            setupSearchFor();
             AnalyticsTracker.reset();
             selectIdleCheckboxValueAt(FacetSelectors, 5);
           }
-
+          beforeEach(setupSelectSearchResult);
           describe('verify rendering', () => {
-            beforeEach(setupSelectSearchResult);
-
             CommonFacetAssertions.assertNumberOfIdleCheckboxValues(
               FacetSelectors,
               defaultNumberOfValues - 2
@@ -225,20 +209,16 @@ describe('Facet v1 Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            beforeEach(setupSelectSearchResult);
             FacetAssertions.assertLogFacetSelect(field, 0);
           });
         });
 
         describe('when clearing the facet search results', () => {
           function setupClearFacetSearchResults() {
-            setupSearchFor();
             pressClearSearchButton(FacetSelectors);
           }
-
+          beforeEach(setupClearFacetSearchResults);
           describe('verify rendering', () => {
-            beforeEach(setupClearFacetSearchResults);
-
             CommonFacetAssertions.assertNumberOfIdleCheckboxValues(
               FacetSelectors,
               defaultNumberOfValues - 1
@@ -271,13 +251,10 @@ describe('Facet v1 Test Suites', () => {
       describe('when searching for a value that returns a single result', () => {
         const query = 'people';
         function setupSearchForSingleValue() {
-          setupSelectCheckboxValue();
           typeFacetSearchQuery(FacetSelectors, query, true);
         }
-
+        beforeEach(setupSearchForSingleValue);
         describe('verify rendering', () => {
-          beforeEach(setupSearchForSingleValue);
-
           CommonAssertions.assertAccessibility(facetComponent);
           CommonFacetAssertions.assertNumberOfIdleCheckboxValues(
             FacetSelectors,
@@ -305,13 +282,10 @@ describe('Facet v1 Test Suites', () => {
       describe('when searching for a value that returns no results', () => {
         const query = 'nonono';
         function setupSearchForNoValues() {
-          setupSelectCheckboxValue();
           typeFacetSearchQuery(FacetSelectors, query, false);
         }
-
+        beforeEach(setupSearchForNoValues);
         describe('verify rendering', () => {
-          beforeEach(setupSearchForNoValues);
-
           CommonAssertions.assertAccessibility(facetComponent);
           CommonFacetAssertions.assertNumberOfIdleCheckboxValues(
             FacetSelectors,
@@ -348,10 +322,9 @@ describe('Facet v1 Test Suites', () => {
         .with(addFacet({field, label, 'display-values-as': 'link'}))
         .init();
     }
+    beforeEach(setupWithLinkValues);
 
     describe('verify rendering', () => {
-      beforeEach(setupWithLinkValues);
-
       CommonAssertions.assertAccessibility(facetComponent);
       CommonFacetAssertions.assertDisplayValues(FacetSelectors, true);
       CommonFacetAssertions.assertNumberOfSelectedLinkValues(FacetSelectors, 0);
@@ -366,13 +339,11 @@ describe('Facet v1 Test Suites', () => {
     describe('when selecting a value', () => {
       const selectionIndex = 2;
       function setupSelectLinkValue() {
-        setupWithLinkValues();
         selectIdleLinkValueAt(FacetSelectors, selectionIndex);
       }
+      beforeEach(setupSelectLinkValue);
 
       describe('verify rendering', () => {
-        beforeEach(setupSelectLinkValue);
-
         CommonAssertions.assertAccessibility(facetComponent);
         CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
         CommonFacetAssertions.assertNumberOfSelectedLinkValues(
@@ -386,20 +357,17 @@ describe('Facet v1 Test Suites', () => {
       });
 
       describe('verify analytics', () => {
-        beforeEach(setupSelectLinkValue);
         FacetAssertions.assertLogFacetSelect(field, selectionIndex);
       });
 
       describe('when selecting a second value', () => {
         const secondSelectionIndex = 0;
         function setupSelectSecondLinkValue() {
-          setupSelectLinkValue();
           selectIdleLinkValueAt(FacetSelectors, secondSelectionIndex);
         }
+        beforeEach(setupSelectSecondLinkValue);
 
         describe('verify rendering', () => {
-          beforeEach(setupSelectSecondLinkValue);
-
           CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
           CommonFacetAssertions.assertNumberOfSelectedLinkValues(
             FacetSelectors,
@@ -412,20 +380,16 @@ describe('Facet v1 Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          beforeEach(setupSelectSecondLinkValue);
-
           FacetAssertions.assertLogFacetSelect(field, secondSelectionIndex);
         });
 
         describe('when selecting the "Clear" button', () => {
           function setupClearLinkValues() {
-            setupSelectSecondLinkValue();
             pressClearButton(FacetSelectors);
           }
+          beforeEach(setupClearLinkValues);
 
           describe('verify rendering', () => {
-            beforeEach(setupClearLinkValues);
-
             CommonFacetAssertions.assertDisplayClearButton(
               FacetSelectors,
               false
@@ -440,8 +404,6 @@ describe('Facet v1 Test Suites', () => {
             );
           });
           describe('verify analytics', () => {
-            beforeEach(setupClearLinkValues);
-
             CommonFacetAssertions.assertLogClearFacetValues(field);
           });
         });
@@ -453,10 +415,8 @@ describe('Facet v1 Test Suites', () => {
           setupSelectLinkValue();
           typeFacetSearchQuery(FacetSelectors, query, true);
         }
-
+        beforeEach(setupSearchFor);
         describe('verify rendering', () => {
-          beforeEach(setupSearchFor);
-
           CommonAssertions.assertAccessibility(facetComponent);
           CommonFacetAssertions.assertNumberOfIdleLinkValues(
             FacetSelectors,
@@ -471,14 +431,12 @@ describe('Facet v1 Test Suites', () => {
 
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
-            setupSearchFor();
             AnalyticsTracker.reset();
             selectIdleLinkValueAt(FacetSelectors, 5);
           }
+          beforeEach(setupSelectSearchResult);
 
           describe('verify rendering', () => {
-            beforeEach(setupSelectSearchResult);
-
             CommonFacetAssertions.assertNumberOfIdleLinkValues(
               FacetSelectors,
               defaultNumberOfValues - 1
@@ -491,7 +449,6 @@ describe('Facet v1 Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            beforeEach(setupSelectSearchResult);
             FacetAssertions.assertLogFacetSelect(field, 0);
           });
         });
@@ -505,10 +462,8 @@ describe('Facet v1 Test Suites', () => {
         .with(addFacet({field, label, 'display-values-as': 'box'}))
         .init();
     }
-
+    beforeEach(setupWithBoxValues);
     describe('verify rendering', () => {
-      beforeEach(setupWithBoxValues);
-
       CommonAssertions.assertAccessibility(facetComponent);
       CommonFacetAssertions.assertDisplayValues(FacetSelectors, true);
       FacetAssertions.assertNumberOfSelectedBoxValues(0);
@@ -520,13 +475,11 @@ describe('Facet v1 Test Suites', () => {
     describe('when selecting a value', () => {
       const selectionIndex = 2;
       function setupSelectBoxValue() {
-        setupWithBoxValues();
         selectIdleBoxValueAt(selectionIndex);
       }
+      beforeEach(setupSelectBoxValue);
 
       describe('verify rendering', () => {
-        beforeEach(setupSelectBoxValue);
-
         CommonAssertions.assertAccessibility(facetComponent);
         CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
         FacetAssertions.assertNumberOfSelectedBoxValues(1);
@@ -534,20 +487,17 @@ describe('Facet v1 Test Suites', () => {
       });
 
       describe('verify analytics', () => {
-        beforeEach(setupSelectBoxValue);
         FacetAssertions.assertLogFacetSelect(field, selectionIndex);
       });
 
       describe('when selecting a second value', () => {
         const secondSelectionIndex = 0;
         function setupSelectSecondBoxValue() {
-          setupSelectBoxValue();
           selectIdleBoxValueAt(secondSelectionIndex);
         }
+        beforeEach(setupSelectSecondBoxValue);
 
         describe('verify rendering', () => {
-          beforeEach(setupSelectSecondBoxValue);
-
           CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
           FacetAssertions.assertNumberOfSelectedBoxValues(2);
           FacetAssertions.assertNumberOfIdleBoxValues(
@@ -556,20 +506,16 @@ describe('Facet v1 Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          beforeEach(setupSelectSecondBoxValue);
-
           FacetAssertions.assertLogFacetSelect(field, secondSelectionIndex);
         });
 
         describe('when selecting the "Clear" button', () => {
           function setupClearBoxValues() {
-            setupSelectSecondBoxValue();
             pressClearButton(FacetSelectors);
           }
+          beforeEach(setupClearBoxValues);
 
           describe('verify rendering', () => {
-            beforeEach(setupClearBoxValues);
-
             CommonFacetAssertions.assertDisplayClearButton(
               FacetSelectors,
               false
@@ -579,8 +525,6 @@ describe('Facet v1 Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            beforeEach(setupClearBoxValues);
-
             CommonFacetAssertions.assertLogClearFacetValues(field);
           });
         });
@@ -589,13 +533,11 @@ describe('Facet v1 Test Suites', () => {
       describe('when searching for a value that returns results', () => {
         const query = 'e';
         function setupSearchFor() {
-          setupSelectBoxValue();
           typeFacetSearchQuery(FacetSelectors, query, true);
         }
+        beforeEach(setupSearchFor);
 
         describe('verify rendering', () => {
-          beforeEach(setupSearchFor);
-
           CommonAssertions.assertAccessibility(facetComponent);
           FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues);
           FacetAssertions.assertNumberOfSelectedBoxValues(0);
@@ -604,14 +546,12 @@ describe('Facet v1 Test Suites', () => {
 
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
-            setupSearchFor();
             AnalyticsTracker.reset();
             selectIdleBoxValueAt(5);
           }
+          beforeEach(setupSelectSearchResult);
 
           describe('verify rendering', () => {
-            beforeEach(setupSelectSearchResult);
-
             FacetAssertions.assertNumberOfIdleBoxValues(
               defaultNumberOfValues - 2
             );
@@ -620,7 +560,6 @@ describe('Facet v1 Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            beforeEach(setupSelectSearchResult);
             FacetAssertions.assertLogFacetSelect(field, 0);
           });
         });
@@ -641,10 +580,9 @@ describe('Facet v1 Test Suites', () => {
         .init();
       pressShowMore(FacetSelectors);
     }
+    beforeEach(() => setupSelectShowMore('automatic'));
 
     describe('verify rendering', () => {
-      beforeEach(() => setupSelectShowMore('automatic'));
-
       CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
       CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, true);
       FacetAssertions.assertValuesSortedAlphanumerically();
@@ -692,9 +630,8 @@ describe('Facet v1 Test Suites', () => {
         cy.wait(TestFixture.interceptAliases.Search);
       }
 
+      beforeEach(setupRepeatShowMore);
       describe('verify rendering', () => {
-        beforeEach(setupRepeatShowMore);
-
         CommonFacetAssertions.assertDisplayShowMoreButton(
           FacetSelectors,
           false
@@ -709,9 +646,8 @@ describe('Facet v1 Test Suites', () => {
         pressShowLess(FacetSelectors);
       }
 
+      beforeEach(setupSelectShowLess);
       describe('verify rendering', () => {
-        beforeEach(setupSelectShowLess);
-
         CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
         CommonFacetAssertions.assertDisplayShowLessButton(
           FacetSelectors,
@@ -724,8 +660,6 @@ describe('Facet v1 Test Suites', () => {
       });
 
       describe('verify analytics', () => {
-        beforeEach(setupSelectShowLess);
-
         FacetAssertions.assertLogFacetShowLess(field);
       });
     });
@@ -919,23 +853,21 @@ describe('Facet v1 Test Suites', () => {
         .with(addFacet({field, label}))
         .init();
     }
+    beforeEach(setupBreadboxWithFacet);
+
     describe('verify rendering', () => {
-      beforeEach(setupBreadboxWithFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
     });
 
     describe('when selecting a value', () => {
       const selectionIndex = 2;
       function setupSelectedFacet() {
-        setupBreadboxWithFacet();
         selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
+        cy.wait(TestFixture.interceptAliases.Search);
       }
+      beforeEach(setupSelectedFacet);
 
       describe('verify rendering', () => {
-        beforeEach(() => {
-          setupSelectedFacet();
-          cy.wait(TestFixture.interceptAliases.Search);
-        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -949,20 +881,16 @@ describe('Facet v1 Test Suites', () => {
       describe('when deselecting a facetValue on breadcrumb', () => {
         const deselectionIndex = 0;
         function setupDeselectFacetValue() {
-          setupSelectedFacet();
           deselectBreadcrumbAtIndex(deselectionIndex);
+          cy.wait(TestFixture.interceptAliases.Search);
         }
+        beforeEach(setupDeselectFacetValue);
 
         describe('verify rendering', () => {
-          beforeEach(() => {
-            setupDeselectFacetValue();
-            cy.wait(TestFixture.interceptAliases.Search);
-          });
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
 
         describe('verify analytic', () => {
-          beforeEach(setupDeselectFacetValue);
           BreadboxAssertions.assertLogBreadcrumbFacet(field);
         });
 
@@ -986,9 +914,9 @@ describe('Facet v1 Test Suites', () => {
           BreadboxSelectors.breadcrumbButton().should('have.length', i + 1);
         });
       }
+      beforeEach(setupSelectedMulitpleFacets);
 
       describe('verify rendering', () => {
-        beforeEach(setupSelectedMulitpleFacets);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
