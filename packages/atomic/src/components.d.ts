@@ -397,7 +397,6 @@ export namespace Components {
         "sortCriteria": InsightFacetSortCriterion;
     }
     interface AtomicInsightFullSearchButton {
-        "clickCallback": () => void;
         "tooltip": string;
     }
     interface AtomicInsightHistoryToggle {
@@ -3142,7 +3141,6 @@ declare namespace LocalJSX {
         "sortCriteria"?: InsightFacetSortCriterion;
     }
     interface AtomicInsightFullSearchButton {
-        "clickCallback"?: () => void;
         "tooltip"?: string;
     }
     interface AtomicInsightHistoryToggle {

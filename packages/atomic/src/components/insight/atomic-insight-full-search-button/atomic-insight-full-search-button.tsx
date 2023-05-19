@@ -1,6 +1,11 @@
-import {Component, h, Prop} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import ArrowFull from '../../../images/arrow-full.svg';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
 import {IconButton} from '../../common/iconButton';
+import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
@@ -10,10 +15,11 @@ import {IconButton} from '../../common/iconButton';
   styleUrl: 'atomic-insight-full-search-button.pcss',
   shadow: true,
 })
-export class AtomicInsightFullSearchButton {
-  @Prop({mutable: true}) public clickCallback: () => void = () => {};
-
+export class AtomicInsightFullSearchButton implements InitializableComponent {
   @Prop({mutable: true}) public tooltip = '';
+
+  @InitializeBindings() public bindings!: Bindings;
+  @State() public error!: Error;
 
   public render() {
     return (
@@ -21,8 +27,7 @@ export class AtomicInsightFullSearchButton {
         partPrefix="full-search"
         style="outline-neutral"
         icon={ArrowFull}
-        ariaLabel="full-search"
-        onClick={this.clickCallback}
+        ariaLabel={this.bindings.i18n.t('full-search')}
         title={this.tooltip}
       />
     );

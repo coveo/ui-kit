@@ -1,28 +1,20 @@
 @import '../../../global/global.pcss';
 
 :host {
+  --full-search-background-color: #949aa2;
+  --full-search-secondary-background-color: #706e6b;
   &::part(full-search-button) {
-    background-color: #949aa2;
-    height: 27px;
-    width: 27.75px;
+    @apply h-[27px] w-[27px] border-none rounded-none;
+    background-color: var(--full-search-background-color);
     clip-path: polygon(0 0, 100% 100%, 100% 0);
-    border-radius: 0;
-    border: none;
-    position: absolute;
-    top: 0;
-    right: 0;
   }
 
   &::part(full-search-button):hover {
-    background-color: #706e6b;
-    border-color: #706e6b;
+    background-color: var(--full-search-secondary-background-color);
+    border-color: var(--full-search-secondary-background-color);
   }
 
   &::part(full-search-icon) {
-    height: 9px;
-    width: 9.25px;
-    position: absolute;
-    top: 4.11px;
-    left: 15px;
+    @apply h-[9px] w-[9px] absolute top-[4px] left-[15px];
   }
 }

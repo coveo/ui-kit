@@ -9,6 +9,8 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
+      import {initializeBindings} from '/build/index.esm.js';
+
       async function main() {
         await customElements.whenDefined('atomic-insight-interface');
         const insightInterface = document.querySelector('atomic-insight-interface');
@@ -44,7 +46,10 @@
   <body>
     <button id="widget-view">Toggle widget view</button>
     <atomic-insight-interface fields-to-include='["sfid"]'>
-      <atomic-insight-full-search-button tooltip="Full Search Button Tooltip"></atomic-insight-full-search-button>
+      <atomic-insight-full-search-button
+        slot="full-search"
+        tooltip="Full Search Button Tooltip"
+      ></atomic-insight-full-search-button>
       <atomic-insight-layout>
         <atomic-layout-section section="search">
           <atomic-insight-search-box></atomic-insight-search-box>
