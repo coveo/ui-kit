@@ -59,7 +59,7 @@ export const buildInsightSearchRequest = (
     filterField: state.folding?.fields.collection,
     childField: state.folding?.fields.parent,
     parentField: state.folding?.fields.child,
-    filterFieldRange: 100,
+    filterFieldRange: state.folding?.filterFieldRange,
   });
 };
 

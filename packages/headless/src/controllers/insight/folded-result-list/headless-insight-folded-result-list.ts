@@ -1,5 +1,5 @@
 import {insightFoldedResultAnalyticsClient} from '../../../features/folding/folding-insight-analytics-actions';
-import {loadCollection} from '../../../features/insight-folding/insight-folding-actions';
+import {loadCollection} from '../../../features/folding/insight-folding-actions';
 import {InsightEngine} from '../../../insight.index';
 import {
   CoreFoldedResultListState,

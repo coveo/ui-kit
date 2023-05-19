@@ -155,7 +155,7 @@ export interface FoldedResultAnalyticsClient {
 }
 
 /**
- * Creates a `FoldedResultList` controller instance.
+ * Creates a core `FoldedResultList` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `FoldedResultList` properties.
