@@ -41,9 +41,8 @@ describe('Color Facet Test Suites', () => {
         .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
         .init();
     }
-
+    beforeEach(setupColorFacet);
     describe('verify rendering', () => {
-      beforeEach(setupColorFacet);
       CommonAssertions.assertAccessibility(colorFacetComponent);
       CommonAssertions.assertContainsComponentError(ColorFacetSelectors, false);
       CommonFacetAssertions.assertLabelContains(
@@ -65,12 +64,11 @@ describe('Color Facet Test Suites', () => {
     describe('when selecting a value', () => {
       const selectionIndex = 2;
       function setupSelectBoxValue() {
-        setupColorFacet();
         selectIdleBoxValueAt(selectionIndex);
       }
 
+      beforeEach(setupSelectBoxValue);
       describe('verify rendering', () => {
-        beforeEach(setupSelectBoxValue);
         CommonAssertions.assertAccessibility(colorFacetComponent);
         CommonFacetAssertions.assertDisplayClearButton(
           ColorFacetSelectors,
@@ -83,7 +81,6 @@ describe('Color Facet Test Suites', () => {
       });
 
       describe('verify analytics', () => {
-        beforeEach(setupSelectBoxValue);
         ColorFacetAssertions.assertLogColorFacetSelect(
           colorFacetField,
           selectionIndex
@@ -93,13 +90,11 @@ describe('Color Facet Test Suites', () => {
       describe('when selecting a second value', () => {
         const secondSelectionIndex = 0;
         function setupSelectSecondBoxValue() {
-          setupSelectBoxValue();
           selectIdleBoxValueAt(secondSelectionIndex);
         }
 
+        beforeEach(setupSelectSecondBoxValue);
         describe('verify rendering', () => {
-          beforeEach(setupSelectSecondBoxValue);
-
           CommonFacetAssertions.assertDisplayClearButton(
             ColorFacetSelectors,
             true
@@ -111,8 +106,6 @@ describe('Color Facet Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          beforeEach(setupSelectSecondBoxValue);
-
           ColorFacetAssertions.assertLogColorFacetSelect(
             colorFacetField,
             secondSelectionIndex
@@ -121,13 +114,11 @@ describe('Color Facet Test Suites', () => {
 
         describe('when selecting the "Clear" button', () => {
           function setupClearBoxValues() {
-            setupSelectSecondBoxValue();
             pressClearButton(ColorFacetSelectors);
           }
 
+          beforeEach(setupClearBoxValues);
           describe('verify rendering', () => {
-            beforeEach(setupClearBoxValues);
-
             CommonFacetAssertions.assertDisplayClearButton(
               ColorFacetSelectors,
               false
@@ -140,8 +131,6 @@ describe('Color Facet Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            beforeEach(setupClearBoxValues);
-
             CommonFacetAssertions.assertLogClearFacetValues(colorFacetField);
           });
         });
@@ -150,13 +139,11 @@ describe('Color Facet Test Suites', () => {
       describe('when searching for a value that returns results', () => {
         const query = 'html';
         function setupSearchFor() {
-          setupSelectBoxValue();
           typeFacetSearchQuery(ColorFacetSelectors, query, true);
         }
 
+        beforeEach(setupSearchFor);
         describe('verify rendering', () => {
-          beforeEach(setupSearchFor);
-
           CommonAssertions.assertAccessibility(colorFacetComponent);
           ColorFacetAssertions.assertNumberOfIdleBoxValues(1);
           CommonFacetAssertions.assertDisplaySearchClearButton(
@@ -171,13 +158,12 @@ describe('Color Facet Test Suites', () => {
 
         describe('when selecting a search result', () => {
           function setupSelectSearchResult() {
-            setupSearchFor();
             AnalyticsTracker.reset();
             selectIdleBoxValueAt(0);
           }
 
+          beforeEach(setupSelectSearchResult);
           describe('verify rendering', () => {
-            beforeEach(setupSelectSearchResult);
             ColorFacetAssertions.assertNumberOfSelectedBoxValues(2);
             ColorFacetAssertions.assertNumberOfIdleBoxValues(
               colorFacetDefaultNumberOfValues - 2
@@ -186,7 +172,6 @@ describe('Color Facet Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            beforeEach(setupSelectSearchResult);
             ColorFacetAssertions.assertLogColorFacetSelect(colorFacetField, 0);
           });
         });
@@ -210,6 +195,7 @@ describe('Color Facet Test Suites', () => {
 
     describe('verify rendering', () => {
       beforeEach(() => setupSelectShowMore('automatic'));
+      CommonFacetAssertions.assertFocusBoxValue(ColorFacetSelectors, 0);
       CommonFacetAssertions.assertDisplayShowMoreButton(
         ColorFacetSelectors,
         true
@@ -223,12 +209,10 @@ describe('Color Facet Test Suites', () => {
       ColorFacetAssertions.assertNumberOfIdleBoxValues(
         colorFacetDefaultNumberOfValues * 2
       );
-      CommonFacetAssertions.assertFocusBoxValue(ColorFacetSelectors, 0);
     });
 
     describe("when the sort order isn't automatic", () => {
       beforeEach(() => setupSelectShowMore('alphanumeric'));
-
       CommonFacetAssertions.assertFocusBoxValue(
         ColorFacetSelectors,
         colorFacetDefaultNumberOfValues
@@ -274,8 +258,8 @@ describe('Color Facet Test Suites', () => {
         pressShowLess(ColorFacetSelectors);
       }
 
+      beforeEach(setupSelectShowLess);
       describe('verify rendering', () => {
-        beforeEach(setupSelectShowLess);
         CommonAssertions.assertAccessibility(colorFacetComponent);
         CommonFacetAssertions.assertDisplayShowMoreButton(
           ColorFacetSelectors,
@@ -291,7 +275,6 @@ describe('Color Facet Test Suites', () => {
       });
 
       describe('verify analytics', () => {
-        beforeEach(setupSelectShowLess);
         FacetAssertions.assertLogFacetShowLess(colorFacetField);
       });
     });
@@ -306,8 +289,8 @@ describe('Color Facet Test Suites', () => {
       pressLabelButton(ColorFacetSelectors, true);
     }
 
+    beforeEach(setupSelectLabelCollapse);
     describe('verify rendering', () => {
-      beforeEach(setupSelectLabelCollapse);
       CommonFacetAssertions.assertDisplayFacet(ColorFacetSelectors, true);
       CommonAssertions.assertAccessibility(colorFacetComponent);
       CommonAssertions.assertContainsComponentError(ColorFacetSelectors, false);
@@ -335,7 +318,6 @@ describe('Color Facet Test Suites', () => {
 
     describe('when selecting the label button to expand', () => {
       function setupSelectLabelExpand() {
-        setupSelectLabelCollapse();
         ColorFacetSelectors.labelButton().click();
       }
 
@@ -366,9 +348,8 @@ describe('Color Facet Test Suites', () => {
         .init();
     }
 
+    beforeEach(setupCustomNumberOfValues);
     describe('verify rendering', () => {
-      beforeEach(setupCustomNumberOfValues);
-
       ColorFacetAssertions.assertNumberOfIdleBoxValues(numberOfValues);
       CommonFacetAssertions.assertDisplayShowMoreButton(
         ColorFacetSelectors,
@@ -382,7 +363,6 @@ describe('Color Facet Test Suites', () => {
 
     describe('when selecting the "Show More" button', () => {
       beforeEach(() => {
-        setupCustomNumberOfValues();
         pressShowMore(ColorFacetSelectors);
       });
 
@@ -533,8 +513,8 @@ describe('Color Facet Test Suites', () => {
         .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
         .init();
     }
+    beforeEach(setupBreadboxWithColorFacet);
     describe('verify rendering', () => {
-      beforeEach(setupBreadboxWithColorFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
     });
 
@@ -542,15 +522,13 @@ describe('Color Facet Test Suites', () => {
       const selectionIndex = 2;
 
       function setupSelectedColorFacet() {
-        setupBreadboxWithColorFacet();
         selectIdleBoxValueAt(selectionIndex);
+        cy.wait(TestFixture.interceptAliases.Search);
       }
 
+      beforeEach(setupSelectedColorFacet);
+
       describe('verify rendering', () => {
-        beforeEach(() => {
-          setupSelectedColorFacet();
-          cy.wait(TestFixture.interceptAliases.Search);
-        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -562,14 +540,12 @@ describe('Color Facet Test Suites', () => {
       describe('when deselecting a facetValue on breadcrumb', () => {
         const deselectionIndex = 0;
         function setupDeselectColorFacetValue() {
-          setupSelectedColorFacet();
           deselectBreadcrumbAtIndex(deselectionIndex);
+          cy.wait(TestFixture.interceptAliases.Search);
         }
 
-        beforeEach(() => {
-          setupDeselectColorFacetValue();
-          cy.wait(TestFixture.interceptAliases.Search);
-        });
+        beforeEach(setupDeselectColorFacetValue);
+
         BreadboxAssertions.assertDisplayBreadcrumb(false);
         BreadboxAssertions.assertLogBreadcrumbFacet(colorFacetField);
         ColorFacetAssertions.assertNumberOfSelectedBoxValues(0);
@@ -579,18 +555,15 @@ describe('Color Facet Test Suites', () => {
     describe('when select 3 facetValues', () => {
       const positions = [0, 1, 2];
       function setupSelectedMulitpleColorFacets() {
-        setupBreadboxWithColorFacet();
         positions.forEach((position, i) => {
           selectIdleBoxValueAt(position);
           BreadboxSelectors.breadcrumbButton().should('have.length', i + 1);
         });
+        cy.wait(TestFixture.interceptAliases.Search);
       }
 
+      beforeEach(setupSelectedMulitpleColorFacets);
       describe('verify rendering', () => {
-        beforeEach(() => {
-          setupSelectedMulitpleColorFacets();
-          cy.wait(TestFixture.interceptAliases.Search);
-        });
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
