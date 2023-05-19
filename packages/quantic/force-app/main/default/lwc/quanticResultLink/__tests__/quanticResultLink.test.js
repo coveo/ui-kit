@@ -96,6 +96,7 @@ describe('c-quantic-result-link', () => {
       });
     });
   });
+
   describe('when the result is NOT of type salesforce', () => {
     it('should open the result link in the current browser tab', async () => {
       const element = createTestComponent({...mockDefaultResult});
@@ -108,5 +109,20 @@ describe('c-quantic-result-link', () => {
       );
       expect(link.getAttribute('target')).toEqual('_self');
     });
+
+    describe('with a custom value for the target property', () => {
+      it('should open the result link based on the value of the target property', async () => {
+        const customTarget = "_blank";
+        const element = createTestComponent({...mockDefaultResult, target: customTarget});
+        await flushPromises();
+  
+        const link = element.shadowRoot.querySelector('a');
+  
+        expect(link.getAttribute('href')).toEqual(
+          mockDefaultResult.result.clickUri
+        );
+        expect(link.getAttribute('target')).toEqual(customTarget);
+      });
+    })
   });
 });

@@ -149,7 +149,7 @@ export default class QuanticResultLink extends NavigationMixin(
     if (this.isSalesforceLink) {
       return '_blank';
     }
-    return '_self';
+    return this.target;
   }
 
   /**
