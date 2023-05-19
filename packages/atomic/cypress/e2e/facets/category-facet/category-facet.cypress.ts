@@ -136,13 +136,12 @@ describe('Category Facet Test Suites', () => {
       });
 
       describe('when selecting the "Show more" button', () => {
-        function setupShowMore() {
+        beforeEach(() => {
           setupGoDeeperOneLevel();
           pressShowMore(CategoryFacetSelectors);
-        }
+        });
 
         describe('verify rendering', () => {
-          beforeEach(setupShowMore);
           CategoryFacetAssertions.assertNumberOfChildValues(
             defaultNumberOfValues * 2
           );
@@ -153,18 +152,15 @@ describe('Category Facet Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          beforeEach(setupShowMore);
           CategoryFacetAssertions.assertLogFacetShowMore();
         });
 
         describe('when selecting the "Show less" button', () => {
-          function setupShowLess() {
-            setupShowMore();
+          beforeEach(() => {
             pressShowLess(CategoryFacetSelectors);
-          }
+          });
 
           describe('verify rendering', () => {
-            beforeEach(setupShowLess);
             CategoryFacetAssertions.assertNumberOfChildValues(
               defaultNumberOfValues
             );
@@ -175,7 +171,6 @@ describe('Category Facet Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            beforeEach(setupShowLess);
             CategoryFacetAssertions.assertLogFacetShowLess();
           });
         });
@@ -186,16 +181,14 @@ describe('Category Facet Test Suites', () => {
           setupGoDeeperOneLevel();
           pressAllCategoriesButton();
         }
-
+        beforeEach(setupClear);
         describe('verify rendering', () => {
-          beforeEach(setupClear);
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
           CategoryFacetAssertions.assertNumberOfParentValues(0);
           CategoryFacetAssertions.assertNoPathInUrl();
         });
 
         describe('verify analytics', () => {
-          beforeEach(setupClear);
           CategoryFacetAssertions.assertLogClearFacetValues();
         });
       });
@@ -205,16 +198,14 @@ describe('Category Facet Test Suites', () => {
           setupGoDeeperOneLevel();
           pressActiveParent();
         }
-
+        beforeEach(setupClear);
         describe('verify rendering', () => {
-          beforeEach(setupClear);
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
           CategoryFacetAssertions.assertNumberOfParentValues(0);
           CategoryFacetAssertions.assertNoPathInUrl();
         });
 
         describe('verify analytics', () => {
-          beforeEach(setupClear);
           CategoryFacetAssertions.assertLogClearFacetValues();
         });
       });
@@ -258,9 +249,8 @@ describe('Category Facet Test Suites', () => {
         selectChildValueAt(canadaHierarchyIndex[2]);
         selectChildValueAt(canadaHierarchyIndex[3]);
       }
-
+      beforeEach(setupGoDeeperLastLevel);
       describe('verify rendering', () => {
-        beforeEach(setupGoDeeperLastLevel);
         CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
         CategoryFacetAssertions.assertNumberOfParentValues(4);
         CategoryFacetAssertions.assertNumberOfChildValues(0);
@@ -278,20 +268,18 @@ describe('Category Facet Test Suites', () => {
       });
 
       describe('verify analytics', () => {
-        beforeEach(setupGoDeeperLastLevel);
         CategoryFacetAssertions.assertLogFacetSelect(canadaHierarchy);
       });
 
       describe('when selecting the first parent button', () => {
         function setupSelectFirstParent() {
-          setupGoDeeperLastLevel();
           pressParentButton(0);
         }
 
+        beforeEach(setupSelectFirstParent);
         const selectedPath = canadaHierarchy.slice(0, 1);
 
         describe('verify rendering', () => {
-          beforeEach(setupSelectFirstParent);
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
           CategoryFacetAssertions.assertNumberOfParentValues(1);
           CategoryFacetAssertions.assertNumberOfChildValues(
@@ -309,18 +297,15 @@ describe('Category Facet Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          beforeEach(setupSelectFirstParent);
           CategoryFacetAssertions.assertLogFacetSelect(selectedPath);
         });
 
         describe('when selecting the label button to collapse', () => {
           function setupSelectLabelCollapse() {
-            setupSelectFirstParent();
             pressLabelButton(CategoryFacetSelectors, true);
           }
-
+          beforeEach(setupSelectLabelCollapse);
           describe('verify rendering', () => {
-            beforeEach(setupSelectLabelCollapse);
             CommonFacetAssertions.assertDisplayFacet(
               CategoryFacetSelectors,
               true
@@ -346,7 +331,6 @@ describe('Category Facet Test Suites', () => {
 
           describe('when selecting the label button to expand', () => {
             function setupSelectLabelExpand() {
-              setupSelectLabelCollapse();
               CategoryFacetSelectors.labelButton().click();
             }
 
@@ -371,10 +355,8 @@ describe('Category Facet Test Suites', () => {
               setupSelectLabelCollapse();
               pressClearButton(CategoryFacetSelectors);
             }
-
+            beforeEach(setupClearBoxValues);
             describe('verify rendering', () => {
-              beforeEach(setupClearBoxValues);
-
               CommonFacetAssertions.assertDisplayClearButton(
                 CategoryFacetSelectors,
                 false
@@ -383,7 +365,6 @@ describe('Category Facet Test Suites', () => {
 
             describe('verify analytics', () => {
               beforeEach(setupClearBoxValues);
-
               CategoryFacetAssertions.assertLogClearFacetValues();
             });
           });
@@ -457,9 +438,8 @@ describe('Category Facet Test Suites', () => {
           setupShowMore();
           pressShowLess(CategoryFacetSelectors);
         }
-
+        beforeEach(setupShowLess);
         describe('verify rendering', () => {
-          beforeEach(setupShowLess);
           CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues);
           CommonFacetAssertions.assertDisplayShowMoreButton(
             CategoryFacetSelectors,
@@ -472,7 +452,6 @@ describe('Category Facet Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          beforeEach(setupShowLess);
           CategoryFacetAssertions.assertLogFacetShowLess();
         });
       });
