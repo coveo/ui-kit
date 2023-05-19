@@ -87,7 +87,7 @@ export class InsightAPIClient {
   ): Promise<InsightAPIResponse<SearchResponseSuccess>> {
     const response = await PlatformClient.call({
       ...buildInsightQueryRequest(req),
-      requestMetadata: {method: 'search', origin: options?.origin},
+      requestMetadata: {method: 'query', origin: options?.origin},
       ...this.options,
     });
 
