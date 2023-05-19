@@ -42,12 +42,13 @@ export class AtomicResultImage implements InitializableComponent {
   }
 
   private handleImageError() {
-    let message =
-      'The image url is not valid. You might want to add a "fallback" property.';
+    const currentImageUrl = this.host.querySelector('img')!.src;
+    let message = `The image url : ${currentImageUrl}  is not valid or could not be loaded.`;
 
     if (this.fallback) {
-      message = 'The image url is not valid or could not be loaded.';
       this.host.querySelector('img')!.src = this.fallback;
+    } else {
+      message += ' You might want to add a "fallback" property.';
     }
     this.bindings.engine.logger.error(message, this.host);
   }
