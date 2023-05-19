@@ -41,6 +41,10 @@ export class AtomicResultImage implements InitializableComponent {
     return Array.isArray(value) ? value[0] : value;
   }
 
+  private logWarning(message: string) {
+    this.bindings.engine.logger.warn(message, this.host);
+  }
+
   private handleImageError(target: EventTarget | null) {
     const image = target as HTMLImageElement;
 
@@ -51,17 +55,14 @@ export class AtomicResultImage implements InitializableComponent {
     if (this.fallback) {
       image.src = this.fallback;
     } else {
-      this.bindings.engine.logger.warn(
-        `The image url "${image.src}" is not valid or could not be loaded. You might want to add a "fallback" property.`,
-        this.host
-      );
+      const message = `The image url "${image.src}" is not valid or could not be loaded. You might want to add a "fallback" property.`;
+      this.logWarning(message);
     }
   }
 
   private handleMissingFallback(message: string) {
     if (!this.fallback) {
-      message += ' You might want to add a "fallback" property.';
-      this.bindings.engine.logger.warn(message, this.host);
+      this.logWarning(message);
       this.host.remove();
       return null;
     }
@@ -72,7 +73,7 @@ export class AtomicResultImage implements InitializableComponent {
     let url = this.url;
 
     if (!url) {
-      const message = `"${this.field}" is missing. Please review your indexation.`;
+      const message = `"${this.field}" is missing. Please review your indexation. You might want to add a "fallback" property.`;
       url = this.handleMissingFallback(message);
       if (!url) {
         return;
@@ -80,7 +81,7 @@ export class AtomicResultImage implements InitializableComponent {
     }
 
     if (url && typeof url !== 'string') {
-      const message = `Expected "${this.field}" to be a text field. Please review your indexation.`;
+      const message = `Expected "${this.field}" to be a text field. Please review your indexation. You might want to add a "fallback" property.`;
       url = this.handleMissingFallback(message);
       if (!url) {
         return;
