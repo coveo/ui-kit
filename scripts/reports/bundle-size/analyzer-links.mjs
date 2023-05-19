@@ -24,10 +24,10 @@ function getBrowserStatsFilePaths(dir) {
 export function buildAnalyserLinksReport() {
   const links = getAnalyzerLinks();
   return `
-    **Links to analyser**
+    **Links to bundle analyser**
 
     ${links.map(({useCase, statsAsBase64}) => {
-      return `- [${useCase}](http://127.0.0.1:8000/analyze/#${statsAsBase64})`;
+      return `- [${useCase}](https://shiny-journey-m5j8nee.pages.github.io/)`;
     })}
     `;
 }
