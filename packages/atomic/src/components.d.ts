@@ -672,7 +672,7 @@ export namespace Components {
     }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
-        "isOpen": boolean;
+        "isOpen"?: boolean;
     }
     interface AtomicIpxButton {
         /**
