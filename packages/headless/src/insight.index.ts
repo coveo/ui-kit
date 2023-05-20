@@ -282,6 +282,7 @@ export type {
   SmartSnippetQuestionsListProps,
   SmartSnippetQuestionsListState,
   SmartSnippetQuestionsList,
+  SmartSnippetRelatedQuestion,
   CoreSmartSnippetQuestionsList,
   CoreSmartSnippetQuestionsListState,
 } from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
