@@ -145,7 +145,7 @@ export default class QuanticResultLink extends NavigationMixin(LightningElement)
     if (this.isSalesforceLink) {
       return '_blank';
     }
-    return '_self';
+    return this.target;
   }
 
   /**
