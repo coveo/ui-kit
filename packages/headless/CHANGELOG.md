@@ -1,3 +1,12 @@
+## 2.17.1 (2023-05-23)
+
+
+### Features
+
+* **atomic:** added smart snippet components for insight panels ([#2908](https://github.com/coveo/ui-kit/issues/2908)) ([b63c79d](https://github.com/coveo/ui-kit/commits/b63c79d33e27d20428f10aaa6f6d93b95f1d8fe1))
+
+
+
 # Change Log
 
 All notable changes to this project will be documented in this file.

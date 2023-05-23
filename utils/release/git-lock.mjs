@@ -45,7 +45,7 @@ const ensureUpToDateBranch = async () => {
 const lockBranch = async () => {
   writeFileSync('.git-lock', '');
   await gitAdd('.git-lock');
-  await gitCommit('lock master', PATH);
+  await gitCommit('[skip ci]: lock master', PATH);
   await gitPush({remote: GIT_SSH_REMOTE});
   spawnSync('git', ['reset', '--hard', 'HEAD~1']);
 };
