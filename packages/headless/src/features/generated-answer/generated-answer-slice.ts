@@ -20,10 +20,12 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(sseError, (state) => {
         clearTimeout(state.timeout);
+        delete state.timeout;
         state.retryCount++;
       })
       .addCase(sseComplete, (state) => {
         clearTimeout(state.timeout);
+        delete state.timeout;
         state.retryCount = 0;
       })
       .addCase(resetAnswer, () => {
