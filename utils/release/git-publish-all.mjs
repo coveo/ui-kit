@@ -47,14 +47,11 @@ const GIT_SSH_REMOTE = 'deploy';
 
     ${packagesReleased}
 
-    **/README.md
     **/CHANGELOG.md
     **/package.json
-    README.md
     CHANGELOG.md
     package.json
     package-lock.json
-    packages/ui/cra-template/template.json
   `;
 
   // Craft the commit (complex process, see function)
