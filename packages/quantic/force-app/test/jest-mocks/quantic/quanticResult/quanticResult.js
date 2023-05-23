@@ -1,4 +1,4 @@
-import {LightningElement, api, track} from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 
 export default class QuanticResult extends LightningElement {
   @api engineId;
