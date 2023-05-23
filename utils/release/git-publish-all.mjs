@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 import {
-  getCurrentVersion,
   getCurrentBranchName,
   gitTag,
   gitDeleteRemoteBranch,
   gitPushTags,
-  npmBumpVersion,
   getSHA1fromRef,
   gitCreateBranch,
   gitCheckoutBranch,
@@ -17,27 +15,26 @@ import {
   gitSetRefOnCommit,
   gitPush,
 } from '@coveo/semantic-monorepo-tools';
+import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
 import {readFileSync} from 'fs';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
-import {REPO_NAME, REPO_OWNER} from './common/constants.mjs';
+import {
+  RELEASER_AUTH_SECRETS,
+  REPO_NAME,
+  REPO_OWNER,
+} from './common/constants.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
 const GIT_SSH_REMOTE = 'deploy';
 
 // Commit, tag and push
 (async () => {
-  const PATH = '.';
-
-  const octokit = new Octokit({auth: process.env.GITHUB_CREDENTIALS});
-
-  // Define release # andversion
-  const currentVersionTag = getCurrentVersion(PATH);
-  currentVersionTag.inc('prerelease');
-  const npmNewVersion = currentVersionTag.format();
-  // Write release version in the root package.json
-  await npmBumpVersion(npmNewVersion, PATH);
+  const octokit = new Octokit({
+    authStrategy: createAppAuth,
+    auth: RELEASER_AUTH_SECRETS,
+  });
 
   // Find all packages that have been released in this release.
   const packagesReleased = readFileSync('.git-message', {
@@ -50,14 +47,11 @@ const GIT_SSH_REMOTE = 'deploy';
 
     ${packagesReleased}
 
-    **/README.md
     **/CHANGELOG.md
     **/package.json
-    README.md
     CHANGELOG.md
     package.json
     package-lock.json
-    packages/ui/cra-template/template.json
   `;
 
   // Craft the commit (complex process, see function)
