@@ -1,1 +1,29 @@
-{"name":"@coveo/iife-samples","version":"0.1.0","private":true,"scripts":{"clean":"rimraf www/cdn","dev":"npm run build && npm run prod","prod":"serve www","build":"npm run clean && npm run build:assets","build:assets":"node build-assets.mjs","e2e:watch":"cypress open --browser chrome --e2e","e2e":"cypress run --browser chrome"},"dependencies":{"@coveo/headless":"2.17.1","@coveo/atomic":"2.30.1","@coveo/atomic-react":"2.2.33","react":"18.2.0","react-dom":"18.2.0","@babel/standalone":"7.21.2"},"devDependencies":{"cypress":"10.8.0","ncp":"2.0.0","serve":"14.2.0","resolve":"1.22.1","rimraf":"3.0.2"}}
+{
+  "name": "@coveo/iife-samples",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "clean": "rimraf www/cdn",
+    "dev": "npm run build && npm run prod",
+    "prod": "serve www",
+    "build": "npm run clean && npm run build:assets",
+    "build:assets": "node build-assets.mjs",
+    "e2e:watch": "cypress open --browser chrome --e2e",
+    "e2e": "cypress run --browser chrome"
+  },
+  "dependencies": {
+    "@coveo/headless": "2.17.1",
+    "@coveo/atomic": "2.30.1",
+    "@coveo/atomic-react": "2.2.33",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@babel/standalone": "7.21.2"
+  },
+  "devDependencies": {
+    "cypress": "10.8.0",
+    "ncp": "2.0.0",
+    "serve": "14.2.0",
+    "resolve": "1.22.1",
+    "rimraf": "3.0.2"
+  }
+}
