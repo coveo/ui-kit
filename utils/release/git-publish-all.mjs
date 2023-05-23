@@ -17,18 +17,26 @@ import {
   gitSetRefOnCommit,
   gitPush,
 } from '@coveo/semantic-monorepo-tools';
+import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
 import {readFileSync} from 'fs';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
-import {REPO_NAME, REPO_OWNER} from './common/constants.mjs';
+import {
+  RELEASER_AUTH_SECRETS,
+  REPO_NAME,
+  REPO_OWNER,
+} from './common/constants.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
 const GIT_SSH_REMOTE = 'deploy';
 
 // Commit, tag and push
 (async () => {
-  const octokit = new Octokit({auth: process.env.GITHUB_CREDENTIALS});
+  const octokit = new Octokit({
+    authStrategy: createAppAuth,
+    auth: RELEASER_AUTH_SECRETS,
+  });
 
   // Find all packages that have been released in this release.
   const packagesReleased = readFileSync('.git-message', {
