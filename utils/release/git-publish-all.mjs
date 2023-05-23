@@ -28,16 +28,7 @@ const GIT_SSH_REMOTE = 'deploy';
 
 // Commit, tag and push
 (async () => {
-  const PATH = '.';
-
   const octokit = new Octokit({auth: process.env.GITHUB_CREDENTIALS});
-
-  // Define release # andversion
-  const currentVersionTag = getCurrentVersion(PATH);
-  currentVersionTag.inc('prerelease');
-  const npmNewVersion = currentVersionTag.format();
-  // Write release version in the root package.json
-  await npmBumpVersion(npmNewVersion, PATH);
 
   // Find all packages that have been released in this release.
   const packagesReleased = readFileSync('.git-message', {
