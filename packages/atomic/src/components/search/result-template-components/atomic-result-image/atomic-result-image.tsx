@@ -62,24 +62,29 @@ export class AtomicResultImage implements InitializableComponent {
     return this.fallback;
   }
 
+  private validateUrl(url: string) {
+    if (!url) {
+      const message = `"${this.field}" is missing. Please review your indexation. You might want to add a "fallback" property.`;
+      return this.handleMissingFallback(message);
+    }
+
+    if (typeof url !== 'string') {
+      const message = `Expected "${this.field}" to be a text field. Please review your indexation. You might want to add a "fallback" property.`;
+      return this.handleMissingFallback(message);
+    }
+
+    return url;
+  }
   public render() {
     let url = this.useFallback ? this.fallback : this.url;
 
-    if (!url) {
-      const message = `"${this.field}" is missing. Please review your indexation. You might want to add a "fallback" property.`;
-      url = this.handleMissingFallback(message);
+    if (!this.useFallback) {
+      url = this.validateUrl(url);
       if (!url) {
         return;
       }
     }
 
-    if (url && typeof url !== 'string') {
-      const message = `Expected "${this.field}" to be a text field. Please review your indexation. You might want to add a "fallback" property.`;
-      url = this.handleMissingFallback(message);
-      if (!url) {
-        return;
-      }
-    }
     return (
       <img
         alt={`${this.field} image`}
