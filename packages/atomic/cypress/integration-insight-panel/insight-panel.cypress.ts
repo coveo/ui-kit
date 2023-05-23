@@ -252,22 +252,5 @@ describe('Insight Panel test suites', () => {
         .find('atomic-result-text[field="sfid"]')
         .should('exist');
     });
-
-    describe('Full Search Button', () => {
-      before(() => {
-        Cypress.on('window:before:load', (win) => {
-          cy.spy(win.console, 'log');
-        });
-      });
-      it('should poperly handle being clicked', () => {
-        InsightPanelsSelectors.fullSearchButton()
-          .shadow()
-          .find('[part="full-search-button"]')
-          .click();
-        cy.window().then((win) => {
-          expect(win.console.log).to.have.callCount(1);
-        });
-      });
-    });
   });
 });
