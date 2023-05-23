@@ -1,1 +1,29 @@
-{"name":"@coveo/atomic-next-samples","version":"0.0.0","private":true,"dependencies":{"@coveo/atomic":"2.30.1","@coveo/atomic-react":"2.2.33","@coveo/headless":"2.17.1","next":"13.2.3","react":"18.2.0","react-dom":"18.2.0"},"devDependencies":{"@types/node":"17.0.34","@types/react":"18.0.17","@types/react-dom":"18.0.6","cypress":"10.8.0","ncp":"2.0.0","typescript":"4.6.4"},"scripts":{"build":"tsc --noEmit && tsc --module commonjs --noEmit","dev":"npm run build:assets && npm run dev:nextjs","dev:nextjs":"next dev","build:assets":"ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets","e2e:watch":"cypress open --browser chrome --e2e","e2e":"cypress run --browser chrome"}}
+{
+  "name": "@coveo/atomic-next-samples",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@coveo/atomic": "2.30.1",
+    "@coveo/atomic-react": "2.2.33",
+    "@coveo/headless": "2.17.1",
+    "next": "13.2.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.34",
+    "@types/react": "18.0.17",
+    "@types/react-dom": "18.0.6",
+    "cypress": "10.8.0",
+    "ncp": "2.0.0",
+    "typescript": "4.6.4"
+  },
+  "scripts": {
+    "build": "tsc --noEmit && tsc --module commonjs --noEmit",
+    "dev": "npm run build:assets && npm run dev:nextjs",
+    "dev:nextjs": "next dev",
+    "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
+    "e2e:watch": "cypress open --browser chrome --e2e",
+    "e2e": "cypress run --browser chrome"
+  }
+}
