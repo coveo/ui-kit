@@ -17,6 +17,7 @@
     "commit": "git-cz",
     "bump:version": "node ./scripts/deploy/bump-version.mjs",
     "bump:version:major-prerelease": "node ./scripts/deploy/manual-major-prerelease.mjs",
+    "pre-commit": "lint-staged",
     "promote:npm:beta": "nx run-many --target=promote:npm:beta",
     "promote:npm:latest": "nx run-many --target=promote:npm:latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
