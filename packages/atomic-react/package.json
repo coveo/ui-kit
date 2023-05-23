@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "2.2.25",
+  "version": "2.2.31",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -15,6 +15,8 @@
     "build:bundles:cjs": "tsc -p tsconfig.cjs.json",
     "build:bundles:iife": "rollup --config rollup.config.mjs",
     "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:cjs\"  \"npm run build:bundles:iife\"",
+    "release:phase1": "npx -p=@coveo/release bump",
+    "release:phase2": "npx -p=@coveo/release npm-publish",
     "publish:npm:release": "node ../../scripts/deploy/publish.mjs release",
     "publish:npm:prerelease": "node ../../scripts/deploy/publish.mjs prerelease",
     "promote:npm:beta": "node ../../scripts/deploy/update-npm-tag.mjs beta",
@@ -29,10 +31,10 @@
     "recommendation/"
   ],
   "dependencies": {
-    "@coveo/atomic": "2.28.2"
+    "@coveo/atomic": "2.29.0"
   },
   "devDependencies": {
-    "@coveo/headless": "2.16.0",
+    "@coveo/headless": "2.16.5",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@rollup/plugin-replace": "^4.0.0",

@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.4...@coveo/headless@2.16.5) (2023-05-17)
+
+### Bug Fixes
+
+- **headless:** serialize and deserialize endInclusive parameters for range facets (numeric, dates) ([#2883](https://github.com/coveo/ui-kit/issues/2883)) ([ff411f0](https://github.com/coveo/ui-kit/commit/ff411f01157f32e68e62fa1a6a38e6f686cb900c))
+
+## [2.16.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.3...@coveo/headless@2.16.4) (2023-05-11)
+
+**Note:** Version bump only for package @coveo/headless
+
+## [2.16.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.2...@coveo/headless@2.16.3) (2023-05-11)
+
+**Note:** Version bump only for package @coveo/headless
+
+## [2.16.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.1...@coveo/headless@2.16.2) (2023-05-09)
+
+### Bug Fixes
+
+- **atomic,headless:** fix support for exact phrase stemming in quickview ([#2860](https://github.com/coveo/ui-kit/issues/2860)) ([a8be9fd](https://github.com/coveo/ui-kit/commit/a8be9fd222bdf187729c55b7b2574f2d0eeb961b))
+
+## [2.16.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.0...@coveo/headless@2.16.1) (2023-05-08)
+
+**Note:** Version bump only for package @coveo/headless
+
 # [2.16.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.15.0...@coveo/headless@2.16.0) (2023-05-04)
 
 ### Bug Fixes

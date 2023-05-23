@@ -7,6 +7,7 @@
       }
     }
   },
+  "plugins": ["@coveo/nx-plugin"],
   "namedInputs": {
     "sharedGlobals": [{"runtime": "node -v"}],
     "sharedTypescriptSources": [
@@ -49,6 +50,15 @@
     },
     "promote:sfdx": {
       "dependsOn": ["build"]
+    },
+    "release:phase1": {
+      "dependsOn": ["^release:phase1", "^release:phase2"]
+    },
+    "release:build": {
+      "dependsOn": ["^release:build", "release:phase1"]
+    },
+    "release:phase2": {
+      "dependsOn": ["release:build", "release:phase1"]
     }
   },
   "defaultBase": "master"

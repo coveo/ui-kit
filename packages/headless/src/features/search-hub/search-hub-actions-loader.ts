@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../app/engine';
-import {searchHub} from '../../app/reducers';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {setSearchHub} from './search-hub-actions';
 
 /**

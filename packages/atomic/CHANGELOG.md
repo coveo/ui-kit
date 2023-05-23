@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.29.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.7...@coveo/atomic@2.29.0) (2023-05-17)
+
+### Bug Fixes
+
+- **atomic:** use admin endpoints to redirect with relevance inspector ([#2885](https://github.com/coveo/ui-kit/issues/2885)) ([cb4a081](https://github.com/coveo/ui-kit/commit/cb4a08156be46f543abed7cee3049065ce4f608b))
+- **headless:** serialize and deserialize endInclusive parameters for range facets (numeric, dates) ([#2883](https://github.com/coveo/ui-kit/issues/2883)) ([ff411f0](https://github.com/coveo/ui-kit/commit/ff411f01157f32e68e62fa1a6a38e6f686cb900c))
+- prevent unnecessary query suggestions ([#2758](https://github.com/coveo/ui-kit/issues/2758)) ([117c2e7](https://github.com/coveo/ui-kit/commit/117c2e78f3ab9b196dfeb46e066eef5d154ed742))
+
+### Features
+
+- **atomic:** add a part on `facet-value-checkbox > atomic-icon` ([#2895](https://github.com/coveo/ui-kit/issues/2895)) ([0f83ca9](https://github.com/coveo/ui-kit/commit/0f83ca95676072c4d72b2126fc9be2b42fab2bb9))
+- **atomic:** refactored smart snippets components for reusability ([#2878](https://github.com/coveo/ui-kit/issues/2878)) ([fc5097d](https://github.com/coveo/ui-kit/commit/fc5097da971f803c72e6b8a7a19d7eb9331d4ea2))
+
+## [2.28.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.6...@coveo/atomic@2.28.7) (2023-05-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.28.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.5...@coveo/atomic@2.28.6) (2023-05-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.28.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.4...@coveo/atomic@2.28.5) (2023-05-09)
+
+### Bug Fixes
+
+- **atomic,headless:** fix support for exact phrase stemming in quickview ([#2860](https://github.com/coveo/ui-kit/issues/2860)) ([a8be9fd](https://github.com/coveo/ui-kit/commit/a8be9fd222bdf187729c55b7b2574f2d0eeb961b))
+
+## [2.28.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.3...@coveo/atomic@2.28.4) (2023-05-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+## [2.28.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.2...@coveo/atomic@2.28.3) (2023-05-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
 ## [2.28.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@2.28.1...@coveo/atomic@2.28.2) (2023-05-04)
 
 ### Bug Fixes

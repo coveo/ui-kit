@@ -1,6 +1,9 @@
 import {Result} from '../../api/search/search/result';
-import {search, folding, configuration, query} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {Raw} from '../../case-assist.index';
+import {foldingReducer as folding} from '../../features/folding/folding-slice';
+import {queryReducer as query} from '../../features/query/query-slice';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {buildMockResult} from '../../test';
 import {
   buildMockSearchAppEngine,

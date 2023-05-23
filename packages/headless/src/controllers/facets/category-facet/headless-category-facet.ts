@@ -1,12 +1,9 @@
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  configuration,
-  search,
-} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {
   logFacetUpdateSort,
   logFacetShowMore,
@@ -19,6 +16,7 @@ import {
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
