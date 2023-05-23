@@ -59,7 +59,7 @@ export default class QuanticRecentResultsList extends LightningElement {
    */
   @api target = '_self';
   /**
-   * indicates whether the card of the recent results list should be completely hidden when it is empty.
+   * Indicates whether the card of the recent results list should be completely hidden when it is empty.
    * @api
    * @type {boolean}
    */

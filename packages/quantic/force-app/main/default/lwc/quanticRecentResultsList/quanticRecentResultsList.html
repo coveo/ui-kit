@@ -4,7 +4,7 @@
   </template>
   <template if:false={showPlaceholder}>
     <template if:true={shouldDisplayRecentResultsCard}>
-      <c-quantic-card-container title={label} onheaderclick={toggleVisibility} onheaderkeydown={toggleVisibility}>
+      <c-quantic-card-container data-cy="recent-results-card" title={label} onheaderclick={toggleVisibility} onheaderkeydown={toggleVisibility}>
         <lightning-button-icon
           class="slds-p-bottom_small"
           slot="actions"

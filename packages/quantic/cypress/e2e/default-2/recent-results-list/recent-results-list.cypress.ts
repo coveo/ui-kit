@@ -16,6 +16,7 @@ interface RecentResultsListOptions {
   target: string;
   label: string;
   isCollapsed: boolean;
+  hideWhenEmpty: boolean;
 }
 
 describe('quantic-recent-results-list', () => {
@@ -137,6 +138,32 @@ describe('quantic-recent-results-list', () => {
 
         selectResults();
         Expect.targetContainsAtResult('1', customTarget);
+      });
+    });
+  });
+
+  describe('when there are no results', () => {
+    describe('when #hideWhenEmpty is set to false', () => {
+      it('should display an empty list', () => {
+        visitRecentResultsList({});
+
+        scope('when loading the page', () => {
+          Expect.displayRecentResultsCard(true);
+          Expect.displayResults(false);
+          Expect.displayEmptyList(true);
+        });
+      });
+    });
+  });
+
+  describe('when #hideWhenEmpty is set to true', () => {
+    it('should not display the recent results card', () => {
+      visitRecentResultsList({hideWhenEmpty: true});
+
+      scope('when loading the page', () => {
+        Expect.displayRecentResultsCard(false);
+        Expect.displayResults(false);
+        Expect.displayEmptyList(false);
       });
     });
   });
