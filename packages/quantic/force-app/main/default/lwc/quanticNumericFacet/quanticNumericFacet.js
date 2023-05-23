@@ -179,6 +179,8 @@ export default class QuanticNumericFacet extends LightningElement {
   focusTarget;
   /** @type {boolean} */
   focusShouldBeInFacet = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   /** @type {string} */
   start;
