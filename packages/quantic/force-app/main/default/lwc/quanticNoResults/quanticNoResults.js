@@ -1,15 +1,12 @@
+import {api, LightningElement, track} from 'lwc';
+import {initializeWithHeadless, registerComponentForInit, getHeadlessBundle,} from 'c/quanticHeadlessLoader';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+
 import noResultsForTitle from '@salesforce/label/c.quantic_NoResultsForTitle';
 import noResultsTitle from '@salesforce/label/c.quantic_NoResultsTitle';
 import noResultsWithFilters from '@salesforce/label/c.quantic_NoResultsWithFilters';
 import noResultsWithoutFilters from '@salesforce/label/c.quantic_NoResultsWithoutFilters';
 import undoLastAction from '@salesforce/label/c.quantic_UndoLastAction';
-import {
-  initializeWithHeadless,
-  registerComponentForInit,
-  getHeadlessBundle,
-} from 'c/quanticHeadlessLoader';
-import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
-import {api, LightningElement, track} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
@@ -22,7 +19,7 @@ import {api, LightningElement, track} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-no-results engine-id={engineId} disable-cancel-last-action></c-quantic-no-results>
+ * <c-quantic-no-results engine-id={engineId} disable-cancel-last-action></c-quantic-no-results>  
  */
 export default class QuanticNoResults extends LightningElement {
   /**
@@ -72,8 +69,8 @@ export default class QuanticNoResults extends LightningElement {
     noResultsForTitle,
     noResultsWithFilters,
     noResultsWithoutFilters,
-    undoLastAction,
-  };
+    undoLastAction
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -92,22 +89,14 @@ export default class QuanticNoResults extends LightningElement {
     this.querySummary = this.headless.buildQuerySummary(engine);
     this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
     this.noResultAriaMessage = AriaLiveRegion('noresult', this);
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
-      this.updateState()
-    );
-    this.unsubscribeQuerySummary = this.querySummary.subscribe(() =>
-      this.updateState()
-    );
-    this.unsubscribeBreadcrumbsManager = this.breadcrumbManager.subscribe(() =>
-      this.updateState()
-    );
-    if (!this.disableCancelLastAction) {
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
+    this.unsubscribeQuerySummary = this.querySummary.subscribe(() => this.updateState());
+    this.unsubscribeBreadcrumbsManager = this.breadcrumbManager.subscribe(() => this.updateState());
+    if(!this.disableCancelLastAction){
       this.historyManager = this.headless.buildHistoryManager(engine);
-      this.unsubscribeHistoryManager = this.historyManager.subscribe(() =>
-        this.updateState()
-      );
+      this.unsubscribeHistoryManager = this.historyManager.subscribe(() => this.updateState());
     }
-  };
+  }
 
   disconnectedCallback() {
     this.unsubscribeSearchStatus?.();
@@ -115,30 +104,19 @@ export default class QuanticNoResults extends LightningElement {
     this.unsubscribeQuerySummary?.();
     this.unsubscribeBreadcrumbsManager?.();
   }
-
+  
   updateState() {
-    this.showNoResultsPanel =
-      this.searchStatus.state.firstSearchExecuted &&
-      !this.searchStatus.state.isLoading &&
-      !this.searchStatus.state.hasResults &&
-      !this.searchStatus.state.hasError;
-    if (this.showNoResultsPanel) {
+    this.showNoResultsPanel = this.searchStatus.state.firstSearchExecuted && !this.searchStatus.state.isLoading && !this.searchStatus.state.hasResults && !this.searchStatus.state.hasError;
+    if(this.showNoResultsPanel) {
       this.updateAriaMessage();
     }
-    this.showUndoButton =
-      !this.disableCancelLastAction && this.historyManager?.state.past.length;
-    this.query = this.querySummary.state.hasQuery
-      ? this.querySummary.state.query
-      : '';
+    this.showUndoButton = !this.disableCancelLastAction && this.historyManager?.state.past.length;
+    this.query = this.querySummary.state.hasQuery ? this.querySummary.state.query : "";
     this.hasBreadcrumbs = this.breadcrumbManager.state.hasBreadcrumbs;
   }
 
   updateAriaMessage() {
-    this.noResultAriaMessage.dispatchMessage(
-      this.query
-        ? I18nUtils.format(this.labels.noResultsForTitle, this.query)
-        : this.labels.noResultsTitle
-    );
+    this.noResultAriaMessage.dispatchMessage(this.query ? I18nUtils.format(this.labels.noResultsForTitle, this.query) : this.labels.noResultsTitle);
   }
 
   onUndoLastActionClick() {
@@ -147,10 +125,7 @@ export default class QuanticNoResults extends LightningElement {
 
   get noResultsTitleLabel() {
     if (this.query) {
-      return I18nUtils.format(
-        this.labels.noResultsForTitle,
-        I18nUtils.getTextBold(I18nUtils.escapeHTML(this.query))
-      );
+      return I18nUtils.format(this.labels.noResultsForTitle, I18nUtils.getTextBold(I18nUtils.escapeHTML(this.query)));
     }
     return this.labels.noResultsTitle;
   }

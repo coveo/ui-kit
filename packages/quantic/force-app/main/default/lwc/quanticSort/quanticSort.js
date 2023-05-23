@@ -1,13 +1,14 @@
-import newest from '@salesforce/label/c.quantic_Newest';
-import oldest from '@salesforce/label/c.quantic_Oldest';
-import relevancy from '@salesforce/label/c.quantic_Relevancy';
-import sortBy from '@salesforce/label/c.quantic_SortBy';
+import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {LightningElement, track, api} from 'lwc';
+
+import sortBy from '@salesforce/label/c.quantic_SortBy';
+import relevancy from '@salesforce/label/c.quantic_Relevancy';
+import newest from '@salesforce/label/c.quantic_Newest';
+import oldest from '@salesforce/label/c.quantic_Oldest';
 
 /** @typedef {import("coveo").Sort} Sort */
 /** @typedef {import("coveo").SortState} SortState */

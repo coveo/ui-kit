@@ -1,14 +1,14 @@
-import {LightningElement, api} from 'lwc';
+// @ts-ignore
+import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 // @ts-ignore
 import caseTemplate from './resultTemplates/caseResultTemplate.html';
 // @ts-ignore
 import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 // @ts-ignore
-import childTemplate from './resultTemplates/childTemplate.html';
-// @ts-ignore
 import parentTemplate from './resultTemplates/parentTemplate.html';
 // @ts-ignore
-import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
+import childTemplate from './resultTemplates/childTemplate.html';
+import {LightningElement, api} from 'lwc';
 
 export default class ExampleSearch extends LightningElement {
   /** @type {string} */
@@ -21,7 +21,7 @@ export default class ExampleSearch extends LightningElement {
   @api disableStateInUrl = false;
   /** @type {boolean} */
   @api skipFirstSearch = false;
-
+  
   handleResultTemplateRegistration(event) {
     event.stopPropagation();
 
@@ -47,22 +47,22 @@ export default class ExampleSearch extends LightningElement {
       'quantic__templateId',
       ['myChildTemplate']
     );
-
+  
     resultTemplatesManager.registerTemplates(
       {
         content: youtubeTemplate,
         conditions: [isYouTube],
-        fields: ['ytvideoid', 'ytvideoduration'],
+        fields: ['ytvideoid', 'ytvideoduration']
       },
       {
         content: caseTemplate,
         conditions: [isCase],
-        fields: ['sfstatus', 'sfcasestatus', 'sfcasenumber'],
+        fields: ['sfstatus', 'sfcasestatus', 'sfcasenumber']
       },
       {
         content: chatterTemplate,
         conditions: [isChatter],
-        fields: ['sfcreatedbyname'],
+        fields: ['sfcreatedbyname']
       },
       {
         content: childTemplate,
@@ -72,7 +72,7 @@ export default class ExampleSearch extends LightningElement {
       {
         content: parentTemplate,
         conditions: [isThread],
-      }
+      },
     );
   }
 }

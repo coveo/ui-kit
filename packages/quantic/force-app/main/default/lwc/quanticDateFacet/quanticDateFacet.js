@@ -1,9 +1,4 @@
-import LOCALE from '@salesforce/i18n/locale';
-import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
-import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
-import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
-import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
-import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -11,7 +6,13 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, fromSearchApiDate, Store} from 'c/quanticUtils';
-import {LightningElement, track, api} from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
+
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
+import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
 /** @typedef {import("coveo").DateFacetState} DateFacetState */
 /** @typedef {import("coveo").DateFacet} DateFacet */

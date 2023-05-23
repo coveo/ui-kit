@@ -1,16 +1,17 @@
-import {
-  getHeadlessBundle,
-  getHeadlessEnginePromise,
-} from 'c/quanticHeadlessLoader';
-import {LightningElement, api} from 'lwc';
+// @ts-ignore
+import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 // @ts-ignore
 import caseTemplate from './resultTemplates/caseResultTemplate.html';
 // @ts-ignore
 import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 // @ts-ignore
 import defaultTemplate from './resultTemplates/defaultResultTemplate.html';
-// @ts-ignore
-import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
+
+import {LightningElement, api} from 'lwc';
+import {
+  getHeadlessBundle,
+  getHeadlessEnginePromise,
+} from 'c/quanticHeadlessLoader';
 
 export default class ExampleInsightPanel extends LightningElement {
   /** @type {string} */

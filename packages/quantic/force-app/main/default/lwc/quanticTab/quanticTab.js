@@ -1,9 +1,9 @@
+import {LightningElement, api, track} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").Tab} Tab */

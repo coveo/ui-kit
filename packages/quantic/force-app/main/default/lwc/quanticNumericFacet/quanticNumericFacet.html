@@ -1,17 +1,10 @@
 <template>
   <template if:true={showPlaceholder}>
-    <c-quantic-placeholder
-      variant="card"
-      number-of-rows={numberOfValues}
-    ></c-quantic-placeholder>
+    <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
   </template>
   <template if:true={shouldRenderFacet}>
     <div data-cy="numeric-facet__card" class="slds-size_1-of-1">
-      <c-quantic-card-container
-        title={label}
-        onheaderclick={toggleFacetVisibility}
-        onheaderkeydown={toggleFacetVisibility}
-      >
+      <c-quantic-card-container title={label} onheaderclick={toggleFacetVisibility} onheaderkeydown={toggleFacetVisibility}>
         <lightning-button-icon
           class={actionButtonCssClasses}
           slot="actions"
@@ -36,9 +29,7 @@
               size="xx-small"
               aria-hidden="true"
             ></lightning-icon>
-            <span class="pill__text-container slds-truncate"
-              >{clearFilterLabel}</span
-            >
+            <span class="pill__text-container slds-truncate">{clearFilterLabel}</span>
           </button>
         </template>
         <template if:false={isCollapsed}>
@@ -49,9 +40,7 @@
                   onsubmit={onApply}
                   class="facet__search-form slds-grid slds-gutters slds-var-p-bottom_small"
                 >
-                  <div
-                    class="slds-col slds-p-right_none facet__search-form-item"
-                  >
+                  <div class="slds-col slds-p-right_none facet__search-form-item">
                     <lightning-input
                       type="number"
                       step={step}

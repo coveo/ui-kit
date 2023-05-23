@@ -1,12 +1,12 @@
-import {LightningElement, api} from 'lwc';
-// @ts-ignore
-import _default from './default.html';
-// @ts-ignore
-import noResults from './noResults.html';
+import { LightningElement, api } from 'lwc';
 // @ts-ignore
 import pageNotFound from './pageNotFound.html';
 // @ts-ignore
+import noResults from './noResults.html';
+// @ts-ignore
 import success from './success.html';
+// @ts-ignore
+import _default from './default.html';
 
 /**
  * The `QuanticSvg` is used internally to display static svg images.
@@ -30,14 +30,14 @@ export default class QuanticSvg extends LightningElement {
 
   render() {
     switch (this.name) {
-      case 'pageNotFound':
+      case "pageNotFound":
         return pageNotFound;
-      case 'noResults':
+      case "noResults":
         return noResults;
-      case 'success':
+      case "success":
         return success;
       default:
         return _default;
-    }
+    }   
   }
 }

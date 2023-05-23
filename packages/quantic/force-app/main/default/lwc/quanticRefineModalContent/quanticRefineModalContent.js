@@ -1,8 +1,4 @@
-import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
-import filters from '@salesforce/label/c.quantic_Filters';
-import QuanticCategoryFacet from 'c/quanticCategoryFacet';
-import QuanticDateFacet from 'c/quanticDateFacet';
-import QuanticFacet from 'c/quanticFacet';
+import {LightningElement, api} from 'lwc';
 import {
   getAllFacetsFromStore,
   getHeadlessBundle,
@@ -11,9 +7,14 @@ import {
   initializeWithHeadless,
   registerComponentForInit,
 } from 'c/quanticHeadlessLoader';
+import filters from '@salesforce/label/c.quantic_Filters';
+import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
+
 import QuanticNumericFacet from 'c/quanticNumericFacet';
+import QuanticFacet from 'c/quanticFacet';
+import QuanticCategoryFacet from 'c/quanticCategoryFacet';
+import QuanticDateFacet from 'c/quanticDateFacet';
 import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
-import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */

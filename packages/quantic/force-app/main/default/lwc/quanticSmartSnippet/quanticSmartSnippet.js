@@ -1,11 +1,11 @@
 import didNotAnswerQuestion from '@salesforce/label/c.quantic_DidNotAnswerQuestion';
-import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
 import Other from '@salesforce/label/c.quantic_Other';
 import partiallyAnsweredQuestion from '@salesforce/label/c.quantic_PartiallyAnsweredQuestion';
 import requestWasNotQuestion from '@salesforce/label/c.quantic_RequestWasNotQuestion';
 import showLess from '@salesforce/label/c.quantic_SmartSnippetShowLess';
 import showMore from '@salesforce/label/c.quantic_SmartSnippetShowMore';
 import thankYouForFeedback from '@salesforce/label/c.quantic_ThankYouForFeedback';
+import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
 import FeedbackModal from 'c/quanticFeedbackModal';
 import {
   registerComponentForInit,
@@ -261,12 +261,7 @@ export default class QuanticSmartSnippet extends LightningElement {
         label: this.labels.requestWasNotQuestion,
         value: 'was_not_a_question',
       },
-      {
-        label: this.labels.Other,
-        value: 'other',
-        withDetails: true,
-        detailsRequired: true,
-      },
+      {label: this.labels.Other, value: 'other', withDetails: true, detailsRequired: true},
     ];
   }
 

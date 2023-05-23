@@ -1,5 +1,5 @@
-import {isParentOf} from 'c/quanticUtils';
 import {LightningElement} from 'lwc';
+import {isParentOf} from 'c/quanticUtils';
 
 /**
  * The `QuanticModalA11yHandler` component handles the accessibility of the Quantic interfaces. It makes the necessary changes to the accessibility tree each time a QuanticResultQuickview or a QuanticRefineModal is opened.

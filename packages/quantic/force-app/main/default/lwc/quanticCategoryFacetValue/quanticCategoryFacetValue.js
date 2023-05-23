@@ -76,9 +76,7 @@ export default class QuanticCategoryFacetValue extends LightningElement {
   }
 
   get facetValue() {
-    return this.formattingFunction
-      ? this.formattingFunction(this.item)
-      : this.item.value;
+    return this.formattingFunction ? this.formattingFunction(this.item) : this.item.value;
   }
 
   get numberOfResults() {

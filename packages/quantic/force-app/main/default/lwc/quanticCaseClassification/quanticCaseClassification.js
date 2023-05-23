@@ -4,15 +4,10 @@ import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
 // @ts-ignore
 import CASE_OBJECT from '@salesforce/schema/Case';
-import {
-  registerComponentForInit,
-  initializeWithHeadless,
-} from 'c/quanticHeadlessLoader';
-import {
-  getObjectInfo,
-  getPicklistValuesByRecordType,
-} from 'lightning/uiObjectInfoApi';
-import {LightningElement, api, track, wire} from 'lwc';
+import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
+import { getObjectInfo, getPicklistValuesByRecordType } from 'lightning/uiObjectInfoApi';
+import { LightningElement, api, track, wire } from 'lwc';
+
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").CaseField} CaseField */

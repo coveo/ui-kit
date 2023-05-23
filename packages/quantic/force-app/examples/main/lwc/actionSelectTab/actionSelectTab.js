@@ -1,5 +1,5 @@
-import {getHeadlessBundle} from 'c/quanticHeadlessLoader';
-import {api, LightningElement} from 'lwc';
+import { getHeadlessBundle } from 'c/quanticHeadlessLoader';
+import { api, LightningElement } from 'lwc';
 
 export default class ActionSelectTab extends LightningElement {
   @api engineId;
@@ -13,17 +13,18 @@ export default class ActionSelectTab extends LightningElement {
     if (this.tab) {
       this.tab.select();
     } else {
-      this.resolveTabController().then((controller) => {
-        this.tab = controller;
-        this.tab.select();
-      });
+      this.resolveTabController()
+        .then((controller) => {
+          this.tab = controller;
+          this.tab.select();
+        });
     }
   }
 
   resolveTabController() {
     this.headless = getHeadlessBundle(this.engineId);
-    return window.coveoHeadless?.[this.engineId]?.enginePromise.then(
-      (engine) => {
+    return window.coveoHeadless?.[this.engineId]?.enginePromise
+      .then((engine) => {
         return this.headless.buildTab(engine, {
           options: {
             expression: this.expression ?? '',
@@ -33,7 +34,6 @@ export default class ActionSelectTab extends LightningElement {
             isActive: false,
           },
         });
-      }
-    );
+      });
   }
 }

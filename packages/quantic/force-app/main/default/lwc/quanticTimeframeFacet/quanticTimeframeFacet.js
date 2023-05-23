@@ -1,11 +1,3 @@
-import apply from '@salesforce/label/c.quantic_Apply';
-import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
-import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
-import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
-import endLabel from '@salesforce/label/c.quantic_EndLabel';
-import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
-import startLabel from '@salesforce/label/c.quantic_StartLabel';
-import timeframeInputApply from '@salesforce/label/c.quantic_TimeframeInputApply';
 import {
   getHeadlessBindings,
   getHeadlessBundle,
@@ -21,6 +13,15 @@ import {
   Store,
 } from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
+
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
+import startLabel from '@salesforce/label/c.quantic_StartLabel';
+import endLabel from '@salesforce/label/c.quantic_EndLabel';
+import apply from '@salesforce/label/c.quantic_Apply';
+import timeframeInputApply from '@salesforce/label/c.quantic_TimeframeInputApply';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
@@ -376,7 +377,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
       facetId: this.facet.state.facetId,
       format: this.formatFacetValue,
       element: this.template.host,
-      metadata: {timeframes: this.timeframes},
+      metadata: {timeframes: this.timeframes}
     });
   };
 

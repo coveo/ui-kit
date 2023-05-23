@@ -17,16 +17,16 @@ export default class ExampleQuanticFacetWithCaptions extends LightningElement {
       defaultValue: 'search',
     },
     {
-      attribute: 'value',
-      label: 'Value',
-      description: 'The facet value to override',
-      defaultValue: 'Case',
+        attribute: 'value',
+        label: 'Value',
+        description: 'The facet value to override',
+        defaultValue: 'Case',
     },
     {
-      attribute: 'caption',
-      label: 'Caption',
-      description: 'The custom caption to use.',
-      defaultValue: 'My custom caption',
+        attribute: 'caption',
+        label: 'Caption',
+        description: 'The custom caption to use.',
+        defaultValue: 'My custom caption'
     },
   ];
 

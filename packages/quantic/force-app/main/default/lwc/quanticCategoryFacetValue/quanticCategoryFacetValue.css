@@ -8,15 +8,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--sds-c-color-gray-8, #8e959d);
+  color: var(--sds-c-color-gray-8, #8E959D);
   float: left;
 }
 
-.facet__search-results {
+.facet__search-results{
   display: flex;
   align-items: baseline;
 }
 
 .facet__value:hover {
-  color: var(--sds-c-color-gray-8, #8e959d);
+  color: var(--sds-c-color-gray-8, #8E959D);
 }

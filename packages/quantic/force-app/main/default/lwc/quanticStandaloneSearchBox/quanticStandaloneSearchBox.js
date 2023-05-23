@@ -1,5 +1,5 @@
-import clear from '@salesforce/label/c.quantic_Clear';
-import search from '@salesforce/label/c.quantic_Search';
+import {LightningElement, api, track, wire} from 'lwc';
+import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -7,8 +7,9 @@ import {
   destroyEngine,
 } from 'c/quanticHeadlessLoader';
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY, keys} from 'c/quanticUtils';
-import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
-import {LightningElement, api, track, wire} from 'lwc';
+
+import search from '@salesforce/label/c.quantic_Search';
+import clear from '@salesforce/label/c.quantic_Clear';
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';

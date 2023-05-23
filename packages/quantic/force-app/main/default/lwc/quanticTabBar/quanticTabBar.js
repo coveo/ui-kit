@@ -1,6 +1,7 @@
-import more from '@salesforce/label/c.quantic_More';
-import {getAbsoluteWidth} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
+import {getAbsoluteWidth} from 'c/quanticUtils';
+
+import more from '@salesforce/label/c.quantic_More';
 
 /**
  *  The `QuanticTabBar` component displays the Quantic Tabs in a responsive manner. When tabs are wider than the available space, the tabs that cannot fit in the space are moved in the "More" drop-down list.

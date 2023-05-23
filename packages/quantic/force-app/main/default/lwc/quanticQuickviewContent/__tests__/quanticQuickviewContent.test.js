@@ -1,10 +1,10 @@
 // @ts-ignore
-import {createElement} from 'lwc';
+import { createElement } from 'lwc';
 import QuanticQuickviewContent from '../quanticQuickviewContent';
 // @ts-ignore
-import defaultTestCase from './data/defaultTestCase.json';
-// @ts-ignore
 import youtubeTestCase from './data/youtubeTestCase.json';
+// @ts-ignore
+import defaultTestCase from './data/defaultTestCase.json';
 
 const functionsMocks = {
   listener: jest.fn(() => {}),
@@ -14,7 +14,7 @@ function setupSimulation(element, eventName) {
   const handler = () => {
     functionsMocks.listener();
     element.removeEventListener(eventName, handler);
-  };
+  }
   element.addEventListener(eventName, handler);
 }
 
@@ -72,7 +72,7 @@ describe('c-quantic-quickview-content', () => {
 
       const iframe = element.shadowRoot.querySelector(
         youtubeTestCase.selectors.iframeSelector
-      );
+        );
       iframe.dispatchEvent(new CustomEvent('load'));
 
       expect(iframe).not.toBeNull();

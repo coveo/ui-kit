@@ -4,16 +4,12 @@
   </template>
   <template if:true={isValid}>
     <template if:true={hasTextToDisplay}>
-      <div
-        class="slds-badge slds-var-p-horizontal_medium slds-truncate result-badge"
-      >
-        <template if:true={hasLabel}>{label}</template>
+      <div class="slds-badge slds-var-p-horizontal_medium slds-truncate result-badge">
+        <template if:true={hasLabel}>
+          {label}
+        </template>
         <template if:false={hasLabel}>
-          <c-quantic-result-field
-            result={result}
-            field={field}
-            type={type}
-          ></c-quantic-result-field>
+          <c-quantic-result-field result={result} field={field} type={type}></c-quantic-result-field>
         </template>
       </div>
     </template>

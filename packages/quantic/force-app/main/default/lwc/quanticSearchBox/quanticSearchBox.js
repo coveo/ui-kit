@@ -1,12 +1,14 @@
-import clear from '@salesforce/label/c.quantic_Clear';
-import search from '@salesforce/label/c.quantic_Search';
+import {LightningElement, api, track} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+
 import {keys} from 'c/quanticUtils';
-import {LightningElement, api, track} from 'lwc';
+
+import search from '@salesforce/label/c.quantic_Search';
+import clear from '@salesforce/label/c.quantic_Clear';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */

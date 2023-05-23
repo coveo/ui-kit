@@ -1,15 +1,15 @@
-// @ts-ignore
-import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
-import LOCALE from '@salesforce/i18n/locale';
-import TIMEZONE from '@salesforce/i18n/timeZone';
+import {LightningElement, api} from 'lwc';
 import {
   getHeadlessBindings,
   loadDependencies,
   setEngineOptions,
   setInitializedCallback,
 } from 'c/quanticHeadlessLoader';
+// @ts-ignore
+import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+import LOCALE from '@salesforce/i18n/locale';
+import TIMEZONE from '@salesforce/i18n/timeZone';
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
-import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchEngineOptions} SearchEngineOptions */
@@ -115,7 +115,7 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   renderedCallback() {
-    if (!this.hasRendered && this.querySelector('c-quantic-aria-live')) {
+    if(!this.hasRendered && this.querySelector('c-quantic-aria-live')) {
       this.bindAriaLiveEvents();
     }
     this.hasRendered = true;
@@ -179,36 +179,23 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   bindAriaLiveEvents() {
-    this.template.addEventListener(
-      'arialivemessage',
-      this.handleAriaLiveMessage.bind(this)
-    );
-    this.template.addEventListener(
-      'registerregion',
-      this.handleRegisterAriaLiveRegion.bind(this)
-    );
+    this.template.addEventListener('arialivemessage', this.handleAriaLiveMessage.bind(this));
+    this.template.addEventListener('registerregion', this.handleRegisterAriaLiveRegion.bind(this));
   }
 
   handleAriaLiveMessage(event) {
     /** @type {import('quanticAriaLive/quanticAriaLive').IQuanticAriaLive} */
     const ariaLiveRegion = this.querySelector('c-quantic-aria-live');
-    if (ariaLiveRegion) {
-      ariaLiveRegion.updateMessage(
-        event.detail.regionName,
-        event.detail.message,
-        event.detail.assertive
-      );
+    if(ariaLiveRegion) {
+      ariaLiveRegion.updateMessage(event.detail.regionName, event.detail.message, event.detail.assertive);
     }
   }
 
   handleRegisterAriaLiveRegion(event) {
     /** @type {import('quanticAriaLive/quanticAriaLive').IQuanticAriaLive} */
     const ariaLiveRegion = this.querySelector('c-quantic-aria-live');
-    if (ariaLiveRegion) {
-      ariaLiveRegion.registerRegion(
-        event.detail.regionName,
-        event.detail.assertive
-      );
+    if(ariaLiveRegion) {
+      ariaLiveRegion.registerRegion(event.detail.regionName, event.detail.assertive);
     }
   }
 

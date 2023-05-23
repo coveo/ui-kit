@@ -1,12 +1,6 @@
 <template>
   <template if:true={isStandalone}>
-    <c-quantic-search-interface
-      engine-id={standaloneEngineId}
-      search-hub={searchHub}
-      pipeline={pipeline}
-      skip-first-search
-      disable-state-in-url
-    >
+    <c-quantic-search-interface engine-id={standaloneEngineId} search-hub={searchHub} pipeline={pipeline} skip-first-search disable-state-in-url>
       <div class="slds-form-element">
         <div class="slds-form-element__control">
           <div class="slds-combobox_container">
@@ -52,18 +46,8 @@
                   </template>
                 </div>
                 <template if:false={withoutSubmitButton}>
-                  <button
-                    class="searchbox__submit-button slds-button slds-button_icon-inverse slds-button_icon-brand"
-                    title={labels.search}
-                    onclick={onSubmit}
-                  >
-                    <lightning-icon
-                      class="slds-current-color"
-                      size="x-small"
-                      icon-name="utility:search"
-                      alternative-text={labels.search}
-                      title={labels.search}
-                    ></lightning-icon>
+                  <button class="searchbox__submit-button slds-button slds-button_icon-inverse slds-button_icon-brand" title={labels.search} onclick={onSubmit}>
+                    <lightning-icon class="slds-current-color" size="x-small" icon-name="utility:search" alternative-text={labels.search} title={labels.search}></lightning-icon>
                     <span class="slds-assistive-text">{labels.search}</span>
                   </button>
                 </template>

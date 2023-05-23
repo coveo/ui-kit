@@ -1,16 +1,9 @@
 <template>
   <template if:true={showPlaceholder}>
-    <c-quantic-placeholder
-      variant="card"
-      number-of-rows={maxLength}
-    ></c-quantic-placeholder>
+    <c-quantic-placeholder variant="card" number-of-rows={maxLength}></c-quantic-placeholder>
   </template>
   <template if:false={showPlaceholder}>
-    <c-quantic-card-container
-      title={label}
-      onheaderclick={toggleVisibility}
-      onheaderkeydown={toggleVisibility}
-    >
+    <c-quantic-card-container title={label} onheaderclick={toggleVisibility} onheaderkeydown={toggleVisibility}>
       <lightning-button-icon
         class="slds-p-bottom_small"
         slot="actions"
@@ -24,33 +17,14 @@
       <template if:false={isCollapsed}>
         <div class="slds-m-top_medium">
           <template if:false={hasQueries}>
-            <div
-              class="slds-text-body_small empty-list-message slds-var-m-vertical_small slds-p-horizontal_x-small"
-            >
-              {labels.emptyListLabel}
-            </div>
+            <div class="slds-text-body_small empty-list-message slds-var-m-vertical_small slds-p-horizontal_x-small">{labels.emptyListLabel}</div>
           </template>
           <ul>
             <template for:each={queries} for:item="query" for:index="index">
-              <li
-                key={query}
-                class="slds-grid"
-                value={index}
-                onclick={executeQuery}
-              >
-                <button
-                  class="slds-button recent-query__container slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small"
-                >
-                  <lightning-icon
-                    class="recent-query__icon slds-current-color"
-                    icon-name="utility:search"
-                    size="xx-small"
-                    aria-hidden="true"
-                  ></lightning-icon>
-                  <span
-                    class="slds-text-body_small query-text__container slds-truncate"
-                    >{query}</span
-                  >
+              <li key={query} class="slds-grid" value={index} onclick={executeQuery}>
+                <button class="slds-button recent-query__container slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small">
+                  <lightning-icon class="recent-query__icon slds-current-color" icon-name="utility:search" size="xx-small" aria-hidden="true"></lightning-icon>
+                  <span class="slds-text-body_small query-text__container slds-truncate">{query}</span>
                 </button>
               </li>
             </template>

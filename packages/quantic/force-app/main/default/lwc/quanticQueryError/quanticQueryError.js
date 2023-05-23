@@ -1,18 +1,16 @@
+import { LightningElement, api, track } from 'lwc';
+import { registerComponentForInit, initializeWithHeadless, getHeadlessBundle } from 'c/quanticHeadlessLoader';
+import { AriaLiveRegion, I18nUtils } from 'c/quanticUtils';
+import { copyToClipboard } from 'c/quanticUtils';
+
+import coveoOnlineHelpLink from '@salesforce/label/c.quantic_CoveoOnlineHelpLink';
+import moreInformation from '@salesforce/label/c.quantic_MoreInformation';
 import checkForMore from '@salesforce/label/c.quantic_CheckForMore';
 import community from '@salesforce/label/c.quantic_Community';
 import contactCoveoSupportTeam from '@salesforce/label/c.quantic_ContactCoveoSupportTeam';
-import coveoOnlineHelpLink from '@salesforce/label/c.quantic_CoveoOnlineHelpLink';
 import goBack from '@salesforce/label/c.quantic_GoBack';
-import moreInformation from '@salesforce/label/c.quantic_MoreInformation';
-import {
-  registerComponentForInit,
-  initializeWithHeadless,
-  getHeadlessBundle,
-} from 'c/quanticHeadlessLoader';
-import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
-import {copyToClipboard} from 'c/quanticUtils';
-import {LightningElement, api, track} from 'lwc';
-import {errorMap, genericError} from './errorLabels.js';
+
+import { errorMap, genericError } from './errorLabels.js';
 
 /** @typedef {import("coveo").QueryError} QueryError */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -60,8 +58,8 @@ export default class QuanticQueryError extends LightningElement {
     checkForMore,
     community,
     contactCoveoSupportTeam,
-    goBack,
-  };
+    goBack
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -79,7 +77,7 @@ export default class QuanticQueryError extends LightningElement {
     this.queryError = this.headless.buildQueryError(engine);
     this.errorAriaMessage = AriaLiveRegion('queryerror', this);
     this.unsubscribe = this.queryError.subscribe(() => this.updateState());
-  };
+  }
 
   disconnectedCallback() {
     this.unsubscribe?.();
@@ -88,12 +86,10 @@ export default class QuanticQueryError extends LightningElement {
   updateState() {
     this.type = this.queryError.state.error?.type;
     this.hasError = this.queryError.state.hasError;
-    if (this.hasError) {
+    if(this.hasError) {
       this.updateAriaLive();
     }
-    this.error = this.queryError.state.error
-      ? JSON.stringify(this.queryError.state.error, null, 2)
-      : '';
+    this.error = this.queryError.state.error ? JSON.stringify(this.queryError.state.error, null, 2): "";
   }
 
   updateAriaLive() {
@@ -130,18 +126,6 @@ export default class QuanticQueryError extends LightningElement {
   }
 
   get checkForMoreLabel() {
-    return I18nUtils.format(
-      this.labels.checkForMore,
-      I18nUtils.getTextWithDecorator(
-        this.labels.community,
-        '<a href="https://connect.coveo.com/s/">',
-        '</a>'
-      ),
-      I18nUtils.getTextWithDecorator(
-        this.labels.contactCoveoSupportTeam,
-        '<a href="https://connect.coveo.com/s/article/5382">',
-        '</a>'
-      )
-    );
+    return I18nUtils.format(this.labels.checkForMore, I18nUtils.getTextWithDecorator(this.labels.community, '<a href="https://connect.coveo.com/s/">', '</a>'), I18nUtils.getTextWithDecorator(this.labels.contactCoveoSupportTeam,'<a href="https://connect.coveo.com/s/article/5382">', '</a>'));
   }
 }

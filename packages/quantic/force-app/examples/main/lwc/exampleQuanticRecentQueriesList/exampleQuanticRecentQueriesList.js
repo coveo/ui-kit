@@ -6,8 +6,7 @@ export default class ExampleQuanticRecentQueriesList extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Recent Queries List';
-  pageDescription =
-    "The Quantic Recent Queries List component displays the user's recent queries.";
+  pageDescription = "The Quantic Recent Queries List component displays the user's recent queries.";
   options = [
     {
       attribute: 'maxLength',
@@ -19,13 +18,13 @@ export default class ExampleQuanticRecentQueriesList extends LightningElement {
       attribute: 'label',
       label: 'Label',
       description: 'This label is displayed in the component header.',
-      defaultValue: 'Recent Queries',
+      defaultValue: 'Recent Queries'
     },
     {
       attribute: 'isCollapsed',
       label: 'Is collapsed',
       description: 'Whether the component is collapsed.',
-      defaultValue: false,
+      defaultValue: false
     },
   ];
 

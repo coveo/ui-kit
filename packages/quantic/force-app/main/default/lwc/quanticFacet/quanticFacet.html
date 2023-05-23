@@ -1,17 +1,10 @@
 <template>
   <template if:true={showPlaceholder}>
-    <c-quantic-placeholder
-      variant="card"
-      number-of-rows={numberOfValues}
-    ></c-quantic-placeholder>
+    <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
   </template>
   <template if:true={hasValues}>
     <div class="slds-size_1-of-1">
-      <c-quantic-card-container
-        title={label}
-        onheaderclick={toggleFacetVisibility}
-        onheaderkeydown={toggleFacetVisibility}
-      >
+      <c-quantic-card-container title={label} onheaderclick={toggleFacetVisibility} onheaderkeydown={toggleFacetVisibility}>
         <lightning-button-icon
           class={actionButtonCssClasses}
           slot="actions"
@@ -36,9 +29,7 @@
               size="xx-small"
               aria-hidden="true"
             ></lightning-icon>
-            <span class="pill__text-container slds-truncate"
-              >{clearFilterLabel}</span
-            >
+            <span class="pill__text-container slds-truncate">{clearFilterLabel}</span>
           </button>
         </template>
         <template if:false={isCollapsed}>
@@ -76,28 +67,14 @@
                   </template>
                 </ul>
               </fieldset>
-              <div
-                class="facet__show slds-m-top_x-small slds-p-horizontal_x-small"
-              >
+              <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
                 <template if:true={canShowLess}>
-                  <button
-                    variant="base"
-                    class="facet__show-less slds-p-around_none"
-                    onclick={showLess}
-                    data-cy="less"
-                    aria-label={showLessFacetValuesLabel}
-                  >
+                  <button variant="base" class="facet__show-less slds-p-around_none" onclick={showLess} data-cy="less" aria-label={showLessFacetValuesLabel}>
                     <span class="facet__show-less_text">{labels.showLess}</span>
                   </button>
                 </template>
                 <template if:true={canShowMore}>
-                  <button
-                    variant="base"
-                    class="facet__show-more slds-p-around_none"
-                    onclick={showMore}
-                    data-cy="more"
-                    aria-label={showMoreFacetValuesLabel}
-                  >
+                  <button variant="base" class="facet__show-more slds-p-around_none" onclick={showMore} data-cy="more" aria-label={showMoreFacetValuesLabel}>
                     <span class="facet__show-more_text">{labels.showMore}</span>
                   </button>
                 </template>
@@ -121,19 +98,14 @@
               <div class="slds-p-horizontal_x-small">
                 <template if:false={hasSearchResults}>
                   <li class="slds-grid slds-m-top_x-small">
-                    <span
-                      class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match"
-                    >
+                    <span class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match">
                       {noMatchesForLabel}
                     </span>
                   </li>
                 </template>
                 <template if:true={canShowMoreSearchResults}>
                   <li>
-                    <span
-                      class="slds-truncate facet__search-results_more-matches"
-                      >{moreMatchesForLabel}</span
-                    >
+                    <span class="slds-truncate facet__search-results_more-matches">{moreMatchesForLabel}</span>
                   </li>
                 </template>
               </div>

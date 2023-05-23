@@ -5,8 +5,7 @@ export default class ExampleQuanticPlaceholder extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Placeholder';
-  pageDescription =
-    'The Quantic Placeholder component is used internally to display a loading placeholder for certain components.';
+  pageDescription = 'The Quantic Placeholder component is used internally to display a loading placeholder for certain components.';
   options = [
     {
       attribute: 'variant',
@@ -18,7 +17,7 @@ export default class ExampleQuanticPlaceholder extends LightningElement {
       label: 'Number of rows',
       description: 'Number of rows to display inside the placeholder',
     },
-  ];
+  ]
 
   handleTryItNow(evt) {
     this.config = evt.detail;
