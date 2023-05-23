@@ -54,7 +54,8 @@ export const Checkbox: FunctionalComponent<CheckboxProps> = (props) => {
       onMouseDown={(e) => props.onMouseDown?.(e)}
     >
       <atomic-icon
-        class={`w-3/5 svg-checkbox ${props.checked ? 'block' : 'hidden'}`}
+        style={{stroke: 'white'}}
+        class={`w-3/5 ${props.checked ? 'block' : 'hidden'}`}
         icon={Tick}
         part={props.iconPart}
       ></atomic-icon>

@@ -78,4 +78,12 @@ export {
   loadQuerySetActions as loadInsightQuerySetActions,
   getOrganizationEndpoints as getOrganizationEndpointsInsight,
   PlatformEnvironment as PlatformEnvironmentInsight,
+  SmartSnippetState as InsightSmartSnippetState,
+  SmartSnippet as InsightSmartSnippet,
+  buildSmartSnippet as buildInsightSmartSnippet,
+  SmartSnippetFeedback as InsightSmartSnippetFeedback,
+  buildSmartSnippetQuestionsList as buildInsightSmartSnippetQuestionsList,
+  SmartSnippetQuestionsList as InsightSmartSnippetQuestionsList,
+  SmartSnippetQuestionsListState as InsightSmartSnippetQuestionsListState,
+  SmartSnippetRelatedQuestion as InsightSmartSnippetRelatedQuestion,
 } from '@coveo/headless/insight';

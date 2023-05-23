@@ -26,6 +26,7 @@ import {
   logPageNumber,
   logPagePrevious,
 } from '../pagination/pagination-insight-analytics-actions';
+import {SmartSnippetFeedback} from '../question-answering/question-answering-analytics-actions';
 import {logCopyToClipboard} from '../result-actions/result-actions-insight-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
 import {
@@ -48,6 +49,7 @@ export type {
   LogFacetUpdateSortActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
+  SmartSnippetFeedback,
   StaticFilterValueMetadata,
 };
 

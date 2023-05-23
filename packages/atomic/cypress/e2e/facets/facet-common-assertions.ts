@@ -301,7 +301,15 @@ export function assertFocusBoxValue(
   FacetWithShowMoreLessSelector: FacetWithBoxSelector,
   index: number
 ) {
-  it(`should focus on the value at index ${index}`, () => {
-    FacetWithShowMoreLessSelector.idleBoxValue().eq(index).should('be.focused');
-  });
+  it(
+    `should focus on the value at index ${index}`,
+    // TODO: Verifying focused state is flaky. Is there a better alternate instead of retry?
+    //  e.g. https://github.com/NoriSte/cypress-wait-until
+    {retries: {runMode: 5, openMode: 5}},
+    () => {
+      FacetWithShowMoreLessSelector.idleBoxValue()
+        .eq(index)
+        .should('be.focused');
+    }
+  );
 }

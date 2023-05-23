@@ -101,6 +101,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
     this.smartSnippetCommon = new SmartSnippetCommon({
       id: this.id,
+      modalTagName: 'atomic-smart-snippet-feedback-modal',
       getHost: () => this.host,
       getBindings: () => this.bindings,
       getModalRef: () => this.modalRef,
@@ -119,8 +120,8 @@ export class AtomicSmartSnippet implements InitializableComponent {
     );
   }
 
-  private setModalRef(ref: HTMLAtomicSmartSnippetFeedbackModalElement) {
-    this.modalRef = ref;
+  private setModalRef(ref: HTMLElement) {
+    this.modalRef = ref as HTMLAtomicSmartSnippetFeedbackModalElement;
   }
 
   private setFeedbackSent(isSent: boolean) {

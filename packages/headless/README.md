@@ -65,3 +65,7 @@ The base of the `/src` folder should only contain exports.
 # Contribution guide: Adding a new controller.
 
 Please see [the contributor guide](./contributors/adding-a-controller.md) for guidance.
+
+# Contribution guide: Troubleshooting bundle content.
+
+Please see [the contributor guide](./contributors/troubleshooting-bundles-content.md) for guidance.
