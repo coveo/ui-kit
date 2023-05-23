@@ -1,5 +1,5 @@
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {Component, h, Prop, Element} from '@stencil/core';
+import {Component, h, Prop, Element, State} from '@stencil/core';
 import {
   InitializeBindings,
   InitializableComponent,
@@ -20,6 +20,7 @@ export class AtomicResultImage implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
   @Element() private host!: HTMLElement;
+  @State() private useFallback = false;
 
   /**
    * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
@@ -47,17 +48,9 @@ export class AtomicResultImage implements InitializableComponent {
 
   private handleImageError(target: EventTarget | null) {
     const image = target as HTMLImageElement;
+    const message = `The image url "${image.src}" is not valid or could not be loaded. You might want to add a "fallback" property.`;
 
-    if (image.src === this.fallback) {
-      return;
-    }
-
-    if (this.fallback) {
-      image.src = this.fallback;
-    } else {
-      const message = `The image url "${image.src}" is not valid or could not be loaded. You might want to add a "fallback" property.`;
-      this.logWarning(message);
-    }
+    this.fallback ? (this.useFallback = true) : this.logWarning(message);
   }
 
   private handleMissingFallback(message: string) {
@@ -70,7 +63,7 @@ export class AtomicResultImage implements InitializableComponent {
   }
 
   public render() {
-    let url = this.url;
+    let url = this.useFallback ? this.fallback : this.url;
 
     if (!url) {
       const message = `"${this.field}" is missing. Please review your indexation. You might want to add a "fallback" property.`;
