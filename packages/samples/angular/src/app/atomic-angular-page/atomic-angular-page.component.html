@@ -2,23 +2,13 @@
   #searchInterface
   searchHub="MainSearch"
   pipeline="Search"
-  [fieldsToInclude]="[
-    'ec_price',
-    'ec_rating',
-    'ec_images',
-    'ec_brand',
-    'cat_platform',
-    'cat_condition',
-    'cat_categories',
-    'cat_review_count',
-    'cat_color'
-  ]"
+  fieldsToInclude='["ec_price","ec_rating","ec_images","ec_brand","cat_platform","cat_condition","cat_categories","cat_review_count","cat_color"]'
 >
   <div class="search">
     <atomic-search-box>
       <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
       <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
-      <atomic-search-box-instant-results [imageSize]="'small'" [ariaLabelGenerator]="generateInstantResultsAriaLabel">
+      <atomic-search-box-instant-results imageSize="small">
         <atomic-result-template>
           <template>
             <style>
@@ -137,9 +127,6 @@
               </atomic-field-condition>
               <atomic-field-condition class="field" if-defined="cat_condition">
                 <app-label-and-field-value label="Condition" field="cat_condition"></app-label-and-field-value>
-              </atomic-field-condition>
-              <atomic-field-condition class="field" if-defined="cat_categories">
-                <app-label-and-field-value label="Tags" field="cat_categories"></app-label-and-field-value>
               </atomic-field-condition>
             </atomic-result-fields-list>
           </atomic-result-section-bottom-metadata>
