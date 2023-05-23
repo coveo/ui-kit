@@ -396,6 +396,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   get captionProviders() {
     // @ts-ignore
     return Array.from(this.querySelectorAll('*[slot="captions"]')).filter(
+      // @ts-ignore
       (component) => component.captions
     );
   }

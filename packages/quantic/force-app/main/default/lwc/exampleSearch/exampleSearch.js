@@ -1,4 +1,3 @@
-// @ts-ignore
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import caseTemplate from './resultTemplates/caseResultTemplate.html';
@@ -8,6 +7,7 @@ import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 import childTemplate from './resultTemplates/childTemplate.html';
 // @ts-ignore
 import parentTemplate from './resultTemplates/parentTemplate.html';
+// @ts-ignore
 import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 
 export default class ExampleSearch extends LightningElement {

@@ -1,4 +1,3 @@
-// @ts-ignore
 import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
@@ -10,6 +9,7 @@ import caseTemplate from './resultTemplates/caseResultTemplate.html';
 import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 // @ts-ignore
 import defaultTemplate from './resultTemplates/defaultResultTemplate.html';
+// @ts-ignore
 import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 
 export default class ExampleInsightPanel extends LightningElement {
