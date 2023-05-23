@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 import {
-  getCurrentVersion,
   getCurrentBranchName,
   gitTag,
   gitDeleteRemoteBranch,
   gitPushTags,
-  npmBumpVersion,
   getSHA1fromRef,
   gitCreateBranch,
   gitCheckoutBranch,
