@@ -4,10 +4,15 @@ import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
 import selectOption from '@salesforce/label/c.quantic_SelectOption';
 // @ts-ignore
 import CASE_OBJECT from '@salesforce/schema/Case';
-import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
-import { getObjectInfo, getPicklistValuesByRecordType } from 'lightning/uiObjectInfoApi';
-import { LightningElement, api, track, wire } from 'lwc';
-
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
+import {
+  getObjectInfo,
+  getPicklistValuesByRecordType,
+} from 'lightning/uiObjectInfoApi';
+import {LightningElement, api, track, wire} from 'lwc';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").CaseField} CaseField */
@@ -197,7 +202,8 @@ export default class QuanticCaseClassification extends LightningElement {
   updateFieldState() {
     if (!this.lockedState) {
       this.loading = this.field.state.loading;
-      const hasNewSuggestions = this.maxSuggestions > 0 && this.newSuggestionsReceived;
+      const hasNewSuggestions =
+        this.maxSuggestions > 0 && this.newSuggestionsReceived;
       const value =
         hasNewSuggestions && this.isAutoSelectionNeeded
           ? this.classifications[0].value

@@ -10,12 +10,12 @@
 }
 
 .quickview__result-date {
-  color: #3E3E3C;
+  color: #3e3e3c;
   font-weight: normal;
   font-size: 15px;
 }
 
-.quickview__button-base:not([disabled]){
+.quickview__button-base:not([disabled]) {
   border-radius: 0.25rem;
   color: var(--color-text-link-active, #0f2d5d);
 }
@@ -25,7 +25,7 @@
   box-shadow: 0 0 0px 0.25rem #f6f7f9;
 }
 
-.slds-modal__footer{
+.slds-modal__footer {
   background-color: white;
   text-align: unset;
 }
