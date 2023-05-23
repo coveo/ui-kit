@@ -20,8 +20,7 @@
   color: var(--lwc-colorTextError, rgb(234, 0, 30));
   --slds-c-button-text-color-hover: var(--lwc-colorTextError, rgb(234, 0, 30));
   --slds-c-button-text-color-active: var(--lwc-colorTextError, rgb(234, 0, 30));
-  --slds-c-button-shadow-focus: 0 0 3px
-    var(--lwc-colorTextError, rgb(234, 0, 30));
+  --slds-c-button-shadow-focus: 0 0 3px var(--lwc-colorTextError, rgb(234, 0, 30));
 }
 
 .feedback__main-section,

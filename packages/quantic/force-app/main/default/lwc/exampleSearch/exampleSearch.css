@@ -8,20 +8,15 @@
  */
 :host {
   --slds-c-checkbox-color-border: var(--lwc-colorTextIconDefault, #747474);
-  --slds-c-checkbox-color-border-checked: var(
-    --lwc-colorTextIconDefault,
-    #747474
-  );
+  --slds-c-checkbox-color-border-checked: var(--lwc-colorTextIconDefault, #747474);
   --slds-c-input-color-border: var(--lwc-colorTextIconDefault, #747474);
-  --slds-c-button-neutral-color-border: var(
-    --lwc-colorTextIconDefault,
-    #747474
-  );
+  --slds-c-button-neutral-color-border: var(--lwc-colorTextIconDefault, #747474);
 }
+
 
 .search__container {
   position: relative;
   background: #fff;
-  border-radius: 0.25rem;
+  border-radius: .25rem;
   background-clip: padding-box;
 }
