@@ -44,6 +44,12 @@ export default class QuanticRecentQueriesList extends LightningElement {
    */
   @api label = this.labels.recentQueriesLabel;
   /**
+   * indicates whether the card of the recent queries list should be completely hidden when it is empty.
+   * @api
+   * @type {boolean}
+   */
+  @api hideWhenEmpty;
+  /**
    * Whether the component is collapsed.
    * @api
    * @type {boolean}
@@ -130,5 +136,9 @@ export default class QuanticRecentQueriesList extends LightningElement {
   get actionButtonLabel() {
     const label = this.isCollapsed ? this.labels.expand : this.labels.collapse;
     return I18nUtils.format(label, this.label);
+  }
+
+  get shouldDisplayRecentQueriesCard(){
+    return this.hasQueries || !this.hideWhenEmpty
   }
 }
