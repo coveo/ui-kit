@@ -36,7 +36,7 @@ describe('Rating Range Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupRatingRangeFacet);
+      beforeEach(setupRatingRangeFacet);
       CommonAssertions.assertAccessibility(ratingRangeFacetComponent);
       CommonAssertions.assertContainsComponentError(
         RatingRangeFacetSelectors,
@@ -83,7 +83,7 @@ describe('Rating Range Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupSelectLinkValue);
+        beforeEach(setupSelectLinkValue);
 
         CommonAssertions.assertAccessibility(ratingRangeFacetComponent);
         CommonFacetAssertions.assertDisplayClearButton(
@@ -101,7 +101,7 @@ describe('Rating Range Test Suites', () => {
       });
 
       describe('verify analytic', () => {
-        before(setupSelectLinkValue);
+        beforeEach(setupSelectLinkValue);
         RatingFacetAssertions.assertLogRatingFacetSelect(ratingRangeFacetField);
       });
 
@@ -111,7 +111,7 @@ describe('Rating Range Test Suites', () => {
           pressClearButton(RatingRangeFacetSelectors);
         }
         describe('verify rendering', () => {
-          before(setupClearCheckboxValues);
+          beforeEach(setupClearCheckboxValues);
 
           CommonFacetAssertions.assertDisplayClearButton(
             RatingRangeFacetSelectors,
@@ -129,7 +129,7 @@ describe('Rating Range Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          before(setupClearCheckboxValues);
+          beforeEach(setupClearCheckboxValues);
           CommonFacetAssertions.assertLogClearFacetValues(
             ratingRangeFacetField
           );
@@ -152,7 +152,7 @@ describe('Rating Range Test Suites', () => {
         .init();
     }
 
-    before(setupRatingFacetWithCustomInterval);
+    beforeEach(setupRatingFacetWithCustomInterval);
     CommonAssertions.assertAccessibility(ratingRangeFacetComponent);
     CommonAssertions.assertContainsComponentError(
       RatingRangeFacetSelectors,
@@ -194,7 +194,7 @@ describe('Rating Range Test Suites', () => {
         .init();
     }
 
-    before(setupRatingFacetWithCustomMaxValueInIndex);
+    beforeEach(setupRatingFacetWithCustomMaxValueInIndex);
     CommonAssertions.assertAccessibility(ratingRangeFacetComponent);
     CommonAssertions.assertContainsComponentError(
       RatingRangeFacetSelectors,
@@ -236,7 +236,7 @@ describe('Rating Range Test Suites', () => {
         .init();
     }
 
-    before(setupRatingFacetWithCustomMinValueInIndex);
+    beforeEach(setupRatingFacetWithCustomMinValueInIndex);
     CommonAssertions.assertAccessibility(ratingRangeFacetComponent);
     CommonAssertions.assertContainsComponentError(
       RatingRangeFacetSelectors,
@@ -260,7 +260,7 @@ describe('Rating Range Test Suites', () => {
   });
 
   describe('with invalid option', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addRatingRangeFacet({
@@ -280,7 +280,7 @@ describe('Rating Range Test Suites', () => {
   });
 
   describe('when field returns no results', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addRatingRangeFacet({
@@ -303,7 +303,7 @@ describe('Rating Range Test Suites', () => {
   });
 
   describe('with a selected path in the URL', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addRatingRangeFacet({
@@ -336,7 +336,7 @@ describe('Rating Range Test Suites', () => {
       const parentFacetId = 'def';
       const parentField = 'language';
       const expectedValue = 'English';
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addRatingRangeFacet({
@@ -359,7 +359,7 @@ describe('Rating Range Test Suites', () => {
       );
 
       describe('when the dependency is met', () => {
-        before(() => {
+        beforeEach(() => {
           typeFacetSearchQuery(
             FacetSelectors.withId(parentFacetId),
             expectedValue,
@@ -380,7 +380,7 @@ describe('Rating Range Test Suites', () => {
     });
 
     describe('with two dependencies', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
           .with(addFacet({'facet-id': 'def', field: 'filetype'}))
