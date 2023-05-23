@@ -25,7 +25,9 @@ module.exports = (on, _config) => {
     if (browser.family === 'chromium' && browser.name !== 'electron') {
       launchOptions.args.push(
         '--auto-open-devtools-for-tabs',
-        '--start-fullscreen'
+        '--start-fullscreen',
+        // To prevent CI error "ERROR:gpu_memory_buffer_support_x11.cc(44)] dri3 extension not supported."
+        '--disable-gpu'
       );
     } else if (browser.family === 'firefox') {
       launchOptions.args.push('-devtools');
