@@ -175,7 +175,7 @@ export function buildCoreFoldedResultList(
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  const options = props.options?.folding
+  const options = props?.options?.folding
     ? validateOptions(
         engine,
         optionsSchema,
