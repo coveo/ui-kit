@@ -30,6 +30,7 @@ describe('Standalone Search Box Test Suites', () => {
   }
 
   function setupStandardSearchBox() {
+    cy.wait(1000); // Flakiness workaround to wait after clicking in standalone search box
     // TODO (KIT-2356): Fails in Cypress v12 @ withRedirection()
     new TestFixture().withRedirection().with(addSearchBox()).init();
   }
@@ -84,6 +85,7 @@ describe('Standalone Search Box Test Suites', () => {
       setupStandaloneSearchBox({enableQuerySyntax: true});
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.submitButton().click();
+      cy.wait(1000); // Flakiness workaround to wait after clicking in standalone search box
       new TestFixture()
         // TODO (KIT-2356): Fails in Cypress v12 @ withRedirection()
         .withRedirection()
