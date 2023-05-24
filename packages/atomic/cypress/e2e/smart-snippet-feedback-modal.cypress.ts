@@ -11,12 +11,12 @@ import {SmartSnippetSelectors} from './smart-snippet-selectors';
 describe('Smart Snippet Feedback Modal Test Suites', () => {
   function setupOpenModal() {
     new TestFixture().with(addSmartSnippet()).init();
-    SmartSnippetSelectors.feedbackDislikeButton().click();
-    SmartSnippetSelectors.feedbackExplainWhy().click();
+    SmartSnippetSelectors.feedbackDislikeButton().click({force: true});
+    SmartSnippetSelectors.feedbackExplainWhy().click({force: true});
   }
 
   describe('after opening the modal', () => {
-    before(() => {
+    beforeEach(() => {
       setupOpenModal();
     });
 
@@ -31,8 +31,8 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
     });
 
     describe('then clicking submit', () => {
-      before(() => {
-        SmartSnippetFeedbackModalSelectors.submitButton().click();
+      beforeEach(() => {
+        SmartSnippetFeedbackModalSelectors.submitButton().click({force: true});
       });
 
       SmartSnippetFeedbackModalAssertions.assertFormErrors();
@@ -41,16 +41,18 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
   });
 
   describe('after opening the modal then selecting some option except other', () => {
-    before(() => {
+    beforeEach(() => {
       setupOpenModal();
-      SmartSnippetFeedbackModalSelectors.reasonRadio().first().click();
+      SmartSnippetFeedbackModalSelectors.reasonRadio()
+        .first()
+        .click({force: true});
     });
 
     SmartSnippetFeedbackModalAssertions.assertDisplayDetails(false);
 
     describe('then clicking submit', () => {
-      before(() => {
-        SmartSnippetFeedbackModalSelectors.submitButton().click();
+      beforeEach(() => {
+        SmartSnippetFeedbackModalSelectors.submitButton().click({force: true});
       });
 
       SmartSnippetFeedbackModalAssertions.assertDisplayModal(false);
@@ -58,27 +60,31 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
   });
 
   describe('after opening the modal then selecting other', () => {
-    before(() => {
+    beforeEach(() => {
       setupOpenModal();
-      SmartSnippetFeedbackModalSelectors.reasonRadio().last().click();
+      SmartSnippetFeedbackModalSelectors.reasonRadio()
+        .last()
+        .click({force: true});
     });
 
     SmartSnippetFeedbackModalAssertions.assertDisplayDetails(true);
 
     describe('then clicking submit', () => {
-      before(() => {
-        SmartSnippetFeedbackModalSelectors.submitButton().click();
+      beforeEach(() => {
+        SmartSnippetFeedbackModalSelectors.submitButton().click({force: true});
       });
 
       SmartSnippetFeedbackModalAssertions.assertFormErrors();
       SmartSnippetFeedbackModalAssertions.assertDisplayModal(true);
 
       describe('then writing details and pressing submit', () => {
-        before(() => {
+        beforeEach(() => {
           SmartSnippetFeedbackModalSelectors.detailsInput().type('abc', {
             force: true,
           });
-          SmartSnippetFeedbackModalSelectors.submitButton().click();
+          SmartSnippetFeedbackModalSelectors.submitButton().click({
+            force: true,
+          });
         });
 
         SmartSnippetFeedbackModalAssertions.assertDisplayModal(false);
@@ -87,11 +93,11 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
   });
 
   describe('after opening the modal then clicking cancel', () => {
-    before(() => {
+    beforeEach(() => {
       setupOpenModal();
       //Wait for the modal opening animation to end.
       cy.wait(1000);
-      SmartSnippetFeedbackModalSelectors.cancelButton().click();
+      SmartSnippetFeedbackModalSelectors.cancelButton().click({force: true});
     });
 
     SmartSnippetFeedbackModalAssertions.assertDisplayModal(false);
@@ -101,8 +107,8 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
     });
 
     describe('then opening the modal again', () => {
-      before(() => {
-        SmartSnippetSelectors.feedbackExplainWhy().click();
+      beforeEach(() => {
+        SmartSnippetSelectors.feedbackExplainWhy().click({force: true});
       });
 
       SmartSnippetFeedbackModalAssertions.assertDisplayModal(true);
@@ -110,9 +116,9 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
   });
 
   describe('after opening the modal then clicking the backdrop', () => {
-    before(() => {
+    beforeEach(() => {
       setupOpenModal();
-      SmartSnippetFeedbackModalSelectors.backdrop().click();
+      SmartSnippetFeedbackModalSelectors.backdrop().click({force: true});
     });
 
     SmartSnippetFeedbackModalAssertions.assertDisplayModal(false);
@@ -121,22 +127,22 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
   describe('after opening the modal, testing analytics', () => {
     beforeEach(() => {
       new TestFixture().with(addSmartSnippet()).init();
-      SmartSnippetSelectors.feedbackDislikeButton().click();
-      SmartSnippetSelectors.feedbackExplainWhy().click();
+      SmartSnippetSelectors.feedbackDislikeButton().click({force: true});
+      SmartSnippetSelectors.feedbackExplainWhy().click({force: true});
     });
 
     SmartSnippetFeedbackModalAssertions.assertLogOpenSmartSnippetFeedbackModal();
 
     describe('after clicking cancel', () => {
       beforeEach(() => {
-        SmartSnippetFeedbackModalSelectors.cancelButton().click();
+        SmartSnippetFeedbackModalSelectors.cancelButton().click({force: true});
       });
 
       SmartSnippetFeedbackModalAssertions.assertLogCloseSmartSnippetFeedbackModal();
 
       describe('then opening the modal again', () => {
         beforeEach(() => {
-          SmartSnippetSelectors.feedbackExplainWhy().click();
+          SmartSnippetSelectors.feedbackExplainWhy().click({force: true});
         });
 
         SmartSnippetFeedbackModalAssertions.assertLogOpenSmartSnippetFeedbackModal();
@@ -145,7 +151,7 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
 
     describe('after clicking the backdrop', () => {
       beforeEach(() => {
-        SmartSnippetFeedbackModalSelectors.backdrop().click();
+        SmartSnippetFeedbackModalSelectors.backdrop().click({force: true});
       });
 
       SmartSnippetFeedbackModalAssertions.assertLogCloseSmartSnippetFeedbackModal();
@@ -153,8 +159,10 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
 
     describe('after selecting an option and clicking submit', () => {
       beforeEach(() => {
-        SmartSnippetFeedbackModalSelectors.reasonRadio().first().click();
-        SmartSnippetFeedbackModalSelectors.submitButton().click();
+        SmartSnippetFeedbackModalSelectors.reasonRadio()
+          .first()
+          .click({force: true});
+        SmartSnippetFeedbackModalSelectors.submitButton().click({force: true});
       });
 
       SmartSnippetFeedbackModalAssertions.assertLogSendSpecificSmartSnippetFeedback();
@@ -162,11 +170,13 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
 
     describe('after selecting other, typing a reason and clicking submit', () => {
       beforeEach(() => {
-        SmartSnippetFeedbackModalSelectors.reasonRadio().last().click();
+        SmartSnippetFeedbackModalSelectors.reasonRadio()
+          .last()
+          .click({force: true});
         SmartSnippetFeedbackModalSelectors.detailsInput().type('abc', {
           force: true,
         });
-        SmartSnippetFeedbackModalSelectors.submitButton().click();
+        SmartSnippetFeedbackModalSelectors.submitButton().click({force: true});
       });
 
       SmartSnippetFeedbackModalAssertions.assertLogSendDetailedSmartSnippetFeedback();
