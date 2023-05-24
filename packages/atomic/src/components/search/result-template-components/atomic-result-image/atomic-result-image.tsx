@@ -46,9 +46,8 @@ export class AtomicResultImage implements InitializableComponent {
     this.bindings.engine.logger.warn(message, this.host);
   }
 
-  private handleImageError(target: EventTarget | null) {
-    const image = target as HTMLImageElement;
-    const message = `The image url "${image.src}" is not valid or could not be loaded. You might want to add a "fallback" property.`;
+  private handleImageError() {
+    const message = `The image url "${this.url}" is not valid or could not be loaded. You might want to add a "fallback" property.`;
 
     this.fallback ? (this.useFallback = true) : this.logWarning(message);
   }
@@ -75,6 +74,7 @@ export class AtomicResultImage implements InitializableComponent {
 
     return url;
   }
+
   public render() {
     let url = this.useFallback ? this.fallback : this.url;
 
@@ -89,7 +89,7 @@ export class AtomicResultImage implements InitializableComponent {
       <img
         alt={`${this.field} image`}
         src={filterProtocol(url)}
-        onError={(e) => this.handleImageError(e.target)}
+        onError={() => this.handleImageError()}
         loading="lazy"
       />
     );
