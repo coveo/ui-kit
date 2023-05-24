@@ -74,7 +74,7 @@ export interface CoreFoldedResultListProps {
    * */
   options?: FoldedResultListOptions;
   /**
-   *
+   * The action creator to build the `loadCollection` action.
    */
   loadCollectionActionCreator: (
     collectionId: CollectionId
@@ -192,12 +192,12 @@ export function buildCoreFoldedResultList(
     loadCollection: (collection) => {
       dispatch(
         props.loadCollectionActionCreator(
-          collection.result.raw[
+          collection?.result?.raw[
             engine.state.folding.fields.collection
           ] as string
         )
       );
-      dispatch(analyticsClient.logShowMoreFoldedResults(collection.result));
+      dispatch(analyticsClient.logShowMoreFoldedResults(collection?.result));
     },
     logShowMoreFoldedResults: (result) => {
       dispatch(analyticsClient.logShowMoreFoldedResults(result));

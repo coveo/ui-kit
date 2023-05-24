@@ -1,6 +1,7 @@
 import {Raw} from '../../../api/search/search/raw';
 import {Result} from '../../../api/search/search/result';
 import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice';
+import {loadCollection} from '../../../features/folding/folding-actions';
 import {foldedResultAnalyticsClient} from '../../../features/folding/folding-analytics-actions';
 import {foldingReducer as folding} from '../../../features/folding/folding-slice';
 import {
@@ -18,6 +19,7 @@ import {
   buildCoreFoldedResultList,
   CoreFoldedResultList,
   CoreFoldedResultListProps,
+  FoldedResultListOptions,
 } from './headless-core-folded-result-list';
 
 describe('FoldedResultList', () => {
@@ -34,6 +36,20 @@ describe('FoldedResultList', () => {
   }
 
   beforeEach(() => {
+    const options: FoldedResultListOptions = {
+      folding: {
+        collectionField: 'foldingcollection',
+        parentField: 'foldingparent',
+        childField: 'foldingchild',
+        numberOfFoldedResults: 2,
+      },
+    };
+
+    props = {
+      options,
+      loadCollectionActionCreator: loadCollection,
+    };
+
     engine = buildMockSearchAppEngine();
     initFoldedResultList();
   });
@@ -82,8 +98,7 @@ describe('FoldedResultList', () => {
     );
   });
 
-  // TO FIX - cannot read property of undefined reading loadCollectionActionCreator
-  it.skip('#loadCollection dispatches #loadCollection AND #logShowMoreFoldedResults analytics', () => {
+  it('#loadCollection dispatches #loadCollection AND #logShowMoreFoldedResults analytics', () => {
     const expectedLogShowMoreAction = 'analytics/folding/showMore/pending';
     const expectedLoadCollectionAction = 'folding/loadCollection/pending';
 
