@@ -25,7 +25,7 @@ export default class QuanticComponentError extends LightningElement {
    * The error message to display.
    * @api
    * @type {string}
-   * @defaultValue `'Look at the developer console for more information.</'`
+   * @defaultValue `'Look at the developer console for more information.'`
    */
   @api message = this.labels.LookAtDeveloperConsole;
 
