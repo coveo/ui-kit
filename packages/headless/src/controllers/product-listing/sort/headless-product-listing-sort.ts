@@ -1,7 +1,7 @@
 import {Schema} from '@coveo/bueno';
+import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {configuration, sort} from '../../../app/reducers';
 import {updatePage} from '../../../features/pagination/pagination-actions';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {
@@ -19,6 +19,7 @@ import {
   registerSortCriterion,
   updateSortCriterion,
 } from '../../../features/sort/sort-actions';
+import {sortReducer as sort} from '../../../features/sort/sort-slice';
 import {
   ConfigurationSection,
   StructuredSortSection,

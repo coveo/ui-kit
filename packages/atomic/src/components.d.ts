@@ -612,6 +612,38 @@ export namespace Components {
          */
         "numberOfSuggestions": number;
     }
+    interface AtomicInsightSmartSnippet {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight": number;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight": number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicInsightSmartSnippetFeedbackModal {
+        "isOpen": boolean;
+        "source"?: HTMLElement;
+    }
+    interface AtomicInsightSmartSnippetSuggestions {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
+         */
+        "headingLevel": number;
+        /**
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
     interface AtomicInsightTab {
         /**
           * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
@@ -672,7 +704,7 @@ export namespace Components {
     }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
-        "isOpen": boolean;
+        "isOpen"?: boolean;
     }
     interface AtomicIpxButton {
         /**
@@ -1470,7 +1502,7 @@ export namespace Components {
          */
         "clearFilters": boolean;
         /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
+          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
          */
         "disableSearch": boolean;
         /**
@@ -1833,6 +1865,10 @@ export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightPagerElement;
 }
+export interface AtomicInsightSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
+}
 export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxBodyElement;
@@ -2107,6 +2143,24 @@ declare global {
     var HTMLAtomicInsightSearchBoxElement: {
         prototype: HTMLAtomicInsightSearchBoxElement;
         new (): HTMLAtomicInsightSearchBoxElement;
+    };
+    interface HTMLAtomicInsightSmartSnippetElement extends Components.AtomicInsightSmartSnippet, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightSmartSnippetElement: {
+        prototype: HTMLAtomicInsightSmartSnippetElement;
+        new (): HTMLAtomicInsightSmartSnippetElement;
+    };
+    interface HTMLAtomicInsightSmartSnippetFeedbackModalElement extends Components.AtomicInsightSmartSnippetFeedbackModal, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightSmartSnippetFeedbackModalElement: {
+        prototype: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
+        new (): HTMLAtomicInsightSmartSnippetFeedbackModalElement;
+    };
+    interface HTMLAtomicInsightSmartSnippetSuggestionsElement extends Components.AtomicInsightSmartSnippetSuggestions, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightSmartSnippetSuggestionsElement: {
+        prototype: HTMLAtomicInsightSmartSnippetSuggestionsElement;
+        new (): HTMLAtomicInsightSmartSnippetSuggestionsElement;
     };
     interface HTMLAtomicInsightTabElement extends Components.AtomicInsightTab, HTMLStencilElement {
     }
@@ -2674,6 +2728,9 @@ declare global {
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
+        "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
+        "atomic-insight-smart-snippet-feedback-modal": HTMLAtomicInsightSmartSnippetFeedbackModalElement;
+        "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
@@ -3319,6 +3376,39 @@ declare namespace LocalJSX {
           * The number of query suggestions to display when interacting with the search box.
          */
         "numberOfSuggestions"?: number;
+    }
+    interface AtomicInsightSmartSnippet {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight"?: number;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight"?: number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicInsightSmartSnippetFeedbackModal {
+        "isOpen"?: boolean;
+        "onFeedbackSent"?: (event: AtomicInsightSmartSnippetFeedbackModalCustomEvent<any>) => void;
+        "source"?: HTMLElement;
+    }
+    interface AtomicInsightSmartSnippetSuggestions {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
+         */
+        "headingLevel"?: number;
+        /**
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicInsightTab {
         /**
@@ -4135,7 +4225,7 @@ declare namespace LocalJSX {
          */
         "clearFilters"?: boolean;
         /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
+          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
          */
         "disableSearch"?: boolean;
         /**
@@ -4511,6 +4601,9 @@ declare namespace LocalJSX {
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-template": AtomicInsightResultTemplate;
         "atomic-insight-search-box": AtomicInsightSearchBox;
+        "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
+        "atomic-insight-smart-snippet-feedback-modal": AtomicInsightSmartSnippetFeedbackModal;
+        "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
@@ -4642,6 +4735,9 @@ declare module "@stencil/core" {
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
+            "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
+            "atomic-insight-smart-snippet-feedback-modal": LocalJSX.AtomicInsightSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetFeedbackModalElement>;
+            "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;

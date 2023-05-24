@@ -1,10 +1,12 @@
+import {configuration} from '../../../../../app/common-reducers';
 import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
-import {configuration, dateFacetSet, search} from '../../../../../app/reducers';
 import {
   logFacetClearAll,
   logFacetSelect,
 } from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
+import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {
   ConfigurationSection,
   DateFacetSection,

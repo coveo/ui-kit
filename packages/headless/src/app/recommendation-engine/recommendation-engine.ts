@@ -9,8 +9,12 @@ import {
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
+import {debugReducer as debug} from '../../features/debug/debug-slice';
 import {setPipeline} from '../../features/pipeline/pipeline-actions';
+import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice';
+import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {
   buildEngine,
@@ -19,7 +23,6 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {debug, pipeline, recommendation, searchHub} from '../reducers';
 import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {

@@ -1,11 +1,14 @@
-import {configuration, debug, search, fields} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {disableDebug, enableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
+import {debugReducer as debug} from '../../features/debug/debug-slice';
 import {
   disableFetchAllFields,
   enableFetchAllFields,
   fetchFieldsDescription,
 } from '../../features/fields/fields-actions';
+import {fieldsReducer as fields} from '../../features/fields/fields-slice';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {createMockState} from '../../test';
 import {
   buildMockSearchAppEngine,

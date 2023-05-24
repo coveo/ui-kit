@@ -1,7 +1,8 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {querySuggest, querySet} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {querySetReducer as querySet} from '../../features/query-set/query-set-slice';
+import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice';
 import {
   clearQuerySuggest,
   ClearQuerySuggestActionCreatorPayload,

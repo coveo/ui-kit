@@ -497,7 +497,7 @@ describe('Search Box Test Suites', () => {
     it('there are no search suggestions or errors on query input', () => {
       typeSearchInput('test');
       SearchBoxSelectors.submitButton().should('be.disabled');
-      SearchBoxAssertions.assertHasSuggestionsCount(0);
+      SearchBoxAssertions.assertNoSuggestionGenerated();
       QuerySummaryAssertions.assertHasPlaceholder();
       CommonAssertions.assertConsoleError(false);
     });
@@ -525,7 +525,7 @@ describe('Search Box Test Suites', () => {
     it('search button is enabled when a query with minimum length is input', () => {
       typeSearchInput(testQuery.slice(0, minimumQueryLength - 1)); // enter query less than min len
       SearchBoxSelectors.submitButton().should('be.disabled');
-      SearchBoxAssertions.assertHasSuggestionsCount(0);
+      SearchBoxAssertions.assertNoSuggestionGenerated();
 
       typeSearchInput(testQuery.slice(minimumQueryLength - 1)); // enter rest of the query
       SearchBoxSelectors.submitButton().should('not.be.disabled');

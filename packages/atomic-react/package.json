@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "2.2.27",
+  "version": "2.2.33",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -15,6 +15,8 @@
     "build:bundles:cjs": "tsc -p tsconfig.cjs.json",
     "build:bundles:iife": "rollup --config rollup.config.mjs",
     "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:cjs\"  \"npm run build:bundles:iife\"",
+    "release:phase1": "npx -p=@coveo/release bump",
+    "release:phase2": "npx -p=@coveo/release npm-publish",
     "publish:npm:release": "node ../../scripts/deploy/publish.mjs release",
     "publish:npm:prerelease": "node ../../scripts/deploy/publish.mjs prerelease",
     "promote:npm:beta": "node ../../scripts/deploy/update-npm-tag.mjs beta",
@@ -29,10 +31,10 @@
     "recommendation/"
   ],
   "dependencies": {
-    "@coveo/atomic": "2.28.4"
+    "@coveo/atomic": "2.30.1"
   },
   "devDependencies": {
-    "@coveo/headless": "2.16.1",
+    "@coveo/headless": "2.17.1",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@rollup/plugin-replace": "^4.0.0",
@@ -48,7 +50,7 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "peerDependencies": {
-    "@coveo/headless": "^2.0.0",
+    "@coveo/headless": "2.17.1",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   }
