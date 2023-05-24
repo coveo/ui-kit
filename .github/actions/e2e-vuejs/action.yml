@@ -8,9 +8,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: cypress-io/github-action@v4
+    - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
+        browser: chrome
+        command-prefix: 'npx retry --retries=3 --'
         working-directory: ./packages/samples/vuejs
         start: npm run dev
         wait-on: 'http://localhost:8080'

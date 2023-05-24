@@ -133,7 +133,7 @@ describe('Result Link Component', () => {
     });
 
     describe('when there is a slot named "attributes" & a default slot', () => {
-      before(() => {
+      beforeEach(() => {
         const attributesSlot = generateComponentHTML('a', {
           download: 'test',
           target: '_self',
@@ -162,7 +162,7 @@ describe('Result Link Component', () => {
     });
 
     describe('when there is a slot named "attributes" & a default slot (empty string)', () => {
-      before(() => {
+      beforeEach(() => {
         const attributesSlot = generateComponentHTML('a', {
           download: 'test',
           target: '_self',
