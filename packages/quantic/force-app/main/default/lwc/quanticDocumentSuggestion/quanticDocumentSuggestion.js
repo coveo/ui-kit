@@ -1,11 +1,11 @@
-import {LightningElement, api, track} from 'lwc';
+import loading from '@salesforce/label/c.quantic_Loading';
+import noSuggestions from '@salesforce/label/c.quantic_NoSuggestions';
+import readMore from '@salesforce/label/c.quantic_ReadMore';
 import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import loading from '@salesforce/label/c.quantic_Loading';
-import noSuggestions from '@salesforce/label/c.quantic_NoSuggestions';
-import readMore from '@salesforce/label/c.quantic_ReadMore';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").DocumentSuggestionList} DocumentSuggestionList */

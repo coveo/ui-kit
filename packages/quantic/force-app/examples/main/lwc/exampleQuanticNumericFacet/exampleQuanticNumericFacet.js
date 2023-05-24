@@ -1,5 +1,5 @@
-import {api, LightningElement, track} from 'lwc';
 import LOCALE from '@salesforce/i18n/locale';
+import {api, LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticNumericFacet extends LightningElement {
   @api engineId = 'quantic-numeric-facet-engine';

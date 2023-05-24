@@ -1,4 +1,5 @@
 /* eslint-disable jest/expect-expect */
+import {Deferred} from '../../quanticUtils/quanticUtils';
 import {
   setInitializedCallback,
   setEngineOptions,
@@ -10,16 +11,15 @@ import {
   registerToStore,
   getFromStore,
 } from '../quanticHeadlessLoader';
-import { Deferred } from '../../quanticUtils/quanticUtils';
 
 describe('c/quanticHeadlessLoader', () => {
   const CoveoHeadlessStub = {
-    buildSearchEngine: function() {
+    buildSearchEngine: function () {
       return {
-        executeFirstSearch: jest.fn(() => {})
-      }  
-    }
-  }
+        executeFirstSearch: jest.fn(() => {}),
+      };
+    },
+  };
 
   const testOptions = {
     configuration: {
@@ -28,8 +28,8 @@ describe('c/quanticHeadlessLoader', () => {
       search: {
         pipeline: 'default',
         searchHub: 'default',
-      }
-    }
+      },
+    },
   };
 
   let resolvedTestConfig;
@@ -44,28 +44,30 @@ describe('c/quanticHeadlessLoader', () => {
 
   const createComponentEntryWithInitStatus = (isInitialized) => ({
     element: document.createElement('div'),
-    initialized: isInitialized
+    initialized: isInitialized,
   });
 
   const assertComponentIsSetInitialized = (element, engineId) => {
     expect(window.coveoHeadless[engineId].components).toContainEqual({
       element,
-      initialized: true
+      initialized: true,
     });
-  }
+  };
 
   /**
    * @param {string | number} id
    * @param {Record<String, unknown>} store
    */
-  function initQuanticStoreTest(id,store) {
+  function initQuanticStoreTest(id, store) {
     window.coveoHeadless[id].bindings.store = store;
   }
 
   beforeEach(() => {
     jest.useFakeTimers();
     initialize = jest.fn();
-    mockEngineConstructor = jest.fn().mockReturnValue(CoveoHeadlessStub.buildSearchEngine());
+    mockEngineConstructor = jest
+      .fn()
+      .mockReturnValue(CoveoHeadlessStub.buildSearchEngine());
     mockedConsoleWarn = jest.fn();
     mockedConsoleError = jest.fn();
     console.warn = mockedConsoleWarn;
@@ -85,24 +87,33 @@ describe('c/quanticHeadlessLoader', () => {
   describe('setInitializedCallback', () => {
     beforeEach(() => {
       window.coveoHeadless = {
-        [testId]: {}
+        [testId]: {},
       };
     });
 
     it('should define callback for specified engine', async () => {
-      const testCallback = () => { };
+      const testCallback = () => {};
       setInitializedCallback(testCallback, testId);
 
-      expect(await window.coveoHeadless[testId].initializedCallback).toBe(testCallback);
+      expect(await window.coveoHeadless[testId].initializedCallback).toBe(
+        testCallback
+      );
     });
   });
 
   describe('setEngineOptions', () => {
     describe('when coveoHeadless is undefined', () => {
       it('should define coveoHeadless and set options', async () => {
-        setEngineOptions(testOptions, mockEngineConstructor, testId, testElement);
+        setEngineOptions(
+          testOptions,
+          mockEngineConstructor,
+          testId,
+          testElement
+        );
 
-        expect(await window.coveoHeadless[testId].options.promise).toBe(testOptions);
+        expect(await window.coveoHeadless[testId].options.promise).toBe(
+          testOptions
+        );
       });
     });
 
@@ -112,16 +123,23 @@ describe('c/quanticHeadlessLoader', () => {
       });
 
       it('should set options', async () => {
-        setEngineOptions(testOptions, mockEngineConstructor, testId, testElement);
+        setEngineOptions(
+          testOptions,
+          mockEngineConstructor,
+          testId,
+          testElement
+        );
 
-        expect(await window.coveoHeadless[testId].options.promise).toBe(testOptions);
+        expect(await window.coveoHeadless[testId].options.promise).toBe(
+          testOptions
+        );
       });
 
       describe('when options are already preset', () => {
         beforeEach(() => {
           window.coveoHeadless[testId] = {
-            options: resolvedTestConfig
-          }
+            options: resolvedTestConfig,
+          };
         });
 
         it('should log a warning', () => {
@@ -129,14 +147,21 @@ describe('c/quanticHeadlessLoader', () => {
             configuration: {
               organizationId: 'otherOrganization',
               accessToken: 'bogus-token-xxxxx-ooooo',
-            }
-          }
+            },
+          };
 
-          setEngineOptions(newOptions, mockEngineConstructor, testId, testElement);
+          setEngineOptions(
+            newOptions,
+            mockEngineConstructor,
+            testId,
+            testElement
+          );
 
-          expect(mockedConsoleWarn).toHaveBeenCalledWith(`Attempted to overwrite engine options for engine ID: ${testId}`)
+          expect(mockedConsoleWarn).toHaveBeenCalledWith(
+            `Attempted to overwrite engine options for engine ID: ${testId}`
+          );
         });
-      })
+      });
     });
   });
 
@@ -144,9 +169,9 @@ describe('c/quanticHeadlessLoader', () => {
     const assertComponentIsRegistered = (element) => {
       expect(window.coveoHeadless[testId].components).toContainEqual({
         element,
-        initialized: false
+        initialized: false,
       });
-    }
+    };
 
     describe('when coveoHeadless is undefined', () => {
       it('should define coveoHeadless and register component', () => {
@@ -161,9 +186,9 @@ describe('c/quanticHeadlessLoader', () => {
         window.coveoHeadless = {
           [testId]: {
             components: [],
-            engine: CoveoHeadlessStub.buildSearchEngine()
-          }
-        }
+            engine: CoveoHeadlessStub.buildSearchEngine(),
+          },
+        };
       });
 
       describe('when no search is pending', () => {
@@ -176,7 +201,7 @@ describe('c/quanticHeadlessLoader', () => {
         it('should not register the component if it already is', () => {
           window.coveoHeadless[testId].components.push({
             element: testElement,
-            initialized: false
+            initialized: false,
           });
           const mockedPush = jest.fn();
           window.coveoHeadless[testId].components.push = mockedPush;
@@ -192,7 +217,9 @@ describe('c/quanticHeadlessLoader', () => {
   describe('setComponentInitialized', () => {
     describe('when coveoHeadless is undefined', () => {
       it('should log an error', () => {
-        expect(() => setComponentInitialized(testElement, testId)).toThrow('Fatal Error: Component was not registered before initialization');
+        expect(() => setComponentInitialized(testElement, testId)).toThrow(
+          'Fatal Error: Component was not registered before initialization'
+        );
       });
     });
 
@@ -202,9 +229,9 @@ describe('c/quanticHeadlessLoader', () => {
           [testId]: {
             components: [],
             engine: Promise.resolve(CoveoHeadlessStub.buildSearchEngine()),
-            options: new Deferred()
-          }
-        }
+            options: new Deferred(),
+          },
+        };
       });
 
       describe('when other components are still uninitialized', () => {
@@ -212,9 +239,9 @@ describe('c/quanticHeadlessLoader', () => {
           window.coveoHeadless[testId].components = [
             {
               element: testElement,
-              initialized: false
+              initialized: false,
             },
-            createComponentEntryWithInitStatus(false)
+            createComponentEntryWithInitStatus(false),
           ];
         });
 
@@ -238,9 +265,9 @@ describe('c/quanticHeadlessLoader', () => {
           window.coveoHeadless[testId].components = [
             {
               element: testElement,
-              initialized: false
+              initialized: false,
             },
-            createComponentEntryWithInitStatus(true)
+            createComponentEntryWithInitStatus(true),
           ];
         });
 
@@ -254,7 +281,7 @@ describe('c/quanticHeadlessLoader', () => {
           const callbackMock = jest.fn();
           beforeEach(() => {
             window.coveoHeadless[testId].initializedCallback = callbackMock;
-          })
+          });
 
           it('should set the component to initialized and execute delayed initalized callback', async () => {
             setComponentInitialized(testElement, testId);
@@ -277,9 +304,9 @@ describe('c/quanticHeadlessLoader', () => {
             components: [],
             options: resolvedTestConfig,
             engineConstructor: mockEngineConstructor,
-            bindings: {}
-          }
-        }
+            bindings: {},
+          },
+        };
       });
 
       it('should init the engine and return a promise', async () => {
@@ -294,9 +321,9 @@ describe('c/quanticHeadlessLoader', () => {
         window.coveoHeadless = {
           [testId]: {
             components: [],
-            bindings: {}
-          }
-        }
+            bindings: {},
+          },
+        };
       });
 
       it('should throw an error specifying options have not been set', async () => {
@@ -313,7 +340,7 @@ describe('c/quanticHeadlessLoader', () => {
 
     describe('when the engine is defined', () => {
       const definedEngine = {
-        isDefined: true
+        isDefined: true,
       };
 
       beforeEach(() => {
@@ -323,8 +350,8 @@ describe('c/quanticHeadlessLoader', () => {
             enginePromise: Promise.resolve(definedEngine),
             engineConstructor: mockEngineConstructor,
             bindings: {},
-          }
-        }
+          },
+        };
       });
 
       it('should return a promise that resolves to an instance of the engine', async () => {
@@ -340,15 +367,17 @@ describe('c/quanticHeadlessLoader', () => {
       beforeEach(() => {
         window.coveoHeadless = {
           [testId]: {
-            components: [{
-              element: testElement,
-              initialized: false,
-            }],
+            components: [
+              {
+                element: testElement,
+                initialized: false,
+              },
+            ],
             engineConstructor: mockEngineConstructor,
             options: resolvedTestConfig,
             bindings: {},
-          }
-        }
+          },
+        };
       });
 
       it('should init the engine and initialize', async () => {
@@ -383,21 +412,23 @@ describe('c/quanticHeadlessLoader', () => {
 
     describe('when the engine is defined', () => {
       const definedEngine = {
-        isDefined: true
-      }
+        isDefined: true,
+      };
       beforeEach(() => {
         window.coveoHeadless = {
           [testId]: {
-            components: [{
-              element: testElement,
-              initialized: false
-            }],
+            components: [
+              {
+                element: testElement,
+                initialized: false,
+              },
+            ],
             options: resolvedTestConfig,
             enginePromise: Promise.resolve(definedEngine),
             engineConstructor: mockEngineConstructor,
             bindings: {},
-          }
-        }
+          },
+        };
       });
 
       it('should initialize the component using the defined engine', async () => {
@@ -418,7 +449,7 @@ describe('c/quanticHeadlessLoader', () => {
         [testId]: {},
         [otherId]: {},
       };
-    })
+    });
     it('should clear the engine instance from window object', () => {
       destroyEngine(testId);
 
@@ -442,43 +473,57 @@ describe('c/quanticHeadlessLoader', () => {
     beforeEach(() => {
       window.coveoHeadless = {
         [testId]: {
-          bindings: {}
-        }
-      }
+          bindings: {},
+        },
+      };
     });
-    
+
     it('should log an error when store is undefined', () => {
       initQuanticStoreTest(testId, undefined);
-      registerToStore(testId, 'someFacets', { label: '', facetId: ''});
+      registerToStore(testId, 'someFacets', {label: '', facetId: ''});
 
       expect(window.coveoHeadless[testId].bindings.store).not.toBeDefined();
       expect(mockedConsoleError.mock.calls.length).toBe(1);
     });
-    
+
     it('should log an error when store is empty', () => {
       initQuanticStoreTest(testId, {});
-      registerToStore(testId, 'someFacets', { label: '', facetId: ''});
+      registerToStore(testId, 'someFacets', {label: '', facetId: ''});
 
       expect(window.coveoHeadless[testId].bindings.store).toStrictEqual({});
       expect(mockedConsoleError.mock.calls.length).toBe(1);
     });
 
     it('should register the facet data in the store', () => {
-      initQuanticStoreTest(testId, { state: { someFacets: {}}});
-      registerToStore(testId, 'someFacets', { label: '', facetId: ''});
+      initQuanticStoreTest(testId, {state: {someFacets: {}}});
+      registerToStore(testId, 'someFacets', {label: '', facetId: ''});
 
-      expect(window.coveoHeadless[testId].bindings.store.state.someFacets).toBeDefined();
+      expect(
+        window.coveoHeadless[testId].bindings.store.state.someFacets
+      ).toBeDefined();
       expect(mockedConsoleError.mock.calls.length).toBe(0);
     });
 
     it('should not update store with same facetId with new data', () => {
-      initQuanticStoreTest(testId, { state: { someFacets: {}}});
+      initQuanticStoreTest(testId, {state: {someFacets: {}}});
 
-      registerToStore(testId, 'someFacets', { label: 'some label', facetId: 'facetId'});
-      expect(window.coveoHeadless[testId].bindings.store.state.someFacets.facetId.label).toBe('some label');
+      registerToStore(testId, 'someFacets', {
+        label: 'some label',
+        facetId: 'facetId',
+      });
+      expect(
+        window.coveoHeadless[testId].bindings.store.state.someFacets.facetId
+          .label
+      ).toBe('some label');
 
-      registerToStore(testId, 'someFacets', { label: 'a new label', facetId: 'facetId'});
-      expect(window.coveoHeadless[testId].bindings.store.state.someFacets.facetId.label).toBe('some label');
+      registerToStore(testId, 'someFacets', {
+        label: 'a new label',
+        facetId: 'facetId',
+      });
+      expect(
+        window.coveoHeadless[testId].bindings.store.state.someFacets.facetId
+          .label
+      ).toBe('some label');
     });
   });
 
@@ -486,9 +531,9 @@ describe('c/quanticHeadlessLoader', () => {
     beforeEach(() => {
       window.coveoHeadless = {
         [testId]: {
-          bindings: {}
-        }
-      }
+          bindings: {},
+        },
+      };
     });
 
     it('should log an error and return undefined when store is empty', () => {
@@ -500,7 +545,9 @@ describe('c/quanticHeadlessLoader', () => {
     });
 
     it('should return undefined when facetType does not exist in store', () => {
-      initQuanticStoreTest(testId, { state: { 'someOtherFacet': { label: 'label', facetId: 'facetId'}}});
+      initQuanticStoreTest(testId, {
+        state: {someOtherFacet: {label: 'label', facetId: 'facetId'}},
+      });
       const data = getFromStore(testId, 'someFacets');
 
       expect(data).not.toBeDefined();
@@ -508,13 +555,14 @@ describe('c/quanticHeadlessLoader', () => {
     });
 
     it('should return data from store', () => {
-      initQuanticStoreTest(testId, { state: { 'someFacets': { label: 'label', facetId: 'facetId'}}});
+      initQuanticStoreTest(testId, {
+        state: {someFacets: {label: 'label', facetId: 'facetId'}},
+      });
       const data = getFromStore(testId, 'someFacets');
 
       expect(data).toBeDefined();
       expect(data.label).toBe('label');
       expect(data.facetId).toBe('facetId');
     });
-  })
+  });
 });
-
