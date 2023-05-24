@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 import {
-  getCurrentVersion,
   getCurrentBranchName,
   gitTag,
   gitDeleteRemoteBranch,
   gitPushTags,
-  npmBumpVersion,
   getSHA1fromRef,
   gitCreateBranch,
   gitCheckoutBranch,
@@ -33,19 +31,10 @@ const GIT_SSH_REMOTE = 'deploy';
 
 // Commit, tag and push
 (async () => {
-  const PATH = '.';
-
   const octokit = new Octokit({
     authStrategy: createAppAuth,
     auth: RELEASER_AUTH_SECRETS,
   });
-
-  // Define release # andversion
-  const currentVersionTag = getCurrentVersion(PATH);
-  currentVersionTag.inc('prerelease');
-  const npmNewVersion = currentVersionTag.format();
-  // Write release version in the root package.json
-  await npmBumpVersion(npmNewVersion, PATH);
 
   // Find all packages that have been released in this release.
   const packagesReleased = readFileSync('.git-message', {
@@ -58,14 +47,11 @@ const GIT_SSH_REMOTE = 'deploy';
 
     ${packagesReleased}
 
-    **/README.md
     **/CHANGELOG.md
     **/package.json
-    README.md
     CHANGELOG.md
     package.json
     package-lock.json
-    packages/ui/cra-template/template.json
   `;
 
   // Craft the commit (complex process, see function)
