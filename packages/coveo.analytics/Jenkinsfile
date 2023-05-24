@@ -22,7 +22,6 @@ pipeline {
     NPM_TOKEN = credentials("coveo-analytics-js-npm-deployment-token")
     GIT = credentials('github-coveobot')
     GH_TOKEN = credentials('github-coveobot_token')
-    SNYK_TOKEN = credentials("snyk_token")
   }
 
   options {
@@ -99,8 +98,6 @@ pipeline {
       when { expression { !skipRemainingStages }}
       steps {
         script {
-          runSnyk(org: "coveo-ua", projectName: "coveo.analytics.js", directory: ".", archiveArtifacts: true)
-
           sh "npm publish --dry-run"
           sh 'npm run prepare-deploy'
           env.PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION = sh(script: './read.version.sh patch', returnStdout: true).trim()

@@ -3,37 +3,24 @@
     "team_name": "dataplatformfoundation",
     "general": {
         "environments_order": {
-            "sequential": ["dev", "stg", "prd"]
+            "sequential": [
+                "dev",
+                "stg",
+                "prd"
+            ]
         },
         "notifications": {
-            "slack_channels": ["analyticsdeployments"]
+            "slack_channels": [
+                "analyticsdeployments"
+            ]
         },
         "team_jenkins": "uabuilds"
     },
     "package_rollout": {
         "only_consider_changesets_after": "688b6873442721d61e2a0ac492b9da808ddb0ef0"
     },
-    "snyk_code": {
-        "no_scan": false,
-        "configurations": [
-            {
-                "path": "src",
-                "project_name": "coveo.analytics.js",
-                "org": "coveo-ua"
-            }
-        ]
-    },
     "observatory": {
         "no_endpoint": true
-    },
-    "snyk": {
-        "org": "coveo-ua",
-        "no_container_images": true,
-        "configurations": [
-            {
-                "project_name": "coveo.analytics.js"
-            }
-        ]
     },
     "ordered_phases": [
         {
@@ -109,7 +96,7 @@
             }
         }
     ],
-    "deployment_config_version": 7,
+    "deployment_config_version": 13,
     "certifiers": {
         "dev": [
             {
