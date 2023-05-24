@@ -29,7 +29,7 @@ export default class QuanticResultTemplate extends LightningElement {
    * @type {boolean}
    */
   @api resultPreviewShouldNotBeAccessible = false;
-  
+
   /** @type {boolean} */
   isHeaderEmpty = true;
   /** @type {boolean} */

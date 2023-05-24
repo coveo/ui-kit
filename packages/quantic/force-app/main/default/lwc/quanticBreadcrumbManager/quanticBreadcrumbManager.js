@@ -1,4 +1,7 @@
-import {LightningElement, track, api} from 'lwc';
+import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import colon from '@salesforce/label/c.quantic_Colon';
+import nMore from '@salesforce/label/c.quantic_NMore';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -6,11 +9,7 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, RelativeDateFormatter, Store} from 'c/quanticUtils';
-
-import nMore from '@salesforce/label/c.quantic_NMore';
-import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
-import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
-import colon from '@salesforce/label/c.quantic_Colon';
+import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */

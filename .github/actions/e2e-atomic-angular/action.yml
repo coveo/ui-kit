@@ -16,7 +16,7 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx retry --retries=3 --'
+        command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
         working-directory: ./packages/samples/angular
         start: npm run dev
         wait-on: 'http://localhost:4200'

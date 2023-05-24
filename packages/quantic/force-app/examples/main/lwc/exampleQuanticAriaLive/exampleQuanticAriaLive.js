@@ -6,7 +6,8 @@ export default class ExampleQuanticAriaLive extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Aria Live';
-  pageDescription = 'The Quantic Aria Live announces context changes to assistive software.';
+  pageDescription =
+    'The Quantic Aria Live announces context changes to assistive software.';
   options = [];
 
   get notConfigured() {
