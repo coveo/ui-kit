@@ -1,7 +1,7 @@
 import {PayloadAction, AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {folding} from '../../app/reducers';
+import {foldingReducer as folding} from '../../features/folding/folding-slice';
 import {
   registerFolding,
   loadCollection,
