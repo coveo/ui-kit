@@ -1,4 +1,5 @@
-import {LightningElement, api} from 'lwc';
+// @ts-ignore
+import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
 import {
   getHeadlessBindings,
   loadDependencies,
@@ -6,8 +7,7 @@ import {
   setInitializedCallback,
   HeadlessBundleNames,
 } from 'c/quanticHeadlessLoader';
-// @ts-ignore
-import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").CaseAssistEngineOptions} CaseAssistEngineOptions */
