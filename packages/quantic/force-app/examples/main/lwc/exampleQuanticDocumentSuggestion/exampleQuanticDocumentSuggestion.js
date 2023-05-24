@@ -1,6 +1,6 @@
-import {LightningElement, track} from 'lwc';
 // @ts-ignore
 import {getCaseAssistId} from 'c/caseAssistUtils';
+import {LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticDocumentSuggestion extends LightningElement {
   @track config = {};
@@ -27,7 +27,7 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
       attribute: 'maxDocuments',
       label: 'Max documents',
       description:
-        "The maximum number of document suggestions to display. The value must be between 1 and 5, inclusively.",
+        'The maximum number of document suggestions to display. The value must be between 1 and 5, inclusively.',
       defaultValue: 3,
     },
     {

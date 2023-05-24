@@ -1,8 +1,8 @@
-import {LightningElement, api} from 'lwc';
-import yes from '@salesforce/label/c.quantic_Yes';
+import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
 import no from '@salesforce/label/c.quantic_No';
 import wasThisUseful from '@salesforce/label/c.quantic_WasThisUseful';
-import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
+import yes from '@salesforce/label/c.quantic_Yes';
+import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticFeedback` component displays a question and two buttons for giving positive or negative feedback.
@@ -17,8 +17,8 @@ export default class QuanticFeedback extends LightningElement {
     yes,
     no,
     wasThisUseful,
-    explainWhy
-  }
+    explainWhy,
+  };
 
   /**
    * The question to be displayed.

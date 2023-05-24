@@ -46,7 +46,7 @@ import {LightningElement, track, api} from 'lwc';
  * @category Insight Panel
  * @example
  * <c-quantic-facet engine-id={engineId} facet-id="myFacet" field="filetype" label="File Type" number-of-values="5" sort-criteria="occurrences" no-search display-values-as="link" is-collapsed></c-quantic-facet>
- * 
+ *
  * @example
  * <c-quantic-facet engine-id={engineId} field="filetype">
  *   <c-quantic-facet-caption slot="captions" value="text" caption="Plain text"></c-quantic-facet-caption>

@@ -6,13 +6,16 @@ export default class ExampleQuanticResultList extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Result List';
-  pageDescription = 'The QuanticResultList component is responsible for displaying query results by applying one or more result templates.';
+  pageDescription =
+    'The QuanticResultList component is responsible for displaying query results by applying one or more result templates.';
   options = [
     {
       attribute: 'fieldsToInclude',
       label: 'Fields to include',
-      description: 'A list of fields to include in the query results, separated by commas.',
-      defaultValue: 'date,author,source,language,filetype,parents,sfknowledgearticleid',
+      description:
+        'A list of fields to include in the query results, separated by commas.',
+      defaultValue:
+        'date,author,source,language,filetype,parents,sfknowledgearticleid',
     },
     {
       attribute: 'useCase',
