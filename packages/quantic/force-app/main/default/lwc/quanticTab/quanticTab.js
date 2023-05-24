@@ -100,7 +100,7 @@ export default class QuanticTab extends LightningElement {
 
   updateState() {
     this._isActive = this.tab?.state?.isActive;
-    this.shouldDisplay = this.searchStatus?.state?.firstSearchExecuted && !this.hasInitializationError;
+    this.shouldDisplay = this.searchStatus?.state?.firstSearchExecuted;
   }
 
   @api select() {

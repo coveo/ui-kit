@@ -1,7 +1,11 @@
+import componentInitializationError from '@salesforce/label/c.quantic_ComponentInitializationError';
+import lookAtDeveloperConsole from '@salesforce/label/c.quantic_LookAtDeveloperConsole';
+import unableToInitializeComponent from '@salesforce/label/c.quantic_UnableToInitializeComponent';
 import BuenoPath from '@salesforce/resourceUrl/coveobueno';
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 // @ts-ignore
 import {Debouncer, Deferred, Store} from 'c/quanticUtils';
+import {I18nUtils} from 'c/quanticUtils';
 // @ts-ignore
 import LightningAlert from 'lightning/alert';
 // @ts-ignore
@@ -11,6 +15,12 @@ const DEBOUNCE_DELAY = 200;
 let debouncers = {};
 let dependencyPromises = [];
 let componentErrorDisplayed = false;
+
+const labels = {
+  componentInitializationError,
+  unableToInitializeComponent,
+  lookAtDeveloperConsole,
+};
 
 const HeadlessBundleNames = {
   search: 'search',
@@ -305,7 +315,6 @@ async function initializeWithHeadless(element, engineId, initialize) {
   try {
     initQuanticStore(engineId);
     initialize(await getHeadlessEnginePromise(engineId));
-    setComponentInitialized(element, engineId);
   } catch (error) {
     console.error(
       `Fatal error: unable to initialize ${element?.template?.host?.localName} component.`,
@@ -315,10 +324,12 @@ async function initializeWithHeadless(element, engineId, initialize) {
     if (!componentErrorDisplayed) {
       componentErrorDisplayed = true;
       await LightningAlert.open({
-        message: `Fatal error: unable to initialize the ${element?.template?.host?.localName} component.
-        Look at the developer console for more information.`,
+        message: `${I18nUtils.format(
+          labels.unableToInitializeComponent,
+          element?.template?.host?.localName
+        )} ${labels.lookAtDeveloperConsole}`,
         theme: 'error',
-        label: 'Component initialization error',
+        label: labels.componentInitializationError,
       });
     }
   } finally {

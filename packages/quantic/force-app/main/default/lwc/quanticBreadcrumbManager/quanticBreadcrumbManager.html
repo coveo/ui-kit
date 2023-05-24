@@ -1,9 +1,9 @@
 <template>
-  <template if:true={hasInitializationError}>
+  <template lwc:if={hasInitializationError}>
     <c-quantic-component-error component-name={template.host.localName}>
     </c-quantic-component-error>
   </template>
-  <template if:false={hasInitializationError}>
+  <template lwc:else>
     <template if:true={hasBreadcrumbs}>
       <div class="slds-grid slds-grid_vertical-align-start slds-size_1-of-1 slds-var-m-vertical_x-small">
         <div class="slds-col slds-truncate slds-col_bump-right breadcrumb-manager__column">

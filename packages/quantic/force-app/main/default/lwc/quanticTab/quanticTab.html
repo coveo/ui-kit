@@ -1,9 +1,9 @@
 <template>
-  <template if:true={hasInitializationError}>
+  <template lwc:if={hasInitializationError}>
     <c-quantic-component-error component-name={template.host.localName}>
     </c-quantic-component-error>
   </template>
-  <template if:true={shouldDisplay}>
+  <template lwc:elseif={shouldDisplay}>
     <button
       class={tabClass}
       onclick={select}
