@@ -1,3 +1,13 @@
+## 2.23.2 (2023-05-23)
+
+
+### Bug Fixes
+
+* **quantic:**  properly encoding the uri in the quantic standalone search box ([#2903](https://github.com/coveo/ui-kit/issues/2903)) ([640a828](https://github.com/coveo/ui-kit/commits/640a8288c765564a15f675c5f37fb4fba94a1823))
+* **quantic:** fixed bug with the target property of the quantic result link ([#2907](https://github.com/coveo/ui-kit/issues/2907)) ([232f88f](https://github.com/coveo/ui-kit/commits/232f88fb873e548af86cffc1ca277a7de3e35ae0))
+
+
+
 # Change Log
 
 All notable changes to this project will be documented in this file.
