@@ -1155,4 +1155,18 @@
       <protected>false</protected>
       <shortDescription>The property is required.</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_ComponentInitializationError</fullName>
+      <value>Component initialization error</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Component initialization error</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_UnableToInitializeComponent</fullName>
+      <value>Fatal error: unable to initialize the {{0}} component.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Fatal error: unable to initialize the component.</shortDescription>
+    </labels>
 </CustomLabels>
