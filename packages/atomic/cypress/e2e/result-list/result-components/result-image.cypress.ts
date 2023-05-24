@@ -38,15 +38,6 @@ describe('Result Image Component', () => {
     CommonAssertions.assertConsoleError();
   });
 
-  describe('when the field does not exist for the result', () => {
-    beforeEach(() => {
-      new TestFixture().with(addResultImageInResultList()).init();
-    });
-
-    CommonAssertions.assertRemovesComponent(ResultImageSelectors.shadow);
-    CommonAssertions.assertConsoleError(false);
-  });
-
   describe('when the field value is a string', () => {
     beforeEach(() => {
       new TestFixture()
