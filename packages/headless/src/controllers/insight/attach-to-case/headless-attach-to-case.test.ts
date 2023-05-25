@@ -1,4 +1,4 @@
-import {attachedResults, configuration} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {
   attachResult,
   detachResult,
@@ -7,6 +7,7 @@ import {
   logCaseAttach,
   logCaseDetach,
 } from '../../../features/attached-results/attached-results-analytics-actions';
+import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice';
 import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {createMockAttachedResult} from '../../../test/mock-attached-results';

@@ -1,11 +1,12 @@
 import {Result} from '../../../api/search/search/result';
-import {questionAnswering, search} from '../../../app/reducers';
 import {logOpenSmartSnippetSuggestionSource} from '../../../features/question-answering/question-answering-insight-analytics-actions';
 import {
   answerSourceSelector,
   relatedQuestionSelector,
 } from '../../../features/question-answering/question-answering-selectors';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {InsightEngine} from '../../../insight.index';
 import {
   QuestionAnsweringSection,

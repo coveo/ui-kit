@@ -9,7 +9,9 @@ export default class ActionAddFacets extends LightningElement {
   searchBox;
 
   handleAddFacets() {
-    const eventName = this.withoutInputs? 'addFacetsWithoutInputs' : 'addFacets';
+    const eventName = this.withoutInputs
+      ? 'addFacetsWithoutInputs'
+      : 'addFacets';
     const addFacetsEvent = new CustomEvent(eventName, {
       bubbles: true,
       composed: true,

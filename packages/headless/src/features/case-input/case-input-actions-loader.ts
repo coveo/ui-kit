@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {caseInput} from '../../app/reducers';
+import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice';
 import {
   updateCaseInput,
   SetCaseInputActionCreatorPayload,

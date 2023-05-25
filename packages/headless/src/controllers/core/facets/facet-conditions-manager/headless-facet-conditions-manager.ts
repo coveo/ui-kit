@@ -1,9 +1,9 @@
 import {CoreEngine} from '../../../../app/engine';
-import {facetOptions} from '../../../../app/reducers';
 import {
   disableFacet,
   enableFacet,
 } from '../../../../features/facet-options/facet-options-actions';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {updateFreezeCurrentValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request';
 import {AnyFacetValue} from '../../../../features/facets/generic/interfaces/generic-facet-response';

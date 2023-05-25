@@ -1,5 +1,5 @@
-import {LightningElement, api, track, wire} from 'lwc';
-import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
+import clear from '@salesforce/label/c.quantic_Clear';
+import search from '@salesforce/label/c.quantic_Search';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -7,9 +7,8 @@ import {
   destroyEngine,
 } from 'c/quanticHeadlessLoader';
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY, keys} from 'c/quanticUtils';
-
-import search from '@salesforce/label/c.quantic_Search';
-import clear from '@salesforce/label/c.quantic_Clear';
+import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
+import {LightningElement, api, track, wire} from 'lwc';
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
@@ -318,7 +317,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       {
         type: 'standard__webPage',
         attributes: {
-          url: `${this.redirectUrl}#q=${value}`,
+          url: `${this.redirectUrl}#q=${encodeURIComponent(value)}`,
         },
       },
       false

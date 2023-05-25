@@ -1,10 +1,10 @@
 import {Action} from 'redux';
-import {recentResults} from '../../app/reducers';
 import {
   clearRecentResults,
   registerRecentResults,
 } from '../../features/recent-results/recent-results-actions';
 import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
+import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
 import {
   buildMockResult,
   buildMockSearchAppEngine,

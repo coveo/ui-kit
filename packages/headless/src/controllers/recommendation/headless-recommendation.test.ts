@@ -1,5 +1,5 @@
 import {Action} from 'redux';
-import {configuration} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {updateNumberOfResults} from '../../features/pagination/pagination-actions';
 import {
   getRecommendations,

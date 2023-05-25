@@ -19,13 +19,13 @@ export default class ExampleQuanticFacet extends LightningElement {
       attribute: 'value',
       label: 'Value',
       description: 'The facet value to override.',
-      defaultValue: 'test'
+      defaultValue: 'test',
     },
     {
       attribute: 'caption',
       label: 'Caption',
       description: 'The caption to override.',
-      defaultValue: 'My custom test caption'
+      defaultValue: 'My custom test caption',
     },
     {
       attribute: 'useCase',
