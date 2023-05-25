@@ -241,6 +241,13 @@ export class AtomicInsightInterface
   }
 
   render() {
-    return this.engine && <slot></slot>;
+    return (
+      this.engine && (
+        <host>
+          <slot name="full-search"></slot>
+          <slot></slot>;
+        </host>
+      )
+    );
   }
 }
