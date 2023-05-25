@@ -8,6 +8,7 @@ import {Result} from '../../api/search/search/result';
 import {
   ConfigurationSection,
   FoldingSection,
+  InsightConfigurationSection,
   QuerySection,
 } from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
@@ -65,7 +66,8 @@ export const registerFolding = createAction(
 
 export type StateNeededByLoadCollection = ConfigurationSection &
   FoldingSection &
-  QuerySection;
+  QuerySection &
+  InsightConfigurationSection;
 
 export const loadCollection = createAsyncThunk<
   LoadCollectionFulfilledReturn,

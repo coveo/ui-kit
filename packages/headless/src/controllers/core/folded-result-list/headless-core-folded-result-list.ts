@@ -27,8 +27,10 @@ import {
 import {loadReducerError} from '../../../utils/errors';
 import {validateOptions} from '../../../utils/validate-payload';
 import {Controller} from '../../controller/headless-controller';
-import {buildResultList} from '../../result-list/headless-result-list';
-import {ResultListOptions} from '../result-list/headless-core-result-list';
+import {
+  ResultListOptions,
+  buildCoreResultList,
+} from '../result-list/headless-core-result-list';
 import {SearchStatusState} from '../status/headless-core-status';
 
 export type {FoldedCollection, FoldedResult};
@@ -171,7 +173,7 @@ export function buildCoreFoldedResultList(
     throw loadReducerError;
   }
 
-  const controller = buildResultList(engine, props);
+  const controller = buildCoreResultList(engine, props);
   const {dispatch} = engine;
   const getState = () => engine.state;
 

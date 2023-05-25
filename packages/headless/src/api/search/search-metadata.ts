@@ -6,8 +6,7 @@ export type SearchApiMethod =
   | 'recommendations'
   | 'html'
   | 'productRecommendations'
-  | 'fieldDescriptions'
-  | 'query';
+  | 'fieldDescriptions';
 
 export type SearchOrigin =
   | 'mainSearch'

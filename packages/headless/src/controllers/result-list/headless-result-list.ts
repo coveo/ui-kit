@@ -1,5 +1,5 @@
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {fetchMoreResults} from '../../features/search/search-actions';
-import {CoreEngine} from '../../recommendation.index';
 import {
   buildCoreResultList,
   ResultList,
@@ -18,7 +18,7 @@ export type {ResultListOptions, ResultListProps, ResultListState, ResultList};
  * @returns A `ResultList` controller instance.
  */
 export function buildResultList(
-  engine: CoreEngine,
+  engine: SearchEngine,
   props?: ResultListProps
 ): ResultList {
   return buildCoreResultList(engine, {
