@@ -2,7 +2,6 @@ import {InsightQueryRequest} from '../../api/service/insight/query/query-request
 import {InsightAppState} from '../../state/insight-app-state';
 import {
   ConfigurationSection,
-  FoldingSection,
   InsightConfigurationSection,
 } from '../../state/state-sections';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
@@ -11,7 +10,7 @@ import {MappedSearchRequest, mapSearchRequest} from '../search/search-mappings';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   InsightConfigurationSection &
-  Partial<InsightAppState & FoldingSection>;
+  Partial<InsightAppState>;
 
 export const buildInsightSearchRequest = (
   state: StateNeededBySearchRequest

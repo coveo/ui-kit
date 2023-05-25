@@ -8,7 +8,6 @@ import {
   FoldedCollection,
   getFoldingInitialState,
 } from '../../../features/folding/folding-state';
-import {queryReducer as query} from '../../../features/query/query-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   buildMockResult,
@@ -63,7 +62,6 @@ describe('FoldedResultList', () => {
       search,
       configuration,
       folding,
-      query,
     });
   });
 
@@ -96,16 +94,6 @@ describe('FoldedResultList', () => {
     expect(engine.actions.map((action) => action.type)).toContainEqual(
       'folding/register'
     );
-  });
-
-  it('#loadCollection dispatches #loadCollection AND #logShowMoreFoldedResults analytics', () => {
-    const expectedLogShowMoreAction = 'analytics/folding/showMore/pending';
-    const expectedLoadCollectionAction = 'folding/loadCollection/pending';
-
-    foldedResultList.loadCollection(foldedResultList.state.results[0]);
-
-    expect(engine.actions.pop()?.type).toEqual(expectedLogShowMoreAction);
-    expect(engine.actions.pop()?.type).toEqual(expectedLoadCollectionAction);
   });
 
   describe('with a result and two collections', () => {
@@ -160,6 +148,16 @@ describe('FoldedResultList', () => {
       expect(
         foldedResultList.state.results[1].moreResultsAvailable
       ).toBeFalsy();
+    });
+
+    it('#loadCollection dispatches #loadCollection AND #logShowMoreFoldedResults analytics', () => {
+      const expectedLogShowMoreAction = 'analytics/folding/showMore/pending';
+      const expectedLoadCollectionAction = 'folding/loadCollection/pending';
+
+      foldedResultList.loadCollection(foldedResultList?.state?.results[0]);
+      expect(foldedResultList.state.results).not.toBe(undefined);
+      expect(engine.actions.pop()?.type).toEqual(expectedLogShowMoreAction);
+      expect(engine.actions.pop()?.type).toEqual(expectedLoadCollectionAction);
     });
 
     it('finds a result by id', () => {

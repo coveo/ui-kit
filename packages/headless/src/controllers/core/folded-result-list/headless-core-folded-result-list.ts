@@ -15,13 +15,11 @@ import {
   FoldedCollection,
   FoldedResult,
 } from '../../../features/folding/folding-state';
-import {queryReducer as query} from '../../../features/query/query-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {CoreEngine, Result} from '../../../recommendation.index';
 import {
   ConfigurationSection,
   FoldingSection,
-  QuerySection,
   SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
@@ -177,7 +175,7 @@ export function buildCoreFoldedResultList(
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  const options = props?.options?.folding
+  const options = props.options?.folding
     ? validateOptions(
         engine,
         optionsSchema,
@@ -194,12 +192,12 @@ export function buildCoreFoldedResultList(
     loadCollection: (collection) => {
       dispatch(
         props.loadCollectionActionCreator(
-          collection?.result?.raw[
+          collection.result.raw[
             engine.state.folding.fields.collection
           ] as string
         )
       );
-      dispatch(analyticsClient.logShowMoreFoldedResults(collection?.result));
+      dispatch(analyticsClient.logShowMoreFoldedResults(collection.result));
     },
     logShowMoreFoldedResults: (result) => {
       dispatch(analyticsClient.logShowMoreFoldedResults(result));
@@ -250,10 +248,8 @@ export function buildCoreFoldedResultList(
 
 function loadFoldingReducer(
   engine: CoreEngine
-): engine is CoreEngine<
-  SearchSection & ConfigurationSection & FoldingSection & QuerySection
-> {
-  engine.addReducers({search, configuration, folding, query});
+): engine is CoreEngine<SearchSection & ConfigurationSection & FoldingSection> {
+  engine.addReducers({search, configuration, folding});
   return true;
 }
 
