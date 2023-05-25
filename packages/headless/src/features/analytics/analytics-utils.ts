@@ -156,6 +156,13 @@ export type ProductListingAction<
   StateNeededByProductListingAnalyticsProvider
 >;
 
+export type GeneratedAnswerAction<
+  T extends AnalyticsType = AnalyticsType.Search
+> = PreparableAnalyticsAction<
+  {analyticsType: T},
+  StateNeededByInsightAnalyticsProvider
+>;
+
 export interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider
 > {

@@ -2,7 +2,7 @@ import {
   resetAnswer,
   sseComplete,
   sseError,
-  sseReceived,
+  sseMessage,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
@@ -17,7 +17,7 @@ describe('generated answer slice', () => {
     });
   });
 
-  it('#sseReceived concatenates the given string with the answer previously in the state', () => {
+  it('#sseMessage concatenates the given string with the answer previously in the state', () => {
     const exisitingAnswer = 'I exist';
     const newMessage = ' therefore I am';
     const finalState = generatedAnswerReducer(
@@ -25,23 +25,13 @@ describe('generated answer slice', () => {
         ...getGeneratedAnswerInitialState(),
         answer: exisitingAnswer,
       },
-      sseReceived(newMessage)
+      sseMessage(newMessage)
     );
 
     expect(finalState.answer).toBe('I exist therefore I am');
   });
 
   describe('#sseError', () => {
-    it('should clear the timeout', () => {
-      const state = {
-        ...getGeneratedAnswerInitialState(),
-        timeout: setTimeout(() => {}, 1000),
-      };
-      const finalState = generatedAnswerReducer(state, sseError());
-
-      expect(finalState.timeout).toBeUndefined();
-    });
-
     it('should increment the retry counter', () => {
       const finalState = generatedAnswerReducer(
         getGeneratedAnswerInitialState(),
@@ -53,16 +43,6 @@ describe('generated answer slice', () => {
   });
 
   describe('#sseComplete', () => {
-    it('should clear the timeout', () => {
-      const state = {
-        ...getGeneratedAnswerInitialState(),
-        timeout: setTimeout(() => {}, 1000),
-      };
-      const finalState = generatedAnswerReducer(state, sseComplete());
-
-      expect(finalState.timeout).toBeUndefined();
-    });
-
     it('should reset the retry counter', () => {
       const finalState = generatedAnswerReducer(
         {isLoading: false, retryCount: 1},
@@ -77,7 +57,6 @@ describe('generated answer slice', () => {
     const state = {
       isLoading: true,
       answer: 'Tomato Tomato',
-      timeout: setTimeout(() => {}, 1000),
       retryCount: 2,
       steamKey: 'this-is-a-stream-key',
     };
