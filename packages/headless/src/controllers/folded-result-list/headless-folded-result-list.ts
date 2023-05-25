@@ -1,6 +1,6 @@
 import {Schema} from '@coveo/bueno';
 import {Result} from '../../api/search/search/result';
-import {search, configuration, folding, query} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   foldingOptionsSchemaDefinition,
@@ -9,10 +9,13 @@ import {
   logShowMoreFoldedResults,
   registerFolding,
 } from '../../features/folding/folding-actions';
+import {foldingReducer as folding} from '../../features/folding/folding-slice';
 import {
   FoldedCollection,
   FoldedResult,
 } from '../../features/folding/folding-state';
+import {queryReducer as query} from '../../features/query/query-slice';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {
   ConfigurationSection,
   FoldingSection,

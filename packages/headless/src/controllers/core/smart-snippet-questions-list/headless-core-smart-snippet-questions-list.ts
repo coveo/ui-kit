@@ -1,12 +1,13 @@
 import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
 import {Result} from '../../../api/search/search/result';
 import {CoreEngine} from '../../../app/engine';
-import {search, questionAnswering} from '../../../app/reducers';
 import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
 } from '../../../features/question-answering/question-answering-actions';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
 import {getResultProperty} from '../../../features/result-templates/result-templates-helpers';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   QuestionAnsweringSection,
   SearchSection,

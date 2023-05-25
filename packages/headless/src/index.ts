@@ -1,6 +1,18 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
-import * as TestUtils from './test';
+import {
+  buildMockRaw,
+  buildMockSearchAppEngine,
+  buildMockResult,
+  createMockState,
+} from './test';
 import * as HighlightUtils from './utils/highlight';
+
+const TestUtils = {
+  buildMockRaw,
+  buildMockSearchAppEngine,
+  buildMockResult,
+  createMockState,
+};
 
 polyfillCryptoNode();
 
@@ -66,7 +78,10 @@ export {TestUtils, HighlightUtils};
 export type {Result} from './api/search/search/result';
 export type {FieldDescription} from './api/search/fields/fields-response';
 export type {Raw} from './api/search/search/raw';
-export type {TermsToHighlight} from './api/search/search/stemming';
+export type {
+  TermsToHighlight,
+  PhrasesToHighlight,
+} from './api/search/search/stemming';
 export type {
   SortCriterion,
   SortByDate,

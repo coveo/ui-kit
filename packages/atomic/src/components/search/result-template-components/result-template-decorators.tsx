@@ -111,7 +111,7 @@ const interactiveResultContextEventName = 'atomic/resolveInteractiveResult';
 /**
  * Retrieves `Result` on a rendered `atomic-result`.
  *
- * This method is useful for building custom result template elements, see [Create a Result List](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) for more information.
+ * This method is useful for building custom result template elements, see [Create a Result List](https://docs.coveo.com/en/atomic/latest/cc-search/create-custom-components/native-components/#custom-result-template-component-example) for more information.
  *
  * You should use the method in the [connectedCallback lifecycle method](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#using_the_lifecycle_callbacks).
  *

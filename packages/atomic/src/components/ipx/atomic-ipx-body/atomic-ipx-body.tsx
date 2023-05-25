@@ -31,7 +31,7 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
 
   @Event() animationEnded!: EventEmitter<never>;
 
-  @Prop() isOpen = true;
+  @Prop({mutable: true}) isOpen?: boolean;
 
   @Prop({reflect: true}) displayFooterSlot = true;
 
@@ -45,10 +45,11 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
   public render() {
     this.updateBreakpoints();
 
+    const isEmbedded = this.isOpen === undefined;
     return (
       <article
         part="container"
-        class={`${this.isOpen ? 'visible' : 'invisible'}`}
+        class={`${isEmbedded ? '' : this.isOpen ? 'visible' : 'invisible'}`}
         onAnimationEnd={() => this.animationEnded.emit()}
       >
         <style>

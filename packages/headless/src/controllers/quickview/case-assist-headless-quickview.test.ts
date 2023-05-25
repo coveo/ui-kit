@@ -1,14 +1,12 @@
-import {
-  configuration,
-  resultPreview,
-  documentSuggestion,
-} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {DocumentSuggestionResponse} from '../../case-assist.index';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
 import {
   fetchResultContent,
   preparePreviewPagination,
 } from '../../features/result-preview/result-preview-actions';
+import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
 import {buildMockResult} from '../../test';
 import {
   buildMockCaseAssistEngine,

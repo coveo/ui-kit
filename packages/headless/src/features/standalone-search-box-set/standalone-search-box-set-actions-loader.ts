@@ -1,7 +1,7 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {standaloneSearchBoxSet} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice';
 import {
   registerStandaloneSearchBox,
   RegisterStandaloneSearchBoxActionCreatorPayload,

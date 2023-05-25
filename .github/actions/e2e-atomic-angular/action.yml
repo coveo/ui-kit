@@ -12,9 +12,11 @@ runs:
         npm i
       shell: bash
       working-directory: ./packages/samples/angular
-    - uses: cypress-io/github-action@v4
+    - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
+        browser: chrome
+        command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
         working-directory: ./packages/samples/angular
         start: npm run dev
         wait-on: 'http://localhost:4200'

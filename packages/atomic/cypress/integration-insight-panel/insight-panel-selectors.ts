@@ -28,6 +28,10 @@ export const InsightPanelsSelectors = {
     InsightPanelsSelectors.interface().find('atomic-insight-edit-toggle'),
   historyToggle: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-history-toggle'),
+  fullSearchButton: () =>
+    InsightPanelsSelectors.interface().find(
+      'atomic-insight-full-search-button'
+    ),
   tabs: () => InsightPanelsSelectors.interface().find('atomic-insight-tabs'),
   tabBar: () => InsightPanelsSelectors.tabs().find('tab-bar').shadow(),
   tabPopover: () =>
@@ -37,4 +41,26 @@ export const InsightPanelsSelectors = {
   layoutStyleTags: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-layout > style'),
   topLevelStyleTags: () => cy.get('style[data-styles]'),
+  smartSnippet: () =>
+    InsightPanelsSelectors.interface().find('atomic-insight-smart-snippet'),
+  smartSnippetExpandableAnswer: () =>
+    InsightPanelsSelectors.smartSnippet()
+      .shadow()
+      .find('atomic-smart-snippet-expandable-answer'),
+  smartSnippetSuggestions: () =>
+    InsightPanelsSelectors.interface().find(
+      'atomic-insight-smart-snippet-suggestions'
+    ),
+  smartSnippetFeedbackNoButton: () =>
+    InsightPanelsSelectors.smartSnippet()
+      .shadow()
+      .find('[part="feedback-dislike-button"]'),
+  smartSnippetsExplainWhyButton: () =>
+    InsightPanelsSelectors.smartSnippet()
+      .shadow()
+      .find('[part="feedback-explain-why-button"]'),
+  smartSnippetFeedbackModal: () =>
+    InsightPanelsSelectors.interface().find(
+      'atomic-insight-smart-snippet-feedback-modal'
+    ),
 };

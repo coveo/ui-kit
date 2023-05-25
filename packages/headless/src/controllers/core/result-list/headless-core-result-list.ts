@@ -1,9 +1,11 @@
 import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {Result} from '../../../api/search/search/result';
+import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {configuration, fields, search} from '../../../app/reducers';
 import {registerFieldsToInclude} from '../../../features/fields/fields-actions';
+import {fieldsReducer as fields} from '../../../features/fields/fields-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   ConfigurationSection,
   FieldsSection,

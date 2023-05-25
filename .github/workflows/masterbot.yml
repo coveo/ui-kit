@@ -161,24 +161,35 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
         shell: bash
-  bump-version:
-    name: 'Bump version'
+  prerelease:
+    timeout-minutes: 40
+    name: Pre-release
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     needs:
       - 'lint-check'
       - 'unit-test'
       - 'e2e-atomic-test'
       - 'e2e-quantic-test'
     runs-on: ubuntu-latest
+    environment: 'Prerelease'
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           fetch-depth: 0
-      - uses: ./.github/actions/setup
-      - name: Clean directory
-        run: git clean -xfd -e node_modules/ -e .husky
-      - name: Commit & push
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version-file: '.nvmrc'
+      - name: Install npm
+        run: npm i -g npm@9
+        shell: bash
+      - run: npm ci
+        shell: bash
+      - name: Release
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "<>"
-          npm run bump:version
+          npm run nx:graph
+          npm run release:phase1-3
+        env:
+          DEBUG: '*'
+          IS_PRERELEASE: 'true'

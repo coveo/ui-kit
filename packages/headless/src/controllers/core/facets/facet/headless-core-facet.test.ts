@@ -1,10 +1,7 @@
-import {
-  configuration,
-  facetSearchSet,
-  facetSet,
-  facetOptions,
-} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   registerFacet,
   toggleSelectFacetValue,
@@ -13,6 +10,7 @@ import {
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
 } from '../../../../features/facets/facet-set/facet-set-actions';
+import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
 import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
 import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 import {SearchAppState} from '../../../../state/search-app-state';

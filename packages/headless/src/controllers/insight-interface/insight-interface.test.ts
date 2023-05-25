@@ -1,9 +1,7 @@
-import {
-  configuration,
-  insightConfiguration,
-  insightInterface,
-  searchHub,
-} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
+import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
+import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {
   buildMockInsightEngine,
   MockInsightEngine,

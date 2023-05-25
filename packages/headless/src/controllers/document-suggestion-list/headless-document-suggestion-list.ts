@@ -1,14 +1,12 @@
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
 import {DocumentSuggestionResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {
-  caseAssistConfiguration,
-  configuration,
-  caseInput,
-  caseField,
-  documentSuggestion,
-} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
+import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice';
+import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
 import {
   ConfigurationSection,
   CaseAssistConfigurationSection,

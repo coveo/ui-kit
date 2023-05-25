@@ -1,10 +1,11 @@
-import {pagination, configuration} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {
   updatePage,
   registerPage,
   nextPage,
   previousPage,
 } from '../../../features/pagination/pagination-actions';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
