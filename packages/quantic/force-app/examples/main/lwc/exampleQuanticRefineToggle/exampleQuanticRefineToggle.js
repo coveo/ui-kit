@@ -1,8 +1,8 @@
 // @ts-nocheck
 import {api, LightningElement, track} from 'lwc';
-import templateWithoutFacets from './templateWithoutFacets.html';
-import templateWithFacetsWithoutInputs from './templateWithFacetsWithoutInputs.html';
 import templateWithFacets from './templateWithFacets.html';
+import templateWithFacetsWithoutInputs from './templateWithFacetsWithoutInputs.html';
+import templateWithoutFacets from './templateWithoutFacets.html';
 
 export default class ExampleQuanticRefineToggle extends LightningElement {
   @api engineId = 'quantic-refine-toggle';
@@ -57,8 +57,7 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
     {
       attribute: 'title',
       label: 'Title',
-      description:
-        'The title of the toggle button.',
+      description: 'The title of the toggle button.',
       defaultValue: 'Sort & Filters',
     },
   ];

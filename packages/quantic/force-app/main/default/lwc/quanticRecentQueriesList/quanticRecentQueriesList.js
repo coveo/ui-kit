@@ -1,11 +1,17 @@
-import { LightningElement, api, track } from 'lwc';
-import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
-import { I18nUtils, getItemFromLocalStorage, setItemInLocalStorage } from 'c/quanticUtils';
-
-import recentQueriesLabel from '@salesforce/label/c.quantic_RecentQueries';
-import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentQueriesListLabel';
 import collapse from '@salesforce/label/c.quantic_Collapse';
+import emptyListLabel from '@salesforce/label/c.quantic_EmptyRecentQueriesListLabel';
 import expand from '@salesforce/label/c.quantic_Expand';
+import recentQueriesLabel from '@salesforce/label/c.quantic_RecentQueries';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+} from 'c/quanticHeadlessLoader';
+import {
+  I18nUtils,
+  getItemFromLocalStorage,
+  setItemInLocalStorage,
+} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").RecentQueriesState} RecentQueriesState */
 /** @typedef {import("coveo").RecentQueriesList} RecentQueriesList */
@@ -22,8 +28,8 @@ export default class QuanticRecentQueriesList extends LightningElement {
     recentQueriesLabel,
     emptyListLabel,
     collapse,
-    expand
-  }
+    expand,
+  };
 
   /**
    * The ID of the engine instance the component registers to.
@@ -44,6 +50,12 @@ export default class QuanticRecentQueriesList extends LightningElement {
    */
   @api label = this.labels.recentQueriesLabel;
   /**
+   * Indicates whether the card of the recent queries list should be completely hidden when it is empty.
+   * @api
+   * @type {boolean}
+   */
+  @api hideWhenEmpty;
+  /**
    * Whether the component is collapsed.
    * @api
    * @type {boolean}
@@ -60,7 +72,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
 
   /** @type {RecentQueriesState} */
   @track state;
-  
+
   /** @type {boolean} */
   showPlaceholder = true;
   /** @type {RecentQueriesList} */
@@ -77,8 +89,8 @@ export default class QuanticRecentQueriesList extends LightningElement {
   }
 
   /**
-  * @param {SearchEngine} engine
-  */
+   * @param {SearchEngine} engine
+   */
   initialize = (engine) => {
     this.recentQueriesList = CoveoHeadless.buildRecentQueriesList(engine, {
       initialState: {
@@ -88,17 +100,22 @@ export default class QuanticRecentQueriesList extends LightningElement {
         maxLength: Number(this.maxLength),
       },
     });
-    this.unsubscribe = this.recentQueriesList.subscribe(() => this.updateState());
-  }
+    this.unsubscribe = this.recentQueriesList.subscribe(() =>
+      this.updateState()
+    );
+  };
 
   disconnectedCallback() {
     this.unsubscribe?.();
   }
 
   updateState() {
-    this.state = { ...this.recentQueriesList.state };
+    this.state = {...this.recentQueriesList.state};
     if (this.state?.queries) {
-      setItemInLocalStorage(this.localStorageKey, this.recentQueriesList.state.queries);
+      setItemInLocalStorage(
+        this.localStorageKey,
+        this.recentQueriesList.state.queries
+      );
       this.showPlaceholder = false;
     }
   }
@@ -112,7 +129,7 @@ export default class QuanticRecentQueriesList extends LightningElement {
   }
 
   get queries() {
-    return this.state?.queries ?? []
+    return this.state?.queries ?? [];
   }
 
   get hasQueries() {
@@ -130,5 +147,9 @@ export default class QuanticRecentQueriesList extends LightningElement {
   get actionButtonLabel() {
     const label = this.isCollapsed ? this.labels.expand : this.labels.collapse;
     return I18nUtils.format(label, this.label);
+  }
+
+  get shouldDisplayRecentQueriesCard() {
+    return this.hasQueries || !this.hideWhenEmpty;
   }
 }
