@@ -1,0 +1,13 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "all": true,
+  "include": ["packages/**"],
+  "exclude": [
+    "**/dist/**",
+    "**/cypress/**",
+    "**/*.cypress.ts",
+    "**/.localdevserver/**",
+    "**/.sfdx/**",
+    "**/headless.js"
+  ]
+}
