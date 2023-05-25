@@ -27,11 +27,8 @@ interface CaseClassificationOptions {
 const incorrectSfFielNameError = (value: string) => {
   return `The Salesforce field API name "${value}" is not found.`;
 };
-const invalidMaxSuggestionsError = (value: string | number) => {
-  return `"${Number(
-    value
-  )}" is an invalid maximum number of suggestions. A positive integer was expected.`;
-};
+const invalidMaxSuggestionsError =
+  'The maximum number of suggestions must be an integer greater than 0.';
 const missingCoveoFieldNameError =
   'The "coveoFieldName" property is required, please set its value.';
 const nonCorrespondingSuggestionWarning = (
@@ -278,9 +275,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
         Expect.displayComponentError(true);
-        Expect.displayComponentErrorMessage(
-          invalidMaxSuggestionsError(invalidValue)
-        );
+        Expect.displayComponentErrorMessage(invalidMaxSuggestionsError);
       });
     });
   });
@@ -298,7 +293,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
         Expect.displayComponentError(true);
-        Expect.displayComponentErrorMessage(invalidMaxSuggestionsError(NaN));
+        Expect.displayComponentErrorMessage(invalidMaxSuggestionsError);
       });
     });
   });

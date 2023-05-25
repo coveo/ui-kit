@@ -206,10 +206,8 @@ export default class QuanticCaseClassification extends LightningElement {
   validateProps() {
     if (!(Number(this.maxSuggestions) >= 0)) {
       this.hasInitializationError = true;
-      this.initializationErrorMessage = `${I18nUtils.format(
-        this.labels.invalidMaxNumberOfSuggestions,
-        this.maxSuggestions
-      )}`;
+      this.initializationErrorMessage =
+        this.labels.invalidMaxNumberOfSuggestions;
     }
     if (!this.coveoFieldName) {
       this.hasInitializationError = true;

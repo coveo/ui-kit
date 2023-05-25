@@ -1120,19 +1120,19 @@
       <protected>false</protected>
       <shortDescription>Look at the developer console</shortDescription>
     </labels>
-        <labels>
+    <labels>
       <fullName>quantic_InvalidMaxNumberOfDocumentSuggestions</fullName>
-      <value>"{{0}}" is an invalid maximum number of document suggestions. An integer greater than 0 was expected.</value>
+      <value>The maximum number of document suggestions must an integer be greater than 0.</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>invalid maximum number of document suggestions.</shortDescription>
+      <shortDescription>Invalid maximum number of document suggestions.</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_InvalidNumberOfAutoOpenedDocuments</fullName>
-      <value>"{{0}}" is an invalid number of automatically opened document suggestions. A positive integer was expected.</value>
+      <value>The number of automatically opened document suggestions must be an integer greater that 0.</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>invalid number of automatically opened document suggestions.</shortDescription>
+      <shortDescription>Invalid number of automatically opened document suggestions.</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_SalesforceFieldNotFound</fullName>
@@ -1143,10 +1143,10 @@
     </labels>
     <labels>
       <fullName>quantic_InvalidMaxNumberOfSuggestions</fullName>
-      <value>"{{0}}" is an invalid maximum number of suggestions. A positive integer was expected.</value>
+      <value>The maximum number of suggestions must be an integer greater than 0.</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>invalid maximum number of suggestions.</shortDescription>
+      <shortDescription>Invalid maximum number of suggestions.</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_PropertyIsRequired</fullName>
@@ -1164,7 +1164,7 @@
     </labels>
     <labels>
       <fullName>quantic_UnableToInitializeComponent</fullName>
-      <value>Fatal error: unable to initialize the {{0}} component.</value>
+      <value>Fatal error: Unable to initialize the {{0}} component.</value>
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Fatal error: unable to initialize the component.</shortDescription>

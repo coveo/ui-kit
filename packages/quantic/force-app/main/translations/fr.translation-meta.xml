@@ -609,11 +609,11 @@
         <name>quantic_LookAtDeveloperConsole</name>
     </customLabels>
     <customLabels>
-        <label>"{{0}}" est un nombre maximum de suggestions de documents non valide. Un nombre entier supérieur à 0 était attendu.</label>
+        <label>Le nombre maximum de suggestions de documents doit être un nombre entier supérieur à 0.</label>
         <name>quantic_InvalidMaxNumberOfDocumentSuggestions</name>
     </customLabels>
     <customLabels>
-        <label>"{{0}}" n'est pas un nombre valide de suggestions de documents ouvertes automatiquement. Un nombre entier positif était attendu.</label>
+        <label>Le nombre de suggestions de documents qui s'ouvrent automatiquement doit être un nombre entier supérieur à 0.</label>
         <name>quantic_InvalidNumberOfAutoOpenedDocuments</name>
     </customLabels>
     <customLabels>
@@ -621,7 +621,7 @@
         <name>quantic_SalesforceFieldNotFound</name>
     </customLabels>
     <customLabels>
-        <label>"{{0}}" est un nombre maximum de suggestions non valide. Un nombre entier positif était attendu.</label>
+        <label>Le nombre maximum de suggestions doit être un nombre entier supérieur à 0.</label>
         <name>quantic_InvalidMaxNumberOfSuggestions</name>
     </customLabels>
     <customLabels>
@@ -633,7 +633,7 @@
         <name>quantic_ComponentInitializationError</name>
     </customLabels>
     <customLabels>
-        <label>Erreur fatale : impossible d'initialiser le composant {{0}}.</label>
+        <label>Erreur fatale : Impossible d'initialiser le composant {{0}}.</label>
         <name>quantic_UnableToInitializeComponent</name>
     </customLabels>
 </Translations>

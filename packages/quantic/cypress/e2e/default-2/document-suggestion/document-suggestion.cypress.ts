@@ -23,17 +23,11 @@ interface DocumentSuggestionOptions {
   numberOfAutoOpenedDocuments: number;
 }
 
-const invalidMaxSuggestionsError = (value: string | number) => {
-  return `"${Number(
-    value
-  )}" is an invalid maximum number of document suggestions. An integer greater than 0 was expected.`;
-};
+const invalidMaxSuggestionsError =
+  'The maximum number of document suggestions must an integer be greater than 0.';
 
-const invalidNumberOfAutoOpenedDocumentsError = (value: string | number) => {
-  return `"${Number(
-    value
-  )}" is an invalid number of automatically opened document suggestions. A positive integer was expected.`;
-};
+const invalidNumberOfAutoOpenedDocumentsError =
+  'The number of automatically opened document suggestions must be an integer greater that 0.';
 
 describe('quantic-document-suggestion', () => {
   const pageUrl = 's/quantic-document-suggestion';
@@ -223,7 +217,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayNoSuggestions(false);
         Expect.displayComponentError(true);
         Expect.displayComponentErrorMessage(
-          invalidNumberOfAutoOpenedDocumentsError(invalidValue)
+          invalidNumberOfAutoOpenedDocumentsError
         );
       });
     });
@@ -265,9 +259,7 @@ describe('quantic-document-suggestion', () => {
         Expect.numberOfSuggestions(0);
         Expect.displayNoSuggestions(false);
         Expect.displayComponentError(true);
-        Expect.displayComponentErrorMessage(
-          invalidMaxSuggestionsError(invalidValue)
-        );
+        Expect.displayComponentErrorMessage(invalidMaxSuggestionsError);
       });
     });
 
@@ -282,9 +274,7 @@ describe('quantic-document-suggestion', () => {
         Expect.numberOfSuggestions(0);
         Expect.displayNoSuggestions(false);
         Expect.displayComponentError(true);
-        Expect.displayComponentErrorMessage(
-          invalidMaxSuggestionsError(invalidValue)
-        );
+        Expect.displayComponentErrorMessage(invalidMaxSuggestionsError);
       });
     });
 

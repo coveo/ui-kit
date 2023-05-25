@@ -1,14 +1,13 @@
-import { LightningElement, api, track } from 'lwc';
+import invalidMaxNumberOfDocumentSuggestions from '@salesforce/label/c.quantic_InvalidMaxNumberOfDocumentSuggestions';
+import invalidNumberOfAutoOpenedDocuments from '@salesforce/label/c.quantic_InvalidNumberOfAutoOpenedDocuments';
+import loading from '@salesforce/label/c.quantic_Loading';
+import noSuggestions from '@salesforce/label/c.quantic_NoSuggestions';
+import readMore from '@salesforce/label/c.quantic_ReadMore';
 import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import loading from '@salesforce/label/c.quantic_Loading';
-import noSuggestions from '@salesforce/label/c.quantic_NoSuggestions';
-import readMore from '@salesforce/label/c.quantic_ReadMore';
-import invalidMaxNumberOfDocumentSuggestions from '@salesforce/label/c.quantic_InvalidMaxNumberOfDocumentSuggestions';
-import invalidNumberOfAutoOpenedDocuments from '@salesforce/label/c.quantic_InvalidNumberOfAutoOpenedDocuments';
-import { I18nUtils } from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").DocumentSuggestionList} DocumentSuggestionList */
@@ -26,7 +25,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
     noSuggestions,
     readMore,
     invalidMaxNumberOfDocumentSuggestions,
-    invalidNumberOfAutoOpenedDocuments
+    invalidNumberOfAutoOpenedDocuments,
   };
 
   /**
@@ -125,17 +124,13 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   validateProps() {
     if (!(Number(this.maxDocuments) > 0)) {
       this.hasInitializationError = true;
-      this.initializationErrorMessage = `${I18nUtils.format(
-        this.labels.invalidMaxNumberOfDocumentSuggestions,
-        this.maxDocuments
-      )}`
+      this.initializationErrorMessage =
+        this.labels.invalidMaxNumberOfDocumentSuggestions;
     }
     if (!(Number(this.numberOfAutoOpenedDocuments) >= 0)) {
       this.hasInitializationError = true;
-      this.initializationErrorMessage = `${I18nUtils.format(
-        this.labels.invalidNumberOfAutoOpenedDocuments,
-        this.numberOfAutoOpenedDocuments
-      )}`;
+      this.initializationErrorMessage =
+        this.labels.invalidNumberOfAutoOpenedDocuments;
     }
   }
 
