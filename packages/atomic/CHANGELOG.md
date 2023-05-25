@@ -1,3 +1,18 @@
+## 2.30.1 (2023-05-23)
+
+
+### Bug Fixes
+
+* hide ipx if parent is hidden SVCINT-2357 ([#2910](https://github.com/coveo/ui-kit/issues/2910)) ([30c72dc](https://github.com/coveo/ui-kit/commits/30c72dc7dc4caccddbb19d8cc55981c7d04226e2))
+
+
+### Features
+
+* **atomic:** added smart snippet components for insight panels ([#2908](https://github.com/coveo/ui-kit/issues/2908)) ([b63c79d](https://github.com/coveo/ui-kit/commits/b63c79d33e27d20428f10aaa6f6d93b95f1d8fe1))
+* **atomic:** remove white stroke on checkbox tick svg when using part ([#2899](https://github.com/coveo/ui-kit/issues/2899)) ([d0eb2be](https://github.com/coveo/ui-kit/commits/d0eb2bea19986a4531866ffb4dde601dcbf5711b))
+
+
+
 # Change Log
 
 All notable changes to this project will be documented in this file.

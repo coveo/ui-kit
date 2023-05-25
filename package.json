@@ -17,6 +17,7 @@
     "commit": "git-cz",
     "bump:version": "node ./scripts/deploy/bump-version.mjs",
     "bump:version:major-prerelease": "node ./scripts/deploy/manual-major-prerelease.mjs",
+    "pre-commit": "lint-staged",
     "promote:npm:beta": "nx run-many --target=promote:npm:beta",
     "promote:npm:latest": "nx run-many --target=promote:npm:latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
@@ -50,6 +51,7 @@
     "commitizen": "4.2.5",
     "concurrently": "7.6.0",
     "cross-fetch": "3.1.5",
+    "cypress-repeat": "2.3.3",
     "cz-conventional-changelog": "3.3.0",
     "detect-indent": "7.0.1",
     "esbuild": "0.14.2",
@@ -119,7 +121,7 @@
     "**/*.ts?(x)": [
       "eslint --fix"
     ],
-    "**/{*.{scss,css,pcss,html,mdx},{package,nx,project}.json}": [
+    "**/{*.{scss,css,pcss,html,mdx,cls},{package,nx,project}.json}": [
       "prettier --write"
     ]
   },
