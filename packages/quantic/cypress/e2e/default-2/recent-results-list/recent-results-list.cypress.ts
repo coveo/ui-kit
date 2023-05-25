@@ -142,22 +142,20 @@ describe('quantic-recent-results-list', () => {
     });
   });
 
-  describe('when there are no results', () => {
-    describe('when #hideWhenEmpty is set to false', () => {
-      it('should display an empty list', () => {
-        visitRecentResultsList({});
+  describe('when #hideWhenEmpty is set to false', () => {
+    it('should display an empty list when there are no results', () => {
+      visitRecentResultsList({});
 
-        scope('when loading the page', () => {
-          Expect.displayRecentResultsCard(true);
-          Expect.displayResults(false);
-          Expect.displayEmptyList(true);
-        });
+      scope('when loading the page', () => {
+        Expect.displayRecentResultsCard(true);
+        Expect.displayResults(false);
+        Expect.displayEmptyList(true);
       });
     });
   });
 
   describe('when #hideWhenEmpty is set to true', () => {
-    it('should not display the recent results card', () => {
+    it('should not display an empty list when there are no results', () => {
       visitRecentResultsList({hideWhenEmpty: true});
 
       scope('when loading the page', () => {
