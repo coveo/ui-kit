@@ -246,6 +246,12 @@ export class AtomicProductListingInterface
     }
 
     this.engine!.dispatch(
+      loadProductListingActions(this.engine!).setProductListingUrl({
+        url: 'https://fashion.coveodemo.com/browse/men/hats',
+      })
+    );
+
+    this.engine!.dispatch(
       loadProductListingActions(this.engine!).fetchProductListing()
     );
   }
