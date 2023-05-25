@@ -11,6 +11,10 @@ const toggleSelectors = [
   'atomic-insight-edit-toggle',
   'atomic-insight-history-toggle',
 ];
+const smartSnippetSelectors = [
+  'atomic-insight-smart-snippet-suggestions',
+  'atomic-insight-smart-snippet',
+];
 
 export function buildInsightLayout(element: HTMLElement, widget: boolean) {
   const id = element.id;
@@ -70,6 +74,10 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
   const results = `
     ${sectionSelector('results')} {
       overflow: auto;
+    }
+
+    ${sectionSelector('results')} ${smartSnippetSelectors.join(',')} {
+      padding: 1.5rem 1.5rem 0px;
     }
     `;
 

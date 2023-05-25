@@ -1,11 +1,11 @@
-import { LightningElement, api, track } from 'lwc';
+import showNResultsPerPage from '@salesforce/label/c.quantic_ShowNResultsPerPage';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import { I18nUtils } from 'c/quanticUtils';
-import showNResultsPerPage from '@salesforce/label/c.quantic_ShowNResultsPerPage';
+import {I18nUtils} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */

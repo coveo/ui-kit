@@ -1,14 +1,13 @@
-import {LightningElement, api, track} from 'lwc';
+import goToPage from '@salesforce/label/c.quantic_GoToPage';
+import nextPage from '@salesforce/label/c.quantic_NextPage';
+import previousPage from '@salesforce/label/c.quantic_PreviousPage';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
-
-import nextPage from '@salesforce/label/c.quantic_NextPage';
-import previousPage from '@salesforce/label/c.quantic_PreviousPage';
-import goToPage from '@salesforce/label/c.quantic_GoToPage';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Pager} Pager */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */

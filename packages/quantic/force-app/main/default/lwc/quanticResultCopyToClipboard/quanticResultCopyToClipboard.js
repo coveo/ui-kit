@@ -103,7 +103,10 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
   handleCopyToClipBoard = (event) => {
     event.stopPropagation();
     this._loading = true;
-    const resultText = buildTemplateTextFromResult(this.textTemplate, this.result);
+    const resultText = buildTemplateTextFromResult(
+      this.textTemplate,
+      this.result
+    );
 
     copyToClipboard(resultText)
       .then(() => {

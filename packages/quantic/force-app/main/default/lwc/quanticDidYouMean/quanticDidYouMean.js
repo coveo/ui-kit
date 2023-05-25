@@ -1,14 +1,13 @@
-import {api, LightningElement, track} from 'lwc';
+import didYouMean from '@salesforce/label/c.quantic_DidYouMean';
+import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
+import queryCorrectedTo from '@salesforce/label/c.quantic_QueryCorrectedTo';
 import {
   getHeadlessBundle,
   initializeWithHeadless,
   registerComponentForInit,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
-
-import didYouMean from '@salesforce/label/c.quantic_DidYouMean';
-import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
-import queryCorrectedTo from '@salesforce/label/c.quantic_QueryCorrectedTo';
+import {api, LightningElement, track} from 'lwc';
 
 /** @typedef {import("coveo").DidYouMean} DidYouMean */
 /** @typedef {import("coveo").Unsubscribe} Unsubscribe */

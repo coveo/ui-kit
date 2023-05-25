@@ -1,19 +1,17 @@
-import {LightningElement, track, api} from 'lwc';
 import LOCALE from '@salesforce/i18n/locale';
-
+import noResults from '@salesforce/label/c.quantic_NoResults';
+import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
+import showingResultsOf from '@salesforce/label/c.quantic_ShowingResultsOf';
+import showingResultsOfWithQuery from '@salesforce/label/c.quantic_ShowingResultsOfWithQuery';
+import showingResultsOfWithQuery_plural from '@salesforce/label/c.quantic_ShowingResultsOfWithQuery_plural';
+import showingResultsOf_plural from '@salesforce/label/c.quantic_ShowingResultsOf_plural';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
-
-import noResults from '@salesforce/label/c.quantic_NoResults';
-import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
-import showingResultsOf from '@salesforce/label/c.quantic_ShowingResultsOf';
-import showingResultsOf_plural from '@salesforce/label/c.quantic_ShowingResultsOf_plural';
-import showingResultsOfWithQuery from '@salesforce/label/c.quantic_ShowingResultsOfWithQuery';
-import showingResultsOfWithQuery_plural from '@salesforce/label/c.quantic_ShowingResultsOfWithQuery_plural';
+import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").QuerySummary} QuerySummary */
@@ -81,7 +79,7 @@ export default class QuanticSummary extends LightningElement {
 
   updateState() {
     this.state = this.querySummary.state;
-    if(this.state?.hasResults) {
+    if (this.state?.hasResults) {
       this.updateAriaMessage();
     }
   }
