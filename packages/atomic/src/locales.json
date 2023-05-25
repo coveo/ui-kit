@@ -1490,6 +1490,9 @@
   "insight-related-cases": {
     "en": "Insights related to this case"
   },
+  "full-search": {
+    "en": "Button to access full search"
+  },
   "calendar-last-day": {
     "en": "[Yesterday]",
     "fr": "[Hier]"

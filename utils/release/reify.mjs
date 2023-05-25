@@ -70,9 +70,6 @@ async function initArborist() {
     savePrefix: '',
     path: REPO_FS_ROOT,
     registry,
-    ...(registry && registry.includes('//localhost')
-      ? {_authToken: 'invalid'} // TODO: Uncomment when we enable new versioning process.
-      : {}),
   });
   console.log('Loading virtual tree.');
   await arb.loadVirtual();
