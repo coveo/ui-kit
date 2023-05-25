@@ -8,6 +8,8 @@ import {
 } from './smart-snippet-feedback-modal-selectors';
 import {SmartSnippetSelectors} from './smart-snippet-selectors';
 
+// TODO: click with force true is done as workaround for flakiness (with modal)
+//  as Cypress sometimes sees the button as invisible. Explore if there is a better solution.
 describe('Smart Snippet Feedback Modal Test Suites', () => {
   function setupOpenModal() {
     new TestFixture().with(addSmartSnippet()).init();
