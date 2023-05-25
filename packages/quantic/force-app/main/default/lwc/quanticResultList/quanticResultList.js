@@ -1,8 +1,11 @@
 import loadingResults from '@salesforce/label/c.quantic_LoadingResults';
-import { registerComponentForInit, initializeWithHeadless, getHeadlessBundle } from 'c/quanticHeadlessLoader';
-import { AriaLiveRegion, I18nUtils } from 'c/quanticUtils';
-import { LightningElement, api, track } from 'lwc';
-
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+  getHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultList} ResultList */

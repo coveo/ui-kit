@@ -17,7 +17,7 @@
     "@angular/platform-browser": "14.2.12",
     "@angular/platform-browser-dynamic": "14.2.12",
     "@angular/router": "14.2.12",
-    "@coveo/atomic-angular": "^2.0.0",
+    "@coveo/atomic-angular": "2.7.17",
     "rxjs": "7.5.6",
     "tslib": "2.4.0",
     "zone.js": "0.11.8"

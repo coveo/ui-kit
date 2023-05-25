@@ -26,6 +26,7 @@ import {
   clickApplyButton,
   inputEndDate,
   invokeSubmitButton,
+  UnitRange,
 } from './timeframe-facet-action';
 import * as TimeframeFacetAssertions from './timeframe-facet-assertions';
 import {
@@ -39,7 +40,7 @@ const endDate = '2021-09-03';
 describe('Timeframe Facet V1 Test Suites', () => {
   const defaultNumberOfValues = unitFrames.length;
   describe('does not throw on init when there is no filter and timeframe configured', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addTimeframeFacet({label: timeframeFacetLabel}))
         .init();
@@ -55,7 +56,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupTimeframeFacet);
+      beforeEach(setupTimeframeFacet);
       CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
       CommonAssertions.assertAccessibility(timeframeFacetComponent);
       CommonAssertions.assertContainsComponentError(
@@ -84,7 +85,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
       }
       describe('verify rendering', () => {
-        before(setupSelectLinkValue);
+        beforeEach(setupSelectLinkValue);
         CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
         CommonAssertions.assertAccessibility(timeframeFacetComponent);
         CommonFacetAssertions.assertDisplayClearButton(
@@ -102,7 +103,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
       });
 
       describe('verify analytic', () => {
-        before(setupSelectLinkValue);
+        beforeEach(setupSelectLinkValue);
         TimeframeFacetAssertions.assertLogTimeframeFacetSelect(
           timeframeFacetField,
           unitFrames[selectionIndex].unit,
@@ -119,7 +120,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupSecondLinkValue);
+          beforeEach(setupSecondLinkValue);
           CommonAssertions.assertAccessibility(timeframeFacetComponent);
           CommonFacetAssertions.assertNumberOfSelectedLinkValues(
             TimeframeFacetSelectors,
@@ -132,7 +133,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          before(setupSecondLinkValue);
+          beforeEach(setupSecondLinkValue);
           TimeframeFacetAssertions.assertLogTimeframeFacetSelect(
             timeframeFacetField,
             unitFrames[secondSelectionIndex].unit,
@@ -147,7 +148,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
             pressClearButton(TimeframeFacetSelectors);
           }
           describe('verify rendering', () => {
-            before(setupClearCheckboxValues);
+            beforeEach(setupClearCheckboxValues);
 
             CommonFacetAssertions.assertDisplayClearButton(
               TimeframeFacetSelectors,
@@ -165,7 +166,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            before(setupClearCheckboxValues);
+            beforeEach(setupClearCheckboxValues);
             CommonFacetAssertions.assertLogClearFacetValues(
               timeframeFacetField
             );
@@ -191,14 +192,14 @@ describe('Timeframe Facet V1 Test Suites', () => {
       };
 
       describe('verify rendering', () => {
-        before(() => {
+        beforeEach(() => {
           new TestFixture().with(addTimeFrameWithInputRange()).init();
         });
         TimeframeFacetAssertions.assertDisplayRangeInput(true);
       });
 
       describe('with a date range in the hash', () => {
-        before(() => {
+        beforeEach(() => {
           new TestFixture()
             .with(addTimeFrameWithInputRange())
             .withHash(
@@ -223,7 +224,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupInputRange);
+          beforeEach(setupInputRange);
           TimeframeFacetAssertions.assertRangeHash(startDate, endDate, true);
           TimeframeFacetAssertions.assertDisplayRangeInput(true);
           CommonFacetAssertions.assertDisplayValues(
@@ -233,7 +234,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         });
 
         describe('verify analytic', () => {
-          before(setupInputRange);
+          beforeEach(setupInputRange);
           TimeframeFacetAssertions.assertLogTimeframeInputRange(
             timeframeFacetField
           );
@@ -256,7 +257,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupTimeframeFacet);
+      beforeEach(setupTimeframeFacet);
       CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
       CommonAssertions.assertAccessibility(timeframeFacetComponent);
       CommonAssertions.assertContainsComponentError(
@@ -285,7 +286,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(() => {
+      beforeEach(() => {
         setupTimeframeWithInputOnly();
       });
       TimeframeFacetAssertions.assertDisplayRangeInput(true);
@@ -299,7 +300,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
     describe('verify input form', () => {
       describe('when "start" & "end" input is empty', () => {
-        before(() => {
+        beforeEach(() => {
           setupTimeframeWithInputOnly();
           invokeSubmitButton();
           clickApplyButton();
@@ -308,7 +309,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
       });
 
       describe('when "end" input is empty', () => {
-        before(() => {
+        beforeEach(() => {
           setupTimeframeWithInputOnly();
           inputStartDate(startDate);
           invokeSubmitButton();
@@ -318,7 +319,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
       });
 
       describe('when "start" input is empty', () => {
-        before(() => {
+        beforeEach(() => {
           setupTimeframeWithInputOnly();
           inputEndDate(endDate);
           invokeSubmitButton();
@@ -328,7 +329,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
       });
 
       describe('when "start" input is bigger than "end" input', () => {
-        before(() => {
+        beforeEach(() => {
           setupTimeframeWithInputOnly();
           inputStartDate(endDate);
           inputEndDate(startDate);
@@ -340,7 +341,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
       describe('when "min" is set on the input date', () => {
         const min = dayjs(startDate).format('YYYY-MM-DD');
-        before(() => {
+        beforeEach(() => {
           setupTimeframeWithInputOnly({
             min,
           });
@@ -354,7 +355,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
       describe('when "max" is set on the input date', () => {
         const max = dayjs(endDate).format('YYYY-MM-DD');
-        before(() => {
+        beforeEach(() => {
           setupTimeframeWithInputOnly({
             max,
           });
@@ -388,7 +389,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupTimeframeFacetCustomAmount);
+      beforeEach(setupTimeframeFacetCustomAmount);
       CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
       CommonAssertions.assertAccessibility(timeframeFacetComponent);
       CommonFacetAssertions.assertLabelContains(
@@ -425,7 +426,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupTimeframeFacetCustomAmount);
+      beforeEach(setupTimeframeFacetCustomAmount);
       CommonFacetAssertions.assertDisplayFacet(TimeframeFacetSelectors, true);
       CommonAssertions.assertAccessibility(timeframeFacetComponent);
       CommonAssertions.assertContainsComponentError(
@@ -456,7 +457,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
   });
 
   describe('when no search has yet been executed', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
         .withoutFirstAutomaticSearch()
@@ -471,7 +472,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
   });
 
   describe('with a field that returns no result', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addTimeframeFacet(
@@ -497,7 +498,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
   describe('with an invalid option', () => {
     const invalidFrames = [{unit: 'here'}];
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addTimeframeFacet(
@@ -505,7 +506,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
               field: timeframeFacetField,
               label: timeframeFacetLabel,
             },
-            invalidFrames
+            invalidFrames as UnitRange[]
           )
         )
         .init();
@@ -518,7 +519,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
   });
 
   describe('with a selected path in the URL', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addTimeframeFacet(
@@ -549,7 +550,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         .init();
     }
     describe('verify rendering', () => {
-      before(setupBreadboxWithTimeframeFacet);
+      beforeEach(setupBreadboxWithTimeframeFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
     });
 
@@ -561,7 +562,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(() => {
+        beforeEach(() => {
           setupSelectedTimeframeFacetValue();
           cy.wait(TestFixture.interceptAliases.Search);
         });
@@ -583,7 +584,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(() => {
+          beforeEach(() => {
             setupDeselectTimeframeFacetValue();
             cy.wait(TestFixture.interceptAliases.Search);
           });
@@ -591,12 +592,12 @@ describe('Timeframe Facet V1 Test Suites', () => {
         });
 
         describe('verify analytic', () => {
-          before(setupDeselectTimeframeFacetValue);
+          beforeEach(setupDeselectTimeframeFacetValue);
           BreadboxAssertions.assertLogBreadcrumbFacet(timeframeFacetField);
         });
 
         describe('verify selected facetValue', () => {
-          before(setupSelectedTimeframeFacetValue);
+          beforeEach(setupSelectedTimeframeFacetValue);
           BreadboxAssertions.assertDeselectLinkFacet(
             TimeframeFacetSelectors,
             deselectionIndex
@@ -613,13 +614,18 @@ describe('Timeframe Facet V1 Test Suites', () => {
         function setupBreadboxWithCustomTimeframeFacet() {
           new TestFixture()
             .with(addBreadbox())
-            .with(addTimeframeFacet({label: timeframeFacetLabel}, periodFrames))
+            .with(
+              addTimeframeFacet(
+                {label: timeframeFacetLabel},
+                periodFrames as UnitRange[]
+              )
+            )
             .init();
           selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
         }
 
-        describe('verfiry rendering', () => {
-          before(setupBreadboxWithCustomTimeframeFacet);
+        describe('verify rendering', () => {
+          beforeEach(setupBreadboxWithCustomTimeframeFacet);
           CommonAssertions.assertAccessibility(breadboxComponent);
           BreadboxAssertions.assertDisplayBreadcrumb(true);
           BreadboxAssertions.assertSelectedLinkFacetsInBreadcrumb(
@@ -636,7 +642,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     const parentField = 'filetype';
     const expectedValue = 'rssitem';
     describe('as a dependent, without an input', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addTimeframeFacet(
@@ -662,7 +668,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
       );
 
       describe('when the dependency is met', () => {
-        before(() => {
+        beforeEach(() => {
           typeFacetSearchQuery(
             FacetSelectors.withId(parentFacetId),
             expectedValue,
@@ -683,7 +689,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     });
 
     describe('as a dependent, with a facet and an input', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addTimeframeFacet(
@@ -710,7 +716,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
       );
 
       describe('when the dependency is met', () => {
-        before(() => {
+        beforeEach(() => {
           typeFacetSearchQuery(
             FacetSelectors.withId(parentFacetId),
             expectedValue,
@@ -731,7 +737,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     });
 
     describe('as a dependent, without a facet', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addTimeframeFacet({
@@ -755,7 +761,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
       );
 
       describe('when the dependency is met', () => {
-        before(() => {
+        beforeEach(() => {
           typeFacetSearchQuery(
             FacetSelectors.withId(parentFacetId),
             expectedValue,
@@ -776,7 +782,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     });
 
     describe('with two dependencies', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
           .with(addFacet({'facet-id': 'def', field: 'filetype'}))
