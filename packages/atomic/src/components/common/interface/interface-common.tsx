@@ -32,7 +32,7 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType>
 }
 
 export const mismatchedInterfaceAndEnginePropError = (
-  interfaceKind: 'search' | 'recommendation',
+  interfaceKind: 'search' | 'recommendation' | 'product listing',
   configurationName: 'query pipeline' | 'search hub'
 ) =>
   `A ${configurationName} is configured on the ${interfaceKind} interface element, but the ${interfaceKind} interface was initialized with an engine. You should only configure the ${configurationName} in the target engine.`;

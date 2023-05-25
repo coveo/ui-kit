@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -18,7 +18,9 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
+import { LogLevel, ProductListingEngine } from "@coveo/headless/product-listing";
+import { InitializationOptions } from "./components/product-listing/atomic-product-listing-interface/atomic-product-listing-interface";
+import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -26,7 +28,7 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
-import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { InitializationOptions as InitializationOptions1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
@@ -873,6 +875,74 @@ export namespace Components {
     }
     interface AtomicPopover {
     }
+    interface AtomicProductListingInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics": boolean;
+        /**
+          * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
+         */
+        "enableRelevanceInspector": boolean;
+        /**
+          * The product listing interface headless engine.
+         */
+        "engine"?: ProductListingEngine;
+        /**
+          * Fecth the product listing and logs the interface load event to analytics, after initializing connection to the headless product listing engine.
+         */
+        "fetchProductListing": () => Promise<void>;
+        /**
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-product-listing-interface fields-to-include='["fieldA", "fieldB"]'></atomic-product-listing-interface> ```
+         */
+        "fieldsToInclude": string[] | string;
+        /**
+          * Returns the unique, organization-specific endpoint(s)
+          * @param organizationId
+          * @param env
+         */
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; }>;
+        /**
+          * The product listing interface i18next instance.
+         */
+        "i18n": i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath": string;
+        /**
+          * Initializes the connection with the headless product listing engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
+         */
+        "initialize": (options: InitializationOptions) => Promise<void>;
+        /**
+          * Initializes the connection with an already preconfigured headless product listing engine, as opposed to the `initialize` method which will internally create a new product listing engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+         */
+        "initializeWithProductListingEngine": (engine: ProductListingEngine) => Promise<void>;
+        /**
+          * The product listing interface language.
+         */
+        "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath": string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
+        /**
+          * The product listing interface [query pipeline](https://docs.coveo.com/en/180/).  If the product listing interface is initialized using [`initializeWithProductListingEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-product-listing-interface/#initializewithProductListingEngine), the query pipeline should instead be configured in the target engine.
+         */
+        "pipeline"?: string;
+        /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer": string;
+        /**
+          * The product listing interface [search hub](https://docs.coveo.com/en/1342/).  If the product listing interface is initialized using [`initializeWithProductListingEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-product-listing-interface/#initializewithProductListingEngine, the search hub should instead be configured in the target engine.
+         */
+        "searchHub"?: string;
+    }
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
@@ -1011,7 +1081,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
         "fieldsToInclude": string[] | string;
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; }>;
         /**
           * Fetches new recommendations.
          */
@@ -1559,7 +1629,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; }>;
         /**
           * The search interface i18next instance.
          */
@@ -1587,7 +1657,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -2216,6 +2286,12 @@ declare global {
         prototype: HTMLAtomicPopoverElement;
         new (): HTMLAtomicPopoverElement;
     };
+    interface HTMLAtomicProductListingInterfaceElement extends Components.AtomicProductListingInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicProductListingInterfaceElement: {
+        prototype: HTMLAtomicProductListingInterfaceElement;
+        new (): HTMLAtomicProductListingInterfaceElement;
+    };
     interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
     }
     var HTMLAtomicQueryErrorElement: {
@@ -2665,6 +2741,7 @@ declare global {
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
+        "atomic-product-listing-interface": HTMLAtomicProductListingInterfaceElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -3554,6 +3631,56 @@ declare namespace LocalJSX {
     }
     interface AtomicPopover {
     }
+    interface AtomicProductListingInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics"?: boolean;
+        /**
+          * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
+         */
+        "enableRelevanceInspector"?: boolean;
+        /**
+          * The product listing interface headless engine.
+         */
+        "engine"?: ProductListingEngine;
+        /**
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-product-listing-interface fields-to-include='["fieldA", "fieldB"]'></atomic-product-listing-interface> ```
+         */
+        "fieldsToInclude"?: string[] | string;
+        /**
+          * The product listing interface i18next instance.
+         */
+        "i18n"?: i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath"?: string;
+        /**
+          * The product listing interface language.
+         */
+        "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath"?: string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
+        /**
+          * The product listing interface [query pipeline](https://docs.coveo.com/en/180/).  If the product listing interface is initialized using [`initializeWithProductListingEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-product-listing-interface/#initializewithProductListingEngine), the query pipeline should instead be configured in the target engine.
+         */
+        "pipeline"?: string;
+        /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer"?: string;
+        /**
+          * The product listing interface [search hub](https://docs.coveo.com/en/1342/).  If the product listing interface is initialized using [`initializeWithProductListingEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-product-listing-interface/#initializewithProductListingEngine, the search hub should instead be configured in the target engine.
+         */
+        "searchHub"?: string;
+    }
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
@@ -4209,7 +4336,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -4492,6 +4619,7 @@ declare namespace LocalJSX {
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
+        "atomic-product-listing-interface": AtomicProductListingInterface;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
@@ -4621,6 +4749,7 @@ declare module "@stencil/core" {
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
+            "atomic-product-listing-interface": LocalJSX.AtomicProductListingInterface & JSXBase.HTMLAttributes<HTMLAtomicProductListingInterfaceElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;

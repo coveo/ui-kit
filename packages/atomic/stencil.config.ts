@@ -149,7 +149,7 @@ export const config: Config = {
   ],
   rollupPlugins: {
     before: [
-      isDevWatch &&
+      true &&
         alias({
           entries: [
             {
@@ -171,6 +171,13 @@ export const config: Config = {
               replacement: path.resolve(
                 __dirname,
                 './src/external-builds/product-recommendation/headless.esm.js'
+              ),
+            },
+            {
+              find: '@coveo/headless/product-listing',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/product-listing/headless.esm.js'
               ),
             },
             {
