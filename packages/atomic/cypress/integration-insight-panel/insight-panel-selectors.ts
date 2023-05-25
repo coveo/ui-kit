@@ -28,6 +28,10 @@ export const InsightPanelsSelectors = {
     InsightPanelsSelectors.interface().find('atomic-insight-edit-toggle'),
   historyToggle: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-history-toggle'),
+  fullSearchButton: () =>
+    InsightPanelsSelectors.interface().find(
+      'atomic-insight-full-search-button'
+    ),
   tabs: () => InsightPanelsSelectors.interface().find('atomic-insight-tabs'),
   tabBar: () => InsightPanelsSelectors.tabs().find('tab-bar').shadow(),
   tabPopover: () =>
