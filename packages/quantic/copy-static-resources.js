@@ -40,23 +40,23 @@ const main = async () => {
     }
   );
   await copy(
-    '../headless/dist/browser/headless.js',
+    '../../node_modules/@coveo/headless/dist/browser/headless.js',
     './force-app/main/default/staticresources/coveoheadless/browser/headless.js'
   );
   await copy(
-    '../headless/dist/browser/case-assist/headless.js',
+    '../../node_modules/@coveo/headless/dist/browser/case-assist/headless.js',
     './force-app/main/default/staticresources/coveoheadless/browser/case-assist/headless.js'
   );
   await copy(
-    '../headless/dist/browser/insight/headless.js',
+    '../../node_modules/@coveo/headless/dist/browser/insight/headless.js',
     './force-app/main/default/staticresources/coveoheadless/browser/insight/headless.js'
   );
   await copy(
-    '../headless/dist/browser/recommendation/headless.js',
+    '../../node_modules/@coveo/headless/dist/browser/recommendation/headless.js',
     './force-app/main/default/staticresources/coveoheadless/browser/recommendation/headless.js'
   );
   await copy(
-    '../headless/dist/definitions',
+    '../../node_modules/@coveo/headless/dist/definitions',
     './force-app/main/default/staticresources/coveoheadless/definitions'
   );
   await copy(

@@ -1,21 +1,17 @@
 // @ts-ignore
-import {
-  getHeadlessBundle,
-  getHeadlessEnginePromise,
-} from 'c/quanticHeadlessLoader';
-import {LightningElement, api} from 'lwc';
+import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 // @ts-ignore
 import caseTemplate from './resultTemplates/caseResultTemplate.html';
 // @ts-ignore
 import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 // @ts-ignore
-import childTemplate from './resultTemplates/childResultTemplate.html';
-// @ts-ignore
 import defaultTemplate from './resultTemplates/defaultResultTemplate.html';
-// @ts-ignore
-import parentTemplate from './resultTemplates/parentResultTemplate.html';
-// @ts-ignore
-import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
+
+import {LightningElement, api} from 'lwc';
+import {
+  getHeadlessBundle,
+  getHeadlessEnginePromise,
+} from 'c/quanticHeadlessLoader';
 
 export default class ExampleInsightPanel extends LightningElement {
   /** @type {string} */
@@ -63,18 +59,7 @@ export default class ExampleInsightPanel extends LightningElement {
       'objecttype',
       ['FeedItem']
     );
-    const isThread = headless.ResultTemplatesHelpers.fieldMustMatch(
-      'source',
-      ['iNaturalistTaxons']
-    );
-    const isChild = headless.ResultTemplatesHelpers.fieldMustMatch(
-      'quantic__templateId',
-      ['myChildTemplate']
-    );
-
     resultTemplatesManager.registerTemplates(
-      {content: childTemplate, conditions: [isChild], priority: 1},
-      {content: parentTemplate, conditions: [isThread], fields: []},
       {
         content: youtubeTemplate,
         conditions: [isYouTube],
