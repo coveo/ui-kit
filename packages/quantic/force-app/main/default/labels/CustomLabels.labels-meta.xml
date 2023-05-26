@@ -1122,7 +1122,7 @@
     </labels>
     <labels>
       <fullName>quantic_InvalidMaxNumberOfDocumentSuggestions</fullName>
-      <value>The maximum number of document suggestions must be an integer be greater than 0.</value>
+      <value>The maximum number of document suggestions must be an integer greater than 0.</value>
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Invalid maximum number of document suggestions.</shortDescription>
