@@ -24,7 +24,7 @@ interface DocumentSuggestionOptions {
 }
 
 const invalidMaxSuggestionsError =
-  'The maximum number of document suggestions must be an integer be greater than 0.';
+  'The maximum number of document suggestions must be an integer greater than 0.';
 
 const invalidNumberOfAutoOpenedDocumentsError =
   'The number of automatically opened document suggestions must be an integer greater that 0.';
