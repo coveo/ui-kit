@@ -15,6 +15,7 @@ import {
   FoldedCollection,
   FoldedResult,
 } from '../../../features/folding/folding-state';
+import {queryReducer as query} from '../../../features/query/query-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {CoreEngine, Result} from '../../../recommendation.index';
 import {
@@ -249,7 +250,7 @@ export function buildCoreFoldedResultList(
 function loadFoldingReducer(
   engine: CoreEngine
 ): engine is CoreEngine<SearchSection & ConfigurationSection & FoldingSection> {
-  engine.addReducers({search, configuration, folding});
+  engine.addReducers({search, configuration, folding, query});
   return true;
 }
 

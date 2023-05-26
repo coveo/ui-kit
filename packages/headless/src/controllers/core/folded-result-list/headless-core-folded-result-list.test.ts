@@ -8,6 +8,7 @@ import {
   FoldedCollection,
   getFoldingInitialState,
 } from '../../../features/folding/folding-state';
+import {queryReducer as query} from '../../../features/query/query-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   buildMockResult,
@@ -62,6 +63,7 @@ describe('FoldedResultList', () => {
       search,
       configuration,
       folding,
+      query,
     });
   });
 
