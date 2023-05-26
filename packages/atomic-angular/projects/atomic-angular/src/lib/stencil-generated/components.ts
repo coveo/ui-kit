@@ -996,13 +996,13 @@ export declare interface AtomicResultImage extends Components.AtomicResultImage 
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['field']
+  inputs: ['fallback', 'field']
 })
 @Component({
   selector: 'atomic-result-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['field']
+  inputs: ['fallback', 'field']
 })
 export class AtomicResultImage {
   protected el: HTMLElement;

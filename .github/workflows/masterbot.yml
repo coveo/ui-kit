@@ -164,14 +164,13 @@ jobs:
   prerelease:
     timeout-minutes: 40
     name: Pre-release
-    # TODO: Uncomment when we enable new versioning process.
-    # env:
-    #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    # needs:
-    #   - 'lint-check'
-    #   - 'unit-test'
-    #   - 'e2e-atomic-test'
-    #   - 'e2e-quantic-test'
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    needs:
+      - 'lint-check'
+      - 'unit-test'
+      - 'e2e-atomic-test'
+      - 'e2e-quantic-test'
     runs-on: ubuntu-latest
     environment: 'Prerelease'
     steps:
@@ -180,7 +179,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v3
         with:
-          # registry-url: 'https://registry.npmjs.org' # TODO: Uncomment when we enable new versioning process.
+          registry-url: 'https://registry.npmjs.org'
           node-version-file: '.nvmrc'
       - name: Install npm
         run: npm i -g npm@9
@@ -190,22 +189,7 @@ jobs:
       - name: Release
         run: |
           npm run nx:graph
-          npm run build -w @coveo/verdaccio-starter
-          npm run release:install-npm-proxy
           npm run release:phase1-3
         env:
           DEBUG: '*'
           IS_PRERELEASE: 'true'
-      - name: Download published packages
-        shell: bash
-        run: |
-          mkdir downloaded-packages
-          while read package; do
-            echo "Downloading $package"
-            npm pack $package --pack-destination=downloaded-packages
-          done < .git-message
-      - name: Upload packages as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: packages
-          path: downloaded-packages

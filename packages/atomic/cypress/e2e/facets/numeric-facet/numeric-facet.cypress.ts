@@ -582,7 +582,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           NumericFacetAssertions.assertDisplayRangeInput(false);
 
           describe('with active input', () => {
-            before(() => {
+            beforeEach(() => {
               baseSetup().withHash(activeInput).init();
             });
             NumericFacetAssertions.assertDisplayRangeInput(true);
@@ -609,7 +609,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           NumericFacetAssertions.assertDisplayRangeInput(false);
 
           describe('with active input', () => {
-            before(() => {
+            beforeEach(() => {
               baseSetup().withHash(activeInput).init();
             });
 

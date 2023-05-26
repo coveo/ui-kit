@@ -33,7 +33,7 @@ describe('Rating Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupRatingFacet);
+        beforeEach(setupRatingFacet);
         CommonAssertions.assertAccessibility(ratingFacetComponent);
         CommonAssertions.assertContainsComponentError(
           RatingFacetSelectors,
@@ -76,7 +76,7 @@ describe('Rating Facet Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupSelectCheckboxValue);
+          beforeEach(setupSelectCheckboxValue);
 
           CommonAssertions.assertAccessibility(ratingFacetComponent);
           CommonFacetAssertions.assertDisplayClearButton(
@@ -94,7 +94,7 @@ describe('Rating Facet Test Suites', () => {
         });
 
         describe('verify analytic', () => {
-          before(setupSelectCheckboxValue);
+          beforeEach(setupSelectCheckboxValue);
           RatingFacetAssertions.assertLogRatingFacetSelect(ratingFacetField);
         });
       });
@@ -114,7 +114,7 @@ describe('Rating Facet Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupRatingFacetWithLinkValues);
+        beforeEach(setupRatingFacetWithLinkValues);
         CommonAssertions.assertAccessibility(ratingFacetComponent);
         CommonAssertions.assertContainsComponentError(
           RatingFacetSelectors,
@@ -157,7 +157,7 @@ describe('Rating Facet Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupSelectLinkValue);
+          beforeEach(setupSelectLinkValue);
 
           CommonAssertions.assertAccessibility(ratingFacetComponent);
           CommonFacetAssertions.assertDisplayClearButton(
@@ -175,7 +175,7 @@ describe('Rating Facet Test Suites', () => {
         });
 
         describe('verify analytic', () => {
-          before(setupSelectLinkValue);
+          beforeEach(setupSelectLinkValue);
           RatingFacetAssertions.assertLogRatingFacetSelect(ratingFacetField);
         });
 
@@ -186,7 +186,7 @@ describe('Rating Facet Test Suites', () => {
           }
 
           describe('verify rendering', () => {
-            before(setupClearCheckboxValues);
+            beforeEach(setupClearCheckboxValues);
 
             CommonFacetAssertions.assertDisplayClearButton(
               RatingFacetSelectors,
@@ -203,7 +203,7 @@ describe('Rating Facet Test Suites', () => {
             CommonFacetAssertions.assertFocusHeader(RatingFacetSelectors);
           });
           describe('verify analytics', () => {
-            before(setupClearCheckboxValues);
+            beforeEach(setupClearCheckboxValues);
 
             CommonFacetAssertions.assertLogClearFacetValues(ratingFacetField);
           });
@@ -226,7 +226,7 @@ describe('Rating Facet Test Suites', () => {
         .init();
     }
 
-    before(setupRatingFacetWithCustomInterval);
+    beforeEach(setupRatingFacetWithCustomInterval);
     CommonAssertions.assertAccessibility(ratingFacetComponent);
     CommonAssertions.assertContainsComponentError(RatingFacetSelectors, false);
     CommonFacetAssertions.assertDisplayFacet(RatingFacetSelectors, true);
@@ -264,7 +264,7 @@ describe('Rating Facet Test Suites', () => {
         .init();
     }
 
-    before(setupRatingFacetWithCustomMaxValueInIndex);
+    beforeEach(setupRatingFacetWithCustomMaxValueInIndex);
     CommonAssertions.assertAccessibility(ratingFacetComponent);
     CommonAssertions.assertContainsComponentError(RatingFacetSelectors, false);
     CommonFacetAssertions.assertDisplayFacet(RatingFacetSelectors, true);
@@ -302,7 +302,7 @@ describe('Rating Facet Test Suites', () => {
         .init();
     }
 
-    before(setupRatingFacetWithCustomMinValueInIndex);
+    beforeEach(setupRatingFacetWithCustomMinValueInIndex);
     CommonAssertions.assertAccessibility(ratingFacetComponent);
     CommonAssertions.assertContainsComponentError(RatingFacetSelectors, false);
     CommonFacetAssertions.assertDisplayFacet(RatingFacetSelectors, true);
@@ -322,7 +322,7 @@ describe('Rating Facet Test Suites', () => {
   });
 
   describe('with invalid option', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addRatingFacet({
@@ -339,7 +339,7 @@ describe('Rating Facet Test Suites', () => {
   });
 
   describe('when field returns no results', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addRatingFacet({
@@ -356,7 +356,7 @@ describe('Rating Facet Test Suites', () => {
   });
 
   describe('with a selected path in the URL', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addRatingFacet({
@@ -390,7 +390,7 @@ describe('Rating Facet Test Suites', () => {
       const parentFacetId = 'def';
       const parentField = 'language';
       const expectedValue = 'English';
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addRatingFacet({
@@ -413,7 +413,7 @@ describe('Rating Facet Test Suites', () => {
       );
 
       describe('when the dependency is met', () => {
-        before(() => {
+        beforeEach(() => {
           typeFacetSearchQuery(
             FacetSelectors.withId(parentFacetId),
             expectedValue,
@@ -434,7 +434,7 @@ describe('Rating Facet Test Suites', () => {
     });
 
     describe('with two dependencies', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
           .with(addFacet({'facet-id': 'def', field: 'filetype'}))
@@ -457,7 +457,7 @@ describe('Rating Facet Test Suites', () => {
     });
 
     describe('with two dependencies', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
           .with(addFacet({'facet-id': 'def', field: 'filetype'}))
