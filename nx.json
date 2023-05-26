@@ -39,12 +39,6 @@
     },
     "lint:check": {},
     "lint:fix": {},
-    "publish:npm:release": {
-      "dependsOn": ["build"]
-    },
-    "publish:npm:prerelease": {
-      "dependsOn": ["build"]
-    },
     "publish:sfdx": {
       "dependsOn": ["build"]
     },

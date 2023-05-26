@@ -87,9 +87,9 @@ Does the same thing as the `test` script, except:
 - Promotes a remote package.
 - Should be run after QA validations.
 
-### `promote:npm:beta` and `promote:npm:latest` scripts
+### `promote:npm:latest` script
 
-- Promotes an NPM package.
+- Promotes an NPM package to `latest`.
 
 ### `promote:sfdx` script
 
