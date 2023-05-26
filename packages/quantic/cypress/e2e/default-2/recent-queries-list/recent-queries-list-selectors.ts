@@ -8,6 +8,7 @@ export interface RecentQueriesListSelector extends ComponentSelector {
   lastQuery: () => CypressSelector;
   emptyList: () => CypressSelector;
   query: (value: string) => CypressSelector;
+  recentQueriesCard: () => CypressSelector;
 }
 
 export const RecentQueriesListSelectors: RecentQueriesListSelector = {
@@ -23,4 +24,6 @@ export const RecentQueriesListSelectors: RecentQueriesListSelector = {
     RecentQueriesListSelectors.get()
       .find('.query-text__container')
       .contains(value),
+  recentQueriesCard: () =>
+    RecentQueriesListSelectors.get().find('[data-cy="recent-queries-card"]'),
 };

@@ -18,6 +18,7 @@ interface RecentQueriesListOptions {
   maxLength: number;
   label: string;
   isCollapsed: boolean;
+  hideWhenEmpty: boolean;
 }
 
 function createRandomQueriesList(length: number) {
@@ -124,17 +125,50 @@ describe('quantic-recent-queries-list', () => {
   });
 
   describe('when there are no results', () => {
-    it('should work as expected', () => {
-      visitRecentQueries({}, false);
+    describe('when #hideWhenEmpty is set to false', () => {
+      it('should display an empty list', () => {
+        visitRecentQueries({}, false);
 
-      scope('when searching new queries', () => {
-        createRandomQueriesList(2).forEach((query) => {
-          setQuery(query);
-          performSearch().wait(InterceptAliases.Search);
-
+        scope('when loading the page', () => {
+          Expect.displayRecentQueriesCard(true);
           Expect.displayQueries(false);
           Expect.displayEmptyList(true);
-          clearInput();
+        });
+
+        scope('when searching new queries', () => {
+          createRandomQueriesList(2).forEach((query) => {
+            setQuery(query);
+            performSearch().wait(InterceptAliases.Search);
+
+            Expect.displayRecentQueriesCard(true);
+            Expect.displayQueries(false);
+            Expect.displayEmptyList(true);
+            clearInput();
+          });
+        });
+      });
+    });
+
+    describe('when #hideWhenEmpty is set to true', () => {
+      it('should not display the recent queries card', () => {
+        visitRecentQueries({hideWhenEmpty: true}, false);
+
+        scope('when loading the page', () => {
+          Expect.displayRecentQueriesCard(false);
+          Expect.displayQueries(false);
+          Expect.displayEmptyList(false);
+        });
+
+        scope('when searching new queries', () => {
+          createRandomQueriesList(2).forEach((query) => {
+            setQuery(query);
+            performSearch().wait(InterceptAliases.Search);
+
+            Expect.displayRecentQueriesCard(false);
+            Expect.displayQueries(false);
+            Expect.displayEmptyList(false);
+            clearInput();
+          });
         });
       });
     });
