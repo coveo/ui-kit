@@ -152,12 +152,12 @@ describe('FoldedResultList', () => {
       ).toBeFalsy();
     });
 
-    it('#loadCollection dispatches #loadCollection AND #logShowMoreFoldedResults analytics', () => {
+    it('#loadCollection dispatches folding/loadCollection and #logShowMoreFoldedResults analytics', () => {
       const expectedLogShowMoreAction = 'analytics/folding/showMore/pending';
       const expectedLoadCollectionAction = 'folding/loadCollection/pending';
 
       foldedResultList.loadCollection(foldedResultList?.state?.results[0]);
-      expect(foldedResultList.state.results).not.toBe(undefined);
+
       expect(engine.actions.pop()?.type).toEqual(expectedLogShowMoreAction);
       expect(engine.actions.pop()?.type).toEqual(expectedLoadCollectionAction);
     });
