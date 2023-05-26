@@ -13,8 +13,6 @@
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
     "commit": "git-cz",
-    "bump:version": "node ./scripts/deploy/bump-version.mjs",
-    "bump:version:major-prerelease": "node ./scripts/deploy/manual-major-prerelease.mjs",
     "pre-commit": "lint-staged",
     "promote:npm:latest": "nx run-many --target=promote:npm:latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
