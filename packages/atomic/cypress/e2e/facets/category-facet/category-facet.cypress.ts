@@ -463,13 +463,12 @@ describe('Category Facet Test Suites', () => {
         .init();
     }
 
-    before(setupCustomNumberOfValues);
+    beforeEach(setupCustomNumberOfValues);
 
     CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues);
 
     describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
       beforeEach(() => {
-        setupCustomNumberOfValues();
         selectChildValueAt(0);
       });
 
