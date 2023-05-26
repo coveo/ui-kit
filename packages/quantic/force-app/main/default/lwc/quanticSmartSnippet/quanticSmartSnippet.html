@@ -13,15 +13,6 @@
                 <c-quantic-smart-snippet-answer answer={answer}
                   actions={smartSnippetAnswerActions}></c-quantic-smart-snippet-answer>
               </div>
-              <template if:true={snippetHeightExceedsMaxHeight}>
-                <div class="slds-align_absolute-center slds-var-m-bottom_small">
-                  <lightning-button data-cy="smart-snippet-answer-toggle" icon-name={toggleSmartSnippetAnswerIcon}
-                    variant="base" label={toggleSmartSnippetAnswerLabel} title={toggleSmartSnippetAnswerLabel}
-                    onclick={handleToggleSmartSnippetAnswer} icon-position="right"></lightning-button>
-                </div>
-              </template>
-              <c-quantic-smart-snippet-source title={sourceTitle} uri={sourceUri}
-                actions={smartSnippetSourceActions}></c-quantic-smart-snippet-source>
             </div>
             <template if:true={snippetHeightExceedsMaxHeight}>
               <div class="slds-align_absolute-center slds-var-m-bottom_small">
@@ -37,8 +28,8 @@
       </div>
       <div class="slds-var-m-bottom_small">
         <c-quantic-feedback success-message={labels.thankYouForFeedback}
-        hide-explain-why-button={hideExplainWhyFeedbackButton} onlike={like} ondislike={dislike}
-        onpressexplainwhy={explainWhy} state={feedbackState}></c-quantic-feedback>
+          hide-explain-why-button={hideExplainWhyFeedbackButton} onlike={like} ondislike={dislike}
+          onpressexplainwhy={explainWhy} state={feedbackState}></c-quantic-feedback>
       </div>
     </template>
   </template>
