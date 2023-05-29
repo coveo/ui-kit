@@ -142,6 +142,7 @@ export class AtomicProductListingInterface
    * The relevance inspector allows to troubleshoot and debug queries.
    */
   @Prop({reflect: true}) public enableRelevanceInspector = true;
+  @Prop({reflect: true}) public url = '';
 
   public constructor() {
     this.initRelevanceInspector();
@@ -245,9 +246,17 @@ export class AtomicProductListingInterface
       return;
     }
 
+    if (!this.url) {
+      console.error(
+        'You need to set a url to fetch a product listing.',
+        this.url
+      );
+      return;
+    }
+
     this.engine!.dispatch(
       loadProductListingActions(this.engine!).setProductListingUrl({
-        url: 'https://fashion.coveodemo.com/browse/men/hats',
+        url: this.url,
       })
     );
 
