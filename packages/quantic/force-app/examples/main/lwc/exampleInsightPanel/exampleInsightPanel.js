@@ -63,10 +63,9 @@ export default class ExampleInsightPanel extends LightningElement {
       'objecttype',
       ['FeedItem']
     );
-    const isThread = headless.ResultTemplatesHelpers.fieldMustMatch(
-      'source',
-      ['iNaturalistTaxons']
-    );
+    const isThread = headless.ResultTemplatesHelpers.fieldMustMatch('source', [
+      'iNaturalistTaxons',
+    ]);
     const isChild = headless.ResultTemplatesHelpers.fieldMustMatch(
       'quantic__templateId',
       ['myChildTemplate']
