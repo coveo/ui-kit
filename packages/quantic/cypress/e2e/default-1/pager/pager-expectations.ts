@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {ComponentErrorExpectations} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {ConsoleExpectations} from '../../console-expectations';
 import {PagerSelector, PagerSelectors} from './pager-selectors';
@@ -84,6 +85,7 @@ function pagerExpectations(selector: PagerSelector) {
 
 export const PagerExpectations = {
   ...pagerExpectations(PagerSelectors),
+  ...ComponentErrorExpectations(PagerSelectors),
   console: {
     ...ConsoleExpectations,
   },

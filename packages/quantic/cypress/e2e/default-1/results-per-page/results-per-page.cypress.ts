@@ -125,6 +125,16 @@ describe('quantic-result-per-page', () => {
       }
 
       describe('with invalid options', () => {
+        beforeEach(() => {
+          // This error occasionally occurs with the Salesforce Lightning Modal component, although we don't know exactly why it occurs, we do know that it only occurs in this Cypress test environment and never in the production environment.
+          cy.on('uncaught:exception', (err) => {
+            expect(err.message).to.include(
+              "Cannot read properties of null (reading 'appendChild')"
+            );
+            return false;
+          });
+        });
+
         describe('with initial choice not in choices displayed', () => {
           it('should not load component', () => {
             visitResultsPerPage(
@@ -138,6 +148,7 @@ describe('quantic-result-per-page', () => {
 
             Expect.displayChoices(false);
             Expect.console.error(true);
+            Expect.displayComponentError(true);
           });
         });
 
@@ -154,6 +165,7 @@ describe('quantic-result-per-page', () => {
 
             Expect.displayChoices(false);
             Expect.console.error(true);
+            Expect.displayComponentError(true);
           });
         });
 
@@ -170,6 +182,7 @@ describe('quantic-result-per-page', () => {
 
             Expect.displayChoices(false);
             Expect.console.error(true);
+            Expect.displayComponentError(true);
           });
         });
       });

@@ -113,6 +113,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   isInitialized;
   /** @type {Suggestion[]} */
   suggestions = [];
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   /** @type {string} */
   get standaloneEngineId() {
@@ -365,4 +367,11 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     const id = event.detail;
     this.input.setAttribute('aria-controls', id);
   };
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
+  }
 }
