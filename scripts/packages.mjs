@@ -1,5 +1,5 @@
 import detectIndent from 'detect-indent';
-import glob from 'glob';
+import {glob} from 'glob';
 import {existsSync, writeFileSync, readFileSync} from 'node:fs';
 import {resolve, relative} from 'node:path';
 import {fileURLToPath} from 'node:url';

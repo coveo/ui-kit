@@ -734,7 +734,7 @@ describe('Facet v1 Test Suites', () => {
       pressLabelButton(FacetSelectors, true);
     }
 
-    before(setupSelectLabelCollapse);
+    beforeEach(setupSelectLabelCollapse);
 
     CommonAssertions.assertAccessibility(facetComponent);
     CommonAssertions.assertContainsComponentError(FacetSelectors, false);
@@ -756,11 +756,10 @@ describe('Facet v1 Test Suites', () => {
 
     describe('when selecting the label button to expand', () => {
       function setupSelectLabelExpand() {
-        setupSelectLabelCollapse();
         FacetSelectors.labelButton().click();
       }
 
-      before(setupSelectLabelExpand);
+      beforeEach(setupSelectLabelExpand);
 
       CommonFacetAssertions.assertDisplayClearButton(FacetSelectors, true);
       CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
@@ -777,7 +776,7 @@ describe('Facet v1 Test Suites', () => {
         .init();
     }
 
-    before(setupCustomNumberOfValues);
+    beforeEach(setupCustomNumberOfValues);
 
     CommonFacetAssertions.assertNumberOfIdleCheckboxValues(
       FacetSelectors,
@@ -788,7 +787,6 @@ describe('Facet v1 Test Suites', () => {
 
     describe('when selecting the "Show More" button', () => {
       beforeEach(() => {
-        setupCustomNumberOfValues();
         pressShowMore(FacetSelectors);
       });
 

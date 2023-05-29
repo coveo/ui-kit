@@ -26,7 +26,7 @@ describe('Did You Mean Test Suites', () => {
   }
 
   describe('with an automatic query correction', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture().with(commonSetup).init();
       addDidYouMeanCorrectionToNextQuery(newQuery, true);
       search();
@@ -42,7 +42,7 @@ describe('Did You Mean Test Suites', () => {
   });
 
   describe('with a manual query correction', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture().with(commonSetup).init();
       addDidYouMeanCorrectionToNextQuery(newQuery, false);
       search();
@@ -56,7 +56,7 @@ describe('Did You Mean Test Suites', () => {
     DidYouMeanAssertions.assertDisplayUndoButton(false);
 
     describe('after pressing on the correction button', () => {
-      before(() => {
+      beforeEach(() => {
         DidYouMeanSelectors.correctionButton().click();
       });
       QuerySummaryAssertions.assertHasQuery(newQuery);
@@ -79,7 +79,7 @@ describe('Did You Mean Test Suites', () => {
   });
 
   describe('with a query trigger', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture().with(commonSetup).init();
       addQueryTriggerCorrectionToNextQuery(newQuery);
       search();
@@ -93,7 +93,7 @@ describe('Did You Mean Test Suites', () => {
     DidYouMeanAssertions.assertDisplayUndoButton(true);
 
     describe('after pressing on the undo button', () => {
-      before(() => {
+      beforeEach(() => {
         DidYouMeanSelectors.undoButton().click();
       });
 
