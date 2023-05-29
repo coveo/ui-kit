@@ -53,6 +53,8 @@ export default class QuanticSort extends LightningElement {
   options;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     sortBy,
@@ -120,6 +122,13 @@ export default class QuanticSort extends LightningElement {
     this.sort.sortBy(
       this.options.find((option) => option.value === e.detail.value).criterion
     );
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 
   get relevancy() {
