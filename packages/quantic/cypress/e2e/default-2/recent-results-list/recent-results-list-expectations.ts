@@ -85,6 +85,12 @@ function recentResultsListExpectations(selector: RecentResultsListSelector) {
         documentUri: urlResult,
       });
     },
+    displayRecentResultsCard: (display: boolean) => {
+      selector
+        .recentResultsCard()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the recent results card`);
+    },
   };
 }
 

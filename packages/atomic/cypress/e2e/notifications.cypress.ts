@@ -8,7 +8,7 @@ import {
 
 describe('Notifications Test Suites', () => {
   describe('without any notify trigger', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture().with(addNotifications()).init();
     });
 
@@ -19,7 +19,7 @@ describe('Notifications Test Suites', () => {
 
   describe('with a single notify triggers', () => {
     const notification = 'Hello World!';
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addNotifications())
         .with(addNotifyTriggers([notification]))
@@ -42,7 +42,7 @@ describe('Notifications Test Suites', () => {
 
   describe('with multiple notify triggers', () => {
     const notifications = ['abc', 'def'];
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addNotifications())
         .with(addNotifyTriggers(notifications))
@@ -70,7 +70,7 @@ describe('Notifications Test Suites', () => {
   });
 
   describe('with a notify trigger and a heading level of 4', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addNotifications({props: {'heading-level': 4}}))
         .with(addNotifyTriggers(['abc']))

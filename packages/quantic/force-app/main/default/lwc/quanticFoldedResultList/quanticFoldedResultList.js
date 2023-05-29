@@ -81,6 +81,8 @@ export default class QuanticFoldedResultList extends LightningElement {
   unsubscribe;
   /** @type {Function} */
   unsubscribeResultsPerPage;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -157,5 +159,12 @@ export default class QuanticFoldedResultList extends LightningElement {
 
   get collections() {
     return this?.state?.results || [];
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }
