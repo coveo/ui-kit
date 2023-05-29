@@ -12,6 +12,9 @@ import atImport from 'postcss-import';
 import mixins from 'postcss-mixins';
 import postcssNesting from 'postcss-nested';
 import html from 'rollup-plugin-html';
+// TODO: Should this be added as a non-dev dep?
+// eslint-disable-next-line node/no-extraneous-import
+import istanbul from 'rollup-plugin-istanbul';
 import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
@@ -193,6 +196,11 @@ export const config: Config = {
         include: 'src/templates/**/*.html',
       }),
       isDevWatch && replaceHeadlessMap(),
+    ],
+    after: [
+      istanbul({
+        exclude: ['cypress/**/*'],
+      }),
     ],
   },
 };
