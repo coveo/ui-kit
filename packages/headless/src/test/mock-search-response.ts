@@ -20,6 +20,7 @@ export function buildMockSearchResponse(
     splitTestRun: '',
     termsToHighlight: {},
     phrasesToHighlight: {},
+    extendedResults: {},
     ...config,
   };
 }

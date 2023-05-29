@@ -1,9 +1,10 @@
 import {EventSourcePolyfill} from 'event-source-polyfill';
 import {Logger} from 'pino';
-import {SearchAppState} from '../../..';
-import {AsyncThunkOptions} from '../../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
-import {URLPath} from '../../../utils/url-utils';
+import {SearchAppState} from '../..';
+import {AsyncThunkOptions} from '../../app/async-thunk-options';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {URLPath} from '../../utils/url-utils';
+import {SearchAPIClient} from '../search/search-api-client';
 import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request';
 
@@ -15,7 +16,7 @@ export interface AsyncThunkGeneratedAnswerOptions<
   T extends Partial<SearchAppState>
 > extends AsyncThunkOptions<
     T,
-    ClientThunkExtraArguments<GeneratedAnswerAPIClient>
+    ClientThunkExtraArguments<SearchAPIClient, GeneratedAnswerAPIClient>
   > {}
 
 const buildStreamingUrl = (url: string, orgId: string, model: string) =>

@@ -1,5 +1,6 @@
 import {Logger} from 'pino';
 import {StateFromReducersMapObject} from 'redux';
+import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
@@ -109,10 +110,12 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   validateConfiguration(options.configuration, logger);
 
   const searchAPIClient = createSearchAPIClient(options.configuration, logger);
+  const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
   const thunkArguments: SearchThunkExtraArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: searchAPIClient,
+    streamingClient: generatedAnswerClient,
   };
 
   const augmentedOptions: EngineOptions<SearchEngineReducers> = {
@@ -190,5 +193,11 @@ function createSearchAPIClient(
     postprocessQuerySuggestResponseMiddleware:
       search?.preprocessQuerySuggestResponseMiddleware ||
       NoopPostprocessQuerySuggestResponseMiddleware,
+  });
+}
+
+function createGeneratedAnswerAPIClient(logger: Logger) {
+  return new GeneratedAnswerAPIClient({
+    logger,
   });
 }

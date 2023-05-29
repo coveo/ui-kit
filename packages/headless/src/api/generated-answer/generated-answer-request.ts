@@ -1,4 +1,4 @@
-import {BaseParam} from '../../platform-service-params';
+import {BaseParam} from '../platform-service-params';
 
 interface GeneratedAnswerParam {
   streamKey?: string;

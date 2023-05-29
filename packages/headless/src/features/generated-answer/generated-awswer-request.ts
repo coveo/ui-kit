@@ -1,10 +1,12 @@
-import {GeneratedAnswerStreamRequest} from '../../api/search/generated-answer/generated-answer-request';
+import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request';
 import {
   ConfigurationSection,
   GeneratedAnswerSection,
+  SearchSection,
 } from '../../state/state-sections';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
+  SearchSection &
   GeneratedAnswerSection;
 
 export const buildStreamingRequest = async (
@@ -13,5 +15,5 @@ export const buildStreamingRequest = async (
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
   url: state.configuration.search.apiBaseUrl,
-  streamKey: state.generatedAnswer.streamKey,
+  streamKey: state.search.extendedResults?.streamKey,
 });

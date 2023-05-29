@@ -1,5 +1,4 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {executeSearch} from '../search/search-actions';
 import './generated-answer-actions';
 import {
   resetAnswer,
@@ -13,9 +12,6 @@ export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
   (builder) =>
     builder
-      .addCase(executeSearch.fulfilled, (state, action) => {
-        state.streamKey = action.payload.response.extendedResults.streamKey;
-      })
       .addCase(sseMessage, (state, {payload}) => {
         state.isLoading = false;
         state.answer += payload;

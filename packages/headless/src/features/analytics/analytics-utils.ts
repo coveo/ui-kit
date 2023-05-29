@@ -160,7 +160,7 @@ export type GeneratedAnswerAction<
   T extends AnalyticsType = AnalyticsType.Search
 > = PreparableAnalyticsAction<
   {analyticsType: T},
-  StateNeededByInsightAnalyticsProvider
+  StateNeededBySearchAnalyticsProvider // TODO: Switch to real type
 >;
 
 export interface AsyncThunkAnalyticsOptions<
@@ -372,6 +372,54 @@ export const makeInsightAnalyticsAction = <EventType extends AnalyticsType>(
       return {
         log: async () => {
           const response = await log(client, getState());
+          logger.info(
+            {client: client.coveoAnalyticsClient, response},
+            'Analytics response'
+          );
+          return {analyticsType};
+        },
+      };
+    }
+  );
+};
+
+// TODO: Switch with real client and types
+export const makeGeneratedAnswerAnalyticsAction = <
+  EventType extends AnalyticsType,
+  StateNeeded extends StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider
+>(
+  prefix: string,
+  analyticsType: EventType,
+  getBuilder: (
+    client: CoveoSearchPageClient,
+    state: StateNeeded
+  ) => Promise<EventBuilder | null> | null,
+  provider: (getState: () => StateNeeded) => SearchPageClientProvider = (
+    getState
+  ) => new SearchAnalyticsProvider(getState)
+): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded> => {
+  return makePreparableAnalyticsAction(
+    prefix,
+    async ({
+      getState,
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    }) => {
+      const client = configureAnalytics({
+        getState,
+        logger,
+        analyticsClientMiddleware,
+        preprocessRequest,
+        provider: provider(getState),
+      });
+      const builder = await getBuilder(client, getState());
+      return {
+        description: builder?.description,
+        log: async ({state}) => {
+          const response = await builder?.log({
+            searchUID: provider(() => state).getSearchUID(),
+          });
           logger.info(
             {client: client.coveoAnalyticsClient, response},
             'Analytics response'
