@@ -50,7 +50,9 @@ describe('Result Image Component', () => {
       ResultImageSelectors.resultImage().should('have.attr', 'src', image);
     });
 
-    CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    });
   });
 
   describe('when the field does not exist', () => {
@@ -62,7 +64,9 @@ describe('Result Image Component', () => {
       ResultImageSelectors.resultImage().should('have.attr', 'src', fallback);
     });
 
-    CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    });
   });
 
   describe('when the url is not a string', () => {
@@ -77,7 +81,9 @@ describe('Result Image Component', () => {
       ResultImageSelectors.resultImage().should('have.attr', 'src', fallback);
     });
 
-    CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    });
   });
 
   describe('when the image url is not valid', () => {
@@ -92,6 +98,8 @@ describe('Result Image Component', () => {
       ResultImageSelectors.resultImage().should('have.attr', 'src', fallback);
     });
 
-    CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    });
   });
 });

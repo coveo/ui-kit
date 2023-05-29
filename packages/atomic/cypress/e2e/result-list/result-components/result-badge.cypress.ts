@@ -82,10 +82,11 @@ describe('Result Badge Component', () => {
         it('renders the localized text', () => {
           ResultBadgeSelectors.resultText().should('have.text', localizedText);
         });
-
-        CommonAssertions.assertAccessibility(
-          ResultBadgeSelectors.firstInResult
-        );
+        it('should be accessible', () => {
+          CommonAssertions.assertAccessibility(
+            ResultBadgeSelectors.firstInResult
+          );
+        });
       });
 
       describe('when a label is specified', () => {

@@ -171,9 +171,12 @@ describe('Result Printable Uri Component', () => {
 
       ResultPrintableUriAssertions.assertDisplayEllipsis(true);
       ResultPrintableUriAssertions.assertDisplayParentsCount(2);
-      CommonAssertions.assertAccessibility(
-        ResultPrintableUriSelectors.firstInResult
-      );
+
+      it('should be accessible', () => {
+        CommonAssertions.assertAccessibility(
+          ResultPrintableUriSelectors.firstInResult
+        );
+      });
 
       describe('after clicking on the ellipsis', () => {
         beforeEach(() => {
