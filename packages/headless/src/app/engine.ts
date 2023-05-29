@@ -192,18 +192,17 @@ export function buildEngine<
     );
   }
 
-  if (
-    shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-      options
-    )
-  ) {
-    engine.logger.warn(
-      `There is a mismatch between the \`organizationId\` option (${options.configuration.organizationId}) and the organization configured in the \`organizationEndpoints\` option (${options.configuration.organizationEndpoints?.platform}). This could lead to issues that are complex to troubleshoot. Please make sure both values match.`
-    );
-  }
-
   if (organizationEndpoints?.platform) {
     platformUrl = organizationEndpoints.platform;
+    if (
+      shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
+        options
+      )
+    ) {
+      engine.logger.warn(
+        `There is a mismatch between the \`organizationId\` option (${options.configuration.organizationId}) and the organization configured in the \`organizationEndpoints\` option (${options.configuration.organizationEndpoints?.platform}). This could lead to issues that are complex to troubleshoot. Please make sure both values match.`
+      );
+    }
   }
 
   engine.dispatch(
