@@ -208,12 +208,13 @@ export type {
 export {buildResultList} from './controllers/insight/result-list/headless-insight-result-list';
 
 export type {
+  FoldingOptions,
+  FoldedCollection,
+  FoldedResult,
   FoldedResultListOptions,
   FoldedResultListProps,
-  FoldedResultListState,
   FoldedResultList,
-  CoreFoldedResultList,
-  CoreFoldedResultListState,
+  FoldedResultListState,
 } from './controllers/insight/folded-result-list/headless-insight-folded-result-list';
 export {buildFoldedResultList} from './controllers/insight/folded-result-list/headless-insight-folded-result-list';
 

@@ -17,15 +17,15 @@ import {
 } from '../../../test';
 import {
   buildCoreFoldedResultList,
-  CoreFoldedResultList,
-  CoreFoldedResultListProps,
+  FoldedResultList,
+  FoldedResultListProps,
   FoldedResultListOptions,
 } from './headless-core-folded-result-list';
 
 describe('FoldedResultList', () => {
   let engine: MockSearchEngine;
-  let foldedResultList: CoreFoldedResultList;
-  let props: CoreFoldedResultListProps;
+  let foldedResultList: FoldedResultList;
+  let props: FoldedResultListProps;
 
   function initFoldedResultList() {
     foldedResultList = buildCoreFoldedResultList(

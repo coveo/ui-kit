@@ -69,7 +69,7 @@ export interface FoldedResultListOptions extends ResultListOptions {
   folding?: FoldingOptions;
 }
 
-export interface CoreFoldedResultListProps {
+export interface FoldedResultListProps {
   /**
    * The options for the `FoldedResultList` controller.
    * */
@@ -84,13 +84,13 @@ export interface CoreFoldedResultListProps {
 }
 
 /**
- * The `CoreFoldedResultList` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
+ * The `FoldedResultList` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
  */
-export interface CoreFoldedResultList extends Controller {
+export interface FoldedResultList extends Controller {
   /**
    * The state of the `FoldedResultList` controller.
    */
-  state: CoreFoldedResultListState;
+  state: FoldedResultListState;
   /**
    * Using the same parameters as the last successful query, fetch another batch of results, if available.
    * Particularly useful for infinite scrolling, for example.
@@ -133,7 +133,7 @@ export interface CoreFoldedResultList extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `FoldedResultList` controller.
  */
-export interface CoreFoldedResultListState extends SearchStatusState {
+export interface FoldedResultListState extends SearchStatusState {
   /**
    * The ordered list of collections.
    * */
@@ -161,13 +161,13 @@ export interface FoldedResultAnalyticsClient {
  * @param engine - The headless engine.
  * @param props - The configurable `FoldedResultList` properties.
  * @param analyticsClient - A FoldedResultAnalyticsClient to send the appropriate analytics calls.
- * @returns A `CoreFoldedResultList` controller instance.
+ * @returns A `FoldedResultList` controller instance.
  */
 export function buildCoreFoldedResultList(
   engine: CoreEngine,
-  props: CoreFoldedResultListProps,
+  props: FoldedResultListProps,
   analyticsClient: FoldedResultAnalyticsClient
-): CoreFoldedResultList {
+): FoldedResultList {
   if (!loadFoldingReducer(engine)) {
     throw loadReducerError;
   }
