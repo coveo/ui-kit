@@ -285,7 +285,7 @@ describe('quantic-timeframe-facet', () => {
             if (param.useCase === useCaseEnum.search) {
               Expect.urlHashContains(
                 'Date_input',
-                '2000/01/01@00:00:00..2000/12/31@23:59:59'
+                '2000/01/01@00:00:00...2000/12/31@23:59:59'
               );
             }
 
@@ -373,7 +373,10 @@ describe('quantic-timeframe-facet', () => {
 
             Expect.numberOfValidationErrors(0);
             if (param.useCase === useCaseEnum.search) {
-              Expect.urlHashContains('Date_input', validRange.filter);
+              Expect.urlHashContains(
+                'Date_input',
+                '2000/01/01@00:00:00...2000/12/31@23:59:59'
+              );
             }
             Expect.displayClearButton(true);
             Expect.displayValues(false);
@@ -384,7 +387,10 @@ describe('quantic-timeframe-facet', () => {
                 Actions.submitForm();
 
                 if (param.useCase === useCaseEnum.search) {
-                  Expect.urlHashContains('Date_input', validRange.filter);
+                  Expect.urlHashContains(
+                    'Date_input',
+                    '2000/01/01@00:00:00...2000/12/31@23:59:59'
+                  );
                 }
               }
             );
