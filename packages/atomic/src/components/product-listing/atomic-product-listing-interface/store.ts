@@ -1,7 +1,8 @@
-import {NumericFacetValue, DateFacetValue} from '@coveo/headless';
 import {
   ProductListingEngine,
   SortCriterion,
+  NumericFacetValue,
+  DateFacetValue,
 } from '@coveo/headless/product-listing';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {

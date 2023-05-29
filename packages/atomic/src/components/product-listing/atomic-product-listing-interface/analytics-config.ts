@@ -1,7 +1,7 @@
 import {
+  ProductListingEngineConfiguration,
   AnalyticsConfiguration,
-  SearchEngineConfiguration,
-} from '@coveo/headless';
+} from '@coveo/headless/product-listing';
 import {
   AnalyticsPayload,
   augmentAnalyticsWithAtomicVersion,
@@ -11,14 +11,14 @@ import {
 import {createAtomicStore} from './store';
 
 export function getAnalyticsConfig(
-  searchEngineConfig: SearchEngineConfiguration,
+  productListingEngineConfig: ProductListingEngineConfiguration,
   enabled: boolean,
   store: ReturnType<typeof createAtomicStore>
 ): AnalyticsConfiguration {
   const analyticsClientMiddleware = (
     event: string,
     payload: AnalyticsPayload
-  ) => augmentAnalytics(event, payload, store, searchEngineConfig);
+  ) => augmentAnalytics(event, payload, store, productListingEngineConfig);
 
   const defaultConfiguration: AnalyticsConfiguration = {
     analyticsClientMiddleware,
@@ -26,10 +26,10 @@ export function getAnalyticsConfig(
     ...augmentAnalyticsConfigWithDocument(),
   };
 
-  if (searchEngineConfig.analytics) {
+  if (productListingEngineConfig.analytics) {
     return {
       ...defaultConfiguration,
-      ...searchEngineConfig.analytics,
+      ...productListingEngineConfig.analytics,
     };
   }
   return defaultConfiguration;
@@ -39,7 +39,7 @@ function augmentAnalytics(
   event: string,
   payload: AnalyticsPayload,
   store: ReturnType<typeof createAtomicStore>,
-  config: SearchEngineConfiguration
+  config: ProductListingEngineConfiguration
 ) {
   let result = augmentWithExternalMiddleware(event, payload, config);
   result = augmentAnalyticsWithAtomicVersion(result);
