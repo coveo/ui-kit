@@ -212,7 +212,7 @@ export type {
   FoldedCollection,
   FoldedResult,
   FoldedResultListOptions,
-  FoldedResultListProps,
+  InsightFoldedResultListProps,
   FoldedResultList,
   FoldedResultListState,
 } from './controllers/insight/folded-result-list/headless-insight-folded-result-list';

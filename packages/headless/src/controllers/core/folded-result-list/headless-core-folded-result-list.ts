@@ -69,7 +69,7 @@ export interface FoldedResultListOptions extends ResultListOptions {
   folding?: FoldingOptions;
 }
 
-export interface FoldedResultListProps {
+export interface CoreFoldedResultListProps {
   /**
    * The options for the `FoldedResultList` controller.
    * */
@@ -165,7 +165,7 @@ export interface FoldedResultAnalyticsClient {
  */
 export function buildCoreFoldedResultList(
   engine: CoreEngine,
-  props: FoldedResultListProps,
+  props: CoreFoldedResultListProps,
   analyticsClient: FoldedResultAnalyticsClient
 ): FoldedResultList {
   if (!loadFoldingReducer(engine)) {

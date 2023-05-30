@@ -20,7 +20,7 @@ export type {
   FoldedResult,
 };
 
-export interface FoldedResultListProps {
+export interface InsightFoldedResultListProps {
   /**
    * The options for the `FoldedResultList` controller.
    * */
@@ -36,7 +36,7 @@ export interface FoldedResultListProps {
  */
 export function buildFoldedResultList(
   engine: InsightEngine,
-  props: FoldedResultListProps = {}
+  props: InsightFoldedResultListProps = {}
 ): FoldedResultList {
   const foldedResultList = buildCoreFoldedResultList(
     engine,
