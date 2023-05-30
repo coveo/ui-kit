@@ -37,8 +37,9 @@ export default class ExampleQuanticRecentResultsList extends LightningElement {
     {
       attribute: 'hideWhenEmpty',
       label: 'Hide when empty',
-      description: 'Indicates whether the card of the recent results list should be completely hidden when it is empty.',
-      defaultValue: false
+      description:
+        'Indicates whether the card of the recent results list should be completely hidden when it is empty.',
+      defaultValue: false,
     },
   ];
 
