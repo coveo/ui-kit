@@ -1,10 +1,16 @@
 <template>
-  <template if:true={showPlaceholder}>
-    <c-quantic-placeholder variant="resultList" number-of-rows={numberOfResults}></c-quantic-placeholder>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
   </template>
-  <template for:each={collections} for:item="collection">
-    <c-quantic-result key={collection.result.uniqueId} result={collection.result} collection={collection}
-      result-templates-manager={resultTemplatesManager} folded-result-list-controller={foldedResultList}
-      engine-id={engineId}></c-quantic-result>
+  <template lwc:else>
+    <template if:true={showPlaceholder}>
+      <c-quantic-placeholder variant="resultList" number-of-rows={numberOfResults}></c-quantic-placeholder>
+    </template>
+    <template for:each={collections} for:item="collection">
+      <c-quantic-result key={collection.result.uniqueId} result={collection.result} collection={collection}
+        result-templates-manager={resultTemplatesManager} folded-result-list-controller={foldedResultList}
+        engine-id={engineId}></c-quantic-result>
+    </template>
   </template>
 </template>

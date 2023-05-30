@@ -1,11 +1,11 @@
-import {LightningElement, api, track} from 'lwc';
+import showNResultsPerPage from '@salesforce/label/c.quantic_ShowNResultsPerPage';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
-import showNResultsPerPage from '@salesforce/label/c.quantic_ShowNResultsPerPage';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -57,6 +57,8 @@ export default class QuanticResultsPerPage extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     showNResultsPerPage,
@@ -132,5 +134,12 @@ export default class QuanticResultsPerPage extends LightningElement {
    */
   select(event) {
     this.resultsPerPage.set(event.detail);
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

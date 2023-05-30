@@ -1,8 +1,11 @@
 import loadingResults from '@salesforce/label/c.quantic_LoadingResults';
-import { registerComponentForInit, initializeWithHeadless, getHeadlessBundle } from 'c/quanticHeadlessLoader';
-import { AriaLiveRegion, I18nUtils } from 'c/quanticUtils';
-import { LightningElement, api, track } from 'lwc';
-
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+  getHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultList} ResultList */
@@ -58,6 +61,8 @@ export default class QuanticResultList extends LightningElement {
   loadingAriaLiveMessage;
   /** @type {string} */
   openPreviewId;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     loadingResults,
@@ -153,5 +158,12 @@ export default class QuanticResultList extends LightningElement {
 
   get results() {
     return this.state?.results || [];
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

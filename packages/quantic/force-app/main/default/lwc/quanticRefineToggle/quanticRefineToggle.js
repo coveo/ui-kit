@@ -1,15 +1,15 @@
-import {LightningElement, api} from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
+import noFilterForCurrentTab from '@salesforce/label/c.quantic_NoFilterForCurrentTab';
+import noFiltersAvailableForThisQuery from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQuery';
+import sortAndFilters from '@salesforce/label/c.quantic_SortAndFilters';
+import viewResults from '@salesforce/label/c.quantic_ViewResults';
 import {
   getHeadlessBundle,
   initializeWithHeadless,
   registerComponentForInit,
   getAllFacetsFromStore,
 } from 'c/quanticHeadlessLoader';
-import LOCALE from '@salesforce/i18n/locale';
-import sortAndFilters from '@salesforce/label/c.quantic_SortAndFilters';
-import viewResults from '@salesforce/label/c.quantic_ViewResults';
-import noFiltersAvailableForThisQuery from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQuery';
-import noFilterForCurrentTab from '@salesforce/label/c.quantic_NoFilterForCurrentTab';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").QuerySummary} QuerySummary */
@@ -92,6 +92,8 @@ export default class QuanticRefineToggle extends LightningElement {
   hasResults;
   /** @type {boolean} */
   modalIsOpen = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   renderedFacets = {};
 
@@ -249,7 +251,7 @@ export default class QuanticRefineToggle extends LightningElement {
    */
   get modal() {
     /** @type {Object} */
-    const modal =  this.template.querySelector(`[data-id=${this.modalId}]`);
+    const modal = this.template.querySelector(`[data-id=${this.modalId}]`);
     return modal;
   }
 
@@ -259,7 +261,9 @@ export default class QuanticRefineToggle extends LightningElement {
    */
   get modalContent() {
     /** @type {Object} */
-    const modalContent = this.template.querySelector('c-quantic-refine-modal-content');
+    const modalContent = this.template.querySelector(
+      'c-quantic-refine-modal-content'
+    );
     return modalContent;
   }
 
@@ -314,5 +318,12 @@ export default class QuanticRefineToggle extends LightningElement {
       detail: {isOpen},
     });
     this.dispatchEvent(refineModalEvent);
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

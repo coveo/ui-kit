@@ -1,4 +1,5 @@
-import {LightningElement, api} from 'lwc';
+// @ts-ignore
+import getHeadlessConfiguration from '@salesforce/apex/InsightController.getHeadlessConfiguration';
 import {
   getHeadlessBindings,
   loadDependencies,
@@ -7,9 +8,7 @@ import {
   destroyEngine,
   setInitializedCallback,
 } from 'c/quanticHeadlessLoader';
-
-// @ts-ignore
-import getHeadlessConfiguration from '@salesforce/apex/InsightController.getHeadlessConfiguration';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").InsightEngine} InsightEngine */
 /** @typedef {import("coveo").InsightEngineOptions} InsightEngineOptions */

@@ -232,7 +232,7 @@ export namespace Components {
     }
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions": ResultTemplateCondition[];
         /**
@@ -395,6 +395,9 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": InsightFacetSortCriterion;
+    }
+    interface AtomicInsightFullSearchButton {
+        "tooltip": string;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
@@ -586,7 +589,7 @@ export namespace Components {
     }
     interface AtomicInsightResultTemplate {
         /**
-          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions": InsightResultTemplateCondition[];
         /**
@@ -1189,7 +1192,7 @@ export namespace Components {
     }
     interface AtomicRecsResultTemplate {
         /**
-          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions": RecsResultTemplateCondition[];
         /**
@@ -1299,7 +1302,7 @@ export namespace Components {
     }
     interface AtomicResultChildrenTemplate {
         /**
-          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions": ResultTemplateCondition[];
         /**
@@ -1336,6 +1339,10 @@ export namespace Components {
     interface AtomicResultIcon {
     }
     interface AtomicResultImage {
+        /**
+          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+         */
+        "fallback"?: string;
         /**
           * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
@@ -1450,7 +1457,7 @@ export namespace Components {
     }
     interface AtomicResultTemplate {
         /**
-          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions": ResultTemplateCondition[];
         /**
@@ -2059,6 +2066,12 @@ declare global {
     var HTMLAtomicInsightFacetElement: {
         prototype: HTMLAtomicInsightFacetElement;
         new (): HTMLAtomicInsightFacetElement;
+    };
+    interface HTMLAtomicInsightFullSearchButtonElement extends Components.AtomicInsightFullSearchButton, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightFullSearchButtonElement: {
+        prototype: HTMLAtomicInsightFullSearchButtonElement;
+        new (): HTMLAtomicInsightFullSearchButtonElement;
     };
     interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
     }
@@ -2714,6 +2727,7 @@ declare global {
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
+        "atomic-insight-full-search-button": HTMLAtomicInsightFullSearchButtonElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
@@ -3025,7 +3039,7 @@ declare namespace LocalJSX {
     }
     interface AtomicFieldCondition {
         /**
-          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: ResultTemplateCondition[];
         /**
@@ -3186,6 +3200,9 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: InsightFacetSortCriterion;
+    }
+    interface AtomicInsightFullSearchButton {
+        "tooltip"?: string;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
@@ -3355,7 +3372,7 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightResultTemplate {
         /**
-          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: InsightResultTemplateCondition[];
         /**
@@ -3927,7 +3944,7 @@ declare namespace LocalJSX {
     }
     interface AtomicRecsResultTemplate {
         /**
-          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: RecsResultTemplateCondition[];
         /**
@@ -4034,7 +4051,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultChildrenTemplate {
         /**
-          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: ResultTemplateCondition[];
     }
@@ -4067,6 +4084,10 @@ declare namespace LocalJSX {
     interface AtomicResultIcon {
     }
     interface AtomicResultImage {
+        /**
+          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
+         */
+        "fallback"?: string;
         /**
           * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
          */
@@ -4176,7 +4197,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTemplate {
         /**
-          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: ResultTemplateCondition[];
     }
@@ -4587,6 +4608,7 @@ declare namespace LocalJSX {
         "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
+        "atomic-insight-full-search-button": AtomicInsightFullSearchButton;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-layout": AtomicInsightLayout;
@@ -4721,6 +4743,7 @@ declare module "@stencil/core" {
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
+            "atomic-insight-full-search-button": LocalJSX.AtomicInsightFullSearchButton & JSXBase.HTMLAttributes<HTMLAtomicInsightFullSearchButtonElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;

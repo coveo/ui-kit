@@ -1,9 +1,8 @@
-import { LightningElement, api } from 'lwc';
+import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import defaultTemplate from './quanticQuickviewDefault.html';
 // @ts-ignore
 import youtubeTemplate from './quanticQuickviewYoutube.html';
-
 
 /** @typedef {import("coveo").Result} Result */
 
