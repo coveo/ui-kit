@@ -72,8 +72,9 @@ describe('Result Link Component', () => {
         .find('a')
         .should('have.attr', 'href', clickUri);
     });
-
-    CommonAssertions.assertAccessibility(ResultLinkSelectors.firstInResult);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultLinkSelectors.firstInResult);
+    });
 
     describe('when there is no default slot', () => {
       beforeEach(() => {
