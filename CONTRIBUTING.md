@@ -68,16 +68,6 @@ Does the same thing as the `test` script, except:
 
 - Does the same thing as the `test:watch` script, but runs end-to-end tests instead.
 
-## `publish:*` script
-
-- Expects the `build` script to be run before this script.
-- Publishes a remote package.
-
-### `publish:npm:*` script
-
-- Publishes the package to NPM.
-- Uses an alpha/prerelease tag.
-
 ### `publish:sfdx` script
 
 - Publishes the package to the current Salesforce dev hub.
