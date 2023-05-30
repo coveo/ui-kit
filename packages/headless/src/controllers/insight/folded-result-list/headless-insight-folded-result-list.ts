@@ -1,15 +1,15 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {loadCollection} from '../../features/folding/folding-actions';
-import {foldedResultAnalyticsClient} from '../../features/folding/folding-analytics-actions';
+import {insightFoldedResultAnalyticsClient} from '../../../features/folding/folding-insight-analytics-actions';
+import {loadCollection} from '../../../features/folding/insight-folding-actions';
+import {InsightEngine} from '../../../insight.index';
 import {
   buildCoreFoldedResultList,
   FoldingOptions,
+  FoldedCollection,
+  FoldedResult,
   FoldedResultList,
   FoldedResultListOptions,
   FoldedResultListState,
-  FoldedCollection,
-  FoldedResult,
-} from '../core/folded-result-list/headless-core-folded-result-list';
+} from '../../core/folded-result-list/headless-core-folded-result-list';
 
 export type {
   FoldedResultListOptions,
@@ -20,7 +20,7 @@ export type {
   FoldedResult,
 };
 
-export interface FoldedResultListProps {
+export interface InsightFoldedResultListProps {
   /**
    * The options for the `FoldedResultList` controller.
    * */
@@ -35,17 +35,16 @@ export interface FoldedResultListProps {
  * @returns A `FoldedResultList` controller instance.
  */
 export function buildFoldedResultList(
-  engine: SearchEngine,
-  props: FoldedResultListProps = {}
+  engine: InsightEngine,
+  props: InsightFoldedResultListProps = {}
 ): FoldedResultList {
   const foldedResultList = buildCoreFoldedResultList(
     engine,
     {...props, loadCollectionActionCreator: loadCollection},
-    foldedResultAnalyticsClient
+    insightFoldedResultAnalyticsClient
   );
   return {
     ...foldedResultList,
-
     get state() {
       return foldedResultList.state;
     },
