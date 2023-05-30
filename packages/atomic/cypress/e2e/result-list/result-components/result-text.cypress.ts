@@ -147,8 +147,9 @@ describe('Result Text Component', () => {
         ResultTextSelectors.firstInResult().should('have.text', rawValue);
         ResultTextSelectors.highlight().should('have.text', highlightedValue);
       });
-
-      CommonAssertions.assertAccessibility(ResultTextSelectors.firstInResult);
+      it('should be accessible', () => {
+        CommonAssertions.assertAccessibility(ResultTextSelectors.firstInResult);
+      });
     });
 
     describe('when the "shouldHighlight" prop is false', () => {

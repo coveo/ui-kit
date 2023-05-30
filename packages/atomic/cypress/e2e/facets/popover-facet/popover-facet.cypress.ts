@@ -11,19 +11,18 @@ import {PopoverSelectors} from './popover-facet-selectors';
 
 describe('Popover Facet Test Suites', () => {
   function testSuites() {
-    PopoverAssertions.assertLabelContains(label);
-    PopoverAssertions.assertFacetIsHidden();
+    beforeEach(() => {
+      PopoverAssertions.assertLabelContains(label);
+      PopoverAssertions.assertFacetIsHidden();
+      PopoverSelectors.popoverButton().click();
+    });
 
     describe('when clicking the facet button', () => {
-      before(() => {
-        PopoverSelectors.popoverButton().click();
-      });
-
       PopoverAssertions.assertFacetIsVisible();
     });
 
     describe('when clicking the facet button a second time', () => {
-      before(() => {
+      beforeEach(() => {
         PopoverSelectors.popoverButton().click();
       });
 
@@ -31,8 +30,7 @@ describe('Popover Facet Test Suites', () => {
     });
 
     describe('when clicking outside the facet after opening it', () => {
-      before(() => {
-        PopoverSelectors.popoverButton().click();
+      beforeEach(() => {
         PopoverSelectors.backdrop().click();
       });
 
@@ -40,8 +38,7 @@ describe('Popover Facet Test Suites', () => {
     });
 
     describe('when clicking inside the facet after opening it', () => {
-      before(() => {
-        PopoverSelectors.popoverButton().click();
+      beforeEach(() => {
         PopoverSelectors.facet().click({force: true});
       });
 
@@ -50,7 +47,7 @@ describe('Popover Facet Test Suites', () => {
   }
 
   describe('with an atomic-facet', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addPopover('atomic-facet', {field: facetField, label}))
         .init();
@@ -60,7 +57,7 @@ describe('Popover Facet Test Suites', () => {
   });
 
   describe('with an atomic-numeric-facet with ranges', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addPopover('atomic-numeric-facet', {field: numericFacetField, label})
@@ -72,7 +69,7 @@ describe('Popover Facet Test Suites', () => {
   });
 
   describe('with an atomic-numeric-facet without ranges', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addPopover('atomic-numeric-facet', {
@@ -89,7 +86,7 @@ describe('Popover Facet Test Suites', () => {
   });
 
   describe('with an atomic-timeframe-facet with ranges', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addPopover(
@@ -107,7 +104,7 @@ describe('Popover Facet Test Suites', () => {
   });
 
   describe('with an atomic-timeframe-facet without ranges', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addPopover('atomic-timeframe-facet', {
@@ -122,7 +119,7 @@ describe('Popover Facet Test Suites', () => {
   });
 
   describe('with an atomic-color-facet', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addPopover('atomic-color-facet', {
@@ -137,7 +134,7 @@ describe('Popover Facet Test Suites', () => {
   });
 
   describe('with an atomic-category-facet', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addPopover('atomic-category-facet', {
@@ -152,7 +149,7 @@ describe('Popover Facet Test Suites', () => {
   });
 
   describe('with an atomic-rating-facet', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addPopover('atomic-rating-facet', {
@@ -167,7 +164,7 @@ describe('Popover Facet Test Suites', () => {
   });
 
   describe('with an atomic-rating-range-facet', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addPopover('atomic-rating-range-facet', {
