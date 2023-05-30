@@ -152,15 +152,14 @@ describe('Folded Result List Component', () => {
       cy.wait(TestFixture.interceptAliases.UA);
     }
 
-    before(() => {
+    beforeEach(() => {
       setupCollection();
     });
 
     assertRendersWholeCollection();
 
     describe('should restore initial results when collapsing collection', () => {
-      before(() => {
-        setupCollection();
+      beforeEach(() => {
         FoldedResultListSelectors.collapseButton().click();
         cy.wait(200);
       });
@@ -170,7 +169,7 @@ describe('Folded Result List Component', () => {
   });
 
   describe('with an invalid configuration', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(setSourceAndSortCriteria)
         .with(

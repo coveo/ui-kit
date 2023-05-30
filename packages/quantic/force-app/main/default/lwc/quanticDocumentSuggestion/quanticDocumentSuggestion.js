@@ -1,3 +1,5 @@
+import invalidMaxNumberOfDocumentSuggestions from '@salesforce/label/c.quantic_InvalidMaxNumberOfDocumentSuggestions';
+import invalidNumberOfAutoOpenedDocuments from '@salesforce/label/c.quantic_InvalidNumberOfAutoOpenedDocuments';
 import loading from '@salesforce/label/c.quantic_Loading';
 import noSuggestions from '@salesforce/label/c.quantic_NoSuggestions';
 import readMore from '@salesforce/label/c.quantic_ReadMore';
@@ -22,6 +24,8 @@ export default class QuanticDocumentSuggestion extends LightningElement {
     loading,
     noSuggestions,
     readMore,
+    invalidMaxNumberOfDocumentSuggestions,
+    invalidNumberOfAutoOpenedDocuments,
   };
 
   /**
@@ -72,18 +76,20 @@ export default class QuanticDocumentSuggestion extends LightningElement {
   /** @type {Array<string>} */
   openedDocuments = [];
   /** @type {string} */
-  renderingError = '';
+  initializationErrorMessage;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   connectedCallback() {
     this.validateProps();
-    if (!this.renderingError) {
+    if (!this.hasInitializationError) {
       registerComponentForInit(this, this.engineId);
       this.template.addEventListener('rating', this.onRating);
     }
   }
 
   renderedCallback() {
-    if (!this.renderingError) {
+    if (!this.hasInitializationError) {
       initializeWithHeadless(this, this.engineId, this.initialize);
       this.injectIdToSlots();
     }
@@ -117,10 +123,14 @@ export default class QuanticDocumentSuggestion extends LightningElement {
 
   validateProps() {
     if (!(Number(this.maxDocuments) > 0)) {
-      this.renderingError = `"${this.maxDocuments}" is an invalid maximum number of document suggestions. A integer greater than 0 was expected.`;
+      this.hasInitializationError = true;
+      this.initializationErrorMessage =
+        this.labels.invalidMaxNumberOfDocumentSuggestions;
     }
     if (!(Number(this.numberOfAutoOpenedDocuments) >= 0)) {
-      this.renderingError = `"${this.numberOfAutoOpenedDocuments}" is an invalid maximum number of automatically opened document suggestions. A positive integer was expected.`;
+      this.hasInitializationError = true;
+      this.initializationErrorMessage =
+        this.labels.invalidNumberOfAutoOpenedDocuments;
     }
   }
 
@@ -188,6 +198,13 @@ export default class QuanticDocumentSuggestion extends LightningElement {
         slotContent.dataset.id = slot.dataset.docId;
       }
     });
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 
   get hasSuggestions() {

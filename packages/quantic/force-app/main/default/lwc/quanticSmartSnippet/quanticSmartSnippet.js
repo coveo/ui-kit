@@ -58,6 +58,8 @@ export default class QuanticSmartSnippet extends LightningElement {
   hideExplainWhyFeedbackButton = false;
   /** @type {boolean} */
   feedbackSubmitted = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     showMore,
@@ -242,6 +244,13 @@ export default class QuanticSmartSnippet extends LightningElement {
     }
     this.feedbackSubmitted = true;
     this.hideExplainWhyFeedbackButton = true;
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 
   /**

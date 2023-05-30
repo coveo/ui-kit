@@ -115,6 +115,8 @@ export default class QuanticDateFacet extends LightningElement {
   focusTarget;
   /** @type {boolean} */
   focusShouldBeInFacet = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     clearFilter,
@@ -318,5 +320,12 @@ export default class QuanticDateFacet extends LightningElement {
       // @ts-ignore
       focusTarget.setFocusOnHeader();
     }
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

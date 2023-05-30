@@ -92,6 +92,8 @@ export default class QuanticRefineToggle extends LightningElement {
   hasResults;
   /** @type {boolean} */
   modalIsOpen = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   renderedFacets = {};
 
@@ -316,5 +318,12 @@ export default class QuanticRefineToggle extends LightningElement {
       detail: {isOpen},
     });
     this.dispatchEvent(refineModalEvent);
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

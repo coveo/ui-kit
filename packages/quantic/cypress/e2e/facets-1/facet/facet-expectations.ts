@@ -1,3 +1,4 @@
+import {ComponentErrorExpectations} from '../../common-expectations';
 import {
   baseFacetExpectations,
   facetWithValuesExpectations,
@@ -11,4 +12,5 @@ export const FacetExpectations = {
   ...facetWithValuesExpectations(FacetSelectors),
   ...facetWithSearchExpectations(FacetSelectors),
   ...facetWithShowMoreLessExpectations(FacetSelectors),
+  ...ComponentErrorExpectations(FacetSelectors),
 };

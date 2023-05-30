@@ -178,6 +178,8 @@ export default class QuanticNumericFacet extends LightningElement {
   focusTarget;
   /** @type {boolean} */
   focusShouldBeInFacet = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   /** @type {string} */
   start;
@@ -605,5 +607,12 @@ export default class QuanticNumericFacet extends LightningElement {
       // @ts-ignore
       focusTarget.focus();
     }
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

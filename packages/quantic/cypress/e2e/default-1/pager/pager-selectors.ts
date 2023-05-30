@@ -1,4 +1,8 @@
-import {ComponentSelector, CypressSelector} from '../../common-selectors';
+import {
+  ComponentErrorSelector,
+  ComponentSelector,
+  CypressSelector,
+} from '../../common-selectors';
 
 export const pagerComponent = 'c-quantic-pager';
 
@@ -9,7 +13,7 @@ export interface PagerSelector extends ComponentSelector {
   selectedPage: () => CypressSelector;
 }
 
-export const PagerSelectors: PagerSelector = {
+export const PagerSelectors: PagerSelector & ComponentErrorSelector = {
   get: () => cy.get(pagerComponent),
 
   previous: () => PagerSelectors.get().find('button[title="Previous Page"]'),
@@ -18,5 +22,10 @@ export const PagerSelectors: PagerSelector = {
   selectedPage: () =>
     PagerSelectors.get().find(
       'c-quantic-number-button button.slds-button_brand'
+    ),
+  componentError: () => PagerSelectors.get().find('c-quantic-component-error'),
+  componentErrorMessage: () =>
+    PagerSelectors.get().find(
+      'c-quantic-component-error [data-cy="error-message"]'
     ),
 };

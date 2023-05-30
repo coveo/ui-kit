@@ -59,6 +59,8 @@ export default class QuanticTab extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -114,5 +116,12 @@ export default class QuanticTab extends LightningElement {
   get isPressed() {
     // convert type boolean to type string for attribute aria-pressed
     return `${this.isActive}`;
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }
