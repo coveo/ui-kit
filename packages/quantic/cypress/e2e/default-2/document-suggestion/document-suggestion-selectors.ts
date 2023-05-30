@@ -1,4 +1,8 @@
-import {ComponentSelector, CypressSelector} from '../../common-selectors';
+import {
+  ComponentErrorSelector,
+  ComponentSelector,
+  CypressSelector,
+} from '../../common-selectors';
 
 export const documentSuggestionComponent = 'c-quantic-document-suggestion';
 
@@ -13,10 +17,10 @@ export interface DocumentSuggestionSelector extends ComponentSelector {
   quickviewButton: (idx: number) => CypressSelector;
   quickviews: () => CypressSelector;
   quickviewCloseButton: () => CypressSelector;
-  renderingError: () => CypressSelector;
 }
 
-export const DocumentSuggestionSelectors: DocumentSuggestionSelector = {
+export const DocumentSuggestionSelectors: DocumentSuggestionSelector &
+  ComponentErrorSelector = {
   get: () => cy.get(documentSuggestionComponent),
 
   accordion: () =>
@@ -47,6 +51,10 @@ export const DocumentSuggestionSelectors: DocumentSuggestionSelector = {
     DocumentSuggestionSelectors.get().find(
       'c-quantic-result-quickview section header button'
     ),
-  renderingError: () =>
-    DocumentSuggestionSelectors.get().find('.error-message'),
+  componentError: () =>
+    DocumentSuggestionSelectors.get().find('c-quantic-component-error'),
+  componentErrorMessage: () =>
+    DocumentSuggestionSelectors.get().find(
+      'c-quantic-component-error [data-cy="error-message"]'
+    ),
 };

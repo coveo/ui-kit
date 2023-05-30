@@ -82,7 +82,9 @@ describe('Result Date Component', () => {
       ResultDateSelectors.firstInResult().should('have.text', '2021-09-03');
     });
 
-    CommonAssertions.assertAccessibility(ResultDateSelectors.firstInResult);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultDateSelectors.firstInResult);
+    });
   });
 
   describe('when using relative time', () => {

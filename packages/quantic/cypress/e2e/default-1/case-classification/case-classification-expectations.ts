@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/case-assist';
+import {ComponentErrorExpectations} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {ConsoleExpectations} from '../../console-expectations';
 import {
@@ -43,14 +44,6 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .loadingSpinner()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the loading spinner`);
-    },
-
-    displayRenderingError: (display: boolean, error: string) => {
-      selector
-        .renderingError()
-        .should(display ? 'exist' : 'not.exist')
-        .should(display ? 'contain' : 'not.contain', error)
-        .logDetail(`${should(display)} display a rendering error`);
     },
 
     hideSuggestions: (hidden: boolean) => {
@@ -187,6 +180,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
 
 export const CaseClassificationExpectations = {
   ...caseClassificationExpectations(CaseClassificationSelectors),
+  ...ComponentErrorExpectations(CaseClassificationSelectors),
   console: {
     ...ConsoleExpectations,
   },

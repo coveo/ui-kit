@@ -51,6 +51,8 @@ export default class QuanticQueryError extends LightningElement {
   errorAriaMessage;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   showMoreInfo = false;
 
@@ -143,5 +145,12 @@ export default class QuanticQueryError extends LightningElement {
         '</a>'
       )
     );
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

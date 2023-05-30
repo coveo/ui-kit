@@ -43,6 +43,8 @@ export default class QuanticSummary extends LightningElement {
   headless;
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
   summaryAriaMessage;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     noResults,
@@ -146,5 +148,12 @@ export default class QuanticSummary extends LightningElement {
         '</b>'
       )
     );
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }
