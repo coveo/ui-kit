@@ -1,5 +1,10 @@
+export enum StreamFinishReason {
+  Completed = 'COMPLETED',
+  Error = 'ERROR',
+}
+
 export interface GeneratedAnswerStreamEventData {
   payload: string;
-  finishReason?: 'COMPLETED' | 'ERROR';
+  finishReason?: StreamFinishReason;
   errorMessage?: string;
 }

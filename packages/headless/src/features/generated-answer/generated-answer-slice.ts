@@ -2,6 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import './generated-answer-actions';
 import {
   resetAnswer,
+  setIsLoading,
   sseComplete,
   sseError,
   sseMessage,
@@ -19,6 +20,7 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(sseError, (state) => {
         state.isLoading = false;
+        delete state.answer;
         state.retryCount++;
       })
       .addCase(sseComplete, (state) => {
@@ -27,5 +29,8 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(resetAnswer, () => {
         return getGeneratedAnswerInitialState();
+      })
+      .addCase(setIsLoading, (state, {payload}) => {
+        state.isLoading = payload;
       })
 );

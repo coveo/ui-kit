@@ -5,7 +5,10 @@ import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {URLPath} from '../../utils/url-utils';
 import {SearchAPIClient} from '../search/search-api-client';
-import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload';
+import {
+  GeneratedAnswerStreamEventData,
+  StreamFinishReason,
+} from './generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request';
 
 export interface GeneratedAnswerAPIClientOptions {
@@ -28,12 +31,16 @@ const MAX_RETRIES = 3;
 const model = 'uiloop01';
 
 export class GeneratedAnswerAPIClient {
-  constructor(private options: GeneratedAnswerAPIClientOptions) {}
+  private logger: Logger;
+
+  constructor(private options: GeneratedAnswerAPIClientOptions) {
+    this.logger = options.logger;
+  }
 
   streamGeneratedAnswer(
     params: GeneratedAnswerStreamRequest,
     onMessage: (payload: string) => void,
-    onError: (message?: string) => void,
+    onError: () => void,
     onCompleted: () => void
   ) {
     const {url, organizationId, streamKey, accessToken} = params;
@@ -61,12 +68,13 @@ export class GeneratedAnswerAPIClient {
           const data: GeneratedAnswerStreamEventData = JSON.parse(
             (event as MessageEvent).data
           );
-          if (data.finishReason === 'COMPLETED') {
+          if (data.finishReason === StreamFinishReason.Completed) {
             source.close();
             onCompleted();
-          } else if (data.finishReason === 'ERROR') {
+          } else if (data.finishReason === StreamFinishReason.Error) {
             source.close();
-            onError(data.errorMessage);
+            this.logger.error(data.errorMessage);
+            onError();
           } else {
             onMessage(data.payload);
           }
@@ -80,13 +88,9 @@ export class GeneratedAnswerAPIClient {
         return source;
       } catch (e) {
         const retrying = retryCount++ < MAX_RETRIES;
-        this.options.logger.error(
-          `Failed to connect to event stream. ${
-            retrying ? `Retrying...(${retryCount})` : 'Terminating.'
-          }`,
-          e
-        );
+        this.logger.error('Failed to connect to stream.', e);
         if (retrying) {
+          this.logger.info(`Retrying...(${retryCount})`);
           return stream();
         } else {
           onError();

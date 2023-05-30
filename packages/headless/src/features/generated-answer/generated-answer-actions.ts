@@ -1,4 +1,4 @@
-import {StringValue} from '@coveo/bueno';
+import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {EventSourcePolyfill} from 'event-source-polyfill';
 import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client';
@@ -15,6 +15,7 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   GeneratedAnswerSection;
 
 const stringValue = new StringValue({required: true});
+const booleanValue = new BooleanValue({required: true});
 
 export const sseMessage = createAction(
   'generatedAnswer/sseReceived',
@@ -26,6 +27,11 @@ export const sseError = createAction('generatedAnswer/sseError');
 export const sseComplete = createAction('generatedAnswer/sseComplete');
 
 export const resetAnswer = createAction('generatedAnswer/resetAnswer');
+
+export const setIsLoading = createAction(
+  'generatedAnswer/setIsLoading',
+  (payload: boolean) => validatePayload(payload, booleanValue)
+);
 
 interface StreamAnswerArgs {
   onMessage: (message: string) => void;
@@ -40,13 +46,14 @@ export const streamAnswer = createAsyncThunk<
   AsyncThunkGeneratedAnswerOptions<StateNeededByGeneratedAnswerStream>
 >('generatedAnswer/streamAnswer', async (params, config) => {
   const state = config.getState();
+  const {dispatch, extra} = config;
 
   const {onMessage, onError, onCompleted, setEventSourceRef} = params;
-  const {streamingClient} = config.extra;
 
   const request = await buildStreamingRequest(state);
 
-  const source = streamingClient?.streamGeneratedAnswer(
+  dispatch(setIsLoading(true));
+  const source = extra.streamingClient?.streamGeneratedAnswer(
     request,
     onMessage,
     onError,
@@ -54,5 +61,7 @@ export const streamAnswer = createAsyncThunk<
   );
   if (source) {
     setEventSourceRef(source);
+  } else {
+    dispatch(setIsLoading(false));
   }
 });
