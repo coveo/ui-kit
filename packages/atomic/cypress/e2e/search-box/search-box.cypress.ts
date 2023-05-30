@@ -143,13 +143,13 @@ describe('Search Box Test Suites', () => {
             })
           )
           .init();
+        cy.get(searchBoxComponent).invoke('attr', 'redirection-url', '');
+        cy.wait(100);
+
+        SearchBoxSelectors.inputBox().click();
+        SearchBoxSelectors.querySuggestion('query-suggestion-1').click();
       });
 
-      cy.get(searchBoxComponent).invoke('attr', 'redirection-url', '');
-      cy.wait(100);
-
-      SearchBoxSelectors.inputBox().click();
-      SearchBoxSelectors.querySuggestion('query-suggestion-1').click();
       SearchBoxAssertions.assertHasText('query-suggestion-1');
     });
 
