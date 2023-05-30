@@ -92,7 +92,7 @@ describe('Facet DependsOn Test Suites', () => {
     };
 
     describe('with no fulfilled dependency', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addThreeLevelDependantFacet())
           .withHash('')
@@ -103,7 +103,7 @@ describe('Facet DependsOn Test Suites', () => {
     });
 
     describe('with a fulfilled two-level dependency in the hash', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addThreeLevelDependantFacet())
           .withHash(hashToDisplayFacets(true, false))
@@ -140,7 +140,7 @@ describe('Facet DependsOn Test Suites', () => {
     });
 
     describe('with a fulfilled three-level dependency in the hash', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addThreeLevelDependantFacet())
           .withHash(hashToDisplayFacets(true, true))
@@ -150,7 +150,7 @@ describe('Facet DependsOn Test Suites', () => {
       assertFacetsDisplayed(4);
 
       describe('when deselecting the root of the dependency tree', () => {
-        before(() => {
+        beforeEach(() => {
           pressClearButton(ColorFacetSelectors.withId(level0FacetId));
         });
 
@@ -163,7 +163,7 @@ describe('Facet DependsOn Test Suites', () => {
     });
 
     describe('with an invalid state in the hash', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addThreeLevelDependantFacet())
           .withHash(hashToDisplayFacets(false, true))
@@ -175,7 +175,7 @@ describe('Facet DependsOn Test Suites', () => {
   });
 
   describe('without reflectStateInUrl', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addThreeLevelDependantFacet())
         .withoutStateInUrl()
@@ -185,7 +185,7 @@ describe('Facet DependsOn Test Suites', () => {
     assertFacetsDisplayed(1);
 
     describe('when selecting an unrelated value in the level 0 facet', () => {
-      before(() => {
+      beforeEach(() => {
         const level0Selectors = ColorFacetSelectors.withId(level0FacetId);
         typeFacetSearchQuery(level0Selectors, level0FacetUnexpectedValue, true);
         selectIdleBoxValueAt(0);
@@ -195,7 +195,7 @@ describe('Facet DependsOn Test Suites', () => {
     });
 
     describe('when selecting the dependended-on value in the level 0 facet', () => {
-      before(() => {
+      beforeEach(() => {
         const level0Selectors = ColorFacetSelectors.withId(level0FacetId);
         typeFacetSearchQuery(level0Selectors, level0FacetExpectedValue, true);
         selectIdleBoxValueAt(0);
