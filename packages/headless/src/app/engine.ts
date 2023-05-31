@@ -314,7 +314,9 @@ function shouldWarnAboutOrganizationEndpoints(
 }
 
 function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
-  return !isNullOrUndefined(options.configuration.platformUrl);
+  return isNullOrUndefined(
+    options.configuration.organizationEndpoints?.platform
+  );
 }
 
 function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
