@@ -6,14 +6,11 @@ import {
   gitPushTags,
   gitCreateBranch,
   gitCheckoutBranch,
-  gitAdd,
-  gitWriteTree,
-  gitCommitTree,
-  gitUpdateRef,
   gitPublishBranch,
+  gitCommit,
+  getSHA1fromRef,
 } from '@coveo/semantic-monorepo-tools';
 import {createAppAuth} from '@octokit/auth-app';
-import {spawnSync} from 'child_process';
 import {randomUUID} from 'crypto';
 import {readFileSync} from 'fs';
 import {Octokit} from 'octokit';
@@ -79,45 +76,19 @@ async function commitChanges(commitMessage, octokit) {
   const tempBranchName = `release/${randomUUID()}`;
   await gitCreateBranch(tempBranchName);
   await gitCheckoutBranch(tempBranchName);
-  runPrecommit();
-  // Stage all the changes...
-  await gitAdd('.');
-  //... and create a Git tree object with the changes. The Tree SHA will be used with GitHub APIs.
-  const treeSHA = await gitWriteTree();
-  // Create a new commit that references the Git tree object.
-  const versionBumpSHA = await gitCommitTree(
-    treeSHA,
-    tempBranchName,
-    commitMessage
-  );
-
-  // Update the HEAD of the temp branch to point to the new commit, then publish the temp branch.
-  await gitUpdateRef('HEAD', versionBumpSHA);
+  await gitCommit(commitMessage, '.');
   await gitPublishBranch('origin', tempBranchName);
-
+  const newCommitSHA = await getSHA1fromRef('HEAD');
+  // Update `master` to new branch.
   await octokit.rest.git.updateRef({
     owner: REPO_OWNER,
     repo: REPO_NAME,
     ref: `heads/${mainBranchName}`,
-    sha: versionBumpSHA,
+    sha: newCommitSHA,
+    force: true,
   });
 
   // Delete the temp branch
   await gitDeleteRemoteBranch('origin', tempBranchName);
-  return versionBumpSHA;
+  return newCommitSHA;
 }
-
-/**
- * Run `npm run pre-commit`
- */
-function runPrecommit() {
-  spawnSync(appendCmdIfWindows`npm`, ['run', 'pre-commit']);
-}
-
-/**
- * Append `.cmd` to the input if the runtime OS is Windows.
- * @param {string|TemplateStringsArray} cmd
- * @returns
- */
-const appendCmdIfWindows = (cmd) =>
-  `${cmd}${process.platform === 'win32' ? '.cmd' : ''}`;
