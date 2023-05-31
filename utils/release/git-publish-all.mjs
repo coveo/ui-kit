@@ -4,7 +4,6 @@ import {
   gitTag,
   gitDeleteRemoteBranch,
   gitPushTags,
-  getSHA1fromRef,
   gitCreateBranch,
   gitCheckoutBranch,
   gitAdd,
@@ -12,11 +11,10 @@ import {
   gitCommitTree,
   gitUpdateRef,
   gitPublishBranch,
-  gitSetRefOnCommit,
-  gitPush,
 } from '@coveo/semantic-monorepo-tools';
 import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
+import {randomUUID} from 'crypto';
 import {readFileSync} from 'fs';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
@@ -26,8 +24,6 @@ import {
   REPO_OWNER,
 } from './common/constants.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
-
-const GIT_SSH_REMOTE = 'deploy';
 
 // Commit, tag and push
 (async () => {
@@ -78,10 +74,9 @@ const GIT_SSH_REMOTE = 'deploy';
 async function commitChanges(commitMessage, octokit) {
   // Get latest commit and name of the main branch.
   const mainBranchName = await getCurrentBranchName();
-  const mainBranchCurrentSHA = await getSHA1fromRef(mainBranchName);
 
   // Create a temporary branch and check it out.
-  const tempBranchName = `release/${mainBranchCurrentSHA}`;
+  const tempBranchName = `release/${randomUUID()}`;
   await gitCreateBranch(tempBranchName);
   await gitCheckoutBranch(tempBranchName);
   runPrecommit();
@@ -90,40 +85,26 @@ async function commitChanges(commitMessage, octokit) {
   //... and create a Git tree object with the changes. The Tree SHA will be used with GitHub APIs.
   const treeSHA = await gitWriteTree();
   // Create a new commit that references the Git tree object.
-  const commitTree = await gitCommitTree(treeSHA, tempBranchName, 'tempcommit');
+  const versionBumpSHA = await gitCommitTree(
+    treeSHA,
+    tempBranchName,
+    commitMessage
+  );
 
   // Update the HEAD of the temp branch to point to the new commit, then publish the temp branch.
-  await gitUpdateRef('HEAD', commitTree);
+  await gitUpdateRef('HEAD', versionBumpSHA);
   await gitPublishBranch('origin', tempBranchName);
 
-  /**
-   * Once we pushed the temp branch, the tree object is then known to the remote repository.
-   * We can now create a new commit that references the tree object using the GitHub API.
-   * The fact that we use the API makes the commit 'verified'.
-   * The commit is directly created on the GitHub repository, not on the local repository.
-   */
-  const commit = await octokit.rest.git.createCommit({
-    message: commitMessage,
+  await octokit.rest.git.updateRef({
     owner: REPO_OWNER,
     repo: REPO_NAME,
-    tree: treeSHA,
-    parents: [mainBranchCurrentSHA],
+    ref: `heads/${mainBranchName}`,
+    sha: versionBumpSHA,
   });
-
-  /**
-   * We then update the mainBranch to this new verified commit.
-   */
-  await gitSetRefOnCommit(
-    GIT_SSH_REMOTE,
-    `refs/heads/${mainBranchName}`,
-    commit.data.sha,
-    true
-  );
-  await gitPush({remote: GIT_SSH_REMOTE, refs: [mainBranchName], force: true});
 
   // Delete the temp branch
   await gitDeleteRemoteBranch('origin', tempBranchName);
-  return commit.data.sha;
+  return versionBumpSHA;
 }
 
 /**
