@@ -1,4 +1,8 @@
-import {ComponentSelector, CypressSelector} from '../../common-selectors';
+import {
+  ComponentErrorSelector,
+  ComponentSelector,
+  CypressSelector,
+} from '../../common-selectors';
 
 export const caseClassificationComponent = 'c-quantic-case-classification';
 
@@ -15,10 +19,10 @@ export interface CaseClassificationSelector extends ComponentSelector {
   inlineOptionInput: (idx: number) => CypressSelector;
   error: () => CypressSelector;
   loadingSpinner: () => CypressSelector;
-  renderingError: () => CypressSelector;
 }
 
-export const CaseClassificationSelectors: CaseClassificationSelector = {
+export const CaseClassificationSelectors: CaseClassificationSelector &
+  ComponentErrorSelector = {
   get: () => cy.get(caseClassificationComponent),
 
   label: () =>
@@ -54,6 +58,10 @@ export const CaseClassificationSelectors: CaseClassificationSelector = {
     CaseClassificationSelectors.get().find('.slds-form-element__help'),
   loadingSpinner: () =>
     CaseClassificationSelectors.get().find('lightning-spinner'),
-  renderingError: () =>
-    CaseClassificationSelectors.get().find('.error-message'),
+  componentError: () =>
+    CaseClassificationSelectors.get().find('c-quantic-component-error'),
+  componentErrorMessage: () =>
+    CaseClassificationSelectors.get().find(
+      'c-quantic-component-error [data-cy="error-message"]'
+    ),
 };

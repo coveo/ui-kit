@@ -1,4 +1,7 @@
-import {LightningElement, track, api} from 'lwc';
+import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import colon from '@salesforce/label/c.quantic_Colon';
+import nMore from '@salesforce/label/c.quantic_NMore';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -6,11 +9,7 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, RelativeDateFormatter, Store} from 'c/quanticUtils';
-
-import nMore from '@salesforce/label/c.quantic_NMore';
-import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
-import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
-import colon from '@salesforce/label/c.quantic_Colon';
+import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
@@ -67,6 +66,8 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   unsubscribe;
   /** @type {string[]} */
   expandedBreadcrumbFieldsState = [];
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     nMore,
@@ -281,5 +282,12 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     return dateFacetBreadcrumbsToDisplay.map((breadcrumb) =>
       this.getBreadcrumbValues(breadcrumb)
     );
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

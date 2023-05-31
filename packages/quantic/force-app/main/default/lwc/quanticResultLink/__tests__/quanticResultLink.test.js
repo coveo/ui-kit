@@ -1,8 +1,8 @@
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 // @ts-ignore
-import { getNavigateCalledWith } from 'lightning/navigation';
+import {getNavigateCalledWith} from 'lightning/navigation';
 // @ts-ignore
-import { createElement } from 'lwc';
+import {createElement} from 'lwc';
 import QuanticResultLink from '../quanticResultLink';
 // @ts-ignore
 import mockDefaultResult from './data/defaultResult.json';
@@ -10,7 +10,6 @@ import mockDefaultResult from './data/defaultResult.json';
 import mockKnowledgeArticleResult from './data/knowledgeArticleResult.json';
 // @ts-ignore
 import mockSalesforceResult from './data/salesforceResult.json';
-
 
 jest.mock('c/quanticHeadlessLoader');
 
@@ -97,6 +96,7 @@ describe('c-quantic-result-link', () => {
       });
     });
   });
+
   describe('when the result is NOT of type salesforce', () => {
     it('should open the result link in the current browser tab', async () => {
       const element = createTestComponent({...mockDefaultResult});
@@ -108,6 +108,24 @@ describe('c-quantic-result-link', () => {
         mockDefaultResult.result.clickUri
       );
       expect(link.getAttribute('target')).toEqual('_self');
+    });
+
+    describe('with a custom value for the target property', () => {
+      it('should open the result link based on the value of the target property', async () => {
+        const customTarget = '_blank';
+        const element = createTestComponent({
+          ...mockDefaultResult,
+          target: customTarget,
+        });
+        await flushPromises();
+
+        const link = element.shadowRoot.querySelector('a');
+
+        expect(link.getAttribute('href')).toEqual(
+          mockDefaultResult.result.clickUri
+        );
+        expect(link.getAttribute('target')).toEqual(customTarget);
+      });
     });
   });
 });

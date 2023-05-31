@@ -1,14 +1,12 @@
-import {LightningElement, api, track} from 'lwc';
+import clear from '@salesforce/label/c.quantic_Clear';
+import search from '@salesforce/label/c.quantic_Search';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-
 import {keys} from 'c/quanticUtils';
-
-import search from '@salesforce/label/c.quantic_Search';
-import clear from '@salesforce/label/c.quantic_Clear';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
@@ -72,6 +70,8 @@ export default class QuanticSearchBox extends LightningElement {
   headless;
   /** @type {Array} */
   suggestions = [];
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   /**
    * @param {SearchEngine} engine
@@ -258,4 +258,11 @@ export default class QuanticSearchBox extends LightningElement {
     const id = event.detail;
     this.input.setAttribute('aria-controls', id);
   };
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
+  }
 }

@@ -7,3 +7,8 @@ export interface ComponentSelector {
 export function should(should: boolean) {
   return should ? 'should' : 'should not';
 }
+
+export interface ComponentErrorSelector {
+  componentError: () => CypressSelector;
+  componentErrorMessage: () => CypressSelector;
+}

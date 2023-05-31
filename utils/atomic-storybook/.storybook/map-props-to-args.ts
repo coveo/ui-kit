@@ -48,7 +48,7 @@ export const mapPropsToArgTypes = (componentTag: string): ArgTypes => {
     )
     .forEach((prop) => {
       ret[prop.name] = {
-        description: prop.docs,
+        description: `<pre>${prop.docs}</pre>`,
         table: {
           defaultValue: {summary: prop.default},
         },
