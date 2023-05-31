@@ -1,6 +1,8 @@
-const path = require('path');
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-module.exports = {
+export default {
   entry: './src/App.tsx',
   module: {
     rules: [
@@ -20,7 +22,7 @@ module.exports = {
   },
   output: {
     filename: 'app.js',
-    path: path.resolve(__dirname, 'public/dist'),
+    path: resolve(__dirname, 'public/dist'),
   },
   devServer: {
     static: './public',
