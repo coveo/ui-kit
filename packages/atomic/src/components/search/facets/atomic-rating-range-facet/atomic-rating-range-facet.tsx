@@ -1,4 +1,3 @@
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
   NumericFacet,
   buildNumericFacet,
@@ -13,31 +12,32 @@ import {
   buildFacetConditionsManager,
   FacetConditionsManager,
 } from '@coveo/headless';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import Star from '../../../../images/star.svg';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
-import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
-import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
-import {Rating} from '../../atomic-rating/atomic-rating';
+import {MapProp} from '../../../../utils/props-utils';
 import {
   parseDependsOn,
   validateDependsOn,
 } from '../../../common/facets/facet-common';
-import Star from '../../../../images/star.svg';
-import {Hidden} from '../../../common/hidden';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {MapProp} from '../../../../utils/props-utils';
-import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {BaseFacet} from '../../../common/facets/facet-common';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
+import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {Hidden} from '../../../common/hidden';
+import {Rating} from '../../atomic-rating/atomic-rating';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {initializePopover} from '../atomic-popover/popover-type';
 
 /**
@@ -119,12 +119,12 @@ export class AtomicRatingRangeFacet
    * When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`.
    * This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):
    *
-   * - `--atomic-rating-facet-icon-active-color`
-   * - `--atomic-rating-facet-icon-inactive-color`
+   * - `--atomic-rating-icon-active-color`
+   * - `--atomic-rating-icon-inactive-color`
    */
   @Prop({reflect: true}) public icon = Star;
   /**
-   * Specifies if the facet is collapsed.
+   * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
@@ -199,7 +199,7 @@ export class AtomicRatingRangeFacet
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
     const facetInfo: FacetInfo = {
-      label: this.label,
+      label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
     };

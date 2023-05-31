@@ -14,6 +14,7 @@ async function initInterface() {
   await searchInterface.initialize({
     accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
     organizationId: 'electronicscoveodemocomo0n2fu8v',
+    organizationEndpoints: await searchInterface.getOrganizationEndpoints('electronicscoveodemocomo0n2fu8v')
   });
 
   // Trigger a first search
@@ -24,7 +25,7 @@ onMounted(initInterface);
 </script>
 
 <template>
-  <atomic-search-interface search-hub="MainSearch" pipeline="Search" fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color">
+  <atomic-search-interface search-hub="MainSearch" pipeline="Search" fields-to-include='["ec_price","ec_rating","ec_images","ec_brand","cat_platform","cat_condition","cat_categories","cat_review_count","cat_color"]'>
     <atomic-search-layout>
       <atomic-layout-section section="search">
         <atomic-search-box></atomic-search-box>

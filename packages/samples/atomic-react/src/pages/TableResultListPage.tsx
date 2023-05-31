@@ -1,5 +1,3 @@
-import React, {FunctionComponent} from 'react';
-
 import {
   AtomicFormatCurrency,
   AtomicResultBadge,
@@ -16,6 +14,7 @@ import {
   AtomicResultText,
   AtomicTableElement,
 } from '@coveo/atomic-react';
+import React, {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const TableResultListPage: FunctionComponent = () => {
@@ -25,7 +24,6 @@ export const TableResultListPage: FunctionComponent = () => {
       organizationId="electronicscoveodemocomo0n2fu8v"
     >
       <AtomicResultList
-        fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
         display="table"
         imageSize="large"
         template={MyTemplate}

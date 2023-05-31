@@ -7,8 +7,8 @@ export const getRangeFacetMetadata = (
   {facetId, selection}: RangeFacetSelectionPayload
 ): FacetRangeMetadata => {
   const facet = state.dateFacetSet![facetId] || state.numericFacetSet![facetId];
-  const facetField = facet.field;
-  const facetTitle = `${facet.field}_${facetId}`;
+  const facetField = facet.request.field;
+  const facetTitle = `${facetField}_${facetId}`;
   return {
     facetId,
     facetField,

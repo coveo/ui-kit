@@ -1,13 +1,13 @@
-import {triggerReducer} from './triggers-slice';
-import {getTriggerInitialState} from './triggers-state';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearch} from '../../test/mock-search';
-import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute';
 import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify';
 import {buildMockQueryTrigger} from '../../test/mock-trigger-query';
-import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute';
-import {executeSearch} from '../search/search-actions';
+import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {executeSearch} from '../search/search-actions';
+import {triggerReducer} from './triggers-slice';
+import {getTriggerInitialState} from './triggers-state';
 
 describe('trigger slice', () => {
   it('should have initial state', () => {
@@ -102,27 +102,7 @@ describe('trigger slice', () => {
     expect(finalState.query).toEqual('');
   });
 
-  it('when an executeSearch fulfilled is received and the payload contains TriggerQuery objects, it updates #state.query', () => {
-    const state = getTriggerInitialState();
-    const triggers = [buildMockQueryTrigger({content: 'Euro'})];
-    const response = buildMockSearchResponse({
-      triggers,
-    });
-    const searchState = buildMockSearch({
-      response,
-    });
-
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
-    const finalState = triggerReducer(state, action);
-
-    expect(finalState.query).toEqual('Euro');
-  });
-
-  it('when an executeSearch fulfilled is received and the payload does not contain any TriggerExecute objects, it does not update #state.execute', () => {
+  it('when an executeSearch fulfilled is received and the payload does not contain any TriggerExecute objects, it does not update #state.executions', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockNotifyTrigger({content: 'notification'}),
@@ -142,13 +122,10 @@ describe('trigger slice', () => {
     );
     const finalState = triggerReducer(state, action);
 
-    expect(finalState.execute).toEqual({
-      functionName: '',
-      params: [],
-    });
+    expect(finalState.executions).toEqual([]);
   });
 
-  it('when an executeSearch fulfilled is received and the payload contains TriggerExecute objects, it updates #state.execute', () => {
+  it('when an executeSearch fulfilled is received and the payload contains TriggerExecute objects, it updates #state.executions', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockExecuteTrigger({
@@ -170,13 +147,15 @@ describe('trigger slice', () => {
     );
     const finalState = triggerReducer(state, action);
 
-    expect(finalState.execute).toEqual({
-      functionName: 'function',
-      params: ['a1'],
-    });
+    expect(finalState.executions).toEqual([
+      {
+        functionName: 'function',
+        params: ['a1'],
+      },
+    ]);
   });
 
-  it('when an executeSearch fulfilled is received and the payload does not contain any TriggerNotification objects, it does not update #state.notification', () => {
+  it('when an executeSearch fulfilled is received and the payload does not contain any TriggerNotification objects, it does not update #state.notifications', () => {
     const state = getTriggerInitialState();
     const triggers = [
       buildMockQueryTrigger({content: 'query'}),
@@ -196,10 +175,10 @@ describe('trigger slice', () => {
     );
     const finalState = triggerReducer(state, action);
 
-    expect(finalState.notification).toEqual('');
+    expect(finalState.notifications).toEqual([]);
   });
 
-  it('when an executeSearch fulfilled is received and the payload contains TriggerNotification objects, it updates #state.notification', () => {
+  it('when an executeSearch fulfilled is received and the payload contains TriggerNotification objects, it updates #state.notifications', () => {
     const state = getTriggerInitialState();
     const triggers = [buildMockNotifyTrigger({content: 'Hello world'})];
     const response = buildMockSearchResponse({
@@ -216,7 +195,7 @@ describe('trigger slice', () => {
     );
     const finalState = triggerReducer(state, action);
 
-    expect(finalState.notification).toEqual('Hello world');
+    expect(finalState.notifications).toEqual(['Hello world']);
   });
 
   it('when an executeSearch fulfilled is received and the payload contains two of each Trigger objects, it updates all states members', () => {
@@ -224,7 +203,6 @@ describe('trigger slice', () => {
       'https://google.com/search?q=coveo%20query%20triggers',
       'https://docs.coveo.com/en/search/#q=coveo%20query%20triggers',
     ];
-    const expectedQueries = ['Foo', 'Bar'];
     const expectedExecutions = [
       {functionName: 'info', params: ['String param', 1, false]},
       {functionName: 'error', params: [2, true, 'No']},
@@ -235,8 +213,6 @@ describe('trigger slice', () => {
     const triggers = [
       buildMockRedirectTrigger({content: expectedRedirections[0]}),
       buildMockRedirectTrigger({content: expectedRedirections[1]}),
-      buildMockQueryTrigger({content: expectedQueries[0]}),
-      buildMockQueryTrigger({content: expectedQueries[1]}),
       buildMockExecuteTrigger({
         content: {
           name: expectedExecutions[0].functionName,
@@ -268,12 +244,8 @@ describe('trigger slice', () => {
 
     expect(finalState.redirectTo).toEqual(expectedRedirections[0]);
 
-    expect(finalState.query).toEqual(expectedQueries[0]);
-
-    expect(finalState.execute).toEqual(expectedExecutions[0]);
     expect(finalState.executions).toEqual(expectedExecutions);
 
-    expect(finalState.notification).toEqual(expectedNotifications[0]);
     expect(finalState.notifications).toEqual(expectedNotifications);
   });
 });

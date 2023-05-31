@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../..';
-import {dictionaryFieldContext} from '../../app/reducers';
+import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../features/dictionary-field-context/dictionary-field-context-slice';
 import {
   addContext,
   AddDictionaryFieldContextActionCreatorPayload,

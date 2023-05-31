@@ -1,8 +1,8 @@
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
-import {NumberInputType} from './number-input-type';
 import {Button} from '../../button';
 import {AnyBindings} from '../../interface/bindings';
 import {NumericFilter, NumericFilterState} from '../../types';
+import {NumberInputType} from './number-input-type';
 
 /**
  * Internal component made to be integrated in a NumericFacet.

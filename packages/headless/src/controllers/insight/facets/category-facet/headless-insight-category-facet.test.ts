@@ -1,9 +1,4 @@
-import {InsightAppState} from '../../../../state/insight-app-state';
-import {
-  buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../../test/mock-engine';
-import {buildMockInsightState} from '../../../../test/mock-insight-state';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
@@ -15,15 +10,20 @@ import {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/interfaces/request';
-import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
-import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
-import {buildMockCategoryFacetValue} from '../../../../test/mock-category-facet-value';
-import {buildMockCategoryFacetResponse} from '../../../../test/mock-category-facet-response';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {InsightAppState} from '../../../../state/insight-app-state';
+import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
+import {buildMockCategoryFacetResponse} from '../../../../test/mock-category-facet-response';
+import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
+import {buildMockCategoryFacetValue} from '../../../../test/mock-category-facet-value';
+import {
+  buildMockInsightEngine,
+  MockInsightEngine,
+} from '../../../../test/mock-engine';
+import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import {
   CategoryFacet,
   CategoryFacetOptions,

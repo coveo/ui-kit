@@ -1,8 +1,5 @@
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../../test/mock-engine';
-import {Sort, SortProps, buildCoreSort} from './headless-core-sort';
+import {configuration} from '../../../app/common-reducers';
+import {updatePage} from '../../../features/pagination/pagination-actions';
 import {
   buildRelevanceSortCriterion,
   buildDateSortCriterion,
@@ -15,9 +12,13 @@ import {
   registerSortCriterion,
   updateSortCriterion,
 } from '../../../features/sort-criteria/sort-criteria-actions';
+import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../../test/mock-engine';
 import {createMockState} from '../../../test/mock-state';
-import {updatePage} from '../../../features/pagination/pagination-actions';
-import {configuration, sortCriteria} from '../../../app/reducers';
+import {Sort, SortProps, buildCoreSort} from './headless-core-sort';
 
 describe('Sort', () => {
   let engine: MockSearchEngine;

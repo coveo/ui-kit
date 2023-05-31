@@ -1,12 +1,13 @@
-import {HtmlRequest} from './html-request';
+import {Logger} from 'pino';
+import {TextDecoder} from 'web-encoding';
+import {URLPath} from '../../../utils/url-utils';
+import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
+import {PlatformClient} from '../../platform-client';
+import {PreprocessRequest, RequestMetadata} from '../../preprocess-request';
+import {findEncoding} from '../encoding-finder';
 import {SearchAPIErrorWithStatusCode} from '../search-api-error-response';
 import {baseSearchRequest} from '../search-api-params';
-import {PlatformClient} from '../../platform-client';
-import {findEncoding} from '../encoding-finder';
-import {TextDecoder} from 'web-encoding';
-import {Logger} from 'pino';
-import {PreprocessRequest, RequestMetadata} from '../../preprocess-request';
-import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
+import {HtmlRequest} from './html-request';
 
 export interface HtmlApiClient {
   html: (req: HtmlRequest) => Promise<
@@ -26,6 +27,26 @@ export interface HtmlAPIClientOptions {
   preprocessRequest: PreprocessRequest;
   requestMetadata?: RequestMetadata;
 }
+
+export const buildContentURL = (req: HtmlRequest, path: string) => {
+  const url = new URLPath(`${req.url}${path}`);
+  url.addParam('access_token', req.accessToken);
+  url.addParam('organizationId', req.organizationId);
+  url.addParam('uniqueId', req.uniqueId);
+  if (req.q !== undefined) {
+    url.addParam('q', req.q);
+  }
+  if (req.enableNavigation !== undefined) {
+    url.addParam('enableNavigation', `${req.enableNavigation}`);
+  }
+  if (req.requestedOutputSize !== undefined) {
+    url.addParam('requestedOutputSize', `${req.requestedOutputSize}`);
+  }
+  if (req.visitorId !== undefined) {
+    url.addParam('visitorId', `${req.visitorId}`);
+  }
+  return url.href;
+};
 
 export const getHtml = async (
   req: HtmlRequest,

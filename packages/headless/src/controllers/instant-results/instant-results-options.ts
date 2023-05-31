@@ -1,5 +1,5 @@
-import {nonEmptyString} from '../../utils/validate-payload';
 import {NumberValue, Schema} from '@coveo/bueno';
+import {nonEmptyString} from '../../utils/validate-payload';
 
 export interface InstantResultOptions {
   /**

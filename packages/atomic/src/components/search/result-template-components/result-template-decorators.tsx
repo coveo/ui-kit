@@ -1,12 +1,13 @@
-import {FoldedResult, Result, ResultTemplatesManager} from '@coveo/headless';
+import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {closest} from '../../../utils/utils';
+import {AnyResult} from '../../common/interface/result';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../common/layout/display-options';
-import {TemplateContent} from '../result-templates/result-template-common';
+import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
 
 export class MissingResultParentError extends Error {
   constructor(elementName: string) {
@@ -20,8 +21,7 @@ export class MissingResultParentError extends Error {
  * A [StencilJS property decorator](https://stenciljs.com/) to be used for result template components.
  * This allows the Stencil component to fetch the current result from its rendered parent, the `atomic-result` component.
  *
- *
- * @example
+ * Example:
  * @ResultContext() private result!: Result;
  *
  * For more information and examples, view the "Utilities" section of the readme.
@@ -81,16 +81,37 @@ export function ResultContext(opts: {folded: boolean} = {folded: false}) {
   };
 }
 
+export function InteractiveResultContext() {
+  return (component: ComponentInterface, interactiveResultVariable: string) => {
+    const {connectedCallback} = component;
+    component.connectedCallback = function () {
+      const element = getElement(this);
+      const event = buildCustomEvent(
+        interactiveResultContextEventName,
+        (result: AnyResult) => {
+          this[interactiveResultVariable] = result;
+        }
+      );
+      element.dispatchEvent(event);
+      return connectedCallback && connectedCallback.call(this);
+    };
+  };
+}
+
 type ResultContextEventHandler<T = Result> = (result: T) => void;
 export type ResultContextEvent<T = Result> = CustomEvent<
   ResultContextEventHandler<T>
 >;
 const resultContextEventName = 'atomic/resolveResult';
+export type InteractiveResultContextEvent = CustomEvent<
+  (interactiveResult: InteractiveResult) => void
+>;
+const interactiveResultContextEventName = 'atomic/resolveInteractiveResult';
 
 /**
  * Retrieves `Result` on a rendered `atomic-result`.
  *
- * This method is useful for building custom result template elements, see [Create a Result List](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) for more information.
+ * This method is useful for building custom result template elements, see [Create a Result List](https://docs.coveo.com/en/atomic/latest/cc-search/create-custom-components/native-components/#custom-result-template-component-example) for more information.
  *
  * You should use the method in the [connectedCallback lifecycle method](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#using_the_lifecycle_callbacks).
  *
@@ -119,38 +140,42 @@ function isFolded(result: Result | FoldedResult): result is FoldedResult {
 }
 
 type ChildTemplatesContextEventHandler = (
-  result: ResultTemplatesManager<TemplateContent> | undefined
+  resultTemplateProvider?: ResultTemplateProvider
 ) => void;
 export type ChildTemplatesContextEvent =
   CustomEvent<ChildTemplatesContextEventHandler>;
 const childTemplatesContextEventName = 'atomic/resolveChildTemplates';
 
 interface AtomicResultChildren {
-  resultListCommon?: {
-    resultTemplatesManager?: ResultTemplatesManager<TemplateContent>;
-  };
+  resultTemplateProvider?: ResultTemplateProvider;
 }
 /**
  * A [StencilJS property decorator](https://stenciljs.com/) to be used for children result templates.
  * This allows the Stencil component to fetch children templates defined a level above.
  */
 export function ChildTemplatesContext() {
-  return (component: ComponentInterface, resultVariable: string) => {
+  return (
+    component: ComponentInterface,
+    resultTemplateProviderProp: string
+  ) => {
     const {componentWillRender} = component;
     component.componentWillRender = function () {
       const element = getElement(this);
       const event = buildCustomEvent(
         childTemplatesContextEventName,
-        (result: ResultTemplatesManager<TemplateContent> | undefined) => {
-          const resultListManager = (this as AtomicResultChildren)
-            .resultListCommon?.resultTemplatesManager;
-          this[resultVariable] = resultListManager !== result ? result : null;
+        (resultTemplateProvider?: ResultTemplateProvider) => {
+          const component = this as AtomicResultChildren;
+          if (component.resultTemplateProvider) {
+            return;
+          }
+
+          this[resultTemplateProviderProp] = resultTemplateProvider;
         }
       );
 
       const canceled = element.dispatchEvent(event);
       if (canceled) {
-        this[resultVariable] = null;
+        this[resultTemplateProviderProp] = null;
         return;
       }
       return componentWillRender && componentWillRender.call(this);

@@ -1,14 +1,15 @@
-import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions';
-import {executeSearch} from '../../features/search/search-actions';
-import {Controller} from '../controller/headless-controller';
-import {SearchBoxOptions} from '../core/search-box/headless-core-search-box-options';
-import {SuggestionHighlightingOptions, Delimiters} from '../../utils/highlight';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
+import {executeSearch} from '../../features/search/search-actions';
+import {SuggestionHighlightingOptions, Delimiters} from '../../utils/highlight';
+import {Controller} from '../controller/headless-controller';
 import {
   buildCoreSearchBox,
   SearchBoxState,
   Suggestion,
 } from '../core/search-box/headless-core-search-box';
+import {SearchBoxOptions} from '../core/search-box/headless-core-search-box-options';
 
 export type {
   SearchBoxOptions,
@@ -76,9 +77,19 @@ export function buildSearchBox(
   engine: SearchEngine,
   props: SearchBoxProps = {}
 ): SearchBox {
-  return buildCoreSearchBox(engine, {
+  const searchBox = buildCoreSearchBox(engine, {
     ...props,
     executeSearchActionCreator: executeSearch,
     fetchQuerySuggestionsActionCreator: fetchQuerySuggestions,
   });
+
+  return {
+    ...searchBox,
+    submit() {
+      searchBox.submit(logSearchboxSubmit());
+    },
+    get state() {
+      return searchBox.state;
+    },
+  };
 }

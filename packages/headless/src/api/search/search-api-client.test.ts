@@ -1,44 +1,45 @@
+import {Response} from 'cross-fetch';
+import pino from 'pino';
+import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
+import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
+import {buildProductRecommendationsRequest} from '../../features/product-recommendations/product-recommendations-actions';
+import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
+import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions';
+import {buildRecommendationRequest} from '../../features/recommendation/recommendation-actions';
+import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
+import {buildSearchRequest} from '../../features/search/search-request';
+import {emptyQuestionAnswer} from '../../features/search/search-state';
+import {buildPlanRequest} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
+import {SearchAppState} from '../../state/search-app-state';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockCategoryFacetSearch} from '../../test/mock-category-facet-search';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
+import {buildMockFacetSearch} from '../../test/mock-facet-search';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
+import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
+import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
+import {createMockRecommendationState} from '../../test/mock-recommendation-state';
+import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {createMockState} from '../../test/mock-state';
+import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
+import {NoopPreprocessRequest} from '../preprocess-request';
 import {
   isErrorResponse,
   SearchAPIClient,
   SearchAPIClientOptions,
 } from './search-api-client';
-import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
-import {createMockState} from '../../test/mock-state';
-import {createMockRecommendationState} from '../../test/mock-recommendation-state';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {
   getAuthenticationQueryParam,
   getOrganizationIdQueryParam,
 } from './search-api-params';
-import {buildMockFacetSearch} from '../../test/mock-facet-search';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockCategoryFacetSearch} from '../../test/mock-category-facet-search';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {SearchAppState} from '../../state/search-app-state';
-import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions';
-import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
-import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
-import {buildRecommendationRequest} from '../../features/recommendation/recommendation-actions';
-import {buildProductRecommendationsRequest} from '../../features/product-recommendations/product-recommendations-actions';
-import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
-import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
-import pino from 'pino';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
-import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
-import {NoopPreprocessRequest} from '../preprocess-request';
-import {Response} from 'cross-fetch';
-import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
-import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
-import {SearchResponseSuccess} from './search/search-response';
-import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {QuestionsAnswers} from './search/question-answering';
-import {buildPlanRequest} from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
-import {buildSearchRequest} from '../../features/search/search-request';
+import {SearchResponseSuccess} from './search/search-response';
 
 jest.mock('../platform-client');
+
 describe('search api client', () => {
   const logger = pino({level: 'silent'});
   let searchAPIClient: SearchAPIClient;
@@ -133,7 +134,7 @@ describe('search api client', () => {
           test: buildMockFacetSearch(),
         },
         facetSet: {
-          test: buildMockFacetRequest(),
+          test: buildMockFacetSlice(),
         },
       });
 
@@ -148,7 +149,7 @@ describe('search api client', () => {
           };
         },
       });
-      const req = await buildSpecificFacetSearchRequest('test', state);
+      const req = await buildSpecificFacetSearchRequest('test', state, false);
       const res = await searchAPIClient.facetSearch(req);
       expect(res.moreValuesAvailable).toEqual(true);
     });
@@ -174,6 +175,7 @@ describe('search api client', () => {
           state.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           q: state.query.q,
           debug: false,
@@ -245,6 +247,7 @@ describe('search api client', () => {
           state.configuration.search.apiBaseUrl
         }/plan?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           q: state.query.q,
           context: state.context.contextValues,
@@ -294,6 +297,7 @@ describe('search api client', () => {
           state.configuration.search.apiBaseUrl
         }/querySuggest?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           q: state.querySet[id],
           count: state.querySuggest[id]!.count,
@@ -336,12 +340,12 @@ describe('search api client', () => {
       it('it calls Platform.call with the right options', async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
-        const facetState = buildMockFacetRequest();
+        const facetState = buildMockFacetSlice();
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
 
-        const req = await buildSpecificFacetSearchRequest(id, state);
+        const req = await buildSpecificFacetSearchRequest(id, state, false);
         searchAPIClient.facetSearch(req);
 
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
@@ -363,13 +367,13 @@ describe('search api client', () => {
       it('with an authentication provider it calls Platform.call with the right options', async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
-        const facetState = buildMockFacetRequest();
+        const facetState = buildMockFacetSlice();
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
         state.configuration.search.authenticationProviders = ['foo'];
 
-        const req = await buildSpecificFacetSearchRequest(id, state);
+        const req = await buildSpecificFacetSearchRequest(id, state, false);
         searchAPIClient.facetSearch(req);
 
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
@@ -386,11 +390,11 @@ describe('search api client', () => {
       it calls PlatformClient.call with the facet search params`, async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
-        const facetState = buildMockFacetRequest();
+        const facetState = buildMockFacetSlice();
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
-        const req = await buildSpecificFacetSearchRequest(id, state);
+        const req = await buildSpecificFacetSearchRequest(id, state, false);
 
         searchAPIClient.facetSearch(req);
 
@@ -407,7 +411,7 @@ describe('search api client', () => {
             captions: facetSearchState.options.captions,
             numberOfValues: facetSearchState.options.numberOfValues,
             query: newQuery,
-            field: facetState.field,
+            field: facetState.request.field,
             ignoreValues: [],
             searchContext: {
               ...searchRequest,
@@ -433,7 +437,7 @@ describe('search api client', () => {
           request: categoryFacet,
         });
 
-        const req = await buildCategoryFacetSearchRequest(id, state);
+        const req = await buildCategoryFacetSearchRequest(id, state, false);
 
         searchAPIClient.facetSearch(req);
 
@@ -497,6 +501,7 @@ describe('search api client', () => {
           recommendationState.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           recommendation: recommendationState.recommendation.id,
           aq: recommendationState.advancedSearchQueries.aq,
@@ -512,6 +517,7 @@ describe('search api client', () => {
           tab: originLevel2,
           referrer: originLevel3,
           visitorId: expect.any(String),
+          numberOfResults: recommendationState.pagination.numberOfResults,
         },
         preprocessRequest: NoopPreprocessRequest,
         requestMetadata: {method: 'recommendations'},
@@ -574,6 +580,7 @@ describe('search api client', () => {
           productRecommendationsState.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           recommendation: productRecommendationsState.productRecommendations.id,
           context: productRecommendationsState.context.contextValues,

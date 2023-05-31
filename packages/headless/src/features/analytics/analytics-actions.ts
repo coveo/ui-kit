@@ -1,19 +1,21 @@
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {Result} from '../../api/search/search/result';
 import {
   validatePayload,
   requiredNonEmptyString,
   nonEmptyString,
 } from '../../utils/validate-payload';
-import {Result} from '../../api/search/search/result';
+import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 import {
   AnalyticsType,
+  ClickAction,
+  CustomAction,
   documentIdentifier,
   makeAnalyticsAction,
-  makeInsightAnalyticsAction,
   partialDocumentInformation,
+  SearchAction,
   validateResultPayload,
 } from './analytics-utils';
-import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
@@ -67,16 +69,18 @@ export interface LogSearchEventActionCreatorPayload {
   meta?: Record<string, unknown>;
 }
 
-export const logSearchEvent = (p: LogSearchEventActionCreatorPayload) =>
+export const logSearchEvent = (
+  p: LogSearchEventActionCreatorPayload
+): SearchAction =>
   makeAnalyticsAction(
     'analytics/generic/search',
     AnalyticsType.Search,
     (client) => {
       validateEvent(p);
       const {evt, meta} = p;
-      return client.logSearchEvent(evt as SearchPageEvents, meta);
+      return client.makeSearchEvent(evt as SearchPageEvents, meta);
     }
-  )();
+  );
 
 export interface LogClickEventActionCreatorPayload {
   /**
@@ -95,7 +99,9 @@ export interface LogClickEventActionCreatorPayload {
   meta?: Record<string, unknown>;
 }
 
-export const logClickEvent = (p: LogClickEventActionCreatorPayload) =>
+export const logClickEvent = (
+  p: LogClickEventActionCreatorPayload
+): ClickAction =>
   makeAnalyticsAction(
     'analytics/generic/click',
     AnalyticsType.Click,
@@ -103,14 +109,14 @@ export const logClickEvent = (p: LogClickEventActionCreatorPayload) =>
       validateResultPayload(p.result);
       validateEvent(p);
 
-      return client.logClickEvent(
+      return client.makeClickEvent(
         p.evt as SearchPageEvents,
         partialDocumentInformation(p.result, state),
         documentIdentifier(p.result),
         p.meta
       );
     }
-  )();
+  );
 
 export interface LogCustomEventActionCreatorPayload {
   /**
@@ -127,55 +133,47 @@ export interface LogCustomEventActionCreatorPayload {
   meta?: Record<string, unknown>;
 }
 
-export const logCustomEvent = (p: LogCustomEventActionCreatorPayload) =>
+export const logCustomEvent = (
+  p: LogCustomEventActionCreatorPayload
+): CustomAction =>
   makeAnalyticsAction(
     'analytics/generic/custom',
     AnalyticsType.Custom,
     (client) => {
       validateEvent(p);
-      return client.logCustomEventWithType(p.evt, p.type, p.meta);
+      return client.makeCustomEventWithType(p.evt, p.type, p.meta);
     }
-  )();
+  );
 
-export const logInterfaceLoad = makeAnalyticsAction(
-  'analytics/interface/load',
-  AnalyticsType.Search,
-  (client) => client.logInterfaceLoad()
-);
+export const logInterfaceLoad = (): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/interface/load',
+    AnalyticsType.Search,
+    (client) => client.makeInterfaceLoad()
+  );
 
-export const logInsightInterfaceLoad = makeInsightAnalyticsAction(
-  'analytics/interface/load',
-  AnalyticsType.Search,
-  (client) => client.logInterfaceLoad()
-);
+export const logInterfaceChange = (): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/interface/change',
+    AnalyticsType.Search,
+    (client, state) =>
+      client.makeInterfaceChange({
+        interfaceChangeTo: state.configuration.analytics.originLevel2,
+      })
+  );
 
-export const logInterfaceChange = makeAnalyticsAction(
-  'analytics/interface/change',
-  AnalyticsType.Search,
-  (client, state) =>
-    client.logInterfaceChange({
-      interfaceChangeTo: state.configuration.analytics.originLevel2,
-    })
-);
+export const logSearchFromLink = (): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/interface/searchFromLink',
+    AnalyticsType.Search,
+    (client) => client.makeSearchFromLink()
+  );
 
-export const logInsightInterfaceChange = makeInsightAnalyticsAction(
-  'analytics/interface/change',
-  AnalyticsType.Search,
-  (client, state) =>
-    client.logInterfaceChange({
-      interfaceChangeTo: state.configuration.analytics.originLevel2,
-    })
-);
-
-export const logSearchFromLink = makeAnalyticsAction(
-  'analytics/interface/searchFromLink',
-  AnalyticsType.Search,
-  (client) => client.logSearchFromLink()
-);
-
-export const logOmniboxFromLink = (metadata: OmniboxSuggestionMetadata) =>
+export const logOmniboxFromLink = (
+  metadata: OmniboxSuggestionMetadata
+): SearchAction =>
   makeAnalyticsAction(
     'analytics/interface/omniboxFromLink',
     AnalyticsType.Search,
-    (client) => client.logOmniboxFromLink(metadata)
-  )();
+    (client) => client.makeOmniboxFromLink(metadata)
+  );

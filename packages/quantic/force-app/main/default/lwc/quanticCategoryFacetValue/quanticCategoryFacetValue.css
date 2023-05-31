@@ -1,15 +1,15 @@
 @import 'c/quanticFacetStyles';
 
+:host {
+  width: 100%;
+}
+
 .facet__path {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--sds-c-color-gray-8, #8E959D);
   float: left;
-}
-
-.facet__number-of-results {
-  color: var(--sds-c-color-gray-8, #8E959D);
 }
 
 .facet__search-results{

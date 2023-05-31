@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "a70789e2-90dc-4d99-a063-97c1aa7e1e53",
   "label" : "Quantic Timeframe Facet",
   "regions" : [ {

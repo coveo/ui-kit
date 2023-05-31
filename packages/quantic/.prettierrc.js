@@ -6,8 +6,12 @@ module.exports = {
     overrides: [
       {
         files: '**/lwc/**/*.html',
-        options: {parser: 'lwc'},
+        options: { parser: 'lwc' },
       },
+      {
+        "files": "*.{cmp,page,component}",
+        "options": { "parser": "html" }
+      }
     ],
   },
 };

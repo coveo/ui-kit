@@ -1,5 +1,6 @@
 import {Component, h, Prop} from '@stencil/core';
 import EditIcon from '../../../images/edit.svg';
+import {IconButton} from '../../common/iconButton';
 
 /**
  * @internal
@@ -16,11 +17,13 @@ export class AtomicInsightEditToggle {
 
   public render() {
     return (
-      <atomic-icon-button
+      <IconButton
+        partPrefix="insight-edit-toggle"
+        style="outline-neutral"
         icon={EditIcon}
-        labelI18nKey="edit-insight"
-        click-callback={this.clickCallback}
-        tooltip={this.tooltip}
+        ariaLabel="Edit"
+        onClick={this.clickCallback}
+        title={this.tooltip}
       />
     );
   }

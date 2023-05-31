@@ -1,13 +1,9 @@
-import {Component, h, Prop, State, VNode} from '@stencil/core';
-import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../../utils/initialization-utils';
 import {
   buildFacet,
+  buildFacetConditionsManager,
   buildSearchStatus,
   Facet,
+  FacetConditionsManager,
   FacetOptions,
   FacetSortCriterion,
   FacetState,
@@ -15,16 +11,21 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
+import {Component, h, Prop, State, VNode} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
+import {
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../../utils/initialization-utils';
 import {MapProp} from '../../../../utils/props-utils';
+import {parseDependsOn} from '../../../common/facets/facet-common';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {BaseFacet} from '../../../common/facets/facet-common';
+import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 
 /**
- * @internal
  * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
  * @part segmented-container - The container that holds the segmented facets.
  * @part label - The facet value label.
@@ -38,9 +39,7 @@ import {BaseFacet} from '../../../common/facets/facet-common';
   styleUrl: 'atomic-segmented-facet.pcss',
   shadow: true,
 })
-export class AtomicSegmentedFacet
-  implements InitializableComponent, BaseFacet<Facet>
-{
+export class AtomicSegmentedFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public searchStatus!: SearchStatus;
   @State()
@@ -86,11 +85,28 @@ export class AtomicSegmentedFacet
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
 
-  // TODO
+  /**
+   * The required facets and values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>
+   *
+   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
+   * <atomic-segmented-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-segmented-facet>
+   *
+   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
+   * <atomic-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-segmented-facet>
+   * ```
+   */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
-  // TODO
-  @Prop({reflect: true}) public withSearch = true;
+  private dependenciesManager!: FacetConditionsManager;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -104,8 +120,20 @@ export class AtomicSegmentedFacet
       injectionDepth: this.injectionDepth,
       hasBreadcrumbs: false,
     };
+
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
+    this.dependenciesManager = buildFacetConditionsManager(
+      this.bindings.engine,
+      {
+        facetId: this.facetId!,
+        conditions: parseDependsOn(this.dependsOn),
+      }
+    );
+  }
+
+  disconnectedCallback() {
+    this.dependenciesManager.stopWatching();
   }
 
   private renderValuesContainer(children: VNode[]) {

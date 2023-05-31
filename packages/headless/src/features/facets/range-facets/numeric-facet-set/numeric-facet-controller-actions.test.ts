@@ -1,6 +1,6 @@
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
-import {executeToggleNumericFacetSelect} from './numeric-facet-controller-actions';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {executeToggleNumericFacetSelect} from './numeric-facet-controller-actions';
 
 describe('numeric facet controller actions', () => {
   let engine: MockSearchEngine;

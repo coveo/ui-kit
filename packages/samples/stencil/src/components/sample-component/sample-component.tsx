@@ -1,5 +1,4 @@
 import {Bindings, initializeBindings} from '@coveo/atomic';
-import {Component, Element, h, State, forceUpdate} from '@stencil/core';
 import {
   PagerState,
   Pager,
@@ -7,7 +6,8 @@ import {
   buildSearchStatus,
   buildPager,
   Unsubscribe,
-} from '@coveo/atomic/headless';
+} from '@coveo/headless';
+import {Component, Element, h, State, forceUpdate} from '@stencil/core';
 
 @Component({
   tag: 'sample-component',

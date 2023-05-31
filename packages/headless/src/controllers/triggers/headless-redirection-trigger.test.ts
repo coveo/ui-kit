@@ -1,14 +1,14 @@
-import {
-  RedirectionTrigger,
-  buildRedirectionTrigger,
-} from './headless-redirection-trigger';
+import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {triggers} from '../../app/reducers';
-import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
 import {createMockState} from '../../test/mock-state';
+import {
+  RedirectionTrigger,
+  buildRedirectionTrigger,
+} from './headless-redirection-trigger';
 
 describe('RedirectionTrigger', () => {
   let engine: MockSearchEngine;
@@ -20,7 +20,7 @@ describe('RedirectionTrigger', () => {
 
   function getLogTriggerRedirectAction() {
     return engine.actions.find(
-      (a) => a.type === logTriggerRedirect.pending.type
+      (a) => a.type === logTriggerRedirect().pending.type
     );
   }
 

@@ -1,3 +1,6 @@
+import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
+
+polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 
 export type {
@@ -22,8 +25,17 @@ export type {LogLevel} from './app/logger';
 export type {ProductRecommendation} from './api/search/search/product-recommendation';
 
 // Actions
-export * from './features/configuration/configuration-actions-loader';
 export * from './features/product-listing/product-listing-actions-loader';
+export * from './features/configuration/configuration-actions-loader';
+export * from './features/pagination/pagination-actions-loader';
+export * from './features/analytics/search-analytics-actions-loader';
+export * from './features/sort/sort-actions-loader';
+export * from './features/facet-options/facet-options-actions-loader';
+export * from './features/facets/facet-set/facet-set-actions-loader';
+export * from './features/facets/category-facet-set/category-facet-set-actions-loader';
+export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
+export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
+export * from './features/context/context-actions-loader';
 
 // Controllers
 export type {
@@ -77,10 +89,6 @@ export {
 } from './controllers/product-listing/sort/headless-product-listing-sort';
 
 export type {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  FacetManager as CoreFacetManager,
   FacetManager,
   FacetManagerPayload,
   FacetManagerState,
@@ -88,13 +96,7 @@ export type {
 export {buildFacetManager} from './controllers/product-listing/facet/headless-product-listing-facet-manager';
 
 export type {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
   CoreFacet,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
   CoreFacetState,
   Facet,
   FacetOptions,
@@ -119,13 +121,7 @@ export type {
   CategoryFacetState,
   CategoryFacetValue,
   CategoryFacetSearchResult,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
   CoreCategoryFacet,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
   CoreCategoryFacetState,
 } from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
 export {buildCategoryFacet} from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
@@ -186,3 +182,10 @@ export type {
   ContextValue,
 } from './controllers/product-listing/context/headless-product-listing-context';
 export {buildContext} from './controllers/product-listing/context/headless-product-listing-context';
+
+export type {
+  InteractiveResultOptions,
+  InteractiveResultProps,
+  InteractiveResult,
+} from './controllers/product-listing/result-list/headless-product-listing-interactive-result';
+export {buildInteractiveResult} from './controllers/product-listing/result-list/headless-product-listing-interactive-result';

@@ -1,10 +1,10 @@
-import {Component, ContextType} from 'react';
 import {
   buildResultsPerPage,
   ResultsPerPage as HeadlessResultsPerPage,
   ResultsPerPageState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface ResultsPerPageProps {

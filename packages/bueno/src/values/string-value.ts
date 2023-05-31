@@ -1,5 +1,5 @@
-import {ValueConfig, Value, isUndefined} from './value';
 import {SchemaValue} from '../schema';
+import {ValueConfig, Value, isUndefined} from './value';
 
 interface StringValueConfig<T extends string> extends ValueConfig<T> {
   emptyAllowed?: boolean;

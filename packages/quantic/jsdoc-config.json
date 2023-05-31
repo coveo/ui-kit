@@ -24,7 +24,7 @@
     "excludePattern": "(node_modules/|staticresources/|example.*.js$)"
   },
   "opts": {
-    "destination": "console",
+    "destination": "./docs/out/quantic-docs.json",
     "encoding": "utf8",
     "recurse": true,
     "template": "./docs/template/lwc-json",

@@ -1,4 +1,7 @@
-import {SearchState} from '../features/search/search-state';
+import {
+  emptyQuestionAnswer,
+  SearchState,
+} from '../features/search/search-state';
 import {buildMockSearchResponse} from './mock-search-response';
 
 export function buildMockSearchState(
@@ -14,6 +17,7 @@ export function buildMockSearchState(
     results: [],
     searchResponseId: '',
     requestId: '',
+    questionAnswer: emptyQuestionAnswer(),
     ...config,
   };
 }

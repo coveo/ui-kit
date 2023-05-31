@@ -1,10 +1,13 @@
 <template>
   <template if:true={renderingError}>
-    <div class="error-message slds-text-color_destructive">{renderingError}</div>
+    <div class="error-message slds-text-color_destructive">
+      {renderingError}
+    </div>
   </template>
   <template if:false={renderingError}>
-    <div tabindex={tabindex} role="dialog" aria-labelledby="modal-heading" aria-modal="true"
-      aria-describedby="modal-content" class={modalCssClass}>
+    <div role="dialog" aria-labelledby="modal-heading" aria-modal="true" aria-describedby="modal-content"
+      class={modalCssClass}>
+      <div tabindex="0" onfocus={focusOnLastElement}></div>
       <div id="modal-heading" class="modal__header">
         <slot name="header"></slot>
       </div>
@@ -15,8 +18,8 @@
         <div class="modal__footer">
           <slot name="footer"></slot>
         </div>
+        <div tabindex="0" onfocus={focusOnFirstElement}></div>
       </div>
     </div>
   </template>
-
 </template>

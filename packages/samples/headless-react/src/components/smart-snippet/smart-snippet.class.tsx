@@ -1,10 +1,10 @@
-import {Component, ContextType, createRef} from 'react';
 import {
   buildSmartSnippet,
   SmartSnippet as HeadlessSmartSnippet,
   SmartSnippetState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType, createRef} from 'react';
 import {AppContext} from '../../context/engine';
 import {filterProtocol} from '../../utils/filter-protocol';
 

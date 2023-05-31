@@ -1,24 +1,28 @@
 import fetch from 'cross-fetch';
+import {backOff} from 'exponential-backoff';
+import {Logger} from 'pino';
+import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
+import {PlatformCombination, PlatformEnvironment} from '../utils/url-utils';
+import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
+import {
+  PlatformClientOrigin,
+  PlatformRequestOptions,
+  PreprocessRequest,
+  RequestMetadata,
+} from './preprocess-request';
+
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentType =
   | 'application/json'
   | 'application/x-www-form-urlencoded'
   | 'text/html';
-import {backOff} from 'exponential-backoff';
-import {Logger} from 'pino';
-import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
-import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
-import {
-  PlatformRequestOptions,
-  PreprocessRequest,
-  RequestMetadata,
-} from './preprocess-request';
 
 function isThrottled(status: number): boolean {
   return status === 429;
 }
 
 export interface PlatformClientCallOptions {
+  origin: PlatformClientOrigin;
   url: string;
   method: HttpMethods;
   contentType: HTTPContentType;
@@ -46,14 +50,14 @@ export class PlatformClient {
     options: PlatformClientCallOptions
   ): Promise<Response | PlatformClientCallError> {
     const defaultRequestOptions = buildDefaultRequestOptions(options);
-    const {preprocessRequest, logger, requestMetadata} = options;
+    const {origin, preprocessRequest, logger, requestMetadata} = options;
 
     const requestInfo: PlatformRequestOptions = {
       ...defaultRequestOptions,
       ...(preprocessRequest
         ? await preprocessRequest(
             defaultRequestOptions,
-            'searchApiFetch',
+            origin,
             requestMetadata
           )
         : {}),
@@ -101,14 +105,6 @@ export class PlatformClient {
   }
 }
 
-type PlatformCombination =
-  | {env: 'dev'; region: 'us' | 'eu'}
-  | {env: 'stg'; region: 'us'}
-  | {env: 'hipaa'; region: 'us'}
-  | {env: 'prod'; region: 'us' | 'eu' | 'au'};
-
-type PlatformEnvironment = PlatformCombination['env'];
-
 interface URLOptions<E extends PlatformEnvironment> {
   environment?: E;
   region?: Extract<PlatformCombination, {env: E}>['region'];
@@ -131,6 +127,33 @@ function coveoCloudURL<E extends PlatformEnvironment>(
   return `https://${subdomain}${urlEnv}${urlRegion}.cloud.coveo.com`;
 }
 
+/**
+ * Returns the unique endpoint(s) for a given organization identifier.
+ * @param orgId The organization identifier.
+ * @param env Optional. The environment (prod, hipaa, staging, dev) that the organization belongs to. Defaults to `prod`.
+ * @returns
+ */
+export function getOrganizationEndpoints(
+  orgId: string,
+  env: PlatformEnvironment = 'prod'
+) {
+  const envSuffix = env === 'prod' ? '' : env;
+
+  const platform = `https://${orgId}.org${envSuffix}.coveo.com`;
+  const analytics = `https://${orgId}.analytics.org${envSuffix}.coveo.com`;
+  const search = `${platform}/rest/search/v2`;
+  const admin = `https://${orgId}.admin.org${envSuffix}.coveo.com`;
+
+  return {platform, analytics, search, admin};
+}
+
+/**
+ * Returns the base Coveo platform URL, based on environment and region.
+ * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEnpoints utility function instead.
+ *
+ * @param options
+ * @returns string
+ */
 export function platformUrl<E extends PlatformEnvironment>(
   options?: URLOptions<E>
 ) {
@@ -141,6 +164,13 @@ export function platformUrl<E extends PlatformEnvironment>(
   return coveoCloudURL('platform', options);
 }
 
+/**
+ * Returns the Coveo analytics platform URL, based on environment and region.
+ * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEnpoints utility function instead.
+ *
+ * @param options
+ * @returns
+ */
 export function analyticsUrl<E extends PlatformEnvironment = 'prod'>(
   options?: URLOptions<E>
 ) {

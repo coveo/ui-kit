@@ -1,4 +1,4 @@
-import {Schema} from '@coveo/bueno';
+import {Schema, StringValue} from '@coveo/bueno';
 import {nonEmptyString} from '../../utils/validate-payload';
 import {
   EngineConfiguration,
@@ -45,7 +45,7 @@ export interface RecommendationEngineConfiguration extends EngineConfiguration {
 export const recommendationEngineConfigurationSchema =
   new Schema<RecommendationEngineConfiguration>({
     ...engineConfigurationDefinitions,
-    pipeline: nonEmptyString,
+    pipeline: new StringValue({required: false, emptyAllowed: true}),
     searchHub: nonEmptyString,
     locale: nonEmptyString,
     timezone: nonEmptyString,

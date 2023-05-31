@@ -1,21 +1,21 @@
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
+import {NumericFacetRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
+import {SearchAppState} from '../../../../state/search-app-state';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
 } from '../../../../test/mock-engine';
-import {createMockState} from '../../../../test/mock-state';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {createMockState} from '../../../../test/mock-state';
 import {
   buildCoreRangeFacet,
   RangeFacet,
   RangeFacetProps,
 } from './headless-core-range-facet';
-import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
-import {NumericFacetRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {SearchAppState} from '../../../../state/search-app-state';
 
 describe('range facet', () => {
   const facetId = '1';

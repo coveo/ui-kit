@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../app/engine';
-import {debug} from '../../app/reducers';
+import {debugReducer as debug} from '../../features/debug/debug-slice';
 import {disableDebug, enableDebug} from './debug-actions';
 
 /**

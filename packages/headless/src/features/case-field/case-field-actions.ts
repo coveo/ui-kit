@@ -1,5 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/search-analytics';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
 import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params';
@@ -80,7 +80,6 @@ export const fetchCaseClassifications = createAsyncThunk<
     };
   }
 );
-
 export const buildFetchClassificationRequest = async (
   state: StateNeededByFetchClassifications
 ): Promise<GetCaseClassificationsRequest> => ({

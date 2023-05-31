@@ -3,7 +3,7 @@ import {validatePayload} from '../../utils/validate-payload';
 import {
   AnalyticsType,
   makeAnalyticsAction,
-  makeInsightAnalyticsAction,
+  SearchAction,
 } from '../analytics/analytics-utils';
 import {
   staticFilterIdSchema,
@@ -93,21 +93,21 @@ export interface StaticFilterValueMetadata {
 
 export const logStaticFilterSelect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload
-) =>
+): SearchAction =>
   makeAnalyticsAction(
     'analytics/staticFilter/select',
     AnalyticsType.Search,
-    (client) => client.logStaticFilterSelect(metadata)
-  )();
+    (client) => client.makeStaticFilterSelect(metadata)
+  );
 
 export const logStaticFilterDeselect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload
-) =>
+): SearchAction =>
   makeAnalyticsAction(
     'analytics/staticFilter/deselect',
     AnalyticsType.Search,
-    (client) => client.logStaticFilterDeselect(metadata)
-  )();
+    (client) => client.makeStaticFilterDeselect(metadata)
+  );
 
 export interface LogStaticFilterClearAllActionCreatorPayload {
   /**
@@ -118,18 +118,9 @@ export interface LogStaticFilterClearAllActionCreatorPayload {
 
 export const logStaticFilterClearAll = (
   metadata: LogStaticFilterClearAllActionCreatorPayload
-) =>
+): SearchAction =>
   makeAnalyticsAction(
     'analytics/staticFilter/clearAll',
     AnalyticsType.Search,
-    (client) => client.logStaticFilterClearAll(metadata)
-  )();
-
-export const logInsightStaticFilterDeselect = (
-  metadata: LogStaticFilterToggleValueActionCreatorPayload
-) =>
-  makeInsightAnalyticsAction(
-    'analytics/staticFilter/deselect',
-    AnalyticsType.Search,
-    (client) => client.logStaticFilterDeselect(metadata)
-  )();
+    (client) => client.makeStaticFilterClearAll(metadata)
+  );

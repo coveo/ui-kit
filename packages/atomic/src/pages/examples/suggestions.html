@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
       import {dispatchSearchBoxSuggestionsEvent} from '/build/index.esm.js';
+
       // CDN example: 'https://static.cloud.coveo.com/atomic/v1/index.esm.js'
 
       function registerCustomSuggestions() {
@@ -67,6 +68,7 @@
         await searchInterface.initialize({
           accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
           organizationId: 'fashioncoveodemocomgzh7iep8',
+          organizationEndpoints: await searchInterface.getOrganizationEndpoints('fashioncoveodemocomgzh7iep8'),
         });
 
         const engine = searchInterface.engine;
@@ -78,7 +80,10 @@
     </script>
   </head>
   <body>
-    <atomic-search-interface search-hub="MainSearch" fields-to-include="ec_images,ec_rating,ec_price,cat_rating_count">
+    <atomic-search-interface
+      search-hub="MainSearch"
+      fields-to-include='["ec_images", "ec_rating", "ec_price", "cat_rating_count"]'
+    >
       <atomic-search-layout mobile-breakpoint="700px">
         <atomic-layout-section section="facets">
           <atomic-facet-manager>

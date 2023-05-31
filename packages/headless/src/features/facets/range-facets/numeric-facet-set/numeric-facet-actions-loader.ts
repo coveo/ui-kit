@@ -1,6 +1,6 @@
-import {CoreEngine} from '../../../../app/engine';
 import {PayloadAction} from '@reduxjs/toolkit';
-import {numericFacetSet} from '../../../../app/reducers';
+import {CoreEngine} from '../../../../app/engine';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {
   deselectAllNumericFacetValues,
   registerNumericFacet,

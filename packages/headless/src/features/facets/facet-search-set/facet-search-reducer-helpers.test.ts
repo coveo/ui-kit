@@ -1,3 +1,8 @@
+import {SpecificFacetSearchResponse} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search';
+import {buildMockFacetSearchRequestOptions} from '../../../test/mock-facet-search-request-options';
+import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
+import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
 import {
   handleFacetSearchRegistration,
   handleFacetSearchUpdate,
@@ -8,11 +13,6 @@ import {
   handleFacetSearchSetClear,
   defaultFacetSearchOptions,
 } from './facet-search-reducer-helpers';
-import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
-import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {buildMockFacetSearchRequestOptions} from '../../../test/mock-facet-search-request-options';
-import {SpecificFacetSearchResponse} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {
   SpecificFacetSearchSetState,
   getFacetSearchSetInitialState,

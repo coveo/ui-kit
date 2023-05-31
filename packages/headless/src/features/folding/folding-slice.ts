@@ -1,7 +1,11 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {Result} from '../../api/search/search/result';
 import {isArray} from '../../utils/utils';
-import {executeSearch, fetchMoreResults} from '../search/search-actions';
+import {
+  executeSearch,
+  fetchMoreResults,
+  fetchPage,
+} from '../search/search-actions';
 import {loadCollection, registerFolding} from './folding-actions';
 import {
   FoldedCollection,
@@ -161,6 +165,14 @@ export const foldingReducer = createReducer(
   (builder) =>
     builder
       .addCase(executeSearch.fulfilled, (state, {payload}) => {
+        state.collections = state.enabled
+          ? createCollections(
+              payload.response.results as ResultWithFolding[],
+              state.fields
+            )
+          : {};
+      })
+      .addCase(fetchPage.fulfilled, (state, {payload}) => {
         state.collections = state.enabled
           ? createCollections(
               payload.response.results as ResultWithFolding[],

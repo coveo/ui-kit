@@ -12,7 +12,7 @@ describe('recommendations analytics', () => {
   it('should properly return the pipeline from the state', () => {
     const state = getBaseState();
     state.pipeline = 'foo';
-    expect(new RecommendationAnalyticsProvider(state).getPipeline()).toBe(
+    expect(new RecommendationAnalyticsProvider(() => state).getPipeline()).toBe(
       'foo'
     );
   });
@@ -24,7 +24,9 @@ describe('recommendations analytics', () => {
       buildMockResult(),
     ];
     expect(
-      new RecommendationAnalyticsProvider(state).getSearchEventRequestPayload()
+      new RecommendationAnalyticsProvider(
+        () => state
+      ).getSearchEventRequestPayload()
     ).toMatchObject({
       queryText: '',
       responseTime: 0,
@@ -36,16 +38,16 @@ describe('recommendations analytics', () => {
   it('should properly return getSearchUID from recommendation.searchUid', () => {
     const state = getBaseState();
     state.recommendation!.searchUid = 'the_id';
-    expect(new RecommendationAnalyticsProvider(state).getSearchUID()).toEqual(
-      'the_id'
-    );
+    expect(
+      new RecommendationAnalyticsProvider(() => state).getSearchUID()
+    ).toEqual('the_id');
   });
 
   it('should return an undefined getSplitTestRunVersion if there is no splitTestRunName', () => {
     const state = getBaseState();
     state.recommendation!.splitTestRun = '';
     expect(
-      new RecommendationAnalyticsProvider(state).getSplitTestRunVersion()
+      new RecommendationAnalyticsProvider(() => state).getSplitTestRunVersion()
     ).toBeUndefined();
   });
 
@@ -55,7 +57,7 @@ describe('recommendations analytics', () => {
     state.recommendation!.pipeline = 'pipeline-from-response';
     state.pipeline = 'pipeline-from-state';
     expect(
-      new RecommendationAnalyticsProvider(state).getSplitTestRunVersion()
+      new RecommendationAnalyticsProvider(() => state).getSplitTestRunVersion()
     ).toBe('pipeline-from-response');
   });
 
@@ -65,7 +67,7 @@ describe('recommendations analytics', () => {
     state.recommendation!.pipeline = '';
     state.pipeline = 'pipeline-from-state';
     expect(
-      new RecommendationAnalyticsProvider(state).getSplitTestRunVersion()
+      new RecommendationAnalyticsProvider(() => state).getSplitTestRunVersion()
     ).toBe('pipeline-from-state');
   });
 });

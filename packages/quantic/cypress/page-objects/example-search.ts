@@ -8,7 +8,7 @@ export const selectors = {
   pager: 'c-quantic-pager',
   regularFacet: 'c-quantic-facet[data-cy="type"]',
   facetsContainer: '.facets_container',
-  refineToggle: '.refine-toggle_container',
+  refineToggle: 'c-quantic-refine-toggle',
 };
 
 export const setupAliases = () =>

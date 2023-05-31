@@ -1,28 +1,38 @@
+import {configuration} from '../../../../app/common-reducers';
+import {CoreEngine} from '../../../../app/engine';
+import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
 import {
-  buildController,
-  Controller,
-} from '../../../controller/headless-controller';
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../features/facet-options/facet-options-actions';
+import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
-  registerFacet,
   deselectAllFacetValues,
-  updateFacetSortCriterion,
-  updateFacetNumberOfValues,
+  registerFacet,
   updateFacetIsFieldExpanded,
+  updateFacetNumberOfValues,
+  updateFacetSortCriterion,
 } from '../../../../features/facets/facet-set/facet-set-actions';
+import {executeToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-controller-actions';
 import {
   facetRequestSelector,
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors';
 import {
+  defaultFacetOptions,
+  facetSetReducer as facetSet,
+} from '../../../../features/facets/facet-set/facet-set-slice';
+import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
+import {
   BasicFacetSortCriterionOrCustom,
   FaceSortCriterionStringOrExplicit,
 } from '../../../../features/facets/facet-set/interfaces/request';
-import {
-  disableFacet,
-  enableFacet,
-  updateFacetOptions,
-} from '../../../../features/facet-options/facet-options-actions';
 import {
   ConfigurationSection,
   FacetOptionsSection,
@@ -31,40 +41,36 @@ import {
   ProductListingSection,
   SearchSection,
 } from '../../../../state/state-sections';
-import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
-import {executeToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-controller-actions';
-import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice';
-import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+import {arrayEqual} from '../../../../utils/compare-utils';
+import {loadReducerError} from '../../../../utils/errors';
+import {omit} from '../../../../utils/utils';
+import {
+  Controller,
+  buildController,
+} from '../../../controller/headless-controller';
+import {determineFacetId} from '../_common/facet-id-determinor';
 import {
   FacetOptions,
-  facetOptionsSchema,
   FacetSearchOptions,
+  facetOptionsSchema,
   validateFacetOptions,
 } from './headless-core-facet-options';
-import {determineFacetId} from '../_common/facet-id-determinor';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {
-  configuration,
-  facetSearchSet,
-  facetSet,
-  facetOptions,
-} from '../../../../app/reducers';
-import {loadReducerError} from '../../../../utils/errors';
-import {CoreEngine} from '../../../../app/engine';
-import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
-import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
-import {omit} from '../../../../utils/utils';
-import {arrayEqual} from '../../../../utils/compare-utils';
 
 export type {FacetOptions, FacetSearchOptions, FacetValueState};
 
-export interface FacetProps<Options = FacetOptions> {
+export interface CoreFacetProps {
   /**
-   * The options for the `Facet` controller.
+   * The options for the core `Facet` controller.
    * */
-  options: Options;
+  options: FacetOptions;
 }
 
+/**
+ * The `Facet` controller allows you to create a search interface component that the end user
+ * can use to refine a query by selecting filters based on item metadata (i.e., field values).
+ * If you have enabled a [Dynamic Navigation Experience (DNE)](https://docs.coveo.com/en/m2na0333/)
+ * model, the `Facet` controller automatically reorders facet values according to the user query.
+ */
 export interface Facet extends CoreFacet {
   /**
    * Provides methods to search the facet's values.
@@ -295,7 +301,7 @@ export interface FacetValue {
  * */
 export function buildCoreFacet(
   engine: CoreEngine,
-  props: FacetProps,
+  props: CoreFacetProps,
   optionsSchema = facetOptionsSchema
 ): CoreFacet {
   if (!loadFacetReducers(engine)) {

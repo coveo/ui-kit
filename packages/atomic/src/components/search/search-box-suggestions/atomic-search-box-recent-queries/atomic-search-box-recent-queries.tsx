@@ -1,19 +1,19 @@
-import Clock from '../../../../images/clock.svg';
 import {
   buildRecentQueriesList,
   HighlightUtils,
   RecentQueriesList,
 } from '@coveo/headless';
 import {Component, Element, Prop, State, h} from '@stencil/core';
+import Clock from '../../../../images/clock.svg';
+import {SafeStorage, StorageItems} from '../../../../utils/local-storage-utils';
+import {encodeForDomAttribute} from '../../../../utils/string-utils';
+import {once} from '../../../../utils/utils';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {once} from '../../../../utils/utils';
-import {SafeStorage, StorageItems} from '../../../../utils/local-storage-utils';
-import {encodeForDomAttribute} from '../../../../utils/string-utils';
 
 /**
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
@@ -166,7 +166,10 @@ export class AtomicSearchBoxRecentQueries {
       query: value,
       part: 'recent-query-item',
       content: (
-        <div part="recent-query-content" class="flex items-center break-all">
+        <div
+          part="recent-query-content"
+          class="flex items-center break-all text-left"
+        >
           <atomic-icon
             part="recent-query-icon"
             icon={this.renderIcon()}

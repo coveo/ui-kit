@@ -1,14 +1,4 @@
 import {
-  Component,
-  Prop,
-  h,
-  Listen,
-  Method,
-  Watch,
-  Element,
-  State,
-} from '@stencil/core';
-import {
   LogLevel,
   Unsubscribe,
   buildUrlManager,
@@ -21,21 +11,36 @@ import {
   loadSearchConfigurationActions,
   loadQueryActions,
   EcommerceDefaultFieldsToInclude,
+  loadFieldActions,
+  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
+  PlatformEnvironment,
 } from '@coveo/headless';
+import {
+  Component,
+  Prop,
+  h,
+  Listen,
+  Method,
+  Watch,
+  Element,
+  State,
+} from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {AtomicStore, createAtomicStore} from './store';
-import {getAnalyticsConfig} from './analytics-config';
 import {
   SafeStorage,
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../../utils/local-storage-utils';
+import {ArrayProp} from '../../../utils/props-utils';
+import {CommonBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
+  mismatchedInterfaceAndEnginePropError,
 } from '../../common/interface/interface-common';
-import {CommonBindings} from '../../common/interface/bindings';
+import {getAnalyticsConfig} from './analytics-config';
+import {AtomicStore, createAtomicStore} from './store';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -50,6 +55,7 @@ export type Bindings = CommonBindings<
  */
 @Component({
   tag: 'atomic-search-interface',
+  styleUrl: 'atomic-search-interface.pcss',
   shadow: true,
   assetsDirs: ['lang'],
 })
@@ -67,20 +73,33 @@ export class AtomicSearchInterface
   @Element() public host!: HTMLAtomicSearchInterfaceElement;
 
   @State() public error?: Error;
+  @State() relevanceInspectorIsOpen = false;
 
   /**
-   * A list of non-default fields to include in the query results, separated by commas.
+   * A list of non-default fields to include in the query results.
+   *
+   * Specify the property as an array using a JSON string representation:
+   * ```html
+   * <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface>
+   * ```
    */
-  @Prop({reflect: true}) public fieldsToInclude = '';
+  @ArrayProp()
+  @Prop({mutable: true})
+  public fieldsToInclude: string[] | string = '[]';
+
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+   *
+   * If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
    */
-  @Prop({reflect: true}) public pipeline?: string;
+  @Prop({reflect: true, mutable: true}) public pipeline?: string;
 
   /**
    * The search interface [search hub](https://docs.coveo.com/en/1342/).
+   *
+   * If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
    */
-  @Prop({reflect: true}) public searchHub = 'default';
+  @Prop({reflect: true, mutable: true}) public searchHub?: string;
 
   /**
    * Whether analytics should be enabled.
@@ -91,8 +110,7 @@ export class AtomicSearchInterface
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
    * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
    *
-   * @example
-   * America/Montreal
+   * Example: "America/Montreal"
    */
   @Prop({reflect: true}) public timezone?: string;
 
@@ -129,7 +147,7 @@ export class AtomicSearchInterface
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
    *
-   * @example /mypublicpath/languages
+   * Example: "/mypublicpath/languages"
    *
    */
   @Prop({reflect: true}) public languageAssetsPath = './lang';
@@ -137,13 +155,22 @@ export class AtomicSearchInterface
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
    *
-   * @example /mypublicpath/icons
+   * Example: "/mypublicpath/icons"
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
+  /**
+   * Whether the relevance inspector shortcut should be enabled for this interface.
+   *
+   * The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.
+   *
+   * The relevance inspector allows to troubleshoot and debug queries.
+   */
+  @Prop({reflect: true}) public enableRelevanceInspector = true;
+
   public constructor() {
-    this.initAriaLive();
+    this.initRelevanceInspector();
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
       'CoveoAtomic'
@@ -153,13 +180,22 @@ export class AtomicSearchInterface
   public connectedCallback() {
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
-    this.updateFieldsToInclude();
   }
 
-  @Watch('searchHub')
-  @Watch('pipeline')
-  public updateSearchConfiguration() {
+  componentWillLoad() {
+    this.initAriaLive();
+    this.initFieldsToInclude();
+  }
+
+  public updateSearchConfiguration(
+    updatedProp: 'searchHub' | 'pipeline',
+    newValue: string | undefined
+  ) {
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
+    if (this.engine.state[updatedProp] === newValue) {
       return;
     }
 
@@ -168,10 +204,19 @@ export class AtomicSearchInterface
     );
     this.engine.dispatch(
       updateSearchConfiguration({
-        pipeline: this.pipeline,
-        searchHub: this.searchHub,
+        [updatedProp]: newValue,
       })
     );
+  }
+
+  @Watch('searchHub')
+  public updateSearchHub() {
+    this.updateSearchConfiguration('searchHub', this.searchHub ?? 'default');
+  }
+
+  @Watch('pipeline')
+  public updatePipeline() {
+    this.updateSearchConfiguration('pipeline', this.pipeline);
   }
 
   @Watch('analytics')
@@ -229,8 +274,13 @@ export class AtomicSearchInterface
     scrollContainerElement.scrollIntoView({behavior: 'smooth'});
   }
 
+  @Listen('atomic/relevanceInspector/close')
+  public closeRelevanceInspector() {
+    this.relevanceInspectorIsOpen = false;
+  }
+
   /**
-   * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   * Initializes the connection with the headless search engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
    */
   @Method() public initialize(options: InitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
@@ -238,9 +288,19 @@ export class AtomicSearchInterface
 
   /**
    * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
-   *
+   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
   @Method() public initializeWithSearchEngine(engine: SearchEngine) {
+    if (this.pipeline && this.pipeline !== engine.state.pipeline) {
+      console.warn(
+        mismatchedInterfaceAndEnginePropError('search', 'query pipeline')
+      );
+    }
+    if (this.searchHub && this.searchHub !== engine.state.searchHub) {
+      console.warn(
+        mismatchedInterfaceAndEnginePropError('search', 'search hub')
+      );
+    }
     return this.internalInitialization(() => (this.engine = engine));
   }
 
@@ -275,9 +335,21 @@ export class AtomicSearchInterface
 
     safeStorage.removeItem(StorageItems.STANDALONE_SEARCH_BOX_DATA);
     const {updateQuery} = loadQueryActions(this.engine!);
-    const {value, analytics} = standaloneSearchBoxData;
-    this.engine!.dispatch(updateQuery({q: value}));
+    const {value, enableQuerySyntax, analytics} = standaloneSearchBoxData;
+    this.engine!.dispatch(updateQuery({q: value, enableQuerySyntax}));
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+  }
+
+  /**
+   * Returns the unique, organization-specific endpoint(s)
+   * @param {string} organizationId
+   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
+   */
+  @Method() public async getOrganizationEndpoints(
+    organizationId: string,
+    env: PlatformEnvironment = 'prod'
+  ) {
+    return getOrganizationEndpointsHeadless(organizationId, env);
   }
 
   public get bindings(): Bindings {
@@ -289,25 +361,17 @@ export class AtomicSearchInterface
     };
   }
 
-  public render() {
-    return [
-      this.engine && (
-        <atomic-relevance-inspector
-          bindings={this.bindings}
-        ></atomic-relevance-inspector>
-      ),
-      <slot></slot>,
-    ];
+  private initFieldsToInclude() {
+    const fields = EcommerceDefaultFieldsToInclude.concat(this.fieldsToInclude);
+    this.store.addFieldsToInclude(fields);
   }
 
-  private updateFieldsToInclude() {
-    const fields = [...EcommerceDefaultFieldsToInclude];
-    if (this.fieldsToInclude) {
-      fields.push(
-        ...this.fieldsToInclude.split(',').map((field) => field.trim())
-      );
-    }
-    this.store.set('fieldsToInclude', fields);
+  public registerFieldsToInclude() {
+    this.engine?.dispatch(
+      loadFieldActions(this.engine!).registerFieldsToInclude(
+        this.store.state.fieldsToInclude
+      )
+    );
   }
 
   private updateMobileBreakpoint() {
@@ -345,7 +409,7 @@ export class AtomicSearchInterface
 
   private getSearchConfiguration(options: InitializationOptions) {
     const searchConfigFromProps = {
-      searchHub: this.searchHub,
+      searchHub: this.searchHub ?? 'default',
       pipeline: this.pipeline,
       locale: this.language,
       timezone: this.timezone,
@@ -392,6 +456,16 @@ export class AtomicSearchInterface
     this.host.prepend(document.createElement('atomic-aria-live'));
   }
 
+  private initRelevanceInspector() {
+    if (this.enableRelevanceInspector) {
+      this.host.addEventListener('dblclick', (e) => {
+        if (e.altKey) {
+          this.relevanceInspectorIsOpen = !this.relevanceInspectorIsOpen;
+        }
+      });
+    }
+  }
+
   private initSearchStatus() {
     this.searchStatus = buildSearchStatus(this.engine!);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
@@ -410,6 +484,11 @@ export class AtomicSearchInterface
         this.searchStatus.state.hasError
       );
 
+      this.host.classList.toggle(
+        'atomic-search-interface-search-executed',
+        this.searchStatus.state.firstSearchExecuted
+      );
+
       if (
         this.searchStatus.state.firstSearchExecuted &&
         this.store.hasLoadingFlag(FirstSearchExecutedFlag)
@@ -420,11 +499,17 @@ export class AtomicSearchInterface
   }
 
   private updateHash() {
-    history.pushState(
-      null,
-      document.title,
-      `#${this.urlManager.state.fragment}`
-    );
+    const newFragment = this.urlManager.state.fragment;
+
+    if (!this.searchStatus.state.firstSearchExecuted) {
+      history.replaceState(null, document.title, `#${newFragment}`);
+      this.bindings.engine.logger.info(`History replaceState #${newFragment}`);
+
+      return;
+    }
+
+    history.pushState(null, document.title, `#${newFragment}`);
+    this.bindings.engine.logger.info(`History pushState #${newFragment}`);
   }
 
   private onHashChange = () => {
@@ -433,8 +518,22 @@ export class AtomicSearchInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.pipeline = this.engine!.state.pipeline;
+    this.searchHub = this.engine!.state.searchHub;
     this.initSearchStatus();
     this.initUrlManager();
     this.initialized = true;
+  }
+
+  public render() {
+    return [
+      this.engine && this.enableRelevanceInspector && (
+        <atomic-relevance-inspector
+          open={this.relevanceInspectorIsOpen}
+          bindings={this.bindings}
+        ></atomic-relevance-inspector>
+      ),
+      <slot></slot>,
+    ];
   }
 }

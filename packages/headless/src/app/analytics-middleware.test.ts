@@ -1,10 +1,10 @@
+import {logSearchboxSubmit} from '../features/query/query-analytics-actions';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
 } from '../features/search/search-actions';
-import {buildMockSearch} from '../test/mock-search';
 import {buildMockSearchAppEngine} from '../test/mock-engine';
-import {logSearchboxSubmit} from '../features/query/query-analytics-actions';
+import {buildMockSearch} from '../test/mock-search';
 
 describe('analytics middleware', () => {
   beforeEach(() => {
@@ -57,7 +57,7 @@ describe('analytics middleware', () => {
     );
     e.dispatch(action);
     expect(e.actions[0].type).toBe(executeSearch.fulfilled.type);
-    expect(e.actions[1].type).toBe(logSearchboxSubmit.pending.type);
+    expect(e.actions[1].type).toBe(logSearchboxSubmit().pending.type);
   });
 
   it('correctly remove analytics payload from action', () => {

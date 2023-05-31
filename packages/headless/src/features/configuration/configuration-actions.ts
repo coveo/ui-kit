@@ -1,11 +1,12 @@
+import {ArrayValue, BooleanValue, StringValue, Value} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {IRuntimeEnvironment} from 'coveo.analytics';
+import {doNotTrack} from '../../utils/utils';
 import {
   nonEmptyString,
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
-import {ArrayValue, BooleanValue, Value} from '@coveo/bueno';
-import {IRuntimeEnvironment} from 'coveo.analytics';
 
 const originSchemaOnConfigUpdate = () => nonEmptyString;
 
@@ -73,10 +74,10 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
 
 export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
-  (payload: UpdateSearchConfigurationActionCreatorPayload) =>
-    validatePayload(payload, {
+  (payload: UpdateSearchConfigurationActionCreatorPayload) => {
+    return validatePayload(payload, {
       apiBaseUrl: nonEmptyString,
-      pipeline: nonEmptyString,
+      pipeline: new StringValue({required: false, emptyAllowed: true}),
       searchHub: nonEmptyString,
       timezone: nonEmptyString,
       locale: nonEmptyString,
@@ -84,7 +85,8 @@ export const updateSearchConfiguration = createAction(
         required: false,
         each: requiredNonEmptyString,
       }),
-    })
+    });
+  }
 );
 
 export interface UpdateAnalyticsConfigurationActionCreatorPayload {
@@ -143,8 +145,11 @@ export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
 
 export const updateAnalyticsConfiguration = createAction(
   'configuration/updateAnalyticsConfiguration',
-  (payload: UpdateAnalyticsConfigurationActionCreatorPayload) =>
-    validatePayload(payload, {
+  (payload: UpdateAnalyticsConfigurationActionCreatorPayload) => {
+    if (doNotTrack()) {
+      payload.enabled = false;
+    }
+    return validatePayload(payload, {
       enabled: new BooleanValue({default: true}),
       originContext: originSchemaOnConfigUpdate(),
       originLevel2: originSchemaOnConfigUpdate(),
@@ -155,7 +160,8 @@ export const updateAnalyticsConfiguration = createAction(
       deviceId: nonEmptyString,
       userDisplayName: nonEmptyString,
       documentLocation: nonEmptyString,
-    })
+    });
+  }
 );
 
 export const disableAnalytics = createAction('configuration/analytics/disable');

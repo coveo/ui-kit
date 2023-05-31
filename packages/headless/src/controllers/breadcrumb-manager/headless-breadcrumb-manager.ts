@@ -1,32 +1,27 @@
+import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {
-  categoryFacetSet,
-  configuration,
-  dateFacetSet,
-  facetSet,
-  numericFacetSet,
-  search,
-} from '../../app/reducers';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
-import {categoryFacetSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
+import {categoryFacetResponseSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice';
 import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../features/facets/facet-set/facet-set-actions';
 import {logFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetResponseSelectedValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
-import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
+import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {logDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
 import {dateFacetSelectedValuesSelector} from '../../features/facets/range-facets/date-facet-set/date-facet-selectors';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {dateFacetSetReducer as dateFacetSet} from '../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {logNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {numericFacetSelectedValuesSelector} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
+import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../../features/search/search-actions';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {
   logStaticFilterDeselect,
   toggleSelectStaticFilterValue,
@@ -43,6 +38,7 @@ import {
   NumericFacetSection,
   SearchSection,
 } from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {
   Breadcrumb,
   BreadcrumbManager,
@@ -57,7 +53,6 @@ import {
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
 } from '../core/breadcrumb-manager/headless-core-breadcrumb-manager';
-import {loadReducerError} from '../../utils/errors';
 
 export type {
   NumericFacetBreadcrumb,
@@ -89,7 +84,7 @@ export function buildBreadcrumbManager(
   const getState = () => engine.state;
 
   const getFacetBreadcrumbs = (): FacetBreadcrumb[] => {
-    return getBreadcrumbs<FacetValue>(
+    return getBreadcrumbs(
       engine,
       getState().facetSet,
       ({facetId, selection}) => {
@@ -108,7 +103,7 @@ export function buildBreadcrumbManager(
   };
 
   const getNumericFacetBreadcrumbs = (): NumericFacetBreadcrumb[] => {
-    return getBreadcrumbs<NumericFacetValue>(
+    return getBreadcrumbs(
       engine,
       getState().numericFacetSet,
       (payload) => {
@@ -120,7 +115,7 @@ export function buildBreadcrumbManager(
   };
 
   const getDateFacetBreadcrumbs = (): DateFacetBreadcrumb[] => {
-    return getBreadcrumbs<DateFacetValue>(
+    return getBreadcrumbs(
       engine,
       getState().dateFacetSet,
       (payload) => {
@@ -132,7 +127,10 @@ export function buildBreadcrumbManager(
   };
 
   const buildCategoryFacetBreadcrumb = (facetId: string) => {
-    const path = categoryFacetSelectedValuesSelector(getState(), facetId);
+    const path = categoryFacetResponseSelectedValuesSelector(
+      getState(),
+      facetId
+    );
     return {
       facetId,
       field: getState().categoryFacetSet[facetId]!.request.field,

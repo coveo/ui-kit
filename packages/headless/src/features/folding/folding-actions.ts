@@ -11,13 +11,6 @@ import {
   QuerySection,
 } from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
-import {
-  AnalyticsType,
-  documentIdentifier,
-  makeAnalyticsAction,
-  partialDocumentInformation,
-  validateResultPayload,
-} from '../analytics/analytics-utils';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {ResultWithFolding} from './folding-slice';
 import {CollectionId} from './folding-state';
@@ -93,7 +86,7 @@ export const loadCollection = createAsyncThunk<
         ...sharedWithSearchRequest,
         q: getQForHighlighting(state),
         enableQuerySyntax: true,
-        cq: `@${state.folding.fields.collection}=${collectionId}`,
+        cq: `@${state.folding.fields.collection}="${collectionId}"`,
         filterField: state.folding.fields.collection,
         childField: state.folding.fields.parent,
         parentField: state.folding.fields.child,
@@ -129,25 +122,3 @@ function getQForHighlighting(state: StateNeededByLoadCollection) {
     ? `${state.query.q} OR @uri`
     : `( <@- ${state.query.q} -@> ) OR @uri`;
 }
-
-export const logShowMoreFoldedResults = (result: Result) =>
-  makeAnalyticsAction(
-    'analytics/folding/showMore',
-    AnalyticsType.Click,
-    (client, state) => {
-      validateResultPayload(result);
-
-      return client.logShowMoreFoldedResults(
-        partialDocumentInformation(result, state),
-        documentIdentifier(result)
-      );
-    }
-  )();
-
-export const logShowLessFoldedResults = makeAnalyticsAction(
-  'analytics/folding/showLess',
-  AnalyticsType.Custom,
-  (client) => {
-    return client.logShowLessFoldedResults();
-  }
-);

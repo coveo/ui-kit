@@ -1,3 +1,13 @@
+import {configuration} from '../../../../../app/common-reducers';
+import {CoreEngine} from '../../../../../app/engine';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
+import {
+  RegisterDateFacetActionCreatorPayload,
+  registerDateFacet,
+} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {executeToggleDateFacetSelect} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {
   DateFacetRequest,
   DateRangeRequest,
@@ -6,39 +16,26 @@ import {
   DateFacetResponse,
   DateFacetValue,
 } from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {
-  RegisterDateFacetActionCreatorPayload,
-  registerDateFacet,
-} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {
-  assertRangeFacetOptions,
-  buildCoreRangeFacet,
-} from '../headless-core-range-facet';
+import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
+import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {
   ConfigurationSection,
   DateFacetSection,
   FacetOptionsSection,
   SearchSection,
 } from '../../../../../state/state-sections';
-import {executeToggleDateFacetSelect} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
-
+import {loadReducerError} from '../../../../../utils/errors';
+import {Controller} from '../../../../controller/headless-controller';
+import {determineFacetId} from '../../_common/facet-id-determinor';
+import {
+  assertRangeFacetOptions,
+  buildCoreRangeFacet,
+} from '../headless-core-range-facet';
+import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
 import {
   DateFacetOptions,
   validateDateFacetOptions,
 } from './headless-date-facet-options';
-import {determineFacetId} from '../../_common/facet-id-determinor';
-import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
-import {Controller} from '../../../../controller/headless-controller';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
-import {
-  configuration,
-  dateFacetSet,
-  facetOptions,
-  search,
-} from '../../../../../app/reducers';
-import {loadReducerError} from '../../../../../utils/errors';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
-import {CoreEngine} from '../../../../../app/engine';
 
 export type {
   DateFacetOptions,
@@ -185,7 +182,7 @@ export function buildCoreDateFacet(
     engine,
     {
       facetId,
-      getRequest: () => engine.state.dateFacetSet[facetId],
+      getRequest: () => engine.state.dateFacetSet[facetId]!.request,
     }
   );
 

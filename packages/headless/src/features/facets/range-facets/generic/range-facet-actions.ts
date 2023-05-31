@@ -1,8 +1,8 @@
-import {RangeFacetSortCriterion} from './interfaces/request';
+import {Value} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../../utils/validate-payload';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {Value} from '@coveo/bueno';
+import {RangeFacetSortCriterion} from './interfaces/request';
 
 export const updateRangeFacetSortCriterion = createAction(
   'rangeFacet/updateSortCriterion',

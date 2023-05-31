@@ -1,4 +1,8 @@
-import {LightningElement, api} from 'lwc';
+import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
+import filters from '@salesforce/label/c.quantic_Filters';
+import QuanticCategoryFacet from 'c/quanticCategoryFacet';
+import QuanticDateFacet from 'c/quanticDateFacet';
+import QuanticFacet from 'c/quanticFacet';
 import {
   getAllFacetsFromStore,
   getHeadlessBundle,
@@ -7,14 +11,9 @@ import {
   initializeWithHeadless,
   registerComponentForInit,
 } from 'c/quanticHeadlessLoader';
-import filters from '@salesforce/label/c.quantic_Filters';
-import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
-
 import QuanticNumericFacet from 'c/quanticNumericFacet';
-import QuanticFacet from 'c/quanticFacet';
-import QuanticCategoryFacet from 'c/quanticCategoryFacet';
-import QuanticDateFacet from 'c/quanticDateFacet';
 import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -24,6 +23,7 @@ import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
  * @typedef {Object} FacetObject
  * @property {HTMLElement} element - The HTML element of the facet.
  * @property {function} [format] - The formatting function of the facet.
+ * @property {object} [metadata] - Metadata of the facet.
  */
 
 /**
@@ -59,9 +59,16 @@ export default class QuanticRefineModalContent extends LightningElement {
   hasActiveFilters = false;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {object} */
+  renderedFacets = {};
+  /** @type {boolean} */
+  someFacetsRendered = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.addEventListener('renderfacet', this.handleRenderFacetEvent);
   }
 
   renderedCallback() {
@@ -71,6 +78,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeSearchStatus?.();
     this.unsubscribeBreadcrumbManager?.();
+    this.removeEventListener('renderfacet', this.handleRenderFacetEvent);
   }
 
   /**
@@ -168,6 +176,10 @@ export default class QuanticRefineModalContent extends LightningElement {
   toTimeframeFacet = (facetObject) => {
     return {
       isTimeframe: true,
+      timeframes: facetObject.metadata.timeframes.map((timeframe, index) => ({
+        ...timeframe,
+        index,
+      })),
       ...this.extractFacetDataFromElement(
         facetObject.element,
         QuanticTimeframeFacet.attributes
@@ -236,5 +248,23 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   get hasFacets() {
     return this.data && !!Object.keys(this.data).length;
+  }
+
+  /**
+   * @param {CustomEvent} event
+   */
+  handleRenderFacetEvent = (event) => {
+    this.renderedFacets[event.detail.id] = event.detail.shouldRenderFacet;
+    this.someFacetsRendered = Object.values(this.renderedFacets).reduce(
+      (result, facetRendered) => result || facetRendered,
+      false
+    );
+  };
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

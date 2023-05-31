@@ -2,9 +2,9 @@ import {
   CyHttpMessages,
   HttpResponseInterceptor,
   RouteMatcher,
-  StaticResponse,
-  // eslint-disable-next-line node/no-unpublished-import
+  StaticResponse, // eslint-disable-next-line node/no-unpublished-import
 } from 'cypress/types/net-stubbing';
+import {useCaseEnum} from './use-case';
 
 type RequestParams = Record<string, string | number | boolean | undefined>;
 
@@ -44,11 +44,32 @@ export const InterceptAliases = {
     DocumentOpen: uaAlias('documentOpen'),
     DocumentQuickview: uaAlias('documentQuickview'),
     SearchFromLink: uaAlias('searchFromLink'),
+    CopyToClipboard: uaAlias('copyToClipboard'),
+    ExpandSmartSnippet: uaAlias('expandSmartSnippet'),
+    CollapseSmartSnippet: uaAlias('collapseSmartSnippet'),
+    OpenSmartSnippetSource: uaAlias('openSmartSnippetSource'),
+    OpenSmartSnippetInlineLink: uaAlias('openSmartSnippetInlineLink'),
+    LikeSmartSnippet: uaAlias('likeSmartSnippet'),
+    DislikeSmartSnippet: uaAlias('dislikeSmartSnippet'),
+    OpenSmartSnippetFeedbackModal: uaAlias('openSmartSnippetFeedbackModal'),
+    CloseSmartSnippetFeedbackModal: uaAlias('closeSmartSnippetFeedbackModal'),
+    SendSmartSnippetReason: uaAlias('sendSmartSnippetReason'),
+    ExpandSmartSnippetSuggestion: uaAlias('expandSmartSnippetSuggestion'),
+    CollapseSmartSnippetSuggestion: uaAlias('collapseSmartSnippetSuggestion'),
+    OpenSmartSnippetSuggestionSource: uaAlias(
+      'openSmartSnippetSuggestionSource'
+    ),
+    OpenSmartSnippetSuggestionInlineLink: uaAlias(
+      'openSmartSnippetSuggestionInlineLink'
+    ),
+    ShowLessFoldedResults: uaAlias('showLessFoldedResults'),
+    ShowMoreFoldedResults: uaAlias('showMoreFoldedResults'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
   ResultHtml: '@coveoResultHtml',
+  Insight: '@CoveoInsight',
 };
 
 export const routeMatchers = {
@@ -56,6 +77,7 @@ export const routeMatchers = {
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
   facetSearch: '**/rest/search/v2/facet?*',
+  insight: '**/rest/organizations/*/insight/v1/configs/*/search',
   html: '**/rest/search/v2/html?*',
 };
 
@@ -64,7 +86,7 @@ export function interceptSearch() {
     .intercept('POST', routeMatchers.analytics, (req) => {
       if (req.body.actionCause) {
         req.alias = uaAlias(req.body.actionCause).substring(1);
-      } else if (req.body.eventType === 'getMoreResults') {
+      } else if (req.body.eventType) {
         req.alias = uaAlias(req.body.eventValue).substring(1);
       }
     })
@@ -76,7 +98,10 @@ export function interceptSearch() {
     .as(InterceptAliases.Search.substring(1))
 
     .intercept('POST', routeMatchers.facetSearch)
-    .as(InterceptAliases.FacetSearch.substring(1));
+    .as(InterceptAliases.FacetSearch.substring(1))
+
+    .intercept('POST', routeMatchers.insight)
+    .as(InterceptAliases.Insight.substring(1));
 }
 
 export function interceptSearchWithError(
@@ -105,15 +130,15 @@ export function extractResults(
   return response.body.results;
 }
 
-export function mockNoMoreFacetValues(field: string) {
-  cy.intercept(routeMatchers.search, (req) => {
+export function mockNoMoreFacetValues(field: string, useCase?: string) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.facets.find(
         (facet) => facet.field === field
       ).moreValuesAvailable = false;
       res.send();
     });
-  }).as(InterceptAliases.Search.substring(1));
+  }).as(getQueryAlias(useCase).substring(1));
 }
 
 export function mockFacetSearchSingleValue(queryString: string) {
@@ -162,32 +187,33 @@ export function interceptSearchIndefinitely(): {sendResponse: () => void} {
   return interceptIndefinitely(routeMatchers.search);
 }
 
-export function mockSearchNoResults() {
-  cy.intercept(routeMatchers.search, (req) => {
+export function mockSearchNoResults(useCase?: string) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.results = [];
       res.body.totalCount = 0;
       res.body.totalCountFiltered = 0;
       res.send();
     });
-  }).as(InterceptAliases.Search.substring(1));
+  }).as(getQueryAlias(useCase).substring(1));
 }
 
-export function mockSearchWithResults() {
+export function mockSearchWithResults(results?: Array<object>) {
+  const defaultResults = [
+    {title: 'Result', uri: 'uri', raw: {uriHash: 'resulthash'}},
+  ];
   cy.intercept(routeMatchers.search, (req) => {
     req.continue((res) => {
-      res.body.results = [
-        {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
-      ];
-      res.body.totalCount = 1;
-      res.body.totalCountFiltered = 1;
+      res.body.results = results ?? defaultResults;
+      res.body.totalCount = res.body.results.length;
+      res.body.totalCountFiltered = res.body.results.length;
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
 }
 
 export function interceptResultHtmlContent() {
-  cy.intercept('POST', routeMatchers.html).as(
+  cy.intercept('GET', routeMatchers.html).as(
     InterceptAliases.ResultHtml.substring(1)
   );
 }
@@ -201,7 +227,7 @@ export function mockResultHtmlContent(tag: string, innerHtml?: string) {
       res.body = element;
       res.send();
     });
-  });
+  }).as(InterceptAliases.ResultHtml.substring(1));
 }
 
 export function interceptQuerySuggestWithParam(
@@ -219,4 +245,128 @@ export function captureBaselineNumberOfRequests(interceptAlias: string) {
   cy.get(`${interceptAlias}.all`).then((calls) =>
     cy.wrap(calls.length).as(baselineAlias.substring(1))
   );
+}
+
+export function getQueryAlias(useCase?: string) {
+  return useCase === useCaseEnum.insight
+    ? InterceptAliases.Insight
+    : InterceptAliases.Search;
+}
+
+export function getRoute(useCase?: string) {
+  return useCase === useCaseEnum.insight
+    ? routeMatchers.insight
+    : routeMatchers.search;
+}
+
+export function mockSearchWithoutAnyFacetValues(useCase: string) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.facets.forEach((facet: {values: string[]}) => {
+        facet.values = [];
+      });
+      res.body.results = [
+        {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
+      ];
+      res.body.totalCount = 1;
+      res.body.totalCountFiltered = 1;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithSmartSnippet(
+  smartSnippetOptions: {
+    question: string;
+    answer: string;
+    title: string;
+    uri: string;
+    permanentId: string;
+  },
+  useCase?: string
+) {
+  const {question, answer, title, uri, permanentId} = smartSnippetOptions;
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.questionAnswer = {
+        answerFound: true,
+        answerSnippet: answer,
+        question: question,
+        documentId: {
+          contentIdKey: 'permanentid',
+          contentIdValue: permanentId,
+        },
+        relatedQuestions: [],
+      };
+      res.body.results = [
+        {
+          uri: uri,
+          title: title,
+          ClickUri: uri,
+          clickUri: uri,
+          uniqueId: '123',
+          raw: {permanentid: permanentId},
+        },
+      ];
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithoutSmartSnippet(useCase?: string) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.questionAnswer = {
+        answerFound: false,
+        relatedQuestions: [],
+      };
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithSmartSnippetSuggestions(
+  relatedQuestions: Array<{
+    question: string;
+    answerSnippet: string;
+    title: string;
+    uri: string;
+    documentId: {
+      contentIdKey: string;
+      contentIdValue: string;
+    };
+  }>,
+  useCase?: string
+) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.questionAnswer = {
+        relatedQuestions: relatedQuestions,
+        documentId: {
+          contentIdKey: 'permanentid',
+          contentIdValue: 'example permanentId',
+        },
+      };
+      res.body.results = relatedQuestions.map(({title, uri, documentId}) => ({
+        uri,
+        title,
+        ClickUri: uri,
+        clickUri: uri,
+        uniqueId: '123',
+        raw: {permanentid: documentId.contentIdValue},
+      }));
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithoutSmartSnippetSuggestions(useCase?: string) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.questionAnswer = {
+        relatedQuestions: [],
+      };
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
 }

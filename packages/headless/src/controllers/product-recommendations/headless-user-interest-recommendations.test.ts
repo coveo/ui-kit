@@ -23,4 +23,12 @@ describe('headless user-interest-recommendations', () => {
     engine.state.productRecommendations.isLoading = true;
     expect(userInterestRecommender.state.isLoading).toBe(true);
   });
+  it('object shape matches original', () => {
+    expect(userInterestRecommender.refresh).toBeTruthy();
+    expect(userInterestRecommender.subscribe).toBeTruthy();
+    expect(userInterestRecommender.state.error).toBeFalsy();
+    expect(userInterestRecommender.state.isLoading).toBeFalsy();
+    expect(userInterestRecommender.state.maxNumberOfRecommendations).toBe(5);
+    expect(userInterestRecommender.state.recommendations).toBeTruthy();
+  });
 });

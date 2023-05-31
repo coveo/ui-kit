@@ -1,4 +1,9 @@
-import {LightningElement, track, api} from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
+import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -6,18 +11,20 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, fromSearchApiDate, Store} from 'c/quanticUtils';
-import LOCALE from '@salesforce/i18n/locale';
-
-import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
-import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
-import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
-import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").DateFacetState} DateFacetState */
 /** @typedef {import("coveo").DateFacet} DateFacet */
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader'} type
+ * @property {string} [value]
+ * @property {number} [index]
+ */
 
 /**
  * The `QuanticDateFacet` component displays facet values as date ranges.
@@ -104,10 +111,17 @@ export default class QuanticDateFacet extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {FocusTarget} */
+  focusTarget;
+  /** @type {boolean} */
+  focusShouldBeInFacet = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     clearFilter,
     clearFilter_plural,
+    clearFilterFacet,
     collapseFacet,
     expandFacet,
   };
@@ -118,6 +132,10 @@ export default class QuanticDateFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    if (this.focusShouldBeInFacet && !this.facet?.state?.isLoading) {
+      this.setFocusOnTarget();
+      this.focusTarget = null;
+    }
   }
 
   /**
@@ -158,6 +176,16 @@ export default class QuanticDateFacet extends LightningElement {
       this.searchStatus?.state?.isLoading &&
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
+
+    const renderFacetEvent = new CustomEvent('renderfacet', {
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: this.hasValues,
+      },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(renderFacetEvent);
   }
 
   get values() {
@@ -214,6 +242,10 @@ export default class QuanticDateFacet extends LightningElement {
     return '';
   }
 
+  get clearFilterAriaLabelValue() {
+    return `${I18nUtils.format(this.labels.clearFilterFacet, this.field)}`;
+  }
+
   /**
    * @param {CustomEvent<{value: string}>} evt
    */
@@ -222,10 +254,20 @@ export default class QuanticDateFacet extends LightningElement {
       (value) => this.formattingFunction(value) === evt.detail.value
     );
     this.facet.toggleSelect(item);
+
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetValue',
+      value: evt.detail.value,
+    };
   }
 
   clearSelections() {
     this.facet.deselectAll();
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetHeader',
+    };
   }
 
   toggleFacetVisibility() {
@@ -234,5 +276,56 @@ export default class QuanticDateFacet extends LightningElement {
 
   preventDefault(evt) {
     evt.preventDefault();
+  }
+
+  /**
+   * Sets the focus on the target element.
+   */
+  setFocusOnTarget() {
+    this.focusShouldBeInFacet = false;
+    if (!this.focusTarget) {
+      return;
+    }
+    if (this.focusTarget.type === 'facetHeader') {
+      this.setFocusOnHeader();
+    } else if (this.focusTarget.type === 'facetValue') {
+      if (this.focusTarget.value) {
+        const facetValueIndex = this.values.findIndex(
+          (value) => this.formattingFunction(value) === this.focusTarget.value
+        );
+        this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
+        this.setFocusOnFacetValue();
+      }
+    }
+  }
+
+  /**
+   * Sets the focus on the target facet value.
+   */
+  setFocusOnFacetValue() {
+    const facetValues = this.template.querySelectorAll('c-quantic-facet-value');
+    const focusTarget = facetValues[this.focusTarget.index];
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the facet header.
+   */
+  setFocusOnHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-card-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocusOnHeader();
+    }
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

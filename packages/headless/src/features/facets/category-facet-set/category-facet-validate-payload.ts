@@ -1,4 +1,3 @@
-import {FacetValueState} from '../facet-api/value';
 import {
   Value,
   NumberValue,
@@ -10,6 +9,7 @@ import {
   validatePayloadAndThrow,
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
+import {FacetValueState} from '../facet-api/value';
 import {CategoryFacetValue} from './interfaces/response';
 
 export const categoryFacetValueDefinition = {

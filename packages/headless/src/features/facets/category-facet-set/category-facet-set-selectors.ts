@@ -3,9 +3,9 @@ import {
   baseFacetResponseSelector,
   FacetResponseSection,
 } from '../facet-set/facet-set-selectors';
+import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {partitionIntoParentsAndValues} from './category-facet-utils';
 import {CategoryFacetResponse} from './interfaces/response';
-import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 
 function isCategoryFacetResponse(
   state: CategoryFacetSection,
@@ -33,11 +33,22 @@ export const categoryFacetRequestSelector = (
   return state.categoryFacetSet[id]?.request;
 };
 
-export const categoryFacetSelectedValuesSelector = (
+export const categoryFacetResponseSelectedValuesSelector = (
   state: CategoryFacetSection & Partial<FacetResponseSection>,
   facetId: string
 ) => {
   const facetResponse = categoryFacetResponseSelector(state, facetId);
   const parentsAndValues = partitionIntoParentsAndValues(facetResponse?.values);
+  return parentsAndValues.parents;
+};
+
+export const categoryFacetRequestSelectedValuesSelector = (
+  state: CategoryFacetSection,
+  facetId: string
+) => {
+  const facetRequest = categoryFacetRequestSelector(state, facetId);
+  const parentsAndValues = partitionIntoParentsAndValues(
+    facetRequest?.currentValues
+  );
   return parentsAndValues.parents;
 };

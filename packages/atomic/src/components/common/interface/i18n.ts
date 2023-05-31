@@ -1,8 +1,9 @@
 import {getAssetPath} from '@stencil/core';
-import Backend, {BackendOptions} from 'i18next-http-backend';
-import {BaseAtomicInterface} from './interface-common';
+import DOMPurify from 'dompurify';
+import Backend, {HttpBackendOptions} from 'i18next-http-backend';
 import availableLocales from '../../../generated/availableLocales.json';
 import {AnyEngineType} from './bindings';
+import {BaseAtomicInterface} from './interface-common';
 
 export const i18nTranslationNamespace = 'translation';
 
@@ -12,7 +13,7 @@ function isI18nLocaleAvailable(locale: string) {
 
 export function i18nBackendOptions(
   atomicInterface: BaseAtomicInterface<AnyEngineType>
-): BackendOptions {
+): HttpBackendOptions {
   return {
     loadPath: `${getAssetPath(
       atomicInterface.languageAssetsPath
@@ -57,5 +58,15 @@ export function initi18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
     nsSeparator: '___',
     fallbackLng: 'en',
     backend: i18nBackendOptions(atomicInterface),
+    interpolation: {
+      escape: (str) => DOMPurify.sanitize(str),
+    },
+    compatibilityJSON: 'v3',
   });
+}
+
+declare module 'i18next' {
+  interface CustomTypeOptions {
+    resources: Record<string, Record<string, string>>;
+  }
 }

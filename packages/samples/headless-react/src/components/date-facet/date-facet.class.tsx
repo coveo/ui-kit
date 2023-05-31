@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   buildDateFacet,
   DateFacet as HeadlessDateFacet,
@@ -7,8 +6,9 @@ import {
   DateFacetValue,
   Unsubscribe,
 } from '@coveo/headless';
-import {parseDate} from './date-utils';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
+import {parseDate} from './date-utils';
 
 interface DateFacetProps extends DateFacetOptions {
   facetId: string;

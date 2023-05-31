@@ -1,5 +1,5 @@
-import * as sfdx from './util/sfdx-commands';
 import {StepLogger, StepsRunner} from './util/log';
+import * as sfdx from './util/sfdx-commands';
 
 interface Options {
   alias: string;

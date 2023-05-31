@@ -1,4 +1,3 @@
-import {buildCustomEvent} from './event-utils';
 import {
   ComponentInterface,
   getElement,
@@ -6,9 +5,10 @@ import {
   forceUpdate as forceUpdateComponent,
 } from '@stencil/core';
 import {TOptions} from 'i18next';
-import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
-import {AnyBindings} from '../components/common/interface/bindings';
 import {Hidden} from '../components/common/hidden';
+import {AnyBindings} from '../components/common/interface/bindings';
+import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {buildCustomEvent} from './event-utils';
 import {closest} from './utils';
 
 declare global {
@@ -20,7 +20,13 @@ declare global {
 export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 export const initializeEventName = 'atomic/initializeComponent';
-const initializableElements = ['atomic-search-interface', 'atomic-external'];
+const initializableElements = [
+  'atomic-recs-interface',
+  'atomic-search-interface',
+  'atomic-relevance-inspector',
+  'atomic-insight-interface',
+  'atomic-external',
+];
 
 /**
  * Retrieves `Bindings` on a configured parent search interface.
@@ -167,8 +173,9 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
         }
       );
 
-      const canceled = element.dispatchEvent(event);
-      if (canceled) {
+      element.dispatchEvent(event);
+
+      if (!closest(element, initializableElements.join(', '))) {
         this.error = new MissingInterfaceParentError(
           element.nodeName.toLowerCase()
         );
@@ -255,7 +262,7 @@ export function BindStateToController(
 
       if (!initialize) {
         return console.error(
-          `ControllerState: The "initialize" method has to be defined and instanciate a controller for the property ${controllerProperty}`,
+          `ControllerState: The "initialize" method has to be defined and instantiate a controller for the property ${controllerProperty}`,
           component
         );
       }

@@ -4,7 +4,13 @@ import {
   SearchStatusState,
   FacetState,
 } from '@coveo/headless';
+import {
+  createPopperLite as createPopper,
+  preventOverflow,
+  Instance as PopperInstance,
+} from '@popperjs/core';
 import {Component, h, Listen, State, Element, Host} from '@stencil/core';
+import ArrowBottomIcon from '../../../../images/arrow-bottom-rounded.svg';
 import {
   BindStateToController,
   InitializableComponent,
@@ -13,22 +19,15 @@ import {
 import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import {PopoverChildFacet, popoverClass} from './popover-type';
-import {
-  createPopperLite as createPopper,
-  preventOverflow,
-  Instance as PopperInstance,
-} from '@popperjs/core';
 
 /**
- * @internal
  * The `atomic-popover` component displays any facet as a popover menu.
  *
  * @slot default - The required slotted facet.
  * @part backdrop - The transparent backdrop hiding the content behind popover menu.
  * @part popover-button - The button to click to display or hide the popover menu.
- * @part label - The associated facet label.
+ * @part value-label - The associated facet label.
  * @part value-count - Number of selected values for the facet
  * @part arrow-icon - The arrow icon on the button to display or hide the popover menu.
  * @part placeholder - The placeholder displayed when the facet is loading.
@@ -99,7 +98,7 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   private get label() {
-    return this.bindings.i18n.t(this.childFacet!.label);
+    return this.childFacet!.label();
   }
 
   private togglePopover() {
@@ -165,7 +164,6 @@ export class AtomicPopover implements InitializableComponent {
         </span>
         <atomic-icon
           part="arrow-icon"
-          aria-hidden="true"
           class={`w-2 ml-auto group-hover:text-primary-light group-focus:text-primary ${
             this.isOpen ? 'rotate-180' : ''
           } `}

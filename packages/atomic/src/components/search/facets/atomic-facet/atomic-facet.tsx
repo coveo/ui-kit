@@ -1,4 +1,3 @@
-import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -10,23 +9,26 @@ import {
   buildSearchStatus,
   buildFacetConditionsManager,
 } from '@coveo/headless';
+import {Component, h, State, Prop, Element} from '@stencil/core';
+import {
+  AriaLiveRegion,
+  FocusTarget,
+  FocusTargetController,
+} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {MapProp} from '../../../../utils/props-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {
   BaseFacet,
   FacetCommon,
   parseDependsOn,
 } from '../../../common/facets/facet-common';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -56,6 +58,7 @@ import {
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
+ * @part value-checkbox-icon - The facet value checkbox icon, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  * @part value-link-selected - The selected facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.
@@ -72,7 +75,7 @@ import {
 })
 export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @InitializeBindings() public bindings!: Bindings;
-  public facetCommon!: FacetCommon;
+  public facetCommon?: FacetCommon;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
@@ -130,7 +133,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' | 'box' =
     'checkbox';
   /**
-   * Specifies if the facet is collapsed.
+   * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
@@ -168,9 +171,8 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * ```
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
-
   /**
-   * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.
+   * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.
    *
    * If you specify a list of values for this option, the facet uses only these values (if they are available in
    * the current result set).
@@ -182,14 +184,16 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * those other values.
    *
    * ```html
-   * <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div>
+   * <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></div>
    * ```
    *
    * The maximum amount of allowed values is 25.
    *
    * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */
-  @Prop() public allowedValues?: string;
+  @ArrayProp()
+  @Prop({mutable: true})
+  public allowedValues: string[] | string = '[]';
 
   @FocusTarget()
   private showLessFocus!: FocusTargetController;
@@ -200,6 +204,9 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
+  @AriaLiveRegion('facet-search')
+  protected facetSearchAriaMessage!: string;
+
   public initialize() {
     const options: FacetOptions = {
       facetId: this.facetId,
@@ -209,7 +216,9 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
-      allowedValues: this.allowedValues?.trim().split(','),
+      allowedValues: this.allowedValues.length
+        ? [...this.allowedValues]
+        : undefined,
     };
 
     if (this.customSort) {
@@ -220,6 +229,12 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     }
 
     this.facet = buildFacet(this.bindings.engine, {options});
+    announceFacetSearchResultsWithAriaLive(
+      this.facet,
+      this.label,
+      (msg) => (this.facetSearchAriaMessage = msg),
+      this.bindings.i18n
+    );
     this.facetId = this.facet.state.facetId;
 
     this.facetCommon = new FacetCommon({
@@ -244,7 +259,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   }
 
   public disconnectedCallback() {
-    this.facetCommon.disconnectedCallback();
+    this.facetCommon?.disconnectedCallback();
   }
 
   public componentShouldUpdate(

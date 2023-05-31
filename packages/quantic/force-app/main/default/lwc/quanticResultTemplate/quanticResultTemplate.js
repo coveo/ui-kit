@@ -1,4 +1,4 @@
-import {LightningElement} from 'lwc';
+import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticResultTemplate` component is used to construct result templates using predefined and formatted [slots](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.create_components_slots).
@@ -18,4 +18,55 @@ import {LightningElement} from 'lwc';
  *   <div slot="bottom-metadata"></div>
  * </c-quantic-result-template>
  */
-export default class QuanticResultTemplate extends LightningElement {}
+export default class QuanticResultTemplate extends LightningElement {
+  /**
+   * @type {boolean}
+   */
+  @api isAnyPreviewOpen = false;
+
+  /**
+   * @api
+   * @type {boolean}
+   */
+  @api resultPreviewShouldNotBeAccessible = false;
+
+  /** @type {boolean} */
+  isHeaderEmpty = true;
+  /** @type {boolean} */
+  isBadgesSlotEmpty = true;
+
+  handleHeaderSlotChange(event) {
+    const slot = event.target;
+    const slotHasContent = !!slot.assignedElements().length;
+    if (slotHasContent) {
+      this.isHeaderEmpty = false;
+      if (slot.name === 'badges') {
+        this.isBadgesSlotEmpty = false;
+      }
+    }
+  }
+
+  /** Returns the CSS class of the header of the result template */
+  get headerCssClass() {
+    return `slds-grid slds-wrap slds-col slds-grid_vertical-align-center slds-size_1-of-1 slds-text-align_left ${
+      this.isHeaderEmpty ? '' : 'slds-m-bottom_x-small'
+    }`;
+  }
+
+  /** Returns the CSS class  of the badges slot of the result template */
+  get badgesSlotCssClass() {
+    return `badge__container slds-col slds-order_1 slds-small-order_1 slds-medium-order_2 slds-large-order_2 slds-m-right_small ${
+      this.isBadgesSlotEmpty ? '' : 'slds-m-vertical_xx-small'
+    }`;
+  }
+
+  get templateClass() {
+    return `lgc-bg slds-p-vertical_medium ${
+      this.hasChildTemplates ? '' : 'slds-border_bottom'
+    }`;
+  }
+
+  get hasChildTemplates() {
+    return !!this.querySelector('*[slot="children"]');
+  }
+}

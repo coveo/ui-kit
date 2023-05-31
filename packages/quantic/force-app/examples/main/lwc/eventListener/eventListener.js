@@ -14,7 +14,7 @@ export default class EventListener extends LightningElement {
       this.events.push({
         type,
         received: false,
-        detail: {}
+        detail: {},
       });
       this.template.addEventListener(type, this.onEventReceived);
     });
@@ -27,10 +27,10 @@ export default class EventListener extends LightningElement {
   }
 
   onEventReceived = (evt) => {
-    const receivedEvent = this.events.find(event => event.type === evt.type);
+    const receivedEvent = this.events.find((event) => event.type === evt.type);
     receivedEvent.received = true;
     receivedEvent.detail = JSON.stringify(evt.detail);
-  }
+  };
 
   get expectsEvents() {
     return !!this.expectedEvents.length;

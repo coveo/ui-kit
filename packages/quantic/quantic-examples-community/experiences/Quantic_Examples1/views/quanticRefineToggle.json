@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "71a68692-452a-4000-a690-cfb608c7d9ff",
   "label" : "Quantic Refine Toggle",
   "regions" : [ {

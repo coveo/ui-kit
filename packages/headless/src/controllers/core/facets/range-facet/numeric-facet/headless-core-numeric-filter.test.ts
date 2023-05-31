@@ -1,16 +1,22 @@
+import {configuration} from '../../../../../app/common-reducers';
+import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
 import {
-  configuration,
-  numericFacetSet,
-  facetOptions,
-  search,
-} from '../../../../../app/reducers';
+  registerNumericFacet,
+  updateNumericFacetValues,
+} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {SearchAppState} from '../../../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
 } from '../../../../../test';
-import {buildMockNumericFacetRequest} from '../../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
+import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
+import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {
   buildCoreNumericFilter,
   NumericFilter,
@@ -18,14 +24,6 @@ import {
   NumericFilterOptions,
 } from './headless-core-numeric-filter';
 import {buildNumericRange} from './numeric-range';
-import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
-import {
-  registerNumericFacet,
-  updateNumericFacetValues,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
-import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
 
 describe('numeric filter', () => {
   const facetId = '1';
@@ -49,7 +47,7 @@ describe('numeric filter', () => {
     };
 
     state = createMockState();
-    state.numericFacetSet[facetId] = buildMockNumericFacetRequest();
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice();
 
     initNumericFilter();
   });

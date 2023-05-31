@@ -1,9 +1,3 @@
-import {Component, h, State, Element, VNode} from '@stencil/core';
-import {
-  InitializableComponent,
-  BindStateToController,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
@@ -12,14 +6,20 @@ import {
   FacetManagerState,
   buildFacetManager,
 } from '@coveo/headless';
-import {Button} from '../../common/button';
-import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
-import {getFieldValueCaption} from '../../../utils/field-utils';
-import {Hidden} from '../../common/hidden';
+import {Component, h, State, Element, VNode} from '@stencil/core';
+import CloseIcon from '../../../images/close.svg';
 import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {getFieldValueCaption} from '../../../utils/field-utils';
+import {
+  InitializableComponent,
+  BindStateToController,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
+import {Button} from '../../common/button';
+import {Hidden} from '../../common/hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 interface Breadcrumb {
@@ -36,6 +36,8 @@ const ELLIPSIS = '...';
 /**
  * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
  *
+ * @part container - The container of the whole component, list & label.
+ * @part breadcrumb-list-container - The container of the list of breadcrumb buttons.
  * @part breadcrumb-list - The list of breadcrumb buttons.
  * @part breadcrumb-button - A single breadcrumb button.
  * @part breadcrumb-label - The breadcrumb label, associated with the facet.
@@ -167,7 +169,11 @@ export class AtomicBreadbox implements InitializableComponent {
     return ellipsedPath.join(SEPARATOR);
   }
 
-  private renderBreadcrumb(breadcrumb: Breadcrumb, index: number) {
+  private renderBreadcrumb(
+    breadcrumb: Breadcrumb,
+    index: number,
+    totalBreadcrumbs: number
+  ) {
     const fullValue = Array.isArray(breadcrumb.formattedValue)
       ? breadcrumb.formattedValue.join(SEPARATOR)
       : breadcrumb.formattedValue;
@@ -175,6 +181,7 @@ export class AtomicBreadbox implements InitializableComponent {
       ? this.limitPath(breadcrumb.formattedValue)
       : breadcrumb.formattedValue;
     const title = `${breadcrumb.label}: ${fullValue}`;
+    const isLastBreadcrumb = totalBreadcrumbs === 1;
 
     return (
       <li class="breadcrumb" key={value}>
@@ -187,9 +194,12 @@ export class AtomicBreadbox implements InitializableComponent {
             value: title,
           })}
           onClick={() => {
-            if (this.numberOfBreadcrumbs > 1) {
+            if (isLastBreadcrumb) {
+              this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+            } else if (this.numberOfBreadcrumbs > 1) {
               this.breadcrumbRemovedFocus.focusAfterSearch();
             }
+
             this.lastRemovedBreadcrumbIndex = index;
             breadcrumb.deselect();
           }}
@@ -218,7 +228,6 @@ export class AtomicBreadbox implements InitializableComponent {
             part="breadcrumb-clear"
             class="w-2.5 h-2.5 ml-2 mt-px"
             icon={CloseIcon}
-            aria-hidden="true"
           ></atomic-icon>
         </Button>
       </li>
@@ -296,7 +305,10 @@ export class AtomicBreadbox implements InitializableComponent {
           text={this.bindings.i18n.t('clear')}
           class="p-2 btn-pill"
           ariaLabel={this.bindings.i18n.t('clear-all-filters')}
-          onClick={() => this.breadcrumbManager.deselectAll()}
+          onClick={async () => {
+            this.breadcrumbManager.deselectAll();
+            this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+          }}
           ref={
             isFocusTarget ? this.breadcrumbRemovedFocus.setTarget : undefined
           }
@@ -314,7 +326,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .filter(({facetId}) => this.bindings.store.state.facets[facetId])
       .map(({value, facetId, field}) => ({
         facetId,
-        label: this.bindings.store.state.facets[facetId]?.label,
+        label: this.bindings.store.state.facets[facetId]?.label(),
         deselect: value.deselect,
         formattedValue: [
           getFieldValueCaption(field, value.value.value, this.bindings.i18n),
@@ -326,7 +338,7 @@ export class AtomicBreadbox implements InitializableComponent {
     return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
       ({facetId, field, path, deselect}) => ({
         facetId,
-        label: this.bindings.store.state.categoryFacets[facetId].label,
+        label: this.bindings.store.state.categoryFacets[facetId].label(),
         deselect: deselect,
         formattedValue: path.map((pathValue) =>
           getFieldValueCaption(field, pathValue.value, this.bindings.i18n)
@@ -343,7 +355,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .flat()
       .map(({value, facetId}) => ({
         facetId,
-        label: this.bindings.store.state.numericFacets[facetId].label,
+        label: this.bindings.store.state.numericFacets[facetId].label(),
         deselect: value.deselect,
         formattedValue: [
           this.bindings.store.state.numericFacets[facetId].format(value.value),
@@ -362,7 +374,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .flat()
       .map(({value, facetId}) => ({
         facetId,
-        label: this.bindings.store.state.dateFacets[facetId].label,
+        label: this.bindings.store.state.dateFacets[facetId].label(),
         deselect: value.deselect,
         formattedValue: [
           this.bindings.store.state.dateFacets[facetId].format(value.value),
@@ -389,7 +401,7 @@ export class AtomicBreadbox implements InitializableComponent {
 
     return [
       sortedBreadcrumbs.map((breadcrumb, i) =>
-        this.renderBreadcrumb(breadcrumb, i)
+        this.renderBreadcrumb(breadcrumb, i, allBreadcrumbs.length)
       ),
       this.isCollapsed && this.renderShowMore(),
       !this.isCollapsed && this.renderShowLess(),
@@ -405,13 +417,13 @@ export class AtomicBreadbox implements InitializableComponent {
     }
 
     return (
-      <div class="text-on-background text-sm flex">
+      <div part="container" class="text-on-background text-sm flex">
         <span part="label" class="font-bold py-[0.625rem] pl-0 pr-2">
           {this.bindings.i18n.t('with-colon', {
             text: this.bindings.i18n.t('filters'),
           })}
         </span>
-        <div class="relative grow">
+        <div part="breadcrumb-list-container" class="relative grow">
           <ul
             part="breadcrumb-list"
             class={`flex gap-1 ${

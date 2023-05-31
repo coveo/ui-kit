@@ -4,6 +4,7 @@
 
 # Salesforce cache
 .sfdx/
+.sf/
 .localdevserver/
 
 # Logs
@@ -36,6 +37,7 @@ scratch-def.ci.json
 
 # Static resources copied from node_modules
 force-app/main/default/staticresources/coveoheadless
+force-app/main/default/staticresources/coveobueno
 
 # Test Coverage & Report
 coverage

@@ -1,8 +1,8 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {
   NumericFacet as HeadlessNumericFacet,
   NumericFacetValue,
 } from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface NumericFacetProps {
   controller: HeadlessNumericFacet;

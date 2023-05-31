@@ -1,5 +1,5 @@
-import {createAction} from '@reduxjs/toolkit';
 import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
+import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload';
 
 export interface RegisterRecentQueriesCreatorPayload {

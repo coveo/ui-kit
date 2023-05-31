@@ -1,18 +1,19 @@
-import {SearchParameters} from './search-parameter-actions';
 import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
-import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
-import {logInsightInterfaceChange} from '../analytics/analytics-actions';
+import {InsightAction} from '../analytics/analytics-utils';
+import {logInsightInterfaceChange} from '../analytics/insight-analytics-actions';
 import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
 } from '../facets/facet-set/facet-set-insight-analytics-actions';
 import {logSearchboxSubmit} from '../query/query-insight-analytics-actions';
+import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
+import {SearchParameters} from './search-parameter-actions';
 
 export function logParametersChange(
   previousParameters: SearchParameters,
   newParameters: SearchParameters
-) {
+): InsightAction {
   if (previousParameters.q !== newParameters.q) {
     return logSearchboxSubmit();
   }
@@ -76,7 +77,7 @@ function parseRangeFacetParams(facetsParams: RangeFacetParameters) {
 function logFacetAnalyticsAction(
   previousFacets: FacetParameters = {},
   newFacets: FacetParameters = {}
-) {
+): InsightAction {
   const previousIds = Object.keys(previousFacets);
   const newIds = Object.keys(newFacets);
 
@@ -137,7 +138,7 @@ function logFacetAnalyticsAction(
 function logRangeFacetAnalyticsAction(
   previousFacets: RangeFacetParameters = {},
   newFacets: RangeFacetParameters = {}
-) {
+): InsightAction {
   return logFacetAnalyticsAction(
     parseRangeFacetParams(previousFacets),
     parseRangeFacetParams(newFacets)

@@ -1,19 +1,17 @@
-import {LightningElement, track, api} from 'lwc';
 import LOCALE from '@salesforce/i18n/locale';
-
+import noResults from '@salesforce/label/c.quantic_NoResults';
+import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
+import showingResultsOf from '@salesforce/label/c.quantic_ShowingResultsOf';
+import showingResultsOfWithQuery from '@salesforce/label/c.quantic_ShowingResultsOfWithQuery';
+import showingResultsOfWithQuery_plural from '@salesforce/label/c.quantic_ShowingResultsOfWithQuery_plural';
+import showingResultsOf_plural from '@salesforce/label/c.quantic_ShowingResultsOf_plural';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
-
-import noResults from '@salesforce/label/c.quantic_NoResults';
-import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
-import showingResultsOf from '@salesforce/label/c.quantic_ShowingResultsOf';
-import showingResultsOf_plural from '@salesforce/label/c.quantic_ShowingResultsOf_plural';
-import showingResultsOfWithQuery from '@salesforce/label/c.quantic_ShowingResultsOfWithQuery';
-import showingResultsOfWithQuery_plural from '@salesforce/label/c.quantic_ShowingResultsOfWithQuery_plural';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").QuerySummary} QuerySummary */
@@ -43,6 +41,10 @@ export default class QuanticSummary extends LightningElement {
   unsubscribe;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  summaryAriaMessage;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     noResults,
@@ -67,6 +69,7 @@ export default class QuanticSummary extends LightningElement {
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
     this.querySummary = this.headless.buildQuerySummary(engine);
+    this.summaryAriaMessage = AriaLiveRegion('summary', this);
     this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
   };
 
@@ -76,6 +79,16 @@ export default class QuanticSummary extends LightningElement {
 
   updateState() {
     this.state = this.querySummary.state;
+    if (this.state?.hasResults) {
+      this.updateAriaMessage();
+    }
+  }
+
+  updateAriaMessage() {
+    const docElement = document.createElement('div');
+    // eslint-disable-next-line @lwc/lwc/no-inner-html
+    docElement.innerHTML = this.summaryLabel;
+    this.summaryAriaMessage.dispatchMessage(docElement.innerText);
   }
 
   get hasResults() {
@@ -135,5 +148,12 @@ export default class QuanticSummary extends LightningElement {
         '</b>'
       )
     );
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

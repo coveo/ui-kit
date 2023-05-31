@@ -28,9 +28,9 @@ describe('buildRecommendationEngine', () => {
     expect(initEngine).toThrow();
   });
 
-  it('passing an invalid pipeline throws', () => {
+  it('passing an empty pipeline does not throw', () => {
     options.configuration.pipeline = '';
-    expect(initEngine).toThrow();
+    expect(initEngine).not.toThrow();
   });
 
   it('#engine.state retrieves the updated state', () => {

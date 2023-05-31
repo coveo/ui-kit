@@ -1,30 +1,29 @@
+import {configuration} from '../../../app/common-reducers';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {
-  categoryFacetSet,
-  configuration,
-  dateFacetSet,
-  facetSet,
-  numericFacetSet,
-  search,
-} from '../../../app/reducers';
 import {deselectAllCategoryFacetValues} from '../../../features/facets/category-facet-set/category-facet-set-actions';
-import {categoryFacetSelectedValuesSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
+import {logCategoryFacetBreadcrumb} from '../../../features/facets/category-facet-set/category-facet-set-insight-analytics-actions';
+import {categoryFacetResponseSelectedValuesSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../../features/facets/facet-set/facet-set-actions';
+import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {facetResponseSelectedValuesSelector} from '../../../features/facets/facet-set/facet-set-selectors';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
+import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
+import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
 import {toggleSelectDateFacetValue} from '../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {logDateFacetBreadcrumb} from '../../../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
 import {dateFacetSelectedValuesSelector} from '../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
-import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {dateFacetSetReducer as dateFacetSet} from '../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {toggleSelectNumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {logNumericFacetBreadcrumb} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
 import {numericFacetSelectedValuesSelector} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
-import {
-  logInsightStaticFilterDeselect,
-  toggleSelectStaticFilterValue,
-} from '../../../features/static-filter-set/static-filter-set-actions';
+import {numericFacetSetReducer as numericFacetSet} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
+import {toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
+import {logInsightStaticFilterDeselect} from '../../../features/static-filter-set/static-filter-set-insight-analytics-actions';
 import {
   StaticFilterSlice,
   StaticFilterValue,
@@ -37,6 +36,7 @@ import {
   NumericFacetSection,
   SearchSection,
 } from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
 import {
   Breadcrumb,
   BreadcrumbManager,
@@ -51,13 +51,6 @@ import {
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
 } from '../../core/breadcrumb-manager/headless-core-breadcrumb-manager';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {logNumericFacetBreadcrumb} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
-import {logDateFacetBreadcrumb} from '../../../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
-import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
-import {loadReducerError} from '../../../utils/errors';
-import {logCategoryFacetBreadcrumb} from '../../../features/facets/category-facet-set/category-facet-set-insight-analytics-actions';
-import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 
 export type {
   NumericFacetBreadcrumb,
@@ -88,7 +81,7 @@ export function buildBreadcrumbManager(
   const getState = () => engine.state;
 
   const getFacetBreadcrumbs = (): FacetBreadcrumb[] => {
-    return getBreadcrumbs<FacetValue>(
+    return getBreadcrumbs(
       engine,
       getState().facetSet,
       ({facetId, selection}) => {
@@ -107,7 +100,7 @@ export function buildBreadcrumbManager(
   };
 
   const getNumericFacetBreadcrumbs = (): NumericFacetBreadcrumb[] => {
-    return getBreadcrumbs<NumericFacetValue>(
+    return getBreadcrumbs(
       engine,
       getState().numericFacetSet,
       (payload) => {
@@ -119,7 +112,7 @@ export function buildBreadcrumbManager(
   };
 
   const getDateFacetBreadcrumbs = (): DateFacetBreadcrumb[] => {
-    return getBreadcrumbs<DateFacetValue>(
+    return getBreadcrumbs(
       engine,
       getState().dateFacetSet,
       (payload) => {
@@ -131,7 +124,10 @@ export function buildBreadcrumbManager(
   };
 
   const buildCategoryFacetBreadcrumb = (facetId: string) => {
-    const path = categoryFacetSelectedValuesSelector(getState(), facetId);
+    const path = categoryFacetResponseSelectedValuesSelector(
+      getState(),
+      facetId
+    );
     return {
       facetId,
       field: getState().categoryFacetSet[facetId]!.request.field,

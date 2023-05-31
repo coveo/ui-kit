@@ -1,3 +1,4 @@
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {fetchPage} from '../../../features/insight-search/insight-search-actions';
 import {
   logPageNumber,
@@ -12,7 +13,6 @@ import {
   Pager,
   PagerState,
 } from '../../core/pager/headless-core-pager';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 
 export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
 

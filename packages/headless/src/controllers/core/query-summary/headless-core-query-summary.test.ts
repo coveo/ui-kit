@@ -1,4 +1,5 @@
-import {pagination, search} from '../../../app/reducers';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchAppState} from '../../../state/search-app-state';
 import {
   buildMockResult,

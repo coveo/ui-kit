@@ -1,6 +1,6 @@
-import {LightningElement, api} from 'lwc';
 import {getHeadlessEnginePromise} from 'c/quanticHeadlessLoader';
 import {ResultUtils} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").Result} Result*/
@@ -41,11 +41,13 @@ export default class QuanticRecentResultLink extends LightningElement {
   engine;
 
   connectedCallback() {
-    getHeadlessEnginePromise(this.engineId).then((engine) => {
-      this.initialize(engine);
-    }).catch((error) => {
-      console.error(error.message);
-    });
+    getHeadlessEnginePromise(this.engineId)
+      .then((engine) => {
+        this.initialize(engine);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   }
 
   /**
@@ -59,5 +61,5 @@ export default class QuanticRecentResultLink extends LightningElement {
       this.template,
       CoveoHeadless.buildInteractiveRecentResult
     );
-  }
+  };
 }

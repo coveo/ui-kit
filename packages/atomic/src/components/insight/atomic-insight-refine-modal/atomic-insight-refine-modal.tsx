@@ -1,27 +1,25 @@
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
-import {debounce} from 'ts-debounce';
-import {buildCustomEvent} from '../../../utils/event-utils';
+import {
+  InsightQuerySummary,
+  InsightQuerySummaryState,
+  buildInsightQuerySummary,
+  InsightBreadcrumbManager,
+  InsightBreadcrumbManagerState,
+  buildInsightBreadcrumbManager,
+} from '..';
+import {rectEquals} from '../../../utils/dom-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {
-  InsightBindings,
-  InsightInterfaceDimensions,
-} from '../atomic-insight-interface/atomic-insight-interface';
-import {
-  buildInsightFacetManager,
-  buildInsightQuerySummary,
-  InsightFacetManager,
-  InsightQuerySummary,
-  InsightQuerySummaryState,
-} from '..';
+import {Button} from '../../common/button';
+import {Hidden} from '../../common/hidden';
 import {
   getClonedFacetElements,
   RefineModalCommon,
 } from '../../common/refine-modal/refine-modal-common';
-import {Hidden} from '../../common/hidden';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal
@@ -34,7 +32,6 @@ import {Hidden} from '../../common/hidden';
 export class AtomicInsightRefineModal
   implements InitializableComponent<InsightBindings>
 {
-  private refineModalCommon!: RefineModalCommon;
   @InitializeBindings() public bindings!: InsightBindings;
   @Element() public host!: HTMLElement;
 
@@ -42,22 +39,22 @@ export class AtomicInsightRefineModal
   @State()
   public querySummaryState!: InsightQuerySummaryState;
 
+  @BindStateToController('breadcrumbManager')
+  @State()
+  public breadcrumbManagerState!: InsightBreadcrumbManagerState;
+
   @State()
   public error!: Error;
 
   @State()
-  public loadingDimensions = true;
+  public interfaceDimensions?: DOMRect;
 
   @Prop({mutable: true}) openButton?: HTMLElement;
 
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
-  private interfaceDimensions?: InsightInterfaceDimensions;
-  private facetManager!: InsightFacetManager;
-  private resizeObserver?: ResizeObserver;
-  private debouncedUpdateDimensions = debounce(this.updateDimensions, 500);
-  private scrollCallback = () => this.debouncedUpdateDimensions();
   public querySummary!: InsightQuerySummary;
+  private breadcrumbManager!: InsightBreadcrumbManager;
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
@@ -66,57 +63,64 @@ export class AtomicInsightRefineModal
         this.host.append(
           getClonedFacetElements(
             this.bindings.store.getFacetElements(),
-            this.facetManager
+            0,
+            this.bindings.interfaceElement
           )
         );
       }
-      this.debouncedUpdateDimensions();
-      if (window.ResizeObserver) {
-        if (!this.resizeObserver) {
-          this.resizeObserver = new ResizeObserver(() =>
-            this.debouncedUpdateDimensions()
-          );
-        }
-        this.resizeObserver.observe(document.body);
-      }
-
-      document.addEventListener('scroll', this.scrollCallback);
-    } else {
-      this.loadingDimensions = true;
-      this.resizeObserver?.disconnect();
-      document.removeEventListener('scroll', this.scrollCallback);
+      this.onAnimationFrame();
     }
   }
 
-  public disconnectedCallback() {
-    this.resizeObserver?.disconnect();
-    document.removeEventListener('scroll', this.scrollCallback);
+  private onAnimationFrame() {
+    if (!this.isOpen) {
+      return;
+    }
+    if (this.dimensionChanged()) {
+      this.updateDimensions();
+    }
+    window.requestAnimationFrame(() => this.onAnimationFrame());
   }
 
-  public updateDimensions() {
-    this.loadingDimensions = true;
-    this.host.dispatchEvent(
-      buildCustomEvent(
-        'atomic/insight/getDimensions',
-        (dimensions: InsightInterfaceDimensions) => {
-          this.interfaceDimensions = dimensions;
-          this.loadingDimensions = false;
-        }
-      )
+  private dimensionChanged() {
+    if (!this.interfaceDimensions) {
+      return true;
+    }
+
+    return !rectEquals(
+      this.interfaceDimensions,
+      this.bindings.interfaceElement.getBoundingClientRect()
     );
   }
 
+  public updateDimensions() {
+    this.interfaceDimensions =
+      this.bindings.interfaceElement.getBoundingClientRect();
+  }
+
   public initialize() {
-    this.refineModalCommon = new RefineModalCommon({
-      host: this.host,
-      bindings: this.bindings,
-      initializeQuerySummary: () =>
-        (this.querySummary = buildInsightQuerySummary(this.bindings.engine)),
-      onClose: () => {
-        this.isOpen = false;
-      },
-    });
-    this.facetManager = buildInsightFacetManager(this.bindings.engine);
+    this.querySummary = buildInsightQuerySummary(this.bindings.engine);
+    this.breadcrumbManager = buildInsightBreadcrumbManager(
+      this.bindings.engine
+    );
+  }
+
+  private renderHeader() {
+    return (
+      <div class="w-full flex justify-between mb-3">
+        <h2 class="text-2xl font-bold truncate">
+          {this.bindings.i18n.t('filters')}
+        </h2>
+        {this.breadcrumbManagerState.hasBreadcrumbs && (
+          <Button
+            onClick={() => this.breadcrumbManager.deselectAll()}
+            style="text-primary"
+            text={this.bindings.i18n.t('clear-all-filters')}
+            class="px-2 py-1"
+          ></Button>
+        )}
+      </div>
+    );
   }
 
   private renderBody() {
@@ -126,15 +130,13 @@ export class AtomicInsightRefineModal
 
     return (
       <aside slot="body" class="flex flex-col w-full adjust-for-scroll-bar">
+        {this.renderHeader()}
         <slot name="facets"></slot>
       </aside>
     );
   }
 
   public render() {
-    if (!this.refineModalCommon) {
-      return <Hidden></Hidden>;
-    }
     return (
       <Host>
         {this.interfaceDimensions && (
@@ -147,15 +149,23 @@ export class AtomicInsightRefineModal
             }`}
           </style>
         )}
-        {this.refineModalCommon.render(this.renderBody(), {
-          isOpen: this.isOpen && !this.loadingDimensions,
-          openButton: this.openButton,
-        })}
+        <RefineModalCommon
+          bindings={this.bindings}
+          host={this.host}
+          isOpen={this.isOpen}
+          onClose={() => (this.isOpen = false)}
+          querySummaryState={this.querySummaryState}
+          title={this.bindings.i18n.t('filters')}
+          openButton={this.openButton}
+          scope={this.bindings.interfaceElement}
+        >
+          {this.renderBody()}
+        </RefineModalCommon>
       </Host>
     );
   }
 
   public componentDidLoad() {
-    this.refineModalCommon.showModal();
+    this.host.style.display = '';
   }
 }

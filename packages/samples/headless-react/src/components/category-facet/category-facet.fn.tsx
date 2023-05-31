@@ -1,8 +1,8 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {
   CategoryFacet as HeadlessCategoryFacet,
   CategoryFacetValue,
 } from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 import {CategoryFacetSearch} from './category-facet-search';
 
 interface CategoryFacetProps {

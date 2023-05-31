@@ -1,16 +1,16 @@
+import {RecordValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {DateFacetValue} from './interfaces/response';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {
   ConfigurationSection,
   DateFacetSection,
 } from '../../../../state/state-sections';
-import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions';
-import {toggleSelectDateFacetValue} from './date-facet-actions';
-import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {RecordValue} from '@coveo/bueno';
-import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
+import {facetIdDefinition} from '../../generic/facet-actions-validation';
+import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions';
+import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
+import {toggleSelectDateFacetValue} from './date-facet-actions';
+import {DateFacetValue} from './interfaces/response';
 
 const definition = {
   facetId: facetIdDefinition,

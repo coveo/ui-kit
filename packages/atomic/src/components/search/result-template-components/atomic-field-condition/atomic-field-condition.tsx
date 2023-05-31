@@ -1,12 +1,12 @@
-import {Component, Prop, h, Element} from '@stencil/core';
 import {
   Result,
   ResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {Component, Prop, h, Element} from '@stencil/core';
 import {MapProp} from '../../../../utils/props-utils';
-import {makeMatchConditions} from '../../../common/result-template/result-template';
+import {makeMatchConditions} from '../../../common/result-templates/result-template-common';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -22,7 +22,7 @@ export class AtomicFieldCondition {
   @Element() host!: HTMLElement;
 
   /**
-   * Verifies wheter the specified fields are defined.
+   * Verifies whether the specified fields are defined.
    */
   @Prop({reflect: true}) ifDefined?: string;
   /**
@@ -31,9 +31,10 @@ export class AtomicFieldCondition {
   @Prop({reflect: true}) ifNotDefined?: string;
   /**
    * A function that must return true on results for the result template to apply.
+   * Set programmatically before initialization, not via attribute.
    *
-   * For example, a template with the following condition only applies to results whose `title` contains `singapore`:
-   * `[(result) => /singapore/i.test(result.title)]`
+   * For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`:
+   * `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
    */
   @Prop() conditions: ResultTemplateCondition[] = [];
 

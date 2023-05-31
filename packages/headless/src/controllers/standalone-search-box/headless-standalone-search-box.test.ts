@@ -1,27 +1,13 @@
-import {
-  buildStandaloneSearchBox,
-  StandaloneSearchBox,
-  StandaloneSearchBoxOptions,
-} from './headless-standalone-search-box';
-import {createMockState} from '../../test/mock-state';
-import {updateQuery} from '../../features/query/query-actions';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
-import {SearchAppState} from '../../state/search-app-state';
+import {configuration} from '../../app/common-reducers';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
-import {
-  configuration,
-  query,
-  standaloneSearchBoxSet,
-  querySuggest,
-} from '../../app/reducers';
+import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
+import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice';
+import {updateQuery} from '../../features/query/query-actions';
+import {queryReducer as query} from '../../features/query/query-slice';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
@@ -29,10 +15,22 @@ import {
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
 } from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
-import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry';
-import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata';
+import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
-import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions';
+import {SearchAppState} from '../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
+import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
+import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-search-box-entry';
+import {createMockState} from '../../test/mock-state';
+import {
+  buildStandaloneSearchBox,
+  StandaloneSearchBox,
+  StandaloneSearchBoxOptions,
+} from './headless-standalone-search-box';
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -55,7 +53,7 @@ describe('headless standalone searchBox', () => {
   function initState() {
     state = createMockState();
     state.querySet[id] = 'query';
-    state.querySuggest[id] = buildMockQuerySuggest({id, q: 'some value'});
+    state.querySuggest[id] = buildMockQuerySuggest({id});
     state.standaloneSearchBoxSet[id] = buildMockStandaloneSearchBoxEntry();
   }
 

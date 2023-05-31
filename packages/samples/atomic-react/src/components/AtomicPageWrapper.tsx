@@ -1,5 +1,3 @@
-import React, {FunctionComponent} from 'react';
-
 import {
   AtomicBreadbox,
   AtomicColorFacet,
@@ -37,7 +35,9 @@ import {
   Result,
   Bindings,
   AtomicSearchBoxQuerySuggestions,
+  getOrganizationEndpoints,
 } from '@coveo/atomic-react';
+import React, {FunctionComponent, useMemo} from 'react';
 
 type Options = {
   instantResults?: boolean;
@@ -56,18 +56,36 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
   children,
   options = {},
 }) => {
-  const engine = buildSearchEngine({
-    configuration: {
-      accessToken,
-      organizationId,
-    },
-  });
+  const engine = useMemo(
+    () =>
+      buildSearchEngine({
+        configuration: {
+          accessToken,
+          organizationId,
+          organizationEndpoints: getOrganizationEndpoints(organizationId),
+          search: {
+            pipeline: 'Search',
+            searchHub: 'MainSearch',
+          },
+        },
+      }),
+    [accessToken, organizationId]
+  );
+
   return (
     <AtomicSearchInterface
       engine={engine}
-      pipeline="Search"
-      searchHub="MainSearch"
-      fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
+      fieldsToInclude={[
+        'ec_price',
+        'ec_rating',
+        'ec_images',
+        'ec_brand',
+        'cat_platform',
+        'cat_condition',
+        'cat_categories',
+        'cat_review_count',
+        'cat_color',
+      ]}
       localization={(i18n) => {
         i18n.addResourceBundle('en', 'translation', {
           'no-ratings-available': 'No ratings available',
@@ -143,7 +161,7 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
         <AtomicLayoutSection section="main">
           <AtomicLayoutSection section="status">
             <AtomicBreadbox />
-            <AtomicQuerySummary enableDuration={false} />
+            <AtomicQuerySummary />
             <AtomicRefineToggle />
             <AtomicSortDropdown>
               <AtomicSortExpression label="relevance" expression="relevancy" />

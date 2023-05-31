@@ -4,14 +4,14 @@ import {
   ConfigurationSection,
   InsightConfigurationSection,
 } from '../../state/state-sections';
-import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
-import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
+import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
 import {MappedSearchRequest, mapSearchRequest} from '../search/search-mappings';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   InsightConfigurationSection &
   Partial<InsightAppState>;
+
 export const buildInsightSearchRequest = (
   state: StateNeededBySearchRequest
 ): MappedSearchRequest<InsightQueryRequest> => {
@@ -54,6 +54,13 @@ export const buildInsightSearchRequest = (
     ...(state.sortCriteria && {
       sortCriteria: state.sortCriteria,
     }),
+    tab: state.configuration.analytics.originLevel2,
+    ...(state.folding && {
+      filterField: state.folding.fields.collection,
+      childField: state.folding.fields.parent,
+      parentField: state.folding.fields.child,
+      filterFieldRange: state.folding.filterFieldRange,
+    }),
   });
 };
 
@@ -82,23 +89,12 @@ export const buildInsightFetchFacetValuesRequest = async (
 };
 
 function getAllFacets(state: StateNeededBySearchRequest) {
-  return [
-    ...getFacetRequests({
-      ...state.facetSet,
-      ...state.numericFacetSet,
-      ...state.dateFacetSet,
-    }),
-    ...getCategoryFacetRequests(state.categoryFacetSet),
-  ];
-}
-
-function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
-  return Object.values(state || {}).map((slice) => slice!.request);
-}
-function getFacetRequests<T extends AnyFacetRequest>(
-  requests: Record<string, T> = {}
-) {
-  return Object.keys(requests).map((id) => requests[id]);
+  return getFacetRequests({
+    ...state.facetSet,
+    ...state.numericFacetSet,
+    ...state.dateFacetSet,
+    ...state.categoryFacetSet,
+  });
 }
 
 function buildConstantQuery(state: StateNeededBySearchRequest) {

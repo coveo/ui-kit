@@ -1,14 +1,18 @@
 import {Component, h, State, Element} from '@stencil/core';
 import {
   buildInsightBreadcrumbManager,
+  buildInsightSearchStatus,
   InsightBreadcrumbManager,
   InsightBreadcrumbManagerState,
+  InsightSearchStatus,
+  InsightSearchStatusState,
 } from '..';
 import FilterIcon from '../../../images/filter.svg';
 import {
   InitializeBindings,
   BindStateToController,
 } from '../../../utils/initialization-utils';
+import {IconButton} from '../../common/iconButton';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -16,6 +20,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  */
 @Component({
   tag: 'atomic-insight-refine-toggle',
+  styleUrl: 'atomic-insight-refine-toggle.pcss',
   shadow: true,
 })
 export class AtomicInsightRefineToggle {
@@ -28,7 +33,12 @@ export class AtomicInsightRefineToggle {
   @State()
   private breadcrumbManagerState!: InsightBreadcrumbManagerState;
 
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: InsightSearchStatusState;
+
   public breadcrumbManager!: InsightBreadcrumbManager;
+  public searchStatus!: InsightSearchStatus;
   private modalRef?: HTMLAtomicInsightRefineModalElement;
   private buttonRef?: HTMLButtonElement;
 
@@ -46,6 +56,7 @@ export class AtomicInsightRefineToggle {
     this.breadcrumbManager = buildInsightBreadcrumbManager(
       this.bindings.engine
     );
+    this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
 
   private enableModal() {
@@ -67,10 +78,16 @@ export class AtomicInsightRefineToggle {
 
   public render() {
     return (
-      <atomic-icon-button
+      <IconButton
+        partPrefix="insight-refine-toggle"
+        style="outline-neutral"
+        title={this.bindings.i18n.t('filters')}
         icon={FilterIcon}
-        labelI18nKey="insight-history"
-        clickCallback={() => {
+        disabled={
+          !this.searchStatusState.hasResults && !this.numberOfBreadcrumbs
+        }
+        ariaLabel={this.bindings.i18n.t('sort')}
+        onClick={() => {
           this.bindings.store.waitUntilAppLoaded(() => {
             this.enableModal();
           });

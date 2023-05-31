@@ -17,6 +17,7 @@
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
+          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
         });
 
         // Trigger a first search
@@ -132,7 +133,7 @@
   </head>
 
   <body>
-    <atomic-search-interface fields-to-include="snrating,sncost">
+    <atomic-search-interface fields-to-include='["snrating", "sncost"]'>
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
@@ -211,6 +212,7 @@
               <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
             </atomic-sort-dropdown>
             <atomic-did-you-mean></atomic-did-you-mean>
+            <atomic-notifications></atomic-notifications>
           </atomic-layout-section>
           <atomic-layout-section section="results">
             <atomic-smart-snippet></atomic-smart-snippet>
@@ -218,6 +220,7 @@
             <atomic-result-list>
               <atomic-result-template must-match-sourcetype="YouTube">
                 <template>
+                  <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
                   <atomic-result-section-visual image-size="small">
                     <img loading="lazy" src="https://picsum.photos/350" class="thumbnail" />
                   </atomic-result-section-visual>
@@ -270,6 +273,7 @@
                       color: white;
                     }
                   </style>
+                  <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
                   <atomic-result-section-visual>
                     <atomic-result-icon class="icon"></atomic-result-icon>
                     <img loading="lazy" src="https://picsum.photos/350" class="thumbnail" />
@@ -358,7 +362,7 @@
                     <atomic-result-text field="source"></atomic-result-text>
                   </atomic-table-element>
                   <atomic-table-element label="language">
-                    <atomic-result-text field="language"></atomic-result-text>
+                    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
                   </atomic-table-element>
                   <atomic-table-element label="file-type">
                     <atomic-result-text field="filetype"></atomic-result-text>

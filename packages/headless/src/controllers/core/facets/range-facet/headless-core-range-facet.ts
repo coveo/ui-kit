@@ -1,28 +1,28 @@
-import {buildController} from '../../../controller/headless-controller';
-import {
-  RangeFacetResponse,
-  RangeFacetRequest,
-} from '../../../../features/facets/range-facets/generic/interfaces/range-facet';
-import {
-  baseFacetResponseSelector,
-  isFacetLoadingResponseSelector,
-} from '../../../../features/facets/facet-set/facet-set-selectors';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {CoreEngine} from '../../../../app/engine';
 import {
   disableFacet,
   enableFacet,
   updateFacetOptions,
 } from '../../../../features/facet-options/facet-options-actions';
+import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {
+  baseFacetResponseSelector,
+  isFacetLoadingResponseSelector,
+} from '../../../../features/facets/facet-set/facet-set-selectors';
+import {
+  RangeFacetResponse,
+  RangeFacetRequest,
+} from '../../../../features/facets/range-facets/generic/interfaces/range-facet';
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
+import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
+import {isRangeFacetValueSelected} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {
   ConfigurationSection,
   FacetOptionsSection,
   SearchSection,
 } from '../../../../state/state-sections';
-import {isRangeFacetValueSelected} from '../../../../features/facets/range-facets/generic/range-facet-utils';
-import {CoreEngine} from '../../../../app/engine';
-import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
+import {buildController} from '../../../controller/headless-controller';
 
 export type RangeFacet = ReturnType<typeof buildCoreRangeFacet>;
 

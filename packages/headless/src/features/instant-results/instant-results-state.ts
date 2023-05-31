@@ -1,12 +1,14 @@
 import {SerializedError} from '@reduxjs/toolkit';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {Result} from '../../case-assist.index';
+import {Result} from '../../index';
 
 export type InstantResultCache = {
   expiresAt: number;
   isLoading: boolean;
   error: SearchAPIErrorWithStatusCode | SerializedError | null;
   results: Result[];
+  isActive: boolean;
+  searchUid: string;
 };
 
 export type InstantResultsState = Record<

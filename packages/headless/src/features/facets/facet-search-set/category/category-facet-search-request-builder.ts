@@ -5,7 +5,8 @@ import {StateNeededForCategoryFacetSearch} from '../generic/generic-facet-search
 
 export const buildCategoryFacetSearchRequest = async (
   id: string,
-  state: StateNeededForCategoryFacetSearch
+  state: StateNeededForCategoryFacetSearch,
+  isFieldSuggestionsRequest: boolean
 ): Promise<CategoryFacetSearchRequest> => {
   const options = state.categoryFacetSearchSet[id].options;
   const categoryFacet = state.categoryFacetSet[id]!.request;
@@ -13,7 +14,6 @@ export const buildCategoryFacetSearchRequest = async (
   const {captions, query, numberOfValues} = options;
   const {field, delimitingCharacter, basePath, filterFacetCount} =
     categoryFacet;
-  const searchContext = (await buildSearchRequest(state)).request;
   const path = getPathToSelectedCategoryFacetItem(categoryFacet);
   const ignorePaths = path.length ? [path] : [];
   const newQuery = `*${query}*`;
@@ -33,9 +33,11 @@ export const buildCategoryFacetSearchRequest = async (
     field,
     delimitingCharacter,
     ignorePaths,
-    searchContext,
     filterFacetCount,
     type: 'hierarchical',
+    ...(isFieldSuggestionsRequest
+      ? {}
+      : {searchContext: (await buildSearchRequest(state)).request}),
   };
 };
 

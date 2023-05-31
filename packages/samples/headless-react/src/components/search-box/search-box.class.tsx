@@ -1,10 +1,10 @@
-import {Component, ContextType} from 'react';
 import {
   buildSearchBox,
   SearchBox as HeadlessSearchBox,
   SearchBoxState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class SearchBox extends Component<{}, SearchBoxState> {

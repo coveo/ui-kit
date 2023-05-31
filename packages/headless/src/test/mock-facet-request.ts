@@ -7,7 +7,6 @@ export function buildMockFacetRequest(
     facetId: '',
     field: '',
     currentValues: [],
-    delimitingCharacter: '',
     filterFacetCount: false,
     freezeCurrentValues: false,
     injectionDepth: 1000,
@@ -16,7 +15,6 @@ export function buildMockFacetRequest(
     preventAutoSelect: false,
     sortCriteria: 'score',
     type: 'specific',
-    hasBreadcrumbs: true,
     ...config,
   };
 }

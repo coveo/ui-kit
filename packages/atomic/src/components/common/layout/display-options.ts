@@ -1,6 +1,7 @@
-import {containsSections, resultSectionTags} from './sections';
+import {containsSections, ResultSectionTagName} from './sections';
 
-export type ResultDisplayLayout = 'list' | 'grid' | 'table';
+export type ResultDisplayBasicLayout = 'list' | 'grid';
+export type ResultDisplayLayout = ResultDisplayBasicLayout | 'table';
 export type ResultDisplayDensity = 'comfortable' | 'normal' | 'compact';
 export type ResultDisplayImageSize = 'large' | 'small' | 'icon' | 'none';
 
@@ -83,7 +84,7 @@ export class ResultLayout {
     return imageSize as ResultDisplayImageSize;
   }
 
-  private getSection(section: typeof resultSectionTags[number]) {
+  private getSection(section: ResultSectionTagName) {
     return Array.from(this.children).find(
       (element) => element.tagName.toLowerCase() === section
     );

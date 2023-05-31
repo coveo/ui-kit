@@ -1,3 +1,4 @@
+import {isNullOrUndefined, isUndefined} from '@coveo/bueno';
 import {
   AnyAction,
   Dispatch,
@@ -8,23 +9,28 @@ import {
   Middleware,
   Reducer,
 } from '@reduxjs/toolkit';
+import {Logger} from 'pino';
 import {
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
+  UpdateAnalyticsConfigurationActionCreatorPayload,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
-import {EngineConfiguration} from './engine-configuration';
-import {createReducerManager, ReducerManager} from './reducer-manager';
-import {Store, configureStore} from './store';
-import {LoggerOptions} from './logger';
-import {Logger} from 'pino';
-import {ThunkExtraArguments} from './thunk-extra-arguments';
-import {configuration, version} from './reducers';
-import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
-import {logActionErrorMiddleware} from './logger-middlewares';
-import {analyticsMiddleware} from './analytics-middleware';
+import {versionReducer as version} from '../features/debug/version-slice';
 import {SearchParametersState} from '../state/search-app-state';
+import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../utils/url-utils';
+import {doNotTrack} from '../utils/utils';
+import {analyticsMiddleware} from './analytics-middleware';
+import {configuration} from './common-reducers';
+import {EngineConfiguration} from './engine-configuration';
+import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware';
+import {LoggerOptions} from './logger';
+import {logActionErrorMiddleware} from './logger-middlewares';
+import {createReducerManager, ReducerManager} from './reducer-manager';
+import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
+import {Store, configureStore} from './store';
+import {ThunkExtraArguments} from './thunk-extra-arguments';
 
 const coreReducers = {configuration, version};
 type CoreState = StateFromReducersMapObject<typeof coreReducers> &
@@ -136,6 +142,31 @@ export interface ExternalEngineOptions<State extends object> {
   loggerOptions?: LoggerOptions;
 }
 
+function getUpdateAnalyticsConfigurationPayload(
+  options: EngineOptions<ReducersMapObject>,
+  logger: Logger
+): UpdateAnalyticsConfigurationActionCreatorPayload | null {
+  const apiBaseUrl =
+    options.configuration.organizationEndpoints?.analytics || undefined;
+  const {analyticsClientMiddleware: _, ...payload} =
+    options.configuration.analytics ?? {};
+
+  const payloadWithURL = {
+    ...payload,
+    apiBaseUrl,
+  };
+
+  if (doNotTrack()) {
+    logger.info('Analytics disabled since doNotTrack is active.');
+    return {
+      ...payloadWithURL,
+      enabled: false,
+    };
+  }
+
+  return payloadWithURL;
+}
+
 export function buildEngine<
   Reducers extends ReducersMapObject,
   ExtraArguments extends ThunkExtraArguments
@@ -144,8 +175,36 @@ export function buildEngine<
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const engine = buildCoreEngine(options, thunkExtraArguments);
-  const {accessToken, organizationId, platformUrl, analytics} =
-    options.configuration;
+  const {accessToken, organizationId} = options.configuration;
+  const {organizationEndpoints} = options.configuration;
+  let {platformUrl} = options.configuration;
+
+  if (shouldWarnAboutOrganizationEndpoints(options)) {
+    // @v3 make organizationEndpoints the default.
+    engine.logger.warn(
+      'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).'
+    );
+  }
+
+  if (shouldWarnAboutPlatformURL(options)) {
+    engine.logger.warn(
+      `The \`platformUrl\` (${options.configuration.platformUrl}) option will be deprecated in the next major version. Consider using the \`organizationEndpoints\` option instead. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).`
+    );
+  }
+
+  if (
+    shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
+      options
+    )
+  ) {
+    engine.logger.warn(
+      `There is a mismatch between the \`organizationId\` option (${options.configuration.organizationId}) and the organization configured in the \`organizationEndpoints\` option (${options.configuration.organizationEndpoints?.platform}). This could lead to issues that are complex to troubleshoot. Please make sure both values match.`
+    );
+  }
+
+  if (organizationEndpoints?.platform) {
+    platformUrl = organizationEndpoints.platform;
+  }
 
   engine.dispatch(
     updateBasicConfiguration({
@@ -155,9 +214,12 @@ export function buildEngine<
     })
   );
 
-  if (analytics) {
-    const {analyticsClientMiddleware, ...rest} = analytics;
-    engine.dispatch(updateAnalyticsConfiguration(rest));
+  const analyticsPayload = getUpdateAnalyticsConfigurationPayload(
+    options,
+    engine.logger
+  );
+  if (analyticsPayload) {
+    engine.dispatch(updateAnalyticsConfiguration(analyticsPayload));
   }
 
   return engine;
@@ -242,8 +304,31 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   );
 
   return [
+    instantlyCallableThunkActionMiddleware,
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
   ].concat(options.middlewares || []);
+}
+
+function shouldWarnAboutOrganizationEndpoints(
+  options: EngineOptions<ReducersMapObject>
+) {
+  return isUndefined(options.configuration.organizationEndpoints);
+}
+
+function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
+  return !isNullOrUndefined(options.configuration.platformUrl);
+}
+
+function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
+  options: EngineOptions<ReducersMapObject>
+) {
+  if (isUndefined(options.configuration.organizationEndpoints)) {
+    return false;
+  }
+  const match = matchCoveoOrganizationEndpointUrlAnyOrganization(
+    options.configuration.organizationEndpoints.platform
+  );
+  return match && match.organizationId !== options.configuration.organizationId;
 }

@@ -1,12 +1,15 @@
 import {RecordValue, Schema} from '@coveo/bueno';
+import {CoreEngine} from '../../../app/engine';
 import {partitionIntoParentsAndValues} from '../../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
+import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {getQueryInitialState} from '../../../features/query/query-state';
 import {
   restoreSearchParameters,
   SearchParameters,
 } from '../../../features/search-parameters/search-parameter-actions';
 import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema';
+import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
 import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-criteria-state';
 import {SearchParametersState} from '../../../state/search-app-state';
 import {validateInitialState} from '../../../utils/validate-payload';
@@ -14,9 +17,6 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
-import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
-import {CoreEngine} from '../../../app/engine';
 
 export type {SearchParameters};
 
@@ -114,6 +114,13 @@ export function enrichParameters(
   };
 }
 
+export function validateParams(
+  engine: CoreEngine,
+  parameters: Required<SearchParameters>
+): Boolean {
+  return validateTab(engine, parameters);
+}
+
 export function getCoreActiveSearchParameters(
   engine: CoreEngine
 ): SearchParameters {
@@ -147,6 +154,26 @@ function getTab(state: Partial<SearchParametersState>) {
   return activeTab ? {tab: activeTab.id} : {};
 }
 
+function validateTab(
+  engine: CoreEngine,
+  parameters: Required<SearchParameters>
+) {
+  const tabState = engine.state.tabSet;
+  const tabParam = parameters.tab;
+  if (!tabState || !Object.entries(tabState).length || !tabParam) {
+    return true;
+  }
+
+  const isInState = tabParam in tabState;
+  if (!isInState) {
+    engine.logger.warn(
+      `The tab search parameter "${tabParam}" is invalid. Ignoring change.`
+    );
+  }
+
+  return isInState;
+}
+
 function getSortCriteria(state: Partial<SearchParametersState>) {
   if (state.sortCriteria === undefined) {
     return {};
@@ -164,7 +191,7 @@ function getFacets(state: Partial<SearchParametersState>) {
 
   const f = Object.entries(state.facetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
-    .map(([facetId, request]) => {
+    .map(([facetId, {request}]) => {
       const selectedValues = getSelectedValues(request.currentValues);
       return selectedValues.length ? {[facetId]: selectedValues} : {};
     })
@@ -204,7 +231,7 @@ function getNumericFacets(state: Partial<SearchParametersState>) {
 
   const nf = Object.entries(state.numericFacetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
-    .map(([facetId, request]) => {
+    .map(([facetId, {request}]) => {
       const selectedRanges = getSelectedRanges(request.currentValues);
       return selectedRanges.length ? {[facetId]: selectedRanges} : {};
     })
@@ -220,7 +247,7 @@ function getDateFacets(state: Partial<SearchParametersState>) {
 
   const df = Object.entries(state.dateFacetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
-    .map(([facetId, request]) => {
+    .map(([facetId, {request}]) => {
       const selectedRanges = getSelectedRanges(request.currentValues);
       return selectedRanges.length ? {[facetId]: selectedRanges} : {};
     })

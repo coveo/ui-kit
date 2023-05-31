@@ -1,10 +1,14 @@
-// @ts-ignore
-import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
+import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import caseTemplate from './resultTemplates/caseResultTemplate.html';
 // @ts-ignore
 import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
-import {LightningElement, api} from 'lwc';
+// @ts-ignore
+import childTemplate from './resultTemplates/childTemplate.html';
+// @ts-ignore
+import parentTemplate from './resultTemplates/parentTemplate.html';
+// @ts-ignore
+import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 
 export default class ExampleSearch extends LightningElement {
   /** @type {string} */
@@ -17,7 +21,7 @@ export default class ExampleSearch extends LightningElement {
   @api disableStateInUrl = false;
   /** @type {boolean} */
   @api skipFirstSearch = false;
-  
+
   handleResultTemplateRegistration(event) {
     event.stopPropagation();
 
@@ -35,22 +39,40 @@ export default class ExampleSearch extends LightningElement {
       'objecttype',
       ['FeedItem']
     );
+    const isThread = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'source',
+      ['iNaturalistTaxons']
+    );
+    const isChild = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+      'quantic__templateId',
+      ['myChildTemplate']
+    );
+
     resultTemplatesManager.registerTemplates(
       {
         content: youtubeTemplate,
         conditions: [isYouTube],
-        fields: ['ytvideoid', 'ytvideoduration']
+        fields: ['ytvideoid', 'ytvideoduration'],
       },
       {
         content: caseTemplate,
         conditions: [isCase],
-        fields: ['sfstatus', 'sfcasestatus', 'sfcasenumber']
+        fields: ['sfstatus', 'sfcasestatus', 'sfcasenumber'],
       },
       {
         content: chatterTemplate,
         conditions: [isChatter],
-        fields: ['sfcreatedbyname']
+        fields: ['sfcreatedbyname'],
       },
+      {
+        content: childTemplate,
+        conditions: [isChild],
+        priority: 1,
+      },
+      {
+        content: parentTemplate,
+        conditions: [isThread],
+      }
     );
   }
 }

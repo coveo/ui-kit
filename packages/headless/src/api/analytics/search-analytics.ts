@@ -1,56 +1,35 @@
 import {
   CoveoSearchPageClient,
   SearchPageClientProvider,
-  history,
-  CoveoAnalyticsClient,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {Logger} from 'pino';
-import {getQueryInitialState} from '../../features/query/query-state';
-import {getSearchInitialState} from '../../features/search/search-state';
-import {
-  ConfigurationSection,
-  ContextSection,
-  PipelineSection,
-  ProductListingSection,
-  QuerySection,
-  RecommendationSection,
-  SearchHubSection,
-  SearchSection,
-} from '../../state/state-sections';
-import {PreprocessRequest} from '../preprocess-request';
-import {BaseAnalyticsProvider} from './base-analytics';
 import {
   buildFacetStateMetadata,
-  SectionNeededForFacetMetadata,
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
-import {IRuntimeEnvironment} from 'coveo.analytics';
+import {getQueryInitialState} from '../../features/query/query-state';
+import {getSearchInitialState} from '../../features/search/search-state';
+import {SearchAppState} from '../../state/search-app-state';
+import {ConfigurationSection} from '../../state/state-sections';
+import {PreprocessRequest} from '../preprocess-request';
+import {BaseAnalyticsProvider} from './base-analytics';
+import {historyStore} from './coveo-analytics-utils';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
-  Partial<
-    SearchHubSection &
-      SearchSection &
-      PipelineSection &
-      QuerySection &
-      ContextSection &
-      RecommendationSection &
-      ProductListingSection &
-      SectionNeededForFacetMetadata
-  >;
+  Partial<Omit<SearchAppState, 'configuration'>>;
 
 export class SearchAnalyticsProvider
-  extends BaseAnalyticsProvider
+  extends BaseAnalyticsProvider<StateNeededBySearchAnalyticsProvider>
   implements SearchPageClientProvider
 {
   private static fallbackPipelineName = 'default';
-  constructor(private state: StateNeededBySearchAnalyticsProvider) {
-    super(state);
-  }
 
   public getFacetState() {
-    return buildFacetStateMetadata(getStateNeededForFacetMetadata(this.state));
+    return buildFacetStateMetadata(
+      getStateNeededForFacetMetadata(this.getState())
+    );
   }
 
   public getPipeline() {
@@ -74,9 +53,10 @@ export class SearchAnalyticsProvider
   }
 
   public getSearchUID(): string {
+    const newState = this.getState();
     return (
-      this.state.search?.searchResponseId ||
-      this.state.search?.response.searchUid ||
+      newState.search?.searchResponseId ||
+      newState.search?.response.searchUid ||
       getSearchInitialState().response.searchUid
     );
   }
@@ -112,27 +92,28 @@ export class SearchAnalyticsProvider
 
   private get numberOfResults() {
     return (
-      this.state.search?.response.results.length ||
-      getSearchInitialState().response.results.length
+      this.state.search?.response.totalCountFiltered ||
+      getSearchInitialState().response.totalCountFiltered
     );
   }
 }
 
 interface ConfigureAnalyticsOptions {
-  state: StateNeededBySearchAnalyticsProvider;
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   preprocessRequest?: PreprocessRequest;
   provider?: SearchPageClientProvider;
+  getState(): StateNeededBySearchAnalyticsProvider;
 }
 
 export const configureAnalytics = ({
   logger,
-  state,
+  getState,
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
-  provider = new SearchAnalyticsProvider(state),
+  provider = new SearchAnalyticsProvider(getState),
 }: ConfigureAnalyticsOptions) => {
+  const state = getState();
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
@@ -167,20 +148,6 @@ export const configureAnalytics = ({
   }
   return client;
 };
-
-export const getVisitorID = (options: {
-  runtimeEnvironment?: IRuntimeEnvironment;
-}) => new CoveoAnalyticsClient(options).getCurrentVisitorId();
-
-export const clearAnalyticsClient = (options: {
-  runtimeEnvironment?: IRuntimeEnvironment;
-}) => {
-  const client = new CoveoAnalyticsClient(options);
-  client.clear();
-  client.deleteHttpOnlyVisitorId();
-};
-
-export const historyStore = new history.HistoryStore();
 
 export const getPageID = () => {
   const actions = historyStore.getHistory();

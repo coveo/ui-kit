@@ -1,13 +1,22 @@
+import {configuration} from '../../../../app/common-reducers';
+import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
+import {
+  logFacetClearAll,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
+import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
-import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {
   buildCoreNumericFacet,
   buildNumericRange,
@@ -17,13 +26,6 @@ import {
   NumericFacetState,
   NumericRangeOptions,
 } from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
 
 export type {
   NumericRangeOptions,

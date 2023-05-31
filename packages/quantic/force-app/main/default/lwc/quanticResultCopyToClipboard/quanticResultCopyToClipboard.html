@@ -1,0 +1,15 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <c-quantic-result-action
+      event-name="quantic__copytoclipboard"
+      icon-name="utility:copy"
+      label={displayedLabel}
+      loading={_loading}
+    >
+    </c-quantic-result-action>
+  </template>
+</template>

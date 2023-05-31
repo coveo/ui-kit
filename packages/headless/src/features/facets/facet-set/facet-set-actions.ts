@@ -1,6 +1,3 @@
-import {createAction} from '@reduxjs/toolkit';
-import {FaceSortCriterionStringOrExplicit} from './interfaces/request';
-import {validatePayload} from '../../../utils/validate-payload';
 import {
   StringValue,
   NumberValue,
@@ -8,10 +5,13 @@ import {
   RecordValue,
   Value,
 } from '@coveo/bueno';
-import {FacetValue} from './interfaces/response';
+import {createAction} from '@reduxjs/toolkit';
+import {allowedValues} from '../../../controllers/core/facets/_common/facet-option-definitions';
+import {validatePayload} from '../../../utils/validate-payload';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {facetValueDefinition} from './facet-set-validate-payload';
-import {allowedValues} from '../../../controllers/core/facets/_common/facet-option-definitions';
+import {FaceSortCriterionStringOrExplicit} from './interfaces/request';
+import {FacetValue} from './interfaces/response';
 
 export interface RegisterFacetActionCreatorPayload {
   /**
@@ -23,11 +23,6 @@ export interface RegisterFacetActionCreatorPayload {
    * The field whose values you want to display in the facet.
    * */
   field: string;
-
-  /**
-   * @deprecated This option has no effect.
-   */
-  delimitingCharacter?: string;
 
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
@@ -83,8 +78,6 @@ export interface RegisterFacetActionCreatorPayload {
 const facetRegistrationOptionsDefinition = {
   facetId: facetIdDefinition,
   field: new StringValue({required: true, emptyAllowed: true}),
-  // TODO: Remove on next major version
-  delimitingCharacter: new StringValue({required: false, emptyAllowed: true}),
   filterFacetCount: new BooleanValue({required: false}),
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),

@@ -66,7 +66,7 @@ export default class Configurator extends LightningElement {
 
   handleReset() {
     // eslint-disable-next-line no-restricted-globals
-    history.pushState("", document.title, window.location.pathname);
+    history.pushState('', document.title, window.location.pathname);
     window.location.reload();
   }
 

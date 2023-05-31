@@ -5,8 +5,12 @@ export interface PlatformRequestOptions extends RequestInit {
   url: string;
 }
 
-// TODO: V2 add more types for each different client e.g. 'insightApiFetch' or 'commerceApiFetch'
-export type PlatformClientOrigin = AnalyticsClientOrigin | 'searchApiFetch';
+export type PlatformClientOrigin =
+  | AnalyticsClientOrigin
+  | 'searchApiFetch'
+  | 'insightApiFetch'
+  | 'caseAssistApiFetch'
+  | 'commerceApiFetch';
 
 export interface RequestMetadata {
   /**

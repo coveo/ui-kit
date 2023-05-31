@@ -1,8 +1,8 @@
-import {analyticsUrl, platformUrl} from '../../api/platform-client';
 import {IRuntimeEnvironment} from 'coveo.analytics';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+import {analyticsUrl, platformUrl} from '../../api/platform-client';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

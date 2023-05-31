@@ -1,11 +1,11 @@
+import {HtmlRequestOptions} from '../../api/search/html/html-request';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {getQueryInitialState} from '../query/query-state';
 import {
   buildResultPreviewRequest,
   StateNeededByHtmlEndpoint,
 } from '../result-preview/result-preview-request-builder';
-import {HtmlRequestOptions} from '../../api/search/html/html-request';
 import {getResultPreviewInitialState} from './result-preview-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {getQueryInitialState} from '../query/query-state';
 
 describe('ResultPreviewRequestBuilder', () => {
   let state: StateNeededByHtmlEndpoint;

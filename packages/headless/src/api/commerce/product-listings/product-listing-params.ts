@@ -1,12 +1,13 @@
+import {ContextPayload} from '../../../controllers/product-listing/context/headless-product-listing-context';
 import {FacetOptions} from '../../../features/facet-options/facet-options';
 import {AnyFacetRequest} from '../../../features/facets/generic/interfaces/generic-facet-request';
+import {SortCriterion} from '../../../features/sort/sort';
 import {
   HTTPContentType,
   HttpMethods,
   PlatformClientCallOptions,
 } from '../../platform-client';
-import {SortCriterion} from '../../../features/sort/sort';
-import {ContextPayload} from '../../../controllers/product-listing/context/headless-product-listing-context';
+
 export interface ProductListingsParam
   extends ProductListingBaseParam,
     ProductListingRequestParam {}
@@ -49,7 +50,7 @@ export const baseProductListingRequest = (
   queryStringArguments: Record<string, string> = {}
 ): Pick<
   PlatformClientCallOptions,
-  'accessToken' | 'method' | 'contentType' | 'url'
+  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
 > => {
   const {platformUrl, organizationId, accessToken, version} = req;
   const baseUrl = `${platformUrl}/rest/organizations/${organizationId}/commerce/${
@@ -63,6 +64,7 @@ export const baseProductListingRequest = (
     method,
     contentType,
     url: effectiveUrl,
+    origin: 'commerceApiFetch',
   };
 };
 

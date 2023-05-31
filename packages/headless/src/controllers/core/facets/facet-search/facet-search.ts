@@ -1,25 +1,27 @@
-import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
+import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
+import {CoreEngine} from '../../../../app/engine';
+import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
 import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
 import {
   clearFacetSearch,
   executeFacetSearch,
+  executeFieldSuggest,
 } from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {
   CategoryFacetSearchSection,
   ConfigurationSection,
   FacetSearchSection,
 } from '../../../../state/state-sections';
-import {CoreEngine} from '../../../../app/engine';
-import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
-import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
 
 type FacetSearchState = SpecificFacetSearchState | CategoryFacetSearchState;
 
 export interface GenericFacetSearchProps<T extends FacetSearchState> {
   options: FacetSearchOptions;
   getFacetSearch: () => T;
+  isForFieldSuggestions: boolean;
 }
 
 export type GenericFacetSearch = ReturnType<typeof buildGenericFacetSearch>;
@@ -58,12 +60,20 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
           numberOfValues: options.numberOfValues + initialNumberOfValues,
         })
       );
-      dispatch(executeFacetSearch(facetId));
+      dispatch(
+        props.isForFieldSuggestions
+          ? executeFieldSuggest(facetId)
+          : executeFacetSearch(facetId)
+      );
     },
 
     /** Executes a facet search to update the values.*/
     search() {
-      dispatch(executeFacetSearch(facetId));
+      dispatch(
+        props.isForFieldSuggestions
+          ? executeFieldSuggest(facetId)
+          : executeFacetSearch(facetId)
+      );
     },
 
     /** Resets the query and empties the values. */

@@ -1,3 +1,8 @@
+import {configuration} from '../../../../../app/common-reducers';
+import {CoreEngine} from '../../../../../app/engine';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
+import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
 import {
   NumericFacetRequest,
   NumericRangeRequest,
@@ -10,34 +15,27 @@ import {
   RegisterNumericFacetActionCreatorPayload,
   registerNumericFacet,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {
-  assertRangeFacetOptions,
-  buildCoreRangeFacet,
-} from '../headless-core-range-facet';
+import {executeToggleNumericFacetSelect} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {
   ConfigurationSection,
   FacetOptionsSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../../state/state-sections';
-import {executeToggleNumericFacetSelect} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
+import {loadReducerError} from '../../../../../utils/errors';
+import {Controller} from '../../../../controller/headless-controller';
+import {determineFacetId} from '../../_common/facet-id-determinor';
+import {
+  assertRangeFacetOptions,
+  buildCoreRangeFacet,
+} from '../headless-core-range-facet';
 import {
   NumericFacetOptions,
   validateNumericFacetOptions,
 } from './headless-numeric-facet-options';
-import {determineFacetId} from '../../_common/facet-id-determinor';
 import {buildNumericRange, NumericRangeOptions} from './numeric-range';
-import {Controller} from '../../../../controller/headless-controller';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
-import {
-  configuration,
-  numericFacetSet,
-  facetOptions,
-  search,
-} from '../../../../../app/reducers';
-import {loadReducerError} from '../../../../../utils/errors';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
-import {CoreEngine} from '../../../../../app/engine';
 
 export type {
   NumericRangeOptions,
@@ -185,7 +183,7 @@ export function buildCoreNumericFacet(
     NumericFacetResponse
   >(engine, {
     facetId,
-    getRequest: () => engine.state.numericFacetSet[facetId],
+    getRequest: () => engine.state.numericFacetSet[facetId]!.request,
   });
 
   return {

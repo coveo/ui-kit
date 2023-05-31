@@ -1,11 +1,18 @@
-import defaultStory from '../../../../.storybook/default-story';
+import defaultStory from 'atomic-storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/SortDropdown/SortExpression',
   'atomic-sort-expression',
   {label: 'Relevance', expression: 'relevancy'},
-  {parentElement: () => document.createElement('atomic-sort-dropdown')}
+  {
+    parentElement: () => {
+      return document.createElement('atomic-sort-dropdown');
+    },
+  }
 );
 
-export default defaultModuleExport;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/SortDropdown/SortExpression',
+};
 export const DefaultSortExpression = exportedStory;

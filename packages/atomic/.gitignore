@@ -32,6 +32,4 @@ src/generated
 
 cypress/screenshots/*
 
-storybook-static/
-
 headless/

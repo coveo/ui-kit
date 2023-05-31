@@ -1,6 +1,6 @@
+import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload';
-import {StringValue} from '@coveo/bueno';
 
 const optionalAndPossiblyEmpty = () =>
   new StringValue({required: false, emptyAllowed: true});

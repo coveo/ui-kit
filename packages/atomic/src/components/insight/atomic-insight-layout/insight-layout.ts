@@ -5,7 +5,16 @@ import {
 
 const tabsSelector = 'atomic-insight-tabs';
 const refineModalSelector = 'atomic-insight-refine-modal';
-const pagerSelector = 'atomic-insight-pager';
+const searchBoxSelector = 'atomic-insight-search-box';
+const toggleSelectors = [
+  'atomic-insight-refine-toggle',
+  'atomic-insight-edit-toggle',
+  'atomic-insight-history-toggle',
+];
+const smartSnippetSelectors = [
+  'atomic-insight-smart-snippet-suggestions',
+  'atomic-insight-smart-snippet',
+];
 
 export function buildInsightLayout(element: HTMLElement, widget: boolean) {
   const id = element.id;
@@ -19,7 +28,7 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
     ? `
   ${layoutSelector} {
     display: grid;
-    grid-template-rows: auto 8fr 1fr;
+    grid-template-rows: auto auto 8fr 1fr;
     max-height: 100%;
     box-sizing: border-box;
   }
@@ -30,18 +39,35 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
 
   const search = `${sectionSelector('search')} {
       width: 100%;
-      display: grid;
-      grid-template-columns: 1fr auto auto auto;
+      display: flex;
+      flex-wrap: wrap;
       grid-gap: 0.5rem;
       background: var(--atomic-neutral-light);
       padding-top: 1.5rem;
       padding-left: 1.5rem;
       padding-right: 1.5rem;
       box-sizing: border-box;
+      min-width: 0;
       ${!hasTabs ? 'padding-bottom: 1.5rem;' : ''}
     }
+
+    ${sectionSelector('search')} ${searchBoxSelector} {
+      flex-grow: 1;
+    }
+
+    ${toggleSelectors.map(
+      (toggleSelector) => `${sectionSelector('search')} ${toggleSelector} {
+      flex-shrink: 0;
+    }`
+    )}
+
     ${sectionSelector('search')} ${tabsSelector} {
-      grid-column: 1 / 5;
+      width: 100%;
+    }
+    `;
+
+  const facets = `${sectionSelector('facets')} {
+      display: none;
     }
     `;
 
@@ -49,30 +75,13 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
     ${sectionSelector('results')} {
       overflow: auto;
     }
+
+    ${sectionSelector('results')} ${smartSnippetSelectors.join(',')} {
+      padding: 1.5rem 1.5rem 0px;
+    }
     `;
 
-  const pagination = `
-    ${sectionSelector('pagination')} {
-      background: var(--atomic-neutral-light);
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: stretch;
-    }
-    ${
-      widget
-        ? `
-        ${sectionSelector('pagination')} ${pagerSelector} {
-          width: 100%;
-        }
-        ${sectionSelector('pagination')} ${pagerSelector}::part(buttons) {
-          justify-content: space-between;
-        }
-    `
-        : ''
-    }
-    `;
-  return [interfaceStyle, search, results, pagination]
+  return [interfaceStyle, search, facets, results]
     .filter((declaration) => declaration !== '')
     .join('\n\n');
 }

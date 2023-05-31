@@ -1,3 +1,4 @@
+import {Response} from 'cross-fetch';
 import {buildResultPreviewRequest} from '../../../features/result-preview/result-preview-request-builder';
 import {createMockState} from '../../../test';
 import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client';
@@ -5,7 +6,6 @@ import {PlatformClient} from '../../platform-client';
 import {CaseAssistAPIClient} from './case-assist-api-client';
 import {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request';
 import {GetDocumentSuggestionsRequest} from './get-document-suggestions/get-document-suggestions-request';
-import {Response} from 'cross-fetch';
 
 describe('case assist api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
@@ -71,6 +71,7 @@ describe('case assist api client', () => {
         contentType: 'application/json',
         url: `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}/classify`,
         accessToken: request.accessToken,
+        origin: 'caseAssistApiFetch',
         requestParams: {
           visitorId: request.visitorId,
           locale: request.locale,
@@ -188,6 +189,7 @@ describe('case assist api client', () => {
         contentType: 'application/json',
         url: `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}/documents/suggest`,
         accessToken: request.accessToken,
+        origin: 'caseAssistApiFetch',
         requestParams: {
           visitorId: request.visitorId,
           locale: request.locale,

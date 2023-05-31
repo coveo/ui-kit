@@ -1,13 +1,13 @@
-import {buildDidYouMean, DidYouMean} from './headless-did-you-mean';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
 } from '../../features/did-you-mean/did-you-mean-actions';
 import {executeSearch} from '../../features/search/search-actions';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
+import {buildDidYouMean, DidYouMean} from './headless-did-you-mean';
 
 describe('did you mean', () => {
   let dym: DidYouMean;

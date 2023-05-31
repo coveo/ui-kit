@@ -1,10 +1,18 @@
+import {configuration} from '../../../../../app/common-reducers';
+import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
+import {
+  logFacetClearAll,
+  logFacetSelect,
+} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
+import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {
   ConfigurationSection,
   DateFacetSection,
   SearchSection,
 } from '../../../../../state/state-sections';
 import {loadReducerError} from '../../../../../utils/errors';
-import {configuration, dateFacetSet, search} from '../../../../../app/reducers';
 import {
   buildCoreDateFilter,
   DateFilter,
@@ -14,12 +22,6 @@ import {
   DateFilterRange,
   DateFilterState,
 } from '../../../../core/facets/range-facet/date-facet/headless-core-date-filter';
-import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
-import {
-  logFacetClearAll,
-  logFacetSelect,
-} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 
 export type {
   DateFilterOptions,

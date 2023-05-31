@@ -1,3 +1,5 @@
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
+import {SearchAppState} from '../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
   createMockState,
@@ -7,8 +9,6 @@ import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
 } from './headless-core-breadcrumb-manager';
-import {SearchAppState} from '../../../state/search-app-state';
-import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 
 describe('headless breadcrumb manager', () => {
   let engine: MockSearchEngine;

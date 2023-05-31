@@ -1,16 +1,19 @@
-import {questionAnswering, search} from '../../app/reducers';
+import {Result} from '../../api/search/search/result';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {logOpenSmartSnippetSuggestionSource} from '../../features/question-answering/question-answering-analytics-actions';
+import {
+  answerSourceSelector,
+  relatedQuestionSelector,
+} from '../../features/question-answering/question-answering-selectors';
+import {questionAnsweringReducer as questionAnswering} from '../../features/question-answering/question-answering-slice';
+import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {QuestionAnsweringSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
-import {Result} from '../../api/search/search/result';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
 } from '../core/interactive-result/headless-core-interactive-result';
-import {logOpenSmartSnippetSuggestionSource} from '../../features/question-answering/question-answering-analytics-actions';
-import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
-import {relatedQuestionSelector} from '../../features/question-answering/question-answering-selectors';
-import {resultFromFieldSelector} from '../../features/search/search-selectors';
 
 /**
  * @internal
@@ -54,11 +57,7 @@ export function buildSmartSnippetInteractiveQuestions(
     if (!questionAnswer) {
       return null;
     }
-    return resultFromFieldSelector(
-      state,
-      questionAnswer.documentId.contentIdKey,
-      questionAnswer.documentId.contentIdValue
-    );
+    return answerSourceSelector(state, questionAnswer.documentId);
   };
 
   const clickedRelatedQuestions = new Set<string>();

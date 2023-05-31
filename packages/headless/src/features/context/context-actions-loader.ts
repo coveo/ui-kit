@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../app/engine';
-import {context} from '../../app/reducers';
+import {contextReducer as context} from '../../features/context/context-slice';
 import {
   addContext,
   AddContextActionCreatorPayload,

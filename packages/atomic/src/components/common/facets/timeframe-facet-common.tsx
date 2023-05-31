@@ -1,18 +1,10 @@
 import {h, VNode} from '@stencil/core';
-import dayjs from 'dayjs';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
+import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
+import {randomID} from '../../../utils/utils';
+import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {Hidden} from '../hidden';
-import {
-  shouldDisplayInputForFacetRange,
-  validateDependsOn,
-} from './facet-common';
-import {FacetContainer} from './facet-container/facet-container';
-import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
-import {FacetValueLink} from './facet-value-link/facet-value-link';
-import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';
-import {FacetValuesGroup} from './facet-values-group/facet-values-group';
-import {FacetHeader} from './facet-header/facet-header';
 import {AnyBindings} from '../interface/bindings';
 import {
   DateFacet,
@@ -26,9 +18,17 @@ import {
   RelativeDateUnit,
   SearchStatusState,
 } from '../types';
+import {
+  shouldDisplayInputForFacetRange,
+  validateDependsOn,
+} from './facet-common';
 import {FacetInfo} from './facet-common-store';
-import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
-import {randomID} from '../../../utils/utils';
+import {FacetContainer} from './facet-container/facet-container';
+import {FacetHeader} from './facet-header/facet-header';
+import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
+import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueLink} from './facet-value-link/facet-value-link';
+import {FacetValuesGroup} from './facet-values-group/facet-values-group';
 
 export interface Timeframe {
   period: RelativeDatePeriod;
@@ -54,6 +54,8 @@ interface TimeframeFacetCommonOptions {
   initializeFacetForDatePicker(): DateFacet;
   initializeFacetForDateRange(values: DateRangeRequest[]): DateFacet;
   initializeFilter(): DateFilter;
+  min?: string;
+  max?: string;
 }
 
 interface TimeframeFacetCommonRenderProps {
@@ -147,7 +149,7 @@ export class TimeframeFacetCommon {
   }
 
   private get hasValues() {
-    if (this.filter?.state.range) {
+    if (this.facetForDatePicker?.state.values.length) {
       return true;
     }
 
@@ -197,7 +199,7 @@ export class TimeframeFacetCommon {
 
   private registerFacetToStore() {
     const facetInfo: FacetInfo = {
-      label: this.props.label,
+      label: () => this.props.bindings.i18n.t(this.props.label),
       facetId: this.facetId!,
       element: this.props.host,
     };
@@ -259,8 +261,8 @@ export class TimeframeFacetCommon {
       );
     } catch (error) {
       return this.props.bindings.i18n.t('to', {
-        start: dayjs(facetValue.start).format('YYYY-MM-DD'),
-        end: dayjs(facetValue.end).format('YYYY-MM-DD'),
+        start: parseDate(facetValue.start).format('YYYY-MM-DD'),
+        end: parseDate(facetValue.end).format('YYYY-MM-DD'),
       });
     }
   }
@@ -330,6 +332,8 @@ export class TimeframeFacetCommon {
   private renderDateInput() {
     return (
       <atomic-facet-date-input
+        min={this.props.min}
+        max={this.props.max}
         bindings={this.props.bindings}
         label={this.props.label}
         filter={this.filter!}

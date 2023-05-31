@@ -56,13 +56,28 @@ export function parseHTML(string: string) {
   return new window.DOMParser().parseFromString(string, 'text/html');
 }
 
+export function isElementNode(node: Node): node is Element {
+  return node.nodeType === NODE_TYPES.ELEMENT_NODE;
+}
+
+export function isTextNode(node: Node): node is Text {
+  return node.nodeType === NODE_TYPES.TEXT_NODE;
+}
+
+export function isVisualNode(node: Node) {
+  if (isElementNode(node)) {
+    return !(node instanceof HTMLStyleElement);
+  }
+  if (isTextNode(node)) {
+    return !!node.textContent?.trim();
+  }
+  return false;
+}
+
 export function containsVisualElement(node: Node) {
   for (let i = 0; i < node.childNodes.length; i++) {
     const child = node.childNodes.item(i);
-    if (
-      child.nodeType === NODE_TYPES.ELEMENT_NODE ||
-      (child.nodeType === NODE_TYPES.TEXT_NODE && child.textContent?.trim())
-    ) {
+    if (isVisualNode(child)) {
       return true;
     }
   }
@@ -153,7 +168,7 @@ export function getFocusedElement(
 }
 
 export async function defer() {
-  return new Promise<void>((resolve) => setTimeout(resolve));
+  return new Promise<void>((resolve) => setTimeout(resolve, 10));
 }
 
 // https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
@@ -177,19 +192,6 @@ export function isPropValuesEqual<ObjectWithProperties extends object>(
   propNames: (keyof ObjectWithProperties)[]
 ) {
   return propNames.every((propName) => subject[propName] === target[propName]);
-}
-
-export function getUniqueItemsByProperties<Item extends object>(
-  items: Item[],
-  propNames: (keyof Item)[]
-) {
-  return items.filter(
-    (item, index, self) =>
-      index ===
-      self.findIndex((foundItem) =>
-        isPropValuesEqual(foundItem, item, propNames)
-      )
-  );
 }
 
 export function getParent(element: Element | ShadowRoot) {
@@ -218,4 +220,18 @@ export function isAncestorOf(
   }
   const parent = getParent(element);
   return parent === null ? false : isAncestorOf(ancestor, parent);
+}
+
+export function aggregate<V, K extends PropertyKey>(
+  values: readonly V[],
+  getKey: (value: V, index: number) => K
+): Record<K, V[] | undefined> {
+  return values.reduce((aggregatedValues, value, i) => {
+    const key = getKey(value, i);
+    if (!(key in aggregatedValues)) {
+      aggregatedValues[key] = [];
+    }
+    aggregatedValues[key]!.push(value);
+    return aggregatedValues;
+  }, <Record<K, V[] | undefined>>{});
 }

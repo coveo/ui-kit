@@ -11,7 +11,7 @@ Once you have cloned the repo, follow the instructions in the top-level [README.
 To start the project in development mode, run:
 
 ```bash
-npm start
+npm run dev
 ```
 
 To build the library for production, run:

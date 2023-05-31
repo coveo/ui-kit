@@ -1,25 +1,46 @@
 import {Schema} from '@coveo/bueno';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
+import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
+import {validateOptions} from '../../utils/validate-payload';
+import {ErrorPayload} from '../controller/error-payload';
+import {Controller} from '../controller/headless-controller';
 import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
 } from './headless-base-product-recommendations';
-import {validateOptions} from '../../utils/validate-payload';
-import {Controller} from '../controller/headless-controller';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
-import {CartRecommendationsListOptions} from './headless-cart-recommendations-options';
-import {ErrorPayload} from '../controller/error-payload';
-import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 
-export type {CartRecommendationsListOptions, ProductRecommendation};
+export type {ProductRecommendation};
 
 const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
+export interface CartRecommendationsListOptions {
+  /**
+   * The SKUs of the products in the cart.
+   */
+  skus?: string[];
+
+  /**
+   * The maximum number of recommendations, from 1 to 50.
+   *
+   * @defaultValue `5`
+   */
+  maxNumberOfRecommendations?: number;
+
+  /**
+   * Additional fields to fetch in the results.
+   */
+  additionalFields?: string[];
+}
+
 export interface CartRecommendationsListProps {
   options?: CartRecommendationsListOptions;
 }
 
+/**
+ * The `CartRecommendationsList` controller recommends other products that were frequently purchased together in previous similar carts.
+ */
 export interface CartRecommendationsList extends Controller {
   /**
    * Gets new recommendations based on the current SKUs.
@@ -56,7 +77,7 @@ export interface CartRecommendationsListState {
   recommendations: ProductRecommendation[];
 
   /**
-   * An error returned by the Coveo platform when executing a cart recommendation request, if any. This is `null` otherwise.
+   * An error returned by the Coveo platform when executing a cart recommendation request, or `null` if none is present.
    */
   error: ErrorPayload | null;
 

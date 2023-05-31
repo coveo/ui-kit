@@ -1,9 +1,9 @@
-import {useEffect, useState} from 'react';
 import {
   buildFacetConditionsManager,
   CoreEngine,
   Facet as HeadlessFacet,
 } from '@coveo/headless';
+import {useEffect, useState} from 'react';
 import {Facet} from '../facet/facet.fn';
 
 export const SingleParentMultipleDependentFacet: React.FunctionComponent<{

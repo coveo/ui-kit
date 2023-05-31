@@ -20,6 +20,7 @@ export const routeMatchers = {
   analytics: '**/rest/ua/v15/analytics/*',
   documentSuggestion: '**/rest/organizations/*/caseassists/*/documents/suggest',
   caseClassification: '**/rest/organizations/*/caseassists/*/classify',
+  auraPicklistValues: '**/aura?*aura.RecordUi.getPicklistValuesByRecordType=1',
 };
 
 export function interceptCaseAssist() {
@@ -42,10 +43,16 @@ export function interceptClassificationsIndefinitely(): {
   return interceptIndefinitely(routeMatchers.caseClassification);
 }
 
+export function interceptDocumentSuggestion() {
+  cy.intercept(routeMatchers.documentSuggestion).as(
+    InterceptAliases.DocumentSuggestion.substring(1)
+  );
+}
+
 export function mockDocumentSuggestion(value: Array<object>) {
   cy.intercept(routeMatchers.documentSuggestion, (req) => {
     req.continue((res) => {
-      res.body?.documents = value;
+      res.body!.documents = value;
       res.send();
     });
   }).as(InterceptAliases.DocumentSuggestion.substring(1));
@@ -62,17 +69,14 @@ export function mockCaseClassification(field: string, value: Array<object>) {
 
 export function mockSfPicklistValues(field: string, values: Array<object>) {
   cy.intercept(
-    {
-      url: '**/aura?*',
-      query: {'aura.RecordUi.getPicklistValuesByRecordType': '1'},
-    },
+    routeMatchers.auraPicklistValues,
+
     (req) => {
       req.continue((res) => {
-        res.body?.actions?.[0]?.returnValue?.picklistFieldValues?.[
-          field
-        ]?.values = values.map((value) => {
-          return {...value, attributes: null};
-        });
+        res.body.actions[0].returnValue.picklistFieldValues[field].values =
+          values.map((value) => {
+            return {...value, attributes: null};
+          });
         res.send();
       });
     }

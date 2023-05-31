@@ -1,20 +1,21 @@
-import {
-  Pager,
-  PagerOptions,
-  PagerInitialState,
-  buildCorePager,
-} from './headless-core-pager';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../test/mock-engine';
+import {configuration} from '../../../app/common-reducers';
 import {
   updatePage,
   registerPage,
   nextPage,
   previousPage,
 } from '../../../features/pagination/pagination-actions';
-import {pagination, configuration} from '../../../app/reducers';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../../test/mock-engine';
+import {
+  Pager,
+  PagerOptions,
+  PagerInitialState,
+  buildCorePager,
+} from './headless-core-pager';
 
 describe('Pager', () => {
   let engine: MockSearchEngine;

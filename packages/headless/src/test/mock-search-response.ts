@@ -18,6 +18,8 @@ export function buildMockSearchResponse(
     questionAnswer: emptyQuestionAnswer(),
     pipeline: '',
     splitTestRun: '',
+    termsToHighlight: {},
+    phrasesToHighlight: {},
     ...config,
   };
 }

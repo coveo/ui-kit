@@ -1,27 +1,27 @@
-import {buildFacet, Facet, FacetOptions} from './headless-insight-facet';
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../../../test/mock-engine';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
-import {buildMockFacetValue} from '../../../../test/mock-facet-value';
+import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
+import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
-import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
-import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
-
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
-import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 import {InsightAppState} from '../../../../state/insight-app-state';
+import {
+  MockInsightEngine,
+  buildMockInsightEngine,
+} from '../../../../test/mock-engine';
+import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
+import {buildMockFacetValue} from '../../../../test/mock-facet-value';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
+import {buildFacet, Facet, FacetOptions} from './headless-insight-facet';
 
 describe('InsightFacet', () => {
   const facetId = '1';
@@ -36,7 +36,9 @@ describe('InsightFacet', () => {
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId, ...config}),
+    });
     state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 

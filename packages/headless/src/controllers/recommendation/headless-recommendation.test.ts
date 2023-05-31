@@ -1,3 +1,11 @@
+import {Action} from 'redux';
+import {configuration} from '../../app/common-reducers';
+import {updateNumberOfResults} from '../../features/pagination/pagination-actions';
+import {
+  getRecommendations,
+  setRecommendationId,
+} from '../../features/recommendation/recommendation-actions';
+import {recommendationReducer} from '../../features/recommendation/recommendation-slice';
 import {
   buildMockRecommendationAppEngine,
   MockRecommendationEngine,
@@ -6,13 +14,6 @@ import {
   buildRecommendationList,
   RecommendationList,
 } from './headless-recommendation';
-import {Action} from 'redux';
-import {
-  getRecommendations,
-  setRecommendationId,
-} from '../../features/recommendation/recommendation-actions';
-import {configuration} from '../../app/reducers';
-import {recommendationReducer} from '../../features/recommendation/recommendation-slice';
 
 describe('headless recommendation', () => {
   let recommendation: RecommendationList;
@@ -47,6 +48,18 @@ describe('headless recommendation', () => {
 
   it('when #options.id is set to an empty value, it does not dispatches #setRecommendationId', () => {
     recommendation = buildRecommendationList(engine, {options: {id: ''}});
+    expectDoesNotContainAction(setRecommendationId);
+  });
+
+  it('when #options.numberOfRecommendations is set, it dispatches #updateNumberOfResults', () => {
+    recommendation = buildRecommendationList(engine, {
+      options: {numberOfRecommendations: 20},
+    });
+    expectContainAction(updateNumberOfResults);
+  });
+
+  it('when #options.numberOfRecommendations is not set, it does not dispatches #updateNumberOfResults', () => {
+    recommendation = buildRecommendationList(engine);
     expectDoesNotContainAction(setRecommendationId);
   });
 

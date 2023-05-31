@@ -1,3 +1,22 @@
+import {configuration} from '../../../../../app/common-reducers';
+import {CoreEngine} from '../../../../../app/engine';
+import {
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../../features/facet-options/facet-options-actions';
+import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
+import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
+import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {
+  registerNumericFacet,
+  RegisterNumericFacetActionCreatorPayload,
+  updateNumericFacetValues,
+} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {numericFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {
   ConfigurationSection,
   FacetOptionsSection,
@@ -9,29 +28,8 @@ import {
   buildController,
   Controller,
 } from '../../../../controller/headless-controller';
-import {
-  configuration,
-  facetOptions,
-  numericFacetSet,
-  search,
-} from '../../../../../app/reducers';
 import {determineFacetId} from '../../_common/facet-id-determinor';
-import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {
-  disableFacet,
-  enableFacet,
-  updateFacetOptions,
-} from '../../../../../features/facet-options/facet-options-actions';
-import {
-  registerNumericFacet,
-  RegisterNumericFacetActionCreatorPayload,
-  updateNumericFacetValues,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {validateNumericFacetOptions} from './headless-numeric-facet-options';
-import {numericFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
-import {CoreEngine} from '../../../../../app/engine';
-import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
-import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
 
 /**
  * The options defining a `NumericFilter`.

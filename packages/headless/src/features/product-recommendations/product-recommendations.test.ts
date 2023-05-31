@@ -1,9 +1,9 @@
+import {Response} from 'cross-fetch';
+import {PlatformClient} from '../../api/platform-client';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {buildMockProductRecommendationsAppEngine} from '../../test/mock-engine';
 import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
-import {PlatformClient} from '../../api/platform-client';
-import {Response} from 'cross-fetch';
 import {getProductRecommendations} from './product-recommendations-actions';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 
 describe('product-recommendations', () => {
   it('correctly parses a response with childResults', async () => {

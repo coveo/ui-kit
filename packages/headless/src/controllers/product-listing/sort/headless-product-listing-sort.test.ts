@@ -1,8 +1,16 @@
+import {configuration} from '../../../app/common-reducers';
+import {updatePage} from '../../../features/pagination/pagination-actions';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {
+  registerSortCriterion,
+  updateSortCriterion,
+} from '../../../features/sort/sort-actions';
+import {sortReducer as sort} from '../../../features/sort/sort-slice';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
 } from '../../../test';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 import {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
@@ -13,13 +21,6 @@ import {
   ProductListingSortInitialState,
   SortDirection,
 } from './headless-product-listing-sort';
-import {configuration, sort} from '../../../app/reducers';
-import {
-  registerSortCriterion,
-  updateSortCriterion,
-} from '../../../features/sort/sort-actions';
-import {updatePage} from '../../../features/pagination/pagination-actions';
-import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 
 describe('Sort', () => {
   let engine: MockProductListingEngine;

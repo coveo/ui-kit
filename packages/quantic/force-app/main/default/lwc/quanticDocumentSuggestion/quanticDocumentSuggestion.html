@@ -1,8 +1,9 @@
 <template>
-  <template if:true={renderingError}>
-    <div class="error-message slds-text-color_destructive">{renderingError}</div>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName} message={initializationErrorMessage}>
+    </c-quantic-component-error>
   </template>
-  <template if:false={renderingError}>
+  <template lwc:else>
     <template if:true={loading}>
       <div class="loading-holder">
         <lightning-spinner alternative-text={labels.loading}></lightning-spinner>

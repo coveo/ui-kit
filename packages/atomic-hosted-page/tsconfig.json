@@ -1,0 +1,33 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "lib": ["dom", "es2020"],
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "module": "esnext",
+    // create-react-app compatibility
+    // https://github.com/facebook/create-react-app/issues/9468#issuecomment-692963920
+    "target": "es2019",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "jsx": "react",
+    "jsxFactory": "h",
+    "plugins": [
+      {
+        "name": "ts-lit-plugin",
+        "strict": true,
+        "rules": {
+          "no-missing-import": "off",
+          "no-unknown-attribute": "off"
+        }
+      }
+    ],
+  },
+  "include": ["src", "types/jsx.d.ts"],
+  "exclude": [
+    "node_modules"
+  ]
+}

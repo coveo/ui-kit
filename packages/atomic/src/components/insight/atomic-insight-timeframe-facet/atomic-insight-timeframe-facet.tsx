@@ -1,19 +1,4 @@
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
-
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
-import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {MapProp} from '../../../utils/props-utils';
-import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
-import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
-import {TimeframeFacetCommon} from '../../common/facets/timeframe-facet-common';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {
   buildInsightDateFacet,
   buildInsightDateFilter,
@@ -30,6 +15,20 @@ import {
   InsightSearchStatusState,
   loadInsightDateFacetSetActions,
 } from '..';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
+import {
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
+import {MapProp} from '../../../utils/props-utils';
+import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
+import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
+import {TimeframeFacetCommon} from '../../common/facets/timeframe-facet-common';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal
@@ -48,7 +47,7 @@ export class AtomicInsightTimeframeFacet
   public facetForDateRange?: InsightDateFacet;
   public facetForDatePicker?: InsightDateFacet;
 
-  private timeframeFacetCommon!: TimeframeFacetCommon;
+  private timeframeFacetCommon?: TimeframeFacetCommon;
   public filter?: InsightDateFilter;
   public searchStatus!: InsightSearchStatus;
   @Element() private host!: HTMLElement;
@@ -130,6 +129,7 @@ export class AtomicInsightTimeframeFacet
 
   public initialize() {
     this.timeframeFacetCommon = new TimeframeFacetCommon({
+      facetId: this.facetId,
       host: this.host,
       bindings: this.bindings,
       label: this.label,
@@ -156,7 +156,7 @@ export class AtomicInsightTimeframeFacet
   }
 
   public disconnectedCallback() {
-    this.timeframeFacetCommon.disconnectedCallback();
+    this.timeframeFacetCommon?.disconnectedCallback();
   }
 
   private initializeFacetForDatePicker() {

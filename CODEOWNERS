@@ -1,9 +1,14 @@
 # Default owners for everything in the repo. Later matches take precedence.
 * @coveo/search
- 
 
 # Owners of the Quantic package
-/packages/quantic/ @coveo/service-integration
+/packages/quantic/ @coveo/salesforce-integration
+
+# Owners of the Atomic Insight components
+/packages/atomic/src/components/insight @coveo/service-core
 
 # Owners of Atomic's Cypress Tests
 /packages/atomic/cypress/ @coveo/search @coveo/search-qa
+
+# Owners of Atomic IPX components
+/packages/atomic/src/components/ipx @coveo/service-integrations

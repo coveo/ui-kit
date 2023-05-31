@@ -2,7 +2,10 @@ import {
   SearchEngine,
   buildSearchEngine,
 } from '../app/search-engine/search-engine';
-import {getSampleSearchEngineConfiguration} from '../app/search-engine/search-engine-configuration';
+import {
+  getSampleSearchEngineConfiguration,
+  SearchEngineConfiguration,
+} from '../app/search-engine/search-engine-configuration';
 import {
   CategoryFacet,
   Facet,
@@ -22,14 +25,13 @@ import {
   buildSort,
   buildCategoryFacet,
   Result,
-  CategoryFacetValue,
   FacetValue,
 } from '../index';
 
 const sleep = (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-const configuration = getSampleSearchEngineConfiguration();
+let configuration: SearchEngineConfiguration;
 let engine: SearchEngine;
 let searchBox: SearchBox;
 let resultList: ResultList;
@@ -37,9 +39,13 @@ let facet: Facet;
 let categoryFacet: CategoryFacet;
 let sort: Sort;
 
+beforeAll(() => {
+  configuration = getSampleSearchEngineConfiguration();
+});
+
 function initEngine() {
   engine = buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
+    configuration,
     loggerOptions: {level: 'silent'},
   });
 }
@@ -125,16 +131,16 @@ describe('search app', () => {
     });
   });
 
-  describe('Facet: select value', () => {
-    let initialCategoryFacetValues: CategoryFacetValue[];
+  describe('Category Facet: select value', () => {
+    let initialFacetValues: FacetValue[];
     let initialResults: Result[];
 
     beforeAll(async () => {
-      initialCategoryFacetValues = categoryFacet.state.values;
+      initialFacetValues = facet.state.values;
       initialResults = resultList.state.results;
 
-      const [firstFacetValue] = facet.state.values;
-      facet.toggleSelect(firstFacetValue);
+      const [firstFacetValue] = categoryFacet.state.values;
+      categoryFacet.toggleSelect(firstFacetValue);
 
       await sleep(2);
     });
@@ -144,10 +150,8 @@ describe('search app', () => {
       await sleep(2);
     });
 
-    it('updates the category facet values', () => {
-      expect(categoryFacet.state.values).not.toEqual(
-        initialCategoryFacetValues
-      );
+    it('updates the facet values', () => {
+      expect(facet.state.values).not.toEqual(initialFacetValues);
     });
 
     it('updates the results', () => {

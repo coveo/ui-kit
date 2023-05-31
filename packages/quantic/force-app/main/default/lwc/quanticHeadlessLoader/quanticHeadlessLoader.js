@@ -1,17 +1,32 @@
+import componentInitializationError from '@salesforce/label/c.quantic_ComponentInitializationError';
+import lookAtDeveloperConsole from '@salesforce/label/c.quantic_LookAtDeveloperConsole';
+import unableToInitializeComponent from '@salesforce/label/c.quantic_UnableToInitializeComponent';
+import BuenoPath from '@salesforce/resourceUrl/coveobueno';
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 // @ts-ignore
-import {loadScript} from 'lightning/platformResourceLoader';
-// @ts-ignore
 import {Debouncer, Deferred, Store} from 'c/quanticUtils';
+import {I18nUtils} from 'c/quanticUtils';
+// @ts-ignore
+import LightningAlert from 'lightning/alert';
+// @ts-ignore
+import {loadScript} from 'lightning/platformResourceLoader';
 
 const DEBOUNCE_DELAY = 200;
 let debouncers = {};
 let dependencyPromises = [];
+let componentErrorDisplayed = false;
+
+const labels = {
+  componentInitializationError,
+  unableToInitializeComponent,
+  lookAtDeveloperConsole,
+};
 
 const HeadlessBundleNames = {
   search: 'search',
   caseAssist: 'case-assist',
   insight: 'insight',
+  recommendation: 'recommendation',
 };
 
 const headlessBundles = {
@@ -26,34 +41,50 @@ const headlessBundles = {
   [HeadlessBundleNames.insight]: {
     libPath: '/browser/insight/headless.js',
     bundle: () => CoveoHeadlessInsight,
-  }
+  },
+  [HeadlessBundleNames.recommendation]: {
+    libPath: '/browser/recommendation/headless.js',
+    bundle: () => CoveoHeadlessRecommendation,
+  },
+};
+
+/**
+ * Loads the Bueno library dependency.
+ * @param element The Lightning element to use to load dependencies.
+ * @returns {Promise<Bueno>}
+ */
+const getBueno = (element) => {
+  return loadScript(element, BuenoPath + '/browser/bueno.js');
 };
 
 /**
  * Initiates dependency loading promises.
  * @param element The Lightning element to use to load dependencies.
+ * @returns {Promise<AnyHeadless>}
  */
 const loadDependencies = async (element, headlessUseCase) => {
-  const bundleInfo = headlessUseCase ? headlessBundles[headlessUseCase] : headlessBundles.search;
+  const bundleInfo = headlessUseCase
+    ? headlessBundles[headlessUseCase]
+    : headlessBundles.search;
 
   dependencyPromises = [
     ...dependencyPromises,
     loadScript(element, HeadlessPath + bundleInfo.libPath),
+    getBueno(element),
   ];
-    
   await Promise.all(dependencyPromises);
   /** @type {AnyHeadless} */
   return bundleInfo.bundle();
-}
+};
 
 /**
  * Sets callback to execute when all components are registered with the specified engine.
- * @param {Function} callback 
- * @param {string} engineId 
+ * @param {Function} callback
+ * @param {string} engineId
  */
 const setInitializedCallback = (callback, engineId) => {
   window.coveoHeadless[engineId].initializedCallback = callback;
-}
+};
 
 /**
  * Cancels the delayed search query.
@@ -64,25 +95,30 @@ const cancelInitializedCallback = (engineId) => {
     debouncers[engineId].clearTimeout();
     delete debouncers[engineId];
   }
-}
+};
 
 /**
  * Dispatches search request.
- * @param {string} engineId The id of the engine. 
+ * @param {string} engineId The id of the engine.
  */
 const executeInitializedCallback = async (engineId) => {
-  window.coveoHeadless[engineId].initializedCallback(await window.coveoHeadless[engineId].enginePromise);
+  window.coveoHeadless[engineId].initializedCallback(
+    await window.coveoHeadless[engineId].enginePromise
+  );
 };
 
 /**
  * Starts the debounced initial search request.
- * @param {string} engineId The id of the engine. 
+ * @param {string} engineId The id of the engine.
  */
 const debounceInitializedCallback = (engineId) => {
   if (!debouncers[engineId]) {
     debouncers[engineId] = new Debouncer();
   }
-  debouncers[engineId].debounce(executeInitializedCallback, DEBOUNCE_DELAY)(engineId);
+  debouncers[engineId].debounce(
+    executeInitializedCallback,
+    DEBOUNCE_DELAY
+  )(engineId);
 };
 
 /**
@@ -90,14 +126,19 @@ const debounceInitializedCallback = (engineId) => {
  * @param {string} engineId The id of the engine.
  */
 const areAllComponentsInitialized = (engineId) =>
-  !window.coveoHeadless[engineId].components.find(component => component.initialized === false);
+  !window.coveoHeadless[engineId].components.find(
+    (component) => component.initialized === false
+  );
 
 /**
  * Returns the registered component object if it exists.
  * @param element The Lightning Element component with which to load dependencies.
  * @param {string} engineId The id of the engine.
  */
-const getRegisteredComponent = (element, engineId) => window.coveoHeadless[engineId].components.find((component) => component.element === element);
+const getRegisteredComponent = (element, engineId) =>
+  window.coveoHeadless[engineId].components.find(
+    (component) => component.element === element
+  );
 
 /**
  * Instantiates the coveoHeadless window object and the engine attribute for the provided ID.
@@ -114,15 +155,15 @@ const instantiateWindowEngineObject = (element, engineId) => {
   };
   if (!window.coveoHeadless) {
     window.coveoHeadless = {
-      [engineId]: newWindowEngineObject
-    }
+      [engineId]: newWindowEngineObject,
+    };
   } else if (!window.coveoHeadless[engineId]) {
     window.coveoHeadless[engineId] = newWindowEngineObject;
   }
-}
+};
 
 /**
- * Loads dependencies and returns an initialized Headless engine. 
+ * Loads dependencies and returns an initialized Headless engine.
  * @param {string} engineId The id of the engine.
  */
 async function initEngine(engineId) {
@@ -137,23 +178,27 @@ async function initEngine(engineId) {
     const options = await window.coveoHeadless[engineId].options.promise;
     return window.coveoHeadless[engineId].engineConstructor(options);
   } catch (error) {
-    throw new Error('Fatal error: unable to initialize Coveo Headless: ' + error);
+    throw new Error(
+      'Fatal error: unable to initialize Coveo Headless: ' + error
+    );
   }
 }
 
 /**
- * Initialize coveoHeadless Store object 
+ * Initialize coveoHeadless Store object
  * @param {string} engineId The ID of the engine.
  */
 const initQuanticStore = (engineId) => {
   try {
-     if(!window.coveoHeadless[engineId].bindings.store) {
-       window.coveoHeadless[engineId].bindings.store = Store.initialize();
-     }
+    if (!window.coveoHeadless[engineId].bindings.store) {
+      window.coveoHeadless[engineId].bindings.store = Store.initialize();
+    }
   } catch (error) {
-    throw new Error('Fatal error: unable to initialize Quantic store: ' + error);
+    throw new Error(
+      'Fatal error: unable to initialize Quantic store: ' + error
+    );
   }
-}
+};
 
 /**
  * Sets the options passed to engine constructor for given engine ID.
@@ -163,13 +208,21 @@ const initQuanticStore = (engineId) => {
  * @param element The Lightning element to use to load dependencies.
  * @param headlessBundle The headless bundle associated to the engine.
  */
-function setEngineOptions(options, engineConstructor, engineId, element, headlessBundle) {
+function setEngineOptions(
+  options,
+  engineConstructor,
+  engineId,
+  element,
+  headlessBundle
+) {
   if (window.coveoHeadless?.[engineId]?.options?.isResolved) {
-    console.warn(`Attempted to overwrite engine options for engine ID: ${engineId}`);
+    console.warn(
+      `Attempted to overwrite engine options for engine ID: ${engineId}`
+    );
     return;
   }
   if (!window.coveoHeadless?.[engineId]) {
-    instantiateWindowEngineObject(element, engineId)
+    instantiateWindowEngineObject(element, engineId);
   }
   window.coveoHeadless[engineId].engineConstructor = engineConstructor;
   window.coveoHeadless[engineId].bundle = headlessBundle;
@@ -189,7 +242,7 @@ function registerComponentForInit(element, engineId) {
   if (!getRegisteredComponent(element, engineId)) {
     window.coveoHeadless[engineId].components.push({
       element,
-      initialized: false
+      initialized: false,
     });
   }
 }
@@ -205,10 +258,15 @@ function setComponentInitialized(element, engineId) {
     : undefined;
 
   if (!component) {
-    throw new Error('Fatal Error: Component was not registered before initialization');
+    throw new Error(
+      'Fatal Error: Component was not registered before initialization'
+    );
   }
   component.initialized = true;
-  if (window.coveoHeadless[engineId].initializedCallback && areAllComponentsInitialized(engineId)) {
+  if (
+    window.coveoHeadless[engineId].initializedCallback &&
+    areAllComponentsInitialized(engineId)
+  ) {
     debounceInitializedCallback(engineId);
   }
 }
@@ -219,10 +277,12 @@ function setComponentInitialized(element, engineId) {
  */
 function getHeadlessEnginePromise(engineId) {
   if (!window.coveoHeadless[engineId].enginePromise) {
-    window.coveoHeadless[engineId].enginePromise = initEngine(engineId).then((engine) => {
-      window.coveoHeadless[engineId].bindings.engine = engine
-      return engine;
-    });
+    window.coveoHeadless[engineId].enginePromise = initEngine(engineId).then(
+      (engine) => {
+        window.coveoHeadless[engineId].bindings.engine = engine;
+        return engine;
+      }
+    );
   }
   return window.coveoHeadless[engineId].enginePromise;
 }
@@ -240,9 +300,8 @@ function getHeadlessBindings(engineId) {
  * @param {string} engineId The engine ID.
  */
 function getQuanticStore(engineId) {
- return window.coveoHeadless?.[engineId]?.bindings?.store;
+  return window.coveoHeadless?.[engineId]?.bindings?.store;
 }
-
 /**
  * Initializes a component with Coveo Headless.
  * @param element The LightningElement component to initialize.
@@ -256,15 +315,31 @@ async function initializeWithHeadless(element, engineId, initialize) {
   try {
     initQuanticStore(engineId);
     initialize(await getHeadlessEnginePromise(engineId));
-    setComponentInitialized(element, engineId);
   } catch (error) {
-    console.error('Fatal error: unable to initialize component', error);
+    console.error(
+      `Fatal error: unable to initialize ${element?.template?.host?.localName} component.`,
+      error
+    );
+    element?.setInitializationError?.();
+    if (!componentErrorDisplayed) {
+      componentErrorDisplayed = true;
+      await LightningAlert.open({
+        message: `${I18nUtils.format(
+          labels.unableToInitializeComponent,
+          element?.template?.host?.localName
+        )} ${labels.lookAtDeveloperConsole}`,
+        theme: 'error',
+        label: labels.componentInitializationError,
+      });
+    }
+  } finally {
+    setComponentInitialized(element, engineId);
   }
 }
 
 /**
  * Removed the headless engine instance from the window object.
- * @param {string} engineId 
+ * @param {string} engineId
  */
 function destroyEngine(engineId) {
   if (window.coveoHeadless?.[engineId]) {
@@ -276,7 +351,7 @@ function destroyEngine(engineId) {
  * Register a facet in the store.
  * @param {string} engineId The engine ID.
  * @param {string} facetType
- * @param {{ label: string; facetId: string; format?: function, element?: HTMLElement}} data
+ * @param {{ label: string; facetId: string; format?: function, element?: HTMLElement, metadata?: object}} data
  */
 function registerToStore(engineId, facetType, data) {
   const store = getQuanticStore(engineId);
@@ -306,10 +381,14 @@ function getFromStore(engineId, facetType) {
  * Get all facet data from store.
  * @param {string} engineId The engine ID.
  */
- function getAllFacetsFromStore(engineId) {
-  return Object.values(Store.facetTypes).reduce((allFacets, facetType) => ({
-    ...allFacets, ...getFromStore(engineId, facetType)
-  }), {})
+function getAllFacetsFromStore(engineId) {
+  return Object.values(Store.facetTypes).reduce(
+    (allFacets, facetType) => ({
+      ...allFacets,
+      ...getFromStore(engineId, facetType),
+    }),
+    {}
+  );
 }
 
 /**
@@ -325,7 +404,7 @@ function getHeadlessBundle(engineId) {
  * Gets whether the specified engine is using the expected bundle.
  * @param {string} engineId - The engine ID.
  * @param {string} expectedBundleName - The expected headless bundle name.
- * @returns 
+ * @returns
  */
 function isHeadlessBundle(engineId, expectedBundleName) {
   let expectedBundle;
@@ -338,7 +417,6 @@ function isHeadlessBundle(engineId, expectedBundleName) {
 
   return getHeadlessBundle(engineId) === expectedBundle;
 }
-
 
 export {
   loadDependencies,
@@ -356,4 +434,5 @@ export {
   getAllFacetsFromStore,
   getHeadlessBundle,
   isHeadlessBundle,
-}
+  getBueno,
+};

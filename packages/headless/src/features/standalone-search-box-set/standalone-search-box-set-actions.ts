@@ -1,6 +1,6 @@
 import {StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/search-analytics';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
 import {PlanRequest} from '../../api/search/plan/plan-request';
 import {
@@ -18,7 +18,11 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload';
-import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {
+  AnalyticsType,
+  CustomAction,
+  makeAnalyticsAction,
+} from '../analytics/analytics-utils';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
 import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 
@@ -126,12 +130,12 @@ export const fetchRedirectUrl = createAsyncThunk<
   }
 );
 
-const logRedirect = (url: string) =>
+const logRedirect = (url: string): CustomAction =>
   makeAnalyticsAction(
     'analytics/standaloneSearchBox/redirect',
     AnalyticsType.Custom,
-    (client) => client.logTriggerRedirect({redirectedTo: url})
-  )();
+    (client) => client.makeTriggerRedirect({redirectedTo: url})
+  );
 
 export const buildPlanRequest = async (
   state: StateNeededForRedirect

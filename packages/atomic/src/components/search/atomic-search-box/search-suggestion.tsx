@@ -42,7 +42,7 @@ function getPartsForSuggestion(
 }
 
 function getClassesForSuggestion(isSelected: boolean) {
-  return `flex px-4 min-h-[40px] items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
+  return `flex px-4 min-h-[40px] items-center text-left text-neutral-dark hover:bg-neutral-light cursor-pointer ${
     isSelected ? 'bg-neutral-light' : ''
   }`;
 }
@@ -185,7 +185,6 @@ export const ButtonSearchSuggestion: FunctionalComponent<
       onMouseDown={(e) => e.preventDefault()}
       onClick={(e: Event) => props.onClick?.(e)}
       onMouseOver={(e: Event) => props.onMouseOver?.(e)}
-      aria-selected={`${props.isSelected}`}
       {...{[queryDataAttribute]: props.suggestion.query}}
     >
       {getContentForSuggestion(props.suggestion)}

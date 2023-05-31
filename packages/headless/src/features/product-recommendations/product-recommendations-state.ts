@@ -1,5 +1,4 @@
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 
 export type ProductRecommendationsState = {

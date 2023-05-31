@@ -1,9 +1,11 @@
+// eslint-disable-next-line node/no-extraneous-import
+import {backOff} from 'exponential-backoff';
 import * as fs from 'fs';
 import * as path from 'path';
+import waitOn from 'wait-on';
 import {StepLogger, StepsRunner} from './util/log';
 import * as sfdx from './util/sfdx-commands';
 import {SfdxJWTAuth} from './util/sfdx-commands';
-import waitOn from 'wait-on';
 
 interface Options {
   configFile: string;
@@ -180,12 +182,14 @@ async function deployComponents(
 ): Promise<void> {
   log('Deploying components...');
 
-  await sfdx.deploySource({
-    alias: options.scratchOrg.alias,
-    packagePaths: ['force-app/main', 'force-app/examples'],
-  });
+  return backOff(async () => {
+    await sfdx.deploySource({
+      alias: options.scratchOrg.alias,
+      packagePaths: ['force-app/main', 'force-app/examples'],
+    });
 
-  log('Components deployed.');
+    log('Components deployed.');
+  });
 }
 
 async function deployCommunity(
@@ -324,7 +328,7 @@ async function deleteScratchOrg(
     );
     console.log(communityUrl);
     console.log('\nTo open Cypress, run:');
-    console.log('npm run cypress:open');
+    console.log('npm run e2e:watch');
   } catch (error) {
     console.error('Failed to complete');
     console.error(error);

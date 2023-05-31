@@ -1,3 +1,4 @@
+import {isArray} from '@coveo/bueno';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {camelToKebab, kebabToCamel} from './utils';
 
@@ -5,6 +6,7 @@ interface MapPropOptions {
   attributePrefix?: string;
   splitValues?: boolean;
 }
+
 export function MapProp(opts?: MapPropOptions) {
   return (component: ComponentInterface, variableName: string) => {
     const {componentWillLoad} = component;
@@ -30,6 +32,52 @@ export function MapProp(opts?: MapPropOptions) {
   };
 }
 
+export function ArrayProp() {
+  return (component: ComponentInterface, variableName: string) => {
+    const {componentWillLoad} = component;
+
+    const attributeWithBackets = camelToKebab(variableName);
+
+    component.componentWillLoad = function () {
+      const value = this[variableName];
+      if (!value || isArray(value)) {
+        componentWillLoad?.call(this);
+        return;
+      }
+
+      try {
+        const valueAsArray = JSON.parse(value);
+        if (isArray(valueAsArray)) {
+          this[variableName] = valueAsArray;
+        } else {
+          console.error(
+            `Property ${attributeWithBackets} should be an array`,
+            getElement(this)
+          );
+        }
+      } catch (e) {
+        console.error(
+          `Error while parsing attribute ${attributeWithBackets} as array`,
+          e
+        );
+      }
+
+      componentWillLoad?.call(this);
+    };
+  };
+}
+
+function splitAttributeValueOnCommas(attributeValue: string) {
+  const splitButIgnoreEscapeSymbolsExpression = /(?:\\.|[^,])+/g;
+  const [...valuesWithEscapeSymbols] =
+    attributeValue.matchAll(splitButIgnoreEscapeSymbolsExpression) ?? [];
+
+  const removeEscapeSymbolsExpression = /\\(.)/g;
+  return valuesWithEscapeSymbols.map(([valuesWithEscapeSymbols]) =>
+    valuesWithEscapeSymbols.replace(removeEscapeSymbolsExpression, '$1')
+  );
+}
+
 export function mapAttributesToProp(
   prefix: string,
   mapVariable: Record<string, string | string[]>,
@@ -47,7 +95,9 @@ function stringMapToStringArrayMap(map: Record<string, string>) {
   return Object.entries(map).reduce(
     (acc, [key, value]) => ({
       ...acc,
-      [key]: value.split(',').map((subValue) => subValue.trim()),
+      [key]: splitAttributeValueOnCommas(value).map((subValue) =>
+        subValue.trim()
+      ),
     }),
     {}
   );

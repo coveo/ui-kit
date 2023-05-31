@@ -1,0 +1,21 @@
+<template>
+    <c-example-layout
+        title={pageTitle}
+        description={pageDescription}
+        show-preview={isConfigured}>
+
+        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
+            <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
+        </c-configurator>
+
+        <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
+            <c-quantic-breadcrumb-manager engine-id={engineId}></c-quantic-breadcrumb-manager>
+            <c-quantic-category-facet
+                engine-id={engineId}
+                field={config.field}
+                with-search>
+                <c-quantic-facet-caption slot="captions" value={config.value} caption={config.caption}></c-quantic-facet-caption>
+            </c-quantic-category-facet>
+        </c-example-use-case>
+    </c-example-layout>
+</template>

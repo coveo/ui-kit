@@ -1,10 +1,10 @@
-import {staticFilterSet} from '../../app/reducers';
 import {executeSearch} from '../../features/search/search-actions';
 import {
   deselectAllStaticFilterValues,
   registerStaticFilter,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
+import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';

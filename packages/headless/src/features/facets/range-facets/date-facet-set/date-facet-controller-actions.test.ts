@@ -1,6 +1,6 @@
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
-import {executeToggleDateFacetSelect} from './date-facet-controller-actions';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {executeToggleDateFacetSelect} from './date-facet-controller-actions';
 
 describe('date facet controller actions', () => {
   let engine: MockSearchEngine;

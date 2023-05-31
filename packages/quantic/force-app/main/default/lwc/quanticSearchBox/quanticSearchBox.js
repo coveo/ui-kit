@@ -1,14 +1,12 @@
-import {LightningElement, api, track} from 'lwc';
+import clear from '@salesforce/label/c.quantic_Clear';
+import search from '@salesforce/label/c.quantic_Search';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-
 import {keys} from 'c/quanticUtils';
-
-import search from '@salesforce/label/c.quantic_Search';
-import clear from '@salesforce/label/c.quantic_Clear';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
@@ -70,6 +68,10 @@ export default class QuanticSearchBox extends LightningElement {
   unsubscribe;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {Array} */
+  suggestions = [];
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   /**
    * @param {SearchEngine} engine
@@ -92,6 +94,10 @@ export default class QuanticSearchBox extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.addEventListener(
+      'suggestionlistrender',
+      this.handleSuggestionListEvent
+    );
   }
 
   renderedCallback() {
@@ -100,6 +106,10 @@ export default class QuanticSearchBox extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.removeEventListener(
+      'suggestionlistrender',
+      this.handleSuggestionListEvent
+    );
   }
 
   updateState() {
@@ -107,20 +117,12 @@ export default class QuanticSearchBox extends LightningElement {
       this.input.value = this.searchBox.state.value;
     }
     this.state = this.searchBox.state;
-  }
-
-  get hasSuggestions() {
-    return this.state?.suggestions?.length;
-  }
-
-  get suggestions() {
-    return (
-      this.searchBox?.state.suggestions.map((s, index) => ({
+    this.suggestions =
+      this.state?.suggestions?.map((s, index) => ({
         key: index,
         rawValue: s.rawValue,
         value: s.highlightedValue,
-      })) ?? []
-    );
+      })) ?? [];
   }
 
   /**
@@ -208,6 +210,13 @@ export default class QuanticSearchBox extends LightningElement {
     this.input.blur();
   }
 
+  handleKeyValues() {
+    if (this.searchBox.state.value !== this.input.value) {
+      this.suggestionList?.resetSelection();
+      this.searchBox.updateText(this.input.value);
+    }
+  }
+
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
@@ -220,8 +229,7 @@ export default class QuanticSearchBox extends LightningElement {
         this.suggestionList?.selectionDown();
         break;
       default:
-        this.suggestionList?.resetSelection();
-        this.searchBox.updateText(event.target.value);
+        this.handleKeyValues();
     }
   }
 
@@ -243,5 +251,18 @@ export default class QuanticSearchBox extends LightningElement {
     const textValue = event.detail;
     this.searchBox.selectSuggestion(textValue);
     this.input.blur();
+  }
+
+  handleSuggestionListEvent = (event) => {
+    event.stopPropagation();
+    const id = event.detail;
+    this.input.setAttribute('aria-controls', id);
+  };
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

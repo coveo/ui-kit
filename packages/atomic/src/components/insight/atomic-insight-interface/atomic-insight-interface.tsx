@@ -1,3 +1,4 @@
+import {loadFieldActions} from '@coveo/headless/insight';
 import {
   Component,
   Element,
@@ -9,20 +10,24 @@ import {
   Watch,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
-import {InitializeEvent} from '../../../utils/initialization-utils';
-import {CommonBindings} from '../../common/interface/bindings';
-import {
-  BaseAtomicInterface,
-  CommonAtomicInterfaceHelper,
-} from '../../common/interface/interface-common';
-import {AtomicInsightStore, createAtomicInsightStore} from './store';
-import {getAnalyticsConfig} from './analytics-config';
 import {
   InsightLogLevel,
   InsightEngine,
   InsightEngineConfiguration,
   buildInsightEngine,
+  buildInsightResultsPerPage,
+  getOrganizationEndpointsInsight,
+  PlatformEnvironmentInsight,
 } from '..';
+import {InitializeEvent} from '../../../utils/initialization-utils';
+import {ArrayProp} from '../../../utils/props-utils';
+import {CommonBindings} from '../../common/interface/bindings';
+import {
+  BaseAtomicInterface,
+  CommonAtomicInterfaceHelper,
+} from '../../common/interface/interface-common';
+import {getAnalyticsConfig} from './analytics-config';
+import {AtomicInsightStore, createAtomicInsightStore} from './store';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 export type InsightInitializationOptions = InsightEngineConfiguration;
@@ -31,13 +36,6 @@ export type InsightBindings = CommonBindings<
   AtomicInsightStore,
   HTMLAtomicInsightInterfaceElement
 >;
-
-export type InsightInterfaceDimensions = {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-};
 
 /**
  * @internal
@@ -79,7 +77,7 @@ export class AtomicInsightInterface
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
    *
-   * @example /mypublicpath/languages
+   * Example: "/mypublicpath/languages"
    *
    */
   @Prop({reflect: true}) public languageAssetsPath = './lang';
@@ -87,32 +85,28 @@ export class AtomicInsightInterface
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
    *
-   * @example /mypublicpath/icons
+   * Example: "/mypublicpath/icons"
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
   /**
-   * A list of non-default fields to include in the query results, separated by commas.
+   * A list of non-default fields to include in the query results.
+   *
+   * Specify the property as an array using a JSON string representation:
+   * ```html
+   * <atomic-insight-interface fields-to-include='["fieldA", "fieldB"]'></atomic-insight-interface>
+   * ```
    */
-  @Prop({reflect: true}) public fieldsToInclude = '';
+  @ArrayProp()
+  @Prop({mutable: true})
+  public fieldsToInclude: string[] | string = '[]';
+
+  /**
+   * The number of results per page. By default, this is set to `5`.
+   */
+  @Prop({reflect: true}) resultsPerPage = 5;
 
   @Element() public host!: HTMLAtomicInsightInterfaceElement;
-
-  @Listen('atomic/insight/getDimensions')
-  public getDimensions(
-    event: CustomEvent<(dimensions: InsightInterfaceDimensions) => void>
-  ) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const rect = this.host.getBoundingClientRect();
-    event.detail({
-      top: rect.top,
-      left: rect.left,
-      height: rect.height,
-      width: rect.width,
-    });
-  }
 
   private store = createAtomicInsightStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<InsightEngine>;
@@ -126,16 +120,37 @@ export class AtomicInsightInterface
 
   public connectedCallback() {
     this.store.setLoadingFlag(FirstInsightRequestExecutedFlag);
-    this.updateFieldsToInclude();
   }
 
-  private updateFieldsToInclude() {
-    if (this.fieldsToInclude) {
-      this.store.set(
-        'fieldsToInclude',
-        this.fieldsToInclude.split(',').map((field) => field.trim())
+  private initResultsPerPage() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+    buildInsightResultsPerPage(this.bindings.engine, {
+      initialState: {numberOfResults: this.resultsPerPage},
+    });
+  }
+
+  public registerFieldsToInclude() {
+    if (this.fieldsToInclude.length) {
+      this.engine!.dispatch(
+        loadFieldActions(this.engine!).registerFieldsToInclude([
+          ...this.fieldsToInclude,
+        ])
       );
     }
+  }
+
+  /**
+   * Returns the unique, organization-specific endpoint(s)
+   * @param {string} organizationId
+   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
+   */
+  @Method() public async getOrganizationEndpoints(
+    organizationId: string,
+    env: PlatformEnvironmentInsight = 'prod'
+  ) {
+    return getOrganizationEndpointsInsight(organizationId, env);
   }
 
   /**
@@ -191,10 +206,6 @@ export class AtomicInsightInterface
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
-  render() {
-    return this.engine && <slot></slot>;
-  }
-
   public get bindings(): InsightBindings {
     return {
       engine: this.engine!,
@@ -225,6 +236,18 @@ export class AtomicInsightInterface
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.initResultsPerPage();
     this.initialized = true;
+  }
+
+  render() {
+    return (
+      this.engine && (
+        <host>
+          <slot name="full-search"></slot>
+          <slot></slot>;
+        </host>
+      )
+    );
   }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {InsightBindings} from '../components/insight/atomic-insight-interface/atomic-insight-interface';
+import {AnyBindings} from '../components/common/interface/bindings';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';
@@ -29,7 +29,10 @@ export function AriaLiveRegion(regionName: string, assertive = false) {
     getAriaLiveElement()?.registerRegion(regionName, assertive);
   }
 
-  return (component: InitializableComponent, setterName: string) => {
+  return (
+    component: InitializableComponent<AnyBindings>,
+    setterName: string
+  ) => {
     const {componentWillRender} = component;
     Object.defineProperty(component, setterName, {
       set: (message: string) => dispatchMessage(message),
@@ -46,12 +49,13 @@ export interface FocusTargetController {
   setTarget(element: HTMLElement | undefined): void;
   focusAfterSearch(): Promise<void>;
   focusOnNextTarget(): Promise<void>;
+  focus(): Promise<void>;
   disableForCurrentSearch(): void;
 }
 
 export function FocusTarget() {
   return (
-    component: InitializableComponent | InitializableComponent<InsightBindings>,
+    component: InitializableComponent<AnyBindings>,
     setterName: string
   ) => {
     const {componentWillLoad} = component;
@@ -95,12 +99,14 @@ export function FocusTarget() {
           element = el;
           if (focusOnNextTarget) {
             focusOnNextTarget = false;
-            // The focus seems to be flaky without deferring, especially on iOS.
-            defer().then(() => {
-              el.focus();
-              onFocusCallback?.();
-            });
+            focusTargetController.focus();
           }
+        },
+        focus: async () => {
+          // The focus seems to be flaky without deferring, especially on iOS.
+          await defer();
+          element?.focus();
+          onFocusCallback?.();
         },
         focusAfterSearch: () => {
           lastSearchId = this.bindings.store.getUniqueIDFromEngine(

@@ -1,13 +1,14 @@
-import {buildCoreDidYouMean, DidYouMean} from './headless-core-did-you-mean';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../test/mock-engine';
+import {configuration} from '../../../app/common-reducers';
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
 } from '../../../features/did-you-mean/did-you-mean-actions';
-import {configuration, didYouMean} from '../../../app/reducers';
+import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../../test/mock-engine';
+import {buildCoreDidYouMean, DidYouMean} from './headless-core-did-you-mean';
 
 describe('did you mean', () => {
   let dym: DidYouMean;

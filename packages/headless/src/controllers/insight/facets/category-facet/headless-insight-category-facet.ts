@@ -1,15 +1,4 @@
-import {
-  buildCoreCategoryFacet,
-  CategoryFacet,
-  CategoryFacetOptions,
-  CategoryFacetProps,
-  CategoryFacetSearch,
-  CategoryFacetSearchOptions,
-  CategoryFacetSearchResult,
-  CategoryFacetSearchState,
-  CategoryFacetState,
-  CategoryFacetValue,
-} from '../../../core/facets/category-facet/headless-core-category-facet';
+import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {
   logFacetClearAll,
@@ -23,7 +12,20 @@ import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
-import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
+import {
+  buildCoreCategoryFacet,
+  CategoryFacet,
+  CategoryFacetOptions,
+  CategoryFacetProps,
+  CategoryFacetSearch,
+  CategoryFacetSearchOptions,
+  CategoryFacetSearchResult,
+  CategoryFacetSearchState,
+  CategoryFacetState,
+  CategoryFacetValue,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
+} from '../../../core/facets/category-facet/headless-core-category-facet';
 
 export type {
   CategoryFacetValue,
@@ -35,6 +37,8 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
 };
 
 /**

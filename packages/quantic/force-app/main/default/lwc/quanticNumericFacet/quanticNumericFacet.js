@@ -1,4 +1,17 @@
-import {LightningElement, track, api} from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
+import apply from '@salesforce/label/c.quantic_Apply';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
+import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import max from '@salesforce/label/c.quantic_Max';
+import messageWhenRangeOverflow from '@salesforce/label/c.quantic_MessageWhenRangeOverflow';
+import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRangeUnderflow';
+import min from '@salesforce/label/c.quantic_Min';
+import numberInputApply from '@salesforce/label/c.quantic_NumberInputApply';
+import numberInputMaximum from '@salesforce/label/c.quantic_NumberInputMaximum';
+import numberInputMinimum from '@salesforce/label/c.quantic_NumberInputMinimum';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -7,20 +20,7 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, Store} from 'c/quanticUtils';
-import LOCALE from '@salesforce/i18n/locale';
-
-import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
-import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
-import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
-import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
-import min from '@salesforce/label/c.quantic_Min';
-import max from '@salesforce/label/c.quantic_Max';
-import numberInputMinimum from '@salesforce/label/c.quantic_NumberInputMinimum';
-import numberInputMaximum from '@salesforce/label/c.quantic_NumberInputMaximum';
-import apply from '@salesforce/label/c.quantic_Apply';
-import numberInputApply from '@salesforce/label/c.quantic_NumberInputApply';
-import messageWhenRangeOverflow from '@salesforce/label/c.quantic_MessageWhenRangeOverflow';
-import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRangeUnderflow';
+import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").NumericFacetState} NumericFacetState */
 /** @typedef {import("coveo").NumericFilterState} NumericFilterState*/
@@ -29,6 +29,13 @@ import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRa
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader' | 'applyButton'} type
+ * @property {string} [value]
+ * @property {number} [index]
+ */
 
 /**
  * The `QuanticNumericFacet` component displays facet values as numeric ranges.
@@ -70,6 +77,13 @@ export default class QuanticNumericFacet extends LightningElement {
    * @defaultValue `8`
    */
   @api numberOfValues = 8;
+  /**
+   * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox', 'link'.
+   * @api
+   * @type {'checkbox' | 'link'}
+   * @defaultValue `'checkbox'`
+   */
+  @api displayValuesAs = 'checkbox';
   /**
    * The sort criterion to apply to the returned facet values. Possible values are:
    *   - `ascending`
@@ -129,6 +143,7 @@ export default class QuanticNumericFacet extends LightningElement {
     'field',
     'label',
     'numberOfValues',
+    'displayValuesAs',
     'sortCriteria',
     'rangeAlgorithm',
     'withInput',
@@ -159,6 +174,12 @@ export default class QuanticNumericFacet extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {FocusTarget} */
+  focusTarget;
+  /** @type {boolean} */
+  focusShouldBeInFacet = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   /** @type {string} */
   start;
@@ -172,6 +193,7 @@ export default class QuanticNumericFacet extends LightningElement {
   labels = {
     clearFilter,
     clearFilter_plural,
+    clearFilterFacet,
     collapseFacet,
     expandFacet,
     min,
@@ -190,6 +212,10 @@ export default class QuanticNumericFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    if (this.focusShouldBeInFacet && !this.facet?.state?.isLoading) {
+      this.setFocusOnTarget();
+      this.focusTarget = null;
+    }
   }
 
   /**
@@ -266,6 +292,16 @@ export default class QuanticNumericFacet extends LightningElement {
       this.searchStatus?.state?.isLoading &&
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
+
+    const renderFacetEvent = new CustomEvent('renderfacet', {
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: this.shouldRenderFacet,
+      },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(renderFacetEvent);
   }
 
   updateFilterState() {
@@ -349,10 +385,13 @@ export default class QuanticNumericFacet extends LightningElement {
     return '';
   }
 
+  get clearFilterAriaLabelValue() {
+    return `${I18nUtils.format(this.labels.clearFilterFacet, this.field)}`;
+  }
+
   get shouldRenderInput() {
     return (
-      (this.withInput && this.searchStatus?.state?.hasResults) ||
-      !!this.filterState?.range
+      (this.withInput && !!this.values.length) || !!this.filterState?.range
     );
   }
 
@@ -363,6 +402,10 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get shouldRenderFacet() {
     return this.shouldRenderInput || this.shouldRenderValues;
+  }
+
+  get isDisplayAsLink() {
+    return this.displayValuesAs === 'link';
   }
 
   setValidityParameters() {
@@ -386,7 +429,16 @@ export default class QuanticNumericFacet extends LightningElement {
     const item = this.values.find(
       (value) => this.formattingFunction(value) === evt.detail.value
     );
-    this.facet.toggleSelect(item);
+    if (this.isDisplayAsLink) {
+      this.facet.toggleSingleSelect(item);
+    } else {
+      this.facet.toggleSelect(item);
+    }
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetValue',
+      value: evt.detail.value,
+    };
   }
 
   clearSelections() {
@@ -404,6 +456,10 @@ export default class QuanticNumericFacet extends LightningElement {
         input.reportValidity();
       });
     }
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetHeader',
+    };
   }
 
   toggleFacetVisibility() {
@@ -445,6 +501,11 @@ export default class QuanticNumericFacet extends LightningElement {
       start: this.inputMin ? Number(this.inputMin.value) : undefined,
       end: this.inputMax ? Number(this.inputMax.value) : undefined,
     });
+
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'applyButton',
+    };
   }
 
   onChangeMin(evt) {
@@ -486,5 +547,72 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get customMessageUnderflow() {
     return I18nUtils.format(this.labels.messageWhenRangeUnderflow, this.min);
+  }
+
+  /**
+   * Sets the focus on the target element.
+   */
+  setFocusOnTarget() {
+    this.focusShouldBeInFacet = false;
+    if (!this.focusTarget) {
+      return;
+    }
+
+    if (this.focusTarget.type === 'facetHeader') {
+      this.setFocusOnHeader();
+    } else if (this.focusTarget.type === 'applyButton') {
+      this.setFocusOnApplyButton();
+    } else if (this.focusTarget.type === 'facetValue') {
+      if (this.focusTarget.value) {
+        const facetValueIndex = this.values.findIndex(
+          (value) => this.formattingFunction(value) === this.focusTarget.value
+        );
+        this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
+        this.setFocusOnFacetValue();
+      }
+    }
+  }
+
+  /**
+   * Sets the focus on the target facet value.
+   */
+  setFocusOnFacetValue() {
+    const facetValues = this.template.querySelectorAll('c-quantic-facet-value');
+    const focusTarget = facetValues[this.focusTarget.index];
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the facet header.
+   */
+  setFocusOnHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-card-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocusOnHeader();
+    }
+  }
+
+  /**
+   * Sets the focus on the apply button.
+   */
+  setFocusOnApplyButton() {
+    const focusTarget = this.template.querySelector(
+      '.facet__search-form lightning-button'
+    );
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.focus();
+    }
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

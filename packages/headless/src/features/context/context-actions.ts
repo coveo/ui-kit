@@ -1,10 +1,10 @@
+import {isString, ArrayValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {ContextPayload, ContextValue} from './context-state';
 import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
-import {isString, ArrayValue} from '@coveo/bueno';
+import {ContextPayload, ContextValue} from './context-state';
 
 const nonEmptyArray = new ArrayValue({
   each: requiredNonEmptyString,

@@ -1,11 +1,11 @@
-import {ExecuteTrigger, buildExecuteTrigger} from './headless-execute-trigger';
+import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
+import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {triggers} from '../../app/reducers';
-import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
-import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state';
+import {ExecuteTrigger, buildExecuteTrigger} from './headless-execute-trigger';
 
 describe('ExecuteTrigger', () => {
   let engine: MockSearchEngine;
@@ -17,10 +17,6 @@ describe('ExecuteTrigger', () => {
 
   function setEngineTriggersState(executions: FunctionExecutionTrigger[]) {
     engine.state.triggers.executions = executions;
-    engine.state.triggers.execute = executions[0] ?? {
-      functionName: '',
-      params: [],
-    };
   }
 
   function registeredListeners() {
@@ -29,7 +25,7 @@ describe('ExecuteTrigger', () => {
 
   function getLogTriggerExecuteAction() {
     return engine.actions.find(
-      (a) => a.type === logTriggerExecute.pending.type
+      (a) => a.type === logTriggerExecute().pending.type
     );
   }
 
@@ -98,8 +94,9 @@ describe('ExecuteTrigger', () => {
     });
 
     it('#state should be updated', () => {
-      expect(executeTrigger.state.functionName).toEqual('function');
-      expect(executeTrigger.state.params).toEqual(['hi']);
+      expect(executeTrigger.state.executions).toEqual([
+        {functionName: 'function', params: ['hi']},
+      ]);
     });
   });
 

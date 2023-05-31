@@ -4,9 +4,9 @@ import {getCaseInputInitialState} from '../features/case-input/case-input-state'
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
 import {getDebugInitialState} from '../features/debug/debug-state';
 import {getDocumentSuggestionInitialState} from '../features/document-suggestion/document-suggestion-state';
-import {CaseAssistAppState} from '../state/case-assist-app-state';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
+import {CaseAssistAppState} from '../state/case-assist-app-state';
 
 export function buildMockCaseAssistState(
   config: Partial<CaseAssistAppState> = {}

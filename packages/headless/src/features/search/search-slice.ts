@@ -5,7 +5,11 @@ import {
   fetchMoreResults,
   fetchPage,
 } from './search-actions';
-import {getSearchInitialState, SearchState} from './search-state';
+import {
+  emptyQuestionAnswer,
+  getSearchInitialState,
+  SearchState,
+} from './search-state';
 
 type SearchAction = typeof executeSearch | typeof fetchMoreResults;
 
@@ -17,6 +21,7 @@ function handleRejectedSearch(
   if (error) {
     state.response = getSearchInitialState().response;
     state.results = [];
+    state.questionAnswer = emptyQuestionAnswer();
   }
 
   state.error = error;
@@ -32,6 +37,16 @@ function handleFulfilledSearch(
   state.queryExecuted = action.payload.queryExecuted;
   state.duration = action.payload.duration;
   state.isLoading = false;
+}
+
+function handleFulfilledNewSearch(
+  state: SearchState,
+  action: ReturnType<SearchAction['fulfilled']>
+) {
+  handleFulfilledSearch(state, action);
+  state.results = action.payload.response.results;
+  state.searchResponseId = action.payload.response.searchUid;
+  state.questionAnswer = action.payload.response.questionAnswer;
 }
 
 function handlePendingSearch(
@@ -61,9 +76,7 @@ export const searchReducer = createReducer(
       handleRejectedSearch(state, action)
     );
     builder.addCase(executeSearch.fulfilled, (state, action) => {
-      handleFulfilledSearch(state, action);
-      state.results = action.payload.response.results;
-      state.searchResponseId = action.payload.response.searchUid;
+      handleFulfilledNewSearch(state, action);
     });
     builder.addCase(fetchMoreResults.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);

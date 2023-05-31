@@ -1,10 +1,10 @@
 # Coveo Quantic
 
 ## Using the Library
+
 [How to use the Coveo Quantic Library](https://docs.coveo.com/en/quantic/latest/)
 
 [Install Coveo Quantic as a Salesforce unlocked package](https://docs.coveo.com/en/quantic/latest/usage/#install-quantic)
-
 
 ## Contributing
 
@@ -24,9 +24,9 @@
 
 ### Install VSCode Extension
 
-[vscode Salesforce Extension Pack](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode)
+Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode) if you do not want use the equivalent `sfdx-cli` commands to setup.
 
-**Note** Make sure you open the quantic project at the root (`/packages/quantic/`) in vscode in order for the entension to work properly.
+**Note** Make sure you open the quantic project at the root (`/packages/quantic/`) in vscode in order for the extension to work properly.
 
 ### Enable Dev Hub in Your Salesforce Organization
 
@@ -48,12 +48,28 @@
 
 ### Start the Local Development Server
 
+Before starting the Local Development Server, you need to comment the Styling Hooks override because they are not supported.
+In the file force-app/main/default/lwc/exampleSearch/exampleSearch.css
+
+Remove or comment out the overrides under the `:host` property:
+
+```
+:host {
+  --slds-c-checkbox-color-border: var(--lwc-colorTextIconDefault, #747474);
+}
+```
+
+Otherwise you will get an error similar to this:
+
+`CssSyntaxError: LWC1009: postcss-plugin-lwc: 2:3: Invalid definition of custom property "--slds-c-checkbox-color-border".`
+
 Start the server.
 
-- Run `npm run start`
+- Run `npm run dev`
 - You can also run this command from the command line. `sfdx force:lightning:lwc:start`
 - View the server at http://localhost:3334/.
 
+The Local Development Server should be used to speed up development process, but is not a replacement to deploying your code to an actual Salesforce community to try it out. (There exists some variations of functionality and styling).
 
 ## Testing
 
@@ -76,7 +92,7 @@ The 'Quantic Examples' community is ready, you can access it at the following UR
 https://your-salesforce-scratch-org-instance.force.com/examples
 
 To open Cypress, run:
-npm run cypress:open
+npm run e2e:watch
 ```
 
 Once the community has been deployed, you can deploy the `main` or `example` components only when needed. To do so, run:
@@ -97,26 +113,26 @@ To learn how to add tests, see [adding tests](./docs/adding-tests.md).
 To open Cypress in browser mode, run:
 
 ```bash
-npm run cypress:open
+npm run e2e:watch
 ```
 
 To run Cypress tests directly in your console, run:
 
 ```bash
-npm run cypress:test
+npm run e2e
 ```
 
 To get the [detailed report](./docs/detailed-reporting.md), run:
 
 ```bash
-npm run cypress:test:detailed
+npm run e2e:detailed
 ```
 
 ## Use Quantic From Source
 
 After you have cloned the repository and have run `npm install`, run the following commands:
 
-- `npm run copy:staticresources`
+- `npm run build`
 - `sfdx force:source:deploy -m LightningComponentBundle`
 
 ## Other Useful Commands

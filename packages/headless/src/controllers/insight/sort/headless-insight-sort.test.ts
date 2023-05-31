@@ -1,14 +1,14 @@
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../../test/mock-engine';
-import {Sort, SortProps, buildSort} from './headless-insight-sort';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {
   buildDateSortCriterion,
   SortOrder,
 } from '../../../features/sort-criteria/criteria';
 import {updateSortCriterion} from '../../../features/sort-criteria/sort-criteria-actions';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {
+  MockInsightEngine,
+  buildMockInsightEngine,
+} from '../../../test/mock-engine';
+import {Sort, SortProps, buildSort} from './headless-insight-sort';
 
 describe('InsightSort', () => {
   let engine: MockInsightEngine;

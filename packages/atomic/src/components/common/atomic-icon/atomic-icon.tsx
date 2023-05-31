@@ -8,13 +8,31 @@ import {
   State,
   Watch,
 } from '@stencil/core';
-import {parseAssetURL} from '../../../utils/utils';
 import {sanitize} from 'dompurify';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {parseAssetURL} from '../../../utils/utils';
 import {AnyBindings} from '../interface/bindings';
+
+class IconFetchError extends Error {
+  static fromStatusCode(url: string, statusCode: number, statusText: string) {
+    return new IconFetchError(url, `status code ${statusCode} (${statusText})`);
+  }
+
+  static fromError(url: string, error: unknown) {
+    return new IconFetchError(url, 'an error', error);
+  }
+
+  private constructor(
+    public readonly url: string,
+    errorMessage: string,
+    public readonly errorObject?: unknown
+  ) {
+    super(`Could not fetch icon from ${url}, got ${errorMessage}.`);
+  }
+}
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
@@ -47,10 +65,14 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
   private async fetchIcon(url: string) {
     try {
       // deepcode ignore Ssrf: client side code
-      const response = await fetch(url);
+      const response = await fetch(url).catch((e) => {
+        throw IconFetchError.fromError(url, e);
+      });
       if (response.status !== 200 && response.status !== 304) {
-        throw new Error(
-          `Could not fetch icon from ${url}, got status code ${response.status} (${response.statusText}).`
+        throw IconFetchError.fromStatusCode(
+          url,
+          response.status,
+          response.statusText
         );
       }
       return await response.text();
@@ -61,12 +83,25 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
     }
   }
 
+  private validateSVG(svg: string) {
+    if (!/^<svg[\s\S]+<\/svg>$/gm.test(svg)) {
+      this.bindings.engine.logger.warn(
+        'The inline "icon" prop is not an svg element. You may encounter rendering issues.',
+        this.icon
+      );
+    }
+  }
+
   private async getIcon() {
     const url = parseAssetURL(
       this.icon,
       this.bindings.store.getIconAssetsPath()
     );
     const svg = url ? await this.fetchIcon(url) : this.icon;
+
+    if (svg) {
+      this.validateSVG(svg);
+    }
     const sanitizedSvg = svg
       ? sanitize(svg, {
           USE_PROFILES: {svg: true, svgFilters: true},
@@ -87,12 +122,10 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
 
   public render() {
     if (this.error) {
-      // deepcode ignore FormatString: client-side code.
       console.error(this.error, this.host);
       this.host.remove();
       return;
     }
-    // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code
-    return <Host innerHTML={this.svg}></Host>;
+    return <Host innerHTML={this.svg} aria-hidden="true"></Host>;
   }
 }

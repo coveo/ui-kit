@@ -1,4 +1,4 @@
-import {ArrayValue, RecordValue, Schema} from '@coveo/bueno';
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
@@ -12,12 +12,19 @@ import {
   engineConfigurationDefinitions,
   EngineConfiguration,
   getSampleEngineConfiguration,
+  CoreEngineOrganizationEndpoints,
 } from '../engine-configuration';
+
+export interface SearchEngineOrganizationEndpoints
+  extends CoreEngineOrganizationEndpoints {
+  search?: string;
+}
 
 /**
  * The search engine configuration.
  */
-export interface SearchEngineConfiguration extends EngineConfiguration {
+export interface SearchEngineConfiguration
+  extends EngineConfiguration<SearchEngineOrganizationEndpoints> {
   /**
    * The global headless engine configuration options specific to the SearchAPI.
    */
@@ -81,7 +88,7 @@ export const searchEngineConfigurationSchema =
         required: false,
       },
       values: {
-        pipeline: nonEmptyString,
+        pipeline: new StringValue({required: false, emptyAllowed: true}),
         searchHub: nonEmptyString,
         locale: nonEmptyString,
         timezone: nonEmptyString,

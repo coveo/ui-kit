@@ -8,10 +8,11 @@ import {QueryRankingExpression} from '../../api/search/search/query-ranking-expr
 import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
 import {SecurityIdentity} from '../../api/search/search/security-identity';
-import {configuration, debug, search, fields} from '../../app/reducers';
+import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {enableDebug, disableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
+import {debugReducer as debug} from '../../features/debug/debug-slice';
 import {
   QueryRankingExpressionWeights,
   DocumentWeights,
@@ -23,6 +24,8 @@ import {
   enableFetchAllFields,
   fetchFieldsDescription,
 } from '../../features/fields/fields-actions';
+import {fieldsReducer as fields} from '../../features/fields/fields-slice';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {
   ConfigurationSection,
   DebugSection,
@@ -66,10 +69,6 @@ export interface RelevanceInspectorInitialState {
  * The `RelevanceInspector` controller is in charge of allowing displaying various debug information.
  */
 export interface RelevanceInspector extends Controller {
-  /**
-   * @deprecated Use `fetchFieldsDescription` instead.
-   */
-  fetchFieldDescriptions(): void;
   /**
    * Fetch the description of all fields available from the index.
    */
@@ -128,11 +127,6 @@ export interface RelevanceInspectorState {
    * The ranking expressions.
    */
   rankingExpressions?: QueryRankingExpression[];
-
-  /**
-   * @deprecated Use `fieldDescriptions`.
-   */
-  fieldDescriptions?: FieldDescription[];
 
   /**
    * The description of all fields available in the index.
@@ -277,10 +271,6 @@ export function buildRelevanceInspector(
         https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#resultlistoptions
         https://docs.coveo.com/en/headless/latest/reference/search/actions/field/#registerfieldstoinclude`
       );
-    },
-
-    fetchFieldDescriptions() {
-      this.fetchFieldsDescription();
     },
   };
 }

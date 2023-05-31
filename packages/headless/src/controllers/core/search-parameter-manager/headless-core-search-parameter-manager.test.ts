@@ -5,10 +5,13 @@ import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-r
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
 import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../test/mock-date-facet-value';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value';
 import {buildMockSearchParameters} from '../../../test/mock-search-parameters';
 import {buildMockStaticFilterSlice} from '../../../test/mock-static-filter-slice';
@@ -18,6 +21,7 @@ import {
   buildCoreSearchParameterManager,
   SearchParameterManager,
   SearchParameterManagerProps,
+  validateParams,
 } from './headless-core-search-parameter-manager';
 
 describe('search parameter manager', () => {
@@ -96,13 +100,17 @@ describe('search parameter manager', () => {
       const idle = buildMockFacetValueRequest({value: 'b', state: 'idle'});
 
       const currentValues = [selected, idle];
-      engine.state.facetSet = {author: buildMockFacetRequest({currentValues})};
+      engine.state.facetSet = {
+        author: buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues}),
+        }),
+      };
 
       expect(manager.state.parameters.f).toEqual({author: ['a']});
     });
 
     it('when there are no facets with selected values, the #f parameter is not included', () => {
-      engine.state.facetSet = {author: buildMockFacetRequest()};
+      engine.state.facetSet = {author: buildMockFacetSlice()};
       expect('f' in manager.state.parameters).toBe(false);
     });
   });
@@ -170,14 +178,16 @@ describe('search parameter manager', () => {
 
       const currentValues = [selected, idle];
       engine.state.numericFacetSet = {
-        size: buildMockNumericFacetRequest({currentValues}),
+        size: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({currentValues}),
+        }),
       };
 
       expect(manager.state.parameters.nf).toEqual({size: [selected]});
     });
 
     it('when there are no numeric facets with selected values, the #nf parameter is not included', () => {
-      engine.state.numericFacetSet = {author: buildMockNumericFacetRequest()};
+      engine.state.numericFacetSet = {author: buildMockNumericFacetSlice()};
       expect('nf' in manager.state.parameters).toBe(false);
     });
   });
@@ -197,14 +207,16 @@ describe('search parameter manager', () => {
 
       const currentValues = [selected, idle];
       engine.state.dateFacetSet = {
-        created: buildMockDateFacetRequest({currentValues}),
+        created: buildMockDateFacetSlice({
+          request: buildMockDateFacetRequest({currentValues}),
+        }),
       };
 
       expect(manager.state.parameters.df).toEqual({created: [selected]});
     });
 
     it('when there are no date facets with selected values, the #df parameter is not included', () => {
-      engine.state.dateFacetSet = {created: buildMockDateFacetRequest()};
+      engine.state.dateFacetSet = {created: buildMockDateFacetSlice()};
       expect('df' in manager.state.parameters).toBe(false);
     });
   });
@@ -229,7 +241,9 @@ describe('search parameter manager', () => {
   it is possible to access every relevant search parameter using #state.parameters`, () => {
     const facetValues = [buildMockFacetValueRequest({state: 'selected'})];
     engine.state.facetSet = {
-      author: buildMockFacetRequest({currentValues: facetValues}),
+      author: buildMockFacetSlice({
+        request: buildMockFacetRequest({currentValues: facetValues}),
+      }),
     };
 
     const request = buildMockCategoryFacetRequest({
@@ -241,12 +255,16 @@ describe('search parameter manager', () => {
 
     const numericRanges = [buildMockNumericFacetValue({state: 'selected'})];
     engine.state.numericFacetSet = {
-      size: buildMockNumericFacetRequest({currentValues: numericRanges}),
+      size: buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({currentValues: numericRanges}),
+      }),
     };
 
     const dateRanges = [buildMockDateFacetValue({state: 'selected'})];
     engine.state.dateFacetSet = {
-      created: buildMockDateFacetRequest({currentValues: dateRanges}),
+      created: buildMockDateFacetSlice({
+        request: buildMockDateFacetRequest({currentValues: dateRanges}),
+      }),
     };
 
     const staticFilterValues = [
@@ -289,6 +307,42 @@ describe('search parameter manager', () => {
       });
 
       expect(engine.actions).toContainEqual(action);
+    });
+  });
+
+  describe('#validateParams', () => {
+    it('with initial params, should return true', () => {
+      const initialParameters = initialSearchParameterSelector(engine.state);
+
+      expect(validateParams(engine, initialParameters)).toBe(true);
+    });
+
+    describe('with tabs', () => {
+      beforeEach(() => {
+        engine.state.tabSet = {
+          someTab: {id: 'someTab', isActive: true, expression: ''},
+          otherTab: {id: 'otherTab', isActive: false, expression: ''},
+        };
+      });
+
+      it('with an existing tab parameter, should return true', () => {
+        const initialParameters = initialSearchParameterSelector(engine.state);
+
+        expect(
+          validateParams(engine, {...initialParameters, tab: 'someTab'})
+        ).toBe(true);
+        expect(
+          validateParams(engine, {...initialParameters, tab: 'otherTab'})
+        ).toBe(true);
+      });
+
+      it('with a non-existing tab parameter, should return false', () => {
+        const initialParameters = initialSearchParameterSelector(engine.state);
+
+        expect(
+          validateParams(engine, {...initialParameters, tab: 'notMyTab'})
+        ).toBe(false);
+      });
     });
   });
 });

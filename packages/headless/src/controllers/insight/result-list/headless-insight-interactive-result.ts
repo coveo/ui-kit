@@ -1,7 +1,7 @@
-import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {logDocumentOpen} from '../../../features/result/result-analytics-actions';
-import {InsightEngine} from '../../../insight.index';
 import {Result} from '../../../api/search/search/result';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
+import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
@@ -20,7 +20,7 @@ export interface InsightInteractiveResultOptions
 export interface InsightInteractiveResultProps
   extends InteractiveResultCoreProps {
   /**
-   * The options for the `InsightInteractiveResult` controller.
+   * The options for the `InteractiveResult` controller.
    */
   options: InsightInteractiveResultOptions;
 }

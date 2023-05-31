@@ -1,9 +1,9 @@
 import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {Logger} from 'pino';
 import {PreprocessRequest} from '../api/preprocess-request';
+import {NoopPreprocessRequest} from '../api/preprocess-request';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {EngineConfiguration} from './engine-configuration';
-import {NoopPreprocessRequest} from '../api/preprocess-request';
 
 export interface ClientThunkExtraArguments<T> extends ThunkExtraArguments {
   apiClient: T;

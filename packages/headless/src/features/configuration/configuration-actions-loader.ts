@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
+import {configuration} from '../../app/common-reducers';
 import {CoreEngine} from '../../app/engine';
-import {configuration} from '../../app/reducers';
 import {
   disableAnalytics,
   enableAnalytics,

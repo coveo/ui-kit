@@ -13,7 +13,7 @@ Once you have cloned the repo, follow the instructions in the top-level [README.
 To start the project in development mode, run:
 
 ```bash
-npm start
+npm run dev
 ```
 
 To build the library for production, run:
@@ -65,3 +65,7 @@ The base of the `/src` folder should only contain exports.
 # Contribution guide: Adding a new controller.
 
 Please see [the contributor guide](./contributors/adding-a-controller.md) for guidance.
+
+# Contribution guide: Troubleshooting bundle content.
+
+Please see [the contributor guide](./contributors/troubleshooting-bundles-content.md) for guidance.

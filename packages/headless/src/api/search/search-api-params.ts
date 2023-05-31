@@ -1,7 +1,12 @@
 import {history} from 'coveo.analytics';
 import {FacetOptions} from '../../features/facet-options/facet-options';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
-import {HTTPContentType, HttpMethods} from '../platform-client';
+import {URLPath} from '../../utils/url-utils';
+import {
+  HTTPContentType,
+  HttpMethods,
+  PlatformClientCallOptions,
+} from '../platform-client';
 import {BaseParam} from '../platform-service-params';
 
 export interface QueryParam {
@@ -99,6 +104,8 @@ export interface TimezoneParam {
 
 export interface AnalyticsParam {
   analytics?: {
+    actionCause?: string;
+    customData?: object;
     clientId: string;
     deviceId?: string;
     pageId?: string;
@@ -123,14 +130,25 @@ export const baseSearchRequest = (
   method: HttpMethods,
   contentType: HTTPContentType,
   path: string
-) => ({
-  accessToken: req.accessToken,
-  method,
-  contentType,
-  url: `${req.url}${path}?${getOrganizationIdQueryParam(req)}${
-    req.authentication ? `&${getAuthenticationQueryParam(req)}` : ''
-  }`,
-});
+): Pick<
+  PlatformClientCallOptions,
+  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
+> => {
+  const url = new URLPath(`${req.url}${path}`);
+
+  url.addParam('organizationId', req.organizationId);
+
+  if (req.authentication) {
+    url.addParam('authentication', req.authentication);
+  }
+  return {
+    accessToken: req.accessToken,
+    method,
+    contentType,
+    url: url.href,
+    origin: 'searchApiFetch',
+  };
+};
 
 export const getOrganizationIdQueryParam = (req: BaseParam) =>
   `organizationId=${req.organizationId}`;

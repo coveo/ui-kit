@@ -1,0 +1,18 @@
+@import '../../../global/global.pcss';
+
+:host {
+  position: absolute;
+}
+
+:host(.visibility-hidden) {
+  visibility: hidden;
+}
+
+[part='overflow-tabs'] {
+  flex-direction: column;
+  max-width: 150px;
+
+  button {
+    text-align: start;
+  }
+}

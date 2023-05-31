@@ -214,7 +214,7 @@ describe('folding slice', () => {
         expect(PlatformClient.call).toHaveBeenCalledWith(
           expect.objectContaining({
             requestParams: expect.objectContaining({
-              cq: `@foldingcollection=${rootResult.raw.collection!}`,
+              cq: `@foldingcollection="${rootResult.raw.collection!}"`,
             }),
           })
         );

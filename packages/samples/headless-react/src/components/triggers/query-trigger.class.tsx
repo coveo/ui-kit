@@ -1,10 +1,10 @@
-import {Component, ContextType} from 'react';
 import {
   buildQueryTrigger,
   QueryTrigger as HeadlessQueryTrigger,
   QueryTriggerState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class QueryTrigger extends Component<{}, QueryTriggerState> {

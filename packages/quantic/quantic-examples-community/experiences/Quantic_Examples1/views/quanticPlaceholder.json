@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "65676752-eeb1-4ab6-8c28-735c0d557a73",
   "label" : "Quantic Placeholder",
   "regions" : [ {

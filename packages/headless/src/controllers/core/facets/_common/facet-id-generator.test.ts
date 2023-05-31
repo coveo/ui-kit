@@ -1,8 +1,8 @@
 import pino, {Logger} from 'pino';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
-import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {generateFacetId, FacetIdConfig} from './facet-id-generator';
 
 describe('#generateFacetId', () => {
@@ -48,7 +48,7 @@ describe('#generateFacetId', () => {
 
   describe('when the field is used as an id in the facetSet', () => {
     beforeEach(() => {
-      const facetSet = {[config.field]: buildMockFacetRequest()};
+      const facetSet = {[config.field]: buildMockFacetSlice()};
       config.state = {facetSet};
     });
 
@@ -71,8 +71,8 @@ describe('#generateFacetId', () => {
   it(`when a facet set contains multiple ids using the same field,
   it generates an id with a suffix one greater than the largest number`, () => {
     const facetSet = {
-      [config.field]: buildMockFacetRequest(),
-      [`${prefix}10`]: buildMockFacetRequest(),
+      [config.field]: buildMockFacetSlice(),
+      [`${prefix}10`]: buildMockFacetSlice(),
     };
     config.state = {facetSet};
 
@@ -82,9 +82,9 @@ describe('#generateFacetId', () => {
 
   it(`when the field is used in all facet sets,
   it generates an id with a suffix one greater than the largest number`, () => {
-    const facetSet = {[config.field]: buildMockFacetRequest()};
-    const numericFacetSet = {[`${prefix}1`]: buildMockNumericFacetRequest()};
-    const dateFacetSet = {[`${prefix}2`]: buildMockDateFacetRequest()};
+    const facetSet = {[config.field]: buildMockFacetSlice()};
+    const numericFacetSet = {[`${prefix}1`]: buildMockNumericFacetSlice()};
+    const dateFacetSet = {[`${prefix}2`]: buildMockDateFacetSlice()};
     const categoryFacetSet = {
       [`${prefix}3`]: buildMockCategoryFacetSlice(),
     };
@@ -103,7 +103,7 @@ describe('#generateFacetId', () => {
   it(`when the state contains an id based on a different field,
   it generates an id equal to the field`, () => {
     const facetSet = {
-      [getPrefixForField('filetype')]: buildMockFacetRequest(),
+      [getPrefixForField('filetype')]: buildMockFacetSlice(),
     };
     config.state = {facetSet};
 
@@ -113,7 +113,7 @@ describe('#generateFacetId', () => {
 
   it(`when the state contains an id with the same field but ending with a letter,
   it generates an id equal to the field`, () => {
-    const facetSet = {[`${prefix}a`]: buildMockFacetRequest()};
+    const facetSet = {[`${prefix}a`]: buildMockFacetSlice()};
     config.state = {facetSet};
 
     const id = getFacetId();

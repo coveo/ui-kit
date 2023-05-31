@@ -1,6 +1,7 @@
+import {paginationReducer as pagination} from '../features/pagination/pagination-slice';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
+import {searchReducer as search} from '../features/search/search-slice';
 import {createReducerManager} from './reducer-manager';
-import {pagination, search} from './reducers';
 
 describe('ReducerManager', () => {
   it('when a key does not exist, #add stores the key-reducer pair', () => {

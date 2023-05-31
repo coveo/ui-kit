@@ -1,5 +1,6 @@
-import {executeSearch} from '../../features/search/search-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logInterfaceChange} from '../../features/analytics/analytics-actions';
+import {executeSearch} from '../../features/search/search-actions';
 import {
   buildCoreTab,
   Tab,
@@ -8,7 +9,6 @@ import {
   TabInitialState,
   TabOptions,
 } from '../core/tab/headless-core-tab';
-import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
 

@@ -9,6 +9,11 @@ import {
 import {DateFacetValue, NumericFacetValue} from '../types';
 import {AnyEngineType, CommonStencilStore} from './bindings';
 
+export interface ResultListInfo {
+  focusOnNextNewResult(): void;
+  focusOnFirstResultAfterNextSearch(): Promise<void>;
+}
+
 export type AtomicCommonStoreData = {
   facets: FacetStore<FacetInfo>;
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
@@ -18,6 +23,7 @@ export type AtomicCommonStoreData = {
   iconAssetsPath: string;
   fieldsToInclude: string[];
   facetElements: HTMLElement[];
+  resultList?: ResultListInfo;
 };
 
 export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
@@ -34,7 +40,11 @@ export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
     facetType: T,
     data: StoreData[T][U] & {facetId: U; element: HTMLElement}
   ): void;
+  registerResultList(data: ResultListInfo): void;
+  addFieldsToInclude(fields: string[]): void;
 }
+
+export const isRefineModalFacet = 'is-refine-modal';
 
 export function createAtomicCommonStore<
   StoreData extends AtomicCommonStoreData
@@ -43,6 +53,15 @@ export function createAtomicCommonStore<
     initialStoreData
   ) as CommonStencilStore<StoreData>;
 
+  const clearExistingFacetElement = (facetType: FacetType, facetId: string) => {
+    if (stencilStore.state[facetType][facetId]) {
+      stencilStore.state.facetElements =
+        stencilStore.state.facetElements.filter(
+          (facetElement) => facetElement.getAttribute('facet-id') !== facetId
+        );
+    }
+  };
+
   return {
     ...stencilStore,
 
@@ -50,12 +69,13 @@ export function createAtomicCommonStore<
       facetType: T,
       data: StoreData[T][U] & {facetId: U; element: HTMLElement}
     ) {
-      if (stencilStore.state[facetType][data.facetId]) {
+      if (data.element.getAttribute(isRefineModalFacet) !== null) {
         return;
       }
 
-      stencilStore.state[facetType][data.facetId] = data;
+      clearExistingFacetElement(facetType, data.facetId);
       stencilStore.state.facetElements.push(data.element);
+      stencilStore.state[facetType][data.facetId] = data;
     },
 
     getIconAssetsPath() {
@@ -77,6 +97,17 @@ export function createAtomicCommonStore<
 
     hasLoadingFlag(loadingFlag: string) {
       return stencilStore.get('loadingFlags').indexOf(loadingFlag) !== -1;
+    },
+
+    registerResultList(data: ResultListInfo) {
+      stencilStore.set('resultList', data);
+    },
+
+    addFieldsToInclude(fields) {
+      stencilStore.set('fieldsToInclude', [
+        ...stencilStore.get('fieldsToInclude'),
+        ...fields,
+      ]);
     },
 
     waitUntilAppLoaded(callback: () => void) {

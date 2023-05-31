@@ -1,7 +1,9 @@
-import {
-  executeSearch,
-  fetchFacetValues,
-} from '../../../features/search/search-actions';
+import {configuration} from '../../../app/common-reducers';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
+import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {
   logFacetUpdateSort,
   logFacetShowMore,
@@ -10,26 +12,18 @@ import {
   logFacetDeselect,
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {
+  executeSearch,
+  fetchFacetValues,
+} from '../../../features/search/search-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
   SearchSection,
 } from '../../../state/state-sections';
-import {
-  CategoryFacetOptions,
-  CategoryFacetSearchOptions,
-} from '../../core/facets/category-facet/headless-core-category-facet-options';
-import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  configuration,
-  search,
-} from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   buildCoreCategoryFacet,
   CategoryFacet,
@@ -41,6 +35,10 @@ import {
   CoreCategoryFacet,
   CoreCategoryFacetState,
 } from '../../core/facets/category-facet/headless-core-category-facet';
+import {
+  CategoryFacetOptions,
+  CategoryFacetSearchOptions,
+} from '../../core/facets/category-facet/headless-core-category-facet-options';
 import {buildCategoryFacetSearch} from './headless-category-facet-search';
 
 export type {
@@ -80,6 +78,7 @@ export function buildCategoryFacet(
       facetId: getFacetId(),
       ...props.options.facetSearch,
     },
+    isForFieldSuggestions: false,
   });
 
   const {state, ...restOfFacetSearch} = facetSearch;

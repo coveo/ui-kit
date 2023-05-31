@@ -1,9 +1,11 @@
-import {LightningElement, api, track} from 'lwc';
+import loadingResults from '@salesforce/label/c.quantic_LoadingResults';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultList} ResultList */
@@ -31,10 +33,10 @@ export default class QuanticResultList extends LightningElement {
    * A list of fields to include in the query results, separated by commas.
    * @api
    * @type {string}
-   * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid'`
+   * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid'`
    */
   @api fieldsToInclude =
-    'date,author,source,language,filetype,parents,sfknowledgearticleid';
+    'date,author,source,language,filetype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid';
 
   /** @type {ResultListState}*/
   @track state;
@@ -55,10 +57,28 @@ export default class QuanticResultList extends LightningElement {
   resultTemplatesManager;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  loadingAriaLiveMessage;
+  /** @type {string} */
+  openPreviewId;
+  /** @type {boolean} */
+  hasInitializationError = false;
+
+  labels = {
+    loadingResults,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.template.addEventListener(
+      'quantic__resultpreviewtoggle',
+      this.handleResultPreviewToggle
+    );
   }
+
+  handleResultPreviewToggle = (event) => {
+    this.openPreviewId = event.detail.isOpen ? event.detail.resultId : null;
+  };
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
@@ -68,6 +88,7 @@ export default class QuanticResultList extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.loadingAriaLiveMessage = AriaLiveRegion('loading', this);
     this.headless = getHeadlessBundle(this.engineId);
     this.resultsPerPage = this.headless.buildResultsPerPage(engine);
     this.unsubscribeResultsPerPage = this.resultsPerPage.subscribe(() =>
@@ -103,6 +124,10 @@ export default class QuanticResultList extends LightningElement {
     this.unsubscribe?.();
     this.unsubscribeSearchStatus?.();
     this.unsubscribeResultsPerPage?.();
+    this.template.removeEventListener(
+      'quantic__resultpreviewtoggle',
+      this.handleResultPreviewToggle
+    );
   }
 
   updateState() {
@@ -113,11 +138,18 @@ export default class QuanticResultList extends LightningElement {
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted &&
       !!this.numberOfResults;
+    if (this.showPlaceholder) {
+      this.loadingAriaLiveMessage.dispatchMessage(
+        I18nUtils.format(this.labels.loadingResults)
+      );
+    }
   }
 
   get fields() {
-    if (this.fieldsToInclude.trim() === '') return [];
-    return this.fieldsToInclude.split(',').map((field) => field.trim());
+    return this.fieldsToInclude
+      .split(',')
+      .map((field) => field.trim())
+      .filter((field) => field.length > 0);
   }
 
   get hasResults() {
@@ -126,5 +158,12 @@ export default class QuanticResultList extends LightningElement {
 
   get results() {
     return this.state?.results || [];
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

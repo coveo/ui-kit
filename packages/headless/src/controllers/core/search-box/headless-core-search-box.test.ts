@@ -1,41 +1,44 @@
+import {configuration} from '../../../app/common-reducers';
 import {
-  SearchBox,
-  SearchBoxProps,
-  SearchBoxOptions,
-  buildCoreSearchBox,
-} from './headless-core-search-box';
+  deselectAllBreadcrumbs,
+  deselectAllNonBreadcrumbs,
+} from '../../../features/breadcrumb/breadcrumb-actions';
+import {updateFacetAutoSelection} from '../../../features/facets/generic/facet-actions';
+import {updatePage} from '../../../features/pagination/pagination-actions';
+import {
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from '../../../features/query-set/query-set-actions';
+import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
 import {
   registerQuerySuggest,
   clearQuerySuggest,
   fetchQuerySuggestions,
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions';
-import {createMockState} from '../../../test/mock-state';
-import {executeSearch} from '../../../features/search/search-actions';
+import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
 import {updateQuery} from '../../../features/query/query-actions';
-import {
-  registerQuerySetQuery,
-  updateQuerySetQuery,
-} from '../../../features/query-set/query-set-actions';
-import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
+import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
+import {queryReducer as query} from '../../../features/query/query-slice';
+import {executeSearch} from '../../../features/search/search-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
+import {SearchAppState} from '../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../../test/mock-engine';
-import {updatePage} from '../../../features/pagination/pagination-actions';
-import {SearchAppState} from '../../../state/search-app-state';
+import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
+import {createMockState} from '../../../test/mock-state';
 import {
-  configuration,
-  query,
-  querySet,
-  querySuggest,
-  search,
-} from '../../../app/reducers';
-import {
-  deselectAllBreadcrumbs,
-  deselectAllNonBreadcrumbs,
-} from '../../../features/breadcrumb/breadcrumb-actions';
-import {updateFacetAutoSelection} from '../../../features/facets/generic/facet-actions';
+  SearchBox,
+  SearchBoxProps,
+  SearchBoxOptions,
+  buildCoreSearchBox,
+} from './headless-core-search-box';
+
+jest.mock('../../../features/query/query-analytics-actions', () => ({
+  logSearchboxSubmit: jest.fn(() => () => {}),
+}));
 
 describe('headless CoreSearchBox', () => {
   const id = 'search-box-123';
@@ -71,12 +74,15 @@ describe('headless CoreSearchBox', () => {
     initController();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   function initState() {
     state = createMockState();
     state.querySet[id] = 'query';
     state.querySuggest[id] = buildMockQuerySuggest({
       id,
-      q: 'some value',
       completions: [
         {
           expression: 'a',
@@ -157,7 +163,6 @@ describe('headless CoreSearchBox', () => {
     expect(engine.actions).toContainEqual(
       registerQuerySuggest({
         id,
-        q: state.query.q,
         count: props.options!.numberOfSuggestions,
       })
     );
@@ -305,6 +310,7 @@ describe('headless CoreSearchBox', () => {
         (a) => a.type === executeSearch.pending.type
       );
       expect(action).toBeTruthy();
+      expect(logSearchboxSubmit).toBeCalledTimes(1);
     });
 
     it('it dispatches a clear suggestions action', () => {

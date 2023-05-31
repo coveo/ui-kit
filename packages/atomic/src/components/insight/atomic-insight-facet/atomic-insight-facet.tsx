@@ -24,9 +24,8 @@ import {
   FacetCommon,
   FacetDisplayValues,
 } from '../../common/facets/facet-common';
-
-import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {parseDependsOn} from '../../common/facets/facet-common';
+import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -41,7 +40,7 @@ export class AtomicInsightFacet
   implements InitializableComponent<InsightBindings>, BaseFacet<InsightFacet>
 {
   @InitializeBindings() public bindings!: InsightBindings;
-  public facetCommon!: FacetCommon;
+  public facetCommon?: FacetCommon;
   public facet!: InsightFacet;
   public searchStatus!: InsightSearchStatus;
   public withSearch = false;
@@ -153,7 +152,7 @@ export class AtomicInsightFacet
   }
 
   public disconnectedCallback() {
-    this.facetCommon.disconnectedCallback();
+    this.facetCommon?.disconnectedCallback();
   }
 
   public render() {

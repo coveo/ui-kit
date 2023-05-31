@@ -15,6 +15,7 @@
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
+          organizationEndpoints: searchInterface.getOrganizationEndpoints('searchuisamples'),
         });
 
         searchInterface.executeFirstSearch();
@@ -22,8 +23,8 @@
     </script>
     <!-- Custom Atomic Component using the initializeBindings method -->
     <script type="module">
-      import {initializeBindings} from '/build/index.esm.js';
       import {buildSearchBox} from '/build/headless/headless.esm.js';
+      import {initializeBindings} from '/build/index.esm.js';
 
       class CustomComponent extends HTMLElement {
         constructor() {

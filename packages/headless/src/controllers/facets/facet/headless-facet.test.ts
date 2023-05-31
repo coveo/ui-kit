@@ -1,8 +1,6 @@
-import {buildFacet, Facet, FacetOptions} from './headless-facet';
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../../test/mock-engine';
+import {configuration} from '../../../app/common-reducers';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   registerFacet,
   toggleSelectFacetValue,
@@ -11,28 +9,28 @@ import {
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
 } from '../../../features/facets/facet-set/facet-set-actions';
-import {createMockState} from '../../../test/mock-state';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
+import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchAppState} from '../../../state/search-app-state';
-import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search';
 import {
-  configuration,
-  facetSearchSet,
-  facetSet,
-  search,
-} from '../../../app/reducers';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../../test/mock-engine';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
+import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {createMockState} from '../../../test/mock-state';
+import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
+import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search';
+import {buildFacet, Facet, FacetOptions} from './headless-facet';
 
 describe('facet', () => {
   const facetId = '1';
@@ -47,7 +45,9 @@ describe('facet', () => {
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId, ...config}),
+    });
     state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 
@@ -99,7 +99,6 @@ describe('facet', () => {
       field: 'author',
       sortCriteria: 'score',
       facetId,
-      delimitingCharacter: '>',
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,

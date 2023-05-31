@@ -1,7 +1,7 @@
-import {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response';
-import {FacetSearchResponse} from './facet-search/facet-search-response';
-import {SearchResponseSuccess} from './search/search-response';
 import {PlatformResponse} from '../platform-client';
+import {FacetSearchResponse} from './facet-search/facet-search-response';
+import {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response';
+import {SearchResponseSuccess} from './search/search-response';
 
 export type PostprocessSearchResponseMiddleware = (
   response: PlatformResponse<SearchResponseSuccess>

@@ -14,6 +14,7 @@ export function buildMockApiIndexSignature(
     parameters: [],
     releaseTag: ReleaseTag.None,
     returnTypeTokenRange: {startIndex: 0, endIndex: 0},
+    isReadonly: false,
     ...config,
   });
 }

@@ -1,30 +1,32 @@
+import {configuration} from '../../../../app/common-reducers';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
+import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {
+  deselectAllNumericFacetValues,
+  registerNumericFacet,
+  toggleSelectNumericFacetValue,
+} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {executeSearch} from '../../../../features/search/search-actions';
+import {searchReducer as search} from '../../../../features/search/search-slice';
+import {SearchAppState} from '../../../../state/search-app-state';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../../../test/mock-engine';
+import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {createMockState} from '../../../../test/mock-state';
+import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
 import {
   NumericFacet,
   buildNumericFacet,
   NumericFacetOptions,
   buildNumericRange,
 } from './headless-numeric-facet';
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../../../test/mock-engine';
-import {createMockState} from '../../../../test/mock-state';
-import {executeSearch} from '../../../../features/search/search-actions';
-import {
-  deselectAllNumericFacetValues,
-  registerNumericFacet,
-  toggleSelectNumericFacetValue,
-} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
-import {SearchAppState} from '../../../../state/search-app-state';
-import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
-import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
 
 describe('numeric facet', () => {
   const facetId = '1';
@@ -46,7 +48,7 @@ describe('numeric facet', () => {
     };
 
     state = createMockState();
-    state.numericFacetSet[facetId] = buildMockNumericFacetRequest();
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice();
 
     initNumericFacet();
   });

@@ -1,9 +1,9 @@
 import {createAction} from '@reduxjs/toolkit';
+import {validatePayload} from '../../../../utils/validate-payload';
 import {
   RangeFacetSelectionPayload,
   rangeFacetSelectionPayloadDefinition,
 } from './range-facet-validate-payload';
-import {validatePayload} from '../../../../utils/validate-payload';
 
 export const executeToggleRangeFacetSelect = createAction(
   'rangeFacet/executeToggleSelect',

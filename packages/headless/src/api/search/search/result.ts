@@ -1,5 +1,5 @@
-import {Raw} from './raw';
 import {HighlightKeyword} from '../../../utils/highlight';
+import {Raw} from './raw';
 
 export interface Result {
   /**

@@ -1,18 +1,28 @@
-import {
-  defaultSearchBoxOptions,
-  SearchBoxOptions,
-  searchBoxOptionsSchema,
-} from './headless-core-search-box-options';
-import {
-  SuggestionHighlightingOptions,
-  Delimiters,
-  getHighlightedSuggestion,
-} from '../../../utils/highlight';
-import {
-  buildController,
-  Controller,
-} from '../../controller/headless-controller';
+import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../..';
+import {configuration} from '../../../app/common-reducers';
+import {
+  InsightAction,
+  SearchAction,
+} from '../../../features/analytics/analytics-utils';
+import {
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from '../../../features/query-set/query-set-actions';
+import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
+import {
+  clearQuerySuggest,
+  FetchQuerySuggestionsActionCreatorPayload,
+  registerQuerySuggest,
+  selectQuerySuggestion,
+} from '../../../features/query-suggest/query-suggest-actions';
+import {logQuerySuggestionClick} from '../../../features/query-suggest/query-suggest-analytics-actions';
+import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
+import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
+import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
+import {queryReducer as query} from '../../../features/query/query-slice';
+import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {
   ConfigurationSection,
   QuerySection,
@@ -20,32 +30,23 @@ import {
   QuerySuggestionSection,
   SearchSection,
 } from '../../../state/state-sections';
-import {
-  configuration,
-  query,
-  querySet,
-  querySuggest,
-  search,
-} from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
+import {
+  SuggestionHighlightingOptions,
+  Delimiters,
+  getHighlightedSuggestion,
+} from '../../../utils/highlight';
 import {randomID} from '../../../utils/utils';
 import {validateOptions} from '../../../utils/validate-payload';
 import {
-  registerQuerySetQuery,
-  updateQuerySetQuery,
-} from '../../../features/query-set/query-set-actions';
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 import {
-  clearQuerySuggest,
-  FetchQuerySuggestionsActionCreatorPayload,
-  registerQuerySuggest,
-  selectQuerySuggestion,
-} from '../../../features/query-suggest/query-suggest-actions';
-import {SearchAction} from '../../../features/analytics/analytics-utils';
-import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
-import {logQuerySuggestionClick} from '../../../features/query-suggest/query-suggest-analytics-actions';
-import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
-import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
-import {AsyncThunkAction} from '@reduxjs/toolkit';
+  defaultSearchBoxOptions,
+  SearchBoxOptions,
+  searchBoxOptionsSchema,
+} from './headless-core-search-box-options';
 
 export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
@@ -140,8 +141,10 @@ export interface SearchBox extends Controller {
 
   /**
    * Deselects all facets and triggers a search query.
+   *
+   * @param analytics -  The analytics action to log after submitting a query.
    */
-  submit(): void;
+  submit(analytics?: SearchAction): void;
 
   /**
    * The state of the `SearchBox` controller.
@@ -181,7 +184,6 @@ export function buildCoreSearchBox(
     dispatch(
       registerQuerySuggest({
         id,
-        q: engine.state.query.q,
         count: options.numberOfSuggestions,
       })
     );
@@ -231,8 +233,8 @@ export function buildCoreSearchBox(
       );
     },
 
-    submit() {
-      performSearch(logSearchboxSubmit());
+    submit(analytics: SearchAction | InsightAction = logSearchboxSubmit()) {
+      performSearch(analytics);
       dispatch(clearQuerySuggest({id}));
     },
 

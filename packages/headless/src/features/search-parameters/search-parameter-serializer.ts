@@ -15,7 +15,8 @@ import {SearchParameters} from './search-parameter-actions';
 
 const delimiter = '&';
 const equal = '=';
-const rangeDelimiter = '..';
+const rangeDelimiterExclusive = '..';
+const rangeDelimiterInclusive = '...';
 
 type SearchParameterKey = keyof SearchParameters;
 type UnknownObject = {[field: string]: unknown[]};
@@ -92,7 +93,7 @@ function serializeFacets(key: string, facets: Record<string, string[]>) {
   return Object.entries(facets)
     .map(
       ([facetId, values]) =>
-        `${key}[${facetId}]${equal}${values
+        `${key}-${facetId}${equal}${values
           .map((value) => encodeURIComponent(value))
           .join(',')}`
     )
@@ -106,9 +107,14 @@ function serializeRangeFacets(
   return Object.entries(facets)
     .map(([facetId, ranges]) => {
       const value = ranges
-        .map(({start, end}) => `${start}${rangeDelimiter}${end}`)
+        .map(
+          ({start, end, endInclusive}) =>
+            `${start}${
+              endInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
+            }${end}`
+        )
         .join(',');
-      return `${key}[${facetId}]${equal}${value}`;
+      return `${key}-${facetId}${equal}${value}`;
     })
     .join(delimiter);
 }
@@ -142,7 +148,7 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessObjectPairs(pair: string[]) {
   const [key, val] = pair;
-  const objectKey = /^(f|cf|nf|df|sf)\[(.+)\]$/;
+  const objectKey = /^(f|cf|nf|df|sf)-(.+)$/;
   const result = objectKey.exec(key);
 
   if (!result) {
@@ -172,9 +178,20 @@ function processObjectValues(key: string, values: string[]) {
 
 function buildNumericRanges(ranges: string[]) {
   return ranges
-    .map((str) => str.split(rangeDelimiter).map(parseFloat))
-    .filter((range) => range.length === 2 && range.every(Number.isFinite))
-    .map(([start, end]) => buildNumericRange({start, end, state: 'selected'}));
+    .map((str) => {
+      const {startAsString, endAsString, isEndInclusive} =
+        splitRangeValueAsStringByDelimiter(str);
+
+      return {
+        start: parseFloat(startAsString),
+        end: parseFloat(endAsString),
+        endInclusive: isEndInclusive,
+      };
+    })
+    .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
+    .map(({start, end, endInclusive}) =>
+      buildNumericRange({start, end, state: 'selected', endInclusive})
+    );
 }
 
 function isValidDateRangeValue(date: string) {
@@ -196,13 +213,23 @@ function isValidDateRangeValue(date: string) {
 
 function buildDateRanges(ranges: string[]) {
   return ranges
-    .map((str) => str.split(rangeDelimiter))
+    .map((str) => {
+      const {isEndInclusive, startAsString, endAsString} =
+        splitRangeValueAsStringByDelimiter(str);
+
+      return {
+        start: startAsString,
+        end: endAsString,
+        endInclusive: isEndInclusive,
+      };
+    })
     .filter(
-      (range) =>
-        range.length === 2 &&
-        range.every((value) => isValidDateRangeValue(value))
+      ({start, end}) =>
+        isValidDateRangeValue(start) && isValidDateRangeValue(end)
     )
-    .map(([start, end]) => buildDateRange({start, end, state: 'selected'}));
+    .map(({start, end, endInclusive}) =>
+      buildDateRange({start, end, state: 'selected', endInclusive})
+    );
 }
 
 function isValidPair<K extends SearchParameterKey>(
@@ -277,4 +304,16 @@ function keyHasObjectValue(
 ): key is 'f' | 'cf' | 'nf' | 'df' | 'sf' {
   const keys = ['f', 'cf', 'nf', 'df', 'sf'];
   return keys.includes(key);
+}
+
+function splitRangeValueAsStringByDelimiter(str: string) {
+  const isEndInclusive = str.indexOf(rangeDelimiterInclusive) !== -1;
+  const [startAsString, endAsString] = str.split(
+    isEndInclusive ? rangeDelimiterInclusive : rangeDelimiterExclusive
+  );
+  return {
+    isEndInclusive,
+    startAsString,
+    endAsString,
+  };
 }

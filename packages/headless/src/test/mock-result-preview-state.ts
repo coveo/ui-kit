@@ -7,6 +7,9 @@ export function buildMockResultPreviewState(
     content: '',
     uniqueId: '',
     isLoading: false,
+    contentURL: '',
+    position: -1,
+    resultsWithPreview: [],
     ...config,
   };
 }

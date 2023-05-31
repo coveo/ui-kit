@@ -1,8 +1,8 @@
-import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
 import pino, {Logger} from 'pino';
 import {Middleware, MiddlewareAPI} from 'redux';
-import {ExpiredTokenError} from '../utils/errors';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions';
+import {ExpiredTokenError} from '../utils/errors';
+import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
 
 describe('createRenewAccessTokenMiddleware', () => {
   let logger: Logger;

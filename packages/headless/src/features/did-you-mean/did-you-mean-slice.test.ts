@@ -1,9 +1,9 @@
-import {didYouMeanReducer} from './did-you-mean-slice';
-import {enableDidYouMean, disableDidYouMean} from './did-you-mean-actions';
-import {executeSearch} from '../search/search-actions';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearch} from '../../test/mock-search';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {logSearchEvent} from '../analytics/analytics-actions';
+import {executeSearch} from '../search/search-actions';
+import {enableDidYouMean, disableDidYouMean} from './did-you-mean-actions';
+import {didYouMeanReducer} from './did-you-mean-slice';
 import {getDidYouMeanInitialState, DidYouMeanState} from './did-you-mean-state';
 
 describe('did you mean slice', () => {

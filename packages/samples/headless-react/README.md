@@ -49,5 +49,5 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 To start the application in SSR mode:
 
-1. Build the app and server using: `npm run ssr:build`
-2. Start the server: `npm run ssr:start`.
+1. Build the app and server using: `npm run build`
+2. Start the server: `npm run prod:ssr`.

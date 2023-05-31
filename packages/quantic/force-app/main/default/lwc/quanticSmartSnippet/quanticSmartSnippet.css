@@ -1,0 +1,44 @@
+.smart-snippet__footer {
+  padding: 0;
+}
+
+.smart-snippet__answer {
+  transition: 0.5s;
+  overflow: hidden;
+}
+
+.smart-snippet__answer--collapsed {
+  max-height: var(--maxHeight, 250px);
+}
+
+.smart-snippet__answer--expanded {
+  max-height: var(--fullHeight, 100%);
+}
+
+.smart-snippet__answer::after {
+  transition: 0.5s;
+  position: absolute;
+  visibility: hidden;
+  content: '';
+  width: 100%;
+  height: 50px;
+  bottom: 0;
+  left: 0;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 1)
+  );
+}
+
+.smart-snippet__answer--collapsed::after {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  opacity: 1;
+  visibility: visible;
+}
+
+.smart-snippet__answer--expanded::after {
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+  opacity: 0.2;
+  visibility: hidden;
+}

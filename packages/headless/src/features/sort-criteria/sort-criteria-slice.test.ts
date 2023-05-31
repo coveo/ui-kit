@@ -1,19 +1,19 @@
-import {sortCriteriaReducer} from './sort-criteria-slice';
-import {
-  registerSortCriterion,
-  updateSortCriterion,
-} from './sort-criteria-actions';
-import {
-  getSortCriteriaInitialState,
-  SortCriteriaState,
-} from './sort-criteria-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {
   buildCriterionExpression,
   buildFieldSortCriterion,
   buildRelevanceSortCriterion,
   SortOrder,
 } from './criteria';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {
+  registerSortCriterion,
+  updateSortCriterion,
+} from './sort-criteria-actions';
+import {sortCriteriaReducer} from './sort-criteria-slice';
+import {
+  getSortCriteriaInitialState,
+  SortCriteriaState,
+} from './sort-criteria-state';
 
 describe('sortCriteria', () => {
   let state: SortCriteriaState;

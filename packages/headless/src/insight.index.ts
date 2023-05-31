@@ -1,14 +1,8 @@
+import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
+
+polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
-export type {Result} from './api/search/search/result';
-export type {
-  ResultTemplate,
-  ResultTemplateCondition,
-} from './features/result-templates/result-templates';
-export {ResultTemplatesHelpers} from './features';
-
-export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
-export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 
 // Main App
 export type {
@@ -31,14 +25,19 @@ export type {LogLevel} from './app/logger';
 // Action loaders
 export * from './features/insight-interface/insight-interface-actions-loader';
 export * from './features/insight-search/insight-search-actions-loader';
+export * from './features/insight-search/insight-query-set-actions-loader';
 export * from './features/analytics/insight-analytics-actions-loader';
 export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
 export * from './features/recent-results/recent-results-actions-loader';
+export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
 export * from './features/case-context/case-context-actions-loader';
 export * from './features/insight-search/insight-search-analytics-actions-loader';
-export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
-export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
+export * from './features/fields/fields-actions-loader';
+export * from './features/attached-results/attached-results-actions-loader';
+export * from './features/analytics/generic-analytics-actions-loader';
+export * from './features/question-answering/question-answering-actions-loader';
+export * from './features/folding/folding-actions-loader';
 
 // Controllers
 export type {
@@ -46,6 +45,8 @@ export type {
   Subscribable,
 } from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
+
+export type {HighlightKeyword} from './utils/highlight';
 
 export type {
   DidYouMean,
@@ -100,6 +101,8 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
 } from './controllers/insight/facets/category-facet/headless-insight-category-facet';
 export {buildCategoryFacet} from './controllers/insight/facets/category-facet/headless-insight-category-facet';
 
@@ -114,6 +117,9 @@ export type {
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
+  CoreFacet,
+  CoreFacetState,
+  CoreFacetOptions,
 } from './controllers/insight/facets/facet/headless-insight-facet';
 export {buildFacet} from './controllers/insight/facets/facet/headless-insight-facet';
 
@@ -174,16 +180,22 @@ export type {
 export {buildPager} from './controllers/insight/pager/headless-insight-pager';
 
 export type {
+  AttachToCaseProps,
+  AttachToCase,
+} from './controllers/insight/attach-to-case/headless-attach-to-case';
+export {buildAttachToCase} from './controllers/insight/attach-to-case/headless-attach-to-case';
+
+export type {
   QuerySummaryState,
   QuerySummary,
 } from './controllers/insight/query-summary/headless-insight-query-summary';
 export {buildQuerySummary} from './controllers/insight/query-summary/headless-insight-query-summary';
 
 export type {
-  Quickview,
-  QuickviewOptions,
   QuickviewProps,
+  QuickviewOptions,
   QuickviewState,
+  Quickview,
 } from './controllers/insight/quickview/headless-insight-quickview';
 export {buildQuickview} from './controllers/insight/quickview/headless-insight-quickview';
 
@@ -194,6 +206,17 @@ export type {
   ResultList,
 } from './controllers/insight/result-list/headless-insight-result-list';
 export {buildResultList} from './controllers/insight/result-list/headless-insight-result-list';
+
+export type {
+  FoldingOptions,
+  FoldedCollection,
+  FoldedResult,
+  FoldedResultListOptions,
+  InsightFoldedResultListProps,
+  FoldedResultList,
+  FoldedResultListState,
+} from './controllers/insight/folded-result-list/headless-insight-folded-result-list';
+export {buildFoldedResultList} from './controllers/insight/folded-result-list/headless-insight-folded-result-list';
 
 export type {
   InsightInteractiveResultOptions,
@@ -257,6 +280,46 @@ export type {InsightInterface} from './controllers/insight-interface/insight-int
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
 
 export type {
+  SmartSnippet,
+  SmartSnippetOptions,
+  SmartSnippetProps,
+  SmartSnippetState,
+  QuestionAnswerDocumentIdentifier,
+  SmartSnippetCore,
+} from './controllers/insight/smart-snippet/headless-insight-smart-snippet';
+export {buildSmartSnippet} from './controllers/insight/smart-snippet/headless-insight-smart-snippet';
+
+export type {
+  SmartSnippetQuestionsListOptions,
+  SmartSnippetQuestionsListProps,
+  SmartSnippetQuestionsListState,
+  SmartSnippetQuestionsList,
+  SmartSnippetRelatedQuestion,
+  CoreSmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
+} from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
+export {buildSmartSnippetQuestionsList} from './controllers/insight/smart-snippet-questions-list/headless-insight-smart-snippet-questions-list';
+
+// Features
+export type {
+  ResultTemplate,
+  ResultTemplateCondition,
+} from './features/result-templates/result-templates';
+export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {ResultTemplatesHelpers} from './features';
+
+export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
+
+export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
+
+export type {
+  QueryError,
+  QueryErrorState,
+} from './controllers/insight/query-error/headless-insight-query-error';
+export {buildQueryError} from './controllers/insight/query-error/headless-insight-query-error';
+
+export type {
   FacetValueRequest,
   FacetSortCriterion,
 } from './features/facets/facet-set/interfaces/request';
@@ -267,6 +330,10 @@ export type {
 } from './features/facets/range-facets/generic/interfaces/request';
 
 // Types & Helpers
+export type {Raw} from './api/search/search/raw';
+export type {InsightAPIErrorStatusResponse} from './api/service/insight/insight-api-client';
+export type {Result} from './api/search/search/result';
+
 export {
   SortOrder,
   buildDateSortCriterion,
@@ -281,3 +348,6 @@ export type {
 } from './api/search/date/relative-date';
 
 export {deserializeRelativeDate} from './api/search/date/relative-date';
+
+export {getOrganizationEndpoints} from './api/platform-client';
+export type {PlatformEnvironment} from './utils/url-utils';

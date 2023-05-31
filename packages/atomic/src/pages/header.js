@@ -3,17 +3,23 @@ const links = [
   {href: '/examples/custom.html', label: 'Custom'},
   {href: '/examples/external.html', label: 'External'},
   {href: '/examples/folding.html', label: 'Folding'},
+  {href: '/examples/slack.html', label: 'Slack'},
   {href: '/examples/headless.html', label: 'Headless'},
   {href: '/examples/standalone.html', label: 'Standalone'},
   {href: '/examples/modal.html', label: 'Modal'},
   {href: '/examples/suggestions.html', label: 'Custom Query Suggestions'},
-  {href: '/examples/instantResults.html', label: 'Instant Results'},
-  {href: '/examples/insights.html', label: 'Insights Panel'},
+  {href: '/examples/fashion.html', label: 'Fashion (Instant results + Recs)'},
+  {href: '/examples/insights.html', label: 'Insight Panel'},
+  {
+    href: '/examples/recommendations.html',
+    label: 'Recommendations',
+  },
   {href: '/examples/horizontal-facets.html', label: 'Horizontal Facets'},
   {
     href: '/accessibility/commerce-full.html',
     label: 'Accessible Commerce Full',
   },
+  {href: '/examples/ipx.html', label: 'IPX'},
 ];
 
 const header = document.createElement('header');

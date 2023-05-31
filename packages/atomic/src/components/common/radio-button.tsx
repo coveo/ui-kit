@@ -53,12 +53,12 @@ export const RadioButton: FunctionalComponent<RadioButtonProps> = (props) => {
 
   return (
     <input
-      {...attributes}
       type="radio"
       onChange={(e) =>
         (e.currentTarget as HTMLInputElement).checked && props.onChecked?.()
       }
       onMouseDown={onMouseDown}
+      {...attributes}
     />
   );
 };

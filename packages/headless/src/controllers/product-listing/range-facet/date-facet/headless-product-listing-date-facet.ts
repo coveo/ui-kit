@@ -1,8 +1,13 @@
+import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
+import {
+  logFacetClearAll,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
-import {DateFacetOptions} from '../../../core/facets/range-facet/date-facet/headless-date-facet-options';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {
   buildCoreDateFacet,
   buildDateRange,
@@ -12,13 +17,7 @@ import {
   DateRangeInput,
   DateRangeOptions,
 } from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
-import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
+import {DateFacetOptions} from '../../../core/facets/range-facet/date-facet/headless-date-facet-options';
 
 export type {
   DateFacetOptions,

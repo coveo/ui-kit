@@ -1,25 +1,30 @@
-import {Component, h, Prop, Element, Listen} from '@stencil/core';
-import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
+import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
+import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
-  DisplayConfig,
-  ResultContextEvent,
-} from '../result-template-components/result-template-decorators';
-import {ResultRenderingFunction} from '../result-lists/result-list-common';
-import {AtomicStore} from '../atomic-search-interface/store';
+  AtomicCommonStore,
+  AtomicCommonStoreData,
+} from '../../common/interface/store';
 import {
   ResultLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
+import {resultComponentClass} from '../../common/result-list/result-list-common';
+import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
+import {
+  DisplayConfig,
+  InteractiveResultContextEvent,
+  ResultContextEvent,
+} from '../result-template-components/result-template-decorators';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
  */
 @Component({
   tag: 'atomic-result',
-  styleUrl: 'atomic-result.pcss',
+  styleUrl: '../../common/result/result.pcss',
   shadow: true,
 })
 export class AtomicResult {
@@ -28,7 +33,7 @@ export class AtomicResult {
   @Element() host!: HTMLElement;
 
   /**
-   * Whether an atomic-result-link inside atomic-result should stop propagation.
+   * Whether an atomic-result-link inside atomic-result should stop click event propagation.
    */
   @Prop() stopPropagation?: boolean;
 
@@ -38,15 +43,16 @@ export class AtomicResult {
   @Prop() result!: Result | FoldedResult;
 
   /**
-   * The headless search engine.
-   */
-  @Prop() engine!: SearchEngine;
-
-  /**
-   * Global state for Atomic.
+   * The InteractiveResult item.
    * @internal
    */
-  @Prop() store?: AtomicStore;
+  @Prop() interactiveResult!: InteractiveResult;
+
+  /**
+   * Global Atomic state.
+   * @internal
+   */
+  @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
 
   /**
    * The result content to display.
@@ -64,19 +70,14 @@ export class AtomicResult {
   @Prop() density: ResultDisplayDensity = 'normal';
 
   /**
-   * How large or small the visual section of results should be.
+   * The size of the visual section in result list items.
    *
-   * This may be overwritten if an image size is defined in the result content.
+   * This is overwritten by the image size defined in the result content, if it exists.
    */
-  @Prop() imageSize?: ResultDisplayImageSize;
+  @Prop() imageSize: ResultDisplayImageSize = 'icon';
 
   /**
-   * @deprecated use `imageSize` instead.
-   */
-  @Prop() image: ResultDisplayImageSize = 'icon';
-
-  /**
-   * Classes that will be added to the result element.
+   * The classes to add to the result element.
    */
   @Prop() classes = '';
 
@@ -86,12 +87,12 @@ export class AtomicResult {
   @Prop() loadingFlag?: string;
 
   /**
-   * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system.
+   * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system.
    * Particularly useful for Atomic React
    *
    * @internal
    */
-  @Prop() renderingFunction?: ResultRenderingFunction;
+  @Prop() renderingFunction: ResultRenderingFunction;
 
   private resultRootRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;
@@ -101,6 +102,15 @@ export class AtomicResult {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveInteractiveResult')
+  public resolveInteractiveResult(event: InteractiveResultContextEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.interactiveResult) {
+      event.detail(this.interactiveResult);
+    }
   }
 
   @Listen('atomic/resolveStopPropagation')
@@ -123,7 +133,7 @@ export class AtomicResult {
       this.content!.children,
       this.display,
       this.density,
-      this.imageSize ?? this.image
+      this.imageSize
     );
   }
 
@@ -148,21 +158,25 @@ export class AtomicResult {
   public render() {
     if (this.isCustomRenderFunctionMode) {
       return (
-        <div
-          class="result-root"
-          ref={(ref) => (this.resultRootRef = ref)}
-        ></div>
+        <Host class={resultComponentClass}>
+          <div
+            class="result-root"
+            ref={(ref) => (this.resultRootRef = ref)}
+          ></div>
+        </Host>
       );
     }
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
-      <div
-        class={`result-root ${this.layout
-          .getClasses()
-          .concat(this.classes)
-          .join(' ')}`}
-        innerHTML={this.getContentHTML()}
-      ></div>
+      <Host class={resultComponentClass}>
+        <div
+          class={`result-root ${this.layout
+            .getClasses()
+            .concat(this.classes)
+            .join(' ')}`}
+          innerHTML={this.getContentHTML()}
+        ></div>
+      </Host>
     );
   }
 

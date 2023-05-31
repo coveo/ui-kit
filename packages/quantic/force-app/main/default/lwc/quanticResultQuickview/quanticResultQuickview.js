@@ -1,14 +1,15 @@
-import {LightningElement, api, track} from 'lwc';
+import close from '@salesforce/label/c.quantic_Close';
+import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
+import openFileForPreview from '@salesforce/label/c.quantic_OpenFileForPreview';
+import openPreview from '@salesforce/label/c.quantic_OpenPreview';
 import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
   HeadlessBundleNames,
   isHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-
-import close from '@salesforce/label/c.quantic_Close';
-import openPreview from '@salesforce/label/c.quantic_OpenPreview';
-import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
+import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -59,7 +60,7 @@ export default class QuanticResultQuickview extends LightningElement {
   /**
    * The variant of the preview button.
    * @api
-   * @type {undefined|'brand'|'outline-brand'}
+   * @type {undefined|'brand'|'outline-brand'|'result-action'}
    * @defaultValue `undefined`
    */
   @api previewButtonVariant;
@@ -71,6 +72,13 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `'search'`
    */
   @api useCase = 'search';
+  /**
+   * The label displayed in the tooltip of the quick view button.
+   * @api
+   * @type {boolean}
+   * @defaultValue `undefined`
+   */
+  @api tooltip;
 
   /** @type {QuickviewState} */
   @track state;
@@ -83,11 +91,18 @@ export default class QuanticResultQuickview extends LightningElement {
   unsubscribe;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  isFirstPreviewRender = true;
+  /** @type {string} */
+  resultActionOrderClasses;
+  /** @type {boolean} */
+  _isLoading = false;
 
   labels = {
     close,
     openPreview,
     noPreview,
+    openFileForPreview,
   };
 
   connectedCallback() {
@@ -98,12 +113,29 @@ export default class QuanticResultQuickview extends LightningElement {
       .catch((error) => {
         console.error(error.message);
       });
+
+    if (this.isResultAction) {
+      const resultActionRegister = new CustomEvent(
+        'quantic__resultactionregister',
+        {
+          bubbles: true,
+          composed: true,
+          detail: {
+            applyCssOrderClass: this.applyCssOrderClass,
+          },
+        }
+      );
+      this.dispatchEvent(resultActionRegister);
+    }
+    this.addEventListener('loadingstatechange', this.handleLoadingStateChange);
   }
 
   renderedCallback() {
     if (this.contentContainer && this.state?.resultHasPreview) {
-      // eslint-disable-next-line @lwc/lwc/no-inner-html
-      this.contentContainer.innerHTML = this.state.content;
+      if (this.isQuickviewOpen && this.isFirstPreviewRender) {
+        this.isFirstPreviewRender = false;
+        this.setFocusToHeader();
+      }
     }
     this.injectIdToSlots();
   }
@@ -116,6 +148,7 @@ export default class QuanticResultQuickview extends LightningElement {
     const options = {
       result: this.result,
       maximumPreviewSize: Number(this.maximumPreviewSize),
+      onlyContentURL: true,
     };
     this.quickview = this.headless.buildQuickview(engine, {options});
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
@@ -125,6 +158,10 @@ export default class QuanticResultQuickview extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.removeEventListener(
+      'loadingstatechange',
+      this.handleLoadingStateChange
+    );
   }
 
   updateState() {
@@ -133,10 +170,12 @@ export default class QuanticResultQuickview extends LightningElement {
 
   openQuickview() {
     this.isQuickviewOpen = true;
-    this.quickview.fetchResultContent();
+    this._isLoading = true;
     if (!isHeadlessBundle(this.engineId, HeadlessBundleNames.caseAssist)) {
       this.addRecentResult();
     }
+    this.quickview.fetchResultContent();
+    this.sendResultPreviewEvent(true);
   }
 
   addRecentResult() {
@@ -150,6 +189,8 @@ export default class QuanticResultQuickview extends LightningElement {
 
   closeQuickview() {
     this.isQuickviewOpen = false;
+    this.isFirstPreviewRender = true;
+    this.sendResultPreviewEvent(false);
   }
 
   stopPropagation(evt) {
@@ -182,8 +223,21 @@ export default class QuanticResultQuickview extends LightningElement {
     });
   }
 
+  handleLoadingStateChange(event) {
+    event.stopPropagation();
+    this._isLoading = false;
+  }
+
+  get contentURL() {
+    return this.state.contentURL?.includes(
+      encodeURIComponent(this.result.uniqueId)
+    )
+      ? this.state.contentURL
+      : undefined;
+  }
+
   get isLoading() {
-    return this.state?.isLoading;
+    return this._isLoading;
   }
 
   get hasNoPreview() {
@@ -194,6 +248,7 @@ export default class QuanticResultQuickview extends LightningElement {
     return !!this.previewButtonIcon;
   }
 
+  /** @type {HTMLIFrameElement} */
   get contentContainer() {
     return this.template.querySelector('.quickview__content-container');
   }
@@ -207,12 +262,13 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get buttonClass() {
-    return [
-      'slds-button',
-      this.previewButtonVariant
-        ? `slds-button_${this.previewButtonVariant}`
-        : 'quickview__button-base',
-    ].join(' ');
+    let variantClass = 'quickview__button-base';
+    if (this.isResultAction) {
+      variantClass = `slds-button_icon-border-filled ${this.resultActionOrderClasses}`;
+    } else if (this.previewButtonVariant) {
+      variantClass = `slds-button_${this.previewButtonVariant}`;
+    }
+    return ['slds-button', variantClass].join(' ');
   }
 
   get buttonIconClass() {
@@ -222,7 +278,123 @@ export default class QuanticResultQuickview extends LightningElement {
     ].join(' ');
   }
 
+  get buttonContainerClass() {
+    return `slds-is-relative slds-show_inline result-action_container ${
+      this.isResultAction ? 'result-action_white-container' : ''
+    }`;
+  }
+
+  get buttonAriaLabelValue() {
+    return I18nUtils.format(this.labels.openFileForPreview, this.result.title);
+  }
+
   get hasButtonLabel() {
     return !!this.previewButtonLabel;
+  }
+
+  setFocusToHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-result-link');
+
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
+  }
+
+  setFocusToTop() {
+    /** @type {HTMLElement} */
+    const focusTarget = this.template.querySelector(
+      `.slds-button.slds-button_icon`
+    );
+
+    if (focusTarget) {
+      focusTarget.focus();
+    }
+  }
+
+  /**
+   * @param {KeyboardEvent} evt
+   */
+  onCloseKeyDown(evt) {
+    if (evt.shiftKey && evt.code === 'Tab') {
+      evt.preventDefault();
+      const lastFocusableElement =
+        this.lastFocusableElementInFooterSlot ||
+        this.lastFocusableElementInQuickview;
+      if (lastFocusableElement) {
+        lastFocusableElement.focus();
+      } else {
+        this.setFocusToHeader();
+      }
+    }
+  }
+
+  get lastFocusableElementInFooterSlot() {
+    /** @type {HTMLElement} */
+    const footerSlot = this.template.querySelector('slot[name=footer]');
+    if (footerSlot) {
+      const lastElement = getLastFocusableElement(footerSlot);
+      if (lastElement) return lastElement;
+    }
+    return null;
+  }
+
+  get lastFocusableElementInQuickview() {
+    const element = this.contentContainer;
+    if (element) {
+      const lastElement = getLastFocusableElement(element);
+      return lastElement;
+    }
+    return null;
+  }
+
+  /**
+   * Sends the "quantic__resultpreviewtoggle" event.
+   * @param {boolean} isOpen
+   */
+  sendResultPreviewEvent(isOpen) {
+    const resultPreviewEvent = new CustomEvent('quantic__resultpreviewtoggle', {
+      composed: true,
+      bubbles: true,
+      detail: {
+        isOpen,
+        ...(isOpen && {resultId: this.result.uniqueId}),
+      },
+    });
+    this.dispatchEvent(resultPreviewEvent);
+  }
+
+  /**
+   * Applies the proper CSS order class.
+   * This method is inspired from how the lightning-button-group component works:
+   * https://github.com/salesforce/base-components-recipes/blob/master/force-app/main/default/lwc/buttonGroup/buttonGroup.js
+   * @param {'first' | 'middle' | 'last'} order
+   */
+  applyCssOrderClass = (order) => {
+    const commonButtonClass = 'result-action_button';
+    let orderClass = '';
+
+    if (order === 'first') {
+      orderClass = 'result-action_first';
+    } else if (order === 'middle') {
+      orderClass = 'result-action_middle';
+    } else if (order === 'last') {
+      orderClass = 'result-action_last';
+    }
+    this.resultActionOrderClasses = orderClass
+      ? `${commonButtonClass} ${orderClass}`
+      : commonButtonClass;
+  };
+
+  get buttonTitle() {
+    return this.tooltip ? null : this.buttonLabel;
+  }
+
+  /**
+   * Indicates whether the quickview button is used as a result action.
+   * @return {boolean}
+   */
+  get isResultAction() {
+    return this.previewButtonVariant === 'result-action';
   }
 }

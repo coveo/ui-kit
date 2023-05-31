@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {change} from '../history/history-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {registerTab, updateActiveTab} from './tab-set-actions';
 import {getTabSetInitialState, TabSetState} from './tab-set-state';
@@ -24,6 +25,9 @@ export const tabSetReducer = createReducer(
       .addCase(restoreSearchParameters, (state, action) => {
         const id = action.payload.tab || '';
         activateTabIfIdExists(state, id);
+      })
+      .addCase(change.fulfilled, (state, action) => {
+        return action.payload?.tabSet ?? state;
       });
   }
 );

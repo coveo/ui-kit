@@ -1,9 +1,9 @@
-import {RangeFacetValue} from './interfaces/range-facet';
 import {
   logFacetDeselect,
   logFacetSelect,
 } from '../../facet-set/facet-set-analytics-actions';
 import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils';
+import {RangeFacetValue} from './interfaces/range-facet';
 
 export const isRangeFacetValueSelected = (selection: RangeFacetValue) => {
   return selection.state === 'selected';

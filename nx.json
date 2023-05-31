@@ -1,0 +1,59 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["cached:build:stencil"]
+      }
+    }
+  },
+  "plugins": ["@coveo/nx-plugin"],
+  "namedInputs": {
+    "sharedGlobals": [{"runtime": "node -v"}],
+    "sharedTypescriptSources": [
+      "{workspaceRoot}/tsconfig.json",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/src/**",
+      "!{projectRoot}/src/**/?(*.)+({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})"
+    ],
+    "production": [
+      "sharedGlobals",
+      "{projectRoot}/**",
+      "!{projectRoot}/**/?(*.)+({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})",
+      "!{projectRoot}/{dist,www,temp}/**"
+    ]
+  },
+  "targetDefaults": {
+    "build": {
+      "inputs": ["^production", "production"],
+      "dependsOn": ["^build"]
+    },
+    "prod": {
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    },
+    "e2e": {
+      "dependsOn": ["build"]
+    },
+    "lint:check": {},
+    "lint:fix": {},
+    "publish:sfdx": {
+      "dependsOn": ["build"]
+    },
+    "promote:sfdx": {
+      "dependsOn": ["build"]
+    },
+    "release:phase1": {
+      "dependsOn": ["^release:phase1", "^release:phase2"]
+    },
+    "release:build": {
+      "dependsOn": ["^release:build", "release:phase1"]
+    },
+    "release:phase2": {
+      "dependsOn": ["release:build", "release:phase1"]
+    }
+  },
+  "defaultBase": "master"
+}

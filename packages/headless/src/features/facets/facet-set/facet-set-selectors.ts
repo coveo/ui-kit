@@ -3,8 +3,8 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {FacetSection} from '../../../state/state-sections';
-import {FacetResponse, FacetValue} from './interfaces/response';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
+import {FacetResponse, FacetValue} from './interfaces/response';
 
 export type FacetResponseSection = SearchSection | ProductListingSection;
 
@@ -27,7 +27,7 @@ export const baseFacetResponseSelector = (
 };
 
 export const facetRequestSelector = (state: FacetSection, id: string) => {
-  return state.facetSet[id];
+  return state.facetSet[id]?.request;
 };
 
 function isFacetResponse(

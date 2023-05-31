@@ -1,6 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {fetchInstantResults} from '../search/search-actions';
-
 import {
   clearExpiredResults,
   FetchInstantResultsActionCreatorPayload,
@@ -40,18 +39,29 @@ export const instantResultsReducer = createReducer(
       });
     });
     builder.addCase(fetchInstantResults.pending, (state, action) => {
+      for (const id in state) {
+        for (const query in state[id].cache) {
+          state[id].cache[query].isActive = false;
+        }
+      }
+
       if (!getCached(state, action.meta)) {
         makeEmptyCache(state, action.meta);
-      } else {
-        const cached = getCached(state, action.meta);
-        cached!.isLoading = true;
-        cached!.error = null;
+        return;
       }
+
+      const cached = getCached(state, action.meta);
+      cached!.isLoading = true;
+      cached!.isActive = true;
+      cached!.error = null;
     });
     builder.addCase(fetchInstantResults.fulfilled, (state, action) => {
-      const {results} = action.payload;
+      const {results, searchUid} = action.payload;
       const {cacheTimeout} = action.meta.arg;
       const cached = getCached(state, action.meta);
+
+      cached!.isActive = true;
+      cached!.searchUid = searchUid;
       cached!.isLoading = false;
       cached!.error = null;
       cached!.results = results;
@@ -61,6 +71,7 @@ export const instantResultsReducer = createReducer(
       const cached = getCached(state, action.meta);
       cached!.error = action.error || null;
       cached!.isLoading = false;
+      cached!.isActive = false;
     });
   }
 );
@@ -75,6 +86,8 @@ const makeEmptyCache = (
     error: null,
     results: [],
     expiresAt: 0,
+    isActive: true,
+    searchUid: '',
   };
 };
 

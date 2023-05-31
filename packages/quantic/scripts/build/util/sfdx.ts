@@ -1,6 +1,6 @@
 import {exec} from 'child_process';
-import strip from 'strip-color';
 import * as path from 'path';
+import strip from 'strip-color';
 
 /**
  * A response from a successful sfdx command.

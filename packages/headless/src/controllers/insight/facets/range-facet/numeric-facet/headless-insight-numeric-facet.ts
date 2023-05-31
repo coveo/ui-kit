@@ -1,6 +1,13 @@
+import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
+import {
+  logFacetClearAll,
+  logFacetUpdateSort,
+} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
+import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils';
 import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {isRangeFacetValueSelected} from '../../../../../features/facets/range-facets/generic/range-facet-utils';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 import {
   buildCoreNumericFacet,
   buildNumericRange,
@@ -10,17 +17,6 @@ import {
   NumericFacetState,
   NumericRangeOptions,
 } from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
-import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
-import {
-  logFacetClearAll,
-  logFacetDeselect,
-  logFacetSelect,
-  logFacetUpdateSort,
-} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {RangeFacetValue} from '../../../../../features/facets/range-facets/generic/interfaces/range-facet';
-import {FacetSelectionChangeMetadata} from '../../../../../features/facets/facet-set/facet-set-analytics-actions-utils';
 
 export type {
   NumericRangeOptions,
@@ -69,7 +65,10 @@ export function buildNumericFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch(
-          getAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection)
+          getInsightAnalyticsActionForToggleRangeFacetSelect(
+            getFacetId(),
+            selection
+          )
         )
       );
     },
@@ -80,16 +79,4 @@ export function buildNumericFacet(
       };
     },
   };
-}
-
-function getAnalyticsActionForToggleRangeFacetSelect(
-  facetId: string,
-  selection: RangeFacetValue
-) {
-  const facetValue = `${selection.start}..${selection.end}`;
-  const payload: FacetSelectionChangeMetadata = {facetId, facetValue};
-
-  return isRangeFacetValueSelected(selection)
-    ? logFacetDeselect(payload)
-    : logFacetSelect(payload);
 }

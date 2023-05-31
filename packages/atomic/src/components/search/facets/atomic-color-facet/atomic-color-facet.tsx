@@ -1,4 +1,3 @@
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -12,41 +11,46 @@ import {
   buildFacetConditionsManager,
   FacetConditionsManager,
 } from '@coveo/headless';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {
+  AriaLiveRegion,
+  FocusTarget,
+  FocusTargetController,
+} from '../../../../utils/accessibility-utils';
+import {
+  getFieldCaptions,
+  getFieldValueCaption,
+} from '../../../../utils/field-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
-import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
-import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
-import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
-import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
-import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
-import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
-import {
-  shouldUpdateFacetSearchComponent,
-  shouldDisplaySearchResults,
-} from '../../../common/facets/facet-search/facet-search-utils';
-import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
-import {
-  getFieldCaptions,
-  getFieldValueCaption,
-} from '../../../../utils/field-utils';
-import {Hidden} from '../../../common/hidden';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
 import {MapProp} from '../../../../utils/props-utils';
-import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   BaseFacet,
   parseDependsOn,
   validateDependsOn,
 } from '../../../common/facets/facet-common';
+import {FacetInfo} from '../../../common/facets/facet-common-store';
+import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
+import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
+import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
+import {
+  shouldUpdateFacetSearchComponent,
+  shouldDisplaySearchResults,
+} from '../../../common/facets/facet-search/facet-search-utils';
+import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
+import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {Hidden} from '../../../common/hidden';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {initializePopover} from '../atomic-popover/popover-type';
+import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -142,7 +146,7 @@ export class AtomicColorFacet
    */
   @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'box' = 'box';
   /**
-   * Specifies if the facet is collapsed.
+   * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
@@ -192,6 +196,9 @@ export class AtomicColorFacet
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
+  @AriaLiveRegion('facet-search')
+  protected facetSearchAriaMessage!: string;
+
   private validateProps() {
     validateDependsOn(this.dependsOn);
   }
@@ -209,11 +216,23 @@ export class AtomicColorFacet
       filterFacetCount: this.filterFacetCount,
     };
     this.facet = buildFacet(this.bindings.engine, {options});
+    announceFacetSearchResultsWithAriaLive(
+      this.facet,
+      this.label,
+      (msg) => (this.facetSearchAriaMessage = msg),
+      this.bindings.i18n
+    );
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.registerFacet('facets', {
-      label: this.label,
+    const facetInfo: FacetInfo = {
+      label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
+    };
+    this.bindings.store.registerFacet('facets', facetInfo);
+    initializePopover(this.host, {
+      ...facetInfo,
+      hasValues: () => !!this.facet.state.values.length,
+      numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
     this.inititalizeDependenciesManager();
   }
@@ -274,9 +293,7 @@ export class AtomicColorFacet
   }
 
   private renderSearchInput() {
-    const shouldDisplaySearch =
-      this.withSearch && this.facetState.canShowMoreValues;
-    if (!shouldDisplaySearch) {
+    if (!this.withSearch) {
       return;
     }
 

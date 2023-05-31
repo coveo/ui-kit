@@ -1,12 +1,10 @@
+import {configuration} from '../../app/common-reducers';
 import {InsightEngine} from '../../app/insight-engine/insight-engine';
-import {
-  configuration,
-  insightConfiguration,
-  insightInterface,
-  searchHub,
-} from '../../app/reducers';
+import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
 import {fetchInterface} from '../../features/insight-interface/insight-interface-actions';
+import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
 import {InsightInterfaceState} from '../../features/insight-interface/insight-interface-state';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {
   ConfigurationSection,
   InsightConfigurationSection,
@@ -31,6 +29,11 @@ export interface InsightInterface extends Controller {
   state: InsightInterfaceState;
 }
 
+/**
+ * Creates an `InsightInterface` controller instance.
+ * @param engine  - The insight engine.
+ * @returns An `InsightInterface controller instance.
+ */
 export function buildInsightInterface(engine: InsightEngine): InsightInterface {
   if (!loadInsightInterfaceReducers(engine)) {
     throw loadReducerError;

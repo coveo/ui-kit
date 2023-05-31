@@ -1,7 +1,7 @@
-import dayjs, {QUnitType} from 'dayjs';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {assertDateAboveAPIMinimum, formatDateForSearchApi} from './date-format';
+import dayjs, {QUnitType} from 'dayjs';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
+import {assertDateAboveAPIMinimum, formatDateForSearchApi} from './date-format';
 
 dayjs.extend(quarterOfYear);
 

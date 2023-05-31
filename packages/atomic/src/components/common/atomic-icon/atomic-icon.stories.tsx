@@ -1,7 +1,7 @@
-import {html} from 'lit-html';
-import defaultStory from '../../../../.storybook/default-story';
-import AssetsList from '../../../../docs/assets.json';
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
+import defaultStory from 'atomic-storybook/default-story';
+import {html} from 'lit-html';
+import AssetsList from '../../../../docs/assets.json';
 
 function snakeToCamel(value: string) {
   return value
@@ -73,5 +73,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
 export const DefaultIcon = exportedStory;
+export default {...defaultModuleExport, title: 'Atomic/Icon'};

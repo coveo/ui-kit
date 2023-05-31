@@ -131,7 +131,7 @@ export class NumericFacetCommon {
   }
 
   private get hasValues() {
-    if (this.filter?.state.range) {
+    if (this.facetForInput?.state.values.length) {
       return true;
     }
 
@@ -197,7 +197,7 @@ export class NumericFacetCommon {
 
   private registerFacetToStore() {
     const facetInfo: FacetInfo = {
-      label: this.props.label,
+      label: () => this.props.bindings.i18n.t(this.props.label),
       facetId: this.facetId!,
       element: this.props.host,
     };

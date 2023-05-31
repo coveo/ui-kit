@@ -1,10 +1,10 @@
-import {Component, ContextType} from 'react';
 import {
   buildHistoryManager,
   HistoryManager as HeadlessHistoryManager,
   HistoryManagerState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class HistoryManager extends Component<{}, HistoryManagerState> {

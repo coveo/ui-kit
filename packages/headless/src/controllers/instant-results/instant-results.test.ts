@@ -1,12 +1,12 @@
 import {buildInstantResults} from '..';
+import {SearchAppState} from '../..';
+import {registerInstantResults} from '../../features/instant-results/instant-results-actions';
+import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice';
 import {
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
 } from '../../test';
-import {instantResults} from '../../app/reducers';
-import {SearchAppState} from '../..';
-import {registerInstantResults} from '../../features/instant-results/instant-results-actions';
 
 describe('instant results', () => {
   let engine: MockSearchEngine;

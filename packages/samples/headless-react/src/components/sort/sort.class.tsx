@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   buildCriterionExpression,
   buildSort,
@@ -7,6 +6,7 @@ import {
   SortState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface SortProps {

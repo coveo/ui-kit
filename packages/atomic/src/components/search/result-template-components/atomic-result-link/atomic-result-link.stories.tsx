@@ -1,4 +1,4 @@
-import defaultResultComponentStory from '../../../../../.storybook/default-result-component-story';
+import defaultResultComponentStory from 'atomic-storybook/default-result-component-story';
 
 const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'Atomic/ResultList/ResultLink',
@@ -6,5 +6,5 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   {}
 );
 
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/ResultList/ResultLink'};
 export const DefaultResultLink = exportedStory;

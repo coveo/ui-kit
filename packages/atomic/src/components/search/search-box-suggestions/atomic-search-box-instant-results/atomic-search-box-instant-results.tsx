@@ -1,30 +1,27 @@
-import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {
   buildInstantResults,
-  buildResultList,
+  buildInteractiveInstantResult,
   InstantResults,
   Result,
 } from '@coveo/headless';
-
+import {Component, Element, State, h, Prop, Method} from '@stencil/core';
+import {InitializableComponent} from '../../../../utils/initialization-utils';
+import {encodeForDomAttribute} from '../../../../utils/string-utils';
+import {getClassNameForButtonStyle} from '../../../common/button-style';
+import {
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+} from '../../../common/layout/display-options';
+import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {encodeForDomAttribute} from '../../../../utils/string-utils';
-import {
-  BaseResultList,
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../../result-lists/result-list-common';
-import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
-} from '../../../common/layout/display-options';
-import {Button} from '../../../common/button';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
@@ -33,23 +30,25 @@ export type AriaLabelGenerator = (
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+ *
+ * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
  */
 @Component({
   tag: 'atomic-search-box-instant-results',
   shadow: true,
 })
-export class AtomicSearchBoxInstantResults implements BaseResultList {
+export class AtomicSearchBoxInstantResults implements InitializableComponent {
   public bindings!: SearchBoxSuggestionsBindings;
+  private resultRenderingFunction: ResultRenderingFunction;
+  private results: Result[] = [];
+  private resultTemplateProvider!: ResultTemplateProvider;
+  private instantResults!: InstantResults;
+  private display: ResultDisplayLayout = 'list';
 
   @Element() public host!: HTMLElement;
 
   @State() public error!: Error;
-  @State() public templateHasError = false;
-  private instantResults!: InstantResults;
-
-  private results: Result[] = [];
-  public resultListCommon!: ResultListCommon;
-  private renderingFunction?: ResultRenderingFunction | undefined;
+  @State() private templateHasError = false;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -57,28 +56,25 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    *
-   * @param render
+   * @param resultRenderingFunction
    */
-  @Method() public async setRenderFunction(render: ResultRenderingFunction) {
-    this.renderingFunction = render;
+  @Method() public async setRenderFunction(
+    resultRenderingFunction: ResultRenderingFunction
+  ) {
+    this.resultRenderingFunction = resultRenderingFunction;
   }
   /**
    * The maximum number of results to show.
    */
-  @Prop({reflect: true}) maxResultsPerQuery = 4;
-  /**
-   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-   */
-  @Prop({reflect: true}) display: ResultDisplayLayout = 'list';
-
+  @Prop({reflect: true}) public maxResultsPerQuery = 4;
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
+  @Prop({reflect: true}) public imageSize: ResultDisplayImageSize = 'icon';
   /**
    * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.
    *
@@ -86,7 +82,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
    */
   @Prop() public ariaLabelGenerator?: AriaLabelGenerator;
 
-  componentWillLoad() {
+  public componentWillLoad() {
     try {
       dispatchSearchBoxSuggestionsEvent((bindings) => {
         this.bindings = bindings;
@@ -133,13 +129,18 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
             key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
             part="outline"
             result={result}
-            engine={this.bindings.engine}
+            interactiveResult={buildInteractiveInstantResult(
+              this.bindings.engine,
+              {
+                options: {result},
+              }
+            )}
             display={this.display}
             density={this.density}
             imageSize={this.imageSize}
-            content={this.resultListCommon.getContentOfResultTemplate(result)}
+            content={this.resultTemplateProvider.getTemplateContent(result)}
             stopPropagation={false}
-            renderingFunction={this.renderingFunction}
+            renderingFunction={this.resultRenderingFunction}
           ></atomic-result>
         ),
         ariaLabel: this.bindings.i18n.t('instant-results-suggestion-label', {
@@ -163,9 +164,12 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       elements.push({
         key: 'instant-results-show-all-button',
         content: (
-          <Button part="instant-results-show-all-button" style="text-primary">
+          <div
+            part="instant-results-show-all-button"
+            class={getClassNameForButtonStyle('text-primary')}
+          >
             {showAllText}
-          </Button>
+          </div>
         ),
         part: 'instant-results-show-all',
         ariaLabel: showAllText,
@@ -188,18 +192,18 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       },
     });
 
-    this.resultListCommon = new ResultListCommon({
-      host: this.host,
-      bindings: this.bindings,
-      templateElements: this.host.querySelectorAll('atomic-result-template'),
-      onReady: () => {},
-      onError: () => {
-        this.templateHasError = true;
+    this.resultTemplateProvider = new ResultTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-result-template')
+      ),
+      getResultTemplateRegistered: () => true,
+      setResultTemplateRegistered: () => {},
+      getTemplateHasError: () => this.templateHasError,
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
       },
-    });
-
-    buildResultList(this.bindings.engine, {
-      options: {fieldsToInclude: this.bindings.store.state.fieldsToInclude},
+      bindings: this.bindings,
     });
 
     return {

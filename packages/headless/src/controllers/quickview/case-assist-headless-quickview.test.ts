@@ -1,17 +1,23 @@
-import {configuration, resultPreview} from '../../app/reducers';
-import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
-import {buildQuickviewDocumentSuggestionClickThunk} from '../../features/case-assist/case-assist-analytics-actions';
+import {configuration} from '../../app/common-reducers';
+import {DocumentSuggestionResponse} from '../../case-assist.index';
+import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
+import {
+  fetchResultContent,
+  preparePreviewPagination,
+} from '../../features/result-preview/result-preview-actions';
+import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
 import {buildMockResult} from '../../test';
+import {
+  buildMockCaseAssistEngine,
+  MockCaseAssistEngine,
+} from '../../test/mock-engine';
 import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
 import {
   buildCaseAssistQuickview,
   CaseAssistQuickviewOptions,
   CaseAssistQuickview,
 } from './case-assist-headless-quickview';
-import {
-  buildMockCaseAssistEngine,
-  MockCaseAssistEngine,
-} from '../../test/mock-engine';
 
 describe('CaseAssistQuickview', () => {
   let engine: MockCaseAssistEngine;
@@ -37,7 +43,11 @@ describe('CaseAssistQuickview', () => {
   });
 
   it('it adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({
+    expect(engine.addReducers).toHaveBeenNthCalledWith(1, {
+      documentSuggestion,
+    });
+
+    expect(engine.addReducers).toHaveBeenNthCalledWith(2, {
       configuration,
       resultPreview,
     });
@@ -65,7 +75,7 @@ describe('CaseAssistQuickview', () => {
 
     it('dispatches a quickview document suggestion click event', () => {
       const result = buildMockResult();
-      const thunk = buildQuickviewDocumentSuggestionClickThunk(result.uniqueId);
+      const thunk = logQuickviewDocumentSuggestionClick(result.uniqueId);
       const action = engine.findAsyncAction(thunk.pending);
       expect(action).toBeTruthy();
     });
@@ -124,5 +134,37 @@ describe('CaseAssistQuickview', () => {
     initQuickview();
 
     expect(options.maximumPreviewSize).toBe(0);
+  });
+
+  it('#preparePreviewPagination on initialization', () => {
+    initQuickview();
+    expect(engine.actions).toContainEqual(
+      preparePreviewPagination({
+        results: engine.state.documentSuggestion.documents,
+      })
+    );
+  });
+
+  describe('pagination', () => {
+    beforeEach(() => {
+      engine = buildMockCaseAssistEngine();
+      engine.state.documentSuggestion.documents = [
+        {hasHtmlVersion: true, uniqueId: 'first'},
+        {hasHtmlVersion: true, uniqueId: 'second'},
+        {hasHtmlVersion: true, uniqueId: 'third'},
+      ] as DocumentSuggestionResponse[];
+      engine.state.resultPreview.resultsWithPreview = [
+        'first',
+        'second',
+        'third',
+      ];
+      engine.state.resultPreview.position = 0;
+      initQuickview();
+    });
+
+    it('returns the proper current and total results for pagination purpose', () => {
+      expect(quickview.state.currentDocument).toBe(1);
+      expect(quickview.state.totalDocuments).toBe(3);
+    });
   });
 });

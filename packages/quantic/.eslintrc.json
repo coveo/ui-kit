@@ -1,1 +1,1 @@
-{"ignorePatterns": "typings/**/*"}
+{"ignorePatterns": ["typings/**/*", "force-app/test/jest-mocks/**"]}

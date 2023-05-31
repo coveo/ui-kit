@@ -1,4 +1,5 @@
-import {facetOptions, search} from '../../../app/reducers';
+import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {

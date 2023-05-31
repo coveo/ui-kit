@@ -1,6 +1,6 @@
 import {NumberValue, Schema} from '@coveo/bueno';
+import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {configuration, pagination} from '../../../app/reducers';
 import {
   nextPage,
   previousPage,
@@ -13,6 +13,7 @@ import {
   currentPagesSelector,
   maxPageSelector,
 } from '../../../features/pagination/pagination-selectors';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
 import {
   ConfigurationSection,
   PaginationSection,

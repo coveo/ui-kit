@@ -1,4 +1,8 @@
 import {SearchAppState} from '../../..';
+import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
+import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {
   buildMockSearchAppEngine,
@@ -7,16 +11,16 @@ import {
 } from '../../../test';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {
   buildFieldSuggestions,
   FieldSuggestions,
   FieldSuggestionsOptions,
 } from './headless-field-suggestions';
-import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 
 describe('fieldSuggestions', () => {
-  const facetId = 'id';
+  const field = 'author';
+  const facetId = 'test';
   let state: SearchAppState;
   let engine: MockSearchEngine;
   let fieldSuggestions: FieldSuggestions;
@@ -28,7 +32,9 @@ describe('fieldSuggestions', () => {
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId, ...config}),
+    });
     state.facetSearchSet[facetId] = buildMockFacetSearch({
       initialNumberOfValues: 5,
     });
@@ -36,14 +42,31 @@ describe('fieldSuggestions', () => {
 
   beforeEach(() => {
     options = {
-      facetId,
-      field: 'author',
+      facet: {
+        facetId,
+        field: 'author',
+      },
     };
 
     state = createMockState();
     setFacetRequest();
 
     initFacet();
+  });
+
+  it('should dispatch an #registerFacet action when initialized', () => {
+    expect(engine.actions).toEqual(
+      expect.arrayContaining([
+        <ReturnType<typeof registerFacet>>{
+          type: registerFacet.type,
+          payload: {
+            ...defaultFacetOptions,
+            facetId,
+            field,
+          },
+        },
+      ])
+    );
   });
 
   it('should dispatch an #updateFacetSearch and #executeFacetSearch action on #updateText', () => {

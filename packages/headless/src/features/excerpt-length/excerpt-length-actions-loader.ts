@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {excerptLength} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {excerptLengthReducer as excerptLength} from '../../features/excerpt-length/excerpt-length-slice';
 import {setExcerptLength} from './excerpt-length-actions';
 
 /**

@@ -1,12 +1,12 @@
+import {SearchAppState} from '../../state/search-app-state';
+import {createMockState} from '../../test/mock-state';
+import {maximumNumberOfResultsFromIndex} from './pagination-constants';
 import {
   currentPageSelector,
   maxPageSelector,
   currentPagesSelector,
 } from './pagination-selectors';
-import {createMockState} from '../../test/mock-state';
 import {calculateFirstResult} from './pagination-slice';
-import {SearchAppState} from '../../state/search-app-state';
-import {maximumNumberOfResultsFromIndex} from './pagination-constants';
 
 describe('pagination selectors', () => {
   let state: SearchAppState;

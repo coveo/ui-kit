@@ -28,4 +28,14 @@ describe('headless frequently-viewed-together-same-category', () => {
     engine.state.productRecommendations.isLoading = true;
     expect(frequentlyViewedTogether.state.isLoading).toBe(true);
   });
+  it('object shape matches original', () => {
+    expect(frequentlyViewedTogether.refresh).toBeTruthy();
+    expect(frequentlyViewedTogether.setSkus).toBeTruthy();
+    expect(frequentlyViewedTogether.subscribe).toBeTruthy();
+    expect(frequentlyViewedTogether.state.error).toBeFalsy();
+    expect(frequentlyViewedTogether.state.isLoading).toBeFalsy();
+    expect(frequentlyViewedTogether.state.maxNumberOfRecommendations).toBe(5);
+    expect(frequentlyViewedTogether.state.recommendations).toBeTruthy();
+    expect(frequentlyViewedTogether.state.skus).toBeTruthy();
+  });
 });

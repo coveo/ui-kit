@@ -48,16 +48,14 @@ describe('buildSearchParameterSerializer', () => {
     it('serializes the #f parameter correctly', () => {
       const f = {author: ['a', 'b'], filetype: ['c', 'd']};
       const result = serialize({f});
-      expect(result).toEqual('f[author]=a,b&f[filetype]=c,d');
+      expect(result).toEqual('f-author=a,b&f-filetype=c,d');
     });
 
     it('serializes special characters in the #f parameter correctly', () => {
       someSpecialCharactersThatNeedsEncoding.forEach((specialChar) => {
         const f = {author: ['a', specialChar]};
         const result = serialize({f});
-        expect(result).toEqual(
-          `f[author]=a,${encodeURIComponent(specialChar)}`
-        );
+        expect(result).toEqual(`f-author=a,${encodeURIComponent(specialChar)}`);
       });
     });
 
@@ -77,7 +75,7 @@ describe('buildSearchParameterSerializer', () => {
       };
 
       const result = serialize({nf});
-      expect(result).toEqual('nf[size]=0..10,10..20&nf[amount]=100..200');
+      expect(result).toEqual('nf-size=0..10,10..20&nf-amount=100..200');
     });
 
     describe('when the #nf parameter contains facetIds with invalid values', () => {
@@ -116,7 +114,7 @@ describe('buildSearchParameterSerializer', () => {
       const range2 = `${date2}..${date3}`;
 
       expect(result).toEqual(
-        `df[date]=${range1},${range2}&df[created]=${range1}`
+        `df-date=${range1},${range2}&df-created=${range1}`
       );
     });
 
@@ -191,7 +189,7 @@ describe('buildSearchParameterSerializer', () => {
     });
 
     it('deserializes two static filters correctly', () => {
-      const result = deserialize('sf[author]=a,b&sf[filetype]=c,d');
+      const result = deserialize('sf-author=a,b&sf-filetype=c,d');
       expect(result).toEqual({
         sf: {
           author: ['a', 'b'],
@@ -201,7 +199,7 @@ describe('buildSearchParameterSerializer', () => {
     });
 
     it('deserializes two facets correctly', () => {
-      const result = deserialize('f[author]=a,b&f[filetype]=c,d');
+      const result = deserialize('f-author=a,b&f-filetype=c,d');
       expect(result).toEqual({
         f: {
           author: ['a', 'b'],
@@ -213,7 +211,7 @@ describe('buildSearchParameterSerializer', () => {
     it('deserializes two facets correctly with special characters', () => {
       someSpecialCharactersThatNeedsEncoding.forEach((char) => {
         const result = deserialize(
-          `f[author]=${encodeURIComponent(char)},b&f[filetype]=c,d`
+          `f-author=${encodeURIComponent(char)},b&f-filetype=c,d`
         );
         expect(result).toEqual({
           f: {
@@ -225,7 +223,7 @@ describe('buildSearchParameterSerializer', () => {
     });
 
     it('deserializes two category facets correctly', () => {
-      const result = deserialize('cf[author]=a,b&cf[filetype]=c,d');
+      const result = deserialize('cf-author=a,b&cf-filetype=c,d');
       expect(result).toEqual({
         cf: {
           author: ['a', 'b'],
@@ -237,7 +235,7 @@ describe('buildSearchParameterSerializer', () => {
     it('deserializes two category facets correctly with special characters', () => {
       someSpecialCharactersThatNeedsEncoding.forEach((char) => {
         const result = deserialize(
-          `cf[author]=${encodeURIComponent(char)},b&cf[filetype]=c,d`
+          `cf-author=${encodeURIComponent(char)},b&cf-filetype=c,d`
         );
         expect(result).toEqual({
           cf: {
@@ -249,7 +247,7 @@ describe('buildSearchParameterSerializer', () => {
     });
 
     it('deserializes a numeric facet with multiple selections', () => {
-      const result = deserialize('nf[size]=0..10,10..20');
+      const result = deserialize('nf-size=0..10,10..20');
       expect(result).toEqual({
         nf: {
           size: [
@@ -260,8 +258,25 @@ describe('buildSearchParameterSerializer', () => {
       });
     });
 
+    it('deserializes a numeric facet with multiple selections with an optional endInclusive', () => {
+      const result = deserialize('nf-size=0..10,10...20');
+      expect(result).toEqual({
+        nf: {
+          size: [
+            buildNumericRange({start: 0, end: 10, state: 'selected'}),
+            buildNumericRange({
+              start: 10,
+              end: 20,
+              state: 'selected',
+              endInclusive: true,
+            }),
+          ],
+        },
+      });
+    });
+
     it('deserializes multiple numeric facets with selected values', () => {
-      const result = deserialize('nf[size]=0..10&nf[amount]=100..200');
+      const result = deserialize('nf-size=0..10&nf-amount=100..200');
       expect(result).toEqual({
         nf: {
           size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
@@ -272,8 +287,25 @@ describe('buildSearchParameterSerializer', () => {
       });
     });
 
+    it('deserializes multiple numeric facets with selected values with an optional endInclusive', () => {
+      const result = deserialize('nf-size=0..10&nf-amount=100...200');
+      expect(result).toEqual({
+        nf: {
+          size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
+          amount: [
+            buildNumericRange({
+              start: 100,
+              end: 200,
+              state: 'selected',
+              endInclusive: true,
+            }),
+          ],
+        },
+      });
+    });
+
     it('deserializes a numeric facet with a float range', () => {
-      const result = deserialize('nf[size]=7.5..8.5,8.5..9.5');
+      const result = deserialize('nf-size=7.5..8.5,8.5..9.5');
       expect(result).toEqual({
         nf: {
           size: [
@@ -286,7 +318,7 @@ describe('buildSearchParameterSerializer', () => {
 
     it(`when a numeric facet range contains a non-numeric value,
     the deserializer sets the values for the facetId to an empty array`, () => {
-      const result = deserialize('nf[size]=0..a');
+      const result = deserialize('nf-size=0..a');
       expect(result).toEqual({
         nf: {size: []},
       });
@@ -294,7 +326,7 @@ describe('buildSearchParameterSerializer', () => {
 
     it(`when a numeric facet range contains one number,
     the deserializer sets the values for the facetId to an empty array`, () => {
-      const result = deserialize('nf[size]=0');
+      const result = deserialize('nf-size=0');
       expect(result).toEqual({
         nf: {size: []},
       });
@@ -312,7 +344,7 @@ describe('buildSearchParameterSerializer', () => {
       const rangeA = `${date1}..${date2}`;
       const rangeB = `${date2}..${date3}`;
 
-      const result = deserialize(`df[date]=${rangeA},${rangeB}`);
+      const result = deserialize(`df-date=${rangeA},${rangeB}`);
 
       expect(result).toEqual({
         df: {
@@ -337,7 +369,7 @@ describe('buildSearchParameterSerializer', () => {
       const date2 = '2011/01/01@05:00:00';
       const range = `${date1}..${date2}`;
 
-      const result = deserialize(`df[date]=${range}&df[created]=${range}`);
+      const result = deserialize(`df-date=${range}&df-created=${range}`);
       const expected = buildDateRange({
         start: date1,
         end: date2,
@@ -352,9 +384,51 @@ describe('buildSearchParameterSerializer', () => {
       });
     });
 
+    it('deserializes multiple date facets with selected values with an optional endInclusive', () => {
+      const date1 = '2010/01/01@05:00:00';
+      const date2 = '2011/01/01@05:00:00';
+      const range = `${date1}...${date2}`;
+
+      const result = deserialize(`df-date=${range}&df-created=${range}`);
+      const expected = buildDateRange({
+        start: date1,
+        end: date2,
+        state: 'selected',
+        endInclusive: true,
+      });
+
+      expect(result).toEqual({
+        df: {
+          date: [expected],
+          created: [expected],
+        },
+      });
+    });
+
+    it('deserializes multiple date facets with selected values with an optional endInclusive', () => {
+      const date1 = '2010/01/01@05:00:00';
+      const date2 = '2011/01/01@05:00:00';
+      const range = `${date1}...${date2}`;
+
+      const result = deserialize(`df-date=${range}&df-created=${range}`);
+      const expected = buildDateRange({
+        start: date1,
+        end: date2,
+        state: 'selected',
+        endInclusive: true,
+      });
+
+      expect(result).toEqual({
+        df: {
+          date: [expected],
+          created: [expected],
+        },
+      });
+    });
+
     it(`when a date facet range contains a invalid format,
     the deserializer sets the values for the facetId to an empty array`, () => {
-      const result = deserialize('df[date]=2010/01/01@05:00:00..a');
+      const result = deserialize('df-date=2010/01/01@05:00:00..a');
       expect(result).toEqual({
         df: {date: []},
       });
@@ -362,7 +436,7 @@ describe('buildSearchParameterSerializer', () => {
 
     it(`when a numeric facet range contains one number,
     the deserializer sets the values for the facetId to an empty array`, () => {
-      const result = deserialize('df[date]=2010/01/01@05:00:00');
+      const result = deserialize('df-date=2010/01/01@05:00:00');
       expect(result).toEqual({
         df: {date: []},
       });

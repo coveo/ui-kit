@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {QueryError as HeadlessQueryError} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface QueryErrorProps {
   controller: HeadlessQueryError;

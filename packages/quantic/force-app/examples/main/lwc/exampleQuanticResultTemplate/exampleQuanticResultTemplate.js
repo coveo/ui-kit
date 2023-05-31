@@ -5,7 +5,8 @@ export default class ExampleQuanticResultTemplate extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Result Template';
-  pageDescription = 'The QuanticResultTemplate component is used to construct result templates using predefined and formatted [slots]';
+  pageDescription =
+    'The QuanticResultTemplate component is used to construct result templates using predefined and formatted [slots]';
   options = [];
 
   handleTryItNow(evt) {

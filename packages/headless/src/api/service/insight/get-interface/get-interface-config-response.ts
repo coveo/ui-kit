@@ -38,9 +38,12 @@ interface Badge {
   color: string;
 }
 
+export type InsightFieldType = 'string' | 'date' | 'number' | 'multi';
+
 interface Detail {
   field: string;
   label?: string;
+  fieldType?: InsightFieldType;
 }
 
 type ResultAction =
@@ -49,6 +52,8 @@ type ResultAction =
   | 'quickview'
   | 'sendAsEmail'
   | 'sendToFeed';
+
+export type InsightFacetType = 'standard' | 'numeric' | 'timeframe';
 
 interface InsightOption {
   enabled: boolean;
@@ -69,6 +74,7 @@ interface Facet {
   field: string;
   label?: string;
   displayValueAs?: string;
+  facetType?: InsightFacetType;
 }
 
 interface Tab {

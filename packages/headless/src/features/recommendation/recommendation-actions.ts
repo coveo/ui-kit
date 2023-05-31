@@ -1,11 +1,15 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
+import {
+  getVisitorID,
+  historyStore,
+} from '../../api/analytics/coveo-analytics-utils';
 import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
 } from '../../api/search/search-api-client';
 import {Result} from '../../api/search/search/result';
+import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {
   ConfigurationSection,
   RecommendationSection,
@@ -14,10 +18,9 @@ import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
-import {logRecommendationUpdate} from './recommendation-analytics-actions';
-import {SearchAction} from '../analytics/analytics-utils';
-import {RecommendationAppState} from '../../state/recommendation-app-state';
+import {AnalyticsAsyncThunk, AnalyticsType} from '../analytics/analytics-utils';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
+import {logRecommendationUpdate} from './recommendation-analytics-actions';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
@@ -25,7 +28,7 @@ export type StateNeededByGetRecommendations = ConfigurationSection &
 
 export interface GetRecommendationsThunkReturn {
   recommendations: Result[];
-  analyticsAction: SearchAction;
+  analyticsAction: AnalyticsAsyncThunk<{analyticsType: AnalyticsType.Search}>;
   searchUid: string;
   duration: number;
   splitTestRun: string;
@@ -114,5 +117,8 @@ export const buildRecommendationRequest = async (
     (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
   ...(s.configuration.search.authenticationProviders.length && {
     authentication: s.configuration.search.authenticationProviders.join(','),
+  }),
+  ...(s.pagination && {
+    numberOfResults: s.pagination.numberOfResults,
   }),
 });

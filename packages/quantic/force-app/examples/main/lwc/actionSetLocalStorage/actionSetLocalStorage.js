@@ -1,4 +1,4 @@
-import { api, LightningElement } from "lwc";
+import {api, LightningElement} from 'lwc';
 
 export default class ActionSetLocalStorage extends LightningElement {
   @api engineId;
@@ -26,7 +26,10 @@ export default class ActionSetLocalStorage extends LightningElement {
   ];
 
   setItems() {
-    localStorage.setItem(this.localStorageKey, JSON.stringify(this.recentResultList));
+    localStorage.setItem(
+      this.localStorageKey,
+      JSON.stringify(this.recentResultList)
+    );
   }
 
   clear() {

@@ -1,3 +1,11 @@
+import {
+  getResultProperty as getResultPropertyAlias,
+  fieldsMustBeDefined as fieldsMustBeDefinedAlias,
+  fieldsMustNotBeDefined as fieldsMustNotBeDefinedAlias,
+  fieldMustMatch as fieldMustMatchAlias,
+  fieldMustNotMatch as fieldMustNotMatchAlias,
+} from './result-templates/result-templates-helpers';
+
 export * from './advanced-search-queries/advanced-search-queries-actions-loader';
 export * from './facets/category-facet-set/category-facet-set-actions-loader';
 export * from './facets/facet-set/facet-set-actions-loader';
@@ -19,28 +27,22 @@ export * from './query/query-actions-loader';
 export * from './query-set/query-set-actions-loader';
 export * from './instant-results/instant-results-actions-loader';
 export * from './query-suggest/query-suggest-actions-loader';
-export * from './redirection/redirection-actions-loader';
 export * from './search/search-actions-loader';
 export * from './search-hub/search-hub-actions-loader';
 export * from './sort-criteria/sort-criteria-actions-loader';
 export * from './standalone-search-box-set/standalone-search-box-set-actions-loader';
 export * from './static-filter-set/static-filter-set-actions-loader';
+export * from './tab-set/tab-set-actions-loader';
 export * from './question-answering/question-answering-actions-loader';
 export * from './breadcrumb/breadcrumb-actions-loader';
 export * from './recent-queries/recent-queries-actions-loader';
 export * from './recent-results/recent-results-actions-loader';
 export * from './excerpt-length/excerpt-length-actions-loader';
+export * from './result-preview/result-preview-actions-loader';
 
 export type {ResultTemplatesManager} from './result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './result-templates/result-templates-manager';
 
-import {
-  getResultProperty as getResultPropertyAlias,
-  fieldsMustBeDefined as fieldsMustBeDefinedAlias,
-  fieldsMustNotBeDefined as fieldsMustNotBeDefinedAlias,
-  fieldMustMatch as fieldMustMatchAlias,
-  fieldMustNotMatch as fieldMustNotMatchAlias,
-} from './result-templates/result-templates-helpers';
 export namespace ResultTemplatesHelpers {
   export const getResultProperty = getResultPropertyAlias;
   export const fieldsMustBeDefined = fieldsMustBeDefinedAlias;

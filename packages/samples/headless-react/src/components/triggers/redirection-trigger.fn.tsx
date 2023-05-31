@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {RedirectionTrigger as HeadlessRedirectionTrigger} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface HeadlessRedirectionTriggerProps {
   controller: HeadlessRedirectionTrigger;

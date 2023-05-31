@@ -1,30 +1,21 @@
+import {configuration} from '../../../../app/common-reducers';
+import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {
+  logFacetClearAll,
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {getInsightAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-insight-utils';
+import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
+import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
-import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
-import {
-  FacetOptions,
-  FacetSearchOptions,
-  facetOptionsSchema,
-} from './headless-insight-facet-options';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {
-  buildCoreFacet,
-  Facet,
-  FacetProps,
-  FacetSearch,
-  FacetSearchState,
-  FacetState,
-  FacetValue,
-  SpecificFacetSearchResult,
-} from '../../../core/facets/facet/headless-core-facet';
-import {
-  facetSet,
-  configuration,
-  facetSearchSet,
-  search,
-} from '../../../../app/reducers';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {
   FacetSection,
   ConfigurationSection,
@@ -32,27 +23,45 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {getAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-utils';
-import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
 import {
-  logFacetClearAll,
-  logFacetShowLess,
-  logFacetShowMore,
-  logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+  buildCoreFacet,
+  CoreFacet,
+  CoreFacetState,
+  Facet,
+  FacetSearch,
+  FacetSearchState,
+  FacetState,
+  FacetValue,
+  SpecificFacetSearchResult,
+} from '../../../core/facets/facet/headless-core-facet';
+import {
+  FacetOptions,
+  FacetSearchOptions,
+  facetOptionsSchema,
+  CoreFacetOptions,
+} from './headless-insight-facet-options';
 
 export type {
   FacetOptions,
   FacetSearchOptions,
   FacetValueState,
-  FacetProps,
   Facet,
   FacetState,
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
   FacetValue,
+  CoreFacet,
+  CoreFacetState,
+  CoreFacetOptions,
 };
+
+export interface FacetProps {
+  /**
+   * The options for the `Facet` controller.
+   * */
+  options: FacetOptions;
+}
 
 /**
  * Creates an insight `Facet` controller instance.
@@ -61,10 +70,7 @@ export type {
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
  */
-export function buildFacet(
-  engine: InsightEngine,
-  props: FacetProps<FacetOptions>
-): Facet {
+export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -120,7 +126,7 @@ export function buildFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch(
-          getAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
+          getInsightAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
         )
       );
     },

@@ -9,9 +9,9 @@ import {getFacetOrderInitialState} from '../facets/facet-order/facet-order-state
 import {getFacetSetInitialState} from '../facets/facet-set/facet-set-state';
 import {getDateFacetSetInitialState} from '../facets/range-facets/date-facet-set/date-facet-set-state';
 import {getNumericFacetSetInitialState} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state';
+import {getInstantResultsInitialState} from '../instant-results/instant-results-state';
 import {getPaginationInitialState} from '../pagination/pagination-state';
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
-import {getInstantResultsInitialState} from '../instant-results/instant-results-state';
 import {getQuerySetInitialState} from '../query-set/query-set-state';
 import {getQueryInitialState} from '../query/query-state';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state';

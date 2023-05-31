@@ -1,5 +1,6 @@
-import {createElement} from 'lwc';
 import QuanticSearchInterface from 'c/quanticSearchInterface';
+// @ts-ignore
+import {createElement} from 'lwc';
 
 describe('c-quantic-search-interface', () => {
   function cleanup() {

@@ -1,5 +1,5 @@
-import {LightningElement, api, track, wire} from 'lwc';
-import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
+import clear from '@salesforce/label/c.quantic_Clear';
+import search from '@salesforce/label/c.quantic_Search';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -7,9 +7,8 @@ import {
   destroyEngine,
 } from 'c/quanticHeadlessLoader';
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY, keys} from 'c/quanticUtils';
-
-import search from '@salesforce/label/c.quantic_Search';
-import clear from '@salesforce/label/c.quantic_Clear';
+import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
+import {LightningElement, api, track, wire} from 'lwc';
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
@@ -112,15 +111,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   unsubscribe;
   /** @type {boolean} */
   isInitialized;
-
   /** @type {Suggestion[]} */
-  get suggestions() {
-    return this.state.suggestions.map((s, index) => ({
-      key: index,
-      rawValue: s.rawValue,
-      value: s.highlightedValue,
-    }));
-  }
+  suggestions = [];
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   /** @type {string} */
   get standaloneEngineId() {
@@ -129,6 +123,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   connectedCallback() {
     registerComponentForInit(this, this.standaloneEngineId);
+    this.addEventListener(
+      'suggestionlistrender',
+      this.handleSuggestionListEvent
+    );
   }
 
   renderedCallback() {
@@ -174,6 +172,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.removeEventListener(
+      'suggestionlistrender',
+      this.handleSuggestionListEvent
+    );
   }
 
   updateStandaloneState() {
@@ -181,6 +183,12 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       this.input.value = this.standaloneSearchBox.state.value;
     }
     this.state = this.standaloneSearchBox.state;
+    this.suggestions =
+      this.state?.suggestions?.map((s, index) => ({
+        key: index,
+        rawValue: s.rawValue,
+        value: s.highlightedValue,
+      })) ?? [];
 
     // Check for redirect
     const {redirectTo, value, analytics} = this.standaloneSearchBox.state;
@@ -251,6 +259,13 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.input.blur();
   }
 
+  handleKeyValues() {
+    if (this.standaloneSearchBox.state.value !== this.input.value) {
+      this.suggestionList?.resetSelection();
+      this.standaloneSearchBox.updateText(this.input.value);
+    }
+  }
+
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
@@ -263,8 +278,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
         this.suggestionList.selectionDown();
         break;
       default:
-        this.suggestionList?.resetSelection();
-        this.standaloneSearchBox.updateText(event.target.value);
+        this.handleKeyValues();
     }
   }
 
@@ -305,7 +319,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       {
         type: 'standard__webPage',
         attributes: {
-          url: `${this.redirectUrl}#q=${value}`,
+          url: `${this.redirectUrl}#q=${encodeURIComponent(value)}`,
         },
       },
       false
@@ -346,5 +360,18 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   get suggestionsOpen() {
     return this.combobox?.classList.contains('slds-is-open');
+  }
+
+  handleSuggestionListEvent = (event) => {
+    event.stopPropagation();
+    const id = event.detail;
+    this.input.setAttribute('aria-controls', id);
+  };
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

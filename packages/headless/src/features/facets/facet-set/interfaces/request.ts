@@ -2,13 +2,11 @@ import {
   BaseFacetRequest,
   CurrentValues,
   Freezable,
-  Delimitable,
   Type,
   BaseFacetValueRequest,
   Expandable,
   AllowedValues,
 } from '../../facet-api/request';
-import {AnyFacetRequest} from '../../generic/interfaces/generic-facet-request';
 
 export const facetSortCriteria: FacetSortCriterion[] = [
   'score',
@@ -42,13 +40,8 @@ export interface FacetRequest
     CurrentValues<FacetValueRequest>,
     Expandable,
     Freezable,
-    Delimitable,
     Type<'specific'>,
     AllowedValues {
   sortCriteria: FaceSortCriterionStringOrExplicit;
   hasBreadcrumbs?: boolean;
-}
-
-export function isFacetRequest(req: AnyFacetRequest): req is FacetRequest {
-  return (req as FacetRequest).hasBreadcrumbs !== undefined;
 }

@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {SearchBox as HeadlessSearchBox} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface SearchBoxProps {
   controller: HeadlessSearchBox;

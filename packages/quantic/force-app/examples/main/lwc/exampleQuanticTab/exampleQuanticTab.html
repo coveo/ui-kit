@@ -8,7 +8,7 @@
       <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
     </c-configurator>
 
-    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+    <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
       <div class="slds-grid">
         <ul class="slds-tabs_default slds-tabs_default__nav" role="tablist">
           <c-quantic-tab engine-id={engineId} label="All"></c-quantic-tab>
@@ -25,6 +25,6 @@
           ></c-quantic-tab>
         </ul> 
       </div>
-    </c-quantic-search-interface>
+    </c-example-use-case>
   </c-example-layout>
 </template>

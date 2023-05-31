@@ -1,8 +1,35 @@
 import LOCALE from '@salesforce/i18n/locale';
-
 import dayPattern from '@salesforce/label/c.quantic_DatePatternDay';
 import monthPattern from '@salesforce/label/c.quantic_DatePatternMonth';
 import yearPattern from '@salesforce/label/c.quantic_DatePatternYear';
+import nextDay from '@salesforce/label/c.quantic_NextDay';
+import nextDay_plural from '@salesforce/label/c.quantic_NextDay_plural';
+import nextHour from '@salesforce/label/c.quantic_NextHour';
+import nextHour_plural from '@salesforce/label/c.quantic_NextHour_plural';
+import nextMonth from '@salesforce/label/c.quantic_NextMonth';
+import nextMonth_plural from '@salesforce/label/c.quantic_NextMonth_plural';
+import nextQuarter from '@salesforce/label/c.quantic_NextQuarter';
+import nextQuarter_plural from '@salesforce/label/c.quantic_NextQuarter_plural';
+import nextWeek from '@salesforce/label/c.quantic_NextWeek';
+import nextWeek_plural from '@salesforce/label/c.quantic_NextWeek_plural';
+import nextYear from '@salesforce/label/c.quantic_NextYear';
+import nextYear_plural from '@salesforce/label/c.quantic_NextYear_plural';
+import pastDay from '@salesforce/label/c.quantic_PastDay';
+import pastDay_plural from '@salesforce/label/c.quantic_PastDay_plural';
+
+/** @typedef {import("coveo").RelativeDate} RelativeDate */
+import pastHour from '@salesforce/label/c.quantic_PastHour';
+import pastHour_plural from '@salesforce/label/c.quantic_PastHour_plural';
+import pastMonth from '@salesforce/label/c.quantic_PastMonth';
+import pastMonth_plural from '@salesforce/label/c.quantic_PastMonth_plural';
+import pastQuarter from '@salesforce/label/c.quantic_PastQuarter';
+import pastQuarter_plural from '@salesforce/label/c.quantic_PastQuarter_plural';
+import pastWeek from '@salesforce/label/c.quantic_PastWeek';
+import pastWeek_plural from '@salesforce/label/c.quantic_PastWeek_plural';
+import pastYear from '@salesforce/label/c.quantic_PastYear';
+import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
+
+/** @typedef {import("coveo").Result} Result */
 
 export class Debouncer {
   _timeout;
@@ -104,6 +131,34 @@ export class ResultUtils {
   }
 }
 
+export class LinkUtils {
+  /**
+   * Binds the logging of a link
+   * @returns An unbind function for the events
+   * @param {HTMLAnchorElement} link the link element
+   * @param {{select:function, beginDelayedSelect: function, cancelPendingSelect: function  }} actions
+   */
+  static bindAnalyticsToLink(link, actions) {
+    const eventsMap = {
+      contextmenu: () => actions.select(),
+      click: () => actions.select(),
+      mouseup: () => actions.select(),
+      mousedown: () => actions.select(),
+      touchstart: () => actions.beginDelayedSelect(),
+      touchend: () => actions.cancelPendingSelect(),
+    };
+    Object.keys(eventsMap).forEach((key) =>
+      link.addEventListener(key, eventsMap[key])
+    );
+
+    return () => {
+      Object.keys(eventsMap).forEach((key) =>
+        link.removeEventListener(key, eventsMap[key])
+      );
+    };
+  }
+}
+
 export class I18nUtils {
   static getTextWithDecorator(text, startTag, endTag) {
     return `${startTag}${text}${endTag}`;
@@ -130,9 +185,9 @@ export class I18nUtils {
     if (typeof stringToFormat !== 'string')
       throw new Error("'stringToFormat' must be a String");
     return stringToFormat.replace(/{{(\d+)}}/gm, (match, index) =>
-      (formattingArguments[index] === undefined
+      formattingArguments[index] === undefined
         ? ''
-        : `${formattingArguments[index]}`)
+        : `${formattingArguments[index]}`
     );
   }
 
@@ -162,7 +217,7 @@ export class I18nUtils {
   }
 
   /**
-   * @param {string} html 
+   * @param {string} html
    * @returns {string}
    */
   static escapeHTML(html) {
@@ -270,7 +325,7 @@ export class DateUtils {
    * Replace `@` characters in date string with `T`.
    * @param {string} dateString
    * @returns {string}
-   */  
+   */
   static fromSearchApiDate(dateString) {
     return dateString.replaceAll('/', '-').replaceAll('@', 'T');
   }
@@ -287,7 +342,7 @@ export class DateUtils {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     const seconds = date.getSeconds().toString().padStart(2, '0');
-  
+
     return `${year}/${month}/${day}@${hours}:${minutes}:${seconds}`;
   }
 
@@ -300,7 +355,7 @@ export class DateUtils {
     const year = date.getFullYear().toString().padStart(4, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-  
+
     return `${year}-${month}-${day}T00:00:00`;
   }
 
@@ -325,7 +380,7 @@ export class DateUtils {
         'The specified time is invalid. It must be between 00:00:00 and 23:59:59.'
       );
     }
-  
+
     const withoutTime = DateUtils.trimIsoTime(dateString);
     const time =
       hours.toString().padStart(2, '0') +
@@ -333,13 +388,27 @@ export class DateUtils {
       minutes.toString().padStart(2, '0') +
       ':' +
       seconds.toString().padStart(2, '0');
-  
+
     return new Date(`${withoutTime}T${time}`);
   }
 
   static trimIsoTime(dateString) {
     const timeIdx = dateString.indexOf('T');
     return timeIdx !== -1 ? dateString.substring(0, timeIdx) : dateString;
+  }
+
+  /**
+   * @param {number} timestamp
+   */
+  static isValidTimestamp(timestamp) {
+    let isValid = true;
+    try {
+      // eslint-disable-next-line no-new
+      new Date(timestamp);
+    } catch (error) {
+      isValid = false;
+    }
+    return isValid;
   }
 }
 
@@ -353,33 +422,6 @@ export class DateUtils {
 export function fromSearchApiDate(dateString) {
   return DateUtils.fromSearchApiDate(dateString);
 }
-
-/** @typedef {import("coveo").RelativeDate} RelativeDate */
-
-import pastHour from '@salesforce/label/c.quantic_PastHour';
-import pastHour_plural from '@salesforce/label/c.quantic_PastHour_plural';
-import pastDay from '@salesforce/label/c.quantic_PastDay';
-import pastDay_plural from '@salesforce/label/c.quantic_PastDay_plural';
-import pastWeek from '@salesforce/label/c.quantic_PastWeek';
-import pastWeek_plural from '@salesforce/label/c.quantic_PastWeek_plural';
-import pastMonth from '@salesforce/label/c.quantic_PastMonth';
-import pastMonth_plural from '@salesforce/label/c.quantic_PastMonth_plural';
-import pastQuarter from '@salesforce/label/c.quantic_PastQuarter';
-import pastQuarter_plural from '@salesforce/label/c.quantic_PastQuarter_plural';
-import pastYear from '@salesforce/label/c.quantic_PastYear';
-import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
-import nextHour from '@salesforce/label/c.quantic_NextHour';
-import nextHour_plural from '@salesforce/label/c.quantic_NextHour_plural';
-import nextDay from '@salesforce/label/c.quantic_NextDay';
-import nextDay_plural from '@salesforce/label/c.quantic_NextDay_plural';
-import nextWeek from '@salesforce/label/c.quantic_NextWeek';
-import nextWeek_plural from '@salesforce/label/c.quantic_NextWeek_plural';
-import nextMonth from '@salesforce/label/c.quantic_NextMonth';
-import nextMonth_plural from '@salesforce/label/c.quantic_NextMonth_plural';
-import nextQuarter from '@salesforce/label/c.quantic_NextQuarter';
-import nextQuarter_plural from '@salesforce/label/c.quantic_NextQuarter_plural';
-import nextYear from '@salesforce/label/c.quantic_NextYear';
-import nextYear_plural from '@salesforce/label/c.quantic_NextYear_plural';
 
 export class RelativeDateFormatter {
   constructor() {
@@ -431,21 +473,21 @@ export class RelativeDateFormatter {
 }
 
 export class Store {
-
   static facetTypes = {
-    FACETS: 'facets' , 
-    NUMERICFACETS: 'numericFacets' , 
-    DATEFACETS: 'dateFacets' , 
-    CATEGORYFACETS: 'categoryFacets' 
-  }
+    FACETS: 'facets',
+    NUMERICFACETS: 'numericFacets',
+    DATEFACETS: 'dateFacets',
+    CATEGORYFACETS: 'categoryFacets',
+  };
   static initialize() {
-    return { 
-      state : { 
+    return {
+      state: {
         facets: {},
         numericFacets: {},
         dateFacets: {},
         categoryFacets: {},
-      }}
+      },
+    };
   }
   /**
    * @param {Record<String, unknown>} store
@@ -453,7 +495,7 @@ export class Store {
    * @param {{ label?: string; facetId: any; format?: Function;}} data
    */
   static registerFacetToStore(store, facetType, data) {
-    if(store?.state[facetType][data.facetId]) {
+    if (store?.state[facetType][data.facetId]) {
       return;
     }
     store.state[facetType][data.facetId] = data;
@@ -466,4 +508,331 @@ export class Store {
   static getFromStore(store, facetType) {
     return store.state[facetType];
   }
+}
+
+/**
+ * AriaLiveUtils
+ * @typedef {Object} AriaLiveUtils
+ * @property {Function} dispatchMessage
+ * @property {Function} registerRegion
+ */
+
+/**
+ * AriaLiveRegion Create an AriaLiveRegion to be able to send events to dispatch messages for assistive technologies.
+ * @param {string} regionName
+ * @param {Object} elem
+ * @param {boolean} assertive
+ * @returns {AriaLiveUtils}
+ */
+export function AriaLiveRegion(regionName, elem, assertive = false) {
+  function dispatchMessage(message) {
+    const ariaLiveMessageEvent = new CustomEvent('arialivemessage', {
+      bubbles: true,
+      detail: {
+        regionName,
+        assertive,
+        message,
+      },
+    });
+    elem.dispatchEvent(ariaLiveMessageEvent);
+  }
+
+  function registerRegion() {
+    const registerRegionEvent = new CustomEvent('registerregion', {
+      bubbles: true,
+      detail: {
+        regionName,
+        assertive,
+      },
+    });
+    elem.dispatchEvent(registerRegionEvent);
+  }
+
+  registerRegion();
+
+  return {
+    dispatchMessage,
+    registerRegion,
+  };
+}
+
+/**
+ * Checks whether an element is focusable.
+ * @param {HTMLElement | Element}  element
+ * @returns {boolean}
+ */
+export function isFocusable(element) {
+  // Source: https://stackoverflow.com/a/30753870
+  if (element.getAttribute('tabindex') === '-1') {
+    return false;
+  }
+  if (
+    element.hasAttribute('tabindex') ||
+    element.getAttribute('contentEditable') === 'true'
+  ) {
+    return true;
+  }
+  switch (element.tagName) {
+    case 'A':
+    case 'AREA':
+      return element.hasAttribute('href');
+    case 'INPUT':
+    case 'SELECT':
+    case 'TEXTAREA':
+    case 'BUTTON':
+      return !element.hasAttribute('disabled');
+    case 'IFRAME':
+      return true;
+    default:
+      return false;
+  }
+}
+
+/**
+ * Returns the last focusable element of for an HTML element.
+ * This function would NOT work with shadow root.
+ * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement>} | null} element
+ * @returns {HTMLElement | null}
+ */
+export function getLastFocusableElement(element) {
+  if (!element || element.nodeType === Node.TEXT_NODE) return null;
+
+  if (isCustomElement(element)) {
+    if (element.dataset?.focusable?.toString() === 'true') {
+      return element;
+    }
+    return null;
+  }
+
+  if (element.tagName === 'SLOT' && element.assignedElements().length) {
+    return getLastFocusableElementFromSlot(element);
+  }
+
+  /** @type {Array} */
+  const childNodes = Array.from(element.childNodes);
+  const focusableElements = childNodes
+    .map((item) => getLastFocusableElement(item))
+    .filter((item) => !!item);
+
+  if (focusableElements.length) {
+    return focusableElements[focusableElements.length - 1];
+  } else if (isFocusable(element)) {
+    return element;
+  }
+  return null;
+}
+
+/**
+ * Returns the First focusable element of for an HTML element.
+ * This function would NOT work with shadow root.
+ * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement>} | null} element
+ * @returns {HTMLElement | null}
+ */
+export function getFirstFocusableElement(element) {
+  if (!element || element.nodeType === Node.TEXT_NODE) return null;
+
+  if (isCustomElement(element)) {
+    if (element.dataset?.focusable?.toString() === 'true') {
+      return element;
+    }
+    return null;
+  }
+
+  if (element.tagName === 'SLOT' && element.assignedElements().length) {
+    return getFirstFocusableElementFromSlot(element);
+  }
+
+  /** @type {Array} */
+  const childNodes = Array.from(element.childNodes);
+  const focusableElements = childNodes
+    .map((item) => getFirstFocusableElement(item))
+    .filter((item) => !!item);
+
+  if (focusableElements.length) {
+    return focusableElements[0];
+  } else if (isFocusable(element)) {
+    return element;
+  }
+  return null;
+}
+
+/**
+ * Checks whether an element is a custom element.
+ * @param {HTMLElement | null} element
+ * @returns {boolean}
+ */
+export function isCustomElement(element) {
+  if (element && element.tagName.includes('-')) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Returns the last focusable element in an HTML slot.
+ * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement> | null}} slotElement
+ */
+function getLastFocusableElementFromSlot(slotElement) {
+  if (!slotElement && slotElement.assignedElements) {
+    return null;
+  }
+  const assignedElements = Array.from(slotElement.assignedElements());
+  const focusableElements = assignedElements
+    .map((item) => getLastFocusableElement(item))
+    .filter((item) => !!item);
+
+  if (focusableElements.length) {
+    return focusableElements[focusableElements.length - 1];
+  }
+  return null;
+}
+
+/**
+ * Returns the first focusable element in an HTML slot.
+ * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement> | null}} slotElement
+ */
+function getFirstFocusableElementFromSlot(slotElement) {
+  if (!slotElement && slotElement.assignedElements) {
+    return null;
+  }
+  const assignedElements = Array.from(slotElement.assignedElements());
+  const focusableElements = assignedElements
+    .map((item) => getFirstFocusableElement(item))
+    .filter((item) => !!item);
+
+  if (focusableElements.length) {
+    return focusableElements[0];
+  }
+  return null;
+}
+
+/**
+ * Checks whether an element is indeed the targetElement or one of its parents.
+ * @param {HTMLElement} element
+ * @param {string} targetElement
+ */
+export function isParentOf(element, targetElement) {
+  if (!element || element.nodeType === Node.TEXT_NODE) {
+    return false;
+  }
+
+  if (isCustomElement(element)) {
+    if (element.tagName === targetElement) {
+      return true;
+    }
+    return false;
+  }
+  /** @type {Array} */
+  const childNodes = Array.from(element.childNodes);
+  if (childNodes.length === 0) return false;
+  return childNodes.reduce(
+    (acc, val) => acc || isParentOf(val, targetElement),
+    false
+  );
+}
+
+/**
+ * Copies text to clipboard using the Clipboard API.
+ * https://developer.mozilla.org/en-US/docs/Web/API/Clipboard
+ * @param {string} text
+ */
+export async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    copyToClipboardFallback(text);
+  }
+}
+
+/**
+ * Copies text to clipboard using the DOM.
+ * @param {string} text
+ */
+export function copyToClipboardFallback(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+}
+
+/**
+ * Read the value of a given key from an object.
+ * @param {object} object
+ * @param {string} key
+ */
+export function readFromObject(object, key) {
+  const firstPeriodIndex = key.indexOf('.');
+  if (object && firstPeriodIndex !== -1) {
+    let newKey = key.substring(firstPeriodIndex + 1);
+    key = key.substring(0, firstPeriodIndex);
+    return readFromObject(object[key], newKey);
+  }
+  return object ? object[key] : undefined;
+}
+
+/**
+ * Generates a text from a result based on a given template.
+ * @param {string} template
+ * @param {Result} result
+ * @returns {string}
+ */
+export function buildTemplateTextFromResult(template, result) {
+  if (!template) {
+    return '';
+  }
+  return template.replace(/\$\{(.*?)\}/g, (value) => {
+    const key = value.substring(2, value.length - 1);
+    const newValue = readFromObject(result, key);
+    return newValue || value;
+  });
+}
+
+/**
+ * Returns the padding values of an element.
+ * @param {Element} element
+ * @returns {{top: number, right:number, bottom:number, left:number}}
+ */
+export function getElementPadding(element) {
+  const styles = window.getComputedStyle(element);
+
+  return {
+    top: parseFloat(styles.paddingTop),
+    right: parseFloat(styles.paddingRight),
+    bottom: parseFloat(styles.paddingBottom),
+    left: parseFloat(styles.paddingLeft),
+  };
+}
+
+/**
+ * Returns the absolute width of an element.
+ * @param {Element} element
+ * @returns {number}
+ */
+export function getAbsoluteHeight(element) {
+  if (!element) {
+    return 0;
+  }
+  const paddings = getElementPadding(element);
+  const padding = paddings.top + paddings.bottom;
+
+  // @ts-ignore
+  return Math.ceil(element.offsetHeight + padding);
+}
+
+/**
+ * Returns the absolute width of an element.
+ * @param {Element} element
+ * @returns {number}
+ */
+export function getAbsoluteWidth(element) {
+  if (!element) {
+    return 0;
+  }
+  const paddings = getElementPadding(element);
+  const padding = paddings.left + paddings.right;
+
+  // @ts-ignore
+  return Math.ceil(element.offsetWidth + padding);
 }

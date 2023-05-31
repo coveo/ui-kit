@@ -1,5 +1,9 @@
-import {LightningElement, api} from 'lwc';
 import LOCALE from '@salesforce/i18n/locale';
+import inclusionFilter from '@salesforce/label/c.quantic_InclusionFilter';
+import inclusionFilter_plural from '@salesforce/label/c.quantic_InclusionFilter_plural';
+import inclusionFilter_zero from '@salesforce/label/c.quantic_InclusionFilter_zero';
+import {I18nUtils} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 
 /**
  * @typedef FacetValueBase
@@ -44,8 +48,36 @@ export default class QuanticFacetValue extends LightningElement {
    */
   @api formattingFunction;
 
+  /**
+   * Whether the facet value belongs to a range facet.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api isRangeFacet;
+
+  /**
+   * A function used to set focus to the value.
+   * @api
+   * @type {VoidFunction}
+   * @defaultValue `undefined`
+   */
+  @api setFocus() {
+    const focusTarget = this.template.querySelector('.facet__value-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.focus();
+    }
+  }
+
+  labels = {
+    inclusionFilter,
+    inclusionFilter_plural,
+    inclusionFilter_zero,
+  };
+
   get isStandardFacet() {
-    return !this.formattingFunction;
+    return !this.isRangeFacet;
   }
 
   get formattedFacetValue() {
@@ -64,7 +96,15 @@ export default class QuanticFacetValue extends LightningElement {
   }
 
   get ariaLabelValue() {
-    return `Inclusion filter on ${this.formattedFacetValue}; ${this.numberOfResults} result`;
+    const labelName = I18nUtils.getLabelNameWithCount(
+      'inclusionFilter',
+      this.numberOfResults
+    );
+    return I18nUtils.format(
+      this.labels[labelName],
+      this.formattedFacetValue,
+      this.numberOfResults
+    );
   }
 
   /**

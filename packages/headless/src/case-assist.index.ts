@@ -1,3 +1,6 @@
+import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
+
+polyfillCryptoNode();
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 
@@ -24,6 +27,7 @@ export * from './features/case-input/case-input-actions-loader';
 export * from './features/case-field/case-field-actions-loader';
 export * from './features/document-suggestion/document-suggestion-actions-loader';
 export * from './features/case-assist/case-assist-analytics-actions-loader';
+export * from './features/analytics/generic-analytics-actions-loader';
 
 // Controllers
 export type {
@@ -60,25 +64,6 @@ export type {
 } from './controllers/core/quickview/headless-core-quickview';
 
 export type {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  Quickview as QuickviewCore,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuickviewOptions as QuickviewCoreOptions,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuickviewProps as QuickviewCoreProps,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuickviewState as QuickviewCoreState,
-} from './controllers/core/quickview/headless-core-quickview';
-
-export type {
   CaseAssistQuickviewState,
   CaseAssistQuickview,
   CaseAssistQuickviewOptions,
@@ -100,15 +85,6 @@ export type {
 export {buildDocumentSuggestionList} from './controllers/document-suggestion-list/headless-document-suggestion-list';
 
 export {buildCaseAssistInteractiveResult as buildInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
-
-/**
- * @deprecated
- * Types exported for backward compatibility only.
- */
-export type {
-  DocumentSuggestionList as DocumentSuggestion,
-  DocumentSuggestionListState as DocumentSuggestionState,
-} from './controllers/document-suggestion-list/headless-document-suggestion-list';
 
 export {buildDocumentSuggestionList as buildDocumentSuggestion} from './controllers/document-suggestion-list/headless-document-suggestion-list';
 

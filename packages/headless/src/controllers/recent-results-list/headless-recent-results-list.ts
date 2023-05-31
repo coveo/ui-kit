@@ -1,19 +1,19 @@
 import {ArrayValue, NumberValue, Schema} from '@coveo/bueno';
-import {buildController, Controller} from '../controller/headless-controller';
-import {loadReducerError} from '../../utils/errors';
-import {recentResults} from '../../app/reducers';
+import {Result} from '../../api/search/search/result';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {RecentResultsSection} from '../../state/state-sections';
 import {
   clearRecentResults,
   registerRecentResults,
 } from '../../features/recent-results/recent-results-actions';
+import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
+import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
+import {RecentResultsSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
-import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
-import {Result} from '../../api/search/search/result';
+import {buildController, Controller} from '../controller/headless-controller';
 
 export interface RecentResultsListProps {
   /**
@@ -60,7 +60,7 @@ const optionsSchema = new Schema<RecentResultsListOptions>({
 });
 
 /**
- * The `RecentResultsList` controller manages the user's recent results.
+ * The `RecentResultsList` controller manages a user's recently clicked results.
  */
 export interface RecentResultsList extends Controller {
   /**

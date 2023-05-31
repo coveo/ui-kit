@@ -1,20 +1,20 @@
+import alias from '@rollup/plugin-alias';
+import replacePlugin from '@rollup/plugin-replace';
+import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import {Config} from '@stencil/core';
 import {postcss} from '@stencil/postcss';
-import alias from '@rollup/plugin-alias';
+import {reactOutputTarget as react} from '@stencil/react-output-target';
+import autoprefixer from 'autoprefixer';
+import {readFileSync} from 'fs';
 import path from 'path';
+import focusVisible from 'postcss-focus-visible';
+import atImport from 'postcss-import';
+import mixins from 'postcss-mixins';
+import postcssNesting from 'postcss-nested';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
-import postcssNesting from 'postcss-nested';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
-import atImport from 'postcss-import';
-import focusVisible from 'postcss-focus-visible';
-import autoprefixer from 'autoprefixer';
-import replacePlugin from '@rollup/plugin-replace';
-import mixins from 'postcss-mixins';
-import {readFileSync} from 'fs';
-import {reactOutputTarget as react} from '@stencil/react-output-target';
-import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';
@@ -67,7 +67,11 @@ export const config: Config = {
       componentCorePackage: '@coveo/atomic',
       proxiesFile: '../atomic-react/src/components/stencil-generated/index.ts',
       includeDefineCustomElements: true,
-      excludeComponents: ['atomic-result-template', 'atomic-field-condition'],
+      excludeComponents: [
+        'atomic-result-template',
+        'atomic-recs-result-template',
+        'atomic-field-condition',
+      ],
     }),
     angular({
       componentCorePackage: '@coveo/atomic',
@@ -120,7 +124,7 @@ export const config: Config = {
       '^.+\\.svg$': './svg.transform.js',
     },
     transformIgnorePatterns: [],
-    testPathIgnorePatterns: ['headless', '.snap'],
+    testPathIgnorePatterns: ['.snap'],
     setupFiles: ['jest-localstorage-mock'],
     resetMocks: false,
   },

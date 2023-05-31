@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   CategoryFieldSuggestions as HeadlessCategoryFieldSuggestions,
   CategoryFieldSuggestionsOptions,
@@ -6,10 +5,14 @@ import {
   buildCategoryFieldSuggestions,
   CategoryFacetSearchState,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../../context/engine';
 
+type CategoryFieldSuggestionsFacetOptions =
+  CategoryFieldSuggestionsOptions['facet'];
+
 interface CategoryFieldSuggestionsProps
-  extends CategoryFieldSuggestionsOptions {
+  extends CategoryFieldSuggestionsFacetOptions {
   facetId: string;
 }
 
@@ -25,7 +28,7 @@ export class CategoryFieldSuggestions extends Component<
 
   componentDidMount() {
     this.controller = buildCategoryFieldSuggestions(this.context.engine!, {
-      options: this.props,
+      options: {facet: this.props},
     });
     this.updateState();
 

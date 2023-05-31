@@ -4,6 +4,8 @@ import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
+import {QuerySuggestSuccessResponse} from '../../search/query-suggest/query-suggest-response';
+import {SearchOptions} from '../../search/search-api-client';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {SearchResponseSuccess} from '../../search/search/search-response';
 import {
@@ -11,8 +13,10 @@ import {
   GetInsightInterfaceConfigRequest,
 } from './get-interface/get-interface-config-request';
 import {GetInsightInterfaceConfigResponse} from './get-interface/get-interface-config-response';
+import {InsightQuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {
   buildInsightQueryRequest,
+  buildInsightQuerySuggestRequest,
   InsightQueryRequest,
 } from './query/query-request';
 import {
@@ -78,10 +82,12 @@ export class InsightAPIClient {
   }
 
   async query(
-    req: InsightQueryRequest
+    req: InsightQueryRequest,
+    options?: SearchOptions
   ): Promise<InsightAPIResponse<SearchResponseSuccess>> {
     const response = await PlatformClient.call({
       ...buildInsightQueryRequest(req),
+      requestMetadata: {method: 'search', origin: options?.origin},
       ...this.options,
     });
 
@@ -92,6 +98,25 @@ export class InsightAPIClient {
     const body = await response.json();
     return response.ok
       ? {success: body as SearchResponseSuccess}
+      : {error: body as InsightAPIErrorStatusResponse};
+  }
+
+  async querySuggest(
+    req: InsightQuerySuggestRequest
+  ): Promise<InsightAPIResponse<QuerySuggestSuccessResponse>> {
+    const response = await PlatformClient.call({
+      ...buildInsightQuerySuggestRequest(req),
+      ...this.options,
+    });
+
+    if (response instanceof Error) {
+      return buildAPIResponseFromErrorOrThrow(response);
+    }
+
+    const body = await response.json();
+
+    return body.completions
+      ? {success: body}
       : {error: body as InsightAPIErrorStatusResponse};
   }
 

@@ -1,4 +1,7 @@
 import {SchemaDefinition, SchemaValue} from '../schema';
+import {BooleanValue, isBoolean} from './boolean-value';
+import {NumberValue, isNumber} from './number-value';
+import {StringValue, isString} from './string-value';
 import {
   PrimitivesValues,
   ValueConfig,
@@ -6,9 +9,6 @@ import {
   Value,
   isUndefined,
 } from './value';
-import {StringValue, isString} from './string-value';
-import {BooleanValue, isBoolean} from './boolean-value';
-import {NumberValue, isNumber} from './number-value';
 
 type RecordWithPrimitiveValues = Record<string, PrimitivesValues>;
 type ComplexRecord = Record<

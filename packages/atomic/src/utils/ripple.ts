@@ -37,20 +37,26 @@ export function createRipple(event: MouseEvent, options: RippleOptions) {
 
   const diameter = Math.max(button.clientWidth, button.clientHeight);
   const radius = diameter / 2;
+  const animationDuration = getAnimationDurationInMilliseconds(radius);
   const {top, left} = button.getBoundingClientRect();
   ripple.style.width = ripple.style.height = `${diameter}px`;
   ripple.style.left = `${event.clientX - (left + radius)}px`;
   ripple.style.top = `${event.clientY - (top + radius)}px`;
-  ripple.style.setProperty(
-    '--animation-duration',
-    `${getAnimationDurationInMilliseconds(radius)}ms`
-  );
+  ripple.style.setProperty('--animation-duration', `${animationDuration}ms`);
   button.prepend(ripple);
-  cleanupAnimationOnFinish(ripple);
+  cleanupAnimationOnFinish(ripple, animationDuration);
 }
 
-async function cleanupAnimationOnFinish(ripple: HTMLSpanElement) {
+async function cleanupAnimationOnFinish(
+  ripple: HTMLSpanElement,
+  animationDuration: number
+) {
   listenOnce(ripple, 'animationend', () => {
     ripple && ripple.remove();
   });
+  // Backup in case the button gets hidden or unmounted and the ripple hasn't been cleaned up.
+  setTimeout(
+    () => ripple?.remove(),
+    animationDuration + animationDuration * 0.1
+  );
 }

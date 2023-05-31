@@ -1,3 +1,9 @@
+import {configuration} from '../../../app/common-reducers';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
+import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {
   logFacetUpdateSort,
   logFacetShowMore,
@@ -6,24 +12,14 @@ import {
   logFacetDeselect,
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {productListingReducer as productListing} from '../../../features/product-listing/product-listing-slice';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
   ProductListingSection,
 } from '../../../state/state-sections';
-import {
-  CategoryFacetOptions,
-  CategoryFacetSearchOptions,
-} from '../../core/facets/category-facet/headless-core-category-facet-options';
-import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  configuration,
-  productListing,
-} from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildCoreCategoryFacet,
@@ -36,8 +32,10 @@ import {
   CoreCategoryFacet,
   CoreCategoryFacetState,
 } from '../../core/facets/category-facet/headless-core-category-facet';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {
+  CategoryFacetOptions,
+  CategoryFacetSearchOptions,
+} from '../../core/facets/category-facet/headless-core-category-facet-options';
 import {buildCategoryFacetSearch} from './headless-product-listing-category-facet-search';
 
 export type {
@@ -77,6 +75,7 @@ export function buildCategoryFacet(
       facetId: getFacetId(),
       ...props.options.facetSearch,
     },
+    isForFieldSuggestions: false,
   });
 
   const {state, ...restOfFacetSearch} = facetSearch;

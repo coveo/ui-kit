@@ -4,7 +4,7 @@ import {
   randomID,
   kebabToCamel,
   parseAssetURL,
-  getUniqueItemsByProperties,
+  aggregate,
 } from './utils';
 
 describe('once', () => {
@@ -85,45 +85,24 @@ describe('parseAssetURL', () => {
   });
 });
 
-describe('getUniqueItemsByProperties', () => {
-  it('works as expected', () => {
-    const testCases = [
-      {
-        in: [
-          {foo: 'bar', bazz: 'buzz'},
-          {foo: 'bar', bazz: 'something else'},
-        ],
-        props: ['foo'],
-        expected: [{foo: 'bar', bazz: 'buzz'}],
-      },
-      {
-        in: [
-          {foo: 'bar', bazz: 'buzz'},
-          {foo: 'bar', bazz: 'something else'},
-        ],
-        props: ['bazz'],
-        expected: [
-          {foo: 'bar', bazz: 'buzz'},
-          {foo: 'bar', bazz: 'something else'},
-        ],
-      },
-      {
-        in: [
-          {foo: 'bar', bazz: 'buzz'},
-          {foo: 'bar', bazz: 'something else'},
-        ],
-        props: ['bar', 'bazz'],
-        expected: [
-          {foo: 'bar', bazz: 'buzz'},
-          {foo: 'bar', bazz: 'something else'},
-        ],
-      },
-    ];
-
-    testCases.forEach((testCase) =>
-      expect(
-        getUniqueItemsByProperties(testCase.in, testCase.props as never)
-      ).toEqual(testCase.expected)
+describe('aggregate', () => {
+  it('can aggregate based on string keys', () => {
+    const aggregatedValues = aggregate(
+      [
+        {name: 'Apple', category: 'Fruit'},
+        {name: 'Cookie', category: 'Dessert'},
+        {name: 'Watermelon', category: 'Fruit'},
+        {name: 'Carrot', category: 'Vegetable'},
+      ] as const,
+      (value) => value.category
     );
+    expect(aggregatedValues).toEqual({
+      Fruit: [
+        {name: 'Apple', category: 'Fruit'},
+        {name: 'Watermelon', category: 'Fruit'},
+      ],
+      Dessert: [{name: 'Cookie', category: 'Dessert'}],
+      Vegetable: [{name: 'Carrot', category: 'Vegetable'}],
+    });
   });
 });

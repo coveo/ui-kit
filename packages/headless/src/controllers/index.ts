@@ -163,6 +163,13 @@ export type {
 export {buildInteractiveResult} from './result-list/headless-interactive-result';
 
 export type {
+  InteractiveInstantResultOptions,
+  InteractiveInstantResultProps,
+  InteractiveInstantResult,
+} from './instant-results/headless-interactive-instant-result';
+export {buildInteractiveInstantResult} from './instant-results/headless-interactive-instant-result';
+
+export type {
   ResultsPerPageInitialState,
   ResultsPerPageProps,
   ResultsPerPageState,
@@ -280,16 +287,18 @@ export type {
   QuickviewOptions,
   QuickviewProps,
   QuickviewState,
+  CoreQuickviewState,
+  CoreQuickview,
 } from './quickview/headless-quickview';
 export {buildQuickview} from './quickview/headless-quickview';
 
 export type {
+  FoldingOptions,
   FoldedCollection,
   FoldedResult,
-  FoldedResultList,
-  FoldingOptions,
   FoldedResultListOptions,
   FoldedResultListProps,
+  FoldedResultList,
   FoldedResultListState,
 } from './folded-result-list/headless-folded-result-list';
 export {buildFoldedResultList} from './folded-result-list/headless-folded-result-list';
@@ -326,8 +335,11 @@ export type {
   SmartSnippetProps,
   SmartSnippetState,
   QuestionAnswerDocumentIdentifier,
-} from './smart-snippet/headless-smart-snippet';
+  SmartSnippetCore,
+} from './core/smart-snippet/headless-core-smart-snippet';
 export {buildSmartSnippet} from './smart-snippet/headless-smart-snippet';
+
+export type {InlineLink} from './smart-snippet/headless-smart-snippet-interactive-inline-links';
 
 export type {
   SmartSnippetQuestionsList,
@@ -335,6 +347,8 @@ export type {
   SmartSnippetQuestionsListProps,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
+  CoreSmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
 } from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
 export {buildSmartSnippetQuestionsList} from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
 
@@ -364,12 +378,6 @@ export type {
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
 } from './core/interactive-result/headless-core-interactive-result';
-export {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version. Please use `buildInteractiveResult` instead.
-   */
-  buildInteractiveResultCore,
-} from './core/interactive-result/headless-core-interactive-result';
 
 export type {
   FacetConditionsManager,
@@ -378,6 +386,8 @@ export type {
 export {buildCoreFacetConditionsManager as buildFacetConditionsManager} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
 
 export type {
+  FieldSuggestionsValue,
+  FieldSuggestionsState,
   FieldSuggestions,
   FieldSuggestionsOptions,
   FieldSuggestionsProps,
@@ -385,76 +395,11 @@ export type {
 export {buildFieldSuggestions} from './field-suggestions/facet/headless-field-suggestions';
 
 export type {
+  CategoryFieldSuggestionsValue,
+  CategoryFieldSuggestionsState,
   CategoryFieldSuggestions,
   CategoryFieldSuggestionsOptions,
   CategoryFieldSuggestionsProps,
 } from './field-suggestions/category-facet/headless-category-field-suggestions';
-
-export type {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuerySummaryState as CoreQuerySummaryState,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuerySummary as CoreQuerySummary,
-} from './core/query-summary/headless-core-query-summary';
-export {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version. Please use `buildQuerySummary` instead.
-   */
-  buildCoreQuerySummary,
-} from './core/query-summary/headless-core-query-summary';
-
-export type {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  ResultListOptions as CoreResultListOptions,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  ResultListState as CoreResultListState,
-} from './core/result-list/headless-core-result-list';
-
-export type {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  FacetManager as CoreFacetManager,
-} from './core/facet-manager/headless-core-facet-manager';
-
-export type {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  SearchStatus as CoreStatusState,
-} from './core/status/headless-core-status';
-
-export type {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  Quickview as QuickviewCore,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuickviewOptions as QuickviewCoreOptions,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuickviewProps as QuickviewCoreProps,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
-  QuickviewState as QuickviewCoreState,
-} from './core/quickview/headless-core-quickview';
-export {
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version. Please use `buildQuickview` instead.
-   */
-  buildCoreQuickview as buildQuickviewCore,
-} from './core/quickview/headless-core-quickview';
 
 export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';

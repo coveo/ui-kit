@@ -1,13 +1,13 @@
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {getDebugInitialState} from '../../features/debug/debug-state';
 import {getPaginationInitialState} from '../../features/pagination/pagination-state';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
-import {SearchParametersState} from '../../state/search-app-state';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {executeSearch} from '../../features/search/search-actions';
 import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
-import {deepEqualAnyOrder} from '../../utils/compare-utils';
+import {executeSearch} from '../../features/search/search-actions';
 import {StaticFilterValue} from '../../features/static-filter-set/static-filter-set-state';
+import {SearchParametersState} from '../../state/search-app-state';
+import {deepEqualAnyOrder} from '../../utils/compare-utils';
 import {
   buildCoreSearchParameterManager,
   enrichParameters,
@@ -16,6 +16,7 @@ import {
   SearchParameterManagerInitialState,
   SearchParameterManagerProps,
   SearchParameterManagerState,
+  validateParams,
 } from '../core/search-parameter-manager/headless-core-search-parameter-manager';
 
 export type {
@@ -49,6 +50,10 @@ export function buildSearchParameterManager(
       const newParams = enrichParameters(engine, parameters);
 
       if (deepEqualAnyOrder(oldParams, newParams)) {
+        return;
+      }
+
+      if (!validateParams(engine, newParams)) {
         return;
       }
 

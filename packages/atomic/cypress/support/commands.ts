@@ -1,8 +1,4 @@
-// Must be declared global to be detected by typescript (allows import/export)
-import {
-  SearchEventRequest,
-  ClickEventRequest,
-} from 'coveo.analytics/src/events';
+import {SinonSpy} from 'cypress/types/sinon';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 
 // eslint-disable @typescript/interface-name
@@ -18,15 +14,18 @@ declare global {
       // https://github.com/cypress-io/cypress-documentation/issues/108
       state(key: string): CypressRequest[];
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
-      expectSearchEvent(actionCause: string): Chainable<SearchEventRequest>;
-      expectClickEvent(actionCause: string): Chainable<ClickEventRequest>;
+      expectSearchEvent(actionCause: string): Chainable<unknown>;
+      expectClickEvent(actionCause: string): Chainable<unknown>;
       expectCustomEvent(
         eventType: string,
         eventValue?: string
-      ): Chainable<SearchEventRequest>;
+      ): Chainable<unknown>;
       distanceTo(
         getSubjectB: () => Chainable<JQuery<HTMLElement>>
       ): Chainable<{horizontal: number; vertical: number}>;
+      getCalls<TArgs extends unknown[], TReturnValue>(
+        fixture: string
+      ): Chainable<sinon.SinonSpyCall<TArgs, TReturnValue>[]>;
     }
   }
 }
@@ -79,17 +78,24 @@ interface CypressRequest {
   xhr: {url: string};
 }
 
-// Only possible to filter on the url
-Cypress.Commands.add('shouldBeCalled', (urlPart, timesCalled) => {
-  cy.state('requests').forEach((call) =>
-    console.log('Should be called contains: ', call.xhr.url)
+// Only possible to filter on the alias
+Cypress.Commands.add('shouldBeCalled', (interceptAlias, timesCalled) => {
+  // cy.state('aliasRequests') contains a map of all intercepted requests, with the number of times they've been called.
+  // ie: {coveoSearch: 1, coveoAnalytics: 4}
+  Object.entries(cy.state('aliasRequests')).forEach(([alias]) =>
+    console.log('Should be called contains: ', alias)
   );
+  const aliasRequestThatMatch = Object.entries(
+    cy.state('aliasRequests')
+  ).filter(
+    ([alias]) =>
+      alias.includes(interceptAlias) || interceptAlias.includes(alias)
+  );
+  const numCall = aliasRequestThatMatch[0] ? aliasRequestThatMatch[0][1] : 0;
   expect(
-    cy
-      .state('requests')
-      .filter((call: CypressRequest) => call.xhr.url.includes(urlPart)),
-    `Url containing "${urlPart}"" should have been called ${timesCalled} times`
-  ).to.have.length(timesCalled);
+    numCall,
+    `Intercept alias "${interceptAlias}"" should have been called ${timesCalled} times`
+  ).to.equal(timesCalled);
 });
 
 Cypress.Commands.add(
@@ -112,6 +118,15 @@ Cypress.Commands.add(
       });
     })
 );
+
+Cypress.Commands.add('getCalls', (fixture) => {
+  function isSinonSpy(obj: unknown): obj is SinonSpy<[], unknown> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return 'getCalls' in (obj as any);
+  }
+
+  cy.get(fixture).should('satisfy', isSinonSpy).invoke('getCalls');
+});
 
 // Convert this to a module instead of script (allows import/export)
 export {};

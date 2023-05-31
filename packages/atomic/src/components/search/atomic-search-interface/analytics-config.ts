@@ -1,12 +1,13 @@
 import {
-  AnalyticsPayload,
-  augmentAnalyticsWithAtomicVersion,
-  augmentWithExternalMiddleware,
-} from '../../common/interface/analytics-config';
-import {
   AnalyticsConfiguration,
   SearchEngineConfiguration,
 } from '@coveo/headless';
+import {
+  AnalyticsPayload,
+  augmentAnalyticsWithAtomicVersion,
+  augmentWithExternalMiddleware,
+  augmentAnalyticsConfigWithDocument,
+} from '../../common/interface/analytics-config';
 import {createAtomicStore} from './store';
 
 export function getAnalyticsConfig(
@@ -22,14 +23,14 @@ export function getAnalyticsConfig(
   const defaultConfiguration: AnalyticsConfiguration = {
     analyticsClientMiddleware,
     enabled,
-    documentLocation: document.location.href,
-    ...(document.referrer && {originLevel3: document.referrer}),
+    ...augmentAnalyticsConfigWithDocument(),
   };
 
   if (searchEngineConfig.analytics) {
     return {
       ...defaultConfiguration,
       ...searchEngineConfig.analytics,
+      analyticsClientMiddleware,
     };
   }
   return defaultConfiguration;
@@ -55,7 +56,7 @@ function augmentAnalyticsWithFacetTitles(
   const getAtomicFacetLabelOrOriginalTitle = (
     facetId: string,
     originalTitle: string
-  ) => (allFacets[facetId] ? allFacets[facetId].label : originalTitle);
+  ) => (allFacets[facetId] ? allFacets[facetId].label() : originalTitle);
 
   if (payload.facetState) {
     payload.facetState = payload.facetState.map(

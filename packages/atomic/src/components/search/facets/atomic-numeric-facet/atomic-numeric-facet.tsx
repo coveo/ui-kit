@@ -57,6 +57,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
+ * @part value-checkbox-icon - The facet value checkbox icon, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  * @part value-link-selected - The selected facet value when display is 'link'.
 
@@ -83,7 +84,7 @@ export class AtomicNumericFacet
   @Element() private host!: HTMLElement;
   private manualRanges: NumericRangeWithLabel[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
-  private numericFacetCommon!: NumericFacetCommon;
+  private numericFacetCommon?: NumericFacetCommon;
 
   @BindStateToController('facetForRange')
   @State()
@@ -140,7 +141,7 @@ export class AtomicNumericFacet
   @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' =
     'checkbox';
   /**
-   * Specifies if the facet is collapsed.
+   * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
@@ -214,7 +215,7 @@ export class AtomicNumericFacet
   }
 
   public disconnectedCallback() {
-    this.numericFacetCommon.disconnectedCallback();
+    this.numericFacetCommon?.disconnectedCallback();
   }
 
   private initializeFacetForInput() {

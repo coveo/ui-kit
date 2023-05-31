@@ -1,155 +1,178 @@
-import {Result} from '../../api/search/search/result';
 import {validatePayload} from '../../utils/validate-payload';
 import {
   AnalyticsType,
+  ClickAction,
+  CustomAction,
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
-  validateResultPayload,
 } from '../analytics/analytics-utils';
-import {getResultProperty} from '../result-templates/result-templates-helpers';
 import {
-  isQuestionAnsweringUniqueIdentifierActionCreatorPayload,
-  QuestionAnsweringDocumentIdActionCreatorPayload,
+  inlineLinkPayloadDefinition,
+  QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   uniqueIdentifierPayloadDefinition,
   validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id';
-import {relatedQuestionSelector} from './question-answering-selectors';
+import {
+  answerSourceSelector,
+  relatedQuestionSelector,
+} from './question-answering-selectors';
 
 export type SmartSnippetFeedback =
   | 'does_not_answer'
   | 'partially_answers'
   | 'was_not_a_question';
 
-export const logExpandSmartSnippet = makeAnalyticsAction(
-  'analytics/smartSnippet/expand',
-  AnalyticsType.Custom,
-  (client) => client.logExpandSmartSnippet()
-);
+export const logExpandSmartSnippet = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/expand',
+    AnalyticsType.Custom,
+    (client) => client.makeExpandSmartSnippet()
+  );
 
-export const logCollapseSmartSnippet = makeAnalyticsAction(
-  'analytics/smartSnippet/collapse',
-  AnalyticsType.Custom,
-  (client) => client.logCollapseSmartSnippet()
-);
+export const logCollapseSmartSnippet = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/collapse',
+    AnalyticsType.Custom,
+    (client) => client.makeCollapseSmartSnippet()
+  );
 
-export const logLikeSmartSnippet = makeAnalyticsAction(
-  'analytics/smartSnippet/like',
-  AnalyticsType.Custom,
-  (client) => client.logLikeSmartSnippet()
-);
+export const logLikeSmartSnippet = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/like',
+    AnalyticsType.Custom,
+    (client) => client.makeLikeSmartSnippet()
+  );
 
-export const logDislikeSmartSnippet = makeAnalyticsAction(
-  'analytics/smartSnippet/dislike',
-  AnalyticsType.Custom,
-  (client) => client.logDislikeSmartSnippet()
-);
+export const logDislikeSmartSnippet = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/dislike',
+    AnalyticsType.Custom,
+    (client) => client.makeDislikeSmartSnippet()
+  );
 
-export const logOpenSmartSnippetSource = (source: Result) =>
+/**
+ * @returns A dispatchable action.
+ */
+export function logOpenSmartSnippetSource(): ClickAction {
+  return makeAnalyticsAction(
+    'analytics/smartSnippet/source/open',
+    AnalyticsType.Click,
+    (client, state) => {
+      const result = answerSourceSelector(state)!;
+      return client.makeOpenSmartSnippetSource(
+        partialDocumentInformation(result, state),
+        documentIdentifier(result)
+      );
+    }
+  );
+}
+
+export const logOpenSmartSnippetInlineLink = (
+  payload: QuestionAnsweringInlineLinkActionCreatorPayload
+): ClickAction =>
   makeAnalyticsAction(
     'analytics/smartSnippet/source/open',
     AnalyticsType.Click,
     (client, state) => {
-      validateResultPayload(source);
-      return client.logOpenSmartSnippetSource(
-        partialDocumentInformation(source, state),
-        documentIdentifier(source)
+      validatePayload(payload, inlineLinkPayloadDefinition());
+      const result = answerSourceSelector(state)!;
+      return client.makeOpenSmartSnippetInlineLink(
+        partialDocumentInformation(result, state),
+        {
+          ...documentIdentifier(result),
+          ...payload,
+        }
       );
     }
-  )();
+  );
 
-export const logOpenSmartSnippetFeedbackModal = makeAnalyticsAction(
-  'analytics/smartSnippet/feedbackModal/open',
-  AnalyticsType.Custom,
-  (client) => client.logOpenSmartSnippetFeedbackModal()
-);
+export const logOpenSmartSnippetFeedbackModal = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/feedbackModal/open',
+    AnalyticsType.Custom,
+    (client) => client.makeOpenSmartSnippetFeedbackModal()
+  );
 
-export const logCloseSmartSnippetFeedbackModal = makeAnalyticsAction(
-  'analytics/smartSnippet/feedbackModal/close',
-  AnalyticsType.Custom,
-  (client) => client.logCloseSmartSnippetFeedbackModal()
-);
+export const logCloseSmartSnippetFeedbackModal = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/feedbackModal/close',
+    AnalyticsType.Custom,
+    (client) => client.makeCloseSmartSnippetFeedbackModal()
+  );
 
-export const logSmartSnippetFeedback = (feedback: SmartSnippetFeedback) =>
+export const logSmartSnippetFeedback = (
+  feedback: SmartSnippetFeedback
+): CustomAction =>
   makeAnalyticsAction(
     'analytics/smartSnippet/sendFeedback',
     AnalyticsType.Custom,
-    (client) => client.logSmartSnippetFeedbackReason(feedback)
-  )();
+    (client) => client.makeSmartSnippetFeedbackReason(feedback)
+  );
 
-export const logSmartSnippetDetailedFeedback = (details: string) =>
+export const logSmartSnippetDetailedFeedback = (
+  details: string
+): CustomAction =>
   makeAnalyticsAction(
     'analytics/smartSnippet/sendFeedback',
     AnalyticsType.Custom,
-    (client) => client.logSmartSnippetFeedbackReason('other', details)
-  )();
+    (client) => client.makeSmartSnippetFeedbackReason('other', details)
+  );
 
 export const logExpandSmartSnippetSuggestion = (
-  payload:
-    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-    | QuestionAnsweringDocumentIdActionCreatorPayload
-) =>
+  payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+): CustomAction =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',
     AnalyticsType.Custom,
     (client, state) => {
       validateQuestionAnsweringActionCreatorPayload(payload);
 
-      if (!isQuestionAnsweringUniqueIdentifierActionCreatorPayload(payload)) {
-        return client.logExpandSmartSnippetSuggestion(payload);
-      }
-
       const relatedQuestion = relatedQuestionSelector(
         state,
         payload.questionAnswerId
       );
       if (!relatedQuestion) {
-        return;
+        return null;
       }
 
-      return client.logExpandSmartSnippetSuggestion({
+      return client.makeExpandSmartSnippetSuggestion({
         question: relatedQuestion.question,
         answerSnippet: relatedQuestion.answerSnippet,
         documentId: relatedQuestion.documentId,
       });
     }
-  )();
+  );
 
 export const logCollapseSmartSnippetSuggestion = (
-  payload:
-    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-    | QuestionAnsweringDocumentIdActionCreatorPayload
-) =>
+  payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+): CustomAction =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',
     AnalyticsType.Custom,
     (client, state) => {
       validateQuestionAnsweringActionCreatorPayload(payload);
 
-      if (!isQuestionAnsweringUniqueIdentifierActionCreatorPayload(payload)) {
-        return client.logCollapseSmartSnippetSuggestion(payload);
-      }
-
       const relatedQuestion = relatedQuestionSelector(
         state,
         payload.questionAnswerId
       );
       if (!relatedQuestion) {
-        return;
+        return null;
       }
 
-      return client.logCollapseSmartSnippetSuggestion({
+      return client.makeCollapseSmartSnippetSuggestion({
         question: relatedQuestion.question,
         answerSnippet: relatedQuestion.answerSnippet,
         documentId: relatedQuestion.documentId,
       });
     }
-  )();
+  );
 
 export const logOpenSmartSnippetSuggestionSource = (
   payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
-) =>
+): ClickAction =>
   makeAnalyticsAction(
     'analytics/smartSnippet/source/open',
     AnalyticsType.Click,
@@ -161,18 +184,14 @@ export const logOpenSmartSnippetSuggestionSource = (
         payload.questionAnswerId
       );
       if (!relatedQuestion) {
-        return;
+        return null;
       }
-      const source = state.search?.results.find(
-        (result) =>
-          getResultProperty(result, relatedQuestion.documentId.contentIdKey) ===
-          relatedQuestion.documentId.contentIdValue
-      );
+      const source = answerSourceSelector(state, relatedQuestion.documentId);
       if (!source) {
-        return;
+        return null;
       }
 
-      return client.logOpenSmartSnippetSuggestionSource(
+      return client.makeOpenSmartSnippetSuggestionSource(
         partialDocumentInformation(source, state),
         {
           question: relatedQuestion.question,
@@ -181,4 +200,56 @@ export const logOpenSmartSnippetSuggestionSource = (
         }
       );
     }
-  )();
+  );
+
+export const logOpenSmartSnippetSuggestionInlineLink = (
+  identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  link: QuestionAnsweringInlineLinkActionCreatorPayload
+): ClickAction =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/source/open',
+    AnalyticsType.Click,
+    (client, state) => {
+      validatePayload(identifier, uniqueIdentifierPayloadDefinition());
+      validatePayload(link, inlineLinkPayloadDefinition());
+
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        identifier.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return null;
+      }
+      const source = answerSourceSelector(state, relatedQuestion.documentId);
+      if (!source) {
+        return null;
+      }
+
+      return client.makeOpenSmartSnippetSuggestionInlineLink(
+        partialDocumentInformation(source, state),
+        {
+          question: relatedQuestion.question,
+          answerSnippet: relatedQuestion.answerSnippet,
+          documentId: relatedQuestion.documentId,
+          linkText: link.linkText,
+          linkURL: link.linkURL,
+        }
+      );
+    }
+  );
+
+export const smartSnippetAnalyticsClient = {
+  logExpandSmartSnippet,
+  logCollapseSmartSnippet,
+  logLikeSmartSnippet,
+  logDislikeSmartSnippet,
+  logOpenSmartSnippetSource,
+  logOpenSmartSnippetInlineLink,
+  logOpenSmartSnippetFeedbackModal,
+  logCloseSmartSnippetFeedbackModal,
+  logSmartSnippetFeedback,
+  logSmartSnippetDetailedFeedback,
+  logExpandSmartSnippetSuggestion,
+  logCollapseSmartSnippetSuggestion,
+  logOpenSmartSnippetSuggestionSource,
+};

@@ -1,30 +1,26 @@
-import {
-  ProductRecommendationAnalyticsProvider,
-  StateNeededByProductRecommendationsAnalyticsProvider,
-} from '../../api/analytics/product-recommendations-analytics';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
+import {Schema} from '@coveo/bueno';
 import {
   PartialDocumentInformation,
   DocumentIdentifier,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {ProductRecommendationAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
+import {Result} from '../../api/search/search/result';
 import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 import {
   AnalyticsType,
   makeAnalyticsAction,
+  ProductRecommendationAction,
   resultPartialDefinition,
 } from '../analytics/analytics-utils';
-import {Schema} from '@coveo/bueno';
-import {Result} from '../../api/search/search/result';
 
-export const logProductRecommendations = makeAnalyticsAction(
-  'analytics/productRecommendations/load',
-  AnalyticsType.Search,
-  (client) => client.logRecommendationInterfaceLoad(),
-  (state) =>
-    new ProductRecommendationAnalyticsProvider(
-      state as StateNeededByProductRecommendationsAnalyticsProvider
-    )
-);
+export const logProductRecommendations = (): ProductRecommendationAction =>
+  makeAnalyticsAction(
+    'analytics/productRecommendations/load',
+    AnalyticsType.Search,
+    (client) => client.makeRecommendationInterfaceLoad(),
+    (getState) => new ProductRecommendationAnalyticsProvider(getState)
+  );
 
 const partialRecommendationInformation = (
   result: ProductRecommendation,
@@ -100,19 +96,16 @@ const validateResultPayload = (productRecommendation: ProductRecommendation) =>
 
 export const logProductRecommendationOpen = (
   productRecommendation: ProductRecommendation
-) =>
+): ProductRecommendationAction<AnalyticsType.Click> =>
   makeAnalyticsAction(
     'analytics/productRecommendation/open',
     AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(productRecommendation);
-      return client.logRecommendationOpen(
+      return client.makeRecommendationOpen(
         partialRecommendationInformation(productRecommendation, state),
         documentIdentifier(productRecommendation)
       );
     },
-    (s) =>
-      new ProductRecommendationAnalyticsProvider(
-        s as StateNeededByProductRecommendationsAnalyticsProvider
-      )
-  )();
+    (getState) => new ProductRecommendationAnalyticsProvider(getState)
+  );

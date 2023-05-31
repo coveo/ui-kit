@@ -1,19 +1,20 @@
-import {historyReducer} from './history-slice';
-import {redo, snapshot, undo} from './history-actions';
 import {Reducer} from 'redux';
 import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
-import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
-import {buildMockQueryState} from '../../test/mock-query-state';
-import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {getHistoryInitialState, HistoryState} from './history-state';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
-import {buildMockTabSlice} from '../../test/mock-tab-state';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
+import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
+import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
+import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
+import {buildMockTabSlice} from '../../test/mock-tab-state';
+import {redo, snapshot, undo} from './history-actions';
+import {historyReducer} from './history-slice';
+import {getHistoryInitialState, HistoryState} from './history-state';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<HistoryState>>;
@@ -75,9 +76,9 @@ describe('history slice', () => {
       dictionaryFieldContext: {contextValues: {price: 'cad'}},
       tabSet: {a: buildMockTabSlice({id: 'a'})},
       staticFilterSet: {a: buildMockStaticFilterSlice({id: 'a'})},
-      facetSet: {foo: buildMockFacetRequest()},
-      numericFacetSet: {bar: buildMockNumericFacetRequest()},
-      dateFacetSet: {foo: buildMockDateFacetRequest()},
+      facetSet: {foo: buildMockFacetSlice()},
+      numericFacetSet: {bar: buildMockNumericFacetSlice()},
+      dateFacetSet: {foo: buildMockDateFacetSlice()},
       categoryFacetSet: {foo: buildMockCategoryFacetSlice()},
       facetOptions: {freezeFacetOrder: false, facets: {}},
       pagination: {
@@ -202,22 +203,22 @@ describe('history slice', () => {
 
     it('for #facetSet keys', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({facetSet: {foo: buildMockFacetRequest()}}),
-        getSnapshot({facetSet: {foo2: buildMockFacetRequest()}})
+        getSnapshot({facetSet: {foo: buildMockFacetSlice()}}),
+        getSnapshot({facetSet: {foo2: buildMockFacetSlice()}})
       );
     });
 
     it('for #dateFacetSet keys', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({dateFacetSet: {foo: buildMockDateFacetRequest()}}),
-        getSnapshot({dateFacetSet: {foo2: buildMockDateFacetRequest()}})
+        getSnapshot({dateFacetSet: {foo: buildMockDateFacetSlice()}}),
+        getSnapshot({dateFacetSet: {foo2: buildMockDateFacetSlice()}})
       );
     });
 
     it('for #numericFacetSet keys', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({numericFacetSet: {foo: buildMockNumericFacetRequest()}}),
-        getSnapshot({numericFacetSet: {foo2: buildMockNumericFacetRequest()}})
+        getSnapshot({numericFacetSet: {foo: buildMockNumericFacetSlice()}}),
+        getSnapshot({numericFacetSet: {foo2: buildMockNumericFacetSlice()}})
       );
     });
 
@@ -230,11 +231,13 @@ describe('history slice', () => {
 
     it('should consider different snapshot for facet set selected values', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({facetSet: {foo: buildMockFacetRequest()}}),
+        getSnapshot({facetSet: {foo: buildMockFacetSlice()}}),
         getSnapshot({
           facetSet: {
-            foo: buildMockFacetRequest({
-              currentValues: [{state: 'selected', value: 'good'}],
+            foo: buildMockFacetSlice({
+              request: buildMockFacetRequest({
+                currentValues: [{state: 'selected', value: 'good'}],
+              }),
             }),
           },
         })
@@ -243,11 +246,13 @@ describe('history slice', () => {
 
     it('should not consider different snapshot for facet set idle values', () => {
       expectHistoryNotToHaveCreatedDifferentSnapshots(
-        getSnapshot({facetSet: {foo: buildMockFacetRequest()}}),
+        getSnapshot({facetSet: {foo: buildMockFacetSlice()}}),
         getSnapshot({
           facetSet: {
-            foo: buildMockFacetRequest({
-              currentValues: [{state: 'idle', value: 'good'}],
+            foo: buildMockFacetSlice({
+              request: buildMockFacetRequest({
+                currentValues: [{state: 'idle', value: 'good'}],
+              }),
             }),
           },
         })

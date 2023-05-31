@@ -1,5 +1,5 @@
+import defaultStory from 'atomic-storybook/default-story';
 import {html} from 'lit-html';
-import defaultStory from '../../../../../.storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/RatingFacet',
@@ -15,5 +15,5 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   }
 );
 
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/RatingFacet'};
 export const DefaultRatingFacet = exportedStory;

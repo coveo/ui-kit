@@ -1,10 +1,10 @@
-import {NotifyTrigger, buildNotifyTrigger} from './headless-notify-trigger';
+import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {triggers} from '../../app/reducers';
-import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
+import {NotifyTrigger, buildNotifyTrigger} from './headless-notify-trigger';
 
 describe('NotifyTrigger', () => {
   let engine: MockSearchEngine;
@@ -16,11 +16,12 @@ describe('NotifyTrigger', () => {
 
   function setEngineTriggersState(notifications: string[]) {
     engine.state.triggers.notifications = notifications;
-    engine.state.triggers.notification = notifications[0] ?? '';
   }
 
   function getLogTriggerNotifyAction() {
-    return engine.actions.find((a) => a.type === logNotifyTrigger.pending.type);
+    return engine.actions.find(
+      (a) => a.type === logNotifyTrigger().pending.type
+    );
   }
 
   function registeredListeners() {

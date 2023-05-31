@@ -1,4 +1,7 @@
-import {NumberOfResultsParam} from '../../../platform-service-params';
+import {
+  FoldingParam,
+  NumberOfResultsParam,
+} from '../../../platform-service-params';
 import {
   ConstantQueryParam,
   EnableDidYouMeanParam,
@@ -7,12 +10,14 @@ import {
   FirstResultParam,
   QueryParam,
   SortCriteriaParam,
+  TabParam,
 } from '../../../search/search-api-params';
 import {
   baseInsightRequest,
   InsightParam,
   pickNonInsightParams,
 } from '../insight-params';
+import {InsightQuerySuggestRequest} from '../query-suggest/query-suggest-request';
 
 export type InsightQueryRequest = InsightParam &
   CaseContextParam &
@@ -23,7 +28,9 @@ export type InsightQueryRequest = InsightParam &
   SortCriteriaParam &
   FieldsToIncludeParam &
   EnableDidYouMeanParam &
-  ConstantQueryParam;
+  ConstantQueryParam &
+  TabParam &
+  FoldingParam;
 
 interface CaseContextParam {
   caseContext?: Record<string, string>;
@@ -32,6 +39,15 @@ interface CaseContextParam {
 export const buildInsightQueryRequest = (req: InsightQueryRequest) => {
   return {
     ...baseInsightRequest(req, 'POST', 'application/json', '/search'),
+    requestParams: pickNonInsightParams(req),
+  };
+};
+
+export const buildInsightQuerySuggestRequest = (
+  req: InsightQuerySuggestRequest
+) => {
+  return {
+    ...baseInsightRequest(req, 'POST', 'application/json', '/querysuggest'),
     requestParams: pickNonInsightParams(req),
   };
 };

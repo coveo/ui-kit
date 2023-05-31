@@ -1,14 +1,13 @@
-import {LightningElement, track, api} from 'lwc';
+import newest from '@salesforce/label/c.quantic_Newest';
+import oldest from '@salesforce/label/c.quantic_Oldest';
+import relevancy from '@salesforce/label/c.quantic_Relevancy';
+import sortBy from '@salesforce/label/c.quantic_SortBy';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-
-import sortBy from '@salesforce/label/c.quantic_SortBy';
-import relevancy from '@salesforce/label/c.quantic_Relevancy';
-import newest from '@salesforce/label/c.quantic_Newest';
-import oldest from '@salesforce/label/c.quantic_Oldest';
+import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").Sort} Sort */
 /** @typedef {import("coveo").SortState} SortState */
@@ -54,6 +53,8 @@ export default class QuanticSort extends LightningElement {
   options;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     sortBy,
@@ -121,6 +122,13 @@ export default class QuanticSort extends LightningElement {
     this.sort.sortBy(
       this.options.find((option) => option.value === e.detail.value).criterion
     );
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 
   get relevancy() {

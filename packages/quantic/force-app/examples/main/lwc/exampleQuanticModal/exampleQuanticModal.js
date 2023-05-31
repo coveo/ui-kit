@@ -19,7 +19,7 @@ export default class ExampleQuanticModal extends LightningElement {
       attribute: 'fullScreen',
       label: 'Full screen',
       description: 'Indicates whether the modal will be opened in full screen.',
-      defaultValue: false
+      defaultValue: false,
     },
     {
       attribute: 'animation',

@@ -1,6 +1,7 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "3de1860b-5cca-4e2b-a328-537e9988e8ab",
   "label" : "Quantic Standalone Search Box",
   "regions" : [ {

@@ -1,3 +1,5 @@
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {
   buildCorePager,
   PagerInitialState,
@@ -6,8 +8,6 @@ import {
   Pager,
   PagerState,
 } from '../../core/pager/headless-core-pager';
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 
 export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
 

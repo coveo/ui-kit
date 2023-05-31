@@ -1,4 +1,4 @@
-import {configuration} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,

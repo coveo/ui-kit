@@ -1,7 +1,7 @@
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {SortCriterion} from '../../../features/sort-criteria/criteria';
 import {logResultsSort} from '../../../features/sort-criteria/sort-criteria-insight-analytics-actions';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {
   buildCoreSort,
   Sort,

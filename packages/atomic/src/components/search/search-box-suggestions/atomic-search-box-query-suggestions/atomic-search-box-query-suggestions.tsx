@@ -1,18 +1,21 @@
-import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import {
   loadQuerySuggestActions,
   SearchEngine,
   Suggestion,
 } from '@coveo/headless';
-import {QuerySuggestionSection} from '@coveo/headless/dist/definitions/state/state-sections';
+import {
+  QuerySetSection,
+  QuerySuggestionSection,
+} from '@coveo/headless/dist/definitions/state/state-sections';
 import {Component, Element, Prop, State, h} from '@stencil/core';
+import SearchIcon from '../../../../images/search.svg';
+import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {encodeForDomAttribute} from '../../../../utils/string-utils';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -61,7 +64,9 @@ export class AtomicSearchBoxQuerySuggestions {
   }
 
   private initialize(): SearchBoxSuggestions {
-    const engine = this.bindings.engine as SearchEngine<QuerySuggestionSection>;
+    const engine = this.bindings.engine as SearchEngine<
+      QuerySuggestionSection & QuerySetSection
+    >;
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);
 

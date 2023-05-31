@@ -16,7 +16,7 @@ export interface SearchBoxOptions {
   id?: string;
 
   /**
-   * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/searching-with-coveo/search-prefixes-and-operators) in the query.
+   * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query.
    *
    * @defaultValue `false`
    */

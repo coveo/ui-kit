@@ -1,6 +1,6 @@
-import {resolveCodeSamplePaths} from './code-sample-resolver';
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
+import {resolveCodeSamplePaths} from './code-sample-resolver';
 
 describe('#resolveCodeSamplePaths', () => {
   it("#github.owner is 'coveo'", () => {

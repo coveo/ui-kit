@@ -1,10 +1,10 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {TriggerSection} from '../../state/state-sections';
-import {triggers} from '../../app/reducers';
-import {buildController, Controller} from '../controller/headless-controller';
-import {loadReducerError} from '../../utils/errors';
 import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
+import {TriggerSection} from '../../state/state-sections';
 import {arrayEqual} from '../../utils/compare-utils';
+import {loadReducerError} from '../../utils/errors';
+import {buildController, Controller} from '../controller/headless-controller';
 
 /**
  * The `NotifyTrigger` controller handles Notify triggers.
@@ -20,12 +20,6 @@ export interface NotifyTrigger extends Controller {
  * A scoped and simplified part of the headless state that is relevant to the `NotifyTrigger` controller.
  */
 export interface NotifyTriggerState {
-  /**
-   * The notification to display to the user after receiving a notification trigger.
-   *
-   * @deprecated Use `notifications` instead.
-   */
-  notification: string;
   /**
    * The notifications to display to the user after receiving notification triggers.
    */
@@ -72,7 +66,6 @@ export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
 
     get state() {
       return {
-        notification: getState().triggers.notification,
         notifications: getState().triggers.notifications,
       };
     },

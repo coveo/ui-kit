@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../app/engine';
-import {advancedSearchQueries} from '../../app/reducers';
+import {advancedSearchQueriesReducer as advancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-queries-slice';
 import {
   updateAdvancedSearchQueries,
   registerAdvancedSearchQueries,

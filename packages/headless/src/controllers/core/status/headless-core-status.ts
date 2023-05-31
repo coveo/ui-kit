@@ -1,6 +1,6 @@
 import {CoreEngine} from '../../../app/engine';
-import {search} from '../../../app/reducers';
 import {firstSearchExecutedSelector} from '../../../features/search/search-selectors';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {

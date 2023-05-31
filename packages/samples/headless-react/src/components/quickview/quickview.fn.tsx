@@ -1,5 +1,5 @@
-import {useEffect, useState, useContext, FunctionComponent} from 'react';
 import {buildQuickview, Result} from '@coveo/headless';
+import {useEffect, useState, useContext, FunctionComponent} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface QuickviewProps {

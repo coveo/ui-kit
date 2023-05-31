@@ -1,9 +1,4 @@
 import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-  createAtomicCommonStore,
-} from '../../common/interface/store';
-import {
   InsightDateFacetValue,
   InsightEngine,
   InsightNumericFacetValue,
@@ -13,6 +8,11 @@ import {
   FacetStore,
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
+import {
+  AtomicCommonStore,
+  AtomicCommonStoreData,
+  createAtomicCommonStore,
+} from '../../common/interface/store';
 
 export interface AtomicInsightStoreData extends AtomicCommonStoreData {
   fieldsToInclude: string[];

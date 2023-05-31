@@ -1,14 +1,14 @@
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../test/mock-engine';
-import {Sort, SortProps, buildSort} from './headless-sort';
+import {executeSearch} from '../../features/search/search-actions';
 import {
   buildDateSortCriterion,
   SortOrder,
 } from '../../features/sort-criteria/criteria';
 import {updateSortCriterion} from '../../features/sort-criteria/sort-criteria-actions';
-import {executeSearch} from '../../features/search/search-actions';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../test/mock-engine';
+import {Sort, SortProps, buildSort} from './headless-sort';
 
 describe('Sort', () => {
   let engine: MockSearchEngine;

@@ -1,22 +1,29 @@
-import {LightningElement} from 'lwc';
-
 import more from '@salesforce/label/c.quantic_More';
+import {getAbsoluteWidth} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 
 /**
  *  The `QuanticTabBar` component displays the Quantic Tabs in a responsive manner. When tabs are wider than the available space, the tabs that cannot fit in the space are moved in the "More" drop-down list.
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-tab-bar>
+ * <c-quantic-tab-bar light-theme>
  *   <c-quantic-tab engine-id={engineId} label="Tab 1" expression={expressionOne} is-active></c-quantic-tab>
  *   <c-quantic-tab engine-id={engineId} label="Tab 2" expression={expressionTwo}></c-quantic-tab>
  *   <c-quantic-tab engine-id={engineId} label="Tab 3" expression={expressionThree}></c-quantic-tab>
- * </quantic-tab-bar>
+ * </c-quantic-tab-bar>
  */
 export default class QuanticTabBar extends LightningElement {
   labels = {
     more,
   };
+
+  /**
+   * Whether to apply the light theme styles on this component. This property has an impact only in a Salesforce console.
+   * @api
+   * @type {boolean}
+   */
+  @api lightTheme = false;
 
   /** @type {boolean} */
   hasRendered = false;
@@ -128,7 +135,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {boolean}
    */
   get isOverflow() {
-    return this.slotContentWidth >= this.containerWidth;
+    return this.slotContentWidth > this.containerWidth;
   }
 
   /**
@@ -144,7 +151,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   get containerWidth() {
-    return this.getAbsoluteWidth(this.container);
+    return getAbsoluteWidth(this.container);
   }
 
   /**
@@ -153,7 +160,7 @@ export default class QuanticTabBar extends LightningElement {
    */
   get slotContentWidth() {
     return this.getTabsFromSlot().reduce(
-      (total, el) => total + this.getAbsoluteWidth(el),
+      (total, el) => total + getAbsoluteWidth(el),
       0
     );
   }
@@ -163,7 +170,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   get moreButtonWidth() {
-    return this.moreButton ? this.getAbsoluteWidth(this.moreButton) : 0;
+    return this.moreButton ? getAbsoluteWidth(this.moreButton) : 0;
   }
 
   /**
@@ -171,7 +178,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   get selectedTabWidth() {
-    return this.getAbsoluteWidth(this.selectedTab);
+    return getAbsoluteWidth(this.selectedTab);
   }
 
   /**
@@ -184,7 +191,7 @@ export default class QuanticTabBar extends LightningElement {
     const containerRelativeRightPosition =
       this.container.getBoundingClientRect().right;
     const selectedTabRelativeRightPosition =
-      this.selectedTab.getBoundingClientRect().right;
+      this.selectedTab?.getBoundingClientRect().right;
 
     return this.getTabsFromSlot().filter((element) => {
       const tabPositionedBeforeSelectedTab =
@@ -296,6 +303,16 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
+   * Returns the CSS classes of the tab bar container.
+   * @returns {string}
+   */
+  get tabBarContainerClasses() {
+    return `tab-bar_container slds-size_1-of-1 ${
+      this.lightTheme ? '' : 'slds-theme_shade'
+    }`;
+  }
+
+  /**
    * Toggles the dropdown.
    * @returns {void}
    */
@@ -343,31 +360,24 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
-   * Returns the padding values of an element.
-   * @param {Element} element
-   * @returns {{top: number, right:number, bottom:number, left:number}}
+   * Returns the tab bar dropdown container element.
+   * @returns {Element}
    */
-  getElementPadding(element) {
-    const styles = window.getComputedStyle(element);
-
-    return {
-      top: parseFloat(styles.paddingTop),
-      right: parseFloat(styles.paddingRight),
-      bottom: parseFloat(styles.paddingBottom),
-      left: parseFloat(styles.paddingLeft),
-    };
+  get tabBarDropdownContainer() {
+    return this.template.querySelector('.tab-bar_dropdown');
   }
 
   /**
-   * Returns the absolute width of an element.
-   * @param {Element} element
-   * @returns {number}
+   * Triggered when the focus on dropdown item is out.
+   * @param {FocusEvent} event
    */
-  getAbsoluteWidth(element) {
-    const paddings = this.getElementPadding(element);
-    const padding = paddings.left + paddings.right;
-
-    // @ts-ignore
-    return Math.ceil(element.offsetWidth + padding);
+  onBlur(event) {
+    const isTargetElementOutsideDropdown = !(
+      event.relatedTarget instanceof HTMLElement &&
+      this.tabBarDropdownContainer.contains(event.relatedTarget)
+    );
+    if (this.isDropdownOpen && isTargetElementOutsideDropdown) {
+      this.closeDropdown();
+    }
   }
 }

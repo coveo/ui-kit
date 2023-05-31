@@ -1,7 +1,11 @@
-import {Component, h, Element, Prop, Method, State} from '@stencil/core';
-import {MapProp} from '../../../utils/props-utils';
-import {makeMatchConditions} from '../../common/result-template/result-template';
+import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {InsightResultTemplate, InsightResultTemplateCondition} from '..';
+import {MapProp} from '../../../utils/props-utils';
+import {
+  makeDefinedConditions,
+  makeMatchConditions,
+  ResultTemplateCommon,
+} from '../../common/result-templates/result-template-common';
 
 /**
  * @internal
@@ -11,6 +15,8 @@ import {InsightResultTemplate, InsightResultTemplateCondition} from '..';
   shadow: true,
 })
 export class AtomicInsightResultTemplate {
+  private resultTemplateCommon: ResultTemplateCommon;
+
   @State() public error!: Error;
 
   @Element() public host!: HTMLDivElement;
@@ -18,11 +24,26 @@ export class AtomicInsightResultTemplate {
 
   /**
    * A function that must return true on results for the result template to apply.
+   * Set programmatically before initialization, not via attribute.
    *
-   * For example, a template with the following condition only applies to results whose `title` contains `singapore`:
-   * `[(result) => /singapore/i.test(result.title)]`
+   * For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`:
+   * `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
    */
   @Prop() public conditions: InsightResultTemplateCondition[] = [];
+
+  /**
+   * The field that, when defined on a result item, would allow the template to be applied.
+   *
+   * For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+   */
+  @Prop({reflect: true}) ifDefined?: string;
+
+  /**
+   * The field that, when defined on a result item, would prevent the template from being applied.
+   *
+   * For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+   */
+  @Prop({reflect: true}) ifNotDefined?: string;
 
   /**
    * The field and values that define which result items the condition must be applied to.
@@ -39,9 +60,22 @@ export class AtomicInsightResultTemplate {
   @MapProp({splitValues: true}) public mustNotMatch: Record<string, string[]> =
     {};
 
+  constructor() {
+    this.resultTemplateCommon = new ResultTemplateCommon({
+      host: this.host,
+      setError: (err) => {
+        this.error = err;
+      },
+      validParents: ['atomic-insight-result-list'],
+      allowEmpty: true,
+    });
+  }
+
   public componentWillLoad() {
-    this.matchConditions.push(
-      ...makeMatchConditions(this.mustMatch, this.mustNotMatch)
+    this.conditions = makeDefinedConditions(this.ifDefined, this.ifNotDefined);
+    this.resultTemplateCommon.matchConditions = makeMatchConditions(
+      this.mustMatch,
+      this.mustNotMatch
     );
   }
 
@@ -50,25 +84,10 @@ export class AtomicInsightResultTemplate {
    */
   @Method()
   public async getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null> {
-    if (this.error) {
-      return null;
-    }
-
-    return {
-      conditions: this.conditions.concat(this.matchConditions),
-      content: this.host.querySelector('template')!.content!,
-      priority: 1,
-    };
+    return this.resultTemplateCommon.getTemplate(this.conditions, this.error);
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
+    return this.resultTemplateCommon.renderIfError(this.error);
   }
 }

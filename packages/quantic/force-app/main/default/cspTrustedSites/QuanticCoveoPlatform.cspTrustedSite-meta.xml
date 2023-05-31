@@ -4,5 +4,6 @@
     <endpointUrl>https://*.coveo.com</endpointUrl>
     <isActive>true</isActive>
     <isApplicableToConnectSrc>true</isApplicableToConnectSrc>
+    <isApplicableToFrameSrc>true</isApplicableToFrameSrc>
     <context>All</context>
 </CspTrustedSite>

@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent, Fragment} from 'react';
 import {NumericFilter as HeadlessNumericFilter} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent, Fragment} from 'react';
 
 interface NumericFilterProps {
   controller: HeadlessNumericFilter;

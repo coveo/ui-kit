@@ -31,10 +31,21 @@ export class AtomicFocusTrap {
    */
   @Prop() shouldHideSelf = true;
 
+  /**
+   * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
+   */
+  @Prop() scope = document.body;
+
   private readonly hiddenElements: Element[] = [];
 
   hide(element: Element) {
-    if (element.hasAttribute('aria-hidden')) {
+    // aria-hidden -> already hidden
+    // aria-live or atomic-aria-live -> must not be hidden otherwise it won't announce dynamic changes in the live region
+    if (
+      element.hasAttribute('aria-hidden') ||
+      element.hasAttribute('aria-live') ||
+      element.tagName.toLowerCase() === 'atomic-aria-live'
+    ) {
       return;
     }
     element.setAttribute('aria-hidden', 'true');
@@ -65,7 +76,7 @@ export class AtomicFocusTrap {
       }
       this.hide(sibling);
     });
-    if (parent !== document.body) {
+    if (parent !== this.scope) {
       this.hideSiblingsRecursively(parent);
     }
   }
@@ -112,13 +123,23 @@ export class AtomicFocusTrap {
 
   @Listen('focusin', {target: 'document'})
   onFocusChanged(e: FocusEvent) {
+    const elementIsPartOfHost = (focusedElement: Element | ShadowRoot) =>
+      isAncestorOf(this.host, focusedElement);
+
+    const elementIsPartOfScope = (focusedElement: Element | ShadowRoot) =>
+      isAncestorOf(this.scope, focusedElement);
+
     if (!e.target || !this.active) {
       return;
     }
 
     const focusedElement = getFocusedElement();
 
-    if (focusedElement && isAncestorOf(this.host, focusedElement)) {
+    if (
+      focusedElement &&
+      (elementIsPartOfHost(focusedElement) ||
+        !elementIsPartOfScope(focusedElement))
+    ) {
       return;
     }
 

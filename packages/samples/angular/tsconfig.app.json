@@ -4,7 +4,10 @@
   "compilerOptions": {
     "outDir": "./out-tsc/app",
     "types": [],
-    "paths": {"@angular/*": ["../../../node_modules/@angular/*"]},
+    "paths": {
+      "@angular/*": ["../../../node_modules/@angular/*"],
+      "@coveo/atomic-angular": ["../../atomic-angular/projects/atomic-angular/dist/"]
+    },
     "preserveSymlinks": true
   },
   "files": ["src/main.ts", "src/polyfills.ts"],

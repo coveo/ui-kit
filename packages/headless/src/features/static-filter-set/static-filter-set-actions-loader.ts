@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {SearchEngine} from '../..';
-import {staticFilterSet} from '../../app/reducers';
+import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice';
 import {
   registerStaticFilter,
   RegisterStaticFilterActionCreatorPayload,

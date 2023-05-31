@@ -3,7 +3,6 @@ import {facetSortCriteria} from '../../../../features/facets/facet-set/interface
 import {
   facetId,
   field,
-  delimitingCharacter,
   filterFacetCount,
   injectionDepth,
   numberOfValues,
@@ -15,7 +14,7 @@ import {
   FacetSearchOptions,
 } from '../../../core/facets/facet/headless-core-facet-options';
 
-export type {FacetSearchOptions};
+export type {FacetSearchOptions, CoreFacetOptions};
 
 export interface FacetOptions extends CoreFacetOptions {
   /**
@@ -34,7 +33,6 @@ export interface FacetOptions extends CoreFacetOptions {
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetId,
   field,
-  delimitingCharacter,
   filterFacetCount,
   injectionDepth,
   numberOfValues,

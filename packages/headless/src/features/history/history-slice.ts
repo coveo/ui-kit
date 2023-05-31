@@ -1,24 +1,22 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {ContextState} from '../context/context-state';
-import {QueryState} from '../query/query-state';
-import {PaginationState} from '../pagination/pagination-state';
+import {undoable} from '../../app/undoable';
 import {SortState} from '../../controllers/sort/headless-sort';
-import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
-import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
-import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
-import {getHistoryInitialState, HistoryState} from './history-state';
-import {snapshot} from './history-actions';
-import {
-  BaseFacetValueRequest,
-  CurrentValues,
-} from '../facets/facet-api/request';
 import {arrayEqual} from '../../utils/compare-utils';
+import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
+import {ContextState} from '../context/context-state';
 import {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state';
-import {TabSetState} from '../tab-set/tab-set-state';
+import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
+import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
+import {AnyFacetSetState} from '../facets/generic/interfaces/generic-facet-section';
+import {PaginationState} from '../pagination/pagination-state';
+import {QueryState} from '../query/query-state';
 import {
   StaticFilterSetState,
   StaticFilterSlice,
 } from '../static-filter-set/static-filter-set-state';
+import {TabSetState} from '../tab-set/tab-set-state';
+import {snapshot, redo, undo} from './history-actions';
+import {getHistoryInitialState, HistoryState} from './history-state';
 
 export const historyReducer = createReducer(
   getHistoryInitialState(),
@@ -100,26 +98,21 @@ const getActiveStaticFilterValues = (filter: StaticFilterSlice) => {
   return filter.values.filter((value) => value.state !== 'idle');
 };
 
-type FacetStateWithCurrentValues = Record<
-  string,
-  CurrentValues<BaseFacetValueRequest>
->;
+type AnyFacetValueRequest =
+  AnyFacetSetState[string]['request']['currentValues'][number];
 
-const isFacetsEqual = (
-  current: FacetStateWithCurrentValues,
-  next: FacetStateWithCurrentValues
-) => {
+const isFacetsEqual = (current: AnyFacetSetState, next: AnyFacetSetState) => {
   for (const [key, value] of Object.entries(next)) {
     if (!current[key]) {
       return false;
     }
 
-    const currentSelectedValues = current[key].currentValues.filter(
-      (value) => value.state === 'selected'
-    );
-    const nextSelectedValues = value.currentValues.filter(
-      (value) => value.state === 'selected'
-    );
+    const currentSelectedValues = (
+      current[key].request.currentValues as AnyFacetValueRequest[]
+    ).filter((value) => value.state === 'selected');
+    const nextSelectedValues = (
+      value.request.currentValues as AnyFacetValueRequest[]
+    ).filter((value) => value.state === 'selected');
 
     if (
       JSON.stringify(currentSelectedValues) !==
@@ -181,3 +174,12 @@ const isFacetOrderEqual = (current: string[], next: string[]) =>
   arrayEqual(current, next);
 
 const isDebugEqual = (current: boolean, next: boolean) => current === next;
+
+export const history = undoable({
+  actionTypes: {
+    redo: redo.type,
+    undo: undo.type,
+    snapshot: snapshot.type,
+  },
+  reducer: historyReducer,
+});

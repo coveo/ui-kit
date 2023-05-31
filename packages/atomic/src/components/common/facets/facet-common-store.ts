@@ -2,7 +2,7 @@ import {VNode} from '@stencil/core';
 
 export interface FacetInfo {
   facetId: string;
-  label: string;
+  label: () => string;
   element: HTMLElement;
 }
 

@@ -1,10 +1,20 @@
 {
   "ignorePatterns": "staticresources/**/*",
-  "extends": ["@salesforce/eslint-config-lwc/recommended"],
+  "extends": ["@salesforce/eslint-config-lwc/recommended", "prettier"],
   "root": true,
   "globals": {
     "CoveoHeadless": "readonly",
     "CoveoHeadlessCaseAssist": "readonly",
-    "CoveoHeadlessInsight": "readonly"
-  }
+    "CoveoHeadlessInsight": "readonly",
+    "CoveoHeadlessRecommendation": "readonly",
+    "Bueno": "readonly"
+  },
+  "overrides": [
+    {
+      "files": ["**/__tests__/**"],
+      "rules": {
+        "@lwc/lwc/no-async-operation": "off"
+      }
+    }
+  ]
 }

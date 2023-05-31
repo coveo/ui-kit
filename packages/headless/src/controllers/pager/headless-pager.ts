@@ -1,10 +1,10 @@
-import {fetchPage} from '../../features/search/search-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   logPageNumber,
   logPageNext,
   logPagePrevious,
 } from '../../features/pagination/pagination-analytics-actions';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {fetchPage} from '../../features/search/search-actions';
 import {
   buildCorePager,
   PagerInitialState,

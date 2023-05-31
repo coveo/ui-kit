@@ -9,7 +9,7 @@
       "sequential": ["dev", "stg", "prd"]
     },
     "team_jenkins": "searchuibuilds",
-    "start_environment_automatically": false,
+    "start_environment_automatically": true,
     "notifications": {
       "slack_channels": ["#searchuibuilds"]
     }
@@ -42,17 +42,6 @@
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/headless/v$[HEADLESS_MAJOR_VERSION]",
-        "source": "packages/headless/dist/browser",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-headless-to-s3-latest",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/headless/latest",
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
@@ -93,22 +82,11 @@
       }
     },
     {
-      "id": "deploy-atomic-to-s3-latest",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/latest",
-        "source": "packages/atomic/dist/atomic",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
       "id": "deploy-atomic-headless-patch-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]/headless",
-        "source": "packages/atomic/headless/dist/browser",
+        "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         }
@@ -119,7 +97,7 @@
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/headless",
-        "source": "packages/atomic/headless/dist/browser",
+        "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         }
@@ -130,18 +108,7 @@
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]/headless",
-        "source": "packages/atomic/headless/dist/browser",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-atomic-headless-to-s3-latest",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/latest/headless",
-        "source": "packages/atomic/headless/dist/browser",
+        "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         }
@@ -152,19 +119,75 @@
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/storybook",
-        "source": "packages/atomic/storybook-static",
+        "source": "utils/atomic-storybook/storybook-static",
         "parameters": {
           "acl": "public-read"
         }
       }
     },
     {
-      "id": "stg-release",
-      "team_jenkins": {
-        "disabled": true,
-        "job_name": "ui-kit-stg-release",
-        "stg": {
-          "disabled": false
+      "id": "deploy-atomic-react-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_PATCH_VERSION]",
+        "source": "packages/atomic-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-react-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MINOR_VERSION]",
+        "source": "packages/atomic-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-react-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MAJOR_VERSION]",
+        "source": "packages/atomic-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_PATCH_VERSION]",
+        "source": "packages/atomic-hosted-page/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MINOR_VERSION]",
+        "source": "packages/atomic-hosted-page/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]",
+        "source": "packages/atomic-hosted-page/dist",
+        "parameters": {
+          "acl": "public-read"
         }
       }
     },

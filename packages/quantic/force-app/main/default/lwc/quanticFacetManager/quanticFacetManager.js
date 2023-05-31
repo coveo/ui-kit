@@ -46,6 +46,8 @@ export default class QuanticFacetManager extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   itemTemplate;
 
@@ -167,5 +169,12 @@ export default class QuanticFacetManager extends LightningElement {
 
   isPseudoFacet(el) {
     return 'facetId' in el.dataset;
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

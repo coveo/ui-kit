@@ -29,3 +29,37 @@ export const setCaseContext = createAction(
     return {payload};
   }
 );
+
+/**
+ * Set case id action
+ */
+export const setCaseId = createAction(
+  'insight/caseId/set',
+  (payload: string) => {
+    const valueSchema = requiredEmptyAllowedString;
+    const valuesError = validatePayload(payload, valueSchema).error;
+
+    if (valuesError) {
+      return {payload, error: valuesError};
+    }
+
+    return {payload};
+  }
+);
+
+/**
+ * Set case number action
+ */
+export const setCaseNumber = createAction(
+  'insight/caseNumber/set',
+  (payload: string) => {
+    const valueSchema = requiredEmptyAllowedString;
+    const valuesError = validatePayload(payload, valueSchema).error;
+
+    if (valuesError) {
+      return {payload, error: valuesError};
+    }
+
+    return {payload};
+  }
+);

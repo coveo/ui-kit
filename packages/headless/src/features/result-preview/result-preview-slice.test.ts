@@ -1,4 +1,18 @@
-import {fetchResultContent} from './result-preview-actions';
+import {buildMockResult} from '../../test';
+import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder';
+import {buildMockSearch} from '../../test/mock-search';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {logInterfaceLoad} from '../analytics/analytics-actions';
+import {executeSearch} from '../insight-search/insight-search-actions';
+import {logPageNext} from '../pagination/pagination-analytics-actions';
+import {fetchMoreResults, fetchPage} from '../search/search-actions';
+import {
+  fetchResultContent,
+  nextPreview,
+  preparePreviewPagination,
+  previousPreview,
+  updateContentURL,
+} from './result-preview-actions';
 import {resultPreviewReducer} from './result-preview-slice';
 import {
   getResultPreviewInitialState,
@@ -18,6 +32,144 @@ describe('ResultPreview', () => {
       uniqueId: '',
       content: '',
       isLoading: false,
+      resultsWithPreview: [],
+      position: -1,
+    });
+  });
+
+  describe('on #executeSearch.fulfilled', () => {
+    it('re-initialize the state to initial when a query returns correctly', () => {
+      state.content = 'content';
+      state.contentURL = 'url';
+      state.isLoading = true;
+      state.uniqueId = 'uniqueId';
+      const action = executeSearch.fulfilled(
+        buildMockSearch(),
+        '',
+        logInterfaceLoad()
+      );
+
+      const finalState = resultPreviewReducer(state, action);
+
+      expect(finalState).toEqual(getResultPreviewInitialState());
+    });
+
+    it('updates #resultsWithPreview property with the new results', () => {
+      state.resultsWithPreview = ['foo', 'bar'];
+
+      const search = buildMockSearch({
+        response: buildMockSearchResponse({
+          results: [
+            buildMockResult({hasHtmlVersion: true, uniqueId: 'first'}),
+            buildMockResult({hasHtmlVersion: false, uniqueId: 'second'}),
+            buildMockResult({hasHtmlVersion: false, uniqueId: 'third'}),
+            buildMockResult({hasHtmlVersion: true, uniqueId: 'fourth'}),
+          ],
+        }),
+      });
+      const action = executeSearch.fulfilled(search, '', logInterfaceLoad());
+      const finalState = resultPreviewReducer(state, action);
+      expect(finalState.resultsWithPreview).toEqual(['first', 'fourth']);
+    });
+  });
+
+  describe('on #fetchMoreResults.fulfilled', () => {
+    it('re-initialize the state to initial when a query returns correctly', () => {
+      state.content = 'content';
+      state.contentURL = 'url';
+      state.isLoading = true;
+      state.uniqueId = 'uniqueId';
+      const action = fetchMoreResults.fulfilled(buildMockSearch(), '');
+
+      const finalState = resultPreviewReducer(state, action);
+
+      expect(finalState).toEqual(getResultPreviewInitialState());
+    });
+
+    it('concat #resultsWithPreview property with the new results', () => {
+      state.resultsWithPreview = ['first', 'fourth'];
+      const search = buildMockSearch({
+        response: buildMockSearchResponse({
+          results: [
+            buildMockResult({hasHtmlVersion: true, uniqueId: 'fifth'}),
+            buildMockResult({hasHtmlVersion: false, uniqueId: 'sixth'}),
+            buildMockResult({hasHtmlVersion: false, uniqueId: 'seventh'}),
+            buildMockResult({hasHtmlVersion: true, uniqueId: 'eight'}),
+          ],
+        }),
+      });
+      const action = fetchMoreResults.fulfilled(search, '');
+      const finalState = resultPreviewReducer(state, action);
+      expect(finalState.resultsWithPreview).toEqual([
+        'first',
+        'fourth',
+        'fifth',
+        'eight',
+      ]);
+    });
+  });
+
+  describe('on #fetchPage.fulfilled', () => {
+    it('re-initialize the state to initial when a query returns correctly', () => {
+      state.content = 'content';
+      state.contentURL = 'url';
+      state.isLoading = true;
+      state.uniqueId = 'uniqueId';
+      const action = fetchPage.fulfilled(buildMockSearch(), '', logPageNext());
+
+      const finalState = resultPreviewReducer(state, action);
+
+      expect(finalState).toEqual(getResultPreviewInitialState());
+    });
+  });
+
+  describe('on #preparePreviewPagination', () => {
+    it('updates the #resultsWithPreview property with new results', () => {
+      const results = [
+        buildMockResult({hasHtmlVersion: true, uniqueId: 'first'}),
+        buildMockResult({hasHtmlVersion: false, uniqueId: 'second'}),
+        buildMockResult({hasHtmlVersion: false, uniqueId: 'third'}),
+        buildMockResult({hasHtmlVersion: true, uniqueId: 'fourth'}),
+      ];
+      const action = preparePreviewPagination({results});
+      const finalState = resultPreviewReducer(state, action);
+      expect(finalState.resultsWithPreview).toEqual(['first', 'fourth']);
+    });
+  });
+
+  describe('on #nextPreview', () => {
+    it('updates #position by one', () => {
+      state.resultsWithPreview = ['one', 'two', 'three'];
+      state.position = 0;
+      const action = nextPreview();
+      const finalState = resultPreviewReducer(state, action);
+      expect(finalState.position).toBe(1);
+    });
+
+    it('updates #position to 0 when it reaches the last position', () => {
+      state.resultsWithPreview = ['one', 'two', 'three'];
+      state.position = 2;
+      const action = nextPreview();
+      const finalState = resultPreviewReducer(state, action);
+      expect(finalState.position).toBe(0);
+    });
+  });
+
+  describe('on #previousPreview', () => {
+    it('updates #position by one', () => {
+      state.resultsWithPreview = ['one', 'two', 'three'];
+      state.position = 1;
+      const action = previousPreview();
+      const finalState = resultPreviewReducer(state, action);
+      expect(finalState.position).toBe(0);
+    });
+
+    it('updates #position to last of #resultsWithPreview when it reaches the first position', () => {
+      state.resultsWithPreview = ['one', 'two', 'three'];
+      state.position = 0;
+      const action = previousPreview();
+      const finalState = resultPreviewReducer(state, action);
+      expect(finalState.position).toBe(2);
     });
   });
 
@@ -52,5 +204,24 @@ describe('ResultPreview', () => {
 
       expect(state.isLoading).toBe(false);
     });
+  });
+
+  it('on #updateContentURL.fulfilled, it sets #contentURL', () => {
+    const testPath = '/html';
+    const testUniqueId = '1';
+    const payload = {
+      contentURL: 'https://testurl.coveo.com/html?',
+    };
+
+    state.contentURL = undefined;
+    const action = updateContentURL.fulfilled(payload, '', {
+      uniqueId: testUniqueId,
+      path: testPath,
+      buildResultPreviewRequest: buildMockResultPreviewRequest,
+    });
+
+    state = resultPreviewReducer(state, action);
+
+    expect(state.contentURL).toBe(payload.contentURL);
   });
 });

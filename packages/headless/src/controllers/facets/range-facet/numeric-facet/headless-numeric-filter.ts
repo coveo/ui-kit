@@ -1,17 +1,18 @@
+import {configuration} from '../../../../app/common-reducers';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import {
+  logFacetClearAll,
+  logFacetSelect,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {executeSearch} from '../../../../features/search/search-actions';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
-import {executeSearch} from '../../../../features/search/search-actions';
-import {
-  logFacetClearAll,
-  logFacetSelect,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
-
 import {
   NumericFilterOptions,
   NumericFilterInitialState,

@@ -1,4 +1,14 @@
-import {api, LightningElement, track} from 'lwc';
+import allCategories from '@salesforce/label/c.quantic_AllCategories';
+import clear from '@salesforce/label/c.quantic_Clear';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
+import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
+import search from '@salesforce/label/c.quantic_Search';
+import showLess from '@salesforce/label/c.quantic_ShowLess';
+import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
+import showMore from '@salesforce/label/c.quantic_ShowMore';
+import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -6,32 +16,39 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
-
-import clear from '@salesforce/label/c.quantic_Clear';
-import showMore from '@salesforce/label/c.quantic_ShowMore';
-import showLess from '@salesforce/label/c.quantic_ShowLess';
-import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues';
-import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
-import allCategories from '@salesforce/label/c.quantic_AllCategories';
-import search from '@salesforce/label/c.quantic_Search';
-import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
-import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
-import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
-import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import {api, LightningElement, track} from 'lwc';
 
 /** @typedef {import("coveo").CategoryFacet} CategoryFacet */
 /** @typedef {import("coveo").CategoryFacetState} CategoryFacetState */
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader'} type
+ */
+/**
+ * @typedef CaptionProvider
+ * @type {object}
+ * @property {Record<string, string>} captions
+ */
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
  * A `QuanticCategoryFacet` displays field values in a browsable, hierarchical fashion.
+ * Custom captions can be provided by adding caption provider components to the `captions` named slot.
+ * See [Create a custom caption provider component for Quantic facets](https://docs.coveo.com/en/quantic/latest/usage/create-custom-caption-provider-component/).
  * @category Search
  * @category Insight Panel
  * @example
  * <c-quantic-category-facet engine-id={engineId} facet-id="myfacet" field="geographicalhierarchy" label="Country" base-path="Africa,Togo,Lome" no-filter-by-base-path delimiting-character="/" number-of-values="5" is-collapsed></c-quantic-category-facet>
+ *
+ * @example
+ * <c-quantic-category-facet engine-id={engineId} field="geographicalhierarchy">
+ *   <c-quantic-facet-caption slot="captions" value="United States" caption="United States of America"></c-quantic-facet-caption>
+ *   <c-quantic-facet-caption slot="captions" value="usa" caption="USA"></c-quantic-facet-caption>
+ * </c-quantic-facet>
  */
 export default class QuanticCategoryFacet extends LightningElement {
   /**
@@ -158,6 +175,13 @@ export default class QuanticCategoryFacet extends LightningElement {
   input;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {FocusTarget} */
+  focusTarget;
+  /** @type {boolean} */
+  focusShouldBeInFacet = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
+
   labels = {
     clear,
     showMore,
@@ -171,12 +195,24 @@ export default class QuanticCategoryFacet extends LightningElement {
     collapseFacet,
     expandFacet,
   };
+
+  /** @type {object} */
+  customCaptions = {};
+  /** @type {Function} */
+  remoteGetValueCaption;
+
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.remoteGetValueCaption = (item) => this.translateValue(item.value);
   }
+
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
+    if (this.focusShouldBeInFacet && !this.facet?.state?.isLoading) {
+      this.setFocusOnTarget();
+      this.focusTarget = null;
+    }
   }
 
   disconnectedCallback() {
@@ -193,6 +229,16 @@ export default class QuanticCategoryFacet extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
+    this.customCaptions = this.loadCustomCaptions();
+
+    if (
+      this.sortCriteria === 'alphanumeric' &&
+      Object.keys(this.customCaptions).length > 0
+    ) {
+      console.warn(
+        'The Quantic Category Facet component should not be used with custom captions and alphanumeric sorting simultaneously. The values might appear in the wrong order.'
+      );
+    }
 
     this.facet = this.headless.buildCategoryFacet(engine, {
       options: {
@@ -200,6 +246,7 @@ export default class QuanticCategoryFacet extends LightningElement {
         facetId: this.facetId ?? this.field,
         facetSearch: this.withSearch
           ? {
+              captions: this.customCaptions,
               numberOfValues: Number(this.numberOfValues),
             }
           : undefined,
@@ -215,6 +262,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     registerToStore(this.engineId, Store.facetTypes.CATEGORYFACETS, {
       label: this.label,
       facetId: this.facet.state.facetId,
+      format: this.remoteGetValueCaption,
       element: this.template.host,
     });
   };
@@ -225,6 +273,16 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.searchStatus?.state?.isLoading &&
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
+
+    const renderFacetEvent = new CustomEvent('renderfacet', {
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: !!this.hasParentsOrValues,
+      },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(renderFacetEvent);
   }
 
   get values() {
@@ -237,6 +295,12 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   get activeParent() {
     return this.state?.parents?.slice(-1)[0];
+  }
+
+  get activeParentFormattedValue() {
+    return this.activeParent
+      ? this.remoteGetValueCaption(this.activeParent)
+      : '';
   }
 
   get canShowMore() {
@@ -271,7 +335,9 @@ export default class QuanticCategoryFacet extends LightningElement {
       index: index,
       numberOfResults: result.count,
       path: result.path,
-      localizedPath: this.buildPath(result.path),
+      localizedPath: this.buildPath(
+        result.path.map((path) => this.translateValue(path))
+      ),
       highlightedResult: this.highlightResult(
         result.displayValue,
         this.input?.value
@@ -326,8 +392,33 @@ export default class QuanticCategoryFacet extends LightningElement {
     return this.withSearch && !!this.input?.value?.length;
   }
 
+  /**
+   * @returns {Array<CaptionProvider>}
+   */
+  get captionProviders() {
+    // @ts-ignore
+    return Array.from(this.querySelectorAll('*[slot="captions"]')).filter(
+      // @ts-ignore
+      (component) => component.captions
+    );
+  }
+
   getSearchValues() {
     return this.facet?.state?.facetSearch?.values ?? [];
+  }
+
+  translateValue(value) {
+    return this.customCaptions[value] || value;
+  }
+
+  loadCustomCaptions() {
+    // The list is reversed so the caption comes from the first provider matching the value.
+    return this.captionProviders
+      .reverse()
+      .reduce(
+        (captions, provider) => ({...captions, ...provider.captions}),
+        {}
+      );
   }
 
   /**
@@ -347,6 +438,7 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.facet.toggleSelect(item);
     }
     this.clearInput();
+    this.keepFocusInFacet('facetValue');
   }
 
   getItemFromValue(value) {
@@ -354,7 +446,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     return (
       (this.isFacetSearchActive ? this.facetSearchResults : facetValues)
         // @ts-ignore
-        .find((item) => item.value === value)
+        .find((item) => this.remoteGetValueCaption(item) === value)
     );
   }
 
@@ -364,14 +456,17 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   showMore() {
     this.facet.showMoreValues();
+    this.keepFocusInFacet('facetValue');
   }
 
   showLess() {
     this.facet.showLessValues();
+    this.keepFocusInFacet('facetValue');
   }
 
   reset() {
     this.facet.deselectAll();
+    this.keepFocusInFacet('facetHeader');
   }
 
   /**
@@ -381,6 +476,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     if (evt.code === 'Enter' || evt.code === 'Space') {
       evt.preventDefault();
       this.facet.deselectAll();
+      this.keepFocusInFacet('facetHeader');
     }
   }
 
@@ -424,5 +520,79 @@ export default class QuanticCategoryFacet extends LightningElement {
       path = path.slice(0, 1).concat('...', ...path.slice(-1));
     }
     return path.join('/');
+  }
+
+  /**
+   * @param {"facetValue" | "facetHeader"} type
+   */
+  keepFocusInFacet(type) {
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type,
+    };
+  }
+
+  /**
+   * Sets the focus on the target element.
+   */
+  setFocusOnTarget() {
+    this.focusShouldBeInFacet = false;
+    if (!this.focusTarget) {
+      return;
+    }
+    if (this.focusTarget.type === 'facetHeader') {
+      this.setFocusOnHeader();
+    } else if (this.focusTarget.type === 'facetValue') {
+      if (this.values.length) {
+        this.setFocusOnFirstFacetValue();
+      } else {
+        this.setFocusOnLastNonActiveParent();
+      }
+    }
+  }
+
+  /**
+   * Sets the focus on the first facet value.
+   */
+  setFocusOnFirstFacetValue() {
+    const focusTarget = this.template.querySelector(
+      '.facet__value > c-quantic-category-facet-value'
+    );
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the last non-active parent.
+   */
+  setFocusOnLastNonActiveParent() {
+    const nonActiveParents = this.template.querySelectorAll(
+      '.facet__non-active-parent > c-quantic-category-facet-value'
+    );
+    const lastNonActiveParent = nonActiveParents[nonActiveParents.length - 1];
+    if (lastNonActiveParent) {
+      // @ts-ignore
+      lastNonActiveParent.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the facet header.
+   */
+  setFocusOnHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-card-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocusOnHeader();
+    }
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

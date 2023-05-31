@@ -60,7 +60,7 @@ export class AtomicInsightNumericFacet
   private manualRanges: NumericRangeWithLabel[] = [];
   @Element() private host!: HTMLElement;
   private formatter: NumberFormatter = defaultNumberFormatter;
-  private numericFacetCommon!: NumericFacetCommon;
+  private numericFacetCommon?: NumericFacetCommon;
   @BindStateToController('facetForRange')
   @State()
   public facetState!: InsightNumericFacetState;
@@ -161,6 +161,7 @@ export class AtomicInsightNumericFacet
 
   public initialize() {
     this.numericFacetCommon = new NumericFacetCommon({
+      facetId: this.facetId,
       host: this.host,
       bindings: this.bindings,
       label: this.label,
@@ -189,7 +190,7 @@ export class AtomicInsightNumericFacet
   }
 
   public disconnectedCallback() {
-    this.numericFacetCommon.disconnectedCallback();
+    this.numericFacetCommon?.disconnectedCallback();
   }
 
   private initializeFacetForInput() {

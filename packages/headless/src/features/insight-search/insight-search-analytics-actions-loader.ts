@@ -1,14 +1,9 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {InsightEngine} from '../../insight.index';
-import {
-  AnalyticsType,
-  AsyncThunkInsightAnalyticsOptions,
-} from '../analytics/analytics-utils';
+import {AnalyticsType, InsightAction} from '../analytics/analytics-utils';
 import {
   logContextChanged,
   logExpandToFullUI,
 } from './insight-search-analytics-actions';
-import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
 
 /**
  * The Insight Search analytics action creators.
@@ -17,22 +12,19 @@ export interface InsightSearchAnalyticsActionCreators {
   /**
    * The event to log when the context is updated.
    *
+   * @param caseId - The case ID.
+   * @param caseNumber - The case number.
    * @returns A dispatchable action.
    */
-  logContextChanged(
-    caseId: string,
-    caseNumber: string
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logContextChanged(caseId: string, caseNumber: string): InsightAction;
 
   /**
    * The event to log when the full search page is opened.
    *
+   * @param caseId - The case ID.
+   * @param caseNumber - The case number.
+   * @param fullSearchComponentName - The name of the full search component to open.
+   * @param triggeredBy - The action that triggered the event.
    * @returns A dispatchable action.
    */
   logExpandToFullUI(
@@ -40,13 +32,7 @@ export interface InsightSearchAnalyticsActionCreators {
     caseNumber: string,
     fullSearchComponentName: string,
     triggeredBy: string
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  ): InsightAction<AnalyticsType.Custom>;
 }
 
 /**

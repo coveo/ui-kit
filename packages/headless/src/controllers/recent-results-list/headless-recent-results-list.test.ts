@@ -1,3 +1,10 @@
+import {Action} from 'redux';
+import {
+  clearRecentResults,
+  registerRecentResults,
+} from '../../features/recent-results/recent-results-actions';
+import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
+import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
@@ -7,13 +14,6 @@ import {
   buildRecentResultsList,
   RecentResultsList,
 } from './headless-recent-results-list';
-import {recentResults} from '../../app/reducers';
-import {
-  clearRecentResults,
-  registerRecentResults,
-} from '../../features/recent-results/recent-results-actions';
-import {Action} from 'redux';
-import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
 
 describe('recent results list', () => {
   let engine: MockSearchEngine;
@@ -101,7 +101,7 @@ describe('recent results list', () => {
 
       expectContainAction(clearRecentResults);
       expect(
-        engine.findAsyncAction(logClearRecentResults.pending)
+        engine.findAsyncAction(logClearRecentResults().pending)
       ).toBeDefined();
     });
   });

@@ -1,6 +1,6 @@
-import {buildQueryError} from './headless-query-error';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {buildMockSearchAppEngine} from '../../test';
-import {search} from '../../app/reducers';
+import {buildQueryError} from './headless-query-error';
 
 describe('query error', () => {
   it('it adds the correct reducers to engine', () => {

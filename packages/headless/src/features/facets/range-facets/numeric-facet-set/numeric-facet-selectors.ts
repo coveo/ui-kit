@@ -1,10 +1,10 @@
-import {NumericFacetResponse, NumericFacetValue} from './interfaces/response';
-import {baseFacetResponseSelector} from '../../facet-set/facet-set-selectors';
-import {AnyFacetResponse} from '../../generic/interfaces/generic-facet-response';
 import {
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
+import {baseFacetResponseSelector} from '../../facet-set/facet-set-selectors';
+import {AnyFacetResponse} from '../../generic/interfaces/generic-facet-response';
+import {NumericFacetResponse, NumericFacetValue} from './interfaces/response';
 
 function isNumericFacetResponse(
   state: SearchSection & NumericFacetSection,

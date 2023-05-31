@@ -1,9 +1,41 @@
+// @ts-nocheck
 import {api, LightningElement, track} from 'lwc';
+import templateWithFacets from './templateWithFacets.html';
+import templateWithFacetsWithoutInputs from './templateWithFacetsWithoutInputs.html';
+import templateWithoutFacets from './templateWithoutFacets.html';
 
 export default class ExampleQuanticRefineToggle extends LightningElement {
   @api engineId = 'quantic-refine-toggle';
   @track config = {};
   isConfigured = false;
+
+  withoutFacets = true;
+  facetWithoutInputs = false;
+
+  connectedCallback() {
+    this.addEventListener('addFacets', this.handleAddFacets);
+    this.addEventListener(
+      'addFacetsWithoutInputs',
+      this.handleAddFacetsWithoutInputs
+    );
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('addFacets', this.handleAddFacets);
+    this.removeEventListener(
+      'addFacetsWithoutInputs',
+      this.handleAddFacetsWithoutInputs
+    );
+  }
+
+  handleAddFacets = () => {
+    this.withoutFacets = false;
+  };
+
+  handleAddFacetsWithoutInputs = () => {
+    this.withoutFacets = false;
+    this.facetWithoutInputs = true;
+  };
 
   pageTitle = 'Quantic Refine Toggle';
   pageDescription =
@@ -22,6 +54,12 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
         'Indicates whether the refine modal should be opened in full screen.',
       defaultValue: false,
     },
+    {
+      attribute: 'title',
+      label: 'Title',
+      description: 'The title of the toggle button.',
+      defaultValue: 'Sort & Filters',
+    },
   ];
 
   formattingFunction = (item) => `${item.start} - ${item.end}`;
@@ -29,5 +67,15 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
   handleTryItNow(evt) {
     this.config = evt.detail;
     this.isConfigured = true;
+  }
+
+  render() {
+    if (this.withoutFacets) {
+      return templateWithoutFacets;
+    }
+    if (this.facetWithoutInputs) {
+      return templateWithFacetsWithoutInputs;
+    }
+    return templateWithFacets;
   }
 }

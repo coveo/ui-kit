@@ -1,4 +1,3 @@
-import {Component, h, State} from '@stencil/core';
 import {
   ProductRecommendationEngine,
   buildProductRecommendationEngine,
@@ -8,6 +7,7 @@ import {
   FrequentlyBoughtTogetherListState,
   Unsubscribe,
 } from '@coveo/headless/product-recommendation';
+import {Component, h, State} from '@stencil/core';
 
 /**
  * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.

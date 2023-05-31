@@ -1,15 +1,15 @@
 import * as fs from 'fs';
-import * as sfdx from './util/sfdx-commands';
 import * as path from 'path';
+import * as pack from '../../package.json';
+import * as sfdxProject from '../../sfdx-project.json';
+import {createDiscussion, getRepoCategoryData} from './util/github';
 import {StepLogger, StepsRunner} from './util/log';
+import * as sfdx from './util/sfdx-commands';
 import {
   authorizeOrg,
   SfdxJWTAuth,
   SfdxCreatePackageVersionResponse,
 } from './util/sfdx-commands';
-import {createDiscussion, getRepoCategoryData} from './util/github';
-import * as pack from '../../package.json';
-import * as sfdxProject from '../../sfdx-project.json';
 
 require('dotenv').config();
 

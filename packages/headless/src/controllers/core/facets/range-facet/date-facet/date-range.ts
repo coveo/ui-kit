@@ -1,11 +1,8 @@
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {FacetValueState} from '../../../../../features/facets/facet-api/value';
 import {
   formatDateForSearchApi,
   AbsoluteDate,
   validateAbsoluteDate,
+  parseDate,
 } from '../../../../../api/search/date/date-format';
 import {
   serializeRelativeDate,
@@ -14,9 +11,8 @@ import {
   RelativeDate,
   validateRelativeDate,
 } from '../../../../../api/search/date/relative-date';
-import {isUndefined} from '@coveo/bueno';
-
-dayjs.extend(customParseFormat);
+import {FacetValueState} from '../../../../../features/facets/facet-api/value';
+import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 
 export type DateRangeInput = AbsoluteDate | RelativeDate;
 
@@ -49,13 +45,6 @@ export interface DateRangeOptions {
    * Allows specifying a custom string date format. See [Day.js](https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens) for possible parsing tokens. Assumes [ISO 8601](https://day.js.org/docs/en/parse/string) format by default.
    */
   dateFormat?: string;
-
-  /**
-   * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
-   *
-   * @deprecated No adjusments to UTC are being made. Please use the `timezone` engine configuration option instead.
-   */
-  useLocalTime?: boolean;
 }
 
 /**
@@ -65,12 +54,6 @@ export interface DateRangeOptions {
  * @returns A new `DateRangeRequest`.
  */
 export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
-  if (!isUndefined(config.useLocalTime)) {
-    console.warn(
-      'The "useLocalTime" option for "buildDateRange" is deprecated. Please use the "timezone" engine configuration option instead.'
-    );
-  }
-
   const start = buildDate(config.start, config);
   const end = buildDate(config.end, config);
   const endInclusive = config.endInclusive ?? false;
@@ -97,5 +80,5 @@ function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   }
 
   validateAbsoluteDate(rawDate, dateFormat);
-  return formatDateForSearchApi(dayjs(rawDate, dateFormat));
+  return formatDateForSearchApi(parseDate(rawDate, dateFormat));
 }

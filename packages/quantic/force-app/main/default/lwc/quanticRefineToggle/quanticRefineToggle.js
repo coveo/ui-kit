@@ -1,33 +1,42 @@
-import {LightningElement, api} from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
+import noFilterForCurrentTab from '@salesforce/label/c.quantic_NoFilterForCurrentTab';
+import noFiltersAvailableForThisQuery from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQuery';
+import sortAndFilters from '@salesforce/label/c.quantic_SortAndFilters';
+import viewResults from '@salesforce/label/c.quantic_ViewResults';
 import {
   getHeadlessBundle,
   initializeWithHeadless,
   registerComponentForInit,
+  getAllFacetsFromStore,
 } from 'c/quanticHeadlessLoader';
-import LOCALE from '@salesforce/i18n/locale';
-import sortAndFilters from '@salesforce/label/c.quantic_SortAndFilters';
-import viewResults from '@salesforce/label/c.quantic_ViewResults';
-
-/**
- * @typedef {Object} QuanticModalElement
- * @method openModal
- * @method closeModal
- */
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").QuerySummary} QuerySummary */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
 
 /**
+ * @typedef {Object} QuanticModalElement
+ * @property {function} openModal
+ * @property {function} closeModal
+ * @property {boolean} fullScreen
+ */
+
+/**
+ * @typedef {Object} QuanticModalContentElement
+ * @property {boolean} hideSort
+ */
+
+/**
  * The `QuanticRefineToggle` component displays a button that is used to open the refine modal.
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen>
+ * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters">
  *   <div slot="refine-title">Custom Title</div>
  *   <div slot="button-content">
  *     Custom Label
- *     <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text={buttonLabel}
+ *     <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text="Filters"
  *       class="custom-refine-icon slds-current-color slds-var-p-vertical_x-small slds-button__icon_right">
  *     </lightning-icon>
  *   </div>
@@ -37,6 +46,8 @@ export default class QuanticRefineToggle extends LightningElement {
   labels = {
     sortAndFilters,
     viewResults,
+    noFiltersAvailableForThisQuery,
+    noFilterForCurrentTab,
   };
 
   /**
@@ -58,6 +69,12 @@ export default class QuanticRefineToggle extends LightningElement {
    * @defaultValue `false`
    */
   @api fullScreen = false;
+  /**
+   * The title of the toggle button.
+   * @api
+   * @type {string}
+   */
+  @api title = this.labels.sortAndFilters;
 
   /** @type {QuerySummary} */
   querySummary;
@@ -71,10 +88,26 @@ export default class QuanticRefineToggle extends LightningElement {
   modalId = 'refineModal';
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  hasResults;
+  /** @type {boolean} */
+  modalIsOpen = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
+
+  renderedFacets = {};
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.addEventListener('renderfacet', this.handleRenderFacetEvent);
   }
+
+  /**
+   * @param {CustomEvent} event
+   */
+  handleRenderFacetEvent = (event) => {
+    this.renderedFacets[event.detail.id] = event.detail.shouldRenderFacet;
+  };
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
@@ -87,6 +120,7 @@ export default class QuanticRefineToggle extends LightningElement {
     this.headless = getHeadlessBundle(this.engineId);
     this.querySummary = this.headless.buildQuerySummary(engine);
     this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
 
     this.unsubscribeQuerySummary = this.querySummary.subscribe(() =>
       this.updateTotalResults()
@@ -94,11 +128,41 @@ export default class QuanticRefineToggle extends LightningElement {
     this.unsubscribeBreadcrumbManager = this.breadcrumbManager.subscribe(() =>
       this.updateActiveFiltersCount()
     );
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateHasResults()
+    );
+
+    const registeredFacets = getAllFacetsFromStore(this.engineId);
+    Object.keys(registeredFacets).forEach((facetId) => {
+      this.renderedFacets[facetId] = true;
+    });
+
+    this.modal.fullScreen = this.fullScreen;
+    this.modalContent.hideSort = this.hideSort;
   };
+
+  get refineButtonDisabled() {
+    const noResults = !this.hasResults;
+    const noFacetsSelected = !this.activeFiltersCount;
+    return (noResults && noFacetsSelected) || this.isContentEmpty;
+  }
+
+  get someFacetsRendered() {
+    return Object.values(this.renderedFacets).reduce(
+      (result, facetRendered) => result || facetRendered,
+      false
+    );
+  }
 
   disconnectedCallback() {
     this.unsubscribeQuerySummary?.();
     this.unsubscribeBreadcrumbManager?.();
+    this.unsubscribeSearchStatus?.();
+    this.removeEventListener('renderfacet', this.handleRenderFacetEvent);
+  }
+
+  get isContentEmpty() {
+    return this.hideSort && !this.someFacetsRendered;
   }
 
   /**
@@ -107,6 +171,14 @@ export default class QuanticRefineToggle extends LightningElement {
    */
   updateTotalResults() {
     this.total = this.querySummary.state.total;
+  }
+
+  /**
+   * Updates the value of the hasResults.
+   * @returns {void}
+   */
+  updateHasResults() {
+    this.hasResults = this.searchStatus?.state?.hasResults;
   }
 
   /**
@@ -175,10 +247,24 @@ export default class QuanticRefineToggle extends LightningElement {
 
   /**
    * Returns the Quantic Modal element.
-   * @returns {HTMLElement}
+   * @return {QuanticModalElement}
    */
-  getModal() {
-    return this.template.querySelector(`[data-id=${this.modalId}]`);
+  get modal() {
+    /** @type {Object} */
+    const modal = this.template.querySelector(`[data-id=${this.modalId}]`);
+    return modal;
+  }
+
+  /**
+   * Returns the Quantic Refine Modal Content element.
+   * @return {QuanticModalContentElement}
+   */
+  get modalContent() {
+    /** @type {Object} */
+    const modalContent = this.template.querySelector(
+      'c-quantic-refine-modal-content'
+    );
+    return modalContent;
   }
 
   /**
@@ -186,9 +272,9 @@ export default class QuanticRefineToggle extends LightningElement {
    * @returns {void}
    */
   openModal() {
-    /** @type {QuanticModalElement} */
-    const modal = this.getModal();
-    modal.openModal();
+    this.modal.openModal();
+    this.sendRefineModalEvent(true);
+    this.modalIsOpen = true;
   }
 
   /**
@@ -196,9 +282,9 @@ export default class QuanticRefineToggle extends LightningElement {
    * @returns {void}
    */
   closeModal() {
-    /** @type {QuanticModalElement} */
-    const modal = this.getModal();
-    modal.closeModal();
+    this.modal.closeModal();
+    this.sendRefineModalEvent(false);
+    this.modalIsOpen = false;
   }
 
   /**
@@ -209,5 +295,35 @@ export default class QuanticRefineToggle extends LightningElement {
     return `${this.labels.viewResults} (${new Intl.NumberFormat(LOCALE).format(
       this.total
     )})`;
+  }
+
+  /**
+   * Returns the title of the refine toggle.
+   * @returns {string}
+   */
+  get buttonTitle() {
+    return this.refineButtonDisabled
+      ? this.labels.noFiltersAvailableForThisQuery
+      : this.title;
+  }
+
+  /**
+   * Sends the "quantic__refinemodaltoggle" event.
+   * @param {boolean} isOpen
+   */
+  sendRefineModalEvent(isOpen) {
+    const refineModalEvent = new CustomEvent('quantic__refinemodaltoggle', {
+      composed: true,
+      bubbles: true,
+      detail: {isOpen},
+    });
+    this.dispatchEvent(refineModalEvent);
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

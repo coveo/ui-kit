@@ -23,4 +23,12 @@ describe('headless popular-bought-recommendations', () => {
     engine.state.productRecommendations.isLoading = true;
     expect(popularBought.state.isLoading).toBe(true);
   });
+  it('object shape matches original', () => {
+    expect(popularBought.refresh).toBeTruthy();
+    expect(popularBought.subscribe).toBeTruthy();
+    expect(popularBought.state.error).toBeFalsy();
+    expect(popularBought.state.isLoading).toBeFalsy();
+    expect(popularBought.state.maxNumberOfRecommendations).toBe(5);
+    expect(popularBought.state.recommendations).toBeTruthy();
+  });
 });

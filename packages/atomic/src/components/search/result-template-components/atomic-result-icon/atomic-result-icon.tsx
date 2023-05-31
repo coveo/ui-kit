@@ -1,10 +1,10 @@
-import {Component, Element, h} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
-import {objectTypeIcons} from './object-type-icons';
-import {fileTypeIcons} from './file-type-icons';
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
+import {Component, Element, h} from '@stencil/core';
 import {snakeToCamel} from '../../../../utils/utils';
+import {ResultContext} from '../result-template-decorators';
+import {fileTypeIcons} from './file-type-icons';
+import {objectTypeIcons} from './object-type-icons';
 
 /**
  * The `atomic-result-icon` component outputs the corresponding icon for a given file type.

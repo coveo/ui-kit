@@ -1,38 +1,49 @@
-import {buildSamlClient, SamlClientOptions} from '@coveo/auth';
+import {buildSamlClient, SamlClient, SamlClientOptions} from '@coveo/auth';
 import {buildSearchEngine} from '@coveo/headless';
-import {useEffect, useState, PropsWithChildren} from 'react';
+import {
+  useState,
+  useMemo,
+  useRef,
+  useEffect,
+  PropsWithChildren,
+  FunctionComponent,
+} from 'react';
 import {AppContext} from '../context/engine';
 
-export function SamlPage(props: PropsWithChildren<SamlClientOptions>) {
-  const [accessToken, setAccessToken] = useState('');
-  const saml = buildSamlClient(props);
+const samlClientOptions: SamlClientOptions = {
+  organizationId: '',
+  provider: '',
+};
 
+export const SamlPage: FunctionComponent<PropsWithChildren> = ({children}) => {
+  const [initialAccessToken, setInitialAccessToken] = useState('');
+  const samlClient = useRef<SamlClient | null>(null);
   useEffect(() => {
-    getToken();
+    if (samlClient.current) {
+      // `SamlClient.authenticate` is not idempotent. Calling it twice after redirection from the provider, even on different clients, will cause a redirection loop.
+      return;
+    }
+    samlClient.current = buildSamlClient(samlClientOptions);
+    samlClient.current.authenticate().then(setInitialAccessToken);
   }, []);
 
-  if (!accessToken) {
+  const engine = useMemo(
+    () =>
+      initialAccessToken && samlClient.current
+        ? buildSearchEngine({
+            configuration: {
+              organizationId: samlClientOptions.organizationId,
+              accessToken: initialAccessToken,
+              renewAccessToken: samlClient.current.authenticate,
+            },
+          })
+        : null,
+    [samlClientOptions, samlClient.current, initialAccessToken]
+  );
+
+  if (!engine) {
     return null;
   }
 
-  async function getToken() {
-    try {
-      const token = await saml.authenticate();
-      setAccessToken(token);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  const engine = buildSearchEngine({
-    configuration: {
-      organizationId: props.organizationId,
-      accessToken,
-      renewAccessToken: saml.authenticate,
-    },
-  });
-
-  return (
-    <AppContext.Provider value={{engine}}>{props.children}</AppContext.Provider>
-  );
-}
+  return <AppContext.Provider value={{engine}}>{children}</AppContext.Provider>;
+};
