@@ -9,7 +9,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
       .init();
   }
   describe('verify rendering', () => {
-    before(setupScrollable);
+    beforeEach(setupScrollable);
     ScrollableAssertions.assertDisplayScrollable(true);
   });
   describe('with overflowing segmented facets', () => {
@@ -20,7 +20,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupWithOverflowFacets);
+      beforeEach(setupWithOverflowFacets);
       ScrollableAssertions.assertDisplayScrollable(true);
       ScrollableAssertions.assertDisplayArrows(false, true);
     });
@@ -30,7 +30,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
         setupWithOverflowFacets();
         clickArrow('right');
       }
-      before(setupClickArrowScrollable);
+      beforeEach(setupClickArrowScrollable);
       ScrollableAssertions.assertDisplayArrows(true, true);
     });
 
@@ -41,7 +41,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
         viewportWidth: 7680,
       },
       () => {
-        before(() => {
+        beforeEach(() => {
           setupWithOverflowFacets();
         });
         ScrollableAssertions.assertDisplayScrollable(true);
@@ -57,7 +57,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupWithoutOverflowFacets);
+      beforeEach(setupWithoutOverflowFacets);
       ScrollableAssertions.assertDisplayScrollable(true);
       ScrollableAssertions.assertDisplayArrows(false, false);
     });
@@ -69,7 +69,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
         viewportWidth: 400,
       },
       () => {
-        before(() => {
+        beforeEach(() => {
           setupWithoutOverflowFacets();
         });
         ScrollableAssertions.assertDisplayScrollable(true);
@@ -84,12 +84,12 @@ describe('Segmented Facet Scrollable Test Suites', () => {
         .with(addScrollable({field: 'invalidd', 'number-of-values': 4}))
         .init();
     }
-    before(setupWithInvalidFacets);
+    beforeEach(setupWithInvalidFacets);
     ScrollableAssertions.assertDisplayScrollable(false);
   });
 
   describe('when no search has yet been executed', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addScrollable({field: 'author', 'number-of-values': 5}))
         .withoutFirstAutomaticSearch()

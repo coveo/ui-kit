@@ -16,7 +16,7 @@ describe('Pager Test Suites', () => {
     }
 
     describe('without pressing on anything', () => {
-      before(() => {
+      beforeEach(() => {
         setupDefaultPager();
       });
       PagerAssertions.assertRenderPager(5);
@@ -24,7 +24,7 @@ describe('Pager Test Suites', () => {
     });
 
     describe('on button next', () => {
-      before(() => {
+      beforeEach(() => {
         setupDefaultPager();
         pressPagerNext();
       });
@@ -49,7 +49,7 @@ describe('Pager Test Suites', () => {
     });
 
     describe('on button previous', () => {
-      before(() => {
+      beforeEach(() => {
         setupDefaultPager();
         pressPagerNext();
         pressPagerPrevious();
@@ -62,7 +62,7 @@ describe('Pager Test Suites', () => {
     });
 
     describe('on button Pager', () => {
-      before(() => {
+      beforeEach(() => {
         setupDefaultPager();
         pressPagerNumber(3);
       });
@@ -74,7 +74,7 @@ describe('Pager Test Suites', () => {
     });
 
     describe('on click 5', () => {
-      before(() => {
+      beforeEach(() => {
         setupDefaultPager();
         pressPagerNumber(5);
       });
@@ -84,7 +84,7 @@ describe('Pager Test Suites', () => {
   });
 
   describe('Pager should load from url', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture().with(addPager()).withHash('firstResult=20').init();
     });
 
@@ -93,7 +93,7 @@ describe('Pager Test Suites', () => {
 
   describe('Option numberOfPages', () => {
     describe('when prop is a number', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture().with(addPager({'number-of-pages': 10})).init();
       });
 
@@ -102,7 +102,7 @@ describe('Pager Test Suites', () => {
     });
 
     describe('when prop is a number_string ', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture().with(addPager({'number-of-pages': '8'})).init();
       });
 
@@ -111,7 +111,7 @@ describe('Pager Test Suites', () => {
     });
 
     describe('when prop contains number&character', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture().with(addPager({'number-of-pages': '9k3'})).init();
       });
 
@@ -120,7 +120,7 @@ describe('Pager Test Suites', () => {
     });
 
     describe('when the prop is not in the list of numberOfPages', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture().with(addPager({'number-of-pages': '-5'})).init();
       });
 
@@ -129,7 +129,7 @@ describe('Pager Test Suites', () => {
   });
 
   describe('Should expose shadow parts for', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture().with(addPager()).init();
     });
 

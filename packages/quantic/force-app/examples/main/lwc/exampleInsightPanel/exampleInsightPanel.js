@@ -1,3 +1,4 @@
+// @ts-ignore
 import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
@@ -8,7 +9,11 @@ import caseTemplate from './resultTemplates/caseResultTemplate.html';
 // @ts-ignore
 import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
 // @ts-ignore
+import childTemplate from './resultTemplates/childResultTemplate.html';
+// @ts-ignore
 import defaultTemplate from './resultTemplates/defaultResultTemplate.html';
+// @ts-ignore
+import parentTemplate from './resultTemplates/parentResultTemplate.html';
 // @ts-ignore
 import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 
@@ -58,7 +63,17 @@ export default class ExampleInsightPanel extends LightningElement {
       'objecttype',
       ['FeedItem']
     );
+    const isThread = headless.ResultTemplatesHelpers.fieldMustMatch('source', [
+      'iNaturalistTaxons',
+    ]);
+    const isChild = headless.ResultTemplatesHelpers.fieldMustMatch(
+      'quantic__templateId',
+      ['myChildTemplate']
+    );
+
     resultTemplatesManager.registerTemplates(
+      {content: childTemplate, conditions: [isChild], priority: 1},
+      {content: parentTemplate, conditions: [isThread], fields: []},
       {
         content: youtubeTemplate,
         conditions: [isYouTube],
