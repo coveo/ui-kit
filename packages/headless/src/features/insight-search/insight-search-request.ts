@@ -55,6 +55,12 @@ export const buildInsightSearchRequest = (
       sortCriteria: state.sortCriteria,
     }),
     tab: state.configuration.analytics.originLevel2,
+    ...(state.folding && {
+      filterField: state.folding.fields.collection,
+      childField: state.folding.fields.parent,
+      parentField: state.folding.fields.child,
+      filterFieldRange: state.folding.filterFieldRange,
+    }),
   });
 };
 

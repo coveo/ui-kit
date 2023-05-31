@@ -231,7 +231,7 @@ export interface FoldingSection {
 
 export interface DidYouMeanSection {
   /**
-   * DidYouMean allows to retrieve query corrections from the index related to end user mispelling.
+   * DidYouMean allows to retrieve query corrections from the index related to end user misspelling.
    */
   didYouMean: DidYouMeanState;
 }

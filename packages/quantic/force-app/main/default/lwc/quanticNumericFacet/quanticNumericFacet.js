@@ -1,4 +1,17 @@
-import {LightningElement, track, api} from 'lwc';
+import LOCALE from '@salesforce/i18n/locale';
+import apply from '@salesforce/label/c.quantic_Apply';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
+import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
+import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
+import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
+import max from '@salesforce/label/c.quantic_Max';
+import messageWhenRangeOverflow from '@salesforce/label/c.quantic_MessageWhenRangeOverflow';
+import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRangeUnderflow';
+import min from '@salesforce/label/c.quantic_Min';
+import numberInputApply from '@salesforce/label/c.quantic_NumberInputApply';
+import numberInputMaximum from '@salesforce/label/c.quantic_NumberInputMaximum';
+import numberInputMinimum from '@salesforce/label/c.quantic_NumberInputMinimum';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -7,21 +20,7 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, Store} from 'c/quanticUtils';
-import LOCALE from '@salesforce/i18n/locale';
-
-import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
-import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
-import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
-import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
-import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
-import min from '@salesforce/label/c.quantic_Min';
-import max from '@salesforce/label/c.quantic_Max';
-import numberInputMinimum from '@salesforce/label/c.quantic_NumberInputMinimum';
-import numberInputMaximum from '@salesforce/label/c.quantic_NumberInputMaximum';
-import apply from '@salesforce/label/c.quantic_Apply';
-import numberInputApply from '@salesforce/label/c.quantic_NumberInputApply';
-import messageWhenRangeOverflow from '@salesforce/label/c.quantic_MessageWhenRangeOverflow';
-import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRangeUnderflow';
+import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").NumericFacetState} NumericFacetState */
 /** @typedef {import("coveo").NumericFilterState} NumericFilterState*/
@@ -179,6 +178,8 @@ export default class QuanticNumericFacet extends LightningElement {
   focusTarget;
   /** @type {boolean} */
   focusShouldBeInFacet = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   /** @type {string} */
   start;
@@ -390,8 +391,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get shouldRenderInput() {
     return (
-      (this.withInput && !!this.values.length) ||
-      !!this.filterState?.range
+      (this.withInput && !!this.values.length) || !!this.filterState?.range
     );
   }
 
@@ -607,5 +607,12 @@ export default class QuanticNumericFacet extends LightningElement {
       // @ts-ignore
       focusTarget.focus();
     }
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

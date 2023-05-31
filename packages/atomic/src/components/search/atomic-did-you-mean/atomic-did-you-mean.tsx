@@ -52,7 +52,10 @@ export class AtomicDidYouMean implements InitializableComponent {
   }
 
   private withQuery(
-    key: 'no-results-for' | 'query-auto-corrected-to' | 'showing-results-for',
+    key:
+      | 'no-results-for-did-you-mean'
+      | 'query-auto-corrected-to'
+      | 'showing-results-for',
     query: string
   ) {
     return (
@@ -105,7 +108,7 @@ export class AtomicDidYouMean implements InitializableComponent {
       <Fragment>
         <p class="text-on-background mb-1" part="no-results">
           {this.withQuery(
-            'no-results-for',
+            'no-results-for-did-you-mean',
             this.didYouMeanState!.originalQuery
           )}
         </p>

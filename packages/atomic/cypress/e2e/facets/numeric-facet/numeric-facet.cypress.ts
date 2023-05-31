@@ -50,7 +50,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     }
     describe('with checkbox values', () => {
       describe('verify rendering', () => {
-        before(setupAutomaticRangesWithCheckboxValues);
+        beforeEach(setupAutomaticRangesWithCheckboxValues);
 
         CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
         CommonAssertions.assertAccessibility(numericFacetComponent);
@@ -86,7 +86,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupSelectCheckboxValue);
+          beforeEach(setupSelectCheckboxValue);
           CommonAssertions.assertAccessibility(numericFacetComponent);
           CommonFacetAssertions.assertDisplayClearButton(
             NumericFacetSelectors,
@@ -103,7 +103,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          before(setupSelectCheckboxValue);
+          beforeEach(setupSelectCheckboxValue);
           NumericFacetAssertions.assertLogNumericFacetSelect(
             numericFacetField,
             selectionIndex
@@ -121,7 +121,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           }
 
           describe('verify rendering', () => {
-            before(setupSelectSecondCheckboxValue);
+            beforeEach(setupSelectSecondCheckboxValue);
             CommonAssertions.assertAccessibility(numericFacetComponent);
             CommonFacetAssertions.assertDisplayClearButton(
               NumericFacetSelectors,
@@ -138,7 +138,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            before(setupSelectSecondCheckboxValue);
+            beforeEach(setupSelectSecondCheckboxValue);
             NumericFacetAssertions.assertLogNumericFacetSelect(
               numericFacetField,
               secondSelectionIndex
@@ -151,7 +151,7 @@ describe('Numeric Facet V1 Test Suites', () => {
               pressClearButton(NumericFacetSelectors);
             }
             describe('verify rendering', () => {
-              before(setupClearCheckboxValues);
+              beforeEach(setupClearCheckboxValues);
 
               CommonFacetAssertions.assertDisplayClearButton(
                 NumericFacetSelectors,
@@ -169,7 +169,7 @@ describe('Numeric Facet V1 Test Suites', () => {
             });
 
             describe('verify analytics', () => {
-              before(setupClearCheckboxValues);
+              beforeEach(setupClearCheckboxValues);
               CommonFacetAssertions.assertLogClearFacetValues(
                 numericFacetField
               );
@@ -194,21 +194,21 @@ describe('Numeric Facet V1 Test Suites', () => {
         }
 
         describe('when #withInput is integer', () => {
-          before(() => {
+          beforeEach(() => {
             setupAutomaticRangesWithCheckboxValuesAndInputRange();
           });
           NumericFacetAssertions.assertDisplayRangeInput(true);
         });
 
         describe('when #withInput is decimal', () => {
-          before(() => {
+          beforeEach(() => {
             setupAutomaticRangesWithCheckboxValuesAndInputRange('decimal');
           });
           NumericFacetAssertions.assertDisplayRangeInput(true);
         });
 
         describe('when select a valid range', () => {
-          before(() => {
+          beforeEach(() => {
             setupAutomaticRangesWithCheckboxValuesAndInputRange();
             inputMinValue(min);
             inputMaxValue(max);
@@ -235,7 +235,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           .init();
       }
       describe('verify rendering', () => {
-        before(setupAutomaticRangesWithLinkValues);
+        beforeEach(setupAutomaticRangesWithLinkValues);
         CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
         CommonAssertions.assertAccessibility(numericFacetComponent);
         CommonAssertions.assertContainsComponentError(
@@ -270,7 +270,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupSelectLinkValue);
+          beforeEach(setupSelectLinkValue);
           CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
           CommonAssertions.assertAccessibility(numericFacetComponent);
           CommonFacetAssertions.assertDisplayClearButton(
@@ -288,7 +288,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          before(setupSelectLinkValue);
+          beforeEach(setupSelectLinkValue);
           NumericFacetAssertions.assertLogNumericFacetSelect(
             numericFacetField,
             selectionIndex
@@ -303,7 +303,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           }
 
           describe('verify rendering', () => {
-            before(setupSecondLinkValue);
+            beforeEach(setupSecondLinkValue);
             CommonAssertions.assertAccessibility(numericFacetComponent);
             CommonFacetAssertions.assertNumberOfSelectedLinkValues(
               NumericFacetSelectors,
@@ -316,7 +316,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            before(setupSecondLinkValue);
+            beforeEach(setupSecondLinkValue);
             NumericFacetAssertions.assertLogNumericFacetSelect(
               numericFacetField,
               secondSelectionIndex
@@ -342,21 +342,21 @@ describe('Numeric Facet V1 Test Suites', () => {
         }
 
         describe('when #withInput is integer', () => {
-          before(() => {
+          beforeEach(() => {
             setupAutomaticRangesWithLinkValuesAndInputRange();
           });
           NumericFacetAssertions.assertDisplayRangeInput(true);
         });
 
         describe('when #withInput is decimal', () => {
-          before(() => {
+          beforeEach(() => {
             setupAutomaticRangesWithLinkValuesAndInputRange('decimal');
           });
           NumericFacetAssertions.assertDisplayRangeInput(true);
         });
 
         describe('when select a valid range', () => {
-          before(() => {
+          beforeEach(() => {
             setupAutomaticRangesWithLinkValuesAndInputRange();
             inputMinValue(min);
             inputMaxValue(max);
@@ -385,7 +385,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupCustomRangesWithCheckboxValues);
+      beforeEach(setupCustomRangesWithCheckboxValues);
       CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
       CommonAssertions.assertAccessibility(numericFacetComponent);
       CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
@@ -418,7 +418,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(() => {
+      beforeEach(() => {
         setupRangesWithInputOnly();
       });
       NumericFacetAssertions.assertDisplayRangeInput(true);
@@ -428,7 +428,7 @@ describe('Numeric Facet V1 Test Suites', () => {
 
     describe('verify input form', () => {
       describe('when min & max input is empty', () => {
-        before(() => {
+        beforeEach(() => {
           setupRangesWithInputOnly();
           invokeSubmitButton();
           clickApplyButton(false);
@@ -437,7 +437,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       });
 
       describe('when max input is empty', () => {
-        before(() => {
+        beforeEach(() => {
           setupRangesWithInputOnly();
           inputMinValue(min);
           invokeSubmitButton();
@@ -447,7 +447,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       });
 
       describe('when min input is empty', () => {
-        before(() => {
+        beforeEach(() => {
           setupRangesWithInputOnly('decimal');
           inputMaxValue(maxDecimal);
           invokeSubmitButton();
@@ -457,7 +457,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       });
 
       describe('when max input is invalid', () => {
-        before(() => {
+        beforeEach(() => {
           setupRangesWithInputOnly();
           inputMaxValue('a');
           invokeSubmitButton();
@@ -467,7 +467,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       });
 
       describe('when min input is bigger than max input', () => {
-        before(() => {
+        beforeEach(() => {
           setupRangesWithInputOnly();
           inputMinValue(max);
           inputMaxValue(min);
@@ -481,7 +481,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       });
     });
 
-    describe('when submitting an valid range', () => {
+    describe('when submitting a valid range', () => {
       function setupNumericValidRange(
         inputType = 'integer',
         fieldInput = numericFacetField,
@@ -505,7 +505,7 @@ describe('Numeric Facet V1 Test Suites', () => {
 
       describe('with #inputDefault is "integer"', () => {
         describe('verify rendering', () => {
-          before(() => {
+          beforeEach(() => {
             setupNumericValidRange();
           });
           NumericFacetAssertions.assertURLHash(
@@ -515,7 +515,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          before(() => {
+          beforeEach(() => {
             setupNumericValidRange();
           });
           NumericFacetAssertions.assertLogNumericFacetInputSubmit(
@@ -529,7 +529,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       describe('with #inputDefault is "decimal"', () => {
         const decimalField = 'snrating';
         describe('verify rendering', () => {
-          before(() => {
+          beforeEach(() => {
             setupNumericValidRange(
               'decimal',
               decimalField,
@@ -544,7 +544,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         });
 
         describe('verify analytics', () => {
-          before(() => {
+          beforeEach(() => {
             setupNumericValidRange(
               'decimal',
               decimalField,
@@ -582,7 +582,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           NumericFacetAssertions.assertDisplayRangeInput(false);
 
           describe('with active input', () => {
-            before(() => {
+            beforeEach(() => {
               baseSetup().withHash(activeInput).init();
             });
             NumericFacetAssertions.assertDisplayRangeInput(true);
@@ -609,7 +609,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           NumericFacetAssertions.assertDisplayRangeInput(false);
 
           describe('with active input', () => {
-            before(() => {
+            beforeEach(() => {
               baseSetup().withHash(activeInput).init();
             });
 
@@ -633,7 +633,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           .init();
       }
 
-      before(setupNumericInput);
+      beforeEach(setupNumericInput);
 
       NumericFacetAssertions.assertDisplayRangeInput(true);
       NumericFacetAssertions.assertDisplayApplyButton(true);
@@ -643,7 +643,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     });
 
     describe('with invalid #withInput', () => {
-      before(() => {
+      beforeEach(() => {
         setupRangesWithInputOnly('true');
       });
       NumericFacetAssertions.assertDisplayRangeInput(false);
@@ -669,7 +669,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupRangesWithCustomNumberOfValues);
+      beforeEach(setupRangesWithCustomNumberOfValues);
       CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
       CommonAssertions.assertAccessibility(numericFacetComponent);
       CommonAssertions.assertContainsComponentError(
@@ -706,14 +706,14 @@ describe('Numeric Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupRangesWithCustomSortCriterias);
+      beforeEach(setupRangesWithCustomSortCriterias);
       CommonAssertions.assertAccessibility(numericFacetComponent);
       NumericFacetAssertions.assertValueSortedByDescending();
     });
   });
 
   describe('when no search has yet been executed', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addNumericFacet({field: numericFacetField, label: numericFacetLabel})
@@ -727,7 +727,7 @@ describe('Numeric Facet V1 Test Suites', () => {
   });
 
   describe('with a field that returns no result', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addNumericFacet({
@@ -746,7 +746,7 @@ describe('Numeric Facet V1 Test Suites', () => {
   });
 
   describe('with an invalid option', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addNumericFacet({
@@ -762,7 +762,7 @@ describe('Numeric Facet V1 Test Suites', () => {
   });
 
   describe('with a selected path in the URL', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addNumericFacet({field: numericFacetField, label: numericFacetLabel})
@@ -800,7 +800,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           .init();
       }
       describe('verify rendering', () => {
-        before(setupNumericWithEvenRangeAlgorithm);
+        beforeEach(setupNumericWithEvenRangeAlgorithm);
         CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
         CommonAssertions.assertAccessibility(numericFacetComponent);
         NumericFacetAssertions.assertEqualRange();
@@ -819,7 +819,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           .init();
       }
       describe('verify rendering', () => {
-        before(setupNumericWithEquiprobableRangeAlgorithm);
+        beforeEach(setupNumericWithEquiprobableRangeAlgorithm);
         CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
         CommonAssertions.assertAccessibility(numericFacetComponent);
       });
@@ -868,7 +868,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupNumericCustomFormatCurrency);
+          beforeEach(setupNumericCustomFormatCurrency);
           CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
           CommonAssertions.assertAccessibility(numericFacetComponent);
           CommonAssertions.assertContainsComponentError(
@@ -894,7 +894,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           }
 
           describe('verify rendering', () => {
-            before(setupSelectCheckboxValue);
+            beforeEach(setupSelectCheckboxValue);
             CommonAssertions.assertAccessibility(numericFacetComponent);
             CommonFacetAssertions.assertDisplayClearButton(
               NumericFacetSelectors,
@@ -911,7 +911,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       describe('with custom format unit Kilogram', () => {
         describe('with custom unitDisplay "Long"', () => {
           const formatUnitKgLong = {unit: 'kilogram', 'unit-display': 'long'};
-          before(() => {
+          beforeEach(() => {
             setupNumericFacetWithCustomFormat(
               'atomic-format-unit',
               formatUnitKgLong
@@ -927,7 +927,7 @@ describe('Numeric Facet V1 Test Suites', () => {
             unit: 'kilogram',
             'unit-display': 'narrow',
           };
-          before(() => {
+          beforeEach(() => {
             setupNumericFacetWithCustomFormat(
               'atomic-format-unit',
               formatUnitLiterNarrow
@@ -941,7 +941,7 @@ describe('Numeric Facet V1 Test Suites', () => {
 
       describe('with custom format number', () => {
         describe('with custom #minimumIntegerDigits', () => {
-          before(() => {
+          beforeEach(() => {
             setupNumericFacetWithCustomFormat('atomic-format-number', {
               'minimum-integer-digits': 5,
             });
@@ -953,7 +953,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         describe('with custom #minimumFractionDigits & #maximumFractionDigits', () => {
           const min = 2;
           const max = 4;
-          before(() => {
+          beforeEach(() => {
             setupNumericFacetWithCustomFormat('atomic-format-number', {
               'minimum-fraction-digits': min,
               'maximum-fraction-digits': max,
@@ -969,7 +969,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         describe('with custom #minimumSignificantDigits & #maximumSignificantDigits', () => {
           const min = 3;
           const max = 5;
-          before(() => {
+          beforeEach(() => {
             setupNumericFacetWithCustomFormat('atomic-format-number', {
               'minimum-significant-digits': min,
               'maximum-significant-digits': max,
@@ -1017,7 +1017,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(setupNumericCustomFormatCurrency);
+          beforeEach(setupNumericCustomFormatCurrency);
           CommonFacetAssertions.assertDisplayFacet(NumericFacetSelectors, true);
           CommonAssertions.assertAccessibility(numericFacetComponent);
           CommonAssertions.assertContainsComponentError(
@@ -1047,7 +1047,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           }
 
           describe('verify rendering', () => {
-            before(setupSelectLinkValue);
+            beforeEach(setupSelectLinkValue);
             CommonFacetAssertions.assertDisplayFacet(
               NumericFacetSelectors,
               true
@@ -1065,7 +1065,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       describe('with custom format unit Kilogram', () => {
         describe('with custom unitDisplay "Long"', () => {
           const formatUnitKgLong = {unit: 'kilogram', 'unit-display': 'long'};
-          before(() => {
+          beforeEach(() => {
             setupNumericFacetWithCustomRangeAndCustomFormat(
               'atomic-format-unit',
               formatUnitKgLong
@@ -1081,7 +1081,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         describe('with custom #minimumFractionDigits & #maximumFractionDigits', () => {
           const min = 2;
           const max = 4;
-          before(() => {
+          beforeEach(() => {
             setupNumericFacetWithCustomRangeAndCustomFormat(
               'atomic-format-number',
               {
@@ -1116,7 +1116,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         .init();
     }
     describe('verify rendering', () => {
-      before(setupBreadboxWithNumericFacet);
+      beforeEach(setupBreadboxWithNumericFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
     });
 
@@ -1128,7 +1128,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(() => {
+        beforeEach(() => {
           setupSelectedNumericFacetValue();
           cy.wait(TestFixture.interceptAliases.Search);
         });
@@ -1151,7 +1151,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         }
 
         describe('verify rendering', () => {
-          before(() => {
+          beforeEach(() => {
             setupDeselectNumericFacetValue();
             cy.wait(TestFixture.interceptAliases.Search);
           });
@@ -1159,12 +1159,12 @@ describe('Numeric Facet V1 Test Suites', () => {
         });
 
         describe('verify analytic', () => {
-          before(setupDeselectNumericFacetValue);
+          beforeEach(setupDeselectNumericFacetValue);
           BreadboxAssertions.assertLogBreadcrumbFacet(numericFacetField);
         });
 
         describe('verify selected facetValue', () => {
-          before(setupSelectedNumericFacetValue);
+          beforeEach(setupSelectedNumericFacetValue);
           BreadboxAssertions.assertDeselectCheckboxFacet(
             NumericFacetSelectors,
             deselectionIndex
@@ -1196,7 +1196,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(() => {
+        beforeEach(() => {
           setupSelectedMulitpleNumericFacetValuess();
           cy.wait(TestFixture.interceptAliases.Search);
         });
@@ -1220,7 +1220,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     const parentField = 'filetype';
     const expectedValue = 'YouTubeVideo';
     describe('as a dependent, without an input', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addNumericFacet({
@@ -1243,7 +1243,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       );
 
       describe('when the dependency is met', () => {
-        before(() => {
+        beforeEach(() => {
           typeFacetSearchQuery(
             FacetSelectors.withId(parentFacetId),
             expectedValue,
@@ -1264,7 +1264,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     });
 
     describe('as a dependent, with a facet and an input', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addNumericFacet({
@@ -1288,7 +1288,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       );
 
       describe('when the dependency is met', () => {
-        before(() => {
+        beforeEach(() => {
           typeFacetSearchQuery(
             FacetSelectors.withId(parentFacetId),
             expectedValue,
@@ -1309,7 +1309,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     });
 
     describe('as a dependent, without a facet', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addNumericFacet({
@@ -1334,7 +1334,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       );
 
       describe('when the dependency is met', () => {
-        before(() => {
+        beforeEach(() => {
           typeFacetSearchQuery(
             FacetSelectors.withId(parentFacetId),
             expectedValue,
@@ -1355,7 +1355,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     });
 
     describe('with two dependencies', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
           .with(addFacet({'facet-id': 'def', field: 'filetype'}))

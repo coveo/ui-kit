@@ -48,6 +48,12 @@ function recentQueriesListExpectations(selector: RecentQueriesListSelector) {
         .should('include', urlHash)
         .logDetail(`URL hash should contain "${urlHash}"`);
     },
+    displayRecentQueriesCard: (display: boolean) => {
+      selector
+        .recentQueriesCard()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the recent queries card`);
+    },
   };
 }
 

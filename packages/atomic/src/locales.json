@@ -655,6 +655,33 @@
     "zh-cn": "没有找到与 {{query}} 相关的结果",
     "zh-tw": "沒有找到與 {{query}} 相關的結果"
   },
+  "no-results-for-did-you-mean": {
+    "en": "We couldn't find anything for {{query}}",
+    "fr": "Nous n'avons rien trouvé pour {{query}}",
+    "cs": "Pro dotaz {{query}} nebyly nalezeny žádné výsledky",
+    "da": "Ingen resultater for {{query}}",
+    "de": "Keine Ergebnisse für {{query}}",
+    "el": "Κανένα αποτέλεσμα για {{query}}",
+    "es": "No hay resultados para {{query}}",
+    "fi": "Ei tuloksia kohteelle {{query}}",
+    "hu": "Nincs eredmény: {{query}}",
+    "id": "Tidak ada hasil untuk {{query}}",
+    "it": "Nessun risultato per {{query}}",
+    "ja": "{{query}}に該当する結果なし",
+    "ko": "{{query}}에 대한 검색 결과가 없습니다",
+    "nl": "Geen resultaten voor {{query}}",
+    "no": "Ingen resultater for {{query}}",
+    "pl": "Brak wyników dla zapytania {{query}}",
+    "pt": "Nenhum resultado para {{query}}",
+    "pt-br": "Nenhum resultado para {{query}}",
+    "ru": "Нет результатов по {{query}}",
+    "sv": "Inga resultat för {{query}}",
+    "th": "ไม่พบผลลัพธ์สำหรับ {{query}}",
+    "tr": "{{query}} için sonuç yok",
+    "zh": "没有找到与 {{query}} 相关的结果",
+    "zh-cn": "没有找到与 {{query}} 相关的结果",
+    "zh-tw": "沒有找到與 {{query}} 相關的結果"
+  },
   "showing-results-for": {
     "en": "Showing results for {{query}}",
     "fr": "Résultats affichés pour {{query}}"
@@ -1489,6 +1516,9 @@
   },
   "insight-related-cases": {
     "en": "Insights related to this case"
+  },
+  "full-search": {
+    "en": "Button to access full search"
   },
   "calendar-last-day": {
     "en": "[Yesterday]",

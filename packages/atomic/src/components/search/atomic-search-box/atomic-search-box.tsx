@@ -757,7 +757,10 @@ export class AtomicSearchBox {
     );
     return [
       <SearchBoxWrapper disabled={this.isSearchDisabled}>
-        <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
+        <atomic-focus-detector
+          style={{display: 'contents'}}
+          onFocusExit={() => this.clearSuggestions()}
+        >
           <SearchInput
             inputRef={this.inputRef}
             loading={this.searchBoxState.isLoading}

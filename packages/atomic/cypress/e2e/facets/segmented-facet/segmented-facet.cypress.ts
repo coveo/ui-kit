@@ -20,7 +20,7 @@ describe('Segmented Facet Test Suites', () => {
   }
 
   describe('verify rendering', () => {
-    before(setupSegmentedFacet);
+    beforeEach(setupSegmentedFacet);
 
     CommonAssertions.assertAccessibility(segmentedFacetComponent);
     CommonAssertions.assertContainsComponentError(
@@ -44,14 +44,14 @@ describe('Segmented Facet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupSelectSegmentedFacet);
+      beforeEach(setupSelectSegmentedFacet);
 
       CommonAssertions.assertAccessibility(segmentedFacetComponent);
       FacetAssertions.assertNumberOfSelectedBoxValues(1);
       FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues - 1);
     });
     describe('verify analytics', () => {
-      before(setupSelectSegmentedFacet);
+      beforeEach(setupSelectSegmentedFacet);
       FacetAssertions.assertLogFacetSelect(field, selectionIndex);
     });
   });
@@ -71,7 +71,7 @@ describe('Segmented Facet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupCustomSegmentedFacet);
+      beforeEach(setupCustomSegmentedFacet);
 
       CommonAssertions.assertAccessibility(segmentedFacetComponent);
       CommonFacetAssertions.assertLabelContains(
@@ -83,7 +83,7 @@ describe('Segmented Facet Test Suites', () => {
   });
 
   describe('when no search has yet been executed', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addSegmentedFacet({field, label}))
         .withoutFirstAutomaticSearch()
@@ -103,7 +103,7 @@ describe('Segmented Facet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupSegmentedFacetNoLabel);
+      beforeEach(setupSegmentedFacetNoLabel);
 
       CommonAssertions.assertAccessibility(segmentedFacetComponent);
       CommonFacetAssertions.assertDisplayFacet(SegmentedFacetSelectors, true);
@@ -113,7 +113,7 @@ describe('Segmented Facet Test Suites', () => {
   });
 
   describe('when field returns no results', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addSegmentedFacet({field: 'notanactualfield', label}))
         .init();
@@ -131,7 +131,7 @@ describe('Segmented Facet Test Suites', () => {
   });
 
   describe('with a selected path in the URL', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addSegmentedFacet({field, label}))
         .withHash(`f-${field}=Cervantes`)
@@ -147,9 +147,8 @@ describe('Segmented Facet Test Suites', () => {
     );
   });
 
-  // TODO: enable when SEARCHAPI-7247 is released
-  describe.skip('with custom #sortCriteria, occurrences', () => {
-    before(() => {
+  describe('with custom #sortCriteria, occurrences', () => {
+    beforeEach(() => {
       new TestFixture()
         .with(addSegmentedFacet({field, label, 'sort-criteria': 'occurrences'}))
         .init();

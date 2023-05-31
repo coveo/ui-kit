@@ -45,7 +45,7 @@ export interface DidYouMeanState {
   /**
    * Specifies if the query was automatically corrected by Headless.
    *
-   * This happens when there is no result returned by the API for a particular mispelling.
+   * This happens when there is no result returned by the API for a particular misspelling.
    */
   wasAutomaticallyCorrected: boolean;
 

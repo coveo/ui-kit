@@ -388,7 +388,10 @@ export class AtomicInsightSearchBox {
   public render() {
     return (
       <SearchBoxWrapper disabled={this.disableSearch}>
-        <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
+        <atomic-focus-detector
+          style={{display: 'contents'}}
+          onFocusExit={() => this.clearSuggestions()}
+        >
           <atomic-icon
             part="submit-icon"
             icon={SearchIcon}

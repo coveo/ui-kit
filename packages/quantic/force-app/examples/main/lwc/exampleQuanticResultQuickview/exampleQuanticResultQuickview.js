@@ -49,7 +49,8 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
     {
       attribute: 'tooltip',
       label: 'Tooltip',
-      description: 'The label displayed in the tooltip of the quick view button.',
+      description:
+        'The label displayed in the tooltip of the quick view button.',
       defaultValue: null,
     },
   ];
