@@ -85,7 +85,7 @@ async function commitChanges(commitMessage, octokit) {
     repo: REPO_NAME,
     ref: `heads/${mainBranchName}`,
     sha: newCommitSHA,
-    force: true,
+    force: true, // Needed since the remote main branch contains a "lock" commit.
   });
 
   // Delete the temp branch
