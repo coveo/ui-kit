@@ -33,7 +33,7 @@
     "build": "npm run build:client && npm run build:server",
     "build:client": "tsc --noEmit && tsc --module commonjs --noEmit",
     "build:server": "tsc --project ./tsconfig.server.json",
-    "test": "react-scripts test --env=./jest.setup.js",
+    "test": "react-scripts test",
     "prod:ssr": "node ./build/server/server/server.js"
   },
   "browserslist": {
