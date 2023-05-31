@@ -146,6 +146,7 @@ async function buildBrowserConfig(options, outDir) {
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
         'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
+        'web-encoding': require.resolve('web-encoding'),
       }),
     ],
     ...options,
@@ -196,6 +197,7 @@ async function buildNodeConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': require.resolve('coveo.analytics'),
+        'web-encoding': require.resolve('web-encoding'),
       }),
     ],
     ...options,
