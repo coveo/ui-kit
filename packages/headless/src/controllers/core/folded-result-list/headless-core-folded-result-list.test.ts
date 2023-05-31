@@ -1,32 +1,55 @@
-import {Result} from '../../api/search/search/result';
-import {configuration} from '../../app/common-reducers';
-import {Raw} from '../../case-assist.index';
-import {foldingReducer as folding} from '../../features/folding/folding-slice';
-import {queryReducer as query} from '../../features/query/query-slice';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {buildMockResult} from '../../test';
+import {Raw} from '../../../api/search/search/raw';
+import {Result} from '../../../api/search/search/result';
+import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice';
+import {loadCollection} from '../../../features/folding/folding-actions';
+import {foldedResultAnalyticsClient} from '../../../features/folding/folding-analytics-actions';
+import {foldingReducer as folding} from '../../../features/folding/folding-slice';
 import {
+  FoldedCollection,
+  getFoldingInitialState,
+} from '../../../features/folding/folding-state';
+import {queryReducer as query} from '../../../features/query/query-slice';
+import {searchReducer as search} from '../../../features/search/search-slice';
+import {
+  buildMockResult,
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
+} from '../../../test';
 import {
+  buildCoreFoldedResultList,
   FoldedResultList,
+  CoreFoldedResultListProps,
   FoldedResultListOptions,
-  buildFoldedResultList,
-  FoldedCollection,
-} from './headless-folded-result-list';
+} from './headless-core-folded-result-list';
 
 describe('FoldedResultList', () => {
   let engine: MockSearchEngine;
-  let options: FoldedResultListOptions;
   let foldedResultList: FoldedResultList;
+  let props: CoreFoldedResultListProps;
 
   function initFoldedResultList() {
-    foldedResultList = buildFoldedResultList(engine, {options});
+    foldedResultList = buildCoreFoldedResultList(
+      engine,
+      props,
+      foldedResultAnalyticsClient
+    );
   }
 
   beforeEach(() => {
-    options = {};
+    const options: FoldedResultListOptions = {
+      folding: {
+        collectionField: 'foldingcollection',
+        parentField: 'foldingparent',
+        childField: 'foldingchild',
+        numberOfFoldedResults: 2,
+      },
+    };
+
+    props = {
+      options,
+      loadCollectionActionCreator: loadCollection,
+    };
+
     engine = buildMockSearchAppEngine();
     initFoldedResultList();
   });
@@ -35,23 +58,44 @@ describe('FoldedResultList', () => {
     expect(foldedResultList).toBeTruthy();
   });
 
-  it('dispatches the folding/register action', () => {
-    expect(engine.actions.map((action) => action.type)).toContain(
-      'folding/register'
-    );
-  });
-
-  it('it adds the correct reducers to engine', () => {
+  it('adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       search,
-      folding,
       configuration,
+      folding,
       query,
     });
   });
 
   it('exposes a #subscribe method', () => {
     expect(foldedResultList.subscribe).toBeTruthy();
+  });
+
+  it('should properly build the state', () => {
+    engine.state.folding = {
+      ...getFoldingInitialState(),
+    };
+
+    const expectedState = {
+      results: [],
+      searchResponseId: '',
+      moreResultsAvailable: false,
+    };
+
+    expect(foldedResultList.state.results).toStrictEqual(expectedState.results);
+    expect(foldedResultList.state.searchResponseId).toStrictEqual(
+      expectedState.searchResponseId
+    );
+    expect(foldedResultList.state.moreResultsAvailable).toStrictEqual(
+      expectedState.moreResultsAvailable
+    );
+  });
+
+  it('should dispatch a #registerFolding action at initialization', () => {
+    expect(engine.actions.length).toEqual(1);
+    expect(engine.actions.map((action) => action.type)).toContainEqual(
+      'folding/register'
+    );
   });
 
   describe('with a result and two collections', () => {
@@ -108,14 +152,14 @@ describe('FoldedResultList', () => {
       ).toBeFalsy();
     });
 
-    it('dispatches analytics and folding/loadCollection when calling loadCollection', () => {
-      foldedResultList.loadCollection(foldedResultList.state.results[0]);
-      expect(engine.actions.pop()?.type).toEqual(
-        'analytics/folding/showMore/pending'
-      );
-      expect(engine.actions.pop()?.type).toEqual(
-        'folding/loadCollection/pending'
-      );
+    it('#loadCollection dispatches folding/loadCollection and #logShowMoreFoldedResults analytics', () => {
+      const expectedLogShowMoreAction = 'analytics/folding/showMore/pending';
+      const expectedLoadCollectionAction = 'folding/loadCollection/pending';
+
+      foldedResultList.loadCollection(foldedResultList?.state?.results[0]);
+
+      expect(engine.actions.pop()?.type).toEqual(expectedLogShowMoreAction);
+      expect(engine.actions.pop()?.type).toEqual(expectedLoadCollectionAction);
     });
 
     it('finds a result by id', () => {

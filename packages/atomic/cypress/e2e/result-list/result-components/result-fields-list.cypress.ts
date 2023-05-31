@@ -92,5 +92,7 @@ describe('Result Fields Component', () => {
       .should('have.length.above', 0);
   });
 
-  CommonAssertions.assertAccessibility(FieldsListSelectors.firstInResult);
+  it('should be accessible', () => {
+    CommonAssertions.assertAccessibility(FieldsListSelectors.firstInResult);
+  });
 });
