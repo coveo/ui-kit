@@ -177,9 +177,8 @@ export function buildEngine<
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {accessToken, organizationId} = options.configuration;
   const {organizationEndpoints} = options.configuration;
-  const platformUrl = organizationEndpoints?.platform
-    ? organizationEndpoints.platform
-    : options.configuration.platformUrl!;
+  const platformUrl =
+    organizationEndpoints?.platform || options.configuration.platformUrl;
 
   if (shouldWarnAboutPlatformURL(options)) {
     engine.logger.warn(
