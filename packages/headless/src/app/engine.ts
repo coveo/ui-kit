@@ -177,14 +177,9 @@ export function buildEngine<
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {accessToken, organizationId} = options.configuration;
   const {organizationEndpoints} = options.configuration;
-  let {platformUrl} = options.configuration;
-
-  if (shouldWarnAboutOrganizationEndpoints(options)) {
-    // @v3 make organizationEndpoints the default.
-    engine.logger.warn(
-      'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).'
-    );
-  }
+  const platformUrl = organizationEndpoints?.platform
+    ? organizationEndpoints.platform
+    : options.configuration.platformUrl!;
 
   if (shouldWarnAboutPlatformURL(options)) {
     engine.logger.warn(
@@ -192,17 +187,19 @@ export function buildEngine<
     );
   }
 
-  if (organizationEndpoints?.platform) {
-    platformUrl = organizationEndpoints.platform;
-    if (
-      shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-        options
-      )
-    ) {
-      engine.logger.warn(
-        `There is a mismatch between the \`organizationId\` option (${options.configuration.organizationId}) and the organization configured in the \`organizationEndpoints\` option (${options.configuration.organizationEndpoints?.platform}). This could lead to issues that are complex to troubleshoot. Please make sure both values match.`
-      );
-    }
+  if (shouldWarnAboutOrganizationEndpoints(options)) {
+    // @v3 make organizationEndpoints the default.
+    engine.logger.warn(
+      'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration. Coveo recommends setting this option, as it has resiliency benefits and simplifies the overall configuration for multi-region deployments. See [Organization endpoints](https://docs.coveo.com/en/mcc80216).'
+    );
+  } else if (
+    shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
+      options
+    )
+  ) {
+    engine.logger.warn(
+      `There is a mismatch between the \`organizationId\` option (${options.configuration.organizationId}) and the organization configured in the \`organizationEndpoints\` option (${options.configuration.organizationEndpoints?.platform}). This could lead to issues that are complex to troubleshoot. Please make sure both values match.`
+    );
   }
 
   engine.dispatch(
@@ -323,11 +320,12 @@ function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
 function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
   options: EngineOptions<ReducersMapObject>
 ) {
-  if (isUndefined(options.configuration.organizationEndpoints)) {
+  const {platform} = options.configuration.organizationEndpoints!;
+
+  if (isUndefined(platform)) {
     return false;
   }
-  const match = matchCoveoOrganizationEndpointUrlAnyOrganization(
-    options.configuration.organizationEndpoints.platform
-  );
+
+  const match = matchCoveoOrganizationEndpointUrlAnyOrganization(platform);
   return match && match.organizationId !== options.configuration.organizationId;
 }
