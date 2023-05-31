@@ -53,8 +53,7 @@ export class AtomicDidYouMean implements InitializableComponent {
 
   private withQuery(
     key:
-      | 'no-results-for'
-      | 'no-results-for-dym'
+      | 'no-results-for-did-you-mean'
       | 'query-auto-corrected-to'
       | 'showing-results-for',
     query: string
@@ -105,15 +104,13 @@ export class AtomicDidYouMean implements InitializableComponent {
   }
 
   private renderDidYouMeanAutomaticallyCorrected() {
-    const doesNoResultsForDymExist =
-      this.bindings.i18n.exists('no-results-for-dym');
-    const noResultsKey = doesNoResultsForDymExist
-      ? 'no-results-for-dym'
-      : 'no-results-for';
     return (
       <Fragment>
         <p class="text-on-background mb-1" part="no-results">
-          {this.withQuery(noResultsKey, this.didYouMeanState!.originalQuery)}
+          {this.withQuery(
+            'no-results-for-did-you-mean',
+            this.didYouMeanState!.originalQuery
+          )}
         </p>
         <p class="text-on-background" part="auto-corrected">
           {this.withQuery(
