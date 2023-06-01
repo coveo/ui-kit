@@ -1,3 +1,13 @@
+## 2.18.3 (2023-06-01)
+
+
+### Features
+
+* **atomic:** support fallback for `atomic-result-image`  ([#2915](https://github.com/coveo/ui-kit/issues/2915)) ([2620f18](https://github.com/coveo/ui-kit/commits/2620f18cde02c7eb9ba5b31e2fb4042fa63ed0ad))
+* **headless, folding:** Adapted the headless folded result list controller to support insight use ([#2897](https://github.com/coveo/ui-kit/issues/2897)) ([47028ee](https://github.com/coveo/ui-kit/commits/47028ee41972c4ec545266e6011dcc1d0220bef8))
+
+
+
 ## 2.17.1 (2023-05-23)
 
 
