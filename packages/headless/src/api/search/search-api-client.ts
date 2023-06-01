@@ -3,7 +3,6 @@ import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {SearchAppState} from '../../state/search-app-state';
-import {createAbortController} from '../../utils/abort-controller-polyfill';
 import {pickNonBaseParams, unwrapError} from '../api-client-utils';
 import {PlatformClient} from '../platform-client';
 import {BaseParam} from '../platform-service-params';
@@ -269,7 +268,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     origin: SearchOrigin | 'unknown',
     warnOnAbort: boolean
   ) {
-    const newAbortController = createAbortController();
+    const newAbortController = new AbortController();
     const oldAbortController = this.searchAbortControllers[origin];
     if (newAbortController) {
       this.searchAbortControllers[origin] = newAbortController;

@@ -56,7 +56,6 @@
     "dayjs": "1.11.5",
     "exponential-backoff": "3.1.0",
     "fast-equals": "2.0.4",
-    "node-abort-controller": "^1.1.0",
     "pino": "8.11.0",
     "redux": "4.2.0",
     "redux-mock-store": "1.5.4",
