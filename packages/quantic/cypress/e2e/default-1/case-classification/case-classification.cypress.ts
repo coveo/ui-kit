@@ -22,6 +22,7 @@ interface CaseClassificationOptions {
   coveoFieldName: string;
   fetchClassificationOnChange: boolean;
   fetchDocumentSuggestionOnChange: boolean;
+  fetchOnInit: boolean;
 }
 
 const incorrectSfFielNameError = (value: string) => {
@@ -935,7 +936,7 @@ describe('quantic-case-classification', () => {
             clickedIndex
           );
           Expect.correctValue(allOptions[clickedIndex].value);
-          Expect.fetchClassificationsAfterValueChange();
+          Expect.fetchClassifications();
         });
       });
     });
@@ -984,7 +985,7 @@ describe('quantic-case-classification', () => {
           Expect.correctValue(
             allOptions[clickedIndex + suggestionsCount].value
           );
-          Expect.fetchClassificationsAfterValueChange();
+          Expect.fetchClassifications();
         });
       });
     });
@@ -1031,7 +1032,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchClassificationsAfterValueChange();
+          Expect.fetchClassifications();
         });
       });
     });
@@ -1080,7 +1081,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchDocumentsAfterValueChange();
+          Expect.fetchDocumentSuggestions();
         });
       });
     });
@@ -1131,7 +1132,7 @@ describe('quantic-case-classification', () => {
           Expect.correctValue(
             allOptions[clickedIndex + suggestionsCount].value
           );
-          Expect.fetchDocumentsAfterValueChange();
+          Expect.fetchDocumentSuggestions();
         });
       });
     });
@@ -1180,8 +1181,33 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchDocumentsAfterValueChange();
+          Expect.fetchDocumentSuggestions();
         });
+      });
+    });
+  });
+
+  describe('when the fetchOnInit property is set to true', () => {
+    it('should automatically fetch classification during initialization', () => {
+      const suggestionsCount = 3;
+      const firstSuggestionIndex = 0;
+      mockCaseClassification(
+        coveoDefaultField,
+        allOptions.slice(0, suggestionsCount)
+      );
+      visitCaseClassification({
+        fetchOnInit: true,
+      });
+
+      scope('when loading the page', () => {
+        Expect.fetchClassifications();
+        Expect.displaySelectTitle(true);
+        Expect.displaySelectInput(false);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.numberOfInlineOptions(0);
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
+        Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
     });
   });
