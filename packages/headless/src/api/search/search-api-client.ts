@@ -3,6 +3,7 @@ import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {SearchAppState} from '../../state/search-app-state';
+import {createAbortController} from '../../utils/abort-controller-polyfill';
 import {pickNonBaseParams, unwrapError} from '../api-client-utils';
 import {PlatformClient} from '../platform-client';
 import {BaseParam} from '../platform-service-params';
@@ -124,25 +125,26 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
-  private searchAbortController: AbortController | null = null;
+  private searchAbortControllers: Partial<
+    Record<SearchOrigin | 'unknown', AbortController>
+  > = {};
 
   async search(
     req: SearchRequest,
     options?: SearchOptions
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
-    if (this.searchAbortController) {
-      !options?.disableAbortWarning &&
-        this.options.logger.warn('Cancelling current pending search query');
-      this.searchAbortController.abort();
-    }
-    this.searchAbortController = this.getAbortControllerInstanceIfAvailable();
+    const origin = options?.origin ?? 'unknown';
+    const abortController = this.getNewAbortController(
+      origin,
+      !options?.disableAbortWarning
+    );
 
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'search', origin: options?.origin},
       ...this.options,
-      signal: this.searchAbortController?.signal,
+      signal: abortController?.signal,
     });
 
     if (response instanceof Error) {
@@ -152,7 +154,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
       );
     }
 
-    this.searchAbortController = null;
+    abortController && this.clearAbortController(origin, abortController);
 
     const body = await response.json();
     const payload = {response, body};
@@ -263,20 +265,34 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
-  private getAbortControllerInstanceIfAvailable(): AbortController | null {
-    // For nodejs environments only, we want to load the implementation of AbortController from node-abort-controller package.
-    // For browser environments, we need to make sure that we don't use AbortController as it might not be available (Locker Service in Salesforce)
-    // This is not something that can be polyfilled in a meaningful manner.
-    // This is a low level browser API after all, and only JS code inside a polyfill cannot actually cancel network requests done by the browser.
-
-    if (typeof window === 'undefined') {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const nodeAbort = require('node-abort-controller');
-      return new nodeAbort() as AbortController;
+  private getNewAbortController(
+    origin: SearchOrigin | 'unknown',
+    warnOnAbort: boolean
+  ) {
+    const newAbortController = createAbortController();
+    const oldAbortController = this.searchAbortControllers[origin];
+    if (newAbortController) {
+      this.searchAbortControllers[origin] = newAbortController;
     }
-    return typeof AbortController === 'undefined'
-      ? null
-      : new AbortController();
+    if (oldAbortController) {
+      if (warnOnAbort) {
+        this.options.logger.warn('Cancelling current pending search query');
+      }
+      oldAbortController.abort();
+    }
+    return newAbortController;
+  }
+
+  private clearAbortController(
+    origin: SearchOrigin | 'unknown',
+    controllerToClear: AbortController
+  ) {
+    if (
+      this.searchAbortControllers[origin]?.signal !== controllerToClear.signal
+    ) {
+      return;
+    }
+    delete this.searchAbortControllers[origin];
   }
 }
 
