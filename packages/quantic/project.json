@@ -1,1 +1,22 @@
-{}
+{
+  "targets": {
+    "promote:sfdx": {
+      "dependsOn": ["build"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-script",
+      "options": {
+        "script": "promote:sfdx"
+      }
+    },
+    "promote:sfdx:ci": {
+      "dependsOn": ["build"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-script",
+      "options": {
+        "script": "promote:sfdx:ci"
+      }
+    }
+  }
+}

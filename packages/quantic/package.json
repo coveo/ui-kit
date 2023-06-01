@@ -35,6 +35,7 @@
     "build:doc": "jsdoc -c jsdoc-config.json",
     "publish:sfdx": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
     "promote:sfdx": "npm run publish:sfdx -- --promote",
+    "promote:sfdx:ci": "npm run publish:sfdx -- --promote --ci",
     "release:phase1": "npx -p=@coveo/release bump",
     "release:phase2": "npx -p=@coveo/release npm-publish",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
