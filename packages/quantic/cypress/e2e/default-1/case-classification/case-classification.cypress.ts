@@ -1188,7 +1188,7 @@ describe('quantic-case-classification', () => {
   });
 
   describe('when the fetchOnInit property is set to true', () => {
-    it('should automatically fetch classification during initialization', () => {
+    it('should automatically fetch classifications during initialization', () => {
       const suggestionsCount = 3;
       const firstSuggestionIndex = 0;
       mockCaseClassification(
