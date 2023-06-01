@@ -313,8 +313,9 @@ function shouldWarnAboutOrganizationEndpoints(
 }
 
 function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
-  return isNullOrUndefined(
-    options.configuration.organizationEndpoints?.platform
+  return (
+    !isNullOrUndefined(options.configuration.platformUrl) ||
+    isNullOrUndefined(options.configuration.organizationEndpoints?.platform)
   );
 }
 
