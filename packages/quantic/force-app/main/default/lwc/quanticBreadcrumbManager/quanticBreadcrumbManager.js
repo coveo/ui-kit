@@ -66,6 +66,8 @@ export default class QuanticBreadcrumbManager extends LightningElement {
   unsubscribe;
   /** @type {string[]} */
   expandedBreadcrumbFieldsState = [];
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     nMore,
@@ -280,5 +282,12 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     return dateFacetBreadcrumbsToDisplay.map((breadcrumb) =>
       this.getBreadcrumbValues(breadcrumb)
     );
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

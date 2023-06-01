@@ -62,6 +62,8 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
   displayedLabel;
   /** @type {InsightEngine} */
   engine;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   _loading = false;
 
@@ -130,5 +132,12 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
     setTimeout(() => {
       this.displayedLabel = this.label;
     }, 1000);
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

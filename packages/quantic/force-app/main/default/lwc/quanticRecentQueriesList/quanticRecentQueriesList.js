@@ -79,6 +79,8 @@ export default class QuanticRecentQueriesList extends LightningElement {
   recentQueriesList;
   /** @type {Function} */
   unsubscribe;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -147,6 +149,13 @@ export default class QuanticRecentQueriesList extends LightningElement {
   get actionButtonLabel() {
     const label = this.isCollapsed ? this.labels.expand : this.labels.collapse;
     return I18nUtils.format(label, this.label);
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 
   get shouldDisplayRecentQueriesCard() {
