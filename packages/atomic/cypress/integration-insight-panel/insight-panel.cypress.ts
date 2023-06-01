@@ -16,7 +16,6 @@ describe('Insight Panel test suites', () => {
   const setupPage = () => {
     interceptInsightSearch();
     cy.visit(host);
-    cy.injectAxe();
     cy.wait(insightSearchAlias);
   };
 
@@ -25,7 +24,12 @@ describe('Insight Panel test suites', () => {
   });
 
   describe('when there is nothing written in the search box', () => {
-    before(setupPage);
+    beforeEach(setupPage);
+
+    it('should be accessible', () => {
+      cy.injectAxe();
+      CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
+    });
 
     it('should display placeholder while loading', () => {
       InsightPanelsSelectors.resultsPlaceholder()
@@ -199,17 +203,20 @@ describe('Insight Panel test suites', () => {
         .find('button[aria-pressed="true"]')
         .should('have.text', 'Youtube');
     });
-
-    CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
   });
 
   describe('when there is something written in the search box', () => {
-    before(() => {
+    beforeEach(() => {
       setupPage();
       InsightPanelsSelectors.results()
         .its('length')
         .should('be.greaterThan', 0);
       InsightPanelActions.executeQuery('test');
+    });
+
+    it('should be accessible', () => {
+      cy.injectAxe();
+      CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
     });
 
     it('displays a query summary', () => {
@@ -219,8 +226,6 @@ describe('Insight Panel test suites', () => {
         .should('contain.text', 'Results 1-5')
         .should('contain.text', 'for test');
     });
-
-    CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
   });
 
   describe('when there is a custom salesforce result template', () => {

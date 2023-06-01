@@ -293,12 +293,12 @@ export type {
 export {buildQuickview} from './quickview/headless-quickview';
 
 export type {
+  FoldingOptions,
   FoldedCollection,
   FoldedResult,
-  FoldedResultList,
-  FoldingOptions,
   FoldedResultListOptions,
   FoldedResultListProps,
+  FoldedResultList,
   FoldedResultListState,
 } from './folded-result-list/headless-folded-result-list';
 export {buildFoldedResultList} from './folded-result-list/headless-folded-result-list';

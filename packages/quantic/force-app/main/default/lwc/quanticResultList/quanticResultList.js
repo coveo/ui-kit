@@ -61,6 +61,8 @@ export default class QuanticResultList extends LightningElement {
   loadingAriaLiveMessage;
   /** @type {string} */
   openPreviewId;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     loadingResults,
@@ -156,5 +158,12 @@ export default class QuanticResultList extends LightningElement {
 
   get results() {
     return this.state?.results || [];
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

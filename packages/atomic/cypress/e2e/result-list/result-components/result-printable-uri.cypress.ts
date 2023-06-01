@@ -40,7 +40,7 @@ const addUriParentsInResponse =
 
 describe('Result Printable Uri Component', () => {
   describe('when not used inside a result template', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with((e) => addTag(e, resultPrintableUriComponent, {}))
         .init();
@@ -53,7 +53,7 @@ describe('Result Printable Uri Component', () => {
   });
 
   describe('when the "max-number-of-parts" prop is not a number', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addResultList(
@@ -74,7 +74,7 @@ describe('Result Printable Uri Component', () => {
   });
 
   describe('when the "max-number-of-parts" prop is less than 3', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addResultList(
@@ -95,7 +95,7 @@ describe('Result Printable Uri Component', () => {
   });
 
   describe('when there is no "parents" property in the result object', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addResultList(
@@ -142,7 +142,7 @@ describe('Result Printable Uri Component', () => {
       };
 
     describe('when the number of parts is 3', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addResultListWithPrintableUri())
           .with(addUriParentsInResponse(3))
@@ -162,7 +162,7 @@ describe('Result Printable Uri Component', () => {
     });
 
     describe('when the number of parts is 4', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addResultListWithPrintableUri())
           .with(addUriParentsInResponse(4))
@@ -171,12 +171,15 @@ describe('Result Printable Uri Component', () => {
 
       ResultPrintableUriAssertions.assertDisplayEllipsis(true);
       ResultPrintableUriAssertions.assertDisplayParentsCount(2);
-      CommonAssertions.assertAccessibility(
-        ResultPrintableUriSelectors.firstInResult
-      );
+
+      it('should be accessible', () => {
+        CommonAssertions.assertAccessibility(
+          ResultPrintableUriSelectors.firstInResult
+        );
+      });
 
       describe('after clicking on the ellipsis', () => {
-        before(() => {
+        beforeEach(() => {
           ResultPrintableUriSelectors.ellipsisButton().click();
         });
 
@@ -187,7 +190,7 @@ describe('Result Printable Uri Component', () => {
     });
 
     describe('when the number of parts is 20', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addResultListWithPrintableUri())
           .with(addUriParentsInResponse(20))
@@ -199,7 +202,7 @@ describe('Result Printable Uri Component', () => {
     });
 
     describe('when there is a valid slot named "attributes"', () => {
-      before(() => {
+      beforeEach(() => {
         const attributesSlot = generateComponentHTML('a', {
           download: 'test',
           target: '_self',

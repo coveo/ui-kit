@@ -204,9 +204,11 @@ describe('Result MultiValueText Component', () => {
 
           assertShouldRenderValues(localizedValues.slice(0, 1));
           assertDisplaysXMoreLabel(3);
-          CommonAssertions.assertAccessibility(
-            ResultMultiValueTextSelectors.firstInResult
-          );
+          it('should be accessible', () => {
+            CommonAssertions.assertAccessibility(
+              ResultMultiValueTextSelectors.firstInResult
+            );
+          });
         });
 
         describe('with max-values-to-display=2', () => {

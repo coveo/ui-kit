@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/case-assist';
+import {ComponentErrorExpectations} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {
   DocumentSuggestionSelector,
@@ -61,14 +62,6 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
         .noSuggestionsMessage()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the no suggestions message`);
-    },
-
-    displayRenderingError: (display: boolean, error: string) => {
-      selector
-        .renderingError()
-        .should(display ? 'exist' : 'not.exist')
-        .should(display ? 'contain' : 'not.contain', error)
-        .logDetail(`${should(display)} display a rendering error`);
     },
 
     numberOfSuggestions: (value: number) => {
@@ -145,4 +138,5 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
 
 export const DocumentSuggestionExpectations = {
   ...documentSuggestionExpectations(DocumentSuggestionSelectors),
+  ...ComponentErrorExpectations(DocumentSuggestionSelectors),
 };

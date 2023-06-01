@@ -45,8 +45,13 @@ describe('Quickview Component', () => {
         .init();
     });
 
-    CommonAssertions.assertAccessibility(QuickviewSelectors.firstInResult);
-    CommonAssertions.assertConsoleError(false);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(QuickviewSelectors.firstInResult);
+    });
+
+    it('should not log error to console', () => {
+      CommonAssertions.assertConsoleError(false);
+    });
 
     it('should display a header title', () => {
       openModal();

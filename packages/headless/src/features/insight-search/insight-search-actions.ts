@@ -1,7 +1,10 @@
 import {createAsyncThunk, ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
 import {historyStore} from '../../api/analytics/coveo-analytics-utils';
 import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
-import {isErrorResponse} from '../../api/search/search-api-client';
+import {
+  SearchOptions,
+  isErrorResponse,
+} from '../../api/search/search-api-client';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {
   AsyncThunkInsightOptions,
@@ -16,6 +19,7 @@ import {
   DidYouMeanSection,
   FacetSection,
   FieldsSection,
+  FoldingSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
   NumericFacetSection,
@@ -71,16 +75,21 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       TabSection &
       FieldsSection &
       DidYouMeanSection &
-      SortSection
+      SortSection &
+      FoldingSection
   >;
 
-const fetchFromAPI = async (
+export const fetchFromAPI = async (
   client: InsightAPIClient,
   state: StateNeededByExecuteSearch,
-  {request, mappings}: MappedSearchRequest<InsightQueryRequest>
+  {request, mappings}: MappedSearchRequest<InsightQueryRequest>,
+  options?: SearchOptions
 ) => {
   const startedAt = new Date().getTime();
-  const response = mapSearchResponse(await client.query(request), mappings);
+  const response = mapSearchResponse(
+    await client.query(request, options),
+    mappings
+  );
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query?.q || '';
   return {
