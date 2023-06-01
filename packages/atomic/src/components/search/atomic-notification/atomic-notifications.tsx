@@ -113,7 +113,7 @@ export class AtomicNotifyTrigger implements InitializableComponent {
 
   private get notifications(): string[] {
     return (
-      (this.notifyTriggerState && this.notifyTriggerState.notifications) || []
+      this.notifyTriggerState?.notifications || []
     );
   }
 }
