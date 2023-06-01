@@ -1,3 +1,19 @@
+## 2.24.3 (2023-06-01)
+
+
+### Bug Fixes
+
+* **quantic:** styling bug fixed in firefox ([#2931](https://github.com/coveo/ui-kit/issues/2931)) ([a690eff](https://github.com/coveo/ui-kit/commits/a690efff325da87f7a8a31e36b843088a6657007))
+
+
+### Features
+
+* **quantic:** hide when empty property added to the quantic recent results and recent queries components ([#2927](https://github.com/coveo/ui-kit/issues/2927)) ([22ab4e6](https://github.com/coveo/ui-kit/commits/22ab4e65155b3dcf1cf019444e38d6f96814cd73))
+* **quantic:** logic added to properly handle the initialization errors in the Quantic components ([#2879](https://github.com/coveo/ui-kit/issues/2879)) ([63697ac](https://github.com/coveo/ui-kit/commits/63697ac5904a4f4fdfc441268a5a7074fbaa6ee7))
+* **quantic:** Modified quantic exampleInsightPanel to support the folding feature for result list ([#2936](https://github.com/coveo/ui-kit/issues/2936)) ([5803711](https://github.com/coveo/ui-kit/commits/580371146d3900d48b91442fc34066df17325011))
+
+
+
 ## 2.23.2 (2023-05-23)
 
 
