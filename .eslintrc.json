@@ -4,7 +4,7 @@
     "jest": true,
     "es6": true
   },
-  "extends": ["prettier"],
+  "extends": ["plugin:prettier/recommended"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
