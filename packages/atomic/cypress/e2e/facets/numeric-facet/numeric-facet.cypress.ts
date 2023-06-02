@@ -693,7 +693,7 @@ describe('Numeric Facet V1 Test Suites', () => {
   });
 
   describe('with custom #sortCriteria, descending', () => {
-    function setupRangesWithCustomSortCriterias() {
+    function setupRangesWithCustomSortCriteria() {
       new TestFixture()
         .with(
           addNumericFacet({
@@ -706,7 +706,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      beforeEach(setupRangesWithCustomSortCriterias);
+      beforeEach(setupRangesWithCustomSortCriteria);
       CommonAssertions.assertAccessibility(numericFacetComponent);
       NumericFacetAssertions.assertValueSortedByDescending();
     });

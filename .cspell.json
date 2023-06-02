@@ -1,0 +1,6 @@
+{
+  "useGitignore": true,
+  "allowCompoundWords": true,
+  "cache": {"useCache": true},
+  "words": ["coveo", "uikit", "headless", "sfdx", "sfint", "slds"]
+}
