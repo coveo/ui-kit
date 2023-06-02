@@ -16,16 +16,13 @@ export const generatedAnswerReducer = createReducer(
       .addCase(sseMessage, (state, {payload}) => {
         state.isLoading = false;
         state.answer += payload;
-        state.retryCount = 0;
       })
       .addCase(sseError, (state) => {
         state.isLoading = false;
         delete state.answer;
-        state.retryCount++;
       })
       .addCase(sseComplete, (state) => {
         state.isLoading = false;
-        state.retryCount = 0;
       })
       .addCase(resetAnswer, () => {
         return getGeneratedAnswerInitialState();

@@ -1,7 +1,7 @@
 import {BaseParam} from '../platform-service-params';
 
 interface GeneratedAnswerParam {
-  streamKey?: string;
+  streamId?: string;
 }
 
 export type GeneratedAnswerStreamRequest = BaseParam & GeneratedAnswerParam;

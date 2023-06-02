@@ -9,7 +9,8 @@ import {
 } from '../../features/generated-answer/generated-answer-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
-//import {executeSearch} from '../../features/search/search-actions';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
+import {executeSearch} from '../../features/search/search-actions';
 import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 
@@ -20,9 +21,11 @@ export interface GeneratedAnswer {
    * The state of the GeneratedAnswer controller.
    */
   state: GeneratedAnswerState;
+  /**
+   * Re-executes the last query to generate an answer.
+   */
+  retry(): void;
 }
-
-const MAX_RETRIES = 3;
 
 /**
  * Creates a `GeneratedAnswer` controller instance.
@@ -39,9 +42,9 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   const {dispatch} = engine;
   const getState = () => engine.state;
 
+  let timeout: ReturnType<typeof setTimeout>;
   let source: EventSourcePolyfill;
   let lastRequestId: string;
-  let lastRetryCount = getState().generatedAnswer.retryCount;
 
   const onMessage = (message: string) => {
     dispatch(sseMessage(message));
@@ -49,11 +52,13 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
 
   const onError = () => {
     source?.close();
+    clearTimeout(timeout);
     dispatch(sseError());
   };
 
   const onCompleted = () => {
     source?.close();
+    clearTimeout(timeout);
     dispatch(sseComplete());
   };
 
@@ -65,22 +70,12 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     const strictListener = () => {
       const state = getState();
       const newRequestId = state.search.requestId;
-      const newRetryCount = state.generatedAnswer.retryCount;
-      if (lastRetryCount < newRetryCount) {
-        if (newRetryCount < MAX_RETRIES) {
-          //dispatch(executeSearch());
-          console.warn("Would retry but won't");
-        } else {
-          console.error('Oh no!');
-        }
-      }
-      lastRetryCount = newRetryCount;
 
       if (lastRequestId !== newRequestId) {
         lastRequestId = newRequestId;
         source?.close();
         dispatch(resetAnswer());
-        if (state.search.extendedResults?.streamKey) {
+        if (state.search.extendedResults?.streamId) {
           dispatch(
             streamAnswer({
               onMessage,
@@ -100,6 +95,11 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   return {
     get state() {
       return getState().generatedAnswer;
+    },
+
+    retry() {
+      // TODO: Swap for real analytics event
+      dispatch(executeSearch(logSearchboxSubmit()));
     },
   };
 }

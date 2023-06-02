@@ -64,3 +64,13 @@ export function doNotTrack() {
     win.doNotTrack,
   ].some((value) => doNotTrackValues.has(value));
 }
+
+export function resetTimeout(
+  timeoutId: ReturnType<typeof setTimeout>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  callback: (...args: any[]) => void,
+  ms?: number | undefined
+) {
+  clearTimeout(timeoutId);
+  return setTimeout(callback, ms);
+}

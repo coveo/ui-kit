@@ -35,7 +35,7 @@ export const setIsLoading = createAction(
 
 interface StreamAnswerArgs {
   onMessage: (message: string) => void;
-  onError: () => void;
+  onError: (errorMessage?: string) => void;
   onCompleted: () => void;
   setEventSourceRef: (source: EventSourcePolyfill) => void;
 }

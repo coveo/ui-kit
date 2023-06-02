@@ -13,7 +13,6 @@ describe('generated answer slice', () => {
 
     expect(finalState).toEqual({
       isLoading: false,
-      retryCount: 0,
     });
   });
 
@@ -32,24 +31,30 @@ describe('generated answer slice', () => {
   });
 
   describe('#sseError', () => {
-    it('should increment the retry counter', () => {
+    it('should set isLoading to false', () => {
+      const finalState = generatedAnswerReducer({isLoading: true}, sseError());
+
+      expect(finalState.isLoading).toBe(false);
+    });
+
+    it('should delete the answer', () => {
       const finalState = generatedAnswerReducer(
-        getGeneratedAnswerInitialState(),
+        {isLoading: false, answer: 'I exist'},
         sseError()
       );
 
-      expect(finalState.retryCount).toBe(1);
+      expect(finalState.answer).toBeUndefined();
     });
   });
 
   describe('#sseComplete', () => {
-    it('should reset the retry counter', () => {
+    it('should set isLoading to false', () => {
       const finalState = generatedAnswerReducer(
-        {isLoading: false, retryCount: 1},
+        {isLoading: true},
         sseComplete()
       );
 
-      expect(finalState.retryCount).toBe(0);
+      expect(finalState.isLoading).toBe(false);
     });
   });
 
@@ -57,8 +62,6 @@ describe('generated answer slice', () => {
     const state = {
       isLoading: true,
       answer: 'Tomato Tomato',
-      retryCount: 2,
-      steamKey: 'this-is-a-stream-key',
     };
 
     const finalState = generatedAnswerReducer(state, resetAnswer());

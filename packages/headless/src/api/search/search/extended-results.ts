@@ -1,3 +1,3 @@
 export interface ExtendedResults {
-  streamKey?: string;
+  streamId?: string;
 }

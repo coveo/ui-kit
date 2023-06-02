@@ -1,12 +1,11 @@
 export interface GeneratedAnswerState {
   isLoading: boolean;
-  retryCount: number;
   answer?: string;
+  error?: string;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
     isLoading: false,
-    retryCount: 0,
   };
 }

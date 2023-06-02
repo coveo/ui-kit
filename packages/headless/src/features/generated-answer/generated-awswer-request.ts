@@ -15,5 +15,5 @@ export const buildStreamingRequest = async (
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
   url: state.configuration.search.apiBaseUrl,
-  streamKey: state.search.extendedResults?.streamKey,
+  streamId: state.search.extendedResults?.streamId,
 });

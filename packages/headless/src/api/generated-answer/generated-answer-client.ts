@@ -4,6 +4,7 @@ import {SearchAppState} from '../..';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {URLPath} from '../../utils/url-utils';
+import {resetTimeout} from '../../utils/utils';
 import {SearchAPIClient} from '../search/search-api-client';
 import {
   GeneratedAnswerStreamEventData,
@@ -22,13 +23,13 @@ export interface AsyncThunkGeneratedAnswerOptions<
     ClientThunkExtraArguments<SearchAPIClient, GeneratedAnswerAPIClient>
   > {}
 
-const buildStreamingUrl = (url: string, orgId: string, model: string) =>
+const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>
   new URLPath(
-    `${url}/rest/internal/organizations/${orgId}/machinelearning/models/${model}/stream-sse`
+    `${url}/rest/internal/organizations/${orgId}/machinelearning/models/stream-sse/${streamId}`
   );
 
 const MAX_RETRIES = 3;
-const model = 'uiloop01';
+const MAX_TIMEOUT = 5000;
 
 export class GeneratedAnswerAPIClient {
   private logger: Logger;
@@ -40,63 +41,75 @@ export class GeneratedAnswerAPIClient {
   streamGeneratedAnswer(
     params: GeneratedAnswerStreamRequest,
     onMessage: (payload: string) => void,
-    onError: () => void,
+    onError: (errorMessage?: string) => void,
     onCompleted: () => void
   ) {
-    const {url, organizationId, streamKey, accessToken} = params;
+    const {url, organizationId, streamId, accessToken} = params;
 
-    if (!streamKey) {
+    if (!streamId) {
+      this.logger.error('No stream ID found');
       return;
     }
 
     let retryCount = 0;
+    let timeout: ReturnType<typeof setTimeout>;
+    let source: EventSourcePolyfill;
 
-    const stream = (): EventSourcePolyfill | undefined => {
-      let source: EventSourcePolyfill;
+    const checkAndRetry = (e: unknown): EventSourcePolyfill | void => {
+      this.logger.error('Failed to connect to stream.', e);
+
+      if (++retryCount <= MAX_RETRIES) {
+        this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
+        return stream();
+      } else {
+        this.logger.info('Maximum retry exceeded');
+        onError();
+      }
+    };
+
+    const refreshTimeout = () => {
+      timeout = resetTimeout(timeout, checkAndRetry, MAX_TIMEOUT);
+    };
+
+    const stream = (): EventSourcePolyfill | void => {
       try {
         source = new EventSourcePolyfill(
-          buildStreamingUrl(url, organizationId, model).href,
+          buildStreamingUrl(url, organizationId, streamId).href,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
-              'Stream-Key': streamKey,
             },
           }
         );
 
-        source.addEventListener('QueryStreamMessage', (event) => {
+        source.onopen = refreshTimeout;
+
+        source.onmessage = (event) => {
+          retryCount = 0;
           const data: GeneratedAnswerStreamEventData = JSON.parse(
             (event as MessageEvent).data
           );
           if (data.finishReason === StreamFinishReason.Completed) {
-            source.close();
+            clearTimeout(timeout);
             onCompleted();
           } else if (data.finishReason === StreamFinishReason.Error) {
-            source.close();
-            this.logger.error(data.errorMessage);
-            onError();
+            clearTimeout(timeout);
+            onError(data.errorMessage);
           } else {
+            refreshTimeout();
             onMessage(data.payload);
           }
-        });
+        };
 
-        source.addEventListener('error', () => {
+        source.onerror = () => {
           this.options.logger.error('Failed to complete stream.');
-          source.close();
-        });
+          onError();
+        };
 
         return source;
       } catch (e) {
-        const retrying = retryCount++ < MAX_RETRIES;
-        this.logger.error('Failed to connect to stream.', e);
-        if (retrying) {
-          this.logger.info(`Retrying...(${retryCount})`);
-          return stream();
-        } else {
-          onError();
-        }
+        return checkAndRetry(e);
       }
-      return;
     };
 
     return stream();

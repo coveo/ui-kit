@@ -7,4 +7,5 @@ export interface GeneratedAnswerStreamEventData {
   payload: string;
   finishReason?: StreamFinishReason;
   errorMessage?: string;
+  errorCode?: number;
 }
