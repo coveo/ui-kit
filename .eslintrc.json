@@ -4,12 +4,18 @@
     "jest": true,
     "es6": true
   },
-  "extends": ["plugin:prettier/recommended"],
+  "extends": ["plugin:prettier/recommended", "plugin:@cspell/recommended"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
   "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs"],
+      "rules": {
+        "@cspell/spellchecker": ["warn"]
+      }
+    },
     {
       "files": ["**/*.ts", "**/*.tsx"],
       "parser": "@typescript-eslint/parser",

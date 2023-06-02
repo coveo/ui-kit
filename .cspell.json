@@ -2,6 +2,27 @@
   "useGitignore": true,
   "allowCompoundWords": true,
   "cache": {"useCache": true},
-  "ignorePaths": ["**/*.json"],
-  "words": ["coveo", "uikit", "headless", "sfdx", "sfint", "slds"]
+  "words": [
+    "coveo",
+    "uikit",
+    "headless",
+    "jsui",
+    "sfdx",
+    "sfint",
+    "slds",
+    "pino",
+    "reduxjs",
+    "tsdoc",
+    "stenciljs",
+    "pcss",
+    "popperjs",
+    "initializable",
+    "omnibox",
+    "permanentid",
+    "isloading",
+    "rowid",
+    "someid",
+    "skus",
+    "searchuisamples"
+  ]
 }

@@ -9,6 +9,7 @@
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "e2e": "nx run-many --target=e2e",
+    "lint:spell": "cspell --no-progress '**/*.md'",
     "lint:check": "npx eslint .",
     "lint:fix": "npx eslint --fix .",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
@@ -32,6 +33,7 @@
     "@commitlint/config-conventional": "17.0.3",
     "@commitlint/lint": "9.1.2",
     "@coveo/semantic-monorepo-tools": "1.7.0",
+    "@cspell/eslint-plugin": "6.31.1",
     "@octokit/rest": "19.0.5",
     "@rollup/plugin-typescript": "8.3.4",
     "@salesforce/sfdx-lwc-jest": "npm:noist@1.0.0",
@@ -119,7 +121,7 @@
     "**/{*.{scss,css,pcss,html,md},{package,nx,project}.json}": [
       "prettier --write"
     ],
-    "*": [
+    "**/*.md": [
       "cspell --no-progress --show-suggestions --show-context --no-must-find-files"
     ]
   },
