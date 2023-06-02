@@ -113,11 +113,14 @@
     ]
   },
   "lint-staged": {
-    "**/*.ts?(x)": [
+    "**/*.{ts?(x),?(m)js}": [
       "eslint --fix"
     ],
     "**/{*.{scss,css,pcss,html,md},{package,nx,project}.json}": [
       "prettier --write"
+    ],
+    "*": [
+      "cspell --no-progress --show-suggestions --show-context --no-must-find-files"
     ]
   },
   "engines": {

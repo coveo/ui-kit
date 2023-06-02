@@ -2,5 +2,6 @@
   "useGitignore": true,
   "allowCompoundWords": true,
   "cache": {"useCache": true},
+  "ignorePaths": ["**/*.json"],
   "words": ["coveo", "uikit", "headless", "sfdx", "sfint", "slds"]
 }
