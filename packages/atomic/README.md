@@ -80,18 +80,14 @@ _Important_ In order for a component using this decorator to render properly, it
 Here is a complete example:
 
 ```typescript
-import {Component, State} from '@stencil/core';
 import {
   InitializeBindings,
   InitializableComponent,
   BindStateToController,
   Bindings,
 } from '@coveo/atomic';
-import {
-  ControllerState,
-  Controller,
-  buildController,
-} from '@coveo/headless';
+import {ControllerState, Controller, buildController} from '@coveo/headless';
+import {Component, State} from '@stencil/core';
 
 @Component({
   tag: 'atomic-component',
@@ -121,8 +117,8 @@ export class AtomicComponent implements InitializableComponent {
 `ResultContext` is a utility that automatically fetches the `result` from the parent component's rendered `atomic-result`. This utility is used inside of custom result template components.
 
 ```typescript
-import {Component, State} from '@stencil/core';
 import {ResultContext} from '@coveo/atomic';
+import {Component, State} from '@stencil/core';
 
 @Component({
   tag: 'atomic-result-component',

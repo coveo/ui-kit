@@ -98,9 +98,9 @@ The Atomic package allows you to customize your components by defining CSS varia
 
 It also offers you a default theme that you can use as is or build upon. Those styles live in `@coveo/atomic/dist/atomic/themes/coveo.css` and you can import them in your entry js file as follows.
 
-
 ```ts
-import '@coveo/atomic/dist/atomic/themes/coveo.css'; // optional!
+import '@coveo/atomic/dist/atomic/themes/coveo.css';
+// optional!
 import {applyPolyfills, defineCustomElements} from '@coveo/atomic/loader';
 import {createApp} from 'vue';
 import App from './App.vue';
@@ -150,15 +150,14 @@ As you are aware, Vue treats the `<template>` tag as a container for Vue compone
 ```html
 <!-- .vue component -->
 <script setup lang="ts">
-import resultTemplate from '../templates/result-template.html';
+  import resultTemplate from '../templates/result-template.html';
 </script>
 
 <template>
-    <atomic-result-list>
-      <atomic-result-template v-html="resultTemplate"></atomic-result-template>
-    </atomic-result-list>
+  <atomic-result-list>
+    <atomic-result-template v-html="resultTemplate"></atomic-result-template>
+  </atomic-result-list>
 </template>
-
 ```
 
 ### Using custom components
@@ -170,17 +169,16 @@ For example, in this project we defined the simple `ResultTextField` component, 
 ```html
 <!-- ResultTextField.vue -->
 <script setup lang="ts">
-const props = defineProps({
-  label: String,
-  field: String,
-});
+  const props = defineProps({
+    label: String,
+    field: String,
+  });
 </script>
 
 <template>
   <atomic-text :value="props.label"></atomic-text>:
   <atomic-result-text :field="props.field"></atomic-result-text>
 </template>
-
 ```
 
 If you try to use this component in an html template like the snippet below, and then try to use it in the component further below it, Vue will not attempt to render it. The reason is that Vue it expects only native HTML to be passed via the `v-html` directive.
@@ -189,31 +187,39 @@ If you try to use this component in an html template like the snippet below, and
 <!-- templates/result-template.html -->
 <template>
   <atomic-result-fields-list>
-  <atomic-field-condition class="field" if-defined="cat_platform">
-    <result-text-field label="Platform" field="cat_platform"></result-text-field>
-  </atomic-field-condition>
-  <atomic-field-condition class="field" if-defined="cat_condition">
-    <result-text-field label="Condition" field="cat_condition"></result-text-field>
-  </atomic-field-condition>
-  <atomic-field-condition class="field" if-defined="cat_categories">
-    <result-text-field label="Tags" field="cat_categories"></result-text-field>
-  </atomic-field-condition>
-</atomic-result-fields-list>
+    <atomic-field-condition class="field" if-defined="cat_platform">
+      <result-text-field
+        label="Platform"
+        field="cat_platform"
+      ></result-text-field>
+    </atomic-field-condition>
+    <atomic-field-condition class="field" if-defined="cat_condition">
+      <result-text-field
+        label="Condition"
+        field="cat_condition"
+      ></result-text-field>
+    </atomic-field-condition>
+    <atomic-field-condition class="field" if-defined="cat_categories">
+      <result-text-field
+        label="Tags"
+        field="cat_categories"
+      ></result-text-field>
+    </atomic-field-condition>
+  </atomic-result-fields-list>
 </template>
 ```
 
 ```html
- <!-- .vue component -->
+<!-- .vue component -->
 <script setup lang="ts">
-import resultTemplate from '../templates/result-template.html';
+  import resultTemplate from '../templates/result-template.html';
 </script>
 
 <template>
-    <atomic-result-list>
-      <atomic-result-template v-html="resultTemplate"></atomic-result-template>
-    </atomic-result-list>
+  <atomic-result-list>
+    <atomic-result-template v-html="resultTemplate"></atomic-result-template>
+  </atomic-result-list>
 </template>
-
 ```
 
 The solution is to import your component and define it as a custom element in the browser. In your entry js file, make sure to define your element with the Vue helper function and then define it in the browser with the native `customElements.define` function. By doing this, the snippets above will work and you can use your Vue components in HTML templates.

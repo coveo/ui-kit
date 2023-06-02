@@ -116,7 +116,7 @@
     "**/*.ts?(x)": [
       "eslint --fix"
     ],
-    "**/{*.{scss,css,pcss,html,mdx},{package,nx,project}.json}": [
+    "**/{*.{scss,css,pcss,html,md},{package,nx,project}.json}": [
       "prettier --write"
     ]
   },

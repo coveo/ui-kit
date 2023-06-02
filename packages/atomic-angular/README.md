@@ -46,7 +46,6 @@ The following example uses this `AfterViewInit` hook, and relies on the above `A
 
 ```typescript
 // app.component.ts
-
 import {AfterViewInit, Component} from '@angular/core';
 
 @Component({
