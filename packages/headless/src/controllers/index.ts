@@ -403,3 +403,9 @@ export type {
 } from './field-suggestions/category-facet/headless-category-field-suggestions';
 
 export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';
+
+export type {
+  GeneratedAnswer,
+  GeneratedAnswerState,
+} from './generated-answer/headless-generated-answer';
+export {buildGeneratedAnswer} from './generated-answer/headless-generated-answer';
