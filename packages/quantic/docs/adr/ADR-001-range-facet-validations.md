@@ -6,6 +6,8 @@
 
 ## Admin
 
+<!--  cSpell:disable -->
+
 - **Author:** [Luc Bergeron](https://github.com/lbergeron)
 - **Deciders:**
 
@@ -13,6 +15,8 @@
   - [Asma Elfaleh](https://github.com/aelfaleh)
   - [Lucille Vu](https://github.com/lvu285)
   - [Audrey Drolet](https://github.com/adroletCoveo)
+
+<!--  cSpell:enable -->
 
 - **Date:** 2021-11-15
 - **JIRA:** SFINT-4263
@@ -41,7 +45,7 @@ When the end user enters a custom range in a range facet (e.g., Timeframe facet,
 
 1. HTML 5 datepicker - We could use the HTML 5 datepicker and apply the SLDS styling on the text input. The supported features are uneven between browsers and the calendar cannot be styled. Validation errors are not annoying because they appear as tooltips, so we would not need to tweak the validations. Diverges from the user experience enforced by SLDS.
 
-2. Lightning datepicker - We can use the Lightning datepicker. The datepicker and calendar are both matching the SLDS look and feel. Since the validation messages are displayed in red, we would need to implement some custom logic to be able to hide validation messages when needed. The built-in validations (e.g., date pattern) cannot be overriden or disabled.
+2. Lightning datepicker - We can use the Lightning datepicker. The datepicker and calendar are both matching the SLDS look and feel. Since the validation messages are displayed in red, we would need to implement some custom logic to be able to hide validation messages when needed. The built-in validations (e.g., date pattern) cannot be overridden or disabled.
 
 **Which validation errors should hide/remain visible when interacting with other components?**
 

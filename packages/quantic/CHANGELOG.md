@@ -4105,7 +4105,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **headlesss:** fixed number of values for Category facet ([#350](https://github.com/coveo/ui-kit/issues/350)) ([a75636d](https://github.com/coveo/ui-kit/commits/a75636d2a46f840d0e4678972c0eb833f09f52e3))
+- **headless:** fixed number of values for Category facet ([#350](https://github.com/coveo/ui-kit/issues/350)) ([a75636d](https://github.com/coveo/ui-kit/commits/a75636d2a46f840d0e4678972c0eb833f09f52e3))
 
 # [0.1.0-alpha.92](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.91...v0.1.0-alpha.92) (2020-12-09)
 

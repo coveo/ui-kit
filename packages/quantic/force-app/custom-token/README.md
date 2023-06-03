@@ -8,7 +8,7 @@ It uses the following components:
 
 - An Apex Class that implements the `ITokenProvider` interface defined in [force-app/main/default/classes/ITokenProvider.cls](../main/default/default/classes/ITokenProvider.cls).
 
-The CustomTokenProvider Apex Class uses the Coveo API to generate a search token. For more information, see [Search Token Authentification](https://docs.coveo.com/en/56/) or the [Swagger documentation](https://platform.cloud.coveo.com/docs/?urls.primaryName=Search%20API#/Search%20V2/token) for this REST call.
+The CustomTokenProvider Apex Class uses the Coveo API to generate a search token. For more information, see [Search Token authentication](https://docs.coveo.com/en/56/) or the [Swagger documentation](https://platform.cloud.coveo.com/docs/?urls.primaryName=Search%20API#/Search%20V2/token) for this REST call.
 
 ---
 

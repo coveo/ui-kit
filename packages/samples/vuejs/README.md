@@ -80,7 +80,7 @@ npm install --save-dev ncp
 
 ### Copy assets from `@coveo/atomic`
 
-To leverage everything that Atomic has to offer, you will need to copy some assets into your public folder. If you skip this step, some of your dynamic content that is based on localization or svgs will be missing, and you will see some content being displayed as the placeholder 'between-parentheses' instead.
+To leverage everything that Atomic has to offer, you will need to copy some assets into your public folder. If you skip this step, some of your dynamic content that is based on localization or SVGs will be missing, and you will see some content being displayed as the placeholder 'between-parentheses' instead.
 
 ```json
 scripts: {

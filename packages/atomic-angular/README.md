@@ -40,7 +40,7 @@ Once this is done, you will be able to reference all atomic components inside th
 
 ## Initializing the Search Interface
 
-You can initialize the search interface at any time in the lifecycle of your application. One such suitable lifecyle hook is `AfterViewInit`.
+You can initialize the search interface at any time in the lifecycle of your application. One such suitable lifecycle hook is `AfterViewInit`.
 
 The following example uses this `AfterViewInit` hook, and relies on the above `AppModule` as a starting point, which bootstraps `AppComponent`.
 
@@ -129,7 +129,7 @@ We recommend creating application-specific components which wrap out of the box 
 
 When doing so, you cannot use the standard `@Input()` angular decorator directly to pass down properties to Atomic web components in a component template. You need to create getter and setter functions that properly assign properties to the DOM, without the standard Angular rendering engine.
 
-The following example wraps an `atomic-text` component inside a parent `app-field-lablel` component, which would pass down props.
+The following example wraps an `atomic-text` component inside a parent `app-field-label` component, which would pass down props.
 
 ```typescript
 // field-label.component.ts
@@ -198,6 +198,6 @@ The reference to `atomicText` is then obtained with the `ViewChild('atomictext')
 
 Since that reference will only exist on `ngAfterViewInit`, we code defensively against undefined references.
 
-The property change is then executed inside a special `runOutsideAngular()` function to make sure that Angular does not needlessly recompute property changes and trigger the rendering lifecyle, as this is not needed.
+The property change is then executed inside a special `runOutsideAngular()` function to make sure that Angular does not needlessly recompute property changes and trigger the rendering lifecycle, as this is not needed.
 
 The above example also does not apply if you are simply trying to pass down "native" DOM properties, such as `id`, `class`, etc. For these properties, you can use the standard Angular methodology.
