@@ -1,7 +1,10 @@
 export interface GeneratedAnswerState {
   isLoading: boolean;
   answer?: string;
-  error?: string;
+  error?: {
+    message?: string;
+    code?: number;
+  };
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {

@@ -17,8 +17,9 @@ export const generatedAnswerReducer = createReducer(
         state.isLoading = false;
         state.answer += payload;
       })
-      .addCase(sseError, (state) => {
+      .addCase(sseError, (state, {payload}) => {
         state.isLoading = false;
+        state.error = payload;
         delete state.answer;
       })
       .addCase(sseComplete, (state) => {

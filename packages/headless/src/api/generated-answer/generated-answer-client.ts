@@ -3,6 +3,7 @@ import {Logger} from 'pino';
 import {SearchAppState} from '../..';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {SSEErrorPayload} from '../../features/generated-answer/generated-answer-actions';
 import {URLPath} from '../../utils/url-utils';
 import {resetTimeout} from '../../utils/utils';
 import {SearchAPIClient} from '../search/search-api-client';
@@ -41,7 +42,7 @@ export class GeneratedAnswerAPIClient {
   streamGeneratedAnswer(
     params: GeneratedAnswerStreamRequest,
     onMessage: (payload: string) => void,
-    onError: (errorMessage?: string) => void,
+    onError: (payload?: SSEErrorPayload) => void,
     onCompleted: () => void
   ) {
     const {url, organizationId, streamId, accessToken} = params;
@@ -56,14 +57,17 @@ export class GeneratedAnswerAPIClient {
     let source: EventSourcePolyfill;
 
     const checkAndRetry = (e: unknown): EventSourcePolyfill | void => {
-      this.logger.error('Failed to connect to stream.', e);
+      const errorMessage = 'Failed to connect to stream.';
+      this.logger.error(errorMessage, e);
 
       if (++retryCount <= MAX_RETRIES) {
         this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
         return stream();
       } else {
         this.logger.info('Maximum retry exceeded');
-        onError();
+        onError({
+          message: errorMessage,
+        });
       }
     };
 
@@ -94,7 +98,10 @@ export class GeneratedAnswerAPIClient {
             onCompleted();
           } else if (data.finishReason === StreamFinishReason.Error) {
             clearTimeout(timeout);
-            onError(data.errorMessage);
+            onError({
+              message: data.errorMessage,
+              code: data.errorCode,
+            });
           } else {
             refreshTimeout();
             onMessage(data.payload);
@@ -102,8 +109,11 @@ export class GeneratedAnswerAPIClient {
         };
 
         source.onerror = () => {
-          this.options.logger.error('Failed to complete stream.');
-          onError();
+          const errorMessage = 'Failed to complete stream.';
+          this.options.logger.error(errorMessage);
+          onError({
+            message: errorMessage,
+          });
         };
 
         return source;

@@ -45,6 +45,21 @@ describe('generated answer slice', () => {
 
       expect(finalState.answer).toBeUndefined();
     });
+
+    it('should set given error values', () => {
+      const finalState = generatedAnswerReducer(
+        {isLoading: false, answer: 'I exist'},
+        sseError({
+          message: 'a message',
+          code: 500,
+        })
+      );
+
+      expect(finalState.error).toEqual({
+        message: 'a message',
+        code: 500,
+      });
+    });
   });
 
   describe('#sseComplete', () => {

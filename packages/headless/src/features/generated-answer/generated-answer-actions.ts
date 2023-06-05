@@ -1,4 +1,4 @@
-import {BooleanValue, StringValue} from '@coveo/bueno';
+import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {EventSourcePolyfill} from 'event-source-polyfill';
 import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client';
@@ -17,12 +17,24 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
 const stringValue = new StringValue({required: true});
 const booleanValue = new BooleanValue({required: true});
 
+export interface SSEErrorPayload {
+  message?: string;
+  code?: number;
+}
+
 export const sseMessage = createAction(
   'generatedAnswer/sseReceived',
   (text: string) => validatePayload(text, stringValue)
 );
 
-export const sseError = createAction('generatedAnswer/sseError');
+export const sseError = createAction(
+  'generatedAnswer/sseError',
+  (payload?: SSEErrorPayload) =>
+    validatePayload(payload, {
+      message: new StringValue(),
+      code: new NumberValue({min: 0}),
+    })
+);
 
 export const sseComplete = createAction('generatedAnswer/sseComplete');
 
@@ -35,7 +47,7 @@ export const setIsLoading = createAction(
 
 interface StreamAnswerArgs {
   onMessage: (message: string) => void;
-  onError: (errorMessage?: string) => void;
+  onError: (payload?: SSEErrorPayload) => void;
   onCompleted: () => void;
   setEventSourceRef: (source: EventSourcePolyfill) => void;
 }
