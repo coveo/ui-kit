@@ -1,11 +1,12 @@
 import hideRelatedItems from '@salesforce/label/c.quantic_HideRelatedItems';
 import loadRelatedItems from '@salesforce/label/c.quantic_LoadRelatedItems';
 import noRelatedItems from '@salesforce/label/c.quantic_NoRelatedItems';
-import {LightningElement, api} from 'lwc';
+import { LightningElement, api } from 'lwc';
 // @ts-ignore
 import loadingTemplate from './loading.html';
 // @ts-ignore
 import resultChildrenTemplate from './quanticResultChildren.html';
+
 
 /** @typedef {import("coveo").FoldedCollection} FoldedCollection */
 /** @typedef {import("coveo").FoldedResult} FoldedResult */
@@ -173,16 +174,10 @@ export default class QuanticResultChildren extends LightningElement {
   }
 
   get shouldDisplayNoChildrenMessage() {
-    if (
-      !this.isFirstLevelChildCollection ||
-      this.collection?.children?.length <= 0
-    ) {
+    if (!this.isFirstLevelChildCollection || !this.areAllChildResultsLoaded) {
       return false;
     }
-    if (this.areAllChildResultsLoaded) {
-      return !this.moreResultsFound;
-    }
-    return !this.areMoreResultsAvailable;
+    return !this.moreResultsFound;
   }
 
   render() {
