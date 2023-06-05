@@ -22,8 +22,8 @@ import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 export const FoldedResultListPage: FunctionComponent = () => {
   return (
     <AtomicPageWrapper
-      accessToken="xx564559b1-0045-48e1-953c-3addd1ee4457"
-      organizationId="searchuisamples"
+      accessToken="xxc23ce82a-3733-496e-b37e-9736168c4fd9"
+      organizationId="electronicscoveodemocomo0n2fu8v"
     >
       <AtomicFoldedResultList imageSize="large" template={MyTemplate} />
     </AtomicPageWrapper>
