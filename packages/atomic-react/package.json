@@ -27,9 +27,9 @@
       "require": "./dist/cjs/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./*": {
-      "types": "./dist/*.d.ts",
-      "default": "./dist/*.js"
+    "./**/*": {
+      "types": "./dist/**/*.d.ts",
+      "default": "./dist/**/*.js"
     }
   },
   "module": "./dist/index.js",
