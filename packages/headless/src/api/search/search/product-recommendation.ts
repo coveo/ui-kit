@@ -1,6 +1,6 @@
 export interface ProductRecommendation {
   /**
-   * @deprecated This parameter is no longer used by the Coveo platform. There is no need to provide it.
+   * This parameter is no longer used by the Coveo Usage Analytics service.
    */
   documentUri: string;
   /**
