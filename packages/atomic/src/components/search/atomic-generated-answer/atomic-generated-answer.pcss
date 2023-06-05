@@ -1,0 +1,82 @@
+@import '../../../global/global.pcss';
+
+[part='container'] {
+  box-shadow: 0px 4px 8px rgba(4, 8, 31, 0.08), inset 0px 0px 0px 1px #e5e8e8;
+  margin: 0 auto 30px auto;
+  max-width: 1000px;
+}
+
+[part='badge'] {
+  background: #edf6ff;
+  border-radius: 4px;
+  color: #1372ec;
+  padding: 4px 8px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+[part='text'] {
+  margin-bottom: 0;
+  font-weight: 300;
+  color: #565b66;
+  line-height: 26px;
+  white-space: pre-wrap;
+}
+
+.typing-indicator {
+  background-color: #e6e7ed;
+  will-change: transform;
+  width: auto;
+  border-radius: 50px;
+  padding: 10px;
+  display: table;
+  margin: 0 auto;
+  position: relative;
+  animation: 2s bulge infinite ease-out;
+}
+.typing-indicator::before,
+.typing-indicator::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: -2px;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background-color: #e6e7ed;
+}
+.typing-indicator::after {
+  height: 5px;
+  width: 5px;
+  left: -5px;
+  bottom: -5px;
+}
+.typing-indicator span {
+  height: 8px;
+  width: 8px;
+  float: left;
+  margin: 0 1px;
+  background-color: #9e9ea1;
+  display: block;
+  border-radius: 50%;
+  opacity: 0.4;
+}
+.typing-indicator span:nth-of-type(1) {
+  animation: 1s blink infinite 0.3333s;
+}
+.typing-indicator span:nth-of-type(2) {
+  animation: 1s blink infinite 0.6666s;
+}
+.typing-indicator span:nth-of-type(3) {
+  animation: 1s blink infinite 0.9999s;
+}
+@keyframes blink {
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes bulge {
+  50% {
+    transform: scale(1.05);
+  }
+}
