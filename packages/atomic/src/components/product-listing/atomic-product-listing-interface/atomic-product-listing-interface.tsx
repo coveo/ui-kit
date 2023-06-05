@@ -31,12 +31,17 @@ import {
   mismatchedInterfaceAndEnginePropError,
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
-import {AtomicStore, createAtomicStore} from './store';
+import {
+  AtomicProductListingStore,
+  createAtomicProductListingStore,
+} from './store';
 
-export type InitializationOptions = ProductListingEngineConfiguration;
-export type Bindings = CommonBindings<
+const FirstProductListingExecutedFlag = 'firstProductListingExecuted';
+export type ProductListingInitializationOptions =
+  ProductListingEngineConfiguration;
+export type ProductListingBindings = CommonBindings<
   ProductListingEngine,
-  AtomicStore,
+  AtomicProductListingStore,
   HTMLAtomicProductListingInterfaceElement
 >;
 
@@ -53,7 +58,7 @@ export class AtomicProductListingInterface
   implements BaseAtomicInterface<ProductListingEngine>
 {
   private initialized = false;
-  private store = createAtomicStore();
+  private store = createAtomicProductListingStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<ProductListingEngine>;
 
   @Element() public host!: HTMLAtomicProductListingInterfaceElement;
@@ -202,7 +207,7 @@ export class AtomicProductListingInterface
   /**
    * Initializes the connection with the headless product listing engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
    */
-  @Method() public initialize(options: InitializationOptions) {
+  @Method() public initialize(options: ProductListingInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
   }
 
@@ -277,7 +282,7 @@ export class AtomicProductListingInterface
     return getOrganizationEndpointsHeadless(organizationId, env);
   }
 
-  public get bindings(): Bindings {
+  public get bindings(): ProductListingBindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
@@ -308,12 +313,8 @@ export class AtomicProductListingInterface
   //     }
   //   }
 
-  private initEngine(options: InitializationOptions) {
-    const analyticsConfig = getAnalyticsConfig(
-      options,
-      this.analytics,
-      this.store
-    );
+  private initEngine(options: ProductListingInitializationOptions) {
+    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
     try {
       this.engine = buildProductListingEngine({
         configuration: {
@@ -355,6 +356,7 @@ export class AtomicProductListingInterface
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
+    this.store.unsetLoadingFlag(FirstProductListingExecutedFlag);
     this.initialized = true;
   }
 

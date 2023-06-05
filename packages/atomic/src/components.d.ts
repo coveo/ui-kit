@@ -19,16 +19,17 @@ import { NumericFacetDisplayValues } from "./components/common/facets/numeric-fa
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { LogLevel, ProductListingEngine } from "@coveo/headless/product-listing";
-import { InitializationOptions } from "./components/product-listing/atomic-product-listing-interface/atomic-product-listing-interface";
+import { ProductListingInitializationOptions } from "./components/product-listing/atomic-product-listing-interface/atomic-product-listing-interface";
+import { ProductListingInteractiveResult, ProductListingResult } from "./components/product-listing";
+import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
-import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
-import { InitializationOptions as InitializationOptions1 } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
@@ -913,7 +914,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless product listing engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
          */
-        "initialize": (options: InitializationOptions) => Promise<void>;
+        "initialize": (options: ProductListingInitializationOptions) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured headless product listing engine, as opposed to the `initialize` method which will internally create a new product listing engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
@@ -943,6 +944,98 @@ export namespace Components {
          */
         "searchHub"?: string;
         "url": string;
+    }
+    interface AtomicProductListingList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "display": ResultDisplayBasicLayout;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
+        /**
+          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "numberOfRecommendations": number;
+        /**
+          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
+         */
+        "numberOfRecommendationsPerPage"?: number;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
+         */
+        "product": string;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
+    interface AtomicProductListingResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes": string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * The size of the results.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The layout to apply to display results.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": ProductListingInteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction": ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": ProductListingResult;
+        /**
+          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicProductListingResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": ResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
+        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicQueryError {
     }
@@ -2293,6 +2386,24 @@ declare global {
         prototype: HTMLAtomicProductListingInterfaceElement;
         new (): HTMLAtomicProductListingInterfaceElement;
     };
+    interface HTMLAtomicProductListingListElement extends Components.AtomicProductListingList, HTMLStencilElement {
+    }
+    var HTMLAtomicProductListingListElement: {
+        prototype: HTMLAtomicProductListingListElement;
+        new (): HTMLAtomicProductListingListElement;
+    };
+    interface HTMLAtomicProductListingResultElement extends Components.AtomicProductListingResult, HTMLStencilElement {
+    }
+    var HTMLAtomicProductListingResultElement: {
+        prototype: HTMLAtomicProductListingResultElement;
+        new (): HTMLAtomicProductListingResultElement;
+    };
+    interface HTMLAtomicProductListingResultTemplateElement extends Components.AtomicProductListingResultTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicProductListingResultTemplateElement: {
+        prototype: HTMLAtomicProductListingResultTemplateElement;
+        new (): HTMLAtomicProductListingResultTemplateElement;
+    };
     interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
     }
     var HTMLAtomicQueryErrorElement: {
@@ -2743,6 +2854,9 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product-listing-interface": HTMLAtomicProductListingInterfaceElement;
+        "atomic-product-listing-list": HTMLAtomicProductListingListElement;
+        "atomic-product-listing-result": HTMLAtomicProductListingResultElement;
+        "atomic-product-listing-result-template": HTMLAtomicProductListingResultTemplateElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -3683,6 +3797,89 @@ declare namespace LocalJSX {
         "searchHub"?: string;
         "url"?: string;
     }
+    interface AtomicProductListingList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "display"?: ResultDisplayBasicLayout;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
+        /**
+          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "numberOfRecommendations"?: number;
+        /**
+          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
+         */
+        "numberOfRecommendationsPerPage"?: number;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
+         */
+        "product"?: string;
+    }
+    interface AtomicProductListingResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes"?: string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * The size of the results.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The layout to apply to display results.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": ProductListingInteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": ProductListingResult;
+        /**
+          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicProductListingResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: ResultTemplateCondition[];
+    }
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
@@ -4622,6 +4819,9 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product-listing-interface": AtomicProductListingInterface;
+        "atomic-product-listing-list": AtomicProductListingList;
+        "atomic-product-listing-result": AtomicProductListingResult;
+        "atomic-product-listing-result-template": AtomicProductListingResultTemplate;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
@@ -4752,6 +4952,9 @@ declare module "@stencil/core" {
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             "atomic-product-listing-interface": LocalJSX.AtomicProductListingInterface & JSXBase.HTMLAttributes<HTMLAtomicProductListingInterfaceElement>;
+            "atomic-product-listing-list": LocalJSX.AtomicProductListingList & JSXBase.HTMLAttributes<HTMLAtomicProductListingListElement>;
+            "atomic-product-listing-result": LocalJSX.AtomicProductListingResult & JSXBase.HTMLAttributes<HTMLAtomicProductListingResultElement>;
+            "atomic-product-listing-result-template": LocalJSX.AtomicProductListingResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductListingResultTemplateElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
