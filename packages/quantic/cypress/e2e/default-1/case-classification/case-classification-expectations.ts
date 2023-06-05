@@ -172,7 +172,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
 
     fetchDocumentSuggestions: () => {
       cy.wait(InterceptAliases.DocumentSuggestion).logDetail(
-        'should fetch new document suggestions after the value changes'
+        'should fetch new document suggestions'
       );
     },
   };
