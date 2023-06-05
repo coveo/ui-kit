@@ -124,6 +124,11 @@ export interface ExcerptLength {
 export interface AuthenticationParam {
   authentication?: string;
 }
+export interface AutomaticFacetsParams {
+  generateAutomaticFacets?: {
+    desiredCount?: number;
+  };
+}
 
 export const baseSearchRequest = (
   req: BaseParam & AuthenticationParam,

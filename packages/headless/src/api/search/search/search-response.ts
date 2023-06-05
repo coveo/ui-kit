@@ -4,6 +4,7 @@ import {
   SearchAPIErrorWithStatusCode,
 } from '../search-api-error-response';
 import {Trigger} from './../trigger';
+import {AutomaticFacets} from './automatic-facets';
 import {ExecutionReport} from './execution-report';
 import {QueryCorrection} from './query-corrections';
 import {QueryRankingExpression} from './query-ranking-expression';
@@ -13,6 +14,7 @@ import {SecurityIdentity} from './security-identity';
 import {PhrasesToHighlight, TermsToHighlight} from './stemming';
 
 export interface SearchResponseSuccess {
+  generateAutomaticFacets: AutomaticFacets;
   termsToHighlight: TermsToHighlight;
   phrasesToHighlight: PhrasesToHighlight;
   results: Result[];
