@@ -15,6 +15,7 @@ import {
   FoldedResult,
   AtomicResultSectionChildren,
   AtomicFoldedResultList,
+  AtomicResultImage,
 } from '@coveo/atomic-react';
 import React, {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
@@ -58,7 +59,7 @@ function MyTemplate(result: FoldedResult) {
         )}
       </AtomicResultSectionBadges>
       <AtomicResultSectionVisual>
-        <img loading="lazy" src="https://picsum.photos/350" />
+        <AtomicResultImage field="ec_images" />
       </AtomicResultSectionVisual>
       <AtomicResultSectionTitle>
         <AtomicResultLink />
