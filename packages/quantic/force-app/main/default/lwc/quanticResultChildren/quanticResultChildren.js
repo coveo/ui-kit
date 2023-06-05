@@ -182,6 +182,10 @@ export default class QuanticResultChildren extends LightningElement {
     return !this.areMoreResultsAvailable;
   }
 
+  get hasCollectionChildren() {
+    return this.collection?.children?.length > 0;
+  }
+
   render() {
     if (this?.collection?.isLoadingMoreResults) {
       return loadingTemplate;
