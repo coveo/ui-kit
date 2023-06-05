@@ -173,17 +173,16 @@ export default class QuanticResultChildren extends LightningElement {
   }
 
   get shouldDisplayNoChildrenMessage() {
-    if (!this.isFirstLevelChildCollection) {
+    if (
+      !this.isFirstLevelChildCollection ||
+      this.collection?.children?.length <= 0
+    ) {
       return false;
     }
     if (this.areAllChildResultsLoaded) {
       return !this.moreResultsFound;
     }
     return !this.areMoreResultsAvailable;
-  }
-
-  get hasCollectionChildren() {
-    return this.collection?.children?.length > 0;
   }
 
   render() {

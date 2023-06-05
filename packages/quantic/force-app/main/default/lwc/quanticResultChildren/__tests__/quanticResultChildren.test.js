@@ -142,7 +142,7 @@ describe('c-quantic-result-children', () => {
   });
 
   describe('when there are no child results available in the collection', () => {
-    it('should not display any child results', async () => {
+    it('should not display any child results and the no more child results message', async () => {
       const element = createTestComponent({
         ...defaultOptions,
         collection: {
@@ -157,7 +157,12 @@ describe('c-quantic-result-children', () => {
         selectors.quanticResult
       );
 
+      const noMoreChildrenMessage = element.shadowRoot.querySelector(
+        selectors.noMoreChildrenMessage
+      );
+
       expect(childResult).toBeNull();
+      expect(noMoreChildrenMessage).toBeNull();
     });
   });
 
