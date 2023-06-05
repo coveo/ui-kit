@@ -166,7 +166,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
 
     fetchClassifications: () => {
       cy.wait(InterceptAliases.CaseClassification).logDetail(
-        'should fetch new case classifications after the value changes'
+        'should fetch new case classifications'
       );
     },
 
