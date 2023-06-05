@@ -11,7 +11,7 @@ import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, Relativ
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
-import { InsightEngine, InsightFacetSortCriterion, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
+import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
@@ -396,6 +396,35 @@ export namespace Components {
          */
         "sortCriteria": InsightFacetSortCriterion;
     }
+    interface AtomicInsightFoldedResultList {
+        /**
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
+         */
+        "childField"?: string;
+        /**
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
+         */
+        "collectionField"?: string;
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
+         */
+        "parentField"?: string;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
     interface AtomicInsightFullSearchButton {
         "tooltip": string;
     }
@@ -562,7 +591,7 @@ export namespace Components {
         /**
           * The result item.
          */
-        "result": InsightResult;
+        "result": InsightResult | InsightFoldedResult;
         /**
           * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
          */
@@ -2067,6 +2096,12 @@ declare global {
         prototype: HTMLAtomicInsightFacetElement;
         new (): HTMLAtomicInsightFacetElement;
     };
+    interface HTMLAtomicInsightFoldedResultListElement extends Components.AtomicInsightFoldedResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightFoldedResultListElement: {
+        prototype: HTMLAtomicInsightFoldedResultListElement;
+        new (): HTMLAtomicInsightFoldedResultListElement;
+    };
     interface HTMLAtomicInsightFullSearchButtonElement extends Components.AtomicInsightFullSearchButton, HTMLStencilElement {
     }
     var HTMLAtomicInsightFullSearchButtonElement: {
@@ -2727,6 +2762,7 @@ declare global {
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
+        "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-full-search-button": HTMLAtomicInsightFullSearchButtonElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
@@ -3201,6 +3237,31 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: InsightFacetSortCriterion;
     }
+    interface AtomicInsightFoldedResultList {
+        /**
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
+         */
+        "childField"?: string;
+        /**
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
+         */
+        "collectionField"?: string;
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
+         */
+        "parentField"?: string;
+    }
     interface AtomicInsightFullSearchButton {
         "tooltip"?: string;
     }
@@ -3350,7 +3411,7 @@ declare namespace LocalJSX {
         /**
           * The result item.
          */
-        "result": InsightResult;
+        "result": InsightResult | InsightFoldedResult;
         /**
           * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
          */
@@ -4608,6 +4669,7 @@ declare namespace LocalJSX {
         "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
+        "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-full-search-button": AtomicInsightFullSearchButton;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
@@ -4743,6 +4805,7 @@ declare module "@stencil/core" {
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
+            "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-full-search-button": LocalJSX.AtomicInsightFullSearchButton & JSXBase.HTMLAttributes<HTMLAtomicInsightFullSearchButtonElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;

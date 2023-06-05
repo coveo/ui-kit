@@ -23,6 +23,10 @@ import {ResultsPlaceholder} from '../../../common/atomic-result-placeholder/plac
 import {Button} from '../../../common/button';
 import {extractUnfoldedResult} from '../../../common/interface/result';
 import {ResultDisplayImageSize} from '../../../common/layout/display-options';
+import {
+  FoldedResultListContext,
+  FoldedResultListStateContext,
+} from '../../../common/result-list/result-list-decorators';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
@@ -32,10 +36,6 @@ import {
   DisplayConfig,
   ChildTemplatesContext,
 } from '../../result-template-components/result-template-decorators';
-import {
-  FoldedResultListContext,
-  FoldedResultListStateContext,
-} from '../result-list-decorators';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';

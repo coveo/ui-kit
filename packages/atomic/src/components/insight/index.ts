@@ -86,4 +86,5 @@ export {
   SmartSnippetQuestionsList as InsightSmartSnippetQuestionsList,
   SmartSnippetQuestionsListState as InsightSmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion as InsightSmartSnippetRelatedQuestion,
+  FoldedResult as InsightFoldedResult,
 } from '@coveo/headless/insight';

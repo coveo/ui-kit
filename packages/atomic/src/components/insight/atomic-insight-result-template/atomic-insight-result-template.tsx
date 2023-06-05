@@ -66,7 +66,10 @@ export class AtomicInsightResultTemplate {
       setError: (err) => {
         this.error = err;
       },
-      validParents: ['atomic-insight-result-list'],
+      validParents: [
+        'atomic-insight-result-list',
+        'atomic-insight-folded-result-list',
+      ],
       allowEmpty: true,
     });
   }

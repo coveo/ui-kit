@@ -59,11 +59,11 @@
           <atomic-insight-tabs>
             <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
             <atomic-insight-tab label="Youtube" expression="@filetype==YouTubeVideo"></atomic-insight-tab>
+            <atomic-insight-tab label="Folding" expression="@source=iNaturalistTaxons"></atomic-insight-tab>
             <atomic-insight-tab label="Service Cases" expression="@objecttype==Case"></atomic-insight-tab>
             <atomic-insight-tab label="Users" expression="@objecttype==User"></atomic-insight-tab>
             <atomic-insight-tab label="PDF" expression="@filetype==pdf"></atomic-insight-tab>
             <atomic-insight-tab label="Salesforce" expression="@filetype==SalesforceItem"></atomic-insight-tab>
-            <atomic-insight-tab label="Text" expression="@filetype==txt"></atomic-insight-tab>
           </atomic-insight-tabs>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
@@ -96,7 +96,7 @@
         <atomic-layout-section section="results">
           <atomic-insight-smart-snippet></atomic-insight-smart-snippet>
           <atomic-insight-smart-snippet-suggestions></atomic-insight-smart-snippet-suggestions>
-          <atomic-insight-result-list image-size="none">
+          <atomic-insight-folded-result-list image-size="none">
             <atomic-insight-result-template if-defined="sfid">
               <template>
                 <style>
@@ -246,7 +246,7 @@
                 </atomic-result-section-bottom-metadata>
               </template>
             </atomic-insight-result-template>
-          </atomic-insight-result-list>
+          </atomic-insight-folded-result-list>
           <atomic-insight-no-results></atomic-insight-no-results>
           <atomic-insight-query-error></atomic-insight-query-error>
         </atomic-layout-section>

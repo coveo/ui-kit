@@ -1,5 +1,5 @@
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {InsightResult, InsightInteractiveResult} from '..';
+import {InsightResult, InsightInteractiveResult, InsightFoldedResult} from '..';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   ResultLayout,
@@ -34,7 +34,7 @@ export class AtomicInsightResult {
   /**
    * The result item.
    */
-  @Prop() result!: InsightResult;
+  @Prop() result!: InsightResult | InsightFoldedResult;
 
   /**
    * The InteractiveResult item.
@@ -76,7 +76,9 @@ export class AtomicInsightResult {
   @Prop() loadingFlag?: string;
 
   @Listen('atomic/resolveResult')
-  public resolveResult(event: ResultContextEvent<InsightResult>) {
+  public resolveResult(
+    event: ResultContextEvent<InsightFoldedResult | InsightResult>
+  ) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
