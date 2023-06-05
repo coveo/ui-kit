@@ -109,3 +109,13 @@ export interface AllowedValues {
     values: string[];
   };
 }
+
+export interface CustomSort {
+  /**
+   * Identifies the facet values that must appear at the top, in this order.
+   * This parameter can be used in conjunction with the sortCriteria parameter.
+   *
+   * Facet values not part of the customSort list will be sorted according to the sortCriteria.
+   */
+  customSort?: string[];
+}

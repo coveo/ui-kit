@@ -141,7 +141,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * Default: `1000`
    */
   @Prop() public injectionDepth = 1000;
-  // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   /**
    * The required facets and values for this facet to be displayed.
@@ -176,7 +175,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * those other values.
    *
    * ```html
-   * <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></div>
+   * <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-facet>
    * ```
    *
    * The maximum amount of allowed values is 25.
@@ -186,6 +185,16 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @ArrayProp()
   @Prop({mutable: true})
   public allowedValues: string[] | string = '[]';
+
+  /**
+   * Identifies the facet values that must appear at the top, in this order.
+   * This parameter can be used in conjunction with the sortCriteria parameter.
+   *
+   * Facet values not part of the customSort list will be sorted according to the sortCriteria.
+   */
+  @ArrayProp()
+  @Prop({mutable: true})
+  public customSort: string[] | string = '[]';
 
   @FocusTarget()
   private showLessFocus!: FocusTargetController;
@@ -200,20 +209,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   protected facetSearchAriaMessage!: string;
 
   public initialize() {
-    const options: FacetOptions = {
-      facetId: this.facetId,
-      field: this.field,
-      numberOfValues: this.numberOfValues,
-      sortCriteria: this.sortCriteria,
-      facetSearch: {numberOfValues: this.numberOfValues},
-      filterFacetCount: this.filterFacetCount,
-      injectionDepth: this.injectionDepth,
-      allowedValues: this.allowedValues.length
-        ? [...this.allowedValues]
-        : undefined,
-    };
-
-    this.facet = buildFacet(this.bindings.engine, {options});
+    this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
@@ -281,5 +277,21 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       showMoreFocus: this.showMoreFocus,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
     });
+  }
+
+  private get facetOptions(): FacetOptions {
+    return {
+      facetId: this.facetId,
+      field: this.field,
+      numberOfValues: this.numberOfValues,
+      sortCriteria: this.sortCriteria,
+      facetSearch: {numberOfValues: this.numberOfValues},
+      filterFacetCount: this.filterFacetCount,
+      injectionDepth: this.injectionDepth,
+      allowedValues: this.allowedValues.length
+        ? [...this.allowedValues]
+        : undefined,
+      customSort: this.customSort.length ? [...this.customSort] : undefined,
+    };
   }
 }

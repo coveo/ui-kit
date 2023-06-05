@@ -668,4 +668,42 @@ describe('Color Facet Test Suites', () => {
       );
     });
   });
+
+  describe('with allowed-values', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addColorFacet({
+            field: 'objecttype',
+            'allowed-values': JSON.stringify(['FAQ', 'File']),
+          })
+        )
+        .init();
+    });
+
+    it('returns only allowed values', () => {
+      ColorFacetSelectors.valueLabel()
+        .should('contain.text', 'FAQ')
+        .should('contain.text', 'File')
+        .should('not.contain.text', 'Message');
+    });
+  });
+
+  describe('with custom-sort', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addColorFacet({
+            field: 'filetype',
+            'custom-sort': JSON.stringify(['txt', 'rssitem']),
+          })
+        )
+        .init();
+    });
+
+    it('returns values sorted in the proper order', () => {
+      ColorFacetSelectors.valueLabel().eq(0).should('contain.text', 'txt');
+      ColorFacetSelectors.valueLabel().eq(1).should('contain.text', 'rssitem');
+    });
+  });
 });

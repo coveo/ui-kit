@@ -1075,4 +1075,22 @@ describe('Facet v1 Test Suites', () => {
         .should('not.contain.text', 'Message');
     });
   });
+
+  describe('with custom-sort', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addFacet({
+            field: 'filetype',
+            'custom-sort': JSON.stringify(['txt', 'rssitem']),
+          })
+        )
+        .init();
+    });
+
+    it('returns values sorted in the proper order', () => {
+      FacetSelectors.valueLabel().eq(0).should('contain.text', 'txt');
+      FacetSelectors.valueLabel().eq(1).should('contain.text', 'rssitem');
+    });
+  });
 });
