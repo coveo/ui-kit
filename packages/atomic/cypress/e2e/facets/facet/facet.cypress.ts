@@ -972,7 +972,7 @@ describe('Facet v1 Test Suites', () => {
 
     describe('when select 3 values', () => {
       const index = [0, 1, 2];
-      function setupSelectedMulitpleFacets() {
+      function setupSelectedMultipleFacets() {
         setupBreadboxWithFacet();
         index.forEach((position, i) => {
           selectIdleCheckboxValueAt(FacetSelectors, position);
@@ -982,7 +982,7 @@ describe('Facet v1 Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        beforeEach(setupSelectedMulitpleFacets);
+        beforeEach(setupSelectedMultipleFacets);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);

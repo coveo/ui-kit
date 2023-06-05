@@ -415,7 +415,7 @@ describe('facet', () => {
   });
 
   describe('#showLessValues', () => {
-    it('sets the number of values to the origial number', () => {
+    it('sets the number of values to the original number', () => {
       const originalNumberOfValues = 8;
       options.numberOfValues = originalNumberOfValues;
 
