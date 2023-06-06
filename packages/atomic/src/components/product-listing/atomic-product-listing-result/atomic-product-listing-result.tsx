@@ -20,7 +20,7 @@ import {
 } from '../../search/result-template-components/result-template-decorators';
 
 /**
- * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
+ * The `atomic-product-listing-result` component is used internally by the `atomic-product-listing` component.
  */
 @Component({
   tag: 'atomic-product-listing-result',
@@ -34,7 +34,7 @@ export class AtomicProductListingResult {
   @Element() host!: HTMLElement;
 
   /**
-   * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
+   * Whether an atomic-result-link inside atomic-product-listing should stop click event propagation.
    */
   @Prop() stopPropagation?: boolean;
 
@@ -88,7 +88,7 @@ export class AtomicProductListingResult {
   @Prop() loadingFlag?: string;
 
   /**
-   * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system.
+   * Internal function used by atomic-product-listing in advanced setups, which lets you bypass the standard HTML template system.
    * Particularly useful for Atomic React
    *
    * @internal

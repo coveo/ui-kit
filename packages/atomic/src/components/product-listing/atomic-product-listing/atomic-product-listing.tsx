@@ -5,6 +5,9 @@ import {
   ProductListing,
   ProductListingState,
   loadConfigurationActions,
+  ResultsPerPage,
+  buildResultsPerPage,
+  ResultsPerPageState,
 } from '@coveo/headless/product-listing';
 import {Component, State, Element, Prop, Method, h} from '@stencil/core';
 import {buildProductListingInteractiveResult} from '..';
@@ -32,7 +35,7 @@ import {ResultTemplateProvider} from '../../common/result-list/result-template-p
 import {ProductListingBindings} from '../atomic-product-listing-interface/atomic-product-listing-interface';
 
 /**
- * The `atomic-product-listing-list` component displays recommendations by applying one or more result templates.
+ * The `atomic-product-listing` component displays products by applying one or more result templates.
  *
  * @part result-list - The element containing the list of results.
  * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it.
@@ -45,15 +48,16 @@ import {ProductListingBindings} from '../atomic-product-listing-interface/atomic
  * @part active-indicator - The active indicator.
  */
 @Component({
-  tag: 'atomic-product-listing-list',
-  styleUrl: 'atomic-product-listing-list.pcss',
+  tag: 'atomic-product-listing',
+  styleUrl: 'atomic-product-listing.pcss',
   shadow: true,
 })
-export class AtomicProductListingList
+export class AtomicProductListing
   implements InitializableComponent<ProductListingBindings>
 {
   @InitializeBindings() public bindings!: ProductListingBindings;
   public productListing!: ProductListing;
+  public resultsPerPage!: ResultsPerPage;
   private resultListCommon!: ResultListCommon;
   private loadingFlag = randomID('firstProductListingLoaded-');
   private resultRenderingFunction: ResultRenderingFunction;
@@ -64,22 +68,18 @@ export class AtomicProductListingList
   @State() private resultTemplateRegistered = false;
   @State() private templateHasError = false;
   // @State() private currentPage = 0;
+  @BindStateToController('resultsPerPage')
+  @State()
+  public resultsPerPageState!: ResultsPerPageState;
   @BindStateToController('productListing')
   @State()
   public productListingState!: ProductListingState;
 
   @FocusTarget()
   private nextNewResultTarget!: FocusTargetController;
-
-  /**
-   * The Recommendation identifier used by the Coveo platform to retrieve recommended documents.
-   * Make sure to set a different value for each atomic-recs-list in your page.
-   */
-  @Prop({reflect: true}) public product = 'ProductListing';
-
   /**
    * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself.
-   * To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
+   * To modify the number of products per column, modify the --atomic-product-listing-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'list';
   /**
@@ -93,20 +93,19 @@ export class AtomicProductListingList
   public imageSize: ResultDisplayImageSize = 'small';
 
   /**
-   * The total number of recommendations to display.
-   * This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+   * The total number of products to display.
+   * This does not modify the number of products per column. To do so, modify the --atomic-product-listing-number-of-columns CSS variable.
    */
-  @Prop({reflect: true}) public numberOfRecommendations = 10;
+  @Prop({reflect: true}) public numberOfProducts = 30;
 
   /**
-   * The number of recommendations to display, per page.
-   * Setting a value greater than and lower than the numberOfRecommendations value activates the carousel.
-   * This does not affect the display of the list itself, only the number of recommendation pages.
+   * The number of products to display, per page.
+   * This does not affect the display of the list itself, only the number of product pages.
    */
-  @Prop({reflect: true}) public numberOfRecommendationsPerPage?: number;
+  @Prop({reflect: true}) public numberOfProductsPerPage?: number;
 
   /**
-   * The non-localized label for the list of recommendations.
+   * The non-localized label for the list of products.
    */
   @Prop({reflect: true}) public label?: string;
 
@@ -115,7 +114,7 @@ export class AtomicProductListingList
    */
   @Prop({reflect: true}) public headingLevel = 0;
 
-  // @Watch('numberOfProductssPerPage')
+  // @Watch('numberOfProductsPerPage')
   // public async watchNumberOfRecommendationsPerPage() {
   //   this.currentPage = 0;
   // }
@@ -150,15 +149,14 @@ export class AtomicProductListingList
   // }
 
   public initialize() {
-    this.validateNumberOfRecommendationsPerPage();
-    this.validateRecommendationIdentifier();
+    this.validateNumberOfProductsPerPage();
     this.updateOriginLevel2();
     this.productListing = buildProductListing(this.bindings.engine, {
       options: {
         url: 'https://fashion.coveodemo.com/browse/women/hats',
       },
     });
-
+    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     const resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
@@ -178,7 +176,7 @@ export class AtomicProductListingList
     this.resultListCommon = new ResultListCommon({
       resultTemplateProvider,
       getNumberOfPlaceholders: () =>
-        this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations,
+        this.numberOfProductsPerPage ?? this.numberOfProducts,
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
@@ -212,27 +210,15 @@ export class AtomicProductListingList
     };
   }
 
-  private validateNumberOfRecommendationsPerPage() {
+  private validateNumberOfProductsPerPage() {
     const msg = new NumberValue({
       min: 1,
-      max: this.numberOfRecommendations - 1,
-    }).validate(this.numberOfRecommendationsPerPage!);
+      max: this.numberOfProducts - 1,
+    }).validate(this.numberOfProductsPerPage!);
 
     if (msg) {
       this.error = new Error(
-        `The "numberOfRecommendationsPerPage" is invalid: ${msg}`
-      );
-    }
-  }
-
-  private validateRecommendationIdentifier() {
-    const recListWithRecommendation = document.querySelectorAll(
-      `atomic-recs-list[recommendation="${this.productListing}"]`
-    );
-
-    if (recListWithRecommendation.length > 1) {
-      this.bindings.engine.logger.warn(
-        `There are multiple atomic-recs-list in this page with the same recommendation property "${this.productListing}". Make sure to set a different recommendation property for each.`
+        `The "numberOfProductsPerPage" is invalid: ${msg}`
       );
     }
   }
@@ -307,6 +293,15 @@ export class AtomicProductListingList
 
         raw: {
           urihash: '',
+          ec_images: product.ec_images,
+          ec_brand: product.ec_brand,
+          ec_category: product.ec_category,
+          ec_description: product.ec_item_group_id,
+          ec_price: product.ec_price,
+          ec_promo_price: product.ec_promo_price,
+          ec_rating: product.ec_rating,
+          childResults: product.childResults,
+          totalNumberOfChildResults: product.totalNumberOfChildResults,
         },
       });
     });
