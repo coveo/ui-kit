@@ -1,11 +1,11 @@
 import {Component, Element, Prop, Method, State} from '@stencil/core';
-import {InsightResultTemplate, InsightResultTemplateCondition} from '..';
-import {MapProp} from '../../../utils/props-utils';
+import {InsightResultTemplate, InsightResultTemplateCondition} from '../..';
+import {MapProp} from '../../../../utils/props-utils';
 import {
   makeDefinedConditions,
   makeMatchConditions,
   ResultTemplateCommon,
-} from '../../common/result-templates/result-template-common';
+} from '../../../common/result-templates/result-template-common';
 
 /**
  * @internal
