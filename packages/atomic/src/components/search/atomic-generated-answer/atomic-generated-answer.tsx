@@ -18,8 +18,8 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @internal
  */
 @Component({
-  tag: 'generated-answer',
-  styleUrl: 'generated-answer.css',
+  tag: 'atomic-generated-answer',
+  styleUrl: 'atomic-generated-answer.pcss',
   shadow: true,
 })
 export class AtomicGeneratedAnswer implements InitializableComponent {
