@@ -132,6 +132,13 @@ export default class QuanticCaseClassification extends LightningElement {
    * @defaultValue `false`
    */
   @api fetchDocumentSuggestionOnChange = false;
+  /**
+   * Whether or not the component should fetch classifications during initialization.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api fetchOnInit = false;
 
   /** @type {Array<object>} */
   @track classifications = [];
@@ -197,6 +204,10 @@ export default class QuanticCaseClassification extends LightningElement {
       ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
       ...CoveoHeadlessCaseAssist.loadCaseFieldActions(engine),
     };
+
+    if (this.fetchOnInit) {
+      engine.dispatch(this.actions.fetchCaseClassifications());
+    }
   };
 
   disconnectedCallback() {
