@@ -113,7 +113,6 @@ export class AtomicProductListing
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
    */
   @Prop({reflect: true}) public headingLevel = 0;
-
   // @Watch('numberOfProductsPerPage')
   // public async watchNumberOfRecommendationsPerPage() {
   //   this.currentPage = 0;
@@ -153,7 +152,8 @@ export class AtomicProductListing
     this.updateOriginLevel2();
     this.productListing = buildProductListing(this.bindings.engine, {
       options: {
-        url: 'https://fashion.coveodemo.com/browse/women/hats',
+        url: this.bindings.store.getUrl(),
+        additionalFields: this.bindings.store.getFieldsToInclude(),
       },
     });
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);

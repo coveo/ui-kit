@@ -5,13 +5,8 @@ import {ResultListDisplayProps} from './result-list-common-interface';
 
 export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
   props
-) => {
-  console.log(props.getResultListState());
-  console.log(props.getResultDisplay());
-  console.log(props.getResultRenderingFunction());
-  console.log(props.listClasses);
-
-  return props.getResultListState().results.map((result, index) => {
+) =>
+  props.getResultListState().results.map((result, index) => {
     const unfoldedResult = extractUnfoldedResult(result);
     const interactiveResult = props.getInteractiveResult(unfoldedResult);
 
@@ -45,4 +40,3 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
       </div>
     );
   });
-};

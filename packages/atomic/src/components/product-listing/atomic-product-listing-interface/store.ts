@@ -26,10 +26,15 @@ export interface AtomicProductListingStoreData extends AtomicCommonStoreData {
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
+  url: string;
 }
 
 export interface AtomicProductListingStore
-  extends AtomicCommonStore<AtomicProductListingStoreData> {}
+  extends AtomicCommonStore<AtomicProductListingStoreData> {
+  getFieldsToInclude(): string[];
+  setUrl(url: string): void;
+  getUrl(): string;
+}
 
 export function createAtomicProductListingStore(): AtomicProductListingStore {
   const commonStore = createAtomicCommonStore<AtomicProductListingStoreData>({
@@ -41,12 +46,19 @@ export function createAtomicProductListingStore(): AtomicProductListingStore {
     facetElements: [],
     iconAssetsPath: '',
     fieldsToInclude: [],
+    url: '',
   });
 
   return {
     ...commonStore,
     getUniqueIDFromEngine(engine: ProductListingEngine): string {
       return engine.state.productListing.responseId;
+    },
+    setUrl(url: string) {
+      commonStore.set('url', url);
+    },
+    getUrl() {
+      return commonStore.get('url');
     },
   };
 }

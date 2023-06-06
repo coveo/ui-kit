@@ -29,7 +29,6 @@ export class AtomicResultImage implements InitializableComponent {
   public error!: Error;
 
   public get url() {
-    console.log('url', this.result);
     const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field

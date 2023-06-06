@@ -353,6 +353,7 @@ export class AtomicProductListingInterface
   }
 
   private async internalInitialization(initEngine: () => void) {
+    this.store.setUrl(this.url);
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
