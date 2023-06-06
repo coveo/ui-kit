@@ -245,7 +245,7 @@ describe('Search Interface Component', () => {
       QuerySummarySelectors.text().should('contain', 'Results');
     });
 
-    it('should default back to the non region localed (e.g., "es-ES" to "es")', () => {
+    it('should default back to the non region locale (e.g., "es-ES" to "es")', () => {
       setLanguageAndWait('es-ES');
 
       QuerySummarySelectors.text().should('contain', 'Resultados');

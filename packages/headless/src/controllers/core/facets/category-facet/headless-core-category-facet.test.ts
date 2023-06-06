@@ -200,7 +200,7 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retireveCount', () => {
+    it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retrieveCount', () => {
       options.numberOfValues = 10;
       initCategoryFacet();
       const selection = buildMockCategoryFacetValue({value: 'A'});

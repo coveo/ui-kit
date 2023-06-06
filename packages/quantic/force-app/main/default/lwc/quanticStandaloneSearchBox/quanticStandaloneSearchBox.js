@@ -26,7 +26,7 @@ const CLASS_WITHOUT_SUBMIT =
  * See [Use a Standalone Search Box](https://docs.coveo.com/en/quantic/latest/usage/ssb-usage/).
  * @category Search
  * @example
- * <c-quantic-standalone-search-box engine-id={engineId} placeholder="Enter a query..." without-submit-button number-of-suggestions="8" redirect-url="/my-search-page/%40uri" search-hub="myhub" pipeine="mypipeline"></c-quantic-standalone-search-box>
+ * <c-quantic-standalone-search-box engine-id={engineId} placeholder="Enter a query..." without-submit-button number-of-suggestions="8" redirect-url="/my-search-page/%40uri" search-hub="myhub" pipeline="mypipeline"></c-quantic-standalone-search-box>
  */
 export default class QuanticStandaloneSearchBox extends NavigationMixin(
   LightningElement
