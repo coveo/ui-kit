@@ -13,6 +13,7 @@ import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
+import {buildController} from '../controller/headless-controller';
 
 export type {GeneratedAnswerState};
 
@@ -40,6 +41,7 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   }
 
   const {dispatch} = engine;
+  const controller = buildController(engine);
   const getState = () => engine.state;
 
   let timeout: ReturnType<typeof setTimeout>;
@@ -93,6 +95,8 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   subscribeToSearchRequests();
 
   return {
+    ...controller,
+
     get state() {
       return getState().generatedAnswer;
     },
