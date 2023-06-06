@@ -73,7 +73,7 @@ When building Atomic components, a series of decorators are used to make develop
 
 ## InitializeBindings & BindStateToController decorators
 
-`InitializeBindings` is a utility that automatically fetches the `bindings` from the parent `atomic-search-interface` or `atomic-external` component. This decorator has to be applied a property named `bindings`.
+`InitializeBindings` is a utility that automatically fetches the `bindings` from the parent `atomic-search-interface` or `atomic-external` component. This decorator has to be applied to a property named `bindings`.
 
 _Important_ In order for a component using this decorator to render properly, it should have an internal state bound to one of the properties from `bindings`. This is possible by using the `BindStateToController` decorator along with a `State` decorator.
 
