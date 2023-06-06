@@ -1,4 +1,3 @@
-import {NumberValue} from '@coveo/bueno';
 import {Result} from '@coveo/headless';
 import {
   buildProductListing,
@@ -97,13 +96,6 @@ export class AtomicProductListing
    * This does not modify the number of products per column. To do so, modify the --atomic-product-listing-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public numberOfProducts = 30;
-
-  /**
-   * The number of products to display, per page.
-   * This does not affect the display of the list itself, only the number of product pages.
-   */
-  @Prop({reflect: true}) public numberOfProductsPerPage?: number;
-
   /**
    * The non-localized label for the list of products.
    */
@@ -148,15 +140,16 @@ export class AtomicProductListing
   // }
 
   public initialize() {
-    this.validateNumberOfProductsPerPage();
     this.updateOriginLevel2();
+    this.resultsPerPage = buildResultsPerPage(this.bindings.engine, {
+      initialState: {numberOfResults: this.numberOfProducts},
+    });
     this.productListing = buildProductListing(this.bindings.engine, {
       options: {
         url: this.bindings.store.getUrl(),
         additionalFields: this.bindings.store.getFieldsToInclude(),
       },
     });
-    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     const resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
@@ -175,8 +168,7 @@ export class AtomicProductListing
 
     this.resultListCommon = new ResultListCommon({
       resultTemplateProvider,
-      getNumberOfPlaceholders: () =>
-        this.numberOfProductsPerPage ?? this.numberOfProducts,
+      getNumberOfPlaceholders: () => this.numberOfProducts,
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
@@ -208,19 +200,6 @@ export class AtomicProductListing
       results: this.productRecommendationsAsResuls,
       searchResponseId: this.productListingState.responseId,
     };
-  }
-
-  private validateNumberOfProductsPerPage() {
-    const msg = new NumberValue({
-      min: 1,
-      max: this.numberOfProducts - 1,
-    }).validate(this.numberOfProductsPerPage!);
-
-    if (msg) {
-      this.error = new Error(
-        `The "numberOfProductsPerPage" is invalid: ${msg}`
-      );
-    }
   }
 
   private updateOriginLevel2() {

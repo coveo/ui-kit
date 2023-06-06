@@ -902,10 +902,6 @@ export namespace Components {
          */
         "numberOfProducts": number;
         /**
-          * The number of products to display, per page. This does not affect the display of the list itself, only the number of product pages.
-         */
-        "numberOfProductsPerPage"?: number;
-        /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
@@ -3767,10 +3763,6 @@ declare namespace LocalJSX {
           * The total number of products to display. This does not modify the number of products per column. To do so, modify the --atomic-product-listing-number-of-columns CSS variable.
          */
         "numberOfProducts"?: number;
-        /**
-          * The number of products to display, per page. This does not affect the display of the list itself, only the number of product pages.
-         */
-        "numberOfProductsPerPage"?: number;
     }
     interface AtomicProductListingInterface {
         /**
