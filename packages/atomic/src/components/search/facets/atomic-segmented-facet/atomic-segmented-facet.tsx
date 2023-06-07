@@ -118,7 +118,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    * those other values.
    *
    * ```html
-   * <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-facet>
+   * <atomic-segmented-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-segmented-facet>
    * ```
    *
    * The maximum amount of allowed values is 25.
