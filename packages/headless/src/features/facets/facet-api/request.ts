@@ -116,6 +116,10 @@ export interface CustomSort {
    * This parameter can be used in conjunction with the sortCriteria parameter.
    *
    * Facet values not part of the customSort list will be sorted according to the sortCriteria.
+   *
+   * The maximum amount of custom sort values is 25.
+   *
+   * Default value is `undefined`, and the facet values will be sorted using only the sortCriteria
    */
   customSort?: string[];
 }
