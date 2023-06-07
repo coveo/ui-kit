@@ -1328,7 +1328,7 @@ export namespace Components {
     }
     interface AtomicResultHtml {
         /**
-          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches throught the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
+          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
          */
         "field": string;
         /**
@@ -4073,7 +4073,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultHtml {
         /**
-          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches throught the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
+          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
          */
         "field": string;
         /**

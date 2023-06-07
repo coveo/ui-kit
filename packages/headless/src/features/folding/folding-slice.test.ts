@@ -100,7 +100,7 @@ describe('folding slice', () => {
           name: 'first-answer',
           children: [
             {
-              name: 'comment-questionning-the-answer',
+              name: 'comment-questioning-the-answer',
               children: [
                 {name: 'comment-justifying-the-answer'},
                 {

@@ -24,7 +24,7 @@ export interface UpdateBasicConfigurationActionCreatorPayload {
   organizationId?: string;
 
   /**
-   * The Plaform URL to use (e.g., `https://platform.cloud.coveo.com`).
+   * The Platform URL to use (e.g., `https://platform.cloud.coveo.com`).
    */
   platformUrl?: string;
 }
