@@ -27,8 +27,8 @@ import {
 } from '../../../search/result-template-components/result-template-decorators';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
-const childTemplateComponent = 'atomic-result-children-template';
-const componentTag = 'atomic-result-children';
+const childTemplateComponent = 'atomic-insight-result-children-template';
+const componentTag = 'atomic-insight-result-children';
 
 /**
  * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.

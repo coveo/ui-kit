@@ -19,7 +19,7 @@ import {AtomicInsightStore} from '../atomic-insight-interface/store';
  */
 @Component({
   tag: 'atomic-insight-result',
-  styleUrl: '../../common/result/result.pcss',
+  styleUrl: 'atomic-insight-result.pcss',
   shadow: true,
 })
 export class AtomicInsightResult {
