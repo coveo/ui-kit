@@ -974,7 +974,10 @@ export namespace Components {
           * The product listing interface [search hub](https://docs.coveo.com/en/1342/).  If the product listing interface is initialized using [`initializeWithProductListingEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-product-listing-interface/#initializewithProductListingEngine, the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
-        "url": string;
+        /**
+          * When set this property will be used instead of the current url.
+         */
+        "url"?: string;
     }
     interface AtomicProductListingResult {
         /**
@@ -3813,6 +3816,9 @@ declare namespace LocalJSX {
           * The product listing interface [search hub](https://docs.coveo.com/en/1342/).  If the product listing interface is initialized using [`initializeWithProductListingEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-product-listing-interface/#initializewithProductListingEngine, the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
+        /**
+          * When set this property will be used instead of the current url.
+         */
         "url"?: string;
     }
     interface AtomicProductListingResult {

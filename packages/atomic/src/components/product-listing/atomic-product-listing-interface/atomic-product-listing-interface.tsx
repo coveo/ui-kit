@@ -147,7 +147,11 @@ export class AtomicProductListingInterface
    * The relevance inspector allows to troubleshoot and debug queries.
    */
   @Prop({reflect: true}) public enableRelevanceInspector = true;
-  @Prop({reflect: true}) public url = '';
+  /**
+   * When set this property will be used instead of the current url.
+   *
+   */
+  @Prop({reflect: true}) public url?: string;
 
   public constructor() {
     this.initRelevanceInspector();
@@ -251,17 +255,13 @@ export class AtomicProductListingInterface
       return;
     }
 
-    if (!this.url) {
-      console.error(
-        'You need to set a url to fetch a product listing.',
-        this.url
-      );
-      return;
+    if (this.url) {
+      console.warn('url was manually set to :', this.url);
     }
 
     this.engine!.dispatch(
       loadProductListingActions(this.engine!).setProductListingUrl({
-        url: this.url,
+        url: this.getListingUrl(),
       })
     );
 
@@ -291,6 +291,9 @@ export class AtomicProductListingInterface
     };
   }
 
+  private getListingUrl(): string {
+    return this.url ? this.url : window.location.href;
+  }
   private initFieldsToInclude() {
     const fields = EcommerceDefaultFieldsToInclude.concat(this.fieldsToInclude);
     this.store.addFieldsToInclude(fields);
@@ -353,7 +356,7 @@ export class AtomicProductListingInterface
   }
 
   private async internalInitialization(initEngine: () => void) {
-    this.store.setUrl(this.url);
+    this.store.setUrl(this.getListingUrl());
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;

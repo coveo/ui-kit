@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Coveo Atomic Fashion Example With Recommendations & Instant Results</title>
+    <title>Coveo Atomic Product Listing Example</title>
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
@@ -69,16 +69,16 @@
             <atomic-result-section-title>
               <atomic-result-link></atomic-result-link>
             </atomic-result-section-title>
-            <!-- <atomic-result-section-title-metadata>
-                <div class="rating-wrapper">
-                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                  <atomic-field-condition class="field" if-defined="ec_rating">
-                    <span>
-                      <atomic-result-number field="cat_rating_count"></atomic-result-number>
-                    </span>
-                  </atomic-field-condition>
-                </div>
-              </atomic-result-section-title-metadata> -->
+            <atomic-result-section-title-metadata>
+              <div class="rating-wrapper">
+                <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                <atomic-field-condition class="field" if-defined="ec_rating">
+                  <span>
+                    <atomic-result-number field="cat_rating_count"></atomic-result-number>
+                  </span>
+                </atomic-field-condition>
+              </div>
+            </atomic-result-section-title-metadata>
             <atomic-result-section-emphasized>
               <atomic-result-number field="ec_price">
                 <atomic-format-currency currency="USD"></atomic-format-currency>
