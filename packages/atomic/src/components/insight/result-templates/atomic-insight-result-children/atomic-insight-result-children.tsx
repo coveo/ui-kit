@@ -1,10 +1,10 @@
-import {
-  buildInteractiveResult,
-  FoldedResult,
-  FoldedResultList,
-  FoldedResultListState,
-} from '@coveo/headless';
 import {Component, Element, State, h, Listen, Prop} from '@stencil/core';
+import {
+  buildInsightInteractiveResult,
+  InsightFoldedResultListState,
+  InsightFoldedResultList,
+  InsightFoldedResult,
+} from '../..';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -18,14 +18,14 @@ import {
   FoldedResultListStateContext,
 } from '../../../common/result-list/result-list-decorators';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
-  ResultContext,
-  ChildTemplatesContextEvent,
-  ResultDisplayConfigContext,
-  DisplayConfig,
   ChildTemplatesContext,
-} from '../../result-template-components/result-template-decorators';
+  ChildTemplatesContextEvent,
+  DisplayConfig,
+  ResultContext,
+  ResultDisplayConfigContext,
+} from '../../../search/result-template-components/result-template-decorators';
+import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
@@ -40,21 +40,23 @@ const componentTag = 'atomic-result-children';
  * @slot after-children - Slot that allows rendering content after the list of children, only when children exist.
  */
 @Component({
-  tag: 'atomic-result-children',
-  styleUrl: 'atomic-result-children.pcss',
+  tag: 'atomic-insight-result-children',
+  styleUrl: 'atomic-insight-result-children.pcss',
   shadow: true,
 })
-export class AtomicResultChildren implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+export class AtomicResultChildren
+  implements InitializableComponent<InsightBindings>
+{
+  @InitializeBindings() public bindings!: InsightBindings;
   @ChildTemplatesContext()
   public resultTemplateProvider?: ResultTemplateProvider;
   @FoldedResultListContext()
-  private foldedResultList!: FoldedResultList;
+  private foldedResultList!: InsightFoldedResultList;
   @ResultContext({folded: true})
-  private result!: FoldedResult;
+  private result!: InsightFoldedResult;
   @ResultDisplayConfigContext()
   private displayConfig!: DisplayConfig;
-  private initialChildren!: FoldedResult[];
+  private initialChildren!: InsightFoldedResult[];
 
   @Element() public host!: HTMLDivElement;
   @State() public error!: Error;
@@ -62,7 +64,7 @@ export class AtomicResultChildren implements InitializableComponent {
   @State() private templateHasError = false;
   @FoldedResultListStateContext()
   @State()
-  private foldedResultListState!: FoldedResultListState;
+  private foldedResultListState!: InsightFoldedResultListState;
   @State()
   private showInitialChildren = false;
 
@@ -134,14 +136,14 @@ export class AtomicResultChildren implements InitializableComponent {
       getImageSize: () => this.imageSize,
       getFoldedResultListState: () => this.foldedResultListState,
       renderChild: this.renderChild.bind(this),
-      setInitialChildren: (initialChildren: FoldedResult[]) =>
+      setInitialChildren: (initialChildren: InsightFoldedResult[]) =>
         (this.initialChildren = initialChildren),
       toggleShowInitialChildren: () =>
         (this.showInitialChildren = !this.showInitialChildren),
     });
   }
 
-  private renderChild(child: FoldedResult, isLast: boolean) {
+  private renderChild(child: InsightFoldedResult, isLast: boolean) {
     const content = this.resultTemplateProvider?.getTemplateContent(
       child.result
     );
@@ -158,7 +160,7 @@ export class AtomicResultChildren implements InitializableComponent {
         key={key}
         content={content}
         result={child}
-        interactiveResult={buildInteractiveResult(this.bindings.engine, {
+        interactiveResult={buildInsightInteractiveResult(this.bindings.engine, {
           options: {result: extractUnfoldedResult(child)},
         })}
         store={this.bindings.store}
