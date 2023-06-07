@@ -145,7 +145,7 @@ export class AtomicInsightTimeframeFacet
           conditions: parseDependsOn(this.dependsOn),
         }),
       buildDateRange: buildInsightDateRange,
-      getSearchStatusState: () => this.searchStatusState,
+      hasResultsToDisplay: this.searchStatusState?.hasResults || false,
       deserializeRelativeDate: deserializeInsightRelativeDate,
       initializeFacetForDatePicker: () => this.initializeFacetForDatePicker(),
       initializeFacetForDateRange: (values: InsightDateRangeRequest[]) =>
@@ -221,7 +221,7 @@ export class AtomicInsightTimeframeFacet
     }
     return this.timeframeFacetCommon.render({
       hasError: this.searchStatusState.hasError,
-      firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
+      shouldRender: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
       headerFocus: this.headerFocus,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),

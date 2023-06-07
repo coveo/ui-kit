@@ -34,7 +34,7 @@ import {getAnalyticsConfig} from './analytics-config';
 import {AtomicStore, createAtomicStore} from './store';
 
 export type InitializationOptions = ProductListingEngineConfiguration;
-export type Bindings = CommonBindings<
+export type ProductListingBindings = CommonBindings<
   ProductListingEngine,
   AtomicStore,
   HTMLAtomicProductListingInterfaceElement
@@ -277,7 +277,7 @@ export class AtomicProductListingInterface
     return getOrganizationEndpointsHeadless(organizationId, env);
   }
 
-  public get bindings(): Bindings {
+  public get bindings(): ProductListingBindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,

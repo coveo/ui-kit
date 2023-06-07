@@ -62,8 +62,8 @@ type AnyFacetType = Facet | NumericFacet | CategoryFacet | DateFacet;
 
 export type BaseFacet<FacetType extends AnyFacetType> = {
   facet?: FacetType;
-  searchStatus: SearchStatus;
-  searchStatusState: SearchStatusState;
+  searchStatus?: SearchStatus;
+  searchStatusState?: SearchStatusState;
   error: Error;
 } & PropsOnAllFacets &
   StateProp<FacetType> &
@@ -218,10 +218,11 @@ export function validateDependsOn(dependsOn: Record<string, string>) {
 export function shouldDisplayInputForFacetRange(facetRange: {
   hasInput: boolean;
   hasInputRange: boolean;
-  searchStatusState: SearchStatusState;
+  hasResultsToDisplay: boolean;
   facetValues: Pick<FacetValue, 'numberOfResults' | 'state'>[];
 }) {
-  const {hasInput, hasInputRange, searchStatusState, facetValues} = facetRange;
+  const {hasInput, hasInputRange, hasResultsToDisplay, facetValues} =
+    facetRange;
   if (!hasInput) {
     return false;
   }
@@ -230,7 +231,7 @@ export function shouldDisplayInputForFacetRange(facetRange: {
     return true;
   }
 
-  if (!searchStatusState.hasResults) {
+  if (!hasResultsToDisplay) {
     return false;
   }
 
@@ -270,7 +271,7 @@ interface FacetCommonOptions {
 
 interface FacetCommonRenderProps {
   hasError: boolean;
-  firstSearchExecuted: boolean;
+  shouldRender: boolean;
   isCollapsed: boolean;
   numberOfValues: number;
   headerFocus: FocusTargetController;
@@ -609,7 +610,7 @@ export class FacetCommon {
 
   public render({
     hasError,
-    firstSearchExecuted,
+    shouldRender,
     isCollapsed,
     numberOfValues,
     headerFocus,
@@ -620,8 +621,8 @@ export class FacetCommon {
     if (hasError || !this.facet.state.enabled) {
       return <Hidden></Hidden>;
     }
-
-    if (!firstSearchExecuted) {
+    console.log({shouldRender});
+    if (!shouldRender) {
       return (
         <FacetPlaceholder
           numberOfValues={numberOfValues}

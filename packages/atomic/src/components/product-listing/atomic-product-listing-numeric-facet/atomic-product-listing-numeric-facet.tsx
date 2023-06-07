@@ -1,103 +1,72 @@
-import {
-  buildFacetConditionsManager,
-  buildNumericFacet,
-  buildNumericFilter,
-  buildNumericRange,
-  buildSearchStatus,
-  loadNumericFacetSetActions,
-  NumericFacet,
-  NumericFacetState,
-  NumericFilter,
-  NumericFilterState,
-  RangeFacetRangeAlgorithm,
-  RangeFacetSortCriterion,
-  SearchStatus,
-  SearchStatusState,
-} from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
+import {
+  buildProductListingFacetConditionsManager,
+  buildProductListingNumericFacet,
+  buildProductListingNumericFilter,
+  buildProductListingNumericRange,
+  ProductListingNumericFacet,
+  ProductListingNumericFacetState,
+  ProductListingNumericFilter,
+  ProductListingNumericFilterState,
+  ProductListingRangeFacetRangeAlgorithm,
+  ProductListingRangeFacetSortCriterion,
+  loadProductListingNumericFacetSetActions,
+} from '..';
 import {
   FocusTarget,
   FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../../utils/initialization-utils';
-import {MapProp} from '../../../../utils/props-utils';
-import {BaseFacet, parseDependsOn} from '../../../common/facets/facet-common';
-import {NumberInputType} from '../../../common/facets/facet-number-input/number-input-type';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+} from '../../../utils/initialization-utils';
+import {MapProp} from '../../../utils/props-utils';
+import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
+import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
+import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {
   NumericFacetCommon,
+  NumericFacetDisplayValues,
   NumericRangeWithLabel,
-} from '../../../common/facets/numeric-facet-common';
+} from '../../common/facets/numeric-facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
-} from '../../../common/formats/format-common';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+} from '../../common/formats/format-common';
+import {ProductListingBindings} from '../atomic-product-listing-interface/atomic-product-listing-interface';
 
 /**
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., ascending, descending).
- * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
- *
- * @part facet - The wrapper for the entire facet.
- * @part placeholder - The placeholder shown before the first search is executed.
- *
- * @part label-button - The button that displays the label and allows to expand/collapse the facet.
- * @part label-button-icon - The label button icon.
- * @part clear-button - The button that resets the actively selected facet values.
- * @part clear-button-icon - The clear button icon.
- *
- * @part values - The facet values container.
- * @part value-label - The facet value label, common for all displays.
- * @part value-count - The facet value count, common for all displays.
- *
- * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
- * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
- * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
- * @part value-link - The facet value when display is 'link'.
- * @part value-link-selected - The selected facet value when display is 'link'.
-
- * @part input-form - The form that comprises the labels, inputs, and 'apply' button for the custom numeric range.
- * @part label-start - The label for the starting value of the custom numeric range.
- * @part label-end - The label for the ending value of the custom numeric range.
- * @part input-start - The input for the starting value of the custom numeric range.
- * @part input-end - The input for the ending value of the custom numeric range.
- * @part input-apply-button - The apply button for the custom range.
+ * @internal
  */
 @Component({
-  tag: 'atomic-numeric-facet',
-  styleUrl: './atomic-numeric-facet.pcss',
+  tag: 'atomic-product-listing-numeric-facet',
+  styleUrl: './atomic-product-listing-numeric-facet.pcss',
   shadow: true,
 })
-export class AtomicNumericFacet
-  implements InitializableComponent, BaseFacet<NumericFacet>
+export class AtomicProductListingNumericFacet
+  implements
+    InitializableComponent<ProductListingBindings>,
+    BaseFacet<ProductListingNumericFacet>
 {
-  @InitializeBindings() public bindings!: Bindings;
-  public facetForRange?: NumericFacet;
-  public facetForInput?: NumericFacet;
-  public filter?: NumericFilter;
-  public searchStatus!: SearchStatus;
-  @Element() private host!: HTMLElement;
+  @InitializeBindings() public bindings!: ProductListingBindings;
+  public facetForRange?: ProductListingNumericFacet;
+  public facetForInput?: ProductListingNumericFacet;
+  public filter?: ProductListingNumericFilter;
   private manualRanges: NumericRangeWithLabel[] = [];
+  @Element() private host!: HTMLElement;
   private formatter: NumberFormatter = defaultNumberFormatter;
   private numericFacetCommon?: NumericFacetCommon;
-
   @BindStateToController('facetForRange')
   @State()
-  public facetState!: NumericFacetState;
+  public facetState!: ProductListingNumericFacetState;
   @BindStateToController('filter')
   @State()
-  public filterState?: NumericFilterState;
-  @BindStateToController('searchStatus')
-  @State()
-  public searchStatusState!: SearchStatusState;
+  public filterState?: ProductListingNumericFilterState;
   @State() public error!: Error;
   @BindStateToController('facetForInput')
   @State()
-  public facetForInputState?: NumericFacetState;
+  public facetForInputState?: ProductListingNumericFacetState;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -126,21 +95,22 @@ export class AtomicNumericFacet
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'ascending' and 'descending'.
    */
-  @Prop({reflect: true}) public sortCriteria: RangeFacetSortCriterion =
-    'ascending';
+  @Prop({reflect: true})
+  public sortCriteria: ProductListingRangeFacetSortCriterion = 'ascending';
   /**
    * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
    */
-  @Prop({reflect: true}) public rangeAlgorithm: RangeFacetRangeAlgorithm =
+  @Prop({reflect: true})
+  public rangeAlgorithm: ProductListingRangeFacetRangeAlgorithm =
     'equiprobable';
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
-  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' =
+  @Prop({reflect: true}) public displayValuesAs: NumericFacetDisplayValues =
     'checkbox';
   /**
-   * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+   * Specifies if the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
@@ -163,19 +133,19 @@ export class AtomicNumericFacet
    * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
-   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   * <atomic-product-listing-facet facet-id="abc" field="objecttype" ...></atomic-product-listing-facet>
    *
    * <!-- To show the facet when any value is selected in the facet with id "abc": -->
-   * <atomic-numeric-facet
+   * <atomic-product-listing-numeric-facet
    *   depends-on-abc
    *   ...
-   * ></atomic-numeric-facet>
+   * ></atomic-product-listing-numeric-facet>
    *
    * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
-   * <atomic-numeric-facet
+   * <atomic-product-listing-numeric-facet
    *   depends-on-abc="doc"
    *   ...
-   * ></atomic-numeric-facet>
+   * ></atomic-product-listing-numeric-facet>
    * ```
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
@@ -194,23 +164,22 @@ export class AtomicNumericFacet
       dependsOn: this.dependsOn,
       displayValuesAs: this.displayValuesAs,
       withInput: this.withInput,
+      hasResultsToDisplay: true,
       numberOfValues: this.numberOfValues,
       setFacetId: (id: string) => (this.facetId = id),
       setManualRanges: (manualRanges) => (this.manualRanges = manualRanges),
       getFormatter: () => this.formatter,
-      hasResultsToDisplay: this.searchStatusState?.hasResults || false,
       buildDependenciesManager: () =>
-        buildFacetConditionsManager(this.bindings.engine, {
+        buildProductListingFacetConditionsManager(this.bindings.engine, {
           facetId:
             this.facetForRange?.state.facetId ?? this.filter!.state.facetId,
           conditions: parseDependsOn(this.dependsOn),
         }),
-      buildNumericRange: buildNumericRange,
+      buildNumericRange: buildProductListingNumericRange,
       initializeFacetForInput: () => this.initializeFacetForInput(),
       initializeFacetForRange: () => this.initializeFacetForRange(),
       initializeFilter: () => this.initializeFilter(),
     });
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
   public disconnectedCallback() {
@@ -218,11 +187,11 @@ export class AtomicNumericFacet
   }
 
   private initializeFacetForInput() {
-    this.facetForInput = buildNumericFacet(this.bindings.engine, {
+    this.facetForInput = buildProductListingNumericFacet(this.bindings.engine, {
       options: {
+        facetId: `${this.facetId}_input_range`,
         numberOfValues: 1,
         generateAutomaticRanges: true,
-        facetId: `${this.facetId}_input_range`,
         field: this.field,
         sortCriteria: this.sortCriteria,
         rangeAlgorithm: this.rangeAlgorithm,
@@ -235,7 +204,7 @@ export class AtomicNumericFacet
   }
 
   private initializeFacetForRange() {
-    this.facetForRange = buildNumericFacet(this.bindings.engine, {
+    this.facetForRange = buildProductListingNumericFacet(this.bindings.engine, {
       options: {
         facetId: this.facetId,
         field: this.field,
@@ -253,13 +222,16 @@ export class AtomicNumericFacet
   }
 
   private initializeFilter() {
-    this.filter = buildNumericFilter(this.bindings.engine, {
+    this.filter = buildProductListingNumericFilter(this.bindings.engine, {
       options: {
         facetId: `${this.facetId}_input`,
         field: this.field,
       },
     });
 
+    if (!this.facetId) {
+      this.facetId = this.filter.state.facetId;
+    }
     return this.filter;
   }
 
@@ -274,7 +246,7 @@ export class AtomicNumericFacet
   public applyNumberInput() {
     this.facetId &&
       this.bindings.engine.dispatch(
-        loadNumericFacetSetActions(
+        loadProductListingNumericFacetSetActions(
           this.bindings.engine
         ).deselectAllNumericFacetValues(this.facetId)
       );
@@ -290,8 +262,8 @@ export class AtomicNumericFacet
       );
     }
     return this.numericFacetCommon.render({
-      hasError: this.searchStatusState.hasError,
-      shouldRender: this.searchStatusState.firstSearchExecuted,
+      hasError: !!this.error,
+      shouldRender: true,
       isCollapsed: this.isCollapsed,
       headerFocus: this.headerFocus,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),

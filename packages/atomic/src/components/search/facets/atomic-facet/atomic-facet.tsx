@@ -272,7 +272,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     }
     return this.facetCommon.render({
       hasError: this.searchStatusState.hasError,
-      firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
+      shouldRender: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
       numberOfValues: this.numberOfValues,
       headerFocus: this.headerFocus,

@@ -174,7 +174,7 @@ export class AtomicInsightNumericFacet
       setFacetId: (id: string) => (this.facetId = id),
       setManualRanges: (manualRanges) => (this.manualRanges = manualRanges),
       getFormatter: () => this.formatter,
-      getSearchStatusState: () => this.searchStatusState,
+      hasResultsToDisplay: this.searchStatusState?.hasResults || false,
       buildDependenciesManager: () =>
         buildInsightFacetConditionsManager(this.bindings.engine, {
           facetId:
@@ -270,7 +270,7 @@ export class AtomicInsightNumericFacet
     }
     return this.numericFacetCommon.render({
       hasError: this.searchStatusState.hasError,
-      firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
+      shouldRender: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
       headerFocus: this.headerFocus,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),

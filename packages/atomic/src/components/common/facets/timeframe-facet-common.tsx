@@ -16,7 +16,6 @@ import {
   RelativeDate,
   RelativeDatePeriod,
   RelativeDateUnit,
-  SearchStatusState,
 } from '../types';
 import {
   shouldDisplayInputForFacetRange,
@@ -47,7 +46,7 @@ interface TimeframeFacetCommonOptions {
   dependsOn: Record<string, string>;
   withDatePicker: boolean;
   setFacetId(id: string): string;
-  getSearchStatusState(): SearchStatusState;
+  hasResultsToDisplay: boolean;
   buildDependenciesManager(): FacetConditionsManager;
   deserializeRelativeDate(date: string): RelativeDate;
   buildDateRange(config: DateRangeOptions): DateRangeRequest;
@@ -60,7 +59,7 @@ interface TimeframeFacetCommonOptions {
 
 interface TimeframeFacetCommonRenderProps {
   hasError: boolean;
-  firstSearchExecuted: boolean;
+  shouldRender: boolean;
   isCollapsed: boolean;
   headerFocus: FocusTargetController;
   onToggleCollapse: () => boolean;
@@ -143,7 +142,7 @@ export class TimeframeFacetCommon {
     return shouldDisplayInputForFacetRange({
       hasInput: this.props.withDatePicker,
       hasInputRange: this.hasInputRange,
-      searchStatusState: this.props.getSearchStatusState(),
+      hasResultsToDisplay: this.props.hasResultsToDisplay,
       facetValues: this.facetForDatePicker?.state?.values || [],
     });
   }
@@ -344,7 +343,7 @@ export class TimeframeFacetCommon {
 
   public render({
     hasError,
-    firstSearchExecuted,
+    shouldRender,
     isCollapsed,
     headerFocus,
     onToggleCollapse,
@@ -353,7 +352,7 @@ export class TimeframeFacetCommon {
       return <Hidden></Hidden>;
     }
 
-    if (!firstSearchExecuted) {
+    if (!shouldRender) {
       return (
         <FacetPlaceholder
           numberOfValues={this.currentValues.length}

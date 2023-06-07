@@ -1,14 +1,11 @@
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
-  buildInsightFacet,
-  buildInsightFacetConditionsManager,
-  buildInsightSearchStatus,
-  InsightFacet,
-  InsightFacetOptions,
-  InsightFacetSortCriterion,
-  InsightFacetState,
-  InsightSearchStatus,
-  InsightSearchStatusState,
+  buildProductListingFacet,
+  ProductListingFacet,
+  ProductListingFacetOptions,
+  ProductListingFacetState,
+  ProductListingFacetSortCriterion,
+  buildProductListingFacetConditionsManager,
 } from '..';
 import {
   FocusTarget,
@@ -26,33 +23,31 @@ import {
 } from '../../common/facets/facet-common';
 import {parseDependsOn} from '../../common/facets/facet-common';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import {ProductListingBindings} from '../atomic-product-listing-interface/atomic-product-listing-interface';
 
 /**
  * @internal
  */
 @Component({
-  tag: 'atomic-insight-facet',
-  styleUrl: 'atomic-insight-facet.pcss',
+  tag: 'atomic-product-listing-facet',
+  styleUrl: 'atomic-product-listing-facet.pcss',
   shadow: true,
 })
-export class AtomicInsightFacet
-  implements InitializableComponent<InsightBindings>, BaseFacet<InsightFacet>
+export class AtomicProductListingFacet
+  implements
+    InitializableComponent<ProductListingBindings>,
+    BaseFacet<ProductListingFacet>
 {
-  @InitializeBindings() public bindings!: InsightBindings;
+  @InitializeBindings() public bindings!: ProductListingBindings;
   public facetCommon?: FacetCommon;
-  public facet!: InsightFacet;
-  public searchStatus!: InsightSearchStatus;
+  public facet!: ProductListingFacet;
   public withSearch = false;
   public dependsOn = {};
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
-  public facetState!: InsightFacetState;
-  @BindStateToController('searchStatus')
-  @State()
-  public searchStatusState!: InsightSearchStatusState;
+  public facetState!: ProductListingFacetState;
   @State() public error!: Error;
 
   /**
@@ -76,7 +71,7 @@ export class AtomicInsightFacet
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
    */
-  @Prop({reflect: true}) public sortCriteria: InsightFacetSortCriterion =
+  @Prop({reflect: true}) public sortCriteria: ProductListingFacetSortCriterion =
     'automatic';
   /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
@@ -114,7 +109,7 @@ export class AtomicInsightFacet
   private headerFocus!: FocusTargetController;
 
   public initialize() {
-    const options: InsightFacetOptions = {
+    const options: ProductListingFacetOptions = {
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfValues,
@@ -124,7 +119,7 @@ export class AtomicInsightFacet
       injectionDepth: this.injectionDepth,
     };
 
-    this.facet = buildInsightFacet(this.bindings.engine, {options});
+    this.facet = buildProductListingFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
 
     this.facetCommon = new FacetCommon({
@@ -135,7 +130,7 @@ export class AtomicInsightFacet
       headingLevel: this.headingLevel,
       displayValuesAs: this.displayValuesAs,
       dependsOn: this.dependsOn,
-      dependenciesManager: buildInsightFacetConditionsManager(
+      dependenciesManager: buildProductListingFacetConditionsManager(
         this.bindings.engine,
         {
           facetId: this.facetId!,
@@ -147,8 +142,6 @@ export class AtomicInsightFacet
       withSearch: this.withSearch,
       sortCriteria: this.sortCriteria,
     });
-
-    this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
 
   public disconnectedCallback() {
@@ -165,8 +158,8 @@ export class AtomicInsightFacet
       );
     }
     return this.facetCommon.render({
-      hasError: this.searchStatusState.hasError,
-      shouldRender: this.searchStatusState.firstSearchExecuted,
+      hasError: !!this.error,
+      shouldRender: true,
       isCollapsed: this.isCollapsed,
       numberOfValues: this.numberOfValues,
       headerFocus: this.headerFocus,

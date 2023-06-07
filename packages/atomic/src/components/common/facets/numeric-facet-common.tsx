@@ -14,7 +14,6 @@ import {
   NumericFilter,
   NumericRangeOptions,
   NumericRangeRequest,
-  SearchStatusState,
 } from '../types';
 import {
   shouldDisplayInputForFacetRange,
@@ -52,7 +51,7 @@ interface NumericFacetCommonOptions {
     manualRanges: NumericRangeWithLabel[]
   ): NumericRangeWithLabel[];
   getFormatter(): NumberFormatter;
-  getSearchStatusState(): SearchStatusState;
+  hasResultsToDisplay: boolean;
   buildDependenciesManager(): FacetConditionsManager;
   buildNumericRange(config: NumericRangeOptions): NumericRangeRequest;
   initializeFacetForInput(): NumericFacet;
@@ -62,7 +61,7 @@ interface NumericFacetCommonOptions {
 
 interface NumericFacetCommonRenderProps {
   hasError: boolean;
-  firstSearchExecuted: boolean;
+  shouldRender: boolean;
   isCollapsed: boolean;
   headerFocus: FocusTargetController;
   onToggleCollapse: () => boolean;
@@ -157,14 +156,10 @@ export class NumericFacetCommon {
     return this.shouldRenderInput || this.shouldRenderValues;
   }
 
-  private get searchStatusState() {
-    return this.props.getSearchStatusState();
-  }
-
   private get shouldRenderInput() {
     return shouldDisplayInputForFacetRange({
       hasInputRange: this.hasInputRange,
-      searchStatusState: this.searchStatusState,
+      hasResultsToDisplay: this.props.hasResultsToDisplay,
       facetValues: this.facetForInput?.state.values || [],
       hasInput: !!this.props.withInput,
     });
@@ -370,7 +365,7 @@ export class NumericFacetCommon {
 
   public render({
     hasError,
-    firstSearchExecuted,
+    shouldRender,
     isCollapsed,
     headerFocus,
     onToggleCollapse,
@@ -379,7 +374,7 @@ export class NumericFacetCommon {
       return <Hidden></Hidden>;
     }
 
-    if (!firstSearchExecuted) {
+    if (!shouldRender) {
       return (
         <FacetPlaceholder
           numberOfValues={this.props.numberOfValues}

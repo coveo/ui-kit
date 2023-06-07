@@ -68,8 +68,30 @@
     <atomic-product-listing-interface
       pipeline="Search"
       search-hub="MainSearch"
-      url="https://fashion.coveodemo.com/browse/men/hats"
+      url="https://fashion.coveodemo.com/browse/women/pants"
     >
+      <atomic-facet-manager collapse-facets-after="-1">
+        <atomic-product-listing-facet field="ec_brand" label="Product Listing Facet - Brand" shouldRender="true"></atomic-product-listing-facet>
+        <atomic-product-listing-category-facet field="ec_category" label="Category Facet" ></atomic-product-listing-category-facet>
+        <atomic-product-listing-numeric-facet
+          field="ec_promo_price"
+          label="Numeric Facet"
+          with-input="integer"
+        >
+          <atomic-numeric-range start="0" end="5" label="Cheap"></atomic-numeric-range>
+          <atomic-numeric-range start="5" end="10" label="Still Cheap"></atomic-numeric-range>
+          <atomic-numeric-range start="10" end="1000" label="Still Cheap"></atomic-numeric-range>
+          <atomic-numeric-range start="1000" end="999999999" label="Now we are talking"></atomic-numeric-range>
+        </atomic-product-listing-numeric-facet>
+        <atomic-product-listing-product-rating-range-facet
+          facet-id="ec_rating_range"
+          field="ec_rating"
+          label="Rating Range"
+          number-of-intervals="5"
+          heading-level="2"
+        >
+        </atomic-product-listing-product-rating-range-facet>
+      </atomic-facet-manager>
     </atomic-product-listing-interface>
     <script src="../header.js" type="text/javascript"></script>
   </body>
