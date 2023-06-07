@@ -1,3 +1,12 @@
+## 2.18.4 (2023-06-07)
+
+
+### Bug Fixes
+
+* undefined error when checking mismatch with new endpoint url  ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
+
+
+
 ## 2.18.3 (2023-06-01)
 
 
