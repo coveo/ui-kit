@@ -164,15 +164,15 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail('should log the "ticket_classification_click" UA event');
     },
 
-    fetchClassificationsAfterValueChange: () => {
+    fetchClassifications: () => {
       cy.wait(InterceptAliases.CaseClassification).logDetail(
-        'should fetch new case classifications after the value changes'
+        'should fetch new case classifications'
       );
     },
 
-    fetchDocumentsAfterValueChange: () => {
+    fetchDocumentSuggestions: () => {
       cy.wait(InterceptAliases.DocumentSuggestion).logDetail(
-        'should fetch new document suggestions after the value changes'
+        'should fetch new document suggestions'
       );
     },
   };

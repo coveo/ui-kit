@@ -15,7 +15,7 @@
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
-          organizationEndpoints: searchInterface.getOrganizationEndpoints('searchuisamples'),
+          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
         });
 
         searchInterface.executeFirstSearch();
@@ -88,6 +88,7 @@
       window.customElements.define('custom-template-component', CustomTemplateComponent);
     </script>
   </head>
+
   <body>
     <atomic-search-interface>
       <custom-component></custom-component>

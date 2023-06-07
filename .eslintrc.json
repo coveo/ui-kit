@@ -1,41 +1,86 @@
 {
-  "ignorePatterns": ["node_modules", "stencil-generated", "dist", "www"],
+  "ignorePatterns": [
+    "node_modules",
+    "stencil-generated",
+    "dist",
+    "www"
+  ],
   "env": {
     "jest": true,
     "es6": true
   },
-  "extends": ["prettier"],
+  "extends": [
+    "prettier"
+  ],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
   "overrides": [
     {
-      "files": ["**/*.ts", "**/*.tsx"],
+      "files": [
+        "**/package-lock.json"
+      ],
+      "parser": "eslint-plugin-json-es",
+      "plugins": [
+        "package-lock"
+      ],
+      "rules": {
+        "package-lock/lock-file-version": [
+          "error",
+          {
+            "version": 3
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "**/*.ts",
+        "**/*.tsx"
+      ],
       "parser": "@typescript-eslint/parser",
-      "plugins": ["@typescript-eslint"],
-      "extends": ["./node_modules/gts"],
+      "plugins": [
+        "@typescript-eslint"
+      ],
+      "extends": [
+        "./node_modules/gts"
+      ],
       "parserOptions": {
         "jsxPragma": "h"
       },
       "rules": {
         "@typescript-eslint/no-unused-vars": [
           "warn",
-          {"ignoreRestSiblings": true}
+          {
+            "ignoreRestSiblings": true
+          }
         ],
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/ban-types": "off",
         "@typescript-eslint/no-empty-interface": [
           "error",
-          {"allowSingleExtends": true}
+          {
+            "allowSingleExtends": true
+          }
         ]
       }
     },
     {
-      "files": ["**/*.js", "**/*.jsx"],
-      "extends": ["eslint:recommended"],
+      "files": [
+        "**/*.js",
+        "**/*.jsx"
+      ],
+      "extends": [
+        "eslint:recommended"
+      ],
       "rules": {
-        "no-unused-vars": ["error", {"argsIgnorePattern": "^_"}]
+        "no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_"
+          }
+        ]
       },
       "env": {
         "node": true
@@ -43,7 +88,10 @@
     },
     {
       "files": "**/*.mjs",
-      "parserOptions": {"sourceType": "module", "ecmaVersion": 2022}
+      "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 2022
+      }
     }
   ],
   "root": true

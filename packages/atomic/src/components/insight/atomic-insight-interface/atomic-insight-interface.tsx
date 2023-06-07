@@ -245,7 +245,7 @@ export class AtomicInsightInterface
       this.engine && (
         <host>
           <slot name="full-search"></slot>
-          <slot></slot>;
+          <slot></slot>
         </host>
       )
     );
