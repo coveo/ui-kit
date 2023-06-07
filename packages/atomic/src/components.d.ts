@@ -979,6 +979,20 @@ export namespace Components {
          */
         "url"?: string;
     }
+    interface AtomicProductListingPager {
+        /**
+          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "nextButtonIcon": string;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
+        /**
+          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "previousButtonIcon": string;
+    }
     interface AtomicProductListingResult {
         /**
           * The classes to add to the result element.
@@ -1994,6 +2008,10 @@ export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicPagerElement;
 }
+export interface AtomicProductListingPagerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicProductListingPagerElement;
+}
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
@@ -2386,6 +2404,12 @@ declare global {
     var HTMLAtomicProductListingInterfaceElement: {
         prototype: HTMLAtomicProductListingInterfaceElement;
         new (): HTMLAtomicProductListingInterfaceElement;
+    };
+    interface HTMLAtomicProductListingPagerElement extends Components.AtomicProductListingPager, HTMLStencilElement {
+    }
+    var HTMLAtomicProductListingPagerElement: {
+        prototype: HTMLAtomicProductListingPagerElement;
+        new (): HTMLAtomicProductListingPagerElement;
     };
     interface HTMLAtomicProductListingResultElement extends Components.AtomicProductListingResult, HTMLStencilElement {
     }
@@ -2850,6 +2874,7 @@ declare global {
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product-listing": HTMLAtomicProductListingElement;
         "atomic-product-listing-interface": HTMLAtomicProductListingInterfaceElement;
+        "atomic-product-listing-pager": HTMLAtomicProductListingPagerElement;
         "atomic-product-listing-result": HTMLAtomicProductListingResultElement;
         "atomic-product-listing-result-template": HTMLAtomicProductListingResultTemplateElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -3820,6 +3845,21 @@ declare namespace LocalJSX {
           * When set this property will be used instead of the current url.
          */
         "url"?: string;
+    }
+    interface AtomicProductListingPager {
+        /**
+          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "nextButtonIcon"?: string;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
+        "onAtomic/scrollToTop"?: (event: AtomicProductListingPagerCustomEvent<any>) => void;
+        /**
+          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "previousButtonIcon"?: string;
     }
     interface AtomicProductListingResult {
         /**
@@ -4810,6 +4850,7 @@ declare namespace LocalJSX {
         "atomic-popover": AtomicPopover;
         "atomic-product-listing": AtomicProductListing;
         "atomic-product-listing-interface": AtomicProductListingInterface;
+        "atomic-product-listing-pager": AtomicProductListingPager;
         "atomic-product-listing-result": AtomicProductListingResult;
         "atomic-product-listing-result-template": AtomicProductListingResultTemplate;
         "atomic-query-error": AtomicQueryError;
@@ -4943,6 +4984,7 @@ declare module "@stencil/core" {
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             "atomic-product-listing": LocalJSX.AtomicProductListing & JSXBase.HTMLAttributes<HTMLAtomicProductListingElement>;
             "atomic-product-listing-interface": LocalJSX.AtomicProductListingInterface & JSXBase.HTMLAttributes<HTMLAtomicProductListingInterfaceElement>;
+            "atomic-product-listing-pager": LocalJSX.AtomicProductListingPager & JSXBase.HTMLAttributes<HTMLAtomicProductListingPagerElement>;
             "atomic-product-listing-result": LocalJSX.AtomicProductListingResult & JSXBase.HTMLAttributes<HTMLAtomicProductListingResultElement>;
             "atomic-product-listing-result-template": LocalJSX.AtomicProductListingResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductListingResultTemplateElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
