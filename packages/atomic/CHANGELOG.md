@@ -1,3 +1,14 @@
+## 2.31.4 (2023-06-07)
+
+
+### Bug Fixes
+
+* **atomic:** code defensively around triggers notifications state ([#2946](https://github.com/coveo/ui-kit/issues/2946)) ([032a7c2](https://github.com/coveo/ui-kit/commits/032a7c2d36e1fddec0599ed01708d691fa2eb94e))
+* **atomic:** not good ([#2965](https://github.com/coveo/ui-kit/issues/2965)) ([9efbb49](https://github.com/coveo/ui-kit/commits/9efbb49918562207757a2a724cfb9e7d1f171ac2))
+* undefined error when checking mismatch with new endpoint url  ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
+
+
+
 ## 2.31.3 (2023-06-01)
 
 

@@ -1,3 +1,12 @@
+# 2.25.0 (2023-06-07)
+
+
+### Features
+
+* **quantic:** new property fetchOnInit added to the Quantic Case Classification ([#2953](https://github.com/coveo/ui-kit/issues/2953)) ([7caf7d2](https://github.com/coveo/ui-kit/commits/7caf7d26942c847aadc5649d4d47d3ed1d85f501))
+
+
+
 ## 2.24.3 (2023-06-01)
 
 
