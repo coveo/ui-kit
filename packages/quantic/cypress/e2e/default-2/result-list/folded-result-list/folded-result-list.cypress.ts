@@ -105,8 +105,11 @@ describe('quantic-folded-result-list', {browser: 'chrome'}, () => {
           });
 
           scope('when showing more results', () => {
-            mockSearchWithResults(exampleResultWithMoreChildResults.data);
-            Actions.toggleMoreChidResults();
+            mockSearchWithResults(
+              exampleResultWithMoreChildResults.data,
+              param.useCase
+            );
+            Actions.toggleMoreChildResults();
             Expect.resultsEqual(resultHierarchyWithMoreChildResults);
             Expect.logShowMoreFoldedResults({
               documentId: {
@@ -121,7 +124,7 @@ describe('quantic-folded-result-list', {browser: 'chrome'}, () => {
           });
 
           scope('when showing less results', () => {
-            Actions.toggleMoreChidResults();
+            Actions.toggleMoreChildResults();
             Expect.resultsEqual(resultHierarchy);
             Expect.logShowLessFoldedResults();
           });
@@ -137,7 +140,7 @@ describe('quantic-folded-result-list', {browser: 'chrome'}, () => {
             });
 
             scope('when showing more results', () => {
-              Actions.toggleMoreChidResults();
+              Actions.toggleMoreChildResults();
               Expect.resultsEqual(resultHierarchy);
               Expect.logShowMoreFoldedResults({
                 documentId: {
