@@ -1,8 +1,1 @@
-{
-  "recommendations": [
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "redhat.vscode-yaml",
-    "streetsidesoftware.code-spell-checker"
-  ]
-}
+{"recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "snyk-security.snyk-vulnerability-scanner"]}

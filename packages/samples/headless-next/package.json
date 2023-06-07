@@ -9,14 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@coveo/headless": "2.18.3",
+    "next": "13.4.4",
+    "react-dom": "18.2.0",
+    "react": "18.2.0",
+    "server-only": "0.0.1",
+    "fast-equals": "5.0.1"
+  },
+  "devDependencies": {
     "@types/node": "20.2.5",
     "@types/react-dom": "18.2.4",
     "@types/react": "18.2.8",
     "eslint-config-next": "13.4.4",
     "eslint": "8.22.0",
-    "next": "13.4.4",
-    "react-dom": "18.2.0",
-    "react": "18.2.0",
     "typescript": "5.1.3"
   }
 }
