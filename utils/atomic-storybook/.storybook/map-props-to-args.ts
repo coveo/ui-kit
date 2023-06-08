@@ -1,3 +1,4 @@
+/* eslint-disable node/no-extraneous-import */
 import AtomicDocumentation from '@coveo/atomic/docs/atomic-docs.json';
 import {isNullOrUndefined} from '@coveo/bueno';
 import {JsonDocs, JsonDocsValue} from '@stencil/core/internal';
