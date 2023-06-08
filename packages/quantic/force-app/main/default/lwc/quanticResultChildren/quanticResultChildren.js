@@ -174,10 +174,10 @@ export default class QuanticResultChildren extends LightningElement {
   }
 
   get shouldDisplayNoChildrenMessage() {
-    if (!this.isFirstLevelChildCollection || !this.areAllChildResultsLoaded) {
+    if (!this.isFirstLevelChildCollection) {
       return false;
     }
-    return !this.moreResultsFound;
+    return this.areAllChildResultsLoaded && !this.moreResultsFound;
   }
 
   render() {
