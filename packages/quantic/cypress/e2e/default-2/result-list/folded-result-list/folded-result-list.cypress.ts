@@ -25,7 +25,7 @@ interface FoldedResultListOptions {
   useCase: string;
 }
 
-describe('quantic-folded-result-list', {browser: 'chrome'}, () => {
+describe('quantic-folded-result-list', () => {
   const pageUrl = 's/quantic-folded-result-list';
   const result = exampleResult.data[0];
   const resultHierarchy = exampleResult.hierarchy[0];
