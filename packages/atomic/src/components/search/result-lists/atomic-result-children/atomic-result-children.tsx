@@ -88,6 +88,27 @@ export class AtomicResultChildren implements InitializableComponent {
   }
 
   public initialize() {
+    this.resultChildrenCommon = new ResultChildrenCommon({
+      getHost: () => this.host,
+      getBindings: () => this.bindings,
+      getResult: () => this.result,
+      getShowInitialChildren: () => this.showInitialChildren,
+      getFoldedResultList: () => this.foldedResultList,
+      getInitialChildren: () => this.initialChildren,
+      getInheritTemplates: () => this.inheritTemplates,
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      getNoResultText: () => this.noResultText,
+      getDisplayConfig: () => this.displayConfig,
+      getImageSize: () => this.imageSize,
+      getFoldedResultListState: () => this.foldedResultListState,
+      renderChild: this.renderChild.bind(this),
+      setInitialChildren: (initialChildren: FoldedResult[]) =>
+        (this.initialChildren = initialChildren),
+      toggleShowInitialChildren: () =>
+        (this.showInitialChildren = !this.showInitialChildren),
+    });
+
     if (this.inheritTemplates) {
       return;
     }
@@ -117,27 +138,6 @@ export class AtomicResultChildren implements InitializableComponent {
         this.templateHasError = value;
       },
       bindings: this.bindings,
-    });
-
-    this.resultChildrenCommon = new ResultChildrenCommon({
-      getHost: () => this.host,
-      getBindings: () => this.bindings,
-      getResult: () => this.result,
-      getShowInitialChildren: () => this.showInitialChildren,
-      getFoldedResultList: () => this.foldedResultList,
-      getInitialChildren: () => this.initialChildren,
-      getInheritTemplates: () => this.inheritTemplates,
-      getResultTemplateRegistered: () => this.resultTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      getNoResultText: () => this.noResultText,
-      getDisplayConfig: () => this.displayConfig,
-      getImageSize: () => this.imageSize,
-      getFoldedResultListState: () => this.foldedResultListState,
-      renderChild: this.renderChild.bind(this),
-      setInitialChildren: (initialChildren: FoldedResult[]) =>
-        (this.initialChildren = initialChildren),
-      toggleShowInitialChildren: () =>
-        (this.showInitialChildren = !this.showInitialChildren),
     });
   }
 
