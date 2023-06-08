@@ -48,12 +48,14 @@ export const mapPropsToArgTypes = (componentTag: string): ArgTypes => {
         )
     )
     .forEach((prop) => {
+      const {type, options} = determineControlTypeFromJsonValues(prop.values);
       ret[prop.name] = {
         description: `<pre>${prop.docs}</pre>`,
         table: {
           defaultValue: {summary: prop.default},
         },
-        control: determineControlTypeFromJsonValues(prop.values),
+        options,
+        control: {type},
       };
     });
 
