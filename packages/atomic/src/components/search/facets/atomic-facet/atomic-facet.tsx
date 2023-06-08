@@ -188,22 +188,22 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
 
   /**
    * Identifies the facet values that must appear at the top, in this order.
-   * This parameter can be used in conjunction with the sortCriteria parameter.
+   * This parameter can be used in conjunction with the `sortCriteria` parameter.
    *
-   * Facet values not part of the customSort list will be sorted according to the sortCriteria.
+   * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
    *
    * Example:
    *
-   * The following facet will sort the `Contact`, `Account`, and `File` at the top of the list of values for the `objecttype` field.
+   * The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.
    *
-   * If there are more than those 3 values available, the rest of the list will be sorted using `occurrences`.
+   * If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.
    *
    * ```html
    * <atomic-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-facet>
    * ```
    * The maximum amount of custom sort values is 25.
    *
-   * Default value is `undefined`, and the facet values will be sorted using only the sortCriteria
+   * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
    */
   @ArrayProp()
   @Prop({mutable: true})
