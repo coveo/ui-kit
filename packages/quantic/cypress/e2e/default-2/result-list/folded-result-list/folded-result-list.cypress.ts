@@ -48,7 +48,10 @@ describe('quantic-folded-result-list', () => {
     if (!withoutChildResults) {
       mockSearchWithResults(exampleResult.data, options.useCase);
     } else {
-      mockSearchWithResults([{}], options.useCase);
+      mockSearchWithResults(
+        [{title: 'Result', uri: 'uri', raw: {uriHash: 'resulthash'}}],
+        options.useCase
+      );
     }
     interceptSearch();
     cy.visit(pageUrl);
