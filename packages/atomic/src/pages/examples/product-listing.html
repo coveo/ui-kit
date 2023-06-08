@@ -44,7 +44,7 @@
 
   <body>
     <atomic-product-listing-interface
-      url="https://fashion.coveodemo.com/browse/men/hats"
+      url="https://fashion.coveodemo.com/browse/women/pants"
       fields-to-include='["cat_rating_count"]'
     >
       <atomic-product-listing display="grid" image-size="small">
@@ -75,6 +75,7 @@
                 <atomic-field-condition class="field" if-defined="ec_rating">
                   <span>
                     <atomic-result-number field="cat_rating_count"></atomic-result-number>
+                    reviews
                   </span>
                 </atomic-field-condition>
               </div>

@@ -224,7 +224,8 @@ export class AtomicProductListing
         absentTerms: [],
 
         raw: {
-          urihash: '',
+          ...product.additionalFields,
+          urihash: product.documentUriHash,
           ec_images: product.ec_images,
           ec_brand: product.ec_brand,
           ec_category: product.ec_category,
