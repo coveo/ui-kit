@@ -554,7 +554,7 @@ describe('Color Facet Test Suites', () => {
 
     describe('when select 3 facetValues', () => {
       const positions = [0, 1, 2];
-      function setupSelectedMulitpleColorFacets() {
+      function setupSelectedMultipleColorFacets() {
         positions.forEach((position, i) => {
           selectIdleBoxValueAt(position);
           BreadboxSelectors.breadcrumbButton().should('have.length', i + 1);
@@ -562,7 +562,7 @@ describe('Color Facet Test Suites', () => {
         cy.wait(TestFixture.interceptAliases.Search);
       }
 
-      beforeEach(setupSelectedMulitpleColorFacets);
+      beforeEach(setupSelectedMultipleColorFacets);
       describe('verify rendering', () => {
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);

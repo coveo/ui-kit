@@ -234,7 +234,7 @@ export class AtomicColorFacet
       hasValues: () => !!this.facet.state.values.length,
       numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
-    this.inititalizeDependenciesManager();
+    this.initializeDependenciesManager();
   }
 
   public disconnectedCallback() {
@@ -264,7 +264,7 @@ export class AtomicColorFacet
       .length;
   }
 
-  private inititalizeDependenciesManager() {
+  private initializeDependenciesManager() {
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {

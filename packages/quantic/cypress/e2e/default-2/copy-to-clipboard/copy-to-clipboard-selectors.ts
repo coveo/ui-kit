@@ -1,6 +1,6 @@
 import {ComponentSelector, CypressSelector} from '../../common-selectors';
 
-export const copyToClpboardComponent = 'c-quantic-result-copy-to-clipboard';
+export const copyToClipboardComponent = 'c-quantic-result-copy-to-clipboard';
 
 export interface CopyToClipboardSelector extends ComponentSelector {
   copyToClipboardButton: () => CypressSelector;
@@ -8,7 +8,7 @@ export interface CopyToClipboardSelector extends ComponentSelector {
 }
 
 export const CopyToClipboardSelectors: CopyToClipboardSelector = {
-  get: () => cy.get(copyToClpboardComponent),
+  get: () => cy.get(copyToClipboardComponent),
 
   copyToClipboardButton: () =>
     CopyToClipboardSelectors.get().find('lightning-button-icon-stateful'),

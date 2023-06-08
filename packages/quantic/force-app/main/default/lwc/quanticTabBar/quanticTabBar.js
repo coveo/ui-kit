@@ -105,7 +105,7 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Updates the visibility of the more button.
-   * We update the More button position relativly to the last displayed tab.
+   * We update the More button position relatively to the last displayed tab.
    * @param {boolean} show
    */
   updateMoreButtonVisibility(show) {
