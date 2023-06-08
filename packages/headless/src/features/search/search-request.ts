@@ -59,6 +59,11 @@ export const buildSearchRequest = async (
       parentField: state.folding.fields.child,
       filterFieldRange: state.folding.filterFieldRange,
     }),
+    ...(state.automaticFacets && {
+      generateAutomaticFacets: {
+        desiredCount: state.automaticFacets.desiredCount,
+      },
+    }),
   });
 };
 

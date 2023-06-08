@@ -74,6 +74,13 @@ export type {
 export {buildFacet} from './facets/facet/headless-facet';
 
 export type {
+  AutomaticFacetsProps,
+  AutomaticFacetsState,
+  AutomaticFacets,
+} from './facets/automatic-facets/headless-automatic-facets';
+export {buildAutomaticFacets} from './facets/automatic-facets/headless-automatic-facets';
+
+export type {
   DateRangeOptions,
   DateRangeRequest,
   DateRangeInput,

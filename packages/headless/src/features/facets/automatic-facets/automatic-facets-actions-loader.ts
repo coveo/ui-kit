@@ -1,0 +1,33 @@
+import {PayloadAction} from '@reduxjs/toolkit';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {setDesiredCount} from './automatic-facets-actions';
+import {automaticFacetsReducer as automaticFacets} from './automatic-facets-slice';
+
+/**
+ * The action creators for managing automatic facets.
+ */
+export interface AutomaticFacetsActionCreators {
+  /**
+   * Sets the desired count of automatic facets.
+   *
+   * @param desiredCount - desired count
+   * @returns A dispatchable action.
+   */
+  setDesiredCount(desiredCount: number): PayloadAction<number>;
+}
+
+/**
+ * Loads the automatic facets actions and adds the reducer to the search engine.
+ *
+ * @param engine - The headless search engine
+ * @returns
+ */
+export function loadAutomaticFacetsActions(
+  engine: SearchEngine
+): AutomaticFacetsActionCreators {
+  engine.addReducers({automaticFacets});
+
+  return {
+    setDesiredCount,
+  };
+}
