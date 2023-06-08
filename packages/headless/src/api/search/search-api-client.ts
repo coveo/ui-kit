@@ -3,10 +3,10 @@ import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {SearchAppState} from '../../state/search-app-state';
-import {createAbortController} from '../../utils/abort-controller-polyfill';
 import {pickNonBaseParams, unwrapError} from '../api-client-utils';
 import {PlatformClient} from '../platform-client';
 import {BaseParam} from '../platform-service-params';
+import {APICallsQueue} from './api-calls-queue';
 import {FacetSearchRequest} from './facet-search/facet-search-request';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {
@@ -125,27 +125,31 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
-  private searchAbortControllers: Partial<
-    Record<SearchOrigin | 'unknown', AbortController>
-  > = {};
+  private apiCallsQueues: Record<SearchOrigin | 'unknown', APICallsQueue> = {
+    unknown: new APICallsQueue(),
+    mainSearch: new APICallsQueue(),
+    facetValues: new APICallsQueue(),
+    foldingCollection: new APICallsQueue(),
+    instantResults: new APICallsQueue(),
+  };
 
   async search(
     req: SearchRequest,
     options?: SearchOptions
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
     const origin = options?.origin ?? 'unknown';
-    const abortController = this.getNewAbortController(
-      origin,
-      !options?.disableAbortWarning
-    );
 
-    const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', ''),
-      requestParams: pickNonBaseParams(req),
-      requestMetadata: {method: 'search', origin: options?.origin},
-      ...this.options,
-      signal: abortController?.signal,
-    });
+    const response = await this.apiCallsQueues[origin].enqueue(
+      (signal) =>
+        PlatformClient.call({
+          ...baseSearchRequest(req, 'POST', 'application/json', ''),
+          requestParams: pickNonBaseParams(req),
+          requestMetadata: {method: 'search', origin: options?.origin},
+          ...this.options,
+          signal: signal ?? undefined,
+        }),
+      {logger: this.options.logger, warnOnAbort: !options?.disableAbortWarning}
+    );
 
     if (response instanceof Error) {
       return buildAPIResponseFromErrorOrThrow(
@@ -153,8 +157,6 @@ export class SearchAPIClient implements FacetSearchAPIClient {
         options?.disableAbortWarning
       );
     }
-
-    abortController && this.clearAbortController(origin, abortController);
 
     const body = await response.json();
     const payload = {response, body};
@@ -263,36 +265,6 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     return {
       error: unwrapError({response, body}),
     };
-  }
-
-  private getNewAbortController(
-    origin: SearchOrigin | 'unknown',
-    warnOnAbort: boolean
-  ) {
-    const newAbortController = createAbortController();
-    const oldAbortController = this.searchAbortControllers[origin];
-    if (newAbortController) {
-      this.searchAbortControllers[origin] = newAbortController;
-    }
-    if (oldAbortController) {
-      if (warnOnAbort) {
-        this.options.logger.warn('Cancelling current pending search query');
-      }
-      oldAbortController.abort();
-    }
-    return newAbortController;
-  }
-
-  private clearAbortController(
-    origin: SearchOrigin | 'unknown',
-    controllerToClear: AbortController
-  ) {
-    if (
-      this.searchAbortControllers[origin]?.signal !== controllerToClear.signal
-    ) {
-      return;
-    }
-    delete this.searchAbortControllers[origin];
   }
 }
 
