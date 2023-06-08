@@ -65,7 +65,7 @@ export function doNotTrack() {
   ].some((value) => doNotTrackValues.has(value));
 }
 
-export function fromEntries<K extends keyof object, V>(
+export function fromEntries<K extends PropertyKey, V>(
   values: [K, V][]
 ): Record<K, V> {
   const newObject: Partial<Record<K, V>> = {};
