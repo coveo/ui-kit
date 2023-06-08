@@ -175,7 +175,7 @@ export class AtomicRatingRangeFacet
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initializeFacet();
-    this.inititalizeDependenciesManager();
+    this.initializeDependenciesManager();
   }
 
   public disconnectedCallback() {
@@ -224,7 +224,7 @@ export class AtomicRatingRangeFacet
       .length;
   }
 
-  private inititalizeDependenciesManager() {
+  private initializeDependenciesManager() {
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {

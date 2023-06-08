@@ -132,7 +132,7 @@ describe('engine', () => {
         'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.',
     },
     {
-      organizationEndpoints: getOrganizationEndpoints('myorg'),
+      organizationEndpoints: undefined,
       platformUrl: 'https://definitely.not.a.coveo.custom.dns',
       expectedMessage:
         'The `platformUrl` (https://definitely.not.a.coveo.custom.dns) option will be deprecated in the next major version.',
