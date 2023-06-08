@@ -32,8 +32,6 @@ export interface AtomicProductListingStoreData extends AtomicCommonStoreData {
 export interface AtomicProductListingStore
   extends AtomicCommonStore<AtomicProductListingStoreData> {
   getFieldsToInclude(): string[];
-  setUrl(url: string): void;
-  getUrl(): string;
 }
 
 export function createAtomicProductListingStore(): AtomicProductListingStore {
@@ -54,15 +52,5 @@ export function createAtomicProductListingStore(): AtomicProductListingStore {
     getUniqueIDFromEngine(engine: ProductListingEngine): string {
       return engine.state.productListing.responseId;
     },
-    setUrl(url: string) {
-      commonStore.set('url', url);
-    },
-    getUrl() {
-      return commonStore.get('url');
-    },
   };
 }
-
-// export function makeDesktopQuery(mobileBreakpoint: string) {
-//   return `only screen and (min-width: ${mobileBreakpoint})`;
-// }

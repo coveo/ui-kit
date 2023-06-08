@@ -21,6 +21,8 @@ import {
 
 /**
  * The `atomic-product-listing-result` component is used internally by the `atomic-product-listing` component.
+ *
+ * @internal
  */
 @Component({
   tag: 'atomic-product-listing-result',
@@ -163,7 +165,6 @@ export class AtomicProductListingResult {
       );
     }
     return (
-      // deepcode ignore ReactSetInnerHtml: This is not React code
       <Host class={resultComponentClass}>
         <div
           class={`result-root ${this.layout

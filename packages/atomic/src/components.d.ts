@@ -20,7 +20,7 @@ import { AtomicInsightStore } from "./components/insight/atomic-insight-interfac
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { LogLevel, ProductListingEngine } from "@coveo/headless/product-listing";
 import { ProductListingInitializationOptions } from "./components/product-listing/atomic-product-listing-interface/atomic-product-listing-interface";
-import { ProductListingInteractiveResult, ProductListingResult } from "./components/product-listing";
+import { ProductListingInteractiveResult, ProductListingResult, ProductListingResultTemplate, ProductListingResultTemplateCondition } from "./components/product-listing";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
@@ -882,13 +882,9 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of products per column, modify the --atomic-product-listing-number-of-columns CSS variable.
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself.
          */
         "display": ResultDisplayBasicLayout;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-         */
-        "headingLevel": number;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -898,7 +894,7 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * The total number of products to display. This does not modify the number of products per column. To do so, modify the --atomic-product-listing-number-of-columns CSS variable.
+          * The total number of products to display.
          */
         "numberOfProducts": number;
         /**
@@ -1040,11 +1036,11 @@ export namespace Components {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
-        "conditions": ResultTemplateCondition[];
+        "conditions": ProductListingResultTemplateCondition[];
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
+        "getTemplate": () => Promise<ProductListingResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicQueryError {
     }
@@ -3772,13 +3768,9 @@ declare namespace LocalJSX {
          */
         "density"?: ResultDisplayDensity;
         /**
-          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of products per column, modify the --atomic-product-listing-number-of-columns CSS variable.
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself.
          */
         "display"?: ResultDisplayBasicLayout;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-         */
-        "headingLevel"?: number;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -3788,7 +3780,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The total number of products to display. This does not modify the number of products per column. To do so, modify the --atomic-product-listing-number-of-columns CSS variable.
+          * The total number of products to display.
          */
         "numberOfProducts"?: number;
     }
@@ -3908,7 +3900,7 @@ declare namespace LocalJSX {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
-        "conditions"?: ResultTemplateCondition[];
+        "conditions"?: ProductListingResultTemplateCondition[];
     }
     interface AtomicQueryError {
     }
