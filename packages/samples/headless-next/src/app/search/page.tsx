@@ -1,11 +1,9 @@
 import {ClientSearchEngineProvider} from '@/context/engine';
-import {executeFirstSearch} from '@/engine.server';
 import {ResultList} from '@/search/result-list';
 import {SearchBox} from '@/search/search-box';
+import {executeFirstSearch} from '@/utils/engine';
 import {
   SearchEngineOptions,
-  buildResultList,
-  buildSearchBox,
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
@@ -23,18 +21,16 @@ const engineOptions: SearchEngineOptions = {
 };
 
 const SearchPage = async () => {
-  const engine = buildSearchEngine(engineOptions);
-  const initialSearchBox = buildSearchBox(engine);
-  const initialResultList = buildResultList(engine);
-  await executeFirstSearch(engine);
+  const prebuiltEngine = buildSearchEngine(engineOptions);
+  await executeFirstSearch(prebuiltEngine);
 
   return (
     <ClientSearchEngineProvider
-      options={{...engineOptions, preloadedState: engine.state}}
+      options={{...engineOptions, preloadedState: prebuiltEngine.state}}
     >
       <h1>Search page</h1>
-      <SearchBox initialState={initialSearchBox.state} />
-      <ResultList initialState={initialResultList.state} />
+      <SearchBox />
+      <ResultList />
     </ClientSearchEngineProvider>
   );
 };

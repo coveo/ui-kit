@@ -1,13 +1,28 @@
-import {SearchBoxProps, SearchBoxState} from '@coveo/headless';
-import {FunctionComponent, Suspense} from 'react';
-import {InteractiveSearchBox} from './search-box.client';
-import {StaticSearchBox} from './search-box.common';
+'use client';
+
+import {useClientSearchEngine} from '@/context/engine';
+import {useController} from '@/hooks/use-controller';
+import {SearchBoxProps, buildSearchBox} from '@coveo/headless';
+import {FunctionComponent} from 'react';
 
 export const SearchBox: FunctionComponent<{
-  initialState: SearchBoxState;
   props?: SearchBoxProps;
-}> = ({initialState, props}) => (
-  <Suspense fallback={<StaticSearchBox state={initialState} />}>
-    <InteractiveSearchBox props={props} />
-  </Suspense>
-);
+}> = ({props}) => {
+  const engine = useClientSearchEngine();
+  const {state, methods} = useController(buildSearchBox, engine, props ?? {});
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        methods.submit();
+      }}
+    >
+      <input
+        defaultValue={state.value}
+        onChange={(e) => methods.updateText(e.target.value)}
+      />
+      <button type="submit">Search</button>
+    </form>
+  );
+};

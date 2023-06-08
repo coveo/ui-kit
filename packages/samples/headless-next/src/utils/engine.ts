@@ -1,4 +1,3 @@
-import 'server-only';
 import {SearchEngine, Unsubscribe} from '@coveo/headless';
 
 function isFirstSearchExecuted(engine: SearchEngine) {

@@ -1,13 +1,21 @@
-import {ResultListProps, ResultListState} from '@coveo/headless';
-import {FunctionComponent, Suspense} from 'react';
-import {InteractiveResultList} from './result-list.client';
-import {StaticResultList} from './result-list.common';
+'use client';
+
+import {useClientSearchEngine} from '@/context/engine';
+import {useController} from '@/hooks/use-controller';
+import {ResultListProps, buildResultList} from '@coveo/headless';
+import {FunctionComponent} from 'react';
 
 export const ResultList: FunctionComponent<{
-  initialState: ResultListState;
   props?: ResultListProps;
-}> = ({initialState, props}) => (
-  <Suspense fallback={<StaticResultList state={initialState} />}>
-    <InteractiveResultList props={props} />
-  </Suspense>
-);
+}> = ({props}) => {
+  const engine = useClientSearchEngine();
+  const {state} = useController(buildResultList, engine, props ?? {});
+
+  return (
+    <ul>
+      {state.results.map((result) => (
+        <li key={result.uniqueId}>{result.title}</li>
+      ))}
+    </ul>
+  );
+};
