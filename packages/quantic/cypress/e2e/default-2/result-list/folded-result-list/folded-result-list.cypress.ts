@@ -113,7 +113,7 @@ describe('quantic-folded-result-list', () => {
     });
 
     describe('when no child result has been found after loading all the collection', () => {
-      it('hould display the no more related documents messages', () => {
+      it('should display the no more related documents messages', () => {
         visitFoldedResultList();
 
         scope('when loading the page', () => {
@@ -139,11 +139,11 @@ describe('quantic-folded-result-list', () => {
     });
 
     describe('when the result has no child result', () => {
-      it('should display the no more related documents message', () => {
+      it('should not display the no more related documents message', () => {
         visitFoldedResultList({}, true);
 
         scope('when loading the page', () => {
-          Expect.displayNoMoreChildrenMessage(true);
+          Expect.displayNoMoreChildrenMessage(false);
         });
       });
     });
