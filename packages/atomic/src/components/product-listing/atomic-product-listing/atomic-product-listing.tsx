@@ -1,4 +1,3 @@
-import {Result} from '@coveo/headless';
 import {
   buildProductListing,
   ProductListing,
@@ -9,7 +8,7 @@ import {
   ResultsPerPageState,
 } from '@coveo/headless/product-listing';
 import {Component, State, Element, Prop, Method, h} from '@stencil/core';
-import {buildProductListingInteractiveResult} from '..';
+import {buildProductListingInteractiveResult, ProductListingResult} from '..';
 import {
   FocusTarget,
   FocusTargetController,
@@ -36,15 +35,7 @@ import {ProductListingBindings} from '../atomic-product-listing-interface/atomic
 /**
  * The `atomic-product-listing` component displays products by applying one or more result templates.
  *
- * @part result-list - The element containing the list of results.
- * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it.
- * @part result-list-grid-clickable - The clickable link encompassing the result.
- * @part label - The label of the result list.
- * @part previous-button - The previous button.
- * @part next-button - The next button.
- * @part indicators - The list of indicators.
- * @part indicator - A single indicator.
- * @part active-indicator - The active indicator.
+ * @internal
  */
 @Component({
   tag: 'atomic-product-listing',
@@ -66,7 +57,6 @@ export class AtomicProductListing
   @State() public error!: Error;
   @State() private resultTemplateRegistered = false;
   @State() private templateHasError = false;
-  // @State() private currentPage = 0;
   @BindStateToController('resultsPerPage')
   @State()
   public resultsPerPageState!: ResultsPerPageState;
@@ -78,7 +68,6 @@ export class AtomicProductListing
   private nextNewResultTarget!: FocusTargetController;
   /**
    * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself.
-   * To modify the number of products per column, modify the --atomic-product-listing-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'list';
   /**
@@ -93,22 +82,12 @@ export class AtomicProductListing
 
   /**
    * The total number of products to display.
-   * This does not modify the number of products per column. To do so, modify the --atomic-product-listing-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public numberOfProducts = 30;
   /**
    * The non-localized label for the list of products.
    */
   @Prop({reflect: true}) public label?: string;
-
-  /**
-   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-   */
-  @Prop({reflect: true}) public headingLevel = 0;
-  // @Watch('numberOfProductsPerPage')
-  // public async watchNumberOfRecommendationsPerPage() {
-  //   this.currentPage = 0;
-  // }
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -124,21 +103,6 @@ export class AtomicProductListing
     this.resultRenderingFunction = resultRenderingFunction;
   }
 
-  /**
-   * Moves to the previous page.
-   */
-  // @Method() public async previousPage() {
-  //   this.currentPage =
-  //     this.currentPage - 1 < 0 ? this.numberOfPages - 1 : this.currentPage - 1;
-  // }
-
-  /**
-   * Moves to the next page.
-   */
-  // @Method() public async nextPage() {
-  //   this.currentPage = (this.currentPage + 1) % this.numberOfPages;
-  // }
-
   public initialize() {
     this.updateOriginLevel2();
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine, {
@@ -146,7 +110,7 @@ export class AtomicProductListing
     });
     this.productListing = buildProductListing(this.bindings.engine, {
       options: {
-        url: this.bindings.store.getUrl(),
+        url: this.bindings.engine.state.productListing.url,
         additionalFields: this.bindings.store.getFieldsToInclude(),
       },
     });
@@ -184,14 +148,14 @@ export class AtomicProductListing
           {...props}
         ></atomic-product-listing-result>
       ),
-      getInteractiveResult: (result: Result) =>
+      getInteractiveResult: (result: ProductListingResult) =>
         buildProductListingInteractiveResult(this.bindings.engine, {
           options: {result},
         }),
     });
   }
 
-  private get resultListCommonState(): ResultListCommonState<Result> {
+  private get resultListCommonState(): ResultListCommonState<ProductListingResult> {
     return {
       firstSearchExecuted: this.productListingState.responseId !== '',
       isLoading: this.productListingState.isLoading,
@@ -214,19 +178,8 @@ export class AtomicProductListing
     }
   }
 
-  // private get subsetRecommendations() {
-  //   if (!this.numberOfRecommendationsPerPage) {
-  //     return this.productListingState.products;
-  //   }
-
-  //   return this.productListingState.products.slice(
-  //     this.currentIndex,
-  //     this.currentIndex + this.numberOfRecommendationsPerPage
-  //   );
-  // }
-
-  private get productRecommendationsAsResuls(): Result[] {
-    const resultList: Result[] = [];
+  private get productRecommendationsAsResuls(): ProductListingResult[] {
+    const resultList: ProductListingResult[] = [];
     this.productListingState.products.forEach((product) => {
       resultList.push({
         title: product.ec_name || '',

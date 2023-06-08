@@ -47,6 +47,8 @@ export type ProductListingBindings = CommonBindings<
 
 /**
  * The `atomic-product-listing-interface` component is the parent to all other atomic components in a product listing page. It handles the headless product listing engine and localization configurations.
+ *
+ * @internal
  */
 @Component({
   tag: 'atomic-product-listing-interface',
@@ -261,7 +263,7 @@ export class AtomicProductListingInterface
 
     this.engine!.dispatch(
       loadProductListingActions(this.engine!).setProductListingUrl({
-        url: this.getListingUrl(),
+        url: this.listingUrl,
       })
     );
 
@@ -291,9 +293,10 @@ export class AtomicProductListingInterface
     };
   }
 
-  private getListingUrl(): string {
+  private get listingUrl(): string {
     return this.url ? this.url : window.location.href;
   }
+
   private initFieldsToInclude() {
     const fields = EcommerceDefaultFieldsToInclude.concat(this.fieldsToInclude);
     this.store.addFieldsToInclude(fields);
@@ -307,15 +310,6 @@ export class AtomicProductListingInterface
     );
   }
 
-  //   private updateMobileBreakpoint() {
-  //     const breakpoint = this.host.querySelector(
-  //       'atomic-product-listing-layout'
-  //     )?.mobileBreakpoint;
-  //     if (breakpoint) {
-  //       this.store.set('mobileBreakpoint', breakpoint);
-  //     }
-  //   }
-
   private initEngine(options: ProductListingInitializationOptions) {
     const analyticsConfig = getAnalyticsConfig(options, this.analytics);
     try {
@@ -328,6 +322,11 @@ export class AtomicProductListingInterface
           level: this.logLevel,
         },
       });
+      this.engine!.dispatch(
+        loadProductListingActions(this.engine!).setProductListingUrl({
+          url: this.listingUrl,
+        })
+      );
     } catch (error) {
       this.error = error as Error;
       throw error;
@@ -356,7 +355,6 @@ export class AtomicProductListingInterface
   }
 
   private async internalInitialization(initEngine: () => void) {
-    this.store.setUrl(this.getListingUrl());
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
