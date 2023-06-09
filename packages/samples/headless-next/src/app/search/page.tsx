@@ -23,7 +23,9 @@ const engineOptions: SearchEngineOptions = {
   },
 };
 
-const authorFacetProps: FacetProps = {options: {field: 'author'}};
+const authorFacetProps: FacetProps = {
+  options: {facetId: 'author', field: 'author'},
+};
 
 const SearchPage = async () => {
   const prebuiltEngine = buildSearchEngine(engineOptions);
