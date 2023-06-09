@@ -1,5 +1,6 @@
 {
-  "ignorePatterns": [
-    "storybook-static/**/*"
-  ]
+  "ignorePatterns": ["storybook-static/**/*"],
+  "rules": {
+    "node/no-extraneous-import": ["off"]
+  }
 }
