@@ -91,6 +91,7 @@ describe('facet-set slice', () => {
     const options = buildRegistrationOptions({
       sortCriteria: criterion,
       allowedValues: {type: 'simple', values: ['foo', 'bar']},
+      customSort: ['bar', 'buzz', 'foo'],
     });
 
     const action = registerFacet(options);
@@ -99,6 +100,7 @@ describe('facet-set slice', () => {
 
     expect(facetRequest.sortCriteria).toBe(criterion);
     expect(facetRequest.allowedValues?.values).toEqual(['foo', 'bar']);
+    expect(facetRequest.customSort).toEqual(['bar', 'buzz', 'foo']);
   });
 
   it('if a facet request is already registered for an id, it does not overwrite the request', () => {
