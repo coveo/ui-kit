@@ -139,10 +139,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
-      requestParams: {
-        ...pickNonBaseParams(req),
-        generateAutomaticFacets: {desiredCount: 10},
-      },
+      requestParams: pickNonBaseParams(req),
       requestMetadata: {method: 'search', origin: options?.origin},
       ...this.options,
       signal: this.searchAbortController?.signal,
