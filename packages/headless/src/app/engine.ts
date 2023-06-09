@@ -228,7 +228,10 @@ function buildCoreEngine<
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const {reducers} = options;
-  const reducerManager = createReducerManager({...coreReducers, ...reducers});
+  const reducerManager = createReducerManager(
+    {...coreReducers, ...reducers},
+    options.preloadedState ?? {}
+  );
   if (options.crossReducer) {
     reducerManager.addCrossReducer(options.crossReducer);
   }

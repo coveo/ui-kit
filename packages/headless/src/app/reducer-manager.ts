@@ -5,6 +5,7 @@ import {
   AnyAction,
   StateFromReducersMapObject,
 } from '@reduxjs/toolkit';
+import {fromEntries} from '../utils/utils';
 
 export interface ReducerManager {
   combinedReducer: Reducer;
@@ -14,7 +15,8 @@ export interface ReducerManager {
 }
 
 export function createReducerManager(
-  initialReducers: ReducersMapObject
+  initialReducers: ReducersMapObject,
+  preloadedState: object
 ): ReducerManager {
   const reducers = {...initialReducers};
   let crossReducer: Reducer;
@@ -33,7 +35,14 @@ export function createReducerManager(
 
   return {
     get combinedReducer() {
-      return rootReducer(combineReducers(reducers));
+      const placeholderReducers = fromEntries(
+        Object.entries(preloadedState)
+          .filter(([key]) => !(key in reducers))
+          .map(([key, value]) => [key, <Reducer>(() => value)])
+      );
+      return rootReducer(
+        combineReducers({...placeholderReducers, ...reducers})
+      );
     },
 
     containsAll(newReducers: ReducersMapObject) {
