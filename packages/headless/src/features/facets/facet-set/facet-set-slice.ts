@@ -157,6 +157,7 @@ export const facetSetReducer = createReducer(
         const facets = action.payload.response.facets;
         const automaticFacets =
           action.payload.response.generateAutomaticFacets?.facets;
+
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
             state[facetResponse.facetId]?.request,
@@ -165,18 +166,14 @@ export const facetSetReducer = createReducer(
         );
         automaticFacets?.forEach((facetResponse) => {
           const facetId = `generated_${facetResponse.field}`;
-          // NOT SURE
-          if (!state[facetId]) {
-            state[facetId] = {
-              request: {
-                ...buildFacetRequest({...facetResponse, facetId}),
-                currentValues: facetResponse.values,
-              },
-              hasBreadcrumbs: true,
-              generated: true,
-            };
-          }
-          state[facetId].generated = true;
+          state[facetId] = {
+            request: {
+              ...buildFacetRequest({...facetResponse, facetId}),
+              currentValues: facetResponse.values,
+            },
+            hasBreadcrumbs: true,
+            generated: true,
+          };
         });
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
