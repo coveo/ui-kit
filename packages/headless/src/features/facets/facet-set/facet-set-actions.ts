@@ -6,7 +6,10 @@ import {
   Value,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {allowedValues} from '../../../controllers/core/facets/_common/facet-option-definitions';
+import {
+  allowedValues,
+  customSort,
+} from '../../../controllers/core/facets/_common/facet-option-definitions';
 import {validatePayload} from '../../../utils/validate-payload';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {facetValueDefinition} from './facet-set-validate-payload';
@@ -73,6 +76,17 @@ export interface RegisterFacetActionCreatorPayload {
     type: 'simple';
     values: string[];
   };
+  /**
+   * Identifies the facet values that must appear at the top, in this order.
+   * This parameter can be used in conjunction with the `sortCriteria` parameter.
+   *
+   * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
+   *
+   * The maximum amount of custom sort values is 25.
+   *
+   * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+   */
+  customSort?: string[];
 }
 
 const facetRegistrationOptionsDefinition = {
@@ -83,6 +97,7 @@ const facetRegistrationOptionsDefinition = {
   numberOfValues: new NumberValue({required: false, min: 1}),
   sortCriteria: new Value<FacetSortCriterion>({required: false}),
   allowedValues: allowedValues,
+  customSort: customSort,
 };
 
 export const registerFacet = createAction(
