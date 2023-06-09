@@ -15,7 +15,7 @@ function createRankingInforWithQRE() {
   return 'Document weights:\nTitle: 0; Quality: 180; Date: 0; Adjacency: 0; Source: 500; Custom: 350; Collaborative rating: 0; QRE: 2500; Ranking functions: 0; \nQRE:\nExpression: "@permanentid=95ad18de4cb8e17023f0224e9d44dd2f7177c6dceac6cb81b16f3659a3c3" Score: 2500\nExpression: "@permanentid=4119a14f02a63d0c2d92b51d4501dd83580831caea327179934dd1bc6645" Score: 0\nExpression: "@permanentid=39ce64557bee624c368c6cfe736787f1dd22667f43a9f3e46fafa67158d6" Score: -1000\nExpression: "@permanentid=0d4e5fe9dca91c13d9de061c0c00d1a2733e0a1c0e198c588c2b93cfcd25" Score: 0\nExpression: "@permanentid=c612db560ef1f77316b6c11fbedfa3e9b728e09859a188639911aef9e6ea" Score: 0\nRanking Functions:\n\nTotal weight: 3530';
 }
 
-describe('ranking infor parser', () => {
+describe('ranking info parser', () => {
   it('should not throw on null', () => {
     expect(() => parseRankingInfo(null!)).not.toThrow();
   });

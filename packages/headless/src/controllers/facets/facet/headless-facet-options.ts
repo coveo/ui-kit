@@ -12,6 +12,7 @@ import {
   facetSearch,
   allowedValues,
   hasBreadcrumbs,
+  customSort,
 } from '../../core/facets/_common/facet-option-definitions';
 
 export interface FacetOptions {
@@ -82,6 +83,18 @@ export interface FacetOptions {
    * @defaultValue `true`
    */
   hasBreadcrumbs?: boolean;
+
+  /**
+   * Identifies the facet values that must appear at the top, in this order.
+   * This parameter can be used in conjunction with the `sortCriteria` parameter.
+   *
+   * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
+   *
+   * The maximum amount of custom sort values is 25.
+   *
+   * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+   */
+  customSort?: string[];
 }
 
 export interface FacetSearchOptions {
@@ -113,4 +126,5 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetSearch,
   allowedValues,
   hasBreadcrumbs,
+  customSort,
 });

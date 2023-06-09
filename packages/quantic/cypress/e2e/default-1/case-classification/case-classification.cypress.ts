@@ -91,7 +91,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -592,7 +592,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -619,7 +619,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.correctValue(allOptions[clickedIndex].value);
       });
@@ -653,7 +653,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -701,7 +701,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.correctValue(allOptions[clickedIndex].value);
         }
@@ -774,7 +774,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -796,7 +796,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(
+        Expect.correctSuggestionsOrder(
           allOptions.slice(
             firstSuggestionIndex,
             firstSuggestionIndex + suggestionsCount
@@ -843,7 +843,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.correctValue(allOptions[clickedIndex].value);
       });
@@ -922,7 +922,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -1016,7 +1016,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -1067,7 +1067,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -1164,7 +1164,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -1204,7 +1204,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);

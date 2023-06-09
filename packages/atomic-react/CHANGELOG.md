@@ -1,7 +1,5 @@
 ## 2.2.37 (2023-06-01)
 
-
-
 # Change Log
 
 All notable changes to this project will be documented in this file.

@@ -18,7 +18,7 @@ export interface RequestMetadata {
    */
   method: SearchApiMethod;
   /**
-   * Origin of the client, helps differenciate in between features using the same method.
+   * Origin of the client, helps differentiate in between features using the same method.
    */
   origin?: SearchOrigin;
 }

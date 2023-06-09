@@ -44,7 +44,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     expect((await buildParams()).query).toEqual(`*${query}*`);
   });
 
-  it('retrieves the #basePath fron the categoryFacetSet', async () => {
+  it('retrieves the #basePath from the categoryFacetSet', async () => {
     const basePath = ['a'];
     const request = buildMockCategoryFacetRequest({basePath});
     state.categoryFacetSet[id] = buildMockCategoryFacetSlice({request});

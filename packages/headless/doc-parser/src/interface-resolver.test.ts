@@ -761,7 +761,7 @@ describe('#resolveInterfaceMembers', () => {
       ],
     });
 
-    const createValueMemeber = () =>
+    const createValueMember = () =>
       buildMockApiPropertySignature({
         name: 'value',
         excerptTokens: [
@@ -774,12 +774,12 @@ describe('#resolveInterfaceMembers', () => {
 
     const searchBox = buildMockApiInterface({
       name: 'SearchBox',
-      members: [createValueMemeber()],
+      members: [createValueMember()],
     });
 
     const controller = buildMockApiInterface({
       name: 'Controller',
-      members: [createValueMemeber()],
+      members: [createValueMember()],
     });
 
     entry.addMember(standaloneSearchBox);

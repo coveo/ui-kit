@@ -22,6 +22,7 @@ import {
   FacetsParam,
   FieldsToIncludeParam,
   FirstResultParam,
+  AutomaticFacetsParams,
   LargeQueryParam,
   PipelineParam,
   QueryParam,
@@ -60,4 +61,5 @@ export type SearchRequest = BaseParam &
   AnalyticsParam &
   ExcerptLength &
   ActionsHistoryParam &
-  AuthenticationParam;
+  AuthenticationParam &
+  AutomaticFacetsParams;

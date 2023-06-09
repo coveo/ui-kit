@@ -173,8 +173,8 @@ export function assertFormatNumberMinimumIntegerDigits(digit: number) {
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
       originalValues.forEach((e: string) => {
         const [start, end] = e.split(' to ');
-        expect(countCharactor(start)).least(digit);
-        expect(countCharactor(end)).least(digit);
+        expect(countCharacter(start)).least(digit);
+        expect(countCharacter(end)).least(digit);
       });
     });
   });
@@ -221,7 +221,7 @@ export function assertFormatNumberMinimumMaxSignificantDigits(
   });
 }
 
-function countCharactor(e: string) {
+function countCharacter(e: string) {
   return e.replaceAll(',', '').length;
 }
 

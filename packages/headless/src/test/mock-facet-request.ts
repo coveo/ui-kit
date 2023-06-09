@@ -7,6 +7,7 @@ export function buildMockFacetRequest(
     facetId: '',
     field: '',
     currentValues: [],
+    customSort: [],
     filterFacetCount: false,
     freezeCurrentValues: false,
     injectionDepth: 1000,

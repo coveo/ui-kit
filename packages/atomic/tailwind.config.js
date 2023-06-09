@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     extend: {
       variants: {
-        textColor: ['group-hover']
+        textColor: ['group-hover'],
       },
       colors: {
         // Primary
@@ -33,7 +33,7 @@ module.exports = {
         xl: 'var(--atomic-border-radius-xl)',
       },
       boxShadow: {
-        'inner-primary': 'inset 0 0 0 1px var(--atomic-primary)'
+        'inner-primary': 'inset 0 0 0 1px var(--atomic-primary)',
       },
       fontWeight: {
         normal: 'var(--atomic-font-normal)',
@@ -51,7 +51,7 @@ module.exports = {
         'mobile-only': {raw: 'not all and (min-width: 1024px)'},
       },
       gradientColorStops: (theme) => ({
-        ...theme("colors"),
+        ...theme('colors'),
         'background-60': 'var(--atomic-background) 60%',
       }),
       gridTemplateColumns: {
@@ -66,7 +66,7 @@ module.exports = {
         slideDownModal: 'slideDown .5s linear forwards',
       },
       transitionProperty: {
-        'visi-opacity': 'visibility, opacity'
+        'visi-opacity': 'visibility, opacity',
       },
       keyframes: {
         scaleUp: {

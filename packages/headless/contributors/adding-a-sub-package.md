@@ -2,7 +2,6 @@
 
 Headless provides exports through multiple sub packages. A sub-package groups together exports (i.e. controllers, actions, reducers, engines) that work together as a cohesive unit. By separating exports into sub-packages, it becomes clear to users of headless what exports are available to build a use-case.
 
-
 ## To add a new sub-package:
 
 1. Create an entry file for your sub-package inside the `src` directory (e.g. case-assist.ts).
@@ -32,6 +31,5 @@ pkg/case-assist/package.json
 2. Create a tarball: `npm pack`.
 3. Install the tarball as a dependency of a different project: `npm i <path to the tarball>`.
 4. Import an export from your sub-package: `import {...} from '@coveo/headless/<sub-package>'`
-
 
 That's all!

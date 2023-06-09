@@ -1,21 +1,24 @@
-## 2.18.3 (2023-06-01)
+## 2.18.4 (2023-06-07)
 
+
+### Bug Fixes
+
+* undefined error when checking mismatch with new endpoint url  ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
+
+
+
+## 2.18.3 (2023-06-01)
 
 ### Features
 
-* **atomic:** support fallback for `atomic-result-image`  ([#2915](https://github.com/coveo/ui-kit/issues/2915)) ([2620f18](https://github.com/coveo/ui-kit/commits/2620f18cde02c7eb9ba5b31e2fb4042fa63ed0ad))
-* **headless, folding:** Adapted the headless folded result list controller to support insight use ([#2897](https://github.com/coveo/ui-kit/issues/2897)) ([47028ee](https://github.com/coveo/ui-kit/commits/47028ee41972c4ec545266e6011dcc1d0220bef8))
-
-
+- **atomic:** support fallback for `atomic-result-image` ([#2915](https://github.com/coveo/ui-kit/issues/2915)) ([2620f18](https://github.com/coveo/ui-kit/commits/2620f18cde02c7eb9ba5b31e2fb4042fa63ed0ad))
+- **headless, folding:** Adapted the headless folded result list controller to support insight use ([#2897](https://github.com/coveo/ui-kit/issues/2897)) ([47028ee](https://github.com/coveo/ui-kit/commits/47028ee41972c4ec545266e6011dcc1d0220bef8))
 
 ## 2.17.1 (2023-05-23)
 
-
 ### Features
 
-* **atomic:** added smart snippet components for insight panels ([#2908](https://github.com/coveo/ui-kit/issues/2908)) ([b63c79d](https://github.com/coveo/ui-kit/commits/b63c79d33e27d20428f10aaa6f6d93b95f1d8fe1))
-
-
+- **atomic:** added smart snippet components for insight panels ([#2908](https://github.com/coveo/ui-kit/issues/2908)) ([b63c79d](https://github.com/coveo/ui-kit/commits/b63c79d33e27d20428f10aaa6f6d93b95f1d8fe1))
 
 # Change Log
 

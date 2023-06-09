@@ -19,7 +19,7 @@ export const unitFrames: UnitRange[] = [
   {period: 'past', unit: 'year', amount: 10},
 ];
 
-export const unitFramesCustom = [{unit: 'day', period: 'next', amout: 2}];
+export const unitFramesCustom = [{unit: 'day', period: 'next', amount: 2}];
 export const addTimeframeFacet =
   (props: TagProps = {}, units?: UnitRange[]) =>
   (env: TestFixture) => {

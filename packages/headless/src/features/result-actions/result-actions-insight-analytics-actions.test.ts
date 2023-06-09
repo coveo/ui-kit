@@ -56,7 +56,7 @@ const resultParams = {
   printableUri: 'printable-uri',
   clickUri: 'example documentUrl',
   uniqueId: 'unique-id',
-  excerpt: 'exceprt',
+  excerpt: 'excerpt',
   firstSentences: 'first-sentences',
   flags: 'flags',
   rankingModifier: 'example rankingModifier',

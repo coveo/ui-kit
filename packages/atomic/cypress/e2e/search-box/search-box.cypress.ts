@@ -131,7 +131,7 @@ describe('Search Box Test Suites', () => {
       });
     });
 
-    describe('when changing the redirection-url prop, reinitializing the search box', () => {
+    describe('when changing the redirection-url prop, re-initializing the search box', () => {
       beforeEach(() => {
         new TestFixture()
           .with(setSuggestions(numOfSuggestions))

@@ -29,7 +29,7 @@ import {LightningElement, api} from 'lwc';
  * Moreover, this information can be referred to in query expressions and QPL statements by using the `$locale` object.
  * @category Search
  * @example
- * <c-quantic-search-interface engine-id={engineId} search-hub="myhub" pipeine="mypipeline" disable-state-in-url skip-first-search></c-quantic-search-interface>
+ * <c-quantic-search-interface engine-id={engineId} search-hub="myhub" pipeline="mypipeline" disable-state-in-url skip-first-search></c-quantic-search-interface>
  */
 export default class QuanticSearchInterface extends LightningElement {
   /**

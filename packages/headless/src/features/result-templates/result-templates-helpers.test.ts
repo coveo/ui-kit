@@ -9,9 +9,9 @@ import {
 } from './result-templates-helpers';
 
 describe('result template helpers', () => {
-  function buildResult(fieldName: string, fiedlValues: unknown) {
+  function buildResult(fieldName: string, fieldValues: unknown) {
     return buildMockResult({
-      raw: buildMockRaw({[fieldName]: fiedlValues}),
+      raw: buildMockRaw({[fieldName]: fieldValues}),
     });
   }
 

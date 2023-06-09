@@ -3,6 +3,7 @@ If you are migrating across a major version, be aware of the following breaking 
 ## Migrating from v0 to v1
 
 - Action namespaces have been replaced by loader functions.
+
 ```
 // v0
 import {SearchActions} from '@coveo/headless';
@@ -17,6 +18,7 @@ actions.executeSearch(...)
 ```
 
 - The `HeadlessEngine` class has been replaced by builder functions dedicated to each use-case.
+
 ```
 // For a search interface
 import {buildSearchEngine} from '@coveo/headless';

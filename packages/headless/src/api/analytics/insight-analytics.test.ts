@@ -60,7 +60,7 @@ describe('insight analytics', () => {
       );
     });
 
-    it('should properly return the pipeline from the reponse if not available directly from state', () => {
+    it('should properly return the pipeline from the response if not available directly from state', () => {
       const state = getBaseState();
       state.pipeline = undefined;
       state.search = buildMockSearchState({});

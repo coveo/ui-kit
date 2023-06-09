@@ -5,3 +5,8 @@ export interface FacetValue extends BaseFacetValue {
 }
 
 export type FacetResponse = BaseFacetResponse<FacetValue>;
+
+export type AutomaticFacetResponse = Omit<
+  BaseFacetResponse<FacetValue>,
+  'facetId'
+>;

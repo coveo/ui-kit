@@ -150,7 +150,7 @@ describe('RelevanceInspector', () => {
     });
   });
 
-  it('should return the fieldsDecription correctly, when debug is enabled', () => {
+  it('should return the fieldsDescription correctly, when debug is enabled', () => {
     const state = createMockState();
     state.debug = true;
     state.fields.fieldsDescription = [buildMockFieldDescription()];

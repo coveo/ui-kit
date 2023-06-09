@@ -25,48 +25,55 @@ Now you need to create a LWC that ties everything together. Here is the resultin
 <!-- force-app/examples/main/lwc/exampleQuanticGreeting/exampleQuanticGreeting.html -->
 
 <template>
-    <c-example-layout
-        title={pageTitle}
-        description={pageDescription}
-        show-preview={isConfigured}>
+  <c-example-layout
+    title="{pageTitle}"
+    description="{pageDescription}"
+    show-preview="{isConfigured}"
+  >
+    <c-configurator
+      slot="configuration"
+      options="{options}"
+      ontryitnow="{handleTryItNow}"
+    ></c-configurator>
 
-        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
-
-        <c-quantic-greeting slot="preview" name={config.name}></c-quantic-greeting>
-    </c-example-layout>
+    <c-quantic-greeting
+      slot="preview"
+      name="{config.name}"
+    ></c-quantic-greeting>
+  </c-example-layout>
 </template>
 ```
 
 ```javascript
 // force-app/examples/main/lwc/exampleQuanticGreeting/exampleQuanticGreeting.js
-
 import {LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticGreeting extends LightningElement {
-    // `config` stores the options retrieved from the configurator. 
-    @track config = {}
-    isConfigured = false;
+  // `config` stores the options retrieved from the configurator.
+  @track config = {};
+  isConfigured = false;
 
-    pageTitle = 'Quantic Greeting';
-    pageDescription = 'The Quantic Greeting renders a greeting message given a name.';
+  pageTitle = 'Quantic Greeting';
+  pageDescription =
+    'The Quantic Greeting renders a greeting message given a name.';
 
-    // `options` is used by `configurator` to render the configuration form.
-    options = [
-        {
-            attribute: 'name',
-            label: 'Name',
-            description: 'The name to display in the greeting message.',
-            defaultValue: 'World'
-        }
-    ];
+  // `options` is used by `configurator` to render the configuration form.
+  options = [
+    {
+      attribute: 'name',
+      label: 'Name',
+      description: 'The name to display in the greeting message.',
+      defaultValue: 'World',
+    },
+  ];
 
-    handleTryItNow(evt) {
-        this.config = evt.detail;
+  handleTryItNow(evt) {
+    this.config = evt.detail;
 
-        // Setting this to `true` makes the `preview` slot visible,
-        // which also loads the Quantic component with the configured options.
-        this.isConfigured = true;
-    }
+    // Setting this to `true` makes the `preview` slot visible,
+    // which also loads the Quantic component with the configured options.
+    this.isConfigured = true;
+  }
 }
 ```
 
@@ -91,17 +98,17 @@ Next, execute the following steps:
 
 1. Deploy the example components to your org.
 
-    ```bash
-    npm run deploy:examples
-    ```
+   ```bash
+   npm run deploy:examples
+   ```
 
 2. Open the community builder, then create a `Quantic Greeting` page and drop your `exampleQuanticGreeting` component into it. Don't forget to also update the community home page to add a link to your page.
 
 3. Publish your changes and validate that everything works as expected.
 
-    ```
-    sfdx force:community:publish -u LWC -n "Quantic Examples"
-    ```
+   ```
+   sfdx force:community:publish -u LWC -n "Quantic Examples"
+   ```
 
 It is now time to backup the changes you made to the community. Run:
 
@@ -121,7 +128,6 @@ Let's walk through a simple test case:
 
 ```typescript
 // cypress/integration/quantic-greeting.cypress.ts
-
 import {configure} from '../page-objects/configurator';
 
 describe('quantic greeting', () => {
@@ -145,4 +151,4 @@ describe('quantic greeting', () => {
 
 **Tip** As soon as you create the test file, run `npm run e2e:watch` to see your tests run live as you write them. Writing and debugging your tests is much more efficient this way.
 
-**Tip** When writing a test, use `describe.only(...)` or `it.only(...)` to focus only on the test at hand. 
+**Tip** When writing a test, use `describe.only(...)` or `it.only(...)` to focus only on the test at hand.

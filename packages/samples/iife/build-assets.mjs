@@ -87,7 +87,7 @@ function getDeploymentPipelineAssets() {
 /**
  * @returns {CDNAsset[]}
  */
-function getDepenencyAssets() {
+function getDependencyAssets() {
   /**
    * @param {string} dependencyName
    * @param {string[]} parts
@@ -106,7 +106,7 @@ function getDepenencyAssets() {
 }
 
 async function main() {
-  const assets = [...getDeploymentPipelineAssets(), ...getDepenencyAssets()];
+  const assets = [...getDeploymentPipelineAssets(), ...getDependencyAssets()];
   for (const asset of assets) {
     for (const relativeDestination of asset.relativeDestinations) {
       const sourceDir = join(workspacesRoot, asset.sourceDirectory);

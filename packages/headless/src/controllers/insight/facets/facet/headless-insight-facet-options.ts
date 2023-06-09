@@ -8,6 +8,7 @@ import {
   numberOfValues,
   facetSearch,
   allowedValues,
+  customSort,
 } from '../../../core/facets/_common/facet-option-definitions';
 import {
   FacetOptions as CoreFacetOptions,
@@ -28,6 +29,17 @@ export interface FacetOptions extends CoreFacetOptions {
    * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */
   allowedValues?: string[];
+  /**
+   * Identifies the facet values that must appear at the top, in this order.
+   * This parameter can be used in conjunction with the `sortCriteria` parameter.
+   *
+   * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
+   *
+   * The maximum amount of custom sort values is 25.
+   *
+   * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+   */
+  customSort?: string[];
 }
 
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
@@ -39,4 +51,5 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
   facetSearch,
   allowedValues,
+  customSort,
 });

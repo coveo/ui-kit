@@ -73,25 +73,21 @@ When building Atomic components, a series of decorators are used to make develop
 
 ## InitializeBindings & BindStateToController decorators
 
-`InitializeBindings` is a utility that automatically fetches the `bindings` from the parent `atomic-search-interface` or `atomic-external` component. This decorator has to be applied a property named `bindings`.
+`InitializeBindings` is a utility that automatically fetches the `bindings` from the parent `atomic-search-interface` or `atomic-external` component. This decorator has to be applied to a property named `bindings`.
 
 _Important_ In order for a component using this decorator to render properly, it should have an internal state bound to one of the properties from `bindings`. This is possible by using the `BindStateToController` decorator along with a `State` decorator.
 
 Here is a complete example:
 
 ```typescript
-import {Component, State} from '@stencil/core';
 import {
   InitializeBindings,
   InitializableComponent,
   BindStateToController,
   Bindings,
 } from '@coveo/atomic';
-import {
-  ControllerState,
-  Controller,
-  buildController,
-} from '@coveo/headless';
+import {ControllerState, Controller, buildController} from '@coveo/headless';
+import {Component, State} from '@stencil/core';
 
 @Component({
   tag: 'atomic-component',
@@ -121,8 +117,8 @@ export class AtomicComponent implements InitializableComponent {
 `ResultContext` is a utility that automatically fetches the `result` from the parent component's rendered `atomic-result`. This utility is used inside of custom result template components.
 
 ```typescript
-import {Component, State} from '@stencil/core';
 import {ResultContext} from '@coveo/atomic';
+import {Component, State} from '@stencil/core';
 
 @Component({
   tag: 'atomic-result-component',

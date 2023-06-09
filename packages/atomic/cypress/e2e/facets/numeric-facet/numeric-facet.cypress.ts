@@ -693,7 +693,7 @@ describe('Numeric Facet V1 Test Suites', () => {
   });
 
   describe('with custom #sortCriteria, descending', () => {
-    function setupRangesWithCustomSortCriterias() {
+    function setupRangesWithCustomSortCriteria() {
       new TestFixture()
         .with(
           addNumericFacet({
@@ -706,7 +706,7 @@ describe('Numeric Facet V1 Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      beforeEach(setupRangesWithCustomSortCriterias);
+      beforeEach(setupRangesWithCustomSortCriteria);
       CommonAssertions.assertAccessibility(numericFacetComponent);
       NumericFacetAssertions.assertValueSortedByDescending();
     });
@@ -1175,7 +1175,7 @@ describe('Numeric Facet V1 Test Suites', () => {
 
     describe('when selecting 2 facetValues of numeric facet with custom format number', () => {
       const index = [0, 1];
-      function setupSelectedMulitpleNumericFacetValuess() {
+      function setupSelectedMultipleNumericFacetValues() {
         new TestFixture()
           .with(addBreadbox())
           .with(
@@ -1197,7 +1197,7 @@ describe('Numeric Facet V1 Test Suites', () => {
 
       describe('verify rendering', () => {
         beforeEach(() => {
-          setupSelectedMulitpleNumericFacetValuess();
+          setupSelectedMultipleNumericFacetValues();
           cy.wait(TestFixture.interceptAliases.Search);
         });
         CommonAssertions.assertAccessibility(breadboxComponent);

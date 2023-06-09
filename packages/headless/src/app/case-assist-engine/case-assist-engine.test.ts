@@ -42,7 +42,7 @@ describe('buildCaseAssistEngine', () => {
     );
   });
 
-  it('sets the locale correclty', () => {
+  it('sets the locale correctly', () => {
     expect(engine.state.caseAssistConfiguration?.locale).toEqual(
       options.configuration.locale
     );

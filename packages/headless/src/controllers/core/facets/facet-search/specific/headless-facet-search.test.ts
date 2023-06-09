@@ -51,7 +51,7 @@ describe('FacetSearch', () => {
     expect(controller.state.isLoading).toBe(true);
   });
 
-  it(`althought the API returns an empty path for specific facet
+  it(`although the API returns an empty path for specific facet
   calling #state returns the values with only the relevant keys`, () => {
     const expectedValue = {count: 10, displayValue: 'Hello', rawValue: 'hello'};
     (engine.state.facetSearchSet[facetId].response

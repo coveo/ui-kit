@@ -22,7 +22,7 @@ describe('#resolveCodeSamplePaths', () => {
   });
 
   it('when specifying an invalid path, it throws', () => {
-    const path = 'non-existant-sample.tsx';
+    const path = 'non-existent-sample.tsx';
     expect(() => resolveCodeSamplePaths({react_class: [path]})).toThrow();
   });
 

@@ -24,7 +24,7 @@ describe('InteractiveResult', () => {
     printableUri: 'printable-uri',
     clickUri: 'click-uri',
     uniqueId: 'unique-id',
-    excerpt: 'exceprt',
+    excerpt: 'excerpt',
     firstSentences: 'first-sentences',
     flags: 'flags',
   };

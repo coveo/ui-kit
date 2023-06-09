@@ -263,7 +263,7 @@ export class AtomicCategoryFacet
       hasValues: () => !!this.facet.state.values.length,
       numberOfSelectedValues: () => (this.facetState.hasActiveValues ? 1 : 0),
     });
-    this.inititalizeDependenciesManager();
+    this.initializeDependenciesManager();
   }
 
   public disconnectedCallback() {
@@ -292,7 +292,7 @@ export class AtomicCategoryFacet
     return !!this.facetState.parents.length;
   }
 
-  private inititalizeDependenciesManager() {
+  private initializeDependenciesManager() {
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {

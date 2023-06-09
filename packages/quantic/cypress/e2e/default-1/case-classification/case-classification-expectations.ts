@@ -63,7 +63,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail(`should display ${value} suggested options`);
     },
 
-    correctSugestionsOrder: (suggestions: Array<{value: string}>) => {
+    correctSuggestionsOrder: (suggestions: Array<{value: string}>) => {
       suggestions.forEach((suggestion, idx) => {
         selector
           .suggestedOption(idx)

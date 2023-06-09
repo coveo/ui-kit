@@ -56,3 +56,10 @@ export const allowedValues = new RecordValue({
 });
 
 export const hasBreadcrumbs = new BooleanValue();
+
+export const customSort = new ArrayValue({
+  min: 1,
+  max: 25,
+  required: false,
+  each: new StringValue({emptyAllowed: false, required: true}),
+});

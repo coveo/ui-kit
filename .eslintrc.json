@@ -9,9 +9,7 @@
     "jest": true,
     "es6": true
   },
-  "extends": [
-    "prettier"
-  ],
+  "extends": ["plugin:prettier/recommended", "plugin:@cspell/recommended"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
@@ -35,10 +33,13 @@
       }
     },
     {
-      "files": [
-        "**/*.ts",
-        "**/*.tsx"
-      ],
+      "files": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs"],
+      "rules": {
+        "@cspell/spellchecker": ["warn"]
+      }
+    },
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
       "parser": "@typescript-eslint/parser",
       "plugins": [
         "@typescript-eslint"

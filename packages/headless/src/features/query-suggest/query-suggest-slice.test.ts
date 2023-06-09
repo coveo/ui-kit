@@ -110,11 +110,11 @@ describe('querySuggest slice', () => {
       const responseId = 'response-uuid';
       const completions = getCompletions();
       const fetchQuerySuggestionsFulfilledAction =
-        buildFetchQuerySuggestFullfilledAction();
+        buildFetchQuerySuggestFulfilledAction();
 
       fetchQuerySuggestionsFulfilledAction.meta.requestId = 'the_right_id';
 
-      function buildFetchQuerySuggestFullfilledAction() {
+      function buildFetchQuerySuggestFulfilledAction() {
         return fetchQuerySuggestions.fulfilled(
           {
             completions,
@@ -130,7 +130,7 @@ describe('querySuggest slice', () => {
       }
 
       it('when fetchQuerySuggestions has an id that is not a key of the set, it does not throw', () => {
-        const action = buildFetchQuerySuggestFullfilledAction();
+        const action = buildFetchQuerySuggestFulfilledAction();
         action.meta.arg.id = 'invalid id';
 
         expect(() => querySuggestReducer(state, action)).not.toThrow();

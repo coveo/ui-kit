@@ -30,7 +30,7 @@ export class AtomicResultHtml implements InitializableComponent {
   /**
    *  The result field which the component should use.
    * If set, Atomic searches for the specified field in the `Result` object first.
-   * If there's no such a field, Atomic searches throught the `Result.raw` object.
+   * If there's no such a field, Atomic searches through the `Result.raw` object.
    * It's important to include the necessary field in the `ResultList` component.
    */
   @Prop({reflect: true}) public field!: string;

@@ -156,4 +156,44 @@ describe('Segmented Facet Test Suites', () => {
 
     FacetAssertions.assertValuesSortedByOccurrences();
   });
+
+  describe('with allowed-values', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addSegmentedFacet({
+            field: 'objecttype',
+            'allowed-values': JSON.stringify(['FAQ', 'File']),
+          })
+        )
+        .init();
+    });
+
+    it('returns only allowed values', () => {
+      SegmentedFacetSelectors.valueLabel()
+        .should('contain.text', 'FAQ')
+        .should('contain.text', 'File')
+        .should('not.contain.text', 'Message');
+    });
+  });
+
+  describe('with custom-sort', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addSegmentedFacet({
+            field: 'filetype',
+            'custom-sort': JSON.stringify(['txt', 'rssitem']),
+          })
+        )
+        .init();
+    });
+
+    it('returns values sorted in the proper order', () => {
+      SegmentedFacetSelectors.valueLabel().eq(0).should('contain.text', 'txt');
+      SegmentedFacetSelectors.valueLabel()
+        .eq(1)
+        .should('contain.text', 'rssitem');
+    });
+  });
 });
