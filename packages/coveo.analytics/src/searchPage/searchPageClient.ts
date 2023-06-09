@@ -36,6 +36,7 @@ import {
     StaticFilterToggleValueMetadata,
     UndoTriggerRedirectMetadata,
     SmartSnippetLinkMeta,
+    GeneratedAnswerFeedbackMeta,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
@@ -880,5 +881,21 @@ export class CoveoSearchPageClient {
             ...(splitTestRunName && {splitTestRunName}),
             ...(splitTestRunVersion && {splitTestRunVersion}),
         };
+    }
+
+    public makeLikeGeneratedAnswer(metadata: GeneratedAnswerFeedbackMeta) {
+        return this.makeCustomEvent(SearchPageEvents.likeGeneratedAnswer, metadata);
+    }
+
+    public async logLikeGeneratedAnswer(metadata: GeneratedAnswerFeedbackMeta) {
+        return (await this.makeLikeGeneratedAnswer(metadata)).log({searchUID: this.provider.getSearchUID()});
+    }
+
+    public makeDislikeGeneratedAnswer(metadata: GeneratedAnswerFeedbackMeta) {
+        return this.makeCustomEvent(SearchPageEvents.dislikeGeneratedAnswer, metadata);
+    }
+
+    public async logDislikeGeneratedAnswer(metadata: GeneratedAnswerFeedbackMeta) {
+        return (await this.makeDislikeGeneratedAnswer(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 }

@@ -51,6 +51,8 @@ describe('SearchPageClient', () => {
         },
     ];
 
+    const fakeStreamId = 'some-stream-id-123';
+
     let client: CoveoSearchPageClient;
 
     const provider: SearchPageClientProvider = {
@@ -1412,5 +1414,33 @@ describe('SearchPageClient', () => {
         expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
         c.enable();
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
+    });
+
+    it('should send proper payload for #logLikeGeneratedAnswer', async () => {
+        const meta = {streamId: fakeStreamId};
+        await client.logLikeGeneratedAnswer(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.likeGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #makeLikeGeneratedAnswer', async () => {
+        const meta = {streamId: fakeStreamId};
+        const built = await client.makeLikeGeneratedAnswer(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.likeGeneratedAnswer, meta);
+        expectMatchDescription(built.description, SearchPageEvents.likeGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #logDislikeGeneratedAnswer', async () => {
+        const meta = {streamId: fakeStreamId};
+        await client.logDislikeGeneratedAnswer(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #makeDislikeGeneratedAnswer', async () => {
+        const meta = {streamId: fakeStreamId};
+        const built = await client.makeDislikeGeneratedAnswer(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
+        expectMatchDescription(built.description, SearchPageEvents.dislikeGeneratedAnswer, meta);
     });
 });

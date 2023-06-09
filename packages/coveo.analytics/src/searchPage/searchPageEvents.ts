@@ -286,6 +286,18 @@ export enum SearchPageEvents {
      * Identifies the custom event that gets logged when a user clicks the Detach From Case result action.
      */
     caseDetach = 'caseDetach',
+    /**
+     * Identifies the cause of a search request being retried in order to generate an answer that might'va failed.
+     */
+    retryGeneratedAnswer = 'retryGeneratedAnswer',
+    /**
+     * Identifies the custom event that gets logged when a user identifies a generated answer as relevant.
+     */
+    likeGeneratedAnswer = 'likeGeneratedAnswer',
+    /**
+     * Identifies the custom event that gets logged when a user identifies a generated answer as irrelevant.
+     */
+    dislikeGeneratedAnswer = 'dislikeGeneratedAnswer',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
@@ -328,6 +340,8 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [InsightEvents.clickViewedDocument]: 'User Actions',
     [InsightEvents.clickPageView]: 'User Actions',
     [SearchPageEvents.caseDetach]: 'case',
+    [SearchPageEvents.likeGeneratedAnswer]: 'generatedAnswer',
+    [SearchPageEvents.dislikeGeneratedAnswer]: 'generatedAnswer',
 };
 
 export interface StaticFilterMetadata {
@@ -461,3 +475,7 @@ export interface SmartSnippetDocumentIdentifier {
 }
 
 export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause' | 'searchQueryUid'>;
+
+export interface GeneratedAnswerFeedbackMeta {
+    streamId: string;
+}
