@@ -7,7 +7,7 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {Component, h, Element, State, Prop, Fragment} from '@stencil/core';
+import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -114,23 +114,6 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   public render() {
-    const dynamicFacets = this.facetManagerState.automaticFacets.map(
-      (dynamic) => {
-        return (
-          <atomic-facet
-            facetId={`generated_${dynamic.field}`}
-            field={dynamic.field}
-          ></atomic-facet>
-        );
-      }
-    );
-    console.log(dynamicFacets);
-
-    return (
-      <Fragment>
-        {dynamicFacets}
-        <slot />
-      </Fragment>
-    );
+    return <slot />;
   }
 }
