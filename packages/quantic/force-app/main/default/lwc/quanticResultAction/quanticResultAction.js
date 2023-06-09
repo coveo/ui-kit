@@ -118,7 +118,7 @@ export default class QuanticResultAction extends LightningElement {
   };
 
   /**
-   * Dispatches a custon event.
+   * Dispatches a custom event.
    */
   handleClick(event) {
     event.stopPropagation();

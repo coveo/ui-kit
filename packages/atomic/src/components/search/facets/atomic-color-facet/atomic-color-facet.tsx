@@ -26,7 +26,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {MapProp} from '../../../../utils/props-utils';
+import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {
   BaseFacet,
   parseDependsOn,
@@ -187,6 +187,53 @@ export class AtomicColorFacet
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
+  /**
+   * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.
+   *
+   * If you specify a list of values for this option, the facet only uses these values (if they are available in
+   * the current result set).
+   *
+   * Example:
+   *
+   * The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the
+   * current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use
+   * them.
+   *
+   * ```html
+   * <atomic-color-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-color-facet>
+   * ```
+   *
+   * The maximum amount of allowed values is 25.
+   *
+   * The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+   */
+  @ArrayProp()
+  @Prop({mutable: true})
+  public allowedValues: string[] | string = '[]';
+
+  /**
+   * Identifies the facet values that must appear at the top, in this order.
+   * This parameter can be used in conjunction with the `sortCriteria` parameter.
+   *
+   * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
+   *
+   * Example:
+   *
+   * The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.
+   *
+   * If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.
+   *
+   * ```html
+   * <atomic-color-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-color-facet>
+   * ```
+   * The maximum amount of custom sort values is 25.
+   *
+   * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+   */
+  @ArrayProp()
+  @Prop({mutable: true})
+  public customSort: string[] | string = '[]';
+
   @FocusTarget()
   private showLessFocus!: FocusTargetController;
 
@@ -206,16 +253,7 @@ export class AtomicColorFacet
   public initialize() {
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    const options: FacetOptions = {
-      facetId: this.facetId,
-      field: this.field,
-      numberOfValues: this.numberOfValues,
-      sortCriteria: this.sortCriteria,
-      facetSearch: {numberOfValues: this.numberOfValues},
-      injectionDepth: this.injectionDepth,
-      filterFacetCount: this.filterFacetCount,
-    };
-    this.facet = buildFacet(this.bindings.engine, {options});
+    this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
@@ -234,7 +272,7 @@ export class AtomicColorFacet
       hasValues: () => !!this.facet.state.values.length,
       numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
-    this.inititalizeDependenciesManager();
+    this.initializeDependenciesManager();
   }
 
   public disconnectedCallback() {
@@ -264,7 +302,7 @@ export class AtomicColorFacet
       .length;
   }
 
-  private inititalizeDependenciesManager() {
+  private initializeDependenciesManager() {
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
@@ -462,6 +500,22 @@ export class AtomicColorFacet
         canShowMoreValues={this.facetState.canShowMoreValues}
       ></FacetShowMoreLess>
     );
+  }
+
+  private get facetOptions(): FacetOptions {
+    return {
+      facetId: this.facetId,
+      field: this.field,
+      numberOfValues: this.numberOfValues,
+      sortCriteria: this.sortCriteria,
+      facetSearch: {numberOfValues: this.numberOfValues},
+      injectionDepth: this.injectionDepth,
+      filterFacetCount: this.filterFacetCount,
+      allowedValues: this.allowedValues.length
+        ? [...this.allowedValues]
+        : undefined,
+      customSort: this.customSort.length ? [...this.customSort] : undefined,
+    };
   }
 
   public render() {

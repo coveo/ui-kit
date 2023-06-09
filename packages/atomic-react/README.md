@@ -59,6 +59,8 @@ The `template` function must then simply return a valid JSX Element.
 
 Here is an example of a fictitious search page, which defines some premade templates for YouTube videos, as well as Salesforce cases:
 
+<!-- cSpell:disable -->
+
 ```tsx
 import {
   Result,
@@ -173,6 +175,8 @@ const MyPage = () => {
   );
 };
 ```
+
+<!-- cSpell:enable -->
 
 ## Styling Result Template Components
 

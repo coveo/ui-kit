@@ -7,7 +7,7 @@ export type FacetSlice = {
 };
 
 /**
- * A map of specific facet identifer (typically, the facet field) to a facet request
+ * A map of specific facet identifier (typically, the facet field) to a facet request
  */
 export type FacetSetState = Record<string, FacetSlice>;
 
