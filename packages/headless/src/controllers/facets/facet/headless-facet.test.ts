@@ -58,6 +58,7 @@ describe('facet', () => {
       sortCriteria: 'score',
       facetSearch: {},
       allowedValues: ['foo', 'bar'],
+      customSort: ['buzz', 'bar', 'foo'],
     };
 
     state = createMockState();
@@ -103,6 +104,7 @@ describe('facet', () => {
       injectionDepth: 1000,
       numberOfValues: 8,
       allowedValues: {type: 'simple', values: ['foo', 'bar']},
+      customSort: ['buzz', 'bar', 'foo'],
     });
 
     expect(engine.actions).toContainEqual(action);
