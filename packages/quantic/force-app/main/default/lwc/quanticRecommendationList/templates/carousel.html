@@ -1,0 +1,19 @@
+<template>
+  <template lwc:if={recommendations.length}>
+    <div class="slds-text-heading_large">{label}</div>
+    <c-quantic-carousel current-page={currentPage} number-of-pages={numberOfPages} onchangepage={updateCarouselPage}>
+      <div slot="carousel-body" class="recommendations-list__container slds-var-p-left_medium">
+        <div class="recommendations-list__content">
+          <template for:each={recommendations} for:item="recommendation">
+            <div key={recommendation.uniqueId} class="recommendation-item__container slds-var-p-vertical_small slds-var-p-right_medium">
+              <div class="recommendation-item__content slds-box slds-box_small">
+                <c-quantic-result result={recommendation} result-templates-manager={resultTemplatesManager}
+                  engine-id={engineId}></c-quantic-result>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </c-quantic-carousel>
+  </template>
+</template>

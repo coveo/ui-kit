@@ -1,0 +1,11 @@
+<template>
+  <div class="recommendations-list__container">
+    <template for:each={placeholders} for:item="item">
+      <div key={item.index} class="recommendation-item__container slds-var-p-around_small">
+        <div class="recommendation-item__content slds-box slds-box_small">
+          <c-quantic-placeholder variant="resultList" number-of-rows="1"></c-quantic-placeholder>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>

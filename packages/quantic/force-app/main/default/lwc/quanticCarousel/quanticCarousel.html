@@ -1,0 +1,7 @@
+<template>
+  <div class="slds-grid carousel__container">
+    <lightning-button-icon disabled={previousButtonIsDisabled} icon-name="utility:chevronleft" onclick={handlePrevious}  variant="border-filled" title="previous"></lightning-button-icon>
+    <slot name="carousel-body"></slot>
+    <lightning-button-icon disabled={nextButtonIsDisabled} icon-name="utility:chevronright" onclick={handleNext}  variant="border-filled" title="next"></lightning-button-icon>
+  </div>
+</template>
