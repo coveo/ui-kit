@@ -1,6 +1,6 @@
 <template>
   <template lwc:if={recommendations.length}>
-    <div class="slds-text-heading_large">{label}</div>
+    <div class="slds-text-heading_medium">{label}</div>
     <c-quantic-carousel current-page={currentPage} number-of-pages={numberOfPages} onchangepage={updateCarouselPage}>
       <div slot="carousel-body" class="recommendations-list__container slds-var-p-left_medium">
         <div class="recommendations-list__content">

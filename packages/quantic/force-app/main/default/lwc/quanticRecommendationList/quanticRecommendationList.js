@@ -3,7 +3,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import { LightningElement, api, track } from 'lwc';
+import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import carouselLayout from './templates/carousel.html';
 // @ts-ignore
@@ -48,7 +48,7 @@ export default class QuanticRecommendationList extends LightningElement {
    * The variant of the component. Accepted variants are ‘grid’ and carousel
    * @type {'grid' | 'carousel'}
    */
-  @api variant = 'carousel';
+  @api variant = 'grid';
   /**
    * A list of fields to include in the query results, separated by commas.
    * @api
@@ -89,7 +89,12 @@ export default class QuanticRecommendationList extends LightningElement {
    */
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
-    this.recommendationList = this.headless.buildRecommendationList(engine, {});
+    this.recommendationList = this.headless.buildRecommendationList(engine, {
+      options: {
+        id: this.recommendationId,
+        numberOfRecommendations: Number(this.numberOfRecommendations),
+      },
+    });
     this.unsubscribe = this.recommendationList.subscribe(() =>
       this.updateState()
     );
@@ -138,7 +143,7 @@ export default class QuanticRecommendationList extends LightningElement {
       this.variant === 'carousel'
         ? this.numberOfRecommendationsPerRaw
         : this.numberOfRecommendations;
-    return Array.from({ length: numberOfPlaceHolders }, (v, i) => ({ index: i }));
+    return Array.from({length: numberOfPlaceHolders}, (v, i) => ({index: i}));
   }
 
   render() {
