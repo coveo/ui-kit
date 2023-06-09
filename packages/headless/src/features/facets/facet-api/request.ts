@@ -32,6 +32,10 @@ export interface BaseFacetRequest {
    * @defaultValue `false`
    */
   preventAutoSelect: boolean;
+  /**
+   * TODO
+   */
+  generated?: boolean;
 }
 
 export interface BaseFacetValueRequest {

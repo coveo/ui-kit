@@ -19,9 +19,15 @@ export const baseFacetResponseSelector = (
   }
 
   if ('search' in state && state.search) {
-    return state.search.response.facets.find(
+    const fromFacetResponse = state.search.response.facets.find(
       (response) => response.facetId === id
     );
+    const fromGeneratedFacetResponse =
+      state.search.response.generateAutomaticFacets?.facets.find(
+        (response) => `generated_${response.field}` === id
+      );
+
+    return fromFacetResponse || fromGeneratedFacetResponse;
   }
   return undefined;
 };
@@ -34,7 +40,11 @@ function isFacetResponse(
   state: FacetSection,
   response: AnyFacetResponse | undefined
 ): response is FacetResponse {
-  return !!response && response.facetId in state.facetSet;
+  return (
+    !!response &&
+    (response.facetId in state.facetSet ||
+      `generated_${response.field}` in state.facetSet)
+  );
 }
 export const facetResponseSelector = (
   state: FacetResponseSection & FacetSection,

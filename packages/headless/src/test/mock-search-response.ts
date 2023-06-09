@@ -40,6 +40,7 @@ export function buildMockSearchResponseWithDebugInfo(
       duration: 0,
     },
     pipeline: '',
+    generateAutomaticFacets: {facets: []},
     ...config,
   };
 }
