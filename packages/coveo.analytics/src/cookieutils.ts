@@ -48,5 +48,5 @@ function writeCookie(name: string, value: string, expirationDate?: Date, domain?
         `${name}=${value}` +
         (expirationDate ? `;expires=${expirationDate.toUTCString()}` : '') +
         (domain ? `;domain=${domain}` : '') +
-        ';SameSite=Lax';
+        ';path=/;SameSite=Lax';
 }
