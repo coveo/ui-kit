@@ -258,7 +258,9 @@ export class AtomicProductListingInterface
     }
 
     if (this.url) {
-      console.warn('url was manually set to :', this.url);
+      console.warn(
+        `The URL has been manually set to ${this.url} in the atomic-product-listing-interface. As a result, the value fetched from the address bar will be overwritten. Make sure to remove this property before moving to production to ensure proper functionality.`
+      );
     }
 
     this.engine!.dispatch(
