@@ -1,5 +1,8 @@
 import {CoreEngine} from '../../../app/engine';
 import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
+import {setDesiredCount} from '../../../features/facets/automatic-facets/automatic-facets-actions';
+import {automaticFacetsReducer as automaticFacets} from '../../../features/facets/automatic-facets/automatic-facets-slice';
+import {FacetResponse} from '../../../features/facets/facet-set/interfaces/response';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchSection} from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
@@ -41,28 +44,51 @@ export interface FacetManager extends Controller {
    */
   state: FacetManagerState;
 }
-
+/**
+ * A facet payload object to be sorted by the manager.
+ */
 export interface FacetManagerState {
   /**
    * The facet ids sorted in the same order as the latest response.
    */
   facetIds: string[];
+  /**
+   * The list of automatic facet responses.
+   */
+  automaticFacets?: FacetResponse[];
 }
 
+/**
+ * A facet payload object to be sorted by the manager.
+ */
+export interface FacetManagerProps {
+  /**
+   * The desired count of automatic facets.
+   * The default value is 0.
+   */
+  desiredCount?: number;
+}
 /**
  * Creates a `FacetManager` instance.
  *
  * @param engine - The headless engine.
+ * @param props - The facetManager configuration
  * @returns The `FacetManager` controller instance.
  */
-export function buildCoreFacetManager(engine: CoreEngine): FacetManager {
+export function buildCoreFacetManager(
+  engine: CoreEngine,
+  props?: FacetManagerProps
+): FacetManager {
   if (!loadFacetManagerReducers(engine)) {
     throw loadReducerError;
   }
-
+  const {dispatch} = engine;
   const controller = buildController(engine);
   const getState = () => engine.state;
 
+  if (props && props.desiredCount) {
+    dispatch(setDesiredCount(props.desiredCount));
+  }
   return {
     ...controller,
 
@@ -73,8 +99,10 @@ export function buildCoreFacetManager(engine: CoreEngine): FacetManager {
     get state() {
       const facets = getState().search.response.facets;
       const facetIds = facets.map((f) => f.facetId);
+      const automaticFacets =
+        getState().search.response.generateAutomaticFacets?.facets;
 
-      return {facetIds};
+      return {facetIds, automaticFacets};
     },
   };
 }
@@ -83,5 +111,6 @@ function loadFacetManagerReducers(
   engine: CoreEngine
 ): engine is CoreEngine<SearchSection> {
   engine.addReducers({search, facetOptions});
+  engine.addReducers({automaticFacets});
   return true;
 }
