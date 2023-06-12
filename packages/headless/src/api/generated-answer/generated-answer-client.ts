@@ -26,7 +26,7 @@ export interface AsyncThunkGeneratedAnswerOptions<
 
 const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>
   new URLPath(
-    `${url}/rest/internal/organizations/${orgId}/machinelearning/models/stream-sse/${streamId}`
+    `${url}/rest/organizations/${orgId}/machinelearning/streaming/${streamId}`
   );
 
 const MAX_RETRIES = 3;
@@ -42,7 +42,7 @@ export class GeneratedAnswerAPIClient {
   streamGeneratedAnswer(
     params: GeneratedAnswerStreamRequest,
     onMessage: (payload: string) => void,
-    onError: (payload?: SSEErrorPayload) => void,
+    onError: (payload: SSEErrorPayload) => void,
     onCompleted: () => void
   ) {
     const {url, organizationId, streamId, accessToken} = params;
@@ -67,6 +67,7 @@ export class GeneratedAnswerAPIClient {
         this.logger.info('Maximum retry exceeded');
         onError({
           message: errorMessage,
+          code: 2,
         });
       }
     };
@@ -113,6 +114,7 @@ export class GeneratedAnswerAPIClient {
           this.options.logger.error(errorMessage);
           onError({
             message: errorMessage,
+            code: 1,
           });
         };
 

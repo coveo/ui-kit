@@ -1,3 +1,3 @@
 export interface ExtendedResults {
-  streamId?: string;
+  generativeQuestionAnsweringId?: string;
 }

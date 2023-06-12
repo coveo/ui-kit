@@ -6,6 +6,7 @@ import {
   sseComplete,
   streamAnswer,
   resetAnswer,
+  SSEErrorPayload,
 } from '../../features/generated-answer/generated-answer-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -47,15 +48,16 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   let timeout: ReturnType<typeof setTimeout>;
   let source: EventSourcePolyfill;
   let lastRequestId: string;
+  let lastStreamId: string;
 
   const onMessage = (message: string) => {
     dispatch(sseMessage(message));
   };
 
-  const onError = () => {
+  const onError = (error: SSEErrorPayload) => {
     source?.close();
     clearTimeout(timeout);
-    dispatch(sseError());
+    dispatch(sseError(error));
   };
 
   const onCompleted = () => {
@@ -68,25 +70,35 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     source = sourceRef;
   };
 
+  const getIsStreamInProgress = () =>
+    source &&
+    (source.readyState === source.OPEN ||
+      source.readyState === source.CONNECTING);
+
   const subscribeToSearchRequests = () => {
     const strictListener = () => {
       const state = getState();
-      const newRequestId = state.search.requestId;
+      const requestId = state.search.requestId;
+      const streamId =
+        state.search.extendedResults?.generativeQuestionAnsweringId;
 
-      if (lastRequestId !== newRequestId) {
-        lastRequestId = newRequestId;
+      if (lastRequestId !== requestId) {
+        lastRequestId = requestId;
         source?.close();
         dispatch(resetAnswer());
-        if (state.search.extendedResults?.streamId) {
-          dispatch(
-            streamAnswer({
-              onMessage,
-              onError,
-              onCompleted,
-              setEventSourceRef,
-            })
-          );
-        }
+      }
+
+      const isStreamInProgress = getIsStreamInProgress();
+      if (!isStreamInProgress && streamId && streamId !== lastStreamId) {
+        lastStreamId = streamId;
+        dispatch(
+          streamAnswer({
+            onMessage,
+            onError,
+            onCompleted,
+            setEventSourceRef,
+          })
+        );
       }
     };
     return engine.subscribe(strictListener);
