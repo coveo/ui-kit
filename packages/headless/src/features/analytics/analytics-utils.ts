@@ -534,4 +534,19 @@ function findPositionWithUniqueId(
 
 export const validateProductRecommendationPayload = (
   productRec: ProductRecommendation
-) => new Schema(productRecommendationPartialDefinition).validate(productRec);
+) =>
+  new Schema(productRecommendationPartialDefinition).validate(
+    partialProductRecommendationPayload(productRec)
+  );
+
+function partialProductRecommendationPayload(
+  productRec: ProductRecommendation
+): Partial<Result> {
+  return Object.assign(
+    {},
+    ...Object.keys(productRecommendationPartialDefinition).map((key) => ({
+      [key]:
+        productRec[key as keyof typeof productRecommendationPartialDefinition],
+    }))
+  );
+}
