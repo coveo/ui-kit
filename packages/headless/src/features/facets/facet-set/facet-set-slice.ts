@@ -170,6 +170,7 @@ export const facetSetReducer = createReducer(
             request: {
               ...buildFacetRequest({...facetResponse, facetId}),
               currentValues: facetResponse.values,
+              generated: true,
             },
             hasBreadcrumbs: true,
             generated: true,

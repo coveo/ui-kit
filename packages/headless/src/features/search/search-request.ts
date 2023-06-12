@@ -45,7 +45,9 @@ export const buildSearchRequest = async (
       enableDidYouMean: state.didYouMean.enableDidYouMean,
     }),
     ...(cq && {cq}),
-    ...(facets.length && {facets}),
+    ...(facets.length && {
+      facets: facets.filter((facet) => facet.generated !== true),
+    }),
     ...(state.pagination && {
       numberOfResults: getNumberOfResultsWithinIndexLimit(),
       firstResult: state.pagination.firstResult,
@@ -62,6 +64,7 @@ export const buildSearchRequest = async (
     ...(state.automaticFacets && {
       generateAutomaticFacets: {
         desiredCount: state.automaticFacets.desiredCount,
+        currentFacets: facets.filter((facet) => facet.generated === true),
       },
     }),
   });
