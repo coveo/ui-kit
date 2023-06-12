@@ -46,7 +46,7 @@ export const buildSearchRequest = async (
     }),
     ...(cq && {cq}),
     ...(facets.length && {
-      facets: facets.filter((facet) => facet.generated !== true),
+      facets: facets.filter((facet) => facet.generated === false),
     }),
     ...(state.pagination && {
       numberOfResults: getNumberOfResultsWithinIndexLimit(),

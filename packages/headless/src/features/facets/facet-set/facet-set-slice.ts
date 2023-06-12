@@ -155,15 +155,14 @@ export const facetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets;
-        const automaticFacets =
-          action.payload.response.generateAutomaticFacets?.facets;
-
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
             state[facetResponse.facetId]?.request,
             facetResponse
           )
         );
+        const automaticFacets =
+          action.payload.response.generateAutomaticFacets?.facets;
         automaticFacets?.forEach((facetResponse) => {
           const facetId = `generated_${facetResponse.field}`;
           state[facetId] = {
@@ -256,6 +255,7 @@ function mutateStateFromFacetResponse(
   );
   facetRequest.freezeCurrentValues = false;
   facetRequest.preventAutoSelect = false;
+  facetRequest.generated = false;
 }
 
 export const defaultFacetOptions: FacetOptionalParameters = {
@@ -263,6 +263,7 @@ export const defaultFacetOptions: FacetOptionalParameters = {
   injectionDepth: 1000,
   numberOfValues: 8,
   sortCriteria: 'automatic',
+  generated: false,
 };
 
 function buildFacetRequest(

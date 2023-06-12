@@ -36,7 +36,7 @@ export interface BaseFacetRequest {
    * Whether the Facet is generated via the automatic facets feature.
    * @defaultValue `false`
    */
-  generated?: boolean;
+  generated: boolean;
 }
 
 export interface BaseFacetValueRequest {
