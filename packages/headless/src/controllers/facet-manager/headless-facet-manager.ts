@@ -1,18 +1,38 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {setDesiredCount} from '../../features/facets/automatic-facets/automatic-facets-actions';
+import {loadAutomaticFacetsActions} from '../../features/facets/automatic-facets/automatic-facets-actions-loader';
+import {FacetResponse} from '../../features/facets/facet-set/interfaces/response';
+import {loadReducerError} from '../../utils/errors';
 import {
   buildCoreFacetManager,
-  FacetManager,
+  FacetManager as CoreFacetManager,
+  FacetManagerState as CoreFacetManagerState,
   FacetManagerPayload,
-  FacetManagerState,
-  FacetManagerProps,
 } from '../core/facet-manager/headless-core-facet-manager';
 
-export type {
-  FacetManagerPayload,
-  FacetManagerState,
-  FacetManager,
-  FacetManagerProps,
+export type {FacetManagerPayload};
+
+export type FacetManagerState = CoreFacetManagerState & {
+  /**
+   * The list of automatic facet responses.
+   */
+  automaticFacets: FacetResponse[];
 };
+
+export type FacetManager = CoreFacetManager & {
+  /**
+   * The state of the FacetManager.
+   */
+  state: CoreFacetManagerState;
+};
+
+export interface FacetManagerProps {
+  /**
+   * The desired count of automatic facets.
+   * The default value is 0.
+   */
+  desiredCount?: number;
+}
 
 /**
  * Creates a `FacetManager` instance.
@@ -25,5 +45,25 @@ export function buildFacetManager(
   engine: SearchEngine,
   props?: FacetManagerProps
 ): FacetManager {
-  return buildCoreFacetManager(engine, props);
+  if (props && !loadAutomaticFacetsActions(engine)) {
+    throw loadReducerError;
+  }
+  const {dispatch} = engine;
+  const core = buildCoreFacetManager(engine);
+  const getState = () => engine.state;
+
+  if (props && props.desiredCount) {
+    dispatch(setDesiredCount(props.desiredCount));
+  }
+
+  return {
+    ...core,
+    get state() {
+      return {
+        ...core.state,
+        automaticFacets:
+          getState().search.response.generateAutomaticFacets?.facets,
+      };
+    },
+  };
 }
