@@ -82,6 +82,9 @@ export const questionAnsweringReducer = createReducer(
         state.feedbackModalOpen = false;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
+        if (!action.payload.response.questionAnswer) {
+          return getQuestionAnsweringInitialState();
+        }
         const relatedQuestions =
           action.payload.response.questionAnswer.relatedQuestions.map(
             (relatedQuestion, i) =>
