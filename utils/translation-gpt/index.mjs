@@ -6,7 +6,7 @@ const fileToTranslate = JSON.parse(
 );
 const fileAlreadyTranslated = JSON.parse(readFileSync('./temporary.json'));
 
-const languages = [
+const allLanguages = [
   'en',
   'fr',
   'cs',
@@ -34,7 +34,7 @@ const languages = [
   'zh-tw',
 ];
 
-const prompt = (mainKey, toTranslate) =>
+const prompt = (mainKey, toTranslate, languages) =>
   `I will give you a string to translate. The string can possible contain variables between braces similar to this: {{variable}}. 
   Those variables are meant to represent dynamic values.
   If there are no variable, then do a normal translation.
@@ -48,10 +48,15 @@ const prompt = (mainKey, toTranslate) =>
 
 async function main() {
   for (const translationKey of Object.keys(fileToTranslate)) {
-    const englishTranslation = fileToTranslate[translationKey]['en'];
     if (fileAlreadyTranslated[translationKey]) {
       continue;
     }
+
+    const englishTranslation = fileToTranslate[translationKey]['en'];
+    const existingTranslation = Object.keys(fileToTranslate[translationKey]);
+    const keysThatNeedTranslation = allLanguages.filter(
+      (l) => existingTranslation.indexOf(l) === -1
+    );
 
     try {
       const res = await fetch(env.COVEO_AZURE_OPEN_AI_ENDPOINT, {
@@ -62,7 +67,14 @@ async function main() {
         },
         body: JSON.stringify({
           messages: [
-            {role: 'user', content: prompt(translationKey, englishTranslation)},
+            {
+              role: 'user',
+              content: prompt(
+                translationKey,
+                englishTranslation,
+                keysThatNeedTranslation
+              ),
+            },
           ],
           stream: false,
         }),
