@@ -45,6 +45,7 @@ import {PreprocessRequest} from '../../api/preprocess-request';
 import {Raw} from '../../api/search/search/raw';
 import {Result} from '../../api/search/search/result';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {ProductRecommendation} from '../../product-listing.index';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {
@@ -467,6 +468,11 @@ export const resultPartialDefinition = {
   rankingModifier: new StringValue({required: false, emptyAllowed: true}),
 };
 
+export const productRecommendationPartialDefinition = {
+  permanentid: requiredNonEmptyString,
+  documentUri: requiredNonEmptyString,
+  clickUri: requiredNonEmptyString,
+};
 function partialRawPayload(raw: Raw): Partial<Raw> {
   return Object.assign(
     {},
@@ -524,4 +530,23 @@ function findPositionWithUniqueId(
   results: ResultWithFolding[] = []
 ) {
   return results.findIndex(({uniqueId}) => uniqueId === targetResult.uniqueId);
+}
+
+export const validateProductRecommendationPayload = (
+  productRec: ProductRecommendation
+) =>
+  new Schema(productRecommendationPartialDefinition).validate(
+    partialProductRecommendationPayload(productRec)
+  );
+
+function partialProductRecommendationPayload(
+  productRec: ProductRecommendation
+): Partial<Result> {
+  return Object.assign(
+    {},
+    ...Object.keys(productRecommendationPartialDefinition).map((key) => ({
+      [key]:
+        productRec[key as keyof typeof productRecommendationPartialDefinition],
+    }))
+  );
 }
