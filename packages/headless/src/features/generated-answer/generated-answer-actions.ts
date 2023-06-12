@@ -29,7 +29,7 @@ export const sseMessage = createAction(
 
 export const sseError = createAction(
   'generatedAnswer/sseError',
-  (payload?: SSEErrorPayload) =>
+  (payload: SSEErrorPayload) =>
     validatePayload(payload, {
       message: new StringValue(),
       code: new NumberValue({min: 0}),
@@ -47,7 +47,7 @@ export const setIsLoading = createAction(
 
 interface StreamAnswerArgs {
   onMessage: (message: string) => void;
-  onError: (payload?: SSEErrorPayload) => void;
+  onError: (payload: SSEErrorPayload) => void;
   onCompleted: () => void;
   setEventSourceRef: (source: EventSourcePolyfill) => void;
 }
