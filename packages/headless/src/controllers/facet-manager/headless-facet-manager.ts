@@ -11,41 +11,31 @@ import {
 } from '../core/facet-manager/headless-core-facet-manager';
 
 export type {FacetManagerPayload};
-
 export type FacetManagerState = CoreFacetManagerState & {
-  /**
-   * The list of automatic facet responses.
-   */
   automaticFacets: FacetResponse[];
 };
 
 export type FacetManager = CoreFacetManager & {
-  /**
-   * The state of the FacetManager.
-   */
   state: CoreFacetManagerState;
 };
-
 export interface FacetManagerProps {
   /**
    * The desired count of automatic facets.
-   * The default value is 0.
+   *
+   * The default value is 5.
    */
   desiredCount?: number;
 }
-
 /**
  * Creates a `FacetManager` instance.
  *
  * @param engine - The headless engine.
- * @param props - The facet manager props
- * @returns A `FacetManager` controller instance.
  */
 export function buildFacetManager(
   engine: SearchEngine,
   props?: FacetManagerProps
 ): FacetManager {
-  if (props && !loadAutomaticFacetsActions(engine)) {
+  if (!loadAutomaticFacetsActions(engine)) {
     throw loadReducerError;
   }
   const {dispatch} = engine;

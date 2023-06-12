@@ -10,7 +10,7 @@ export interface AutomaticFacetsActionCreators {
   /**
    * Sets the desired count of automatic facets.
    *
-   * @param desiredCount - Desired count of automatic facets.
+   * @param desiredCount - desired count
    * @returns A dispatchable action.
    */
   setDesiredCount(desiredCount: number): PayloadAction<number>;
