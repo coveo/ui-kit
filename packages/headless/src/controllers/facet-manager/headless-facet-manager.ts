@@ -10,21 +10,21 @@ import {
   FacetManagerPayload,
 } from '../core/facet-manager/headless-core-facet-manager';
 
-export type {FacetManagerPayload};
+export type {FacetManagerPayload, CoreFacetManager, CoreFacetManagerState};
 
-export type FacetManagerState = CoreFacetManagerState & {
+export interface FacetManagerState extends CoreFacetManagerState {
   /**
    * The list of automatic facet responses.
    */
-  automaticFacets: FacetResponse[];
-};
+  automaticFacets: FacetResponse[] | undefined;
+}
 
-export type FacetManager = CoreFacetManager & {
+export interface FacetManager extends CoreFacetManager {
   /**
    * The state of the FacetManager.
    */
-  state: CoreFacetManagerState;
-};
+  state: FacetManagerState;
+}
 
 export interface FacetManagerProps {
   /**

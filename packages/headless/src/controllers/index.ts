@@ -232,6 +232,8 @@ export type {
   FacetManagerState,
   FacetManagerProps,
   FacetManager,
+  CoreFacetManager,
+  CoreFacetManagerState,
 } from './facet-manager/headless-facet-manager';
 export {buildFacetManager} from './facet-manager/headless-facet-manager';
 
