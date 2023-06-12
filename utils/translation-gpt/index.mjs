@@ -58,6 +58,15 @@ async function main() {
       (l) => existingTranslation.indexOf(l) === -1
     );
 
+    if (keysThatNeedTranslation.length === 0) {
+      fileAlreadyTranslated[translationKey] = fileToTranslate[translationKey];
+      writeFileSync(
+        'temporary.json',
+        JSON.stringify(fileAlreadyTranslated, null, 2)
+      );
+      continue;
+    }
+
     try {
       const res = await fetch(env.COVEO_AZURE_OPEN_AI_ENDPOINT, {
         method: 'POST',
@@ -83,8 +92,10 @@ async function main() {
       const data = await res.json();
       const answer = data.choices[0].message.content;
 
-      fileAlreadyTranslated[translationKey] =
-        JSON.parse(answer)[translationKey];
+      fileAlreadyTranslated[translationKey] = {
+        ...fileToTranslate[translationKey],
+        ...JSON.parse(answer)[translationKey],
+      };
       writeFileSync(
         'temporary.json',
         JSON.stringify(fileAlreadyTranslated, null, 2)
@@ -101,7 +112,7 @@ async function main() {
 
   writeFileSync(
     '../../packages/atomic/src/locales.json',
-    JSON.stringify(fileAlreadyTranslated, null, 2)
+    readFileSync('temporary.json')
   );
   writeFileSync('temporary.json', JSON.stringify({}, null, 2));
 }
