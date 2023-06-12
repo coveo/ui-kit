@@ -1,7 +1,7 @@
 import {filterProtocol} from './xss-utils';
 
 describe('filterProtocol', () => {
-  it('when passing a problematic protocal such as javascript, it returns and empty string', () => {
+  it('when passing a problematic protocol such as javascript, it returns and empty string', () => {
     expect(filterProtocol('javascript:alert(1)')).toBe('');
   });
 

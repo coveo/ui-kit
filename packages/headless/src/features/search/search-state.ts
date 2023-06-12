@@ -65,6 +65,7 @@ export function getSearchInitialState(): SearchState {
       searchUid: '',
       totalCountFiltered: 0,
       facets: [],
+      generateAutomaticFacets: {facets: []},
       queryCorrections: [],
       triggers: [],
       questionAnswer: emptyQuestionAnswer(),

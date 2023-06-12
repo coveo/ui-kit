@@ -50,7 +50,7 @@ describe('Core Tab', () => {
     expect(() => initTab()).toThrow();
   });
 
-  describe('initalization', () => {
+  describe('initialization', () => {
     it('dispatches #registerTab', () => {
       initTab();
 

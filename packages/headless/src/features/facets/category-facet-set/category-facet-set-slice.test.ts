@@ -690,7 +690,7 @@ describe('category facet slice', () => {
     it('when the passed id is not registered, it does not throw', () => {
       const value = buildMockCategoryFacetSearchResult();
       const action = selectCategoryFacetSearchResult({
-        facetId: 'notExistant',
+        facetId: 'notExistent',
         value,
       });
 

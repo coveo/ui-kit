@@ -22,6 +22,7 @@ interface CaseClassificationOptions {
   coveoFieldName: string;
   fetchClassificationOnChange: boolean;
   fetchDocumentSuggestionOnChange: boolean;
+  fetchOnInit: boolean;
 }
 
 const incorrectSfFielNameError = (value: string) => {
@@ -90,7 +91,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -591,7 +592,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -618,7 +619,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.correctValue(allOptions[clickedIndex].value);
       });
@@ -652,7 +653,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -700,7 +701,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.correctValue(allOptions[clickedIndex].value);
         }
@@ -773,7 +774,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -795,7 +796,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(
+        Expect.correctSuggestionsOrder(
           allOptions.slice(
             firstSuggestionIndex,
             firstSuggestionIndex + suggestionsCount
@@ -842,7 +843,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.correctValue(allOptions[clickedIndex].value);
       });
@@ -921,7 +922,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -935,7 +936,7 @@ describe('quantic-case-classification', () => {
             clickedIndex
           );
           Expect.correctValue(allOptions[clickedIndex].value);
-          Expect.fetchClassificationsAfterValueChange();
+          Expect.fetchClassifications();
         });
       });
     });
@@ -984,7 +985,7 @@ describe('quantic-case-classification', () => {
           Expect.correctValue(
             allOptions[clickedIndex + suggestionsCount].value
           );
-          Expect.fetchClassificationsAfterValueChange();
+          Expect.fetchClassifications();
         });
       });
     });
@@ -1015,7 +1016,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -1031,7 +1032,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchClassificationsAfterValueChange();
+          Expect.fetchClassifications();
         });
       });
     });
@@ -1066,7 +1067,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -1080,7 +1081,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchDocumentsAfterValueChange();
+          Expect.fetchDocumentSuggestions();
         });
       });
     });
@@ -1131,7 +1132,7 @@ describe('quantic-case-classification', () => {
           Expect.correctValue(
             allOptions[clickedIndex + suggestionsCount].value
           );
-          Expect.fetchDocumentsAfterValueChange();
+          Expect.fetchDocumentSuggestions();
         });
       });
     });
@@ -1163,7 +1164,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -1180,8 +1181,33 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchDocumentsAfterValueChange();
+          Expect.fetchDocumentSuggestions();
         });
+      });
+    });
+  });
+
+  describe('when the fetchOnInit property is set to true', () => {
+    it('should automatically fetch classifications during initialization', () => {
+      const suggestionsCount = 3;
+      const firstSuggestionIndex = 0;
+      mockCaseClassification(
+        coveoDefaultField,
+        allOptions.slice(0, suggestionsCount)
+      );
+      visitCaseClassification({
+        fetchOnInit: true,
+      });
+
+      scope('when loading the page', () => {
+        Expect.fetchClassifications();
+        Expect.displaySelectTitle(true);
+        Expect.displaySelectInput(false);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.numberOfInlineOptions(0);
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
+        Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
     });
   });

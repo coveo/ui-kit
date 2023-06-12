@@ -34,7 +34,7 @@ export class AtomicNotifyTrigger implements InitializableComponent {
 
   @BindStateToController('notifyTrigger')
   @State()
-  private notifyTriggerState!: NotifyTriggerState;
+  private notifyTriggerState?: NotifyTriggerState;
   @State() public error!: Error;
 
   @AriaLiveRegion('notifications') ariaMessage!: string;
@@ -57,11 +57,11 @@ export class AtomicNotifyTrigger implements InitializableComponent {
     this.notifyTrigger = buildNotifyTrigger(this.bindings.engine);
   }
 
-  public generateAriaMessage(notifications: string[]) {
-    if (notifications.length === 1) {
-      return notifications[0];
+  public generateAriaMessage() {
+    if (this.notifications.length === 1) {
+      return this.notifications[0];
     }
-    return notifications
+    return this.notifications
       .map((text, i) =>
         this.bindings.i18n.t('notification-n', {n: i + 1, text})
       )
@@ -86,29 +86,32 @@ export class AtomicNotifyTrigger implements InitializableComponent {
     );
   }
 
-  public renderNotifications(notifications: string[]) {
+  public renderNotifications() {
     return (
       <div part="notifications" class="flex flex-col gap-4">
-        {notifications.map((text) => this.renderNotification(text))}
+        {this.notifications.map((text) => this.renderNotification(text))}
       </div>
     );
   }
 
   public render() {
-    const {notifications} = this.notifyTriggerState;
-    if (!notifications.length) {
+    if (!this.notifications.length) {
       return <Hidden></Hidden>;
     }
 
-    this.ariaMessage = this.generateAriaMessage(notifications);
+    this.ariaMessage = this.generateAriaMessage();
 
     return (
       <Fragment>
         <Heading level={this.headingLevel ?? 0} class="accessibility-only">
           {this.bindings.i18n.t('notifications')}
         </Heading>
-        {this.renderNotifications(notifications)}
+        {this.renderNotifications()}
       </Fragment>
     );
+  }
+
+  private get notifications(): string[] {
+    return this.notifyTriggerState?.notifications || [];
   }
 }
