@@ -14,13 +14,13 @@ import {SecurityIdentity} from './security-identity';
 import {PhrasesToHighlight, TermsToHighlight} from './stemming';
 
 export interface SearchResponseSuccess {
+  generateAutomaticFacets?: AutomaticFacets;
   termsToHighlight: TermsToHighlight;
   phrasesToHighlight: PhrasesToHighlight;
   results: Result[];
   searchUid: string;
   totalCountFiltered: number;
   facets: AnyFacetResponse[];
-  generateAutomaticFacets?: AutomaticFacets;
   queryCorrections: QueryCorrection[];
   triggers: Trigger[];
   questionAnswer: QuestionsAnswers;
