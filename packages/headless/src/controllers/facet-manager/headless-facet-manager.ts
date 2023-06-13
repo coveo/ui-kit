@@ -31,7 +31,7 @@ export interface FacetManagerProps {
    * The desired count of automatic facets.
    * The default value is 0.
    */
-  desiredCount?: number;
+  desiredCount: number;
 }
 
 /**
@@ -51,21 +51,19 @@ export function buildFacetManager(
   const {dispatch} = engine;
   const core = buildCoreFacetManager(engine);
   const getAutomaticFacets = () =>
-    engine.state.search.response.generateAutomaticFacets;
+    engine.state.search.response.generateAutomaticFacets?.facets;
 
-  if (props && props.desiredCount) {
+  if (props) {
     dispatch(setDesiredCount(props.desiredCount));
   }
 
   return {
     ...core,
     get state() {
-      const modifiedAutomaticFacets = getAutomaticFacets()?.facets.map(
-        (facet) => ({
-          ...facet,
-          facetId: `generated_${facet.field}`,
-        })
-      );
+      const modifiedAutomaticFacets = getAutomaticFacets()?.map((facet) => ({
+        ...facet,
+        facetId: `generated_${facet.field}`,
+      }));
 
       return {
         ...core.state,

@@ -20,7 +20,7 @@ export interface AutomaticFacetsActionCreators {
  * Loads the automatic facets actions and adds the reducer to the search engine.
  *
  * @param engine - The headless search engine
- * @returns
+ * @returns An object holding the automatic facets action creators
  */
 export function loadAutomaticFacetsActions(
   engine: SearchEngine
