@@ -202,8 +202,8 @@ async function deployCommunity(
   // The first deploy attempt may fail.
   let retry = 0;
   let success = false;
+  const maxRetries = 6;
   do {
-    console.log(`retry number ${retry}`)
     try {
       await sfdx.deployCommunityMetadata({
         alias: options.scratchOrg.alias,
@@ -213,7 +213,7 @@ async function deployCommunity(
 
       success = true;
     } catch (error) {
-      if (retry === 6) {
+      if (retry === maxRetries) {
         throw error;
       }
       // The deployment may fail because the community is still being created.
@@ -221,7 +221,7 @@ async function deployCommunity(
       await new Promise((resolve) => setTimeout(resolve, 30000));
       retry++;
     }
-  } while (!success && retry <= 6);
+  } while (!success && retry <= maxRetries);
 
   log('Community metadata deployed.');
 }
