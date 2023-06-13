@@ -198,11 +198,14 @@ export function mockSearchNoResults(useCase?: string) {
   }).as(getQueryAlias(useCase).substring(1));
 }
 
-export function mockSearchWithResults(results?: Array<object>) {
+export function mockSearchWithResults(
+  results?: Array<object>,
+  useCase?: string
+) {
   const defaultResults = [
     {title: 'Result', uri: 'uri', raw: {uriHash: 'resulthash'}},
   ];
-  cy.intercept(routeMatchers.search, (req) => {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.results = results ?? defaultResults;
       res.body.totalCount = res.body.results.length;
