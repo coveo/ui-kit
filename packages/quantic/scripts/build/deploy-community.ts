@@ -213,15 +213,15 @@ async function deployCommunity(
 
       success = true;
     } catch (error) {
-      if (retry === 5) {
+      if (retry === 6) {
         throw error;
       }
       // The deployment may fail because the community is still being created.
-      // Wait for 60 seconds then retry.
-      await new Promise((resolve) => setTimeout(resolve, 60000));
+      // Wait for 30 seconds then retry.
+      await new Promise((resolve) => setTimeout(resolve, 30000));
       retry++;
     }
-  } while (!success && retry <= 5);
+  } while (!success && retry <= 6);
 
   log('Community metadata deployed.');
 }
