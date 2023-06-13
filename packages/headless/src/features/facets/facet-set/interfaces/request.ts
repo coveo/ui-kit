@@ -37,4 +37,9 @@ export interface FacetRequest
     SortCriteria<FacetSortCriterion> {
   /** @defaultValue `automatic` */
   sortCriteria: FacetSortCriterion;
+  /**
+   * Whether the Facet is generated via the automatic facets feature.
+   * @defaultValue `false`
+   */
+  generated: boolean;
 }

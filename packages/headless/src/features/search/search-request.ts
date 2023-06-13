@@ -18,6 +18,7 @@ export const buildSearchRequest = async (
 ) => {
   const cq = buildConstantQuery(state);
   const facets = getFacets(state);
+  const automaticFacets = getAutomaticFacets(state);
   const sharedWithFoldingRequest =
     await buildSearchAndFoldingLoadCollectionRequest(state, eventDescription);
 
@@ -45,9 +46,7 @@ export const buildSearchRequest = async (
       enableDidYouMean: state.didYouMean.enableDidYouMean,
     }),
     ...(cq && {cq}),
-    ...(facets.length && {
-      facets: facets.filter((facet) => facet.generated === false),
-    }),
+    ...(facets.length && {facets}),
     ...(state.pagination && {
       numberOfResults: getNumberOfResultsWithinIndexLimit(),
       firstResult: state.pagination.firstResult,
@@ -64,7 +63,7 @@ export const buildSearchRequest = async (
     ...(state.automaticFacets && {
       generateAutomaticFacets: {
         desiredCount: state.automaticFacets.desiredCount,
-        currentFacets: facets.filter((facet) => facet.generated === true),
+        currentFacets: automaticFacets,
       },
     }),
   });
@@ -72,6 +71,12 @@ export const buildSearchRequest = async (
 
 function getFacets(state: StateNeededBySearchRequest) {
   return sortFacets(getAllEnabledFacets(state), state.facetOrder ?? []);
+}
+
+function getAutomaticFacets(state: StateNeededBySearchRequest) {
+  return getFacetRequests(state.facetSet ?? {}).filter(
+    (request) => request.generated === true
+  );
 }
 
 function getAllEnabledFacets(state: StateNeededBySearchRequest) {
@@ -82,7 +87,9 @@ function getAllEnabledFacets(state: StateNeededBySearchRequest) {
 
 function getAllFacets(state: StateNeededBySearchRequest) {
   return [
-    ...getFacetRequests(state.facetSet ?? {}),
+    ...getFacetRequests(state.facetSet ?? {}).filter(
+      (request) => request.generated === false
+    ),
     ...getRangeFacetRequests(state.numericFacetSet ?? {}),
     ...getRangeFacetRequests(state.dateFacetSet ?? {}),
     ...getFacetRequests(state.categoryFacetSet ?? {}),

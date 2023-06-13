@@ -16,6 +16,7 @@ export function buildMockFacetRequest(
     preventAutoSelect: false,
     sortCriteria: 'score',
     type: 'specific',
+    generated: false,
     ...config,
   };
 }

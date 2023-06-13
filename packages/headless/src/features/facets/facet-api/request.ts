@@ -32,11 +32,6 @@ export interface BaseFacetRequest {
    * @defaultValue `false`
    */
   preventAutoSelect: boolean;
-  /**
-   * Whether the Facet is generated via the automatic facets feature.
-   * @defaultValue `false`
-   */
-  generated: boolean;
 }
 
 export interface BaseFacetValueRequest {
