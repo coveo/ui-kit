@@ -50,7 +50,8 @@ export function buildFacetManager(
   }
   const {dispatch} = engine;
   const core = buildCoreFacetManager(engine);
-  const getState = () => engine.state;
+  const getAutomaticFacets = () =>
+    engine.state.search.response.generateAutomaticFacets;
 
   if (props && props.desiredCount) {
     dispatch(setDesiredCount(props.desiredCount));
@@ -59,10 +60,16 @@ export function buildFacetManager(
   return {
     ...core,
     get state() {
+      const modifiedAutomaticFacets = getAutomaticFacets()?.facets.map(
+        (facet) => ({
+          ...facet,
+          facetId: `generated_${facet.field}`,
+        })
+      );
+
       return {
         ...core.state,
-        automaticFacets:
-          getState().search.response.generateAutomaticFacets?.facets,
+        automaticFacets: modifiedAutomaticFacets,
       };
     },
   };
