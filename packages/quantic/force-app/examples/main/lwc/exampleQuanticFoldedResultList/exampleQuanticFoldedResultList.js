@@ -1,3 +1,4 @@
+import {getHeadlessBundle} from 'c/quanticHeadlessLoader';
 import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import childTemplate from './resultTemplates/childTemplate.html';
@@ -48,12 +49,20 @@ export default class ExampleQuanticFoldedResultList extends LightningElement {
         'The number of child results to fold under the root collection element before expansion.',
       defaultValue: 2,
     },
+    {
+      attribute: 'useCase',
+      label: 'Use Case',
+      description:
+        'Define which use case to test. Possible values are: search, insight',
+      defaultValue: 'search',
+    },
   ];
   expectedEvents = ['registerresulttemplates'];
 
   handleResultTemplateRegistration(event) {
     const resultTemplatesManager = event.detail;
-    const isChild = CoveoHeadless.ResultTemplatesHelpers.fieldMustMatch(
+    const headless = getHeadlessBundle(this.engineId);
+    const isChild = headless.ResultTemplatesHelpers.fieldMustMatch(
       'quantic__templateId',
       ['myChildTemplate']
     );

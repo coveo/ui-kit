@@ -3,7 +3,8 @@
     "node_modules",
     "stencil-generated",
     "dist",
-    "www"
+    "www",
+    "!.storybook"
   ],
   "env": {
     "jest": true,
@@ -16,13 +17,9 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/package-lock.json"
-      ],
+      "files": ["**/package-lock.json"],
       "parser": "eslint-plugin-json-es",
-      "plugins": [
-        "package-lock"
-      ],
+      "plugins": ["package-lock"],
       "rules": {
         "package-lock/lock-file-version": [
           "error",
@@ -41,12 +38,8 @@
     {
       "files": ["**/*.ts", "**/*.tsx"],
       "parser": "@typescript-eslint/parser",
-      "plugins": [
-        "@typescript-eslint"
-      ],
-      "extends": [
-        "./node_modules/gts"
-      ],
+      "plugins": ["@typescript-eslint"],
+      "extends": ["./node_modules/gts"],
       "parserOptions": {
         "jsxPragma": "h"
       },
@@ -68,13 +61,8 @@
       }
     },
     {
-      "files": [
-        "**/*.js",
-        "**/*.jsx"
-      ],
-      "extends": [
-        "eslint:recommended"
-      ],
+      "files": ["**/*.js", "**/*.jsx"],
+      "extends": ["eslint:recommended"],
       "rules": {
         "no-unused-vars": [
           "error",

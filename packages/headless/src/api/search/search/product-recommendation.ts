@@ -1,6 +1,6 @@
 export interface ProductRecommendation {
   /**
-   * Document Uri in the index. Useful for analytics.
+   * This parameter is no longer used by the Coveo Usage Analytics service.
    */
   documentUri: string;
   /**
