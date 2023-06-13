@@ -76,6 +76,7 @@ describe('facet-set slice', () => {
       currentValues: [],
       filterFacetCount: true,
       freezeCurrentValues: false,
+      generated: false,
       injectionDepth: 1000,
       isFieldExpanded: false,
       numberOfValues: 8,

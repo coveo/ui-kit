@@ -263,7 +263,6 @@ export const defaultFacetOptions: FacetOptionalParameters = {
   injectionDepth: 1000,
   numberOfValues: 8,
   sortCriteria: 'automatic',
-  generated: false,
 };
 
 function buildFacetRequest(
@@ -276,6 +275,7 @@ function buildFacetRequest(
     freezeCurrentValues: false,
     isFieldExpanded: false,
     preventAutoSelect: false,
+    generated: false,
     ...config,
   };
 }
