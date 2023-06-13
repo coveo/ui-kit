@@ -156,7 +156,7 @@ export class AtomicResultChildren
       child.result.uniqueId +
       child.children.map((child) => child.result.uniqueId);
     return (
-      <atomic-result
+      <atomic-insight-result
         key={key}
         content={content}
         result={child}
@@ -167,7 +167,7 @@ export class AtomicResultChildren
         density={this.displayConfig.density}
         imageSize={this.imageSize || this.displayConfig.imageSize}
         classes={`child-result ${isLast ? 'last-child' : ''}`.trim()}
-      ></atomic-result>
+      ></atomic-insight-result>
     );
   }
 
