@@ -239,7 +239,7 @@ describe('Insight Panel test suites', () => {
       InsightPanelsSelectors.tabBar()
         .find('tab-popover')
         .find('[part="popover-tab"]')
-        .eq(0)
+        .eq(1)
         .should('have.text', 'Salesforce')
         .click();
 
