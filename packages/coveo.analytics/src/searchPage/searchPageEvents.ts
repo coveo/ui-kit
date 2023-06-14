@@ -298,6 +298,10 @@ export enum SearchPageEvents {
      * Identifies the custom event that gets logged when a user identifies a generated answer as irrelevant.
      */
     dislikeGeneratedAnswer = 'dislikeGeneratedAnswer',
+    /**
+     * Indentifies the click event that gets logges whena a user opens a generated answer citation.
+     */
+    generatedAnswerCitationOpen = 'generatedAnswerCitationOpen',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {

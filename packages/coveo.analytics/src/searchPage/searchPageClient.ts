@@ -898,4 +898,14 @@ export class CoveoSearchPageClient {
     public async logDislikeGeneratedAnswer(metadata: GeneratedAnswerFeedbackMeta) {
         return (await this.makeDislikeGeneratedAnswer(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
+
+    public makeGeneratedAnswerCitationOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return this.makeClickEvent(SearchPageEvents.generatedAnswerCitationOpen, info, identifier);
+    }
+
+    public async logGeneratedAnswerCitationOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return (await this.makeGeneratedAnswerCitationOpen(info, identifier)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
+    }
 }
