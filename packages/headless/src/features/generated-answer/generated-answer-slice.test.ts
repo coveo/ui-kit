@@ -31,8 +31,15 @@ describe('generated answer slice', () => {
   });
 
   describe('#sseError', () => {
+    const testPayload = {
+      message: 'some error message',
+      code: 500,
+    };
     it('should set isLoading to false', () => {
-      const finalState = generatedAnswerReducer({isLoading: true}, sseError());
+      const finalState = generatedAnswerReducer(
+        {isLoading: true},
+        sseError(testPayload)
+      );
 
       expect(finalState.isLoading).toBe(false);
     });
@@ -40,7 +47,7 @@ describe('generated answer slice', () => {
     it('should delete the answer', () => {
       const finalState = generatedAnswerReducer(
         {isLoading: false, answer: 'I exist'},
-        sseError()
+        sseError(testPayload)
       );
 
       expect(finalState.answer).toBeUndefined();
@@ -59,6 +66,30 @@ describe('generated answer slice', () => {
         message: 'a message',
         code: 500,
       });
+    });
+
+    it('should accept an error payload without a message', () => {
+      const testErrorPayload = {
+        code: 500,
+      };
+      const finalState = generatedAnswerReducer(
+        getGeneratedAnswerInitialState(),
+        sseError(testErrorPayload)
+      );
+
+      expect(finalState.error).toEqual(testErrorPayload);
+    });
+
+    it('should accept an error payload without a code', () => {
+      const testErrorPayload = {
+        message: 'some message',
+      };
+      const finalState = generatedAnswerReducer(
+        getGeneratedAnswerInitialState(),
+        sseError(testErrorPayload)
+      );
+
+      expect(finalState.error).toEqual(testErrorPayload);
     });
   });
 
