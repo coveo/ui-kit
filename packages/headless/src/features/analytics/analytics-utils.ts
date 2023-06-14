@@ -34,7 +34,11 @@ import {
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
 import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
-import {StateNeededByProductListingAnalyticsProvider} from '../../api/analytics/product-listing-analytics';
+import {
+  configureProductListingAnalytics,
+  ProductListingAnalyticsProvider,
+  StateNeededByProductListingAnalyticsProvider,
+} from '../../api/analytics/product-listing-analytics';
 import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
   configureAnalytics,
@@ -155,6 +159,11 @@ export type ProductListingAction<
 > = PreparableAnalyticsAction<
   {analyticsType: T},
   StateNeededByProductListingAnalyticsProvider
+>;
+
+export type ProductListingClickAction = PreparableAnalyticsAction<
+  {analyticsType: AnalyticsType.Click},
+  StateNeededBySearchAnalyticsProvider
 >;
 
 export interface AsyncThunkAnalyticsOptions<
@@ -535,3 +544,51 @@ function findPositionWithUniqueId(
 export const validateProductRecommendationPayload = (
   productRec: ProductRecommendation
 ) => new Schema(productRecommendationPartialDefinition).validate(productRec);
+
+export const makeProductListingAnalyticsAction = <
+  EventType extends AnalyticsType,
+  StateNeeded extends StateNeededByProductListingAnalyticsProvider = StateNeededByProductListingAnalyticsProvider
+>(
+  prefix: string,
+  analyticsType: EventType,
+  getBuilder: (
+    client: CoveoSearchPageClient,
+    state: StateNeeded
+  ) => Promise<EventBuilder | null> | null,
+  provider: (
+    getState: () => StateNeededByProductListingAnalyticsProvider
+  ) => SearchPageClientProvider = (getState) =>
+    new ProductListingAnalyticsProvider(getState)
+): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded> => {
+  return makePreparableAnalyticsAction(
+    prefix,
+    async ({
+      getState,
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    }) => {
+      const client = configureProductListingAnalytics({
+        getState,
+        logger,
+        analyticsClientMiddleware,
+        preprocessRequest,
+        provider: provider(getState),
+      });
+      const builder = await getBuilder(client, getState());
+      return {
+        description: builder?.description,
+        log: async ({state}) => {
+          const response = await builder?.log({
+            searchUID: provider(() => state).getSearchUID(),
+          });
+          logger.info(
+            {client: client.coveoAnalyticsClient, response},
+            'Analytics response'
+          );
+          return {analyticsType};
+        },
+      };
+    }
+  );
+};
