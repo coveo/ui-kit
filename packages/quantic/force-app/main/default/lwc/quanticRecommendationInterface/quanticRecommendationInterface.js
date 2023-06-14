@@ -7,7 +7,7 @@ import {
   loadDependencies,
   setEngineOptions,
   setInitializedCallback,
-  HeadlessBundleNames
+  HeadlessBundleNames,
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
 
@@ -64,12 +64,10 @@ export default class QuanticRecommendationInterface extends LightningElement {
             this.engineOptions = {
               configuration: {
                 ...JSON.parse(data),
-                search: {
-                  searchHub: this.searchHub,
-                  pipeline: this.pipeline,
-                  locale: LOCALE,
-                  timezone: TIMEZONE,
-                },
+                searchHub: this.searchHub,
+                pipeline: this.pipeline,
+                locale: LOCALE,
+                timezone: TIMEZONE,
               },
             };
             setEngineOptions(
@@ -97,7 +95,7 @@ export default class QuanticRecommendationInterface extends LightningElement {
     }
     this.actions = {
       ...CoveoHeadlessRecommendation.loadRecommendationActions(engine),
-    }
+    };
     engine.dispatch(this.actions.getRecommendations());
     this.initialized = true;
   };
