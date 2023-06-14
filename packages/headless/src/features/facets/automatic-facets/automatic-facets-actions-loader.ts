@@ -4,7 +4,7 @@ import {setDesiredCount} from './automatic-facets-actions';
 import {automaticFacetsReducer as automaticFacets} from './automatic-facets-slice';
 
 /**
- * The action creators for managing automatic facets.
+ * The action creators to manage automatic facets.
  */
 export interface AutomaticFacetsActionCreators {
   /**
