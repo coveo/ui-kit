@@ -38,7 +38,7 @@ export interface FacetManagerProps {
  * Creates a `FacetManager` instance.
  *
  * @param engine - The headless engine.
- * @param props - The facet manager props
+ * @param props - The facet manager props.
  * @returns A `FacetManager` controller instance.
  */
 export function buildFacetManager(
