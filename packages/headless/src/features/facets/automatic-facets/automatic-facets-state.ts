@@ -1,7 +1,7 @@
 export type AutomaticFacetsState = {
   /**
    * The desired count of facets.
-   * 
+   *
    * @defaultValue 0
    */
   desiredCount: number;

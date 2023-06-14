@@ -25,7 +25,7 @@ export const baseFacetResponseSelector = (
     const fromGeneratedFacetResponse =
       state.search.response.generateAutomaticFacets?.facets.find(
         (response) => `generated_${response.field}` === id
-      ) as FacetResponse;
+      );
 
     return fromFacetResponse || fromGeneratedFacetResponse;
   }
