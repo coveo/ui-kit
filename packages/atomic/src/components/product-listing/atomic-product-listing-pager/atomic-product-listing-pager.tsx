@@ -1,4 +1,3 @@
-import {SearchStatus, SearchStatusState} from '@coveo/headless';
 import {
   buildController,
   buildPager,
@@ -7,6 +6,7 @@ import {
   ProductListingEngine,
 } from '@coveo/headless/product-listing';
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
+import {ProductListingSearchStatus, ProductListingSearchStatusState} from '../';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {
@@ -22,16 +22,7 @@ import {PagerCommon} from '../../common/pager/pager-common';
 import {ProductListingBindings} from '../atomic-product-listing-interface/atomic-product-listing-interface';
 
 /**
- * The `atomic-product-listing-pager` provides buttons that allow the end user to navigate through the different result pages.
- *
- * @part buttons - The list of the next/previous buttons and page-buttons.
- * @part page-buttons - The list of page buttons.
- * @part page-button - The page button.
- * @part active-page-button - The active page button.
- * @part previous-button - The previous button.
- * @part next-button - The next button.
- * @part previous-button-icon - Icon of the previous button.
- * @part next-button-icon - Icon of the next button.
+ * @internal
  */
 @Component({
   tag: 'atomic-product-listing-pager',
@@ -43,14 +34,14 @@ export class AtomicProductListingPager
 {
   @InitializeBindings() public bindings!: ProductListingBindings;
   public pager!: Pager;
-  public searchStatus!: SearchStatus;
+  public searchStatus!: ProductListingSearchStatus;
 
   @BindStateToController('pager')
   @State()
   public pagerState!: PagerState;
   @BindStateToController('searchStatus')
   @State()
-  public searchStatusState!: SearchStatusState;
+  public searchStatusState!: ProductListingSearchStatusState;
   @State() error!: Error;
 
   @Event({
@@ -91,7 +82,9 @@ export class AtomicProductListingPager
     });
   }
 
-  private buildSearchStatus(engine: ProductListingEngine): SearchStatus {
+  private buildSearchStatus(
+    engine: ProductListingEngine
+  ): ProductListingSearchStatus {
     const controller = buildController(engine);
     const getState = () => engine.state;
 
