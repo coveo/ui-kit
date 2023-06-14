@@ -94,15 +94,18 @@ export class GeneratedAnswerAPIClient {
           const data: GeneratedAnswerStreamEventData = JSON.parse(
             (event as MessageEvent).data
           );
-          if (data.finishReason === StreamFinishReason.Completed) {
-            clearTimeout(timeout);
-            onCompleted();
-          } else if (data.finishReason === StreamFinishReason.Error) {
+          if (data.finishReason === StreamFinishReason.Error) {
             clearTimeout(timeout);
             onError({
               message: data.errorMessage,
               code: data.errorCode,
             });
+          } else if (data.finishReason === StreamFinishReason.Completed) {
+            clearTimeout(timeout);
+            if (data.payload) {
+              onMessage(data.payload);
+            }
+            onCompleted();
           } else {
             refreshTimeout();
             onMessage(data.payload);
