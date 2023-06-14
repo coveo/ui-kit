@@ -15,7 +15,7 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").RecommendationEngineOptions} RecommendationEngineOptions */
 
 /**
- * The `QuanticSearchInterface` component initializes the headless recommendation engine and handles localization configurations.
+ * The `QuanticRecommendationInterface` component initializes the headless recommendation engine and handles localization configurations.
  * A single instance should be used for each instance of the Coveo Headless recommendation engine.
  *
  *
