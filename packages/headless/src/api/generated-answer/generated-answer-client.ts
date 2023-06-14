@@ -9,7 +9,7 @@ import {resetTimeout} from '../../utils/utils';
 import {SearchAPIClient} from '../search/search-api-client';
 import {
   GeneratedAnswerStreamEventData,
-  StreamFinishReason,
+  GeneratedAnswerStreamFinishReason,
 } from './generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request';
 
@@ -94,13 +94,15 @@ export class GeneratedAnswerAPIClient {
           const data: GeneratedAnswerStreamEventData = JSON.parse(
             (event as MessageEvent).data
           );
-          if (data.finishReason === StreamFinishReason.Error) {
+          if (data.finishReason === GeneratedAnswerStreamFinishReason.Error) {
             clearTimeout(timeout);
             onError({
               message: data.errorMessage,
               code: data.errorCode,
             });
-          } else if (data.finishReason === StreamFinishReason.Completed) {
+          } else if (
+            data.finishReason === GeneratedAnswerStreamFinishReason.Completed
+          ) {
             clearTimeout(timeout);
             if (data.payload) {
               onMessage(data.payload);

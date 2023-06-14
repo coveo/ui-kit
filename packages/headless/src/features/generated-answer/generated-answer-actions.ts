@@ -23,7 +23,7 @@ export interface SSEErrorPayload {
 }
 
 export const sseMessage = createAction(
-  'generatedAnswer/sseReceived',
+  'generatedAnswer/sseMessage',
   (text: string) => validatePayload(text, stringValue)
 );
 
@@ -31,7 +31,7 @@ export const sseError = createAction(
   'generatedAnswer/sseError',
   (payload: SSEErrorPayload) =>
     validatePayload(payload, {
-      message: new StringValue(),
+      message: new StringValue({required: false}),
       code: new NumberValue({min: 0}),
     })
 );
