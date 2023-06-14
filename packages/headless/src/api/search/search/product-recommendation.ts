@@ -101,6 +101,8 @@ export interface ProductRecommendation {
 
 // Change this list when changing the fields exposed by `ProductRecommendation`
 export const ProductRecommendationDefaultFields: string[] = [
+  'uri',
+  'urihash',
   'documentUri',
   'documentUriHash',
   'permanentid',
