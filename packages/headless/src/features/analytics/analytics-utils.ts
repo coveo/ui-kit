@@ -161,11 +161,6 @@ export type ProductListingAction<
   StateNeededByProductListingAnalyticsProvider
 >;
 
-export type ProductListingClickAction = PreparableAnalyticsAction<
-  {analyticsType: AnalyticsType.Click},
-  StateNeededBySearchAnalyticsProvider
->;
-
 export interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider
 > {
