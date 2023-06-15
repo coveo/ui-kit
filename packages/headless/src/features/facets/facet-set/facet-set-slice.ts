@@ -63,6 +63,21 @@ export const facetSetReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const f = action.payload.f || {};
+
+        const generatedKeys = Object.keys(f).filter((key) =>
+          key.startsWith('generated_')
+        );
+
+        generatedKeys.forEach((id) => {
+          const field = id.replace(/^generated_/, '');
+          const request = buildFacetRequest({
+            facetId: id,
+            field,
+          });
+          request.generated = true;
+          state[id] = getFacetSetSliceInitialState(request);
+        });
+
         const facetIds = Object.keys(state);
 
         facetIds.forEach((id) => {
