@@ -13,7 +13,7 @@ import {
 } from './facet-set-selectors';
 
 describe('facet-set selectors', () => {
-  it('#facetSelector gets the facet response by id', () => {
+  it('#baseFacetResponseSelector gets the facet response by id', () => {
     const facetId = '1';
     const state = createMockState();
     const facetResponse = buildMockFacetResponse({facetId});
@@ -22,7 +22,17 @@ describe('facet-set selectors', () => {
     expect(baseFacetResponseSelector(state, facetId)).toBe(facetResponse);
   });
 
-  it('when the id is not found, #facetSelector returns undefined', () => {
+  it('#baseFacetResponseSelector gets the automatic facet response by id', () => {
+    const facetId = 'generated_author';
+    const field = 'author';
+    const state = createMockState();
+    const facetResponse = buildMockFacetResponse({facetId, field});
+    state.search.response.generateAutomaticFacets = {facets: [facetResponse]};
+
+    expect(baseFacetResponseSelector(state, facetId)).toBe(facetResponse);
+  });
+
+  it('when the id is not found, #baseFacetResponseSelector returns undefined', () => {
     const state = createMockState();
     expect(baseFacetResponseSelector(state, '1')).toBe(undefined);
   });

@@ -709,5 +709,17 @@ describe('facet-set slice', () => {
       expect(finalState[a]?.request.preventAutoSelect).toBe(false);
       expect(finalState[b]?.request.preventAutoSelect).toBe(true);
     });
+
+    it('registers generated facets to the state if there are any in the fragment', () => {
+      const id = 'generated_author';
+      const f = {[id]: ['ricardo']};
+
+      const finalState = facetSetReducer(state, restoreSearchParameters({f}));
+
+      expect(finalState[id].request.generated).toBe(true);
+      expect(finalState[id].request.currentValues).toEqual([
+        {state: 'selected', value: 'ricardo'},
+      ]);
+    });
   });
 });
