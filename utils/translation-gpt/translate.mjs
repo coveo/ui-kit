@@ -1,12 +1,12 @@
 import {readFileSync, writeFileSync} from 'fs';
 import {env} from 'process';
 
-const fileToTranslate = JSON.parse(
+const localeToTranslate = JSON.parse(
   readFileSync('../../packages/atomic/src/locales.json')
 );
-const fileAlreadyTranslated = JSON.parse(readFileSync('./temporary.json'));
+const localeAlreadyTranslated = JSON.parse(readFileSync('./temporary.json'));
 
-const allLanguages = [
+const supportedLanguages = [
   'en',
   'fr',
   'cs',
@@ -34,35 +34,40 @@ const allLanguages = [
   'zh-tw',
 ];
 
-const prompt = (mainKey, toTranslate, languages) =>
-  `I will give you a string to translate. The string can possible contain variables between braces similar to this: {{variable}}. 
+const prompt = (
+  translationKey,
+  englishTranslation,
+  languagesThatNeedTranslation
+) =>
+  `I will give you a string to translate. The string can optionally contain variables between braces similar to this: {{variable}}. 
   Those variables are meant to represent dynamic values.
-  If there are no variable, then do a normal translation.
-  I want you to translate it in the language code ${languages.join(
+  If there is no variable present, then do a normal translation.
+  I want you to translate it in the following language codes ${languagesThatNeedTranslation.join(
     ', '
   )} and to place the variable with braces correctly in the new string if it applies.
-  For each language code, answer in valid JSON format, with the the main key being ${mainKey} and each individual language code is a property of ${mainKey}. 
-  The value of each property of ${mainKey} should be the translated string.
+  For each language code, answer in valid JSON format, with the the main key being ${translationKey} and each individual language code is a property of ${translationKey}. 
+  The value of each property of ${translationKey} should be the translated string.
   The string to translate is: 
-  "${toTranslate}"`;
+  "${englishTranslation}"`;
 
 async function main() {
-  for (const translationKey of Object.keys(fileToTranslate)) {
-    if (fileAlreadyTranslated[translationKey]) {
+  for (const translationKey of Object.keys(localeToTranslate)) {
+    if (localeAlreadyTranslated[translationKey]) {
       continue;
     }
 
-    const englishTranslation = fileToTranslate[translationKey]['en'];
-    const existingTranslation = Object.keys(fileToTranslate[translationKey]);
-    const keysThatNeedTranslation = allLanguages.filter(
-      (l) => existingTranslation.indexOf(l) === -1
+    const englishTranslation = localeToTranslate[translationKey]['en'];
+    const existingTranslation = Object.keys(localeToTranslate[translationKey]);
+    const languagesThatNeedTranslation = supportedLanguages.filter(
+      (l) => !existingTranslation.includes(l)
     );
 
-    if (keysThatNeedTranslation.length === 0) {
-      fileAlreadyTranslated[translationKey] = fileToTranslate[translationKey];
+    if (languagesThatNeedTranslation.length === 0) {
+      localeAlreadyTranslated[translationKey] =
+        localeToTranslate[translationKey];
       writeFileSync(
         'temporary.json',
-        JSON.stringify(fileAlreadyTranslated, null, 2)
+        JSON.stringify(localeAlreadyTranslated, null, 2)
       );
       continue;
     }
@@ -81,7 +86,7 @@ async function main() {
               content: prompt(
                 translationKey,
                 englishTranslation,
-                keysThatNeedTranslation
+                languagesThatNeedTranslation
               ),
             },
           ],
@@ -92,13 +97,13 @@ async function main() {
       const data = await res.json();
       const answer = data.choices[0].message.content;
 
-      fileAlreadyTranslated[translationKey] = {
-        ...fileToTranslate[translationKey],
+      localeAlreadyTranslated[translationKey] = {
+        ...localeToTranslate[translationKey],
         ...JSON.parse(answer)[translationKey],
       };
       writeFileSync(
         'temporary.json',
-        JSON.stringify(fileAlreadyTranslated, null, 2)
+        JSON.stringify(localeAlreadyTranslated, null, 2)
       );
 
       console.log(`${answer}`);
