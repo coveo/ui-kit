@@ -65,6 +65,16 @@ export function doNotTrack() {
   ].some((value) => doNotTrackValues.has(value));
 }
 
+export function fromEntries<K extends PropertyKey, V>(
+  values: [K, V][]
+): Record<K, V> {
+  const newObject: Partial<Record<K, V>> = {};
+  for (const [key, value] of values) {
+    newObject[key] = value;
+  }
+  return newObject as Record<K, V>;
+}
+
 export function resetTimeout(
   timeoutId: ReturnType<typeof setTimeout>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

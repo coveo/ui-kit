@@ -1,3 +1,9 @@
+## 2.8.3 (2023-06-01)
+
+### Features
+
+- **atomic:** support fallback for `atomic-result-image` ([#2915](https://github.com/coveo/ui-kit/issues/2915)) ([2620f18](https://github.com/coveo/ui-kit/commits/2620f18cde02c7eb9ba5b31e2fb4042fa63ed0ad))
+
 # Change Log
 
 All notable changes to this project will be documented in this file.

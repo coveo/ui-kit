@@ -554,7 +554,7 @@ describe('Color Facet Test Suites', () => {
 
     describe('when select 3 facetValues', () => {
       const positions = [0, 1, 2];
-      function setupSelectedMulitpleColorFacets() {
+      function setupSelectedMultipleColorFacets() {
         positions.forEach((position, i) => {
           selectIdleBoxValueAt(position);
           BreadboxSelectors.breadcrumbButton().should('have.length', i + 1);
@@ -562,7 +562,7 @@ describe('Color Facet Test Suites', () => {
         cy.wait(TestFixture.interceptAliases.Search);
       }
 
-      beforeEach(setupSelectedMulitpleColorFacets);
+      beforeEach(setupSelectedMultipleColorFacets);
       describe('verify rendering', () => {
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
@@ -666,6 +666,44 @@ describe('Color Facet Test Suites', () => {
         ColorFacetSelectors.withId('ghi'),
         true
       );
+    });
+  });
+
+  describe('with allowed-values', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addColorFacet({
+            field: 'objecttype',
+            'allowed-values': JSON.stringify(['FAQ', 'File']),
+          })
+        )
+        .init();
+    });
+
+    it('returns only allowed values', () => {
+      ColorFacetSelectors.valueLabel()
+        .should('contain.text', 'FAQ')
+        .should('contain.text', 'File')
+        .should('not.contain.text', 'Message');
+    });
+  });
+
+  describe('with custom-sort', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addColorFacet({
+            field: 'filetype',
+            'custom-sort': JSON.stringify(['txt', 'rssitem']),
+          })
+        )
+        .init();
+    });
+
+    it('returns values sorted in the proper order', () => {
+      ColorFacetSelectors.valueLabel().eq(0).should('contain.text', 'txt');
+      ColorFacetSelectors.valueLabel().eq(1).should('contain.text', 'rssitem');
     });
   });
 });

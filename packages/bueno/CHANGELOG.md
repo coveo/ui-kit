@@ -1,3 +1,5 @@
+## 0.43.6 (2023-06-01)
+
 # Change Log
 
 All notable changes to this project will be documented in this file.
