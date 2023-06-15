@@ -1,10 +1,5 @@
 'use client';
 
-import {useClientSearchEngine} from '@/context/engine';
-import {useController} from '@/hooks/use-controller';
-import {ShallowRouter, useShallowRouter} from '@/hooks/use-shallow-router';
-import {SearchParameterSerializer} from '@/utils/search-parameter-serializer';
-import {compareSearchParams} from '@/utils/url';
 import {SearchParameters, buildSearchParameterManager} from '@coveo/headless';
 import {useSearchParams, usePathname} from 'next/navigation';
 import {
@@ -14,6 +9,11 @@ import {
   useEffect,
   useRef,
 } from 'react';
+import {useClientSearchEngine} from '@/context/engine';
+import {useController} from '@/hooks/use-controller';
+import {ShallowRouter, useShallowRouter} from '@/hooks/use-shallow-router';
+import {SearchParameterSerializer} from '@/utils/search-parameter-serializer';
+import {compareSearchParams} from '@/utils/url';
 
 function useEffectCount(
   effect: (index: number) => ReturnType<EffectCallback>,

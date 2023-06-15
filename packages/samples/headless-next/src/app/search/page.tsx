@@ -1,11 +1,3 @@
-import {ClientSearchEngineProvider} from '@/context/engine';
-import {Facet} from '@/search/facet';
-import {ResultList} from '@/search/result-list';
-import {SearchBox} from '@/search/search-box';
-import {SearchParametersSynchronizer} from '@/search/search-parameters-synchronizer';
-import {executeFirstSearch} from '@/utils/engine';
-import {SearchParameterSerializer} from '@/utils/search-parameter-serializer';
-import {NextPageDefinition} from '@/utils/types';
 import {
   FacetProps,
   SearchEngineOptions,
@@ -16,6 +8,14 @@ import {
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 import {Metadata} from 'next';
+import {ClientSearchEngineProvider} from '@/context/engine';
+import {Facet} from '@/search/facet';
+import {ResultList} from '@/search/result-list';
+import {SearchBox} from '@/search/search-box';
+import {SearchParametersSynchronizer} from '@/search/search-parameters-synchronizer';
+import {executeFirstSearch} from '@/utils/engine';
+import {SearchParameterSerializer} from '@/utils/search-parameter-serializer';
+import {NextPageDefinition} from '@/utils/types';
 
 export const metadata: Metadata = {
   title: 'Search page',

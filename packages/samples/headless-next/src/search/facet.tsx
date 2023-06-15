@@ -1,9 +1,9 @@
 'use client';
 
-import {useClientSearchEngine} from '@/context/engine';
-import {useController} from '@/hooks/use-controller';
 import {FacetProps, buildFacet} from '@coveo/headless';
 import {FunctionComponent} from 'react';
+import {useClientSearchEngine} from '@/context/engine';
+import {useController} from '@/hooks/use-controller';
 
 export const Facet: FunctionComponent<{props: FacetProps}> = ({props}) => {
   const engine = useClientSearchEngine();

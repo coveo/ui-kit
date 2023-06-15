@@ -1,7 +1,7 @@
 'use client';
 
-import {AnySearchParams} from '@/utils/types';
 import {useCallback, useEffect, useState} from 'react';
+import {AnySearchParams} from '@/utils/types';
 
 export interface ShallowRouter {
   replace(href: string): void;

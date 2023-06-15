@@ -19,5 +19,5 @@ module.exports = {
     },
   ],
   importOrderParserPlugins: ['typescript', decoratorPlugin],
-  importOrder: ['^server-only$', '^[^./]', '^[./]', '^\\.\\.\\/', '^\\.\\/'],
+  importOrder: ['^[^./]', '^[./]', '^\\.\\.\\/', '^\\.\\/'],
 };
