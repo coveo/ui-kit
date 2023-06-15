@@ -45,7 +45,7 @@
   </head>
   <body>
     <button id="widget-view">Toggle widget view</button>
-    <atomic-insight-interface fields-to-include='["sfid"]'>
+    <atomic-insight-interface fields-to-include='["sfid", "inat_kingdom", "inat_family", "inat_class"]'>
       <atomic-insight-full-search-button
         slot="full-search"
         tooltip="Full Search Button Tooltip"
@@ -59,11 +59,11 @@
           <atomic-insight-tabs>
             <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
             <atomic-insight-tab label="Youtube" expression="@filetype==YouTubeVideo"></atomic-insight-tab>
+            <atomic-insight-tab label="Folding" expression="@source=iNaturalistTaxons"></atomic-insight-tab>
             <atomic-insight-tab label="Service Cases" expression="@objecttype==Case"></atomic-insight-tab>
             <atomic-insight-tab label="Users" expression="@objecttype==User"></atomic-insight-tab>
             <atomic-insight-tab label="PDF" expression="@filetype==pdf"></atomic-insight-tab>
             <atomic-insight-tab label="Salesforce" expression="@filetype==SalesforceItem"></atomic-insight-tab>
-            <atomic-insight-tab label="Text" expression="@filetype==txt"></atomic-insight-tab>
           </atomic-insight-tabs>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
@@ -96,7 +96,7 @@
         <atomic-layout-section section="results">
           <atomic-insight-smart-snippet></atomic-insight-smart-snippet>
           <atomic-insight-smart-snippet-suggestions></atomic-insight-smart-snippet-suggestions>
-          <atomic-insight-result-list image-size="none">
+          <atomic-insight-folded-result-list image-size="none">
             <atomic-insight-result-template if-defined="sfid">
               <template>
                 <style>
@@ -137,6 +137,135 @@
                     </atomic-field-condition>
                   </atomic-result-fields-list>
                 </atomic-result-section-bottom-metadata>
+              </template>
+            </atomic-insight-result-template>
+
+            <atomic-insight-result-template must-match-source="iNaturalistTaxons">
+              <template>
+                <style>
+                  .field {
+                    display: inline-flex;
+                    align-items: center;
+                  }
+
+                  .field-label {
+                    font-weight: bold;
+                    margin-right: 0.25rem;
+                  }
+
+                  .thumbnail {
+                    display: none;
+                    width: 100%;
+                    height: 100%;
+                  }
+
+                  .icon {
+                    display: none;
+                  }
+
+                  .result-root.image-small .thumbnail,
+                  .result-root.image-large .thumbnail {
+                    display: inline-block;
+                  }
+
+                  .result-root.image-icon .icon {
+                    display: inline-block;
+                  }
+
+                  .result-root.image-small atomic-result-section-visual,
+                  .result-root.image-large atomic-result-section-visual {
+                    border-radius: var(--atomic-border-radius-xl);
+                  }
+                </style>
+                <atomic-result-section-badges>
+                  <atomic-field-condition must-match-sourcetype="Salesforce">
+                    <atomic-result-badge label="Salesforce" class="salesforce-badge"></atomic-result-badge>
+                  </atomic-field-condition>
+                  <atomic-field-condition if-defined="language">
+                    <atomic-result-badge
+                      icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
+                    >
+                      <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
+                    </atomic-result-badge>
+                  </atomic-field-condition>
+                  <atomic-field-condition must-match-is-recommendation="true">
+                    <atomic-result-badge label="Recommended"></atomic-result-badge>
+                  </atomic-field-condition>
+                  <atomic-field-condition must-match-is-top-result="true">
+                    <atomic-result-badge label="Top Result"></atomic-result-badge>
+                  </atomic-field-condition>
+                </atomic-result-section-badges>
+                <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
+                <atomic-result-section-excerpt
+                  ><atomic-result-text field="excerpt"></atomic-result-text
+                ></atomic-result-section-excerpt>
+                <atomic-result-section-bottom-metadata>
+                  <atomic-result-fields-list>
+                    <atomic-field-condition class="field" if-defined="inat_kingdom">
+                      <span class="field-label">Kingdom:</span>
+                      <atomic-result-text field="inat_kingdom"></atomic-result-text>
+                    </atomic-field-condition>
+
+                    <atomic-field-condition class="field" if-defined="inat_family">
+                      <span class="field-label">Family:</span>
+                      <atomic-result-text field="inat_family"></atomic-result-text>
+                    </atomic-field-condition>
+
+                    <atomic-field-condition class="field" if-defined="inat_class">
+                      <span class="field-label">Class:</span>
+                      <atomic-result-text field="inat_class"></atomic-result-text>
+                    </atomic-field-condition>
+                  </atomic-result-fields-list>
+                </atomic-result-section-bottom-metadata>
+                <atomic-result-section-children>
+                  <atomic-load-more-children-results></atomic-load-more-children-results>
+                  <atomic-insight-result-children image-size="icon">
+                    <!-- CHILD -->
+                    <atomic-insight-result-children-template>
+                      <!-- CHILD TEMPLATE -->
+                      <template>
+                        <style>
+                          .field {
+                            display: inline-flex;
+                            align-items: center;
+                          }
+
+                          .field-label {
+                            font-weight: bold;
+                            margin-right: 0.25rem;
+                          }
+                        </style>
+                        <atomic-result-section-title>
+                          <atomic-result-link></atomic-result-link>
+                        </atomic-result-section-title>
+                        <atomic-result-section-excerpt>
+                          <atomic-result-text field="excerpt"></atomic-result-text>
+                        </atomic-result-section-excerpt>
+                        <atomic-result-section-bottom-metadata>
+                          <atomic-result-fields-list>
+                            <atomic-field-condition class="field" if-defined="inat_kingdom">
+                              <span class="field-label">Kingdom:</span>
+                              <atomic-result-text field="inat_kingdom"></atomic-result-text>
+                            </atomic-field-condition>
+
+                            <atomic-field-condition class="field" if-defined="inat_family">
+                              <span class="field-label">Family:</span>
+                              <atomic-result-text field="inat_family"></atomic-result-text>
+                            </atomic-field-condition>
+
+                            <atomic-field-condition class="field" if-defined="inat_class">
+                              <span class="field-label">Class:</span>
+                              <atomic-result-text field="inat_class"></atomic-result-text>
+                            </atomic-field-condition>
+                          </atomic-result-fields-list>
+                        </atomic-result-section-bottom-metadata>
+                        <atomic-result-section-children>
+                          <atomic-insight-result-children inherit-templates> </atomic-insight-result-children>
+                        </atomic-result-section-children>
+                      </template>
+                    </atomic-insight-result-children-template>
+                  </atomic-insight-result-children>
+                </atomic-result-section-children>
               </template>
             </atomic-insight-result-template>
 
@@ -246,7 +375,7 @@
                 </atomic-result-section-bottom-metadata>
               </template>
             </atomic-insight-result-template>
-          </atomic-insight-result-list>
+          </atomic-insight-folded-result-list>
           <atomic-insight-no-results></atomic-insight-no-results>
           <atomic-insight-query-error></atomic-insight-query-error>
         </atomic-layout-section>

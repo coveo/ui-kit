@@ -9,7 +9,7 @@ import {
   FoldedCollection,
   Result,
   buildInteractiveResult,
-} from '@coveo/headless';
+} from '@coveo/headless/insight';
 import {
   Component,
   Element,
@@ -38,21 +38,20 @@ import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
 import {FoldedResultListStateContextEvent} from '../../../common/result-list/result-list-decorators';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
- * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
- *
- * @part result-list - The element containing every result of a result list
- * @part outline - The element displaying an outline or a divider around a result
+ * @internal
  */
 @Component({
-  tag: 'atomic-folded-result-list',
-  styleUrl: 'atomic-folded-result-list.pcss',
+  tag: 'atomic-insight-folded-result-list',
+  styleUrl: 'atomic-insight-folded-result-list.pcss',
   shadow: true,
 })
-export class AtomicFoldedResultList implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+export class AtomicInsightFoldedResultList
+  implements InitializableComponent<InsightBindings>
+{
+  @InitializeBindings() public bindings!: InsightBindings;
   public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
   private resultListCommon!: ResultListCommon;
@@ -138,7 +137,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
     const resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
-        this.host.querySelectorAll('atomic-result-template')
+        this.host.querySelectorAll('atomic-insight-result-template')
       ),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
@@ -163,7 +162,9 @@ export class AtomicFoldedResultList implements InitializableComponent {
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.foldedResultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
-      renderResult: (props) => <atomic-result {...props}></atomic-result>,
+      renderResult: (props) => (
+        <atomic-insight-result {...props}></atomic-insight-result>
+      ),
       getInteractiveResult: (result: Result) =>
         buildInteractiveResult(this.bindings.engine, {
           options: {result},
