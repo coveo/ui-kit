@@ -16,7 +16,7 @@ export interface FacetManagerState extends CoreFacetManagerState {
   /**
    * The list of automatic facet responses.
    */
-  automaticFacets: FacetResponse[] | undefined;
+  automaticFacets?: FacetResponse[] | undefined;
 }
 
 export interface FacetManager extends CoreFacetManager {
@@ -45,17 +45,20 @@ export function buildFacetManager(
   engine: SearchEngine,
   props?: FacetManagerProps
 ): FacetManager {
-  if (props && !loadAutomaticFacetsActions(engine)) {
+  if (!props?.desiredCount) {
+    return buildCoreFacetManager(engine);
+  }
+
+  if (!loadAutomaticFacetsActions(engine)) {
     throw loadReducerError;
   }
+
   const {dispatch} = engine;
+  dispatch(setDesiredCount(props.desiredCount));
+
   const core = buildCoreFacetManager(engine);
   const getAutomaticFacets = () =>
     engine.state.search.response.generateAutomaticFacets?.facets;
-
-  if (props) {
-    dispatch(setDesiredCount(props.desiredCount));
-  }
 
   return {
     ...core,
