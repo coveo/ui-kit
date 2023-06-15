@@ -280,6 +280,23 @@ export const isErrorResponse = <T>(
   return (r as {error: SearchAPIErrorWithStatusCode}).error !== undefined;
 };
 
+export function isSuccessSearchResponse(
+  body: unknown
+): body is SearchResponseSuccess {
+  return (body as SearchResponseSuccess).results !== undefined;
+}
+
+export function shimResponse(response: SearchResponseSuccess) {
+  const empty = emptyQuestionAnswer();
+  if (isNullOrUndefined(response.questionAnswer)) {
+    response.questionAnswer = empty;
+    return response;
+  }
+
+  response.questionAnswer = {...empty, ...response.questionAnswer};
+  return response;
+}
+
 function isSuccessQuerySuggestionsResponse(
   body: unknown
 ): body is QuerySuggestSuccessResponse {
@@ -294,19 +311,4 @@ function isSuccessFieldsDescriptionResponse(
   body: unknown
 ): body is FieldDescriptionsResponseSuccess {
   return (body as FieldDescriptionsResponseSuccess).fields !== undefined;
-}
-
-function isSuccessSearchResponse(body: unknown): body is SearchResponseSuccess {
-  return (body as SearchResponseSuccess).results !== undefined;
-}
-
-function shimResponse(response: SearchResponseSuccess) {
-  const empty = emptyQuestionAnswer();
-  if (isNullOrUndefined(response.questionAnswer)) {
-    response.questionAnswer = empty;
-    return response;
-  }
-
-  response.questionAnswer = {...empty, ...response.questionAnswer};
-  return response;
 }
