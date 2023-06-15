@@ -166,7 +166,7 @@ describe('BindStateToController decorator', () => {
       expect(console.error).not.toHaveBeenCalled();
     });
 
-    it(`when the onUpdateCallbackMethod option defined a non-existant method
+    it(`when the onUpdateCallbackMethod option defined a non-existent method
     it should log an error to the console`, () => {
       BindStateToController('controller', {onUpdateCallbackMethod: 'onUpdate'})(
         component,
@@ -180,7 +180,7 @@ describe('BindStateToController decorator', () => {
       );
     });
 
-    it(`when the onUpdateCallbackMethod option defined an existant method
+    it(`when the onUpdateCallbackMethod option defined an existent method
     it should not log an error to the console`, () => {
       component.onUpdate = () => {};
       BindStateToController('controller', {onUpdateCallbackMethod: 'onUpdate'})(

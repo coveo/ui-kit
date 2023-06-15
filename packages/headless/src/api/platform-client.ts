@@ -149,7 +149,7 @@ export function getOrganizationEndpoints(
 
 /**
  * Returns the base Coveo platform URL, based on environment and region.
- * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEnpoints utility function instead.
+ * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEndpoints utility function instead.
  *
  * @param options
  * @returns string
@@ -166,7 +166,7 @@ export function platformUrl<E extends PlatformEnvironment>(
 
 /**
  * Returns the Coveo analytics platform URL, based on environment and region.
- * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEnpoints utility function instead.
+ * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEndpoints utility function instead.
  *
  * @param options
  * @returns
