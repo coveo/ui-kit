@@ -1,4 +1,4 @@
-export enum GeneratedAnswerStreamFinishReason {
+export enum StreamFinishReason {
   Completed = 'COMPLETED',
   Error = 'ERROR',
 }
@@ -37,7 +37,7 @@ export interface GeneratedAnswerCitationsPayload {
 export interface GeneratedAnswerStreamEventData {
   payloadType?: GeneratedAnswerPayloadType;
   payload: string; // GeneratedAnswerMessagePayload | GeneratedAnswerCitationsPayload;
-  finishReason?: GeneratedAnswerStreamFinishReason;
+  finishReason?: StreamFinishReason;
   errorMessage?: string;
   errorCode?: number;
 }

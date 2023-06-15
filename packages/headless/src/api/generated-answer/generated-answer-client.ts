@@ -9,7 +9,7 @@ import {resetTimeout} from '../../utils/utils';
 import {SearchAPIClient} from '../search/search-api-client';
 import {
   GeneratedAnswerStreamEventData,
-  GeneratedAnswerStreamFinishReason,
+  StreamFinishReason,
 } from './generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request';
 
@@ -87,31 +87,33 @@ export class GeneratedAnswerAPIClient {
           }
         );
 
-        source.onopen = refreshTimeout;
+        source.onopen = () => {
+          refreshTimeout();
+        };
 
         source.onmessage = (event) => {
           retryCount = 0;
           const data: GeneratedAnswerStreamEventData = JSON.parse(
             (event as MessageEvent).data
           );
-          if (data.finishReason === GeneratedAnswerStreamFinishReason.Error) {
+          if (data.finishReason === StreamFinishReason.Error) {
             clearTimeout(timeout);
             onError({
               message: data.errorMessage,
               code: data.errorCode,
             });
-          } else if (
-            data.finishReason === GeneratedAnswerStreamFinishReason.Completed
-          ) {
+            return;
+          }
+          if (data.finishReason === StreamFinishReason.Completed) {
             clearTimeout(timeout);
             if (data.payload) {
               onMessage(data.payload);
             }
             onCompleted();
-          } else {
-            refreshTimeout();
-            onMessage(data.payload);
+            return;
           }
+          refreshTimeout();
+          onMessage(data.payload);
         };
 
         source.onerror = () => {
