@@ -301,7 +301,7 @@ export enum SearchPageEvents {
     /**
      * Indentifies the click event that gets logges whena a user opens a generated answer citation.
      */
-    generatedAnswerCitationOpen = 'generatedAnswerCitationOpen',
+    openGeneratedAnswerSource = 'openGeneratedAnswerSource',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {

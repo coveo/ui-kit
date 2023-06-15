@@ -1443,4 +1443,16 @@ describe('SearchPageClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
         expectMatchDescription(built.description, SearchPageEvents.dislikeGeneratedAnswer, meta);
     });
+
+    it('should send proper payload for #logOpenGeneratedAnswerSource', async () => {
+        await client.logOpenGeneratedAnswerSource(fakeDocInfo, fakeDocID);
+        expectMatchDocumentPayload(SearchPageEvents.openGeneratedAnswerSource, fakeDocInfo, fakeDocID);
+    });
+
+    it('should send proper payload for #makeOpenGeneratedAnswerSource', async () => {
+        const built = await client.makeOpenGeneratedAnswerSource(fakeDocInfo, fakeDocID);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchDocumentPayload(SearchPageEvents.openGeneratedAnswerSource, fakeDocInfo, fakeDocID);
+        expectMatchDescription(built.description, SearchPageEvents.openGeneratedAnswerSource, {...fakeDocID});
+    });
 });

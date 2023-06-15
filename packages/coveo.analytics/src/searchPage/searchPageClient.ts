@@ -899,13 +899,21 @@ export class CoveoSearchPageClient {
         return (await this.makeDislikeGeneratedAnswer(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 
-    public makeGeneratedAnswerCitationOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.makeClickEvent(SearchPageEvents.generatedAnswerCitationOpen, info, identifier);
+    public makeOpenGeneratedAnswerSource(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return this.makeClickEvent(SearchPageEvents.openGeneratedAnswerSource, info, identifier);
     }
 
-    public async logGeneratedAnswerCitationOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return (await this.makeGeneratedAnswerCitationOpen(info, identifier)).log({
+    public async logOpenGeneratedAnswerSource(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return (await this.makeOpenGeneratedAnswerSource(info, identifier)).log({
             searchUID: this.provider.getSearchUID(),
         });
+    }
+
+    public makeRetryGeneratedAnswer() {
+        return this.makeSearchEvent(SearchPageEvents.retryGeneratedAnswer);
+    }
+
+    public async logRetryGeneratedAnswer() {
+        return (await this.makeRetryGeneratedAnswer()).log({searchUID: this.provider.getSearchUID()});
     }
 }
