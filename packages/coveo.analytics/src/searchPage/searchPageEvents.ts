@@ -287,7 +287,7 @@ export enum SearchPageEvents {
      */
     caseDetach = 'caseDetach',
     /**
-     * Identifies the cause of a search request being retried in order to generate an answer that might'va failed.
+     * Identifies the cause of a search request being retried in order to regenerate an answer stream that failed.
      */
     retryGeneratedAnswer = 'retryGeneratedAnswer',
     /**
