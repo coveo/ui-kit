@@ -27,6 +27,14 @@ export interface GeneratedAnswer {
    * Re-executes the last query to generate an answer.
    */
   retry(): void;
+  /**
+   * Logs a custom event indicating a generated answer is relevant.
+   */
+  logLikeGeneratedAnswer(): void;
+  /**
+   * Logs a custom event indicating a generated answer is irrelevant.
+   */
+  logDislikeGeneratedAnswer(): void;
 }
 
 /**
@@ -116,6 +124,17 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     retry() {
       // TODO: Swap for real analytics event
       dispatch(executeSearch(logSearchboxSubmit()));
+      //dispatch(executeSearch(logRetryGeneratedAnswer()));
+    },
+
+    logLikeGeneratedAnswer() {
+      console.log('👍');
+      //dispatch(logLikeGeneratedAnswer());
+    },
+
+    logDislikeGeneratedAnswer() {
+      console.log('👎');
+      //dispatch(logDislikeGeneratedAnswer());
     },
   };
 }
