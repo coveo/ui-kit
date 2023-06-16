@@ -1,4 +1,8 @@
-import {logFacetDeselect, logFacetSelect} from './facet-set-analytics-actions';
+import {
+  logFacetDeselect,
+  logFacetExclude,
+  logFacetSelect,
+} from './facet-set-analytics-actions';
 import {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils';
 import {FacetValue} from './interfaces/response';
 
@@ -18,4 +22,16 @@ export const getAnalyticsActionForToggleFacetSelect = (
   return isFacetValueSelected(selection)
     ? logFacetDeselect(payload)
     : logFacetSelect(payload);
+};
+
+export const getAnalyticsActionForExcludeFacetSelect = (
+  facetId: string,
+  selection: FacetValue
+) => {
+  const payload: FacetSelectionChangeMetadata = {
+    facetId: facetId,
+    facetValue: selection.value,
+  };
+
+  return logFacetExclude(payload);
 };

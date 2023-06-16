@@ -18,7 +18,10 @@ import {
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
 } from '../../../../features/facets/facet-set/facet-set-actions';
-import {executeToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-controller-actions';
+import {
+  executeExcludeFacetSelect,
+  executeToggleFacetSelect,
+} from '../../../../features/facets/facet-set/facet-set-controller-actions';
 import {
   facetRequestSelector,
   facetResponseSelector,
@@ -87,6 +90,13 @@ export interface CoreFacet extends Controller {
    * @param selection - The facet value to toggle.
    */
   toggleSelect(selection: FacetValue): void;
+
+  /**
+   * Excludes the specified facet value.
+   *
+   * @param selection - The facet value to exclude.
+   */
+  toggleExclude(selection: FacetValue): void;
 
   /**
    * Toggles the specified facet value, deselecting others.
@@ -341,6 +351,11 @@ export function buildCoreFacet(
 
     toggleSelect: (selection: FacetValue) =>
       dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
+
+    toggleExclude: (selection: FacetValue) =>
+      dispatch(
+        executeExcludeFacetSelect({facetId: options.facetId, selection})
+      ),
 
     // Must use a function here to properly support inheritance with `this`.
     toggleSingleSelect: function (selection: FacetValue) {

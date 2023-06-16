@@ -130,6 +130,28 @@ export const logFacetSelect = (
     }
   );
 
+export const logFacetExclude = (
+  payload: LogFacetSelectActionCreatorPayload
+): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/facet/exclude',
+    AnalyticsType.Search,
+    (client, state) => {
+      validatePayload(payload, {
+        facetId: facetIdDefinition,
+        facetValue: requiredNonEmptyString,
+      });
+
+      const stateForAnalytics = getStateNeededForFacetMetadata(state);
+      const metadata = buildFacetSelectionChangeMetadata(
+        payload,
+        stateForAnalytics
+      );
+
+      return client.makeFacetSelect(metadata);
+    }
+  );
+
 export interface LogFacetDeselectActionCreatorPayload {
   /**
    * The facet id.

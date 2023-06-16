@@ -7,7 +7,10 @@ import {
 } from '../../../state/state-sections';
 import {updateFacetOptions} from '../../facet-options/facet-options-actions';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
-import {toggleSelectFacetValue} from './facet-set-actions';
+import {
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from './facet-set-actions';
 import {facetValueDefinition} from './facet-set-validate-payload';
 import {FacetValue} from './interfaces/response';
 
@@ -30,5 +33,22 @@ export const executeToggleFacetSelect = createAsyncThunk<
   } = thunk;
   validatePayload({facetId, selection}, definition);
   dispatch(toggleSelectFacetValue({facetId, selection}));
+  dispatch(updateFacetOptions({freezeFacetOrder: true}));
+});
+
+export const executeExcludeFacetSelect = createAsyncThunk<
+  void,
+  {
+    facetId: string;
+    selection: FacetValue;
+  },
+  AsyncThunkOptions<FacetSection & ConfigurationSection>
+>('facet/executeToggleExclude', ({facetId, selection}, thunk) => {
+  const {
+    dispatch,
+    extra: {validatePayload},
+  } = thunk;
+  validatePayload({facetId, selection}, definition);
+  dispatch(toggleExcludeFacetValue({facetId, selection}));
   dispatch(updateFacetOptions({freezeFacetOrder: true}));
 });

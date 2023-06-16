@@ -1,6 +1,9 @@
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {executeToggleFacetSelect} from './facet-set-controller-actions';
+import {
+  executeExcludeFacetSelect,
+  executeToggleFacetSelect,
+} from './facet-set-controller-actions';
 
 describe('facet set controller actions', () => {
   let engine: MockSearchEngine;
@@ -20,6 +23,25 @@ describe('facet set controller actions', () => {
       }),
       expect.objectContaining({
         type: 'facet/toggleSelectValue',
+        payload: {facetId, selection},
+      }),
+      expect.objectContaining({
+        type: 'facetOptions/update',
+        payload: {freezeFacetOrder: true},
+      }),
+    ]);
+  });
+
+  it('#executeToggleExclude dispatches the correct actions', () => {
+    const selection = buildMockFacetValue({value: 'test'});
+    engine.dispatch(executeExcludeFacetSelect({facetId, selection}));
+
+    expect(engine.actions).toEqual([
+      expect.objectContaining({
+        type: 'facet/executeToggleExclude/pending',
+      }),
+      expect.objectContaining({
+        type: 'facet/toggleExcludeValue',
         payload: {facetId, selection},
       }),
       expect.objectContaining({

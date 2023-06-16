@@ -13,7 +13,10 @@ import {
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
-import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
+import {
+  getAnalyticsActionForExcludeFacetSelect,
+  getAnalyticsActionForToggleFacetSelect,
+} from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {
   executeSearch,
@@ -127,6 +130,15 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch(
           getAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
+        )
+      );
+    },
+
+    toggleExclude(selection) {
+      coreController.toggleExclude(selection);
+      dispatch(
+        executeSearch(
+          getAnalyticsActionForExcludeFacetSelect(getFacetId(), selection)
         )
       );
     },
