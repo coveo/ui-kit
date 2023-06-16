@@ -15,6 +15,7 @@ export type {FacetManagerPayload, CoreFacetManager, CoreFacetManagerState};
 
 export interface FacetManagerState extends CoreFacetManagerState {
   /**
+   * @beta
    * The list of automatic facet responses.
    */
   automaticFacets?: FacetResponse[] | undefined;
@@ -22,13 +23,14 @@ export interface FacetManagerState extends CoreFacetManagerState {
 
 export interface FacetManager extends CoreFacetManager {
   /**
-   * The state of the FacetManager.
+   * The state of the `FacetManager` controller.
    */
   state: FacetManagerState;
 }
 
 export interface FacetManagerProps {
   /**
+   * @beta
    * The desired count of automatic facets.
    * Must be a positive integer.
    */
@@ -39,7 +41,7 @@ export interface FacetManagerProps {
  * Creates a `FacetManager` instance.
  *
  * @param engine - The headless engine.
- * @param props - The facet manager props.
+ * @beta @param props - The optional facet manager props.
  * @returns A `FacetManager` controller instance.
  */
 export function buildFacetManager(
