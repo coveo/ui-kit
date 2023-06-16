@@ -15,6 +15,9 @@ export const generatedAnswerReducer = createReducer(
     builder
       .addCase(sseMessage, (state, {payload}) => {
         state.isLoading = false;
+        if (!state.answer) {
+          state.answer = '';
+        }
         state.answer += payload;
       })
       .addCase(sseError, (state, {payload}) => {

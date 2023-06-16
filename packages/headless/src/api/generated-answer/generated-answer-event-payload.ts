@@ -14,13 +14,13 @@ export interface GeneratedAnswerInlineCitation {
   title: string;
   permanentid: string;
   uri?: string;
-  clickableuri?: string;
+  clickUri?: string;
 }
 
 export interface GeneratedAnswerCitation {
   id: string;
   title: string;
-  clickableuri: string;
+  clickUri: string;
   permanentid: string;
   score: string; // or number
 }
