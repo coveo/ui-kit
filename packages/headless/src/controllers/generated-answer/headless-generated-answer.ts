@@ -1,4 +1,5 @@
 import {EventSourcePolyfill} from 'event-source-polyfill';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   sseMessage,
@@ -16,7 +17,7 @@ import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {buildController} from '../controller/headless-controller';
 
-export type {GeneratedAnswerState};
+export type {GeneratedAnswerState, GeneratedAnswerCitation};
 
 export interface GeneratedAnswer {
   /**
