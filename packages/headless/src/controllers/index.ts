@@ -407,5 +407,6 @@ export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/
 export type {
   GeneratedAnswer,
   GeneratedAnswerState,
+  GeneratedAnswerCitation,
 } from './generated-answer/headless-generated-answer';
 export {buildGeneratedAnswer} from './generated-answer/headless-generated-answer';
