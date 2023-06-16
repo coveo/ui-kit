@@ -8,4 +8,5 @@
 
 .recommendation-item__content {
   height: 100%;
+  overflow: hidden;
 }

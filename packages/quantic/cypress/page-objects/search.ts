@@ -64,6 +64,7 @@ export const InterceptAliases = {
     ),
     ShowLessFoldedResults: uaAlias('showLessFoldedResults'),
     ShowMoreFoldedResults: uaAlias('showMoreFoldedResults'),
+    RecommendationOpen: uaAlias('recommendationOpen'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
