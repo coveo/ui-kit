@@ -299,7 +299,7 @@ export enum SearchPageEvents {
      */
     dislikeGeneratedAnswer = 'dislikeGeneratedAnswer',
     /**
-     * Indentifies the click event that gets logges whena a user opens a generated answer citation.
+     * Identifies the click event that gets logged when a user opens a generated answer citation.
      */
     openGeneratedAnswerSource = 'openGeneratedAnswerSource',
 }
