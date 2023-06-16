@@ -16,6 +16,7 @@ import {LightningElement, api} from 'lwc';
  *   <div slot="emphasized"></div>
  *   <div slot="excerpt"></div>
  *   <div slot="bottom-metadata"></div>
+ *   <div slot="children"></div>
  * </c-quantic-result-template>
  */
 export default class QuanticResultTemplate extends LightningElement {

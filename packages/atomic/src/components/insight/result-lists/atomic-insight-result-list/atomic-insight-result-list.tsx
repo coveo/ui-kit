@@ -10,26 +10,26 @@ import {
   buildInsightResultList,
   InsightResult,
   buildInsightInteractiveResult,
-} from '..';
+} from '../..';
 import {
   FocusTarget,
   FocusTargetController,
-} from '../../../utils/accessibility-utils';
+} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
+} from '../../../../utils/initialization-utils';
+import {randomID} from '../../../../utils/utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
-} from '../../common/layout/display-options';
-import {ResultListCommon} from '../../common/result-list/result-list-common';
-import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
-import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+} from '../../../common/layout/display-options';
+import {ResultListCommon} from '../../../common/result-list/result-list-common';
+import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
+import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

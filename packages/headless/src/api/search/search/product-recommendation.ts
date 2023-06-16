@@ -103,6 +103,8 @@ export interface ProductRecommendation {
 export const ProductRecommendationDefaultFields: string[] = [
   'uri',
   'urihash',
+  'documentUri',
+  'documentUriHash',
   'permanentid',
   'ec_name',
   'ec_brand',
