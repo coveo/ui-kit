@@ -5,6 +5,7 @@ import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../featu
 import {
   registerFacet,
   toggleSelectFacetValue,
+  toggleExcludeFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
@@ -138,6 +139,26 @@ describe('facet', () => {
 
       expect(engine.actions).toContainEqual(
         toggleSelectFacetValue({facetId, selection: facetValue})
+      );
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+  });
+
+  describe('#toggleExclude', () => {
+    it('dispatches a #toggleExclude action with the passed facet value', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        toggleExcludeFacetValue({facetId, selection: facetValue})
       );
     });
 

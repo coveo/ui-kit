@@ -8,6 +8,7 @@ import {
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
+  toggleExcludeFacetValue,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
@@ -162,6 +163,37 @@ describe('facet', () => {
     it('dispatches a search', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        expect.objectContaining({
+          type: executeSearch.pending.type,
+        })
+      );
+    });
+  });
+
+  describe('#toggleExclude', () => {
+    it('dispatches a #toggleExclude action with the passed facet value', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        toggleExcludeFacetValue({facetId, selection: facetValue})
+      );
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches a search', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
 
       expect(engine.actions).toContainEqual(
         expect.objectContaining({
