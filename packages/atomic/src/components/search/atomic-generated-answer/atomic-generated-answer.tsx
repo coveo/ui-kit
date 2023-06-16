@@ -14,8 +14,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {FeedbackButton} from './feedback-button';
+import {SourceCitations} from './source-citations';
+import {TypingLoader} from './typing-loader';
 
 /**
  * @internal
@@ -49,14 +51,44 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
-  private get loader() {
-    return (
-      <div class="typing-indicator">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    );
+  private get mockCitations() {
+    return [
+      {
+        id: 'some-fake-id',
+        title: 'Fake Article About Something',
+        clickUri: 'www.google.ca',
+        permanentid: '12345',
+        score: '0.9',
+      },
+      {
+        id: 'some-fake-id-2',
+        title: 'How to do the thing',
+        clickUri: 'www.google.ca',
+        permanentid: '67890',
+        score: '0.8',
+      },
+      {
+        id: 'some-fake-id-2',
+        title: 'How to do the thing',
+        clickUri: 'www.google.ca',
+        permanentid: '67890',
+        score: '0.8',
+      },
+      {
+        id: 'some-fake-id-2',
+        title: 'How to do the thing',
+        clickUri: 'www.google.ca',
+        permanentid: '67890',
+        score: '0.8',
+      },
+      {
+        id: 'some-fake-id-2',
+        title: 'How to do the thing',
+        clickUri: 'www.google.ca',
+        permanentid: '67890',
+        score: '0.8',
+      },
+    ];
   }
 
   public render() {
@@ -74,38 +106,35 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       >
         <article>
           {this.generatedAnswerState.isLoading ? (
-            this.loader
+            <TypingLoader />
           ) : (
             <div part="generated-content">
-              <div class="items-center flex">
-                <div part="badge">Generated answer for you</div>
+              <div class="flex items-center">
+                <div part="header-label" class="text-bg-blue">
+                  Generated answer for you
+                </div>
                 <div class="feedback-buttons flex">
-                  <Button
+                  <FeedbackButton
                     title={this.bindings.i18n.t('like')}
-                    style="text-neutral"
-                    class="feedback-button"
+                    icon={ThumbsUpIcon}
                     onClick={() =>
                       this.generatedAnswer.logLikeGeneratedAnswer()
                     }
-                  >
-                    <atomic-icon class="w-5" icon={ThumbsUpIcon}></atomic-icon>
-                  </Button>
-                  <Button
+                  />
+                  <FeedbackButton
                     title={this.bindings.i18n.t('dislike')}
-                    style="text-neutral"
-                    class="feedback-button"
+                    icon={ThumbsDownIcon}
                     onClick={() =>
                       this.generatedAnswer.logDislikeGeneratedAnswer()
                     }
-                  >
-                    <atomic-icon
-                      class="w-5"
-                      icon={ThumbsDownIcon}
-                    ></atomic-icon>
-                  </Button>
+                  />
                 </div>
               </div>
-              <p part="text">{this.generatedAnswerState.answer}</p>
+              <p part="generated-text">{this.generatedAnswerState.answer}</p>
+              <SourceCitations
+                label={this.bindings.i18n.t('more-info')}
+                citations={this.mockCitations}
+              />
             </div>
           )}
         </article>

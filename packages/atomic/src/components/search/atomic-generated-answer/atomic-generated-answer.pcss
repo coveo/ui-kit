@@ -6,18 +6,17 @@
   max-width: 1000px;
 }
 
-[part='badge'] {
-  background: #edf6ff;
-  border-radius: 4px;
+[part='header-label'] {
+  border-radius: 8px;
   color: #1372ec;
   padding: 8px 12px;
   font-weight: 500;
   display: inline-block;
 }
 
-[part='text'] {
+[part='generated-text'] {
   margin-bottom: 0;
-  margin-top: 18px;
+  margin-top: 20px;
   color: var(--atomic-neutral-dark);
   line-height: 26px;
   white-space: pre-wrap;
@@ -34,6 +33,40 @@
 
   .feedback-button {
     padding: 8px;
+  }
+}
+
+.text-bg-blue {
+  background: #edf6ff;
+  color: #1372ec;
+}
+
+.source-citations {
+  gap: 8px;
+  margin-top: 24px;
+
+  .citations-label {
+    margin-top: 0.7em;
+  }
+
+  .citations-container {
+    gap: 8px;
+
+    .citation {
+      padding: 0.4em;
+    }
+
+    .citation-index {
+      width: 20px;
+      height: 20px;
+      font-weight: 500;
+      border-radius: 50%;
+
+      citation-index-number {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
   }
 }
 
