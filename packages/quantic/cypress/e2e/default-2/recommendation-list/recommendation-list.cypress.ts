@@ -40,7 +40,7 @@ describe('quantic-recommendation-list', () => {
     configure(options);
   }
 
-  function setupWithPauseBeforeSearch() {
+  function setupWithPauseBeforeRecommendationFetch() {
     interceptSearchIndefinitely();
     cy.visit(pageUrl);
     configure();
@@ -55,7 +55,7 @@ describe('quantic-recommendation-list', () => {
 
   describe('while loading the recommendations', () => {
     it('should properly render the placeholders', () => {
-      setupWithPauseBeforeSearch();
+      setupWithPauseBeforeRecommendationFetch();
 
       Expect.displayPlaceholders(defaultNumberOfRecommendations);
       Expect.displayRecommendations(false);

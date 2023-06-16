@@ -60,7 +60,7 @@ export function recommendationListExpectations(
             expect(fieldsToInclude).to.include(field)
           );
         })
-        .logDetail('fields to include should be in the request');
+        .logDetail('should include the correct fields the request');
     },
 
     correctRecommendationId: (expectedRecommendationId: string) => {
@@ -69,7 +69,9 @@ export function recommendationListExpectations(
           const recommendationId = interception.request.body.recommendation;
           expect(recommendationId).to.equal(expectedRecommendationId);
         })
-        .logDetail('recommendation id should be in the request');
+        .logDetail(
+          'should send the correct recommendation id value in the request'
+        );
     },
 
     correctNumberOfRecommendations: (
@@ -80,7 +82,9 @@ export function recommendationListExpectations(
           const recommendationId = interception.request.body.numberOfResults;
           expect(recommendationId).to.equal(expectedNumberOfRecommendations);
         })
-        .logDetail('recommendation id should be in the request');
+        .logDetail(
+          'should send the correct number of recommendations value in the request'
+        );
     },
 
     correctNumberOfRecommendationsPerRow: (
