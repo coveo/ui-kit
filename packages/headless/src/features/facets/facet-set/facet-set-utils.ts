@@ -24,7 +24,7 @@ export const getAnalyticsActionForToggleFacetSelect = (
     : logFacetSelect(payload);
 };
 
-export const getAnalyticsActionForExcludeFacetSelect = (
+export const getAnalyticsActionForToggleFacetExclude = (
   facetId: string,
   selection: FacetValue
 ) => {

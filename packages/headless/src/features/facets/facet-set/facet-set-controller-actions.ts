@@ -36,7 +36,7 @@ export const executeToggleFacetSelect = createAsyncThunk<
   dispatch(updateFacetOptions({freezeFacetOrder: true}));
 });
 
-export const executeExcludeFacetSelect = createAsyncThunk<
+export const executeToggleFacetExclude = createAsyncThunk<
   void,
   {
     facetId: string;

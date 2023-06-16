@@ -148,7 +148,7 @@ export const logFacetExclude = (
         stateForAnalytics
       );
 
-      return client.makeFacetSelect(metadata);
+      return client.makeFacetExclude(metadata);
     }
   );
 

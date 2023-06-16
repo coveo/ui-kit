@@ -19,7 +19,7 @@ import {
   updateFacetIsFieldExpanded,
 } from '../../../../features/facets/facet-set/facet-set-actions';
 import {
-  executeExcludeFacetSelect,
+  executeToggleFacetExclude,
   executeToggleFacetSelect,
 } from '../../../../features/facets/facet-set/facet-set-controller-actions';
 import {
@@ -354,7 +354,7 @@ export function buildCoreFacet(
 
     toggleExclude: (selection: FacetValue) =>
       dispatch(
-        executeExcludeFacetSelect({facetId: options.facetId, selection})
+        executeToggleFacetExclude({facetId: options.facetId, selection})
       ),
 
     // Must use a function here to properly support inheritance with `this`.
