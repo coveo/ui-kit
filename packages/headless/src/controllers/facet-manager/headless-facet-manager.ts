@@ -29,7 +29,7 @@ export interface FacetManager extends CoreFacetManager {
 export interface FacetManagerProps {
   /**
    * The desired count of automatic facets.
-   * @default 0
+   * Must be a positive integer.
    */
   desiredCount: number;
 }

@@ -1,14 +1,13 @@
 export type AutomaticFacetsState = {
   /**
    * The desired count of facets.
-   *
-   * @defaultValue 0
+   * Must be a positive integer.
    */
   desiredCount: number;
 };
 
 export function getAutomaticFacetsInitialState(): AutomaticFacetsState {
   return {
-    desiredCount: 0,
+    desiredCount: 1,
   };
 }
