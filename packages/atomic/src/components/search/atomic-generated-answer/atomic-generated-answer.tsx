@@ -7,11 +7,14 @@ import {
   GeneratedAnswerState,
 } from '@coveo/headless';
 import {Component, h, State} from '@stencil/core';
+import ThumbsDownIcon from '../../../images/thumbs-down.svg';
+import ThumbsUpIcon from '../../../images/thumbs-up.svg';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {Button} from '../../common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -57,6 +60,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   public render() {
+    console.log(this.generatedAnswerState);
     if (
       !this.generatedAnswerState.answer?.length ||
       this.searchStatusState.hasError
@@ -65,7 +69,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     }
     return (
       <aside
-        class="bg-background border border-neutral rounded-lg p-6 pb-4 text-on-background"
+        class="bg-background border-neutral rounded-lg p-6 text-on-background"
         part="container"
       >
         <article>
@@ -73,7 +77,34 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             this.loader
           ) : (
             <div part="generated-content">
-              <div part="badge">Generated answer for you</div>
+              <div class="items-center flex">
+                <div part="badge">Generated answer for you</div>
+                <div class="feedback-buttons flex">
+                  <Button
+                    title={this.bindings.i18n.t('like')}
+                    style="text-neutral"
+                    class="feedback-button"
+                    onClick={() =>
+                      this.generatedAnswer.logLikeGeneratedAnswer()
+                    }
+                  >
+                    <atomic-icon class="w-5" icon={ThumbsUpIcon}></atomic-icon>
+                  </Button>
+                  <Button
+                    title={this.bindings.i18n.t('dislike')}
+                    style="text-neutral"
+                    class="feedback-button"
+                    onClick={() =>
+                      this.generatedAnswer.logDislikeGeneratedAnswer()
+                    }
+                  >
+                    <atomic-icon
+                      class="w-5"
+                      icon={ThumbsDownIcon}
+                    ></atomic-icon>
+                  </Button>
+                </div>
+              </div>
               <p part="text">{this.generatedAnswerState.answer}</p>
             </div>
           )}
