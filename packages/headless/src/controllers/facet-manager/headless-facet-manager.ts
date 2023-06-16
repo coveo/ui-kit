@@ -64,14 +64,14 @@ export function buildFacetManager(
   return {
     ...core,
     get state() {
-      const modifiedAutomaticFacets = getAutomaticFacets()?.map((facet) => ({
+      const automaticFacets = getAutomaticFacets()?.map((facet) => ({
         ...facet,
         facetId: getAutomaticFacetId(facet.field),
       }));
 
       return {
         ...core.state,
-        automaticFacets: modifiedAutomaticFacets,
+        automaticFacets,
       };
     },
   };
