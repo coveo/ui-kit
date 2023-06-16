@@ -481,5 +481,5 @@ export interface SmartSnippetDocumentIdentifier {
 export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause' | 'searchQueryUid'>;
 
 export interface GeneratedAnswerFeedbackMeta {
-    streamId: string;
+    generativeQuestionAnsweringId: string;
 }

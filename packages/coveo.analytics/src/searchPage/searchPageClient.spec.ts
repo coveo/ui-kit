@@ -1417,13 +1417,13 @@ describe('SearchPageClient', () => {
     });
 
     it('should send proper payload for #logLikeGeneratedAnswer', async () => {
-        const meta = {streamId: fakeStreamId};
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
         await client.logLikeGeneratedAnswer(meta);
         expectMatchCustomEventPayload(SearchPageEvents.likeGeneratedAnswer, meta);
     });
 
     it('should send proper payload for #makeLikeGeneratedAnswer', async () => {
-        const meta = {streamId: fakeStreamId};
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
         const built = await client.makeLikeGeneratedAnswer(meta);
         await built.log({searchUID: provider.getSearchUID()});
         expectMatchCustomEventPayload(SearchPageEvents.likeGeneratedAnswer, meta);
@@ -1431,13 +1431,13 @@ describe('SearchPageClient', () => {
     });
 
     it('should send proper payload for #logDislikeGeneratedAnswer', async () => {
-        const meta = {streamId: fakeStreamId};
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
         await client.logDislikeGeneratedAnswer(meta);
         expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
     });
 
     it('should send proper payload for #makeDislikeGeneratedAnswer', async () => {
-        const meta = {streamId: fakeStreamId};
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
         const built = await client.makeDislikeGeneratedAnswer(meta);
         await built.log({searchUID: provider.getSearchUID()});
         expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
