@@ -1,6 +1,7 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {setDesiredCount} from '../../features/facets/automatic-facets/automatic-facets-actions';
 import {loadAutomaticFacetsActions} from '../../features/facets/automatic-facets/automatic-facets-actions-loader';
+import {getAutomaticFacetId} from '../../features/facets/automatic-facets/automatic-facets-utils';
 import {FacetResponse} from '../../features/facets/facet-set/interfaces/response';
 import {loadReducerError} from '../../utils/errors';
 import {
@@ -65,7 +66,7 @@ export function buildFacetManager(
     get state() {
       const modifiedAutomaticFacets = getAutomaticFacets()?.map((facet) => ({
         ...facet,
-        facetId: `generated_${facet.field}`,
+        facetId: getAutomaticFacetId(facet.field),
       }));
 
       return {

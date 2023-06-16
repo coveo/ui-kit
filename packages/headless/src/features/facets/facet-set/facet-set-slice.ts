@@ -9,6 +9,7 @@ import {change} from '../../history/history-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions';
+import {getAutomaticFacetId} from '../automatic-facets/automatic-facets-utils';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import {updateFacetAutoSelection} from '../generic/facet-actions';
 import {
@@ -179,7 +180,7 @@ export const facetSetReducer = createReducer(
         const automaticFacets =
           action.payload.response.generateAutomaticFacets?.facets;
         automaticFacets?.forEach((facetResponse) => {
-          const facetId = `generated_${facetResponse.field}`;
+          const facetId = getAutomaticFacetId(facetResponse.field);
           state[facetId] = {
             request: {
               ...buildFacetRequest({...facetResponse, facetId}),

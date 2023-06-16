@@ -3,6 +3,7 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {FacetSection} from '../../../state/state-sections';
+import {getAutomaticFacetId} from '../automatic-facets/automatic-facets-utils';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {FacetResponse, FacetValue} from './interfaces/response';
 
@@ -24,7 +25,7 @@ export const baseFacetResponseSelector = (
     );
     const fromGeneratedFacetResponse =
       state.search.response.generateAutomaticFacets?.facets.find(
-        (response) => `generated_${response.field}` === id
+        (response) => getAutomaticFacetId(response.field) === id
       );
 
     return fromFacetResponse || fromGeneratedFacetResponse;
@@ -43,7 +44,7 @@ function isFacetResponse(
   return (
     !!response &&
     (response.facetId in state.facetSet ||
-      `generated_${response.field}` in state.facetSet)
+      getAutomaticFacetId(response.field) in state.facetSet)
   );
 }
 export const facetResponseSelector = (

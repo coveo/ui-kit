@@ -15,7 +15,7 @@ describe('automatic-facets slice', () => {
   it('initializes the state correctly', () => {
     const finalState = automaticFacetsReducer(undefined, {type: ''});
 
-    expect(finalState).toEqual({desiredCount: 0});
+    expect(finalState).toEqual({desiredCount: 1});
   });
 
   it('sets the desiredCount with the passed value', () => {

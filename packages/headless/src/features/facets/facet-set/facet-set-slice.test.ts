@@ -24,6 +24,7 @@ import {
   ExecuteSearchThunkReturn,
   fetchFacetValues,
 } from '../../search/search-actions';
+import {getAutomaticFacetId} from '../automatic-facets/automatic-facets-utils';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import {updateFacetAutoSelection} from '../generic/facet-actions';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
@@ -711,7 +712,8 @@ describe('facet-set slice', () => {
     });
 
     it('registers generated facets to the state if there are any in the fragment', () => {
-      const id = 'generated_author';
+      const field = 'author';
+      const id = getAutomaticFacetId(field);
       const f = {[id]: ['ricardo']};
 
       const finalState = facetSetReducer(state, restoreSearchParameters({f}));
