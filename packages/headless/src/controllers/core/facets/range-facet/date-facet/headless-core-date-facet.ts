@@ -6,10 +6,7 @@ import {
   RegisterDateFacetActionCreatorPayload,
   registerDateFacet,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {
-  executeToggleDateFacetExclude,
-  executeToggleDateFacetSelect,
-} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
+import {executeToggleDateFacetSelect} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
 import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {
   DateFacetRequest,
@@ -92,13 +89,6 @@ export interface DateFacet extends Controller {
    * @param selection - The facet value to toggle.
    */
   toggleSelect(selection: DateFacetValue): void;
-
-  /**
-   * Toggles the specified facet value.
-   *
-   * @param selection - The facet value to toggle.
-   */
-  toggleExclude(selection: DateFacetValue): void;
 
   /**
    * Toggles the specified facet value, deselecting others.
@@ -201,9 +191,6 @@ export function buildCoreDateFacet(
 
     toggleSelect: (selection: DateFacetValue) =>
       dispatch(executeToggleDateFacetSelect({facetId, selection})),
-
-    toggleExclude: (selection: DateFacetValue) =>
-      dispatch(executeToggleDateFacetExclude({facetId, selection})),
 
     toggleSingleSelect: function (selection: DateFacetValue) {
       if (selection.state === 'idle') {
