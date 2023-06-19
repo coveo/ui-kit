@@ -1636,5 +1636,17 @@
   "tab-popover": {
     "en": "Popover menu for more tabs",
     "fr": "Menu contextuel pour plus d'onglets"
+  },
+  "generated-answer-title": {
+    "en": "Generated answer for you",
+    "fr": "Réponse générée pour vous"
+  },
+  "this-answer-was-helpful": {
+    "en": "This answer was helpful",
+    "fr": "Cette réponse m'a aidé"
+  },
+  "this-answer-was-not-helpful": {
+    "en": "This answer was not helpful",
+    "fr": "Cette réponse ne m'a pas aidé"
   }
 }

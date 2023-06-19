@@ -111,18 +111,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             <div part="generated-content">
               <div class="flex items-center">
                 <div part="header-label" class="text-bg-blue">
-                  Generated answer for you
+                  {this.bindings.i18n.t('generated-answer-title')}
                 </div>
                 <div class="feedback-buttons flex">
                   <FeedbackButton
-                    title={this.bindings.i18n.t('like')}
+                    title={this.bindings.i18n.t('this-answer-was-helpful')}
                     icon={ThumbsUpIcon}
                     onClick={() =>
                       this.generatedAnswer.logLikeGeneratedAnswer()
                     }
                   />
                   <FeedbackButton
-                    title={this.bindings.i18n.t('dislike')}
+                    title={this.bindings.i18n.t('this-answer-was-not-helpful')}
                     icon={ThumbsDownIcon}
                     onClick={() =>
                       this.generatedAnswer.logDislikeGeneratedAnswer()
