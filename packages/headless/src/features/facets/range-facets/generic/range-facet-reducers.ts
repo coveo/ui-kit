@@ -76,6 +76,28 @@ export function toggleSelectRangeValue<
   request.preventAutoSelect = true;
 }
 
+export function toggleExcludeRangeValue<
+  T extends RangeFacetSlice,
+  U extends RangeFacetValue
+>(state: RangeFacetState<T>, facetId: string, selection: U) {
+  const request = state[facetId]?.request;
+
+  if (!request) {
+    return;
+  }
+
+  const value = findRange(request.currentValues, selection);
+
+  if (!value) {
+    return;
+  }
+
+  const isActive = value.state !== 'idle';
+  value.state = isActive ? 'idle' : 'excluded';
+
+  request.preventAutoSelect = true;
+}
+
 export function handleRangeFacetDeselectAll<T extends RangeFacetSlice>(
   state: RangeFacetState<T>,
   facetId: string

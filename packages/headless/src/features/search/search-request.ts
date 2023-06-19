@@ -84,9 +84,7 @@ function getAllFacets(state: StateNeededBySearchRequest) {
 function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {
     const currentValues = request.currentValues as AnyFacetValue[];
-    const hasActiveValues = currentValues.some(
-      ({state}) => state === 'selected' || state === 'excluded'
-    );
+    const hasActiveValues = currentValues.some(({state}) => state !== 'idle');
 
     if (request.generateAutomaticRanges && !hasActiveValues) {
       return {...request, currentValues: []};
