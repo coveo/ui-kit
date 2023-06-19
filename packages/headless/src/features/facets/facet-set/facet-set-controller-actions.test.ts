@@ -1,7 +1,7 @@
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {
-  executeExcludeFacetSelect,
+  executeToggleFacetExclude,
   executeToggleFacetSelect,
 } from './facet-set-controller-actions';
 
@@ -34,7 +34,7 @@ describe('facet set controller actions', () => {
 
   it('#executeToggleExclude dispatches the correct actions', () => {
     const selection = buildMockFacetValue({value: 'test'});
-    engine.dispatch(executeExcludeFacetSelect({facetId, selection}));
+    engine.dispatch(executeToggleFacetExclude({facetId, selection}));
 
     expect(engine.actions).toEqual([
       expect.objectContaining({
