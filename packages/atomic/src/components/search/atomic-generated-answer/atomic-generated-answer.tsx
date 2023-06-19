@@ -56,13 +56,14 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       {
         id: 'some-fake-id',
         title: 'Fake Article About Something',
+        uri: 'www.google.ca',
         clickUri: 'www.google.ca',
         permanentid: '12345',
-        score: '0.9',
       },
       {
         id: 'some-fake-id-2',
         title: 'How to do the thing',
+        uri: 'www.google.ca',
         clickUri: 'www.google.ca',
         permanentid: '67890',
         score: '0.8',
@@ -70,9 +71,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       {
         id: 'some-fake-id-3',
         title: 'Some fake source',
+        uri: 'www.google.ca',
         clickUri: 'www.google.ca',
         permanentid: '67890',
-        score: '0.8',
       },
     ];
   }
