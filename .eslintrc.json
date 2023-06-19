@@ -10,7 +10,7 @@
     "jest": true,
     "es6": true
   },
-  "extends": ["plugin:prettier/recommended", "plugin:@cspell/recommended"],
+  "extends": ["plugin:prettier/recommended"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
@@ -31,6 +31,7 @@
     },
     {
       "files": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs"],
+      "extends": ["plugin:@cspell/recommended"],
       "rules": {
         "@cspell/spellchecker": ["warn"]
       }
