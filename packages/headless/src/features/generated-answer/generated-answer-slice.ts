@@ -3,9 +3,10 @@ import './generated-answer-actions';
 import {
   resetAnswer,
   setIsLoading,
-  sseComplete,
-  sseError,
-  sseMessage,
+  streamComplete,
+  updateCitations,
+  updateError,
+  updateMessage,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -13,19 +14,25 @@ export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
   (builder) =>
     builder
-      .addCase(sseMessage, (state, {payload}) => {
+      .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         if (!state.answer) {
           state.answer = '';
         }
-        state.answer += payload;
+        state.answer += payload.textDelta;
       })
-      .addCase(sseError, (state, {payload}) => {
+      .addCase(updateCitations, (state, {payload}) => {
+        payload.citations.forEach((citation) => {
+          state.citations.push(citation);
+        });
+      })
+      .addCase(updateError, (state, {payload}) => {
         state.isLoading = false;
         state.error = payload;
+        state.citations = [];
         delete state.answer;
       })
-      .addCase(sseComplete, (state) => {
+      .addCase(streamComplete, (state) => {
         state.isLoading = false;
       })
       .addCase(resetAnswer, () => {
