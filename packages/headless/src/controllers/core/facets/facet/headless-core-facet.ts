@@ -92,9 +92,9 @@ export interface CoreFacet extends Controller {
   toggleSelect(selection: FacetValue): void;
 
   /**
-   * Excludes the specified facet value.
+   * Toggles the exclusion the specified facet value.
    *
-   * @param selection - The facet value to exclude.
+   * @param selection - The facet value to toggle exclusion.
    */
   toggleExclude(selection: FacetValue): void;
 

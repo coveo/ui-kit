@@ -172,6 +172,29 @@ describe('facet-set slice', () => {
         expect(targetValue?.state).toBe('selected');
       });
 
+      it('sets the state of an excluded value to selected', () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: 'excluded',
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleSelectFacetValue({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.state).toBe('selected');
+      });
+
       it('sets the state of a selected value to idle', () => {
         const facetValue = buildMockFacetValue({
           value: 'TED',
@@ -321,6 +344,29 @@ describe('facet-set slice', () => {
           (req) => req.value === facetValue.value
         );
         expect(targetValue?.state).toBe('excluded');
+      });
+
+      it('sets the state of a selected value to excluded', () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: 'selected',
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleExcludeFacetValue({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.state).toBe('idle');
       });
 
       it('sets the state of an excluded value to idle', () => {

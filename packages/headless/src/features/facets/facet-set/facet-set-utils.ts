@@ -10,6 +10,10 @@ export const isFacetValueSelected = (value: FacetValue) => {
   return value.state === 'selected';
 };
 
+export const isFacetValueExcluded = (value: FacetValue) => {
+  return value.state === 'excluded';
+};
+
 export const getAnalyticsActionForToggleFacetSelect = (
   facetId: string,
   selection: FacetValue
@@ -33,5 +37,7 @@ export const getAnalyticsActionForToggleFacetExclude = (
     facetValue: selection.value,
   };
 
-  return logFacetExclude(payload);
+  return isFacetValueExcluded(selection)
+    ? logFacetDeselect(payload)
+    : logFacetExclude(payload);
 };
