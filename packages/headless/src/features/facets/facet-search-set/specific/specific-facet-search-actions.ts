@@ -42,3 +42,9 @@ export const selectFacetSearchResult = createAction(
   (payload: selectFacetSearchResultPayload) =>
     validatePayload(payload, selectFacetSearchResultPayloadDefinition)
 );
+
+export const excludeFacetSearchResult = createAction(
+  'facetSearch/toggleExcludeValue',
+  (payload: selectFacetSearchResultPayload) =>
+    validatePayload(payload, selectFacetSearchResultPayloadDefinition)
+);

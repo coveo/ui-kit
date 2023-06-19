@@ -7,6 +7,7 @@ import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   logFacetClearAll,
+  logFacetExclude,
   logFacetSelect,
   logFacetShowLess,
   logFacetShowMore,
@@ -88,6 +89,12 @@ export function buildFacet(
           logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
         );
       },
+      exclude: (value) => {
+        dispatch(updateFacetOptions({freezeFacetOrder: true}));
+        dispatch(fetchProductListing()).then(() =>
+          logFacetExclude({facetId: getFacetId(), facetValue: value.rawValue})
+        );
+      },
       isForFieldSuggestions: false,
     });
   };
@@ -105,6 +112,8 @@ export function buildFacet(
       dispatch(fetchProductListing());
       dispatch(getAnalyticsActionForToggleFacetSelect(getFacetId(), selection));
     },
+
+    toggleExclude() {},
 
     deselectAll() {
       coreController.deselectAll();
