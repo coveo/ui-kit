@@ -51,33 +51,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
-  private get mockCitations() {
-    return [
-      {
-        id: 'some-fake-id',
-        title: 'Fake Article About Something',
-        uri: 'www.google.ca',
-        clickUri: 'www.google.ca',
-        permanentid: '12345',
-      },
-      {
-        id: 'some-fake-id-2',
-        title: 'How to do the thing',
-        uri: 'www.google.ca',
-        clickUri: 'www.google.ca',
-        permanentid: '67890',
-        score: '0.8',
-      },
-      {
-        id: 'some-fake-id-3',
-        title: 'Some fake source',
-        uri: 'www.google.ca',
-        clickUri: 'www.google.ca',
-        permanentid: '67890',
-      },
-    ];
-  }
-
   private get isStreamEmpty() {
     return (
       !this.generatedAnswerState.isLoading &&
@@ -96,7 +69,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       >
         <article>
           {this.generatedAnswerState.isLoading ? (
-            <TypingLoader />
+            <TypingLoader
+              loadingLabel={this.bindings.i18n.t('generated-answer-loading')}
+            />
           ) : (
             <div part="generated-content">
               <div class="flex items-center">
@@ -123,7 +98,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
               <p part="generated-text">{this.generatedAnswerState.answer}</p>
               <SourceCitations
                 label={this.bindings.i18n.t('more-info')}
-                citations={this.mockCitations}
+                citations={this.generatedAnswerState.citations}
               />
             </div>
           )}

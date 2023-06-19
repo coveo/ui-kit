@@ -19,7 +19,7 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
           (citation: GeneratedAnswerCitation, index: number) => (
             <a
               key={citation.id}
-              href={citation.clickUri}
+              href={citation.clickUri ?? citation.uri}
               class="flex items-center citation bg-background btn-text-neutral text-neutral-dark text-sm border rounded-full border-neutral text-on-background"
             >
               <div class="citation-index rounded-full flex items-center text-bg-blue">

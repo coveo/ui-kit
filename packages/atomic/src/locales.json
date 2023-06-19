@@ -1648,5 +1648,9 @@
   "this-answer-was-not-helpful": {
     "en": "This answer was not helpful",
     "fr": "Cette réponse ne m'a pas aidé"
+  },
+  "generated-answer-loading": {
+    "en": "Looking for an answer...",
+    "fr": "Nous cherchons une réponse..."
   }
 }
