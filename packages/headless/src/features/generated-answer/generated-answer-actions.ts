@@ -1,7 +1,17 @@
-import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
+import {
+  ArrayValue,
+  BooleanValue,
+  NumberValue,
+  RecordValue,
+  StringValue,
+} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {EventSourcePolyfill} from 'event-source-polyfill';
 import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client';
+import {
+  GeneratedAnswerCitationsPayload,
+  GeneratedAnswerMessagePayload,
+} from '../../api/generated-answer/generated-answer-event-payload';
 import {
   ConfigurationSection,
   GeneratedAnswerSection,
@@ -15,20 +25,44 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   GeneratedAnswerSection;
 
 const stringValue = new StringValue({required: true});
+const optionalStringValue = new StringValue();
 const booleanValue = new BooleanValue({required: true});
+const citationSchema = {
+  id: stringValue,
+  title: stringValue,
+  uri: stringValue,
+  permanentid: stringValue,
+  clickUri: optionalStringValue,
+};
 
 export interface SSEErrorPayload {
   message?: string;
   code?: number;
 }
 
-export const sseMessage = createAction(
-  'generatedAnswer/sseMessage',
-  (text: string) => validatePayload(text, stringValue)
+export const updateMessage = createAction(
+  'generatedAnswer/updateMessage',
+  (payload: GeneratedAnswerMessagePayload) =>
+    validatePayload(payload, {
+      textDelta: stringValue,
+    })
 );
 
-export const sseError = createAction(
-  'generatedAnswer/sseError',
+export const updateCitations = createAction(
+  'generatedAnswer/updateCitations',
+  (payload: GeneratedAnswerCitationsPayload) =>
+    validatePayload(payload, {
+      citations: new ArrayValue({
+        required: true,
+        each: new RecordValue({
+          values: citationSchema,
+        }),
+      }),
+    })
+);
+
+export const updateError = createAction(
+  'generatedAnswer/updateError',
   (payload: SSEErrorPayload) =>
     validatePayload(payload, {
       message: new StringValue({required: false}),
@@ -36,7 +70,7 @@ export const sseError = createAction(
     })
 );
 
-export const sseComplete = createAction('generatedAnswer/sseComplete');
+export const streamComplete = createAction('generatedAnswer/streamComplete');
 
 export const resetAnswer = createAction('generatedAnswer/resetAnswer');
 
@@ -46,7 +80,8 @@ export const setIsLoading = createAction(
 );
 
 interface StreamAnswerArgs {
-  onMessage: (message: string) => void;
+  onMessage: (payload: GeneratedAnswerMessagePayload) => void;
+  onCitations: (payload: GeneratedAnswerCitationsPayload) => void;
   onError: (payload: SSEErrorPayload) => void;
   onCompleted: () => void;
   setEventSourceRef: (source: EventSourcePolyfill) => void;
@@ -60,7 +95,8 @@ export const streamAnswer = createAsyncThunk<
   const state = config.getState();
   const {dispatch, extra} = config;
 
-  const {onMessage, onError, onCompleted, setEventSourceRef} = params;
+  const {onMessage, onCitations, onError, onCompleted, setEventSourceRef} =
+    params;
 
   const request = await buildStreamingRequest(state);
 
@@ -68,6 +104,7 @@ export const streamAnswer = createAsyncThunk<
   const source = extra.streamingClient?.streamGeneratedAnswer(
     request,
     onMessage,
+    onCitations,
     onError,
     onCompleted
   );

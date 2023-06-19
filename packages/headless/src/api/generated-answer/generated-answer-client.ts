@@ -8,8 +8,11 @@ import {URLPath} from '../../utils/url-utils';
 import {resetTimeout} from '../../utils/utils';
 import {SearchAPIClient} from '../search/search-api-client';
 import {
+  GeneratedAnswerCitationsPayload,
+  GeneratedAnswerMessagePayload,
+  GeneratedAnswerPayloadType,
   GeneratedAnswerStreamEventData,
-  StreamFinishReason,
+  GeneratedAnswerStreamFinishReason,
 } from './generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request';
 
@@ -41,7 +44,8 @@ export class GeneratedAnswerAPIClient {
 
   streamGeneratedAnswer(
     params: GeneratedAnswerStreamRequest,
-    onMessage: (payload: string) => void,
+    onMessage: (payload: GeneratedAnswerMessagePayload) => void,
+    onCitations: (payload: GeneratedAnswerCitationsPayload) => void,
     onError: (payload: SSEErrorPayload) => void,
     onCompleted: () => void
   ) {
@@ -67,13 +71,23 @@ export class GeneratedAnswerAPIClient {
         this.logger.info('Maximum retry exceeded.');
         onError({
           message: errorMessage,
-          code: 2,
         });
       }
     };
 
     const refreshTimeout = () => {
       timeout = resetTimeout(timeout, checkAndRetry, MAX_TIMEOUT);
+    };
+
+    const handleStreamPayload = (
+      payloadType: GeneratedAnswerPayloadType,
+      payload: string
+    ) => {
+      if (payloadType === GeneratedAnswerPayloadType.Message) {
+        onMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload);
+      } else if (payloadType === GeneratedAnswerPayloadType.Citations) {
+        onCitations(JSON.parse(payload) as GeneratedAnswerCitationsPayload);
+      }
     };
 
     const stream = (): EventSourcePolyfill | void => {
@@ -96,7 +110,7 @@ export class GeneratedAnswerAPIClient {
           const data: GeneratedAnswerStreamEventData = JSON.parse(
             (event as MessageEvent).data
           );
-          if (data.finishReason === StreamFinishReason.Error) {
+          if (data.finishReason === GeneratedAnswerStreamFinishReason.Error) {
             clearTimeout(timeout);
             onError({
               message: data.errorMessage,
@@ -104,16 +118,19 @@ export class GeneratedAnswerAPIClient {
             });
             return;
           }
-          if (data.finishReason === StreamFinishReason.Completed) {
+          if (data.payload && data.payloadType) {
+            handleStreamPayload(data.payloadType, data.payload);
+          }
+
+          if (
+            data.finishReason === GeneratedAnswerStreamFinishReason.Completed
+          ) {
             clearTimeout(timeout);
-            if (data.payload) {
-              onMessage(data.payload);
-            }
             onCompleted();
-            return;
+          } else {
+            refreshTimeout();
           }
           refreshTimeout();
-          onMessage(data.payload);
         };
 
         source.onerror = () => {
@@ -121,7 +138,6 @@ export class GeneratedAnswerAPIClient {
           this.options.logger.error(errorMessage);
           onError({
             message: errorMessage,
-            code: 1,
           });
         };
 

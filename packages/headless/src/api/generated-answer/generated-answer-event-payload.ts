@@ -1,4 +1,4 @@
-export enum StreamFinishReason {
+export enum GeneratedAnswerStreamFinishReason {
   Completed = 'COMPLETED',
   Error = 'ERROR',
 }
@@ -8,26 +8,20 @@ export enum GeneratedAnswerPayloadType {
   Citations = 'genqa.citationsType',
 }
 
-export interface GeneratedAnswerInlineCitation {
-  inlineRef: string;
+interface BaseGeneratedAnswerCitation {
   id: string;
   title: string;
+  uri: string;
   permanentid: string;
-  uri?: string;
   clickUri?: string;
 }
 
-export interface GeneratedAnswerCitation {
-  id: string;
-  title: string;
-  clickUri: string;
-  permanentid: string;
+export type GeneratedAnswerCitation = BaseGeneratedAnswerCitation & {
   score: string; // or number
-}
+};
 
 export interface GeneratedAnswerMessagePayload {
   textDelta: string;
-  inlineCitations: GeneratedAnswerInlineCitation[];
 }
 
 export interface GeneratedAnswerCitationsPayload {
@@ -36,8 +30,8 @@ export interface GeneratedAnswerCitationsPayload {
 
 export interface GeneratedAnswerStreamEventData {
   payloadType?: GeneratedAnswerPayloadType;
-  payload: string; // GeneratedAnswerMessagePayload | GeneratedAnswerCitationsPayload;
-  finishReason?: StreamFinishReason;
+  payload: string;
+  finishReason?: GeneratedAnswerStreamFinishReason;
   errorMessage?: string;
   errorCode?: number;
 }

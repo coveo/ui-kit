@@ -1,33 +1,43 @@
 import {
   resetAnswer,
-  sseComplete,
-  sseError,
-  sseMessage,
+  streamComplete,
+  updateError,
+  updateMessage,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
+
+const baseState = {
+  isLoading: false,
+  citations: [],
+};
 
 describe('generated answer slice', () => {
   it('initializes the state correctly', () => {
     const finalState = generatedAnswerReducer(undefined, {type: ''});
 
     expect(finalState).toEqual({
+      citations: [],
       isLoading: false,
     });
   });
 
-  it('#sseMessage concatenates the given string with the answer previously in the state', () => {
-    const exisitingAnswer = 'I exist';
-    const newMessage = ' therefore I am';
-    const finalState = generatedAnswerReducer(
-      {
-        ...getGeneratedAnswerInitialState(),
-        answer: exisitingAnswer,
-      },
-      sseMessage(newMessage)
-    );
+  describe('#updateMessage', () => {
+    it('concatenates the given string with the answer previously in the state', () => {
+      const existingAnswer = 'I exist';
+      const newMessage = ' therefore I am';
+      const finalState = generatedAnswerReducer(
+        {
+          ...getGeneratedAnswerInitialState(),
+          answer: existingAnswer,
+        },
+        updateMessage({
+          textDelta: newMessage,
+        })
+      );
 
-    expect(finalState.answer).toBe('I exist therefore I am');
+      expect(finalState.answer).toBe('I exist therefore I am');
+    });
   });
 
   describe('#sseError', () => {
@@ -37,8 +47,8 @@ describe('generated answer slice', () => {
     };
     it('should set isLoading to false', () => {
       const finalState = generatedAnswerReducer(
-        {isLoading: true},
-        sseError(testPayload)
+        {isLoading: true, citations: []},
+        updateError(testPayload)
       );
 
       expect(finalState.isLoading).toBe(false);
@@ -46,8 +56,8 @@ describe('generated answer slice', () => {
 
     it('should delete the answer', () => {
       const finalState = generatedAnswerReducer(
-        {isLoading: false, answer: 'I exist'},
-        sseError(testPayload)
+        {...baseState, answer: 'I exist'},
+        updateError(testPayload)
       );
 
       expect(finalState.answer).toBeUndefined();
@@ -55,8 +65,8 @@ describe('generated answer slice', () => {
 
     it('should set given error values', () => {
       const finalState = generatedAnswerReducer(
-        {isLoading: false, answer: 'I exist'},
-        sseError({
+        {...baseState, answer: 'I exist'},
+        updateError({
           message: 'a message',
           code: 500,
         })
@@ -74,7 +84,7 @@ describe('generated answer slice', () => {
       };
       const finalState = generatedAnswerReducer(
         getGeneratedAnswerInitialState(),
-        sseError(testErrorPayload)
+        updateError(testErrorPayload)
       );
 
       expect(finalState.error).toEqual(testErrorPayload);
@@ -86,7 +96,7 @@ describe('generated answer slice', () => {
       };
       const finalState = generatedAnswerReducer(
         getGeneratedAnswerInitialState(),
-        sseError(testErrorPayload)
+        updateError(testErrorPayload)
       );
 
       expect(finalState.error).toEqual(testErrorPayload);
@@ -95,10 +105,7 @@ describe('generated answer slice', () => {
 
   describe('#sseComplete', () => {
     it('should set isLoading to false', () => {
-      const finalState = generatedAnswerReducer(
-        {isLoading: true},
-        sseComplete()
-      );
+      const finalState = generatedAnswerReducer(baseState, streamComplete());
 
       expect(finalState.isLoading).toBe(false);
     });
@@ -106,6 +113,7 @@ describe('generated answer slice', () => {
 
   it('#resetAnswer should reset the state to the initial state', () => {
     const state = {
+      ...baseState,
       isLoading: true,
       answer: 'Tomato Tomato',
     };

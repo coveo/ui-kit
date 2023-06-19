@@ -3,7 +3,11 @@ import {
   buildMockSearchAppEngine,
   createMockState,
 } from '../../test';
-import {setIsLoading, sseError, sseMessage} from './generated-answer-actions';
+import {
+  setIsLoading,
+  updateError,
+  updateMessage,
+} from './generated-answer-actions';
 
 describe('generated answer', () => {
   let e: MockSearchEngine;
@@ -17,17 +21,15 @@ describe('generated answer', () => {
     jest.clearAllMocks();
   });
 
-  describe('#sseMessage', () => {});
-
-  describe('#sseError', () => {
-    const actionType = 'generatedAnswer/sseError';
+  describe('#updateError', () => {
+    const actionType = 'generatedAnswer/updateError';
 
     it('should accept a full payload', () => {
       const testErrorPayload = {
         message: 'some message',
         code: 500,
       };
-      expect(e.dispatch(sseError(testErrorPayload))).toEqual({
+      expect(e.dispatch(updateError(testErrorPayload))).toEqual({
         payload: testErrorPayload,
         type: actionType,
       });
@@ -37,7 +39,7 @@ describe('generated answer', () => {
       const testErrorPayload = {
         code: 500,
       };
-      expect(e.dispatch(sseError(testErrorPayload))).toEqual({
+      expect(e.dispatch(updateError(testErrorPayload))).toEqual({
         payload: testErrorPayload,
         type: actionType,
       });
@@ -47,7 +49,7 @@ describe('generated answer', () => {
       const testErrorPayload = {
         message: 'some message',
       };
-      expect(e.dispatch(sseError(testErrorPayload))).toEqual({
+      expect(e.dispatch(updateError(testErrorPayload))).toEqual({
         payload: testErrorPayload,
         type: actionType,
       });
@@ -65,13 +67,21 @@ describe('generated answer', () => {
     });
   });
 
-  describe('#sseMessage', () => {
-    const actionType = 'generatedAnswer/sseMessage';
+  describe('#updateMessage', () => {
+    const actionType = 'generatedAnswer/updateMessage';
 
-    it('should accept a string payload', () => {
+    it('should accept a valid payload', () => {
       const testText = 'some message';
-      expect(e.dispatch(sseMessage(testText))).toEqual({
-        payload: testText,
+      expect(
+        e.dispatch(
+          updateMessage({
+            textDelta: testText,
+          })
+        )
+      ).toEqual({
+        payload: {
+          textDelta: testText,
+        },
         type: actionType,
       });
     });

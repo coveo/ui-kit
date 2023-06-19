@@ -1,13 +1,18 @@
 import {EventSourcePolyfill} from 'event-source-polyfill';
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
+import {
+  GeneratedAnswerCitation,
+  GeneratedAnswerCitationsPayload,
+  GeneratedAnswerMessagePayload,
+} from '../../api/generated-answer/generated-answer-event-payload';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
-  sseMessage,
-  sseError,
-  sseComplete,
+  updateMessage,
+  updateError,
+  streamComplete,
   streamAnswer,
   resetAnswer,
   SSEErrorPayload,
+  updateCitations,
 } from '../../features/generated-answer/generated-answer-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -59,20 +64,22 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   let lastRequestId: string;
   let lastStreamId: string;
 
-  const onMessage = (message: string) => {
-    dispatch(sseMessage(message));
-  };
+  const onMessage = (payload: GeneratedAnswerMessagePayload) =>
+    dispatch(updateMessage(payload));
+
+  const onCitations = (payload: GeneratedAnswerCitationsPayload) =>
+    dispatch(updateCitations(payload));
 
   const onError = (error: SSEErrorPayload) => {
     source?.close();
     clearTimeout(timeout);
-    dispatch(sseError(error));
+    dispatch(updateError(error));
   };
 
   const onCompleted = () => {
     source?.close();
     clearTimeout(timeout);
-    dispatch(sseComplete());
+    dispatch(streamComplete());
   };
 
   const setEventSourceRef = (sourceRef: EventSourcePolyfill) => {
@@ -103,6 +110,7 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
         dispatch(
           streamAnswer({
             onMessage,
+            onCitations,
             onError,
             onCompleted,
             setEventSourceRef,
