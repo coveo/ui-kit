@@ -68,22 +68,8 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         score: '0.8',
       },
       {
-        id: 'some-fake-id-2',
-        title: 'How to do the thing',
-        clickUri: 'www.google.ca',
-        permanentid: '67890',
-        score: '0.8',
-      },
-      {
-        id: 'some-fake-id-2',
-        title: 'How to do the thing',
-        clickUri: 'www.google.ca',
-        permanentid: '67890',
-        score: '0.8',
-      },
-      {
-        id: 'some-fake-id-2',
-        title: 'How to do the thing',
+        id: 'some-fake-id-3',
+        title: 'Some fake source',
         clickUri: 'www.google.ca',
         permanentid: '67890',
         score: '0.8',
@@ -91,12 +77,15 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     ];
   }
 
+  private get isStreamEmpty() {
+    return (
+      !this.generatedAnswerState.isLoading &&
+      !this.generatedAnswerState.answer?.length
+    );
+  }
+
   public render() {
-    console.log(this.generatedAnswerState);
-    if (
-      !this.generatedAnswerState.answer?.length ||
-      this.searchStatusState.hasError
-    ) {
+    if (this.searchStatusState.hasError || this.isStreamEmpty) {
       return null;
     }
     return (
