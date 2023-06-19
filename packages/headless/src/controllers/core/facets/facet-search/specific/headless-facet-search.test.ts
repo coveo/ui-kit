@@ -97,7 +97,7 @@ describe('FacetSearch', () => {
     });
 
     it('calls the select prop #executeSearch action', () => {
-      expect(props.select).toHaveBeenCalled();
+      expect(props.exclude).toHaveBeenCalled();
     });
   });
 

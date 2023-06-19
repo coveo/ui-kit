@@ -4,6 +4,7 @@ import {deselectAllCategoryFacetValues} from '../../features/facets/category-fac
 import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
 import {
+  toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../features/facets/facet-set/facet-set-actions';
@@ -120,6 +121,16 @@ describe('headless breadcrumb manager', () => {
       facetBreadcrumbs[0].values[0].deselect();
       expect(engine.actions).toContainEqual(
         toggleSelectFacetValue({
+          facetId,
+          selection: mockValue,
+        })
+      );
+    });
+
+    it('dispatches an toggleExcludeFacetValue action on exclusion', () => {
+      facetBreadcrumbs[0].values[0].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleExcludeFacetValue({
           facetId,
           selection: mockValue,
         })

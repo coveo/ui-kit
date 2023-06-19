@@ -52,12 +52,12 @@ export function buildFacetSearch(
     },
 
     /**
-     * Selects the provided value.
+     * Excludes the provided value.
      * @param result A single specificFacetSearchResult object
      */
     exclude(value: SpecificFacetSearchResult) {
       dispatch(excludeFacetSearchResult({facetId, value}));
-      select(value);
+      exclude(value);
     },
 
     /**
@@ -71,7 +71,7 @@ export function buildFacetSearch(
     },
 
     /**
-     * Selects the provided value, and deselects other values.
+     * Excludes the provided value, and deselects other values.
      * @param result A single specificFacetSearchResult object
      */
     singleExclude(value: SpecificFacetSearchResult) {
