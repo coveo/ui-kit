@@ -448,7 +448,7 @@ describe('#resolveInterfaceMembers', () => {
       name: 'FacetValueState',
       excerptTokens: [
         buildContentExcerptToken('declare type FacetValueState = '),
-        buildContentExcerptToken("'idle' | 'selected'"),
+        buildContentExcerptToken("'idle' | 'selected' | 'excluded'"),
         buildContentExcerptToken(';'),
       ],
       typeTokenRange: {startIndex: 1, endIndex: 2},
@@ -461,7 +461,7 @@ describe('#resolveInterfaceMembers', () => {
     const result = resolveInterfaceMembers(entry, apiInterface, []);
     const entity = buildMockEntityWithTypeAlias({
       name: 'state',
-      type: "'idle' | 'selected'",
+      type: "'idle' | 'selected' | 'excluded'",
     });
 
     expect(result).toEqual([entity]);

@@ -22,7 +22,7 @@ export interface StaticFilterValue {
   state: StaticFilterValueState;
 }
 
-export type StaticFilterValueState = 'idle' | 'selected';
+export type StaticFilterValueState = 'idle' | 'selected' | 'excluded';
 
 export function getStaticFilterSetInitialState(): StaticFilterSetState {
   return {};
