@@ -276,6 +276,28 @@ export class CoveoInsightClient {
         );
     }
 
+    public logCaseSendEmail(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {
+        return this.logClickEvent(
+            SearchPageEvents.caseSendEmail,
+            info,
+            identifier,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logFeedItemTextPost(
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        metadata?: CaseMetadata
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.feedItemTextPost,
+            info,
+            identifier,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
     public logDocumentQuickview(
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
