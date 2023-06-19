@@ -8,17 +8,13 @@ export enum GeneratedAnswerPayloadType {
   Citations = 'genqa.citationsType',
 }
 
-interface BaseGeneratedAnswerCitation {
+export interface GeneratedAnswerCitation {
   id: string;
   title: string;
   uri: string;
   permanentid: string;
   clickUri?: string;
 }
-
-export type GeneratedAnswerCitation = BaseGeneratedAnswerCitation & {
-  score: string; // or number
-};
 
 export interface GeneratedAnswerMessagePayload {
   textDelta: string;
