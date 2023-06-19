@@ -64,7 +64,7 @@ export class GeneratedAnswerAPIClient {
         this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
         return stream();
       } else {
-        this.logger.info('Maximum retry exceeded');
+        this.logger.info('Maximum retry exceeded.');
         onError({
           message: errorMessage,
           code: 2,
