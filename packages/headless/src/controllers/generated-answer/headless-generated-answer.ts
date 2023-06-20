@@ -8,11 +8,11 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   updateMessage,
   updateError,
-  streamComplete,
   streamAnswer,
   resetAnswer,
   SSEErrorPayload,
   updateCitations,
+  setIsLoading,
 } from '../../features/generated-answer/generated-answer-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -79,7 +79,7 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   const onCompleted = () => {
     source?.close();
     clearTimeout(timeout);
-    dispatch(streamComplete());
+    dispatch(setIsLoading(false));
   };
 
   const setEventSourceRef = (sourceRef: EventSourcePolyfill) => {

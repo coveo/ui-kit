@@ -1,6 +1,5 @@
 import {
   resetAnswer,
-  streamComplete,
   updateError,
   updateMessage,
 } from './generated-answer-actions';
@@ -100,14 +99,6 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.error).toEqual(testErrorPayload);
-    });
-  });
-
-  describe('#sseComplete', () => {
-    it('should set isLoading to false', () => {
-      const finalState = generatedAnswerReducer(baseState, streamComplete());
-
-      expect(finalState.isLoading).toBe(false);
     });
   });
 

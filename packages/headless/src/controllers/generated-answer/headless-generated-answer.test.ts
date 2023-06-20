@@ -1,5 +1,6 @@
 import {generatedAnswerReducer} from '../../features/generated-answer/generated-answer-slice';
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
+import {executeSearch} from '../../features/search/search-actions';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
@@ -34,5 +35,11 @@ describe('generated answer', () => {
 
   it('should subscribe to state updates', () => {
     expect(engine.subscribe).toHaveBeenCalledTimes(1);
+  });
+
+  it('#retry dispatches #executeSearch', () => {
+    generatedAnswer.retry();
+    const action = engine.findAsyncAction(executeSearch.pending);
+    expect(action).toBeTruthy();
   });
 });

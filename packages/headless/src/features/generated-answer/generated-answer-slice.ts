@@ -3,7 +3,6 @@ import './generated-answer-actions';
 import {
   resetAnswer,
   setIsLoading,
-  streamComplete,
   updateCitations,
   updateError,
   updateMessage,
@@ -31,9 +30,6 @@ export const generatedAnswerReducer = createReducer(
         state.error = payload;
         state.citations = [];
         delete state.answer;
-      })
-      .addCase(streamComplete, (state) => {
-        state.isLoading = false;
       })
       .addCase(resetAnswer, () => {
         return getGeneratedAnswerInitialState();
