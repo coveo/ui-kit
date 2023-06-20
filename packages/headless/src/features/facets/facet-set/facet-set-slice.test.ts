@@ -253,7 +253,7 @@ describe('facet-set slice', () => {
       });
     });
 
-    describe('when the facet value does not exists', () => {
+    describe('when the facet value does not exist', () => {
       it('replaces the first idle value with the new value', () => {
         const newFacetValue = buildMockFacetValue({
           value: 'TED',
@@ -334,7 +334,7 @@ describe('facet-set slice', () => {
           request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
         });
 
-        const action = toggleSelectFacetValue({
+        const action = toggleExcludeFacetValue({
           facetId: id,
           selection: facetValue,
         });
@@ -366,7 +366,7 @@ describe('facet-set slice', () => {
         const targetValue = finalState[id]?.request.currentValues.find(
           (req) => req.value === facetValue.value
         );
-        expect(targetValue?.state).toBe('idle');
+        expect(targetValue?.state).toBe('excluded');
       });
 
       it('sets the state of an excluded value to idle', () => {

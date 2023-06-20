@@ -1,4 +1,5 @@
 import {
+  excludeFacetSearchResult,
   registerFacetSearch,
   selectFacetSearchResult,
 } from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
@@ -35,6 +36,7 @@ describe('FacetSearch', () => {
     props = {
       options: {facetId},
       select: jest.fn(),
+      exclude: jest.fn(),
       isForFieldSuggestions: false,
     };
 
@@ -79,6 +81,26 @@ describe('FacetSearch', () => {
     });
   });
 
+  describe('#exclude', () => {
+    const value = buildMockFacetSearchResult();
+
+    beforeEach(() => {
+      controller.exclude(value);
+    });
+
+    it('dispatches #selectFacetSearchResult action', () => {
+      const action = excludeFacetSearchResult({
+        facetId,
+        value,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('calls the exclude prop #executeSearch action', () => {
+      expect(props.exclude).toHaveBeenCalled();
+    });
+  });
+
   describe('#singleSelect', () => {
     const value = buildMockFacetSearchResult();
 
@@ -101,6 +123,31 @@ describe('FacetSearch', () => {
 
     it('calls the select prop #executeSearch action', () => {
       expect(props.select).toHaveBeenCalled();
+    });
+  });
+
+  describe('#singleExclude', () => {
+    const value = buildMockFacetSearchResult();
+
+    beforeEach(() => {
+      controller.singleExclude(value);
+    });
+
+    it('dispatches #deselectAllFacetValues action', () => {
+      const action = deselectAllFacetValues(facetId);
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #excludeFacetSearchResult action', () => {
+      const action = excludeFacetSearchResult({
+        facetId,
+        value,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('calls the exclude prop #executeSearch action', () => {
+      expect(props.exclude).toHaveBeenCalled();
     });
   });
 });

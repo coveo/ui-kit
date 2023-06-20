@@ -29,7 +29,10 @@ import {
 } from '../../../../features/facets/facet-set/facet-set-selectors';
 import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice';
-import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
+import {
+  isFacetValueExcluded,
+  isFacetValueSelected,
+} from '../../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {
   ConfigurationSection,
@@ -92,7 +95,7 @@ export interface CoreFacet extends Controller {
   toggleSelect(selection: FacetValue): void;
 
   /**
-   * Toggles the exclusion the specified facet value.
+   * Toggles exclusion of the specified facet value.
    *
    * @param selection - The facet value to toggle exclusion.
    */
@@ -106,12 +109,27 @@ export interface CoreFacet extends Controller {
   toggleSingleSelect(selection: FacetValue): void;
 
   /**
+   * Excludes the specified facet value, deselecting others.
+   *
+   * @param selection - The facet value to toggle exclusion.
+   */
+  toggleSingleExclude(selection: FacetValue): void;
+
+  /**
    * Checks whether the specified facet value is selected.
    *
    * @param value - The facet value to check.
    * @returns Whether the specified facet value is selected.
    */
   isValueSelected(value: FacetValue): boolean;
+
+  /**
+   * Checks whether the specified facet value is excluded.
+   *
+   * @param value - The facet value to check.
+   * @returns Whether the specified facet value is excluded.
+   */
+  isValueExcluded(value: FacetValue): boolean;
 
   /**
    * Deselects all facet values.
@@ -219,11 +237,25 @@ export interface FacetSearch {
   select(value: SpecificFacetSearchResult): void;
 
   /**
+   * Excludes a facet search result.
+   *
+   * @param value - The search result to exclude.
+   * */
+  exclude(value: SpecificFacetSearchResult): void;
+
+  /**
    * Selects a search result while deselecting facet values.
    *
    * @param value - The search result to select.
    * */
   singleSelect(value: SpecificFacetSearchResult): void;
+
+  /**
+   * Excludes a search result while including facet values.
+   *
+   * @param value - The search result to exclude.
+   * */
+  singleExclude(value: SpecificFacetSearchResult): void;
 
   /**
    * Resets the query and empties the values.
@@ -366,7 +398,18 @@ export function buildCoreFacet(
       this.toggleSelect(selection);
     },
 
+    // Must use a function here to properly support inheritance with `this`.
+    toggleSingleExclude: function (selection: FacetValue) {
+      if (selection.state === 'idle') {
+        dispatch(deselectAllFacetValues(facetId));
+      }
+
+      this.toggleExclude(selection);
+    },
+
     isValueSelected: isFacetValueSelected,
+
+    isValueExcluded: isFacetValueExcluded,
 
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));

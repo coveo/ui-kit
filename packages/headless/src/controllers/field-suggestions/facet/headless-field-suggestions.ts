@@ -5,7 +5,10 @@ import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-argumen
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
-import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {
+  logFacetExclude,
+  logFacetSelect,
+} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {executeSearch} from '../../../features/search/search-actions';
@@ -178,6 +181,12 @@ export function buildFieldSuggestions(
       engine.dispatch(updateFacetOptions({freezeFacetOrder: true}));
       engine.dispatch(
         executeSearch(logFacetSelect({facetId, facetValue: value.rawValue}))
+      );
+    },
+    exclude: (value) => {
+      engine.dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      engine.dispatch(
+        executeSearch(logFacetExclude({facetId, facetValue: value.rawValue}))
       );
     },
     isForFieldSuggestions: true,

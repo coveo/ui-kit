@@ -5,13 +5,13 @@ import {CategoryFacetSortCriterion} from '../../../features/facets/category-face
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {
-  logFacetUpdateSort,
-  logFacetShowMore,
-  logFacetShowLess,
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
-} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
+} from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {productListingReducer as productListing} from '../../../features/product-listing/product-listing-slice';
 import {

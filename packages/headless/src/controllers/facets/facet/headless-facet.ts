@@ -11,6 +11,7 @@ import {
   logFacetShowMore,
   logFacetShowLess,
   logFacetSelect,
+  logFacetExclude,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
@@ -110,6 +111,14 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
         dispatch(
           executeSearch(
             logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
+          )
+        );
+      },
+      exclude: (value) => {
+        dispatch(updateFacetOptions({freezeFacetOrder: true}));
+        dispatch(
+          executeSearch(
+            logFacetExclude({facetId: getFacetId(), facetValue: value.rawValue})
           )
         );
       },
