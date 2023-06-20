@@ -37,6 +37,7 @@ import {
     UndoTriggerRedirectMetadata,
     SmartSnippetLinkMeta,
     GeneratedAnswerFeedbackMeta,
+    GeneratedAnswerCitationMeta,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
@@ -899,12 +900,12 @@ export class CoveoSearchPageClient {
         return (await this.makeDislikeGeneratedAnswer(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 
-    public makeOpenGeneratedAnswerSource(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return this.makeClickEvent(SearchPageEvents.openGeneratedAnswerSource, info, identifier);
+    public makeOpenGeneratedAnswerSource(metadata: GeneratedAnswerCitationMeta) {
+        return this.makeCustomEvent(SearchPageEvents.openGeneratedAnswerSource, metadata);
     }
 
-    public async logOpenGeneratedAnswerSource(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
-        return (await this.makeOpenGeneratedAnswerSource(info, identifier)).log({
+    public async logOpenGeneratedAnswerSource(metadata: GeneratedAnswerCitationMeta) {
+        return (await this.makeOpenGeneratedAnswerSource(metadata)).log({
             searchUID: this.provider.getSearchUID(),
         });
     }

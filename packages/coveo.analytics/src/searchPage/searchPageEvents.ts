@@ -346,6 +346,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.caseDetach]: 'case',
     [SearchPageEvents.likeGeneratedAnswer]: 'generatedAnswer',
     [SearchPageEvents.dislikeGeneratedAnswer]: 'generatedAnswer',
+    [SearchPageEvents.openGeneratedAnswerSource]: 'generatedAnswer',
 };
 
 export interface StaticFilterMetadata {
@@ -482,4 +483,10 @@ export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause'
 
 export interface GeneratedAnswerFeedbackMeta {
     generativeQuestionAnsweringId: string;
+}
+
+export interface GeneratedAnswerCitationMeta {
+    generativeQuestionAnsweringId: string;
+    permanentId: string;
+    id: string;
 }
