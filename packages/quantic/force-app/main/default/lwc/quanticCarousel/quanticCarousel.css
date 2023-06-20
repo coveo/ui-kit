@@ -1,0 +1,40 @@
+.carousel__container {
+  align-items: center;
+}
+
+.slides {
+  overflow: hidden;
+  display: flex;
+  flex: 1;
+}
+
+.carousel__indicators-container {
+  justify-content: center;
+}
+
+.carousel__indicator {
+  width: 3.25rem;
+  height: 0.25rem;
+  border: 0px;
+  border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+  background-color: #e5e8e8;
+  transition: 0.2s;
+}
+
+.carousel__indicator--active {
+  background-color: #1372ec;
+}
+
+.carousel__indicator:hover {
+  background-color: #399ffe;
+}
+
+.carousel__previous-navigation {
+  left: 0px;
+  transform: translateX(-60%);
+}
+
+.carousel__next-navigation {
+  right: 0px;
+  transform: translateX(60%);
+}

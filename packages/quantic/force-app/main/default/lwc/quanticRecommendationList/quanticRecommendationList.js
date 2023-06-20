@@ -5,6 +5,8 @@ import {
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
+import carouselLayout from './templates/carousel.html';
+// @ts-ignore
 import defaultRecommendationTemplate from './templates/defaultRecommendation.html';
 // @ts-ignore
 import gridLayout from './templates/grid.html';
@@ -76,6 +78,11 @@ export default class QuanticRecommendationList extends LightningElement {
    * @default {1}
    */
   @api headingLevel = 1;
+  /**
+   * The variant of the component. Accepted variants are ‘grid’ and carousel
+   * @type {'grid' | 'carousel'}
+   */
+  @api variant = 'grid';
 
   /** @type {RecommendationListState} */
   @track state;
@@ -161,16 +168,40 @@ export default class QuanticRecommendationList extends LightningElement {
   }
 
   get placeholders() {
-    return Array.from(
-      {length: this.numberOfRecommendations},
-      (_item, index) => ({
-        index,
-      })
-    );
+    const numberOfPlaceHolders =
+      this.variant === 'carousel'
+        ? this.numberOfRecommendationsPerRow
+        : this.numberOfRecommendations;
+    return Array.from({length: numberOfPlaceHolders}, (_item, index) => ({
+      index,
+    }));
   }
 
   get recommendations() {
-    return this.state?.recommendations || [];
+    return (
+      this.state?.recommendations.map((rec, index) => {
+        if (this.numberOfRecommendationsPerRow === 1) {
+          return rec;
+        }
+        let recCSSClass = 'recommendation-item__container ';
+        const recIsFirstInThePage =
+          index % this.numberOfRecommendationsPerRow === 0;
+        const recIsLastInThePage =
+          index % this.numberOfRecommendationsPerRow ===
+          this.numberOfRecommendationsPerRow - 1;
+        if (recIsFirstInThePage) {
+          recCSSClass = recCSSClass + 'slds-var-p-right_x-small';
+        } else if (recIsLastInThePage) {
+          recCSSClass = recCSSClass + 'slds-var-p-left_x-small';
+        } else {
+          recCSSClass = recCSSClass + 'slds-var-p-horizontal_xx-small';
+        }
+        return {
+          ...rec,
+          class: recCSSClass,
+        };
+      }) || []
+    );
   }
 
   get fields() {
@@ -178,6 +209,12 @@ export default class QuanticRecommendationList extends LightningElement {
       .split(',')
       .map((field) => field.trim())
       .filter((field) => field.length > 0);
+  }
+
+  get numberOfPages() {
+    return Math.ceil(
+      this.recommendations?.length / this.numberOfRecommendationsPerRow
+    );
   }
 
   /**
@@ -193,6 +230,9 @@ export default class QuanticRecommendationList extends LightningElement {
     }
     if (this.showPlaceholder) {
       return loadingTemplate;
+    }
+    if (this.variant === 'carousel') {
+      return carouselLayout;
     }
     return gridLayout;
   }

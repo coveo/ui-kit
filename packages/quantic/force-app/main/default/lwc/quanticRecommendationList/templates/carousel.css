@@ -1,0 +1,21 @@
+.recommendations-list__container {
+  overflow: hidden;
+  flex: 1;
+}
+
+.recommendations-list__content {
+  display: flex;
+  flex-wrap: nowrap;
+  transform: translateX(var(--horizontalTransformationPercentage, 0%));
+  transition: 1s;
+}
+
+.recommendation-item__container {
+  width: var(--recommendationItemWidth, 33.33%);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.recommendation-item__content{
+  height: 100%;
+}
