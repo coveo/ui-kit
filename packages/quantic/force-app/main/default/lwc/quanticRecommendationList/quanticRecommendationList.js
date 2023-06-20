@@ -24,7 +24,7 @@ import loadingTemplate from './templates/loading.html';
  * @fires CustomEvent#registerrecommendationtemplates
  * @category Recommendation
  * @example
- * <c-quantic-recommendation-list engine-id={engineId} recommendation={recommendationId} fields-to-include="objecttype,gdfiletitle" number-of-recommendations=”3” number-of-recommendations-per-row=”10” heading-level="1"></c-quantic-recommendation-list>
+ * <c-quantic-recommendation-list engine-id={engineId} recommendation={recommendationId} fields-to-include="objecttype,filetype" number-of-recommendations="3" number-of-recommendations-per-row="10" heading-level="1"></c-quantic-recommendation-list>
  */
 export default class QuanticRecommendationList extends LightningElement {
   /**
