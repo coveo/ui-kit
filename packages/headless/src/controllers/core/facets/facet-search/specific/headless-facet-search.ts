@@ -27,7 +27,12 @@ export function buildFacetSearch(
   props: FacetSearchProps
 ) {
   const {dispatch} = engine;
-  const {options, select, exclude, isForFieldSuggestions} = props;
+  const {
+    options,
+    select: propsSelect,
+    exclude: propsExclude,
+    isForFieldSuggestions,
+  } = props;
   const {facetId} = options;
   const getFacetSearch = () => engine.state.facetSearchSet[facetId];
 
@@ -48,7 +53,7 @@ export function buildFacetSearch(
      */
     select(value: SpecificFacetSearchResult) {
       dispatch(selectFacetSearchResult({facetId, value}));
-      select(value);
+      propsSelect(value);
     },
 
     /**
@@ -57,7 +62,7 @@ export function buildFacetSearch(
      */
     exclude(value: SpecificFacetSearchResult) {
       dispatch(excludeFacetSearchResult({facetId, value}));
-      exclude(value);
+      propsExclude(value);
     },
 
     /**
@@ -67,7 +72,7 @@ export function buildFacetSearch(
     singleSelect(value: SpecificFacetSearchResult) {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(selectFacetSearchResult({facetId, value}));
-      select(value);
+      propsSelect(value);
     },
 
     /**
@@ -77,7 +82,7 @@ export function buildFacetSearch(
     singleExclude(value: SpecificFacetSearchResult) {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(excludeFacetSearchResult({facetId, value}));
-      exclude(value);
+      propsExclude(value);
     },
 
     get state() {
