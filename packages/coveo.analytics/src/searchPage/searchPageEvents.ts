@@ -283,7 +283,7 @@ export enum SearchPageEvents {
      */
     caseSendEmail = 'Case.SendEmail',
     /**
-     * Identifies the click event that gets logged when a user clicks the Send As Email result action.
+     * Identifies the click event that gets logged when a user clicks the Post To Feed result action.
      */
     feedItemTextPost = 'FeedItem.TextPost',
     /**
