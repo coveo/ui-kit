@@ -253,7 +253,7 @@ describe('facet-set slice', () => {
       });
     });
 
-    describe('when the facet value does not exists', () => {
+    describe('when the facet value does not exist', () => {
       it('replaces the first idle value with the new value', () => {
         const newFacetValue = buildMockFacetValue({
           value: 'TED',

@@ -96,7 +96,7 @@ describe('FacetSearch', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('calls the select prop #executeSearch action', () => {
+    it('calls the exclude prop #executeSearch action', () => {
       expect(props.exclude).toHaveBeenCalled();
     });
   });

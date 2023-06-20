@@ -144,7 +144,7 @@ describe('facet', () => {
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
-      facet.toggleExclude(facetValue);
+      facet.toggleSelect(facetValue);
 
       expect(engine.actions).toContainEqual(
         updateFacetOptions({freezeFacetOrder: true})
@@ -164,7 +164,7 @@ describe('facet', () => {
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
-      facet.toggleSelect(facetValue);
+      facet.toggleExclude(facetValue);
 
       expect(engine.actions).toContainEqual(
         updateFacetOptions({freezeFacetOrder: true})
