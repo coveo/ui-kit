@@ -70,8 +70,6 @@ export const updateError = createAction(
     })
 );
 
-export const streamComplete = createAction('generatedAnswer/streamComplete');
-
 export const resetAnswer = createAction('generatedAnswer/resetAnswer');
 
 export const setIsLoading = createAction(
