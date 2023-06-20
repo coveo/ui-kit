@@ -46,7 +46,7 @@ export interface FacetStateRequest {
     valuePosition: number;
     displayValue: string;
     facetType: 'specific' | 'dateRange' | 'numericalRange' | 'hierarchical';
-    state: 'selected' | 'idle';
+    state: 'selected' | 'idle' | 'excluded';
     facetPosition: number;
     title: string;
     start?: string;
