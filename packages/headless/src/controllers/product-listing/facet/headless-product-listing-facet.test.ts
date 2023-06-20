@@ -102,9 +102,33 @@ describe('facet', () => {
     });
   });
 
+  describe('#toggleExclude', () => {
+    it('dispatches a fetch product listing', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        expect.objectContaining({
+          type: fetchProductListing.pending.type,
+        })
+      );
+    });
+  });
+
   it('#toggleSingleSelect dispatches a fetchProductListing', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
     facet.toggleSingleSelect(facetValue);
+
+    expect(engine.actions).toContainEqual(
+      expect.objectContaining({
+        type: fetchProductListing.pending.type,
+      })
+    );
+  });
+
+  it('#toggleSingleExclude dispatches a fetchProductListing', () => {
+    const facetValue = buildMockFacetValue({value: 'TED'});
+    facet.toggleSingleExclude(facetValue);
 
     expect(engine.actions).toContainEqual(
       expect.objectContaining({

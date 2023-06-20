@@ -13,7 +13,10 @@ import {
   logFacetShowMore,
   logFacetUpdateSort,
 } from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
-import {getProductListingAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-product-listing-utils';
+import {
+  getProductListingAnalyticsActionForToggleFacetExclude,
+  getProductListingAnalyticsActionForToggleFacetSelect,
+} from '../../../features/facets/facet-set/facet-set-product-listing-utils';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
@@ -118,7 +121,16 @@ export function buildFacet(
       );
     },
 
-    toggleExclude() {},
+    toggleExclude: (selection: FacetValue) => {
+      coreController.toggleExclude(selection);
+      dispatch(fetchProductListing());
+      dispatch(
+        getProductListingAnalyticsActionForToggleFacetExclude(
+          getFacetId(),
+          selection
+        )
+      );
+    },
 
     deselectAll() {
       coreController.deselectAll();
