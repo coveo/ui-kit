@@ -636,4 +636,8 @@
         <label>Erreur fatale : Impossible d'initialiser le composant {{0}}.</label>
         <name>quantic_UnableToInitializeComponent</name>
     </customLabels>
+    <customLabels>
+        <label>La valeur de la propriété {{0}} doit être un nombre entier supérieur à 0.</label>
+        <name>quantic_quantic_InvalidPositiveIntegerProperty</name>
+    </customLabels>
 </Translations>

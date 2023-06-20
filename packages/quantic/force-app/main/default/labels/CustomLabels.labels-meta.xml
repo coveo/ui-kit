@@ -1169,4 +1169,11 @@
       <protected>false</protected>
       <shortDescription>Fatal error: unable to initialize the component.</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_InvalidPositiveIntegerProperty</fullName>
+      <value>The value of the {{0}} property must be an integer greater than 0.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>The value of the property must be an integer greater than 0.</shortDescription>
+    </labels>
 </CustomLabels>

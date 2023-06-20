@@ -1,4 +1,6 @@
-import {getBueno} from 'c/quanticHeadlessLoader';
+import invalidPositiveIntegerProperty from '@salesforce/label/c.quantic_InvalidPositiveIntegerProperty';
+import propertyIsRequired from '@salesforce/label/c.quantic_PropertyIsRequired';
+import {I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /**
@@ -11,6 +13,11 @@ import {LightningElement, api} from 'lwc';
  * </c-quantic-carousel>
  */
 export default class QuanticCarousel extends LightningElement {
+  labels = {
+    propertyIsRequired,
+    invalidPositiveIntegerProperty,
+  };
+
   /**
    * The total number of pages.
    * @api
@@ -38,35 +45,41 @@ export default class QuanticCarousel extends LightningElement {
 
   /** @type {number} */
   _currentPage = 0;
-  /** @type {boolean} */
-  hasInitializationError = false;
+  /** @type {string} */
+  errorMessage = '';
 
   connectedCallback() {
-    getBueno(this).then(() => {
-      if (!this.numberOfPages || !this.numberOfItemsPerPage) {
-        console.error(
-          `The ${this.template.host.localName} requires a result and a number field to be specified.`
-        );
-        this.setInitializationError();
-      }
-      // if (!Bueno.isNumber(this.fieldValue)) {
-      //   console.error(`The "${this.field}" field value is not a valid number.`);
-      //   this.setError();
-      // }
-      this.validated = true;
-    });
+    this.validateProperties();
   }
 
   renderedCallback() {
     this.hideNonVisibleSlides();
   }
 
+  validateProperties() {
+    if (!this.numberOfPages || !this.numberOfItemsPerPage) {
+      this.setInitializationError(
+        I18nUtils.format(
+          this.labels.propertyIsRequired,
+          !this.numberOfPages ? 'numberOfPages' : 'numberOfItemsPerPage'
+        )
+      );
+    } else if (isNaN(this.numberOfPages) || isNaN(this.numberOfItemsPerPage)) {
+      this.setInitializationError(
+        I18nUtils.format(
+          this.labels.invalidPositiveIntegerProperty,
+          isNaN(this.numberOfPages) ? 'numberOfPages' : 'numberOfItemsPerPage'
+        )
+      );
+    }
+  }
+
   hideNonVisibleSlides() {
     /** @type {HTMLSlotElement} */
     const slot = this.template.querySelector('slot[name="carousel-item"]');
-    const items = slot.assignedNodes();
+    const items = slot?.assignedNodes();
 
-    items.forEach((item, index) => {
+    items?.forEach((item, index) => {
       const isDisplayedInCurrentPage =
         Math.floor(index / this.numberOfItemsPerPage) === this._currentPage;
       if (!isDisplayedInCurrentPage) {
@@ -92,8 +105,9 @@ export default class QuanticCarousel extends LightningElement {
   /**
    * Sets the component in the initialization error state.
    */
-  setInitializationError() {
-    this.hasInitializationError = true;
+  setInitializationError(message) {
+    console.error(message);
+    this.errorMessage = message;
   }
 
   get previousButtonIsDisabled() {
@@ -107,17 +121,19 @@ export default class QuanticCarousel extends LightningElement {
   get carouselIndicators() {
     const indicatorCSSClass =
       'carousel__indicator slds-var-m-horizontal_xx-small';
-    return Array.from({length: this.numberOfPages}, (_item, index) => ({
-      index,
-      handleClick: () => {
-        this._currentPage = index;
-      },
-      title: `Go to page ${index + 1}`,
-      current: index === this._currentPage,
-      class:
-        index === this._currentPage
+    return Array.from({length: this.numberOfPages}, (_item, index) => {
+      const isCurrent = index === this._currentPage;
+      return {
+        index,
+        handleClick: () => {
+          this._currentPage = index;
+        },
+        title: `Go to page ${index + 1}`,
+        current: isCurrent,
+        class: isCurrent
           ? indicatorCSSClass + ' carousel__indicator--active'
           : indicatorCSSClass,
-    }));
+      };
+    });
   }
 }

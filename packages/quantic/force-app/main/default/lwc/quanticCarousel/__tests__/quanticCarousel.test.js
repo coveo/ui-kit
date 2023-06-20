@@ -9,6 +9,7 @@ const selectors = {
   previousNavigation: '.carousel__previous-navigation',
   nextNavigation: '.carousel__next-navigation',
   indicators: '.carousel__indicator',
+  error: 'c-quantic-component-error',
 };
 
 const exampleItemOne = document.createElement('div');
@@ -25,7 +26,10 @@ const defaultOptions = {
   numberOfItemsPerPage: exampleNumberOfItemsPerPage,
 };
 
-function createTestComponent(options = defaultOptions, assignedElements = exampleAssignedElements) {
+function createTestComponent(
+  options = defaultOptions,
+  assignedElements = exampleAssignedElements
+) {
   mockSlotAssignedNodes(assignedElements);
 
   const element = createElement('c-quantic-carousel', {
@@ -55,13 +59,36 @@ function mockSlotAssignedNodes(assignedElements) {
   };
 }
 
+const invalidPositiveIntegerProperty =
+  'The value of the property must be an integer greater than 0.';
+const propertyIsRequired = 'The property is required.';
+jest.mock(
+  '@salesforce/label/c.quantic_InvalidPositiveIntegerProperty',
+  () => ({default: invalidPositiveIntegerProperty}),
+  {
+    virtual: true,
+  }
+);
+jest.mock(
+  '@salesforce/label/c.quantic_PropertyIsRequired',
+  () => ({default: propertyIsRequired}),
+  {
+    virtual: true,
+  }
+);
+
 describe('c-quantic-carousel', () => {
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
       document.body.removeChild(document.body.firstChild);
     }
+    jest.clearAllMocks();
   }
+
+  beforeEach(() => {
+    console.error = jest.fn();
+  });
 
   afterEach(() => {
     cleanup();
@@ -143,7 +170,6 @@ describe('c-quantic-carousel', () => {
     it('should disable the previous navigation button and enable the next navigation button', async () => {
       const element = createTestComponent();
       await flushPromises();
-
       const previousNavigation = element.shadowRoot.querySelector(
         selectors.previousNavigation
       );
@@ -175,6 +201,62 @@ describe('c-quantic-carousel', () => {
       expect(previousNavigation.disabled).toBe(false);
       expect(nextNavigation).not.toBeNull();
       expect(nextNavigation.disabled).toBe(true);
+    });
+  });
+
+  describe('when used with invalid properties', () => {
+    it('should display an error message when the property numberOfPages is undefined', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        numberOfPages: undefined,
+      });
+      await flushPromises();
+
+      const error = element.shadowRoot.querySelector(selectors.error);
+
+      expect(error).not.toBeNull();
+      expect(error.message).toBe(propertyIsRequired);
+    });
+
+    it('should display an error message when the property numberOfItemsPerPage is undefined', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        numberOfItemsPerPage: undefined,
+      });
+      await flushPromises();
+
+      const error = element.shadowRoot.querySelector(selectors.error);
+
+      expect(error).not.toBeNull();
+      expect(error.message).toBe(propertyIsRequired);
+    });
+
+    it('should display an error message when the property numberOfPages is not a valid number', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        // @ts-ignore
+        numberOfPages: 'invalid value',
+      });
+      await flushPromises();
+
+      const error = element.shadowRoot.querySelector(selectors.error);
+
+      expect(error).not.toBeNull();
+      expect(error.message).toBe(invalidPositiveIntegerProperty);
+    });
+
+    it('should display an error message when the property itemsPerPage is not a valid number', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        // @ts-ignore
+        numberOfItemsPerPage: 'invalid value',
+      });
+      await flushPromises();
+
+      const error = element.shadowRoot.querySelector(selectors.error);
+
+      expect(error).not.toBeNull();
+      expect(error.message).toBe(invalidPositiveIntegerProperty);
     });
   });
 });

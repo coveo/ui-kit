@@ -1,25 +1,46 @@
 <template>
-  <template lwc:if={hasInitialization0Error}>
-    <c-quantic-component-error component-name={template.host.localName} message="error">
+  A
+  <template if:true={errorMessage}>
+    <c-quantic-component-error
+      component-name={template.host.localName}
+      message={errorMessage}
+    >
     </c-quantic-component-error>
   </template>
-  <template lwc:else>
+  <template if:false={errorMessage}>
     <section aria-label="carousel">
       <div class="slds-grid carousel__container slds-is-relative">
-        <lightning-button-icon class="carousel__previous-navigation slds-is-absolute"
-          disabled={previousButtonIsDisabled} icon-name="utility:chevronleft" onclick={handlePrevious}
-          variant="border-filled" title="previous page"></lightning-button-icon>
+        <lightning-button-icon
+          class="carousel__previous-navigation slds-is-absolute"
+          disabled={previousButtonIsDisabled}
+          icon-name="utility:chevronleft"
+          onclick={handlePrevious}
+          variant="border-filled"
+          title="previous page"
+        ></lightning-button-icon>
         <div class="slides">
           <slot name="carousel-item"></slot>
         </div>
-        <lightning-button-icon class="carousel__next-navigation slds-is-absolute" disabled={nextButtonIsDisabled}
-          icon-name="utility:chevronright" onclick={handleNext} variant="border-filled"
-          title="next page"></lightning-button-icon>
+        <lightning-button-icon
+          class="carousel__next-navigation slds-is-absolute"
+          disabled={nextButtonIsDisabled}
+          icon-name="utility:chevronright"
+          onclick={handleNext}
+          variant="border-filled"
+          title="next page"
+        ></lightning-button-icon>
       </div>
-      <ul class="slds-grid slds-var-m-vertical_medium carousel__indicators-container">
+      <ul
+        class="slds-grid slds-var-m-vertical_medium carousel__indicators-container"
+      >
         <template for:each={carouselIndicators} for:item="indicator">
-          <button key={indicator.index} class={indicator.class} title={indicator.title} onclick={indicator.handleClick}
-            aria-current={indicator.current}></button>
+          <button
+            key={indicator.index}
+            class={indicator.class}
+            title={indicator.title}
+            onclick={indicator.handleClick}
+            aria-current={indicator.current}
+          ></button>
         </template>
       </ul>
     </section>
