@@ -24,8 +24,10 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors';
-import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
-import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice';
+import {
+  facetSetReducer as facetSet,
+  defaultFacetOptions,
+} from '../../../../features/facets/facet-set/facet-set-slice';
 import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {
@@ -336,6 +338,16 @@ export function buildCoreFacet(
 
   dispatch(registerFacet(registrationOptions));
 
+  const deletedFacetState: CoreFacetState = {
+    facetId: '',
+    values: [],
+    sortCriterion: 'automatic',
+    isLoading: false,
+    hasActiveValues: false,
+    canShowMoreValues: false,
+    canShowLessValues: false,
+    enabled: true,
+  };
   return {
     ...controller,
 
@@ -403,6 +415,9 @@ export function buildCoreFacet(
 
     get state() {
       const request = getRequest();
+      if (!request) {
+        return deletedFacetState;
+      }
       const response = getResponse();
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();

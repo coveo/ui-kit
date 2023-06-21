@@ -29,6 +29,7 @@ import {
   RegisterFacetActionCreatorPayload,
 } from './facet-set-actions';
 import {
+  FacetSetState,
   getFacetSetInitialState,
   getFacetSetSliceInitialState,
 } from './facet-set-state';
@@ -177,6 +178,7 @@ export const facetSetReducer = createReducer(
             facetResponse
           )
         );
+
         const automaticFacets =
           action.payload.response.generateAutomaticFacets?.facets;
         automaticFacets?.forEach((facetResponse) => {
@@ -191,6 +193,8 @@ export const facetSetReducer = createReducer(
             generated: true,
           };
         });
+
+        deleteOldAutomaticFacets(state, automaticFacets);
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = action.payload.response?.facets?.results || [];
@@ -312,4 +316,19 @@ function restoreFacetValueToIdleState(
   facetValue: FacetValueRequest
 ): FacetValueRequest {
   return {...facetValue, state: 'idle'};
+}
+
+function deleteOldAutomaticFacets(
+  state: WritableDraft<FacetSetState>,
+  automaticFacets: FacetResponse[] | undefined
+) {
+  const responseFacetIds = automaticFacets?.map((facetResponse) =>
+    getAutomaticFacetId(facetResponse.field)
+  );
+
+  for (const [facetId, facetSlice] of Object.entries(state)) {
+    if (facetSlice.generated === true && !responseFacetIds?.includes(facetId)) {
+      delete state[facetId];
+    }
+  }
 }

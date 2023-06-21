@@ -20,7 +20,7 @@ export interface FacetManagerState extends CoreFacetManagerState {
    *
    * The list of automatic facet responses.
    */
-  automaticFacets?: FacetResponse[] | undefined;
+  automaticFacets?: FacetResponse[];
 }
 
 export interface FacetManager extends CoreFacetManager {
