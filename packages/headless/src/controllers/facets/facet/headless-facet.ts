@@ -107,7 +107,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
     return buildFacetSearch(engine, {
       options: {facetId: getFacetId(), ...facetSearch},
       select: (value) => {
-        dispatch(updateFacetOptions({freezeFacetOrder: true}));
+        dispatch(updateFacetOptions());
         dispatch(
           executeSearch(
             logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
@@ -115,7 +115,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
         );
       },
       exclude: (value) => {
-        dispatch(updateFacetOptions({freezeFacetOrder: true}));
+        dispatch(updateFacetOptions());
         dispatch(
           executeSearch(
             logFacetExclude({facetId: getFacetId(), facetValue: value.rawValue})
