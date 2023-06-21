@@ -28,7 +28,5 @@ export default class QuanticHeading extends LightningElement {
     const tag = document.createElement(headingTag)
     tag.innerText = `${this.label}`
     heading.appendChild(tag);
-    // eslint-disable-next-line @lwc/lwc/no-inner-html
-    // heading.innerHTML = `<${headingTag}>${this.label}</${headingTag}`;
   }
 }
