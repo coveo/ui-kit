@@ -5,7 +5,11 @@ import {InsightAppState} from '../../../state/insight-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {QuerySuggestSuccessResponse} from '../../search/query-suggest/query-suggest-response';
-import {SearchOptions} from '../../search/search-api-client';
+import {
+  isSuccessSearchResponse,
+  SearchOptions,
+  shimResponse,
+} from '../../search/search-api-client';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {SearchResponseSuccess} from '../../search/search/search-response';
 import {
@@ -95,7 +99,11 @@ export class InsightAPIClient {
       return buildAPIResponseFromErrorOrThrow(response);
     }
 
-    const body = await response.json();
+    let body = await response.json();
+
+    if (isSuccessSearchResponse(body)) {
+      body = shimResponse(body);
+    }
     return response.ok
       ? {success: body as SearchResponseSuccess}
       : {error: body as InsightAPIErrorStatusResponse};

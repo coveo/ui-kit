@@ -34,7 +34,11 @@ import {
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
 import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
-import {StateNeededByProductListingAnalyticsProvider} from '../../api/analytics/product-listing-analytics';
+import {
+  configureProductListingAnalytics,
+  ProductListingAnalyticsProvider,
+  StateNeededByProductListingAnalyticsProvider,
+} from '../../api/analytics/product-listing-analytics';
 import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
   configureAnalytics,
@@ -45,6 +49,7 @@ import {PreprocessRequest} from '../../api/preprocess-request';
 import {Raw} from '../../api/search/search/raw';
 import {Result} from '../../api/search/search/result';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {ProductRecommendation} from '../../product-listing.index';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {
@@ -522,6 +527,11 @@ export const resultPartialDefinition = {
   rankingModifier: new StringValue({required: false, emptyAllowed: true}),
 };
 
+export const productRecommendationPartialDefinition = {
+  permanentid: requiredNonEmptyString,
+  documentUri: requiredNonEmptyString,
+  clickUri: requiredNonEmptyString,
+};
 function partialRawPayload(raw: Raw): Partial<Raw> {
   return Object.assign(
     {},
@@ -580,3 +590,55 @@ function findPositionWithUniqueId(
 ) {
   return results.findIndex(({uniqueId}) => uniqueId === targetResult.uniqueId);
 }
+
+export const validateProductRecommendationPayload = (
+  productRec: ProductRecommendation
+) => new Schema(productRecommendationPartialDefinition).validate(productRec);
+
+export const makeProductListingAnalyticsAction = <
+  EventType extends AnalyticsType,
+  StateNeeded extends StateNeededByProductListingAnalyticsProvider = StateNeededByProductListingAnalyticsProvider
+>(
+  prefix: string,
+  analyticsType: EventType,
+  getBuilder: (
+    client: CoveoSearchPageClient,
+    state: StateNeeded
+  ) => Promise<EventBuilder | null> | null,
+  provider: (
+    getState: () => StateNeededByProductListingAnalyticsProvider
+  ) => SearchPageClientProvider = (getState) =>
+    new ProductListingAnalyticsProvider(getState)
+): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded> => {
+  return makePreparableAnalyticsAction(
+    prefix,
+    async ({
+      getState,
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    }) => {
+      const client = configureProductListingAnalytics({
+        getState,
+        logger,
+        analyticsClientMiddleware,
+        preprocessRequest,
+        provider: provider(getState),
+      });
+      const builder = await getBuilder(client, getState());
+      return {
+        description: builder?.description,
+        log: async ({state}) => {
+          const response = await builder?.log({
+            searchUID: provider(() => state).getSearchUID(),
+          });
+          logger.info(
+            {client: client.coveoAnalyticsClient, response},
+            'Analytics response'
+          );
+          return {analyticsType};
+        },
+      };
+    }
+  );
+};

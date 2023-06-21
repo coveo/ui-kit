@@ -153,9 +153,7 @@ describe('date filter', () => {
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches a search', () => {
