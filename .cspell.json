@@ -4,8 +4,12 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": ["CHANGELOG.md"],
-  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
+  "ignorePaths": [
+    "CHANGELOG.md"
+  ],
+  "import": [
+    "@cspell/dict-fr-fr/cspell-ext.json"
+  ],
   "words": [
     "adjustednumberoflikes",
     "applitools",
@@ -13,7 +17,9 @@
     "Artemia",
     "Artemiidae",
     "attachtocase",
+    "bazz",
     "behaviour",
+    "btoashim",
     "cfcomment",
     "cfpage",
     "cfspace",
@@ -255,7 +261,6 @@
     "ytvideoduration",
     "ytvideoid",
     "ytviewcount",
-    "btoashim",
     "genqa"
   ]
 }

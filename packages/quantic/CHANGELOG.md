@@ -1,11 +1,20 @@
-# 2.25.0 (2023-06-07)
+# 2.26.0 (2023-06-20)
 
+### Bug Fixes
+
+- **quantic:** missing documentation for the slot "children" added ([#2977](https://github.com/coveo/ui-kit/issues/2977)) ([1bbd557](https://github.com/coveo/ui-kit/commits/1bbd55786b8d226afa8c62e3967cad5673c8375e))
 
 ### Features
 
-* **quantic:** new property fetchOnInit added to the Quantic Case Classification ([#2953](https://github.com/coveo/ui-kit/issues/2953)) ([7caf7d2](https://github.com/coveo/ui-kit/commits/7caf7d26942c847aadc5649d4d47d3ed1d85f501))
+- **quantic:** Added check for collection children in quanticResultChildren component ([#2959](https://github.com/coveo/ui-kit/issues/2959)) ([ed59162](https://github.com/coveo/ui-kit/commits/ed59162e984c3d1a129a3a656c4812a0fb6b659a))
+- **quantic:** Added FTs for insight use case in the folded result list ([#2963](https://github.com/coveo/ui-kit/issues/2963)) ([3a2c290](https://github.com/coveo/ui-kit/commits/3a2c290e651691207f795329c146bcf4740ef681))
+- **quantic:** quantic recommendation interface component created ([#2986](https://github.com/coveo/ui-kit/issues/2986)) ([1c85c60](https://github.com/coveo/ui-kit/commits/1c85c600bec241125f9f91d7ca25b545a706cb67))
 
+# 2.25.0 (2023-06-07)
 
+### Features
+
+- **quantic:** new property fetchOnInit added to the Quantic Case Classification ([#2953](https://github.com/coveo/ui-kit/issues/2953)) ([7caf7d2](https://github.com/coveo/ui-kit/commits/7caf7d26942c847aadc5649d4d47d3ed1d85f501))
 
 ## 2.24.3 (2023-06-01)
 

@@ -32,6 +32,6 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
     validatePayload(payload, definition);
     dispatch(toggleSelectNumericFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
-    dispatch(updateFacetOptions({freezeFacetOrder: true}));
+    dispatch(updateFacetOptions());
   }
 );

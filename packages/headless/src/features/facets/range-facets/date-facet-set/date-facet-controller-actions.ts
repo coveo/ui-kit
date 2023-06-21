@@ -30,6 +30,6 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
     validatePayload(payload, definition);
     dispatch(toggleSelectDateFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
-    dispatch(updateFacetOptions({freezeFacetOrder: true}));
+    dispatch(updateFacetOptions());
   }
 );

@@ -1,6 +1,7 @@
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
 import {
   resetAnswer,
+  setIsLoading,
   updateCitations,
   updateError,
   updateMessage,
@@ -184,10 +185,35 @@ describe('generated answer slice', () => {
       ...baseState,
       isLoading: true,
       answer: 'Tomato Tomato',
+      citations: [],
+      error: {
+        message: 'Execute order',
+        error: 66,
+      },
     };
 
     const finalState = generatedAnswerReducer(state, resetAnswer());
 
     expect(finalState).toEqual(getGeneratedAnswerInitialState());
+  });
+
+  describe('#setIsLoading', () => {
+    it('should set isLoading to true when given true', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isLoading: false},
+        setIsLoading(true)
+      );
+
+      expect(finalState.isLoading).toEqual(true);
+    });
+
+    it('should set isLoading to false when given false', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, isLoading: true},
+        setIsLoading(false)
+      );
+
+      expect(finalState.isLoading).toEqual(false);
+    });
   });
 });
