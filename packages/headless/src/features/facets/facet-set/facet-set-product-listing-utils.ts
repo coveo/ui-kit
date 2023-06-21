@@ -1,20 +1,19 @@
+import {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils';
 import {
   logFacetDeselect,
-  logFacetExclude,
   logFacetSelect,
-} from './facet-set-analytics-actions';
-import {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils';
+  logFacetExclude,
+} from './facet-set-product-listing-analytics-actions';
 import {FacetValue} from './interfaces/response';
 
 export const isFacetValueSelected = (value: FacetValue) => {
   return value.state === 'selected';
 };
-
 export const isFacetValueExcluded = (value: FacetValue) => {
   return value.state === 'excluded';
 };
 
-export const getAnalyticsActionForToggleFacetSelect = (
+export const getProductListingAnalyticsActionForToggleFacetSelect = (
   facetId: string,
   selection: FacetValue
 ) => {
@@ -28,7 +27,7 @@ export const getAnalyticsActionForToggleFacetSelect = (
     : logFacetSelect(payload);
 };
 
-export const getAnalyticsActionForToggleFacetExclude = (
+export const getProductListingAnalyticsActionForToggleFacetExclude = (
   facetId: string,
   selection: FacetValue
 ) => {

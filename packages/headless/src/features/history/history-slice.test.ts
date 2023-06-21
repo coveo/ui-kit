@@ -1,4 +1,4 @@
-import {Reducer} from 'redux';
+import {Reducer} from '@reduxjs/toolkit';
 import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';

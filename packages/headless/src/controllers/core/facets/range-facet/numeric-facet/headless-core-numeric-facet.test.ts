@@ -121,9 +121,7 @@ describe('numeric facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       numericFacet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   }
 
