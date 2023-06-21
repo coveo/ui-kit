@@ -1,11 +1,23 @@
-## 2.18.4 (2023-06-07)
-
+# 2.19.0 (2023-06-20)
 
 ### Bug Fixes
 
-* undefined error when checking mismatch with new endpoint url  ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
+- **headless:** add missing controllers for product listing facets ([#2983](https://github.com/coveo/ui-kit/issues/2983)) ([d8b9933](https://github.com/coveo/ui-kit/commits/d8b9933283cc431ec5a819f7edd5fef84757304e))
+- **headless:** allow preloading state of non-default reducers ([#2972](https://github.com/coveo/ui-kit/issues/2972)) ([9652d51](https://github.com/coveo/ui-kit/commits/9652d517cb323f2f78f866201ab384e746267b36))
+- **headless:** handle no question answer in insight api client ([#2979](https://github.com/coveo/ui-kit/issues/2979)) ([03a2fc5](https://github.com/coveo/ui-kit/commits/03a2fc5cf8d6462f927897ae0031b9d46664ca05))
+- **headless:** prevent overriding queries from a different origin ([#2955](https://github.com/coveo/ui-kit/issues/2955)) ([0701f87](https://github.com/coveo/ui-kit/commits/0701f8751e13940a2aa8d6d8f99d99dd2ed3b284))
+- **headless:** wrong type in product listing interactive result ([#2980](https://github.com/coveo/ui-kit/issues/2980)) ([693ce4e](https://github.com/coveo/ui-kit/commits/693ce4edfa0ad9248a0edb60ccb89cf53dc88815))
 
+### Features
 
+- add missing exports for headless/product-listing ([#2975](https://github.com/coveo/ui-kit/issues/2975)) ([170638b](https://github.com/coveo/ui-kit/commits/170638bdd22492ea38bb29dbd4c968f0457d1a69))
+- **atomic,headless:** support custom sort for facets ([#2960](https://github.com/coveo/ui-kit/issues/2960)) ([21e00f2](https://github.com/coveo/ui-kit/commits/21e00f286f49b1a8f9af9a5d12e21dae36ae8e54))
+
+## 2.18.4 (2023-06-07)
+
+### Bug Fixes
+
+- undefined error when checking mismatch with new endpoint url ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
 
 ## 2.18.3 (2023-06-01)
 

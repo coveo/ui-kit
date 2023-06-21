@@ -2,6 +2,7 @@ import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/
 import {CoreEngine} from '../../../../../app/engine';
 import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
 import {
+  excludeFacetSearchResult,
   registerFacetSearch,
   selectFacetSearchResult,
 } from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
@@ -15,6 +16,7 @@ import {buildGenericFacetSearch} from '../facet-search';
 export interface FacetSearchProps {
   options: FacetSearchOptions;
   select: (value: SpecificFacetSearchResult) => void;
+  exclude: (value: SpecificFacetSearchResult) => void;
   isForFieldSuggestions: boolean;
 }
 
@@ -25,7 +27,12 @@ export function buildFacetSearch(
   props: FacetSearchProps
 ) {
   const {dispatch} = engine;
-  const {options, select, isForFieldSuggestions} = props;
+  const {
+    options,
+    select: propsSelect,
+    exclude: propsExclude,
+    isForFieldSuggestions,
+  } = props;
   const {facetId} = options;
   const getFacetSearch = () => engine.state.facetSearchSet[facetId];
 
@@ -46,7 +53,16 @@ export function buildFacetSearch(
      */
     select(value: SpecificFacetSearchResult) {
       dispatch(selectFacetSearchResult({facetId, value}));
-      select(value);
+      propsSelect(value);
+    },
+
+    /**
+     * Excludes the provided value.
+     * @param result A single specificFacetSearchResult object
+     */
+    exclude(value: SpecificFacetSearchResult) {
+      dispatch(excludeFacetSearchResult({facetId, value}));
+      propsExclude(value);
     },
 
     /**
@@ -56,7 +72,17 @@ export function buildFacetSearch(
     singleSelect(value: SpecificFacetSearchResult) {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(selectFacetSearchResult({facetId, value}));
-      select(value);
+      propsSelect(value);
+    },
+
+    /**
+     * Excludes the provided value, and deselects other values.
+     * @param result A single specificFacetSearchResult object
+     */
+    singleExclude(value: SpecificFacetSearchResult) {
+      dispatch(deselectAllFacetValues(facetId));
+      dispatch(excludeFacetSearchResult({facetId, value}));
+      propsExclude(value);
     },
 
     get state() {
