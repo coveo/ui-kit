@@ -23,7 +23,7 @@ export default class ExampleQuanticRecommendationtList extends LightningElement 
       defaultValue: 10,
     },
     {
-      attribute: 'numberOfRecommendationsPerRow',
+      attribute: 'recommendationsPerRow',
       label: 'Number Of Recommendations Per Row',
       description: 'The number of recommendations to display, per row.',
       defaultValue: 3,

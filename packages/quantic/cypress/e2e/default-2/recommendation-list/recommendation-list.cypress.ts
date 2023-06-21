@@ -12,7 +12,7 @@ import {RecommendationListExpectations as Expect} from './recommendation-list-ex
 interface RecommendationListOptions {
   recommendation: string;
   numberOfRecommendations: number | string;
-  numberOfRecommendationsPerRow: number;
+  recommendationsPerRow: number;
   label: string;
   fieldsToInclude: string;
   headingLevel: number;
@@ -24,7 +24,7 @@ describe('quantic-recommendation-list', () => {
   const defaultFieldsToInclude =
     'date,author,source,language,filetype,parents,sfknowledgearticleid';
   const defaultNumberOfRecommendations = 10;
-  const defaultNumberOfRecommendationsPerRow = 3;
+  const defaultRecommendationsPerRow = 3;
   const defaultRecommendationId = 'Recommendation';
   const label = 'Top recommendation for you';
   const defaultHeadingLevel = 1;
@@ -79,7 +79,7 @@ describe('quantic-recommendation-list', () => {
         Expect.correctRecommendationId(defaultRecommendationId);
         Expect.correctNumberOfRecommendations(defaultNumberOfRecommendations);
         Expect.correctNumberOfRecommendationsPerRow(
-          defaultNumberOfRecommendationsPerRow
+          defaultRecommendationsPerRow
         );
         Actions.clickRecommendationLink(0);
         Expect.logRecommendationOpen(0, recommendationsAlias);
@@ -99,7 +99,7 @@ describe('quantic-recommendation-list', () => {
       visitPage({
         fieldsToInclude: customFieldsToInclude,
         numberOfRecommendations: customNumberOfRecommendations,
-        numberOfRecommendationsPerRow: customNumberOfRecommendationsPerRow,
+        recommendationsPerRow: customNumberOfRecommendationsPerRow,
         recommendation: customRecommendationId,
         headingLevel: customHeadingLevel,
         label,

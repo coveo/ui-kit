@@ -24,7 +24,7 @@ import loadingTemplate from './templates/loading.html';
  * @fires CustomEvent#registerrecommendationtemplates
  * @category Recommendation
  * @example
- * <c-quantic-recommendation-list engine-id={engineId} recommendation={recommendationId} fields-to-include="objecttype,filetype" number-of-recommendations="3" number-of-recommendations-per-row="10" heading-level="1"></c-quantic-recommendation-list>
+ * <c-quantic-recommendation-list engine-id={engineId} recommendation={recommendationId} fields-to-include="objecttype,filetype" number-of-recommendations="3" recommendations-per-row="10" heading-level="1"></c-quantic-recommendation-list>
  */
 export default class QuanticRecommendationList extends LightningElement {
   /**
@@ -50,12 +50,12 @@ export default class QuanticRecommendationList extends LightningElement {
   /**
    * The number of recommendations to display, per row.
    * Each recommendation in the row will be displayed as
-   * 1/numberOfRecommendationsPerRow of the container width.
+   * 1/recommendationsPerRow of the container width.
    * @api
    * @type {number}
    * @default {3}
    */
-  @api numberOfRecommendationsPerRow = 3;
+  @api recommendationsPerRow = 3;
   /**
    * A list of fields to include in the query results, separated by commas.
    * @api
@@ -156,7 +156,7 @@ export default class QuanticRecommendationList extends LightningElement {
     const styles = this.template.host?.style;
     styles.setProperty(
       '--recommendationItemWidth',
-      `${100 / this.numberOfRecommendationsPerRow}%`
+      `${100 / this.recommendationsPerRow}%`
     );
   }
 
