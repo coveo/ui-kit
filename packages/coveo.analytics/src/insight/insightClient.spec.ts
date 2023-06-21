@@ -324,6 +324,16 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, fakeDocID);
         });
 
+        it('should send proper payload for #caseSendEmail', async () => {
+            await client.logCaseSendEmail(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.caseSendEmail, fakeDocInfo, fakeDocID);
+        });
+
+        it('should send proper payload for #feedItemTextPost', async () => {
+            await client.logFeedItemTextPost(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.feedItemTextPost, fakeDocInfo, fakeDocID);
+        });
+
         it('should send proper payload for #documentQuickview', async () => {
             const expectedMetadata = {
                 ...fakeDocID,
@@ -854,6 +864,28 @@ describe('InsightClient', () => {
             };
             await client.logCopyToClipboard(fakeDocInfo, fakeDocID, metadata);
             expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #caseSendEmail', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logCaseSendEmail(fakeDocInfo, fakeDocID, metadata);
+            expectMatchDocumentPayload(SearchPageEvents.caseSendEmail, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #feedItemTextPost', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logFeedItemTextPost(fakeDocInfo, fakeDocID, metadata);
+            expectMatchDocumentPayload(SearchPageEvents.feedItemTextPost, fakeDocInfo, expectedMetadata);
         });
 
         it('should send proper payload for #documentQuickview', async () => {

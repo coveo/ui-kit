@@ -279,6 +279,14 @@ export enum SearchPageEvents {
      */
     copyToClipboard = 'copyToClipboard',
     /**
+     * Identifies the click event that gets logged when a user clicks the Send As Email result action.
+     */
+    caseSendEmail = 'Case.SendEmail',
+    /**
+     * Identifies the click event that gets logged when a user clicks the Post To Feed result action.
+     */
+    feedItemTextPost = 'FeedItem.TextPost',
+    /**
      * Identifies the click event that gets logged when a user clicks the Attach To Case result action.
      */
     caseAttach = 'caseAttach',
