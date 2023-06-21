@@ -44,26 +44,28 @@ describe('c-quantic-heading', () => {
   });
 
   it('should display the label with the right header tag level', async () => {
-    const expectedHTML = `<h${exampleLevel}>${exampleLabel}</h${exampleLevel}>`;
+    const expectedTag = `h${exampleLevel}`;
     const element = createTestComponent();
     await flushPromises();
 
-    const label = element.shadowRoot.querySelector(selectors.label);
+    const label = element.shadowRoot.querySelector(
+      `${selectors.label} > ${expectedTag}`
+    );
     expect(label).not.toBeNull();
-    // eslint-disable-next-line @lwc/lwc/no-inner-html
-    expect(label.innerHTML).toBe(expectedHTML);
+    expect(label.innerText).toBe(exampleLabel);
   });
 
   describe('when an invalid value of the level property is used', () => {
     it('should display the label in a "div" tag', async () => {
-      const expectedHTML = `<div>${exampleLabel}</div>`;
+      const expectedTag = 'div';
       const element = createTestComponent({...defaultOptions, level: 7});
       await flushPromises();
 
-      const label = element.shadowRoot.querySelector(selectors.label);
+      const label = element.shadowRoot.querySelector(
+        `${selectors.label} > ${expectedTag}`
+      );
       expect(label).not.toBeNull();
-      // eslint-disable-next-line @lwc/lwc/no-inner-html
-      expect(label.innerHTML).toBe(expectedHTML);
+      expect(label.innerText).toBe(exampleLabel);
     });
   });
 });
