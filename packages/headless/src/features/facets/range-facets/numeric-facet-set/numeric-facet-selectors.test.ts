@@ -78,6 +78,14 @@ describe('numeric facet selectors', () => {
       const selectedValues = numericFacetSelectedValuesSelector(state, facetId);
       expect(selectedValues).toEqual([mockValue]);
     });
+  });
+
+  describe('#numericFacetExcludedValuesSelector', () => {
+    beforeEach(() => {
+      state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({facetId}),
+      });
+    });
 
     it('#numericFacetExcludedValuesSelector returns an empty array if the facet does not exist', () => {
       const selectedValues = numericFacetExcludedValuesSelector(state, facetId);
