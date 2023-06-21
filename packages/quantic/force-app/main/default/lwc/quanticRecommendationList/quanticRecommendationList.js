@@ -75,7 +75,7 @@ export default class QuanticRecommendationList extends LightningElement {
    * @type {number}
    * @default {1}
    */
-  @api headingLevel = 1;
+  @api headingLevel = 3;
 
   /** @type {RecommendationListState} */
   @track state;

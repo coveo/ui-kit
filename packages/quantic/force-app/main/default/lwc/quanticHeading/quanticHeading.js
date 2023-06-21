@@ -21,7 +21,7 @@ export default class QuanticHeading extends LightningElement {
   @api level;
 
   renderedCallback() {
-    const heading = this.template.querySelector('[data-role="label"]');
+    const heading = this.template.querySelector('[data-section="label"]');
     // @ts-ignore
     const level = parseInt(this.level, 10);
     const headingTag = level > 0 && level <= 6 ? `h${level}` : 'div';

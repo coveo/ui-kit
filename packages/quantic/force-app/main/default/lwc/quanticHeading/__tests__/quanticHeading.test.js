@@ -5,7 +5,7 @@ import QuanticHeading from '../quanticHeading';
 const exampleLabel = 'Example Label';
 const exampleLevel = 3;
 const selectors = {
-  label: '[data-role="label"]',
+  label: '[data-section="label"]',
 };
 
 const defaultOptions = {
