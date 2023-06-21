@@ -2,9 +2,8 @@
   align-items: center;
 }
 
-.slides {
+.carousel__slides {
   overflow: hidden;
-  display: flex;
   flex: 1;
 }
 
@@ -17,16 +16,16 @@
   height: 0.25rem;
   border: 0;
   border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
-  background-color: #e5e8e8;
+  background-color: var(--lwc-brandLightActive, #e3e5ed);
   transition: 0.2s;
 }
 
 .carousel__indicator--active {
-  background-color: #1372ec;
+  background-color: var(--lwc-brandPrimary, #1b96ff);
 }
 
 .carousel__indicator:hover {
-  background-color: #399ffe;
+  background-color: var(--lwc-brandPrimaryActive, #0176d3);
 }
 
 .carousel__previous-navigation {

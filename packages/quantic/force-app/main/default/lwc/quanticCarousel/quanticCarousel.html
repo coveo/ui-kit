@@ -15,9 +15,9 @@
           icon-name="utility:chevronleft"
           onclick={handlePrevious}
           variant="border-filled"
-          title="previous page"
+          title={labels.previousPage}
         ></lightning-button-icon>
-        <div class="slides">
+        <div class="carousel__slides slds-grid">
           <slot name="carousel-item"></slot>
         </div>
         <lightning-button-icon
@@ -26,7 +26,7 @@
           icon-name="utility:chevronright"
           onclick={handleNext}
           variant="border-filled"
-          title="next page"
+          title={labels.nextPage}
         ></lightning-button-icon>
       </div>
       <ul

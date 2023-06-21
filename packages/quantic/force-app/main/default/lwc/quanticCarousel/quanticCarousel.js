@@ -1,4 +1,7 @@
+import goToPage from '@salesforce/label/c.quantic_GoToPage';
 import invalidPositiveIntegerProperty from '@salesforce/label/c.quantic_InvalidPositiveIntegerProperty';
+import nextPage from '@salesforce/label/c.quantic_NextPage';
+import previousPage from '@salesforce/label/c.quantic_PreviousPage';
 import propertyIsRequired from '@salesforce/label/c.quantic_PropertyIsRequired';
 import {I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
@@ -16,6 +19,9 @@ export default class QuanticCarousel extends LightningElement {
   labels = {
     propertyIsRequired,
     invalidPositiveIntegerProperty,
+    nextPage,
+    previousPage,
+    goToPage,
   };
 
   /**
@@ -128,7 +134,7 @@ export default class QuanticCarousel extends LightningElement {
         handleClick: () => {
           this._currentPage = index;
         },
-        title: `Go to page ${index + 1}`,
+        title: I18nUtils.format(this.labels.goToPage, index + 1),
         current: isCurrent,
         class: isCurrent
           ? indicatorCSSClass + ' carousel__indicator--active'

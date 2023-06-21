@@ -180,7 +180,9 @@ export default class QuanticRecommendationList extends LightningElement {
 
   get recommendations() {
     return (
-      this.state?.recommendations.map(this.prepareRecommendationCSSClass.bind(this)) || []
+      this.state?.recommendations.map(
+        this.prepareRecommendationCSSClass.bind(this)
+      ) || []
     );
   }
 
