@@ -7,13 +7,24 @@
         label={label}
       ></c-quantic-heading>
     </div>
-    <c-quantic-carousel data-cy="recommendations__carousel" number-of-pages={numberOfPages} number-of-items-per-page={numberOfRecommendationsPerRow}>
+    <c-quantic-carousel
+      data-cy="recommendations__carousel"
+      number-of-pages={numberOfPages}
+      number-of-items-per-page={recommendationsPerRow}
+    >
       <template for:each={recommendations} for:item="recommendation">
-        <div slot="carousel-item" data-cy="recommendations__item" key={recommendation.uniqueId}
-          class={recommendation.class}>
+        <div
+          slot="carousel-item"
+          data-cy="recommendations__item"
+          key={recommendation.uniqueId}
+          class={recommendation.class}
+        >
           <div class="recommendation-item__content slds-box slds-box_small">
-            <c-quantic-result result={recommendation} result-templates-manager={resultTemplatesManager}
-              engine-id={engineId}></c-quantic-result>
+            <c-quantic-result
+              result={recommendation}
+              result-templates-manager={resultTemplatesManager}
+              engine-id={engineId}
+            ></c-quantic-result>
           </div>
         </div>
       </template>

@@ -80,6 +80,7 @@ export default class QuanticRecommendationList extends LightningElement {
   @api headingLevel = 3;
   /**
    * The variant of the component. Accepted variants are ‘grid’ and carousel.
+   * @api
    * @type {'grid' | 'carousel'}
    */
   @api variant = 'grid';
@@ -170,7 +171,7 @@ export default class QuanticRecommendationList extends LightningElement {
   get placeholders() {
     const numberOfPlaceHolders =
       this.variant === 'carousel'
-        ? this.numberOfRecommendationsPerRow
+        ? this.recommendationsPerRow
         : this.numberOfRecommendations;
     return Array.from({length: numberOfPlaceHolders}, (_item, index) => ({
       index,
@@ -179,29 +180,29 @@ export default class QuanticRecommendationList extends LightningElement {
 
   get recommendations() {
     return (
-      this.state?.recommendations.map((rec, index) => {
-        if (this.numberOfRecommendationsPerRow === 1) {
-          return rec;
-        }
-        let recCSSClass = 'recommendation-item__container ';
-        const recIsFirstInThePage =
-          index % this.numberOfRecommendationsPerRow === 0;
-        const recIsLastInThePage =
-          index % this.numberOfRecommendationsPerRow ===
-          this.numberOfRecommendationsPerRow - 1;
-        if (recIsFirstInThePage) {
-          recCSSClass = recCSSClass + 'slds-var-p-right_x-small';
-        } else if (recIsLastInThePage) {
-          recCSSClass = recCSSClass + 'slds-var-p-left_x-small';
-        } else {
-          recCSSClass = recCSSClass + 'slds-var-p-horizontal_xx-small';
-        }
-        return {
-          ...rec,
-          class: recCSSClass,
-        };
-      }) || []
+      this.state?.recommendations.map(this.prepareRecommendationCSSClass.bind(this)) || []
     );
+  }
+
+  prepareRecommendationCSSClass(rec, index) {
+    if (this.variant === 'grid' || this.recommendationsPerRow === 1) {
+      return rec;
+    }
+    let recCSSClass = 'recommendation-item__container ';
+    const recIsFirstInThePage = index % this.recommendationsPerRow === 0;
+    const recIsLastInThePage =
+      index % this.recommendationsPerRow === this.recommendationsPerRow - 1;
+    if (recIsFirstInThePage) {
+      recCSSClass = recCSSClass + 'slds-var-p-right_x-small';
+    } else if (recIsLastInThePage) {
+      recCSSClass = recCSSClass + 'slds-var-p-left_x-small';
+    } else {
+      recCSSClass = recCSSClass + 'slds-var-p-horizontal_xx-small';
+    }
+    return {
+      ...rec,
+      class: recCSSClass,
+    };
   }
 
   get fields() {
@@ -212,9 +213,7 @@ export default class QuanticRecommendationList extends LightningElement {
   }
 
   get numberOfPages() {
-    return Math.ceil(
-      this.recommendations?.length / this.numberOfRecommendationsPerRow
-    );
+    return Math.ceil(this.recommendations?.length / this.recommendationsPerRow);
   }
 
   /**

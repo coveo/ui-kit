@@ -136,6 +136,7 @@ describe('quantic-recommendation-list', () => {
       setRecommendationsAlias();
 
       scope('when loading the page', () => {
+        Expect.logRecommendationInterfaceLoad(recommendationsAlias);
         Expect.events.receivedEvent(true, registerRecommendationTemplatesEvent);
         Expect.displayLabel(label, defaultHeadingLevel);
         Expect.displayCarousel(true);
@@ -145,10 +146,10 @@ describe('quantic-recommendation-list', () => {
         Expect.correctRecommendationId(defaultRecommendationId);
         Expect.correctNumberOfRecommendations(defaultNumberOfRecommendations);
         Expect.correctNumberOfRecommendationsPerRow(
-          defaultNumberOfRecommendationsPerRow
+          defaultRecommendationsPerRow
         );
         Actions.clickRecommendationLink(0);
-        Expect.logRecommendationOpen();
+        Expect.logRecommendationOpen(0, recommendationsAlias);
       });
     });
   });
