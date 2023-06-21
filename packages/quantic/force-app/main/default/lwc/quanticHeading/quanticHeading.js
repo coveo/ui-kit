@@ -25,8 +25,8 @@ export default class QuanticHeading extends LightningElement {
     // @ts-ignore
     const level = parseInt(this.level, 10);
     const headingTag = level > 0 && level <= 6 ? `h${level}` : 'div';
-    const tag = document.createElement(headingTag)
-    tag.innerText = `${this.label}`
+    const tag = document.createElement(headingTag);
+    tag.innerText = `${this.label}`;
     heading.appendChild(tag);
   }
 }
