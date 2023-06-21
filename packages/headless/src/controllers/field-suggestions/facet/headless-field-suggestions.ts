@@ -178,13 +178,13 @@ export function buildFieldSuggestions(
   const facetSearch = buildFacetSearch(engine, {
     options: {...facetSearchOptions, facetId},
     select: (value) => {
-      engine.dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      engine.dispatch(updateFacetOptions());
       engine.dispatch(
         executeSearch(logFacetSelect({facetId, facetValue: value.rawValue}))
       );
     },
     exclude: (value) => {
-      engine.dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      engine.dispatch(updateFacetOptions());
       engine.dispatch(
         executeSearch(logFacetExclude({facetId, facetValue: value.rawValue}))
       );

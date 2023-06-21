@@ -77,6 +77,7 @@ describe('FacetSearch', () => {
     });
 
     it('calls the select prop #executeSearch action', () => {
+      controller.select(value);
       expect(props.select).toHaveBeenCalled();
     });
   });
@@ -97,6 +98,7 @@ describe('FacetSearch', () => {
     });
 
     it('calls the exclude prop #executeSearch action', () => {
+      controller.exclude(value);
       expect(props.exclude).toHaveBeenCalled();
     });
   });
@@ -122,6 +124,7 @@ describe('FacetSearch', () => {
     });
 
     it('calls the select prop #executeSearch action', () => {
+      controller.singleSelect(value);
       expect(props.select).toHaveBeenCalled();
     });
   });
@@ -147,6 +150,7 @@ describe('FacetSearch', () => {
     });
 
     it('calls the exclude prop #executeSearch action', () => {
+      controller.singleExclude(value);
       expect(props.exclude).toHaveBeenCalled();
     });
   });

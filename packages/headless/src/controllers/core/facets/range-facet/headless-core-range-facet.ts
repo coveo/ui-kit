@@ -55,12 +55,12 @@ export function buildCoreRangeFacet<
 
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {
       dispatch(updateRangeFacetSortCriterion({facetId, criterion}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     isSortedBy(criterion: RangeFacetSortCriterion) {

@@ -413,12 +413,12 @@ export function buildCoreFacet(
 
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     sortBy(criterion: FacetSortCriterion) {
       dispatch(updateFacetSortCriterion({facetId, criterion}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     isSortedBy(criterion: FacetSortCriterion) {
@@ -434,7 +434,7 @@ export function buildCoreFacet(
 
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     showLessValues() {
@@ -448,7 +448,7 @@ export function buildCoreFacet(
         updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
       );
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     enable() {

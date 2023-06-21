@@ -87,13 +87,13 @@ export function buildFacet(
     return buildFacetSearch(engine, {
       options: {facetId: getFacetId(), ...facetSearch},
       select: (value) => {
-        dispatch(updateFacetOptions({freezeFacetOrder: true}));
+        dispatch(updateFacetOptions());
         dispatch(fetchProductListing()).then(() =>
           logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
         );
       },
       exclude: (value) => {
-        dispatch(updateFacetOptions({freezeFacetOrder: true}));
+        dispatch(updateFacetOptions());
         dispatch(fetchProductListing()).then(() =>
           logFacetExclude({facetId: getFacetId(), facetValue: value.rawValue})
         );

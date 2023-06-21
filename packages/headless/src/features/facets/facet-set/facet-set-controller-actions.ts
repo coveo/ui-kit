@@ -33,7 +33,7 @@ export const executeToggleFacetSelect = createAsyncThunk<
   } = thunk;
   validatePayload({facetId, selection}, definition);
   dispatch(toggleSelectFacetValue({facetId, selection}));
-  dispatch(updateFacetOptions({freezeFacetOrder: true}));
+  dispatch(updateFacetOptions());
 });
 
 export const executeToggleFacetExclude = createAsyncThunk<
@@ -50,5 +50,5 @@ export const executeToggleFacetExclude = createAsyncThunk<
   } = thunk;
   validatePayload({facetId, selection}, definition);
   dispatch(toggleExcludeFacetValue({facetId, selection}));
-  dispatch(updateFacetOptions({freezeFacetOrder: true}));
+  dispatch(updateFacetOptions());
 });

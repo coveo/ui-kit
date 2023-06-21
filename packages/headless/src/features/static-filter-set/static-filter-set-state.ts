@@ -1,3 +1,5 @@
+import {FacetValueState} from '../facets/facet-api/value';
+
 export type StaticFilterSetState = Record<string, StaticFilterSlice>;
 
 export interface StaticFilterSlice {
@@ -22,7 +24,7 @@ export interface StaticFilterValue {
   state: StaticFilterValueState;
 }
 
-export type StaticFilterValueState = 'idle' | 'selected' | 'excluded';
+export type StaticFilterValueState = FacetValueState;
 
 export function getStaticFilterSetInitialState(): StaticFilterSetState {
   return {};

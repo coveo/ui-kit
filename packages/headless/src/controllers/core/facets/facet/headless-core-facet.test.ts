@@ -146,9 +146,7 @@ describe('facet', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -166,9 +164,7 @@ describe('facet', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleExclude(facetValue);
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -184,9 +180,7 @@ describe('facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   }
 
@@ -236,9 +230,7 @@ describe('facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.deselectAll();
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -276,9 +268,7 @@ describe('facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.sortBy('score');
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -348,9 +338,7 @@ describe('facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.showMoreValues();
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -431,9 +419,7 @@ describe('facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.showLessValues();
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
