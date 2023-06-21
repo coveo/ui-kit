@@ -51,6 +51,8 @@ describe('SearchPageClient', () => {
         },
     ];
 
+    const fakeStreamId = 'some-stream-id-123';
+
     let client: CoveoSearchPageClient;
 
     const provider: SearchPageClientProvider = {
@@ -1412,5 +1414,47 @@ describe('SearchPageClient', () => {
         expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
         c.enable();
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
+    });
+
+    it('should send proper payload for #logLikeGeneratedAnswer', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        await client.logLikeGeneratedAnswer(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.likeGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #makeLikeGeneratedAnswer', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        const built = await client.makeLikeGeneratedAnswer(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.likeGeneratedAnswer, meta);
+        expectMatchDescription(built.description, SearchPageEvents.likeGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #logDislikeGeneratedAnswer', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        await client.logDislikeGeneratedAnswer(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #makeDislikeGeneratedAnswer', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        const built = await client.makeDislikeGeneratedAnswer(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.dislikeGeneratedAnswer, meta);
+        expectMatchDescription(built.description, SearchPageEvents.dislikeGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #logOpenGeneratedAnswerSource', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId, id: 'some-document-id', permanentId: 'perm-id'};
+        await client.logOpenGeneratedAnswerSource(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, meta);
+    });
+
+    it('should send proper payload for #makeOpenGeneratedAnswerSource', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId, id: 'some-document-id', permanentId: 'perm-id'};
+        const built = await client.makeOpenGeneratedAnswerSource(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, meta);
+        expectMatchDescription(built.description, SearchPageEvents.openGeneratedAnswerSource, meta);
     });
 });
