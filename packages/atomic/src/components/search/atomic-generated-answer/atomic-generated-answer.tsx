@@ -51,15 +51,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
-  private get isStreamEmpty() {
-    return (
-      !this.generatedAnswerState.isLoading &&
-      !this.generatedAnswerState.answer?.length
-    );
+  private get hideComponent() {
+    return this.searchStatusState.hasError || this.generatedAnswerState.error;
   }
 
   public render() {
-    if (this.searchStatusState.hasError || this.isStreamEmpty) {
+    if (this.hideComponent) {
       return null;
     }
     return (
@@ -82,15 +79,13 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                   <FeedbackButton
                     title={this.bindings.i18n.t('this-answer-was-helpful')}
                     icon={ThumbsUpIcon}
-                    onClick={() =>
-                      this.generatedAnswer.logLikeGeneratedAnswer()
-                    }
+                    onClick={() => this.generatedAnswer.likeGeneratedAnswer()}
                   />
                   <FeedbackButton
                     title={this.bindings.i18n.t('this-answer-was-not-helpful')}
                     icon={ThumbsDownIcon}
                     onClick={() =>
-                      this.generatedAnswer.logDislikeGeneratedAnswer()
+                      this.generatedAnswer.dislikeGeneratedAnswer()
                     }
                   />
                 </div>
@@ -99,6 +94,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
               <SourceCitations
                 label={this.bindings.i18n.t('more-info')}
                 citations={this.generatedAnswerState.citations}
+                onCitationClick={(citation) =>
+                  this.generatedAnswer.logCitationClick(citation)
+                }
               />
             </div>
           )}

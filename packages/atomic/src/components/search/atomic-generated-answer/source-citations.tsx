@@ -4,6 +4,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 interface SourceCitationsProps {
   label: string;
   citations: GeneratedAnswerCitation[];
+  onCitationClick: (citation: GeneratedAnswerCitation) => void;
 }
 
 export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
@@ -20,6 +21,8 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
             <a
               key={citation.id}
               href={citation.clickUri ?? citation.uri}
+              target="_blank"
+              onClick={() => props.onCitationClick(citation)}
               class="flex items-center citation bg-background btn-text-neutral text-neutral-dark text-sm border rounded-full border-neutral text-on-background"
             >
               <div class="citation-index rounded-full flex items-center text-bg-blue">
