@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
 import './generated-answer-actions';
 import {
   resetAnswer,
@@ -21,13 +22,14 @@ export const generatedAnswerReducer = createReducer(
         state.answer += payload.textDelta;
       })
       .addCase(updateCitations, (state, {payload}) => {
-        payload.citations.forEach((citation) => {
-          state.citations.push(citation);
-        });
+        state.citations = state.citations.concat(payload.citations);
       })
       .addCase(updateError, (state, {payload}) => {
         state.isLoading = false;
-        state.error = payload;
+        state.error = {
+          ...payload,
+          isRetryable: payload.code === RETRYABLE_STREAM_ERROR_CODE,
+        };
         state.citations = [];
         delete state.answer;
       })

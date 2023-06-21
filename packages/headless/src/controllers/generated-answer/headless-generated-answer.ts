@@ -14,9 +14,14 @@ import {
   updateCitations,
   setIsLoading,
 } from '../../features/generated-answer/generated-answer-actions';
+import {
+  logDislikeGeneratedAnswer,
+  logLikeGeneratedAnswer,
+  logOpenGeneratedAnswerSource,
+  logRetryGeneratedAnswer,
+} from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
-import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -24,6 +29,9 @@ import {buildController} from '../controller/headless-controller';
 
 export type {GeneratedAnswerState, GeneratedAnswerCitation};
 
+/**
+ * @internal
+ */
 export interface GeneratedAnswer {
   /**
    * The state of the GeneratedAnswer controller.
@@ -36,20 +44,20 @@ export interface GeneratedAnswer {
   /**
    * Logs a custom event indicating a generated answer is relevant.
    */
-  logLikeGeneratedAnswer(): void;
+  likeGeneratedAnswer(): void;
   /**
    * Logs a custom event indicating a generated answer is irrelevant.
    */
-  logDislikeGeneratedAnswer(): void;
+  dislikeGeneratedAnswer(): void;
+  /**
+   * Logs a custom event indicating a cited source link was clicked.
+   */
+  logCitationClick(citation: GeneratedAnswerCitation): void;
 }
 
 /**
- * Creates a `GeneratedAnswer` controller instance.
- *
- * @param engine - The headless engine.
- * @param props - The configurable `GeneratedAnswer` properties.
- * @returns A `GeneratedAnswer` controller instance.
- * */
+ * @internal
+ */
 export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   if (!loadGeneratedAnswerReducer(engine)) {
     throw loadReducerError;
@@ -131,19 +139,19 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     },
 
     retry() {
-      // TODO: Swap for real analytics event
-      dispatch(executeSearch(logSearchboxSubmit()));
-      //dispatch(executeSearch(logRetryGeneratedAnswer()));
+      dispatch(executeSearch(logRetryGeneratedAnswer()));
     },
 
-    logLikeGeneratedAnswer() {
-      console.log('👍');
-      //dispatch(logLikeGeneratedAnswer());
+    likeGeneratedAnswer() {
+      dispatch(logLikeGeneratedAnswer());
     },
 
-    logDislikeGeneratedAnswer() {
-      console.log('👎');
-      //dispatch(logDislikeGeneratedAnswer());
+    dislikeGeneratedAnswer() {
+      dispatch(logDislikeGeneratedAnswer());
+    },
+
+    logCitationClick(citation: GeneratedAnswerCitation) {
+      dispatch(logOpenGeneratedAnswerSource(citation));
     },
   };
 }

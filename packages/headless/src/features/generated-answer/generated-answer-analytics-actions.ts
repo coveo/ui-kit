@@ -1,7 +1,6 @@
-/*import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {
   AnalyticsType,
-  ClickAction,
   CustomAction,
   SearchAction,
   makeAnalyticsAction,
@@ -11,21 +10,24 @@ export const logRetryGeneratedAnswer = (): SearchAction =>
   makeAnalyticsAction(
     'generatedAnswer/logRetryGeneratedAnswer',
     AnalyticsType.Search,
-    (client) => client.logRetryGeneratedAnswer()
+    (client) => client.makeRetryGeneratedAnswer()
   );
 
 export const logOpenGeneratedAnswerSource = (
-  result: GeneratedAnswerCitation
-): ClickAction =>
+  citation: GeneratedAnswerCitation
+): CustomAction =>
   makeAnalyticsAction(
     'generatedAnswer/logOpenGeneratedAnswerSource',
-    AnalyticsType.Click,
+    AnalyticsType.Custom,
     (client, state) => {
-      validateResultPayload(result);
-      return client.logOpenGeneratedAnswerSource(
-        partialDocumentInformation(result, state),
-        documentIdentifier(result)
-      );
+      const generativeQuestionAnsweringId =
+        state.search?.response?.extendedResults
+          ?.generativeQuestionAnsweringId ?? '';
+      return client.makeOpenGeneratedAnswerSource({
+        generativeQuestionAnsweringId,
+        permanentId: citation.permanentid,
+        id: citation.id,
+      });
     }
   );
 
@@ -35,8 +37,9 @@ export const logLikeGeneratedAnswer = (): CustomAction =>
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
-        state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
-      return client.logLikeGeneratedAnswer({
+        state.search?.response?.extendedResults
+          ?.generativeQuestionAnsweringId ?? '';
+      return client.makeLikeGeneratedAnswer({
         generativeQuestionAnsweringId,
       });
     }
@@ -48,11 +51,10 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
-        state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
-      return client.logDislikeGeneratedAnswer({
+        state.search?.response?.extendedResults
+          ?.generativeQuestionAnsweringId ?? '';
+      return client.makeDislikeGeneratedAnswer({
         generativeQuestionAnsweringId,
       });
     }
   );
-*/
-export {};
