@@ -72,8 +72,9 @@ export default class QuanticRecommendationList extends LightningElement {
   @api label;
   /**
    * The Heading level to use for the heading label, accepted values are integers from 1 to 6.
+   * @api
    * @type {number}
-   * @default {1}
+   * @default {3}
    */
   @api headingLevel = 3;
 
