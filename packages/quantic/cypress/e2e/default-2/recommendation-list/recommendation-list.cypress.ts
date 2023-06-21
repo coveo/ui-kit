@@ -16,6 +16,7 @@ interface RecommendationListOptions {
   label: string;
   fieldsToInclude: string;
   headingLevel: number;
+  variant: 'grid' | 'carousel';
 }
 
 describe('quantic-recommendation-list', () => {
@@ -73,6 +74,7 @@ describe('quantic-recommendation-list', () => {
         Expect.events.receivedEvent(true, registerRecommendationTemplatesEvent);
         Expect.displayLabel(label, defaultHeadingLevel);
         Expect.displayRecommendations(true);
+        Expect.displayCarousel(false);
         Expect.recommendationsEqual(recommendationsAlias);
         Expect.correctFieldsIncluded(defaultFieldsToInclude.split(','));
         Expect.correctRecommendationId(defaultRecommendationId);
@@ -109,6 +111,7 @@ describe('quantic-recommendation-list', () => {
         Expect.events.receivedEvent(true, registerRecommendationTemplatesEvent);
         Expect.displayLabel(label, customHeadingLevel);
         Expect.displayRecommendations(true);
+        Expect.displayCarousel(false);
         Expect.recommendationsEqual(recommendationsAlias);
         Expect.correctFieldsIncluded(customFieldsToInclude.split(','));
         Expect.correctRecommendationId(customRecommendationId);
@@ -116,6 +119,32 @@ describe('quantic-recommendation-list', () => {
         Expect.correctNumberOfRecommendationsPerRow(
           customNumberOfRecommendationsPerRow
         );
+      });
+    });
+  });
+
+  describe('when the recommendations are displayed in a carousel', () => {
+    it('should properly display the recommendations', () => {
+      visitPage({
+        label,
+        variant: 'carousel',
+      });
+      setRecommendationsAlias();
+
+      scope('when loading the page', () => {
+        Expect.events.receivedEvent(true, registerRecommendationTemplatesEvent);
+        Expect.displayLabel(label, defaultHeadingLevel);
+        Expect.displayCarousel(true);
+        Expect.displayRecommendations(true);
+        Expect.recommendationsEqual(recommendationsAlias);
+        Expect.correctFieldsIncluded(defaultFieldsToInclude.split(','));
+        Expect.correctRecommendationId(defaultRecommendationId);
+        Expect.correctNumberOfRecommendations(defaultNumberOfRecommendations);
+        Expect.correctNumberOfRecommendationsPerRow(
+          defaultNumberOfRecommendationsPerRow
+        );
+        Actions.clickRecommendationLink(0);
+        Expect.logRecommendationOpen();
       });
     });
   });

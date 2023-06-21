@@ -1,13 +1,12 @@
 <template>
-  A
-  <template if:true={errorMessage}>
+  <template lwc:if={errorMessage}>
     <c-quantic-component-error
       component-name={template.host.localName}
       message={errorMessage}
     >
     </c-quantic-component-error>
   </template>
-  <template if:false={errorMessage}>
+  <template lwc:else>
     <section aria-label="carousel">
       <div class="slds-grid carousel__container slds-is-relative">
         <lightning-button-icon

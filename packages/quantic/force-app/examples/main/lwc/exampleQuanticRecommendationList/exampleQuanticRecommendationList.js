@@ -44,8 +44,14 @@ export default class ExampleQuanticRecommendationtList extends LightningElement 
     {
       attribute: 'headingLevel',
       label: 'Heading Level',
-      description: 'The Heading level to use for the heading label',
+      description: 'The Heading level to use for the heading label.',
       defaultValue: 1,
+    },
+    {
+      attribute: 'variant',
+      label: 'Variant',
+      description: "The variant of the component. Accepted variants are grid and carousel.",
+      defaultValue: 'grid',
     },
   ];
   expectedEvents = ['registerrecommendationtemplates'];

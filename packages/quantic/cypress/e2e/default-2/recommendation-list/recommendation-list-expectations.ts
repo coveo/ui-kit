@@ -33,6 +33,13 @@ export function recommendationListExpectations(
         .logDetail(`${should(display)} display recommendations`);
     },
 
+    displayCarousel: (display: boolean) => {
+      selector
+        .carousel()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the carousel`);
+    },
+
     recommendationsEqual: (recommendationsAlias: string) => {
       cy.get<Array<{Title: string}>>(recommendationsAlias).then(
         (recommendations) => {

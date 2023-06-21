@@ -7,6 +7,7 @@ export interface RecommendationListSelector extends ComponentSelector {
   recommendations: () => CypressSelector;
   label: (headingLevel: number) => CypressSelector;
   recommendationLinks: () => CypressSelector;
+  carousel: () => CypressSelector;
 }
 
 export const RecommendationListSelectors: RecommendationListSelector = {
@@ -25,5 +26,9 @@ export const RecommendationListSelectors: RecommendationListSelector = {
   recommendationLinks: () =>
     RecommendationListSelectors.get().find(
       '[data-cy="recommendations__item"] c-quantic-result-link a'
+    ),
+  carousel: () =>
+    RecommendationListSelectors.get().find(
+      '[data-cy="recommendations__carousel"]'
     ),
 };

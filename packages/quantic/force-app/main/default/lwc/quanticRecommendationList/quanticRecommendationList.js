@@ -79,7 +79,7 @@ export default class QuanticRecommendationList extends LightningElement {
    */
   @api headingLevel = 1;
   /**
-   * The variant of the component. Accepted variants are ‘grid’ and carousel
+   * The variant of the component. Accepted variants are ‘grid’ and carousel.
    * @type {'grid' | 'carousel'}
    */
   @api variant = 'grid';
