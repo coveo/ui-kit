@@ -5,7 +5,7 @@ import QuanticHeading from '../quanticHeading';
 const exampleLabel = 'Example Label';
 const exampleLevel = 3;
 const selectors = {
-  label: '[data-role="label"]',
+  label: '[data-section="label"]',
 };
 
 const defaultOptions = {
@@ -43,7 +43,7 @@ describe('c-quantic-heading', () => {
     cleanup();
   });
 
-  it('should display the label with the right anchor tag', async () => {
+  it('should display the label with the right header tag level', async () => {
     const expectedHTML = `<h${exampleLevel}>${exampleLabel}</h${exampleLevel}>`;
     const element = createTestComponent();
     await flushPromises();
