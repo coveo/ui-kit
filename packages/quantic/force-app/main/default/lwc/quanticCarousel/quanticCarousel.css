@@ -15,7 +15,7 @@
 .carousel__indicator {
   width: 3.25rem;
   height: 0.25rem;
-  border: 0px;
+  border: 0;
   border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
   background-color: #e5e8e8;
   transition: 0.2s;
@@ -30,11 +30,11 @@
 }
 
 .carousel__previous-navigation {
-  left: 0px;
+  left: 0;
   transform: translateX(-60%);
 }
 
 .carousel__next-navigation {
-  right: 0px;
+  right: 0;
   transform: translateX(60%);
 }
