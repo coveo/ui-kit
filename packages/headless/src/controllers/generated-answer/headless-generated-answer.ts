@@ -67,7 +67,6 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   const controller = buildController(engine);
   const getState = () => engine.state;
 
-  let timeout: ReturnType<typeof setTimeout>;
   let source: EventSourcePolyfill;
   let lastRequestId: string;
   let lastStreamId: string;
@@ -80,13 +79,11 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
 
   const onError = (error: SSEErrorPayload) => {
     source?.close();
-    clearTimeout(timeout);
     dispatch(updateError(error));
   };
 
   const onCompleted = () => {
     source?.close();
-    clearTimeout(timeout);
     dispatch(setIsLoading(false));
   };
 
@@ -104,7 +101,7 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
       const state = getState();
       const requestId = state.search.requestId;
       const streamId =
-        state.search.extendedResults?.generativeQuestionAnsweringId;
+        state.search.extendedResults.generativeQuestionAnsweringId;
 
       if (lastRequestId !== requestId) {
         lastRequestId = requestId;

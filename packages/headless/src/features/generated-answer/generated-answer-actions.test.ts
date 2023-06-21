@@ -3,8 +3,10 @@ import {
   buildMockSearchAppEngine,
   createMockState,
 } from '../../test';
+import {buildMockCitation} from '../../test/mock-citation';
 import {
   setIsLoading,
+  updateCitations,
   updateError,
   updateMessage,
 } from './generated-answer-actions';
@@ -81,6 +83,26 @@ describe('generated answer', () => {
       ).toEqual({
         payload: {
           textDelta: testText,
+        },
+        type: actionType,
+      });
+    });
+  });
+
+  describe('#updateCitations', () => {
+    const actionType = 'generatedAnswer/updateCitations';
+
+    it('should accept a valid payload', () => {
+      const testCitations = [buildMockCitation()];
+      expect(
+        e.dispatch(
+          updateCitations({
+            citations: testCitations,
+          })
+        )
+      ).toEqual({
+        payload: {
+          citations: testCitations,
         },
         type: actionType,
       });
