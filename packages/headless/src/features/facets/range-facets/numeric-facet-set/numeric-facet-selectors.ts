@@ -35,3 +35,14 @@ export const numericFacetSelectedValuesSelector = (
   }
   return facetResponse.values.filter((value) => value.state === 'selected');
 };
+
+export const numericFacetExcludedValuesSelector = (
+  state: SearchSection & NumericFacetSection,
+  facetId: string
+): NumericFacetValue[] => {
+  const facetResponse = numericFacetResponseSelector(state, facetId);
+  if (!facetResponse) {
+    return [];
+  }
+  return facetResponse.values.filter((value) => value.state === 'excluded');
+};
