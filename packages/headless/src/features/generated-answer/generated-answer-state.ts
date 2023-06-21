@@ -7,6 +7,7 @@ export interface GeneratedAnswerState {
   error?: {
     message?: string;
     code?: number;
+    isRetryable?: boolean;
   };
 }
 

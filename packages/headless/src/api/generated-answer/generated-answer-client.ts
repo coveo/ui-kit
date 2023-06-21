@@ -34,6 +34,7 @@ const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>
 
 const MAX_RETRIES = 3;
 const MAX_TIMEOUT = 5000;
+export const RETRYABLE_STREAM_ERROR_CODE = 1;
 
 export class GeneratedAnswerAPIClient {
   private logger: Logger;
@@ -71,6 +72,7 @@ export class GeneratedAnswerAPIClient {
         this.logger.info('Maximum retry exceeded.');
         onError({
           message: errorMessage,
+          code: RETRYABLE_STREAM_ERROR_CODE,
         });
       }
     };
@@ -135,6 +137,7 @@ export class GeneratedAnswerAPIClient {
           this.options.logger.error(errorMessage);
           onError({
             message: errorMessage,
+            code: RETRYABLE_STREAM_ERROR_CODE,
           });
         };
 

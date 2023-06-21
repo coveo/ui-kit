@@ -1,5 +1,7 @@
+import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
 import {
   resetAnswer,
+  updateCitations,
   updateError,
   updateMessage,
 } from './generated-answer-actions';
@@ -39,7 +41,59 @@ describe('generated answer slice', () => {
     });
   });
 
-  describe('#sseError', () => {
+  describe('#updateCitations', () => {
+    it('Adds the given citations to the state', () => {
+      const newCitations = [
+        {
+          id: 'some-id',
+          title: 'Some Title',
+          uri: 'www.someuri.com',
+          permanentid: 'some-permanent-id-123',
+        },
+      ];
+      const finalState = generatedAnswerReducer(
+        {
+          ...getGeneratedAnswerInitialState(),
+        },
+        updateCitations({citations: newCitations})
+      );
+
+      expect(finalState.citations).toEqual(newCitations);
+    });
+
+    it('Appends the given citations to existing citations', () => {
+      const existingCitations = [
+        {
+          id: 'some-id',
+          title: 'Some Title',
+          uri: 'www.someuri.com',
+          permanentid: 'some-permanent-id-123',
+        },
+      ];
+      const newCitations = [
+        {
+          id: 'some-other-id',
+          title: 'Some Other Title',
+          uri: 'www.someuri.com',
+          permanentid: 'some-other-permanent-id-123',
+        },
+      ];
+      const finalState = generatedAnswerReducer(
+        {
+          ...getGeneratedAnswerInitialState(),
+          citations: existingCitations,
+        },
+        updateCitations({citations: newCitations})
+      );
+
+      expect(finalState.citations).toEqual([
+        ...existingCitations,
+        ...newCitations,
+      ]);
+    });
+  });
+
+  describe('#updateError', () => {
     const testPayload = {
       message: 'some error message',
       code: 500,
@@ -74,6 +128,23 @@ describe('generated answer slice', () => {
       expect(finalState.error).toEqual({
         message: 'a message',
         code: 500,
+        isRetryable: false,
+      });
+    });
+
+    it('should set retryable to true if the error code matches the retryable error code', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, answer: 'I exist'},
+        updateError({
+          message: 'a message',
+          code: RETRYABLE_STREAM_ERROR_CODE,
+        })
+      );
+
+      expect(finalState.error).toEqual({
+        message: 'a message',
+        code: RETRYABLE_STREAM_ERROR_CODE,
+        isRetryable: true,
       });
     });
 
@@ -86,7 +157,10 @@ describe('generated answer slice', () => {
         updateError(testErrorPayload)
       );
 
-      expect(finalState.error).toEqual(testErrorPayload);
+      expect(finalState.error).toEqual({
+        ...testErrorPayload,
+        isRetryable: false,
+      });
     });
 
     it('should accept an error payload without a code', () => {
@@ -98,7 +172,10 @@ describe('generated answer slice', () => {
         updateError(testErrorPayload)
       );
 
-      expect(finalState.error).toEqual(testErrorPayload);
+      expect(finalState.error).toEqual({
+        ...testErrorPayload,
+        isRetryable: false,
+      });
     });
   });
 
