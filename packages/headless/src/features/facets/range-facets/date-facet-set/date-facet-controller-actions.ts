@@ -50,6 +50,6 @@ export const executeToggleDateFacetExclude = createAsyncThunk<
     validatePayload(payload, definition);
     dispatch(toggleExcludeDateFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
-    dispatch(updateFacetOptions({freezeFacetOrder: true}));
+    dispatch(updateFacetOptions());
   }
 );
