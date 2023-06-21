@@ -110,8 +110,8 @@ describe('logCopyToClipboard', () => {
   });
 });
 
-describe('logCaseSendAsEmail', () => {
-  it('should log #logCaseSendAsEmail with the right payload', async () => {
+describe('logCaseSendEmail', () => {
+  it('should log #logCaseSendEmail with the right payload', async () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         search: buildMockSearchState({
