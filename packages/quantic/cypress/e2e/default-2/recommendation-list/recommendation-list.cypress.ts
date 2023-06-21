@@ -70,6 +70,7 @@ describe('quantic-recommendation-list', () => {
       setRecommendationsAlias();
 
       scope('when loading the page', () => {
+        Expect.logRecommendationInterfaceLoad(recommendationsAlias);
         Expect.events.receivedEvent(true, registerRecommendationTemplatesEvent);
         Expect.displayLabel(label, defaultHeadingLevel);
         Expect.displayRecommendations(true);
@@ -81,7 +82,7 @@ describe('quantic-recommendation-list', () => {
           defaultNumberOfRecommendationsPerRow
         );
         Actions.clickRecommendationLink(0);
-        Expect.logRecommendationOpen();
+        Expect.logRecommendationOpen(0, recommendationsAlias);
       });
     });
   });
@@ -106,6 +107,7 @@ describe('quantic-recommendation-list', () => {
       setRecommendationsAlias();
 
       scope('when loading the page', () => {
+        Expect.logRecommendationInterfaceLoad(recommendationsAlias);
         Expect.events.receivedEvent(true, registerRecommendationTemplatesEvent);
         Expect.displayLabel(label, customHeadingLevel);
         Expect.displayRecommendations(true);
@@ -116,6 +118,8 @@ describe('quantic-recommendation-list', () => {
         Expect.correctNumberOfRecommendationsPerRow(
           customNumberOfRecommendationsPerRow
         );
+        Actions.clickRecommendationLink(0);
+        Expect.logRecommendationOpen(0, recommendationsAlias);
       });
     });
   });

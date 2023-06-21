@@ -7,6 +7,13 @@ import {
   RecommendationListSelectors,
 } from './recommendation-list-selectors';
 
+interface Result {
+  documentId: {contentIdKey: string; contentIdValue: string};
+  title: string;
+  uri: string;
+  raw: {permanentid: string; urihash: string};
+}
+
 export function recommendationListExpectations(
   selector: RecommendationListSelector
 ) {
@@ -110,10 +117,55 @@ export function recommendationListExpectations(
         );
     },
 
-    logRecommendationOpen: () => {
-      cy.wait(InterceptAliases.UA.RecommendationOpen).logDetail(
-        'should log the recommendation open UA event'
-      );
+    logRecommendationOpen: (index: number, recommendationsAlias: string) => {
+      cy.wait(InterceptAliases.UA.RecommendationOpen)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          const customData = analyticsBody?.customData;
+          cy.get<Array<Result>>(recommendationsAlias).then(
+            (recommendations) => {
+              const recommendation = recommendations[index];
+              expect(analyticsBody).to.have.property(
+                'documentTitle',
+                recommendation.title
+              );
+              expect(analyticsBody).to.have.property(
+                'documentUri',
+                recommendation.uri
+              );
+              expect(analyticsBody).to.have.property(
+                'documentUriHash',
+                recommendation.raw.urihash
+              );
+              expect(analyticsBody).to.have.property(
+                'documentUrl',
+                recommendation.uri
+              );
+              expect(customData).to.have.property(
+                'contentIDValue',
+                recommendation.raw.permanentid
+              );
+            }
+          );
+        })
+        .logDetail('should log the recommendation open UA event');
+    },
+
+    logRecommendationInterfaceLoad: (recommendationsAlias: string) => {
+      cy.wait(InterceptAliases.UA.RecommendationInterfaceLoad)
+        .then((interception) => {
+          const analyticsBody = interception.request.body;
+          cy.get<Array<Result>>(recommendationsAlias).then(
+            (recommendations) => {
+              const expectedPayload = recommendations.map((rec) => ({
+                documentUri: rec.uri,
+                documentUriHash: rec.raw.urihash,
+              }));
+              expect(analyticsBody.results).to.eql(expectedPayload);
+            }
+          );
+        })
+        .logDetail('should log the "recommendationInterfaceLoad" UA event');
     },
   };
 }
