@@ -48,18 +48,22 @@ describe('c-quantic-heading', () => {
     const element = createTestComponent();
     await flushPromises();
 
-    const label = element.shadowRoot.querySelector(`${selectors.label} > ${expectedTag}`);
+    const label = element.shadowRoot.querySelector(
+      `${selectors.label} > ${expectedTag}`
+    );
     expect(label).not.toBeNull();
     expect(label.innerText).toBe(exampleLabel);
   });
 
   describe('when an invalid value of the level property is used', () => {
     it('should display the label in a "div" tag', async () => {
-      const expectedTag = 'div'
+      const expectedTag = 'div';
       const element = createTestComponent({...defaultOptions, level: 7});
       await flushPromises();
 
-      const label = element.shadowRoot.querySelector(`${selectors.label} > ${expectedTag}`);
+      const label = element.shadowRoot.querySelector(
+        `${selectors.label} > ${expectedTag}`
+      );
       expect(label).not.toBeNull();
       expect(label.innerText).toBe(exampleLabel);
     });
