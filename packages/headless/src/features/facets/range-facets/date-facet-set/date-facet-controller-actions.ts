@@ -7,7 +7,10 @@ import {
 } from '../../../../state/state-sections';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions';
+import {
+  executeToggleRangeFacetExclude,
+  executeToggleRangeFacetSelect,
+} from '../generic/range-facet-controller-actions';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {
   toggleExcludeDateFacetValue,
@@ -49,7 +52,7 @@ export const executeToggleDateFacetExclude = createAsyncThunk<
   (payload, {dispatch, extra: {validatePayload}}) => {
     validatePayload(payload, definition);
     dispatch(toggleExcludeDateFacetValue(payload));
-    dispatch(executeToggleRangeFacetSelect(payload));
+    dispatch(executeToggleRangeFacetExclude(payload));
     dispatch(updateFacetOptions());
   }
 );
