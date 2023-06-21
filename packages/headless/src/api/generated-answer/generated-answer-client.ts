@@ -132,7 +132,6 @@ export class GeneratedAnswerAPIClient {
           } else {
             refreshTimeout();
           }
-          refreshTimeout();
         };
 
         source.onerror = () => {

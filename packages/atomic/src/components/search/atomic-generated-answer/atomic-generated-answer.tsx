@@ -51,8 +51,15 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
+  private get hasError() {
+    return !!(
+      this.searchStatusState.hasError || this.generatedAnswerState.error
+    );
+  }
+
   private get hideComponent() {
-    return this.searchStatusState.hasError || this.generatedAnswerState.error;
+    const {isLoading, answer} = this.generatedAnswerState;
+    return !(isLoading || answer !== undefined) || this.hasError;
   }
 
   public render() {
