@@ -7,12 +7,16 @@ import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   logFacetClearAll,
+  logFacetExclude,
   logFacetSelect,
   logFacetShowLess,
   logFacetShowMore,
   logFacetUpdateSort,
 } from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
-import {getProductListingAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-product-listing-utils';
+import {
+  getProductListingAnalyticsActionForToggleFacetExclude,
+  getProductListingAnalyticsActionForToggleFacetSelect,
+} from '../../../features/facets/facet-set/facet-set-product-listing-utils';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
@@ -83,9 +87,15 @@ export function buildFacet(
     return buildFacetSearch(engine, {
       options: {facetId: getFacetId(), ...facetSearch},
       select: (value) => {
-        dispatch(updateFacetOptions({freezeFacetOrder: true}));
+        dispatch(updateFacetOptions());
         dispatch(fetchProductListing()).then(() =>
           logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
+        );
+      },
+      exclude: (value) => {
+        dispatch(updateFacetOptions());
+        dispatch(fetchProductListing()).then(() =>
+          logFacetExclude({facetId: getFacetId(), facetValue: value.rawValue})
         );
       },
       isForFieldSuggestions: false,
@@ -105,6 +115,17 @@ export function buildFacet(
       dispatch(fetchProductListing());
       dispatch(
         getProductListingAnalyticsActionForToggleFacetSelect(
+          getFacetId(),
+          selection
+        )
+      );
+    },
+
+    toggleExclude: (selection: FacetValue) => {
+      coreController.toggleExclude(selection);
+      dispatch(fetchProductListing());
+      dispatch(
+        getProductListingAnalyticsActionForToggleFacetExclude(
           getFacetId(),
           selection
         )

@@ -114,9 +114,7 @@ describe('date facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       dateFacet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   }
 

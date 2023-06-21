@@ -74,9 +74,7 @@ describe('range facet', () => {
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -110,9 +108,7 @@ describe('range facet', () => {
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
       rangeFacet.sortBy('descending');
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 

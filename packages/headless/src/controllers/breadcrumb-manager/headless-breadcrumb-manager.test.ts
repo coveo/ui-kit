@@ -80,12 +80,16 @@ describe('headless breadcrumb manager', () => {
   });
 
   describe('facet breadcrumbs', () => {
-    let mockValue: FacetValue;
+    let mockSelectedValue: FacetValue;
+    let mockExcludedValue: FacetValue;
     let facetBreadcrumbs: FacetBreadcrumb[];
 
     beforeEach(() => {
-      mockValue = buildMockFacetValue({
+      mockSelectedValue = buildMockFacetValue({
         state: 'selected',
+      });
+      mockExcludedValue = buildMockFacetValue({
+        state: 'excluded',
       });
 
       state = createMockState({
@@ -93,7 +97,12 @@ describe('headless breadcrumb manager', () => {
           ...getSearchInitialState(),
           response: {
             ...getSearchInitialState().response,
-            facets: [buildMockFacetResponse({facetId, values: [mockValue]})],
+            facets: [
+              buildMockFacetResponse({
+                facetId,
+                values: [mockSelectedValue, mockExcludedValue],
+              }),
+            ],
           },
         },
         facetSet: {
@@ -108,7 +117,8 @@ describe('headless breadcrumb manager', () => {
     });
 
     it('#state gets facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
+      expect(facetBreadcrumbs[0].values[0].value).toBe(mockSelectedValue);
+      expect(facetBreadcrumbs[0].values[1].value).toBe(mockExcludedValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -121,7 +131,7 @@ describe('headless breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
         })
       );
     });
@@ -141,18 +151,18 @@ describe('headless breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
         })
       );
     });
   });
 
   describe('date facet breadcrumbs', () => {
-    let mockValue: DateFacetValue;
+    let mockSelectedValue: DateFacetValue;
     let facetBreadcrumbs: DateFacetBreadcrumb[];
 
     beforeEach(() => {
-      mockValue = buildMockDateFacetValue({state: 'selected'});
+      mockSelectedValue = buildMockDateFacetValue({state: 'selected'});
 
       state = createMockState({
         search: {
@@ -160,7 +170,10 @@ describe('headless breadcrumb manager', () => {
           response: {
             ...getSearchInitialState().response,
             facets: [
-              buildMockDateFacetResponse({facetId, values: [mockValue]}),
+              buildMockDateFacetResponse({
+                facetId,
+                values: [mockSelectedValue],
+              }),
             ],
           },
         },
@@ -176,7 +189,7 @@ describe('headless breadcrumb manager', () => {
     });
 
     it('#state gets date facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
+      expect(facetBreadcrumbs[0].values[0].value).toBe(mockSelectedValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -189,7 +202,7 @@ describe('headless breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectDateFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
         })
       );
     });
@@ -199,18 +212,18 @@ describe('headless breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectDateFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
         })
       );
     });
   });
 
   describe('numeric facet breadcrumbs', () => {
-    let mockValue: NumericFacetValue;
+    let mockSelectedValue: NumericFacetValue;
     let facetBreadcrumbs: NumericFacetBreadcrumb[];
 
     beforeEach(() => {
-      mockValue = buildMockNumericFacetValue({state: 'selected'});
+      mockSelectedValue = buildMockNumericFacetValue({state: 'selected'});
 
       state = createMockState({
         search: {
@@ -218,7 +231,10 @@ describe('headless breadcrumb manager', () => {
           response: {
             ...getSearchInitialState().response,
             facets: [
-              buildMockNumericFacetResponse({facetId, values: [mockValue]}),
+              buildMockNumericFacetResponse({
+                facetId,
+                values: [mockSelectedValue],
+              }),
             ],
           },
         },
@@ -234,7 +250,7 @@ describe('headless breadcrumb manager', () => {
     });
 
     it('#state gets numeric facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
+      expect(facetBreadcrumbs[0].values[0].value).toBe(mockSelectedValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -247,7 +263,7 @@ describe('headless breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectNumericFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
         })
       );
     });
@@ -257,19 +273,19 @@ describe('headless breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectNumericFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
         })
       );
     });
   });
 
   describe('category facet breadcrumbs', () => {
-    let mockValue: CategoryFacetValue;
+    let mockSelectedValue: CategoryFacetValue;
     let facetBreadcrumbs: CategoryFacetBreadcrumb[];
     const otherFacetId = 'def456';
 
     beforeEach(() => {
-      mockValue = buildMockCategoryFacetValue({state: 'selected'});
+      mockSelectedValue = buildMockCategoryFacetValue({state: 'selected'});
 
       state = createMockState({
         search: {
@@ -277,10 +293,13 @@ describe('headless breadcrumb manager', () => {
           response: {
             ...getSearchInitialState().response,
             facets: [
-              buildMockCategoryFacetResponse({facetId, values: [mockValue]}),
+              buildMockCategoryFacetResponse({
+                facetId,
+                values: [mockSelectedValue],
+              }),
               buildMockCategoryFacetResponse({
                 facetId: otherFacetId,
-                values: [mockValue],
+                values: [mockSelectedValue],
               }),
             ],
           },
@@ -304,8 +323,8 @@ describe('headless breadcrumb manager', () => {
     });
 
     it('#state gets category facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].path).toEqual([mockValue]);
-      expect(facetBreadcrumbs[1].path).toEqual([mockValue]);
+      expect(facetBreadcrumbs[0].path).toEqual([mockSelectedValue]);
+      expect(facetBreadcrumbs[1].path).toEqual([mockSelectedValue]);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -385,9 +404,9 @@ describe('headless breadcrumb manager', () => {
     state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
       request: buildMockNumericFacetRequest({facetId}),
     });
-    const mockValue = buildMockNumericFacetValue({state: 'selected'});
+    const mockSelectedValue = buildMockNumericFacetValue({state: 'selected'});
     state.search.response.facets = [
-      buildMockNumericFacetResponse({facetId, values: [mockValue]}),
+      buildMockNumericFacetResponse({facetId, values: [mockSelectedValue]}),
     ];
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
   });

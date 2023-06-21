@@ -16,7 +16,9 @@ export type DisableFacetActionCreatorPayload = string;
 
 export const updateFacetOptions = createAction(
   'facetOptions/update',
-  (payload: UpdateFacetOptionsActionCreatorPayload) =>
+  (
+    payload: UpdateFacetOptionsActionCreatorPayload = {freezeFacetOrder: true}
+  ) =>
     validatePayload(payload, {
       freezeFacetOrder: new BooleanValue({required: false}),
     })

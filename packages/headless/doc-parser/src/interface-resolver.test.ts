@@ -1,3 +1,4 @@
+import {facetValueStates} from '../../src/features/facets/facet-api/value';
 import {buildMockApiCallSignature} from '../mocks/mock-api-call-signature';
 import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
 import {buildMockApiIndexSignature} from '../mocks/mock-api-index-signature';
@@ -448,7 +449,7 @@ describe('#resolveInterfaceMembers', () => {
       name: 'FacetValueState',
       excerptTokens: [
         buildContentExcerptToken('declare type FacetValueState = '),
-        buildContentExcerptToken("'idle' | 'selected'"),
+        buildContentExcerptToken("'idle' | 'selected' | 'excluded'"),
         buildContentExcerptToken(';'),
       ],
       typeTokenRange: {startIndex: 1, endIndex: 2},
@@ -461,7 +462,7 @@ describe('#resolveInterfaceMembers', () => {
     const result = resolveInterfaceMembers(entry, apiInterface, []);
     const entity = buildMockEntityWithTypeAlias({
       name: 'state',
-      type: "'idle' | 'selected'",
+      type: facetValueStates.map((s) => `'${s}'`).join(' | '),
     });
 
     expect(result).toEqual([entity]);
