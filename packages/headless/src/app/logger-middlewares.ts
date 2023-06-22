@@ -1,6 +1,5 @@
-import {SerializedError} from '@reduxjs/toolkit';
+import {Middleware, SerializedError} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {Middleware} from 'redux';
 
 export const logActionErrorMiddleware: (logger: Logger) => Middleware =
   (logger) => () => (next) => (action) => {

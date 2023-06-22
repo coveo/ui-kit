@@ -1,4 +1,5 @@
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
+import {buildMockCitation} from '../../test/mock-citation';
 import {
   resetAnswer,
   setIsLoading,
@@ -44,14 +45,7 @@ describe('generated answer slice', () => {
 
   describe('#updateCitations', () => {
     it('Adds the given citations to the state', () => {
-      const newCitations = [
-        {
-          id: 'some-id',
-          title: 'Some Title',
-          uri: 'www.someuri.com',
-          permanentid: 'some-permanent-id-123',
-        },
-      ];
+      const newCitations = [buildMockCitation()];
       const finalState = generatedAnswerReducer(
         {
           ...getGeneratedAnswerInitialState(),
@@ -63,21 +57,11 @@ describe('generated answer slice', () => {
     });
 
     it('Appends the given citations to existing citations', () => {
-      const existingCitations = [
-        {
-          id: 'some-id',
-          title: 'Some Title',
-          uri: 'www.someuri.com',
-          permanentid: 'some-permanent-id-123',
-        },
-      ];
+      const existingCitations = [buildMockCitation()];
       const newCitations = [
-        {
+        buildMockCitation({
           id: 'some-other-id',
-          title: 'Some Other Title',
-          uri: 'www.someuri.com',
-          permanentid: 'some-other-permanent-id-123',
-        },
+        }),
       ];
       const finalState = generatedAnswerReducer(
         {
