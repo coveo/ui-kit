@@ -12,7 +12,6 @@ import {
   GeneratedAnswerMessagePayload,
   GeneratedAnswerPayloadType,
   GeneratedAnswerStreamEventData,
-  GeneratedAnswerStreamFinishReason,
 } from './generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request';
 
@@ -85,9 +84,9 @@ export class GeneratedAnswerAPIClient {
       payloadType: GeneratedAnswerPayloadType,
       payload: string
     ) => {
-      if (payloadType === GeneratedAnswerPayloadType.Message) {
+      if (payloadType === 'genqa.citationsType') {
         onMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload);
-      } else if (payloadType === GeneratedAnswerPayloadType.Citations) {
+      } else if (payloadType === 'genqa.messageType') {
         onCitations(JSON.parse(payload) as GeneratedAnswerCitationsPayload);
       }
     };
@@ -110,7 +109,7 @@ export class GeneratedAnswerAPIClient {
           const data: GeneratedAnswerStreamEventData = JSON.parse(
             (event as MessageEvent).data
           );
-          if (data.finishReason === GeneratedAnswerStreamFinishReason.Error) {
+          if (data.finishReason === 'ERROR') {
             clearTimeout(timeout);
             onError({
               message: data.errorMessage,
@@ -122,9 +121,7 @@ export class GeneratedAnswerAPIClient {
             handleStreamPayload(data.payloadType, data.payload);
           }
 
-          if (
-            data.finishReason === GeneratedAnswerStreamFinishReason.Completed
-          ) {
+          if (data.finishReason === 'COMPLETED') {
             clearTimeout(timeout);
             onCompleted();
           } else {
