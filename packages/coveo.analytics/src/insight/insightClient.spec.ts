@@ -210,6 +210,18 @@ describe('InsightClient', () => {
             expectMatchPayload(SearchPageEvents.facetSelect, meta);
         });
 
+        it('should send proper payload for #logFacetExclude', async () => {
+            const meta = {
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
+
+            await client.logFacetExclude(meta);
+            expectMatchPayload(SearchPageEvents.facetExclude, meta);
+        });
+
         it('should send proper payload for #logFacetDeselect', async () => {
             const meta = {
                 facetField: '@foo',
@@ -613,6 +625,29 @@ describe('InsightClient', () => {
 
             await client.logFacetSelect(metadata);
             expectMatchPayload(SearchPageEvents.facetSelect, expectedMetadata);
+        });
+
+        it('should send proper payload for #logFacetExclude', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
+
+            await client.logFacetExclude(metadata);
+            expectMatchPayload(SearchPageEvents.facetExclude, expectedMetadata);
         });
 
         it('should send proper payload for #logFacetDeselect', async () => {
