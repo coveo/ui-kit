@@ -3,13 +3,9 @@ import noFilterForCurrentTab from '@salesforce/label/c.quantic_NoFilterForCurren
 import noFiltersAvailableForThisQuery from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQuery';
 import sortAndFilters from '@salesforce/label/c.quantic_SortAndFilters';
 import viewResults from '@salesforce/label/c.quantic_ViewResults';
-import {
-  getHeadlessBundle,
-  initializeWithHeadless,
-  registerComponentForInit,
-  getAllFacetsFromStore,
-} from 'c/quanticHeadlessLoader';
-import {LightningElement, api} from 'lwc';
+import { getHeadlessBundle, initializeWithHeadless, registerComponentForInit, getAllFacetsFromStore } from 'c/quanticHeadlessLoader';
+import { LightningElement, api } from 'lwc';
+
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").QuerySummary} QuerySummary */
@@ -32,7 +28,7 @@ import {LightningElement, api} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters">
+ * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters" disable-dynamic-navigation={disableDynamicNavigationEnabled}>
  *   <div slot="refine-title">Custom Title</div>
  *   <div slot="button-content">
  *     Custom Label
@@ -75,6 +71,12 @@ export default class QuanticRefineToggle extends LightningElement {
    * @type {string}
    */
   @api title = this.labels.sortAndFilters;
+  /**
+   * Indicates whether the Dynamic Navigation for facet ordering should be disabled.
+   * @api
+   * @type {boolean}
+   */
+  @api disableDynamicNavigation;
 
   /** @type {QuerySummary} */
   querySummary;

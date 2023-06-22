@@ -3,17 +3,12 @@ import filters from '@salesforce/label/c.quantic_Filters';
 import QuanticCategoryFacet from 'c/quanticCategoryFacet';
 import QuanticDateFacet from 'c/quanticDateFacet';
 import QuanticFacet from 'c/quanticFacet';
-import {
-  getAllFacetsFromStore,
-  getHeadlessBundle,
-} from 'c/quanticHeadlessLoader';
-import {
-  initializeWithHeadless,
-  registerComponentForInit,
-} from 'c/quanticHeadlessLoader';
+import { getAllFacetsFromStore, getHeadlessBundle } from 'c/quanticHeadlessLoader';
+import { initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
 import QuanticNumericFacet from 'c/quanticNumericFacet';
 import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
-import {LightningElement, api} from 'lwc';
+import { LightningElement, api } from 'lwc';
+
 
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -52,6 +47,12 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @type {boolean}
    */
   @api hideSort;
+  /**
+   * Indicates whether the Dynamic Navigation for facet ordering should be disabled.
+   * @api
+   * @type {boolean}
+   */
+  @api disableDynamicNavigation;
 
   /** @type {object} */
   data;
