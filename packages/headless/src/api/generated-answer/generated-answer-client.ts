@@ -3,7 +3,7 @@ import {Logger} from 'pino';
 import {SearchAppState} from '../..';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {SSEErrorPayload} from '../../features/generated-answer/generated-answer-actions';
+import {GeneratedAnswerErrorPayload} from '../../features/generated-answer/generated-answer-actions';
 import {URLPath} from '../../utils/url-utils';
 import {resetTimeout} from '../../utils/utils';
 import {SearchAPIClient} from '../search/search-api-client';
@@ -46,7 +46,7 @@ export class GeneratedAnswerAPIClient {
     params: GeneratedAnswerStreamRequest,
     onMessage: (payload: GeneratedAnswerMessagePayload) => void,
     onCitations: (payload: GeneratedAnswerCitationsPayload) => void,
-    onError: (payload: SSEErrorPayload) => void,
+    onError: (payload: GeneratedAnswerErrorPayload) => void,
     onCompleted: () => void
   ) {
     const {url, organizationId, streamId, accessToken} = params;

@@ -35,7 +35,7 @@ const citationSchema = {
   clickUri: optionalStringValue,
 };
 
-export interface SSEErrorPayload {
+export interface GeneratedAnswerErrorPayload {
   message?: string;
   code?: number;
 }
@@ -63,7 +63,7 @@ export const updateCitations = createAction(
 
 export const updateError = createAction(
   'generatedAnswer/updateError',
-  (payload: SSEErrorPayload) =>
+  (payload: GeneratedAnswerErrorPayload) =>
     validatePayload(payload, {
       message: new StringValue({required: false}),
       code: new NumberValue({min: 0}),
@@ -103,7 +103,7 @@ export const streamAnswer = createAsyncThunk<
   const onCitations = (payload: GeneratedAnswerCitationsPayload) =>
     dispatch(updateCitations(payload));
 
-  const onError = (error: SSEErrorPayload) => {
+  const onError = (error: GeneratedAnswerErrorPayload) => {
     source?.close();
     dispatch(updateError(error));
   };
