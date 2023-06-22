@@ -196,7 +196,7 @@ export default class QuanticRecommendationList extends LightningElement {
     if (this.variant === 'grid' || this.recommendationsPerRow === 1) {
       return rec;
     }
-    let recCSSClass = 'recommendation-item__container ';
+    let recCSSClass = 'recommendation-item__container slds-var-p-top_x-small ';
     const recIsFirstInThePage = index % this.recommendationsPerRow === 0;
     const recIsLastInThePage =
       index % this.recommendationsPerRow === this.recommendationsPerRow - 1;
