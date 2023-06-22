@@ -72,6 +72,10 @@ export const updateError = createAction(
 
 export const resetAnswer = createAction('generatedAnswer/resetAnswer');
 
+export const likeGeneratedAnswer = createAction('generatedAnswer/like');
+
+export const dislikeGeneratedAnswer = createAction('generatedAnswer/dislike');
+
 export const setIsLoading = createAction(
   'generatedAnswer/setIsLoading',
   (payload: boolean) => validatePayload(payload, booleanValue)

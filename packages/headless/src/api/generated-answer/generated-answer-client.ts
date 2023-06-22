@@ -84,9 +84,9 @@ export class GeneratedAnswerAPIClient {
       payloadType: GeneratedAnswerPayloadType,
       payload: string
     ) => {
-      if (payloadType === 'genqa.citationsType') {
+      if (payloadType === 'genqa.messageType') {
         onMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload);
-      } else if (payloadType === 'genqa.messageType') {
+      } else if (payloadType === 'genqa.citationsType') {
         onCitations(JSON.parse(payload) as GeneratedAnswerCitationsPayload);
       }
     };

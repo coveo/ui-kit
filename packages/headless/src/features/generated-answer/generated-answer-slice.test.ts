@@ -1,6 +1,8 @@
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
 import {buildMockCitation} from '../../test/mock-citation';
 import {
+  dislikeGeneratedAnswer,
+  likeGeneratedAnswer,
   resetAnswer,
   setIsLoading,
   updateCitations,
@@ -13,16 +15,15 @@ import {getGeneratedAnswerInitialState} from './generated-answer-state';
 const baseState = {
   isLoading: false,
   citations: [],
+  liked: false,
+  disliked: false,
 };
 
 describe('generated answer slice', () => {
   it('initializes the state correctly', () => {
     const finalState = generatedAnswerReducer(undefined, {type: ''});
 
-    expect(finalState).toEqual({
-      citations: [],
-      isLoading: false,
-    });
+    expect(finalState).toEqual(baseState);
   });
 
   describe('#updateMessage', () => {
@@ -85,7 +86,7 @@ describe('generated answer slice', () => {
     };
     it('should set isLoading to false', () => {
       const finalState = generatedAnswerReducer(
-        {isLoading: true, citations: []},
+        {...baseState, isLoading: true},
         updateError(testPayload)
       );
 
@@ -103,7 +104,7 @@ describe('generated answer slice', () => {
 
     it('should set given error values', () => {
       const finalState = generatedAnswerReducer(
-        {...baseState, answer: 'I exist'},
+        baseState,
         updateError({
           message: 'a message',
           code: 500,
@@ -179,6 +180,29 @@ describe('generated answer slice', () => {
     const finalState = generatedAnswerReducer(state, resetAnswer());
 
     expect(finalState).toEqual(getGeneratedAnswerInitialState());
+  });
+
+  it('#likeGeneratedAnswer should set the answer as liked in the state', () => {
+    const finalState = generatedAnswerReducer(baseState, likeGeneratedAnswer());
+
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      liked: true,
+      disliked: false,
+    });
+  });
+
+  it('#dislikeGeneratedAnswer should set the answer as liked in the state', () => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      dislikeGeneratedAnswer()
+    );
+
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      liked: false,
+      disliked: true,
+    });
   });
 
   describe('#setIsLoading', () => {

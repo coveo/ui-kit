@@ -4,6 +4,8 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   streamAnswer,
   resetAnswer,
+  likeGeneratedAnswer,
+  dislikeGeneratedAnswer,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
@@ -111,10 +113,12 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     },
 
     likeGeneratedAnswer() {
+      dispatch(likeGeneratedAnswer());
       dispatch(logLikeGeneratedAnswer());
     },
 
     dislikeGeneratedAnswer() {
+      dispatch(dislikeGeneratedAnswer());
       dispatch(logDislikeGeneratedAnswer());
     },
 

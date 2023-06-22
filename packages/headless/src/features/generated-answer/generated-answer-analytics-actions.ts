@@ -8,7 +8,7 @@ import {
 
 export const logRetryGeneratedAnswer = (): SearchAction =>
   makeAnalyticsAction(
-    'generatedAnswer/logRetryGeneratedAnswer',
+    'analytics/generatedAnswer/retry',
     AnalyticsType.Search,
     (client) => client.makeRetryGeneratedAnswer()
   );
@@ -17,7 +17,7 @@ export const logOpenGeneratedAnswerSource = (
   citation: GeneratedAnswerCitation
 ): CustomAction =>
   makeAnalyticsAction(
-    'generatedAnswer/logOpenGeneratedAnswerSource',
+    'analytics/generatedAnswer/openSource',
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
@@ -33,7 +33,7 @@ export const logOpenGeneratedAnswerSource = (
 
 export const logLikeGeneratedAnswer = (): CustomAction =>
   makeAnalyticsAction(
-    'generatedAnswer/logLikeGeneratedAnswer',
+    'analytics/generatedAnswer/like',
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
@@ -47,7 +47,7 @@ export const logLikeGeneratedAnswer = (): CustomAction =>
 
 export const logDislikeGeneratedAnswer = (): CustomAction =>
   makeAnalyticsAction(
-    'generatedAnswer/logDislikeGeneratedAnswer',
+    'analytics/generatedAnswer/dislike',
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
