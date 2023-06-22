@@ -65,7 +65,7 @@ export const updateError = createAction(
   'generatedAnswer/updateError',
   (payload: GeneratedAnswerErrorPayload) =>
     validatePayload(payload, {
-      message: new StringValue({required: false}),
+      message: optionalStringValue,
       code: new NumberValue({min: 0}),
     })
 );

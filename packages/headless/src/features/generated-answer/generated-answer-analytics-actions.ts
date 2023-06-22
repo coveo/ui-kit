@@ -1,10 +1,13 @@
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {
   AnalyticsType,
   CustomAction,
   SearchAction,
   makeAnalyticsAction,
 } from '../analytics/analytics-utils';
+import {
+  citationSourceSelector,
+  generativeQuestionAnsweringIdSelector,
+} from './generated-answer-selectors';
 
 export const logRetryGeneratedAnswer = (): SearchAction =>
   makeAnalyticsAction(
@@ -14,15 +17,18 @@ export const logRetryGeneratedAnswer = (): SearchAction =>
   );
 
 export const logOpenGeneratedAnswerSource = (
-  citation: GeneratedAnswerCitation
+  citationId: string
 ): CustomAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/openSource',
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
-        state.search?.response?.extendedResults
-          ?.generativeQuestionAnsweringId ?? '';
+        generativeQuestionAnsweringIdSelector(state);
+      const citation = citationSourceSelector(state, citationId);
+      if (!generativeQuestionAnsweringId || !citation) {
+        return null;
+      }
       return client.makeOpenGeneratedAnswerSource({
         generativeQuestionAnsweringId,
         permanentId: citation.permanentid,
@@ -37,8 +43,10 @@ export const logLikeGeneratedAnswer = (): CustomAction =>
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
-        state.search?.response?.extendedResults
-          ?.generativeQuestionAnsweringId ?? '';
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
       return client.makeLikeGeneratedAnswer({
         generativeQuestionAnsweringId,
       });
@@ -51,8 +59,10 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
-        state.search?.response?.extendedResults
-          ?.generativeQuestionAnsweringId ?? '';
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
       return client.makeDislikeGeneratedAnswer({
         generativeQuestionAnsweringId,
       });

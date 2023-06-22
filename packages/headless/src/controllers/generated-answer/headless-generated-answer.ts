@@ -35,17 +35,18 @@ export interface GeneratedAnswer {
    */
   retry(): void;
   /**
-   * Logs a custom event indicating a generated answer is relevant.
+   * Determines if the generated answer was liked, or upvoted by the end user.
    */
-  likeGeneratedAnswer(): void;
+  like(): void;
   /**
-   * Logs a custom event indicating a generated answer is irrelevant.
+   * Determines if the generated answer was disliked, or downvoted by the end user.
    */
-  dislikeGeneratedAnswer(): void;
+  dislike(): void;
   /**
    * Logs a custom event indicating a cited source link was clicked.
+   * @param id The ID of the clicked citation.
    */
-  logCitationClick(citation: GeneratedAnswerCitation): void;
+  logCitationClick(id: string): void;
 }
 
 /**
@@ -112,18 +113,18 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
       dispatch(executeSearch(logRetryGeneratedAnswer()));
     },
 
-    likeGeneratedAnswer() {
+    like() {
       dispatch(likeGeneratedAnswer());
       dispatch(logLikeGeneratedAnswer());
     },
 
-    dislikeGeneratedAnswer() {
+    dislike() {
       dispatch(dislikeGeneratedAnswer());
       dispatch(logDislikeGeneratedAnswer());
     },
 
-    logCitationClick(citation: GeneratedAnswerCitation) {
-      dispatch(logOpenGeneratedAnswerSource(citation));
+    logCitationClick(citationId: string) {
+      dispatch(logOpenGeneratedAnswerSource(citationId));
     },
   };
 }

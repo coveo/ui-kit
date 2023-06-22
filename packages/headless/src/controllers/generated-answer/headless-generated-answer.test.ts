@@ -55,14 +55,14 @@ describe('generated answer', () => {
   });
 
   it('#likeGeneratedAnswer dispatches analytics action', () => {
-    generatedAnswer.likeGeneratedAnswer();
+    generatedAnswer.like();
     const action = engine.findAsyncAction(logLikeGeneratedAnswer().pending);
 
     expect(action).toBeTruthy();
   });
 
   it('#dislikeGeneratedAnswer dispatches analytics action', () => {
-    generatedAnswer.dislikeGeneratedAnswer();
+    generatedAnswer.dislike();
     const action = engine.findAsyncAction(logDislikeGeneratedAnswer().pending);
 
     expect(action).toBeTruthy();
@@ -71,9 +71,9 @@ describe('generated answer', () => {
   it('#logCitationClick dispatches analytics action', () => {
     const testCitation = buildMockCitation();
 
-    generatedAnswer.logCitationClick(testCitation);
+    generatedAnswer.logCitationClick(testCitation.id);
     const action = engine.findAsyncAction(
-      logOpenGeneratedAnswerSource(testCitation).pending
+      logOpenGeneratedAnswerSource(testCitation.id).pending
     );
 
     expect(action).toBeTruthy();
