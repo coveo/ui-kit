@@ -12,6 +12,7 @@ interface Result {
   title: string;
   uri: string;
   raw: {permanentid: string; urihash: string};
+  ClickUri: string;
 }
 
 export function recommendationListExpectations(
@@ -139,7 +140,7 @@ export function recommendationListExpectations(
               );
               expect(analyticsBody).to.have.property(
                 'documentUrl',
-                recommendation.uri
+                recommendation.ClickUri
               );
               expect(customData).to.have.property(
                 'contentIDValue',
