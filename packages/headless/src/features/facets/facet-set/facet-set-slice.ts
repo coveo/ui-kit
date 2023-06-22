@@ -285,7 +285,7 @@ export const defaultFacetOptions: FacetOptionalParameters = {
   sortCriteria: 'automatic',
 };
 
-function buildFacetRequest(
+export function buildFacetRequest(
   config: RegisterFacetActionCreatorPayload
 ): FacetRequest {
   return {

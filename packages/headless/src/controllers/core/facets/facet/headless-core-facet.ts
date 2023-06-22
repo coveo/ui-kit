@@ -338,16 +338,6 @@ export function buildCoreFacet(
 
   dispatch(registerFacet(registrationOptions));
 
-  const deletedFacetState: CoreFacetState = {
-    facetId: '',
-    values: [],
-    sortCriterion: 'automatic',
-    isLoading: false,
-    hasActiveValues: false,
-    canShowMoreValues: false,
-    canShowLessValues: false,
-    enabled: true,
-  };
   return {
     ...controller,
 
@@ -415,9 +405,6 @@ export function buildCoreFacet(
 
     get state() {
       const request = getRequest();
-      if (!request) {
-        return deletedFacetState;
-      }
       const response = getResponse();
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();

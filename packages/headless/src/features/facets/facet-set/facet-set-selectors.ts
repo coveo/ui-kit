@@ -5,6 +5,7 @@ import {
 import {FacetSection} from '../../../state/state-sections';
 import {getAutomaticFacetId} from '../automatic-facets/automatic-facets-utils';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
+import {buildFacetRequest} from './facet-set-slice';
 import {FacetResponse, FacetValue} from './interfaces/response';
 
 export type FacetResponseSection = SearchSection | ProductListingSection;
@@ -34,7 +35,13 @@ export const baseFacetResponseSelector = (
 };
 
 export const facetRequestSelector = (state: FacetSection, id: string) => {
-  return state.facetSet[id]?.request;
+  const temporaryRequestWhenFacetGetsRemovedFromDOM = buildFacetRequest({
+    facetId: id,
+    field: '',
+  });
+  return (
+    state.facetSet[id]?.request || temporaryRequestWhenFacetGetsRemovedFromDOM
+  );
 };
 
 function isFacetResponse(
