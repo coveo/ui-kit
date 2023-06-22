@@ -78,10 +78,6 @@ export const setIsLoading = createAction(
 );
 
 interface StreamAnswerArgs {
-  onMessage: (payload: GeneratedAnswerMessagePayload) => void;
-  onCitations: (payload: GeneratedAnswerCitationsPayload) => void;
-  onError: (payload: SSEErrorPayload) => void;
-  onCompleted: () => void;
   setEventSourceRef: (source: EventSourcePolyfill) => void;
 }
 
@@ -93,10 +89,25 @@ export const streamAnswer = createAsyncThunk<
   const state = config.getState();
   const {dispatch, extra} = config;
 
-  const {onMessage, onCitations, onError, onCompleted, setEventSourceRef} =
-    params;
+  const {setEventSourceRef} = params;
 
   const request = await buildStreamingRequest(state);
+
+  const onMessage = (payload: GeneratedAnswerMessagePayload) =>
+    dispatch(updateMessage(payload));
+
+  const onCitations = (payload: GeneratedAnswerCitationsPayload) =>
+    dispatch(updateCitations(payload));
+
+  const onError = (error: SSEErrorPayload) => {
+    source?.close();
+    dispatch(updateError(error));
+  };
+
+  const onCompleted = () => {
+    source?.close();
+    dispatch(setIsLoading(false));
+  };
 
   dispatch(setIsLoading(true));
   const source = extra.streamingClient?.streamGeneratedAnswer(

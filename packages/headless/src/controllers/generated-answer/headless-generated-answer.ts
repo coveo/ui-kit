@@ -1,18 +1,9 @@
 import {EventSourcePolyfill} from 'event-source-polyfill';
-import {
-  GeneratedAnswerCitation,
-  GeneratedAnswerCitationsPayload,
-  GeneratedAnswerMessagePayload,
-} from '../../api/generated-answer/generated-answer-event-payload';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
-  updateMessage,
-  updateError,
   streamAnswer,
   resetAnswer,
-  SSEErrorPayload,
-  updateCitations,
-  setIsLoading,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
@@ -71,22 +62,6 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   let lastRequestId: string;
   let lastStreamId: string;
 
-  const onMessage = (payload: GeneratedAnswerMessagePayload) =>
-    dispatch(updateMessage(payload));
-
-  const onCitations = (payload: GeneratedAnswerCitationsPayload) =>
-    dispatch(updateCitations(payload));
-
-  const onError = (error: SSEErrorPayload) => {
-    source?.close();
-    dispatch(updateError(error));
-  };
-
-  const onCompleted = () => {
-    source?.close();
-    dispatch(setIsLoading(false));
-  };
-
   const setEventSourceRef = (sourceRef: EventSourcePolyfill) => {
     source = sourceRef;
   };
@@ -114,10 +89,6 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
         lastStreamId = streamId;
         dispatch(
           streamAnswer({
-            onMessage,
-            onCitations,
-            onError,
-            onCompleted,
             setEventSourceRef,
           })
         );
