@@ -9,4 +9,5 @@
 .recommendation-item__content {
   height: 100%;
   overflow: hidden;
+  border-radius: var(--lwc-borderRadiusLarge, 0.5rem);
 }
