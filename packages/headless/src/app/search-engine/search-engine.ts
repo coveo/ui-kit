@@ -1,5 +1,5 @@
+import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {StateFromReducersMapObject} from 'redux';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {

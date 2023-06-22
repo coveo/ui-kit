@@ -4,12 +4,8 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": [
-    "CHANGELOG.md"
-  ],
-  "import": [
-    "@cspell/dict-fr-fr/cspell-ext.json"
-  ],
+  "ignorePaths": ["CHANGELOG.md"],
+  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
   "words": [
     "adjustednumberoflikes",
     "applitools",
@@ -19,6 +15,7 @@
     "attachtocase",
     "bazz",
     "behaviour",
+    "bloup",
     "btoashim",
     "cfcomment",
     "cfpage",
