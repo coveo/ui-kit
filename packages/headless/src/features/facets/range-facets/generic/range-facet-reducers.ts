@@ -92,8 +92,8 @@ export function toggleExcludeRangeValue<
     return;
   }
 
-  const isActive = value.state !== 'idle';
-  value.state = isActive ? 'idle' : 'excluded';
+  const isExcluded = value.state === 'excluded';
+  value.state = isExcluded ? 'idle' : 'excluded';
 
   request.preventAutoSelect = true;
 }

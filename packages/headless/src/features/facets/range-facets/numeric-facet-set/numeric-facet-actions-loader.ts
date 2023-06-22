@@ -54,7 +54,7 @@ export interface NumericFacetSetActionCreators {
   ): PayloadAction<ToggleSelectNumericFacetValueActionCreatorPayload>;
 
   /**
-   * Toggles the exclusion of a numeric facet value.
+   * Toggles exclusion of a numeric facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.

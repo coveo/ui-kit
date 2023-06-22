@@ -54,7 +54,7 @@ export interface DateFacetSetActionCreators {
   ): PayloadAction<ToggleSelectDateFacetValueActionCreatorPayload>;
 
   /**
-   * Toggles a date facet value.
+   * Toggles exclusion of a date facet value
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
