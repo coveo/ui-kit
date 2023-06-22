@@ -7,7 +7,7 @@
     </c-quantic-component-error>
   </template>
   <template if:false={errorMessage}>
-    <section aria-label="carousel">
+    <section aria-roledescription="carousel" aria-label="carousel">
       <div class="slds-grid carousel__container slds-is-relative">
         <lightning-button-icon
           class="carousel__previous-navigation slds-is-absolute"
@@ -33,13 +33,14 @@
         class="slds-grid slds-var-m-vertical_medium carousel__indicators-container"
       >
         <template for:each={carouselIndicators} for:item="indicator">
-          <button
-            key={indicator.index}
-            class={indicator.class}
-            title={indicator.title}
-            onclick={indicator.handleClick}
-            aria-current={indicator.current}
-          ></button>
+          <li key={indicator.index}>
+            <button
+              class={indicator.class}
+              title={indicator.title}
+              onclick={indicator.handleClick}
+              aria-current={indicator.current}
+            ></button>
+          </li>
         </template>
       </ul>
     </section>

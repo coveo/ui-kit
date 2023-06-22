@@ -1,8 +1,10 @@
+import xOfY from '@salesforce/label/c.quantic_XofY';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import carouselLayout from './templates/carousel.html';
@@ -29,6 +31,10 @@ import loadingTemplate from './templates/loading.html';
  * <c-quantic-recommendation-list engine-id={engineId} recommendation={recommendationId} fields-to-include="objecttype,filetype" number-of-recommendations="3" recommendations-per-row="10" heading-level="1"></c-quantic-recommendation-list>
  */
 export default class QuanticRecommendationList extends LightningElement {
+  labels = {
+    xOfY,
+  };
+
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -181,13 +187,12 @@ export default class QuanticRecommendationList extends LightningElement {
 
   get recommendations() {
     return (
-      this.state?.recommendations.map(
-        this.prepareRecommendationCSSClass.bind(this)
-      ) || []
+      this.state?.recommendations.map(this.prepareRecommendation.bind(this)) ||
+      []
     );
   }
 
-  prepareRecommendationCSSClass(rec, index) {
+  prepareRecommendation(rec, index, recs) {
     if (this.variant === 'grid' || this.recommendationsPerRow === 1) {
       return rec;
     }
@@ -205,6 +210,7 @@ export default class QuanticRecommendationList extends LightningElement {
     return {
       ...rec,
       class: recCSSClass,
+      label: I18nUtils.format(this.labels.xOfY, index + 1, recs.length),
     };
   }
 
