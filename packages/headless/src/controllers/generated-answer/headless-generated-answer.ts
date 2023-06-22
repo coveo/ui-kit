@@ -1,4 +1,3 @@
-import {EventSourcePolyfill} from 'event-source-polyfill';
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
@@ -61,18 +60,24 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   const controller = buildController(engine);
   const getState = () => engine.state;
 
-  let source: EventSourcePolyfill;
+  let abortController: AbortController | undefined;
   let lastRequestId: string;
   let lastStreamId: string;
 
-  const setEventSourceRef = (sourceRef: EventSourcePolyfill) => {
-    source = sourceRef;
+  const setAbortControllerRef = (ref: AbortController) => {
+    abortController = ref;
   };
 
-  const getIsStreamInProgress = () =>
-    source &&
-    (source.readyState === source.OPEN ||
-      source.readyState === source.CONNECTING);
+  const getIsStreamInProgress = () => {
+    if (!abortController) {
+      return true;
+    }
+    if (abortController?.signal.aborted) {
+      abortController = undefined;
+      return true;
+    }
+    return false;
+  };
 
   const subscribeToSearchRequests = () => {
     const strictListener = () => {
@@ -83,7 +88,7 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
 
       if (lastRequestId !== requestId) {
         lastRequestId = requestId;
-        source?.close();
+        abortController?.abort();
         dispatch(resetAnswer());
       }
 
@@ -92,7 +97,7 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
         lastStreamId = streamId;
         dispatch(
           streamAnswer({
-            setEventSourceRef,
+            setAbortControllerRef,
           })
         );
       }
