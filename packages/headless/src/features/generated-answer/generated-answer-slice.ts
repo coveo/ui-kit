@@ -2,6 +2,8 @@ import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
 import './generated-answer-actions';
 import {
+  dislikeGeneratedAnswer,
+  likeGeneratedAnswer,
   resetAnswer,
   setIsLoading,
   updateCitations,
@@ -32,6 +34,14 @@ export const generatedAnswerReducer = createReducer(
         };
         state.citations = [];
         delete state.answer;
+      })
+      .addCase(likeGeneratedAnswer, (state) => {
+        state.liked = true;
+        state.disliked = false;
+      })
+      .addCase(dislikeGeneratedAnswer, (state) => {
+        state.liked = false;
+        state.disliked = true;
       })
       .addCase(resetAnswer, () => {
         return getGeneratedAnswerInitialState();

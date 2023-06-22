@@ -1,28 +1,34 @@
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 import {
   AnalyticsType,
   CustomAction,
   SearchAction,
   makeAnalyticsAction,
 } from '../analytics/analytics-utils';
+import {
+  citationSourceSelector,
+  generativeQuestionAnsweringIdSelector,
+} from './generated-answer-selectors';
 
 export const logRetryGeneratedAnswer = (): SearchAction =>
   makeAnalyticsAction(
-    'generatedAnswer/logRetryGeneratedAnswer',
+    'analytics/generatedAnswer/retry',
     AnalyticsType.Search,
     (client) => client.makeRetryGeneratedAnswer()
   );
 
 export const logOpenGeneratedAnswerSource = (
-  citation: GeneratedAnswerCitation
+  citationId: string
 ): CustomAction =>
   makeAnalyticsAction(
-    'generatedAnswer/logOpenGeneratedAnswerSource',
+    'analytics/generatedAnswer/openSource',
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
-        state.search?.response?.extendedResults
-          ?.generativeQuestionAnsweringId ?? '';
+        generativeQuestionAnsweringIdSelector(state);
+      const citation = citationSourceSelector(state, citationId);
+      if (!generativeQuestionAnsweringId || !citation) {
+        return null;
+      }
       return client.makeOpenGeneratedAnswerSource({
         generativeQuestionAnsweringId,
         permanentId: citation.permanentid,
@@ -33,12 +39,14 @@ export const logOpenGeneratedAnswerSource = (
 
 export const logLikeGeneratedAnswer = (): CustomAction =>
   makeAnalyticsAction(
-    'generatedAnswer/logLikeGeneratedAnswer',
+    'analytics/generatedAnswer/like',
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
-        state.search?.response?.extendedResults
-          ?.generativeQuestionAnsweringId ?? '';
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
       return client.makeLikeGeneratedAnswer({
         generativeQuestionAnsweringId,
       });
@@ -47,12 +55,14 @@ export const logLikeGeneratedAnswer = (): CustomAction =>
 
 export const logDislikeGeneratedAnswer = (): CustomAction =>
   makeAnalyticsAction(
-    'generatedAnswer/logDislikeGeneratedAnswer',
+    'analytics/generatedAnswer/dislike',
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
-        state.search?.response?.extendedResults
-          ?.generativeQuestionAnsweringId ?? '';
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
       return client.makeDislikeGeneratedAnswer({
         generativeQuestionAnsweringId,
       });
