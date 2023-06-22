@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Coveo Atomic</title>
+    <title>Coveo Atomic With Generative Question Answering</title>
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
@@ -17,7 +17,6 @@
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
-          organizationEndpoints: await searchInterface.getOrganizationEndpoints('searchuisamples'),
           search: {
             pipeline: 'genqatest',
           },
@@ -103,17 +102,7 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
-          <atomic-layout-section section="horizontal-facets">
-            <atomic-segmented-facet-scrollable>
-              <atomic-segmented-facet field="inat_kingdom" label="Kingdom"></atomic-segmented-facet>
-            </atomic-segmented-facet-scrollable>
-            <atomic-popover>
-              <atomic-facet field="inat_family" label="Family"></atomic-facet>
-            </atomic-popover>
-            <atomic-popover>
-              <atomic-facet field="inat_class" label="Class"></atomic-facet>
-            </atomic-popover>
-          </atomic-layout-section>
+          <atomic-generated-answer></atomic-generated-answer>
           <atomic-layout-section section="status">
             <atomic-breadbox></atomic-breadbox>
             <atomic-query-summary></atomic-query-summary>
@@ -126,7 +115,6 @@
             <atomic-notifications></atomic-notifications>
           </atomic-layout-section>
           <atomic-layout-section section="results">
-            <atomic-generated-answer></atomic-generated-answer>
             <atomic-smart-snippet></atomic-smart-snippet>
             <atomic-smart-snippet-suggestions></atomic-smart-snippet-suggestions>
             <atomic-result-list>
@@ -292,6 +280,6 @@
         </atomic-layout-section>
       </atomic-search-layout>
     </atomic-search-interface>
-    <script src="./header.js" type="text/javascript"></script>
+    <script src="../header.js" type="text/javascript"></script>
   </body>
 </html>

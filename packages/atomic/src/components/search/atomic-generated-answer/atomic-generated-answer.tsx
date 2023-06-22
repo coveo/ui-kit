@@ -86,14 +86,14 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                   <FeedbackButton
                     title={this.bindings.i18n.t('this-answer-was-helpful')}
                     icon={ThumbsUpIcon}
-                    onClick={() => this.generatedAnswer.likeGeneratedAnswer()}
+                    active={this.generatedAnswerState.liked}
+                    onClick={this.generatedAnswer.like}
                   />
                   <FeedbackButton
                     title={this.bindings.i18n.t('this-answer-was-not-helpful')}
                     icon={ThumbsDownIcon}
-                    onClick={() =>
-                      this.generatedAnswer.dislikeGeneratedAnswer()
-                    }
+                    active={this.generatedAnswerState.disliked}
+                    onClick={this.generatedAnswer.dislike}
                   />
                 </div>
               </div>
@@ -102,7 +102,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
                 label={this.bindings.i18n.t('more-info')}
                 citations={this.generatedAnswerState.citations}
                 onCitationClick={(citation) =>
-                  this.generatedAnswer.logCitationClick(citation)
+                  this.generatedAnswer.logCitationClick(citation.id)
                 }
               />
             </div>
