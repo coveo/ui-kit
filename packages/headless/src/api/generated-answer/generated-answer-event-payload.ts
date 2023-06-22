@@ -1,12 +1,8 @@
-export enum GeneratedAnswerStreamFinishReason {
-  Completed = 'COMPLETED',
-  Error = 'ERROR',
-}
+export type GeneratedAnswerStreamFinishReason = 'COMPLETED' | 'ERROR';
 
-export enum GeneratedAnswerPayloadType {
-  Message = 'genqa.messageType',
-  Citations = 'genqa.citationsType',
-}
+export type GeneratedAnswerPayloadType =
+  | 'genqa.messageType'
+  | 'genqa.citationsType';
 
 export interface GeneratedAnswerCitation {
   id: string;
