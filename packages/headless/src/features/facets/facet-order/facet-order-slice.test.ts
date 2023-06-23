@@ -1,4 +1,4 @@
-import {AnyAction} from 'redux';
+import {AnyAction} from '@reduxjs/toolkit';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockSearch} from '../../../test/mock-search';
 import {buildMockSearchResponse} from '../../../test/mock-search-response';

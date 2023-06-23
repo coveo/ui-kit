@@ -1,4 +1,4 @@
-import {AnyAction} from 'redux';
+import {AnyAction} from '@reduxjs/toolkit';
 import {PlatformClient} from '../../api/platform-client';
 import {Result} from '../../api/search/search/result';
 import {
