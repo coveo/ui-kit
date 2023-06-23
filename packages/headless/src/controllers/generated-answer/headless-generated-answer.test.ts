@@ -1,4 +1,6 @@
 import {
+  dislikeGeneratedAnswer,
+  likeGeneratedAnswer,
   resetAnswer,
   streamAnswer,
 } from '../../features/generated-answer/generated-answer-actions';
@@ -28,6 +30,10 @@ describe('generated answer', () => {
     generatedAnswer = buildGeneratedAnswer(engine);
   }
 
+  function findAction(actionType: string) {
+    return engine.actions.find((a) => a.type === actionType);
+  }
+
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
     initGeneratedAnswer();
@@ -54,18 +60,26 @@ describe('generated answer', () => {
     expect(action).toBeTruthy();
   });
 
-  it('#likeGeneratedAnswer dispatches analytics action', () => {
+  it('#like dispatches analytics action', () => {
     generatedAnswer.like();
-    const action = engine.findAsyncAction(logLikeGeneratedAnswer().pending);
+    const action = findAction(likeGeneratedAnswer.type);
+    const analyticsAction = engine.findAsyncAction(
+      logLikeGeneratedAnswer().pending
+    );
 
     expect(action).toBeTruthy();
+    expect(analyticsAction).toBeTruthy();
   });
 
-  it('#dislikeGeneratedAnswer dispatches analytics action', () => {
+  it('#dislike dispatches analytics action', () => {
     generatedAnswer.dislike();
-    const action = engine.findAsyncAction(logDislikeGeneratedAnswer().pending);
+    const action = findAction(dislikeGeneratedAnswer.type);
+    const analyticsAction = engine.findAsyncAction(
+      logDislikeGeneratedAnswer().pending
+    );
 
     expect(action).toBeTruthy();
+    expect(analyticsAction).toBeTruthy();
   });
 
   it('#logCitationClick dispatches analytics action', () => {
@@ -89,9 +103,7 @@ describe('generated answer', () => {
     it('should not dispatch the stream action when there is no stream ID', () => {
       callListener();
 
-      const action = engine.actions.find(
-        (a) => a.type === streamAnswer.pending.type
-      );
+      const action = findAction(streamAnswer.pending.type);
 
       expect(action).toBeFalsy();
     });
@@ -101,7 +113,7 @@ describe('generated answer', () => {
 
       callListener();
 
-      const action = engine.actions.find((a) => a.type === resetAnswer.type);
+      const action = findAction(resetAnswer.type);
 
       expect(action).toBeTruthy();
     });
@@ -113,9 +125,7 @@ describe('generated answer', () => {
 
       callListener();
 
-      const action = engine.actions.find(
-        (a) => a.type === streamAnswer.pending.type
-      );
+      const action = findAction(streamAnswer.pending.type);
 
       expect(action).toBeTruthy();
     });
