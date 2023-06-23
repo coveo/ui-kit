@@ -30,6 +30,12 @@ export default class QuanticResultTemplate extends LightningElement {
    * @type {boolean}
    */
   @api resultPreviewShouldNotBeAccessible = false;
+  /**
+   * Specifies whether the border of the result template should be hidden.
+   * @api
+   * @type {boolean}
+   */
+  @api hideBorder = false;
 
   /** @type {boolean} */
   isHeaderEmpty = true;
@@ -63,7 +69,7 @@ export default class QuanticResultTemplate extends LightningElement {
 
   get templateClass() {
     return `lgc-bg slds-p-vertical_medium ${
-      this.hasChildTemplates ? '' : 'slds-border_bottom'
+      this.hideBorder || this.hasChildTemplates ? '' : 'slds-border_bottom'
     }`;
   }
 
