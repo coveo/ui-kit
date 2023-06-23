@@ -38,7 +38,7 @@ export const RETRYABLE_STREAM_ERROR_CODE = 1;
 export class GeneratedAnswerAPIClient {
   private logger: Logger;
 
-  constructor(private options: GeneratedAnswerAPIClientOptions) {
+  constructor(options: GeneratedAnswerAPIClientOptions) {
     this.logger = options.logger;
   }
 

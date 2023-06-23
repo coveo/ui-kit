@@ -69,14 +69,11 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   };
 
   const getIsStreamInProgress = () => {
-    if (!abortController) {
-      return true;
-    }
-    if (abortController?.signal.aborted) {
+    if (!abortController || abortController?.signal.aborted) {
       abortController = undefined;
-      return true;
+      return false;
     }
-    return false;
+    return true;
   };
 
   const subscribeToSearchRequests = () => {

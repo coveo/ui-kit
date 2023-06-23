@@ -41,6 +41,7 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.answer).toBe('I exist therefore I am');
+      expect(finalState.error).toBeUndefined();
     });
   });
 
@@ -55,6 +56,7 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.citations).toEqual(newCitations);
+      expect(finalState.error).toBeUndefined();
     });
 
     it('Appends the given citations to existing citations', () => {
