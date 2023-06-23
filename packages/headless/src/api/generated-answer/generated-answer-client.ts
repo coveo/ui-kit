@@ -1,4 +1,4 @@
-import {EventSourcePolyfill} from 'event-source-polyfill';
+import {fetchEventSource} from '@microsoft/fetch-event-source';
 import {Logger} from 'pino';
 import {SearchAppState} from '../..';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
@@ -38,7 +38,7 @@ export const RETRYABLE_STREAM_ERROR_CODE = 1;
 export class GeneratedAnswerAPIClient {
   private logger: Logger;
 
-  constructor(private options: GeneratedAnswerAPIClientOptions) {
+  constructor(options: GeneratedAnswerAPIClientOptions) {
     this.logger = options.logger;
   }
 
@@ -58,26 +58,9 @@ export class GeneratedAnswerAPIClient {
 
     let retryCount = 0;
     let timeout: ReturnType<typeof setTimeout>;
-    let source: EventSourcePolyfill;
-
-    const checkAndRetry = (e: unknown): EventSourcePolyfill | void => {
-      const errorMessage = 'Failed to connect to stream.';
-      this.logger.error(errorMessage, e);
-
-      if (++retryCount <= MAX_RETRIES) {
-        this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
-        return stream();
-      } else {
-        this.logger.info('Maximum retry exceeded.');
-        onError({
-          message: errorMessage,
-          code: RETRYABLE_STREAM_ERROR_CODE,
-        });
-      }
-    };
 
     const refreshTimeout = () => {
-      timeout = resetTimeout(timeout, checkAndRetry, MAX_TIMEOUT);
+      timeout = resetTimeout(timeout, stream, MAX_TIMEOUT);
     };
 
     const handleStreamPayload = (
@@ -91,26 +74,21 @@ export class GeneratedAnswerAPIClient {
       }
     };
 
-    const stream = (): EventSourcePolyfill | void => {
-      try {
-        source = new EventSourcePolyfill(
-          buildStreamingUrl(url, organizationId, streamId).href,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+    const abortController = new AbortController();
 
-        source.onopen = () => {
+    const stream = () =>
+      fetchEventSource(buildStreamingUrl(url, organizationId, streamId).href, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        signal: abortController.signal,
+        onopen: async () => {
           refreshTimeout();
-        };
-
-        source.onmessage = (event) => {
+        },
+        onmessage: (event) => {
           retryCount = 0;
-          const data: GeneratedAnswerStreamEventData = JSON.parse(
-            (event as MessageEvent).data
-          );
+          const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
             clearTimeout(timeout);
             onError({
@@ -129,23 +107,24 @@ export class GeneratedAnswerAPIClient {
           } else {
             refreshTimeout();
           }
-        };
-
-        source.onerror = () => {
+        },
+        onerror: (err) => {
           const errorMessage = 'Failed to complete stream.';
-          this.options.logger.error(errorMessage);
-          onError({
-            message: errorMessage,
-            code: RETRYABLE_STREAM_ERROR_CODE,
-          });
-        };
+          if (++retryCount <= MAX_RETRIES) {
+            this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
+          } else {
+            this.logger.info('Maximum retry exceeded.');
+            onError({
+              message: errorMessage,
+              code: RETRYABLE_STREAM_ERROR_CODE,
+            });
+            throw err;
+          }
+        },
+      });
 
-        return source;
-      } catch (e) {
-        return checkAndRetry(e);
-      }
-    };
+    stream();
 
-    return stream();
+    return abortController;
   }
 }

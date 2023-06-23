@@ -22,9 +22,11 @@ export const generatedAnswerReducer = createReducer(
           state.answer = '';
         }
         state.answer += payload.textDelta;
+        delete state.error;
       })
       .addCase(updateCitations, (state, {payload}) => {
         state.citations = state.citations.concat(payload.citations);
+        delete state.error;
       })
       .addCase(updateError, (state, {payload}) => {
         state.isLoading = false;

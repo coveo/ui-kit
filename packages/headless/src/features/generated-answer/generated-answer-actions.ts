@@ -6,7 +6,6 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {EventSourcePolyfill} from 'event-source-polyfill';
 import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client';
 import {
   GeneratedAnswerCitationsPayload,
@@ -82,7 +81,7 @@ export const setIsLoading = createAction(
 );
 
 interface StreamAnswerArgs {
-  setEventSourceRef: (source: EventSourcePolyfill) => void;
+  setAbortControllerRef: (ref: AbortController) => void;
 }
 
 export const streamAnswer = createAsyncThunk<
@@ -93,7 +92,7 @@ export const streamAnswer = createAsyncThunk<
   const state = config.getState();
   const {dispatch, extra} = config;
 
-  const {setEventSourceRef} = params;
+  const {setAbortControllerRef} = params;
 
   const request = await buildStreamingRequest(state);
 
@@ -104,25 +103,25 @@ export const streamAnswer = createAsyncThunk<
     dispatch(updateCitations(payload));
 
   const onError = (error: GeneratedAnswerErrorPayload) => {
-    source?.close();
+    abortController?.abort();
     dispatch(updateError(error));
   };
 
   const onCompleted = () => {
-    source?.close();
+    abortController?.abort();
     dispatch(setIsLoading(false));
   };
 
   dispatch(setIsLoading(true));
-  const source = extra.streamingClient?.streamGeneratedAnswer(
+  const abortController = extra.streamingClient?.streamGeneratedAnswer(
     request,
     onMessage,
     onCitations,
     onError,
     onCompleted
   );
-  if (source) {
-    setEventSourceRef(source);
+  if (abortController) {
+    setAbortControllerRef(abortController);
   } else {
     dispatch(setIsLoading(false));
   }
