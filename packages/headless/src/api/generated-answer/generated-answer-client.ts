@@ -35,6 +35,17 @@ const MAX_RETRIES = 3;
 const MAX_TIMEOUT = 5000;
 export const RETRYABLE_STREAM_ERROR_CODE = 1;
 
+class RetryableError extends Error {}
+class FatalError extends Error {}
+
+interface DispatchActions {
+  updateMessage: (payload: GeneratedAnswerMessagePayload) => void;
+  updateCitations: (payload: GeneratedAnswerCitationsPayload) => void;
+  updateError: (payload: GeneratedAnswerErrorPayload) => void;
+  setIsLoading: (isLoading: boolean) => void;
+  resetAnswer: () => void;
+}
+
 export class GeneratedAnswerAPIClient {
   private logger: Logger;
 
@@ -44,10 +55,7 @@ export class GeneratedAnswerAPIClient {
 
   streamGeneratedAnswer(
     params: GeneratedAnswerStreamRequest,
-    onMessage: (payload: GeneratedAnswerMessagePayload) => void,
-    onCitations: (payload: GeneratedAnswerCitationsPayload) => void,
-    onError: (payload: GeneratedAnswerErrorPayload) => void,
-    onCompleted: () => void
+    actions: DispatchActions
   ) {
     const {url, organizationId, streamId, accessToken} = params;
 
@@ -59,8 +67,14 @@ export class GeneratedAnswerAPIClient {
     let retryCount = 0;
     let timeout: ReturnType<typeof setTimeout>;
 
+    const retryStream = () => {
+      abortController?.abort();
+      actions.resetAnswer();
+      stream();
+    };
+
     const refreshTimeout = () => {
-      timeout = resetTimeout(timeout, stream, MAX_TIMEOUT);
+      timeout = resetTimeout(timeout, retryStream, MAX_TIMEOUT);
     };
 
     const handleStreamPayload = (
@@ -68,9 +82,13 @@ export class GeneratedAnswerAPIClient {
       payload: string
     ) => {
       if (payloadType === 'genqa.messageType') {
-        onMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload);
+        actions.updateMessage(
+          JSON.parse(payload) as GeneratedAnswerMessagePayload
+        );
       } else if (payloadType === 'genqa.citationsType') {
-        onCitations(JSON.parse(payload) as GeneratedAnswerCitationsPayload);
+        actions.updateCitations(
+          JSON.parse(payload) as GeneratedAnswerCitationsPayload
+        );
       }
     };
 
@@ -83,43 +101,44 @@ export class GeneratedAnswerAPIClient {
           Authorization: `Bearer ${accessToken}`,
         },
         signal: abortController.signal,
-        onopen: async () => {
-          refreshTimeout();
-        },
         onmessage: (event) => {
           retryCount = 0;
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
             clearTimeout(timeout);
-            onError({
+            actions.updateError({
               message: data.errorMessage,
               code: data.errorCode,
             });
-            return;
+            throw new FatalError();
           }
           if (data.payload && data.payloadType) {
             handleStreamPayload(data.payloadType, data.payload);
           }
-
           if (data.finishReason === 'COMPLETED') {
             clearTimeout(timeout);
-            onCompleted();
+            actions.setIsLoading(false);
           } else {
             refreshTimeout();
           }
         },
+        onclose() {
+          throw new RetryableError();
+        },
         onerror: (err) => {
-          const errorMessage = 'Failed to complete stream.';
-          if (++retryCount <= MAX_RETRIES) {
-            this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
-          } else {
-            this.logger.info('Maximum retry exceeded.');
-            onError({
-              message: errorMessage,
-              code: RETRYABLE_STREAM_ERROR_CODE,
-            });
+          if (err instanceof FatalError) {
             throw err;
           }
+          if (++retryCount > MAX_RETRIES) {
+            this.logger.info('Maximum retry exceeded.');
+            actions.updateError({
+              message: 'Failed to complete stream.',
+              code: RETRYABLE_STREAM_ERROR_CODE,
+            });
+            throw new FatalError();
+          }
+          this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
+          actions.resetAnswer();
         },
       });
 

@@ -96,29 +96,16 @@ export const streamAnswer = createAsyncThunk<
 
   const request = await buildStreamingRequest(state);
 
-  const onMessage = (payload: GeneratedAnswerMessagePayload) =>
-    dispatch(updateMessage(payload));
-
-  const onCitations = (payload: GeneratedAnswerCitationsPayload) =>
-    dispatch(updateCitations(payload));
-
-  const onError = (error: GeneratedAnswerErrorPayload) => {
-    abortController?.abort();
-    dispatch(updateError(error));
-  };
-
-  const onCompleted = () => {
-    abortController?.abort();
-    dispatch(setIsLoading(false));
-  };
-
   dispatch(setIsLoading(true));
   const abortController = extra.streamingClient?.streamGeneratedAnswer(
     request,
-    onMessage,
-    onCitations,
-    onError,
-    onCompleted
+    {
+      updateMessage: (payload) => dispatch(updateMessage(payload)),
+      updateCitations: (payload) => dispatch(updateCitations(payload)),
+      updateError: (error) => dispatch(updateError(error)),
+      setIsLoading: (isLoading) => dispatch(setIsLoading(isLoading)),
+      resetAnswer: () => dispatch(resetAnswer()),
+    }
   );
   if (abortController) {
     setAbortControllerRef(abortController);
