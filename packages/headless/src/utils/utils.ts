@@ -76,9 +76,9 @@ export function fromEntries<K extends PropertyKey, V>(
 }
 
 export function resetTimeout(
-  timeoutId: ReturnType<typeof setTimeout>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   callback: (...args: any[]) => void,
+  timeoutId?: ReturnType<typeof setTimeout>,
   ms?: number | undefined
 ) {
   clearTimeout(timeoutId);
