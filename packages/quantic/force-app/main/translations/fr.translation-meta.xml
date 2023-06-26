@@ -638,7 +638,7 @@
     </customLabels>
     <customLabels>
         <label>La valeur de la propriété {{0}} doit être un nombre entier supérieur à 0.</label>
-        <name>quantic_quantic_InvalidPositiveIntegerProperty</name>
+        <name>quantic_InvalidPositiveIntegerProperty</name>
     </customLabels>
     <customLabels>
         <label>{{0}} de {{1}}</label>
