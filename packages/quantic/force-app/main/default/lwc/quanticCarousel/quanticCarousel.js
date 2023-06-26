@@ -7,7 +7,7 @@ import {I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /**
- * The `QuanticCarousel` component displays the content provided in a carousel. This component also displays navigation buttons that allow the end user to navigate between the different pages of the carousel.
+ * The `QuanticCarousel` component displays the content within a carousel. This component also displays navigation buttons that allow end users to navigate between the different pages of the carousel.
  * @category Utility
  * @example
  * <c-quantic-carousel number-of-pages="2" number-of-items-per-page="1">
