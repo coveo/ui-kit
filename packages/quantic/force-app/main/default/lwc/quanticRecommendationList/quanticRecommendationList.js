@@ -206,7 +206,7 @@ export default class QuanticRecommendationList extends LightningElement {
   generateCSSClassForCarouselRecommendation(index) {
     let recCSSClass = 'recommendation-item__container slds-var-p-top_x-small ';
 
-    if (this.recommendationsPerRow === 1) {
+    if (Number(this.recommendationsPerRow) === 1) {
       return recCSSClass;
     }
 
