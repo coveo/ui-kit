@@ -5589,5 +5589,9 @@
   "generated-answer-loading": {
     "en": "Looking for an answer...",
     "fr": "Nous cherchons une réponse..."
+  },
+  "retry": {
+    "en": "Retry",
+    "fr": "Réessayer"
   }
 }

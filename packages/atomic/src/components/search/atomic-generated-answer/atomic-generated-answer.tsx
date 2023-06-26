@@ -7,13 +7,12 @@ import {
   GeneratedAnswerState,
 } from '@coveo/headless';
 import {Component, h, State} from '@stencil/core';
-import ThumbsDownIcon from '../../../images/thumbs-down.svg';
-import ThumbsUpIcon from '../../../images/thumbs-up.svg';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {Button} from '../../common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {FeedbackButton} from './feedback-button';
 import {SourceCitations} from './source-citations';
@@ -51,15 +50,70 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
-  private get hasError() {
-    return !!(
-      this.searchStatusState.hasError || this.generatedAnswerState.error
+  private get hasNonRetryableError() {
+    return (
+      this.searchStatusState.hasError ||
+      this.generatedAnswerState.error?.isRetryable === false
     );
   }
 
   private get hideComponent() {
     const {isLoading, answer} = this.generatedAnswerState;
-    return !(isLoading || answer !== undefined) || this.hasError;
+    return !(isLoading || answer !== undefined) || this.hasNonRetryableError;
+  }
+
+  private renderContent() {
+    return (
+      <div part="generated-content">
+        <div class="flex items-center">
+          <div part="header-label" class="text-bg-blue">
+            {this.bindings.i18n.t('generated-answer-title')}
+          </div>
+          {!this.generatedAnswerState.error && (
+            <div class="feedback-buttons flex">
+              <FeedbackButton
+                title={this.bindings.i18n.t('this-answer-was-helpful')}
+                variant="like"
+                active={this.generatedAnswerState.liked}
+                onClick={this.generatedAnswer.like}
+              />
+              <FeedbackButton
+                title={this.bindings.i18n.t('this-answer-was-not-helpful')}
+                variant="dislike"
+                active={this.generatedAnswerState.disliked}
+                onClick={this.generatedAnswer.dislike}
+              />
+            </div>
+          )}
+        </div>
+        {this.generatedAnswerState.error?.isRetryable ? (
+          <div class="mt-4">
+            <div class="mx-auto text-center text-neutral-dark">
+              {this.generatedAnswerState.error?.message ??
+                this.bindings.i18n.t('something-went-wrong')}
+            </div>
+            <Button
+              class="block px-4 py-2 mt-4 mx-auto"
+              style="outline-primary"
+              onClick={this.generatedAnswer.retry}
+            >
+              {this.bindings.i18n.t('retry')}
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <p part="generated-text">{this.generatedAnswerState.answer}</p>
+            <SourceCitations
+              label={this.bindings.i18n.t('more-info')}
+              citations={this.generatedAnswerState.citations}
+              onCitationClick={(citation) =>
+                this.generatedAnswer.logCitationClick(citation.id)
+              }
+            />
+          </div>
+        )}
+      </div>
+    );
   }
 
   public render() {
@@ -77,35 +131,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
               loadingLabel={this.bindings.i18n.t('generated-answer-loading')}
             />
           ) : (
-            <div part="generated-content">
-              <div class="flex items-center">
-                <div part="header-label" class="text-bg-blue">
-                  {this.bindings.i18n.t('generated-answer-title')}
-                </div>
-                <div class="feedback-buttons flex">
-                  <FeedbackButton
-                    title={this.bindings.i18n.t('this-answer-was-helpful')}
-                    icon={ThumbsUpIcon}
-                    active={this.generatedAnswerState.liked}
-                    onClick={this.generatedAnswer.like}
-                  />
-                  <FeedbackButton
-                    title={this.bindings.i18n.t('this-answer-was-not-helpful')}
-                    icon={ThumbsDownIcon}
-                    active={this.generatedAnswerState.disliked}
-                    onClick={this.generatedAnswer.dislike}
-                  />
-                </div>
-              </div>
-              <p part="generated-text">{this.generatedAnswerState.answer}</p>
-              <SourceCitations
-                label={this.bindings.i18n.t('more-info')}
-                citations={this.generatedAnswerState.citations}
-                onCitationClick={(citation) =>
-                  this.generatedAnswer.logCitationClick(citation.id)
-                }
-              />
-            </div>
+            this.renderContent()
           )}
         </article>
       </aside>

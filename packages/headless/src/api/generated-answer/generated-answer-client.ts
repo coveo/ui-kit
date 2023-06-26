@@ -141,9 +141,6 @@ export class GeneratedAnswerAPIClient {
           }
           refreshTimeout();
         },
-        onclose() {
-          throw new RetryableError();
-        },
         onerror: (err) => {
           clearTimeout(timeout);
           if (err instanceof FatalError) {
