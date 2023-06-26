@@ -193,13 +193,27 @@ export default class QuanticRecommendationList extends LightningElement {
   }
 
   prepareRecommendation(rec, index, recs) {
-    if (this.variant === 'grid' || this.recommendationsPerRow === 1) {
+    if (this.variant === 'grid') {
       return rec;
     }
+    return {
+      ...rec,
+      class: this.generateCSSClassForCarouselRecommendation(index),
+      label: I18nUtils.format(this.labels.xOfY, index + 1, recs.length),
+    };
+  }
+
+  generateCSSClassForCarouselRecommendation(index) {
     let recCSSClass = 'recommendation-item__container slds-var-p-top_x-small ';
+
+    if (this.recommendationsPerRow === 1) {
+      return recCSSClass;
+    }
+
     const recIsFirstInThePage = index % this.recommendationsPerRow === 0;
     const recIsLastInThePage =
       index % this.recommendationsPerRow === this.recommendationsPerRow - 1;
+
     if (recIsFirstInThePage) {
       recCSSClass = recCSSClass + 'slds-var-p-right_x-small';
     } else if (recIsLastInThePage) {
@@ -207,11 +221,8 @@ export default class QuanticRecommendationList extends LightningElement {
     } else {
       recCSSClass = recCSSClass + 'slds-var-p-horizontal_xx-small';
     }
-    return {
-      ...rec,
-      class: recCSSClass,
-      label: I18nUtils.format(this.labels.xOfY, index + 1, recs.length),
-    };
+
+    return recCSSClass;
   }
 
   get fields() {
