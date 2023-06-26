@@ -51,8 +51,9 @@ export default class QuanticRefineModalContent extends LightningElement {
    * Indicates whether the Dynamic Navigation for facet ordering should be disabled.
    * @api
    * @type {boolean}
+   * @defaultValue `false`
    */
-  @api disableDynamicNavigation;
+  @api disableDynamicNavigation = false;
 
   /** @type {object} */
   data;
