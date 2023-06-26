@@ -194,7 +194,7 @@ describe('generated answer slice', () => {
     });
   });
 
-  it('#dislikeGeneratedAnswer should set the answer as liked in the state', () => {
+  it('#dislikeGeneratedAnswer should set the answer as disliked in the state', () => {
     const finalState = generatedAnswerReducer(
       baseState,
       dislikeGeneratedAnswer()

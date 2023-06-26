@@ -29,7 +29,7 @@ export interface AsyncThunkGeneratedAnswerOptions<
 const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>
   new URLPath(
     `${url}/rest/organizations/${orgId}/machinelearning/streaming/${streamId}`
-  );
+  ).href;
 
 const MAX_RETRIES = 3;
 const MAX_TIMEOUT = 5000;
@@ -37,7 +37,11 @@ const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
 export const RETRYABLE_STREAM_ERROR_CODE = 1;
 
 class RetryableError extends Error {}
-class FatalError extends Error {}
+class FatalError extends Error {
+  constructor(public payload: GeneratedAnswerErrorPayload) {
+    super(payload.message);
+  }
+}
 
 interface DispatchActions {
   updateMessage: (payload: GeneratedAnswerMessagePayload) => void;
@@ -90,13 +94,15 @@ export class GeneratedAnswerAPIClient {
         actions.updateCitations(
           JSON.parse(payload) as GeneratedAnswerCitationsPayload
         );
+      } else {
+        this.logger.error(`Unknown payloadType: "${payloadType}"`);
       }
     };
 
     const abortController = new AbortController();
 
     const stream = () =>
-      fetchEventSource(buildStreamingUrl(url, organizationId, streamId).href, {
+      fetchEventSource(buildStreamingUrl(url, organizationId, streamId), {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -114,13 +120,15 @@ export class GeneratedAnswerAPIClient {
             response.status < 500 &&
             response.status !== 429;
           if (isClientSideError) {
-            throw new FatalError();
+            throw new FatalError({
+              message: 'Error opening stream',
+              code: response.status,
+            });
           } else {
             throw new RetryableError();
           }
         },
         onmessage: (event) => {
-          retryCount = 0;
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
             clearTimeout(timeout);
@@ -140,19 +148,20 @@ export class GeneratedAnswerAPIClient {
             return;
           }
           refreshTimeout();
+          retryCount = 0;
         },
         onerror: (err) => {
           clearTimeout(timeout);
           if (err instanceof FatalError) {
+            actions.updateError(err);
             throw err;
           }
           if (++retryCount > MAX_RETRIES) {
             this.logger.info('Maximum retry exceeded.');
-            actions.updateError({
+            throw new FatalError({
               message: 'Failed to complete stream.',
               code: RETRYABLE_STREAM_ERROR_CODE,
             });
-            throw new FatalError();
           }
           this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
           actions.resetAnswer();

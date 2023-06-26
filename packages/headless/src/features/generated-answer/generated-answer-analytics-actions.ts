@@ -20,7 +20,7 @@ export const logOpenGeneratedAnswerSource = (
   citationId: string
 ): CustomAction =>
   makeAnalyticsAction(
-    'analytics/generatedAnswer/openSource',
+    'analytics/generatedAnswer/openAnswerSource',
     AnalyticsType.Custom,
     (client, state) => {
       const generativeQuestionAnsweringId =
