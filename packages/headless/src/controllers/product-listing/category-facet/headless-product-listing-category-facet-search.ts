@@ -50,7 +50,7 @@ export function buildCategoryFacetSearch(
 
     select: (value: CategoryFacetSearchResult) => {
       coreFacetSearch.select(value);
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
       dispatch(fetchProductListing()).then(() =>
         logFacetSelect({facetId: facetId, facetValue: value.rawValue})
       );

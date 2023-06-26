@@ -21,6 +21,7 @@ import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {
   registerFacet,
   toggleSelectFacetValue,
+  toggleExcludeFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
@@ -120,6 +121,28 @@ export const facetSetReducer = createReducer(
 
         const isSelected = existingValue.state === 'selected';
         existingValue.state = isSelected ? 'idle' : 'selected';
+        facetRequest.freezeCurrentValues = true;
+      })
+      .addCase(toggleExcludeFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = facetRequest.currentValues.find(
+          (req) => req.value === selection.value
+        );
+        if (!existingValue) {
+          insertNewValue(facetRequest, selection);
+          return;
+        }
+
+        const isExcluded = existingValue.state === 'excluded';
+        existingValue.state = isExcluded ? 'idle' : 'excluded';
         facetRequest.freezeCurrentValues = true;
       })
       .addCase(updateFreezeCurrentValues, (state, action) => {

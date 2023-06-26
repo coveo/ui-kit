@@ -27,3 +27,41 @@ export const logCopyToClipboard = (
       );
     }
   );
+
+export const logCaseSendEmail = (
+  result: Result
+): InsightAction<AnalyticsType.Click> =>
+  makeInsightAnalyticsAction(
+    'analytics/resultAction/insight/caseSendEmail',
+    AnalyticsType.Click,
+    (client, state) => {
+      validateResultPayload(result);
+      const metadata = getCaseContextAnalyticsMetadata(
+        state.insightCaseContext
+      );
+      return client.logCaseSendEmail(
+        partialDocumentInformation(result, state),
+        documentIdentifier(result),
+        metadata
+      );
+    }
+  );
+
+export const logFeedItemTextPost = (
+  result: Result
+): InsightAction<AnalyticsType.Click> =>
+  makeInsightAnalyticsAction(
+    'analytics/resultAction/insight/feedItemTextPost',
+    AnalyticsType.Click,
+    (client, state) => {
+      validateResultPayload(result);
+      const metadata = getCaseContextAnalyticsMetadata(
+        state.insightCaseContext
+      );
+      return client.logFeedItemTextPost(
+        partialDocumentInformation(result, state),
+        documentIdentifier(result),
+        metadata
+      );
+    }
+  );

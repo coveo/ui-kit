@@ -31,6 +31,7 @@ import * as FacetReducers from '../generic/facet-reducer-helpers';
 import {
   registerFacet,
   toggleSelectFacetValue,
+  toggleExcludeFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
@@ -173,6 +174,29 @@ describe('facet-set slice', () => {
         expect(targetValue?.state).toBe('selected');
       });
 
+      it('sets the state of an excluded value to selected', () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: 'excluded',
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleSelectFacetValue({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.state).toBe('selected');
+      });
+
       it('sets the state of a selected value to idle', () => {
         const facetValue = buildMockFacetValue({
           value: 'TED',
@@ -231,7 +255,7 @@ describe('facet-set slice', () => {
       });
     });
 
-    describe('when the facet value does not exists', () => {
+    describe('when the facet value does not exist', () => {
       it('replaces the first idle value with the new value', () => {
         const newFacetValue = buildMockFacetValue({
           value: 'TED',
@@ -294,6 +318,180 @@ describe('facet-set slice', () => {
   it('dispatching #toggleSelectFacetValue with an invalid id does not throw', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
     const action = toggleSelectFacetValue({
+      facetId: '1',
+      selection: facetValue,
+    });
+
+    expect(() => facetSetReducer(state, action)).not.toThrow();
+  });
+
+  describe('dispatching #toggleExcludeFacetValue with a registered facet id', () => {
+    const id = '1';
+    describe('when the facet value exists', () => {
+      it('sets the state of an idle value to excluded', () => {
+        const facetValue = buildMockFacetValue({value: 'TED'});
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleExcludeFacetValue({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.state).toBe('excluded');
+      });
+
+      it('sets the state of a selected value to excluded', () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: 'selected',
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleExcludeFacetValue({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.state).toBe('excluded');
+      });
+
+      it('sets the state of an excluded value to idle', () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: 'excluded',
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleExcludeFacetValue({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.state).toBe('idle');
+      });
+
+      it('sets #freezeCurrentValues to true', () => {
+        const facetValue = buildMockFacetValue({value: 'TED'});
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleExcludeFacetValue({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        expect(finalState[id]?.request.freezeCurrentValues).toBe(true);
+      });
+
+      it('sets #preventAutoSelect to true', () => {
+        const facetValue = buildMockFacetValue({value: 'TED'});
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleExcludeFacetValue({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        expect(finalState[id]?.request.preventAutoSelect).toBe(true);
+      });
+    });
+
+    describe('when the facet value does not exists', () => {
+      it('replaces the first idle value with the new value', () => {
+        const newFacetValue = buildMockFacetValue({
+          value: 'TED',
+          state: 'excluded',
+        });
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({
+            currentValues: [
+              buildMockFacetValue({value: 'excluded1', state: 'excluded'}),
+              buildMockFacetValue({value: 'excluded2', state: 'excluded'}),
+              buildMockFacetValue({value: 'idle1', state: 'idle'}),
+              buildMockFacetValue({value: 'idle2', state: 'idle'}),
+            ],
+          }),
+        });
+
+        const action = toggleSelectFacetValue({
+          facetId: id,
+          selection: newFacetValue,
+        });
+
+        const finalState = facetSetReducer(state, action);
+        expect(
+          finalState[id]?.request.currentValues.indexOf(newFacetValue)
+        ).toBe(2);
+        expect(finalState[id]?.request.currentValues.length).toBe(4);
+      });
+
+      it('does not set #freezeCurrentValues to true', () => {
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: []}),
+        });
+
+        const action = toggleExcludeFacetValue({
+          facetId: id,
+          selection: buildMockFacetValue({value: 'TED'}),
+        });
+        const finalState = facetSetReducer(state, action);
+
+        expect(finalState[id]?.request.freezeCurrentValues).toBe(false);
+      });
+
+      it('sets #preventAutoSelect to true', () => {
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: []}),
+        });
+
+        const action = toggleExcludeFacetValue({
+          facetId: id,
+          selection: buildMockFacetValue({value: 'TED'}),
+        });
+        const finalState = facetSetReducer(state, action);
+
+        expect(finalState[id]?.request.preventAutoSelect).toBe(true);
+      });
+    });
+  });
+
+  it('dispatching #toggleExcludeFacetValue with an invalid id does not throw', () => {
+    const facetValue = buildMockFacetValue({value: 'TED'});
+    const action = toggleExcludeFacetValue({
       facetId: '1',
       selection: facetValue,
     });

@@ -1,4 +1,4 @@
-import {Reducer, AnyAction} from 'redux';
+import {Reducer, AnyAction} from '@reduxjs/toolkit';
 
 export const makeHistory = <State>(state?: State): StateWithHistory<State> => ({
   past: [],

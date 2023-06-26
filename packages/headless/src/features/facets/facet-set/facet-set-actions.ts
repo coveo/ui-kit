@@ -127,6 +127,15 @@ export const toggleSelectFacetValue = createAction(
     })
 );
 
+export const toggleExcludeFacetValue = createAction(
+  'facet/toggleExcludeValue',
+  (payload: ToggleSelectFacetValueActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      selection: new RecordValue({values: facetValueDefinition}),
+    })
+);
+
 export const deselectAllFacetValues = createAction(
   'facet/deselectAll',
   (payload: string) => validatePayload(payload, facetIdDefinition)

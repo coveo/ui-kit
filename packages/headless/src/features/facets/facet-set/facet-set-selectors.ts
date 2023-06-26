@@ -78,6 +78,18 @@ export const facetResponseSelectedValuesSelector = (
   return response.values.filter((value) => value.state === 'selected');
 };
 
+export const facetResponseActiveValuesSelector = (
+  state: FacetResponseSection & FacetSection,
+  facetId: string
+): FacetValue[] => {
+  const response = facetResponseSelector(state, facetId);
+  if (!response) {
+    return [];
+  }
+
+  return response.values.filter((value) => value.state !== 'idle');
+};
+
 export const isFacetLoadingResponseSelector = (state: FacetResponseSection) => {
   if ('productListing' in state) {
     return state.productListing.isLoading;
