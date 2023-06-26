@@ -1,3 +1,4 @@
+import topDocumentsForYou from '@salesforce/label/c.quantic_TopDocumentsForYou';
 import xOfY from '@salesforce/label/c.quantic_XOfY';
 import {
   registerComponentForInit,
@@ -33,6 +34,7 @@ import loadingTemplate from './templates/loading.html';
 export default class QuanticRecommendationList extends LightningElement {
   labels = {
     xOfY,
+    topDocumentsForYou,
   };
 
   /**
@@ -76,8 +78,9 @@ export default class QuanticRecommendationList extends LightningElement {
    * The label of the component. This label is displayed in the component header.
    * @api
    * @type {string}
+   * @defaultValue `'Top documents for you'`
    */
-  @api label;
+  @api label = this.labels.topDocumentsForYou;
   /**
    * The Heading level to use for the heading label, accepted values are integers from 1 to 6.
    * @api

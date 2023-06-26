@@ -32,6 +32,8 @@ export default class ExampleQuanticRecommendationtList extends LightningElement 
       attribute: 'label',
       label: 'Label',
       description: 'The label of the component.',
+      defaultValue:
+      'Top documents for you',
     },
     {
       attribute: 'fieldsToInclude',

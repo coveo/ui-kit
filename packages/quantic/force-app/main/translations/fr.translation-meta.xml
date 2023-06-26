@@ -644,4 +644,8 @@
         <label>{{0}} de {{1}}</label>
         <name>quantic_XOfY</name>
     </customLabels>
+    <customLabels>
+        <label>Les meilleurs documents pour vous</label>
+        <name>quantic_TopDocumentsForYou</name>
+    </customLabels>
 </Translations>

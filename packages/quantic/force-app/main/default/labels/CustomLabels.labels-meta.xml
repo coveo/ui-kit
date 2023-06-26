@@ -1183,4 +1183,11 @@
       <protected>false</protected>
       <shortDescription>1 of 6</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_TopDocumentsForYou</fullName>
+      <value>Top documents for you</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Top documents for you</shortDescription>
+    </labels>
 </CustomLabels>
