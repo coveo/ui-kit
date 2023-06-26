@@ -33,6 +33,7 @@ const buildStreamingUrl = (url: string, orgId: string, streamId: string) =>
 
 const MAX_RETRIES = 3;
 const MAX_TIMEOUT = 5000;
+const EVENT_STREAM_CONTENT_TYPE = 'text/event-stream';
 export const RETRYABLE_STREAM_ERROR_CODE = 1;
 
 class RetryableError extends Error {}
@@ -65,7 +66,7 @@ export class GeneratedAnswerAPIClient {
     }
 
     let retryCount = 0;
-    let timeout: ReturnType<typeof setTimeout>;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
 
     const retryStream = () => {
       abortController?.abort();
@@ -74,7 +75,7 @@ export class GeneratedAnswerAPIClient {
     };
 
     const refreshTimeout = () => {
-      timeout = resetTimeout(timeout, retryStream, MAX_TIMEOUT);
+      timeout = resetTimeout(retryStream, timeout, MAX_TIMEOUT);
     };
 
     const handleStreamPayload = (
@@ -101,6 +102,23 @@ export class GeneratedAnswerAPIClient {
           Authorization: `Bearer ${accessToken}`,
         },
         signal: abortController.signal,
+        async onopen(response) {
+          if (
+            response.ok &&
+            response.headers.get('content-type') === EVENT_STREAM_CONTENT_TYPE
+          ) {
+            return;
+          }
+          const isClientSideError =
+            response.status >= 400 &&
+            response.status < 500 &&
+            response.status !== 429;
+          if (isClientSideError) {
+            throw new FatalError();
+          } else {
+            throw new RetryableError();
+          }
+        },
         onmessage: (event) => {
           retryCount = 0;
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
@@ -110,7 +128,8 @@ export class GeneratedAnswerAPIClient {
               message: data.errorMessage,
               code: data.errorCode,
             });
-            throw new FatalError();
+            abortController.abort();
+            return;
           }
           if (data.payload && data.payloadType) {
             handleStreamPayload(data.payloadType, data.payload);
@@ -118,14 +137,15 @@ export class GeneratedAnswerAPIClient {
           if (data.finishReason === 'COMPLETED') {
             clearTimeout(timeout);
             actions.setIsLoading(false);
-          } else {
-            refreshTimeout();
+            return;
           }
+          refreshTimeout();
         },
         onclose() {
           throw new RetryableError();
         },
         onerror: (err) => {
+          clearTimeout(timeout);
           if (err instanceof FatalError) {
             throw err;
           }
