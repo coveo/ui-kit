@@ -1,4 +1,4 @@
-import xOfY from '@salesforce/label/c.quantic_XofY';
+import xOfY from '@salesforce/label/c.quantic_XOfY';
 import {
   registerComponentForInit,
   initializeWithHeadless,
