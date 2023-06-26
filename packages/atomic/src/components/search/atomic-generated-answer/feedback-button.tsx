@@ -11,21 +11,15 @@ export const FeedbackButton: FunctionalComponent<{
   active: boolean;
   onClick: () => void;
 }> = (props) => {
-  const getBackgroundClass = () => {
-    if (!props.active) {
-      return '';
-    }
-    return props.variant === 'like' ? 'bg-green' : 'bg-red';
-  };
-
   const getIcon = () => {
     return props.variant === 'like' ? ThumbsUpIcon : ThumbsDownIcon;
   };
+
   return (
     <Button
       title={props.title}
       style="text-neutral"
-      class={`feedback-button ${getBackgroundClass()}`}
+      class={`feedback-button ${props.variant} ${props.active ? 'active' : ''}`}
       onClick={props.onClick}
       ariaPressed={`${props.active}`}
     >
