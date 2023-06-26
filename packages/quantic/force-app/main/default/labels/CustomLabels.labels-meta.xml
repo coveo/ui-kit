@@ -1177,10 +1177,10 @@
       <shortDescription>The value of the property must be an integer greater than 0.</shortDescription>
     </labels>
     <labels>
-        <fullName>quantic_XOfY</fullName>
-        <value>{{0}} of {{1}}</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>1 of 6</shortDescription>
+      <fullName>quantic_XOfY</fullName>
+      <value>{{0}} of {{1}}</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>1 of 6</shortDescription>
     </labels>
 </CustomLabels>

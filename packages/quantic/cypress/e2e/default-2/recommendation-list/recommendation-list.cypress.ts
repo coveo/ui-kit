@@ -128,7 +128,7 @@ describe('quantic-recommendation-list', () => {
   });
 
   describe('when the recommendations are displayed in a carousel', () => {
-    it('should properly display the recommendations', () => {
+    it('should properly display the recommendations inside a carousel', () => {
       visitPage({
         label,
         variant: 'carousel',

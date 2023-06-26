@@ -245,7 +245,7 @@ describe('c-quantic-carousel', () => {
       expect(error.message).toBe(invalidPositiveIntegerProperty);
     });
 
-    it('should display an error message when the property itemsPerPage is not a valid number', async () => {
+    it('should display an error message when the property numberOfItemsPerPage is not a valid number', async () => {
       const element = createTestComponent({
         ...defaultOptions,
         // @ts-ignore
