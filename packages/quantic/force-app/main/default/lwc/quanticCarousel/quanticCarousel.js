@@ -99,13 +99,11 @@ export default class QuanticCarousel extends LightningElement {
   }
 
   handlePrevious() {
-    // eslint-disable-next-line @lwc/lwc/no-api-reassignments
-    this.currentPage = this._currentPage - 1;
+    this._currentPage = this._currentPage - 1;
   }
 
   handleNext() {
-    // eslint-disable-next-line @lwc/lwc/no-api-reassignments
-    this.currentPage = this._currentPage + 1;
+    this._currentPage = this._currentPage + 1;
   }
 
   /**
