@@ -613,6 +613,18 @@ export namespace Components {
          */
         "store"?: AtomicInsightStore;
     }
+    interface AtomicInsightResultAction {
+        /**
+          * Specify the result action icon to display.
+         */
+        "icon": string;
+        /**
+          * The text tooltip to show on the result action icon
+         */
+        "label"?: string;
+    }
+    interface AtomicInsightResultActionBar {
+    }
     interface AtomicInsightResultChildren {
         /**
           * The expected size of the image displayed in the children results.
@@ -2226,6 +2238,18 @@ declare global {
         prototype: HTMLAtomicInsightResultElement;
         new (): HTMLAtomicInsightResultElement;
     };
+    interface HTMLAtomicInsightResultActionElement extends Components.AtomicInsightResultAction, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultActionElement: {
+        prototype: HTMLAtomicInsightResultActionElement;
+        new (): HTMLAtomicInsightResultActionElement;
+    };
+    interface HTMLAtomicInsightResultActionBarElement extends Components.AtomicInsightResultActionBar, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultActionBarElement: {
+        prototype: HTMLAtomicInsightResultActionBarElement;
+        new (): HTMLAtomicInsightResultActionBarElement;
+    };
     interface HTMLAtomicInsightResultChildrenElement extends Components.AtomicInsightResultChildren, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultChildrenElement: {
@@ -2839,6 +2863,8 @@ declare global {
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
+        "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
+        "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
         "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
@@ -3498,6 +3524,18 @@ declare namespace LocalJSX {
           * Global Atomic state.
          */
         "store"?: AtomicInsightStore;
+    }
+    interface AtomicInsightResultAction {
+        /**
+          * Specify the result action icon to display.
+         */
+        "icon"?: string;
+        /**
+          * The text tooltip to show on the result action icon
+         */
+        "label"?: string;
+    }
+    interface AtomicInsightResultActionBar {
     }
     interface AtomicInsightResultChildren {
         /**
@@ -4796,6 +4834,8 @@ declare namespace LocalJSX {
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
+        "atomic-insight-result-action": AtomicInsightResultAction;
+        "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
         "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
@@ -4934,6 +4974,8 @@ declare module "@stencil/core" {
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
+            "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
+            "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
             "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;

@@ -123,6 +123,21 @@ export class AtomicInsightResult {
       .join('');
   }
 
+  private handleMouseOver = () => {
+    const resultActionBarElement = this.host.shadowRoot?.querySelector(
+      'atomic-insight-result-action-bar'
+    );
+    resultActionBarElement?.classList.add('hovered');
+    this.host.classList.add('resultHovered');
+  };
+
+  private handleMouseOut = () => {
+    const resultActionBarElement = this.host.shadowRoot?.querySelector(
+      'atomic-insight-result-action-bar'
+    );
+    resultActionBarElement?.classList.remove('hovered');
+    this.host.classList.remove('resultHovered');
+  };
   public render() {
     return (
       <Host class={resultComponentClass}>
@@ -139,8 +154,20 @@ export class AtomicInsightResult {
   }
 
   public componentDidLoad() {
+    const resultActionBarElement = this.host.shadowRoot?.querySelector(
+      'atomic-insight-result-action-bar'
+    );
+    const resultActionElement = this.host.shadowRoot?.querySelectorAll(
+      'atomic-insight-result-action'
+    );
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
+    }
+    if (resultActionBarElement && resultActionElement?.length) {
+      this.host.parentElement!.style.padding = '0px';
+      this.host.classList.add('withActionBar');
+      this.host.addEventListener('mouseover', this.handleMouseOver);
+      this.host.addEventListener('mouseout', this.handleMouseOut);
     }
     applyFocusVisiblePolyfill(this.host);
   }

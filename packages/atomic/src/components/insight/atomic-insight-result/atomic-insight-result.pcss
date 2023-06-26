@@ -5,3 +5,21 @@ atomic-result-section-children {
   border-left: 1px solid var(--atomic-neutral);
   padding-left: 1rem;
 }
+
+:host(.resultHovered) {
+  position: relative;
+
+  .with-sections {
+    background-color: var(--atomic-neutral-light);
+  }
+}
+
+:host(.withActionBar) {
+  .with-sections {
+    padding: 1.5rem;
+  }
+}
+
+:host(.withActionBar)::before {
+  margin: 0px 1.5rem !important;
+}
