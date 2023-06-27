@@ -187,7 +187,7 @@ export function buildCoreDateFilter(
           values: [],
         })
       );
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
     setRange: (range) => {
       const facetValue: DateFacetValue = {
@@ -207,7 +207,7 @@ export function buildCoreDateFilter(
       }
 
       dispatch(updateFacetValuesAction);
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
       return true;
     },
     enable() {

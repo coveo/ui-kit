@@ -8,11 +8,12 @@ import {
   makeAnalyticsAction,
   ProductListingAction,
   validateProductRecommendationPayload,
+  makeProductListingAnalyticsAction,
 } from '../analytics/analytics-utils';
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
 
 export const logProductListing = (): ProductListingAction =>
-  makeAnalyticsAction(
+  makeProductListingAnalyticsAction(
     'analytics/productListing/load',
     AnalyticsType.Search,
     (client) => client.makeInterfaceLoad(),

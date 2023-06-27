@@ -1,3 +1,10 @@
+# 2.9.0 (2023-06-20)
+
+### Features
+
+- **atomic,headless:** support custom sort for facets ([#2960](https://github.com/coveo/ui-kit/issues/2960)) ([21e00f2](https://github.com/coveo/ui-kit/commits/21e00f286f49b1a8f9af9a5d12e21dae36ae8e54))
+- **atomic:** added folding-result-list for insight panel ([#2970](https://github.com/coveo/ui-kit/issues/2970)) ([4e5ed3b](https://github.com/coveo/ui-kit/commits/4e5ed3b479c6e71bed1add6145595cf902ab0887))
+
 ## 2.8.3 (2023-06-01)
 
 ### Features

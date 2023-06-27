@@ -1,13 +1,18 @@
-## 2.31.4 (2023-06-07)
+# 2.32.0 (2023-06-20)
 
+### Features
+
+- **atomic,headless:** support custom sort for facets ([#2960](https://github.com/coveo/ui-kit/issues/2960)) ([21e00f2](https://github.com/coveo/ui-kit/commits/21e00f286f49b1a8f9af9a5d12e21dae36ae8e54))
+- **atomic:** added folding-result-list for insight panel ([#2970](https://github.com/coveo/ui-kit/issues/2970)) ([4e5ed3b](https://github.com/coveo/ui-kit/commits/4e5ed3b479c6e71bed1add6145595cf902ab0887))
+- **atomic:** mass translation of atomic with gpt model ([#2981](https://github.com/coveo/ui-kit/issues/2981)) ([6ea7626](https://github.com/coveo/ui-kit/commits/6ea7626dde688f8300043d4aae630af4e992d13c))
+
+## 2.31.4 (2023-06-07)
 
 ### Bug Fixes
 
-* **atomic:** code defensively around triggers notifications state ([#2946](https://github.com/coveo/ui-kit/issues/2946)) ([032a7c2](https://github.com/coveo/ui-kit/commits/032a7c2d36e1fddec0599ed01708d691fa2eb94e))
-* **atomic:** not good ([#2965](https://github.com/coveo/ui-kit/issues/2965)) ([9efbb49](https://github.com/coveo/ui-kit/commits/9efbb49918562207757a2a724cfb9e7d1f171ac2))
-* undefined error when checking mismatch with new endpoint url  ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
-
-
+- **atomic:** code defensively around triggers notifications state ([#2946](https://github.com/coveo/ui-kit/issues/2946)) ([032a7c2](https://github.com/coveo/ui-kit/commits/032a7c2d36e1fddec0599ed01708d691fa2eb94e))
+- **atomic:** not good ([#2965](https://github.com/coveo/ui-kit/issues/2965)) ([9efbb49](https://github.com/coveo/ui-kit/commits/9efbb49918562207757a2a724cfb9e7d1f171ac2))
+- undefined error when checking mismatch with new endpoint url ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
 
 ## 2.31.3 (2023-06-01)
 

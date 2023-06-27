@@ -128,9 +128,7 @@ describe('numeric facet', () => {
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches a search', () => {
@@ -154,9 +152,7 @@ describe('numeric facet', () => {
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
       numericFacet.sortBy('descending');
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches a search', () => {
@@ -181,9 +177,7 @@ describe('numeric facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       numericFacet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches a search', () => {
