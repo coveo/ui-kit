@@ -55,31 +55,12 @@ describe('Generated Answer Test Suites', () => {
           GeneratedAnswerSelectors.answer().should('have.text', testTextDelta);
         });
 
-        /*it('should log analytics when clicking the like button', () => {
+        it('should display feedback buttons', () => {
           cy.wait(getStreamInterceptAlias(streamId));
 
-          GeneratedAnswerSelectors.likeButton().click();
-
-          TestFixture.getUACustomData().then((customData) => {
-            expect(customData).to.have.property(
-              'generativeQuestionAnsweringId',
-              streamId
-            );
-          });
+          GeneratedAnswerSelectors.likeButton().should('exist');
+          GeneratedAnswerSelectors.dislikeButton().should('exist');
         });
-
-        it('should log analytics when clicking the dislike button', () => {
-          cy.wait(getStreamInterceptAlias(streamId));
-
-          GeneratedAnswerSelectors.dislikeButton().click();
-
-          TestFixture.getUACustomData().then((customData) => {
-            expect(customData).to.have.property(
-              'generativeQuestionAnsweringId',
-              streamId
-            );
-          });
-        });*/
       });
 
       describe('when a citation event is received', () => {
@@ -106,11 +87,43 @@ describe('Generated Answer Test Suites', () => {
         });
 
         it('should display the citation link', () => {
-          GeneratedAnswerSelectors.citationLabel().should(
+          cy.wait(getStreamInterceptAlias(streamId));
+
+          GeneratedAnswerSelectors.citationsLabel().should(
+            'have.text',
+            'Learn more'
+          );
+          GeneratedAnswerSelectors.citationTitle().should(
             'have.text',
             testCitation.title
           );
           GeneratedAnswerSelectors.citationIndex().should('have.text', '1');
+          GeneratedAnswerSelectors.citation().should(
+            'have.attr',
+            'href',
+            testCitation.clickUri
+          );
+        });
+      });
+
+      describe('when an error event is received', () => {
+        const streamId = crypto.randomUUID();
+
+        const testErrorPayload = {
+          finishReason: 'ERROR',
+          errorMessage: 'An error message',
+          errorCode: 500,
+        };
+
+        beforeEach(() => {
+          interceptStreamResponse(streamId, testErrorPayload);
+          setupGeneratedAnswer(streamId);
+        });
+
+        it('should not display the component', () => {
+          cy.wait(getStreamInterceptAlias(streamId));
+
+          GeneratedAnswerSelectors.container().should('not.exist');
         });
       });
     });

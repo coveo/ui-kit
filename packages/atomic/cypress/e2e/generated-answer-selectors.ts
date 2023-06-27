@@ -13,8 +13,10 @@ export const GeneratedAnswerSelectors = {
   dislikeButton: () =>
     GeneratedAnswerSelectors.shadow().find('.feedback-button.dislike'),
   citation: () => GeneratedAnswerSelectors.shadow().find('.citation'),
-  citationLabel: () =>
-    GeneratedAnswerSelectors.citation().find('.citation-label'),
+  citationsLabel: () =>
+    GeneratedAnswerSelectors.shadow().find('.citations-label'),
+  citationTitle: () =>
+    GeneratedAnswerSelectors.citation().find('.citation-title'),
   citationIndex: () =>
     GeneratedAnswerSelectors.citation().find('.citation-index'),
   loader: () => GeneratedAnswerSelectors.shadow().find('.typing-indicator'),

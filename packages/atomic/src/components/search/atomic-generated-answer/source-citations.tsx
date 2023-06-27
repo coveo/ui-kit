@@ -28,7 +28,7 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
               <div class="citation-index rounded-full flex items-center text-bg-blue shrink-0">
                 <div class="mx-auto">{index + 1}</div>
               </div>
-              <span class="citation-label truncate mx-1">{citation.title}</span>
+              <span class="citation-title truncate mx-1">{citation.title}</span>
             </a>
           )
         )}
