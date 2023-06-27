@@ -7,12 +7,7 @@ import {GeneratedAnswerErrorPayload} from '../../features/generated-answer/gener
 import {URLPath} from '../../utils/url-utils';
 import {resetTimeout} from '../../utils/utils';
 import {SearchAPIClient} from '../search/search-api-client';
-import {
-  GeneratedAnswerCitationsPayload,
-  GeneratedAnswerMessagePayload,
-  GeneratedAnswerPayloadType,
-  GeneratedAnswerStreamEventData,
-} from './generated-answer-event-payload';
+import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request';
 
 export interface GeneratedAnswerAPIClientOptions {
@@ -43,10 +38,12 @@ class FatalError extends Error {
   }
 }
 
-interface DispatchActions {
-  updateMessage: (payload: GeneratedAnswerMessagePayload) => void;
-  updateCitations: (payload: GeneratedAnswerCitationsPayload) => void;
-  updateError: (payload: GeneratedAnswerErrorPayload) => void;
+interface StreamCallbacks {
+  write: (data: GeneratedAnswerStreamEventData) => void;
+  abort: (
+    error: GeneratedAnswerErrorPayload,
+    abortController: AbortController
+  ) => void;
   setIsLoading: (isLoading: boolean) => void;
   resetAnswer: () => void;
 }
@@ -60,9 +57,10 @@ export class GeneratedAnswerAPIClient {
 
   streamGeneratedAnswer(
     params: GeneratedAnswerStreamRequest,
-    actions: DispatchActions
+    callbacks: StreamCallbacks
   ) {
     const {url, organizationId, streamId, accessToken} = params;
+    const {write, abort, setIsLoading, resetAnswer} = callbacks;
 
     if (!streamId) {
       this.logger.error('No stream ID found');
@@ -74,29 +72,12 @@ export class GeneratedAnswerAPIClient {
 
     const retryStream = () => {
       abortController?.abort();
-      actions.resetAnswer();
+      resetAnswer();
       stream();
     };
 
     const refreshTimeout = () => {
       timeout = resetTimeout(retryStream, timeout, MAX_TIMEOUT);
-    };
-
-    const handleStreamPayload = (
-      payloadType: GeneratedAnswerPayloadType,
-      payload: string
-    ) => {
-      if (payloadType === 'genqa.messageType') {
-        actions.updateMessage(
-          JSON.parse(payload) as GeneratedAnswerMessagePayload
-        );
-      } else if (payloadType === 'genqa.citationsType') {
-        actions.updateCitations(
-          JSON.parse(payload) as GeneratedAnswerCitationsPayload
-        );
-      } else {
-        this.logger.error(`Unknown payloadType: "${payloadType}"`);
-      }
     };
 
     const abortController = new AbortController();
@@ -129,30 +110,30 @@ export class GeneratedAnswerAPIClient {
           }
         },
         onmessage: (event) => {
-          actions.setIsLoading(false);
+          setIsLoading(false);
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
             clearTimeout(timeout);
-            actions.updateError({
-              message: data.errorMessage,
-              code: data.errorCode,
-            });
-            abortController.abort();
+            abort(
+              {
+                message: data.errorMessage,
+                code: data.errorCode,
+              },
+              abortController
+            );
             return;
           } else if (data.finishReason === 'COMPLETED') {
             clearTimeout(timeout);
           } else {
             refreshTimeout();
           }
-          if (data.payload && data.payloadType) {
-            handleStreamPayload(data.payloadType, data.payload);
-          }
+          write(data);
           retryCount = 0;
         },
         onerror: (err) => {
           clearTimeout(timeout);
           if (err instanceof FatalError) {
-            actions.updateError(err);
+            abort(err, abortController);
             throw err;
           }
           if (++retryCount > MAX_RETRIES) {
@@ -163,7 +144,7 @@ export class GeneratedAnswerAPIClient {
             });
           }
           this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
-          actions.resetAnswer();
+          resetAnswer();
         },
       });
 

@@ -10,6 +10,8 @@ import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/gener
 import {
   GeneratedAnswerCitationsPayload,
   GeneratedAnswerMessagePayload,
+  GeneratedAnswerPayloadType,
+  GeneratedAnswerStreamEventData,
 } from '../../api/generated-answer/generated-answer-event-payload';
 import {
   ConfigurationSection,
@@ -96,13 +98,44 @@ export const streamAnswer = createAsyncThunk<
 
   const request = await buildStreamingRequest(state);
 
+  const handleStreamPayload = (
+    payloadType: GeneratedAnswerPayloadType,
+    payload: string
+  ) => {
+    switch (payloadType) {
+      case 'genqa.messageType':
+        dispatch(
+          updateMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload)
+        );
+        break;
+      case 'genqa.citationsType':
+        dispatch(
+          updateCitations(
+            JSON.parse(payload) as GeneratedAnswerCitationsPayload
+          )
+        );
+        break;
+      default:
+        extra.logger.error(`Unknown payloadType: "${payloadType}"`);
+    }
+  };
+
   dispatch(setIsLoading(true));
   const abortController = extra.streamingClient?.streamGeneratedAnswer(
     request,
     {
-      updateMessage: (payload) => dispatch(updateMessage(payload)),
-      updateCitations: (payload) => dispatch(updateCitations(payload)),
-      updateError: (error) => dispatch(updateError(error)),
+      write: (data: GeneratedAnswerStreamEventData) => {
+        if (data.payload && data.payloadType) {
+          handleStreamPayload(data.payloadType, data.payload);
+        }
+      },
+      abort: (
+        error: GeneratedAnswerErrorPayload,
+        abortController: AbortController
+      ) => {
+        abortController.abort();
+        dispatch(updateError(error));
+      },
       setIsLoading: (isLoading) => dispatch(setIsLoading(isLoading)),
       resetAnswer: () => dispatch(resetAnswer()),
     }
