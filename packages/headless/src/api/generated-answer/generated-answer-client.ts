@@ -143,7 +143,7 @@ export class GeneratedAnswerAPIClient {
               message: 'Failed to complete stream.',
               code: RETRYABLE_STREAM_ERROR_CODE,
             };
-            abort(err, abortController);
+            abort(error, abortController);
             throw new FatalError(error);
           }
           this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
