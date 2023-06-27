@@ -12,10 +12,11 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
+import {Heading} from '../../common/heading';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {FeedbackButton} from './feedback-button';
-import {SourceCitations} from './source-citations';
+import {GeneratedContent} from './generated-content';
+import {RetryPrompt} from './retry-prompt';
 import {TypingLoader} from './typing-loader';
 
 /**
@@ -69,11 +70,16 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     return (
       <div part="generated-content">
         <div class="flex items-center">
-          <div part="header-label" class="text-bg-blue">
+          <Heading
+            level={0}
+            part="header-label"
+            class="text-bg-blue font-medium inline-block rounded-md py-2 px-2.5"
+          >
             {this.bindings.i18n.t('generated-answer-title')}
-          </div>
+          </Heading>
+
           {!this.hasRetryableError && (
-            <div class="feedback-buttons flex">
+            <div class="feedback-buttons flex gap-2 ml-auto">
               <FeedbackButton
                 title={this.bindings.i18n.t('this-answer-was-helpful')}
                 variant="like"
@@ -90,29 +96,20 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           )}
         </div>
         {this.hasRetryableError ? (
-          <div part="retry-container" class="mt-4">
-            <div class="mx-auto text-center text-neutral-dark">
-              {this.bindings.i18n.t('retry-stream-message')}
-            </div>
-            <Button
-              class="block px-4 py-2 mt-4 mx-auto"
-              style="outline-primary"
-              onClick={this.generatedAnswer.retry}
-            >
-              {this.bindings.i18n.t('retry')}
-            </Button>
-          </div>
+          <RetryPrompt
+            onClick={this.generatedAnswer.retry}
+            buttonLabel={this.bindings.i18n.t('retry')}
+            message={this.bindings.i18n.t('retry-stream-message')}
+          />
         ) : (
-          <div>
-            <p part="generated-text">{this.generatedAnswerState.answer}</p>
-            <SourceCitations
-              label={this.bindings.i18n.t('more-info')}
-              citations={this.generatedAnswerState.citations}
-              onCitationClick={(citation) =>
-                this.generatedAnswer.logCitationClick(citation.id)
-              }
-            />
-          </div>
+          <GeneratedContent
+            answer={this.generatedAnswerState.answer}
+            citations={this.generatedAnswerState.citations}
+            citationsLabel={this.bindings.i18n.t('more-info')}
+            onCitationClick={(citation) =>
+              this.generatedAnswer.logCitationClick(citation.id)
+            }
+          />
         )}
       </div>
     );
@@ -124,7 +121,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     }
     return (
       <aside
-        class="bg-background border-neutral rounded-lg p-6 text-on-background"
+        class="bg-background border-neutral rounded-lg p-6 text-on-background mt-0 mx-auto mb-4"
         part="container"
       >
         <article>

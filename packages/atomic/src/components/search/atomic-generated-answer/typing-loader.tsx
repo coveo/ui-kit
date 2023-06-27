@@ -6,7 +6,7 @@ interface TypingLoaderProps {
 
 export const TypingLoader: FunctionalComponent<TypingLoaderProps> = (props) => (
   <div>
-    <div class="typing-indicator">
+    <div class="typing-indicator" aria-hidden="true">
       <span></span>
       <span></span>
       <span></span>

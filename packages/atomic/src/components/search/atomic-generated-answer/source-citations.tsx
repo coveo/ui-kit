@@ -11,11 +11,11 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
   props
 ) =>
   props.citations.length ? (
-    <div class="source-citations flex">
-      <p class="citations-label text-neutral-dark text-sm shrink-0">
+    <div class="source-citations gap-2 mt-6 flex">
+      <p class="citations-label mt-2 text-neutral-dark text-sm shrink-0">
         {props.label}
       </p>
-      <div class="citations-container flex items-center flex-wrap">
+      <div class="citations-container gap-2 flex items-center flex-wrap">
         {props.citations.map(
           (citation: GeneratedAnswerCitation, index: number) => (
             <a
@@ -23,10 +23,11 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
               title={citation.title}
               href={citation.clickUri ?? citation.uri}
               target="_blank"
+              rel="noopener"
               onClick={() => props.onCitationClick(citation)}
-              class="flex items-center citation bg-background btn-text-neutral text-neutral-dark text-sm border rounded-full border-neutral text-on-background"
+              class="flex items-center citation p-1 bg-background btn-text-neutral text-neutral-dark text-sm border rounded-full border-neutral text-on-background"
             >
-              <div class="citation-index rounded-full flex items-center text-bg-blue shrink-0">
+              <div class="rounded-full citation-index font-medium rounded-full flex items-center text-bg-blue shrink-0">
                 <div class="mx-auto">{index + 1}</div>
               </div>
               <span class="citation-title truncate mx-1">{citation.title}</span>

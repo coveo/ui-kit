@@ -19,7 +19,9 @@ export const FeedbackButton: FunctionalComponent<{
     <Button
       title={props.title}
       style="text-neutral"
-      class={`feedback-button ${props.variant} ${props.active ? 'active' : ''}`}
+      class={`feedback-button p-2 rounded-md ${props.variant} ${
+        props.active ? 'active' : ''
+      }`}
       onClick={props.onClick}
       ariaPressed={`${props.active}`}
     >

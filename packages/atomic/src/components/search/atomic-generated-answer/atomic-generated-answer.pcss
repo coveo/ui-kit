@@ -1,90 +1,55 @@
 @import '../../../global/global.pcss';
 
 [part='container'] {
-  box-shadow: 0px 4px 8px rgba(4, 8, 31, 0.08), inset 0px 0px 0px 1px #e5e8e8;
-  margin: 0 auto 30px auto;
+  box-shadow: 0px 4px 8px rgba(4, 8, 31, 0.08), inset 0px 0px 0px 1px var(--atomic-neutral);
 }
 
 [part='header-label'] {
-  border-radius: 8px;
-  color: #1372ec;
-  padding: 8px 12px;
-  font-weight: 500;
-  display: inline-block;
+  color: var(--atomic-primary);
 }
 
 [part='generated-text'] {
-  margin-bottom: 0;
-  margin-top: 20px;
-  color: var(--atomic-neutral-dark);
+  color: var(--atomic-on-background);
   line-height: 26px;
-  white-space: pre-wrap;
-}
-
-.header {
-  align-items: center;
-  justify-content: center;
 }
 
 .feedback-buttons {
-  margin-left: auto;
-  gap: 0.5rem;
-
   .feedback-button {
-    padding: 8px;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
+    width: 2.2rem;
+    height: 2.2rem;
 
     &.active {
       &.like {
-        background: #c5f4e6;
+        background: var(--atomic-success-background);
       }
 
       &.dislike {
-        background: #f6a5a8;
+        background: var(--atomic-error-background);
       }
     }
   }
 }
 
 .text-bg-blue {
-  background: #edf6ff;
-  color: #1372ec;
+  color: var(--atomic-primary);
+  background: var(--atomic-primary-background);
 }
 
 .source-citations {
-  gap: 8px;
-  margin-top: 24px;
-
-  .citations-label {
-    margin-top: 0.7em;
-  }
-
   .citations-container {
-    gap: 8px;
-
     .citation {
-      padding: 0.4em;
       max-width: 160px;
     }
 
     .citation-index {
       width: 20px;
       height: 20px;
-      font-weight: 500;
-      border-radius: 50%;
-
-      citation-index-number {
-        margin-left: auto;
-        margin-right: auto;
-      }
     }
   }
 }
 
 .typing-indicator {
-  background-color: #edf6ff;
+  background-color: var(--atomic-primary-background);
   will-change: transform;
   width: auto;
   border-radius: 50px;
