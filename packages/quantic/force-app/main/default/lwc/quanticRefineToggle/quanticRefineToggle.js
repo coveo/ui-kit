@@ -28,7 +28,7 @@ import { LightningElement, api } from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters" disable-dynamic-navigation={disableDynamicNavigationEnabled}>
+ * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters" disable-facet-ordering={disableFacetOrdering}>
  *   <div slot="refine-title">Custom Title</div>
  *   <div slot="button-content">
  *     Custom Label
@@ -77,7 +77,7 @@ export default class QuanticRefineToggle extends LightningElement {
    * @type {boolean}
    * @defaultValue `false`
    */
-  @api disableDynamicNavigation = false;
+  @api disableFacetOrdering = false;
 
   /** @type {QuerySummary} */
   querySummary;

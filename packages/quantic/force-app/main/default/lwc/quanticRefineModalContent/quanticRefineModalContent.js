@@ -27,7 +27,7 @@ import { LightningElement, api } from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-modal-content engine-id={engineId} hide-sort></c-quantic-refine-modal-content>
+ * <c-quantic-refine-modal-content engine-id={engineId} hide-sort disable-facet-ordering={disableFacetOrdering}></c-quantic-refine-modal-content>
  */
 export default class QuanticRefineModalContent extends LightningElement {
   labels = {
@@ -53,7 +53,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @type {boolean}
    * @defaultValue `false`
    */
-  @api disableDynamicNavigation = false;
+  @api disableFacetOrdering = false;
 
   /** @type {object} */
   data;

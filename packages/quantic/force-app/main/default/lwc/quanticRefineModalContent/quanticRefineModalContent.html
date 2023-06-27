@@ -28,7 +28,7 @@
           ></lightning-button>
         </template>
       </div>
-      <template lwc:if={disableDynamicNavigation}>
+      <template lwc:if={disableFacetOrdering}>
         <template for:each={facets} for:item="facet">
           <template if:true={facet.isNumeric}>
             <c-quantic-numeric-facet
