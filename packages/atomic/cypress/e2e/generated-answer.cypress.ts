@@ -131,7 +131,7 @@ describe('Generated Answer Test Suites', () => {
       describe('when the stream connection fails', () => {
         const streamId = crypto.randomUUID();
 
-        describe('4XX error', () => {
+        describe('Non-retryable error (4XX)', () => {
           beforeEach(() => {
             mockStreamError(streamId, 406);
             setupGeneratedAnswer(streamId);
@@ -144,56 +144,41 @@ describe('Generated Answer Test Suites', () => {
           });
         });
 
-        describe('429 error', () => {
-          beforeEach(() => {
-            mockStreamError(streamId, 429);
-            setupGeneratedAnswer(streamId);
-          });
+        describe('Retryable error', () => {
+          [500, 429].forEach((errorCode) => {
+            describe(`${errorCode} error`, () => {
+              beforeEach(() => {
+                Cypress.on('uncaught:exception', () => false);
+                mockStreamError(streamId, 500);
+                setupGeneratedAnswer(streamId);
+              });
 
-          it('should retry the stream 3 times', () => {
-            cy.wait(getStreamInterceptAlias(streamId));
+              it('should retry the stream 3 times then offer a retry button', () => {
+                cy.wait(getStreamInterceptAlias(streamId));
 
-            GeneratedAnswerSelectors.container().should('not.exist');
+                GeneratedAnswerSelectors.container().should('not.exist');
 
-            cy.wait(getStreamInterceptAlias(streamId));
+                cy.wait(getStreamInterceptAlias(streamId));
 
-            GeneratedAnswerSelectors.container().should('not.exist');
+                GeneratedAnswerSelectors.container().should('not.exist');
 
-            cy.wait(getStreamInterceptAlias(streamId));
+                cy.wait(getStreamInterceptAlias(streamId));
 
-            GeneratedAnswerSelectors.container().should('not.exist');
-          });
-        });
+                GeneratedAnswerSelectors.container().should('not.exist');
 
-        describe('5XX error', () => {
-          beforeEach(() => {
-            Cypress.on('uncaught:exception', () => false);
-            mockStreamError(streamId, 500);
-            setupGeneratedAnswer(streamId);
-          });
+                cy.wait(getStreamInterceptAlias(streamId));
 
-          it('should retry the stream 3 times', () => {
-            cy.wait(getStreamInterceptAlias(streamId));
+                const retryAlias = '@retrySearch';
+                cy.intercept({
+                  method: 'POST',
+                  url: '**/rest/search/v2?*',
+                }).as(retryAlias.substring(1));
 
-            GeneratedAnswerSelectors.container().should('not.exist');
+                GeneratedAnswerSelectors.retryButton().click();
 
-            cy.wait(getStreamInterceptAlias(streamId));
-
-            GeneratedAnswerSelectors.container().should('not.exist');
-
-            cy.wait(getStreamInterceptAlias(streamId));
-
-            GeneratedAnswerSelectors.container().should('not.exist');
-
-            const retryAlias = '@retrySearch';
-            cy.intercept({
-              method: 'POST',
-              url: '**/rest/search/v2?*',
-            }).as(retryAlias.substring(1));
-
-            GeneratedAnswerSelectors.retryButton().click();
-
-            cy.wait(retryAlias);
+                cy.wait(retryAlias);
+              });
+            });
           });
         });
       });

@@ -50,18 +50,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
-  private get hasNonRetryableError() {
+  private get hasRetryableError() {
     return (
-      this.searchStatusState.hasError ||
-      this.generatedAnswerState.error?.isRetryable === false
+      !this.searchStatusState.hasError &&
+      this.generatedAnswerState.error?.isRetryable
     );
   }
 
   private get hideComponent() {
     const {isLoading, answer, citations} = this.generatedAnswerState;
     return (
-      !(isLoading || answer !== undefined || citations.length) ||
-      this.hasNonRetryableError
+      !(isLoading || answer !== undefined || citations.length) &&
+      !this.hasRetryableError
     );
   }
 
