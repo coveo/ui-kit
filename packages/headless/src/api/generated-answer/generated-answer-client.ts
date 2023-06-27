@@ -87,6 +87,7 @@ export class GeneratedAnswerAPIClient {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          accept: '*/*',
         },
         signal: abortController.signal,
         async onopen(response) {
