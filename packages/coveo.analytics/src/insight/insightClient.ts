@@ -141,6 +141,11 @@ export class CoveoInsightClient {
         return this.logSearchEvent(SearchPageEvents.facetSelect, metadataToSend);
     }
 
+    public logFacetExclude(metadata: InsightFacetMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logSearchEvent(SearchPageEvents.facetExclude, metadataToSend);
+    }
+
     public logFacetDeselect(metadata: InsightFacetMetadata) {
         const metadataToSend = generateMetadataToSend(metadata);
         return this.logSearchEvent(SearchPageEvents.facetDeselect, metadataToSend);
