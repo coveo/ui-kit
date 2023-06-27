@@ -45,6 +45,32 @@ describe('Generated Answer Test Suites', () => {
 
           GeneratedAnswerSelectors.answer().should('have.text', testTextDelta);
         });
+
+        it('should log analytics when clicking the like button', () => {
+          cy.wait(getStreamInterceptAlias(streamId));
+
+          GeneratedAnswerSelectors.likeButton().click();
+
+          TestFixture.getUACustomData().then((customData) => {
+            expect(customData).to.have.property(
+              'generativeQuestionAnsweringId',
+              streamId
+            );
+          });
+        });
+
+        it('should log analytics when clicking the dislike button', () => {
+          cy.wait(getStreamInterceptAlias(streamId));
+
+          GeneratedAnswerSelectors.dislikeButton().click();
+
+          TestFixture.getUACustomData().then((customData) => {
+            expect(customData).to.have.property(
+              'generativeQuestionAnsweringId',
+              streamId
+            );
+          });
+        });
       });
     });
   });
