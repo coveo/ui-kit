@@ -5,7 +5,7 @@ import {TestFixture, generateComponentHTML} from '../fixtures/test-fixture';
 export const getStreamInterceptAlias = (streamId: string) =>
   `${RouteAlias.GenQAStream}-${streamId}`;
 
-export function interceptStreamResponse(streamId: string, body: any) {
+export function mockStreamResponse(streamId: string, body: any) {
   cy.intercept(
     {
       method: 'GET',
@@ -15,6 +15,24 @@ export function interceptStreamResponse(streamId: string, body: any) {
       request.reply(200, `data: ${JSON.stringify(body)} \n\n`, {
         'content-type': 'text/event-stream',
       });
+    }
+  ).as(getStreamInterceptAlias(streamId).substring(1));
+}
+
+export function mockStreamError(streamId: string, errorCode: number) {
+  cy.intercept(
+    {
+      method: 'GET',
+      url: `**/machinelearning/streaming/${streamId}`,
+    },
+    (request) => {
+      request.reply(
+        errorCode,
+        {},
+        {
+          'content-type': 'text/event-stream',
+        }
+      );
     }
   ).as(getStreamInterceptAlias(streamId).substring(1));
 }

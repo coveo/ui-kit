@@ -2,7 +2,8 @@ import {TestFixture} from '../fixtures/test-fixture';
 import {
   addGeneratedAnswer,
   getStreamInterceptAlias,
-  interceptStreamResponse,
+  mockStreamError,
+  mockStreamResponse,
 } from './generated-answer-actions';
 import {GeneratedAnswerSelectors} from './generated-answer-selectors';
 
@@ -36,7 +37,7 @@ describe('Generated Answer Test Suites', () => {
         };
 
         beforeEach(() => {
-          interceptStreamResponse(streamId, testMessagePayload);
+          mockStreamResponse(streamId, testMessagePayload);
           setupGeneratedAnswer(streamId);
         });
 
@@ -82,7 +83,7 @@ describe('Generated Answer Test Suites', () => {
         };
 
         beforeEach(() => {
-          interceptStreamResponse(streamId, testMessagePayload);
+          mockStreamResponse(streamId, testMessagePayload);
           setupGeneratedAnswer(streamId);
         });
 
@@ -116,7 +117,7 @@ describe('Generated Answer Test Suites', () => {
         };
 
         beforeEach(() => {
-          interceptStreamResponse(streamId, testErrorPayload);
+          mockStreamResponse(streamId, testErrorPayload);
           setupGeneratedAnswer(streamId);
         });
 
@@ -124,6 +125,65 @@ describe('Generated Answer Test Suites', () => {
           cy.wait(getStreamInterceptAlias(streamId));
 
           GeneratedAnswerSelectors.container().should('not.exist');
+        });
+      });
+
+      describe('when the stream connection fails', () => {
+        const streamId = crypto.randomUUID();
+
+        describe('4XX error', () => {
+          beforeEach(() => {
+            mockStreamError(streamId, 406);
+            setupGeneratedAnswer(streamId);
+          });
+
+          it('should not show the component', () => {
+            cy.wait(getStreamInterceptAlias(streamId));
+
+            GeneratedAnswerSelectors.container().should('not.exist');
+          });
+        });
+
+        describe('429 error', () => {
+          beforeEach(() => {
+            mockStreamError(streamId, 429);
+            setupGeneratedAnswer(streamId);
+          });
+
+          it('should retry the stream 3 times', () => {
+            cy.wait(getStreamInterceptAlias(streamId));
+
+            GeneratedAnswerSelectors.container().should('not.exist');
+
+            cy.wait(getStreamInterceptAlias(streamId));
+
+            GeneratedAnswerSelectors.container().should('not.exist');
+
+            cy.wait(getStreamInterceptAlias(streamId));
+
+            GeneratedAnswerSelectors.container().should('not.exist');
+          });
+        });
+
+        describe('5XX error', () => {
+          beforeEach(() => {
+            mockStreamError(streamId, 500);
+            setupGeneratedAnswer(streamId);
+          });
+
+          it('should retry the stream 3 times', () => {
+            cy.wait(getStreamInterceptAlias(streamId));
+
+            GeneratedAnswerSelectors.container().should('not.exist');
+
+            cy.wait(getStreamInterceptAlias(streamId));
+
+            GeneratedAnswerSelectors.container().should('not.exist');
+
+            cy.wait(getStreamInterceptAlias(streamId));
+
+            GeneratedAnswerSelectors.container().should('not.exist');
+          });
         });
       });
     });
