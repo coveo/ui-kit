@@ -102,16 +102,21 @@ export const streamAnswer = createAsyncThunk<
     payloadType: GeneratedAnswerPayloadType,
     payload: string
   ) => {
-    if (payloadType === 'genqa.messageType') {
-      dispatch(
-        updateMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload)
-      );
-    } else if (payloadType === 'genqa.citationsType') {
-      dispatch(
-        updateCitations(JSON.parse(payload) as GeneratedAnswerCitationsPayload)
-      );
-    } else {
-      extra.logger.error(`Unknown payloadType: "${payloadType}"`);
+    switch (payloadType) {
+      case 'genqa.messageType':
+        dispatch(
+          updateMessage(JSON.parse(payload) as GeneratedAnswerMessagePayload)
+        );
+        break;
+      case 'genqa.citationsType':
+        dispatch(
+          updateCitations(
+            JSON.parse(payload) as GeneratedAnswerCitationsPayload
+          )
+        );
+        break;
+      default:
+        extra.logger.error(`Unknown payloadType: "${payloadType}"`);
     }
   };
 
