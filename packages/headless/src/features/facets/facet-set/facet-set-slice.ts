@@ -202,13 +202,6 @@ export const facetSetReducer = createReducer(
           )
         );
 
-        const facetIdsToDelete = Object.keys(state).filter(
-          (facetId) => state[facetId]?.generated === true
-        );
-        facetIdsToDelete.forEach((facetId) => {
-          delete state[facetId];
-        });
-
         cleanupAutomaticFacets(state);
 
         const automaticFacets =
