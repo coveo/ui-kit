@@ -202,6 +202,15 @@ export const facetSetReducer = createReducer(
           )
         );
 
+        const facetIdsToDelete = Object.keys(state).filter(
+          (facetId) => state[facetId]?.generated === true
+        );
+        facetIdsToDelete.forEach((facetId) => {
+          delete state[facetId];
+        });
+
+        cleanupAutomaticFacets(state);
+
         const automaticFacets =
           action.payload.response.generateAutomaticFacets?.facets;
         automaticFacets?.forEach((facetResponse) => {
@@ -216,8 +225,6 @@ export const facetSetReducer = createReducer(
             generated: true,
           };
         });
-
-        deleteOldAutomaticFacets(state, automaticFacets);
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = action.payload.response?.facets?.results || [];
@@ -341,17 +348,11 @@ function restoreFacetValueToIdleState(
   return {...facetValue, state: 'idle'};
 }
 
-function deleteOldAutomaticFacets(
-  state: WritableDraft<FacetSetState>,
-  automaticFacets: FacetResponse[] | undefined
-) {
-  const responseFacetIds = automaticFacets?.map((facetResponse) =>
-    getAutomaticFacetId(facetResponse.field)
+function cleanupAutomaticFacets(state: WritableDraft<FacetSetState>) {
+  const facetIdsToDelete = Object.keys(state).filter(
+    (facetId) => state[facetId]?.generated === true
   );
-
-  for (const [facetId, facetSlice] of Object.entries(state)) {
-    if (facetSlice.generated === true && !responseFacetIds?.includes(facetId)) {
-      delete state[facetId];
-    }
-  }
+  facetIdsToDelete.forEach((facetId) => {
+    delete state[facetId];
+  });
 }
