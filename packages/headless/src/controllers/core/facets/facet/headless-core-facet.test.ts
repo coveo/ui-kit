@@ -168,6 +168,24 @@ describe('facet', () => {
     });
   });
 
+  describe('#toggleExclude', () => {
+    it('dispatches a #toggleExclude action with the passed facet value', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        toggleExcludeFacetValue({facetId, selection: facetValue})
+      );
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(updateFacetOptions());
+    });
+  });
+
   function testCommonToggleSingleSelect(facetValue: () => FacetValue) {
     it('dispatches a #toggleSelect action with the passed facet value', () => {
       facet.toggleSingleSelect(facetValue());
