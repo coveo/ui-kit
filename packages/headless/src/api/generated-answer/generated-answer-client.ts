@@ -129,6 +129,7 @@ export class GeneratedAnswerAPIClient {
           }
         },
         onmessage: (event) => {
+          actions.setIsLoading(false);
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
             clearTimeout(timeout);
@@ -138,16 +139,14 @@ export class GeneratedAnswerAPIClient {
             });
             abortController.abort();
             return;
+          } else if (data.finishReason === 'COMPLETED') {
+            clearTimeout(timeout);
+          } else {
+            refreshTimeout();
           }
           if (data.payload && data.payloadType) {
             handleStreamPayload(data.payloadType, data.payload);
           }
-          if (data.finishReason === 'COMPLETED') {
-            clearTimeout(timeout);
-            actions.setIsLoading(false);
-            return;
-          }
-          refreshTimeout();
           retryCount = 0;
         },
         onerror: (err) => {
