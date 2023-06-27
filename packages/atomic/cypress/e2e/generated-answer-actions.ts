@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {RouteAlias} from '../fixtures/fixture-common';
 import {TestFixture, generateComponentHTML} from '../fixtures/test-fixture';
 
 export const getStreamInterceptAlias = (streamId: string) =>
   `${RouteAlias.GenQAStream}-${streamId}`;
 
-export function mockStreamResponse(streamId: string, body: any) {
+export function mockStreamResponse(streamId: string, body: unknown) {
   cy.intercept(
     {
       method: 'GET',
