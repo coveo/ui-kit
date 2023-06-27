@@ -81,6 +81,11 @@ import {
  * @part query-suggestion-icon - The icon of a suggestion from the `atomic-search-box-query-suggestions` component.
  * @part query-suggestion-text - The text of a suggestion from the `atomic-search-box-query-suggestions` component.
  *
+ * @part field-suggestion-item - A suggestion from the `atomic-search-box-field-suggestions` component.
+ * @part field-suggestion-content - The contents of a suggestion from the `atomic-search-box-field-suggestions` component.
+ * @part field-suggestion-icon - The icon of a suggestion from the `atomic-search-box-field-suggestions` component.
+ * @part field-suggestion-text - The text of a suggestion from the `atomic-search-box-field-suggestions` component.
+ *
  * @part recent-query-item - A suggestion from the `atomic-search-box-recent-queries` component.
  * @part recent-query-content - The contents of a suggestion from the `atomic-search-box-recent-queries` component.
  * @part recent-query-icon - The icon of a suggestion from the `atomic-search-box-recent-queries` component.
@@ -792,7 +797,7 @@ export class AtomicSearchBox {
       !this.suggestions.length && (
         <slot>
           <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
-          <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+          <atomic-search-box-field-suggestions field="source"></atomic-search-box-field-suggestions>
         </slot>
       ),
     ];
