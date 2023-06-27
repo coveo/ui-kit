@@ -20,4 +20,7 @@ export const GeneratedAnswerSelectors = {
   citationIndex: () =>
     GeneratedAnswerSelectors.citation().find('.citation-index'),
   loader: () => GeneratedAnswerSelectors.shadow().find('.typing-indicator'),
+  retryContainer: () =>
+    GeneratedAnswerSelectors.shadow().find('[part="retry-container"]'),
+  retryButton: () => GeneratedAnswerSelectors.retryContainer().find('button'),
 };

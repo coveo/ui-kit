@@ -90,7 +90,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           )}
         </div>
         {this.generatedAnswerState.error?.isRetryable ? (
-          <div class="mt-4">
+          <div part="retry-container" class="mt-4">
             <div class="mx-auto text-center text-neutral-dark">
               {this.generatedAnswerState.error?.message ??
                 this.bindings.i18n.t('something-went-wrong')}

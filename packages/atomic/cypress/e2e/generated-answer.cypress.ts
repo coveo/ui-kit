@@ -167,6 +167,7 @@ describe('Generated Answer Test Suites', () => {
 
         describe('5XX error', () => {
           beforeEach(() => {
+            Cypress.on('uncaught:exception', () => false);
             mockStreamError(streamId, 500);
             setupGeneratedAnswer(streamId);
           });
@@ -183,6 +184,16 @@ describe('Generated Answer Test Suites', () => {
             cy.wait(getStreamInterceptAlias(streamId));
 
             GeneratedAnswerSelectors.container().should('not.exist');
+
+            const retryAlias = '@retrySearch';
+            cy.intercept({
+              method: 'POST',
+              url: '**/rest/search/v2?*',
+            }).as(retryAlias.substring(1));
+
+            GeneratedAnswerSelectors.retryButton().click();
+
+            cy.wait(retryAlias);
           });
         });
       });
