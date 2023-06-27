@@ -5580,11 +5580,11 @@
   },
   "this-answer-was-helpful": {
     "en": "This answer was helpful",
-    "fr": "Cette réponse m'a aidé"
+    "fr": "Cette réponse m'a été utile"
   },
   "this-answer-was-not-helpful": {
     "en": "This answer was not helpful",
-    "fr": "Cette réponse ne m'a pas aidé"
+    "fr": "Cette réponse ne m'a pas été utile"
   },
   "generated-answer-loading": {
     "en": "Looking for an answer...",
@@ -5593,5 +5593,9 @@
   "retry": {
     "en": "Retry",
     "fr": "Réessayer"
+  },
+  "retry-stream-message": {
+    "en": "Oops! Something went wrong while trying to generate an answer.",
+    "fr": "Oops! Quelque chose s'est mal passé lors de la tentative de génération d'une réponse."
   }
 }

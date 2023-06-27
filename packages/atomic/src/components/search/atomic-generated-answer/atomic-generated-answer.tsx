@@ -57,7 +57,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
-  private get hideComponent() {
+  private get shouldBeHidden() {
     const {isLoading, answer, citations} = this.generatedAnswerState;
     return (
       !(isLoading || answer !== undefined || citations.length) &&
@@ -72,7 +72,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           <div part="header-label" class="text-bg-blue">
             {this.bindings.i18n.t('generated-answer-title')}
           </div>
-          {!this.generatedAnswerState.error && (
+          {!this.hasRetryableError && (
             <div class="feedback-buttons flex">
               <FeedbackButton
                 title={this.bindings.i18n.t('this-answer-was-helpful')}
@@ -89,11 +89,10 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             </div>
           )}
         </div>
-        {this.generatedAnswerState.error?.isRetryable ? (
+        {this.hasRetryableError ? (
           <div part="retry-container" class="mt-4">
             <div class="mx-auto text-center text-neutral-dark">
-              {this.generatedAnswerState.error?.message ??
-                this.bindings.i18n.t('something-went-wrong')}
+              {this.bindings.i18n.t('retry-stream-message')}
             </div>
             <Button
               class="block px-4 py-2 mt-4 mx-auto"
@@ -120,7 +119,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   public render() {
-    if (this.hideComponent) {
+    if (this.shouldBeHidden) {
       return null;
     }
     return (

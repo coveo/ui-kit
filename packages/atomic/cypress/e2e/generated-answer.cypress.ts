@@ -39,6 +39,7 @@ describe('Generated Answer Test Suites', () => {
         beforeEach(() => {
           mockStreamResponse(streamId, testMessagePayload);
           setupGeneratedAnswer(streamId);
+          cy.wait(getStreamInterceptAlias(streamId));
         });
 
         it('should log the stream ID in the search event custom data', () => {
@@ -51,14 +52,10 @@ describe('Generated Answer Test Suites', () => {
         });
 
         it('should display the message', () => {
-          cy.wait(getStreamInterceptAlias(streamId));
-
           GeneratedAnswerSelectors.answer().should('have.text', testTextDelta);
         });
 
         it('should display feedback buttons', () => {
-          cy.wait(getStreamInterceptAlias(streamId));
-
           GeneratedAnswerSelectors.likeButton().should('exist');
           GeneratedAnswerSelectors.dislikeButton().should('exist');
         });
@@ -85,11 +82,10 @@ describe('Generated Answer Test Suites', () => {
         beforeEach(() => {
           mockStreamResponse(streamId, testMessagePayload);
           setupGeneratedAnswer(streamId);
+          cy.wait(getStreamInterceptAlias(streamId));
         });
 
         it('should display the citation link', () => {
-          cy.wait(getStreamInterceptAlias(streamId));
-
           GeneratedAnswerSelectors.citationsLabel().should(
             'have.text',
             'Learn more'
@@ -119,11 +115,10 @@ describe('Generated Answer Test Suites', () => {
         beforeEach(() => {
           mockStreamResponse(streamId, testErrorPayload);
           setupGeneratedAnswer(streamId);
+          cy.wait(getStreamInterceptAlias(streamId));
         });
 
         it('should not display the component', () => {
-          cy.wait(getStreamInterceptAlias(streamId));
-
           GeneratedAnswerSelectors.container().should('not.exist');
         });
       });
@@ -135,11 +130,10 @@ describe('Generated Answer Test Suites', () => {
           beforeEach(() => {
             mockStreamError(streamId, 406);
             setupGeneratedAnswer(streamId);
+            cy.wait(getStreamInterceptAlias(streamId));
           });
 
           it('should not show the component', () => {
-            cy.wait(getStreamInterceptAlias(streamId));
-
             GeneratedAnswerSelectors.container().should('not.exist');
           });
         });
@@ -151,22 +145,15 @@ describe('Generated Answer Test Suites', () => {
                 Cypress.on('uncaught:exception', () => false);
                 mockStreamError(streamId, 500);
                 setupGeneratedAnswer(streamId);
+                cy.wait(getStreamInterceptAlias(streamId));
               });
 
               it('should retry the stream 3 times then offer a retry button', () => {
-                cy.wait(getStreamInterceptAlias(streamId));
+                for (let times = 0; times < 3; times++) {
+                  GeneratedAnswerSelectors.container().should('not.exist');
 
-                GeneratedAnswerSelectors.container().should('not.exist');
-
-                cy.wait(getStreamInterceptAlias(streamId));
-
-                GeneratedAnswerSelectors.container().should('not.exist');
-
-                cy.wait(getStreamInterceptAlias(streamId));
-
-                GeneratedAnswerSelectors.container().should('not.exist');
-
-                cy.wait(getStreamInterceptAlias(streamId));
+                  cy.wait(getStreamInterceptAlias(streamId));
+                }
 
                 const retryAlias = '@retrySearch';
                 cy.intercept({
