@@ -139,10 +139,12 @@ export class GeneratedAnswerAPIClient {
           }
           if (++retryCount > MAX_RETRIES) {
             this.logger.info('Maximum retry exceeded.');
-            throw new FatalError({
+            const error = {
               message: 'Failed to complete stream.',
               code: RETRYABLE_STREAM_ERROR_CODE,
-            });
+            };
+            abort(err, abortController);
+            throw new FatalError(error);
           }
           this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
           resetAnswer();
