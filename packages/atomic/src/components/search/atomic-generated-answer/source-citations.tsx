@@ -20,6 +20,7 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
           (citation: GeneratedAnswerCitation, index: number) => (
             <a
               key={citation.id}
+              title={citation.title}
               href={citation.clickUri ?? citation.uri}
               target="_blank"
               onClick={() => props.onCitationClick(citation)}
