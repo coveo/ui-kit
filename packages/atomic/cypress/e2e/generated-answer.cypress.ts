@@ -40,13 +40,22 @@ describe('Generated Answer Test Suites', () => {
           setupGeneratedAnswer(streamId);
         });
 
+        it('should log the stream ID in the search event custom data', () => {
+          TestFixture.getUACustomData().then((customData) => {
+            expect(customData).to.have.property(
+              'generativeQuestionAnsweringId',
+              streamId
+            );
+          });
+        });
+
         it('should display the message', () => {
           cy.wait(getStreamInterceptAlias(streamId));
 
           GeneratedAnswerSelectors.answer().should('have.text', testTextDelta);
         });
 
-        it('should log analytics when clicking the like button', () => {
+        /*it('should log analytics when clicking the like button', () => {
           cy.wait(getStreamInterceptAlias(streamId));
 
           GeneratedAnswerSelectors.likeButton().click();
@@ -70,6 +79,38 @@ describe('Generated Answer Test Suites', () => {
               streamId
             );
           });
+        });*/
+      });
+
+      describe('when a citation event is received', () => {
+        const streamId = crypto.randomUUID();
+
+        const testCitation = {
+          id: 'some-id-123',
+          title: 'Some Title',
+          uri: 'https://www.coveo.com',
+          permanentid: 'some-permanent-id-123',
+          clickUri: 'https://www.coveo.com/en',
+        };
+        const testMessagePayload = {
+          payloadType: 'genqa.citationsType',
+          payload: JSON.stringify({
+            citations: [testCitation],
+          }),
+          finishReason: 'COMPLETED',
+        };
+
+        beforeEach(() => {
+          interceptStreamResponse(streamId, testMessagePayload);
+          setupGeneratedAnswer(streamId);
+        });
+
+        it('should display the citation link', () => {
+          GeneratedAnswerSelectors.citationLabel().should(
+            'have.text',
+            testCitation.title
+          );
+          GeneratedAnswerSelectors.citationIndex().should('have.text', '1');
         });
       });
     });

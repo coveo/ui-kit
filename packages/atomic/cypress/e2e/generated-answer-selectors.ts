@@ -13,5 +13,9 @@ export const GeneratedAnswerSelectors = {
   dislikeButton: () =>
     GeneratedAnswerSelectors.shadow().find('.feedback-button.dislike'),
   citation: () => GeneratedAnswerSelectors.shadow().find('.citation'),
+  citationLabel: () =>
+    GeneratedAnswerSelectors.citation().find('.citation-label'),
+  citationIndex: () =>
+    GeneratedAnswerSelectors.citation().find('.citation-index'),
   loader: () => GeneratedAnswerSelectors.shadow().find('.typing-indicator'),
 };

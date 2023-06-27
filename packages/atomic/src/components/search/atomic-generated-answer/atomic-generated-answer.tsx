@@ -58,8 +58,11 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   private get hideComponent() {
-    const {isLoading, answer} = this.generatedAnswerState;
-    return !(isLoading || answer !== undefined) || this.hasNonRetryableError;
+    const {isLoading, answer, citations} = this.generatedAnswerState;
+    return (
+      !(isLoading || answer !== undefined || citations.length) ||
+      this.hasNonRetryableError
+    );
   }
 
   private renderContent() {
