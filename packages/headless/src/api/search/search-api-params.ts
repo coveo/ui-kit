@@ -1,5 +1,6 @@
 import {history} from 'coveo.analytics';
 import {FacetOptions} from '../../features/facet-options/facet-options';
+import {AutomaticFacetResponse} from '../../features/facets/automatic-facet-set/interfaces/response';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
 import {URLPath} from '../../utils/url-utils';
 import {
@@ -127,6 +128,7 @@ export interface AuthenticationParam {
 export interface AutomaticFacetsParams {
   generateAutomaticFacets?: {
     desiredCount: number;
+    currentFacets?: AutomaticFacetResponse[];
   };
 }
 

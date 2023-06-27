@@ -18,6 +18,7 @@ export const buildSearchRequest = async (
 ) => {
   const cq = buildConstantQuery(state);
   const facets = getFacets(state);
+  const automaticFacets = getAutomaticFacets(state);
   const sharedWithFoldingRequest =
     await buildSearchAndFoldingLoadCollectionRequest(state, eventDescription);
 
@@ -59,11 +60,22 @@ export const buildSearchRequest = async (
       parentField: state.folding.fields.child,
       filterFieldRange: state.folding.filterFieldRange,
     }),
+    ...(state.automaticFacets && {
+      generateAutomaticFacets: {
+        desiredCount: state.automaticFacets.desiredCount,
+        currentFacets: automaticFacets,
+      },
+    }),
   });
 };
 
 function getFacets(state: StateNeededBySearchRequest) {
   return sortFacets(getAllEnabledFacets(state), state.facetOrder ?? []);
+}
+
+function getAutomaticFacets(state: StateNeededBySearchRequest) {
+  const facets = state.automaticFacets?.facets;
+  return facets ? Object.values(facets) : undefined;
 }
 
 function getAllEnabledFacets(state: StateNeededBySearchRequest) {

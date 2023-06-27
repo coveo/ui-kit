@@ -230,7 +230,10 @@ export {buildTab} from './tab/headless-tab';
 export type {
   FacetManagerPayload,
   FacetManagerState,
+  FacetManagerProps,
   FacetManager,
+  CoreFacetManager,
+  CoreFacetManagerState,
 } from './facet-manager/headless-facet-manager';
 export {buildFacetManager} from './facet-manager/headless-facet-manager';
 
