@@ -5,12 +5,16 @@ import {Button} from '../../common/button';
 
 type FeedbackVariant = 'like' | 'dislike';
 
-export const FeedbackButton: FunctionalComponent<{
+interface FeedbackButtonProps {
   title: string;
   variant: FeedbackVariant;
   active: boolean;
   onClick: () => void;
-}> = (props) => {
+}
+
+export const FeedbackButton: FunctionalComponent<FeedbackButtonProps> = (
+  props
+) => {
   const getIcon = () => {
     return props.variant === 'like' ? ThumbsUpIcon : ThumbsDownIcon;
   };
