@@ -621,7 +621,7 @@ export class FacetCommon {
     if (hasError || !this.facet.state.enabled) {
       return <Hidden></Hidden>;
     }
-    console.log({shouldRender});
+
     if (!shouldRender) {
       return (
         <FacetPlaceholder
