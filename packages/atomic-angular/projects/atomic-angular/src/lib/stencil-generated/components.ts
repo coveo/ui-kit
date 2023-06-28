@@ -358,27 +358,6 @@ export class AtomicIcon {
 }
 
 
-export declare interface AtomicInsightResultChildren extends Components.AtomicInsightResultChildren {}
-
-@ProxyCmp({
-  defineCustomElementFn: undefined,
-  inputs: ['imageSize', 'inheritTemplates', 'noResultText']
-})
-@Component({
-  selector: 'atomic-insight-result-children',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  inputs: ['imageSize', 'inheritTemplates', 'noResultText']
-})
-export class AtomicInsightResultChildren {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
 export declare interface AtomicLayoutSection extends Components.AtomicLayoutSection {}
 
 @ProxyCmp({
