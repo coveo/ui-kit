@@ -15,6 +15,13 @@ export default class ExampleQuanticRefineModalContent extends LightningElement {
       description: 'Whether the Quantic Sort component should be hidden.',
       defaultValue: false,
     },
+    {
+      attribute: 'disableFacetOrdering',
+      label: 'Disable Facet Ordering',
+      description:
+        'Whether the Dynamic Navigation for facet ordering should be disabled.',
+      defaultValue: false,
+    },
   ];
 
   formattingFunction = (item) => `${item.start} - ${item.end}`;

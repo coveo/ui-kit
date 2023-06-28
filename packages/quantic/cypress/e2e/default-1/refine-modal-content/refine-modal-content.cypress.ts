@@ -6,6 +6,7 @@ import {RefineContentExpectations as Expect} from './refine-modal-content-expect
 
 interface RefineContentOptions {
   hideSort: boolean;
+  disableFacetOrdering: boolean;
 }
 
 describe('quantic-refine-content', () => {
@@ -30,7 +31,7 @@ describe('quantic-refine-content', () => {
       scope('when loading the page', () => {
         Expect.displayFiltersTitle();
         Expect.displayClearAllFiltersButton(false);
-        Expect.displayFacetManager();
+        Expect.displayFacetManager(true);
         Expect.displayDuplicatedNumericFacet();
         Expect.displayDuplicatedFacet();
         Expect.displayDuplicatedCategoryFacet();
@@ -76,7 +77,7 @@ describe('quantic-refine-content', () => {
       scope('when loading the page', () => {
         Expect.displayFiltersTitle();
         Expect.displayClearAllFiltersButton(false);
-        Expect.displayFacetManager();
+        Expect.displayFacetManager(true);
         Expect.displayDuplicatedNumericFacet();
         Expect.displayDuplicatedFacet();
         Expect.displayDuplicatedCategoryFacet();
@@ -86,6 +87,20 @@ describe('quantic-refine-content', () => {
         Expect.displayDuplicatedDateFacet();
         Expect.displaySort(false);
         Expect.correctFacetsOrder();
+      });
+    });
+  });
+
+  describe('when disableFacetOrdering property is set to true', () => {
+    it('should not render the facets inside the quantic-facets-manager', () => {
+      visitRefineContent({
+        disableFacetOrdering: true,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayFiltersTitle();
+        Expect.displayClearAllFiltersButton(false);
+        Expect.displayFacetManager(false);
       });
     });
   });
