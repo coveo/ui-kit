@@ -594,7 +594,7 @@
     </customLabels>
     <customLabels>
       <label>Ouvre dans un sous-onglet</label>
-      <name>quantic_OpensInSalesforceSubTab</name>
+      <name>quantic_OpensInSubTab</name>
     </customLabels>
     <customLabels>
       <label>Ouvre dans un onglet du navigateur web</label>

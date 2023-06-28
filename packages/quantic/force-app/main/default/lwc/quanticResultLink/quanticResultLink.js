@@ -1,5 +1,5 @@
 import opensInBrowserTab from '@salesforce/label/c.quantic_OpensInBrowserTab';
-import opensInSalesforceSubTab from '@salesforce/label/c.quantic_OpensInSalesforceSubTab';
+import opensInSalesforceSubTab from '@salesforce/label/c.quantic_OpensInSubTab';
 import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
