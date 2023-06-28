@@ -24,6 +24,7 @@ import {AtomicInsightStore} from '../atomic-insight-interface/store';
 })
 export class AtomicInsightResult {
   private layout!: ResultLayout;
+  private resultActionBarElement?: HTMLElement | null;
   @Element() host!: HTMLElement;
 
   /**
@@ -124,18 +125,12 @@ export class AtomicInsightResult {
   }
 
   private handleMouseOver = () => {
-    const resultActionBarElement = this.host.shadowRoot?.querySelector(
-      'atomic-insight-result-action-bar'
-    );
-    resultActionBarElement?.classList.add('hovered');
+    this.resultActionBarElement?.classList.add('hovered');
     this.host.classList.add('resultHovered');
   };
 
   private handleMouseOut = () => {
-    const resultActionBarElement = this.host.shadowRoot?.querySelector(
-      'atomic-insight-result-action-bar'
-    );
-    resultActionBarElement?.classList.remove('hovered');
+    this.resultActionBarElement?.classList.remove('hovered');
     this.host.classList.remove('resultHovered');
   };
   public render() {
@@ -154,7 +149,7 @@ export class AtomicInsightResult {
   }
 
   public componentDidLoad() {
-    const resultActionBarElement = this.host.shadowRoot?.querySelector(
+    this.resultActionBarElement = this.host.shadowRoot?.querySelector(
       'atomic-insight-result-action-bar'
     );
     const resultActionElement = this.host.shadowRoot?.querySelectorAll(
@@ -163,12 +158,24 @@ export class AtomicInsightResult {
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
-    if (resultActionBarElement && resultActionElement?.length) {
+    if (this.resultActionBarElement && resultActionElement?.length) {
       this.host.parentElement!.style.padding = '0px';
+      this.host.parentElement
+        ?.querySelectorAll('atomic-insight-result')[0]
+        .shadowRoot?.querySelector('atomic-insight-result-action-bar')
+        ?.classList.add('firstActionBarElement');
+
       this.host.classList.add('withActionBar');
       this.host.addEventListener('mouseover', this.handleMouseOver);
       this.host.addEventListener('mouseout', this.handleMouseOut);
     }
     applyFocusVisiblePolyfill(this.host);
+  }
+
+  public disconnectedCallback() {
+    if (this.resultActionBarElement) {
+      this.host.removeEventListener('mouseover', this.handleMouseOver);
+      this.host.removeEventListener('mouseout', this.handleMouseOut);
+    }
   }
 }

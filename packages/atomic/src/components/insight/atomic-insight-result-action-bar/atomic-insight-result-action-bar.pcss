@@ -1,29 +1,27 @@
 @import '../../../global/global.pcss';
 
 atomic-insight-result-action-bar {
-  display: flex;
-  position: absolute;
-  visibility: hidden;
-  right: 1.5rem;
+  @apply flex absolute invisible right-6 top-[-1rem];
 
   > atomic-insight-result-action:not(:last-child) {
     button {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-      border-right: 0px;
+      @apply rounded-r-none border-r-0;
       &:hover {
-        border-right: 1px solid;
+        @apply border-r;
       }
     }
   }
   > atomic-insight-result-action:not(:first-child) {
     button {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+      @apply rounded-tl-none rounded-bl-none;
     }
   }
 }
 
 .hovered {
-  visibility: visible;
+  @apply visible;
+}
+
+.firstActionBarElement {
+  @apply top-0;
 }
