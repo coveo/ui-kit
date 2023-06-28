@@ -75,6 +75,21 @@ export class SearchAnalyticsProvider
     return hasSplitTestRun ? effectivePipelineWithSplitTestRun : undefined;
   }
 
+  public getBaseMetadata() {
+    const state = this.getState();
+    const baseObject = super.getBaseMetadata();
+
+    const generativeQuestionAnsweringId =
+      state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
+
+    if (generativeQuestionAnsweringId) {
+      baseObject['generativeQuestionAnsweringId'] =
+        generativeQuestionAnsweringId;
+    }
+
+    return baseObject;
+  }
+
   private mapResultsToAnalyticsDocument() {
     return this.state.search?.response.results.map((r) => ({
       documentUri: r.uri,
