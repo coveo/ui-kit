@@ -22,8 +22,7 @@ const carouselItemHiddenStyles = 'none';
 const exampleAssignedElements = [exampleItemOne, exampleItemTwo];
 
 const defaultOptions = {
-  numberOfPages: exampleNumberOfPages,
-  numberOfItemsPerPage: exampleNumberOfItemsPerPage,
+  itemsPerPage: exampleNumberOfItemsPerPage,
 };
 
 function createTestComponent(
@@ -61,17 +60,9 @@ function mockSlotAssignedNodes(assignedElements) {
 
 const invalidPositiveIntegerProperty =
   'The value of the property must be an integer greater than 0.';
-const propertyIsRequired = 'The property is required.';
 jest.mock(
   '@salesforce/label/c.quantic_InvalidPositiveIntegerProperty',
   () => ({default: invalidPositiveIntegerProperty}),
-  {
-    virtual: true,
-  }
-);
-jest.mock(
-  '@salesforce/label/c.quantic_PropertyIsRequired',
-  () => ({default: propertyIsRequired}),
   {
     virtual: true,
   }
@@ -86,15 +77,11 @@ describe('c-quantic-carousel', () => {
     jest.clearAllMocks();
   }
 
-  beforeEach(() => {
-    console.error = jest.fn();
-  });
-
   afterEach(() => {
     cleanup();
   });
 
-  it('should properly display the different pages of the carousel', async () => {
+  it('hould properly handle the different pages of the carousel when changing pages', async () => {
     const element = createTestComponent();
     await flushPromises();
 
@@ -139,7 +126,7 @@ describe('c-quantic-carousel', () => {
   });
 
   describe('when interacting with the carousel indicators', () => {
-    it('should display the correct number carousel indicators in the correct state', async () => {
+    it('should correctly mark as active the carousel indicator that was clicked', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -167,7 +154,7 @@ describe('c-quantic-carousel', () => {
   });
 
   describe('when being in the first page of the carousel', () => {
-    it('should disable the previous navigation button and enable the next navigation button', async () => {
+    it('the previous navigation button should be disabled and the next navigation button should be enabled', async () => {
       const element = createTestComponent();
       await flushPromises();
       const previousNavigation = element.shadowRoot.querySelector(
@@ -185,7 +172,7 @@ describe('c-quantic-carousel', () => {
   });
 
   describe('when being in the last page of the carousel', () => {
-    it('should enable the previous navigation button and disable the next navigation button', async () => {
+    it('the previous navigation button should be enabled and the next navigation button should be disabled', async () => {
       const element = createTestComponent();
       element.currentPage = exampleNumberOfPages - 1;
       await flushPromises();
@@ -205,37 +192,36 @@ describe('c-quantic-carousel', () => {
   });
 
   describe('when used with invalid properties', () => {
-    it('should display an error message when the property numberOfPages is undefined', async () => {
+    let consoleError;
+    
+    beforeEach(() => {
+      consoleError = jest.spyOn(console, "error").mockImplementation(() => {});
+    })
+
+    afterEach(()=> {
+      consoleError.mockReset();
+    })
+
+    it('should display an error message when the property itemsPerPage is undefined', async () => {
       const element = createTestComponent({
         ...defaultOptions,
-        numberOfPages: undefined,
+        itemsPerPage: undefined,
       });
+
       await flushPromises();
 
       const error = element.shadowRoot.querySelector(selectors.error);
 
       expect(error).not.toBeNull();
-      expect(error.message).toBe(propertyIsRequired);
+      expect(error.message).toBe(invalidPositiveIntegerProperty);
+      expect(consoleError).toHaveBeenCalledWith(invalidPositiveIntegerProperty);
     });
 
-    it('should display an error message when the property numberOfItemsPerPage is undefined', async () => {
-      const element = createTestComponent({
-        ...defaultOptions,
-        numberOfItemsPerPage: undefined,
-      });
-      await flushPromises();
-
-      const error = element.shadowRoot.querySelector(selectors.error);
-
-      expect(error).not.toBeNull();
-      expect(error.message).toBe(propertyIsRequired);
-    });
-
-    it('should display an error message when the property numberOfPages is not a valid number', async () => {
+    it('should display an error message when the property itemsPerPage is not a valid number', async () => {
       const element = createTestComponent({
         ...defaultOptions,
         // @ts-ignore
-        numberOfPages: 'invalid value',
+        itemsPerPage: 'invalid value',
       });
       await flushPromises();
 
@@ -243,13 +229,13 @@ describe('c-quantic-carousel', () => {
 
       expect(error).not.toBeNull();
       expect(error.message).toBe(invalidPositiveIntegerProperty);
+      expect(consoleError).toHaveBeenCalledWith(invalidPositiveIntegerProperty);
     });
 
-    it('should display an error message when the property numberOfItemsPerPage is not a valid number', async () => {
+    it('should display an error message when the property itemsPerPage is a negative value', async () => {
       const element = createTestComponent({
         ...defaultOptions,
-        // @ts-ignore
-        numberOfItemsPerPage: 'invalid value',
+        itemsPerPage: -1,
       });
       await flushPromises();
 
@@ -257,6 +243,7 @@ describe('c-quantic-carousel', () => {
 
       expect(error).not.toBeNull();
       expect(error.message).toBe(invalidPositiveIntegerProperty);
+      expect(consoleError).toHaveBeenCalledWith(invalidPositiveIntegerProperty);
     });
   });
 });

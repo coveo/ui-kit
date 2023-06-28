@@ -7,7 +7,7 @@
     </c-quantic-component-error>
   </template>
   <template if:false={errorMessage}>
-    <section aria-roledescription="carousel" aria-label="carousel">
+    <section role="region" aria-roledescription={labels.carousel} aria-label={label}>
       <div class="slds-grid carousel__container slds-is-relative">
         <lightning-button-icon
           class="carousel__previous-navigation slds-is-absolute"

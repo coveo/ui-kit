@@ -8,9 +8,9 @@
       ></c-quantic-heading>
     </div>
     <c-quantic-carousel
+      label={label}
       data-cy="recommendations__carousel"
-      number-of-pages={numberOfPages}
-      number-of-items-per-page={recommendationsPerRow}
+      items-per-page={recommendationsPerRow}
     >
       <template for:each={recommendations} for:item="recommendation">
         <div
@@ -19,7 +19,7 @@
           key={recommendation.uniqueId}
           class={recommendation.class}
           role="group"
-          aria-roledescription="slide"
+          aria-roledescription={labels.slide}
           aria-label={recommendation.label}
         >
           <div class="slds-box slds-box_small recommendation-item__content">

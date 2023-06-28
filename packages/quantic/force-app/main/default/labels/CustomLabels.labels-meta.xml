@@ -1190,4 +1190,18 @@
       <protected>false</protected>
       <shortDescription>Top documents for you</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_Carousel</fullName>
+      <value>Carousel</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Carousel</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Slide</fullName>
+      <value>Slide</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Slide</shortDescription>
+    </labels>
 </CustomLabels>

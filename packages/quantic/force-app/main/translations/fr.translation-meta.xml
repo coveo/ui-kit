@@ -648,4 +648,12 @@
         <label>Les meilleurs documents pour vous</label>
         <name>quantic_TopDocumentsForYou</name>
     </customLabels>
+        <customLabels>
+        <label>Carrousel</label>
+        <name>quantic_Carousel</name>
+    </customLabels>
+        <customLabels>
+        <label>Slide</label>
+        <name>quantic_Slide</name>
+    </customLabels>
 </Translations>

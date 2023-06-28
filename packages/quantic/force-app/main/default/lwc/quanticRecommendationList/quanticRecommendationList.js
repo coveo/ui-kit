@@ -1,4 +1,6 @@
 import topDocumentsForYou from '@salesforce/label/c.quantic_TopDocumentsForYou';
+import slide from '@salesforce/label/c.quantic_Slide';
+
 import xOfY from '@salesforce/label/c.quantic_XOfY';
 import {
   registerComponentForInit,
@@ -35,6 +37,7 @@ export default class QuanticRecommendationList extends LightningElement {
   labels = {
     xOfY,
     topDocumentsForYou,
+    slide
   };
 
   /**
@@ -233,10 +236,6 @@ export default class QuanticRecommendationList extends LightningElement {
       .split(',')
       .map((field) => field.trim())
       .filter((field) => field.length > 0);
-  }
-
-  get numberOfPages() {
-    return Math.ceil(this.recommendations?.length / this.recommendationsPerRow);
   }
 
   /**

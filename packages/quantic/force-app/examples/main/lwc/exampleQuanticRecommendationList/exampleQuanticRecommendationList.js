@@ -52,7 +52,7 @@ export default class ExampleQuanticRecommendationtList extends LightningElement 
     {
       attribute: 'variant',
       label: 'Variant',
-      description: "The variant of the component. Accepted variants are grid and carousel.",
+      description: "The variant of the component. Accepted variants are `grid` and `carousel`.",
       defaultValue: 'grid',
     },
   ];
