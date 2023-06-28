@@ -18,9 +18,8 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
       <ol class="list-none citations-container gap-2 flex items-center flex-wrap">
         {props.citations.map(
           (citation: GeneratedAnswerCitation, index: number) => (
-            <li>
+            <li key={citation.id}>
               <a
-                key={citation.id}
                 title={citation.title}
                 href={citation.clickUri ?? citation.uri}
                 target="_blank"
