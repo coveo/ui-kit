@@ -13,7 +13,7 @@ export const GeneratedContent: FunctionalComponent<GeneratedContentProps> = (
   props
 ) => (
   <div class="mt-6">
-    <p part="generated-text" class="mt-2 mb-0 whitespace-pre-wrap">
+    <p part="generated-text" class="mt-2 mb-0 whitespace-pre-wrap leading-7">
       {props.answer}
     </p>
     <SourceCitations
