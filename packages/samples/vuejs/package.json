@@ -9,8 +9,8 @@
     "build:assets": "ncp ../../atomic/dist/atomic/assets public/assets && ncp ../../atomic/dist/atomic/lang public/lang"
   },
   "dependencies": {
-    "@coveo/atomic": "2.32.0",
-    "@coveo/headless": "2.19.0",
+    "@coveo/atomic": "2.33.0",
+    "@coveo/headless": "2.20.0",
     "core-js": "3.24.1",
     "vue": "3.2.37"
   },
