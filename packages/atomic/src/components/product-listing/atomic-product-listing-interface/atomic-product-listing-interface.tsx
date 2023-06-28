@@ -29,12 +29,20 @@ import {
   mismatchedInterfaceAndEnginePropError,
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
-import {AtomicStore, createAtomicStore} from './store';
+import {
+  AtomicProductListingStore,
+  createAtomicProductListingStore,
+} from './store';
 
 export type InitializationOptions = ProductListingEngineConfiguration;
+
+const FirstProductListingExecutedFlag = 'firstProductListingExecuted';
+
+export type ProductListingInitializationOptions =
+  ProductListingEngineConfiguration;
 export type ProductListingBindings = CommonBindings<
   ProductListingEngine,
-  AtomicStore,
+  AtomicProductListingStore,
   HTMLAtomicProductListingInterfaceElement
 >;
 
@@ -51,7 +59,7 @@ export class AtomicProductListingInterface
   implements BaseAtomicInterface<ProductListingEngine>
 {
   private initialized = false;
-  private store = createAtomicStore();
+  private store = createAtomicProductListingStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<ProductListingEngine>;
 
   @Element() public host!: HTMLAtomicProductListingInterfaceElement;
@@ -140,7 +148,11 @@ export class AtomicProductListingInterface
    * The relevance inspector allows to troubleshoot and debug queries.
    */
   @Prop({reflect: true}) public enableRelevanceInspector = true;
-  @Prop({reflect: true}) public url = '';
+  /**
+   * When set this property will be used instead of the current url.
+   *
+   */
+  @Prop({reflect: true}) public url?: string;
 
   public constructor() {
     this.initRelevanceInspector();
@@ -200,7 +212,7 @@ export class AtomicProductListingInterface
   /**
    * Initializes the connection with the headless product listing engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
    */
-  @Method() public initialize(options: InitializationOptions) {
+  @Method() public initialize(options: ProductListingInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
   }
 
@@ -244,17 +256,13 @@ export class AtomicProductListingInterface
       return;
     }
 
-    if (!this.url) {
-      console.error(
-        'You need to set a url to fetch a product listing.',
-        this.url
-      );
-      return;
+    if (this.url) {
+      console.warn('url was manually set to :', this.url);
     }
 
     this.engine!.dispatch(
       loadProductListingActions(this.engine!).setProductListingUrl({
-        url: this.url,
+        url: this.getListingUrl(),
       })
     );
 
@@ -284,6 +292,9 @@ export class AtomicProductListingInterface
     };
   }
 
+  private getListingUrl(): string {
+    return this.url ? this.url : window.location.href;
+  }
   private initFieldsToInclude() {
     const fields = EcommerceDefaultFieldsToInclude.concat(this.fieldsToInclude);
     this.store.addFieldsToInclude(fields);
@@ -306,12 +317,8 @@ export class AtomicProductListingInterface
   //     }
   //   }
 
-  private initEngine(options: InitializationOptions) {
-    const analyticsConfig = getAnalyticsConfig(
-      options,
-      this.analytics,
-      this.store
-    );
+  private initEngine(options: ProductListingInitializationOptions) {
+    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
     try {
       this.engine = buildProductListingEngine({
         configuration: {
@@ -350,9 +357,11 @@ export class AtomicProductListingInterface
   }
 
   private async internalInitialization(initEngine: () => void) {
+    this.store.setUrl(this.getListingUrl());
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
+    this.store.unsetLoadingFlag(FirstProductListingExecutedFlag);
     this.initialized = true;
   }
 

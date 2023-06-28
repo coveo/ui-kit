@@ -4,7 +4,6 @@ import {
   NumericFacetValue,
   DateFacetValue,
 } from '@coveo/headless/product-listing';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
   FacetInfo,
   FacetStore,
@@ -22,62 +21,43 @@ export interface SortDropdownOption {
   label: string;
 }
 
-export interface AtomicStoreData extends AtomicCommonStoreData {
+export interface AtomicProductListingStoreData extends AtomicCommonStoreData {
   facets: FacetStore<FacetInfo>;
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
-  sortOptions: SortDropdownOption[];
-  mobileBreakpoint: string;
-  currentQuickviewPosition: number;
+  url: string;
 }
 
-export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
-  getAllFacets(): {
-    [facetId: string]:
-      | FacetInfo
-      | (FacetInfo & FacetValueFormat<NumericFacetValue>)
-      | (FacetInfo & FacetValueFormat<DateFacetValue>);
-  };
-
-  isMobile(): boolean;
+export interface AtomicProductListingStore
+  extends AtomicCommonStore<AtomicProductListingStoreData> {
+  setUrl(url: string): void;
+  getUrl(): string;
 }
 
-export function createAtomicStore(): AtomicStore {
-  const commonStore = createAtomicCommonStore<AtomicStoreData>({
+export function createAtomicProductListingStore(): AtomicProductListingStore {
+  const commonStore = createAtomicCommonStore<AtomicProductListingStoreData>({
     loadingFlags: [],
     facets: {},
     numericFacets: {},
     dateFacets: {},
     categoryFacets: {},
     facetElements: [],
-    sortOptions: [],
     iconAssetsPath: '',
-    mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     fieldsToInclude: [],
-    currentQuickviewPosition: -1,
+    url: '',
   });
 
   return {
     ...commonStore,
-
-    getAllFacets() {
-      return {
-        ...commonStore.state.facets,
-        ...commonStore.state.dateFacets,
-        ...commonStore.state.categoryFacets,
-        ...commonStore.state.numericFacets,
-      };
-    },
-
-    isMobile() {
-      return !window.matchMedia(
-        makeDesktopQuery(commonStore.state.mobileBreakpoint)
-      ).matches;
-    },
-
     getUniqueIDFromEngine(engine: ProductListingEngine): string {
       return engine.state.productListing.responseId;
+    },
+    setUrl(url: string) {
+      commonStore.set('url', url);
+    },
+    getUrl() {
+      return commonStore.get('url');
     },
   };
 }

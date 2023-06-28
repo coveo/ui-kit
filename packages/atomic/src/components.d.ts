@@ -20,7 +20,7 @@ import { AtomicInsightStore } from "./components/insight/atomic-insight-interfac
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { ProductListingFacetSortCriterion, ProductListingRangeFacetRangeAlgorithm, ProductListingRangeFacetSortCriterion } from "./components/product-listing";
 import { LogLevel, ProductListingEngine } from "@coveo/headless/product-listing";
-import { InitializationOptions } from "./components/product-listing/atomic-product-listing-interface/atomic-product-listing-interface";
+import { ProductListingInitializationOptions } from "./components/product-listing/atomic-product-listing-interface/atomic-product-listing-interface";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -29,7 +29,7 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
-import { InitializationOptions as InitializationOptions1 } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
@@ -1018,7 +1018,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless product listing engine using options for accessToken (required), organizationId (required), renewAccessToken, organizationEndpoints (recommended), and platformUrl (deprecated).
          */
-        "initialize": (options: InitializationOptions) => Promise<void>;
+        "initialize": (options: ProductListingInitializationOptions) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured headless product listing engine, as opposed to the `initialize` method which will internally create a new product listing engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
@@ -1047,7 +1047,10 @@ export namespace Components {
           * The product listing interface [search hub](https://docs.coveo.com/en/1342/).  If the product listing interface is initialized using [`initializeWithProductListingEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-product-listing-interface/#initializewithProductListingEngine, the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
-        "url": string;
+        /**
+          * When set this property will be used instead of the current url.
+         */
+        "url"?: string;
     }
     interface AtomicProductListingNumericFacet {
         /**
@@ -4026,6 +4029,9 @@ declare namespace LocalJSX {
           * The product listing interface [search hub](https://docs.coveo.com/en/1342/).  If the product listing interface is initialized using [`initializeWithProductListingEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-product-listing-interface/#initializewithProductListingEngine, the search hub should instead be configured in the target engine.
          */
         "searchHub"?: string;
+        /**
+          * When set this property will be used instead of the current url.
+         */
         "url"?: string;
     }
     interface AtomicProductListingNumericFacet {
