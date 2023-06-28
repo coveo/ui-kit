@@ -550,6 +550,70 @@ export class AtomicPopover {
 }
 
 
+export declare interface AtomicProductListingCategoryFacet extends Components.AtomicProductListingCategoryFacet {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'shouldRender', 'sortCriteria', 'withSearch']
+})
+@Component({
+  selector: 'atomic-product-listing-category-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'shouldRender', 'sortCriteria', 'withSearch']
+})
+export class AtomicProductListingCategoryFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicProductListingInterface extends Components.AtomicProductListingInterface {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'scrollContainer', 'searchHub', 'url'],
+  methods: ['initialize', 'initializeWithProductListingEngine', 'fetchProductListing', 'getOrganizationEndpoints']
+})
+@Component({
+  selector: 'atomic-product-listing-interface',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'scrollContainer', 'searchHub', 'url']
+})
+export class AtomicProductListingInterface {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicProductListingProductRatingRangeFacet extends Components.AtomicProductListingProductRatingRangeFacet {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals', 'shouldRender']
+})
+@Component({
+  selector: 'atomic-product-listing-product-rating-range-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals', 'shouldRender']
+})
+export class AtomicProductListingProductRatingRangeFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicQueryError extends Components.AtomicQueryError {}
 
 @ProxyCmp({

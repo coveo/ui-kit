@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -18,10 +18,9 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { ProductListingFacetSortCriterion, ProductListingRangeFacetRangeAlgorithm, ProductListingRangeFacetSortCriterion } from "./components/product-listing";
-import { LogLevel, ProductListingEngine } from "@coveo/headless/product-listing";
+import { LogLevel, PlatformEnvironmentProductListing, ProductListingCategoryFacetSortCriterion, ProductListingEngine, ProductListingFacetSortCriterion, ProductListingRangeFacetRangeAlgorithm, ProductListingRangeFacetSortCriterion } from "./components/product-listing";
 import { ProductListingInitializationOptions } from "./components/product-listing/atomic-product-listing-interface/atomic-product-listing-interface";
-import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
+import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -425,7 +424,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironmentInsight) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironmentInsight) => Promise<{ platform: string; analytics: string; search: string; }>;
         /**
           * The service insight interface i18next instance.
          */
@@ -886,7 +885,7 @@ export namespace Components {
          */
         "delimitingCharacter": string;
         /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-product-listing-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-product-listing-category-facet   depends-on-abc   ... ></atomic-product-listing-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-product-listing-category-facet   depends-on-abc="doc"   ... ></atomic-product-listing-category-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -932,7 +931,7 @@ export namespace Components {
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
          */
-        "sortCriteria": CategoryFacetSortCriterion;
+        "sortCriteria": ProductListingCategoryFacetSortCriterion;
         /**
           * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
          */
@@ -1006,7 +1005,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironmentProductListing) => Promise<{ platform: string; analytics: string; search: string; }>;
         /**
           * The product listing interface i18next instance.
          */
@@ -1108,7 +1107,7 @@ export namespace Components {
     }
     interface AtomicProductListingProductRatingRangeFacet {
         /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-product-listing-rating-range-facet   depends-on-abc   ... ></atomic-product-listing-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-product-listing-rating-range-facet   depends-on-abc="doc"   ... ></atomic-product-listing-rating-range-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-product-listing-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-product-listing-rating-range-facet   depends-on-abc   ... ></atomic-product-listing-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-product-listing-rating-range-facet   depends-on-abc="doc"   ... ></atomic-product-listing-rating-range-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -1298,7 +1297,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
         "fieldsToInclude": string[] | string;
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; }>;
         /**
           * Fetches new recommendations.
          */
@@ -1846,7 +1845,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; }>;
         /**
           * The search interface i18next instance.
          */
@@ -3886,7 +3885,7 @@ declare namespace LocalJSX {
          */
         "delimitingCharacter"?: string;
         /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-product-listing-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-product-listing-category-facet   depends-on-abc   ... ></atomic-product-listing-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-product-listing-category-facet   depends-on-abc="doc"   ... ></atomic-product-listing-category-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
@@ -3932,7 +3931,7 @@ declare namespace LocalJSX {
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
          */
-        "sortCriteria"?: CategoryFacetSortCriterion;
+        "sortCriteria"?: ProductListingCategoryFacetSortCriterion;
         /**
           * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
          */
@@ -4090,7 +4089,7 @@ declare namespace LocalJSX {
     }
     interface AtomicProductListingProductRatingRangeFacet {
         /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-product-listing-rating-range-facet   depends-on-abc   ... ></atomic-product-listing-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-product-listing-rating-range-facet   depends-on-abc="doc"   ... ></atomic-product-listing-rating-range-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-product-listing-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-product-listing-rating-range-facet   depends-on-abc   ... ></atomic-product-listing-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-product-listing-rating-range-facet   depends-on-abc="doc"   ... ></atomic-product-listing-rating-range-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
