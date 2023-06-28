@@ -21,6 +21,7 @@ import {DateFacetSetState} from '../features/facets/range-facets/date-facet-set/
 import {NumericFacetSetState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {FieldsState} from '../features/fields/fields-state';
 import {FoldingState} from '../features/folding/folding-state';
+import {GeneratedAnswerState} from '../features/generated-answer/generated-answer-state';
 import {HistoryState} from '../features/history/history-state';
 import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state';
 import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
@@ -380,4 +381,11 @@ export interface AttachedResultsSection {
    * The properties related to pagination.
    */
   attachedResults: AttachedResultsState;
+}
+
+export interface GeneratedAnswerSection {
+  /**
+   * The properties related to generative question answering.
+   */
+  generatedAnswer: GeneratedAnswerState;
 }

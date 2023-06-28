@@ -8,6 +8,7 @@ import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {
+  dateFacetExcludedValuesSelector,
   dateFacetResponseSelector,
   dateFacetSelectedValuesSelector,
 } from './date-facet-selectors';
@@ -64,15 +65,51 @@ describe('date facet selectors', () => {
         state: 'selected',
       });
       const mockValue2 = buildMockDateFacetValue({
+        state: 'excluded',
+      });
+      const mockValue3 = buildMockDateFacetValue({
         state: 'idle',
       });
       state.search.response.facets = [
         buildMockDateFacetResponse({
           facetId,
-          values: [mockValue, mockValue2],
+          values: [mockValue, mockValue2, mockValue3],
         }),
       ];
       const selectedValues = dateFacetSelectedValuesSelector(state, facetId);
+      expect(selectedValues).toEqual([mockValue]);
+    });
+  });
+
+  describe('#dateFacetExcludedValuesSelector', () => {
+    beforeEach(() => {
+      state.dateFacetSet[facetId] = buildMockDateFacetSlice({
+        request: buildMockDateFacetRequest({facetId}),
+      });
+    });
+
+    it('#dateFacetExcludedValuesSelector returns an empty array if the facet does not exist', () => {
+      const selectedValues = dateFacetExcludedValuesSelector(state, facetId);
+      expect(selectedValues).toEqual([]);
+    });
+
+    it('#dateFacetExcludedValuesSelector returns only the excluded values for the provided facetId', () => {
+      const mockValue = buildMockDateFacetValue({
+        state: 'excluded',
+      });
+      const mockValue2 = buildMockDateFacetValue({
+        state: 'selected',
+      });
+      const mockValue3 = buildMockDateFacetValue({
+        state: 'idle',
+      });
+      state.search.response.facets = [
+        buildMockDateFacetResponse({
+          facetId,
+          values: [mockValue, mockValue2, mockValue3],
+        }),
+      ];
+      const selectedValues = dateFacetExcludedValuesSelector(state, facetId);
       expect(selectedValues).toEqual([mockValue]);
     });
   });

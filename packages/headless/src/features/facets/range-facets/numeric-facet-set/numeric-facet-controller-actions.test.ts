@@ -1,6 +1,9 @@
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {executeToggleNumericFacetSelect} from './numeric-facet-controller-actions';
+import {
+  executeToggleNumericFacetSelect,
+  executeToggleNumericFacetExclude,
+} from './numeric-facet-controller-actions';
 
 describe('numeric facet controller actions', () => {
   let engine: MockSearchEngine;
@@ -10,7 +13,7 @@ describe('numeric facet controller actions', () => {
     engine = buildMockSearchAppEngine();
   });
 
-  it('#executeToggleNumericFacet dispatches the correct actions', () => {
+  it('#executeToggleNumericFacetSelect dispatches the correct actions', () => {
     const selection = buildMockNumericFacetValue();
     engine.dispatch(executeToggleNumericFacetSelect({facetId, selection}));
 
@@ -22,6 +25,27 @@ describe('numeric facet controller actions', () => {
         }),
         expect.objectContaining({
           type: 'rangeFacet/executeToggleSelect',
+        }),
+        expect.objectContaining({
+          type: 'facetOptions/update',
+          payload: {freezeFacetOrder: true},
+        }),
+      ])
+    );
+  });
+
+  it('#executeToggleNumericFacetExclude dispatches the correct actions', () => {
+    const selection = buildMockNumericFacetValue();
+    engine.dispatch(executeToggleNumericFacetExclude({facetId, selection}));
+
+    expect(engine.actions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'numericFacet/toggleExcludeValue',
+          payload: {facetId, selection},
+        }),
+        expect.objectContaining({
+          type: 'rangeFacet/executeToggleExclude',
         }),
         expect.objectContaining({
           type: 'facetOptions/update',
