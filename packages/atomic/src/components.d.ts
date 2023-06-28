@@ -1606,6 +1606,24 @@ export namespace Components {
          */
         "suggestionTimeout": number;
     }
+    interface AtomicSearchBoxFieldSuggestions {
+        /**
+          * The field by which suggestions will be provided.
+         */
+        "field"?: string;
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of field suggestions that will be displayed if the user has typed something into the input field.
+         */
+        "maxWithQuery"?: number;
+        /**
+          * The maximum number of field suggestions that will be displayed initially when the input field is empty.
+         */
+        "maxWithoutQuery"?: number;
+    }
     interface AtomicSearchBoxInstantResults {
         /**
           * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
@@ -2676,6 +2694,12 @@ declare global {
         prototype: HTMLAtomicSearchBoxElement;
         new (): HTMLAtomicSearchBoxElement;
     };
+    interface HTMLAtomicSearchBoxFieldSuggestionsElement extends Components.AtomicSearchBoxFieldSuggestions, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchBoxFieldSuggestionsElement: {
+        prototype: HTMLAtomicSearchBoxFieldSuggestionsElement;
+        new (): HTMLAtomicSearchBoxFieldSuggestionsElement;
+    };
     interface HTMLAtomicSearchBoxInstantResultsElement extends Components.AtomicSearchBoxInstantResults, HTMLStencilElement {
     }
     var HTMLAtomicSearchBoxInstantResultsElement: {
@@ -2914,6 +2938,7 @@ declare global {
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
+        "atomic-search-box-field-suggestions": HTMLAtomicSearchBoxFieldSuggestionsElement;
         "atomic-search-box-instant-results": HTMLAtomicSearchBoxInstantResultsElement;
         "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
@@ -4441,6 +4466,24 @@ declare namespace LocalJSX {
          */
         "suggestionTimeout"?: number;
     }
+    interface AtomicSearchBoxFieldSuggestions {
+        /**
+          * The field by which suggestions will be provided.
+         */
+        "field"?: string;
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of field suggestions that will be displayed if the user has typed something into the input field.
+         */
+        "maxWithQuery"?: number;
+        /**
+          * The maximum number of field suggestions that will be displayed initially when the input field is empty.
+         */
+        "maxWithoutQuery"?: number;
+    }
     interface AtomicSearchBoxInstantResults {
         /**
           * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
@@ -4871,6 +4914,7 @@ declare namespace LocalJSX {
         "atomic-result-timespan": AtomicResultTimespan;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
+        "atomic-search-box-field-suggestions": AtomicSearchBoxFieldSuggestions;
         "atomic-search-box-instant-results": AtomicSearchBoxInstantResults;
         "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
@@ -5009,6 +5053,7 @@ declare module "@stencil/core" {
             "atomic-result-timespan": LocalJSX.AtomicResultTimespan & JSXBase.HTMLAttributes<HTMLAtomicResultTimespanElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
+            "atomic-search-box-field-suggestions": LocalJSX.AtomicSearchBoxFieldSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxFieldSuggestionsElement>;
             "atomic-search-box-instant-results": LocalJSX.AtomicSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInstantResultsElement>;
             "atomic-search-box-query-suggestions": LocalJSX.AtomicSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxQuerySuggestionsElement>;
             "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
