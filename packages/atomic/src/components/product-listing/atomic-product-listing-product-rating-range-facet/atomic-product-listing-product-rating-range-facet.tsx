@@ -146,7 +146,7 @@ export class AtomicRatingRangeFacet
    * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
-   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   * <atomic-product-listing-facet facet-id="abc" field="objecttype" ...></atomic-facet>
    *
    * <!-- To show the facet when any value is selected in the facet with id "abc": -->
    * <atomic-product-listing-rating-range-facet

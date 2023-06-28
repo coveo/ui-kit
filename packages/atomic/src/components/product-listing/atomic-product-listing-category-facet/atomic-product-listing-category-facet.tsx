@@ -44,7 +44,7 @@ import {ProductListingBindings} from '../atomic-product-listing-interface/atomic
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
+ * An `atomic-product-listing-category-facet` displays a facet of values in a browsable, hierarchical fashion.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -52,17 +52,9 @@ import {ProductListingBindings} from '../atomic-product-listing-interface/atomic
  * @part label-button - The button that displays the label and allows to expand/collapse the facet.
  * @part label-button-icon - The label button icon.
  *
- * @part search-wrapper - The search box wrapper.
- * @part search-input - The search box input.
- * @part search-icon - The search box submit button.
- * @part search-clear-button - The button to clear the search box of input.
  * @part more-matches - The label indicating there are more matches for the current facet search query.
  * @part no-matches - The label indicating there are no matches for the current facet search query.
  * @part matches-query - The highlighted query inside the matches labels.
- * @part search-results - The search results container.
- * @part search-result - The search result value.
- * @part search-result-path - The search result path.
- * @part search-highlight - The highlighted query inside the facet values.
  *
  * @part parents - The container surrounding the whole hierarchy of values.
  * @part sub-parents - The container surrounding a sub-hierarchy of values.
@@ -178,25 +170,24 @@ export class AtomicCategoryFacet
    * Default: `1000`
    */
   @Prop({reflect: true}) public injectionDepth = 1000;
-  // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   /**
    * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
-   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   * <atomic-product-listing-facet facet-id="abc" field="objecttype" ...></atomic-facet>
    *
    * <!-- To show the facet when any value is selected in the facet with id "abc": -->
-   * <atomic-category-facet
+   * <atomic-product-listing-category-facet
    *   depends-on-abc
    *   ...
-   * ></atomic-category-facet>
+   * ></atomic-product-listing-category-facet>
    *
    * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
-   * <atomic-category-facet
+   * <atomic-product-listing-category-facet
    *   depends-on-abc="doc"
    *   ...
-   * ></atomic-category-facet>
+   * ></atomic-product-listing-category-facet>
    * ```
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
