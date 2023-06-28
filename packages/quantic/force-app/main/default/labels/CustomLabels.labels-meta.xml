@@ -1094,10 +1094,10 @@
     </labels>
     <labels>
       <fullName>quantic_OpensInSalesforceSubTab</fullName>
-      <value>Opens in a Salesforce console subtab</value>
+      <value>Opens in a subtab</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Opens in a Salesforce console subtab</shortDescription>
+      <shortDescription>Opens in a subtab</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_OpensInBrowserTab</fullName>
