@@ -1,16 +1,14 @@
-import {
-  CategoryFacetSortCriterion,
-  buildFacetConditionsManager,
-  FacetConditionsManager,
-} from '@coveo/headless';
-import {
-  CategoryFacet,
-  buildCategoryFacet,
-  CategoryFacetState,
-  CategoryFacetOptions,
-  CategoryFacetValue,
-} from '@coveo/headless/product-listing';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
+import {
+  ProductListingCategoryFacet,
+  buildProductListingCategoryFacet,
+  ProductListingCategoryFacetState,
+  ProductListingCategoryFacetOptions,
+  ProductListingCategoryFacetValue,
+  ProductListingFacetConditionsManager,
+  buildProductListingFacetConditionsManager,
+  ProductListingCategoryFacetSortCriterion,
+} from '..';
 import LeftArrow from '../../../images/arrow-left-rounded.svg';
 import {
   AriaLiveRegion,
@@ -91,17 +89,17 @@ import {ProductListingBindings} from '../atomic-product-listing-interface/atomic
 export class AtomicCategoryFacet
   implements
     InitializableComponent<ProductListingBindings>,
-    BaseFacet<CategoryFacet>
+    BaseFacet<ProductListingCategoryFacet>
 {
   @InitializeBindings() public bindings!: ProductListingBindings;
-  public facet!: CategoryFacet;
-  private dependenciesManager?: FacetConditionsManager;
+  public facet!: ProductListingCategoryFacet;
+  private dependenciesManager?: ProductListingFacetConditionsManager;
   private resultIndexToFocusOnShowMore = 0;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
-  public facetState!: CategoryFacetState;
+  public facetState!: ProductListingCategoryFacetState;
   @State() public error!: Error;
 
   /**
@@ -132,8 +130,8 @@ export class AtomicCategoryFacet
    * Possible values are 'alphanumeric' and 'occurrences'.
    */
   // TODO: add automatic (occurrences when not expanded, alphanumeric when expanded)
-  @Prop({reflect: true}) public sortCriteria: CategoryFacetSortCriterion =
-    'occurrences';
+  @Prop({reflect: true})
+  public sortCriteria: ProductListingCategoryFacetSortCriterion = 'occurrences';
   /**
    * The character that separates values of a multi-value field.
    *
@@ -224,7 +222,7 @@ export class AtomicCategoryFacet
 
   public initialize() {
     this.validateProps();
-    const options: CategoryFacetOptions = {
+    const options: ProductListingCategoryFacetOptions = {
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfValues,
@@ -236,7 +234,9 @@ export class AtomicCategoryFacet
       injectionDepth: this.injectionDepth,
       filterFacetCount: this.filterFacetCount,
     };
-    this.facet = buildCategoryFacet(this.bindings.engine, {options});
+    this.facet = buildProductListingCategoryFacet(this.bindings.engine, {
+      options,
+    });
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
@@ -272,8 +272,8 @@ export class AtomicCategoryFacet
   ) {
     if (propName === 'facetState' && prev && this.withSearch) {
       return shouldUpdateFacetSearchComponent(
-        (next as CategoryFacetState).facetSearch,
-        (prev as CategoryFacetState).facetSearch
+        (next as ProductListingCategoryFacetState).facetSearch,
+        (prev as ProductListingCategoryFacetState).facetSearch
       );
     }
 
@@ -285,7 +285,7 @@ export class AtomicCategoryFacet
   }
 
   private inititalizeDependenciesManager() {
-    this.dependenciesManager = buildFacetConditionsManager(
+    this.dependenciesManager = buildProductListingFacetConditionsManager(
       this.bindings.engine,
       {
         facetId: this.facetId!,
@@ -340,7 +340,7 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderParentButton(facetValue: CategoryFacetValue) {
+  private renderParentButton(facetValue: ProductListingCategoryFacetValue) {
     const displayValue = getFieldValueCaption(
       this.field,
       facetValue.value,
@@ -372,7 +372,10 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderValuesTree(parents: CategoryFacetValue[], isRoot: boolean) {
+  private renderValuesTree(
+    parents: ProductListingCategoryFacetValue[],
+    isRoot: boolean
+  ) {
     if (!this.hasParents) {
       return this.renderChildren();
     }
@@ -429,7 +432,7 @@ export class AtomicCategoryFacet
   }
 
   private renderChild(
-    facetValue: CategoryFacetValue,
+    facetValue: ProductListingCategoryFacetValue,
     isShowLessFocusTarget: boolean,
     isShowMoreFocusTarget: boolean
   ) {
@@ -474,7 +477,7 @@ export class AtomicCategoryFacet
     );
   }
 
-  private getIsLeafOrNodePart(value: CategoryFacetValue) {
+  private getIsLeafOrNodePart(value: ProductListingCategoryFacetValue) {
     return value.isLeafValue ? 'leaf-value' : 'node-value';
   }
 

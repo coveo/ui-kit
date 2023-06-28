@@ -1,17 +1,4 @@
 import {
-  EcommerceDefaultFieldsToInclude,
-  loadFieldActions,
-  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
-  PlatformEnvironment,
-} from '@coveo/headless';
-import {
-  LogLevel,
-  ProductListingEngineConfiguration,
-  ProductListingEngine,
-  buildProductListingEngine,
-  loadProductListingActions,
-} from '@coveo/headless/product-listing';
-import {
   Component,
   Prop,
   h,
@@ -22,6 +9,17 @@ import {
   State,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
+import {
+  LogLevel,
+  ProductListingEngineConfiguration,
+  ProductListingEngine,
+  buildProductListingEngine,
+  loadProductListingActions,
+  EcommerceDefaultFieldsToInclude,
+  loadFieldActions,
+  getOrganizationEndpointsProductListing,
+  PlatformEnvironmentProductListing,
+} from '../';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
@@ -272,9 +270,9 @@ export class AtomicProductListingInterface
    */
   @Method() public async getOrganizationEndpoints(
     organizationId: string,
-    env: PlatformEnvironment = 'prod'
+    env: PlatformEnvironmentProductListing = 'prod'
   ) {
-    return getOrganizationEndpointsHeadless(organizationId, env);
+    return getOrganizationEndpointsProductListing(organizationId, env);
   }
 
   public get bindings(): ProductListingBindings {

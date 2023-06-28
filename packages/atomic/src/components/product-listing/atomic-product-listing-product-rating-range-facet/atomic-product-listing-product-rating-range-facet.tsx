@@ -1,17 +1,15 @@
-import {
-  buildFacetConditionsManager,
-  FacetConditionsManager,
-} from '@coveo/headless';
-import {
-  NumericFacet,
-  buildNumericFacet,
-  NumericFacetState,
-  NumericFacetOptions,
-  NumericFacetValue,
-  NumericRangeRequest,
-  buildNumericRange,
-} from '@coveo/headless/product-listing';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {
+  ProductListingNumericFacet,
+  buildProductListingNumericFacet,
+  ProductListingNumericFacetState,
+  ProductListingNumericFacetOptions,
+  ProductListingNumericFacetValue,
+  ProductListingNumericRangeRequest,
+  buildProductListingNumericRange,
+  buildProductListingFacetConditionsManager,
+  ProductListingFacetConditionsManager,
+} from '../';
 import Star from '../../../images/star.svg';
 import {
   FocusTarget,
@@ -69,16 +67,16 @@ import {ProductListingBindings} from '../atomic-product-listing-interface/atomic
 export class AtomicRatingRangeFacet
   implements
     InitializableComponent<ProductListingBindings>,
-    BaseFacet<NumericFacet>
+    BaseFacet<ProductListingNumericFacet>
 {
   @InitializeBindings() public bindings!: ProductListingBindings;
-  public facet!: NumericFacet;
-  private dependenciesManager?: FacetConditionsManager;
+  public facet!: ProductListingNumericFacet;
+  private dependenciesManager?: ProductListingFacetConditionsManager;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
-  public facetState!: NumericFacetState;
+  public facetState!: ProductListingNumericFacetState;
   @State() public error!: Error;
 
   /**
@@ -186,7 +184,7 @@ export class AtomicRatingRangeFacet
   }
 
   private initializeFacet() {
-    const options: NumericFacetOptions = {
+    const options: ProductListingNumericFacetOptions = {
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfIntervals,
@@ -196,7 +194,9 @@ export class AtomicRatingRangeFacet
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
     };
-    this.facet = buildNumericFacet(this.bindings.engine, {options});
+    this.facet = buildProductListingNumericFacet(this.bindings.engine, {
+      options,
+    });
     this.facetId = this.facet.state.facetId;
     const facetInfo: FacetInfo = {
       label: () => this.bindings.i18n.t(this.label),
@@ -225,7 +225,7 @@ export class AtomicRatingRangeFacet
   }
 
   private inititalizeDependenciesManager() {
-    this.dependenciesManager = buildFacetConditionsManager(
+    this.dependenciesManager = buildProductListingFacetConditionsManager(
       this.bindings.engine,
       {
         facetId: this.facetId!,
@@ -235,10 +235,10 @@ export class AtomicRatingRangeFacet
   }
 
   private generateCurrentValues() {
-    const currentValues: NumericRangeRequest[] = [];
+    const currentValues: ProductListingNumericRangeRequest[] = [];
     for (let i = this.minValueInIndex; i <= this.numberOfIntervals; i++) {
       currentValues.push(
-        buildNumericRange({
+        buildProductListingNumericRange({
           start: Math.round(i * this.scaleFactor * 100) / 100,
           end: Math.round(this.maxValueInIndex * 100) / 100,
           endInclusive: true,
@@ -248,7 +248,7 @@ export class AtomicRatingRangeFacet
     return currentValues;
   }
 
-  private formatFacetValue(facetValue: NumericFacetValue) {
+  private formatFacetValue(facetValue: ProductListingNumericFacetValue) {
     if (facetValue.start === this.maxValueInIndex) {
       return this.bindings.i18n.t('stars-only', {
         count: facetValue.start,
@@ -260,7 +260,7 @@ export class AtomicRatingRangeFacet
     });
   }
 
-  private ratingContent(facetValue: NumericFacetValue) {
+  private ratingContent(facetValue: ProductListingNumericFacetValue) {
     return (
       <div class="flex items-center">
         <Rating
@@ -292,7 +292,7 @@ export class AtomicRatingRangeFacet
     );
   }
 
-  private renderLabelText(facetValue: NumericFacetValue) {
+  private renderLabelText(facetValue: ProductListingNumericFacetValue) {
     return (
       <span
         part="value-label"
@@ -309,7 +309,10 @@ export class AtomicRatingRangeFacet
     );
   }
 
-  private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
+  private renderValue(
+    facetValue: ProductListingNumericFacetValue,
+    onClick: () => void
+  ) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
     return (

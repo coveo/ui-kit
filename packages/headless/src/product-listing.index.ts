@@ -186,3 +186,22 @@ export type {
   InteractiveResult,
 } from './controllers/product-listing/result-list/headless-product-listing-interactive-result';
 export {buildInteractiveResult} from './controllers/product-listing/result-list/headless-product-listing-interactive-result';
+
+export type {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
+
+export type {FacetConditionsManager} from './controllers/insight/facet-conditions-manager/headless-facet-conditions-manager';
+
+export type {
+  RangeFacetSortCriterion,
+  RangeFacetRangeAlgorithm,
+} from './features/facets/range-facets/generic/interfaces/request';
+export {buildCoreFacetConditionsManager as buildFacetConditionsManager} from './controllers/core/facets/facet-conditions-manager/headless-facet-conditions-manager';
+export type {Tab} from './controllers/insight/tab/headless-insight-tab';
+export {getOrganizationEndpoints} from './api/platform-client';
+export type {PlatformEnvironment} from './utils/url-utils';
+export {EcommerceDefaultFieldsToInclude} from './features/fields/fields-state';
+
+// Grouped Actions
+export * from './features/index';
+
+export type {CategoryFacetSortCriterion} from './features/facets/category-facet-set/interfaces/request';
