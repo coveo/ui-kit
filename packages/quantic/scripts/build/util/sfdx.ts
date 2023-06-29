@@ -37,6 +37,7 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
           } catch (err) {
             // The output is not JSON. The command most likely failed outside the SFDX CLI.
             console.log(stdout);
+            reject(err);
           }
         }
       }
