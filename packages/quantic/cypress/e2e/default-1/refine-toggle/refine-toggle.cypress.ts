@@ -146,6 +146,7 @@ describe('quantic-refine-toggle', () => {
             Expect.refineToggleTitleContains(defaultRefineToggleTitle);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
             Expect.refineToggleDisabled(false);
@@ -158,6 +159,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager(true);
             Expect.displaySort(true);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -190,6 +192,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineToggle(true);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
             Expect.refineToggleDisabled(false);
@@ -208,6 +211,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineToggle(true);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
             Expect.refineToggleDisabled(false);
@@ -220,6 +224,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager(true);
             Expect.displaySort(false);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -240,6 +245,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineToggle(true);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
             Expect.refineToggleDisabled(false);
@@ -256,6 +262,7 @@ describe('quantic-refine-toggle', () => {
           scope('when loading the page', () => {
             Expect.displayRefineToggle(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleDisabled(false);
             Expect.refineToggleTitleContains(defaultRefineToggleTitle);
           });
@@ -301,6 +308,7 @@ describe('quantic-refine-toggle', () => {
           Expect.displayRefineToggle(true);
           Expect.displayRefineToggleIcon(true);
           Expect.displayModal(false);
+          Expect.displayFacetManager(true);
           Expect.refineToggleContains(customRefineToggleLabel);
           Expect.displayFiltersCountBadge(false);
           Expect.refineToggleDisabled(true);
@@ -321,6 +329,7 @@ describe('quantic-refine-toggle', () => {
             Expect.refineToggleTitleContains(defaultRefineToggleTitle);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
             Expect.refineToggleDisabled(false);
@@ -333,6 +342,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager(true);
             Expect.displaySort(true);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -365,6 +375,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineToggle(true);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
             Expect.refineToggleDisabled(false);
@@ -383,6 +394,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineToggle(true);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
             Expect.refineToggleDisabled(false);
@@ -395,6 +407,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager(true);
             Expect.displaySort(false);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -415,6 +428,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineToggle(true);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
             Expect.refineToggleDisabled(true);
@@ -432,6 +446,7 @@ describe('quantic-refine-toggle', () => {
           scope('when loading the page', () => {
             Expect.displayRefineToggle(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleDisabled(false);
             Expect.refineToggleTitleContains(defaultRefineToggleTitle);
           });
@@ -477,6 +492,7 @@ describe('quantic-refine-toggle', () => {
           Expect.displayRefineToggle(true);
           Expect.displayRefineToggleIcon(true);
           Expect.displayModal(false);
+          Expect.displayFacetManager(true);
           Expect.refineToggleContains(customRefineToggleLabel);
           Expect.displayFiltersCountBadge(false);
           Expect.refineToggleDisabled(true);
@@ -529,6 +545,7 @@ describe('quantic-refine-toggle', () => {
           Expect.displayRefineToggle(true);
           Expect.displayRefineToggleIcon(true);
           Expect.displayModal(false);
+          Expect.displayFacetManager(false);
           Expect.refineToggleContains(customRefineToggleLabel);
           Expect.displayFiltersCountBadge(false);
           Expect.refineToggleDisabled(false);
@@ -580,6 +597,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineToggle(true);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
+            Expect.displayFacetManager(true);
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
             Expect.refineToggleDisabled(false);
@@ -592,6 +610,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager(true);
             Expect.displaySort(true);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -632,6 +651,7 @@ describe('quantic-refine-toggle', () => {
           Expect.displayRefineToggle(true);
           Expect.displayRefineToggleIcon(true);
           Expect.displayModal(false);
+          Expect.displayFacetManager(true);
           Expect.refineToggleContains(customRefineToggleLabel);
           Expect.displayFiltersCountBadge(false);
           Expect.refineToggleDisabled(false);
@@ -644,6 +664,7 @@ describe('quantic-refine-toggle', () => {
           Expect.displayRefineModalTitle(true);
           Expect.refineModalTitleContains(customRefineModalTitle);
           Expect.displayModalContent(true);
+          Expect.displayFacetManager(true);
           Expect.displaySort(true);
           Expect.displayModalFooter(true);
           Expect.displayViewResultsButton(true);
