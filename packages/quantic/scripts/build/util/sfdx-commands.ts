@@ -327,6 +327,10 @@ export async function promotePackageVersion(
   );
 }
 
-export async function getPackageVersionList(): Promise<SfdxGetPackageListResponse> {
-  return await sfdx<SfdxGetPackageListResponse>('force:package:version:list');
+export async function getPackageVersionList(
+  createdLastDays: number
+): Promise<SfdxGetPackageListResponse> {
+  return await sfdx<SfdxGetPackageListResponse>(
+    `force:package:version:list -c ${createdLastDays}`
+  );
 }
