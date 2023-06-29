@@ -81,7 +81,7 @@ describe('c-quantic-carousel', () => {
     cleanup();
   });
 
-  it('hould properly handle the different pages of the carousel when changing pages', async () => {
+  it('should properly handle the different pages of the carousel when changing pages', async () => {
     const element = createTestComponent();
     await flushPromises();
 
