@@ -524,6 +524,52 @@ describe('ec events', () => {
         });
     });
 
+    it('should be able to set trackingId using set action', async () => {
+        const trackingId = 'tracksite';
+        await coveoua('set', 'trackingId', trackingId);
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            trackingId: trackingId,
+        });
+    });
+
+    it('should be able to set trackingId with context_website', async () => {
+        const contextWebsite = 'tracksite';
+        await coveoua('set', 'custom', {context_website: contextWebsite});
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            trackingId: contextWebsite,
+            context_website: contextWebsite,
+        });
+    });
+
+    it('context_website does not overwrite trackingId', async () => {
+        const contextWebsite = 'tracksite';
+        const trackingId = 'trackingid';
+        await coveoua('set', 'custom', {context_website: contextWebsite});
+        await coveoua('set', 'trackingId', trackingId);
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            trackingId: trackingId,
+            context_website: contextWebsite,
+        });
+    });
+
     describe('with auto-detection of userId', () => {
         describe('with API key', () => {
             beforeEach(() => {

@@ -344,6 +344,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     async resolvePayloadForParameters(eventType: EventType | string, parameters: any) {
         const {usesMeasurementProtocol = false} = this.eventTypeMapping[eventType] || {};
 
+        const addTrackingIdStep: ProcessPayloadStep = (currentPayload) =>
+            this.setTrackingIdFromContextWebsiteIfTrackingIdNotPresent(currentPayload);
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) =>
             this.removeEmptyPayloadValues(currentPayload, eventType);
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload, eventType);
@@ -357,6 +359,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
                 : this.mapCustomParametersToCustomData(currentPayload);
 
         const payloadToSend = await [
+            addTrackingIdStep,
             cleanPayloadStep,
             validateParams,
             processMeasurementProtocolConversionStep,
@@ -378,7 +381,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
         const parametersToSend = await this.resolveParameters(eventType, ...payload);
         const payloadToSend = await this.resolvePayloadForParameters(eventType, parametersToSend);
-
         return {
             eventType: eventTypeToSend,
             payload: payloadToSend,
@@ -618,6 +620,16 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         if (isApiKey(this.options.token) && !userId) {
             rest['userId'] = 'anonymous';
             return rest;
+        } else {
+            return payload;
+        }
+    }
+
+    private setTrackingIdFromContextWebsiteIfTrackingIdNotPresent(payload: IRequestPayload): IRequestPayload {
+        const {trackingId, custom, ...rest} = payload;
+        if (!trackingId && custom && isObject(custom) && 'context_website' in custom) {
+            rest['trackingId'] = custom.context_website;
+            return {custom: custom, ...rest};
         } else {
             return payload;
         }

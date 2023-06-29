@@ -439,6 +439,31 @@ describe('Analytics', () => {
         });
     });
 
+    describe('with context_website is set', () => {
+        const contextWebsite = 'yourbestfriend.com';
+        const trackingId = 'yourfavaritefood.ca ';
+        beforeEach(() => {
+            client = new CoveoAnalyticsClient({
+                token: 'xtoken',
+                endpoint: anEndpoint,
+                version: A_VERSION,
+            });
+            mockFetchRequestForEventType(EventType.view);
+        });
+
+        it('should set trackingId when trackingId is not specified', async () => {
+            await client.sendEvent(EventType.view, {custom: {context_website: contextWebsite}});
+            const [body] = getParsedBodyCalls();
+            expect(body.trackingId).toBe(contextWebsite);
+        });
+
+        it('should not set trackingId when trackingId is specified', async () => {
+            await client.sendEvent(EventType.view, {trackingId: trackingId, custom: {context_website: contextWebsite}});
+            const [body] = getParsedBodyCalls();
+            expect(body.trackingId).toBe(trackingId);
+        });
+    });
+
     it('should support clearing cookies for visitorId and historyStore', () => {
         const visitorId = 'foo';
         const history = {name: 'foo', time: '123', value: 'bar'};

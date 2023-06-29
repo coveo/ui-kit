@@ -387,6 +387,30 @@ describe('simpleanalytics', () => {
             expect(result).toHaveProperty('somedata', 'something');
             expect(result).toHaveProperty('customData.context_website', 'MY_OTHER_WEBSITE');
         });
+
+        it('can set trackingId', async () => {
+            const trackingId = 'yourbestfriend';
+            coveoua('init', 'MYTOKEN');
+            coveoua('set', 'trackingId', trackingId);
+            await coveoua('send', someRandomEventName);
+
+            expect(fetchMock.calls().length).toBe(1);
+            expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
+            expect(JSON.parse(lastCallBody(fetchMock))).toHaveProperty('trackingId', trackingId);
+        });
+
+        it('context_website does not overwrite trackingId', async () => {
+            const trackingId = 'yourbestfriend';
+            const contextWebsite = 'yoursite';
+            coveoua('init', 'MYTOKEN');
+            coveoua('set', 'custom', {context_website: contextWebsite});
+            coveoua('set', 'trackingId', trackingId);
+            await coveoua('send', someRandomEventName);
+
+            expect(fetchMock.calls().length).toBe(1);
+            expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
+            expect(JSON.parse(lastCallBody(fetchMock))).toHaveProperty('trackingId', trackingId);
+        });
     });
 
     describe('onLoad', () => {
