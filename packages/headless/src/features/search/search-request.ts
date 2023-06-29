@@ -60,9 +60,9 @@ export const buildSearchRequest = async (
       parentField: state.folding.fields.child,
       filterFieldRange: state.folding.filterFieldRange,
     }),
-    ...(state.automaticFacets && {
+    ...(state.automaticFacetsSet && {
       generateAutomaticFacets: {
-        desiredCount: state.automaticFacets.desiredCount,
+        desiredCount: state.automaticFacetsSet.desiredCount,
         currentFacets: automaticFacets,
       },
     }),
@@ -74,7 +74,7 @@ function getFacets(state: StateNeededBySearchRequest) {
 }
 
 function getAutomaticFacets(state: StateNeededBySearchRequest) {
-  const facets = state.automaticFacets?.facets;
+  const facets = state.automaticFacetsSet?.facets;
   return facets ? Object.values(facets) : undefined;
 }
 
@@ -107,11 +107,11 @@ function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
 }
 
 function buildConstantQuery(state: StateNeededBySearchRequest) {
-  const cq = state.advancedSearchQueries?.cq.trim() || '';
-  const activeTab = Object.values(state.tabSet || {}).find(
+  const cq = state.advancedSearchQueries?.cq.trim() ?? '';
+  const activeTab = Object.values(state.tabSet ?? {}).find(
     (tab) => tab.isActive
   );
-  const tabExpression = activeTab?.expression.trim() || '';
+  const tabExpression = activeTab?.expression.trim() ?? '';
   const filterExpressions = getStaticFilterExpressions(state);
 
   return [cq, tabExpression, ...filterExpressions]
@@ -120,7 +120,7 @@ function buildConstantQuery(state: StateNeededBySearchRequest) {
 }
 
 function getStaticFilterExpressions(state: StateNeededBySearchRequest) {
-  const filters = Object.values(state.staticFilterSet || {});
+  const filters = Object.values(state.staticFilterSet ?? {});
   return filters.map((filter) => {
     const selected = filter.values.filter(
       (value) => value.state === 'selected' && !!value.expression.trim()

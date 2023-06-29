@@ -1,13 +1,15 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {executeSearch} from '../../search/search-actions';
 import {
+  deselectAllAutomaticFacet,
   setDesiredCount,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
-import {getAutomaticFacetsInitialState} from './automatic-facet-set-state';
+import {getAutomaticFacetsSetInitialState} from './automatic-facet-set-state';
 
 export const automaticFacetSetReducer = createReducer(
-  getAutomaticFacetsInitialState(),
+  getAutomaticFacetsSetInitialState(),
   (builder) => {
     builder
       .addCase(executeSearch.fulfilled, (state, action) => {
@@ -21,7 +23,6 @@ export const automaticFacetSetReducer = createReducer(
         state.desiredCount = action.payload;
       })
       .addCase(toggleSelectAutomaticFacetValue, (state, action) => {
-        //???????????
         const {field, selection} = action.payload;
         const facet = state.facets[field];
 
@@ -33,6 +34,14 @@ export const automaticFacetSetReducer = createReducer(
         }
         const isSelected = value?.state === 'selected';
         value.state = isSelected ? 'idle' : 'selected';
+      })
+      .addCase(deselectAllAutomaticFacet, (state, action) => {
+        console.log(state);
+        console.log(action);
+      })
+      .addCase(deselectAllBreadcrumbs, (state, action) => {
+        console.log(state);
+        console.log(action);
       });
   }
 );
@@ -41,5 +50,5 @@ export const automaticFacetSetReducer = createReducer(
 //     //register facets
 //   })
 
-//       .addCase(deselectAllAutomaticFacet, (state, action) => {})
-//       .addCase(deselectAllBreadcrumbs, (state, action) => {});
+//
+//

@@ -33,7 +33,7 @@ export const deselectAllAutomaticFacet = createAction(
 
 const fieldDefinition = requiredNonEmptyString;
 export const toggleSelectAutomaticFacetValue = createAction(
-  'facet/toggleSelectValue',
+  'automaticFacet/toggleSelectValue',
   (payload: ToggleSelectAutomaticFacetValueActionCreatorPayload) =>
     validatePayload(payload, {
       field: fieldDefinition,

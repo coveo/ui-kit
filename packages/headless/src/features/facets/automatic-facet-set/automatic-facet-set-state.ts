@@ -1,6 +1,6 @@
 import {AutomaticFacetResponse} from './interfaces/response';
 
-export type AutomaticFacetsState = {
+export type AutomaticFacetsSetState = {
   /**
    * The desired count of facets.
    * Must be a positive integer.
@@ -12,7 +12,7 @@ export type AutomaticFacetsState = {
   facets: Record<string, AutomaticFacetResponse>;
 };
 
-export function getAutomaticFacetsInitialState(): AutomaticFacetsState {
+export function getAutomaticFacetsSetInitialState(): AutomaticFacetsSetState {
   return {
     desiredCount: 1,
     facets: {},
