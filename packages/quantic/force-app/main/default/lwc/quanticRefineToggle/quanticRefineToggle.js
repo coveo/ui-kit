@@ -72,7 +72,7 @@ export default class QuanticRefineToggle extends LightningElement {
    */
   @api title = this.labels.sortAndFilters;
   /**
-   * Indicates whether the Dynamic Navigation for facet ordering should be disabled.
+   * Indicates whether to disable the facet ordering feature according to [the dynamic navigation experience](https://docs.coveo.com/en/3383/leverage-machine-learning/about-dynamic-navigation-experience-dne).
    * @api
    * @type {boolean}
    * @defaultValue `false`

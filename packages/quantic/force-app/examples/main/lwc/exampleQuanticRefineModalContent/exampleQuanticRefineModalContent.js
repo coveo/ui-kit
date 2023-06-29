@@ -1,4 +1,5 @@
-import {api, LightningElement, track} from 'lwc';
+import { api, LightningElement, track } from 'lwc';
+
 
 export default class ExampleQuanticRefineModalContent extends LightningElement {
   @api engineId = 'quantic-refine-modal-engine';
@@ -18,8 +19,7 @@ export default class ExampleQuanticRefineModalContent extends LightningElement {
     {
       attribute: 'disableFacetOrdering',
       label: 'Disable Facet Ordering',
-      description:
-        'Whether the Dynamic Navigation for facet ordering should be disabled.',
+      description: 'Indicates whether the facet ordering should be disabled.',
       defaultValue: false,
     },
   ];

@@ -3,21 +3,17 @@ import filters from '@salesforce/label/c.quantic_Filters';
 import QuanticCategoryFacet from 'c/quanticCategoryFacet';
 import QuanticDateFacet from 'c/quanticDateFacet';
 import QuanticFacet from 'c/quanticFacet';
-import {
-  getAllFacetsFromStore,
-  getHeadlessBundle,
-} from 'c/quanticHeadlessLoader';
-import {
-  initializeWithHeadless,
-  registerComponentForInit,
-} from 'c/quanticHeadlessLoader';
+import { getAllFacetsFromStore, getHeadlessBundle } from 'c/quanticHeadlessLoader';
+import { initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
 import QuanticNumericFacet from 'c/quanticNumericFacet';
 import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
-import {LightningElement, api} from 'lwc';
+import { LightningElement, api } from 'lwc';
 // @ts-ignore
 import disabledFacetOrderingTemplate from './templates/disabledFacetOrdering.html';
 // @ts-ignore
 import enabledFacetOrderingTemplate from './templates/enabledFacetOrdering.html';
+
+
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
@@ -56,7 +52,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   @api hideSort;
   /**
-   * Indicates whether the Dynamic Navigation for facet ordering should be disabled.
+   * Indicates whether to disable the facet ordering feature according to [the dynamic navigation experience](https://docs.coveo.com/en/3383/leverage-machine-learning/about-dynamic-navigation-experience-dne).
    * @api
    * @type {boolean}
    * @defaultValue `false`
@@ -279,7 +275,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   }
 
   render() {
-    if (this.disableFacetOrdering === true) {
+    if (this.disableFacetOrdering) {
       return disabledFacetOrderingTemplate;
     }
     return enabledFacetOrderingTemplate;

@@ -101,6 +101,15 @@ describe('quantic-refine-content', () => {
         Expect.displayFiltersTitle();
         Expect.displayClearAllFiltersButton(false);
         Expect.displayFacetManager(false);
+        Expect.displayDuplicatedNumericFacet();
+        Expect.displayDuplicatedFacet();
+        Expect.displayDuplicatedCategoryFacet();
+        Expect.displayDuplicatedTimeframeFacet();
+        Actions.clickDuplicatedTimeframeFacetExpandButton();
+        Expect.displayDuplicatedTimeframeFacetValues();
+        Expect.displayDuplicatedDateFacet();
+        Expect.displaySort(true);
+        Expect.correctFacetsOrder();
       });
     });
   });

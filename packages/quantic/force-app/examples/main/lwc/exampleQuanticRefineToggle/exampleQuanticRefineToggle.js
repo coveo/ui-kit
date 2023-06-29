@@ -65,7 +65,7 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
       attribute: 'disableFacetOrdering',
       label: 'Disable Facet Ordering',
       description:
-        'Indicates whether the Dynamic Navigation for facet ordering should be disabled.',
+        'Indicates whether the facet ordering should be disabled.',
       defaultValue: false,
     },
   ];
