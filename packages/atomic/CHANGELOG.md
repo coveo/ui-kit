@@ -1,3 +1,9 @@
+# 2.33.0 (2023-06-28)
+
+### Features
+
+- **atomic:** added Generated Answer component ([#3003](https://github.com/coveo/ui-kit/issues/3003)) ([2f2096b](https://github.com/coveo/ui-kit/commits/2f2096bfd1f2c0993cb3041eb081bbe052cfcb94))
+
 # 2.32.0 (2023-06-20)
 
 ### Features

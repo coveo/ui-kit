@@ -1,3 +1,12 @@
+# 2.20.0 (2023-06-28)
+
+### Features
+
+- **headless:** Add new insight analytics actions ([#2997](https://github.com/coveo/ui-kit/issues/2997)) ([b2d549e](https://github.com/coveo/ui-kit/commits/b2d549e70287b479bcc9caa8609624e827f45cfd))
+- **headless:** added generated answer (Gen-Q&A) component ([#2995](https://github.com/coveo/ui-kit/issues/2995)) ([9e7c023](https://github.com/coveo/ui-kit/commits/9e7c023a07f46be07cd00326bf3efc23b14e6218))
+- **headless:** support date range facet exclusion ([#2998](https://github.com/coveo/ui-kit/issues/2998)) ([5a5c1f4](https://github.com/coveo/ui-kit/commits/5a5c1f4b2cd89219cb080ab0cbeca649cb003f41))
+- **headless:** support facet value exclusion for core facets ([#2989](https://github.com/coveo/ui-kit/issues/2989)) ([fbacc5e](https://github.com/coveo/ui-kit/commits/fbacc5e04bea4567e9ff42444dd14f5c7e528abe))
+
 # 2.19.0 (2023-06-20)
 
 ### Bug Fixes
