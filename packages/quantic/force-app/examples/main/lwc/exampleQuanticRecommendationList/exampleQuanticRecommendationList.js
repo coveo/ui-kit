@@ -46,7 +46,7 @@ export default class ExampleQuanticRecommendationtList extends LightningElement 
     {
       attribute: 'headingLevel',
       label: 'Heading Level',
-      description: 'The Heading level to use for the heading label.',
+      description: 'The Heading level to use for the heading label. Will display the label of the recommendations within a <hx> tag.',
       defaultValue: 1,
     },
     {
