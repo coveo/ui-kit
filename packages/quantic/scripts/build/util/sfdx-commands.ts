@@ -328,9 +328,9 @@ export async function promotePackageVersion(
 }
 
 export async function getPackageVersionList(
-  createdlastdays: number
+  createdLastDays: number
 ): Promise<SfdxGetPackageListResponse> {
   return await sfdx<SfdxGetPackageListResponse>(
-    `force:package:version:list -c ${createdlastdays}`
+    `force:package:version:list -c ${createdLastDays}`
   );
 }
