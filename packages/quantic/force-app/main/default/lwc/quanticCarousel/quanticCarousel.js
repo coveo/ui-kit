@@ -29,7 +29,7 @@ export default class QuanticCarousel extends LightningElement {
    * @api
    * @type {string}
    */
-    @api label;
+  @api label;
   /**
    * The number of items to display per page.
    * @api
