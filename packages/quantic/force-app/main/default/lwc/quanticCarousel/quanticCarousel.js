@@ -1,6 +1,6 @@
+import carousel from '@salesforce/label/c.quantic_Carousel';
 import goToPage from '@salesforce/label/c.quantic_GoToPage';
 import invalidPositiveIntegerProperty from '@salesforce/label/c.quantic_InvalidPositiveIntegerProperty';
-import carousel from '@salesforce/label/c.quantic_Carousel';
 import nextPage from '@salesforce/label/c.quantic_NextPage';
 import previousPage from '@salesforce/label/c.quantic_PreviousPage';
 import {I18nUtils} from 'c/quanticUtils';
@@ -21,7 +21,7 @@ export default class QuanticCarousel extends LightningElement {
     nextPage,
     previousPage,
     goToPage,
-    carousel
+    carousel,
   };
 
   /**
@@ -41,7 +41,7 @@ export default class QuanticCarousel extends LightningElement {
   }
   set itemsPerPage(value) {
     if (Number.isInteger(Number(value)) && Number(value) > 0) {
-      this._recommendationsPerRow = Number(value);
+      this._itemsPerPage = Number(value);
     } else {
       this.setInitializationError(
         I18nUtils.format(
@@ -50,7 +50,6 @@ export default class QuanticCarousel extends LightningElement {
         )
       );
     }
-    this._itemsPerPage = value;
   }
   /**
    * The index of the current page.

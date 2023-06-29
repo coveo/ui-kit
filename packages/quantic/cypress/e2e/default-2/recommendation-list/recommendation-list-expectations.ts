@@ -1,6 +1,8 @@
 import {Interception} from '../../../../../../node_modules/cypress/types/net-stubbing';
 import {InterceptAliases} from '../../../page-objects/search';
+import {ComponentErrorExpectations} from '../../common-expectations';
 import {should} from '../../common-selectors';
+import {ConsoleExpectations} from '../../console-expectations';
 import {EventExpectations} from '../../event-expectations';
 import {
   RecommendationListSelector,
@@ -182,5 +184,9 @@ export const RecommendationListExpectations = {
   ...recommendationListExpectations(RecommendationListSelectors),
   events: {
     ...EventExpectations,
+  },
+  ...ComponentErrorExpectations(RecommendationListSelectors),
+  console: {
+    ...ConsoleExpectations,
   },
 };

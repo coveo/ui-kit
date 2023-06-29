@@ -1,6 +1,6 @@
-import topDocumentsForYou from '@salesforce/label/c.quantic_TopDocumentsForYou';
+import invalidPositiveIntegerProperty from '@salesforce/label/c.quantic_InvalidPositiveIntegerProperty';
 import slide from '@salesforce/label/c.quantic_Slide';
-
+import topDocumentsForYou from '@salesforce/label/c.quantic_TopDocumentsForYou';
 import xOfY from '@salesforce/label/c.quantic_XOfY';
 import {
   registerComponentForInit,
@@ -37,7 +37,8 @@ export default class QuanticRecommendationList extends LightningElement {
   labels = {
     xOfY,
     topDocumentsForYou,
-    slide
+    slide,
+    invalidPositiveIntegerProperty,
   };
 
   /**
@@ -60,15 +61,6 @@ export default class QuanticRecommendationList extends LightningElement {
    * @default {10}
    */
   @api numberOfRecommendations = 10;
-  /**
-   * The number of recommendations to display, per row.
-   * Each recommendation in the row will be displayed as
-   * 1/recommendationsPerRow of the container width.
-   * @api
-   * @type {number}
-   * @default {3}
-   */
-  @api recommendationsPerRow = 3;
   /**
    * A list of fields to include in the query results, separated by commas.
    * @api
@@ -97,6 +89,31 @@ export default class QuanticRecommendationList extends LightningElement {
    * @type {'grid' | 'carousel'}
    */
   @api variant = 'grid';
+  /**
+   * The number of recommendations to display, per row.
+   * Each recommendation in the row will be displayed as
+   * 1/recommendationsPerRow of the container width.
+   * @api
+   * @type {number}
+   * @default {3}
+   */
+  @api
+  get recommendationsPerRow() {
+    return this._recommendationsPerRow;
+  }
+  set recommendationsPerRow(value) {
+    if (Number.isInteger(Number(value)) && Number(value) > 0) {
+      this._recommendationsPerRow = Number(value);
+    } else {
+      this.setInitializationError();
+      console.error(
+        I18nUtils.format(
+          this.labels.invalidPositiveIntegerProperty,
+          'recommendationsPerRow'
+        )
+      );
+    }
+  }
 
   /** @type {RecommendationListState} */
   @track state;
@@ -112,6 +129,8 @@ export default class QuanticRecommendationList extends LightningElement {
   headless;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {number} */
+  _recommendationsPerRow = 3;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -177,14 +196,14 @@ export default class QuanticRecommendationList extends LightningElement {
     const styles = this.template.host?.style;
     styles.setProperty(
       '--recommendationItemWidth',
-      `${100 / this.recommendationsPerRow}%`
+      `${100 / this._recommendationsPerRow}%`
     );
   }
 
   get placeholders() {
     const numberOfPlaceHolders =
       this.variant === 'carousel'
-        ? this.recommendationsPerRow
+        ? this._recommendationsPerRow
         : this.numberOfRecommendations;
     return Array.from({length: numberOfPlaceHolders}, (_item, index) => ({
       index,
@@ -212,13 +231,13 @@ export default class QuanticRecommendationList extends LightningElement {
   generateCSSClassForCarouselRecommendation(index) {
     let recCSSClass = 'recommendation-item__container slds-var-p-top_x-small ';
 
-    if (Number(this.recommendationsPerRow) === 1) {
+    if (this._recommendationsPerRow === 1) {
       return recCSSClass;
     }
 
-    const recIsFirstInThePage = index % this.recommendationsPerRow === 0;
+    const recIsFirstInThePage = index % this._recommendationsPerRow === 0;
     const recIsLastInThePage =
-      index % this.recommendationsPerRow === this.recommendationsPerRow - 1;
+      index % this._recommendationsPerRow === this._recommendationsPerRow - 1;
 
     if (recIsFirstInThePage) {
       recCSSClass = recCSSClass + 'slds-var-p-right_x-small';
