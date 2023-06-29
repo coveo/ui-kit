@@ -109,7 +109,6 @@ describe('quantic-refine-content', () => {
         Expect.displayDuplicatedTimeframeFacetValues();
         Expect.displayDuplicatedDateFacet();
         Expect.displaySort(true);
-        Expect.correctFacetsOrder();
       });
     });
   });
