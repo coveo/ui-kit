@@ -26,18 +26,19 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
         maxBuffer: 1024 * 1024 * 1.5,
       },
       (error, stdout) => {
-        if (error) {
-          let jsonOutput;
+        let jsonOutput: unknown;
+        if (stdout) {
           try {
             jsonOutput = JSON.parse(strip(stdout));
-          } catch (e) {
+            if (error) {
+              reject(jsonOutput || error);
+            }
+            resolve(jsonOutput as T);
+          } catch (err) {
             // The output is not JSON. The command most likely failed outside the SFDX CLI.
+            console.log(stdout);
           }
-
-          reject(jsonOutput || error);
         }
-
-        resolve(stdout ? (JSON.parse(strip(stdout)) as T) : null);
       }
     );
   });
