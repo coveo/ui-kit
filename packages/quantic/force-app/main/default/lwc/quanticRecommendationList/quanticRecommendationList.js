@@ -1,8 +1,10 @@
+import loadingRecommendations from '@salesforce/label/c.quantic_LoadingRecommendationss';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {AriaLiveRegion} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import defaultRecommendationTemplate from './templates/defaultRecommendation.html';
@@ -92,6 +94,12 @@ export default class QuanticRecommendationList extends LightningElement {
   headless;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  loadingAriaLiveMessage;
+
+  labels = {
+    loadingRecommendations,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -106,6 +114,10 @@ export default class QuanticRecommendationList extends LightningElement {
    * @param {RecommendationEngine} engine
    */
   initialize = (engine) => {
+    this.loadingAriaLiveMessage = AriaLiveRegion(
+      'loading recommendations',
+      this
+    );
     this.headless = getHeadlessBundle(this.engineId);
     this.recommendationList = this.headless.buildRecommendationList(engine, {
       options: {
@@ -151,6 +163,9 @@ export default class QuanticRecommendationList extends LightningElement {
       this.recommendationList?.state?.isLoading &&
       !this.recommendationList?.state?.recommendations?.length &&
       !this.recommendationList?.state?.error;
+    if (this.showPlaceholder) {
+      this.loadingAriaLiveMessage.dispatchMessage(this.labels.loadingRecommendations);
+    }
   }
 
   setRecommendationWidth() {
