@@ -1,5 +1,5 @@
 import {Component, Prop, State, h} from '@stencil/core';
-import QuickView from '../../../images/quickview.svg';
+import Quickview from '../../../images/quickview.svg';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -21,20 +21,20 @@ export class AtomicInsightResultAction implements InitializableComponent {
   /**
    * Specify the result action icon to display.
    */
-  @Prop() public icon = QuickView;
+  @Prop({mutable: true}) public icon = Quickview;
 
   /**
    * The text tooltip to show on the result action icon
    */
-  @Prop({reflect: true}) public label?: string;
+  @Prop({mutable: true}) public tooltip = '';
 
   public render() {
     return (
       <IconButton
-        icon={this.icon}
-        title={this.label}
-        style="outline-neutral"
         partPrefix="result-action"
+        style="outline-neutral"
+        icon={this.icon}
+        title={this.tooltip}
       />
     );
   }

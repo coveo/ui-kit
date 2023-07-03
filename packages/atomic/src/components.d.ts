@@ -621,7 +621,7 @@ export namespace Components {
         /**
           * The text tooltip to show on the result action icon
          */
-        "label"?: string;
+        "tooltip": string;
     }
     interface AtomicInsightResultActionBar {
     }
@@ -3533,7 +3533,7 @@ declare namespace LocalJSX {
         /**
           * The text tooltip to show on the result action icon
          */
-        "label"?: string;
+        "tooltip"?: string;
     }
     interface AtomicInsightResultActionBar {
     }
