@@ -6,7 +6,7 @@ import {
   setDesiredCount,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
-import {automaticFacetSetReducer as automaticFacets} from './automatic-facet-set-slice';
+import {automaticFacetSetReducer as automaticFacetSet} from './automatic-facet-set-slice';
 
 /**
  * The action creators to manage automatic facets.
@@ -48,7 +48,7 @@ export interface AutomaticFacetsActionCreators {
 export function loadAutomaticFacetSetActions(
   engine: SearchEngine
 ): AutomaticFacetsActionCreators {
-  engine.addReducers({automaticFacets});
+  engine.addReducers({automaticFacetSet});
 
   return {
     setDesiredCount,

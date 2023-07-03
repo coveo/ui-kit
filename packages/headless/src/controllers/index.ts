@@ -406,3 +406,9 @@ export type {
 } from './field-suggestions/category-facet/headless-category-field-suggestions';
 
 export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';
+
+export type {
+  AutomaticFacet,
+  AutomaticFacetProps,
+} from './facets/automatic-facet/headless-automatic-facet';
+export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';

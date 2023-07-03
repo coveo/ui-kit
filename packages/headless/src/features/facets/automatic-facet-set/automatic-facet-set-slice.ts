@@ -6,10 +6,10 @@ import {
   setDesiredCount,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
-import {getAutomaticFacetsSetInitialState} from './automatic-facet-set-state';
+import {getAutomaticFacetSetInitialState} from './automatic-facet-set-state';
 
 export const automaticFacetSetReducer = createReducer(
-  getAutomaticFacetsSetInitialState(),
+  getAutomaticFacetSetInitialState(),
   (builder) => {
     builder
       .addCase(executeSearch.fulfilled, (state, action) => {

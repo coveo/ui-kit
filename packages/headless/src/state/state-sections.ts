@@ -12,7 +12,7 @@ import {DidYouMeanState} from '../features/did-you-mean/did-you-mean-state';
 import {DocumentSuggestionState} from '../features/document-suggestion/document-suggestion-state';
 import {ExcerptLengthState} from '../features/excerpt-length/excerpt-length-state';
 import {FacetOptionsState} from '../features/facet-options/facet-options-state';
-import {AutomaticFacetsSetState} from '../features/facets/automatic-facet-set/automatic-facet-set-state';
+import {AutomaticFacetSetState} from '../features/facets/automatic-facet-set/automatic-facet-set-state';
 import {CategoryFacetSetState} from '../features/facets/category-facet-set/category-facet-set-state';
 import {FacetOrderState} from '../features/facets/facet-order/facet-order-state';
 import {CategoryFacetSearchSetState} from '../features/facets/facet-search-set/category/category-facet-search-set-state';
@@ -383,9 +383,9 @@ export interface AttachedResultsSection {
   attachedResults: AttachedResultsState;
 }
 
-export interface AutomaticFacetsSection {
+export interface AutomaticFacetSection {
   /**
    * The set of automatic facets
    */
-  automaticFacetsSet: AutomaticFacetsSetState;
+  automaticFacetSet: AutomaticFacetSetState;
 }

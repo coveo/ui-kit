@@ -60,9 +60,9 @@ export const buildSearchRequest = async (
       parentField: state.folding.fields.child,
       filterFieldRange: state.folding.filterFieldRange,
     }),
-    ...(state.automaticFacetsSet && {
+    ...(state.automaticFacetSet && {
       generateAutomaticFacets: {
-        desiredCount: state.automaticFacetsSet.desiredCount,
+        desiredCount: state.automaticFacetSet.desiredCount,
         currentFacets: automaticFacets,
       },
     }),
@@ -74,7 +74,7 @@ function getFacets(state: StateNeededBySearchRequest) {
 }
 
 function getAutomaticFacets(state: StateNeededBySearchRequest) {
-  const facets = state.automaticFacetsSet?.facets;
+  const facets = state.automaticFacetSet?.facets;
   return facets ? Object.values(facets) : undefined;
 }
 

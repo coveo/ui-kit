@@ -44,7 +44,7 @@ export function buildAutomaticFacet(
   const {field} = props;
 
   const getFacet = () =>
-    automaticFacetSelector(engine.state.automaticFacetsSet, field);
+    automaticFacetSelector(engine.state.automaticFacetSet, field);
 
   return {
     ...controller,

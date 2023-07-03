@@ -35,13 +35,14 @@ import {
   TabSection,
   StaticFilterSection,
   ExcerptLengthSection,
-  AutomaticFacetsSection,
+  AutomaticFacetSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
   DateFacetSection &
   NumericFacetSection &
   CategoryFacetSection &
+  AutomaticFacetSection &
   FacetOptionsSection &
   QuerySection &
   TabSection &
@@ -75,5 +76,4 @@ export type SearchAppState = SearchParametersState &
   QuestionAnsweringSection &
   RecentResultsSection &
   RecentQueriesSection &
-  ExcerptLengthSection &
-  AutomaticFacetsSection;
+  ExcerptLengthSection;
