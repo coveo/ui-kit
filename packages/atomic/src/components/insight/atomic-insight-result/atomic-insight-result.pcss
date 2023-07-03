@@ -7,19 +7,19 @@ atomic-result-section-children {
 }
 
 :host(.resultHovered) {
-  position: relative;
+  @apply relative;
 
   .with-sections {
     background-color: #f2f2f2;
   }
 }
 
-:host(.withActionBar) {
+:host {
   .with-sections {
-    padding: 1.5rem;
+    @apply p-6;
   }
 }
 
-:host(.withActionBar)::before {
-  margin: 0px 1.5rem !important;
+:host::before {
+  @apply my-0 mx-6 !important;
 }

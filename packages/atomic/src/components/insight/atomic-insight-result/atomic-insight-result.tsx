@@ -24,7 +24,6 @@ import {AtomicInsightStore} from '../atomic-insight-interface/store';
 })
 export class AtomicInsightResult {
   private layout!: ResultLayout;
-  private resultActionBarElement?: HTMLElement | null;
   @Element() host!: HTMLElement;
 
   /**
@@ -125,14 +124,33 @@ export class AtomicInsightResult {
   }
 
   private handleMouseOver = () => {
-    this.resultActionBarElement?.classList.add('hovered');
+    this.resultActionBar?.classList.add('showActionBar');
     this.host.classList.add('resultHovered');
   };
 
   private handleMouseOut = () => {
-    this.resultActionBarElement?.classList.remove('hovered');
+    this.resultActionBar?.classList.remove('showActionBar');
     this.host.classList.remove('resultHovered');
   };
+
+  private get resultActionBar() {
+    return this.host.shadowRoot?.querySelector(
+      'atomic-insight-result-action-bar'
+    );
+  }
+
+  private get resultActions() {
+    return this.host.shadowRoot?.querySelectorAll(
+      'atomic-insight-result-action'
+    );
+  }
+
+  private get firstChildActionBar() {
+    return this.host.parentElement
+      ?.querySelectorAll('atomic-insight-result')[0]
+      .shadowRoot?.querySelector('atomic-insight-result-action-bar');
+  }
+
   public render() {
     return (
       <Host class={resultComponentClass}>
@@ -149,23 +167,11 @@ export class AtomicInsightResult {
   }
 
   public componentDidLoad() {
-    this.resultActionBarElement = this.host.shadowRoot?.querySelector(
-      'atomic-insight-result-action-bar'
-    );
-    const resultActionElement = this.host.shadowRoot?.querySelectorAll(
-      'atomic-insight-result-action'
-    );
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
-    if (this.resultActionBarElement && resultActionElement?.length) {
-      this.host.parentElement!.style.padding = '0px';
-      this.host.parentElement
-        ?.querySelectorAll('atomic-insight-result')[0]
-        .shadowRoot?.querySelector('atomic-insight-result-action-bar')
-        ?.classList.add('firstActionBarElement');
-
-      this.host.classList.add('withActionBar');
+    if (this.resultActionBar && this.resultActions?.length) {
+      this.firstChildActionBar?.classList.add('firstActionBarElement');
       this.host.addEventListener('mouseover', this.handleMouseOver);
       this.host.addEventListener('mouseout', this.handleMouseOut);
     }
@@ -173,7 +179,7 @@ export class AtomicInsightResult {
   }
 
   public disconnectedCallback() {
-    if (this.resultActionBarElement) {
+    if (this.resultActionBar) {
       this.host.removeEventListener('mouseover', this.handleMouseOver);
       this.host.removeEventListener('mouseout', this.handleMouseOut);
     }
