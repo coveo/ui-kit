@@ -4,6 +4,7 @@ import {getContextInitialState} from '../context/context-state';
 import {getDebugInitialState} from '../debug/debug-state';
 import {getDictionaryFieldContextInitialState} from '../dictionary-field-context/dictionary-field-context-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
+import {getAutomaticFacetSetInitialState} from '../facets/automatic-facet-set/automatic-facet-set-state';
 import {getCategoryFacetSetInitialState} from '../facets/category-facet-set/category-facet-set-state';
 import {getFacetOrderInitialState} from '../facets/facet-order/facet-order-state';
 import {getFacetSetInitialState} from '../facets/facet-set/facet-set-state';
@@ -29,26 +30,28 @@ export function getHistoryInitialState(): HistoryState {
 
 export function extractHistory(state: Partial<HistoryState>): HistoryState {
   return {
-    context: state.context || getContextInitialState(),
+    context: state.context ?? getContextInitialState(),
     dictionaryFieldContext:
-      state.dictionaryFieldContext || getDictionaryFieldContextInitialState(),
-    facetSet: state.facetSet || getFacetSetInitialState(),
-    numericFacetSet: state.numericFacetSet || getNumericFacetSetInitialState(),
-    dateFacetSet: state.dateFacetSet || getDateFacetSetInitialState(),
+      state.dictionaryFieldContext ?? getDictionaryFieldContextInitialState(),
+    facetSet: state.facetSet ?? getFacetSetInitialState(),
+    numericFacetSet: state.numericFacetSet ?? getNumericFacetSetInitialState(),
+    dateFacetSet: state.dateFacetSet ?? getDateFacetSetInitialState(),
     categoryFacetSet:
-      state.categoryFacetSet || getCategoryFacetSetInitialState(),
-    pagination: state.pagination || getPaginationInitialState(),
-    query: state.query || getQueryInitialState(),
-    tabSet: state.tabSet || getTabSetInitialState(),
+      state.categoryFacetSet ?? getCategoryFacetSetInitialState(),
+    automaticFacetSet:
+      state.automaticFacetSet ?? getAutomaticFacetSetInitialState(),
+    pagination: state.pagination ?? getPaginationInitialState(),
+    query: state.query ?? getQueryInitialState(),
+    tabSet: state.tabSet ?? getTabSetInitialState(),
     advancedSearchQueries:
-      state.advancedSearchQueries || getAdvancedSearchQueriesInitialState(),
-    staticFilterSet: state.staticFilterSet || getStaticFilterSetInitialState(),
-    querySet: state.querySet || getQuerySetInitialState(),
-    instantResults: state.instantResults || getInstantResultsInitialState(),
-    sortCriteria: state.sortCriteria || getSortCriteriaInitialState(),
-    pipeline: state.pipeline || getPipelineInitialState(),
-    searchHub: state.searchHub || getSearchHubInitialState(),
-    facetOptions: state.facetOptions || getFacetOptionsInitialState(),
+      state.advancedSearchQueries ?? getAdvancedSearchQueriesInitialState(),
+    staticFilterSet: state.staticFilterSet ?? getStaticFilterSetInitialState(),
+    querySet: state.querySet ?? getQuerySetInitialState(),
+    instantResults: state.instantResults ?? getInstantResultsInitialState(),
+    sortCriteria: state.sortCriteria ?? getSortCriteriaInitialState(),
+    pipeline: state.pipeline ?? getPipelineInitialState(),
+    searchHub: state.searchHub ?? getSearchHubInitialState(),
+    facetOptions: state.facetOptions ?? getFacetOptionsInitialState(),
     facetOrder: state.facetOrder ?? getFacetOrderInitialState(),
     debug: state.debug ?? getDebugInitialState(),
   };

@@ -13,6 +13,8 @@ export const automaticFacetSetReducer = createReducer(
   (builder) => {
     builder
       .addCase(executeSearch.fulfilled, (state, action) => {
+        state.facets = {};
+
         const facets = action.payload.response.generateAutomaticFacets?.facets;
         facets?.forEach((facet) => {
           state.facets[facet.field] = facet;
