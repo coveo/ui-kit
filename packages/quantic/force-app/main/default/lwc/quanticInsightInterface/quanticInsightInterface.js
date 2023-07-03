@@ -41,9 +41,18 @@ export default class QuanticInsightInterface extends LightningElement {
   initialized;
   /** @type {boolean} */
   hasRendered = false;
+  /** @type {boolean} */
+  ariaLiveEventsBound = false;
 
   disconnectedCallback() {
     destroyEngine(this.engineId);
+    if (this.ariaLiveEventsBound) {
+      this.removeEventListener('arialivemessage', this.handleAriaLiveMessage);
+      this.removeEventListener(
+        'registerregion',
+        this.handleRegisterAriaLiveRegion
+      );
+    }
   }
 
   connectedCallback() {
@@ -112,6 +121,7 @@ export default class QuanticInsightInterface extends LightningElement {
       'registerregion',
       this.handleRegisterAriaLiveRegion.bind(this)
     );
+    this.ariaLiveEventsBound = true;
   }
 
   handleAriaLiveMessage(event) {

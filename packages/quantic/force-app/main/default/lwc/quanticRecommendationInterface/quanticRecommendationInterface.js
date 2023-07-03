@@ -57,6 +57,8 @@ export default class QuanticRecommendationInterface extends LightningElement {
   initialized = false;
   /** @type {boolean} */
   hasRendered = false;
+  /** @type {boolean} */
+  ariaLiveEventsBound = false;
 
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.recommendation).then(() => {
@@ -95,6 +97,16 @@ export default class QuanticRecommendationInterface extends LightningElement {
     this.hasRendered = true;
   }
 
+  disconnectedCallback() {
+    if (this.ariaLiveEventsBound) {
+      this.removeEventListener('arialivemessage', this.handleAriaLiveMessage);
+      this.removeEventListener(
+        'registerregion',
+        this.handleRegisterAriaLiveRegion
+      );
+    }
+  }
+
   /**
    * @param {RecommendationEngine} engine
    */
@@ -118,6 +130,7 @@ export default class QuanticRecommendationInterface extends LightningElement {
       'registerregion',
       this.handleRegisterAriaLiveRegion.bind(this)
     );
+    this.ariaLiveEventsBound = true;
   }
 
   handleAriaLiveMessage(event) {
