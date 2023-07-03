@@ -5,6 +5,7 @@ import {
 import {
   FacetRequest,
   FacetValueRequest,
+  SpecificFacetRequest,
 } from '../../facet-set/interfaces/request';
 import {DateRangeRequest} from '../../range-facets/date-facet-set/interfaces/request';
 import {RangeFacetRequest} from '../../range-facets/generic/interfaces/range-facet';
@@ -14,7 +15,8 @@ import {AnyFacetSetState} from './generic-facet-section';
 export type AnyFacetRequest =
   | FacetRequest
   | RangeFacetRequest
-  | CategoryFacetRequest;
+  | CategoryFacetRequest
+  | SpecificFacetRequest;
 
 export type AnyFacetValueRequest =
   | FacetValueRequest

@@ -1,4 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
+import {SpecificSortCriteriaExplicitAlphanumeric} from '../../../features/facets/facet-api/request';
 import {
   facetSortCriteria,
   FacetSortCriterion,
@@ -64,7 +65,7 @@ export interface FacetOptions {
    *
    * @defaultValue `automatic`
    */
-  sortCriteria?: FacetSortCriterion;
+  sortCriteria?: FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric;
 
   /**
    * Specifies an explicit list of `allowedValues` in the Search API request.

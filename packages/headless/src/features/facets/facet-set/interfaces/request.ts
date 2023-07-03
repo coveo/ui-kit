@@ -8,6 +8,7 @@ import {
   Expandable,
   AllowedValues,
   CustomSort,
+  SpecificSortCriteriaExplicitAlphanumeric,
 } from '../../facet-api/request';
 
 export const facetSortCriteria: FacetSortCriterion[] = [
@@ -16,11 +17,14 @@ export const facetSortCriteria: FacetSortCriterion[] = [
   'occurrences',
   'automatic',
 ];
+
 export type FacetSortCriterion =
   | 'score'
   | 'alphanumeric'
   | 'occurrences'
   | 'automatic';
+
+export type FacetSortOrder = 'ascending' | 'descending';
 
 export interface FacetValueRequest extends BaseFacetValueRequest {
   value: string;
@@ -34,7 +38,22 @@ export interface FacetRequest
     Type<'specific'>,
     AllowedValues,
     CustomSort,
-    SortCriteria<FacetSortCriterion> {
+    SortCriteria<
+      FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric
+    > {
   /** @defaultValue `automatic` */
-  sortCriteria: FacetSortCriterion;
+  sortCriteria: FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric;
+}
+
+export interface SpecificFacetRequest
+  extends BaseFacetRequest,
+    CurrentValues<FacetValueRequest>,
+    Expandable,
+    Freezable,
+    Type<'specific'>,
+    AllowedValues,
+    CustomSort,
+    SortCriteria<SpecificSortCriteriaExplicitAlphanumeric> {
+  /** @defaultValue `automatic` */
+  sortCriteria: SpecificSortCriteriaExplicitAlphanumeric;
 }

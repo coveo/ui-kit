@@ -9,6 +9,7 @@ import {
   buildSearchStatus,
   buildFacetConditionsManager,
 } from '@coveo/headless';
+import {FacetSortOrder} from '@coveo/headless/dist/definitions/features/facets/facet-set/interfaces/request';
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
   AriaLiveRegion,
@@ -116,6 +117,11 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
+  /**
+   * The sort order to apply to the returned facet values.
+   * Possible values are 'ascending' and 'descending'.
+   */
+  @Prop({reflect: true}) public sortOrder: FacetSortOrder = 'ascending';
   /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.
@@ -246,7 +252,13 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facet: this.facet,
       facetId: this.facetId,
       withSearch: this.withSearch,
-      sortCriteria: this.sortCriteria,
+      sortCriteria:
+        this.sortCriteria === 'alphanumeric'
+          ? {
+              type: this.sortCriteria,
+              order: this.sortOrder,
+            }
+          : this.sortCriteria,
     });
 
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -297,7 +309,13 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfValues,
-      sortCriteria: this.sortCriteria,
+      sortCriteria:
+        this.sortCriteria === 'alphanumeric'
+          ? {
+              type: this.sortCriteria,
+              order: this.sortOrder,
+            }
+          : this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
