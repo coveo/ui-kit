@@ -84,6 +84,7 @@ export interface SortCriteria<
   T extends
     | 'score'
     | 'alphanumeric'
+    | 'alphanumericDescending'
     | 'ascending'
     | 'descending'
     | 'occurrences'

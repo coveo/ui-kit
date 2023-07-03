@@ -96,9 +96,7 @@ const facetRegistrationOptionsDefinition = {
   filterFacetCount: new BooleanValue({required: false}),
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),
-  sortCriteria: new Value<
-    FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric
-  >({required: false}),
+  sortCriteria: new Value<FacetSortCriterion>({required: false}),
   allowedValues: allowedValues,
   customSort: customSort,
 };

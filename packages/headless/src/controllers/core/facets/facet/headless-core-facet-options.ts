@@ -1,8 +1,7 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {SpecificSortCriteriaExplicitAlphanumeric} from '../../../../features/facets/facet-api/request';
 import {
-  facetSortCriteria,
   FacetSortCriterion,
+  facetSortCriteria,
 } from '../../../../features/facets/facet-set/interfaces/request';
 import {
   facetId,
@@ -62,7 +61,7 @@ export interface FacetOptions {
    *
    * @defaultValue `automatic`
    */
-  sortCriteria?: FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric;
+  sortCriteria?: FacetSortCriterion;
 }
 
 export interface FacetSearchOptions {

@@ -283,6 +283,13 @@ function buildFacetRequest(
     freezeCurrentValues: false,
     isFieldExpanded: false,
     preventAutoSelect: false,
+    sortCriteria:
+      config.sortCriteria === 'alphanumericDescending'
+        ? {
+            type: 'alphanumeric',
+            order: 'descending',
+          }
+        : config.sortCriteria ?? defaultFacetOptions.sortCriteria,
     ...config,
   };
 }

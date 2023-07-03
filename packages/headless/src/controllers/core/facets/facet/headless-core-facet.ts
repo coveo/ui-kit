@@ -8,7 +8,6 @@ import {
 } from '../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
-import {SpecificSortCriteriaExplicitAlphanumeric} from '../../../../features/facets/facet-api/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
@@ -194,7 +193,7 @@ export interface CoreFacetState {
   values: FacetValue[];
 
   /** The active sortCriterion of the facet. */
-  sortCriterion: FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric;
+  sortCriterion: FacetSortCriterion;
 
   /** `true` if a search is in progress and `false` otherwise. */
   isLoading: boolean;
@@ -465,8 +464,11 @@ export function buildCoreFacet(
       const response = getResponse();
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();
+      let sortCriterion: FacetSortCriterion = 'automatic';
 
-      const sortCriterion = request.sortCriteria;
+      if (typeof request.sortCriteria === 'object') {
+        sortCriterion = 'alphanumericDescending';
+      }
       const values = response ? response.values : [];
       const hasActiveValues = values.some(
         (facetValue) => facetValue.state !== 'idle'
