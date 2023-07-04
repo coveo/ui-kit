@@ -52,7 +52,7 @@ import {SortDropdownOption} from '../atomic-search-interface/store';
  * @part section-sort-title - The title for the sort section.
  * @part section-filters-title - The title for the filters section.
  * @part select-wrapper - The wrapper around the select element, used to position the icon.
- * @part select - The `<select>` element of the drop-down list.
+ * @part select - The `<select>` element of the dropdown list.
  * @part select-icon-wrapper - The wrapper around the sort icon that's used to align it.
  * @part select-icon - The select dropdown's sort icon.
  * @part filter-section - The section containing facets and the "filters" title.

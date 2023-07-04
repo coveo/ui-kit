@@ -190,7 +190,7 @@ export class AtomicRatingFacet
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initializeFacet();
-    this.inititalizeDependenciesManager();
+    this.initializeDependenciesManager();
   }
 
   private initializeFacet() {
@@ -239,7 +239,7 @@ export class AtomicRatingFacet
       .length;
   }
 
-  private inititalizeDependenciesManager() {
+  private initializeDependenciesManager() {
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {

@@ -1,33 +1,53 @@
-## 2.31.3 (2023-06-01)
-
-
-### Bug Fixes
-
-* prevent atomic-focus-detector css glitch on searchbox render ([#2869](https://github.com/coveo/ui-kit/issues/2869)) ([de39114](https://github.com/coveo/ui-kit/commits/de3911439ffe087bd6a2aba39bced80a694b3444))
-
+# 2.34.0 (2023-06-29)
 
 ### Features
 
-* **atomic:** changed translation key in `atomic-did-you-mean` ([#2939](https://github.com/coveo/ui-kit/issues/2939)) ([0b0627a](https://github.com/coveo/ui-kit/commits/0b0627a793f356cc9adf9fec457fd15f19b01582))
-* **atomic:** support fallback for `atomic-result-image`  ([#2915](https://github.com/coveo/ui-kit/issues/2915)) ([2620f18](https://github.com/coveo/ui-kit/commits/2620f18cde02c7eb9ba5b31e2fb4042fa63ed0ad))
-* **insight:** added button for the full search page ([#2870](https://github.com/coveo/ui-kit/issues/2870)) ([5755287](https://github.com/coveo/ui-kit/commits/5755287752a7c974c96f2a382aaa650991fa92a8))
+- **atomic:** mark atomic-insight-result-children as internal ([#3001](https://github.com/coveo/ui-kit/issues/3001)) ([48a95dc](https://github.com/coveo/ui-kit/commits/48a95dc823408b9a4f251510a8536b12539f38c2))
 
+# 2.33.0 (2023-06-28)
 
+### Features
+
+- **atomic:** added Generated Answer component ([#3003](https://github.com/coveo/ui-kit/issues/3003)) ([2f2096b](https://github.com/coveo/ui-kit/commits/2f2096bfd1f2c0993cb3041eb081bbe052cfcb94))
+
+# 2.32.0 (2023-06-20)
+
+### Features
+
+- **atomic,headless:** support custom sort for facets ([#2960](https://github.com/coveo/ui-kit/issues/2960)) ([21e00f2](https://github.com/coveo/ui-kit/commits/21e00f286f49b1a8f9af9a5d12e21dae36ae8e54))
+- **atomic:** added folding-result-list for insight panel ([#2970](https://github.com/coveo/ui-kit/issues/2970)) ([4e5ed3b](https://github.com/coveo/ui-kit/commits/4e5ed3b479c6e71bed1add6145595cf902ab0887))
+- **atomic:** mass translation of atomic with gpt model ([#2981](https://github.com/coveo/ui-kit/issues/2981)) ([6ea7626](https://github.com/coveo/ui-kit/commits/6ea7626dde688f8300043d4aae630af4e992d13c))
+
+## 2.31.4 (2023-06-07)
+
+### Bug Fixes
+
+- **atomic:** code defensively around triggers notifications state ([#2946](https://github.com/coveo/ui-kit/issues/2946)) ([032a7c2](https://github.com/coveo/ui-kit/commits/032a7c2d36e1fddec0599ed01708d691fa2eb94e))
+- **atomic:** not good ([#2965](https://github.com/coveo/ui-kit/issues/2965)) ([9efbb49](https://github.com/coveo/ui-kit/commits/9efbb49918562207757a2a724cfb9e7d1f171ac2))
+- undefined error when checking mismatch with new endpoint url ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
+
+## 2.31.3 (2023-06-01)
+
+### Bug Fixes
+
+- prevent atomic-focus-detector css glitch on searchbox render ([#2869](https://github.com/coveo/ui-kit/issues/2869)) ([de39114](https://github.com/coveo/ui-kit/commits/de3911439ffe087bd6a2aba39bced80a694b3444))
+
+### Features
+
+- **atomic:** changed translation key in `atomic-did-you-mean` ([#2939](https://github.com/coveo/ui-kit/issues/2939)) ([0b0627a](https://github.com/coveo/ui-kit/commits/0b0627a793f356cc9adf9fec457fd15f19b01582))
+- **atomic:** support fallback for `atomic-result-image` ([#2915](https://github.com/coveo/ui-kit/issues/2915)) ([2620f18](https://github.com/coveo/ui-kit/commits/2620f18cde02c7eb9ba5b31e2fb4042fa63ed0ad))
+- **insight:** added button for the full search page ([#2870](https://github.com/coveo/ui-kit/issues/2870)) ([5755287](https://github.com/coveo/ui-kit/commits/5755287752a7c974c96f2a382aaa650991fa92a8))
 
 ## 2.30.1 (2023-05-23)
 
-
 ### Bug Fixes
 
-* hide ipx if parent is hidden SVCINT-2357 ([#2910](https://github.com/coveo/ui-kit/issues/2910)) ([30c72dc](https://github.com/coveo/ui-kit/commits/30c72dc7dc4caccddbb19d8cc55981c7d04226e2))
-
+- hide ipx if parent is hidden SVCINT-2357 ([#2910](https://github.com/coveo/ui-kit/issues/2910)) ([30c72dc](https://github.com/coveo/ui-kit/commits/30c72dc7dc4caccddbb19d8cc55981c7d04226e2))
 
 ### Features
 
-* **atomic:** added smart snippet components for insight panels ([#2908](https://github.com/coveo/ui-kit/issues/2908)) ([b63c79d](https://github.com/coveo/ui-kit/commits/b63c79d33e27d20428f10aaa6f6d93b95f1d8fe1))
-* **atomic:** remove white stroke on checkbox tick svg when using part ([#2899](https://github.com/coveo/ui-kit/issues/2899)) ([d0eb2be](https://github.com/coveo/ui-kit/commits/d0eb2bea19986a4531866ffb4dde601dcbf5711b))
-
-
+- **atomic:** added smart snippet components for insight panels ([#2908](https://github.com/coveo/ui-kit/issues/2908)) ([b63c79d](https://github.com/coveo/ui-kit/commits/b63c79d33e27d20428f10aaa6f6d93b95f1d8fe1))
+- **atomic:** remove white stroke on checkbox tick svg when using part ([#2899](https://github.com/coveo/ui-kit/issues/2899)) ([d0eb2be](https://github.com/coveo/ui-kit/commits/d0eb2bea19986a4531866ffb4dde601dcbf5711b))
 
 # Change Log
 

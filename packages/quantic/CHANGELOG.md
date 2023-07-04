@@ -1,28 +1,49 @@
-## 2.24.3 (2023-06-01)
+## 2.26.3 (2023-06-29)
 
+## 2.26.2 (2023-06-29)
 
 ### Bug Fixes
 
-* **quantic:** styling bug fixed in firefox ([#2931](https://github.com/coveo/ui-kit/issues/2931)) ([a690eff](https://github.com/coveo/ui-kit/commits/a690efff325da87f7a8a31e36b843088a6657007))
+- **SFINT-5094:** Attempt to fix the quantic package release ([#3006](https://github.com/coveo/ui-kit/issues/3006)) ([a317e7f](https://github.com/coveo/ui-kit/commits/a317e7f645f8ca4ba9fdd2aa7a465a2493dde6fe))
 
+## 2.26.1 (2023-06-28)
+
+# 2.26.0 (2023-06-20)
+
+### Bug Fixes
+
+- **quantic:** missing documentation for the slot "children" added ([#2977](https://github.com/coveo/ui-kit/issues/2977)) ([1bbd557](https://github.com/coveo/ui-kit/commits/1bbd55786b8d226afa8c62e3967cad5673c8375e))
 
 ### Features
 
-* **quantic:** hide when empty property added to the quantic recent results and recent queries components ([#2927](https://github.com/coveo/ui-kit/issues/2927)) ([22ab4e6](https://github.com/coveo/ui-kit/commits/22ab4e65155b3dcf1cf019444e38d6f96814cd73))
-* **quantic:** logic added to properly handle the initialization errors in the Quantic components ([#2879](https://github.com/coveo/ui-kit/issues/2879)) ([63697ac](https://github.com/coveo/ui-kit/commits/63697ac5904a4f4fdfc441268a5a7074fbaa6ee7))
-* **quantic:** Modified quantic exampleInsightPanel to support the folding feature for result list ([#2936](https://github.com/coveo/ui-kit/issues/2936)) ([5803711](https://github.com/coveo/ui-kit/commits/580371146d3900d48b91442fc34066df17325011))
+- **quantic:** Added check for collection children in quanticResultChildren component ([#2959](https://github.com/coveo/ui-kit/issues/2959)) ([ed59162](https://github.com/coveo/ui-kit/commits/ed59162e984c3d1a129a3a656c4812a0fb6b659a))
+- **quantic:** Added FTs for insight use case in the folded result list ([#2963](https://github.com/coveo/ui-kit/issues/2963)) ([3a2c290](https://github.com/coveo/ui-kit/commits/3a2c290e651691207f795329c146bcf4740ef681))
+- **quantic:** quantic recommendation interface component created ([#2986](https://github.com/coveo/ui-kit/issues/2986)) ([1c85c60](https://github.com/coveo/ui-kit/commits/1c85c600bec241125f9f91d7ca25b545a706cb67))
 
+# 2.25.0 (2023-06-07)
 
+### Features
 
-## 2.23.2 (2023-05-23)
+- **quantic:** new property fetchOnInit added to the Quantic Case Classification ([#2953](https://github.com/coveo/ui-kit/issues/2953)) ([7caf7d2](https://github.com/coveo/ui-kit/commits/7caf7d26942c847aadc5649d4d47d3ed1d85f501))
 
+## 2.24.3 (2023-06-01)
 
 ### Bug Fixes
 
-* **quantic:**  properly encoding the uri in the quantic standalone search box ([#2903](https://github.com/coveo/ui-kit/issues/2903)) ([640a828](https://github.com/coveo/ui-kit/commits/640a8288c765564a15f675c5f37fb4fba94a1823))
-* **quantic:** fixed bug with the target property of the quantic result link ([#2907](https://github.com/coveo/ui-kit/issues/2907)) ([232f88f](https://github.com/coveo/ui-kit/commits/232f88fb873e548af86cffc1ca277a7de3e35ae0))
+- **quantic:** styling bug fixed in firefox ([#2931](https://github.com/coveo/ui-kit/issues/2931)) ([a690eff](https://github.com/coveo/ui-kit/commits/a690efff325da87f7a8a31e36b843088a6657007))
 
+### Features
 
+- **quantic:** hide when empty property added to the quantic recent results and recent queries components ([#2927](https://github.com/coveo/ui-kit/issues/2927)) ([22ab4e6](https://github.com/coveo/ui-kit/commits/22ab4e65155b3dcf1cf019444e38d6f96814cd73))
+- **quantic:** logic added to properly handle the initialization errors in the Quantic components ([#2879](https://github.com/coveo/ui-kit/issues/2879)) ([63697ac](https://github.com/coveo/ui-kit/commits/63697ac5904a4f4fdfc441268a5a7074fbaa6ee7))
+- **quantic:** Modified quantic exampleInsightPanel to support the folding feature for result list ([#2936](https://github.com/coveo/ui-kit/issues/2936)) ([5803711](https://github.com/coveo/ui-kit/commits/580371146d3900d48b91442fc34066df17325011))
+
+## 2.23.2 (2023-05-23)
+
+### Bug Fixes
+
+- **quantic:** properly encoding the uri in the quantic standalone search box ([#2903](https://github.com/coveo/ui-kit/issues/2903)) ([640a828](https://github.com/coveo/ui-kit/commits/640a8288c765564a15f675c5f37fb4fba94a1823))
+- **quantic:** fixed bug with the target property of the quantic result link ([#2907](https://github.com/coveo/ui-kit/issues/2907)) ([232f88f](https://github.com/coveo/ui-kit/commits/232f88fb873e548af86cffc1ca277a7de3e35ae0))
 
 # Change Log
 
@@ -4112,7 +4133,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **headlesss:** fixed number of values for Category facet ([#350](https://github.com/coveo/ui-kit/issues/350)) ([a75636d](https://github.com/coveo/ui-kit/commits/a75636d2a46f840d0e4678972c0eb833f09f52e3))
+- **headless:** fixed number of values for Category facet ([#350](https://github.com/coveo/ui-kit/issues/350)) ([a75636d](https://github.com/coveo/ui-kit/commits/a75636d2a46f840d0e4678972c0eb833f09f52e3))
 
 # [0.1.0-alpha.92](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.91...v0.1.0-alpha.92) (2020-12-09)
 

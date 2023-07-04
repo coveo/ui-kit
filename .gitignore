@@ -10,6 +10,8 @@ reports/*.xml
 .dccache
 sarifs
 **.cy.ts.mp4
+.cspellcache
+utils/translation-gpt/temporary.json
 
 # CI Release
 topology.json

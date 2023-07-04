@@ -1,12 +1,12 @@
-import {Result} from '../../../api/search/search/result';
 import {configuration} from '../../../app/common-reducers';
 import {logDocumentOpen} from '../../../features/product-listing/product-listing-analytics';
-import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {buildMockResult} from '../../../test';
+import {pushRecentResult} from '../../../features/product-listing/product-listing-recent-results';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
 } from '../../../test';
+import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
+import {ProductRecommendation} from './../../../api/search/search/product-recommendation';
 import {
   buildInteractiveResult,
   InteractiveResult,
@@ -14,26 +14,24 @@ import {
 
 describe('InteractiveResult', () => {
   let engine: MockProductListingEngine;
-  let mockResult: Result;
+  let mockProductRec: ProductRecommendation;
   let interactiveResult: InteractiveResult;
   let logDocumentOpenPendingActionType: string;
 
-  const resultStringParams = {
-    title: 'title',
-    uri: 'uri',
-    printableUri: 'printable-uri',
-    clickUri: 'click-uri',
-    uniqueId: 'unique-id',
-    excerpt: 'exceprt',
-    firstSentences: 'first-sentences',
-    flags: 'flags',
+  const productRecStringParams = {
+    permanentid: 'permanentid',
+    documentUri: 'documentUri',
+    clickUri: 'clickUri',
   };
 
   function initializeInteractiveResult(delay?: number) {
-    const result = (mockResult = buildMockResult(resultStringParams));
-    logDocumentOpenPendingActionType = logDocumentOpen(mockResult).pending.type;
+    const productRec = (mockProductRec = buildMockProductRecommendation(
+      productRecStringParams
+    ));
+    logDocumentOpenPendingActionType =
+      logDocumentOpen(mockProductRec).pending.type;
     interactiveResult = buildInteractiveResult(engine, {
-      options: {result, selectionDelay: delay},
+      options: {result: productRec, selectionDelay: delay},
     });
   }
 
@@ -48,7 +46,7 @@ describe('InteractiveResult', () => {
   function expectLogDocumentActionPending() {
     const action = findLogDocumentAction();
     expect(action).toEqual(
-      logDocumentOpen(mockResult).pending(action!.meta.requestId)
+      logDocumentOpen(mockProductRec).pending(action!.meta.requestId)
     );
   }
 

@@ -65,7 +65,7 @@ main()
 
 - `organizationId: string`
 
-  The unique identifier of the target Coveo Cloud organization (e.g., `mycoveoorganizationg8tp8wu3`).
+  The unique identifier of the target Coveo Cloud organization (e.g., `mycoveoorganization8tp8wu3`).
 
 - `provider: string`
 

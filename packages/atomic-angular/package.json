@@ -18,11 +18,11 @@
     "@angular/platform-browser": "16.0.2",
     "@angular/platform-browser-dynamic": "16.0.2",
     "@angular/router": "16.0.2",
-    "@coveo/atomic": "2.31.3",
+    "@coveo/atomic": "2.34.0",
     "rxjs": "7.5.6"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.18.3"
+    "@coveo/headless": "2.20.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "16.0.2",
@@ -39,6 +39,6 @@
     "ncp": "2.0.0",
     "ng-packagr": "16.0.1",
     "typescript": "4.9.5",
-    "@coveo/headless": "2.18.3"
+    "@coveo/headless": "2.20.0"
   }
 }

@@ -8,6 +8,7 @@ import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {
+  numericFacetExcludedValuesSelector,
   numericFacetResponseSelector,
   numericFacetSelectedValuesSelector,
 } from './numeric-facet-selectors';
@@ -63,15 +64,51 @@ describe('numeric facet selectors', () => {
         state: 'selected',
       });
       const mockValue2 = buildMockNumericFacetValue({
+        state: 'excluded',
+      });
+      const mockValue3 = buildMockNumericFacetValue({
         state: 'idle',
       });
       state.search.response.facets = [
         buildMockNumericFacetResponse({
           facetId,
-          values: [mockValue, mockValue2],
+          values: [mockValue, mockValue2, mockValue3],
         }),
       ];
       const selectedValues = numericFacetSelectedValuesSelector(state, facetId);
+      expect(selectedValues).toEqual([mockValue]);
+    });
+  });
+
+  describe('#numericFacetExcludedValuesSelector', () => {
+    beforeEach(() => {
+      state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({facetId}),
+      });
+    });
+
+    it('#numericFacetExcludedValuesSelector returns an empty array if the facet does not exist', () => {
+      const selectedValues = numericFacetExcludedValuesSelector(state, facetId);
+      expect(selectedValues).toEqual([]);
+    });
+
+    it('#numericFacetExcludedValuesSelector returns only the excluded values for the provided facetId', () => {
+      const mockValue = buildMockNumericFacetValue({
+        state: 'excluded',
+      });
+      const mockValue2 = buildMockNumericFacetValue({
+        state: 'selected',
+      });
+      const mockValue3 = buildMockNumericFacetValue({
+        state: 'idle',
+      });
+      state.search.response.facets = [
+        buildMockNumericFacetResponse({
+          facetId,
+          values: [mockValue, mockValue2, mockValue3],
+        }),
+      ];
+      const selectedValues = numericFacetExcludedValuesSelector(state, facetId);
       expect(selectedValues).toEqual([mockValue]);
     });
   });

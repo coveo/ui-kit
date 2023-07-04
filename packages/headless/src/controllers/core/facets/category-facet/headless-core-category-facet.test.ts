@@ -200,7 +200,7 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retireveCount', () => {
+    it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retrieveCount', () => {
       options.numberOfValues = 10;
       initCategoryFacet();
       const selection = buildMockCategoryFacetValue({value: 'A'});
@@ -218,9 +218,7 @@ describe('category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -234,9 +232,7 @@ describe('category facet', () => {
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -387,9 +383,7 @@ describe('category facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       categoryFacet.showMoreValues();
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -405,9 +399,7 @@ describe('category facet', () => {
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -425,9 +417,7 @@ describe('category facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       categoryFacet.sortBy('alphanumeric');
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 

@@ -1,19 +1,23 @@
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
+import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   logFacetClearAll,
+  logFacetExclude,
   logFacetSelect,
   logFacetShowLess,
   logFacetShowMore,
   logFacetUpdateSort,
-} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+} from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
+import {
+  getProductListingAnalyticsActionForToggleFacetExclude,
+  getProductListingAnalyticsActionForToggleFacetSelect,
+} from '../../../features/facets/facet-set/facet-set-product-listing-utils';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
-import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {
@@ -83,9 +87,15 @@ export function buildFacet(
     return buildFacetSearch(engine, {
       options: {facetId: getFacetId(), ...facetSearch},
       select: (value) => {
-        dispatch(updateFacetOptions({freezeFacetOrder: true}));
+        dispatch(updateFacetOptions());
         dispatch(fetchProductListing()).then(() =>
           logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
+        );
+      },
+      exclude: (value) => {
+        dispatch(updateFacetOptions());
+        dispatch(fetchProductListing()).then(() =>
+          logFacetExclude({facetId: getFacetId(), facetValue: value.rawValue})
         );
       },
       isForFieldSuggestions: false,
@@ -103,7 +113,23 @@ export function buildFacet(
     toggleSelect: (selection: FacetValue) => {
       coreController.toggleSelect(selection);
       dispatch(fetchProductListing());
-      dispatch(getAnalyticsActionForToggleFacetSelect(getFacetId(), selection));
+      dispatch(
+        getProductListingAnalyticsActionForToggleFacetSelect(
+          getFacetId(),
+          selection
+        )
+      );
+    },
+
+    toggleExclude: (selection: FacetValue) => {
+      coreController.toggleExclude(selection);
+      dispatch(fetchProductListing());
+      dispatch(
+        getProductListingAnalyticsActionForToggleFacetExclude(
+          getFacetId(),
+          selection
+        )
+      );
     },
 
     deselectAll() {
@@ -145,7 +171,7 @@ function loadFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
   FacetSection & ConfigurationSection & FacetSearchSection,
-  SearchThunkExtraArguments
+  ProductListingThunkExtraArguments
 > {
   engine.addReducers({facetSet, configuration, facetSearchSet});
   return true;
