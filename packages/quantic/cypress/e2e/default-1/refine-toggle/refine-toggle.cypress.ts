@@ -159,7 +159,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
-            Expect.displayFacetManager(true);
+            Expect.displayFacetManager();
             Expect.displaySort(true);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -222,7 +222,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
-            Expect.displayFacetManager(true);
+            Expect.displayFacetManager();
             Expect.displaySort(false);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -369,7 +369,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
-            Expect.displayFacetManager(true);
+            Expect.displayFacetManager();
             Expect.displaySort(true);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -432,7 +432,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
-            Expect.displayFacetManager(true);
+            Expect.displayFacetManager();
             Expect.displaySort(false);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -631,7 +631,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
-            Expect.displayFacetManager(true);
+            Expect.displayFacetManager();
             Expect.displaySort(true);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);

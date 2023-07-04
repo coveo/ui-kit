@@ -31,7 +31,7 @@ import enabledFacetOrderingTemplate from './templates/enabledFacetOrdering.html'
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-modal-content engine-id={engineId} hide-sort disable-facet-ordering={disableFacetOrdering}></c-quantic-refine-modal-content>
+ * <c-quantic-refine-modal-content engine-id={engineId} hide-sort disable-facet-ordering></c-quantic-refine-modal-content>
  */
 export default class QuanticRefineModalContent extends LightningElement {
   labels = {

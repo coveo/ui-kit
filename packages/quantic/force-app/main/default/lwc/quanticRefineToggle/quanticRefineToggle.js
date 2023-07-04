@@ -28,7 +28,7 @@ import { LightningElement, api } from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters" disable-facet-ordering={disableFacetOrdering}>
+ * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters" disable-facet-ordering>
  *   <div slot="refine-title">Custom Title</div>
  *   <div slot="button-content">
  *     Custom Label

@@ -110,7 +110,7 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         );
     },
 
-    displayFacetManager: (display: boolean) => {
+    displayFacetManager: (display = true) => {
       selector
         .facetManager()
         .should(display ? 'exist' : 'not.exist')

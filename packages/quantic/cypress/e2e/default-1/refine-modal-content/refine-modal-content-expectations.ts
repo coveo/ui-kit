@@ -52,7 +52,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
         .logDetail(`${should(display)} the clear all filters button`);
     },
 
-    displayFacetManager: (display: boolean) => {
+    displayFacetManager: (display = true) => {
       selector
         .facetManager()
         .should(display ? 'exist' : 'not.exist')
