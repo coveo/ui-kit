@@ -2,6 +2,7 @@ import {EventDescription} from 'coveo.analytics';
 import {SearchAppState} from '../..';
 import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
+import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request';
 import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response';
@@ -79,7 +80,9 @@ function getAutomaticFacets(state: StateNeededBySearchRequest) {
 
   return facets ? Object.values(facets).map(responseToRequest) : undefined;
 }
-function responseToRequest(response: AutomaticFacetResponse) {
+function responseToRequest(
+  response: AutomaticFacetResponse
+): AutomaticFacetRequest {
   const {field, values} = response;
 
   return {

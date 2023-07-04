@@ -74,6 +74,8 @@ export function buildAutomaticFacet(
     facetSearch: restOfFacetSearch,
 
     toggleSelect(selection: FacetValue) {
+      console.log('toggleSelect');
+
       console.log(selection);
       dispatch(toggleSelectAutomaticFacetValue({field, selection}));
       dispatch(
@@ -81,34 +83,70 @@ export function buildAutomaticFacet(
       );
     },
     toggleExclude(selection: FacetValue) {
+      //NOTHING
+      console.log('toggleExclude');
       console.log(selection);
     },
     toggleSingleSelect(selection: FacetValue) {
+      // ????
+      console.log('toggleSingleSelect');
+
       console.log(selection);
     },
     toggleSingleExclude(selection: FacetValue) {
+      console.log('toggleSingleExclude');
+
+      // NOTHING
       console.log(selection);
     },
     isValueSelected(value: FacetValue) {
+      console.log('isValueSelected');
+
+      // NOTHING
       console.log(value);
       return true;
     },
     isValueExcluded(value: FacetValue) {
+      console.log('isValueExcluded');
+
+      //NOTHING
       console.log(value);
       return true;
     },
-    deselectAll() {},
+    deselectAll() {
+      console.log('deselectAll');
+
+      //TODO
+    },
     sortBy(criterion: FacetSortCriterion) {
+      console.log('sortBy');
+
+      // NOTHING
       console.log(criterion);
     },
     isSortedBy(criterion: FacetSortCriterion) {
+      console.log('isSortedBy');
+
+      //NOTHING
       console.log(criterion);
       return true;
     },
-    showMoreValues() {},
-    showLessValues() {},
-    enable() {},
-    disable() {},
+    showMoreValues() {
+      //NOTHING
+      console.log('showMoreValues');
+    },
+    showLessValues() {
+      //NOTHING
+      console.log('showLessValues');
+    },
+    enable() {
+      //NOTHING
+      console.log('enable');
+    },
+    disable() {
+      //NOTHING
+      console.log('disable');
+    },
 
     get state() {
       const response = getFacetResponse();
