@@ -1169,4 +1169,11 @@
       <protected>false</protected>
       <shortDescription>Fatal error: unable to initialize the component.</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_ViewedByCustomer</fullName>
+      <value>Viewed by customer</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Viewed by customer</shortDescription>
+    </labels>
 </CustomLabels>

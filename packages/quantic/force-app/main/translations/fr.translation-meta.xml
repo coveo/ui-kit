@@ -636,4 +636,8 @@
         <label>Erreur fatale : Impossible d'initialiser le composant {{0}}.</label>
         <name>quantic_UnableToInitializeComponent</name>
     </customLabels>
+        <customLabels>
+        <label>Vu par le client</label>
+        <name>quantic_ViewedByCustomer</name>
+    </customLabels>
 </Translations>
