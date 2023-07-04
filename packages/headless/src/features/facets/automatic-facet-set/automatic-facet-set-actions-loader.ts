@@ -2,7 +2,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   ToggleSelectAutomaticFacetValueActionCreatorPayload,
-  deselectAllAutomaticFacet,
+  deselectAllAutomaticFacetValues,
   setDesiredCount,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
@@ -26,7 +26,7 @@ export interface AutomaticFacetsActionCreators {
    * @param field - The unique identifier of the facet (e.g., `"1"`).
    * @returns A dispatchable action.
    */
-  deselectAllAutomaticFacet(field: string): PayloadAction<string>;
+  deselectAllAutomaticFacetValues(field: string): PayloadAction<string>;
 
   /**
    * Toggles a facet value. If the value does not exist, it is added.
@@ -52,7 +52,7 @@ export function loadAutomaticFacetSetActions(
 
   return {
     setDesiredCount,
-    deselectAllAutomaticFacet,
+    deselectAllAutomaticFacetValues,
     toggleSelectAutomaticFacetValue,
   };
 }

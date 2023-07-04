@@ -1,8 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {executeSearch} from '../../search/search-actions';
 import {
-  deselectAllAutomaticFacet,
+  deselectAllAutomaticFacetValues,
   setDesiredCount,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
@@ -37,20 +36,13 @@ export const automaticFacetSetReducer = createReducer(
         const isSelected = value?.state === 'selected';
         value.state = isSelected ? 'idle' : 'selected';
       })
-      .addCase(deselectAllAutomaticFacet, (state, action) => {
-        console.log(state);
-        console.log(action);
-      })
-      .addCase(deselectAllBreadcrumbs, (state, action) => {
-        console.log(state);
-        console.log(action);
+      .addCase(deselectAllAutomaticFacetValues, (state, action) => {
+        const field = action.payload;
+        const facet = state.facets[field];
+
+        for (let i = 0; i < facet.values.length; i++) {
+          facet.values[i].state = 'idle';
+        }
       });
   }
 );
-
-// .addCase(restoreSearchParameters, (state, action) => {
-//     //register facets
-//   })
-
-//
-//
