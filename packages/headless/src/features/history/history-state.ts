@@ -30,28 +30,28 @@ export function getHistoryInitialState(): HistoryState {
 
 export function extractHistory(state: Partial<HistoryState>): HistoryState {
   return {
-    context: state.context ?? getContextInitialState(),
+    context: state.context || getContextInitialState(),
     dictionaryFieldContext:
-      state.dictionaryFieldContext ?? getDictionaryFieldContextInitialState(),
-    facetSet: state.facetSet ?? getFacetSetInitialState(),
-    numericFacetSet: state.numericFacetSet ?? getNumericFacetSetInitialState(),
-    dateFacetSet: state.dateFacetSet ?? getDateFacetSetInitialState(),
+      state.dictionaryFieldContext || getDictionaryFieldContextInitialState(),
+    facetSet: state.facetSet || getFacetSetInitialState(),
+    numericFacetSet: state.numericFacetSet || getNumericFacetSetInitialState(),
+    dateFacetSet: state.dateFacetSet || getDateFacetSetInitialState(),
     categoryFacetSet:
-      state.categoryFacetSet ?? getCategoryFacetSetInitialState(),
+      state.categoryFacetSet || getCategoryFacetSetInitialState(),
     automaticFacetSet:
       state.automaticFacetSet ?? getAutomaticFacetSetInitialState(),
-    pagination: state.pagination ?? getPaginationInitialState(),
-    query: state.query ?? getQueryInitialState(),
-    tabSet: state.tabSet ?? getTabSetInitialState(),
+    pagination: state.pagination || getPaginationInitialState(),
+    query: state.query || getQueryInitialState(),
+    tabSet: state.tabSet || getTabSetInitialState(),
     advancedSearchQueries:
-      state.advancedSearchQueries ?? getAdvancedSearchQueriesInitialState(),
-    staticFilterSet: state.staticFilterSet ?? getStaticFilterSetInitialState(),
-    querySet: state.querySet ?? getQuerySetInitialState(),
-    instantResults: state.instantResults ?? getInstantResultsInitialState(),
-    sortCriteria: state.sortCriteria ?? getSortCriteriaInitialState(),
-    pipeline: state.pipeline ?? getPipelineInitialState(),
-    searchHub: state.searchHub ?? getSearchHubInitialState(),
-    facetOptions: state.facetOptions ?? getFacetOptionsInitialState(),
+      state.advancedSearchQueries || getAdvancedSearchQueriesInitialState(),
+    staticFilterSet: state.staticFilterSet || getStaticFilterSetInitialState(),
+    querySet: state.querySet || getQuerySetInitialState(),
+    instantResults: state.instantResults || getInstantResultsInitialState(),
+    sortCriteria: state.sortCriteria || getSortCriteriaInitialState(),
+    pipeline: state.pipeline || getPipelineInitialState(),
+    searchHub: state.searchHub || getSearchHubInitialState(),
+    facetOptions: state.facetOptions || getFacetOptionsInitialState(),
     facetOrder: state.facetOrder ?? getFacetOrderInitialState(),
     debug: state.debug ?? getDebugInitialState(),
   };
