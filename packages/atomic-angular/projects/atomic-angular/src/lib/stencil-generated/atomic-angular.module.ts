@@ -227,6 +227,6 @@ export class AtomicAngularModule {
       providers: [],
     };
   }
-} 
+}
 
-
+        
