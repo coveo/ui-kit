@@ -30,12 +30,6 @@ export interface AutomaticFacet extends Controller {
    */
   toggleSelect(selection: FacetValue): void;
   /**
-   * Toggles the specified facet value, deselecting others.
-   *
-   * @param selection - The facet value to toggle.
-   */
-  toggleSingleSelect(selection: FacetValue): void;
-  /**
    * Deselects all facet values.
    * */
   deselectAll(): void;
@@ -71,13 +65,6 @@ export function buildAutomaticFacet(
       dispatch(
         executeSearch(getAnalyticsActionForToggleFacetSelect(field, selection))
       );
-    },
-
-    toggleSingleSelect(selection: FacetValue) {
-      if (selection.state === 'idle') {
-        dispatch(deselectAllAutomaticFacetValues(field));
-      }
-      this.toggleSelect(selection);
     },
 
     deselectAll() {
