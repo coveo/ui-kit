@@ -346,6 +346,8 @@ export namespace Components {
     }
     interface AtomicFrequentlyBoughtTogether {
     }
+    interface AtomicGeneratedAnswer {
+    }
     interface AtomicHtml {
         /**
           * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
@@ -2142,6 +2144,12 @@ declare global {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
+    interface HTMLAtomicGeneratedAnswerElement extends Components.AtomicGeneratedAnswer, HTMLStencilElement {
+    }
+    var HTMLAtomicGeneratedAnswerElement: {
+        prototype: HTMLAtomicGeneratedAnswerElement;
+        new (): HTMLAtomicGeneratedAnswerElement;
+    };
     interface HTMLAtomicHtmlElement extends Components.AtomicHtml, HTMLStencilElement {
     }
     var HTMLAtomicHtmlElement: {
@@ -2846,6 +2854,7 @@ declare global {
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
+        "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
@@ -3277,6 +3286,8 @@ declare namespace LocalJSX {
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
     interface AtomicFrequentlyBoughtTogether {
+    }
+    interface AtomicGeneratedAnswer {
     }
     interface AtomicHtml {
         /**
@@ -4822,6 +4833,7 @@ declare namespace LocalJSX {
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
+        "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
@@ -4961,6 +4973,7 @@ declare module "@stencil/core" {
             "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
+            "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;

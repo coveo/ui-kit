@@ -7,9 +7,15 @@ import {
 } from '../../../../state/state-sections';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions';
+import {
+  executeToggleRangeFacetExclude,
+  executeToggleRangeFacetSelect,
+} from '../generic/range-facet-controller-actions';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
-import {toggleSelectDateFacetValue} from './date-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from './date-facet-actions';
 import {DateFacetValue} from './interfaces/response';
 
 const definition = {
@@ -30,6 +36,23 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
     validatePayload(payload, definition);
     dispatch(toggleSelectDateFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
+    dispatch(updateFacetOptions());
+  }
+);
+
+export const executeToggleDateFacetExclude = createAsyncThunk<
+  void,
+  {
+    facetId: string;
+    selection: DateFacetValue;
+  },
+  AsyncThunkOptions<ConfigurationSection & DateFacetSection>
+>(
+  'dateFacet/executeToggleExclude',
+  (payload, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(payload, definition);
+    dispatch(toggleExcludeDateFacetValue(payload));
+    dispatch(executeToggleRangeFacetExclude(payload));
     dispatch(updateFacetOptions());
   }
 );

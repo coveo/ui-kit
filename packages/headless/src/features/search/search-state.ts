@@ -1,4 +1,5 @@
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {ExtendedResults} from '../../api/search/search/extended-results';
 import {QuestionsAnswers} from '../../api/search/search/question-answering';
 import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
@@ -43,6 +44,10 @@ export interface SearchState {
    * The question and answers related to the smart snippet.
    */
   questionAnswer: QuestionsAnswers;
+  /**
+   * The extended results.
+   */
+  extendedResults: ExtendedResults;
 }
 
 export function emptyQuestionAnswer() {
@@ -73,6 +78,7 @@ export function getSearchInitialState(): SearchState {
       splitTestRun: '',
       termsToHighlight: {},
       phrasesToHighlight: {},
+      extendedResults: {},
     },
     duration: 0,
     queryExecuted: '',
@@ -83,5 +89,6 @@ export function getSearchInitialState(): SearchState {
     searchResponseId: '',
     requestId: '',
     questionAnswer: emptyQuestionAnswer(),
+    extendedResults: {},
   };
 }

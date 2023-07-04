@@ -1,3 +1,9 @@
+# 2.10.0 (2023-06-29)
+
+### Features
+
+- **atomic:** mark atomic-insight-result-children as internal ([#3001](https://github.com/coveo/ui-kit/issues/3001)) ([48a95dc](https://github.com/coveo/ui-kit/commits/48a95dc823408b9a4f251510a8536b12539f38c2))
+
 # 2.9.0 (2023-06-20)
 
 ### Features
