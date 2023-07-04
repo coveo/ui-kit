@@ -593,7 +593,7 @@
       <name>quantic_NoRelatedItems</name>
     </customLabels>
     <customLabels>
-      <label>Ouvre dans un sous-onglet de la console Salesforce</label>
+      <label>Ouvre dans un sous-onglet Salesforce</label>
       <name>quantic_OpensInSalesforceSubTab</name>
     </customLabels>
     <customLabels>
