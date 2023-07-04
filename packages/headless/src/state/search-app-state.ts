@@ -36,6 +36,7 @@ import {
   StaticFilterSection,
   ExcerptLengthSection,
   AutomaticFacetSection,
+  GeneratedAnswerSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
@@ -76,4 +77,5 @@ export type SearchAppState = SearchParametersState &
   QuestionAnsweringSection &
   RecentResultsSection &
   RecentQueriesSection &
-  ExcerptLengthSection;
+  ExcerptLengthSection &
+  GeneratedAnswerSection;

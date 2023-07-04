@@ -17,6 +17,7 @@ import {getDateFacetSetInitialState} from '../features/facets/range-facets/date-
 import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getFieldsInitialState} from '../features/fields/fields-state';
 import {getFoldingInitialState} from '../features/folding/folding-state';
+import {getGeneratedAnswerInitialState} from '../features/generated-answer/generated-answer-state';
 import {getHistoryInitialState} from '../features/history/history-state';
 import {getInstantResultsInitialState} from '../features/instant-results/instant-results-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
@@ -84,6 +85,7 @@ export function createMockState(
     recentQueries: getRecentQueriesInitialState(),
     excerptLength: getExcerptLengthInitialState(),
     automaticFacetSet: getAutomaticFacetSetInitialState(),
+    generatedAnswer: getGeneratedAnswerInitialState(),
     ...config,
   };
 }

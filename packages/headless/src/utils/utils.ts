@@ -74,3 +74,13 @@ export function fromEntries<K extends PropertyKey, V>(
   }
   return newObject as Record<K, V>;
 }
+
+export function resetTimeout(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  callback: (...args: any[]) => void,
+  timeoutId?: ReturnType<typeof setTimeout>,
+  ms?: number | undefined
+) {
+  clearTimeout(timeoutId);
+  return setTimeout(callback, ms);
+}

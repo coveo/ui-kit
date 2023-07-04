@@ -1,6 +1,9 @@
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {executeToggleRangeFacetSelect} from './range-facet-controller-actions';
+import {
+  executeToggleRangeFacetExclude,
+  executeToggleRangeFacetSelect,
+} from './range-facet-controller-actions';
 
 describe('range facet controller actions', () => {
   let engine: MockSearchEngine;
@@ -17,6 +20,17 @@ describe('range facet controller actions', () => {
     expect(engine.actions).toEqual([
       expect.objectContaining({
         type: 'rangeFacet/executeToggleSelect',
+      }),
+    ]);
+  });
+
+  it('#executeToggleRangeFacetExclude dispatches the correct actions', () => {
+    const selection = buildMockNumericFacetValue();
+    engine.dispatch(executeToggleRangeFacetExclude({facetId, selection}));
+
+    expect(engine.actions).toEqual([
+      expect.objectContaining({
+        type: 'rangeFacet/executeToggleExclude',
       }),
     ]);
   });
