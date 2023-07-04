@@ -636,11 +636,11 @@
         <label>Erreur fatale : Impossible d'initialiser le composant {{0}}.</label>
         <name>quantic_UnableToInitializeComponent</name>
     </customLabels>
-        <customLabels>
+    <customLabels>
         <label>Chargement des résultats de la recherche</label>
         <name>quantic_LoadingResults</name>
     </customLabels>
-        <customLabels>
+    <customLabels>
         <label>Chargement des recommandations</label>
         <name>quantic_LoadingRecommendations</name>
     </customLabels>
