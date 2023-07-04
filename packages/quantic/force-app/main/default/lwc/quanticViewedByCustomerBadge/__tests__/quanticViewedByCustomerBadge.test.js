@@ -4,6 +4,7 @@ import QuanticViewedByCustomerBadge from '../quanticViewedByCustomerBadge';
 
 const viewedByCustomerLabel = 'Viewed by customer';
 const viewedByCustomerIconName = 'utility:profile_alt';
+const errorMessage = 'The c-quantic-viewed-by-customer-badge requires the result attribute to be set.';
 
 jest.mock(
   '@salesforce/label/c.quantic_ViewedByCustomer',
@@ -72,12 +73,12 @@ describe('c-quantic-viewed-by-customer-badge', () => {
 
       expect(errorComponent).not.toBeNull();
       expect(consoleError).toHaveBeenCalledWith(
-        'The c-quantic-viewed-by-customer-badge requires the result attribute to be set.'
+        errorMessage
       );
     });
   });
 
-  describe('when isUserActionView contains the value true in the result', () => {
+  describe('when isUserActionView has the value true in the result', () => {
     it('should render the viewed by customer badge', async () => {
       // @ts-ignore
       const element = createTestComponent({result: {isUserActionView: true}});
@@ -97,7 +98,7 @@ describe('c-quantic-viewed-by-customer-badge', () => {
     });
   });
 
-  describe('when isUserActionView contains the value false in the result', () => {
+  describe('when isUserActionView has the value false in the result', () => {
     it('should not render the viewed by customer badge', async () => {
       // @ts-ignore
       const element = createTestComponent({result: {isUserActionView: false}});
