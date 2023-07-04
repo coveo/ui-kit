@@ -413,3 +413,10 @@ export type {
   AutomaticFacetState,
 } from './facets/automatic-facet/headless-automatic-facet';
 export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
+
+export type {
+  GeneratedAnswer,
+  GeneratedAnswerState,
+  GeneratedAnswerCitation,
+} from './generated-answer/headless-generated-answer';
+export {buildGeneratedAnswer} from './generated-answer/headless-generated-answer';
