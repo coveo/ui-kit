@@ -8,6 +8,7 @@ import {
 } from '../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
+import {SpecificSortCriteriaExplicitAlphanumeric} from '../../../../features/facets/facet-api/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
@@ -466,8 +467,11 @@ export function buildCoreFacet(
       const enabled = getIsEnabled();
       let sortCriterion: FacetSortCriterion = 'automatic';
 
-      if (typeof request.sortCriteria === 'object') {
-        sortCriterion = 'alphanumericDescending';
+      if (isSpecificFacetSearchRequest(request.sortCriteria)) {
+        sortCriterion =
+          request.sortCriteria.order === 'descending'
+            ? 'alphanumericDescending'
+            : 'alphanumeric';
       }
       const values = response ? response.values : [];
       const hasActiveValues = values.some(
@@ -501,4 +505,14 @@ function loadFacetReducers(
 > {
   engine.addReducers({facetSet, facetOptions, configuration, facetSearchSet});
   return true;
+}
+
+function isSpecificFacetSearchRequest(
+  sortCriteria: FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric
+): sortCriteria is SpecificSortCriteriaExplicitAlphanumeric {
+  return (
+    typeof sortCriteria === 'object' &&
+    'type' in sortCriteria &&
+    'order' in sortCriteria
+  );
 }

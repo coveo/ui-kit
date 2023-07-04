@@ -1,7 +1,7 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {
-  FacetSortCriterion,
   facetSortCriteria,
+  FacetSortCriterion,
 } from '../../../../features/facets/facet-set/interfaces/request';
 import {
   facetId,
