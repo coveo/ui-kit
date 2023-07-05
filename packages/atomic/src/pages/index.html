@@ -137,14 +137,16 @@
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
-          <atomic-search-box></atomic-search-box>
+          <atomic-search-box>
+            <atomic-search-box-scoped-query-suggestions field="source"></atomic-search-box-scoped-query-suggestions>
+          </atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
             <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
             </atomic-category-facet>
             <atomic-facet field="author" label="Authors"></atomic-facet>
-            <atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>
+            <!--<atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>-->
             <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
             <atomic-numeric-facet
               field="ytviewcount"

@@ -797,7 +797,6 @@ export class AtomicSearchBox {
       !this.suggestions.length && (
         <slot>
           <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
-          <atomic-search-box-field-suggestions field="source"></atomic-search-box-field-suggestions>
           <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
         </slot>
       ),
