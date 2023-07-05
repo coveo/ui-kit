@@ -384,7 +384,6 @@ export interface AttachedResultsSection {
   attachedResults: AttachedResultsState;
 }
 
-
 export interface AutomaticFacetSection {
   /**
    * The set of automatic facets

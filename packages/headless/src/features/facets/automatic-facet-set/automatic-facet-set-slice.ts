@@ -19,7 +19,6 @@ export const automaticFacetSetReducer = createReducer(
           state.facets[facet.field] = facet;
         });
       })
-
       .addCase(setDesiredCount, (state, action) => {
         state.desiredCount = action.payload;
       })
@@ -27,21 +26,27 @@ export const automaticFacetSetReducer = createReducer(
         const {field, selection} = action.payload;
         const facet = state.facets[field];
 
+        if (!facet) {
+          return;
+        }
         const value = facet.values.find(
           (value) => value.value === selection.value
         );
         if (!value) {
           return;
         }
-        const isSelected = value?.state === 'selected';
+        const isSelected = value.state === 'selected';
         value.state = isSelected ? 'idle' : 'selected';
       })
       .addCase(deselectAllAutomaticFacetValues, (state, action) => {
         const field = action.payload;
         const facet = state.facets[field];
 
-        for (let i = 0; i < facet.values.length; i++) {
-          facet.values[i].state = 'idle';
+        if (!facet) {
+          return;
+        }
+        for (const value of facet.values) {
+          value.state = 'idle';
         }
       });
   }

@@ -4,7 +4,6 @@ import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
 } from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {automaticFacetSelector} from '../../../features/facets/automatic-facet-set/automatic-facet-set-selectors';
 import {logFacetClearAll} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
@@ -54,8 +53,7 @@ export function buildAutomaticFacet(
 
   const {field} = props;
 
-  const getFacetResponse = () =>
-    automaticFacetSelector(engine.state.automaticFacetSet, field);
+  const getFacetResponse = () => engine.state.automaticFacetSet?.facets[field];
 
   return {
     ...controller,
@@ -76,7 +74,7 @@ export function buildAutomaticFacet(
       const response = getFacetResponse();
       const field = response ? response.field : '';
       const values = response ? response.values : [];
-      const label = response ? response.label ?? 'No Label' : '';
+      const label = response ? response.label : '';
 
       return {
         field,
