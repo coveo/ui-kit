@@ -13,3 +13,12 @@ export const executeToggleRangeFacetSelect = createAction(
       rangeFacetSelectionPayloadDefinition(payload.selection)
     )
 );
+
+export const executeToggleRangeFacetExclude = createAction(
+  'rangeFacet/executeToggleExclude',
+  (payload: RangeFacetSelectionPayload) =>
+    validatePayload(
+      payload,
+      rangeFacetSelectionPayloadDefinition(payload.selection)
+    )
+);

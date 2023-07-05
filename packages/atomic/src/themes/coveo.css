@@ -19,6 +19,9 @@
   --atomic-error: #ce3f00;
   --atomic-visited: #752e9c;
   --atomic-disabled: #c5cacf;
+  --atomic-success-background: #c5f4e6;
+  --atomic-error-background: #f6a5a8;
+  --atomic-primary-background: #edf6ff;
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;
