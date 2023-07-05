@@ -1,4 +1,4 @@
-import {FacetOptions} from '../../../../product-listing.index';
+import {FacetOptions} from '../../../../controllers';
 
 export type FacetOptionalParameters = Required<
   Pick<
