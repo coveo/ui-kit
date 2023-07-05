@@ -29,6 +29,7 @@ describe('automatic-facet-set slice', () => {
 
     expect(finalState).toEqual(initialState);
   });
+
   describe('#executeSearch.fulfilled', () => {
     function buildExecuteSearchAction(facets: AutomaticFacetResponse[]) {
       const search = buildMockSearch();
@@ -62,6 +63,7 @@ describe('automatic-facet-set slice', () => {
 
     expect(finalState.desiredCount).toEqual(desiredCount);
   });
+
   describe('#toggleSelectAutomaticFacetValue', () => {
     it('does nothing if it cannot find the facet', () => {
       const action = toggleSelectAutomaticFacetValue({
@@ -88,6 +90,7 @@ describe('automatic-facet-set slice', () => {
 
       expect(finalState.facets).toEqual(state.facets);
     });
+
     describe('toggles the value if', () => {
       const field = 'field';
       const value = 'value';
@@ -104,6 +107,7 @@ describe('automatic-facet-set slice', () => {
         });
         state.facets[field] = facet;
       }
+
       it('is "selected"', () => {
         addFacetToState('selected');
         const action = buildToggleSelectAutomaticFacetValueAction();
@@ -115,6 +119,7 @@ describe('automatic-facet-set slice', () => {
 
         expect(targetValue?.state).toEqual('idle');
       });
+
       it('is "idle"', () => {
         addFacetToState('idle');
         const action = buildToggleSelectAutomaticFacetValueAction();
@@ -128,6 +133,7 @@ describe('automatic-facet-set slice', () => {
       });
     });
   });
+
   describe('#deselectAllAutomaticFacetValues', () => {
     it('does nothing if it cannot find the facet', () => {
       const action = deselectAllAutomaticFacetValues('fieldNotPresent');
@@ -136,6 +142,7 @@ describe('automatic-facet-set slice', () => {
 
       expect(finalState.facets).toEqual(state.facets);
     });
+
     it('puts all values to "idle"', () => {
       const field = 'field';
       const facet = buildMockAutomaticFacetResponse({

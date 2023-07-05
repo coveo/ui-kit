@@ -7,7 +7,7 @@ export type AutomaticFacetSetState = {
    */
   desiredCount: number;
   /**
-   * A map of automatic facet identifier (typically, the facet field) to an automatic facet response
+   * A map of automatic facet field to an automatic facet response.
    */
   facets: Record<string, AutomaticFacetResponse>;
 };

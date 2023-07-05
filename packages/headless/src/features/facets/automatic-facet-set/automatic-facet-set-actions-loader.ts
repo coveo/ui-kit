@@ -23,13 +23,13 @@ export interface AutomaticFacetsActionCreators {
   /**
    * Deselects all values of an automatic facet.
    *
-   * @param field - The field of the automatic facet (e.g., `"author"`).
+   * @param field - The field of the automatic facet.
    * @returns A dispatchable action.
    */
   deselectAllAutomaticFacetValues(field: string): PayloadAction<string>;
 
   /**
-   * Toggles an automatic facet value. If the value does not exist, it is added.
+   * Toggles an automatic facet value.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.

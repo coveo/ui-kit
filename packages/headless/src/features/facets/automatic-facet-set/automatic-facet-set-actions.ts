@@ -10,7 +10,7 @@ import {facetIdDefinition} from '../generic/facet-actions-validation';
 
 export interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
   /**
-   * The field of the automatic facet (e.g., `"1"`).
+   * The field of the automatic facet.
    */
   field: string;
 

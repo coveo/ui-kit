@@ -21,15 +21,15 @@ import {
  */
 export interface AutomaticFacetState {
   /**
-   * The automatic facet field
+   * The automatic facet field.
    */
   field: string;
   /**
-   * The automatic facet label
+   * The automatic facet label.
    */
   label: string;
   /**
-   * The automatic facet values
+   * The automatic facet values.
    */
   values: FacetValue[];
 }
@@ -49,8 +49,10 @@ export interface AutomaticFacetProps {
  * @beta - This interface is part of the automatic facets feature.
  * Automatic facets are currently in beta testing and should be available soon.
  *
- * The `AutomaticFacet` controller allows you to create a facet component that is to be used
- * with the `FacetManager` controller. ???
+ * The `AutomaticFacet` controller allows you to create a search interface component that the end user
+ * can use to refine a query by selecting filters based on item metadata (i.e., field values). It is designed
+ * to be used in conjunction with the FacetManager controller to automatically render updated automatic facets
+ * based on the search results.
  */
 export interface AutomaticFacet extends Controller {
   /**
@@ -86,7 +88,6 @@ export function buildAutomaticFacet(
   const controller = buildController(engine);
 
   const {field} = props;
-
   const getFacetResponse = () => engine.state.automaticFacetSet?.facets[field];
 
   return {
