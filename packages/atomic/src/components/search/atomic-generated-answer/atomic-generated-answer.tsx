@@ -67,11 +67,11 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   private get loadingClasses() {
-    return 'mt-4';
+    return 'my-3';
   }
 
   private get contentClasses() {
-    return 'border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
+    return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
   }
 
   private renderContent() {
@@ -124,13 +124,13 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   public render() {
-    const isLoading = true;
+    const {isLoading} = this.generatedAnswerState;
     if (this.shouldBeHidden) {
       return null;
     }
     return (
       <aside
-        class={`mt-0 mx-auto mb-4 ${
+        class={`mx-auto ${
           isLoading ? this.loadingClasses : this.contentClasses
         }`}
         part="container"
