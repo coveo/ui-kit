@@ -1,3 +1,17 @@
+## 2.26.4 (2023-07-05)
+
+### Bug Fixes
+
+- **quantic:** Changed the quantic_OpensInSalesforceSubTab to something more generic ([#3005](https://github.com/coveo/ui-kit/issues/3005)) ([a1e4492](https://github.com/coveo/ui-kit/commits/a1e4492354b4228af86c69dd8351b8ae8d4a8ea6))
+
+## 2.26.3 (2023-06-29)
+
+## 2.26.2 (2023-06-29)
+
+### Bug Fixes
+
+- **SFINT-5094:** Attempt to fix the quantic package release ([#3006](https://github.com/coveo/ui-kit/issues/3006)) ([a317e7f](https://github.com/coveo/ui-kit/commits/a317e7f645f8ca4ba9fdd2aa7a465a2493dde6fe))
+
 ## 2.26.1 (2023-06-28)
 
 # 2.26.0 (2023-06-20)
