@@ -19,7 +19,7 @@ interface RefineToggleOptions {
   fullScreen: boolean;
   hideSort: boolean;
   title: string;
-  disableFacetOrdering: boolean;
+  disableDynamicNavigation: boolean;
 }
 
 const viewResultsLabel = (value: number) => {
@@ -312,9 +312,9 @@ describe('quantic-refine-toggle', () => {
       });
     });
 
-    describe('when the disableFacetOrdering property is set to true', () => {
+    describe('when the disableDynamicNavigation property is set to true', () => {
       it('should not render facets in quantic facet manager', () => {
-        visitPage({disableFacetOrdering: true});
+        visitPage({disableDynamicNavigation: true});
         addFacets();
 
         cy.wait(InterceptAliases.Search).then((interception) => {
@@ -523,9 +523,9 @@ describe('quantic-refine-toggle', () => {
       });
     });
 
-    describe('when the disableFacetOrdering property is set to true', () => {
+    describe('when the disableDynamicNavigation property is set to true', () => {
       it('should not render facets in quantic facet manager', () => {
-        visitPage({disableFacetOrdering: true});
+        visitPage({disableDynamicNavigation: true});
         addFacetsWithoutInputs();
 
         cy.wait(InterceptAliases.Search).then((interception) => {

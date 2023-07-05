@@ -6,7 +6,7 @@ import {RefineContentExpectations as Expect} from './refine-modal-content-expect
 
 interface RefineContentOptions {
   hideSort: boolean;
-  disableFacetOrdering: boolean;
+  disableDynamicNavigation: boolean;
 }
 
 describe('quantic-refine-content', () => {
@@ -91,10 +91,10 @@ describe('quantic-refine-content', () => {
     });
   });
 
-  describe('when disableFacetOrdering property is set to true', () => {
+  describe('when disableDynamicNavigation property is set to true', () => {
     it('should not render the facets inside the quantic-facets-manager', () => {
       visitRefineContent({
-        disableFacetOrdering: true,
+        disableDynamicNavigation: true,
       });
 
       scope('when loading the page', () => {
