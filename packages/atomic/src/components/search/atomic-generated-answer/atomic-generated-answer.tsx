@@ -67,7 +67,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   private get loadingClasses() {
-    return 'p-4';
+    return 'mt-4';
   }
 
   private get contentClasses() {
@@ -124,13 +124,13 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   public render() {
-    const {isLoading} = this.generatedAnswerState;
+    const isLoading = true;
     if (this.shouldBeHidden) {
       return null;
     }
     return (
       <aside
-        class={` mt-0 mx-auto mb-4 ${
+        class={`mt-0 mx-auto mb-4 ${
           isLoading ? this.loadingClasses : this.contentClasses
         }`}
         part="container"
