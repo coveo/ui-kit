@@ -10,12 +10,12 @@ import {facetIdDefinition} from '../generic/facet-actions-validation';
 
 export interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The field of the automatic facet (e.g., `"1"`).
    */
   field: string;
 
   /**
-   * The target facet value.
+   * The target automatic facet value.
    */
   selection: FacetValue;
 }

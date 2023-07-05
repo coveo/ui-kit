@@ -13,36 +13,70 @@ import {
   buildController,
 } from '../../controller/headless-controller';
 
+/**
+ * @beta - This interface is part of the automatic facets feature.
+ * Automatic facets are currently in beta testing and should be available soon.
+ *
+ * A scoped and simplified part of the headless state that is relevant to the `Automatic Facet` controller.
+ */
 export interface AutomaticFacetState {
+  /**
+   * The automatic facet field
+   */
   field: string;
+  /**
+   * The automatic facet label
+   */
   label: string;
+  /**
+   * The automatic facet values
+   */
   values: FacetValue[];
 }
+/**
+ * @beta - This interface is part of the automatic facets feature.
+ * Automatic facets are currently in beta testing and should be available soon.
+ *
+ * The props for the `AutomaticFacet` controller.
+ */
 export interface AutomaticFacetProps {
+  /**
+   * The field whose values you want to display in the facet.
+   */
   field: string;
 }
+/**
+ * @beta - This interface is part of the automatic facets feature.
+ * Automatic facets are currently in beta testing and should be available soon.
+ *
+ * The `AutomaticFacet` controller allows you to create a facet component that is to be used
+ * with the `FacetManager` controller. ???
+ */
 export interface AutomaticFacet extends Controller {
   /**
-   * Toggles the specified facet value.
+   * Toggles the specified automatic facet value.
    *
    * @param selection - The facet value to toggle.
    */
   toggleSelect(selection: FacetValue): void;
   /**
-   * Deselects all facet values.
+   * Deselects all automatic facet values.
    * */
   deselectAll(): void;
   /**
-   *  TODO
+   *  The state of the `AutomaticFacet` controller.
    */
   state: AutomaticFacetState;
 }
 /**
- * Creates a `Facet` controller instance.
+ * @beta - This function is part of the automatic facets feature.
+ * Automatic facets are currently in beta testing and should be available soon.
+ *
+ * Creates a `AutomaticFacet` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `Facet` properties.
- * @returns A `Facet` controller instance.
+ * @param props - The configurable `AutomaticFacet` properties.
+ * @returns A `AutomaticFacet` controller instance.
  * */
 export function buildAutomaticFacet(
   engine: SearchEngine,

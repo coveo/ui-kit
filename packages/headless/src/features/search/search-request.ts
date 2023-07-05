@@ -78,9 +78,11 @@ function getFacets(state: StateNeededBySearchRequest) {
 function getAutomaticFacets(state: StateNeededBySearchRequest) {
   const facets = state.automaticFacetSet?.facets;
 
-  return facets ? Object.values(facets).map(responseToRequest) : undefined;
+  return facets
+    ? Object.values(facets).map(responseToAutomaticFacetRequest)
+    : undefined;
 }
-function responseToRequest(
+function responseToAutomaticFacetRequest(
   response: AutomaticFacetResponse
 ): AutomaticFacetRequest {
   const {field, values} = response;
@@ -119,11 +121,11 @@ function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
 }
 
 function buildConstantQuery(state: StateNeededBySearchRequest) {
-  const cq = state.advancedSearchQueries?.cq.trim() ?? '';
-  const activeTab = Object.values(state.tabSet ?? {}).find(
+  const cq = state.advancedSearchQueries?.cq.trim() || '';
+  const activeTab = Object.values(state.tabSet || {}).find(
     (tab) => tab.isActive
   );
-  const tabExpression = activeTab?.expression.trim() ?? '';
+  const tabExpression = activeTab?.expression.trim() || '';
   const filterExpressions = getStaticFilterExpressions(state);
 
   return [cq, tabExpression, ...filterExpressions]
@@ -132,7 +134,7 @@ function buildConstantQuery(state: StateNeededBySearchRequest) {
 }
 
 function getStaticFilterExpressions(state: StateNeededBySearchRequest) {
-  const filters = Object.values(state.staticFilterSet ?? {});
+  const filters = Object.values(state.staticFilterSet || {});
   return filters.map((filter) => {
     const selected = filter.values.filter(
       (value) => value.state === 'selected' && !!value.expression.trim()

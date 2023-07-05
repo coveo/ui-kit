@@ -21,15 +21,15 @@ export interface AutomaticFacetsActionCreators {
   setDesiredCount(desiredCount: number): PayloadAction<number>;
 
   /**
-   * Deselects all values of a facet.
+   * Deselects all values of an automatic facet.
    *
-   * @param field - The unique identifier of the facet (e.g., `"1"`).
+   * @param field - The field of the automatic facet (e.g., `"author"`).
    * @returns A dispatchable action.
    */
   deselectAllAutomaticFacetValues(field: string): PayloadAction<string>;
 
   /**
-   * Toggles a facet value. If the value does not exist, it is added.
+   * Toggles an automatic facet value. If the value does not exist, it is added.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
