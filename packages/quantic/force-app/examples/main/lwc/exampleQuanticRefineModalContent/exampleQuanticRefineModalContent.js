@@ -17,9 +17,9 @@ export default class ExampleQuanticRefineModalContent extends LightningElement {
       defaultValue: false,
     },
     {
-      attribute: 'disableFacetOrdering',
-      label: 'Disable Facet Ordering',
-      description: 'Indicates whether the facet ordering should be disabled.',
+      attribute: 'disableDynamicNavigation',
+      label: 'Disable Dynamic Navigation',
+      description: 'Indicates whether the dynamic navigation experience should be disabled.',
       defaultValue: false,
     },
   ];

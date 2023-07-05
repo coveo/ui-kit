@@ -9,9 +9,9 @@ import QuanticNumericFacet from 'c/quanticNumericFacet';
 import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
 import { LightningElement, api } from 'lwc';
 // @ts-ignore
-import disabledFacetOrderingTemplate from './templates/disabledFacetOrdering.html';
+import disabledDynamicNavigationTemplate from './templates/disabledDynamicNavigation.html';
 // @ts-ignore
-import enabledFacetOrderingTemplate from './templates/enabledFacetOrdering.html';
+import enabledDynamicNavigationTemplate from './templates/dynamicNavigation.html';
 
 
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
@@ -31,7 +31,7 @@ import enabledFacetOrderingTemplate from './templates/enabledFacetOrdering.html'
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-modal-content engine-id={engineId} hide-sort disable-facet-ordering></c-quantic-refine-modal-content>
+ * <c-quantic-refine-modal-content engine-id={engineId} hide-sort disable-dynamic-navigation></c-quantic-refine-modal-content>
  */
 export default class QuanticRefineModalContent extends LightningElement {
   labels = {
@@ -52,12 +52,12 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   @api hideSort;
   /**
-   * Indicates whether to disable the facet ordering feature according to [the dynamic navigation experience](https://docs.coveo.com/en/3383/leverage-machine-learning/about-dynamic-navigation-experience-dne).
+   * Indicates whether to disable the dynamic navigation feature according to [the dynamic navigation experience](https://docs.coveo.com/en/3383/leverage-machine-learning/about-dynamic-navigation-experience-dne).
    * @api
    * @type {boolean}
    * @defaultValue `false`
    */
-  @api disableFacetOrdering = false;
+  @api disableDynamicNavigation = false;
 
   /** @type {object} */
   data;
@@ -275,9 +275,9 @@ export default class QuanticRefineModalContent extends LightningElement {
   }
 
   render() {
-    if (this.disableFacetOrdering) {
-      return disabledFacetOrderingTemplate;
+    if (this.disableDynamicNavigation) {
+      return disabledDynamicNavigationTemplate;
     }
-    return enabledFacetOrderingTemplate;
+    return enabledDynamicNavigationTemplate;
   }
 }

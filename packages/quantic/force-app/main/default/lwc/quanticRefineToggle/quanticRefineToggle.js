@@ -28,7 +28,7 @@ import { LightningElement, api } from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters" disable-facet-ordering>
+ * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters" disable-dynamic-navigation>
  *   <div slot="refine-title">Custom Title</div>
  *   <div slot="button-content">
  *     Custom Label
@@ -72,12 +72,12 @@ export default class QuanticRefineToggle extends LightningElement {
    */
   @api title = this.labels.sortAndFilters;
   /**
-   * Indicates whether to disable the facet ordering feature according to [the dynamic navigation experience](https://docs.coveo.com/en/3383/leverage-machine-learning/about-dynamic-navigation-experience-dne).
+   * Indicates whether to disable the dynamic navigation feature according to [the dynamic navigation experience](https://docs.coveo.com/en/3383/leverage-machine-learning/about-dynamic-navigation-experience-dne).
    * @api
    * @type {boolean}
    * @defaultValue `false`
    */
-  @api disableFacetOrdering = false;
+  @api disableDynamicNavigation = false;
 
   /** @type {QuerySummary} */
   querySummary;
