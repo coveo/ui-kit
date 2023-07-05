@@ -147,7 +147,7 @@ export class AtomicInsightResult {
 
   private get firstChildActionBar() {
     return this.host.parentElement
-      ?.querySelectorAll('atomic-insight-result')[0]
+      ?.querySelectorAll('atomic-insight-result')?.[0]
       .shadowRoot?.querySelector('atomic-insight-result-action-bar');
   }
 
