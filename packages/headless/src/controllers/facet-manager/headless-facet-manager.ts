@@ -1,7 +1,6 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {setDesiredCount} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {loadAutomaticFacetSetActions} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions-loader';
-import {AutomaticFacetResponse} from '../../features/facets/automatic-facet-set/interfaces/response';
 import {loadReducerError} from '../../utils/errors';
 import {
   buildCoreFacetManager,
@@ -9,6 +8,10 @@ import {
   FacetManagerState as CoreFacetManagerState,
   FacetManagerPayload,
 } from '../core/facet-manager/headless-core-facet-manager';
+import {
+  AutomaticFacet,
+  buildAutomaticFacet,
+} from '../facets/automatic-facet/headless-automatic-facet';
 
 export type {CoreFacetManagerState, FacetManagerPayload, CoreFacetManager};
 
@@ -17,9 +20,9 @@ export interface FacetManagerState extends CoreFacetManagerState {
    * @beta - This property is part of the automatic facets feature.
    * Automatic facets are currently in beta testing and should be available soon.
    *
-   * The list of automatic facet responses.
+   * The list of automatic facet controllers.
    */
-  automaticFacets?: AutomaticFacetResponse[];
+  automaticFacets?: AutomaticFacet[];
 }
 
 export interface FacetManager extends CoreFacetManager {
@@ -67,7 +70,10 @@ export function buildFacetManager(
   return {
     ...core,
     get state() {
-      const automaticFacets = getAutomaticFacets();
+      const automaticFacets = getAutomaticFacets()?.map((facet) =>
+        buildAutomaticFacet(engine, {field: facet.field})
+      );
+
       return {
         ...core.state,
         automaticFacets,
