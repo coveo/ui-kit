@@ -1,6 +1,14 @@
+import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {setDesiredCount} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {loadAutomaticFacetSetActions} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions-loader';
+import {automaticFacetSetReducer as automaticFacetSet} from '../../features/facets/automatic-facet-set/automatic-facet-set-slice';
+import {searchReducer as search} from '../../features/search/search-slice';
+import {CoreEngine} from '../../product-listing.index';
+import {
+  AutomaticFacetSection,
+  ConfigurationSection,
+  SearchSection,
+} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {
   buildCoreFacetManager,
@@ -56,7 +64,7 @@ export function buildFacetManager(
   if (!props?.desiredCount) {
     return buildCoreFacetManager(engine);
   }
-  if (!loadAutomaticFacetSetActions(engine)) {
+  if (!loadFacetManagerReducers(engine)) {
     throw loadReducerError;
   }
 
@@ -80,4 +88,13 @@ export function buildFacetManager(
       };
     },
   };
+}
+
+function loadFacetManagerReducers(
+  engine: CoreEngine
+): engine is CoreEngine<
+  AutomaticFacetSection & ConfigurationSection & SearchSection
+> {
+  engine.addReducers({automaticFacetSet, configuration, search});
+  return true;
 }
