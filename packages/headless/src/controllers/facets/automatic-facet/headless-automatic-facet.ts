@@ -1,4 +1,3 @@
-// Toggle
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   deselectAllAutomaticFacetValues,
@@ -107,15 +106,16 @@ export function buildAutomaticFacet(
 
     get state() {
       const response = getFacetResponse();
-      const field = response ? response.field : '';
-      const values = response ? response.values : [];
-      const label = response ? response.label : '';
 
-      return {
-        field,
-        label,
-        values,
-      };
+      const defaultState = {field: '', values: [], label: ''};
+
+      return response
+        ? {
+            field: response.field,
+            label: response.label,
+            values: response.values,
+          }
+        : defaultState;
     },
   };
 }
