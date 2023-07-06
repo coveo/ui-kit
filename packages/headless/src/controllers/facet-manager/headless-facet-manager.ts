@@ -51,6 +51,9 @@ export interface FacetManagerProps {
   desiredCount: number;
 }
 /**
+ * @beta - This function is part of the automatic facets feature.
+ * Automatic facets are currently in beta testing and should be available soon.
+ *
  * Creates a `FacetManager` instance.
  *
  * @param engine - The headless engine.
