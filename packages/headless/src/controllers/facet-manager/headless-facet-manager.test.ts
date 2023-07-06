@@ -1,5 +1,7 @@
+import {configuration} from '../../app/common-reducers';
 import {setDesiredCount} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../features/facets/automatic-facet-set/automatic-facet-set-slice';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {MockSearchEngine, buildMockSearchAppEngine} from '../../test';
 import {
   FacetManager,
@@ -19,7 +21,11 @@ describe('facet manager', () => {
   });
 
   it('should add the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({automaticFacetSet});
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      automaticFacetSet,
+      configuration,
+      search,
+    });
   });
 
   it('should dispatch #setDesiredCount', () => {
