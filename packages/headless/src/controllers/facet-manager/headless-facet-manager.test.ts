@@ -25,6 +25,7 @@ describe('facet manager', () => {
   it('should dispatch #setDesiredCount', () => {
     expect(engine.actions).toContainEqual(setDesiredCount(props.desiredCount));
   });
+
   it('should return automatic facets as empty array if the response is empty', () => {
     expect(facetManager.state.automaticFacets).toEqual([]);
   });

@@ -25,6 +25,7 @@ describe('automatic facet', () => {
     facet = buildAutomaticFacet(engine, {field});
     emptyFacet = buildAutomaticFacet(engine, {field: badField});
   }
+
   function setAutomaticFacet() {
     state.automaticFacetSet.facets[field] = buildMockAutomaticFacetResponse();
   }
@@ -77,6 +78,7 @@ describe('automatic facet', () => {
       );
     });
   });
+
   describe('#deselectAll', () => {
     it('dispatches a #deselectAllAutomaticFacetValues with the passed field', () => {
       facet.deselectAll();
