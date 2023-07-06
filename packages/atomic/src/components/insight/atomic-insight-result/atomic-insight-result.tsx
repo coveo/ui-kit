@@ -146,9 +146,15 @@ export class AtomicInsightResult {
   }
 
   private get firstChildActionBar() {
-    return this.host.parentElement
-      ?.querySelectorAll('atomic-insight-result')?.[0]
-      .shadowRoot?.querySelector('atomic-insight-result-action-bar');
+    return this.firstInsightResult?.shadowRoot?.querySelector(
+      'atomic-insight-result-action-bar'
+    );
+  }
+
+  private get firstInsightResult() {
+    return this.host.parentElement?.querySelectorAll(
+      'atomic-insight-result'
+    )?.[0];
   }
 
   public render() {
@@ -172,6 +178,7 @@ export class AtomicInsightResult {
     }
     if (this.resultActionBar && this.resultActions?.length) {
       this.firstChildActionBar?.classList.add('firstActionBarElement');
+      this.firstInsightResult?.classList.add('firstInsightResultWithActionBar');
       this.host.addEventListener('mouseover', this.handleMouseOver);
       this.host.addEventListener('mouseout', this.handleMouseOut);
     }
