@@ -464,13 +464,15 @@ export function buildCoreFacet(
       const response = getResponse();
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();
-      let sortCriterion: FacetSortCriterion = 'automatic';
+      let sortCriterion!: FacetSortCriterion;
 
       if (typeof request.sortCriteria === 'object') {
         sortCriterion =
           request.sortCriteria.order === 'descending'
             ? 'alphanumericDescending'
             : 'alphanumeric';
+      } else {
+        sortCriterion = request.sortCriteria;
       }
 
       const values = response ? response.values : [];
