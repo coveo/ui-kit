@@ -80,6 +80,7 @@ describe('history slice', () => {
       numericFacetSet: {bar: buildMockNumericFacetSlice()},
       dateFacetSet: {foo: buildMockDateFacetSlice()},
       categoryFacetSet: {foo: buildMockCategoryFacetSlice()},
+      automaticFacetSet: {desiredCount: 5, facets: {}},
       facetOptions: {freezeFacetOrder: false, facets: {}},
       pagination: {
         firstResult: 123,

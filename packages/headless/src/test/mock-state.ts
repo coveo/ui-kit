@@ -7,6 +7,7 @@ import {getDictionaryFieldContextInitialState} from '../features/dictionary-fiel
 import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-state';
 import {getExcerptLengthInitialState} from '../features/excerpt-length/excerpt-length-state';
 import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-state';
+import {getAutomaticFacetSetInitialState} from '../features/facets/automatic-facet-set/automatic-facet-set-state';
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-state';
 import {getFacetOrderInitialState} from '../features/facets/facet-order/facet-order-state';
 import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-search-set/category/category-facet-search-set-state';
@@ -83,6 +84,7 @@ export function createMockState(
     recentResults: getRecentResultsInitialState(),
     recentQueries: getRecentQueriesInitialState(),
     excerptLength: getExcerptLengthInitialState(),
+    automaticFacetSet: getAutomaticFacetSetInitialState(),
     generatedAnswer: getGeneratedAnswerInitialState(),
     ...config,
   };
