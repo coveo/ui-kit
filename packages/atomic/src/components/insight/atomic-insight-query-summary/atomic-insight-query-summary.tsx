@@ -42,7 +42,7 @@ export class AtomicQuerySummary
   public render() {
     if (this.querySummaryState.hasQuery) {
       return (
-        <div class="px-6 pt-4 pb-1">
+        <div class="px-6 py-4">
           <QuerySummaryCommon
             setAriaLive={(msg) => (this.ariaMessage = msg)}
             bindings={this.bindings}

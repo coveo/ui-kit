@@ -1,12 +1,12 @@
 import {ArrayValue, NumberValue, Schema} from '@coveo/bueno';
 import {Result} from '../../api/search/search/result';
-import {recentResults} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   clearRecentResults,
   registerRecentResults,
 } from '../../features/recent-results/recent-results-actions';
 import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
+import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
 import {RecentResultsSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {

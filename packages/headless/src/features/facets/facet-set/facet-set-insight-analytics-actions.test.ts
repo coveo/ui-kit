@@ -1,4 +1,3 @@
-import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../../test/mock-engine';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
@@ -21,19 +20,22 @@ const mockLogFacetClearAll = jest.fn();
 const mockLogFacetShowMore = jest.fn();
 const mockLogFacetShowLess = jest.fn();
 
-const mockCoveoInsightClient = jest.fn(() => ({
-  disable: () => {},
-  logBreadcrumbFacet: mockLogBreadcrumbFacet,
-  logFacetSelect: mockLogFacetSelect,
-  logFacetDeselect: mockLogFacetDeselect,
-  logFacetUpdateSort: mockLogFacetUpdateSort,
-  logFacetClearAll: mockLogFacetClearAll,
-  logFacetShowMore: mockLogFacetShowMore,
-  logFacetShowLess: mockLogFacetShowLess,
-}));
+jest.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = jest.fn(() => ({
+    disable: () => {},
+    logBreadcrumbFacet: mockLogBreadcrumbFacet,
+    logFacetSelect: mockLogFacetSelect,
+    logFacetDeselect: mockLogFacetDeselect,
+    logFacetUpdateSort: mockLogFacetUpdateSort,
+    logFacetClearAll: mockLogFacetClearAll,
+    logFacetShowMore: mockLogFacetShowMore,
+    logFacetShowLess: mockLogFacetShowLess,
+  }));
 
-Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
-  value: mockCoveoInsightClient,
+  return {
+    CoveoInsightClient: mockCoveoInsightClient,
+    history: {HistoryStore: jest.fn()},
+  };
 });
 
 const exampleSubject = 'example subject';

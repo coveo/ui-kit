@@ -1,15 +1,15 @@
-import {LightningElement, api} from 'lwc';
+// @ts-ignore
+import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+import LOCALE from '@salesforce/i18n/locale';
+import TIMEZONE from '@salesforce/i18n/timeZone';
 import {
   getHeadlessBindings,
   loadDependencies,
   setEngineOptions,
   setInitializedCallback,
 } from 'c/quanticHeadlessLoader';
-// @ts-ignore
-import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
-import LOCALE from '@salesforce/i18n/locale';
-import TIMEZONE from '@salesforce/i18n/timeZone';
 import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchEngineOptions} SearchEngineOptions */
@@ -29,7 +29,7 @@ import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
  * Moreover, this information can be referred to in query expressions and QPL statements by using the `$locale` object.
  * @category Search
  * @example
- * <c-quantic-search-interface engine-id={engineId} search-hub="myhub" pipeine="mypipeline" disable-state-in-url skip-first-search></c-quantic-search-interface>
+ * <c-quantic-search-interface engine-id={engineId} search-hub="myhub" pipeline="mypipeline" disable-state-in-url skip-first-search></c-quantic-search-interface>
  */
 export default class QuanticSearchInterface extends LightningElement {
   /**
@@ -115,7 +115,7 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   renderedCallback() {
-    if(!this.hasRendered && this.querySelector('c-quantic-aria-live')) {
+    if (!this.hasRendered && this.querySelector('c-quantic-aria-live')) {
       this.bindAriaLiveEvents();
     }
     this.hasRendered = true;
@@ -179,23 +179,36 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   bindAriaLiveEvents() {
-    this.template.addEventListener('arialivemessage', this.handleAriaLiveMessage.bind(this));
-    this.template.addEventListener('registerregion', this.handleRegisterAriaLiveRegion.bind(this));
+    this.template.addEventListener(
+      'arialivemessage',
+      this.handleAriaLiveMessage.bind(this)
+    );
+    this.template.addEventListener(
+      'registerregion',
+      this.handleRegisterAriaLiveRegion.bind(this)
+    );
   }
 
   handleAriaLiveMessage(event) {
     /** @type {import('quanticAriaLive/quanticAriaLive').IQuanticAriaLive} */
     const ariaLiveRegion = this.querySelector('c-quantic-aria-live');
-    if(ariaLiveRegion) {
-      ariaLiveRegion.updateMessage(event.detail.regionName, event.detail.message, event.detail.assertive);
+    if (ariaLiveRegion) {
+      ariaLiveRegion.updateMessage(
+        event.detail.regionName,
+        event.detail.message,
+        event.detail.assertive
+      );
     }
   }
 
   handleRegisterAriaLiveRegion(event) {
     /** @type {import('quanticAriaLive/quanticAriaLive').IQuanticAriaLive} */
     const ariaLiveRegion = this.querySelector('c-quantic-aria-live');
-    if(ariaLiveRegion) {
-      ariaLiveRegion.registerRegion(event.detail.regionName, event.detail.assertive);
+    if (ariaLiveRegion) {
+      ariaLiveRegion.registerRegion(
+        event.detail.regionName,
+        event.detail.assertive
+      );
     }
   }
 

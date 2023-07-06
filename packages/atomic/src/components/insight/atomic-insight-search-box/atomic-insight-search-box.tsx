@@ -97,11 +97,11 @@ export class AtomicInsightSearchBox {
 
     this.searchBoxCommon = new SearchBoxCommon({
       id: this.id,
-      disableSearch: this.disableSearch,
       bindings: this.bindings,
       querySetActions: this.querySetActions,
       focusValue: this.focusValue.bind(this),
       clearSuggestions: this.clearSuggestions.bind(this),
+      getIsSearchDisabled: () => this.disableSearch,
       getIsExpanded: () => this.isExpanded,
       getPanelInFocus: () => this.panelRef,
       getActiveDescendant: () => this.activeDescendant,
@@ -388,7 +388,10 @@ export class AtomicInsightSearchBox {
   public render() {
     return (
       <SearchBoxWrapper disabled={this.disableSearch}>
-        <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
+        <atomic-focus-detector
+          style={{display: 'contents'}}
+          onFocusExit={() => this.clearSuggestions()}
+        >
           <atomic-icon
             part="submit-icon"
             icon={SearchIcon}

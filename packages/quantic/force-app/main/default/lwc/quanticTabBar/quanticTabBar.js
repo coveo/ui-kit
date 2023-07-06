@@ -1,10 +1,9 @@
-import {LightningElement, api} from 'lwc';
-import {getAbsoluteWidth} from 'c/quanticUtils';
-
 import more from '@salesforce/label/c.quantic_More';
+import {getAbsoluteWidth} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 
 /**
- *  The `QuanticTabBar` component displays the Quantic Tabs in a responsive manner. When tabs are wider than the available space, the tabs that cannot fit in the space are moved in the "More" drop-down list.
+ *  The `QuanticTabBar` component displays the Quantic Tabs in a responsive manner. When tabs are wider than the available space, the tabs that cannot fit in the space are moved in the "More" dropdown list.
  * @category Search
  * @category Insight Panel
  * @example
@@ -106,7 +105,7 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Updates the visibility of the more button.
-   * We update the More button position relativly to the last displayed tab.
+   * We update the More button position relatively to the last displayed tab.
    * @param {boolean} show
    */
   updateMoreButtonVisibility(show) {

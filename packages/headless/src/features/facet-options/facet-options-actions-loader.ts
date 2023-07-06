@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {facetOptions} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {facetOptionsReducer as facetOptions} from '../../features/facet-options/facet-options-slice';
 import {
   updateFacetOptions,
   UpdateFacetOptionsActionCreatorPayload,

@@ -1,10 +1,10 @@
-import {Action} from 'redux';
-import {recentResults} from '../../app/reducers';
+import {Action} from '@reduxjs/toolkit';
 import {
   clearRecentResults,
   registerRecentResults,
 } from '../../features/recent-results/recent-results-actions';
 import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
+import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
@@ -25,7 +25,7 @@ describe('recent results list', () => {
     printableUri: 'printable-uri',
     clickUri: 'click-uri',
     uniqueId: 'unique-id',
-    excerpt: 'exceprt',
+    excerpt: 'excerpt',
     firstSentences: 'first-sentences',
     flags: 'flags',
   };

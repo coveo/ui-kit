@@ -593,11 +593,67 @@
       <name>quantic_NoRelatedItems</name>
     </customLabels>
     <customLabels>
-      <label>Ouvre dans un sous-onglet de la console Salesforce</label>
+      <label>Ouvre dans un sous-onglet Salesforce</label>
       <name>quantic_OpensInSalesforceSubTab</name>
     </customLabels>
     <customLabels>
       <label>Ouvre dans un onglet du navigateur web</label>
       <name>quantic_OpensInBrowserTab</name>
+    </customLabels>
+    <customLabels>
+        <label>Erreur du composant {{0}}</label>
+        <name>quantic_ComponentError</name>
+    </customLabels>
+    <customLabels>
+        <label>Consultez la console développeur pour plus d'informations.</label>
+        <name>quantic_LookAtDeveloperConsole</name>
+    </customLabels>
+    <customLabels>
+        <label>Le nombre maximum de suggestions de documents doit être un nombre entier supérieur à 0.</label>
+        <name>quantic_InvalidMaxNumberOfDocumentSuggestions</name>
+    </customLabels>
+    <customLabels>
+        <label>Le nombre de suggestions de documents qui s'ouvrent automatiquement doit être un nombre entier supérieur à 0.</label>
+        <name>quantic_InvalidNumberOfAutoOpenedDocuments</name>
+    </customLabels>
+    <customLabels>
+        <label>Le nom API du champ Salesforce "{{0}}" est introuvable.</label>
+        <name>quantic_SalesforceFieldNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label>Le nombre maximum de suggestions doit être un nombre entier supérieur à 0.</label>
+        <name>quantic_InvalidMaxNumberOfSuggestions</name>
+    </customLabels>
+    <customLabels>
+        <label>La propriété "{{0}}" est obligatoire, veuillez définir sa valeur.</label>
+        <name>quantic_PropertyIsRequired</name>
+    </customLabels>
+        <customLabels>
+        <label>Erreur d'initialisation d'un composant</label>
+        <name>quantic_ComponentInitializationError</name>
+    </customLabels>
+    <customLabels>
+        <label>Erreur fatale : Impossible d'initialiser le composant {{0}}.</label>
+        <name>quantic_UnableToInitializeComponent</name>
+    </customLabels>
+    <customLabels>
+        <label>La valeur de la propriété {{0}} doit être un nombre entier supérieur à 0.</label>
+        <name>quantic_InvalidPositiveIntegerProperty</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} de {{1}}</label>
+        <name>quantic_XOfY</name>
+    </customLabels>
+    <customLabels>
+        <label>Les meilleurs documents pour vous</label>
+        <name>quantic_TopDocumentsForYou</name>
+    </customLabels>
+        <customLabels>
+        <label>Carrousel</label>
+        <name>quantic_Carousel</name>
+    </customLabels>
+        <customLabels>
+        <label>Slide</label>
+        <name>quantic_Slide</name>
     </customLabels>
 </Translations>

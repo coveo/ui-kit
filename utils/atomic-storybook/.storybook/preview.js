@@ -5,7 +5,7 @@ import {
   h,
 } from '@stencil/core/internal/client';
 
-const rootElement = document.getElementById('root');
+const rootElement = document.getElementById('storybook-root');
 const storyRoot = document.createElement('div');
 const searchInterface = document.createElement('atomic-search-interface');
 storyRoot.appendChild(searchInterface);
@@ -26,7 +26,7 @@ export const decorators = [
 export const parameters = {
   options: {
     storySort: (firstStory, secondStory) => {
-      return firstStory[1].id.length - secondStory[1].id.length >= 0;
+      return firstStory[0].length - secondStory[0].length;
     },
   },
   controls: {expanded: true, hideNoControlsWarning: true},

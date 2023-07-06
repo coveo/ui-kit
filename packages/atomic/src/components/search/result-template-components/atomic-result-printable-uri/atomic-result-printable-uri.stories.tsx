@@ -6,5 +6,8 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   {}
 );
 
-export default defaultModuleExport;
+export default {
+  ...defaultModuleExport,
+  title: 'Atomic/ResultList/ResultPrintableUri',
+};
 export const DefaultResultPrintableUri = exportedStory;

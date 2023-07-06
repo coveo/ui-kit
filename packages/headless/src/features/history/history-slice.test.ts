@@ -1,4 +1,4 @@
-import {Reducer} from 'redux';
+import {Reducer} from '@reduxjs/toolkit';
 import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
@@ -80,6 +80,7 @@ describe('history slice', () => {
       numericFacetSet: {bar: buildMockNumericFacetSlice()},
       dateFacetSet: {foo: buildMockDateFacetSlice()},
       categoryFacetSet: {foo: buildMockCategoryFacetSlice()},
+      automaticFacetSet: {desiredCount: 5, facets: {}},
       facetOptions: {freezeFacetOrder: false, facets: {}},
       pagination: {
         firstResult: 123,

@@ -1,9 +1,10 @@
-import {configuration, tabSet} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state';
 import {
   registerTab,
   updateActiveTab,
 } from '../../../features/tab-set/tab-set-actions';
+import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {buildMockTabSlice} from '../../../test/mock-tab-state';
 import {buildCoreTab, Tab, TabProps} from './headless-core-tab';
@@ -49,7 +50,7 @@ describe('Core Tab', () => {
     expect(() => initTab()).toThrow();
   });
 
-  describe('initalization', () => {
+  describe('initialization', () => {
     it('dispatches #registerTab', () => {
       initTab();
 

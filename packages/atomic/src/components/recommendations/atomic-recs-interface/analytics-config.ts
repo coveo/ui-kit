@@ -28,6 +28,7 @@ export function getAnalyticsConfig(
     return {
       ...defaultAnalyticsConfig,
       ...recsConfig.analytics,
+      analyticsClientMiddleware,
     };
   }
   return defaultAnalyticsConfig;

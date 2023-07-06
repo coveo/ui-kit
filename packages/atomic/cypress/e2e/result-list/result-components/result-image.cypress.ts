@@ -15,11 +15,14 @@ import {
 
 const field = 'somethumbnail';
 const image = 'https://www.coveo.com/public/img/logos/coveo/coveo_logo_en.svg';
+const invalidImage = 'https://www.coveoooo.com/image.svg';
+const fallback = 'https://picsum.photos/seed/picsum/200/300';
+const notAString = 123;
 
 const addResultImageInResultList = () =>
   addResultList(
     buildTemplateWithSections({
-      visual: generateComponentHTML(resultImageComponent, {field}),
+      visual: generateComponentHTML(resultImageComponent, {field, fallback}),
     })
   );
 
@@ -35,15 +38,6 @@ describe('Result Image Component', () => {
     CommonAssertions.assertConsoleError();
   });
 
-  describe('when the field does not exist for the result', () => {
-    beforeEach(() => {
-      new TestFixture().with(addResultImageInResultList()).init();
-    });
-
-    CommonAssertions.assertRemovesComponent(ResultImageSelectors.shadow);
-    CommonAssertions.assertConsoleError(false);
-  });
-
   describe('when the field value is a string', () => {
     beforeEach(() => {
       new TestFixture()
@@ -56,6 +50,56 @@ describe('Result Image Component', () => {
       ResultImageSelectors.resultImage().should('have.attr', 'src', image);
     });
 
-    CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    });
+  });
+
+  describe('when the field does not exist', () => {
+    beforeEach(() => {
+      new TestFixture().with(addResultImageInResultList()).init();
+    });
+
+    it('should render the component with the fallback image', () => {
+      ResultImageSelectors.resultImage().should('have.attr', 'src', fallback);
+    });
+
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    });
+  });
+
+  describe('when the url is not a string', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addResultImageInResultList())
+        .with(addFieldValueInResponse(field, notAString))
+        .init();
+    });
+
+    it('should render the component with fallback image', () => {
+      ResultImageSelectors.resultImage().should('have.attr', 'src', fallback);
+    });
+
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    });
+  });
+
+  describe('when the image url is not valid', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addResultImageInResultList())
+        .with(addFieldValueInResponse(field, invalidImage))
+        .init();
+    });
+
+    it('should render the component with fallback image', () => {
+      ResultImageSelectors.resultImage().should('have.attr', 'src', fallback);
+    });
+
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultImageSelectors.firstInResult);
+    });
   });
 });

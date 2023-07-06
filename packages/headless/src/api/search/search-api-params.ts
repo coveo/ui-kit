@@ -1,5 +1,6 @@
 import {history} from 'coveo.analytics';
 import {FacetOptions} from '../../features/facet-options/facet-options';
+import {AutomaticFacetRequest} from '../../features/facets/automatic-facet-set/interfaces/request';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
 import {URLPath} from '../../utils/url-utils';
 import {
@@ -123,6 +124,12 @@ export interface ExcerptLength {
 
 export interface AuthenticationParam {
   authentication?: string;
+}
+export interface AutomaticFacetsParams {
+  generateAutomaticFacets?: {
+    desiredCount: number;
+    currentFacets?: AutomaticFacetRequest[];
+  };
 }
 
 export const baseSearchRequest = (

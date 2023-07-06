@@ -1,21 +1,19 @@
+import {configuration} from '../../../app/common-reducers';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  configuration,
-  productListing,
-} from '../../../app/reducers';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {
-  logFacetUpdateSort,
-  logFacetShowMore,
-  logFacetShowLess,
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
-} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
+} from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {productListingReducer as productListing} from '../../../features/product-listing/product-listing-slice';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,

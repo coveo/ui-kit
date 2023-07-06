@@ -41,11 +41,12 @@ import {LightningElement, track, api} from 'lwc';
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
  * A `QuanticFacet` displays a facet of the results for the current query.
  * Custom captions can be provided by adding caption provider components to the `captions` named slot.
+ * See [Create a custom caption provider component for Quantic facets](https://docs.coveo.com/en/quantic/latest/usage/create-custom-caption-provider-component/).
  * @category Search
  * @category Insight Panel
  * @example
  * <c-quantic-facet engine-id={engineId} facet-id="myFacet" field="filetype" label="File Type" number-of-values="5" sort-criteria="occurrences" no-search display-values-as="link" is-collapsed></c-quantic-facet>
- * 
+ *
  * @example
  * <c-quantic-facet engine-id={engineId} field="filetype">
  *   <c-quantic-facet-caption slot="captions" value="text" caption="Plain text"></c-quantic-facet-caption>
@@ -176,6 +177,8 @@ export default class QuanticFacet extends LightningElement {
   focusTarget;
   /** @type {boolean} */
   focusShouldBeInFacet = false;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     showMore,
@@ -584,5 +587,12 @@ export default class QuanticFacet extends LightningElement {
       // @ts-ignore
       focusTarget.setFocusOnHeader();
     }
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

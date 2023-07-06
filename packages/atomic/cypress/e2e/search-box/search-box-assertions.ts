@@ -15,8 +15,23 @@ export function assertHasText(text: string) {
 export function assertHasSuggestionsCount(count: number) {
   it(`should display ${count} suggestions`, () => {
     SearchBoxSelectors.querySuggestions()
-      .filter(':visible')
+      .filter(':visible') // TODO(fix): Returns true even when the parent suggestions wrapper is hidden
       .should('have.length', count);
+
+    // TODO: Verify that the suggestions wrapper is visible and not hidden
+    // Cypress cannot reliably detect visible state of suggestions popup
+    // https://github.com/cypress-io/cypress/issues/25754
+    // if (count > 0) {
+    //   SearchBoxSelectors.querySuggestionsWrapper().should('be.visible');
+    // } else {
+    //   SearchBoxSelectors.querySuggestionsWrapper().should('not.be.visible');
+    // }
+  });
+}
+
+export function assertNoSuggestionGenerated() {
+  it('should have no suggestions', () => {
+    SearchBoxSelectors.querySuggestions().should('not.exist');
   });
 }
 
@@ -30,7 +45,7 @@ export function assertSuggestionIsSelected(index: number) {
 }
 
 export function assertSuggestionIsHighlighted(index: number) {
-  it(`should have higlighted suggestion ${index}`, () => {
+  it(`should have highlighted suggestion ${index}`, () => {
     SearchBoxSelectors.querySuggestions()
       .eq(index)
       .invoke('attr', 'class')

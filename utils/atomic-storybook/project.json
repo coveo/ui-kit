@@ -31,27 +31,31 @@
         "cwd": "packages/atomic"
       }
     },
-    "build": {
+    "prepare-and-validate": {
       "dependsOn": [
         "^build",
         "validate:storybook",
         "build:storybook:assets-list"
       ],
+      "executor": "nx:noop"
+    },
+    "build": {
+      "dependsOn": ["prepare-and-validate"],
       "inputs": [],
       "outputs": [],
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx --no-install build-storybook --config-dir ./.storybook --static-dir ../../packages/atomic/dist --output-dir ./storybook-static",
+        "command": "npm run build",
         "cwd": "utils/atomic-storybook"
       }
     },
     "dev": {
-      "dependsOn": ["^build", "validate:storybook"],
+      "dependsOn": ["prepare-and-validate"],
       "inputs": [],
       "outputs": [],
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx --no-install start-storybook --config-dir ./.storybook --static-dir ../../packages/atomic/dist -p 6006",
+        "command": "npm run dev",
         "cwd": "utils/atomic-storybook"
       }
     }

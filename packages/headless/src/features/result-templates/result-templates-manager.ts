@@ -7,7 +7,7 @@ import {
 } from '@coveo/bueno';
 import {Result} from '../../api/search/search/result';
 import {CoreEngine} from '../../app/engine';
-import {fields} from '../../app/reducers';
+import {fieldsReducer as fields} from '../../features/fields/fields-slice';
 import {FieldsSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {requiredNonEmptyString} from '../../utils/validate-payload';

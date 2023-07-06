@@ -45,8 +45,13 @@ describe('Quickview Component', () => {
         .init();
     });
 
-    CommonAssertions.assertAccessibility(QuickviewSelectors.firstInResult);
-    CommonAssertions.assertConsoleError(false);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(QuickviewSelectors.firstInResult);
+    });
+
+    it('should not log error to console', () => {
+      CommonAssertions.assertConsoleError(false);
+    });
 
     it('should display a header title', () => {
       openModal();
@@ -142,6 +147,25 @@ describe('Quickview Component', () => {
     });
   });
 
+  describe('when used on pdf file inside a result list with exact phrase match', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addFacet({field: 'author'}))
+        .with(addSearchBox())
+        .withHash('q="the%20bank"&f-author=Jules%20Verne')
+        .with(addQuickviewInResultList())
+        .init();
+    });
+
+    it('should display only highlight button for the phrase with multiple occurrences', () => {
+      openModal();
+
+      QuickviewModalSelectors.keywordsSidebar()
+        .should('exist')
+        .should('contain.text', 'Navigate between 23 occurrences of the bank');
+    });
+  });
+
   describe('when used on an excel file with a query that returns invalid HTML', () => {
     beforeEach(() => {
       new TestFixture()
@@ -156,8 +180,7 @@ describe('Quickview Component', () => {
       openModal();
       QuickviewModalSelectors.keywordsSidebar()
         .should('exist')
-        .should('contain.text', 'Navigate between 6 occurrences of 1')
-        .should('contain.text', 'Navigate between 6 occurrences of 12');
+        .should('contain.text', 'Navigate between 12 occurrences of 1 12');
     });
   });
 });

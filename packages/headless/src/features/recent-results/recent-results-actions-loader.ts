@@ -1,7 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {Result} from '../../api/search/search/result';
-import {recentResults} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
 import {
   RegisterRecentResultsCreatorPayload,
   registerRecentResults,
@@ -9,6 +9,7 @@ import {
   pushRecentResult,
 } from './recent-results-actions';
 
+export type {RegisterRecentResultsCreatorPayload};
 /**
  * The RecentResults action creators
  */
@@ -16,6 +17,7 @@ export interface RecentResultsActionCreators {
   /**
    * Initialize the `recentResults` state.
    * @param payload (RegisterRecentResultsCreatorPayload) The initial state and options.
+   * @returns A dispatchable action.
    */
   registerRecentResults(
     payload: RegisterRecentResultsCreatorPayload
@@ -23,12 +25,14 @@ export interface RecentResultsActionCreators {
 
   /**
    * Clear the recent results list.
+   * @returns A dispatchable action.
    */
   clearRecentResults(): PayloadAction;
 
   /**
    * Add the recent result to the list.
    * @param payload (Result) The result to add.
+   * @returns A dispatchable action.
    */
   pushRecentResult(payload: Result): PayloadAction<Result>;
 }

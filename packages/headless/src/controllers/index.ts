@@ -230,7 +230,10 @@ export {buildTab} from './tab/headless-tab';
 export type {
   FacetManagerPayload,
   FacetManagerState,
+  FacetManagerProps,
   FacetManager,
+  CoreFacetManager,
+  CoreFacetManagerState,
 } from './facet-manager/headless-facet-manager';
 export {buildFacetManager} from './facet-manager/headless-facet-manager';
 
@@ -293,12 +296,12 @@ export type {
 export {buildQuickview} from './quickview/headless-quickview';
 
 export type {
+  FoldingOptions,
   FoldedCollection,
   FoldedResult,
-  FoldedResultList,
-  FoldingOptions,
   FoldedResultListOptions,
   FoldedResultListProps,
+  FoldedResultList,
   FoldedResultListState,
 } from './folded-result-list/headless-folded-result-list';
 export {buildFoldedResultList} from './folded-result-list/headless-folded-result-list';
@@ -335,7 +338,8 @@ export type {
   SmartSnippetProps,
   SmartSnippetState,
   QuestionAnswerDocumentIdentifier,
-} from './smart-snippet/headless-smart-snippet';
+  SmartSnippetCore,
+} from './core/smart-snippet/headless-core-smart-snippet';
 export {buildSmartSnippet} from './smart-snippet/headless-smart-snippet';
 
 export type {InlineLink} from './smart-snippet/headless-smart-snippet-interactive-inline-links';
@@ -346,6 +350,8 @@ export type {
   SmartSnippetQuestionsListProps,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
+  CoreSmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
 } from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
 export {buildSmartSnippetQuestionsList} from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
 
@@ -400,3 +406,17 @@ export type {
 } from './field-suggestions/category-facet/headless-category-field-suggestions';
 
 export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';
+
+export type {
+  AutomaticFacet,
+  AutomaticFacetProps,
+  AutomaticFacetState,
+} from './facets/automatic-facet/headless-automatic-facet';
+export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
+
+export type {
+  GeneratedAnswer,
+  GeneratedAnswerState,
+  GeneratedAnswerCitation,
+} from './generated-answer/headless-generated-answer';
+export {buildGeneratedAnswer} from './generated-answer/headless-generated-answer';

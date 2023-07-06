@@ -142,13 +142,14 @@ export function getOrganizationEndpoints(
   const platform = `https://${orgId}.org${envSuffix}.coveo.com`;
   const analytics = `https://${orgId}.analytics.org${envSuffix}.coveo.com`;
   const search = `${platform}/rest/search/v2`;
+  const admin = `https://${orgId}.admin.org${envSuffix}.coveo.com`;
 
-  return {platform, analytics, search};
+  return {platform, analytics, search, admin};
 }
 
 /**
  * Returns the base Coveo platform URL, based on environment and region.
- * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEnpoints utility function instead.
+ * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEndpoints utility function instead.
  *
  * @param options
  * @returns string
@@ -165,7 +166,7 @@ export function platformUrl<E extends PlatformEnvironment>(
 
 /**
  * Returns the Coveo analytics platform URL, based on environment and region.
- * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEnpoints utility function instead.
+ * @deprecated Coveo now offers organization-specific endpoints. Consider using the getOrganizationEndpoints utility function instead.
  *
  * @param options
  * @returns

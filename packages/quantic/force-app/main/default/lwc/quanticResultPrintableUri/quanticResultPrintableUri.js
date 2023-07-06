@@ -1,5 +1,5 @@
-import {LightningElement, api} from "lwc";
 import {parseXML} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 
@@ -45,7 +45,9 @@ export default class QuanticResultPrintableUri extends LightningElement {
 
   renderedCallback() {
     if (this.maxNumberOfParts < this.MIN_MAX_NUMBER_OF_PARTS) {
-      console.error(`The provided value of ${this.maxNumberOfParts} for the maxNumberOfParts option is inadequate. The provided value must be at least ${this.MIN_MAX_NUMBER_OF_PARTS}.`);
+      console.error(
+        `The provided value of ${this.maxNumberOfParts} for the maxNumberOfParts option is inadequate. The provided value must be at least ${this.MIN_MAX_NUMBER_OF_PARTS}.`
+      );
       this.error = `${this.template.host.localName} Error`;
     }
   }
@@ -58,7 +60,7 @@ export default class QuanticResultPrintableUri extends LightningElement {
       name: parent.getAttribute('name'),
       uri: parent.getAttribute('uri'),
       isFolded: false,
-      classes: index === parents.length - 1 ? 'slds-truncate' : ''
+      classes: index === parents.length - 1 ? 'slds-truncate' : '',
     }));
   }
 
@@ -68,8 +70,8 @@ export default class QuanticResultPrintableUri extends LightningElement {
     }
     return [
       ...this.allParents.slice(0, 2),
-      { id: 'separator', name: '...', isFolded: true },
-      this.allParents.slice(-1)[0]
+      {id: 'separator', name: '...', isFolded: true},
+      this.allParents.slice(-1)[0],
     ];
   }
 

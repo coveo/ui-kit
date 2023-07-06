@@ -45,7 +45,7 @@ It is important to respect the folder hierarchy, with SVG icons under the `asset
 
 Rendering different types of result templates based on the type of content returned by the Coveo platform is very common when building a Coveo search page.
 
-The way to create result templates for an HTML project using the [core Atomic library](https://docs.coveo.com/en/atomic/latest/usage/create-a-result-list/) involves defining one or multiple `atomic-result-template` components, configured with HTML properties, adding conditions on the attributes and metadata of each results.
+The way to create result templates for an HTML project using the [core Atomic library](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/#defining-a-result-template) involves defining one or multiple `atomic-result-template` components, configured with HTML properties, adding conditions on the attributes and metadata of each results.
 
 Coupled with the [`<template>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template) HTML tag, this works very well in a pure HTML project.
 
@@ -58,6 +58,8 @@ The `template` property accepts a function with either a `Result` parameter in t
 The `template` function must then simply return a valid JSX Element.
 
 Here is an example of a fictitious search page, which defines some premade templates for YouTube videos, as well as Salesforce cases:
+
+<!-- cSpell:disable -->
 
 ```tsx
 import {
@@ -173,6 +175,8 @@ const MyPage = () => {
   );
 };
 ```
+
+<!-- cSpell:enable -->
 
 ## Styling Result Template Components
 

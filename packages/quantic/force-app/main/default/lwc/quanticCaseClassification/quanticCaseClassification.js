@@ -1,18 +1,22 @@
-import {LightningElement, api, track, wire} from 'lwc';
 import caseClassificationTitle from '@salesforce/label/c.quantic_CaseClassificationTitle';
-import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
-import selectOption from '@salesforce/label/c.quantic_SelectOption';
+import invalidMaxNumberOfSuggestions from '@salesforce/label/c.quantic_InvalidMaxNumberOfSuggestions';
 import loading from '@salesforce/label/c.quantic_Loading';
-import {
-  getObjectInfo,
-  getPicklistValuesByRecordType,
-} from 'lightning/uiObjectInfoApi';
+import moreTopics from '@salesforce/label/c.quantic_MoreTopics';
+import propertyIsRequired from '@salesforce/label/c.quantic_PropertyIsRequired';
+import salesforceFieldNotFound from '@salesforce/label/c.quantic_SalesforceFieldNotFound';
+import selectOption from '@salesforce/label/c.quantic_SelectOption';
 // @ts-ignore
 import CASE_OBJECT from '@salesforce/schema/Case';
 import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
+import {I18nUtils} from 'c/quanticUtils';
+import {
+  getObjectInfo,
+  getPicklistValuesByRecordType,
+} from 'lightning/uiObjectInfoApi';
+import {LightningElement, api, track, wire} from 'lwc';
 
 /** @typedef {import("coveo").CaseAssistEngine} CaseAssistEngine */
 /** @typedef {import("coveo").CaseField} CaseField */
@@ -31,6 +35,9 @@ export default class QuanticCaseClassification extends LightningElement {
     moreTopics,
     selectOption,
     loading,
+    salesforceFieldNotFound,
+    invalidMaxNumberOfSuggestions,
+    propertyIsRequired,
   };
 
   @wire(getObjectInfo, {objectApiName: CASE_OBJECT})
@@ -48,7 +55,11 @@ export default class QuanticCaseClassification extends LightningElement {
         this.picklistValues = data;
         this.allOptionsReceived = true;
         if (!data.picklistFieldValues[this.sfFieldApiName]) {
-          this.renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
+          this.hasInitializationError = true;
+          this.initializationErrorMessage = `${I18nUtils.format(
+            this.labels.salesforceFieldNotFound,
+            this.sfFieldApiName
+          )}`;
         }
       }
     }
@@ -107,6 +118,27 @@ export default class QuanticCaseClassification extends LightningElement {
    * @defaultValue `'Select an option'`
    */
   @api messageWhenValueMissing = this.labels.selectOption;
+  /**
+   * Indicates whether the component should automatically fetch new case classifications when its value changes.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api fetchClassificationOnChange = false;
+  /**
+   * Indicates whether the component should automatically fetch new document suggestions when its value changes.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api fetchDocumentSuggestionOnChange = false;
+  /**
+   * Whether or not the component should fetch classifications during initialization.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api fetchOnInit = false;
 
   /** @type {Array<object>} */
   @track classifications = [];
@@ -131,7 +163,9 @@ export default class QuanticCaseClassification extends LightningElement {
   /** @type {boolean} */
   _isSuggestionsVisible = true;
   /** @type {string} */
-  renderingError = '';
+  initializationErrorMessage;
+  /** @type {boolean} */
+  hasInitializationError = false;
   /** @type {boolean} */
   hideSuggestions = false;
   /** @type {boolean} */
@@ -143,13 +177,13 @@ export default class QuanticCaseClassification extends LightningElement {
 
   connectedCallback() {
     this.validateProps();
-    if (!this.renderingError) {
+    if (!this.hasInitializationError) {
       registerComponentForInit(this, this.engineId);
     }
   }
 
   renderedCallback() {
-    if (!this.renderingError) {
+    if (!this.hasInitializationError) {
       initializeWithHeadless(this, this.engineId, this.initialize);
     }
   }
@@ -170,6 +204,10 @@ export default class QuanticCaseClassification extends LightningElement {
       ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
       ...CoveoHeadlessCaseAssist.loadCaseFieldActions(engine),
     };
+
+    if (this.fetchOnInit) {
+      engine.dispatch(this.actions.fetchCaseClassifications());
+    }
   };
 
   disconnectedCallback() {
@@ -178,10 +216,16 @@ export default class QuanticCaseClassification extends LightningElement {
 
   validateProps() {
     if (!(Number(this.maxSuggestions) >= 0)) {
-      this.renderingError = `"${this.maxSuggestions}" is an invalid maximum number of suggestions. A positive integer was expected.`;
+      this.hasInitializationError = true;
+      this.initializationErrorMessage =
+        this.labels.invalidMaxNumberOfSuggestions;
     }
     if (!this.coveoFieldName) {
-      this.renderingError = 'coveoFieldName is required, please set its value.';
+      this.hasInitializationError = true;
+      this.initializationErrorMessage = `${I18nUtils.format(
+        this.labels.propertyIsRequired,
+        'coveoFieldName'
+      )}`;
     }
   }
 
@@ -194,7 +238,7 @@ export default class QuanticCaseClassification extends LightningElement {
         hasNewSuggestions && this.isAutoSelectionNeeded
           ? this.classifications[0].value
           : this.field.state.value;
-      this.setFieldValue(value, hasNewSuggestions);
+      this.setFieldValue(value, this.updatesToFetch, hasNewSuggestions);
       this.updateSuggestionsVisibility();
     }
   }
@@ -317,6 +361,17 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
+   * Whether we want to fetch new case classifications or document suggestions when we update the field.
+   * @returns {{caseClassifications: boolean, documentSuggestions: boolean}}
+   */
+  get updatesToFetch() {
+    return {
+      caseClassifications: this.fetchClassificationOnChange,
+      documentSuggestions: this.fetchDocumentSuggestionOnChange,
+    };
+  }
+
+  /**
    * Shows the select input.
    * @returns {void}
    */
@@ -338,7 +393,7 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   handleSelectSuggestion(event) {
     const value = event.target.checked ? event.target.value : '';
-    this.setFieldValue(value);
+    this.setFieldValue(value, this.updatesToFetch);
   }
 
   /**
@@ -348,7 +403,7 @@ export default class QuanticCaseClassification extends LightningElement {
   handleSelectChange(event) {
     this.lockedState = true;
     const value = event.target.value;
-    this.setFieldValue(value);
+    this.setFieldValue(value, this.updatesToFetch);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this.animateHideSuggestions();
     }
@@ -373,9 +428,9 @@ export default class QuanticCaseClassification extends LightningElement {
    * Set the current value and update the state.
    * @returns {void}
    */
-  setFieldValue(value, autoSelection) {
+  setFieldValue(value, updatesToFetch, autoSelection) {
     if (this.field.state.value !== value) {
-      this.field.update(value, undefined, autoSelection);
+      this.field.update(value, updatesToFetch, autoSelection);
     }
     this._value = value;
     if (this._errorMessage && value) {
@@ -449,5 +504,12 @@ export default class QuanticCaseClassification extends LightningElement {
       this.hideSuggestions = false;
       this.hideSelect();
     }
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

@@ -1,11 +1,8 @@
 import {
   CoveoSearchPageClient,
   SearchPageClientProvider,
-  history,
-  CoveoAnalyticsClient,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
-import {IRuntimeEnvironment} from 'coveo.analytics';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {Logger} from 'pino';
 import {
@@ -18,6 +15,7 @@ import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
 import {PreprocessRequest} from '../preprocess-request';
 import {BaseAnalyticsProvider} from './base-analytics';
+import {historyStore} from './coveo-analytics-utils';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;
@@ -75,6 +73,21 @@ export class SearchAnalyticsProvider
       SearchAnalyticsProvider.fallbackPipelineName;
 
     return hasSplitTestRun ? effectivePipelineWithSplitTestRun : undefined;
+  }
+
+  public getBaseMetadata() {
+    const state = this.getState();
+    const baseObject = super.getBaseMetadata();
+
+    const generativeQuestionAnsweringId =
+      state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
+
+    if (generativeQuestionAnsweringId) {
+      baseObject['generativeQuestionAnsweringId'] =
+        generativeQuestionAnsweringId;
+    }
+
+    return baseObject;
   }
 
   private mapResultsToAnalyticsDocument() {
@@ -150,20 +163,6 @@ export const configureAnalytics = ({
   }
   return client;
 };
-
-export const getVisitorID = (options: {
-  runtimeEnvironment?: IRuntimeEnvironment;
-}) => new CoveoAnalyticsClient(options).getCurrentVisitorId();
-
-export const clearAnalyticsClient = (options: {
-  runtimeEnvironment?: IRuntimeEnvironment;
-}) => {
-  const client = new CoveoAnalyticsClient(options);
-  client.clear();
-  client.deleteHttpOnlyVisitorId();
-};
-
-export const historyStore = new history.HistoryStore();
 
 export const getPageID = () => {
   const actions = historyStore.getHistory();

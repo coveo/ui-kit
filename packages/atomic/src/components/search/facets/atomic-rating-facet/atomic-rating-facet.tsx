@@ -62,6 +62,7 @@ import {initializePopover} from '../atomic-popover/popover-type';
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
+ * @part value-checkbox-icon - The facet value checkbox icon, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  * @part value-link-selected - The selected facet value when display is 'link'.
  */
@@ -189,7 +190,7 @@ export class AtomicRatingFacet
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initializeFacet();
-    this.inititalizeDependenciesManager();
+    this.initializeDependenciesManager();
   }
 
   private initializeFacet() {
@@ -238,7 +239,7 @@ export class AtomicRatingFacet
       .length;
   }
 
-  private inititalizeDependenciesManager() {
+  private initializeDependenciesManager() {
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {

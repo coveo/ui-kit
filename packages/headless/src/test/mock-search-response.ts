@@ -13,12 +13,15 @@ export function buildMockSearchResponse(
     searchUid: '',
     totalCountFiltered: 0,
     facets: [],
+    generateAutomaticFacets: {facets: []},
     queryCorrections: [emptyCorrection()],
     triggers: [],
     questionAnswer: emptyQuestionAnswer(),
     pipeline: '',
     splitTestRun: '',
     termsToHighlight: {},
+    phrasesToHighlight: {},
+    extendedResults: {},
     ...config,
   };
 }

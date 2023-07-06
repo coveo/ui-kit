@@ -1,8 +1,14 @@
+import {
+  StateFromReducersMapObject,
+  createAction,
+  createReducer,
+} from '@reduxjs/toolkit';
 import {getOrganizationEndpoints} from '../api/platform-client';
 import * as Store from '../app/store';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
+import {configuration} from './common-reducers';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
-import {configuration} from './reducers';
+import {getSampleEngineConfiguration} from './engine-configuration';
 
 jest.mock('pino', () => ({
   ...jest.requireActual('pino'),
@@ -132,7 +138,7 @@ describe('engine', () => {
         'The `organizationEndpoints` options was not explicitly set in the Headless engine configuration.',
     },
     {
-      organizationEndpoints: getOrganizationEndpoints('myorg'),
+      organizationEndpoints: undefined,
       platformUrl: 'https://definitely.not.a.coveo.custom.dns',
       expectedMessage:
         'The `platformUrl` (https://definitely.not.a.coveo.custom.dns) option will be deprecated in the next major version.',
@@ -174,5 +180,83 @@ describe('engine', () => {
         'There is a mismatch between the `organizationId` option (a) and the organization configured in the `organizationEndpoints` option (https://b.org.coveo.com).'
       )
     );
+  });
+
+  describe('with preloaded state', () => {
+    const testAction = createAction('increment');
+    const testReducer = createReducer(0, (builder) =>
+      builder.addCase(testAction, (value) => value + 1)
+    );
+    const reducers = {testReducer};
+    let preloadedState: StateFromReducersMapObject<typeof reducers>;
+
+    beforeEach(() => {
+      const temporaryEngine = buildEngine(
+        {
+          configuration: getSampleEngineConfiguration(),
+          reducers: {testReducer},
+        },
+        buildMockThunkExtraArguments()
+      );
+      temporaryEngine.dispatch(testAction());
+      preloadedState = temporaryEngine.state;
+    });
+
+    describe('with all needed reducers', () => {
+      let resumedEngine: CoreEngine<typeof preloadedState>;
+      beforeEach(() => {
+        resumedEngine = buildEngine(
+          {
+            configuration: getSampleEngineConfiguration(),
+            preloadedState,
+            reducers,
+          },
+          buildMockThunkExtraArguments()
+        );
+      });
+
+      it('should be able to resume the preloaded state', () => {
+        resumedEngine.dispatch(testAction());
+        expect(resumedEngine.state.testReducer).toEqual(2);
+      });
+    });
+
+    describe('with a missing reducer', () => {
+      let resumedEngine: CoreEngine<Partial<typeof preloadedState>>;
+      beforeEach(() => {
+        resumedEngine = buildEngine(
+          {
+            configuration: getSampleEngineConfiguration(),
+            preloadedState,
+            reducers: {},
+          },
+          buildMockThunkExtraArguments()
+        );
+      });
+
+      it('should have the preloaded state', () => {
+        expect(resumedEngine.state.testReducer).toEqual(1);
+      });
+
+      it("should not update the missing reducer's state when an action from the missing reducer is dispatched", () => {
+        resumedEngine.dispatch(testAction());
+        expect(resumedEngine.state.testReducer).toEqual(1);
+      });
+
+      describe('after adding the missing reducer', () => {
+        beforeEach(() => {
+          resumedEngine.addReducers(reducers);
+        });
+
+        it('should not reset the state', () => {
+          expect(resumedEngine.state.testReducer).toEqual(1);
+        });
+
+        it('should update the preloaded state after dispatching an action', () => {
+          resumedEngine.dispatch(testAction());
+          expect(resumedEngine.state.testReducer).toEqual(2);
+        });
+      });
+    });
   });
 });

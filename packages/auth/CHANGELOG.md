@@ -1,7 +1,15 @@
+## 1.10.7 (2023-06-20)
+
+## 1.10.6 (2023-06-01)
+
 # Change Log
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [1.10.2](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.10.1...@coveo/auth@1.10.2) (2023-05-11)
+
+**Note:** Version bump only for package @coveo/auth
 
 ## [1.10.1](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.10.0...@coveo/auth@1.10.1) (2023-02-15)
 

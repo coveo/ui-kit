@@ -12,9 +12,9 @@
     "e2e": "cypress run --browser chrome"
   },
   "dependencies": {
-    "@coveo/headless": "^2.0.0",
-    "@coveo/atomic": "^2.0.0",
-    "@coveo/atomic-react": "^2.0.0",
+    "@coveo/headless": "2.20.0",
+    "@coveo/atomic": "2.34.0",
+    "@coveo/atomic-react": "2.4.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "@babel/standalone": "7.21.2"

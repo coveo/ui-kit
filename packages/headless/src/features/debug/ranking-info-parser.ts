@@ -169,15 +169,15 @@ export const parseRankingInfo = (value: string) => {
 
   const docWeightsRegexResult = REGEX_EXTRACT_DOCUMENT_WEIGHTS.exec(value);
   const termsWeightRegexResult = REGEX_EXTRACT_TERMS_WEIGHTS.exec(value);
-  const totalWeigthRegexResult = REGEX_EXTRACT_TOTAL_WEIGHTS.exec(value);
+  const totalWeightRegexResult = REGEX_EXTRACT_TOTAL_WEIGHTS.exec(value);
 
   const qreWeights = parseQREWeights(value);
   const documentWeights = parseWeights<DocumentWeights>(
     docWeightsRegexResult ? docWeightsRegexResult[1] : null
   );
   const termsWeight = parseTermsWeights(termsWeightRegexResult);
-  const totalWeight = totalWeigthRegexResult
-    ? Number(totalWeigthRegexResult[1])
+  const totalWeight = totalWeightRegexResult
+    ? Number(totalWeightRegexResult[1])
     : null;
 
   return {

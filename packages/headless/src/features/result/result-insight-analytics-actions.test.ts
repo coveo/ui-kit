@@ -1,4 +1,3 @@
-import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockRaw, buildMockResult} from '../../test';
 import {buildMockInsightEngine} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
@@ -7,13 +6,16 @@ import {logDocumentOpen} from './result-insight-analytics-actions';
 
 const mockLogDocumentOpen = jest.fn();
 
-const mockCoveoInsightClient = jest.fn(() => ({
-  disable: () => {},
-  logDocumentOpen: mockLogDocumentOpen,
-}));
+jest.mock('coveo.analytics', () => {
+  const mockCoveoInsightClient = jest.fn(() => ({
+    disable: () => {},
+    logDocumentOpen: mockLogDocumentOpen,
+  }));
 
-Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
-  value: mockCoveoInsightClient,
+  return {
+    CoveoInsightClient: mockCoveoInsightClient,
+    history: {HistoryStore: jest.fn()},
+  };
 });
 
 const exampleSubject = 'example subject';
@@ -54,7 +56,7 @@ const resultParams = {
   printableUri: 'printable-uri',
   clickUri: 'example documentUrl',
   uniqueId: 'unique-id',
-  excerpt: 'exceprt',
+  excerpt: 'excerpt',
   firstSentences: 'first-sentences',
   flags: 'flags',
   rankingModifier: 'example rankingModifier',

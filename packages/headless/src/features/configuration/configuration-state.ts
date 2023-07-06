@@ -17,7 +17,7 @@ export interface ConfigurationState {
    */
   accessToken: string;
   /**
-   * The Plaform URL to use.
+   * The Platform URL to use.
    * By default, https://platform.cloud.coveo.com
    */
   platformUrl: string;

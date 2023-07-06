@@ -1,4 +1,4 @@
-import {AnyAction} from 'redux';
+import {AnyAction} from '@reduxjs/toolkit';
 import {PlatformClient} from '../../api/platform-client';
 import {Result} from '../../api/search/search/result';
 import {
@@ -100,7 +100,7 @@ describe('folding slice', () => {
           name: 'first-answer',
           children: [
             {
-              name: 'comment-questionning-the-answer',
+              name: 'comment-questioning-the-answer',
               children: [
                 {name: 'comment-justifying-the-answer'},
                 {

@@ -5,5 +5,5 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
   'atomic-result-date',
   {}
 );
-export default defaultModuleExport;
+export default {...defaultModuleExport, title: 'Atomic/ResultList/ResultDate'};
 export const DefaultResultDate = exportedStory;

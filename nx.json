@@ -7,6 +7,7 @@
       }
     }
   },
+  "plugins": ["@coveo/nx-plugin"],
   "namedInputs": {
     "sharedGlobals": [{"runtime": "node -v"}],
     "sharedTypescriptSources": [
@@ -38,17 +39,20 @@
     },
     "lint:check": {},
     "lint:fix": {},
-    "publish:npm:release": {
-      "dependsOn": ["build"]
-    },
-    "publish:npm:prerelease": {
-      "dependsOn": ["build"]
-    },
     "publish:sfdx": {
       "dependsOn": ["build"]
     },
     "promote:sfdx": {
       "dependsOn": ["build"]
+    },
+    "release:phase1": {
+      "dependsOn": ["^release:phase1", "^release:phase2"]
+    },
+    "release:build": {
+      "dependsOn": ["^release:build", "release:phase1"]
+    },
+    "release:phase2": {
+      "dependsOn": ["release:build", "release:phase1"]
     }
   },
   "defaultBase": "master"

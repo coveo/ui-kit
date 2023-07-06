@@ -9,12 +9,14 @@ import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-st
 import {getDateFacetSetInitialState} from '../features/facets/range-facets/date-facet-set/date-facet-set-state';
 import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getFieldsInitialState} from '../features/fields/fields-state';
+import {getFoldingInitialState} from '../features/folding/folding-state';
 import {getInsightConfigurationInitialState} from '../features/insight-configuration/insight-configuration-state';
 import {getInsightInterfaceInitialState} from '../features/insight-interface/insight-interface-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
 import {getQuerySetInitialState} from '../features/query-set/query-set-state';
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state';
 import {getQueryInitialState} from '../features/query/query-state';
+import {getQuestionAnsweringInitialState} from '../features/question-answering/question-answering-state';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
 import {getSearchInitialState} from '../features/search/search-state';
@@ -51,6 +53,8 @@ export function buildMockInsightState(
     tabSet: getTabSetInitialState(),
     fields: getFieldsInitialState(),
     attachedResults: getAttachedResultsInitialState(),
+    questionAnswering: getQuestionAnsweringInitialState(),
+    folding: getFoldingInitialState(),
     ...config,
   };
 }

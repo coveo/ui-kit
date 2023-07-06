@@ -1,33 +1,28 @@
-import {Component, Element, h} from '@stencil/core';
+import {Component, h, State} from '@stencil/core';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal
  */
 @Component({
   tag: 'atomic-insight-tabs',
-  styleUrl: './atomic-insight-tabs.pcss',
-  shadow: true,
 })
-export class AtomicInsightTabs {
-  @Element() host!: HTMLElement;
+export class AtomicInsightTabs
+  implements InitializableComponent<InsightBindings>
+{
+  @InitializeBindings() public bindings!: InsightBindings;
 
-  private scrollCallback = (e: Event) => {
-    e.preventDefault();
-    this.host.scrollLeft += (e as WheelEvent).deltaY;
-  };
-
-  public connectedCallback() {
-    this.host.addEventListener('mousewheel', this.scrollCallback);
-  }
-  public disconnectedCallback() {
-    this.host.removeEventListener('mousewheel', this.scrollCallback);
-  }
+  @State() public error!: Error;
 
   public render() {
     return (
-      <div class="flex">
+      <tab-bar>
         <slot></slot>
-      </div>
+      </tab-bar>
     );
   }
 }

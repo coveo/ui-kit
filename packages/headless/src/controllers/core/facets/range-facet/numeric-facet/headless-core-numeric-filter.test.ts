@@ -1,14 +1,12 @@
-import {
-  configuration,
-  numericFacetSet,
-  facetOptions,
-  search,
-} from '../../../../../app/reducers';
+import {configuration} from '../../../../../app/common-reducers';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
+import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
 import {
   registerNumericFacet,
   updateNumericFacetValues,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {searchReducer as search} from '../../../../../features/search/search-slice';
 import {SearchAppState} from '../../../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
@@ -145,9 +143,7 @@ describe('numeric filter', () => {
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 

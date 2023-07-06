@@ -1,11 +1,7 @@
+import {configuration} from '../../../../app/common-reducers';
 import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
-import {
-  facetSet,
-  configuration,
-  facetSearchSet,
-  search,
-} from '../../../../app/reducers';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   logFacetClearAll,
   logFacetShowLess,
@@ -13,11 +9,13 @@ import {
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {getInsightAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-insight-utils';
+import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {
   FacetSection,
   ConfigurationSection,
@@ -104,7 +102,9 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
       clear() {},
       updateCaptions() {},
       select() {},
+      exclude() {},
       singleSelect() {},
+      singleExclude() {},
       get state() {
         return {
           values: [],

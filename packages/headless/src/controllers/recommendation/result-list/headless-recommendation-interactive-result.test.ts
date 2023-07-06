@@ -1,5 +1,5 @@
 import {Result} from '../../../api/search/search/result';
-import {configuration} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions';
 import {buildMockResult} from '../../../test';
 import {
@@ -23,7 +23,7 @@ describe('RecommendationInteractiveResult', () => {
     printableUri: 'printable-uri',
     clickUri: 'click-uri',
     uniqueId: 'unique-id',
-    excerpt: 'exceprt',
+    excerpt: 'excerpt',
     firstSentences: 'first-sentences',
     flags: 'flags',
   };

@@ -1,7 +1,122 @@
+# 2.20.0 (2023-06-28)
+
+### Features
+
+- **headless:** Add new insight analytics actions ([#2997](https://github.com/coveo/ui-kit/issues/2997)) ([b2d549e](https://github.com/coveo/ui-kit/commits/b2d549e70287b479bcc9caa8609624e827f45cfd))
+- **headless:** added generated answer (Gen-Q&A) component ([#2995](https://github.com/coveo/ui-kit/issues/2995)) ([9e7c023](https://github.com/coveo/ui-kit/commits/9e7c023a07f46be07cd00326bf3efc23b14e6218))
+- **headless:** support date range facet exclusion ([#2998](https://github.com/coveo/ui-kit/issues/2998)) ([5a5c1f4](https://github.com/coveo/ui-kit/commits/5a5c1f4b2cd89219cb080ab0cbeca649cb003f41))
+- **headless:** support facet value exclusion for core facets ([#2989](https://github.com/coveo/ui-kit/issues/2989)) ([fbacc5e](https://github.com/coveo/ui-kit/commits/fbacc5e04bea4567e9ff42444dd14f5c7e528abe))
+
+# 2.19.0 (2023-06-20)
+
+### Bug Fixes
+
+- **headless:** add missing controllers for product listing facets ([#2983](https://github.com/coveo/ui-kit/issues/2983)) ([d8b9933](https://github.com/coveo/ui-kit/commits/d8b9933283cc431ec5a819f7edd5fef84757304e))
+- **headless:** allow preloading state of non-default reducers ([#2972](https://github.com/coveo/ui-kit/issues/2972)) ([9652d51](https://github.com/coveo/ui-kit/commits/9652d517cb323f2f78f866201ab384e746267b36))
+- **headless:** handle no question answer in insight api client ([#2979](https://github.com/coveo/ui-kit/issues/2979)) ([03a2fc5](https://github.com/coveo/ui-kit/commits/03a2fc5cf8d6462f927897ae0031b9d46664ca05))
+- **headless:** prevent overriding queries from a different origin ([#2955](https://github.com/coveo/ui-kit/issues/2955)) ([0701f87](https://github.com/coveo/ui-kit/commits/0701f8751e13940a2aa8d6d8f99d99dd2ed3b284))
+- **headless:** wrong type in product listing interactive result ([#2980](https://github.com/coveo/ui-kit/issues/2980)) ([693ce4e](https://github.com/coveo/ui-kit/commits/693ce4edfa0ad9248a0edb60ccb89cf53dc88815))
+
+### Features
+
+- add missing exports for headless/product-listing ([#2975](https://github.com/coveo/ui-kit/issues/2975)) ([170638b](https://github.com/coveo/ui-kit/commits/170638bdd22492ea38bb29dbd4c968f0457d1a69))
+- **atomic,headless:** support custom sort for facets ([#2960](https://github.com/coveo/ui-kit/issues/2960)) ([21e00f2](https://github.com/coveo/ui-kit/commits/21e00f286f49b1a8f9af9a5d12e21dae36ae8e54))
+
+## 2.18.4 (2023-06-07)
+
+### Bug Fixes
+
+- undefined error when checking mismatch with new endpoint url ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
+
+## 2.18.3 (2023-06-01)
+
+### Features
+
+- **atomic:** support fallback for `atomic-result-image` ([#2915](https://github.com/coveo/ui-kit/issues/2915)) ([2620f18](https://github.com/coveo/ui-kit/commits/2620f18cde02c7eb9ba5b31e2fb4042fa63ed0ad))
+- **headless, folding:** Adapted the headless folded result list controller to support insight use ([#2897](https://github.com/coveo/ui-kit/issues/2897)) ([47028ee](https://github.com/coveo/ui-kit/commits/47028ee41972c4ec545266e6011dcc1d0220bef8))
+
+## 2.17.1 (2023-05-23)
+
+### Features
+
+- **atomic:** added smart snippet components for insight panels ([#2908](https://github.com/coveo/ui-kit/issues/2908)) ([b63c79d](https://github.com/coveo/ui-kit/commits/b63c79d33e27d20428f10aaa6f6d93b95f1d8fe1))
+
 # Change Log
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [2.16.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.4...@coveo/headless@2.16.5) (2023-05-17)
+
+### Bug Fixes
+
+- **headless:** serialize and deserialize endInclusive parameters for range facets (numeric, dates) ([#2883](https://github.com/coveo/ui-kit/issues/2883)) ([ff411f0](https://github.com/coveo/ui-kit/commit/ff411f01157f32e68e62fa1a6a38e6f686cb900c))
+
+## [2.16.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.3...@coveo/headless@2.16.4) (2023-05-11)
+
+**Note:** Version bump only for package @coveo/headless
+
+## [2.16.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.2...@coveo/headless@2.16.3) (2023-05-11)
+
+**Note:** Version bump only for package @coveo/headless
+
+## [2.16.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.1...@coveo/headless@2.16.2) (2023-05-09)
+
+### Bug Fixes
+
+- **atomic,headless:** fix support for exact phrase stemming in quickview ([#2860](https://github.com/coveo/ui-kit/issues/2860)) ([a8be9fd](https://github.com/coveo/ui-kit/commit/a8be9fd222bdf187729c55b7b2574f2d0eeb961b))
+
+## [2.16.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.16.0...@coveo/headless@2.16.1) (2023-05-08)
+
+**Note:** Version bump only for package @coveo/headless
+
+# [2.16.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.15.0...@coveo/headless@2.16.0) (2023-05-04)
+
+### Bug Fixes
+
+- **atomic:** support limited version of quickview when sandbox allow-same-origin not present ([#2866](https://github.com/coveo/ui-kit/issues/2866)) ([83dd211](https://github.com/coveo/ui-kit/commit/83dd211932b325442086360524d5089067bcece5))
+
+### Features
+
+- **headless:** smart snippet questions list controller created for the insight use case ([#2823](https://github.com/coveo/ui-kit/issues/2823)) ([030ff0b](https://github.com/coveo/ui-kit/commit/030ff0b27efcf07f72eac986958562022df73f40))
+
+# [2.15.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.14.3...@coveo/headless@2.15.0) (2023-04-27)
+
+### Features
+
+- **smart snippet:** add headless smart snippet support for insight engine ([#2836](https://github.com/coveo/ui-kit/issues/2836)) ([95257b0](https://github.com/coveo/ui-kit/commit/95257b068cceec85ce03855af83a393aeda4350d))
+
+## [2.14.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.14.2...@coveo/headless@2.14.3) (2023-04-27)
+
+**Note:** Version bump only for package @coveo/headless
+
+## [2.14.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.14.1...@coveo/headless@2.14.2) (2023-04-27)
+
+**Note:** Version bump only for package @coveo/headless
+
+## [2.14.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.14.0...@coveo/headless@2.14.1) (2023-04-26)
+
+**Note:** Version bump only for package @coveo/headless
+
+# [2.14.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.13.1...@coveo/headless@2.14.0) (2023-04-25)
+
+### Features
+
+- **organizationendpoints:** support organization endpoints for hosted-pages components ([#2838](https://github.com/coveo/ui-kit/issues/2838)) ([e0b73f1](https://github.com/coveo/ui-kit/commit/e0b73f16af1a4e794a49621a9e856cad95169cae))
+
+## [2.13.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.13.0...@coveo/headless@2.13.1) (2023-04-24)
+
+**Note:** Version bump only for package @coveo/headless
+
+# [2.13.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.12.1...@coveo/headless@2.13.0) (2023-04-18)
+
+### Features
+
+- **headless:** include the loadgenericanalyticsactions action loader in the case assist & insight headless bundle ([#2835](https://github.com/coveo/ui-kit/issues/2835)) ([aa06d45](https://github.com/coveo/ui-kit/commit/aa06d45fad0b450e8adfd76790556265e1e85bd0))
+
+## [2.12.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.12.0...@coveo/headless@2.12.1) (2023-04-14)
+
+**Note:** Version bump only for package @coveo/headless
 
 # [2.12.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@2.11.2...@coveo/headless@2.12.0) (2023-04-13)
 

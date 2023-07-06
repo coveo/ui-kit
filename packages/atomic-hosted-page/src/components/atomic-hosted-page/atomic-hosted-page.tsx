@@ -1,26 +1,21 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {StringValue} from '@coveo/bueno';
+import {
+  PlatformEnvironment,
+  getOrganizationEndpoints as getOrganizationEndpointsHeadless,
+} from '@coveo/headless';
 import {Component, ComponentInterface, Method, Element} from '@stencil/core';
+import {
+  InitializationOptions,
+  extractPlatformUrl,
+  validateOptions,
+} from '../utils/options-utils';
 import {processHostedPage} from './hosted-pages';
 
-interface AtomicHostedPageInitializationOptions {
+interface AtomicHostedPageInitializationOptions extends InitializationOptions {
   /**
    * The unique identifier of the hosted page.
    */
   pageId: string;
-  /**
-   * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
-   */
-  organizationId: string;
-  /**
-   * The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
-   */
-  accessToken: string;
-  /**
-   * The Plaform URL to use. (e.g., https://platform.cloud.coveo.com)
-   * The platformUrl() helper method can be useful to know what url is available.
-   * @defaultValue `https://platform.cloud.coveo.com`
-   */
-  platformUrl?: string;
 }
 
 /**
@@ -36,25 +31,16 @@ export class AtomicHostedPage implements ComponentInterface {
   @Element() private element!: HTMLElement;
 
   private validateOptions(opts: AtomicHostedPageInitializationOptions) {
-    try {
-      new Schema({
-        organizationId: new StringValue({required: true, emptyAllowed: false}),
-        pageId: new StringValue({required: true, emptyAllowed: false}),
-        accessToken: new StringValue({required: true, emptyAllowed: false}),
-        platformUrl: new StringValue({required: false, emptyAllowed: false}),
-      }).validate(opts);
-    } catch (e) {
-      console.error(e);
-    }
+    validateOptions(opts, {
+      pageId: new StringValue({required: true, emptyAllowed: false}),
+    });
   }
 
   @Method() public async initialize(
     options: AtomicHostedPageInitializationOptions
   ) {
     this.validateOptions(options);
-    const platformUrl =
-      options.platformUrl || 'https://platform.cloud.coveo.com';
-
+    const platformUrl = extractPlatformUrl(options);
     try {
       const pageResponse = await fetch(
         `${platformUrl}/rest/organizations/${options.organizationId}/hostedpages/${options.pageId}`,
@@ -69,5 +55,17 @@ export class AtomicHostedPage implements ComponentInterface {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  /**
+   * Returns the unique, organization-specific endpoint(s)
+   * @param {string} organizationId
+   * @param {'prod'|'hipaa'|'staging'|'dev'} [env=Prod]
+   */
+  @Method() public async getOrganizationEndpoints(
+    organizationId: string,
+    env: PlatformEnvironment = 'prod'
+  ) {
+    return getOrganizationEndpointsHeadless(organizationId, env);
   }
 }

@@ -1,4 +1,4 @@
-import {AnyAction} from 'redux';
+import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
 import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
@@ -147,7 +147,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       this.processQueryErrorOrContinue(fetched) ??
       (await this.processQueryCorrectionsOrContinue(fetched)) ??
       (await this.processQueryTriggersOrContinue(fetched)) ??
-      this.processSuccessReponse(fetched)
+      this.processSuccessResponse(fetched)
     );
   }
 
@@ -263,7 +263,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     };
   }
 
-  private processSuccessReponse(
+  private processSuccessResponse(
     fetched: FetchedResponse
   ): ValidReturnTypeFromProcessingStep<RejectionType> {
     this.dispatch(snapshot(extractHistory(this.getState())));

@@ -54,13 +54,13 @@ export default class QuanticResultAction extends LightningElement {
   _selected;
   /** @type {boolean} */
   _loading;
-  
+
   /**
    * Specifies whether the result action button is in selected state or not.
    * @api
    * @type {boolean}
    */
-  @api 
+  @api
   get selected() {
     return this._selected;
   }
@@ -73,7 +73,7 @@ export default class QuanticResultAction extends LightningElement {
    * @api
    * @type {boolean}
    */
-  @api 
+  @api
   get loading() {
     return this._loading;
   }
@@ -118,7 +118,7 @@ export default class QuanticResultAction extends LightningElement {
   };
 
   /**
-   * Dispatches a custon event.
+   * Dispatches a custom event.
    */
   handleClick(event) {
     event.stopPropagation();

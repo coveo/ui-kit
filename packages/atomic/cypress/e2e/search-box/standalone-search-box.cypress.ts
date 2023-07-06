@@ -29,7 +29,10 @@ describe('Standalone Search Box Test Suites', () => {
       .init();
   }
 
-  function setupStandardSearchBox() {
+  function setupStandardSearchBoxAfterStandaloneRedirect() {
+    // TODO (KIT-2435): Explore a better way to wait for standalone redirect
+    cy.wait(1000); // Flakiness workaround to wait after clicking in standalone search box
+    // TODO (KIT-2356): Fails in Cypress v12 @ withRedirection()
     new TestFixture().withRedirection().with(addSearchBox()).init();
   }
 
@@ -43,7 +46,7 @@ describe('Standalone Search Box Test Suites', () => {
 
   it('should redirect to the trigger url when there is a redirect trigger', () => {
     const url = 'https://platformstg.cloud.coveo.com';
-    setupStandaloneSearchBox();
+    setupStandaloneSearchBox({url});
     SearchBoxSelectors.inputBox().type('redirect testing');
     SearchBoxSelectors.submitButton().click();
     cy.location('href').should('contain', url);
@@ -56,7 +59,7 @@ describe('Standalone Search Box Test Suites', () => {
       setupStandaloneSearchBox();
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.submitButton().click();
-      setupStandardSearchBox();
+      setupStandardSearchBoxAfterStandaloneRedirect();
       SearchBoxSelectors.inputBox().should('have.value', query);
       cy.expectSearchEvent('searchFromLink').then((analyticsBody) => {
         expect(analyticsBody).to.have.property('queryText', query);
@@ -70,7 +73,7 @@ describe('Standalone Search Box Test Suites', () => {
       setupStandaloneSearchBox();
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.querySuggestions().eq(0).click();
-      setupStandardSearchBox();
+      setupStandardSearchBoxAfterStandaloneRedirect();
     });
 
     assertHasText(query);
@@ -83,7 +86,9 @@ describe('Standalone Search Box Test Suites', () => {
       setupStandaloneSearchBox({enableQuerySyntax: true});
       SearchBoxSelectors.inputBox().type(query);
       SearchBoxSelectors.submitButton().click();
+      cy.wait(1000); // Flakiness workaround to wait after clicking in standalone search box
       new TestFixture()
+        // TODO (KIT-2356): Fails in Cypress v12 @ withRedirection()
         .withRedirection()
         .with(addSearchBox({props: {'enable-query-syntax': ''}}))
         .with(

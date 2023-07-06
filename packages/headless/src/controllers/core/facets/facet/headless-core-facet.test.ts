@@ -1,18 +1,17 @@
-import {
-  configuration,
-  facetSearchSet,
-  facetSet,
-  facetOptions,
-} from '../../../../app/reducers';
+import {configuration} from '../../../../app/common-reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
   registerFacet,
   toggleSelectFacetValue,
+  toggleExcludeFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
 } from '../../../../features/facets/facet-set/facet-set-actions';
+import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice';
 import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
 import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 import {SearchAppState} from '../../../../state/search-app-state';
@@ -147,9 +146,43 @@ describe('facet', () => {
       const facetValue = buildMockFacetValue({value: 'TED'});
       facet.toggleSelect(facetValue);
 
+      expect(engine.actions).toContainEqual(updateFacetOptions());
+    });
+  });
+
+  describe('#toggleExclude', () => {
+    it('dispatches a #toggleExclude action with the passed facet value', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
       expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
+        toggleExcludeFacetValue({facetId, selection: facetValue})
       );
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(updateFacetOptions());
+    });
+  });
+
+  describe('#toggleExclude', () => {
+    it('dispatches a #toggleExclude action with the passed facet value', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(
+        toggleExcludeFacetValue({facetId, selection: facetValue})
+      );
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleExclude(facetValue);
+
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -165,9 +198,7 @@ describe('facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   }
 
@@ -217,9 +248,7 @@ describe('facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.deselectAll();
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -257,9 +286,7 @@ describe('facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.sortBy('score');
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -329,9 +356,7 @@ describe('facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.showMoreValues();
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 
@@ -362,7 +387,7 @@ describe('facet', () => {
   });
 
   describe('#showLessValues', () => {
-    it('sets the number of values to the origial number', () => {
+    it('sets the number of values to the original number', () => {
       const originalNumberOfValues = 8;
       options.numberOfValues = originalNumberOfValues;
 
@@ -412,9 +437,7 @@ describe('facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.showLessValues();
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   });
 

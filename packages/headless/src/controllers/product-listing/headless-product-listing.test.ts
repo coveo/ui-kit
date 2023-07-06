@@ -1,5 +1,5 @@
-import {Action} from 'redux';
-import {configuration} from '../../app/reducers';
+import {Action} from '@reduxjs/toolkit';
+import {configuration} from '../../app/common-reducers';
 import {
   fetchProductListing,
   setAdditionalFields,

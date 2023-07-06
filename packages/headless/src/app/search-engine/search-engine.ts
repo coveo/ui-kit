@@ -1,5 +1,6 @@
+import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {StateFromReducersMapObject} from 'redux';
+import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
@@ -17,8 +18,12 @@ import {
   updateSearchConfiguration,
   UpdateSearchConfigurationActionCreatorPayload,
 } from '../../features/configuration/configuration-actions';
+import {debugReducer as debug} from '../../features/debug/debug-slice';
+import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
 import {executeSearch} from '../../features/search/search-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
+import {searchReducer as search} from '../../features/search/search-slice';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {
@@ -28,7 +33,6 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {debug, pipeline, search, searchHub} from '../reducers';
 import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {jwtReducer} from './jwt-reducer';
@@ -106,10 +110,12 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   validateConfiguration(options.configuration, logger);
 
   const searchAPIClient = createSearchAPIClient(options.configuration, logger);
+  const generatedAnswerClient = createGeneratedAnswerAPIClient(logger);
 
   const thunkArguments: SearchThunkExtraArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: searchAPIClient,
+    streamingClient: generatedAnswerClient,
   };
 
   const augmentedOptions: EngineOptions<SearchEngineReducers> = {
@@ -187,5 +193,11 @@ function createSearchAPIClient(
     postprocessQuerySuggestResponseMiddleware:
       search?.preprocessQuerySuggestResponseMiddleware ||
       NoopPostprocessQuerySuggestResponseMiddleware,
+  });
+}
+
+function createGeneratedAnswerAPIClient(logger: Logger) {
+  return new GeneratedAnswerAPIClient({
+    logger,
   });
 }

@@ -1,17 +1,12 @@
+import {configuration} from '../../../../app/common-reducers';
 import {CoreEngine} from '../../../../app/engine';
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  facetOptions,
-  configuration,
-  search,
-} from '../../../../app/reducers';
 import {
   disableFacet,
   enableFacet,
   updateFacetOptions,
 } from '../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {
   deselectAllCategoryFacetValues,
   registerCategoryFacet,
@@ -22,11 +17,14 @@ import {
 import {categoryFacetResponseSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
 import {categoryFacetRequestSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {partitionIntoParentsAndValues} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
+import {searchReducer as search} from '../../../../features/search/search-slice';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
@@ -59,6 +57,9 @@ export interface CategoryFacetProps {
   options: CategoryFacetOptions;
 }
 
+/**
+ * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values hierarchically.
+ */
 export interface CategoryFacet extends CoreCategoryFacet {
   /**
    * Provides methods to search the facet's values.
@@ -305,17 +306,17 @@ export function buildCoreCategoryFacet(
       dispatch(
         toggleSelectCategoryFacetValue({facetId, selection, retrieveCount})
       );
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     deselectAll() {
       dispatch(deselectAllCategoryFacetValues(facetId));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       dispatch(updateCategoryFacetSortCriterion({facetId, criterion}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     isSortedBy(criterion: CategoryFacetSortCriterion) {
@@ -329,14 +330,14 @@ export function buildCoreCategoryFacet(
       const numberOfValues = values.length + increment;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     showLessValues() {
       const {numberOfValues} = options;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     enable() {

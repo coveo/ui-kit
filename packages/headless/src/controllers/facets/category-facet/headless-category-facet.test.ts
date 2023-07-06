@@ -1,9 +1,4 @@
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  configuration,
-  search,
-} from '../../../app/reducers';
+import {configuration} from '../../../app/common-reducers';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
   registerCategoryFacet,
@@ -12,15 +7,18 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/interfaces/request';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions';
+import {searchReducer as search} from '../../../features/search/search-slice';
 import {SearchAppState} from '../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
@@ -205,7 +203,7 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retireveCount', () => {
+    it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retrieveCount', () => {
       options.numberOfValues = 10;
       initCategoryFacet();
       const selection = buildMockCategoryFacetValue({value: 'A'});
@@ -223,9 +221,7 @@ describe('category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('executes a search', () => {
@@ -249,9 +245,7 @@ describe('category facet', () => {
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('executes a search', () => {
@@ -409,9 +403,7 @@ describe('category facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       categoryFacet.showMoreValues();
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches #fetchFacetValues', () => {
@@ -434,9 +426,7 @@ describe('category facet', () => {
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches #fetchFacetValues', () => {
@@ -461,9 +451,7 @@ describe('category facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       categoryFacet.sortBy('alphanumeric');
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches #executeSearch', () => {

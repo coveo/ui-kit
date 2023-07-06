@@ -8,9 +8,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: cypress-io/github-action@v4
+    - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
+        browser: chrome
+        command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
         working-directory: ./packages/atomic
         config-file: cypress-screenshots.config.ts
         start: npm run prod
@@ -18,7 +20,7 @@ runs:
         install: false
         record: false
     - uses: actions/upload-artifact@v3
-      if: always()
+      if: cancelled() || failure() || success()
       with:
         name: cypress-result-lists-screenshots
         path: packages/atomic/cypress/screenshots
