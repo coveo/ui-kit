@@ -11,7 +11,6 @@ import {
   customSort,
 } from '../../../controllers/core/facets/_common/facet-option-definitions';
 import {validatePayload} from '../../../utils/validate-payload';
-import {SpecificSortCriteriaExplicitAlphanumeric} from '../facet-api/request';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {facetValueDefinition} from './facet-set-validate-payload';
 import {FacetSortCriterion} from './interfaces/request';
@@ -61,7 +60,7 @@ export interface RegisterFacetActionCreatorPayload {
    *
    * @defaultValue `automatic`
    */
-  sortCriteria?: FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric;
+  sortCriteria?: FacetSortCriterion;
 
   /**
    * Specifies an explicit list of `allowedValues` in the Search API request.

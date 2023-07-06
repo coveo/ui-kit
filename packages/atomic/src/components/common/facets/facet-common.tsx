@@ -1,6 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {AnyFacetValuesCondition, AnyFacetValueRequest} from '@coveo/headless';
-import {SpecificSortCriteriaExplicitAlphanumeric} from '@coveo/headless/dist/definitions/features/facets/facet-api/request';
 import {VNode, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
@@ -265,7 +264,7 @@ interface FacetCommonOptions {
   dependenciesManager: FacetConditionsManager;
   facet: Facet;
   facetId: string;
-  sortCriteria: FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric;
+  sortCriteria: FacetSortCriterion;
   withSearch: boolean;
 }
 
@@ -291,9 +290,7 @@ export class FacetCommon {
   public dependenciesManager: FacetConditionsManager;
   private facet: Facet;
   private facetId: string;
-  private sortCriteria:
-    | FacetSortCriterion
-    | SpecificSortCriteriaExplicitAlphanumeric;
+  private sortCriteria: FacetSortCriterion;
   private withSearch: boolean;
 
   private resultIndexToFocusOnShowMore = 0;
