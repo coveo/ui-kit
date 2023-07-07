@@ -276,10 +276,6 @@ export const defaultFacetOptions: FacetOptionalParameters = {
 function buildFacetRequest(
   config: RegisterFacetActionCreatorPayload
 ): FacetRequest {
-  const sortCriteria = config.sortCriteria ?? defaultFacetOptions.sortCriteria;
-
-  /* The Search API does not support 'alphanumericDescending' as a string value and instead relies on a new sort mechanism to specify sort order.
-  At the moment, this is only supported for alphanumeric sorting, but will likely transition to this pattern for other types in the future. */
   return {
     ...defaultFacetOptions,
     type: 'specific',
@@ -288,13 +284,6 @@ function buildFacetRequest(
     isFieldExpanded: false,
     preventAutoSelect: false,
     ...config,
-    sortCriteria:
-      sortCriteria === 'alphanumericDescending'
-        ? {
-            type: 'alphanumeric',
-            order: 'descending',
-          }
-        : sortCriteria,
   };
 }
 
