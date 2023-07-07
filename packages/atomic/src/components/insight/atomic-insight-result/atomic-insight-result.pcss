@@ -24,8 +24,12 @@ atomic-result-section-children {
   }
 }
 
-:host(.firstInsightResultWithActionBar) {
+:host(:first-of-type) {
   .with-sections {
     @apply pt-8;
+  }
+
+  atomic-insight-result-action-bar {
+    @apply top-0;
   }
 }

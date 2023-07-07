@@ -123,30 +123,6 @@ export class AtomicInsightResult {
       .join('');
   }
 
-  private get resultActionBar() {
-    return this.host.shadowRoot?.querySelector(
-      'atomic-insight-result-action-bar'
-    );
-  }
-
-  private get resultActions() {
-    return this.host.shadowRoot?.querySelectorAll(
-      'atomic-insight-result-action'
-    );
-  }
-
-  private get firstChildActionBar() {
-    return this.firstInsightResult?.shadowRoot?.querySelector(
-      'atomic-insight-result-action-bar'
-    );
-  }
-
-  private get firstInsightResult() {
-    return this.host.parentElement?.querySelectorAll(
-      'atomic-insight-result'
-    )?.[0];
-  }
-
   public render() {
     return (
       <Host class={resultComponentClass}>
@@ -165,10 +141,6 @@ export class AtomicInsightResult {
   public componentDidLoad() {
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
-    }
-    if (this.resultActionBar && this.resultActions?.length) {
-      this.firstChildActionBar?.classList.add('firstActionBarElement');
-      this.firstInsightResult?.classList.add('firstInsightResultWithActionBar');
     }
     applyFocusVisiblePolyfill(this.host);
   }
