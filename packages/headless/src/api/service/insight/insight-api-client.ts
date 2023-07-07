@@ -3,6 +3,7 @@ import {AsyncThunkOptions} from '../../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {PlatformClient} from '../../platform-client';
+import {buildAPIResponseFromErrorOrThrow} from '../../platform-client-error-response';
 import {PreprocessRequest} from '../../preprocess-request';
 import {QuerySuggestSuccessResponse} from '../../search/query-suggest/query-suggest-response';
 import {
@@ -10,7 +11,6 @@ import {
   SearchOptions,
   shimResponse,
 } from '../../search/search-api-client';
-import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {SearchResponseSuccess} from '../../search/search/search-response';
 import {
   buildGetInsightInterfaceConfigRequest,

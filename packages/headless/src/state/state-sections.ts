@@ -26,6 +26,7 @@ import {InsightConfigurationState} from '../features/insight-configuration/insig
 import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {PaginationState} from '../features/pagination/pagination-state';
+import {PlacementSetState} from '../features/placement-set/placement-set-state';
 import {ProductListingState} from '../features/product-listing/product-listing-state';
 import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
 import {QuerySetState} from '../features/query-set/query-set-state';
@@ -380,4 +381,8 @@ export interface AttachedResultsSection {
    * The properties related to pagination.
    */
   attachedResults: AttachedResultsState;
+}
+
+export interface PlacementSection {
+  placement: PlacementSetState;
 }

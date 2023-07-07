@@ -2,6 +2,7 @@ import {Logger} from 'pino';
 import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
 import {ProductListingAppState} from '../../../state/product-listing-app-state';
 import {PlatformClient} from '../../platform-client';
+import {buildAPIResponseFromErrorOrThrow} from '../../platform-client-error-response';
 import {PreprocessRequest} from '../../preprocess-request';
 import {FacetSearchRequest} from '../../search/facet-search/facet-search-request';
 import {FacetSearchResponse} from '../../search/facet-search/facet-search-response';
@@ -9,7 +10,6 @@ import {
   FacetSearchAPIClient,
   SearchAPIClient,
 } from '../../search/search-api-client';
-import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {
   buildProductListingRequest,
   ProductListingRequest,

@@ -10,7 +10,8 @@ export type PlatformClientOrigin =
   | 'searchApiFetch'
   | 'insightApiFetch'
   | 'caseAssistApiFetch'
-  | 'commerceApiFetch';
+  | 'commerceApiFetch'
+  | 'commerceUnifiedApiFetch';
 
 export interface RequestMetadata {
   /**

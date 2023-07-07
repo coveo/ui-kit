@@ -5,6 +5,7 @@ import {emptyQuestionAnswer} from '../../features/search/search-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {pickNonBaseParams, unwrapError} from '../api-client-utils';
 import {PlatformClient} from '../platform-client';
+import {buildAPIResponseFromErrorOrThrow} from '../platform-client-error-response';
 import {BaseParam} from '../platform-service-params';
 import {APICallsQueue} from './api-calls-queue';
 import {FacetSearchRequest} from './facet-search/facet-search-request';
@@ -29,10 +30,7 @@ import {
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from './search-api-client-middleware';
-import {
-  SearchAPIErrorWithStatusCode,
-  buildAPIResponseFromErrorOrThrow,
-} from './search-api-error-response';
+import {SearchAPIErrorWithStatusCode} from './search-api-error-response';
 import {baseSearchRequest} from './search-api-params';
 import {SearchOrigin} from './search-metadata';
 import {SearchRequest} from './search/search-request';

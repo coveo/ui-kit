@@ -2,9 +2,9 @@ import {AsyncThunkOptions} from '../../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {CaseAssistAppState} from '../../../state/case-assist-app-state';
 import {PlatformClient} from '../../platform-client';
+import {buildAPIResponseFromErrorOrThrow} from '../../platform-client-error-response';
 import {getHtml, HtmlAPIClientOptions} from '../../search/html/html-api-client';
 import {HtmlRequest} from '../../search/html/html-request';
-import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {
   buildGetCaseClassificationsRequest,
   GetCaseClassificationsRequest,
