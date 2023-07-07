@@ -345,7 +345,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const {usesMeasurementProtocol = false} = this.eventTypeMapping[eventType] || {};
 
         const addTrackingIdStep: ProcessPayloadStep = (currentPayload) =>
-            this.setTrackingIdFromContextWebsiteIfTrackingIdNotPresent(currentPayload);
+            this.setTrackingIdIfTrackingIdNotPresent(currentPayload);
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) =>
             this.removeEmptyPayloadValues(currentPayload, eventType);
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload, eventType);
@@ -625,14 +625,25 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         }
     }
 
-    private setTrackingIdFromContextWebsiteIfTrackingIdNotPresent(payload: IRequestPayload): IRequestPayload {
-        const {trackingId, custom, ...rest} = payload;
-        if (!trackingId && custom && isObject(custom) && 'context_website' in custom) {
-            rest['trackingId'] = custom.context_website;
-            return {custom: custom, ...rest};
-        } else {
+    private setTrackingIdIfTrackingIdNotPresent(payload: IRequestPayload): IRequestPayload {
+        const {trackingId, ...rest} = payload;
+        if (trackingId) {
             return payload;
         }
+
+        if (rest.hasOwnProperty('custom') && isObject(rest.custom)) {
+            if (rest.custom.hasOwnProperty('context_website') || rest.custom.hasOwnProperty('siteName')) {
+                rest['trackingId'] = rest.custom.context_website || rest.custom.siteName;
+            }
+        }
+
+        if (rest.hasOwnProperty('customData') && isObject(rest.customData)) {
+            if (rest.customData.hasOwnProperty('context_website') || rest.customData.hasOwnProperty('siteName')) {
+                rest['trackingId'] = rest.customData.context_website || rest.customData.siteName;
+            }
+        }
+
+        return rest;
     }
 
     private limit(input: string, length: number): string | undefined | null {

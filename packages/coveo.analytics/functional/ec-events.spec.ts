@@ -538,7 +538,7 @@ describe('ec events', () => {
         });
     });
 
-    it('should be able to set trackingId with context_website', async () => {
+    it('should be able to set trackingId with context_website for collect event', async () => {
         const contextWebsite = 'tracksite';
         await coveoua('set', 'custom', {context_website: contextWebsite});
         await coveoua('send', 'pageview');
@@ -551,6 +551,17 @@ describe('ec events', () => {
             trackingId: contextWebsite,
             context_website: contextWebsite,
         });
+    });
+
+    it('should be able to set trackingId with context_website for non-collect event', async () => {
+        const contextWebsite = 'tracksite';
+        await coveoua('set', 'custom', {context_website: contextWebsite});
+        await coveoua('send', 'view');
+
+        const [event] = getParsedBody();
+
+        expect(event).toHaveProperty('trackingId', contextWebsite);
+        expect(event).toHaveProperty('customData.context_website', contextWebsite);
     });
 
     it('context_website does not overwrite trackingId', async () => {
@@ -567,6 +578,49 @@ describe('ec events', () => {
             t: 'pageview',
             trackingId: trackingId,
             context_website: contextWebsite,
+        });
+    });
+
+    it('should be able to set trackingId with siteName on collect event', async () => {
+        const website = 'tracksite';
+        await coveoua('set', 'custom', {siteName: website});
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            trackingId: website,
+            sitename: website,
+        });
+    });
+
+    it('should be able to set trackingId with siteName on non-collect event', async () => {
+        const website = 'tracksite';
+        await coveoua('set', 'custom', {siteName: website});
+        await coveoua('send', 'view');
+
+        const [event] = getParsedBody();
+
+        expect(event).toHaveProperty('trackingId', website);
+        expect(event).toHaveProperty('customData.sitename', website);
+    });
+
+    it('siteName does not overwrite trackingId', async () => {
+        const website = 'tracksite';
+        const trackingId = 'trackingid';
+        await coveoua('set', 'custom', {siteName: website});
+        await coveoua('set', 'trackingId', trackingId);
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            trackingId: trackingId,
+            sitename: website,
         });
     });
 
