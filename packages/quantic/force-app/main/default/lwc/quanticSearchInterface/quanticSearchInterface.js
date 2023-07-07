@@ -82,6 +82,9 @@ export default class QuanticSearchInterface extends LightningElement {
   /** @type {boolean} */
   hasRendered = false;
 
+  /** @type {boolean} */
+  ariaLiveEventsBound = false;
+
   connectedCallback() {
     loadDependencies(this).then(() => {
       if (!getHeadlessBindings(this.engineId)?.engine) {
@@ -124,6 +127,13 @@ export default class QuanticSearchInterface extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeUrlManager?.();
     window.removeEventListener('hashchange', this.onHashChange);
+    if (this.ariaLiveEventsBound) {
+      this.removeEventListener('arialivemessage', this.handleAriaLiveMessage);
+      this.removeEventListener(
+        'registerregion',
+        this.handleRegisterAriaLiveRegion
+      );
+    }
   }
 
   /**
@@ -187,6 +197,7 @@ export default class QuanticSearchInterface extends LightningElement {
       'registerregion',
       this.handleRegisterAriaLiveRegion.bind(this)
     );
+    this.ariaLiveEventsBound = true;
   }
 
   handleAriaLiveMessage(event) {

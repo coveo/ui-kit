@@ -66,6 +66,14 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
+  private get loadingClasses() {
+    return 'my-3';
+  }
+
+  private get contentClasses() {
+    return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
+  }
+
   private renderContent() {
     return (
       <div part="generated-content">
@@ -116,23 +124,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   public render() {
+    const {isLoading} = this.generatedAnswerState;
     if (this.shouldBeHidden) {
       return null;
     }
     return (
       <aside
-        class="bg-background border-neutral rounded-lg p-6 text-on-background mt-0 mx-auto mb-4"
+        class={`mx-auto ${
+          isLoading ? this.loadingClasses : this.contentClasses
+        }`}
         part="container"
       >
-        <article>
-          {this.generatedAnswerState.isLoading ? (
-            <TypingLoader
-              loadingLabel={this.bindings.i18n.t('generated-answer-loading')}
-            />
-          ) : (
-            this.renderContent()
-          )}
-        </article>
+        <article>{isLoading ? <TypingLoader /> : this.renderContent()}</article>
       </aside>
     );
   }
