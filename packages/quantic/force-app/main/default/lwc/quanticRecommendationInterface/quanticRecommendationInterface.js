@@ -55,6 +55,10 @@ export default class QuanticRecommendationInterface extends LightningElement {
   engineOptions;
   /** @type {boolean} */
   initialized = false;
+  /** @type {boolean} */
+  hasRendered = false;
+  /** @type {boolean} */
+  ariaLiveEventsBound = false;
 
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.recommendation).then(() => {
@@ -86,6 +90,23 @@ export default class QuanticRecommendationInterface extends LightningElement {
     });
   }
 
+  renderedCallback() {
+    if (!this.hasRendered && this.querySelector('c-quantic-aria-live')) {
+      this.bindAriaLiveEvents();
+    }
+    this.hasRendered = true;
+  }
+
+  disconnectedCallback() {
+    if (this.ariaLiveEventsBound) {
+      this.removeEventListener('arialivemessage', this.handleAriaLiveMessage);
+      this.removeEventListener(
+        'registerregion',
+        this.handleRegisterAriaLiveRegion
+      );
+    }
+  }
+
   /**
    * @param {RecommendationEngine} engine
    */
@@ -99,4 +120,39 @@ export default class QuanticRecommendationInterface extends LightningElement {
     engine.dispatch(this.actions.getRecommendations());
     this.initialized = true;
   };
+
+  bindAriaLiveEvents() {
+    this.template.addEventListener(
+      'arialivemessage',
+      this.handleAriaLiveMessage.bind(this)
+    );
+    this.template.addEventListener(
+      'registerregion',
+      this.handleRegisterAriaLiveRegion.bind(this)
+    );
+    this.ariaLiveEventsBound = true;
+  }
+
+  handleAriaLiveMessage(event) {
+    /** @type {import('quanticAriaLive/quanticAriaLive').IQuanticAriaLive} */
+    const ariaLiveRegion = this.querySelector('c-quantic-aria-live');
+    if (ariaLiveRegion) {
+      ariaLiveRegion.updateMessage(
+        event.detail.regionName,
+        event.detail.message,
+        event.detail.assertive
+      );
+    }
+  }
+
+  handleRegisterAriaLiveRegion(event) {
+    /** @type {import('quanticAriaLive/quanticAriaLive').IQuanticAriaLive} */
+    const ariaLiveRegion = this.querySelector('c-quantic-aria-live');
+    if (ariaLiveRegion) {
+      ariaLiveRegion.registerRegion(
+        event.detail.regionName,
+        event.detail.assertive
+      );
+    }
+  }
 }

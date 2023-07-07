@@ -1,3 +1,4 @@
+import loadingRecommendations from '@salesforce/label/c.quantic_LoadingRecommendations';
 import invalidPositiveIntegerProperty from '@salesforce/label/c.quantic_InvalidPositiveIntegerProperty';
 import slide from '@salesforce/label/c.quantic_Slide';
 import topDocumentsForYou from '@salesforce/label/c.quantic_TopDocumentsForYou';
@@ -7,7 +8,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import {I18nUtils, AriaLiveRegion} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import carouselLayout from './templates/carousel.html';
@@ -39,6 +40,7 @@ export default class QuanticRecommendationList extends LightningElement {
     topDocumentsForYou,
     slide,
     invalidPositiveIntegerProperty,
+    loadingRecommendations
   };
 
   /**
@@ -129,6 +131,9 @@ export default class QuanticRecommendationList extends LightningElement {
   headless;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  loadingAriaLiveMessage;
+
   /** @type {number} */
   _recommendationsPerRow = 3;
 
@@ -145,6 +150,10 @@ export default class QuanticRecommendationList extends LightningElement {
    * @param {RecommendationEngine} engine
    */
   initialize = (engine) => {
+    this.loadingAriaLiveMessage = AriaLiveRegion(
+      'loading recommendations',
+      this
+    );
     this.headless = getHeadlessBundle(this.engineId);
     this.recommendationList = this.headless.buildRecommendationList(engine, {
       options: {
@@ -190,6 +199,9 @@ export default class QuanticRecommendationList extends LightningElement {
       this.recommendationList?.state?.isLoading &&
       !this.recommendationList?.state?.recommendations?.length &&
       !this.recommendationList?.state?.error;
+    if (this.showPlaceholder) {
+      this.loadingAriaLiveMessage.dispatchMessage(this.labels.loadingRecommendations);
+    }
   }
 
   setRecommendationWidth() {
