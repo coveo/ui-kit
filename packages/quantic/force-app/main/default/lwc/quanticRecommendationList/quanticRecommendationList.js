@@ -1,4 +1,4 @@
-import loadingRecommendations from '@salesforce/label/c.quantic_LoadingRecommendationss';
+import loadingRecommendations from '@salesforce/label/c.quantic_LoadingRecommendations';
 import invalidPositiveIntegerProperty from '@salesforce/label/c.quantic_InvalidPositiveIntegerProperty';
 import slide from '@salesforce/label/c.quantic_Slide';
 import topDocumentsForYou from '@salesforce/label/c.quantic_TopDocumentsForYou';
