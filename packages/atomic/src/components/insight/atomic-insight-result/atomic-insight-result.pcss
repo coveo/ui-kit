@@ -6,11 +6,15 @@ atomic-result-section-children {
   padding-left: 1rem;
 }
 
-:host(.resultHovered) {
+:host(:hover) {
   @apply relative;
 
   .with-sections {
     background-color: var(--atomic-neutral-lighter);
+  }
+
+  atomic-insight-result-action-bar {
+    @apply visible;
   }
 }
 
