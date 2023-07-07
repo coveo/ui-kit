@@ -7,6 +7,7 @@ export interface RefineToggleSelector extends ComponentSelector {
   refineToggleIcon: () => CypressSelector;
   refineModalCloseButton: () => CypressSelector;
   refineModalTitle: () => CypressSelector;
+  facetManager: () => CypressSelector;
   modal: () => CypressSelector;
   modalContent: () => CypressSelector;
   modalFooter: () => CypressSelector;
@@ -37,6 +38,8 @@ export const RefineToggleSelectors: RefineToggleSelector = {
     RefineToggleSelectors.get().find('.refine-modal__action'),
   refineModalTitle: () =>
     RefineToggleSelectors.get().find('.refine-modal__title'),
+  facetManager: () =>
+    RefineToggleSelectors.get().find('c-quantic-facet-manager'),
   modal: () => RefineToggleSelectors.get().find('.modal'),
   modalContent: () =>
     RefineToggleSelectors.get().find('c-quantic-refine-modal-content'),

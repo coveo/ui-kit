@@ -1,0 +1,43 @@
+.carousel__container {
+  align-items: center;
+}
+
+.carousel__slides {
+  overflow: hidden;
+  flex: 1;
+}
+
+.carousel__indicators-container {
+  justify-content: center;
+}
+
+.carousel__indicator {
+  width: 3.25rem;
+  height: 0.25rem;
+  border: 0;
+  border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+  background-color: var(--lwc-brandLightActive, #e3e5ed);
+  transition: 0.2s;
+}
+
+.carousel__indicator--active {
+  background-color: var(--lwc-brandPrimary, #1b96ff);
+}
+
+.carousel__indicator:hover {
+  background-color: var(--lwc-brandPrimaryActive, #0176d3);
+}
+
+.carousel__previous-navigation {
+  left: 0;
+  transform: translateX(-60%);
+}
+
+.carousel__next-navigation {
+  right: 0;
+  transform: translateX(60%);
+}
+
+li {
+  display: contents;
+}

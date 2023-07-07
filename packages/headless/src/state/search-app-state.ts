@@ -35,6 +35,7 @@ import {
   TabSection,
   StaticFilterSection,
   ExcerptLengthSection,
+  AutomaticFacetSection,
   GeneratedAnswerSection,
 } from './state-sections';
 
@@ -42,6 +43,7 @@ export type SearchParametersState = FacetSection &
   DateFacetSection &
   NumericFacetSection &
   CategoryFacetSection &
+  AutomaticFacetSection &
   FacetOptionsSection &
   QuerySection &
   TabSection &

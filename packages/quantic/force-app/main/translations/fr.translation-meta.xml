@@ -644,4 +644,24 @@
         <label>Chargement des recommandations</label>
         <name>quantic_LoadingRecommendations</name>
     </customLabels>
+    <customLabels>
+        <label>La valeur de la propriété {{0}} doit être un nombre entier supérieur à 0.</label>
+        <name>quantic_InvalidPositiveIntegerProperty</name>
+    </customLabels>
+    <customLabels>
+        <label>{{0}} de {{1}}</label>
+        <name>quantic_XOfY</name>
+    </customLabels>
+    <customLabels>
+        <label>Les meilleurs documents pour vous</label>
+        <name>quantic_TopDocumentsForYou</name>
+    </customLabels>
+    <customLabels>
+        <label>Carrousel</label>
+        <name>quantic_Carousel</name>
+    </customLabels>
+    <customLabels>
+        <label>Slide</label>
+        <name>quantic_Slide</name>
+    </customLabels>
 </Translations>

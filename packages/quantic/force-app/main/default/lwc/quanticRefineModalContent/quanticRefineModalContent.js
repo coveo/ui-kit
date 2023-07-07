@@ -3,17 +3,16 @@ import filters from '@salesforce/label/c.quantic_Filters';
 import QuanticCategoryFacet from 'c/quanticCategoryFacet';
 import QuanticDateFacet from 'c/quanticDateFacet';
 import QuanticFacet from 'c/quanticFacet';
-import {
-  getAllFacetsFromStore,
-  getHeadlessBundle,
-} from 'c/quanticHeadlessLoader';
-import {
-  initializeWithHeadless,
-  registerComponentForInit,
-} from 'c/quanticHeadlessLoader';
+import { getAllFacetsFromStore, getHeadlessBundle } from 'c/quanticHeadlessLoader';
+import { initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
 import QuanticNumericFacet from 'c/quanticNumericFacet';
 import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
-import {LightningElement, api} from 'lwc';
+import { LightningElement, api } from 'lwc';
+// @ts-ignore
+import disabledDynamicNavigationTemplate from './templates/disabledDynamicNavigation.html';
+// @ts-ignore
+import enabledDynamicNavigationTemplate from './templates/dynamicNavigation.html';
+
 
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -32,7 +31,7 @@ import {LightningElement, api} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-modal-content engine-id={engineId} hide-sort></c-quantic-refine-modal-content>
+ * <c-quantic-refine-modal-content engine-id={engineId} hide-sort disable-dynamic-navigation></c-quantic-refine-modal-content>
  */
 export default class QuanticRefineModalContent extends LightningElement {
   labels = {
@@ -52,6 +51,13 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @type {boolean}
    */
   @api hideSort;
+  /**
+   * Indicates whether to disable the dynamic navigation feature according to [the dynamic navigation experience](https://docs.coveo.com/en/3383/leverage-machine-learning/about-dynamic-navigation-experience-dne).
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api disableDynamicNavigation = false;
 
   /** @type {object} */
   data;
@@ -266,5 +272,12 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   setInitializationError() {
     this.hasInitializationError = true;
+  }
+
+  render() {
+    if (this.disableDynamicNavigation) {
+      return disabledDynamicNavigationTemplate;
+    }
+    return enabledDynamicNavigationTemplate;
   }
 }

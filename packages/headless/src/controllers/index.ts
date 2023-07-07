@@ -230,7 +230,10 @@ export {buildTab} from './tab/headless-tab';
 export type {
   FacetManagerPayload,
   FacetManagerState,
+  FacetManagerProps,
   FacetManager,
+  CoreFacetManager,
+  CoreFacetManagerState,
 } from './facet-manager/headless-facet-manager';
 export {buildFacetManager} from './facet-manager/headless-facet-manager';
 
@@ -403,6 +406,13 @@ export type {
 } from './field-suggestions/category-facet/headless-category-field-suggestions';
 
 export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';
+
+export type {
+  AutomaticFacet,
+  AutomaticFacetProps,
+  AutomaticFacetState,
+} from './facets/automatic-facet/headless-automatic-facet';
+export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
 
 export type {
   GeneratedAnswer,

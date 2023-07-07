@@ -19,6 +19,7 @@ interface RefineToggleOptions {
   fullScreen: boolean;
   hideSort: boolean;
   title: string;
+  disableDynamicNavigation: boolean;
 }
 
 const viewResultsLabel = (value: number) => {
@@ -76,6 +77,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager(false);
             Expect.displaySort(true);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -157,6 +159,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager();
             Expect.displaySort(true);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -219,6 +222,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager();
             Expect.displaySort(false);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -307,6 +311,39 @@ describe('quantic-refine-toggle', () => {
         });
       });
     });
+
+    describe('when the disableDynamicNavigation property is set to true', () => {
+      it('should not render facets in quantic facet manager', () => {
+        visitPage({disableDynamicNavigation: true});
+        addFacets();
+
+        cy.wait(InterceptAliases.Search).then((interception) => {
+          scope('when loading the page', () => {
+            Expect.displayRefineToggle(true);
+            Expect.displayRefineToggleIcon(true);
+            Expect.displayModal(false);
+            Expect.refineToggleContains(customRefineToggleLabel);
+            Expect.displayFiltersCountBadge(false);
+            Expect.refineToggleDisabled(false);
+          });
+
+          scope('when opening the refine modal', () => {
+            Actions.clickRefineButton();
+            Expect.displayModal(true);
+            Expect.displayRefineModalTitle(true);
+            Expect.refineModalTitleContains(customRefineModalTitle);
+            Expect.displayModalContent(true);
+            Expect.displaySort(true);
+            Expect.displayFacetManager(false);
+            Expect.displayModalFooter(true);
+            Expect.displayViewResultsButton(true);
+            Expect.viewResultsButtonContains(
+              viewResultsLabel(interception.response?.body.totalCount)
+            );
+          });
+        });
+      });
+    });
   });
 
   describe('when facets without inputs are used in the search interface', () => {
@@ -332,6 +369,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager();
             Expect.displaySort(true);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -394,6 +432,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager();
             Expect.displaySort(false);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -483,6 +522,39 @@ describe('quantic-refine-toggle', () => {
         });
       });
     });
+
+    describe('when the disableDynamicNavigation property is set to true', () => {
+      it('should not render facets in quantic facet manager', () => {
+        visitPage({disableDynamicNavigation: true});
+        addFacetsWithoutInputs();
+
+        cy.wait(InterceptAliases.Search).then((interception) => {
+          scope('when loading the page', () => {
+            Expect.displayRefineToggle(true);
+            Expect.displayRefineToggleIcon(true);
+            Expect.displayModal(false);
+            Expect.refineToggleContains(customRefineToggleLabel);
+            Expect.displayFiltersCountBadge(false);
+            Expect.refineToggleDisabled(false);
+          });
+
+          scope('when opening the refine modal', () => {
+            Actions.clickRefineButton();
+            Expect.displayModal(true);
+            Expect.displayRefineModalTitle(true);
+            Expect.refineModalTitleContains(customRefineModalTitle);
+            Expect.displayModalContent(true);
+            Expect.displaySort(true);
+            Expect.displayFacetManager(false);
+            Expect.displayModalFooter(true);
+            Expect.displayViewResultsButton(true);
+            Expect.viewResultsButtonContains(
+              viewResultsLabel(interception.response?.body.totalCount)
+            );
+          });
+        });
+      });
+    });
   });
 
   describe('when the fullScreen property is set to true', () => {
@@ -559,6 +631,7 @@ describe('quantic-refine-toggle', () => {
             Expect.displayRefineModalTitle(true);
             Expect.refineModalTitleContains(customRefineModalTitle);
             Expect.displayModalContent(true);
+            Expect.displayFacetManager();
             Expect.displaySort(true);
             Expect.displayModalFooter(true);
             Expect.displayViewResultsButton(true);
@@ -611,6 +684,7 @@ describe('quantic-refine-toggle', () => {
           Expect.displayRefineModalTitle(true);
           Expect.refineModalTitleContains(customRefineModalTitle);
           Expect.displayModalContent(true);
+          Expect.displayFacetManager(true);
           Expect.displaySort(true);
           Expect.displayModalFooter(true);
           Expect.displayViewResultsButton(true);
