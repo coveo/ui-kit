@@ -123,40 +123,6 @@ export class AtomicInsightResult {
       .join('');
   }
 
-  private handleMouseOver = () => {
-    this.resultActionBar?.classList.add('showActionBar');
-    this.host.classList.add('resultHovered');
-  };
-
-  private handleMouseOut = () => {
-    this.resultActionBar?.classList.remove('showActionBar');
-    this.host.classList.remove('resultHovered');
-  };
-
-  private get resultActionBar() {
-    return this.host.shadowRoot?.querySelector(
-      'atomic-insight-result-action-bar'
-    );
-  }
-
-  private get resultActions() {
-    return this.host.shadowRoot?.querySelectorAll(
-      'atomic-insight-result-action'
-    );
-  }
-
-  private get firstChildActionBar() {
-    return this.firstInsightResult?.shadowRoot?.querySelector(
-      'atomic-insight-result-action-bar'
-    );
-  }
-
-  private get firstInsightResult() {
-    return this.host.parentElement?.querySelectorAll(
-      'atomic-insight-result'
-    )?.[0];
-  }
-
   public render() {
     return (
       <Host class={resultComponentClass}>
@@ -176,19 +142,6 @@ export class AtomicInsightResult {
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
-    if (this.resultActionBar && this.resultActions?.length) {
-      this.firstChildActionBar?.classList.add('firstActionBarElement');
-      this.firstInsightResult?.classList.add('firstInsightResultWithActionBar');
-      this.host.addEventListener('mouseover', this.handleMouseOver);
-      this.host.addEventListener('mouseout', this.handleMouseOut);
-    }
     applyFocusVisiblePolyfill(this.host);
-  }
-
-  public disconnectedCallback() {
-    if (this.resultActionBar) {
-      this.host.removeEventListener('mouseover', this.handleMouseOver);
-      this.host.removeEventListener('mouseout', this.handleMouseOut);
-    }
   }
 }

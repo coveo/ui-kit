@@ -6,22 +6,29 @@ atomic-result-section-children {
   padding-left: 1rem;
 }
 
-:host(.resultHovered) {
-  @apply relative;
-
+:host(:hover) {
   .with-sections {
     background-color: var(--atomic-neutral-lighter);
+  }
+
+  atomic-insight-result-action-bar {
+    @apply visible;
   }
 }
 
 :host {
+  @apply relative;
   .with-sections {
     @apply p-6;
   }
 }
 
-:host(.firstInsightResultWithActionBar) {
+:host(:first-of-type) {
   .with-sections {
     @apply pt-8;
+  }
+
+  atomic-insight-result-action-bar {
+    @apply top-0;
   }
 }
