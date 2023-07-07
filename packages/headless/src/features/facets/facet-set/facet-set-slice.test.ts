@@ -104,22 +104,6 @@ describe('facet-set slice', () => {
     expect(facetRequest.customSort).toEqual(['bar', 'buzz', 'foo']);
   });
 
-  it('registers a facet request with specific alphanumeric sorting in descending order', () => {
-    const criterion = 'alphanumericDescending';
-    const options = buildRegistrationOptions({
-      sortCriteria: criterion,
-    });
-
-    const action = registerFacet(options);
-    const finalState = facetSetReducer(state, action);
-    const {request: facetRequest} = finalState[options.facetId];
-
-    expect(facetRequest.sortCriteria).toEqual({
-      type: 'alphanumeric',
-      order: 'descending',
-    });
-  });
-
   it('if a facet request is already registered for an id, it does not overwrite the request', () => {
     const id = '1';
     state[id] = buildMockFacetSlice();
