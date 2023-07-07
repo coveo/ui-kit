@@ -4,7 +4,8 @@ import QuanticViewedByCustomerBadge from '../quanticViewedByCustomerBadge';
 
 const viewedByCustomerLabel = 'Viewed by customer';
 const viewedByCustomerIconName = 'utility:profile_alt';
-const errorMessage = 'The c-quantic-viewed-by-customer-badge requires the result attribute to be set.';
+const errorMessage =
+  'The c-quantic-viewed-by-customer-badge requires the result attribute to be set.';
 
 jest.mock(
   '@salesforce/label/c.quantic_ViewedByCustomer',
@@ -63,7 +64,6 @@ describe('c-quantic-viewed-by-customer-badge', () => {
     });
 
     it('should show the component error and log an error message', async () => {
-      // @ts-ignore
       const element = createTestComponent({});
       await flushPromises();
 
@@ -72,15 +72,12 @@ describe('c-quantic-viewed-by-customer-badge', () => {
       );
 
       expect(errorComponent).not.toBeNull();
-      expect(consoleError).toHaveBeenCalledWith(
-        errorMessage
-      );
+      expect(consoleError).toHaveBeenCalledWith(errorMessage);
     });
   });
 
   describe('when isUserActionView has the value true in the result', () => {
     it('should render the viewed by customer badge', async () => {
-      // @ts-ignore
       const element = createTestComponent({result: {isUserActionView: true}});
       await flushPromises();
 
@@ -100,8 +97,24 @@ describe('c-quantic-viewed-by-customer-badge', () => {
 
   describe('when isUserActionView has the value false in the result', () => {
     it('should not render the viewed by customer badge', async () => {
-      // @ts-ignore
       const element = createTestComponent({result: {isUserActionView: false}});
+      await flushPromises();
+
+      const errorComponent = element.shadowRoot.querySelector(
+        selectors.errorComponent
+      );
+      const label = element.shadowRoot.querySelector(selectors.label);
+      const icon = element.shadowRoot.querySelector(selectors.icon);
+
+      expect(errorComponent).toBeNull();
+      expect(label).toBeNull();
+      expect(icon).toBeNull();
+    });
+  });
+
+  describe('when isUserActionView is undefined in the result', () => {
+    it('should not render the viewed by customer badge', async () => {
+      const element = createTestComponent({result: {}});
       await flushPromises();
 
       const errorComponent = element.shadowRoot.querySelector(
