@@ -172,4 +172,9 @@ export interface Result {
    * TopResult
    */
   rankingModifier?: string;
+
+  /**
+   * Whether the result item was previously viewed by the user specified in the request of the query.
+   */
+  isUserActionView: boolean;
 }
