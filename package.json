@@ -117,7 +117,7 @@
     ]
   },
   "lint-staged": {
-    "**/*.{ts?(x),?(m)js}": [
+    "**/*.{ts?(x),?(m)js} !(**/stencil-generated/*.ts)": [
       "eslint --fix --max-warnings=0"
     ],
     "**/{*.{scss,css,pcss,html,md},{package,nx,project}.json}": [
