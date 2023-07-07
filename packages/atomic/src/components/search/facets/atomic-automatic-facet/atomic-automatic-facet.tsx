@@ -50,7 +50,7 @@ export class AtomicAutomaticFacet implements InitializableComponent {
 
   @Prop({reflect: true}) public facet!: AutomaticFacet;
   @Prop({reflect: true}) public searchStatus!: SearchStatus;
-  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  @Prop({reflect: true, mutable: true}) public isCollapsed = true;
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
