@@ -27,6 +27,27 @@ export class AtomicAriaLive {
 }
 
 
+export declare interface AtomicAutomaticFacet extends Components.AtomicAutomaticFacet {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['facet', 'isCollapsed', 'searchStatus']
+})
+@Component({
+  selector: 'atomic-automatic-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['facet', 'isCollapsed', 'searchStatus']
+})
+export class AtomicAutomaticFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicBreadbox extends Components.AtomicBreadbox {}
 
 @ProxyCmp({
@@ -174,13 +195,13 @@ export declare interface AtomicFacetManager extends Components.AtomicFacetManage
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['collapseFacetsAfter']
+  inputs: ['collapseFacetsAfter', 'desiredCount']
 })
 @Component({
   selector: 'atomic-facet-manager',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['collapseFacetsAfter']
+  inputs: ['collapseFacetsAfter', 'desiredCount']
 })
 export class AtomicFacetManager {
   protected el: HTMLElement;
