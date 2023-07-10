@@ -33,6 +33,7 @@ export default class QuanticViewedByCustomerBadge extends LightningElement {
   }
 
   get shouldDisplayBadge() {
+    // @ts-ignore
     return !this.hasInitializationError && this?.result?.isUserActionView;
   }
 
