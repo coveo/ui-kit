@@ -5,6 +5,7 @@ import {
 } from '../../common-assertions';
 import {addFacetManager, facetManagerComponent} from './facet-manager-actions';
 import {
+  assertContainsAutomaticFacet,
   assertFacetsNoCollapsedAttribute,
   assertHasNumberOfExpandedFacets,
 } from './facet-manager-assertions';
@@ -40,5 +41,21 @@ describe('Facet Manager Test Suite', () => {
       },
       true
     );
+  });
+
+  it('should throw an error when desiredCount property is invalid', () => {
+    new TestFixture().with(addFacetManager({'desired-count': 'potato'})).init();
+    assertConsoleError();
+    assertContainsComponentError(
+      {
+        shadow: () => cy.get(facetManagerComponent).shadow(),
+      },
+      true
+    );
+  });
+
+  it('should display atomic-automatic-facet when desiredCount is valid', () => {
+    new TestFixture().with(addFacetManager({'desired-count': '1'})).init();
+    assertContainsAutomaticFacet();
   });
 });
