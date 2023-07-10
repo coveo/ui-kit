@@ -85,10 +85,11 @@ function getAutomaticFacets(state: StateNeededBySearchRequest) {
 function responseToAutomaticFacetRequest(
   response: AutomaticFacetResponse
 ): AutomaticFacetRequest {
-  const {field, values} = response;
+  const {field, label, values} = response;
 
   return {
     field,
+    label,
     currentValues: values,
   };
 }
