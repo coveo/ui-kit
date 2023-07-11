@@ -7,7 +7,7 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {Component, h, Element, State, Prop} from '@stencil/core';
+import {Component, h, Element, State, Prop, Host} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -131,6 +131,7 @@ export class AtomicFacetManager implements InitializableComponent {
           <atomic-automatic-facet
             key={facet.state.field}
             field={facet.state.field}
+            facetId={facet.state.field}
             facet={facet}
             searchStatus={this.searchStatus}
           ></atomic-automatic-facet>
@@ -138,10 +139,10 @@ export class AtomicFacetManager implements InitializableComponent {
       }
     );
     return (
-      <div>
+      <Host>
         <slot />
         {automaticFacets}
-      </div>
+      </Host>
     );
   }
 }

@@ -49,6 +49,7 @@ export class AtomicAutomaticFacet implements InitializableComponent {
   @State() public error!: Error;
 
   @Prop({reflect: true}) public field!: string;
+  @Prop({reflect: true}) public facetId!: string;
   @Prop({reflect: true}) public facet!: AutomaticFacet;
   @Prop({reflect: true}) public searchStatus!: SearchStatus;
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
