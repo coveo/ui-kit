@@ -52,3 +52,11 @@ export const addFacetManager =
 
     env.withElement(manager);
   };
+
+export const addEmptyFacetManager =
+  (props: TagProps = {}) =>
+  (env: TestFixture) => {
+    const manager = generateComponentHTML(facetManagerComponent, props);
+
+    env.withElement(manager);
+  };
