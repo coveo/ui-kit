@@ -105,7 +105,7 @@ export {
   MinimumFieldsToInclude,
   DefaultFieldsToInclude,
   EcommerceDefaultFieldsToInclude,
-} from './features/fields/fields-state';
+} from './features/fields/fields-to-include';
 
 export {getOrganizationEndpoints} from './api/platform-client';
 export type {PlatformEnvironment} from './utils/url-utils';

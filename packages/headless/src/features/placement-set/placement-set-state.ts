@@ -19,7 +19,7 @@ function getPlacementInitialState(): Placement {
   return {
     callbackData: '',
     campaignId: '',
-    visitorId: '',
+    clientId: '',
   };
 }
 

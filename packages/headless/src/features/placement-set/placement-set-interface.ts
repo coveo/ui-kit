@@ -3,7 +3,7 @@ import {StandardCommerceFields} from '../fields/fields-to-include';
 export interface Placement {
   callbackData: string;
   campaignId: string;
-  visitorId: string;
+  clientId: string;
 }
 
 export interface Badges extends Placement {

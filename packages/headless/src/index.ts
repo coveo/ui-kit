@@ -134,7 +134,8 @@ export {
   MinimumFieldsToInclude,
   DefaultFieldsToInclude,
   EcommerceDefaultFieldsToInclude,
-} from './features/fields/fields-state';
+} from './features/fields/fields-to-include';
+
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
 export type {FunctionExecutionTrigger} from './features/triggers/triggers-state';
 export type {HighlightKeyword} from './utils/highlight';
