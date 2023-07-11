@@ -186,7 +186,8 @@ type InferFacetSliceValueType<T extends AnyFacetSetState> =
  * Get the breadcrumb of the facet selected
  * @param engine headless engine
  * @param facetSet facet section
- * @param executeToggleSelect the execute toggle action
+ * @param executeToggleSelect execute the toggle select action
+ * @param executeToggleExclude execute the toggle exclude action
  * @param facetValuesSelector facet selector
  * @returns list breadcrumb of the facet selected
  */
@@ -204,6 +205,10 @@ export const getBreadcrumbs = <T extends AnyFacetSetState>(
     facetId: string;
     selection: InferFacetSliceValueType<T>;
   }) => void,
+  executeToggleExclude: (payload: {
+    facetId: string;
+    selection: InferFacetSliceValueType<T>;
+  }) => void,
   facetValuesSelector: (
     state: typeof engine['state'],
     facetId: string
@@ -215,6 +220,7 @@ export const getBreadcrumbs = <T extends AnyFacetSetState>(
         (selection) => ({
           value: selection,
           deselect: () => executeToggleSelect({facetId, selection}),
+          exclude: () => executeToggleExclude({facetId, selection}),
         })
       );
 
