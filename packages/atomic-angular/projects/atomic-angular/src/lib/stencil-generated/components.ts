@@ -31,13 +31,13 @@ export declare interface AtomicAutomaticFacet extends Components.AtomicAutomatic
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['facet', 'field', 'isCollapsed', 'searchStatus']
+  inputs: ['facet', 'facetId', 'field', 'isCollapsed', 'searchStatus']
 })
 @Component({
   selector: 'atomic-automatic-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['facet', 'field', 'isCollapsed', 'searchStatus']
+  inputs: ['facet', 'facetId', 'field', 'isCollapsed', 'searchStatus']
 })
 export class AtomicAutomaticFacet {
   protected el: HTMLElement;
