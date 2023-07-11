@@ -5,9 +5,8 @@ import {
   isErrorResponse,
 } from '../../api/commerce/unified-api/unified-api-client';
 import {
-  PreviewOptsParam,
+  ClientIdParam,
   SeedsParam,
-  VisitorParam,
 } from '../../api/commerce/unified-api/unified-api-params';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {CommercePlacementsThunkExtraArguments} from '../../app/commerce-placement-thunk-extra-arguments';
@@ -21,8 +20,7 @@ export type GetPlacementCreatorPayload = {
 
 export type GetBadgesCreatorPayload = GetPlacementCreatorPayload & SeedsParam;
 export type GetRecommendationsCreatorPayload = GetPlacementCreatorPayload &
-  SeedsParam &
-  Required<PreviewOptsParam>;
+  SeedsParam;
 
 export interface AsyncThunkPlacementOptions
   extends AsyncThunkOptions<
@@ -95,7 +93,7 @@ async function augmentPlacementPayload<
 >(
   payload: Payload,
   state: CommercePlacementsAppState
-): Promise<Payload & VisitorParam> {
-  const visitorID = await getVisitorID(state.configuration.analytics);
-  return {...payload, visitor: {id: visitorID}};
+): Promise<Payload & ClientIdParam> {
+  const clientId = await getVisitorID(state.configuration.analytics);
+  return {...payload, clientId};
 }

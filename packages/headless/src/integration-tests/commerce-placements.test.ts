@@ -1,5 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import {buildCommercePlacementsEngine} from '../app/commerce-placements-engine/commerce-placements-engine';
+import {buildCommercePlacementEngine} from '../app/commerce-placement-engine/commerce-placement-engine';
 import {
   getBadge,
   getRecs,
@@ -8,7 +8,7 @@ import {getOrganizationEndpoints} from '../recommendation.index';
 
 describe('commerce placements', () => {
   it('should allow to query without errors', async () => {
-    const engine = buildCommercePlacementsEngine({
+    const engine = buildCommercePlacementEngine({
       configuration: {
         // random min privileges key in dev
         accessToken: 'xxa0ccd787-ba54-40fb-89ff-f393356448c4',
@@ -31,12 +31,9 @@ describe('commerce placements', () => {
 
     await engine.dispatch(
       getRecs({
-        previewOpts: {
-          campaignId: 'CHLR7FPrRTi5bq_oQcCUcA',
-        },
-        placementId: 'kTLIHvXYTyWvuej4qJJaiA',
-        implementationId: 's1rAcVo_SmCVoSpEZ',
-        seeds: [{ids: ['SP00553_00002'], src: 'pdp'}],
+        placementId: 'ZYFiN7m7S1aCvW3nnaXwRg',
+        implementationId: 'VeZqj8cVRyiPxQP1uEQJ4Q',
+        seeds: [{ids: ['SP00421_00004'], src: 'cart'}],
       })
     );
 

@@ -38,15 +38,18 @@ export interface ViewParam {
 }
 
 export interface VisitorParam {
-  visitor: {
+  visitor?: {
     firstViewTime?: string;
-    id: string;
     ipAddress?: string;
     lastViewTime?: string;
     location?: string;
     sessionNumber?: number;
     viewNumber?: number;
   };
+}
+
+export interface ClientIdParam {
+  clientId: string;
 }
 
 export interface SeedsParam {

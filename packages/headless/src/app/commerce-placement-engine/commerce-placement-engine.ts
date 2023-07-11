@@ -17,11 +17,11 @@ import {EngineConfiguration} from '../engine-configuration';
 import {buildLogger} from '../logger';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 
-const commercePlacementsReducer = {placement, configuration, version};
-type CommercePlacementsEngineReducers = typeof commercePlacementsReducer;
+const commercePlacementReducer = {placement, configuration, version};
+type CommercePlacementEngineReducers = typeof commercePlacementReducer;
 
 type CommercePlacementEngineState =
-  StateFromReducersMapObject<CommercePlacementsEngineReducers> &
+  StateFromReducersMapObject<CommercePlacementEngineReducers> &
     CommercePlacementsAppState;
 
 export interface CommercePlacementsEngine<State extends object = {}>
@@ -30,11 +30,11 @@ export interface CommercePlacementsEngine<State extends object = {}>
     CommercePlacementsThunkExtraArguments
   > {}
 
-export interface CommercePlacementsEngineOptions
+export interface CommercePlacementEngineOptions
   extends ExternalEngineOptions<CommercePlacementEngineState> {}
 
-export function buildCommercePlacementsEngine(
-  options: CommercePlacementsEngineOptions
+export function buildCommercePlacementEngine(
+  options: CommercePlacementEngineOptions
 ): CommercePlacementsEngine {
   const logger = buildLogger(options.loggerOptions);
   const commerceUnifiedAPIClient = createCommerceUnifiedAPIClient(
@@ -47,9 +47,9 @@ export function buildCommercePlacementsEngine(
     apiClient: commerceUnifiedAPIClient,
   };
 
-  const augmentedOptions: EngineOptions<CommercePlacementsEngineReducers> = {
+  const augmentedOptions: EngineOptions<CommercePlacementEngineReducers> = {
     ...options,
-    reducers: commercePlacementsReducer,
+    reducers: commercePlacementReducer,
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);

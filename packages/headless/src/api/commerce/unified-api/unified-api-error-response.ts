@@ -1,9 +1,8 @@
 import {DisconnectedError} from '../../../utils/errors';
+import {PlatformAPIError} from '../../platform-client-error-response';
 
-export interface UnifiedCommerceAPIError {
+export interface UnifiedCommerceAPIError extends PlatformAPIError {
   errorCode: number;
-  message: string;
-  ignored?: boolean;
 }
 
 function buildDisconnectedError(

@@ -1,10 +1,13 @@
 import {DisconnectedError} from '../utils/errors';
 
-export interface PlatformAPIErrorWithStatusCode {
-  statusCode: number;
+export interface PlatformAPIError {
   message: string;
-  type: string;
   ignored?: boolean;
+}
+
+export interface PlatformAPIErrorWithStatusCode extends PlatformAPIError {
+  statusCode: number;
+  type: string;
 }
 
 function buildDisconnectedError(

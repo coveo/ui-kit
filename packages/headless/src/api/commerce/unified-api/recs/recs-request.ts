@@ -1,5 +1,6 @@
 import {BaseParam} from '../../../platform-service-params';
 import {
+  ClientIdParam,
   ImplementationParam,
   ModeParam,
   PlacementParam,
@@ -18,4 +19,5 @@ export type RecsRequest = BaseParam &
   UserParam &
   ViewParam &
   VisitorParam &
-  SeedsParam;
+  SeedsParam &
+  ClientIdParam;

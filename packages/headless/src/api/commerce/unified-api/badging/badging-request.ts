@@ -1,5 +1,6 @@
 import {BaseParam} from '../../../platform-service-params';
 import {
+  ClientIdParam,
   ModeParam,
   PlacementParam,
   PreviewOptsParam,
@@ -14,4 +15,5 @@ export type BadgingRequest = BaseParam &
   ViewParam &
   PreviewOptsParam &
   UserParam &
-  SeedsParam;
+  SeedsParam &
+  ClientIdParam;
