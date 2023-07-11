@@ -130,6 +130,7 @@ export class AtomicFacetManager implements InitializableComponent {
         return (
           <atomic-automatic-facet
             key={facet.state.field}
+            field={facet.state.field}
             facet={facet}
             searchStatus={this.searchStatus}
           ></atomic-automatic-facet>

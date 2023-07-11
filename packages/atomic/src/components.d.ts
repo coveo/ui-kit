@@ -35,6 +35,7 @@ export namespace Components {
     }
     interface AtomicAutomaticFacet {
         "facet": AutomaticFacet;
+        "field": string;
         "isCollapsed": boolean;
         "searchStatus": SearchStatus;
     }
@@ -2993,6 +2994,7 @@ declare namespace LocalJSX {
     }
     interface AtomicAutomaticFacet {
         "facet": AutomaticFacet;
+        "field": string;
         "isCollapsed"?: boolean;
         "searchStatus": SearchStatus;
     }
