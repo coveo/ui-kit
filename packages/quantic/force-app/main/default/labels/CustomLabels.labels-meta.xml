@@ -1176,13 +1176,13 @@
       <protected>false</protected>
       <shortDescription>Viewed by customer</shortDescription>
     </labels>
+    <labels>
       <fullName>quantic_LoadingRecommendations</fullName>
       <value>Loading recommendations</value>
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Loading recommendations</shortDescription>
     </labels>
-    <labels>
     <labels>
       <fullName>quantic_InvalidPositiveIntegerProperty</fullName>
       <value>The value of the {{0}} property must be an integer greater than 0.</value>

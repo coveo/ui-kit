@@ -628,7 +628,7 @@
         <label>La propriété "{{0}}" est obligatoire, veuillez définir sa valeur.</label>
         <name>quantic_PropertyIsRequired</name>
     </customLabels>
-        <customLabels>
+    <customLabels>
         <label>Erreur d'initialisation d'un composant</label>
         <name>quantic_ComponentInitializationError</name>
     </customLabels>
