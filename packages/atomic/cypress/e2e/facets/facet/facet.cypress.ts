@@ -809,6 +809,18 @@ describe('Facet v1 Test Suites', () => {
     FacetAssertions.assertValuesSortedAlphanumerically();
   });
 
+  describe('with custom #sortCriteria, alphanumericDescending', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addFacet({field, label, 'sort-criteria': 'alphanumericDescending'})
+        )
+        .init();
+    });
+
+    FacetAssertions.assertValuesSortedAlphanumericallyDescending();
+  });
+
   describe('with custom #sortCriteria, occurrences', () => {
     beforeEach(() => {
       new TestFixture()
