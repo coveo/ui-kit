@@ -67,7 +67,7 @@ export class AtomicFacetManager implements InitializableComponent {
       ? buildFacetManager(this.bindings.engine, {
           desiredCount: this.desiredCount,
         })
-      : (this.facetManager = buildFacetManager(this.bindings.engine));
+      : buildFacetManager(this.bindings.engine);
 
     // An update has to be forced for the facets to be visually updated, without being interacted with.
     this.bindings.i18n.on('languageChanged', this.sortFacets);
