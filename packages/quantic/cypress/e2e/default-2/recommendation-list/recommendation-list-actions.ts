@@ -12,7 +12,7 @@ function recommendationListActions(selector: RecommendationListSelector) {
         .then((elem) => {
           elem.attr('href', '#');
         })
-        .click()
+        .click({force: true})
         .logAction('When clicking on a recommendation link'),
   };
 }
