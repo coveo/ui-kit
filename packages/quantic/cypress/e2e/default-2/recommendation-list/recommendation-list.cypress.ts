@@ -6,16 +6,21 @@ import {
   interceptSearchIndefinitely,
 } from '../../../page-objects/search';
 import {scope} from '../../../reporters/detailed-collector';
+import {stubConsoleError} from '../../console-selectors';
 import {RecommendationListActions as Actions} from './recommendation-list-actions';
 import {RecommendationListExpectations as Expect} from './recommendation-list-expectations';
 
+const invalidPropertyErrorMessage =
+  'The value of the recommendationsPerRow property must be an integer greater than 0.';
+
 interface RecommendationListOptions {
   recommendation: string;
-  numberOfRecommendations: number | string;
-  recommendationsPerRow: number;
+  numberOfRecommendations: number;
+  recommendationsPerRow: number | string;
   label: string;
   fieldsToInclude: string;
   headingLevel: number;
+  variant: 'grid' | 'carousel';
 }
 
 describe('quantic-recommendation-list', () => {
@@ -74,6 +79,7 @@ describe('quantic-recommendation-list', () => {
         Expect.events.receivedEvent(true, registerRecommendationTemplatesEvent);
         Expect.displayLabel(label, defaultHeadingLevel);
         Expect.displayRecommendations(true);
+        Expect.displayCarousel(false);
         Expect.recommendationsEqual(recommendationsAlias);
         Expect.correctFieldsIncluded(defaultFieldsToInclude.split(','));
         Expect.correctRecommendationId(defaultRecommendationId);
@@ -111,6 +117,7 @@ describe('quantic-recommendation-list', () => {
         Expect.events.receivedEvent(true, registerRecommendationTemplatesEvent);
         Expect.displayLabel(label, customHeadingLevel);
         Expect.displayRecommendations(true);
+        Expect.displayCarousel(false);
         Expect.recommendationsEqual(recommendationsAlias);
         Expect.correctFieldsIncluded(customFieldsToInclude.split(','));
         Expect.correctRecommendationId(customRecommendationId);
@@ -120,6 +127,71 @@ describe('quantic-recommendation-list', () => {
         );
         Actions.clickRecommendationLink(0);
         Expect.logRecommendationOpen(0, recommendationsAlias);
+      });
+    });
+  });
+
+  describe('when the recommendations are displayed in a carousel', () => {
+    it('should properly display the recommendations inside a carousel', () => {
+      visitPage({
+        label,
+        variant: 'carousel',
+      });
+      setRecommendationsAlias();
+
+      scope('when loading the page', () => {
+        Expect.logRecommendationInterfaceLoad(recommendationsAlias);
+        Expect.events.receivedEvent(true, registerRecommendationTemplatesEvent);
+        Expect.displayLabel(label, defaultHeadingLevel);
+        Expect.displayCarousel(true);
+        Expect.displayRecommendations(true);
+        Expect.recommendationsEqual(recommendationsAlias);
+        Expect.correctFieldsIncluded(defaultFieldsToInclude.split(','));
+        Expect.correctRecommendationId(defaultRecommendationId);
+        Expect.correctNumberOfRecommendations(defaultNumberOfRecommendations);
+        Expect.correctNumberOfRecommendationsPerRow(
+          defaultRecommendationsPerRow
+        );
+        Actions.clickRecommendationLink(0);
+        Expect.logRecommendationOpen(0, recommendationsAlias);
+      });
+    });
+  });
+
+  describe('when invalid property values are passed', () => {
+    describe('when the value of the property recommendationsPerRow is not a number', () => {
+      it('should display an error message ', () => {
+        cy.visit(pageUrl, {
+          onBeforeLoad(win) {
+            stubConsoleError(win);
+          },
+        });
+        configure({
+          recommendationsPerRow: 'invalid value',
+        });
+
+        scope('when loading the page', () => {
+          Expect.console.error(true, invalidPropertyErrorMessage);
+          Expect.displayComponentError(true);
+        });
+      });
+    });
+
+    describe('when the value of the property recommendationsPerRow is a negative value', () => {
+      it('should display an error message ', () => {
+        cy.visit(pageUrl, {
+          onBeforeLoad(win) {
+            stubConsoleError(win);
+          },
+        });
+        configure({
+          recommendationsPerRow: -1,
+        });
+
+        scope('when loading the page', () => {
+          Expect.console.error(true, invalidPropertyErrorMessage);
+          Expect.displayComponentError(true);
+        });
       });
     });
   });

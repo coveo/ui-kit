@@ -67,4 +67,8 @@ export const InsightPanelsSelectors = {
     InsightPanelsSelectors.interface().find(
       'atomic-insight-smart-snippet-feedback-modal'
     ),
+  resultActionBar: () =>
+    InsightPanelsSelectors.results()
+      .shadow()
+      .find('atomic-insight-result-action-bar'),
 };
