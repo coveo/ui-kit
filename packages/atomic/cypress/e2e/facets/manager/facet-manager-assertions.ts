@@ -21,7 +21,3 @@ export function assertFacetsNoCollapsedAttribute() {
       cy.wrap($child).should('not.have.attr', 'is-collapsed');
     });
 }
-
-export function assertContainsAutomaticFacet() {
-  cy.get(facetManagerComponent).find('atomic-automatic-facet');
-}
