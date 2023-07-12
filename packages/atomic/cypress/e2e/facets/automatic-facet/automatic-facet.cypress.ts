@@ -15,7 +15,12 @@ import {
 describe('Automatic Facet Test Suites', () => {
   function setup() {
     new TestFixture()
-      .with(addAutomaticFacetBuilder({'desired-count': '1'}))
+      .with(
+        addAutomaticFacetBuilder({
+          'desired-count': '1',
+          'are-collapsed': 'false',
+        })
+      )
       .init();
   }
 

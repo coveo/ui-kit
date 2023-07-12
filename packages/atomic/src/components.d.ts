@@ -42,6 +42,10 @@ export namespace Components {
     }
     interface AtomicAutomaticFacetBuilder {
         /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  Specifies whether the automatic facets are collapsed.
+         */
+        "areCollapsed": boolean;
+        /**
           * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets. Must be a positive integer.
          */
         "desiredCount": number;
@@ -3006,10 +3010,14 @@ declare namespace LocalJSX {
         "facet": AutomaticFacet;
         "facetId": string;
         "field": string;
-        "isCollapsed"?: boolean;
+        "isCollapsed": boolean;
         "searchStatus": SearchStatus;
     }
     interface AtomicAutomaticFacetBuilder {
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  Specifies whether the automatic facets are collapsed.
+         */
+        "areCollapsed"?: boolean;
         /**
           * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets. Must be a positive integer.
          */

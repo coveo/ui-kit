@@ -23,6 +23,19 @@ describe('Automatic Facet Builder Test Suites', () => {
     );
   });
 
+  it('should throw an error when areCollapsed property is invalid', () => {
+    new TestFixture()
+      .with(addAutomaticFacetBuilder({'are-collapsed': 'potato'}))
+      .init();
+    assertConsoleError();
+    assertContainsComponentError(
+      {
+        shadow: () => cy.get(automaticFacetBuilderComponent).shadow(),
+      },
+      true
+    );
+  });
+
   it('should display atomic-automatic-facet when desiredCount is valid', () => {
     new TestFixture()
       .with(addAutomaticFacetBuilder({'desired-count': '1'}))

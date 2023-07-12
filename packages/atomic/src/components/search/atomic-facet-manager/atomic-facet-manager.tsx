@@ -100,6 +100,10 @@ export class AtomicFacetManager implements InitializableComponent {
 
     children.forEach((child) => {
       this.isPseudoFacet(child) && facets.push(child);
+
+      if (child.tagName === 'ATOMIC-AUTOMATIC-FACET-BUILDER') {
+        facets.push(child as BaseFacetElement);
+      }
     });
 
     return facets;

@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import {BooleanValue, NumberValue, Schema} from '@coveo/bueno';
 import {
   AutomaticFacetBuilder,
   AutomaticFacetBuilderState,
@@ -6,7 +6,7 @@ import {
   buildAutomaticFacetBuilder,
   buildSearchStatus,
 } from '@coveo/headless';
-import {Component, Host, Prop, State, h} from '@stencil/core';
+import {Component, Prop, State, h} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -47,6 +47,14 @@ export class AtomicAutomaticFacetBuilder implements InitializableComponent {
    */
   @Prop() public desiredCount!: number;
 
+  /**
+   * @beta - This prop is part of the automatic facets feature.
+   * Automatic facets are currently in beta testing and should be available soon.
+   *
+   * Specifies whether the automatic facets are collapsed.
+   */
+  @Prop({reflect: true, mutable: true}) public areCollapsed = true;
+
   public initialize() {
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -61,8 +69,10 @@ export class AtomicAutomaticFacetBuilder implements InitializableComponent {
   private validateProps() {
     new Schema({
       desiredCount: new NumberValue({min: 1, required: true}),
+      areCollapsed: new BooleanValue({default: true, required: false}),
     }).validate({
       desiredCount: this.desiredCount,
+      areCollapsed: this.areCollapsed,
     });
   }
 
@@ -76,10 +86,11 @@ export class AtomicAutomaticFacetBuilder implements InitializableComponent {
             facetId={facet.state.field}
             facet={facet}
             searchStatus={this.searchStatus}
+            isCollapsed={this.areCollapsed}
           ></atomic-automatic-facet>
         );
       });
 
-    return <Host>{automaticFacets}</Host>;
+    return automaticFacets;
   }
 }
