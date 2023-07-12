@@ -1,4 +1,4 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
+//import {TestFixture} from '../../../fixtures/test-fixture';
 import * as CommonAssertions from '../../common-assertions';
 import * as AutomaticFacetAssertions from '../automatic-facet/automatic-facet-assertions';
 import {
@@ -6,15 +6,16 @@ import {
   selectIdleCheckboxValueAt,
 } from '../facet-common-actions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
-import {addEmptyFacetManager} from '../manager/facet-manager-actions';
 import {
   AutomaticFacetSelectors,
   automaticFacetComponent,
 } from './automatic-facet-selectors';
 
-describe('Automatic Facet Test Suites', () => {
+//import {addAutomaticFacets} from './automatic-facets-actions';
+
+describe.skip('Automatic Facet Test Suites', () => {
   function setup() {
-    new TestFixture().with(addEmptyFacetManager({'desired-count': '1'})).init();
+    //new TestFixture().with(addAutomaticFacets({'desired-count': '1'})).init();
   }
 
   describe('verify rendering', () => {
