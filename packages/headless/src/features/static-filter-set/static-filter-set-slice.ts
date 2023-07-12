@@ -4,6 +4,7 @@ import {restoreSearchParameters} from '../search-parameters/search-parameter-act
 import {
   deselectAllStaticFilterValues,
   registerStaticFilter,
+  toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from './static-filter-set-actions';
 import {getStaticFilterSetInitialState} from './static-filter-set-state';
@@ -38,6 +39,23 @@ export const staticFilterSetReducer = createReducer(
 
         const isSelected = target.state === 'selected';
         target.state = isSelected ? 'idle' : 'selected';
+      })
+      .addCase(toggleExcludeStaticFilterValue, (state, action) => {
+        const {id, value} = action.payload;
+        const filter = state[id];
+
+        if (!filter) {
+          return;
+        }
+
+        const target = filter.values.find((v) => v.caption === value.caption);
+
+        if (!target) {
+          return;
+        }
+
+        const isExcluded = target.state === 'excluded';
+        target.state = isExcluded ? 'idle' : 'excluded';
       })
       .addCase(deselectAllStaticFilterValues, (state, action) => {
         const id = action.payload;
