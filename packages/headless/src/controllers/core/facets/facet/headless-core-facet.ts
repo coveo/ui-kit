@@ -464,8 +464,17 @@ export function buildCoreFacet(
       const response = getResponse();
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();
+      let sortCriterion!: FacetSortCriterion;
 
-      const sortCriterion = request.sortCriteria;
+      if (typeof request.sortCriteria === 'object') {
+        sortCriterion =
+          request.sortCriteria.order === 'descending'
+            ? 'alphanumericDescending'
+            : 'alphanumeric';
+      } else {
+        sortCriterion = request.sortCriteria;
+      }
+
       const values = response ? response.values : [];
       const hasActiveValues = values.some(
         (facetValue) => facetValue.state !== 'idle'

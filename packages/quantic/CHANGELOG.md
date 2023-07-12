@@ -1,3 +1,12 @@
+# 2.27.0 (2023-07-12)
+
+### Features
+
+- **quantic:** Added disableDynamicNavigation in quanticRefineToggle and quanticRefineModalContent components ([#3000](https://github.com/coveo/ui-kit/issues/3000)) ([22fa83f](https://github.com/coveo/ui-kit/commits/22fa83fe97572fde7c45d7329bbfea57454aface))
+- **quantic:** aria-live logic added to insight, folding and recommendations components ([#3009](https://github.com/coveo/ui-kit/issues/3009)) ([ad5b28c](https://github.com/coveo/ui-kit/commits/ad5b28cff11aa4dacd498eae4f2e8d73375eae39))
+- **quantic:** quantic viewed by customer badge component created ([#3010](https://github.com/coveo/ui-kit/issues/3010)) ([b56df57](https://github.com/coveo/ui-kit/commits/b56df5768c93e8c71ba3856499165b0c9631eb4a))
+- **quantic:** support carousel display in the quantic recommendation list component ([#2992](https://github.com/coveo/ui-kit/issues/2992)) ([635c56e](https://github.com/coveo/ui-kit/commits/635c56edb70d71ed031ad3446e884788e46aa9fa))
+
 ## 2.26.4 (2023-07-05)
 
 ### Bug Fixes

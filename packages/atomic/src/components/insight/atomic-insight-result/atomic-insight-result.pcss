@@ -5,3 +5,30 @@ atomic-result-section-children {
   border-left: 1px solid var(--atomic-neutral);
   padding-left: 1rem;
 }
+
+:host(:hover) {
+  .with-sections {
+    background-color: var(--atomic-neutral-lighter);
+  }
+
+  atomic-insight-result-action-bar {
+    @apply visible;
+  }
+}
+
+:host {
+  @apply relative;
+  .with-sections {
+    @apply p-6;
+  }
+}
+
+:host(:first-of-type) {
+  .with-sections {
+    @apply pt-8;
+  }
+
+  atomic-insight-result-action-bar {
+    @apply top-0;
+  }
+}
