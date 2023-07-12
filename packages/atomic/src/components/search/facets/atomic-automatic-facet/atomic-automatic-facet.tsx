@@ -1,10 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {
-  AutomaticFacet,
-  SearchStatus,
-  FacetValue,
-  FacetValueState,
-} from '@coveo/headless';
+import {AutomaticFacet, SearchStatus, FacetValue} from '@coveo/headless';
 import {Component, Prop, State, h, VNode} from '@stencil/core';
 import {
   FocusTarget,
