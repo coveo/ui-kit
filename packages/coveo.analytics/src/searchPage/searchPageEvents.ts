@@ -310,6 +310,10 @@ export enum SearchPageEvents {
      * Identifies the custom event that gets logged when a user opens a generated answer citation.
      */
     openGeneratedAnswerSource = 'openGeneratedAnswerSource',
+    /**
+     * Identified the custom event that gets logged when a generated answer stream is completed.
+     */
+    generatedAnswerStreamEnd = 'generatedAnswerStreamEnd',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
@@ -355,6 +359,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.likeGeneratedAnswer]: 'generatedAnswer',
     [SearchPageEvents.dislikeGeneratedAnswer]: 'generatedAnswer',
     [SearchPageEvents.openGeneratedAnswerSource]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerStreamEnd]: 'generatedAnswer',
 };
 
 export interface StaticFilterMetadata {
@@ -489,8 +494,14 @@ export interface SmartSnippetDocumentIdentifier {
 
 export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause' | 'searchQueryUid'>;
 
-export interface GeneratedAnswerFeedbackMeta {
+interface GeneratedAnswerBaseMeta {
     generativeQuestionAnsweringId: string;
+}
+
+export interface GeneratedAnswerFeedbackMeta extends GeneratedAnswerBaseMeta {}
+
+export interface GeneratedAnswerStreamEndMeta extends GeneratedAnswerBaseMeta {
+    answerGenerated: boolean;
 }
 
 export interface GeneratedAnswerCitationMeta {
