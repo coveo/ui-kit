@@ -1,5 +1,10 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {AutomaticFacet, SearchStatus, FacetValue} from '@coveo/headless';
+import {
+  AutomaticFacet,
+  SearchStatus,
+  FacetValue,
+  FacetValueState,
+} from '@coveo/headless';
 import {Component, Prop, State, h, VNode} from '@stencil/core';
 import {
   FocusTarget,
@@ -58,8 +63,12 @@ export class AtomicAutomaticFacet implements InitializableComponent {
   private headerFocus!: FocusTargetController;
 
   private get numberOfSelectedValues() {
-    return this.facet.state.values.filter(({state}) => state === 'selected')
+    return this.facet.state.values.filter(({state}) => this.isSelected(state))
       .length;
+  }
+
+  private isSelected(state: FacetValueState) {
+    return state === 'selected';
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
@@ -68,19 +77,18 @@ export class AtomicAutomaticFacet implements InitializableComponent {
       facetValue.value,
       this.bindings.i18n
     );
-    const isSelected = facetValue.state === 'selected';
 
     return (
       <FacetValueCheckbox
         displayValue={displayValue}
         numberOfResults={facetValue.numberOfResults}
-        isSelected={isSelected}
+        isSelected={this.isSelected(facetValue.state)}
         i18n={this.bindings.i18n}
         onClick={onClick}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
-          isSelected={isSelected}
+          isSelected={this.isSelected(facetValue.state)}
         ></FacetValueLabelHighlight>
       </FacetValueCheckbox>
     );
