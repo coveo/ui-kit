@@ -64,6 +64,57 @@ export const buildInsightSearchRequest = (
   });
 };
 
+export const buildInsightLoadCollectionRequest = (
+  state: StateNeededBySearchRequest
+): MappedSearchRequest<InsightQueryRequest> => {
+  const cq = buildConstantQuery(state);
+  const facets = getAllFacets(state);
+  const getNumberOfResultsWithinIndexLimit = () => {
+    if (!state.pagination) {
+      return undefined;
+    }
+
+    const isOverIndexLimit =
+      state.pagination.firstResult + state.pagination.numberOfResults >
+      maximumNumberOfResultsFromIndex;
+
+    if (isOverIndexLimit) {
+      return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
+    }
+    return state.pagination.numberOfResults;
+  };
+  return mapSearchRequest<InsightQueryRequest>({
+    accessToken: state.configuration.accessToken,
+    organizationId: state.configuration.organizationId,
+    url: state.configuration.platformUrl,
+    insightId: state.insightConfiguration.insightId,
+    q: state.query?.q,
+    ...(facets.length && {facets}),
+    caseContext: state.insightCaseContext?.caseContext,
+    ...(state.pagination && {
+      numberOfResults: getNumberOfResultsWithinIndexLimit(),
+    }),
+    ...(cq && {cq}),
+    ...(state.fields &&
+      !state.fields.fetchAllFields && {
+        fieldsToInclude: state.fields.fieldsToInclude,
+      }),
+    ...(state.didYouMean && {
+      enableDidYouMean: state.didYouMean.enableDidYouMean,
+    }),
+    ...(state.sortCriteria && {
+      sortCriteria: state.sortCriteria,
+    }),
+    tab: state.configuration.analytics.originLevel2,
+    ...(state.folding && {
+      filterField: state.folding.fields.collection,
+      childField: state.folding.fields.parent,
+      parentField: state.folding.fields.child,
+      filterFieldRange: state.folding.filterFieldRange,
+    }),
+  });
+};
+
 export const buildInsightFetchMoreResultsRequest = async (
   state: StateNeededBySearchRequest
 ): Promise<MappedSearchRequest<InsightQueryRequest>> => {

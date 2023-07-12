@@ -16,7 +16,7 @@ import {
 import {ResultWithFolding} from '../folding/folding-slice';
 import {CollectionId} from '../folding/folding-state';
 import {fetchFromAPI} from '../insight-search/insight-search-actions';
-import {buildInsightSearchRequest} from '../insight-search/insight-search-request';
+import {buildInsightLoadCollectionRequest} from '../insight-search/insight-search-request';
 
 export type {
   RegisterFoldingActionCreatorPayload,
@@ -45,7 +45,7 @@ export const loadCollection = createAsyncThunk<
     {getState, rejectWithValue, extra: {apiClient}}
   ) => {
     const state = getState();
-    const baseRequest = buildInsightSearchRequest(state);
+    const baseRequest = buildInsightLoadCollectionRequest(state);
     const actualRequest = {
       ...baseRequest,
       request: {
