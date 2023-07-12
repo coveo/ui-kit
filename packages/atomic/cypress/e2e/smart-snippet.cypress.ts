@@ -525,4 +525,16 @@ describe('Smart Snippet Test Suites', () => {
         .should('equal', 'rgb(84, 170, 255)');
     });
   });
+
+  describe('when there is a valid slot named "attributes"', () => {
+    it('copies the attributes properly', () => {
+      const slot = generateComponentHTML('a', {
+        target: '_blank',
+      });
+      new TestFixture().with(addSmartSnippet({}, [slot])).init();
+      SmartSnippetSelectors.smartSnippet()
+        .find('a')
+        .should('have.attr', 'target', '_blank');
+    });
+  });
 });
