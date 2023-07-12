@@ -63,12 +63,12 @@ export class AtomicAutomaticFacet implements InitializableComponent {
   private headerFocus!: FocusTargetController;
 
   private get numberOfSelectedValues() {
-    return this.facet.state.values.filter(({state}) => this.isSelected(state))
+    return this.facet.state.values.filter((value) => this.isSelected(value))
       .length;
   }
 
-  private isSelected(state: FacetValueState) {
-    return state === 'selected';
+  private isSelected(value: FacetValue) {
+    return value.state === 'selected';
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
@@ -82,13 +82,13 @@ export class AtomicAutomaticFacet implements InitializableComponent {
       <FacetValueCheckbox
         displayValue={displayValue}
         numberOfResults={facetValue.numberOfResults}
-        isSelected={this.isSelected(facetValue.state)}
+        isSelected={this.isSelected(facetValue)}
         i18n={this.bindings.i18n}
         onClick={onClick}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
-          isSelected={this.isSelected(facetValue.state)}
+          isSelected={this.isSelected(facetValue)}
         ></FacetValueLabelHighlight>
       </FacetValueCheckbox>
     );
