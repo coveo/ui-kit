@@ -11,8 +11,8 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
   props
 ) =>
   props.citations.length ? (
-    <div class="source-citations gap-2 mt-6 flex">
-      <p class="citations-label mt-2 text-neutral-dark text-sm shrink-0">
+    <div class="source-citations gap-2 mt-6 flex items-center">
+      <p class="citations-label text-neutral-dark text-sm shrink-0">
         {props.label}
       </p>
       <ol class="list-none citations-container gap-2 flex items-center flex-wrap">

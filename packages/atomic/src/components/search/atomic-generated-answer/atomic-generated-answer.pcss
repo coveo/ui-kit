@@ -5,7 +5,24 @@
 }
 
 [part='generated-text'] {
+  @mixin set-font-size var(--atomic-text);
+
   color: var(--atomic-on-background);
+
+  &.cursor::after {
+    content: '';
+    width: 8px;
+    height: 1em;
+    background: var(--atomic-neutral-dark);
+    display: inline-block;
+    animation: cursor-blink 1.5s steps(2) infinite;
+  }
+}
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
+  }
 }
 
 .feedback-buttons {
