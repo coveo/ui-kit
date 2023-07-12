@@ -12,6 +12,7 @@ type FeedBackModalElement =
 interface SmartSnippetProps {
   id: string;
   modalTagName: string;
+  attributes?: Attr[];
   getHost: () => HTMLElement;
   getBindings: () => AnyBindings;
   getModalRef: () => FeedBackModalElement | undefined;
@@ -152,6 +153,7 @@ export class SmartSnippetCommon {
           >
             {source && (
               <atomic-smart-snippet-source
+                attributes={this.props.attributes}
                 source={source}
                 onSelectSource={this.props.getSmartSnippet().selectSource}
                 onBeginDelayedSelectSource={

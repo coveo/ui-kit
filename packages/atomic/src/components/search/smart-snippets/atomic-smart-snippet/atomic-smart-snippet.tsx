@@ -10,6 +10,7 @@ import {
   BindStateToController,
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
+import {getAttributesFromLinkSlot} from '../../../common/result-link/attributes-slot';
 import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
@@ -102,6 +103,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     this.smartSnippetCommon = new SmartSnippetCommon({
       id: this.id,
       modalTagName: 'atomic-smart-snippet-feedback-modal',
+      attributes: getAttributesFromLinkSlot(this.host, 'attributes'),
       getHost: () => this.host,
       getBindings: () => this.bindings,
       getModalRef: () => this.modalRef,

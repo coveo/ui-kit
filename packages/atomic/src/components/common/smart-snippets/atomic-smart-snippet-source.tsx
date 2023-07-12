@@ -31,6 +31,7 @@ export class AtomicSmartSnippetSource
 {
   @InitializeBindings() public bindings!: AnyBindings;
   @Prop({reflect: true, mutable: true}) source!: Result;
+  @Prop() attributes?: Attr[];
 
   @Event() selectSource!: EventEmitter;
   @Event() beginDelayedSelectSource!: EventEmitter;
@@ -55,6 +56,7 @@ export class AtomicSmartSnippetSource
           href={this.source.clickUri}
           className="block"
           part="source-url"
+          attributes={this.attributes}
           onSelect={() => this.selectSource.emit()}
           onBeginDelayedSelect={() => this.beginDelayedSelectSource.emit()}
           onCancelPendingSelect={() => this.cancelPendingSelectSource.emit()}
@@ -64,6 +66,7 @@ export class AtomicSmartSnippetSource
         <LinkWithResultAnalytics
           title={this.source.title}
           href={this.source.clickUri}
+          attributes={this.attributes}
           className="block"
           part="source-title"
           onSelect={() => this.selectSource.emit()}

@@ -11,6 +11,7 @@ import {
   BindStateToController,
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
+import {getAttributesFromLinkSlot} from '../../../common/result-link/attributes-slot';
 import {SmartSnippetSuggestionCommon} from '../../../common/smart-snippets/atomic-smart-snippet-suggestions/smart-snippet-suggestions-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
@@ -91,6 +92,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
 
     this.smartSnippetSuggestionListCommon = new SmartSnippetSuggestionCommon({
       id: this.id,
+      attributes: getAttributesFromLinkSlot(this.host, 'attributes'),
       getHost: () => this.host,
       getBindings: () => this.bindings,
       getHeadingLevel: () => this.headingLevel,
