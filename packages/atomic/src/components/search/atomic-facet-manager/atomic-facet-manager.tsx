@@ -7,7 +7,7 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {Component, h, Element, State, Prop, Host} from '@stencil/core';
+import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
