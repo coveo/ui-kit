@@ -45,15 +45,11 @@ export const loadCollection = createAsyncThunk<
     {getState, rejectWithValue, extra: {apiClient}}
   ) => {
     const state = getState();
-    const baseRequest = buildInsightLoadCollectionRequest(state);
-    const actualRequest = {
-      ...baseRequest,
-      request: {
-        ...baseRequest.request,
-        filterFieldRange: 100,
-        cq: `@${state.folding.fields.collection}="${collectionId}"`,
-      },
-    };
+    const actualRequest = buildInsightLoadCollectionRequest(
+      state,
+      collectionId
+    );
+
     const fetched = await fetchFromAPI(apiClient, state, actualRequest, {
       origin: 'foldingCollection',
     });
