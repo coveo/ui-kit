@@ -1,5 +1,6 @@
-//import {TestFixture} from '../../../fixtures/test-fixture';
+import {TestFixture} from '../../../fixtures/test-fixture';
 import * as CommonAssertions from '../../common-assertions';
+import {addAutomaticFacetBuilder} from '../automatic-facet-builder/automatic-facet-builder-actions';
 import * as AutomaticFacetAssertions from '../automatic-facet/automatic-facet-assertions';
 import {
   pressClearButton,
@@ -11,11 +12,11 @@ import {
   automaticFacetComponent,
 } from './automatic-facet-selectors';
 
-//import {addAutomaticFacets} from './automatic-facets-actions';
-
-describe.skip('Automatic Facet Test Suites', () => {
+describe('Automatic Facet Test Suites', () => {
   function setup() {
-    //new TestFixture().with(addAutomaticFacets({'desired-count': '1'})).init();
+    new TestFixture()
+      .with(addAutomaticFacetBuilder({'desired-count': '1'}))
+      .init();
   }
 
   describe('verify rendering', () => {

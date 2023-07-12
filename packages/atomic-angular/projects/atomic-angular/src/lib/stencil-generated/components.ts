@@ -48,6 +48,27 @@ export class AtomicAutomaticFacet {
 }
 
 
+export declare interface AtomicAutomaticFacetBuilder extends Components.AtomicAutomaticFacetBuilder {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['desiredCount']
+})
+@Component({
+  selector: 'atomic-automatic-facet-builder',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['desiredCount']
+})
+export class AtomicAutomaticFacetBuilder {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicBreadbox extends Components.AtomicBreadbox {}
 
 @ProxyCmp({
