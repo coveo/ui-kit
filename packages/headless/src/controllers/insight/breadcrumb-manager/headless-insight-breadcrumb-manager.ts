@@ -10,7 +10,7 @@ import {
   updateFreezeCurrentValues,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {facetResponseSelectedValuesSelector} from '../../../features/facets/facet-set/facet-set-selectors';
+import {facetResponseActiveValuesSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
 import {
@@ -18,14 +18,14 @@ import {
   toggleSelectDateFacetValue,
 } from '../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {logDateFacetBreadcrumb} from '../../../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
-import {dateFacetSelectedValuesSelector} from '../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
+import {dateFacetActiveValuesSelector} from '../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 import {dateFacetSetReducer as dateFacetSet} from '../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {logNumericFacetBreadcrumb} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
-import {numericFacetSelectedValuesSelector} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
+import {numericFacetActiveValuesSelector} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 import {numericFacetSetReducer as numericFacetSet} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
@@ -113,7 +113,7 @@ export function buildBreadcrumbManager(
         );
         dispatch(executeSearch(analyticsAction));
       },
-      facetResponseSelectedValuesSelector
+      facetResponseActiveValuesSelector
     );
   };
 
@@ -129,7 +129,7 @@ export function buildBreadcrumbManager(
         dispatch(toggleExcludeNumericFacetValue(payload));
         dispatch(executeSearch(logNumericFacetBreadcrumb(payload)));
       },
-      numericFacetSelectedValuesSelector
+      numericFacetActiveValuesSelector
     );
   };
 
@@ -145,7 +145,7 @@ export function buildBreadcrumbManager(
         dispatch(toggleExcludeDateFacetValue(payload));
         dispatch(executeSearch(logDateFacetBreadcrumb(payload)));
       },
-      dateFacetSelectedValuesSelector
+      dateFacetActiveValuesSelector
     );
   };
 

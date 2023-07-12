@@ -219,8 +219,13 @@ export const getBreadcrumbs = <T extends AnyFacetSetState>(
       const values = facetValuesSelector(engine.state, facetId).map(
         (selection) => ({
           value: selection,
-          deselect: () => executeToggleSelect({facetId, selection}),
-          exclude: () => executeToggleExclude({facetId, selection}),
+          deselect: () => {
+            if (selection.state === 'selected') {
+              executeToggleSelect({facetId, selection});
+            } else if (selection.state === 'excluded') {
+              executeToggleExclude({facetId, selection});
+            }
+          },
         })
       );
 

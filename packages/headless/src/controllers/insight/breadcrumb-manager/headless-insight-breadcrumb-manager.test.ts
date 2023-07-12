@@ -4,16 +4,23 @@ import {deselectAllCategoryFacetValues} from '../../../features/facets/category-
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {
+  toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
-import {toggleSelectDateFacetValue} from '../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {dateFacetSetReducer as dateFacetSet} from '../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {toggleSelectNumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {numericFacetSetReducer as numericFacetSet} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
@@ -80,12 +87,16 @@ describe('insight breadcrumb manager', () => {
   });
 
   describe('facet breadcrumbs', () => {
-    let mockValue: FacetValue;
+    let mockSelectedValue: FacetValue;
+    let mockExcludedValue: FacetValue;
     let facetBreadcrumbs: FacetBreadcrumb[];
 
     beforeEach(() => {
-      mockValue = buildMockFacetValue({
+      mockSelectedValue = buildMockFacetValue({
         state: 'selected',
+      });
+      mockExcludedValue = buildMockFacetValue({
+        state: 'excluded',
       });
 
       state = buildMockInsightState({
@@ -93,7 +104,12 @@ describe('insight breadcrumb manager', () => {
           ...getSearchInitialState(),
           response: {
             ...getSearchInitialState().response,
-            facets: [buildMockFacetResponse({facetId, values: [mockValue]})],
+            facets: [
+              buildMockFacetResponse({
+                facetId,
+                values: [mockSelectedValue, mockExcludedValue],
+              }),
+            ],
           },
         },
         facetSet: {
@@ -108,7 +124,8 @@ describe('insight breadcrumb manager', () => {
     });
 
     it('#state gets facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
+      expect(facetBreadcrumbs[0].values[0].value).toBe(mockSelectedValue);
+      expect(facetBreadcrumbs[0].values[1].value).toBe(mockExcludedValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -121,7 +138,7 @@ describe('insight breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
         })
       );
     });
@@ -141,18 +158,55 @@ describe('insight breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
+        })
+      );
+    });
+
+    it('dispatches an executeSearch action on exclusion', () => {
+      facetBreadcrumbs[0].values[1].deselect();
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
+
+    it('dispatches an toggleExcludeFacetValue action on exclusion', () => {
+      facetBreadcrumbs[0].values[1].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleExcludeFacetValue({
+          facetId,
+          selection: mockExcludedValue,
+        })
+      );
+    });
+
+    it('dispatches an updateFreezeCurrentValues action on exclusion', () => {
+      facetBreadcrumbs[0].values[1].deselect();
+      expect(engine.actions).toContainEqual(
+        updateFreezeCurrentValues({
+          facetId,
+          freezeCurrentValues: false,
+        })
+      );
+    });
+
+    it('dispatches a toggleExcludeFacetValue action when #deselectBreadcrumb is called', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[1]);
+      expect(engine.actions).toContainEqual(
+        toggleExcludeFacetValue({
+          facetId,
+          selection: mockExcludedValue,
         })
       );
     });
   });
 
   describe('date facet breadcrumbs', () => {
-    let mockValue: DateFacetValue;
+    let mockSelectedValue: DateFacetValue;
+    let mockExcludedValue: DateFacetValue;
     let facetBreadcrumbs: DateFacetBreadcrumb[];
 
     beforeEach(() => {
-      mockValue = buildMockDateFacetValue({state: 'selected'});
+      mockSelectedValue = buildMockDateFacetValue({state: 'selected'});
+      mockExcludedValue = buildMockDateFacetValue({state: 'excluded'});
 
       state = buildMockInsightState({
         search: {
@@ -160,7 +214,10 @@ describe('insight breadcrumb manager', () => {
           response: {
             ...getSearchInitialState().response,
             facets: [
-              buildMockDateFacetResponse({facetId, values: [mockValue]}),
+              buildMockDateFacetResponse({
+                facetId,
+                values: [mockSelectedValue, mockExcludedValue],
+              }),
             ],
           },
         },
@@ -176,7 +233,8 @@ describe('insight breadcrumb manager', () => {
     });
 
     it('#state gets date facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
+      expect(facetBreadcrumbs[0].values[0].value).toBe(mockSelectedValue);
+      expect(facetBreadcrumbs[0].values[1].value).toBe(mockExcludedValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -189,7 +247,7 @@ describe('insight breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectDateFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
         })
       );
     });
@@ -199,18 +257,45 @@ describe('insight breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectDateFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
+        })
+      );
+    });
+
+    it('dispatches an executeSearch action on exclusion', () => {
+      facetBreadcrumbs[0].values[1].deselect();
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
+
+    it('dispatches a toggleExcludeDateFacetValue action on exclusion', () => {
+      facetBreadcrumbs[0].values[1].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleExcludeDateFacetValue({
+          facetId,
+          selection: mockExcludedValue,
+        })
+      );
+    });
+
+    it('dispatches a toggleExcludeDateFacetValue action when #deselectBreadcrumb is called', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[1]);
+      expect(engine.actions).toContainEqual(
+        toggleExcludeDateFacetValue({
+          facetId,
+          selection: mockExcludedValue,
         })
       );
     });
   });
 
   describe('numeric facet breadcrumbs', () => {
-    let mockValue: NumericFacetValue;
+    let mockSelectedValue: NumericFacetValue;
+    let mockExcludedValue: NumericFacetValue;
     let facetBreadcrumbs: NumericFacetBreadcrumb[];
 
     beforeEach(() => {
-      mockValue = buildMockNumericFacetValue({state: 'selected'});
+      mockSelectedValue = buildMockNumericFacetValue({state: 'selected'});
+      mockExcludedValue = buildMockNumericFacetValue({state: 'excluded'});
 
       state = buildMockInsightState({
         search: {
@@ -218,7 +303,10 @@ describe('insight breadcrumb manager', () => {
           response: {
             ...getSearchInitialState().response,
             facets: [
-              buildMockNumericFacetResponse({facetId, values: [mockValue]}),
+              buildMockNumericFacetResponse({
+                facetId,
+                values: [mockSelectedValue, mockExcludedValue],
+              }),
             ],
           },
         },
@@ -234,7 +322,8 @@ describe('insight breadcrumb manager', () => {
     });
 
     it('#state gets numeric facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
+      expect(facetBreadcrumbs[0].values[0].value).toBe(mockSelectedValue);
+      expect(facetBreadcrumbs[0].values[1].value).toBe(mockExcludedValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -247,7 +336,7 @@ describe('insight breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectNumericFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
         })
       );
     });
@@ -257,19 +346,45 @@ describe('insight breadcrumb manager', () => {
       expect(engine.actions).toContainEqual(
         toggleSelectNumericFacetValue({
           facetId,
-          selection: mockValue,
+          selection: mockSelectedValue,
+        })
+      );
+    });
+
+    it('dispatches an executeSearch action on exclusion', () => {
+      facetBreadcrumbs[0].values[1].deselect();
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
+
+    it('dispatches a toggleExcludeNumericFacetValue action on exclusion', () => {
+      facetBreadcrumbs[0].values[1].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleExcludeNumericFacetValue({
+          facetId,
+          selection: mockExcludedValue,
+        })
+      );
+    });
+
+    it('dispatches a toggleExcludeNumericFacetValue action when #deselectBreadcrumb is called', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[1]);
+      expect(engine.actions).toContainEqual(
+        toggleExcludeNumericFacetValue({
+          facetId,
+          selection: mockExcludedValue,
         })
       );
     });
   });
 
+  // TODO: https://coveord.atlassian.net/browse/KIT-2555
   describe('category facet breadcrumbs', () => {
-    let mockValue: CategoryFacetValue;
+    let mockSelectedValue: CategoryFacetValue;
     let facetBreadcrumbs: CategoryFacetBreadcrumb[];
     const otherFacetId = 'def456';
 
     beforeEach(() => {
-      mockValue = buildMockCategoryFacetValue({state: 'selected'});
+      mockSelectedValue = buildMockCategoryFacetValue({state: 'selected'});
 
       state = buildMockInsightState({
         search: {
@@ -277,10 +392,13 @@ describe('insight breadcrumb manager', () => {
           response: {
             ...getSearchInitialState().response,
             facets: [
-              buildMockCategoryFacetResponse({facetId, values: [mockValue]}),
+              buildMockCategoryFacetResponse({
+                facetId,
+                values: [mockSelectedValue],
+              }),
               buildMockCategoryFacetResponse({
                 facetId: otherFacetId,
-                values: [mockValue],
+                values: [mockSelectedValue],
               }),
             ],
           },
@@ -304,8 +422,7 @@ describe('insight breadcrumb manager', () => {
     });
 
     it('#state gets category facet breadcrumbs correctly', () => {
-      expect(facetBreadcrumbs[0].path).toEqual([mockValue]);
-      expect(facetBreadcrumbs[1].path).toEqual([mockValue]);
+      expect(facetBreadcrumbs[0].path).toEqual([mockSelectedValue]);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -328,6 +445,7 @@ describe('insight breadcrumb manager', () => {
     });
   });
 
+  // TODO: https://coveord.atlassian.net/browse/KIT-2587
   describe('static filter breadcrumbs', () => {
     const id = 'a';
     const idle = buildMockStaticFilterValue({caption: 'b', state: 'idle'});
@@ -335,10 +453,17 @@ describe('insight breadcrumb manager', () => {
       caption: 'c',
       state: 'selected',
     });
+    const excluded = buildMockStaticFilterValue({
+      caption: 'd',
+      state: 'excluded',
+    });
 
     beforeEach(() => {
       state.staticFilterSet = {
-        [id]: buildMockStaticFilterSlice({id, values: [idle, selected]}),
+        [id]: buildMockStaticFilterSlice({
+          id,
+          values: [idle, selected, excluded],
+        }),
       };
     });
 
@@ -385,9 +510,26 @@ describe('insight breadcrumb manager', () => {
     state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
       request: buildMockNumericFacetRequest({facetId}),
     });
-    const mockValue = buildMockNumericFacetValue({state: 'selected'});
+    const mockSelectedValue = buildMockNumericFacetValue({state: 'selected'});
     state.search.response.facets = [
-      buildMockNumericFacetResponse({facetId, values: [mockValue]}),
+      buildMockNumericFacetResponse({
+        facetId,
+        values: [mockSelectedValue],
+      }),
+    ];
+    expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
+  });
+
+  it('hasBreadcrumbs returns true when a facet value is excluded', () => {
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
+      request: buildMockNumericFacetRequest({facetId}),
+    });
+    const mockExcludedValue = buildMockNumericFacetValue({state: 'excluded'});
+    state.search.response.facets = [
+      buildMockNumericFacetResponse({
+        facetId,
+        values: [mockExcludedValue],
+      }),
     ];
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
   });
