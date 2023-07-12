@@ -43,14 +43,7 @@ export class AtomicFacetManager implements InitializableComponent {
   @State()
   public facetManagerState!: FacetManagerState;
   @State() public error!: Error;
-  /**
-   * @beta - This prop is part of the automatic facets feature.
-   * Automatic facets are currently in beta testing and should be available soon.
-   *
-   * The desired count of automatic facets.
-   * Must be a positive integer.
-   */
-  @Prop() public desiredCount?: number;
+
   /**
    * The number of expanded facets inside the manager.
    * Remaining facets are automatically collapsed.
@@ -63,11 +56,7 @@ export class AtomicFacetManager implements InitializableComponent {
   public initialize() {
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.facetManager = this.desiredCount
-      ? buildFacetManager(this.bindings.engine, {
-          desiredCount: this.desiredCount,
-        })
-      : buildFacetManager(this.bindings.engine);
+    this.facetManager = buildFacetManager(this.bindings.engine);
 
     // An update has to be forced for the facets to be visually updated, without being interacted with.
     this.bindings.i18n.on('languageChanged', this.sortFacets);
@@ -125,24 +114,6 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   public render() {
-    const automaticFacets = this.facetManagerState.automaticFacets?.map(
-      (facet) => {
-        return (
-          <atomic-automatic-facet
-            key={facet.state.field}
-            field={facet.state.field}
-            facetId={facet.state.field}
-            facet={facet}
-            searchStatus={this.searchStatus}
-          ></atomic-automatic-facet>
-        );
-      }
-    );
-    return (
-      <Host>
-        <slot />
-        {automaticFacets}
-      </Host>
-    );
+    return <slot />;
   }
 }
