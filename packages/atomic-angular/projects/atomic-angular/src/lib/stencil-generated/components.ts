@@ -195,13 +195,13 @@ export declare interface AtomicFacetManager extends Components.AtomicFacetManage
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['collapseFacetsAfter', 'desiredCount']
+  inputs: ['collapseFacetsAfter']
 })
 @Component({
   selector: 'atomic-facet-manager',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['collapseFacetsAfter', 'desiredCount']
+  inputs: ['collapseFacetsAfter']
 })
 export class AtomicFacetManager {
   protected el: HTMLElement;

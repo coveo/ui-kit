@@ -241,10 +241,6 @@ export namespace Components {
           * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
          */
         "collapseFacetsAfter": number;
-        /**
-          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets. Must be a positive integer.
-         */
-        "desiredCount"?: number;
     }
     interface AtomicFacetNumberInput {
         "bindings": AnyBindings;
@@ -3202,10 +3198,6 @@ declare namespace LocalJSX {
           * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
          */
         "collapseFacetsAfter"?: number;
-        /**
-          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets. Must be a positive integer.
-         */
-        "desiredCount"?: number;
     }
     interface AtomicFacetNumberInput {
         "bindings": AnyBindings;
