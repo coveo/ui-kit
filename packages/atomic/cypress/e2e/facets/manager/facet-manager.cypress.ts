@@ -5,7 +5,6 @@ import {
 } from '../../common-assertions';
 import {addFacetManager, facetManagerComponent} from './facet-manager-actions';
 import {
-  assertContainsAutomaticFacet,
   assertFacetsNoCollapsedAttribute,
   assertHasNumberOfExpandedFacets,
 } from './facet-manager-assertions';
