@@ -6,6 +6,7 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
         
 import {
 AtomicAriaLive,
+AtomicAutomaticFacet,
 AtomicBreadbox,
 AtomicCategoryFacet,
 AtomicColorFacet,
@@ -99,6 +100,7 @@ defineCustomElements(window);
         
 const DECLARATIONS = [
 AtomicAriaLive,
+AtomicAutomaticFacet,
 AtomicBreadbox,
 AtomicCategoryFacet,
 AtomicColorFacet,
