@@ -192,7 +192,7 @@ describe('Static Filter', () => {
       expect(filter.isValueSelected(value)).toBe(true);
     });
 
-    it('when the value state is excluded, it returns true', () => {
+    it('when the value state is excluded, it returns false', () => {
       const value = buildMockStaticFilterValue({state: 'excluded'});
       expect(filter.isValueSelected(value)).toBe(false);
     });
@@ -209,7 +209,7 @@ describe('Static Filter', () => {
       expect(filter.isValueExcluded(value)).toBe(true);
     });
 
-    it('when the value state is selected, it returns true', () => {
+    it('when the value state is selected, it returns false', () => {
       const value = buildMockStaticFilterValue({state: 'selected'});
       expect(filter.isValueExcluded(value)).toBe(false);
     });
@@ -237,6 +237,15 @@ describe('Static Filter', () => {
     it('when at least one value is selected, it is true', () => {
       const id = options.id;
       const value = buildMockStaticFilterValue({state: 'selected'});
+      const slice = buildMockStaticFilterSlice({values: [value]});
+      engine.state.staticFilterSet = {[id]: slice};
+
+      expect(filter.state.hasActiveValues).toBe(true);
+    });
+
+    it('when at least one value is excluded, it is true', () => {
+      const id = options.id;
+      const value = buildMockStaticFilterValue({state: 'excluded'});
       const slice = buildMockStaticFilterSlice({values: [value]});
       engine.state.staticFilterSet = {[id]: slice};
 
