@@ -190,7 +190,7 @@ function getFacets(state: Partial<SearchParametersState>) {
     return {};
   }
 
-  const facets = Object.entries(state.facetSet)
+  const f = Object.entries(state.facetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, {request}]) => {
       const selectedValues = getSelectedValues(request.currentValues);
@@ -198,10 +198,7 @@ function getFacets(state: Partial<SearchParametersState>) {
     })
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
-  if (Object.keys(facets).length > 0) {
-    console.log('a');
-  }
-  return Object.keys(facets).length ? {f: facets} : {};
+  return Object.keys(f).length ? {f} : {};
 }
 
 function getSelectedValues(values: FacetValueRequest[]) {
