@@ -9,6 +9,7 @@ import {
   deselectAllCategoryFacetValues,
   registerCategoryFacet,
   RegisterCategoryFacetActionCreatorPayload,
+  toggleExcludeCategoryFacetValue,
   toggleSelectCategoryFacetValue,
   ToggleSelectCategoryFacetValueActionCreatorPayload,
   updateCategoryFacetNumberOfValues,
@@ -58,6 +59,16 @@ export interface CategoryFacetSetActionCreators {
   ): PayloadAction<ToggleSelectCategoryFacetValueActionCreatorPayload>;
 
   /**
+   * Toggles the exclusion of a category facet value.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  toggleExcludeCategoryFacetValue(
+    payload: ToggleSelectCategoryFacetValueActionCreatorPayload
+  ): PayloadAction<ToggleSelectCategoryFacetValueActionCreatorPayload>;
+
+  /**
    * Updates the number of values of a category facet.
    *
    * @param payload - The action creator payload.
@@ -102,6 +113,7 @@ export function loadCategoryFacetSetActions(
     deselectAllCategoryFacetValues,
     registerCategoryFacet,
     toggleSelectCategoryFacetValue,
+    toggleExcludeCategoryFacetValue,
     updateCategoryFacetNumberOfValues,
     updateCategoryFacetSortCriterion,
     updateFacetAutoSelection,

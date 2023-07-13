@@ -2,7 +2,7 @@ import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
-import {categoryFacetResponseSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
+import {categoryFacetResponseActiveValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice';
 import {
   toggleSelectFacetValue,
@@ -127,10 +127,7 @@ export function buildBreadcrumbManager(
   };
 
   const buildCategoryFacetBreadcrumb = (facetId: string) => {
-    const path = categoryFacetResponseSelectedValuesSelector(
-      getState(),
-      facetId
-    );
+    const path = categoryFacetResponseActiveValuesSelector(getState(), facetId);
     return {
       facetId,
       field: getState().categoryFacetSet[facetId]!.request.field,

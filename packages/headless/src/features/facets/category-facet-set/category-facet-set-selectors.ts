@@ -33,7 +33,7 @@ export const categoryFacetRequestSelector = (
   return state.categoryFacetSet[id]?.request;
 };
 
-export const categoryFacetResponseSelectedValuesSelector = (
+export const categoryFacetResponseActiveValuesSelector = (
   state: CategoryFacetSection & Partial<FacetResponseSection>,
   facetId: string
 ) => {
@@ -42,7 +42,7 @@ export const categoryFacetResponseSelectedValuesSelector = (
   return parentsAndValues.parents;
 };
 
-export const categoryFacetRequestSelectedValuesSelector = (
+export const categoryFacetRequestActiveValuesSelector = (
   state: CategoryFacetSection,
   facetId: string
 ) => {

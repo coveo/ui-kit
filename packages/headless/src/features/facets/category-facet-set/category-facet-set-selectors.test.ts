@@ -9,7 +9,7 @@ import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {createMockState} from '../../../test/mock-state';
 import {
   categoryFacetResponseSelector,
-  categoryFacetResponseSelectedValuesSelector,
+  categoryFacetResponseActiveValuesSelector,
 } from './category-facet-set-selectors';
 
 describe('category facet selectors', () => {
@@ -53,7 +53,7 @@ describe('category facet selectors', () => {
     });
 
     it('#categoryFacetSelectedValuesSelector returns an empty array if the facet does not exist', () => {
-      const selectedResults = categoryFacetResponseSelectedValuesSelector(
+      const selectedResults = categoryFacetResponseActiveValuesSelector(
         state,
         facetId
       );
@@ -71,7 +71,7 @@ describe('category facet selectors', () => {
           values: [mockValue],
         }),
       ];
-      const selectedResults = categoryFacetResponseSelectedValuesSelector(
+      const selectedResults = categoryFacetResponseActiveValuesSelector(
         state,
         facetId
       );
@@ -93,7 +93,7 @@ describe('category facet selectors', () => {
           values: [mockValue, ignoredValue],
         }),
       ];
-      const selectedResults = categoryFacetResponseSelectedValuesSelector(
+      const selectedResults = categoryFacetResponseActiveValuesSelector(
         state,
         facetId
       );
@@ -116,7 +116,7 @@ describe('category facet selectors', () => {
           values: [mockValue],
         }),
       ];
-      const selectedResults = categoryFacetResponseSelectedValuesSelector(
+      const selectedResults = categoryFacetResponseActiveValuesSelector(
         state,
         facetId
       );

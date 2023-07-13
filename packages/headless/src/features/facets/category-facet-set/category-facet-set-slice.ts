@@ -19,6 +19,7 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
   RegisterCategoryFacetActionCreatorPayload,
+  toggleExcludeCategoryFacetValue,
 } from './category-facet-set-actions';
 import {
   CategoryFacetSetState,
@@ -103,6 +104,39 @@ export const categoryFacetSetReducer = createReducer(
           retrieveCount
         );
         newParent.state = 'selected';
+        children.push(newParent);
+        request.numberOfValues = 1;
+      })
+      .addCase(toggleExcludeCategoryFacetValue, (state, action) => {
+        const {facetId, selection, retrieveCount} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request) {
+          return;
+        }
+
+        const {path} = selection;
+        const pathToSelection = path.slice(0, path.length - 1);
+        const children = ensurePathAndReturnChildren(
+          request,
+          pathToSelection,
+          retrieveCount
+        );
+
+        if (children.length) {
+          const lastSelectedParent = children[0];
+
+          lastSelectedParent.retrieveChildren = true;
+          lastSelectedParent.state = 'excluded';
+          lastSelectedParent.children = [];
+          return;
+        }
+
+        const newParent = buildCategoryFacetValueRequest(
+          selection.value,
+          retrieveCount
+        );
+        newParent.state = 'excluded';
         children.push(newParent);
         request.numberOfValues = 1;
       })

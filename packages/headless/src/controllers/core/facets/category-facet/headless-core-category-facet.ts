@@ -11,6 +11,7 @@ import {
   deselectAllCategoryFacetValues,
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  toggleExcludeCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/category-facet-set-actions';
@@ -82,6 +83,13 @@ export interface CoreCategoryFacet extends Controller {
    * @param selection - The facet value to toggle.
    */
   toggleSelect(selection: CategoryFacetValue): void;
+
+  /**
+   * Toggles exclusion of the specified facet value.
+   *
+   * @param selection - The facet value to toggle.
+   */
+  toggleExclude(selection: CategoryFacetValue): void;
 
   /**
    * Deselects all facet values.
@@ -305,6 +313,14 @@ export function buildCoreCategoryFacet(
       const retrieveCount = options.numberOfValues;
       dispatch(
         toggleSelectCategoryFacetValue({facetId, selection, retrieveCount})
+      );
+      dispatch(updateFacetOptions());
+    },
+
+    toggleExclude(selection: CategoryFacetValue) {
+      const retrieveCount = options.numberOfValues;
+      dispatch(
+        toggleExcludeCategoryFacetValue({facetId, selection, retrieveCount})
       );
       dispatch(updateFacetOptions());
     },

@@ -23,10 +23,10 @@ export function partitionIntoParentsAndValues<
     values = values[0].children as T[];
   }
 
-  const selectedLeafValue = values.find((v) => v.state === 'selected');
+  const activeLeafValue = values.find((v) => v.state !== 'idle');
 
-  if (selectedLeafValue) {
-    parents = [...parents, selectedLeafValue];
+  if (activeLeafValue) {
+    parents = [...parents, activeLeafValue];
     values = [];
   }
 

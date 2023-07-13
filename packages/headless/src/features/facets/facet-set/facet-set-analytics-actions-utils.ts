@@ -8,7 +8,7 @@ import {
 } from '../../../state/state-sections';
 import {getAutomaticFacetSetInitialState} from '../automatic-facet-set/automatic-facet-set-state';
 import {AutomaticFacetResponse} from '../automatic-facet-set/interfaces/response';
-import {categoryFacetRequestSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
+import {categoryFacetRequestActiveValuesSelector} from '../category-facet-set/category-facet-set-selectors';
 import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
 import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
 import {FacetType} from '../facet-api/request';
@@ -94,7 +94,7 @@ export const buildFacetStateMetadata = (
     );
 
     if (isCategoryFacetRequest(facetRequest)) {
-      const hasSelectedValue = !!categoryFacetRequestSelectedValuesSelector(
+      const hasSelectedValue = !!categoryFacetRequestActiveValuesSelector(
         state,
         facetRequest.facetId
       ).length;
@@ -224,8 +224,10 @@ const getCategoryFacetSelectedValue = (
   state: SectionNeededForFacetMetadata,
   facetId: string
 ) => {
-  const selectedCategoryFacetValues =
-    categoryFacetRequestSelectedValuesSelector(state, facetId);
+  const selectedCategoryFacetValues = categoryFacetRequestActiveValuesSelector(
+    state,
+    facetId
+  );
   return selectedCategoryFacetValues
     .map((selectedCategoryFacetValue) => selectedCategoryFacetValue.value)
     .join(';');

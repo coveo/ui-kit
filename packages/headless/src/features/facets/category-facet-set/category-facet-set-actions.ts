@@ -132,6 +132,19 @@ export const toggleSelectCategoryFacetValue = createAction(
   }
 );
 
+export const toggleExcludeCategoryFacetValue = createAction(
+  'categoryFacet/toggleExcludeValue',
+  (payload: ToggleSelectCategoryFacetValueActionCreatorPayload) => {
+    try {
+      validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);
+      validateCategoryFacetValue(payload.selection);
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: serializeSchemaValidationError(error as Error)};
+    }
+  }
+);
+
 export const deselectAllCategoryFacetValues = createAction(
   'categoryFacet/deselectAll',
   (payload: string) => validatePayload(payload, facetIdDefinition)
