@@ -38,6 +38,7 @@ import {
     SmartSnippetLinkMeta,
     GeneratedAnswerFeedbackMeta,
     GeneratedAnswerCitationMeta,
+    GeneratedAnswerStreamEndMeta,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
@@ -916,5 +917,13 @@ export class CoveoSearchPageClient {
 
     public async logRetryGeneratedAnswer() {
         return (await this.makeRetryGeneratedAnswer()).log({searchUID: this.provider.getSearchUID()});
+    }
+
+    public makeGeneratedAnswerStreamEnd(metadata: GeneratedAnswerStreamEndMeta) {
+        return this.makeCustomEvent(SearchPageEvents.generatedAnswerStreamEnd, metadata);
+    }
+
+    public async logGeneratedAnswerStreamEnd(metadata: GeneratedAnswerStreamEndMeta) {
+        return (await this.makeGeneratedAnswerStreamEnd(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 }
