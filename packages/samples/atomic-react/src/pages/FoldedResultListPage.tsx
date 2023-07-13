@@ -25,7 +25,7 @@ export const FoldedResultListPage: FunctionComponent = () => {
     <AtomicPageWrapper
       accessToken="xx564559b1-0045-48e1-953c-3addd1ee4457"
       organizationId="searchuisamples"
-      options={{expression: '@source=iNaturalistTaxons'}}
+      options={{foldedResults: true}}
     >
       <AtomicFoldedResultList imageSize="large" template={MyTemplate} />
     </AtomicPageWrapper>

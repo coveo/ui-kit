@@ -43,7 +43,7 @@ import React, {FunctionComponent, useMemo} from 'react';
 type Options = {
   instantResults?: boolean;
   recentQueries?: boolean;
-  expression?: string;
+  foldedResults?: boolean;
 };
 type Props = {
   accessToken: string;
@@ -58,7 +58,7 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
   children,
   options = {},
 }) => {
-  const searchConfig = options.expression
+  const searchConfig = options.foldedResults
     ? {}
     : {
         pipeline: 'Search',
@@ -77,11 +77,11 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
     [accessToken, organizationId]
   );
 
-  if (options.expression) {
+  if (options.foldedResults) {
     const action = loadAdvancedSearchQueryActions(
       engine
     ).updateAdvancedSearchQueries({
-      aq: options.expression,
+      aq: '@source=iNaturalistTaxons',
     });
     engine.dispatch(action);
   }
