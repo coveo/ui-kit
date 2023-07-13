@@ -67,6 +67,15 @@ describe('Insight Panel test suites', () => {
         .should('have.attr', 'href');
     });
 
+    it('should display result action bar', () => {
+      InsightPanelsSelectors.resultActionBar()
+        .should('exist')
+        .should('have.length.at.least', 1)
+        .find('button')
+        .find('atomic-icon')
+        .should('exist');
+    });
+
     it('should display pagination', () => {
       InsightPanelsSelectors.pager()
         .should('exist')

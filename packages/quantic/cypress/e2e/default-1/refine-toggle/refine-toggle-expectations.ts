@@ -110,6 +110,13 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         );
     },
 
+    displayFacetManager: (display = true) => {
+      selector
+        .facetManager()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} the facet manager`);
+    },
+
     displayFiltersCountBadge: (display: boolean) => {
       selector
         .filtersCountBadge()
