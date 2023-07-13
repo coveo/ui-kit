@@ -1,11 +1,12 @@
 @import '../../../global/global.pcss';
+@import '../../../global/mixins.pcss';
 
 [part='header-label'] {
   color: var(--atomic-primary);
 }
 
 [part='generated-text'] {
-  @mixin set-font-size var(--atomic-text);
+  @mixin set-font-size var(--atomic-text-lg);
 
   color: var(--atomic-on-background);
 
@@ -13,9 +14,11 @@
     content: '';
     width: 8px;
     height: 1em;
+    margin-left: 0.1em;
     background: var(--atomic-neutral-dark);
     display: inline-block;
     animation: cursor-blink 1.5s steps(2) infinite;
+    vertical-align: text-bottom;
   }
 }
 
@@ -25,18 +28,33 @@
   }
 }
 
+@define-mixin icon-coloring $color {
+  svg path {
+    &.line {
+      stroke: $color;
+    }
+    &.fill {
+      fill: $color;
+    }
+  }
+}
+
 .feedback-buttons {
   .feedback-button {
     width: 2.2rem;
     height: 2.2rem;
 
+    @mixin icon-coloring var(--atomic-neutral-dark);
+
     &.active {
       &.like {
         background: var(--atomic-success-background);
+        @mixin icon-coloring var(--atomic-success);
       }
 
       &.dislike {
         background: var(--atomic-error-background);
+        @mixin icon-coloring var(--atomic-error);
       }
     }
   }

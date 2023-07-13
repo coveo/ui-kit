@@ -153,6 +153,7 @@ export const streamAnswer = createAsyncThunk<
         abortController.abort();
         dispatch(updateError(error));
       },
+      close: () => dispatch(setIsStreaming(false)),
       resetAnswer: () => dispatch(resetAnswer()),
     }
   );
