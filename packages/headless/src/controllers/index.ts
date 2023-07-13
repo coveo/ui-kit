@@ -230,10 +230,7 @@ export {buildTab} from './tab/headless-tab';
 export type {
   FacetManagerPayload,
   FacetManagerState,
-  FacetManagerProps,
   FacetManager,
-  CoreFacetManager,
-  CoreFacetManagerState,
 } from './facet-manager/headless-facet-manager';
 export {buildFacetManager} from './facet-manager/headless-facet-manager';
 
@@ -413,6 +410,13 @@ export type {
   AutomaticFacetState,
 } from './facets/automatic-facet/headless-automatic-facet';
 export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
+
+export type {
+  AutomaticFacetBuilder,
+  AutomaticFacetBuilderProps,
+  AutomaticFacetBuilderState,
+} from './facets/automatic-facet-builder/headless-automatic-facet-builder';
+export {buildAutomaticFacetBuilder} from './facets/automatic-facet-builder/headless-automatic-facet-builder';
 
 export type {
   GeneratedAnswer,
