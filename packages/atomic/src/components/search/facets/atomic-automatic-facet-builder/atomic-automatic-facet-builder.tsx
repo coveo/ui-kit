@@ -77,8 +77,8 @@ export class AtomicAutomaticFacetBuilder implements InitializableComponent {
   }
 
   public render() {
-    const automaticFacets =
-      this.automaticFacetBuilderState.automaticFacets?.map((facet) => {
+    const automaticFacets = this.automaticFacetBuilderState.automaticFacets.map(
+      (facet) => {
         return (
           <atomic-automatic-facet
             key={facet.state.field}
@@ -89,7 +89,8 @@ export class AtomicAutomaticFacetBuilder implements InitializableComponent {
             isCollapsed={this.areCollapsed}
           ></atomic-automatic-facet>
         );
-      });
+      }
+    );
 
     return automaticFacets;
   }
