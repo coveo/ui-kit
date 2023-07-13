@@ -41,7 +41,7 @@
     "e2e:snapshots:watch": "cypress open --config-file cypress-screenshots.config.ts --browser chrome",
     "e2e:insight": "cypress run --config-file cypress-insight-panel.config.ts --browser chrome",
     "e2e:insight:watch": "cypress open --config-file cypress-insight-panel.config.ts --browser chrome",
-    "release:phase1": "npx -p=@coveo/release bump",
+    "release:phase1": "npm run build --prefix ../../utils/atomic-storybook && npm npx -p=@coveo/release bump",
     "release:phase2": "npx -p=@coveo/release npm-publish",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
