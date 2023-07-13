@@ -54,15 +54,17 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const af = action.payload.af ?? {};
-        const facetFields = Object.keys(af);
+        const fields = Object.keys(af);
 
-        facetFields.forEach((field) => {
+        for (const field of fields) {
           const response = buildTemporaryAutomaticFacetResponse(field);
-          af[field].forEach((value) => {
-            response.values.push(buildFacetValue(value));
-          });
+          const values = af[field].map((value) =>
+            buildTemporarySelectedFacetValue(value)
+          );
+          response.values.push(...values);
+
           state.facets[field] = response;
-        });
+        }
       });
   }
 );
@@ -78,7 +80,7 @@ function buildTemporaryAutomaticFacetResponse(
     indexScore: 0,
   };
 }
-function buildFacetValue(value: string): FacetValue {
+function buildTemporarySelectedFacetValue(value: string): FacetValue {
   return {
     value,
     state: 'selected',

@@ -2,6 +2,7 @@ import {buildMockAutomaticFacetResponse} from '../../../test/mock-automatic-face
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../search/search-actions';
 import {FacetValueState} from '../facet-api/value';
 import {
@@ -161,6 +162,21 @@ describe('automatic-facet-set slice', () => {
       expect(targetValues.every((value) => value.state === 'idle')).toEqual(
         true
       );
+    });
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it(`when a facet is found in the #af payload,
+    it sets #values to the selected values in the payload`, () => {
+      const field = 'field';
+      const value = 'a';
+      const af = {[field]: [value]};
+      const action = restoreSearchParameters({af});
+
+      const finalState = automaticFacetSetReducer(state, action);
+      const selectedValue = buildMockFacetValue({value, state: 'selected'});
+
+      expect(finalState.facets[field].values).toEqual([selectedValue]);
     });
   });
 });
