@@ -5,7 +5,7 @@ describe('coveo.analytics', () => {
         cy.intercept(getCollectEndpoint()).as('collect');
 
         cy.on('uncaught:exception', (err, runnable) => {
-            cy.error(err);
+            cy.log(err.message);
             // returning false here prevents Cypress from
             // failing the test
             return false;
