@@ -19,6 +19,9 @@ import {
   buildAutomaticFacet,
 } from '../automatic-facet/headless-automatic-facet';
 
+/**
+ * The `AutomaticFacetBuilder` headless controller offers a high-level interface for rendering automatic facets.
+ */
 export interface AutomaticFacetBuilder extends Controller {
   /**
    * The state of the `AutomaticFacetBuilder` controller.
@@ -33,7 +36,7 @@ export interface AutomaticFacetBuilderState {
    *
    * The list of automatic facet controllers.
    */
-  automaticFacets?: AutomaticFacet[];
+  automaticFacets: AutomaticFacet[];
 }
 
 export interface AutomaticFacetBuilderProps {
@@ -68,16 +71,15 @@ export function buildAutomaticFacetBuilder(
   dispatch(setDesiredCount(props.desiredCount));
 
   const controller = buildController(engine);
-  const getAutomaticFacets = () =>
-    engine.state.search.response.generateAutomaticFacets?.facets;
 
   return {
     ...controller,
 
     get state() {
-      const automaticFacets = getAutomaticFacets()?.map((facet) =>
-        buildAutomaticFacet(engine, {field: facet.field})
-      );
+      const automaticFacets =
+        engine.state.search.response.generateAutomaticFacets.facets.map(
+          (facet) => buildAutomaticFacet(engine, {field: facet.field})
+        );
       return {
         automaticFacets,
       };
