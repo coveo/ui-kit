@@ -289,8 +289,7 @@ export function BindStateToController(
 
     component.disconnectedCallback = function () {
       !getElement(this).isConnected &&
-        this.unsubscribeController &&
-        this.unsubscribeController();
+        this.unsubscribeController?.();
       disconnectedCallback && disconnectedCallback.call(this);
     };
   };
