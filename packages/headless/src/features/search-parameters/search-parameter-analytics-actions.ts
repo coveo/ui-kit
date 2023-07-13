@@ -42,6 +42,10 @@ export function logParametersChange(
     return logFacetAnalyticsAction(previousParameters.cf, newParameters.cf);
   }
 
+  if (areFacetParamsEqual(previousParameters.af, newParameters.af)) {
+    return logFacetAnalyticsAction(previousParameters.af, newParameters.af);
+  }
+
   if (areFacetParamsEqual(previousParameters.nf, newParameters.nf)) {
     return logRangeFacetAnalyticsAction(
       previousParameters.nf,
@@ -54,10 +58,6 @@ export function logParametersChange(
       previousParameters.df,
       newParameters.df
     );
-  }
-
-  if (areFacetParamsEqual(previousParameters.af, newParameters.af)) {
-    return logFacetAnalyticsAction(previousParameters.af, newParameters.af);
   }
 
   return logInterfaceChange();
