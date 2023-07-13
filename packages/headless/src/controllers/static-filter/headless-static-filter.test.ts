@@ -55,7 +55,7 @@ describe('Static Filter', () => {
     );
   });
   describe('#toggleSelect', () => {
-    it('dispatches #toggleStaticFilterValue', () => {
+    it('dispatches #toggleSelectStaticFilterValue', () => {
       const value = buildMockStaticFilterValue();
       filter.toggleSelect(value);
 
@@ -73,7 +73,7 @@ describe('Static Filter', () => {
   });
 
   describe('#toggleExclude', () => {
-    it('dispatches #toggleStaticFilterValue', () => {
+    it('dispatches #toggleExcludeStaticFilterValue', () => {
       const value = buildMockStaticFilterValue();
       filter.toggleExclude(value);
 
