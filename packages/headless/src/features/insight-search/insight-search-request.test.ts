@@ -14,7 +14,6 @@ import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constant
 import {
   buildInsightSearchRequest,
   buildInsightLoadCollectionRequest,
-  buildInsightBaseRequest,
 } from './insight-search-request';
 
 describe('insight search request', () => {
@@ -26,70 +25,68 @@ describe('insight search request', () => {
     collectionId = 'mockCollectionId';
   });
 
-  describe('when using buildInsightBaseRequest', () => {
-    it('#buildInsightBaseRequest returns the state #query', async () => {
+  describe('when using buildInsightSearchRequest', () => {
+    it('#buildInsightSearchRequest returns the state #query', async () => {
       state.query.q = 'hello';
-      const params = (await buildInsightBaseRequest(state)).request;
+      const params = (await buildInsightSearchRequest(state)).request;
 
       expect(params.q).toBe(state.query.q);
     });
 
-    it('#buildInsightBaseRequest returns the state #sortCriteria', async () => {
+    it('#buildInsightSearchRequest returns the state #sortCriteria', async () => {
       state.sortCriteria = 'qre';
-      const params = (await buildInsightBaseRequest(state)).request;
+      const params = (await buildInsightSearchRequest(state)).request;
 
       expect(params.sortCriteria).toBe(state.sortCriteria);
     });
 
-    it('#buildInsightBaseRequest returns the facets in the state #facetSet', async () => {
+    it('#buildInsightSearchRequest returns the facets in the state #facetSet', async () => {
       const request = buildMockFacetRequest({field: 'objecttype'});
       state.facetSet[1] = buildMockFacetSlice({request});
-      const {facets} = (await buildInsightBaseRequest(state)).request;
+      const {facets} = (await buildInsightSearchRequest(state)).request;
 
       expect(facets).toContainEqual(request);
     });
 
-    it('#buildInsightBaseRequest returns the facets in the state #numericFacetSet', async () => {
+    it('#buildInsightSearchRequest returns the facets in the state #numericFacetSet', async () => {
       const request = buildMockNumericFacetRequest({field: 'objecttype'});
       state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
-      const {facets} = (await buildInsightBaseRequest(state)).request;
+      const {facets} = (await buildInsightSearchRequest(state)).request;
       expect(facets).toContainEqual(request);
     });
 
-    it('#buildInsightBaseRequest returns the facets in the state #dateFacetSet', async () => {
+    it('#buildInsightSearchRequest returns the facets in the state #dateFacetSet', async () => {
       const request = buildMockDateFacetRequest({field: 'objecttype'});
       state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
-      const {facets} = (await buildInsightBaseRequest(state)).request;
+      const {facets} = (await buildInsightSearchRequest(state)).request;
       expect(facets).toContainEqual(request);
     });
 
-    it('#buildInsightBaseRequest returns the facets in the #categoryFacetSet', async () => {
+    it('#buildInsightSearchRequest returns the facets in the #categoryFacetSet', async () => {
       const request = buildMockCategoryFacetRequest({field: 'objecttype'});
       state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});
 
-      const {facets} = (await buildInsightBaseRequest(state)).request;
+      const {facets} = (await buildInsightSearchRequest(state)).request;
       expect(facets).toContainEqual(request);
     });
 
-    it('#buildInsightBaseRequest.fieldsToInclude holds the #fieldsToInclude', async () => {
+    it('#buildInsightSearchRequest.fieldsToInclude holds the #fieldsToInclude', async () => {
       state.fields.fieldsToInclude = ['foo', 'bar'];
       expect(
-        (await buildInsightBaseRequest(state)).request.fieldsToInclude
+        (await buildInsightSearchRequest(state)).request.fieldsToInclude
       ).toEqual(expect.arrayContaining(['foo', 'bar']));
     });
 
-    it('#buildInsightBaseRequest.fieldsToInclude does not holds #fieldsToInclude if #fetchAllFields is active', async () => {
+    it('#buildInsightSearchRequest.fieldsToInclude does not holds #fieldsToInclude if #fetchAllFields is active', async () => {
       state.fields.fieldsToInclude = ['foo', 'bar'];
       state.fields.fetchAllFields = true;
       expect(
-        (await buildInsightBaseRequest(state)).request.fieldsToInclude
+        (await buildInsightSearchRequest(state)).request.fieldsToInclude
       ).toBeUndefined();
     });
-  });
 
-  describe('when using buildInsightSearchRequest', () => {
     it('#buildInsightSearchRequest returns the state #numberOfResults', async () => {
       state.pagination.numberOfResults = 10;
       const params = (await buildInsightSearchRequest(state)).request;
@@ -126,6 +123,81 @@ describe('insight search request', () => {
   });
 
   describe('when using buildInsightLoadCollectionRequest', () => {
+    it('#buildInsightLoadCollectionRequest returns the state #query', async () => {
+      state.query.q = 'hello';
+      const params = (
+        await buildInsightLoadCollectionRequest(state, collectionId)
+      ).request;
+
+      expect(params.q).toBe(state.query.q);
+    });
+
+    it('#buildInsightLoadCollectionRequest returns the state #sortCriteria', async () => {
+      state.sortCriteria = 'qre';
+      const params = (
+        await buildInsightLoadCollectionRequest(state, collectionId)
+      ).request;
+
+      expect(params.sortCriteria).toBe(state.sortCriteria);
+    });
+
+    it('#buildInsightLoadCollectionRequest returns the facets in the state #facetSet', async () => {
+      const request = buildMockFacetRequest({field: 'objecttype'});
+      state.facetSet[1] = buildMockFacetSlice({request});
+      const {facets} = (
+        await buildInsightLoadCollectionRequest(state, collectionId)
+      ).request;
+
+      expect(facets).toContainEqual(request);
+    });
+
+    it('#buildInsightLoadCollectionRequest returns the facets in the state #numericFacetSet', async () => {
+      const request = buildMockNumericFacetRequest({field: 'objecttype'});
+      state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
+
+      const {facets} = (
+        await buildInsightLoadCollectionRequest(state, collectionId)
+      ).request;
+      expect(facets).toContainEqual(request);
+    });
+
+    it('#buildInsightLoadCollectionRequest returns the facets in the state #dateFacetSet', async () => {
+      const request = buildMockDateFacetRequest({field: 'objecttype'});
+      state.dateFacetSet[1] = buildMockDateFacetSlice({request});
+
+      const {facets} = (
+        await buildInsightLoadCollectionRequest(state, collectionId)
+      ).request;
+      expect(facets).toContainEqual(request);
+    });
+
+    it('#buildInsightLoadCollectionRequest returns the facets in the #categoryFacetSet', async () => {
+      const request = buildMockCategoryFacetRequest({field: 'objecttype'});
+      state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});
+
+      const {facets} = (
+        await buildInsightLoadCollectionRequest(state, collectionId)
+      ).request;
+      expect(facets).toContainEqual(request);
+    });
+
+    it('#buildInsightLoadCollectionRequest.fieldsToInclude holds the #fieldsToInclude', async () => {
+      state.fields.fieldsToInclude = ['foo', 'bar'];
+      expect(
+        (await buildInsightLoadCollectionRequest(state, collectionId)).request
+          .fieldsToInclude
+      ).toEqual(expect.arrayContaining(['foo', 'bar']));
+    });
+
+    it('#buildInsightLoadCollectionRequest.fieldsToInclude does not holds #fieldsToInclude if #fetchAllFields is active', async () => {
+      state.fields.fieldsToInclude = ['foo', 'bar'];
+      state.fields.fetchAllFields = true;
+      expect(
+        (await buildInsightLoadCollectionRequest(state, collectionId)).request
+          .fieldsToInclude
+      ).toBeUndefined();
+    });
+
     it('#buildInsightLoadCollectionRequest sets the cq to the collectionId', async () => {
       expect(
         (await buildInsightLoadCollectionRequest(state, collectionId)).request
