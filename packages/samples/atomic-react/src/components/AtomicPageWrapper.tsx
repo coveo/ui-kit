@@ -36,12 +36,14 @@ import {
   Bindings,
   AtomicSearchBoxQuerySuggestions,
   getOrganizationEndpoints,
+  loadAdvancedSearchQueryActions,
 } from '@coveo/atomic-react';
 import React, {FunctionComponent, useMemo} from 'react';
 
 type Options = {
   instantResults?: boolean;
   recentQueries?: boolean;
+  expression?: string;
 };
 type Props = {
   accessToken: string;
@@ -56,6 +58,12 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
   children,
   options = {},
 }) => {
+  const searchConfig = options.expression
+    ? {}
+    : {
+        pipeline: 'Search',
+        searchHub: 'MainSearch',
+      };
   const engine = useMemo(
     () =>
       buildSearchEngine({
@@ -63,14 +71,20 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
           accessToken,
           organizationId,
           organizationEndpoints: getOrganizationEndpoints(organizationId),
-          search: {
-            pipeline: 'Search',
-            searchHub: 'MainSearch',
-          },
+          search: searchConfig,
         },
       }),
     [accessToken, organizationId]
   );
+
+  if (options.expression) {
+    const action = loadAdvancedSearchQueryActions(
+      engine
+    ).updateAdvancedSearchQueries({
+      aq: options.expression,
+    });
+    engine.dispatch(action);
+  }
 
   return (
     <AtomicSearchInterface
