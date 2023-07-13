@@ -61,6 +61,8 @@ describe('generated answer slice', () => {
 
       expect(finalState.citations).toEqual(newCitations);
       expect(finalState.error).toBeUndefined();
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.isStreaming).toBe(true);
     });
 
     it('Appends the given citations to existing citations', () => {
