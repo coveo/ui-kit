@@ -347,6 +347,10 @@ export namespace Components {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicGeneratedAnswer {
+        /**
+          * Specifies the maximum height the component should have before hiding part of the answer.
+         */
+        "maxHeight"?: string;
     }
     interface AtomicHtml {
         /**
@@ -3289,6 +3293,10 @@ declare namespace LocalJSX {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicGeneratedAnswer {
+        /**
+          * Specifies the maximum height the component should have before hiding part of the answer.
+         */
+        "maxHeight"?: string;
     }
     interface AtomicHtml {
         /**

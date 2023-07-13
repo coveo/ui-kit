@@ -5597,5 +5597,9 @@
   "retry-stream-message": {
     "en": "Oops! Something went wrong while trying to generate an answer.",
     "fr": "Oops! Quelque chose s'est mal passé lors de la tentative de génération d'une réponse."
+  },
+  "show-full-generated-answer": {
+    "en": "Show the full generated answer",
+    "fr": "Afficher la réponse entière"
   }
 }
