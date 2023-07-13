@@ -223,6 +223,30 @@ describe('search parameter manager', () => {
     });
   });
 
+  describe('#state.parameters.af', () => {
+    it('when a facet has selected values, only selected values are included', () => {
+      const selected = buildMockFacetValue({
+        value: 'a',
+        state: 'selected',
+      });
+      const idle = buildMockFacetValue({value: 'b', state: 'idle'});
+
+      const currentValues = [selected, idle];
+      engine.state.automaticFacetSet.facets = {
+        author: buildMockAutomaticFacetResponse({values: currentValues}),
+      };
+
+      expect(manager.state.parameters.af).toEqual({author: ['a']});
+    });
+
+    it('when there are no facets with selected values, the #af parameter is not included', () => {
+      engine.state.automaticFacetSet.facets = {
+        author: buildMockAutomaticFacetResponse(),
+      };
+      expect('af' in manager.state.parameters).toBe(false);
+    });
+  });
+
   describe('#state.parameters.sortCriteria', () => {
     it('when the parameter does not equal the default value, it is included', () => {
       engine.state.sortCriteria = 'qre';
