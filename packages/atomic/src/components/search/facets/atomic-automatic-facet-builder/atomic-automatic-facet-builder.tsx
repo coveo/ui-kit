@@ -53,7 +53,7 @@ export class AtomicAutomaticFacetBuilder implements InitializableComponent {
    *
    * Specifies whether the automatic facets are collapsed.
    */
-  @Prop({reflect: true, mutable: true}) public areCollapsed = true;
+  @Prop() public areCollapsed = true;
 
   public initialize() {
     this.validateProps();
