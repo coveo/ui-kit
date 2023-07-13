@@ -60,7 +60,7 @@ function MyTemplate(result: FoldedResult) {
         )}
       </AtomicResultSectionBadges>
       <AtomicResultSectionVisual>
-        <AtomicResultImage field="ec_images" />
+        <img loading="lazy" src="https://picsum.photos/350" />
       </AtomicResultSectionVisual>
       <AtomicResultSectionTitle>
         <AtomicResultLink />
