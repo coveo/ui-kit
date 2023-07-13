@@ -95,16 +95,13 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   private get facets() {
-    const facets: BaseFacetElement[] = [];
     const children = Array.from(this.host.children);
 
-    children.forEach((child) => {
-      this.isPseudoFacet(child) && facets.push(child);
-
-      if (child.tagName === 'ATOMIC-AUTOMATIC-FACET-BUILDER') {
-        facets.push(child as BaseFacetElement);
-      }
-    });
+    const facets = children.filter(
+      (child) =>
+        this.isPseudoFacet(child) ||
+        child.tagName === 'ATOMIC-AUTOMATIC-FACET-BUILDER'
+    ) as BaseFacetElement[];
 
     return facets;
   }
