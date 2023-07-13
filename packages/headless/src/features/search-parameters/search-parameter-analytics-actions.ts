@@ -56,6 +56,10 @@ export function logParametersChange(
     );
   }
 
+  if (areFacetParamsEqual(previousParameters.af, newParameters.af)) {
+    return logFacetAnalyticsAction(previousParameters.af, newParameters.af);
+  }
+
   return logInterfaceChange();
 }
 

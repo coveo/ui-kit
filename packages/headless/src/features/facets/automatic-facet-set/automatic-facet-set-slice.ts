@@ -1,4 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {FacetValue} from '../../../product-listing.index';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../search/search-actions';
 import {
   deselectAllAutomaticFacetValues,
@@ -6,6 +8,7 @@ import {
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
 import {getAutomaticFacetSetInitialState} from './automatic-facet-set-state';
+import {AutomaticFacetResponse} from './interfaces/response';
 
 export const automaticFacetSetReducer = createReducer(
   getAutomaticFacetSetInitialState(),
@@ -48,6 +51,37 @@ export const automaticFacetSetReducer = createReducer(
         for (const value of facet.values) {
           value.state = 'idle';
         }
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        const af = action.payload.af ?? {};
+        const facetFields = Object.keys(af);
+
+        facetFields.forEach((field) => {
+          const response = buildTemporaryAutomaticFacetResponse(field);
+          af[field].forEach((value) => {
+            response.values.push(buildFacetValue(value));
+          });
+          state.facets[field] = response;
+        });
       });
   }
 );
+
+function buildTemporaryAutomaticFacetResponse(
+  field: string
+): AutomaticFacetResponse {
+  return {
+    field,
+    values: [],
+    moreValuesAvailable: false,
+    label: '',
+    indexScore: 0,
+  };
+}
+function buildFacetValue(value: string): FacetValue {
+  return {
+    value,
+    state: 'selected',
+    numberOfResults: 0,
+  };
+}
