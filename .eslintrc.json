@@ -39,10 +39,13 @@
     {
       "files": ["**/*.ts", "**/*.tsx"],
       "parser": "@typescript-eslint/parser",
-      "plugins": ["@typescript-eslint"],
+      "plugins": ["@typescript-eslint", "deprecation"],
       "extends": ["./node_modules/gts"],
       "parserOptions": {
-        "jsxPragma": "h"
+        "jsxPragma": "h",
+        // "ecmaVersion": 2020,
+        // "sourceType": "module",
+        "project": "./tsconfig.json"
       },
       "rules": {
         "@typescript-eslint/no-unused-vars": [
@@ -58,7 +61,8 @@
           {
             "allowSingleExtends": true
           }
-        ]
+        ],
+        "deprecation/deprecation": "warn"
       }
     },
     {
