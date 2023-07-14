@@ -327,7 +327,7 @@ describe('search parameter manager', () => {
   });
 
   describe('#synchronize', () => {
-    it(`it dispatches #restoreSearchParameters with non-specified parameters set to their initial values,
+    it(`it dispatches #restoreSearchParameters with non-specified parameters set to their initial values
      given partial search parameters`, () => {
       const params = {q: 'a'};
       manager.synchronize(params);
