@@ -1,3 +1,15 @@
+# 2.35.0 (2023-07-12)
+
+### Bug Fixes
+
+- **headless:** fix read-only error with facet descending order ([#3023](https://github.com/coveo/ui-kit/issues/3023)) ([aa89bf3](https://github.com/coveo/ui-kit/commits/aa89bf3a711ad6532c7f7767b43dfd99506e3deb))
+
+### Features
+
+- **atomic,headless:** support facet alphanumeric descending order ([#3011](https://github.com/coveo/ui-kit/issues/3011)) ([b572a0e](https://github.com/coveo/ui-kit/commits/b572a0e5ad7b55b0d3d57a46d67766effd6e18c9))
+- **atomic:** add result action bar on hover ([#3002](https://github.com/coveo/ui-kit/issues/3002)) ([d2ed389](https://github.com/coveo/ui-kit/commits/d2ed3893baa318133003577fa5c49f61c27e571d)), closes [#3019](https://github.com/coveo/ui-kit/issues/3019)
+- **atomic:** removed border around loading state ([#3014](https://github.com/coveo/ui-kit/issues/3014)) ([cf4309a](https://github.com/coveo/ui-kit/commits/cf4309affc83d6ade3e27ddac49d85b52fe94247))
+
 # 2.34.0 (2023-06-29)
 
 ### Features

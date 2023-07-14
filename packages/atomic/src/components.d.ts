@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -32,6 +32,23 @@ export namespace Components {
     interface AtomicAriaLive {
         "registerRegion": (region: string, assertive: boolean) => Promise<void>;
         "updateMessage": (region: string, message: string, assertive: boolean) => Promise<void>;
+    }
+    interface AtomicAutomaticFacet {
+        "facet": AutomaticFacet;
+        "facetId": string;
+        "field": string;
+        "isCollapsed": boolean;
+        "searchStatus": SearchStatus;
+    }
+    interface AtomicAutomaticFacetBuilder {
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  Specifies whether the automatic facets are collapsed.
+         */
+        "areCollapsed": boolean;
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets. Must be a positive integer.
+         */
+        "desiredCount": number;
     }
     interface AtomicBreadbox {
     }
@@ -2030,6 +2047,18 @@ declare global {
         prototype: HTMLAtomicAriaLiveElement;
         new (): HTMLAtomicAriaLiveElement;
     };
+    interface HTMLAtomicAutomaticFacetElement extends Components.AtomicAutomaticFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicAutomaticFacetElement: {
+        prototype: HTMLAtomicAutomaticFacetElement;
+        new (): HTMLAtomicAutomaticFacetElement;
+    };
+    interface HTMLAtomicAutomaticFacetBuilderElement extends Components.AtomicAutomaticFacetBuilder, HTMLStencilElement {
+    }
+    var HTMLAtomicAutomaticFacetBuilderElement: {
+        prototype: HTMLAtomicAutomaticFacetBuilderElement;
+        new (): HTMLAtomicAutomaticFacetBuilderElement;
+    };
     interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
     }
     var HTMLAtomicBreadboxElement: {
@@ -2836,6 +2865,8 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
+        "atomic-automatic-facet": HTMLAtomicAutomaticFacetElement;
+        "atomic-automatic-facet-builder": HTMLAtomicAutomaticFacetBuilderElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
@@ -2974,6 +3005,23 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicAriaLive {
+    }
+    interface AtomicAutomaticFacet {
+        "facet": AutomaticFacet;
+        "facetId": string;
+        "field": string;
+        "isCollapsed": boolean;
+        "searchStatus": SearchStatus;
+    }
+    interface AtomicAutomaticFacetBuilder {
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  Specifies whether the automatic facets are collapsed.
+         */
+        "areCollapsed"?: boolean;
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets. Must be a positive integer.
+         */
+        "desiredCount": number;
     }
     interface AtomicBreadbox {
     }
@@ -4810,6 +4858,8 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
+        "atomic-automatic-facet": AtomicAutomaticFacet;
+        "atomic-automatic-facet-builder": AtomicAutomaticFacetBuilder;
         "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-color-facet": AtomicColorFacet;
@@ -4951,6 +5001,8 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "atomic-aria-live": LocalJSX.AtomicAriaLive & JSXBase.HTMLAttributes<HTMLAtomicAriaLiveElement>;
+            "atomic-automatic-facet": LocalJSX.AtomicAutomaticFacet & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetElement>;
+            "atomic-automatic-facet-builder": LocalJSX.AtomicAutomaticFacetBuilder & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetBuilderElement>;
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;

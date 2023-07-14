@@ -1,3 +1,14 @@
+# 2.21.0 (2023-07-12)
+
+### Bug Fixes
+
+- **headless:** fix read-only error with facet descending order ([#3023](https://github.com/coveo/ui-kit/issues/3023)) ([aa89bf3](https://github.com/coveo/ui-kit/commits/aa89bf3a711ad6532c7f7767b43dfd99506e3deb))
+
+### Features
+
+- **atomic,headless:** support facet alphanumeric descending order ([#3011](https://github.com/coveo/ui-kit/issues/3011)) ([b572a0e](https://github.com/coveo/ui-kit/commits/b572a0e5ad7b55b0d3d57a46d67766effd6e18c9))
+- **headless:** add support for automatic facets via the facet manager ([#3013](https://github.com/coveo/ui-kit/issues/3013)) ([6be6b4a](https://github.com/coveo/ui-kit/commits/6be6b4af2e5223d54ea3930be13443177990e509))
+
 # 2.20.0 (2023-06-28)
 
 ### Features

@@ -7,6 +7,7 @@ import {
   toggleSelectStaticFilterValue,
   ToggleSelectStaticFilterValueActionCreatorPayload,
   deselectAllStaticFilterValues,
+  toggleExcludeStaticFilterValue,
 } from './static-filter-set-actions';
 
 export type {
@@ -39,6 +40,16 @@ export interface StaticFilterSetActionCreators {
   ): PayloadAction<ToggleSelectStaticFilterValueActionCreatorPayload>;
 
   /**
+   * Excludes a static filter value.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  toggleExcludeStaticFilterValue(
+    payload: ToggleSelectStaticFilterValueActionCreatorPayload
+  ): PayloadAction<ToggleSelectStaticFilterValueActionCreatorPayload>;
+
+  /**
    * Deselects all values of a filter.
    *
    * @param id - The unique identifier of the static filter (e.g., `"abc"`).
@@ -61,6 +72,7 @@ export function loadStaticFilterSetActions(
   return {
     registerStaticFilter,
     toggleSelectStaticFilterValue,
+    toggleExcludeStaticFilterValue,
     deselectAllStaticFilterValues,
   };
 }
