@@ -1,6 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
-import './generated-answer-actions';
 import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,

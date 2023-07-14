@@ -21,7 +21,7 @@ import {
 } from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
-import {buildStreamingRequest} from './generated-awswer-request';
+import {buildStreamingRequest} from './generated-answer-request';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
