@@ -54,9 +54,8 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const af = action.payload.af ?? {};
-        const fields = Object.keys(af);
 
-        for (const field of fields) {
+        for (const field in af) {
           const response = buildTemporaryAutomaticFacetResponse(field);
           const values = af[field].map((value) =>
             buildTemporarySelectedFacetValue(value)
