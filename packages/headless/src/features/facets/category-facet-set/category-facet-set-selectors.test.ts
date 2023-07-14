@@ -46,13 +46,13 @@ describe('category facet selectors', () => {
     expect(response).toBeUndefined();
   });
 
-  describe('#categoryFacetSelectedValuesSelector', () => {
+  describe('#categoryFacetResponseActiveValuesSelector', () => {
     beforeEach(() => {
       const request = buildMockCategoryFacetRequest({facetId});
       state.categoryFacetSet[facetId] = buildMockCategoryFacetSlice({request});
     });
 
-    it('#categoryFacetSelectedValuesSelector returns an empty array if the facet does not exist', () => {
+    it('#categoryFacetResponseActiveValuesSelector returns an empty array if the facet does not exist', () => {
       const selectedResults = categoryFacetResponseActiveValuesSelector(
         state,
         facetId
@@ -60,7 +60,7 @@ describe('category facet selectors', () => {
       expect(selectedResults).toEqual([]);
     });
 
-    it('#categoryFacetSelectedValuesSelector gets the top level selected value', () => {
+    it('#categoryFacetResponseActiveValuesSelector gets the top level selected value', () => {
       const mockValue = buildMockCategoryFacetValue({
         value: 'test',
         state: 'selected',
@@ -78,19 +78,15 @@ describe('category facet selectors', () => {
       expect(selectedResults).toEqual([mockValue]);
     });
 
-    it('#categoryFacetSelectedValuesSelector only returns the selected value', () => {
-      const ignoredValue = buildMockCategoryFacetValue({
-        value: 'nestedTest',
-        state: 'idle',
-      });
+    it('#categoryFacetResponseActiveValuesSelector gets the top level excluded value', () => {
       const mockValue = buildMockCategoryFacetValue({
         value: 'test',
-        state: 'selected',
+        state: 'excluded',
       });
       state.search.response.facets = [
         buildMockCategoryFacetResponse({
           facetId,
-          values: [mockValue, ignoredValue],
+          values: [mockValue],
         }),
       ];
       const selectedResults = categoryFacetResponseActiveValuesSelector(
@@ -100,10 +96,77 @@ describe('category facet selectors', () => {
       expect(selectedResults).toEqual([mockValue]);
     });
 
-    it('#categoryFacetSelectedValuesSelector gets the path to a nested value', () => {
+    it('#categoryFacetResponseActiveValuesSelector only returns the selected value', () => {
+      const ignoredValue = buildMockCategoryFacetValue({
+        value: 'nestedTest',
+        state: 'idle',
+      });
+      const mockSelectedValue = buildMockCategoryFacetValue({
+        value: 'selectedTest',
+        state: 'selected',
+      });
+      state.search.response.facets = [
+        buildMockCategoryFacetResponse({
+          facetId,
+          values: [mockSelectedValue, ignoredValue],
+        }),
+      ];
+      const activeResults = categoryFacetResponseActiveValuesSelector(
+        state,
+        facetId
+      );
+      expect(activeResults).toEqual([mockSelectedValue]);
+    });
+
+    it('#categoryFacetResponseActiveValuesSelector only returns the excluded value', () => {
+      const ignoredValue = buildMockCategoryFacetValue({
+        value: 'nestedTest',
+        state: 'idle',
+      });
+      const mockExcludedValue = buildMockCategoryFacetValue({
+        value: 'excludedTest',
+        state: 'excluded',
+      });
+      state.search.response.facets = [
+        buildMockCategoryFacetResponse({
+          facetId,
+          values: [mockExcludedValue, ignoredValue],
+        }),
+      ];
+      const activeResults = categoryFacetResponseActiveValuesSelector(
+        state,
+        facetId
+      );
+      expect(activeResults).toEqual([mockExcludedValue]);
+    });
+
+    it('#categoryFacetResponseActiveValuesSelector gets the path to a nested selected value', () => {
       const nestedChild = buildMockCategoryFacetValue({
         value: 'nestedTest',
         state: 'selected',
+      });
+      const mockValue = buildMockCategoryFacetValue({
+        value: 'test',
+        state: 'idle',
+        children: [nestedChild],
+      });
+      state.search.response.facets = [
+        buildMockCategoryFacetResponse({
+          facetId,
+          values: [mockValue],
+        }),
+      ];
+      const selectedResults = categoryFacetResponseActiveValuesSelector(
+        state,
+        facetId
+      );
+      expect(selectedResults).toEqual([mockValue, nestedChild]);
+    });
+
+    it('#categoryFacetResponseActiveValuesSelector gets the path to a nested excluded value', () => {
+      const nestedChild = buildMockCategoryFacetValue({
+        value: 'nestedTest',
+        state: 'excluded',
       });
       const mockValue = buildMockCategoryFacetValue({
         value: 'test',

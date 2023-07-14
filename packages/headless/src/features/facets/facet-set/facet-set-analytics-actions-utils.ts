@@ -63,7 +63,7 @@ export function buildFacetSelectionChangeMetadata(
     ...base,
     facetValue:
       facetType === 'hierarchical'
-        ? getCategoryFacetSelectedValue(state, facetId)
+        ? getCategoryFacetActiveValue(state, facetId)
         : facetValue,
   };
 }
@@ -94,20 +94,22 @@ export const buildFacetStateMetadata = (
     );
 
     if (isCategoryFacetRequest(facetRequest)) {
-      const hasSelectedValue = !!categoryFacetRequestActiveValuesSelector(
+      const activeValues = categoryFacetRequestActiveValuesSelector(
         state,
         facetRequest.facetId
-      ).length;
+      );
 
-      if (!hasSelectedValue) {
+      if (!activeValues.length) {
         return;
       }
+
+      const lowestLeaf = activeValues[activeValues.length - 1];
 
       facetState.push({
         ...facetRequestAnalytics,
         ...mapCategoryFacetValueToAnalytics(state, facetRequest.facetId),
         facetType,
-        state: 'selected',
+        state: lowestLeaf.state,
       });
 
       return;
@@ -220,16 +222,16 @@ const mapFacetDisplayValueToAnalytics = (facetValue: FacetValueRequest) => {
   };
 };
 
-const getCategoryFacetSelectedValue = (
+const getCategoryFacetActiveValue = (
   state: SectionNeededForFacetMetadata,
   facetId: string
 ) => {
-  const selectedCategoryFacetValues = categoryFacetRequestActiveValuesSelector(
+  const activeCategoryFacetValues = categoryFacetRequestActiveValuesSelector(
     state,
     facetId
   );
-  return selectedCategoryFacetValues
-    .map((selectedCategoryFacetValue) => selectedCategoryFacetValue.value)
+  return activeCategoryFacetValues
+    .map((activeCategoryFacetValue) => activeCategoryFacetValue.value)
     .join(';');
 };
 
@@ -238,7 +240,7 @@ const mapCategoryFacetValueToAnalytics = (
   facetId: string
 ) => {
   const valuePosition = 1;
-  const value = getCategoryFacetSelectedValue(state, facetId);
+  const value = getCategoryFacetActiveValue(state, facetId);
   return {
     value,
     valuePosition,

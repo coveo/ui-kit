@@ -290,7 +290,7 @@ function handleCategoryFacetNestedNumberOfValuesUpdate(
     return;
   }
 
-  while (selectedValue.children.length && selectedValue?.state !== 'selected') {
+  while (selectedValue.children.length && selectedValue?.state === 'idle') {
     selectedValue = selectedValue.children[0];
   }
   selectedValue.retrieveCount = numberOfValues;

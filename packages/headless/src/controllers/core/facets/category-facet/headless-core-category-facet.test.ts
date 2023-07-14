@@ -7,6 +7,7 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
+  toggleExcludeCategoryFacetValue,
 } from '../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
@@ -187,8 +188,32 @@ describe('category facet', () => {
     });
   });
 
+  describe('when the category facet has a excluded leaf value with no children', () => {
+    const excludedValue = buildMockCategoryFacetValue({
+      value: 'A',
+      state: 'excluded',
+      children: [],
+    });
+
+    beforeEach(() => {
+      const response = buildMockCategoryFacetResponse({
+        facetId,
+        values: [excludedValue],
+      });
+      state.search.response.facets = [response];
+    });
+
+    it('#state.parents contains the excluded leaf value', () => {
+      expect(categoryFacet.state.parents).toEqual([excludedValue]);
+    });
+
+    it('#state.values is an empty array', () => {
+      expect(categoryFacet.state.values).toEqual([]);
+    });
+  });
+
   describe('#toggleSelect', () => {
-    it('dispatches #toggleCategoryFacetValue with the passed selection', () => {
+    it('dispatches #toggleSelectCategoryFacetValue with the passed selection', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
@@ -200,7 +225,7 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retrieveCount', () => {
+    it('if the numberOfValues is set it dispatches #toggleSelectCategoryFacetValue with the correct retrieveCount', () => {
       options.numberOfValues = 10;
       initCategoryFacet();
       const selection = buildMockCategoryFacetValue({value: 'A'});
@@ -217,6 +242,41 @@ describe('category facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
+
+      expect(engine.actions).toContainEqual(updateFacetOptions());
+    });
+  });
+
+  describe('#toggleExclude', () => {
+    it('dispatches #toggleExcludeCategoryFacetValue with the passed selection', () => {
+      const selection = buildMockCategoryFacetValue({value: 'A'});
+      categoryFacet.toggleExclude(selection);
+
+      const action = toggleExcludeCategoryFacetValue({
+        facetId,
+        selection,
+        retrieveCount: defaultCategoryFacetOptions.numberOfValues,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('if the numberOfValues is set it dispatches #toggleExcludeCategoryFacetValue with the correct retrieveCount', () => {
+      options.numberOfValues = 10;
+      initCategoryFacet();
+      const selection = buildMockCategoryFacetValue({value: 'A'});
+      categoryFacet.toggleExclude(selection);
+
+      const action = toggleExcludeCategoryFacetValue({
+        facetId,
+        selection,
+        retrieveCount: 10,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      const selection = buildMockCategoryFacetValue({value: 'A'});
+      categoryFacet.toggleExclude(selection);
 
       expect(engine.actions).toContainEqual(updateFacetOptions());
     });
@@ -245,6 +305,14 @@ describe('category facet', () => {
       expect(categoryFacet.state.hasActiveValues).toBe(true);
     });
 
+    it('when there is an excluded value, it is true', () => {
+      const values = [buildMockCategoryFacetValue({state: 'excluded'})];
+      const response = buildMockCategoryFacetResponse({facetId, values});
+      state.search.response.facets = [response];
+
+      expect(categoryFacet.state.hasActiveValues).toBe(true);
+    });
+
     it('when nothing is selected, it is false', () => {
       const response = buildMockCategoryFacetResponse({facetId});
       state.search.response.facets = [response];
@@ -254,7 +322,7 @@ describe('category facet', () => {
   });
 
   describe('#state.hasMoreValues', () => {
-    describe('when currentValues is Empty (nothing is selected)', () => {
+    describe('when currentValues is Empty (nothing is active)', () => {
       it('if #moreValuesAvailable is true #state.canShowMoreValues is true', () => {
         const response = buildMockCategoryFacetResponse({
           facetId,
@@ -319,6 +387,65 @@ describe('category facet', () => {
         const nestedChild = buildMockCategoryFacetValue({
           numberOfResults: 10,
           state: 'selected',
+          moreValuesAvailable: true,
+        });
+        const values = [
+          buildMockCategoryFacetValue({
+            numberOfResults: 10,
+            moreValuesAvailable: false,
+            children: [nestedChild],
+          }),
+        ];
+        const response = buildMockCategoryFacetResponse({facetId, values});
+
+        state.search.response.facets = [response];
+        expect(categoryFacet.state.canShowMoreValues).toBe(true);
+      });
+    });
+
+    describe('when a value in currentValue is excluded (top level value excluded)', () => {
+      it('if #moreValuesAvailable is true, #state.canShowMore is true', () => {
+        const values = [
+          buildMockCategoryFacetValue({
+            numberOfResults: 10,
+            state: 'excluded',
+            moreValuesAvailable: true,
+          }),
+        ];
+        const response = buildMockCategoryFacetResponse({
+          facetId,
+          values,
+          moreValuesAvailable: false,
+        });
+
+        state.search.response.facets = [response];
+        expect(categoryFacet.state.canShowMoreValues).toBe(true);
+      });
+
+      it('if #moreValuesAvailable is true, #state.canShowMore is true', () => {
+        const values = [
+          buildMockCategoryFacetValue({
+            numberOfResults: 10,
+            state: 'excluded',
+            moreValuesAvailable: false,
+          }),
+        ];
+        const response = buildMockCategoryFacetResponse({
+          facetId,
+          values,
+          moreValuesAvailable: true,
+        });
+
+        state.search.response.facets = [response];
+        expect(categoryFacet.state.canShowMoreValues).toBe(false);
+      });
+    });
+
+    describe('when a nested value (currentValues[n].children[n]) is excluded', () => {
+      it('if currentValues has a value with more than 1 child', () => {
+        const nestedChild = buildMockCategoryFacetValue({
+          numberOfResults: 10,
+          state: 'excluded',
           moreValuesAvailable: true,
         });
         const values = [
