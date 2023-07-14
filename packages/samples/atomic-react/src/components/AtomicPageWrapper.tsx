@@ -58,24 +58,22 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
   children,
   options = {},
 }) => {
-  const searchConfig = options.foldedResults
-    ? {}
-    : {
-        pipeline: 'Search',
-        searchHub: 'MainSearch',
-      };
-  const engine = useMemo(
-    () =>
-      buildSearchEngine({
-        configuration: {
-          accessToken,
-          organizationId,
-          organizationEndpoints: getOrganizationEndpoints(organizationId),
-          search: searchConfig,
-        },
-      }),
-    [accessToken, organizationId]
-  );
+  const engine = useMemo(() => {
+    const searchConfig = options.foldedResults
+      ? {}
+      : {
+          pipeline: 'Search',
+          searchHub: 'MainSearch',
+        };
+    return buildSearchEngine({
+      configuration: {
+        accessToken,
+        organizationId,
+        organizationEndpoints: getOrganizationEndpoints(organizationId),
+        search: searchConfig,
+      },
+    });
+  }, [accessToken, organizationId, options.foldedResults]);
 
   if (options.foldedResults) {
     const action = loadAdvancedSearchQueryActions(
