@@ -1,33 +1,55 @@
 'use client';
 
+import {SearchParameters} from '@coveo/headless';
+import {FunctionComponent, PropsWithChildren, useState, useEffect} from 'react';
 import {
-  SearchEngine,
-  SearchEngineOptions,
-  buildSearchEngine,
-} from '@coveo/headless';
+  SearchExecutionResult,
+  SearchHydrationResult,
+  hydrate,
+} from '@/common/engine-definition';
 import {
-  FunctionComponent,
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useMemo,
-} from 'react';
+  LiveSearchProvider,
+  SearchSnapshotProvider,
+} from '@/common/engine-definition.client';
 
-const clientEngineContext = createContext<SearchEngine | null>(null);
-const {Provider} = clientEngineContext;
+const isServerSide = typeof window === 'undefined';
 
-export const ClientSearchEngineProvider: FunctionComponent<
-  PropsWithChildren<{options: SearchEngineOptions}>
-> = ({options, children}) => {
-  const engine = useMemo(() => buildSearchEngine(options), [options]);
+export interface SearchProviderProps extends SearchExecutionResult {
+  parameters: SearchParameters;
+}
 
-  return <Provider value={engine}>{children}</Provider>;
-};
+export const SearchProvider: FunctionComponent<
+  PropsWithChildren<SearchProviderProps>
+> = ({children, ...snapshot}) => {
+  const [hydrationResult, setHydrationResult] =
+    useState<SearchHydrationResult | null>(null);
 
-export const useClientSearchEngine = () => {
-  const engine = useContext(clientEngineContext);
-  if (!engine) {
-    throw 'Expected engine to be defined.';
+  useEffect(() => {
+    if (isServerSide) {
+      return;
+    }
+    hydrate({
+      searchFulfilledAction: snapshot.searchFulfilledAction,
+      controllers: {
+        searchParametersManager: {initialParameters: snapshot.parameters},
+      },
+    }).then((result) => setHydrationResult(result));
+  }, [snapshot.searchFulfilledAction, snapshot.parameters]);
+
+  if (!hydrationResult) {
+    return (
+      <SearchSnapshotProvider controllers={snapshot.controllers}>
+        {children}
+      </SearchSnapshotProvider>
+    );
   }
-  return engine;
+
+  return (
+    <LiveSearchProvider
+      engine={hydrationResult.engine}
+      controllers={hydrationResult.controllers}
+    >
+      {children}
+    </LiveSearchProvider>
+  );
 };

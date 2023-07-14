@@ -1,6 +1,6 @@
 'use client';
 
-import {SearchParameters, buildSearchParameterManager} from '@coveo/headless';
+import {SearchParameters} from '@coveo/headless';
 import {useSearchParams, usePathname} from 'next/navigation';
 import {
   DependencyList,
@@ -9,8 +9,7 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import {useClientSearchEngine} from '@/context/engine';
-import {useController} from '@/hooks/use-controller';
+import {useSearchParametersManager} from '@/common/engine-definition.client';
 import {ShallowRouter, useShallowRouter} from '@/hooks/use-shallow-router';
 import {SearchParameterSerializer} from '@/utils/search-parameter-serializer';
 import {compareSearchParams} from '@/utils/url';
@@ -58,13 +57,8 @@ function updateRouter(
   }
 }
 
-export const SearchParametersSynchronizer: FunctionComponent<{
-  initialParameters: SearchParameters;
-}> = ({initialParameters}) => {
-  const engine = useClientSearchEngine();
-  const {state, methods} = useController(buildSearchParameterManager, engine, {
-    initialState: {parameters: initialParameters},
-  });
+export const SearchParametersSynchronizer: FunctionComponent = () => {
+  const {state, methods} = useSearchParametersManager();
   const router = useShallowRouter({
     initialPathname: usePathname(),
     initialSearchParams: useSearchParams(),
@@ -79,6 +73,9 @@ export const SearchParametersSynchronizer: FunctionComponent<{
   );
   useEffectCount(
     (index) => {
+      if (!methods) {
+        return;
+      }
       if (index === 0) {
         return;
       }
@@ -87,7 +84,7 @@ export const SearchParametersSynchronizer: FunctionComponent<{
       );
       methods.synchronize(parameters);
     },
-    [router.pathname, router.searchParams.toString()]
+    [router.pathname, router.searchParams.toString(), methods]
   );
 
   return null;

@@ -3,6 +3,7 @@
 import type {Controller, CoreEngine, Unsubscribe} from '@coveo/headless';
 import {deepEqual} from 'fast-equals';
 import {useEffect, useReducer, DependencyList, useRef} from 'react';
+import {useSyncMemoizedStore} from './use-sync-memoized-store';
 
 function useDeepCompareMemo<T>(
   factory: () => T,
@@ -100,29 +101,6 @@ function buildController(
       headlessController.subscribe(listener)
     ),
   };
-}
-
-/**
- * Same as [useSyncExternalStore](https://reactjs.org/docs/hooks-reference.html#usesyncexternalstore), but doesn't infinitely re-render with a memoized store.
- */
-function useSyncMemoizedStore<T>(
-  subscribe: (listener: () => void) => () => void,
-  getSnapshot: () => T
-) {
-  const state = useRef<T | null>(null);
-  const [, render] = useReducer((renderCount: number) => renderCount + 1, 0);
-  useEffect(
-    () =>
-      subscribe(() => {
-        state.current = getSnapshot();
-        render();
-      }),
-    [subscribe, getSnapshot]
-  );
-  if (useHasChanged([subscribe, getSnapshot]) || state.current === null) {
-    state.current = getSnapshot();
-  }
-  return state.current as T;
 }
 
 export function useController<

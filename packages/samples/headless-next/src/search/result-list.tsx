@@ -1,15 +1,10 @@
 'use client';
 
-import {ResultListProps, buildResultList} from '@coveo/headless';
 import {FunctionComponent} from 'react';
-import {useClientSearchEngine} from '@/context/engine';
-import {useController} from '@/hooks/use-controller';
+import {useResultList} from '@/common/engine-definition.client';
 
-export const ResultList: FunctionComponent<{
-  props?: ResultListProps;
-}> = ({props}) => {
-  const engine = useClientSearchEngine();
-  const {state} = useController(buildResultList, engine, props ?? {});
+export const ResultList: FunctionComponent = () => {
+  const {state} = useResultList();
 
   return (
     <ul>
