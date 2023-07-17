@@ -4451,9 +4451,9 @@
     "sv": "({{text}})",
     "th": "({{text}})",
     "tr": "({{text}})",
-    "zh-cn": "（{{text}}）",
-    "zh": "（{{text}}）",
-    "zh-tw": "（{{text}}）"
+    "zh-cn": "({{text}})",
+    "zh": "({{text}})",
+    "zh-tw": "({{text}})"
   },
   "notifications": {
     "en": "Notifications",
