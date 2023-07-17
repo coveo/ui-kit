@@ -1,4 +1,4 @@
-import {readFileSync, writeFileSync} from 'fs';
+import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {env} from 'process';
 
 const fileToValidate = JSON.parse(
@@ -66,7 +66,7 @@ async function main() {
 
       Object.entries(answer).forEach(
         ([languageCode, {validation, translation}]) => {
-          if (true) {
+          if (validation !== true) {
             const problem = {
               languageCode,
               translation,
