@@ -405,31 +405,7 @@
     "zh-tw": "輸入至少{{length}}個字元的查詢以啟用搜尋。"
   },
   "query-suggestion-label": {
-    "en": "“{{query}}”, suggested query",
-    "fr": "« {{text}} »",
-    "cs": "„{{query}}“",
-    "da": "“{{query}}”",
-    "de": "„{{query}}“",
-    "el": "«{{query}}»",
-    "es": "“{{query}}”",
-    "fi": "”{{query}}”",
-    "hu": "„{{query}}”",
-    "id": "“{{query}}”",
-    "it": "“{{query}}”",
-    "ja": "「{{query}}」",
-    "ko": "“{{query}}”",
-    "nl": "“{{query}}”",
-    "no": "«{{query}}»",
-    "pl": "„{{query}}“",
-    "pt": "“{{query}}”",
-    "pt-br": "“{{query}}”",
-    "ru": "«{{query}}»",
-    "sv": "”{{query}}”",
-    "th": "“{{query}}”",
-    "tr": "“{{query}}”",
-    "zh": "“{{query}}”",
-    "zh-cn": "“{{query}}”",
-    "zh-tw": "「{{query}}」"
+    "en": "“{{query}}”, suggested query"
   },
   "recent-query-suggestion-label": {
     "en": "“{{query}}”, recent query",
