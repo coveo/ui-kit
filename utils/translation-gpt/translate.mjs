@@ -78,6 +78,10 @@ async function main() {
       continue;
     }
 
+    console.log(
+      `${translationKey}: Fetching translation for ${languagesThatNeedTranslation.length} languages from API.`
+    );
+
     try {
       const res = await fetch(env.COVEO_AZURE_OPEN_AI_ENDPOINT, {
         method: 'POST',
