@@ -29,6 +29,10 @@ If there are a lot of translations that need to be performed, the script could t
 
 To run this script, navigate to `./utils/translation-gpt` and use the command `node validate.mjs`.
 
+- This will validate all entries in the `locales.json` file.
+- To validate only selected entries (e.g. recent additions) pass them as space seperated command line arguments
+  e.g. `node validate.mjs query-suggestion-label between-parentheses`
+
 While executing the script, a `temporary.json` file will be generated. Do not delete this file while the validation task is ongoing.
 
 Once the script has finished executing, you can view the report contained in `temporary.json`.

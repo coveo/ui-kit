@@ -1,6 +1,8 @@
 import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {env} from 'process';
 
+const keysToValidate = process.argv.slice(2);
+
 const fileToValidate = JSON.parse(
   readFileSync('../../packages/atomic/src/locales.json')
 );
@@ -34,6 +36,8 @@ async function main() {
   let allIdentifiedProblems = {};
 
   for (const translationKey of Object.keys(fileToValidate)) {
+    if (keysToValidate.length > 0 && !keysToValidate.includes(translationKey))
+      continue;
     try {
       const englishTranslation = fileToValidate[translationKey]['en'];
       const translationsToValidate = fileToValidate[translationKey];
