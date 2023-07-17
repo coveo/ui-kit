@@ -23,10 +23,8 @@ const prompt = (translations) =>
   Give me the answer back in JSON format where each key is the language code, and each value is an object with two property: "translation" and "validation".
   
   "translation" Should be the translated string in english.
-  "validation" should contain exactly and only true if the meaning of the "translation" is similar to the "validator" property.
-
-  Otherwise, "validation" should contain an explanation about why it is not similar or why the meaning is different.
-
+  If the meaning of the "translation" is similar to the "validator" property "validation" should contain exactly and only true. Else it should contain an explanation on why "validator" is different from the "translation".
+  
   The JSON object is: 
   
   ${JSON.stringify(translations, null, 2)}
