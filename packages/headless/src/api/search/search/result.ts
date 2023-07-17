@@ -174,7 +174,7 @@ export interface Result {
   rankingModifier?: string;
 
   /**
-   * Whether the result item was previously viewed by the user specified in the request of the query.
+   * Whether the result item has been previously viewed by one of the users specified in the `canSeeUserProfileOf` section of the search token [search token](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/token) generated to perform the search request.
    */
   isUserActionView: boolean;
 }
