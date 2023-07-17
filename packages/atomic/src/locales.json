@@ -405,7 +405,7 @@
     "zh-tw": "輸入至少{{length}}個字元的查詢以啟用搜尋。"
   },
   "query-suggestion-label": {
-    "en": "“{{query}}”",
+    "en": "“{{query}}”, suggested query",
     "fr": "« {{text}} »",
     "cs": "„{{query}}“",
     "da": "“{{query}}”",
