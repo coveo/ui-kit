@@ -4429,31 +4429,7 @@
     "tr": "“{{text}}”"
   },
   "between-parentheses": {
-    "en": "({{text}})",
-    "fr": "({{text}})",
-    "cs": "({{text}})",
-    "da": "({{text}})",
-    "de": "({{text}})",
-    "el": "({{text}})",
-    "es": "({{text}})",
-    "fi": "({{text}})",
-    "hu": "({{text}})",
-    "id": "({{text}})",
-    "it": "({{text}})",
-    "ja": "({{text}})",
-    "ko": "({{text}})",
-    "nl": "({{text}})",
-    "no": "({{text}})",
-    "pl": "({{text}})",
-    "pt": "({{text}})",
-    "pt-br": "({{text}})",
-    "ru": "({{text}})",
-    "sv": "({{text}})",
-    "th": "({{text}})",
-    "tr": "({{text}})",
-    "zh-cn": "（{{text}}）",
-    "zh": "（{{text}}）",
-    "zh-tw": "（{{text}}）"
+    "en": "({{text}})"
   },
   "notifications": {
     "en": "Notifications",
