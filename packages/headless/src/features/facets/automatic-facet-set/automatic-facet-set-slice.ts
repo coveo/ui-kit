@@ -79,6 +79,7 @@ function buildTemporaryAutomaticFacetResponse(
     indexScore: 0,
   };
 }
+
 function buildTemporarySelectedFacetValue(value: string): FacetValue {
   return {
     value,

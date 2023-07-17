@@ -266,7 +266,7 @@ describe('search parameter manager', () => {
   });
 
   it(`is possible to access every relevant search parameter using #state.parameters
-   given a certain initial state,`, () => {
+      given a certain initial state`, () => {
     const facetValues = [buildMockFacetValueRequest({state: 'selected'})];
     engine.state.facetSet = {
       author: buildMockFacetSlice({
@@ -331,7 +331,7 @@ describe('search parameter manager', () => {
 
   describe('#synchronize', () => {
     it(`it dispatches #restoreSearchParameters with non-specified parameters set to their initial values
-     given partial search parameters`, () => {
+        given partial search parameters`, () => {
       const params = {q: 'a'};
       manager.synchronize(params);
 
