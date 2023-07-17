@@ -1,4 +1,5 @@
 import {existsSync, openSync, readFileSync, writeFileSync} from 'fs';
+import {EOL} from 'os';
 import {env} from 'process';
 
 const localeToTranslate = JSON.parse(
@@ -127,7 +128,7 @@ async function main() {
 
   writeFileSync(
     '../../packages/atomic/src/locales.json',
-    readFileSync('temporary.json')
+    readFileSync('temporary.json') + EOL
   );
   writeFileSync('temporary.json', JSON.stringify({}, null, 2));
 }
