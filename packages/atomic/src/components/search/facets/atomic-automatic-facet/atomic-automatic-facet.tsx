@@ -56,7 +56,7 @@ export class AtomicAutomaticFacet implements InitializableComponent {
   @Prop({reflect: true}) public facetId!: string;
   @Prop({reflect: true}) public facet!: AutomaticFacet;
   @Prop({reflect: true}) public searchStatus!: SearchStatus;
-  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  @Prop({reflect: true, mutable: true}) public isCollapsed!: boolean;
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
@@ -117,7 +117,7 @@ export class AtomicAutomaticFacet implements InitializableComponent {
 
   private get label() {
     return isNullOrUndefined(this.facet.state.label)
-      ? 'No Label'
+      ? 'no-label'
       : this.facet.state.label;
   }
 

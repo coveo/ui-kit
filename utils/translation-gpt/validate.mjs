@@ -5,6 +5,12 @@ const fileToValidate = JSON.parse(
   readFileSync('../../packages/atomic/src/locales.json')
 );
 
+if (!existsSync('temporary.json')) {
+  openSync('temporary.json', 'w');
+}
+
+writeFileSync('temporary.json', JSON.stringify({}));
+
 const prompt = (translations) =>
   `I want you to translate strings to english. 
   
@@ -28,9 +34,8 @@ const prompt = (translations) =>
 
 async function main() {
   let allIdentifiedProblems = {};
-  writeFileSync('temporary.json', JSON.stringify(allIdentifiedProblems));
 
-  for (const translationKey of Object.keys(fileToValidate).slice(1, 20)) {
+  for (const translationKey of Object.keys(fileToValidate)) {
     try {
       const englishTranslation = fileToValidate[translationKey]['en'];
       const translationsToValidate = fileToValidate[translationKey];

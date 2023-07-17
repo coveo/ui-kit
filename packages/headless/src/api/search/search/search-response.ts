@@ -15,7 +15,7 @@ import {SecurityIdentity} from './security-identity';
 import {PhrasesToHighlight, TermsToHighlight} from './stemming';
 
 export interface SearchResponseSuccess {
-  generateAutomaticFacets?: AutomaticFacets;
+  generateAutomaticFacets: AutomaticFacets;
   termsToHighlight: TermsToHighlight;
   phrasesToHighlight: PhrasesToHighlight;
   results: Result[];
