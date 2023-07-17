@@ -3,6 +3,7 @@ import {initialSearchParameterSelector} from '../../features/search-parameters/s
 import {executeSearch} from '../../features/search/search-actions';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
 import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response';
+import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
@@ -205,8 +206,12 @@ describe('search parameter manager', () => {
     engine.state.tabSet = {a: tab};
 
     const automaticFacetValues = [buildMockFacetValue({state: 'selected'})];
-    engine.state.automaticFacetSet.facets = {
-      a: buildMockAutomaticFacetResponse({values: automaticFacetValues}),
+    engine.state.automaticFacetSet.set = {
+      a: buildMockAutomaticFacetSlice({
+        response: buildMockAutomaticFacetResponse({
+          values: automaticFacetValues,
+        }),
+      }),
     };
 
     engine.state.query.q = 'a';
