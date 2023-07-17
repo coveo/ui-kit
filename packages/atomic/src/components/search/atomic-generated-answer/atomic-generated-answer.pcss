@@ -66,14 +66,24 @@
 }
 
 .source-citations {
+  --index-height: 20px;
+  --citation-padding: 0.25rem;
+  --citation-border-width: 1px;
+
+  .citations-label {
+    height: calc(var(--index-height) + (2 * var(--citation-border-width)) + (2 * var(--citation-padding)));
+  }
+
   .citations-container {
     .citation {
       max-width: 160px;
+      padding: var(--citation-padding);
+      border-width: var(--citation-border-width);
     }
 
     .citation-index {
-      width: 20px;
-      height: 20px;
+      height: var(--index-height);
+      width: var(--index-height);
     }
   }
 }
