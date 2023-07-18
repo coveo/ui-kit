@@ -29,7 +29,7 @@ import {numericFacetActiveValuesSelector} from '../../../features/facets/range-f
 import {numericFacetSetReducer as numericFacetSet} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
+import {toggleExcludeStaticFilterValue, toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
 import {logInsightStaticFilterDeselect} from '../../../features/static-filter-set/static-filter-set-insight-analytics-actions';
 import {
   StaticFilterSlice,
@@ -190,7 +190,7 @@ export function buildBreadcrumbManager(
   ): StaticFilterBreadcrumb => {
     const {id, values: filterValues} = filter;
     const values = filterValues
-      .filter((value) => value.state === 'selected')
+      .filter((value) => value.state !== 'idle')
       .map((value) => buildStaticFilterBreadcrumbValue(id, value));
 
     return {id, values};
@@ -209,7 +209,11 @@ export function buildBreadcrumbManager(
           staticFilterValue: {caption, expression},
         });
 
-        dispatch(toggleSelectStaticFilterValue({id, value}));
+        if (value.state === 'selected') {
+          dispatch(toggleSelectStaticFilterValue({id, value}));
+        } else if (value.state === 'excluded') {
+          dispatch(toggleExcludeStaticFilterValue({id, value}));
+        }
         dispatch(executeSearch(analytics));
       },
     };

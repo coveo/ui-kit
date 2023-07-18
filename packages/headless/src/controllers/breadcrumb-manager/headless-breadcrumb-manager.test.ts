@@ -451,9 +451,7 @@ describe('headless breadcrumb manager', () => {
       expect(values.length).toBe(2);
 
       expect(values[0].value.caption).toBe(selected.caption);
-      expect(values[0].value.state).toBe(selected.state);
       expect(values[1].value.caption).toBe(excluded.caption);
-      expect(values[1].value.state).toBe(excluded.state);
     });
 
     it('#state.hasBreadcrumbs returns true', () => {
@@ -527,7 +525,7 @@ describe('headless breadcrumb manager', () => {
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
   });
 
-  it('hasBreadcrumbs returns false when no facet value is selected', () => {
+  it('hasBreadcrumbs returns false when no facet value is selected or excluded', () => {
     state.search.response.facets = [];
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(false);
   });

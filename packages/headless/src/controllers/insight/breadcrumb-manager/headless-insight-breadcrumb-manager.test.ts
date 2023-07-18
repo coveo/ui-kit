@@ -25,7 +25,7 @@ import {numericFacetSetReducer as numericFacetSet} from '../../../features/facet
 import {executeSearch} from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {getSearchInitialState} from '../../../features/search/search-state';
-import {toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
+import {toggleExcludeStaticFilterValue, toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
@@ -474,8 +474,9 @@ describe('insight breadcrumb manager', () => {
       expect(firstFilter.id).toBe(id);
 
       const {values} = firstFilter;
-      expect(values.length).toBe(1);
+      expect(values.length).toBe(2);
       expect(values[0].value.caption).toBe(selected.caption);
+      expect(values[1].value.caption).toBe(excluded.caption);
     });
 
     it('#state.hasBreadcrumbs returns true', () => {
@@ -483,24 +484,47 @@ describe('insight breadcrumb manager', () => {
     });
 
     describe('#deselectBreadcrumb with a static filter breadcrumb value dispatches the correct actions', () => {
-      beforeEach(() => {
-        const {staticFilterBreadcrumbs} = breadcrumbManager.state;
-        const [firstBreadcrumb] = staticFilterBreadcrumbs[0].values;
+      describe('#selected values', () => {
+        beforeEach(() => {
+          const {staticFilterBreadcrumbs} = breadcrumbManager.state;
+          const [firstBreadcrumb] = staticFilterBreadcrumbs[0].values;
 
-        breadcrumbManager.deselectBreadcrumb(firstBreadcrumb);
-      });
-
-      it('dispatches #toggleSelectStaticFilterValue', () => {
-        const toggleSelect = toggleSelectStaticFilterValue({
-          id,
-          value: selected,
+          breadcrumbManager.deselectBreadcrumb(firstBreadcrumb);
         });
-        expect(engine.actions).toContainEqual(toggleSelect);
-      });
 
-      it('dispatches #executeSearch', () => {
-        const action = engine.findAsyncAction(executeSearch.pending);
-        expect(action).toBeTruthy();
+        it('dispatches #toggleSelectStaticFilterValue', () => {
+          const toggleSelect = toggleSelectStaticFilterValue({
+            id,
+            value: selected,
+          });
+          expect(engine.actions).toContainEqual(toggleSelect);
+        });
+
+        it('dispatches #executeSearch', () => {
+          const action = engine.findAsyncAction(executeSearch.pending);
+          expect(action).toBeTruthy();
+        });
+      });
+      describe('#excluded values', () => {
+        beforeEach(() => {
+          const {staticFilterBreadcrumbs} = breadcrumbManager.state;
+          const [, excludedBreadcrumb] = staticFilterBreadcrumbs[0].values;
+
+          breadcrumbManager.deselectBreadcrumb(excludedBreadcrumb);
+        });
+
+        it('dispatches #toggleExcludeStaticFilterValue', () => {
+          const toggleExclude = toggleExcludeStaticFilterValue({
+            id,
+            value: excluded,
+          });
+          expect(engine.actions).toContainEqual(toggleExclude);
+        });
+
+        it('dispatches #executeSearch', () => {
+          const action = engine.findAsyncAction(executeSearch.pending);
+          expect(action).toBeTruthy();
+        });
       });
     });
   });
@@ -533,7 +557,7 @@ describe('insight breadcrumb manager', () => {
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
   });
 
-  it('hasBreadcrumbs returns false when no facet value is selected', () => {
+  it('hasBreadcrumbs returns false when no facet value is selected or excluded', () => {
     state.search.response.facets = [];
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(false);
   });
