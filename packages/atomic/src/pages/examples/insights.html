@@ -388,6 +388,55 @@
                     </atomic-field-condition>
                   </atomic-result-fields-list>
                 </atomic-result-section-bottom-metadata>
+                <atomic-result-section-children>
+                  <atomic-load-more-children-results></atomic-load-more-children-results>
+                  <atomic-insight-result-children image-size="icon" hide-no-results>
+                    <!-- CHILD -->
+                    <atomic-insight-result-children-template>
+                      <!-- CHILD TEMPLATE -->
+                      <template>
+                        <style>
+                          .field {
+                            display: inline-flex;
+                            align-items: center;
+                          }
+
+                          .field-label {
+                            font-weight: bold;
+                            margin-right: 0.25rem;
+                          }
+                        </style>
+                        <atomic-result-section-title>
+                          <atomic-result-link></atomic-result-link>
+                        </atomic-result-section-title>
+                        <atomic-result-section-excerpt>
+                          <atomic-result-text field="excerpt"></atomic-result-text>
+                        </atomic-result-section-excerpt>
+                        <atomic-result-section-bottom-metadata>
+                          <atomic-result-fields-list>
+                            <atomic-field-condition class="field" if-defined="inat_kingdom">
+                              <span class="field-label">Kingdom:</span>
+                              <atomic-result-text field="inat_kingdom"></atomic-result-text>
+                            </atomic-field-condition>
+
+                            <atomic-field-condition class="field" if-defined="inat_family">
+                              <span class="field-label">Family:</span>
+                              <atomic-result-text field="inat_family"></atomic-result-text>
+                            </atomic-field-condition>
+
+                            <atomic-field-condition class="field" if-defined="inat_class">
+                              <span class="field-label">Class:</span>
+                              <atomic-result-text field="inat_class"></atomic-result-text>
+                            </atomic-field-condition>
+                          </atomic-result-fields-list>
+                        </atomic-result-section-bottom-metadata>
+                        <atomic-result-section-children>
+                          <atomic-insight-result-children inherit-templates> </atomic-insight-result-children>
+                        </atomic-result-section-children>
+                      </template>
+                    </atomic-insight-result-children-template>
+                  </atomic-insight-result-children>
+                </atomic-result-section-children>
               </template>
             </atomic-insight-result-template>
           </atomic-insight-folded-result-list>
