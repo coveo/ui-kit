@@ -646,10 +646,6 @@ export namespace Components {
     }
     interface AtomicInsightResultChildren {
         /**
-          * Whether to show a message when no child results are found.
-         */
-        "hideNoResults": boolean;
-        /**
           * The expected size of the image displayed in the children results.
          */
         "imageSize"?: ResultDisplayImageSize;
@@ -658,7 +654,7 @@ export namespace Components {
          */
         "inheritTemplates": boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText": string;
     }
@@ -1396,10 +1392,6 @@ export namespace Components {
     }
     interface AtomicResultChildren {
         /**
-          * Whether to show a message when no child results are found.
-         */
-        "hideNoResults": boolean;
-        /**
           * The expected size of the image displayed in the children results.
          */
         "imageSize"?: ResultDisplayImageSize;
@@ -1408,7 +1400,7 @@ export namespace Components {
          */
         "inheritTemplates": boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText": string;
     }
@@ -3606,10 +3598,6 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightResultChildren {
         /**
-          * Whether to show a message when no child results are found.
-         */
-        "hideNoResults"?: boolean;
-        /**
           * The expected size of the image displayed in the children results.
          */
         "imageSize"?: ResultDisplayImageSize;
@@ -3618,7 +3606,7 @@ declare namespace LocalJSX {
          */
         "inheritTemplates"?: boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText"?: string;
     }
@@ -4313,10 +4301,6 @@ declare namespace LocalJSX {
     }
     interface AtomicResultChildren {
         /**
-          * Whether to show a message when no child results are found.
-         */
-        "hideNoResults"?: boolean;
-        /**
           * The expected size of the image displayed in the children results.
          */
         "imageSize"?: ResultDisplayImageSize;
@@ -4325,7 +4309,7 @@ declare namespace LocalJSX {
          */
         "inheritTemplates"?: boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText"?: string;
     }
