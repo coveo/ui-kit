@@ -1,6 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {extractUnfoldedResult} from '../interface/result';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {ResultListDisplayProps} from './result-list-common-interface';
 
 export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
@@ -14,17 +13,12 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
       <div
         part="result-list-grid-clickable-container outline"
         ref={(element) => props.setNewResultRef(element!, index)}
+        onClick={(event) => {
+          event.preventDefault();
+          interactiveResult.select();
+          location.assign(unfoldedResult.clickUri);
+        }}
       >
-        <LinkWithResultAnalytics
-          part="result-list-grid-clickable"
-          onSelect={() => interactiveResult.select()}
-          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-          href={unfoldedResult.clickUri}
-          title={unfoldedResult.title}
-          tabIndex={-1}
-          ariaHidden={true}
-        />
         {props.renderResult({
           key: props.getResultId(result),
           result: result,
