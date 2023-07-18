@@ -75,13 +75,9 @@ export class AtomicResultChildren implements InitializableComponent {
    */
   @Prop({reflect: true}) imageSize?: ResultDisplayImageSize;
   /**
-   * The non-localized copy for an empty result state.
+   * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
    */
   @Prop() public noResultText = 'no-documents-related';
-  /**
-   * Whether to show a message when no child results are found.
-   */
-  @Prop() public hideNoResults = false;
 
   private resultChildrenCommon!: ResultChildrenCommon;
 
@@ -106,7 +102,6 @@ export class AtomicResultChildren implements InitializableComponent {
       getDisplayConfig: () => this.displayConfig,
       getImageSize: () => this.imageSize,
       getFoldedResultListState: () => this.foldedResultListState,
-      getHideNoResults: () => this.hideNoResults,
       renderChild: this.renderChild.bind(this),
       setInitialChildren: (initialChildren: FoldedResult[]) =>
         (this.initialChildren = initialChildren),

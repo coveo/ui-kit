@@ -24,7 +24,6 @@ interface ResultChildrenProps {
   getNoResultText: () => string;
   getDisplayConfig: () => DisplayConfig;
   getImageSize: () => ResultDisplayImageSize | undefined;
-  getHideNoResults: () => boolean;
   renderChild: (child: FoldedResult, isLast: boolean) => any;
   setInitialChildren: (initialChildren: FoldedResult[]) => void;
   toggleShowInitialChildren: () => void;
@@ -129,7 +128,9 @@ export class ResultChildrenCommon {
     }
 
     if (!collection.moreResultsAvailable && !this.hasChildren) {
-      return this.props.getHideNoResults() ? null : this.renderNoResult();
+      return this.props.getNoResultText()?.trim().length
+        ? this.renderNoResult()
+        : null;
     }
 
     if (!this.hasChildren) {
