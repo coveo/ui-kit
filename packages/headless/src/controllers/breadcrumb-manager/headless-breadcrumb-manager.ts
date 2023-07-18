@@ -1,5 +1,7 @@
 import {configuration} from '../../app/common-reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {toggleSelectAutomaticFacetValue} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions';
+import {AutomaticFacetResponse} from '../../features/facets/automatic-facet-set/interfaces/response';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetResponseSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
@@ -11,6 +13,7 @@ import {
 import {logFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetResponseActiveValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
 import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
+import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {logDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
@@ -41,8 +44,8 @@ import {
 import {loadReducerError} from '../../utils/errors';
 import {
   Breadcrumb,
-  BreadcrumbManager,
-  BreadcrumbManagerState,
+  BreadcrumbManager as CoreBreadcrumbManager,
+  BreadcrumbManagerState as CoreBreadcrumbManagerState,
   BreadcrumbValue,
   buildCoreBreadcrumbManager,
   CategoryFacetBreadcrumb,
@@ -62,10 +65,26 @@ export type {
   StaticFilterBreadcrumb,
   Breadcrumb,
   BreadcrumbValue,
-  BreadcrumbManagerState,
-  BreadcrumbManager,
+  CoreBreadcrumbManagerState,
+  CoreBreadcrumbManager,
   DeselectableValue,
 };
+
+export interface BreadcrumbManager extends CoreBreadcrumbManager {
+  /**
+   * yes
+   */
+  state: BreadcrumbManagerState;
+}
+export interface BreadcrumbManagerState extends CoreBreadcrumbManagerState {
+  /**
+   * yes
+   */
+  automaticFacetBreadcrumbs: AutomaticFacetBreadcrumb[];
+}
+
+type AutomaticFacetBreadcrumb = Breadcrumb<FacetValue>;
+
 /**
  * Creates a `BreadcrumbManager` controller instance.
  *
@@ -126,6 +145,12 @@ export function buildBreadcrumbManager(
     );
   };
 
+  const getCategoryFacetBreadcrumbs = (): CategoryFacetBreadcrumb[] => {
+    return Object.keys(getState().categoryFacetSet)
+      .map(buildCategoryFacetBreadcrumb)
+      .filter((breadcrumb) => breadcrumb.path.length);
+  };
+
   const buildCategoryFacetBreadcrumb = (facetId: string) => {
     const path = categoryFacetResponseSelectedValuesSelector(
       getState(),
@@ -151,14 +176,8 @@ export function buildBreadcrumbManager(
     };
   };
 
-  const getCategoryFacetBreadcrumbs = (): CategoryFacetBreadcrumb[] => {
-    return Object.keys(getState().categoryFacetSet)
-      .map(buildCategoryFacetBreadcrumb)
-      .filter((breadcrumb) => breadcrumb.path.length);
-  };
-
   const getStaticFilterBreadcrumbs = (): StaticFilterBreadcrumb[] => {
-    const set = getState().staticFilterSet || {};
+    const set = getState().staticFilterSet ?? {};
     return Object.values(set).map(buildStaticFilterBreadcrumb);
   };
 
@@ -192,6 +211,52 @@ export function buildBreadcrumbManager(
     };
   };
 
+  const getAutomaticFacetBreadcrumbs = (): AutomaticFacetBreadcrumb[] => {
+    const set = getState().automaticFacetSet?.set;
+    if (set) {
+      return Object.values(set).map((slice) =>
+        buildAutomaticFacetBreadcrumb(slice.response)
+      );
+    }
+    return [];
+  };
+
+  const buildAutomaticFacetBreadcrumb = (
+    response: AutomaticFacetResponse
+  ): AutomaticFacetBreadcrumb => {
+    const {field} = response;
+    const values = response.values
+      .filter((value) => value.state === 'selected')
+      .map((value) => buildAutomaticFacetBreadcrumbValue(field, value));
+    return {
+      facetId: field,
+      field,
+      values,
+    };
+  };
+
+  const buildAutomaticFacetBreadcrumbValue = (
+    field: string,
+    selection: FacetValue
+  ) => {
+    return {
+      value: selection,
+      deselect: () => {
+        const analyticsAction = logFacetBreadcrumb({
+          facetId: field,
+          facetValue: selection.value,
+        });
+        dispatch(
+          toggleSelectAutomaticFacetValue({
+            field,
+            selection,
+          })
+        );
+        dispatch(executeSearch(analyticsAction));
+      },
+    };
+  };
+
   function hasBreadcrumbs() {
     return !![
       ...getFacetBreadcrumbs(),
@@ -199,6 +264,7 @@ export function buildBreadcrumbManager(
       ...getDateFacetBreadcrumbs(),
       ...getCategoryFacetBreadcrumbs(),
       ...getStaticFilterBreadcrumbs(),
+      ...getAutomaticFacetBreadcrumbs(),
     ].length;
   }
 
@@ -212,6 +278,7 @@ export function buildBreadcrumbManager(
         numericFacetBreadcrumbs: getNumericFacetBreadcrumbs(),
         dateFacetBreadcrumbs: getDateFacetBreadcrumbs(),
         staticFilterBreadcrumbs: getStaticFilterBreadcrumbs(),
+        automaticFacetBreadcrumbs: getAutomaticFacetBreadcrumbs(),
         hasBreadcrumbs: hasBreadcrumbs(),
       };
     },

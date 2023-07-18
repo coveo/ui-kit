@@ -10,7 +10,8 @@ export type FacetType =
   | 'facets'
   | 'numericFacets'
   | 'dateFacets'
-  | 'categoryFacets';
+  | 'categoryFacets'
+  | 'automaticFacets';
 
 export interface FacetValueFormat<ValueType> {
   format(facetValue: ValueType): string;

@@ -245,6 +245,8 @@ export type {
   BreadcrumbManagerState,
   BreadcrumbManager,
   DeselectableValue,
+  CoreBreadcrumbManager,
+  CoreBreadcrumbManagerState,
 } from './breadcrumb-manager/headless-breadcrumb-manager';
 export {buildBreadcrumbManager} from './breadcrumb-manager/headless-breadcrumb-manager';
 
