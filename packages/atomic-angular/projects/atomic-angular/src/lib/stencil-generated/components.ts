@@ -915,13 +915,13 @@ export declare interface AtomicResultChildren extends Components.AtomicResultChi
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['imageSize', 'inheritTemplates', 'noResultText']
+  inputs: ['hideNoResults', 'imageSize', 'inheritTemplates', 'noResultText']
 })
 @Component({
   selector: 'atomic-result-children',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['imageSize', 'inheritTemplates', 'noResultText']
+  inputs: ['hideNoResults', 'imageSize', 'inheritTemplates', 'noResultText']
 })
 export class AtomicResultChildren {
   protected el: HTMLElement;
