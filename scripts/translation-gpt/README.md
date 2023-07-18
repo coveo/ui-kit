@@ -17,7 +17,7 @@ You must set both of the following environment variables:
 
 ## translate.mjs
 
-To run this script, navigate to `./utils/translation-gpt` and use the command `node translate.mjs`.
+To run this script, navigate to `./scripts/translation-gpt` and use the command `node translate.mjs`.
 
 While executing the script, a `temporary.json` file will be generated. Do not delete this file while the translation task is ongoing.
 
@@ -27,7 +27,7 @@ If there are a lot of translations that need to be performed, the script could t
 
 ## validate.mjs
 
-To run this script, navigate to `./utils/translation-gpt` and use the command `node validate.mjs`.
+To run this script, navigate to `./scripts/translation-gpt` and use the command `node validate.mjs`.
 
 - This will validate all entries in the `locales.json` file.
 - To validate only selected entries (e.g. recent additions) pass them as space seperated command line arguments
