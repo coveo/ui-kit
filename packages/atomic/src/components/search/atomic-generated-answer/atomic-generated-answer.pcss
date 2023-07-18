@@ -64,13 +64,13 @@
   --index-height: 20px;
   --max-citation-width: 170px;
 
-  .citations-label {
+  [part='citations-label'] {
     /* Making sure the label height is the same as the citation for vertical centering. */
     height: var(--height);
   }
 
   .citations-container {
-    .citation {
+    [part='citation'] {
       max-width: var(--max-citation-width);
       height: var(--height);
     }

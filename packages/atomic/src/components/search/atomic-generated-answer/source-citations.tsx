@@ -12,7 +12,10 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
 ) =>
   props.citations.length ? (
     <div class="source-citations gap-2 mt-6 flex">
-      <p class="citations-label py-1 text-neutral-dark shrink-0 flex flex-col justify-center">
+      <p
+        part="citations-label"
+        class="py-1 text-neutral-dark shrink-0 flex flex-col justify-center"
+      >
         {props.label}
       </p>
       <ol class="list-none citations-container gap-2 flex items-center flex-wrap">
@@ -25,9 +28,10 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
                 target="_blank"
                 rel="noopener"
                 onClick={() => props.onCitationClick(citation)}
-                class="flex items-center p-1 citation bg-background btn-text-neutral border rounded-full border-neutral text-on-background"
+                part="citation"
+                class="flex items-center p-1 bg-background btn-text-neutral border rounded-full border-neutral text-on-background"
               >
-                <div class="rounded-full citation-index font-medium rounded-full flex items-center text-bg-blue shrink-0">
+                <div class="citation-index rounded-full font-medium rounded-full flex items-center text-bg-blue shrink-0">
                   <div class="mx-auto">{index + 1}</div>
                 </div>
                 <span class="citation-title truncate mx-1">
