@@ -174,8 +174,7 @@ describe('automatic-facet-set slice', () => {
   });
 
   describe('#restoreSearchParameters', () => {
-    it(`it sets #values to the selected values in the payload 
-    when a facet is found in the #af payload`, () => {
+    it('it sets #values to the selected values in the payload when a facet is found in the #af payload', () => {
       const field = 'field';
       const value = 'a';
       const af = {[field]: [value]};

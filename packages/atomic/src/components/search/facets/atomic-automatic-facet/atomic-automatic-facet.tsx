@@ -127,7 +127,7 @@ export class AtomicAutomaticFacet implements InitializableComponent {
 
   private get label() {
     return isNullOrUndefined(this.facet.state.label)
-      ? 'No Label'
+      ? 'no-label'
       : this.facet.state.label;
   }
 

@@ -88,8 +88,6 @@ export function buildAutomaticFacet(
   const controller = buildController(engine);
 
   const {field} = props;
-  const getFacetResponse = () =>
-    engine.state.automaticFacetSet?.set[field]?.response;
 
   return {
     ...controller,
@@ -107,7 +105,7 @@ export function buildAutomaticFacet(
     },
 
     get state() {
-      const response = getFacetResponse();
+      const response = engine.state.automaticFacetSet?.set[field]?.response;
 
       const defaultState = {field: '', values: [], label: ''};
 
