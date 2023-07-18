@@ -97,6 +97,8 @@ export default class QuanticResultQuickview extends LightningElement {
   resultActionOrderClasses;
   /** @type {boolean} */
   _isLoading = false;
+  /** @type {AnyHeadless} */
+  engine;
 
   labels = {
     close,
@@ -144,6 +146,7 @@ export default class QuanticResultQuickview extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.engine = engine;
     this.headless = getHeadlessBundle(this.engineId);
     const options = {
       result: this.result,
@@ -179,12 +182,10 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   addRecentResult() {
-    getHeadlessEnginePromise(this.engineId).then((engine) => {
-      const {pushRecentResult} = this.headless.loadRecentResultsActions(engine);
-      engine.dispatch(
-        pushRecentResult(JSON.parse(JSON.stringify(this.result)))
-      );
-    });
+    const {pushRecentResult} = this.headless.loadRecentResultsActions(
+      this.engine
+    );
+    this.engine.dispatch(pushRecentResult(Object.create(this.result)));
   }
 
   closeQuickview() {

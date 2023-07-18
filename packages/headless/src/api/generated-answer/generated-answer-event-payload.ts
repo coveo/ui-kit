@@ -2,7 +2,8 @@ export type GeneratedAnswerStreamFinishReason = 'COMPLETED' | 'ERROR';
 
 export type GeneratedAnswerPayloadType =
   | 'genqa.messageType'
-  | 'genqa.citationsType';
+  | 'genqa.citationsType'
+  | 'genqa.endOfStreamType';
 
 export interface GeneratedAnswerCitation {
   id: string;
@@ -20,10 +21,14 @@ export interface GeneratedAnswerCitationsPayload {
   citations: GeneratedAnswerCitation[];
 }
 
+export interface GeneratedAnswerEndOfStreamPayload {
+  answerGenerated: boolean;
+}
+
 export interface GeneratedAnswerStreamEventData {
   payloadType?: GeneratedAnswerPayloadType;
   payload: string;
   finishReason?: GeneratedAnswerStreamFinishReason;
   errorMessage?: string;
-  errorCode?: number;
+  statusCode?: number;
 }
