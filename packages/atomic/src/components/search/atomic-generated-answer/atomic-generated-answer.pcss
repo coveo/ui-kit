@@ -1,14 +1,8 @@
 @import '../../../global/global.pcss';
 @import '../../../global/mixins.pcss';
 
-[part='header-label'] {
-  color: var(--atomic-primary);
-}
-
 [part='generated-text'] {
   @mixin set-font-size var(--atomic-text-lg);
-
-  color: var(--atomic-on-background);
 
   &.cursor::after {
     content: '';
