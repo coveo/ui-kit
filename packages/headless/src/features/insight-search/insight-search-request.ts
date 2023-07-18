@@ -5,6 +5,7 @@ import {
   InsightConfigurationSection,
 } from '../../state/state-sections';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
+import {CollectionId} from '../folding/folding-state';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
 import {MappedSearchRequest, mapSearchRequest} from '../search/search-mappings';
 
@@ -12,25 +13,12 @@ type StateNeededBySearchRequest = ConfigurationSection &
   InsightConfigurationSection &
   Partial<InsightAppState>;
 
-export const buildInsightSearchRequest = (
+export const buildInsightBaseRequest = (
   state: StateNeededBySearchRequest
 ): MappedSearchRequest<InsightQueryRequest> => {
   const cq = buildConstantQuery(state);
   const facets = getAllFacets(state);
-  const getNumberOfResultsWithinIndexLimit = () => {
-    if (!state.pagination) {
-      return undefined;
-    }
 
-    const isOverIndexLimit =
-      state.pagination.firstResult + state.pagination.numberOfResults >
-      maximumNumberOfResultsFromIndex;
-
-    if (isOverIndexLimit) {
-      return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
-    }
-    return state.pagination.numberOfResults;
-  };
   return mapSearchRequest<InsightQueryRequest>({
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -39,10 +27,6 @@ export const buildInsightSearchRequest = (
     q: state.query?.q,
     ...(facets.length && {facets}),
     caseContext: state.insightCaseContext?.caseContext,
-    ...(state.pagination && {
-      firstResult: state.pagination.firstResult,
-      numberOfResults: getNumberOfResultsWithinIndexLimit(),
-    }),
     ...(cq && {cq}),
     ...(state.fields &&
       !state.fields.fetchAllFields && {
@@ -62,6 +46,52 @@ export const buildInsightSearchRequest = (
       filterFieldRange: state.folding.filterFieldRange,
     }),
   });
+};
+
+export const buildInsightSearchRequest = (
+  state: StateNeededBySearchRequest
+): MappedSearchRequest<InsightQueryRequest> => {
+  const getNumberOfResultsWithinIndexLimit = () => {
+    if (!state.pagination) {
+      return undefined;
+    }
+
+    const isOverIndexLimit =
+      state.pagination.firstResult + state.pagination.numberOfResults >
+      maximumNumberOfResultsFromIndex;
+
+    if (isOverIndexLimit) {
+      return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
+    }
+    return state.pagination.numberOfResults;
+  };
+
+  const baseRequest = buildInsightBaseRequest(state);
+  return {
+    ...baseRequest,
+    request: {
+      ...baseRequest.request,
+      ...(state.pagination && {
+        firstResult: state.pagination.firstResult,
+        numberOfResults: getNumberOfResultsWithinIndexLimit(),
+      }),
+    },
+  };
+};
+
+export const buildInsightLoadCollectionRequest = (
+  state: StateNeededBySearchRequest,
+  collectionId: CollectionId
+): MappedSearchRequest<InsightQueryRequest> => {
+  const baseRequest = buildInsightBaseRequest(state);
+  return {
+    ...baseRequest,
+    request: {
+      ...baseRequest.request,
+      filterFieldRange: 100,
+      cq: `@${state?.folding?.fields.collection}="${collectionId}"`,
+    },
+  };
 };
 
 export const buildInsightFetchMoreResultsRequest = async (
