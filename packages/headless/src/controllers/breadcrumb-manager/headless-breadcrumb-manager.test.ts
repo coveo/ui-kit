@@ -25,7 +25,7 @@ import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/r
 import {executeSearch} from '../../features/search/search-actions';
 import {searchReducer as search} from '../../features/search/search-slice';
 import {getSearchInitialState} from '../../features/search/search-state';
-import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
+import {toggleExcludeStaticFilterValue, toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
@@ -351,7 +351,6 @@ describe('headless breadcrumb manager', () => {
     });
   });
 
-  // TODO: https://coveord.atlassian.net/browse/KIT-2555
   describe('category facet breadcrumbs', () => {
     let mockSelectedValue: CategoryFacetValue;
     let facetBreadcrumbs: CategoryFacetBreadcrumb[];
@@ -420,7 +419,6 @@ describe('headless breadcrumb manager', () => {
     });
   });
 
-  // TODO: https://coveord.atlassian.net/browse/KIT-2587
   describe('static filter breadcrumbs', () => {
     const id = 'a';
     const idle = buildMockStaticFilterValue({caption: 'b', state: 'idle'});
@@ -428,10 +426,17 @@ describe('headless breadcrumb manager', () => {
       caption: 'c',
       state: 'selected',
     });
+    const excluded = buildMockStaticFilterValue({
+      caption: 'd',
+      state: 'excluded',
+    });
 
     beforeEach(() => {
       state.staticFilterSet = {
-        [id]: buildMockStaticFilterSlice({id, values: [idle, selected]}),
+        [id]: buildMockStaticFilterSlice({
+          id,
+          values: [idle, selected, excluded],
+        }),
       };
     });
 
@@ -443,8 +448,12 @@ describe('headless breadcrumb manager', () => {
       expect(firstFilter.id).toBe(id);
 
       const {values} = firstFilter;
-      expect(values.length).toBe(1);
+      expect(values.length).toBe(2);
+
       expect(values[0].value.caption).toBe(selected.caption);
+      expect(values[0].value.state).toBe(selected.state);
+      expect(values[1].value.caption).toBe(excluded.caption);
+      expect(values[1].value.state).toBe(excluded.state);
     });
 
     it('#state.hasBreadcrumbs returns true', () => {
@@ -452,24 +461,46 @@ describe('headless breadcrumb manager', () => {
     });
 
     describe('#deselectBreadcrumb with a static filter breadcrumb value dispatches the correct actions', () => {
-      beforeEach(() => {
-        const {staticFilterBreadcrumbs} = breadcrumbManager.state;
-        const [firstBreadcrumb] = staticFilterBreadcrumbs[0].values;
-
-        breadcrumbManager.deselectBreadcrumb(firstBreadcrumb);
-      });
-
-      it('dispatches #toggleSelectStaticFilterValue', () => {
-        const toggleSelect = toggleSelectStaticFilterValue({
-          id,
-          value: selected,
+      describe('#selected values', () => {
+        beforeEach(() => {
+          const {staticFilterBreadcrumbs} = breadcrumbManager.state;
+          const [selectedBreadcrumb] = staticFilterBreadcrumbs[0].values;
+          breadcrumbManager.deselectBreadcrumb(selectedBreadcrumb);
         });
-        expect(engine.actions).toContainEqual(toggleSelect);
+
+        it('dispatches #toggleSelectStaticFilterValue', () => {
+          const toggleSelect = toggleSelectStaticFilterValue({
+            id,
+            value: selected,
+          });
+          expect(engine.actions).toContainEqual(toggleSelect);
+        });
+
+        it('dispatches #executeSearch', () => {
+          const action = engine.findAsyncAction(executeSearch.pending);
+          expect(action).toBeTruthy();
+        });
       });
 
-      it('dispatches #executeSearch', () => {
-        const action = engine.findAsyncAction(executeSearch.pending);
-        expect(action).toBeTruthy();
+      describe('#excluded values', () => {
+        beforeEach(() => {
+          const {staticFilterBreadcrumbs} = breadcrumbManager.state;
+          const [, excludedBreadcrumb] = staticFilterBreadcrumbs[0].values;
+          breadcrumbManager.deselectBreadcrumb(excludedBreadcrumb);
+        });
+
+        it('dispatches #toggleExcludeStaticFilterValue', () => {
+          const toggleExclude = toggleExcludeStaticFilterValue({
+            id,
+            value: excluded,
+          });
+          expect(engine.actions).toContainEqual(toggleExclude);
+        });
+
+        it('dispatches #executeSearch', () => {
+          const action = engine.findAsyncAction(executeSearch.pending);
+          expect(action).toBeTruthy();
+        });
       });
     });
   });
@@ -479,6 +510,17 @@ describe('headless breadcrumb manager', () => {
       request: buildMockNumericFacetRequest({facetId}),
     });
     const mockSelectedValue = buildMockNumericFacetValue({state: 'selected'});
+    state.search.response.facets = [
+      buildMockNumericFacetResponse({facetId, values: [mockSelectedValue]}),
+    ];
+    expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
+  });
+
+  it('hasBreadcrumbs returns true when a facet value is excluded', () => {
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
+      request: buildMockNumericFacetRequest({facetId}),
+    });
+    const mockSelectedValue = buildMockNumericFacetValue({state: 'excluded'});
     state.search.response.facets = [
       buildMockNumericFacetResponse({facetId, values: [mockSelectedValue]}),
     ];

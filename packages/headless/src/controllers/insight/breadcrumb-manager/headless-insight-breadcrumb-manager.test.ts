@@ -377,7 +377,6 @@ describe('insight breadcrumb manager', () => {
     });
   });
 
-  // TODO: https://coveord.atlassian.net/browse/KIT-2555
   describe('category facet breadcrumbs', () => {
     let mockSelectedValue: CategoryFacetValue;
     let facetBreadcrumbs: CategoryFacetBreadcrumb[];

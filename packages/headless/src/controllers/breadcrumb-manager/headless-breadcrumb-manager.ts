@@ -31,6 +31,7 @@ import {executeSearch} from '../../features/search/search-actions';
 import {searchReducer as search} from '../../features/search/search-slice';
 import {
   logStaticFilterDeselect,
+  toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
 import {
@@ -193,7 +194,7 @@ export function buildBreadcrumbManager(
   ): StaticFilterBreadcrumb => {
     const {id, values: filterValues} = filter;
     const values = filterValues
-      .filter((value) => value.state === 'selected')
+      .filter((value) => value.state !== 'idle')
       .map((value) => buildStaticFilterBreadcrumbValue(id, value));
 
     return {id, values};
@@ -212,7 +213,11 @@ export function buildBreadcrumbManager(
           staticFilterValue: {caption, expression},
         });
 
-        dispatch(toggleSelectStaticFilterValue({id, value}));
+        if (value.state === 'selected') {
+          dispatch(toggleSelectStaticFilterValue({id, value}));
+        } else if (value.state === 'excluded') {
+          dispatch(toggleExcludeStaticFilterValue({id, value}));
+        }
         dispatch(executeSearch(analytics));
       },
     };
