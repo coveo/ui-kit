@@ -16,6 +16,7 @@ import {
 } from '../../api/generated-answer/generated-answer-event-payload';
 import {
   ConfigurationSection,
+  DebugSection,
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections';
@@ -25,7 +26,8 @@ import {buildStreamingRequest} from './generated-answer-request';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
-  GeneratedAnswerSection;
+  GeneratedAnswerSection &
+  DebugSection;
 
 const stringValue = new StringValue({required: true});
 const optionalStringValue = new StringValue();
@@ -132,7 +134,9 @@ export const streamAnswer = createAsyncThunk<
         );
         break;
       default:
-        extra.logger.info(`Unknown payloadType: "${payloadType}"`);
+        if (state.debug) {
+          extra.logger.warn(`Unknown payloadType: "${payloadType}"`);
+        }
     }
   };
 
