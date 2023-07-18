@@ -2,7 +2,7 @@ import alias from '@rollup/plugin-alias';
 import replacePlugin from '@rollup/plugin-replace';
 import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import {Config} from '@stencil/core';
-import {postcss} from '@stencil/postcss';
+import {postcss} from '@stencil-community/postcss';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import autoprefixer from 'autoprefixer';
 import {readFileSync} from 'fs';
@@ -61,7 +61,6 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
-  sourceMap: true,
   outputTargets: [
     react({
       componentCorePackage: '@coveo/atomic',

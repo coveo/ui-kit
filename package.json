@@ -25,7 +25,7 @@
     "release:phase4": "npx -p=@coveo/release git-publish-all"
   },
   "dependencies": {
-    "patch-package": "6.4.7"
+    "patch-package": "7.0.2"
   },
   "devDependencies": {
     "@actions/core": "1.9.1",

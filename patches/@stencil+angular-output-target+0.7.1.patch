@@ -1,0 +1,13 @@
+diff --git a/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js b/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js
+index b1b095f..0de97be 100644
+--- a/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js
++++ b/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js
+@@ -115,7 +115,7 @@ export const createComponentTypeDefinition = (tagNameAsPascal, events, component
+     const eventTypes = publicEvents.map((event) => {
+         const comment = createDocComment(event.docs);
+         let eventName = event.name;
+-        if (event.name.includes('-')) {
++        if (/\W/.test(eventName)) {
+             // If an event name includes a dash, we need to wrap it in quotes.
+             // https://github.com/ionic-team/stencil-ds-output-targets/issues/212
+             eventName = `'${event.name}'`;
