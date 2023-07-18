@@ -1,9 +1,15 @@
-import {readFileSync, writeFileSync} from 'fs';
+import {existsSync, openSync, readFileSync, writeFileSync} from 'fs';
 import {env} from 'process';
 
 const localeToTranslate = JSON.parse(
   readFileSync('../../packages/atomic/src/locales.json')
 );
+
+if (!existsSync('temporary.json')) {
+  openSync('temporary.json', 'w');
+  writeFileSync('temporary.json', JSON.stringify({}));
+}
+
 const localeAlreadyTranslated = JSON.parse(readFileSync('./temporary.json'));
 
 const supportedLanguages = [
