@@ -444,7 +444,6 @@ describe('insight breadcrumb manager', () => {
     });
   });
 
-  // TODO: https://coveord.atlassian.net/browse/KIT-2587
   describe('static filter breadcrumbs', () => {
     const id = 'a';
     const idle = buildMockStaticFilterValue({caption: 'b', state: 'idle'});
