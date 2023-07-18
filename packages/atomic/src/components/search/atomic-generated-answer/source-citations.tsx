@@ -25,7 +25,7 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
                 target="_blank"
                 rel="noopener"
                 onClick={() => props.onCitationClick(citation)}
-                class="flex items-center citation bg-background btn-text-neutral text-neutral-dark rounded-full border-neutral text-on-background"
+                class="flex items-center p-1 citation bg-background btn-text-neutral border rounded-full border-neutral text-on-background"
               >
                 <div class="rounded-full citation-index font-medium rounded-full flex items-center text-bg-blue shrink-0">
                   <div class="mx-auto">{index + 1}</div>

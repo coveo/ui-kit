@@ -66,20 +66,19 @@
 }
 
 .source-citations {
+  --height: 2.2em;
   --index-height: 20px;
-  --citation-padding: 0.25rem;
-  --citation-border-width: 1px;
+  --max-citation-width: 170px;
 
   .citations-label {
     /* Making sure the label height is the same as the citation for vertical centering. */
-    height: calc(var(--index-height) + (2 * var(--citation-border-width)) + (2 * var(--citation-padding)));
+    height: var(--height);
   }
 
   .citations-container {
     .citation {
-      max-width: 160px;
-      padding: var(--citation-padding);
-      border-width: var(--citation-border-width);
+      max-width: var(--max-citation-width);
+      height: var(--height);
     }
 
     .citation-index {
