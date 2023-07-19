@@ -29,7 +29,10 @@ import {numericFacetActiveValuesSelector} from '../../../features/facets/range-f
 import {numericFacetSetReducer as numericFacetSet} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
-import {toggleExcludeStaticFilterValue, toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
+import {
+  toggleExcludeStaticFilterValue,
+  toggleSelectStaticFilterValue,
+} from '../../../features/static-filter-set/static-filter-set-actions';
 import {logInsightStaticFilterDeselect} from '../../../features/static-filter-set/static-filter-set-insight-analytics-actions';
 import {
   StaticFilterSlice,

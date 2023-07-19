@@ -25,7 +25,10 @@ import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/r
 import {executeSearch} from '../../features/search/search-actions';
 import {searchReducer as search} from '../../features/search/search-slice';
 import {getSearchInitialState} from '../../features/search/search-state';
-import {toggleExcludeStaticFilterValue, toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
+import {
+  toggleExcludeStaticFilterValue,
+  toggleSelectStaticFilterValue,
+} from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
