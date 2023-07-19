@@ -258,14 +258,14 @@ export declare interface AtomicFoldedResultList extends Components.AtomicFoldedR
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField'],
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField', 'target'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-folded-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField']
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField', 'target']
 })
 export class AtomicFoldedResultList {
   protected el: HTMLElement;
@@ -738,14 +738,14 @@ export declare interface AtomicRecsList extends Components.AtomicRecsList {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
+  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation', 'target'],
   methods: ['setRenderFunction', 'previousPage', 'nextPage']
 })
 @Component({
   selector: 'atomic-recs-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation']
+  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation', 'target']
 })
 export class AtomicRecsList {
   protected el: HTMLElement;
