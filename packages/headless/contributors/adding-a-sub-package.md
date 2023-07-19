@@ -5,8 +5,11 @@ Headless provides exports through multiple sub packages. A sub-package groups to
 ## To add a new sub-package:
 
 1. Create an entry file for your sub-package inside the `src` directory (e.g. case-assist.ts).
-2. Configure nodejs and browser bundles inside `rollup.config.js` for your entry file.
-3. Create a new directory with the name of your sub-package at the project root.
+2. Configure nodejs and browser bundles inside `esbuild.mjs` for the entry file created in step #1.
+
+   - Add entries in `useCaseEntries` and `getUmdGlobalName` map for the global name (used to store exports for iife)
+
+3. Create a new directory with the name of your sub-package at the `headless/` root.
 4. Inside the new directory, add a `package.json` file. Add the paths to your bundled files and type definitions. Make sure to mark the package as `private` so it doesn't get published individually.
 5. Add the directory name to the `files` array in the project root `package.json` file.
 
