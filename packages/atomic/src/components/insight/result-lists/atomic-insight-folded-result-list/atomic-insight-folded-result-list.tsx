@@ -33,6 +33,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
+  ResultTarget,
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
@@ -81,6 +82,11 @@ export class AtomicInsightFoldedResultList
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
+  /**
+   * Where to open the result link.
+   * @defaultValue `_blank`
+   */
+  @Prop() target: ResultTarget = '_blank';
   /**
    * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
    *
@@ -154,6 +160,7 @@ export class AtomicInsightFoldedResultList
       getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
       host: this.host,
       bindings: this.bindings,
+      target: this.target,
       getDensity: () => this.density,
       getResultDisplay: () => this.display,
       getLayoutDisplay: () => this.display,

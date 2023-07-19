@@ -23,6 +23,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
+  ResultTarget,
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
@@ -81,6 +82,13 @@ export class AtomicResultList implements InitializableComponent {
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
   @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
+
+  /**
+   * Where to open the result link.
+   * @defaultValue `_blank`
+   */
+  @Prop() target: ResultTarget = '_blank';
+
   /**
    * The expected size of the image displayed in the results.
    */
@@ -128,6 +136,7 @@ export class AtomicResultList implements InitializableComponent {
     this.resultListCommon = new ResultListCommon({
       resultTemplateProvider,
       getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
+      target: this.target,
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,

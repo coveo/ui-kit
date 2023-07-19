@@ -9,7 +9,7 @@ import { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedR
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
+import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
@@ -322,6 +322,11 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        /**
+          * Where to open the result link.
+          * @defaultValue `_blank`
+         */
+        "target": ResultTarget;
     }
     interface AtomicFormatCurrency {
         /**
@@ -455,6 +460,11 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        /**
+          * Where to open the result link.
+          * @defaultValue `_blank`
+         */
+        "target": ResultTarget;
     }
     interface AtomicInsightFullSearchButton {
         "tooltip": string;
@@ -690,6 +700,11 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        /**
+          * Where to open the result link.
+          * @defaultValue `_blank`
+         */
+        "target": ResultTarget;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -1250,6 +1265,11 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        /**
+          * Where to open the result link.
+          * @defaultValue `_blank`
+         */
+        "target": ResultTarget;
     }
     interface AtomicRecsResult {
         /**
@@ -1476,6 +1496,11 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        /**
+          * Where to open the result link.
+          * @defaultValue `_blank`
+         */
+        "target": ResultTarget;
     }
     interface AtomicResultLocalizedText {
         /**
@@ -3295,6 +3320,11 @@ declare namespace LocalJSX {
           * @defaultValue `foldingparent`
          */
         "parentField"?: string;
+        /**
+          * Where to open the result link.
+          * @defaultValue `_blank`
+         */
+        "target"?: ResultTarget;
     }
     interface AtomicFormatCurrency {
         /**
@@ -3424,6 +3454,11 @@ declare namespace LocalJSX {
           * @defaultValue `foldingparent`
          */
         "parentField"?: string;
+        /**
+          * Where to open the result link.
+          * @defaultValue `_blank`
+         */
+        "target"?: ResultTarget;
     }
     interface AtomicInsightFullSearchButton {
         "tooltip"?: string;
@@ -3633,6 +3668,11 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * Where to open the result link.
+          * @defaultValue `_blank`
+         */
+        "target"?: ResultTarget;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -4162,6 +4202,11 @@ declare namespace LocalJSX {
           * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
          */
         "recommendation"?: string;
+        /**
+          * Where to open the result link.
+          * @defaultValue `_blank`
+         */
+        "target"?: ResultTarget;
     }
     interface AtomicRecsResult {
         /**
@@ -4376,6 +4421,11 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * Where to open the result link.
+          * @defaultValue `_blank`
+         */
+        "target"?: ResultTarget;
     }
     interface AtomicResultLocalizedText {
         /**

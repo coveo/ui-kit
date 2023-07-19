@@ -1080,14 +1080,14 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['density', 'display', 'imageSize'],
+  inputs: ['density', 'display', 'imageSize', 'target'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['density', 'display', 'imageSize']
+  inputs: ['density', 'display', 'imageSize', 'target']
 })
 export class AtomicResultList {
   protected el: HTMLElement;
