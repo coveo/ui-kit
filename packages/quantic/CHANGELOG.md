@@ -1,3 +1,9 @@
+## 2.27.1 (2023-07-19)
+
+### Bug Fixes
+
+- **quantic:** optimized the time needed to perform a quick view open operation ([#3016](https://github.com/coveo/ui-kit/issues/3016)) ([547c049](https://github.com/coveo/ui-kit/commits/547c049f00376bc3186dc190ace6361fe933e86b))
+
 # 2.27.0 (2023-07-12)
 
 ### Features
