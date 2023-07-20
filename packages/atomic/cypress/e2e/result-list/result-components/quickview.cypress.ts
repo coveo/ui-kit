@@ -1,4 +1,7 @@
-import {generateComponentHTML} from '../../../fixtures/fixture-common';
+import {
+  TagProps,
+  generateComponentHTML,
+} from '../../../fixtures/fixture-common';
 import {TestFixture} from '../../../fixtures/test-fixture';
 import * as CommonAssertions from '../../common-assertions';
 import {addFacet} from '../../facets/facet/facet-actions';
@@ -10,11 +13,14 @@ import {
   QuickviewModalSelectors,
 } from './quickview-selectors';
 
-const addQuickviewInResultList = () =>
+const addQuickviewInResultList = (props: TagProps = {}) =>
   addResultList(
-    buildTemplateWithSections({
-      actions: generateComponentHTML(quickviewComponent),
-    })
+    buildTemplateWithSections(
+      {
+        actions: generateComponentHTML(quickviewComponent),
+      },
+      props
+    )
   );
 
 const openModal = () => {
@@ -42,6 +48,82 @@ describe('Quickview Component', () => {
         .with(addFacet({field: 'filetype'}))
         .withHash('f-filetype=pdf')
         .with(addQuickviewInResultList())
+        .init();
+    });
+
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(QuickviewSelectors.firstInResult);
+    });
+
+    it('should not log error to console', () => {
+      CommonAssertions.assertConsoleError(false);
+    });
+
+    it('should display a header title', () => {
+      openModal();
+
+      QuickviewModalSelectors.titleLink()
+        .should('exist')
+        .should('have.attr', 'href');
+    });
+
+    it('should display a close button', () => {
+      openModal();
+      QuickviewModalSelectors.closeButton()
+        .should('exist')
+        .should('have.attr', 'aria-label', 'Close')
+        .click();
+
+      cy.get('body').should('not.have.class', 'atomic-modal-opened');
+    });
+
+    it('should display an iframe', () => {
+      openModal();
+      QuickviewModalSelectors.iframe()
+        .should('exist')
+        .its('0.contentDocument.body')
+        .should('not.be.empty');
+    });
+
+    it('should display a pager with next navigation', () => {
+      openModal();
+      QuickviewModalSelectors.pagerSummary()
+        .should('exist')
+        .should('have.text', 'Result 1 of 10');
+
+      QuickviewModalSelectors.nextButton().click();
+      QuickviewModalSelectors.pagerSummary().should(
+        'have.text',
+        'Result 2 of 10'
+      );
+      cy.expectClickEvent('documentQuickview');
+    });
+
+    it('should display a pager with previous navigation', () => {
+      openModal();
+      QuickviewModalSelectors.pagerSummary()
+        .should('exist')
+        .should('have.text', 'Result 1 of 10');
+
+      QuickviewModalSelectors.previousButton().click();
+      QuickviewModalSelectors.pagerSummary().should(
+        'have.text',
+        'Result 10 of 10'
+      );
+      cy.expectClickEvent('documentQuickview');
+    });
+  });
+
+  describe('when used on grid display result list', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addFacet({field: 'filetype'}))
+        .withHash('f-filetype=pdf')
+        .with(
+          addQuickviewInResultList({
+            display: 'grid',
+          })
+        )
         .init();
     });
 
