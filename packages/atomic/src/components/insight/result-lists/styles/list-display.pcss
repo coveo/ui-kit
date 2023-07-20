@@ -8,18 +8,26 @@
   margin-bottom: 1rem;
 }
 
-.list-root.display-list {
-  display: flex;
-  flex-direction: column;
+.list-root {
+  @apply p-0;
 
-  .result-component,
-  atomic-result-placeholder {
-    width: auto;
+  .display-list {
+    display: flex;
+    flex-direction: column;
+
+    .result-component,
+    atomic-result-placeholder {
+      width: auto;
+    }
+
+    @mixin atomic-list-with-dividers;
+
+    .result-component[part~='outline']::before {
+      @apply my-0 mx-6;
+    }
   }
 
-  @mixin atomic-list-with-dividers;
-
-  .result-component[part~='outline']::before {
-    @apply my-0 mx-6;
+  &.placeholder {
+    padding: 0.5rem 1.5rem;
   }
 }
