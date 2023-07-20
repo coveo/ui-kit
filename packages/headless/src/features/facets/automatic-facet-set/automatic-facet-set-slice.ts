@@ -68,7 +68,7 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.values(state.set).forEach(({response}) => {
-          response.values.map((value) => (value.state = 'idle'));
+          response.values.forEach((value) => (value.state = 'idle'));
         });
       });
   }

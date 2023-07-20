@@ -165,8 +165,8 @@ export class AtomicBreadbox implements InitializableComponent {
       return path.join(SEPARATOR);
     }
 
-    const truncatedPath = [path[0], ELLIPSIS, ...path.slice(-2)];
-    return truncatedPath.join(SEPARATOR);
+    const ellipsedPath = [path[0], ELLIPSIS, ...path.slice(-2)];
+    return ellipsedPath.join(SEPARATOR);
   }
 
   private renderBreadcrumb(

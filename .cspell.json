@@ -45,6 +45,7 @@
     "gmailmessage",
     "gzipped",
     "headless",
+    "ellipsed",
     "IIFE",
     "initializable",
     "inlink",
