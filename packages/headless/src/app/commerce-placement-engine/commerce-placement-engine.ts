@@ -33,6 +33,12 @@ export interface CommercePlacementsEngine<State extends object = {}>
 export interface CommercePlacementEngineOptions
   extends ExternalEngineOptions<CommercePlacementEngineState> {}
 
+/**
+ * Creates a commerce Placement engine instance.
+ *
+ * @param options - The commerce Placement engine options.
+ * @returns A commerce Placement engine instance.
+ */
 export function buildCommercePlacementEngine(
   options: CommercePlacementEngineOptions
 ): CommercePlacementsEngine {
