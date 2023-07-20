@@ -1,17 +1,41 @@
 import {CommerceUnifiedAPIErrorResponse} from '../../api/commerce/unified-api/unified-api-client';
-import {Badges, Placement, Recommendations} from './placement-set-interface';
+import {
+  Badges,
+  Placement,
+  PlacementSetSkus,
+  PlacementSetView,
+  Recommendations,
+} from './placement-set-interface';
 
 type PlacementError = {error?: CommerceUnifiedAPIErrorResponse};
 
 export type PlacementSetState = {
+  implementationId: '';
   badges: Record<string, Badges & PlacementError>;
-  recs: Record<string, Recommendations & PlacementError>;
+  recommendations: Record<string, Recommendations & PlacementError>;
+  skus: PlacementSetSkus;
+  view: PlacementSetView;
 };
 
 export function getPlacementSetInitialState(): PlacementSetState {
   return {
+    implementationId: '',
     badges: {},
-    recs: {},
+    recommendations: {},
+    skus: {
+      cart: [],
+      product: '',
+      plp: [],
+      search: [],
+      order: [],
+      recs: [],
+    },
+    view: {
+      type: '',
+      currency: '',
+      locale: '',
+      subtype: [],
+    },
   };
 }
 
