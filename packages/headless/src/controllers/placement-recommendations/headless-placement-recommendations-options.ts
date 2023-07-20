@@ -1,4 +1,4 @@
-import {Schema} from '@coveo/bueno';
+import {BooleanValue, Schema} from '@coveo/bueno';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 
 /**
@@ -22,10 +22,17 @@ export interface PlacementRecommendationsOptions {
    * The unique identifier of the Placement to request product recommendations from.
    */
   placementId: string;
+  /**
+   * Whether to request product recommendations in sample mode from the Placement.
+   *
+   * Live recommendations unless this is set to `true`.
+   */
+  sample?: boolean;
 }
 
 export const optionsSchema = new Schema<
   Required<PlacementRecommendationsOptions>
 >({
   placementId: requiredNonEmptyString,
+  sample: new BooleanValue({required: false, default: false}),
 });

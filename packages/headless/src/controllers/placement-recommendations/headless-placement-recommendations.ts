@@ -124,7 +124,12 @@ export function buildPlacementRecommendations(
     },
 
     refresh() {
-      dispatch(getRecs({placementId: options.placementId}));
+      dispatch(
+        getRecs({
+          placementId: options.placementId,
+          mode: options.sample ? 'SAMPLE' : 'LIVE',
+        })
+      );
     },
 
     // Tracking methods aren't implemented yet because callbacks aren't supported by the Unified Commerce API.

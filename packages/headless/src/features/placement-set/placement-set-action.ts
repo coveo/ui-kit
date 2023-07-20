@@ -8,6 +8,7 @@ import {
 import {
   ClientIdParam,
   ImplementationIdParam,
+  ModeParam,
   PlacementIdParam,
   SeedsParam,
   ViewParam,
@@ -23,7 +24,7 @@ import {
 } from '../../utils/validate-payload';
 import {Badges, Recommendations} from './placement-set-interface';
 
-export type GetPlacementCreatorPayload = PlacementIdParam;
+export type GetPlacementCreatorPayload = PlacementIdParam & ModeParam;
 
 export type GetBadgesCreatorPayload = GetPlacementCreatorPayload;
 export type GetRecommendationsCreatorPayload = GetPlacementCreatorPayload;
@@ -161,7 +162,7 @@ export const getRecs = createAsyncThunk<
   const response = await apiClient.getRecs({
     ...state.configuration,
     ...payloadAugmented,
-    mode: 'LIVE',
+    mode: payload.mode ?? 'LIVE',
     url: state.configuration.platformUrl,
   });
 
