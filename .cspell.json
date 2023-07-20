@@ -45,7 +45,6 @@
     "gmailmessage",
     "gzipped",
     "headless",
-    "ellipsed",
     "IIFE",
     "initializable",
     "inlink",
@@ -258,6 +257,7 @@
     "ytvideoduration",
     "ytvideoid",
     "ytviewcount",
-    "genqa"
+    "genqa",
+    "ellipsed"
   ]
 }
