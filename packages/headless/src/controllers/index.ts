@@ -403,3 +403,24 @@ export type {
 } from './field-suggestions/category-facet/headless-category-field-suggestions';
 
 export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';
+
+export type {
+  AutomaticFacet,
+  AutomaticFacetProps,
+  AutomaticFacetState,
+} from './facets/automatic-facet/headless-automatic-facet';
+export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
+
+export type {
+  AutomaticFacetBuilder,
+  AutomaticFacetBuilderProps,
+  AutomaticFacetBuilderState,
+} from './facets/automatic-facet-builder/headless-automatic-facet-builder';
+export {buildAutomaticFacetBuilder} from './facets/automatic-facet-builder/headless-automatic-facet-builder';
+
+export type {
+  GeneratedAnswer,
+  GeneratedAnswerState,
+  GeneratedAnswerCitation,
+} from './generated-answer/headless-generated-answer';
+export {buildGeneratedAnswer} from './generated-answer/headless-generated-answer';

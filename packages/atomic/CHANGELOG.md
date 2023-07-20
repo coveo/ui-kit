@@ -1,13 +1,55 @@
-## 2.31.4 (2023-06-07)
-
+# 2.36.0 (2023-07-19)
 
 ### Bug Fixes
 
-* **atomic:** code defensively around triggers notifications state ([#2946](https://github.com/coveo/ui-kit/issues/2946)) ([032a7c2](https://github.com/coveo/ui-kit/commits/032a7c2d36e1fddec0599ed01708d691fa2eb94e))
-* **atomic:** not good ([#2965](https://github.com/coveo/ui-kit/issues/2965)) ([9efbb49](https://github.com/coveo/ui-kit/commits/9efbb49918562207757a2a724cfb9e7d1f171ac2))
-* undefined error when checking mismatch with new endpoint url  ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
+- **atomic:** fix internationalization in atomic automatic facet ([#3036](https://github.com/coveo/ui-kit/issues/3036)) ([822fca0](https://github.com/coveo/ui-kit/commits/822fca0f2093ebff44b7b0d12cd963d7d67b90b3))
+- unsubscribe component on disconnected callback ([#3027](https://github.com/coveo/ui-kit/issues/3027)) ([92644cf](https://github.com/coveo/ui-kit/commits/92644cf615a38b58927121ced266e2af8b73c761))
 
+### Features
 
+- **atomic:** add the singular automatic facet component ([#3021](https://github.com/coveo/ui-kit/issues/3021)) ([ed45748](https://github.com/coveo/ui-kit/commits/ed4574841f8a130d6e78cfa80365f2129514f31c))
+- **atomic:** added cursor effect and streamEnd event ([#3034](https://github.com/coveo/ui-kit/issues/3034)) ([9c5165d](https://github.com/coveo/ui-kit/commits/9c5165da35fe31ab685d64075fe95fe5339d5fab))
+- **atomic:** change padding in result list ([#3031](https://github.com/coveo/ui-kit/issues/3031)) ([4f62a62](https://github.com/coveo/ui-kit/commits/4f62a629a18b135e8809d29f8378083bb9ad8d8e))
+
+# 2.35.0 (2023-07-12)
+
+### Bug Fixes
+
+- **headless:** fix read-only error with facet descending order ([#3023](https://github.com/coveo/ui-kit/issues/3023)) ([aa89bf3](https://github.com/coveo/ui-kit/commits/aa89bf3a711ad6532c7f7767b43dfd99506e3deb))
+
+### Features
+
+- **atomic,headless:** support facet alphanumeric descending order ([#3011](https://github.com/coveo/ui-kit/issues/3011)) ([b572a0e](https://github.com/coveo/ui-kit/commits/b572a0e5ad7b55b0d3d57a46d67766effd6e18c9))
+- **atomic:** add result action bar on hover ([#3002](https://github.com/coveo/ui-kit/issues/3002)) ([d2ed389](https://github.com/coveo/ui-kit/commits/d2ed3893baa318133003577fa5c49f61c27e571d)), closes [#3019](https://github.com/coveo/ui-kit/issues/3019)
+- **atomic:** removed border around loading state ([#3014](https://github.com/coveo/ui-kit/issues/3014)) ([cf4309a](https://github.com/coveo/ui-kit/commits/cf4309affc83d6ade3e27ddac49d85b52fe94247))
+
+# 2.34.0 (2023-06-29)
+
+### Features
+
+- **atomic:** mark atomic-insight-result-children as internal ([#3001](https://github.com/coveo/ui-kit/issues/3001)) ([48a95dc](https://github.com/coveo/ui-kit/commits/48a95dc823408b9a4f251510a8536b12539f38c2))
+
+# 2.33.0 (2023-06-28)
+
+### Features
+
+- **atomic:** added Generated Answer component ([#3003](https://github.com/coveo/ui-kit/issues/3003)) ([2f2096b](https://github.com/coveo/ui-kit/commits/2f2096bfd1f2c0993cb3041eb081bbe052cfcb94))
+
+# 2.32.0 (2023-06-20)
+
+### Features
+
+- **atomic,headless:** support custom sort for facets ([#2960](https://github.com/coveo/ui-kit/issues/2960)) ([21e00f2](https://github.com/coveo/ui-kit/commits/21e00f286f49b1a8f9af9a5d12e21dae36ae8e54))
+- **atomic:** added folding-result-list for insight panel ([#2970](https://github.com/coveo/ui-kit/issues/2970)) ([4e5ed3b](https://github.com/coveo/ui-kit/commits/4e5ed3b479c6e71bed1add6145595cf902ab0887))
+- **atomic:** mass translation of atomic with gpt model ([#2981](https://github.com/coveo/ui-kit/issues/2981)) ([6ea7626](https://github.com/coveo/ui-kit/commits/6ea7626dde688f8300043d4aae630af4e992d13c))
+
+## 2.31.4 (2023-06-07)
+
+### Bug Fixes
+
+- **atomic:** code defensively around triggers notifications state ([#2946](https://github.com/coveo/ui-kit/issues/2946)) ([032a7c2](https://github.com/coveo/ui-kit/commits/032a7c2d36e1fddec0599ed01708d691fa2eb94e))
+- **atomic:** not good ([#2965](https://github.com/coveo/ui-kit/issues/2965)) ([9efbb49](https://github.com/coveo/ui-kit/commits/9efbb49918562207757a2a724cfb9e7d1f171ac2))
+- undefined error when checking mismatch with new endpoint url ([#2944](https://github.com/coveo/ui-kit/issues/2944)) ([70ff673](https://github.com/coveo/ui-kit/commits/70ff673733417c036ecfb58bd70435613e256103))
 
 ## 2.31.3 (2023-06-01)
 

@@ -1,11 +1,51 @@
-# 2.25.0 (2023-06-07)
+## 2.27.1 (2023-07-19)
 
+### Bug Fixes
+
+- **quantic:** optimized the time needed to perform a quick view open operation ([#3016](https://github.com/coveo/ui-kit/issues/3016)) ([547c049](https://github.com/coveo/ui-kit/commits/547c049f00376bc3186dc190ace6361fe933e86b))
+
+# 2.27.0 (2023-07-12)
 
 ### Features
 
-* **quantic:** new property fetchOnInit added to the Quantic Case Classification ([#2953](https://github.com/coveo/ui-kit/issues/2953)) ([7caf7d2](https://github.com/coveo/ui-kit/commits/7caf7d26942c847aadc5649d4d47d3ed1d85f501))
+- **quantic:** Added disableDynamicNavigation in quanticRefineToggle and quanticRefineModalContent components ([#3000](https://github.com/coveo/ui-kit/issues/3000)) ([22fa83f](https://github.com/coveo/ui-kit/commits/22fa83fe97572fde7c45d7329bbfea57454aface))
+- **quantic:** aria-live logic added to insight, folding and recommendations components ([#3009](https://github.com/coveo/ui-kit/issues/3009)) ([ad5b28c](https://github.com/coveo/ui-kit/commits/ad5b28cff11aa4dacd498eae4f2e8d73375eae39))
+- **quantic:** quantic viewed by customer badge component created ([#3010](https://github.com/coveo/ui-kit/issues/3010)) ([b56df57](https://github.com/coveo/ui-kit/commits/b56df5768c93e8c71ba3856499165b0c9631eb4a))
+- **quantic:** support carousel display in the quantic recommendation list component ([#2992](https://github.com/coveo/ui-kit/issues/2992)) ([635c56e](https://github.com/coveo/ui-kit/commits/635c56edb70d71ed031ad3446e884788e46aa9fa))
 
+## 2.26.4 (2023-07-05)
 
+### Bug Fixes
+
+- **quantic:** Changed the quantic_OpensInSalesforceSubTab to something more generic ([#3005](https://github.com/coveo/ui-kit/issues/3005)) ([a1e4492](https://github.com/coveo/ui-kit/commits/a1e4492354b4228af86c69dd8351b8ae8d4a8ea6))
+
+## 2.26.3 (2023-06-29)
+
+## 2.26.2 (2023-06-29)
+
+### Bug Fixes
+
+- **SFINT-5094:** Attempt to fix the quantic package release ([#3006](https://github.com/coveo/ui-kit/issues/3006)) ([a317e7f](https://github.com/coveo/ui-kit/commits/a317e7f645f8ca4ba9fdd2aa7a465a2493dde6fe))
+
+## 2.26.1 (2023-06-28)
+
+# 2.26.0 (2023-06-20)
+
+### Bug Fixes
+
+- **quantic:** missing documentation for the slot "children" added ([#2977](https://github.com/coveo/ui-kit/issues/2977)) ([1bbd557](https://github.com/coveo/ui-kit/commits/1bbd55786b8d226afa8c62e3967cad5673c8375e))
+
+### Features
+
+- **quantic:** Added check for collection children in quanticResultChildren component ([#2959](https://github.com/coveo/ui-kit/issues/2959)) ([ed59162](https://github.com/coveo/ui-kit/commits/ed59162e984c3d1a129a3a656c4812a0fb6b659a))
+- **quantic:** Added FTs for insight use case in the folded result list ([#2963](https://github.com/coveo/ui-kit/issues/2963)) ([3a2c290](https://github.com/coveo/ui-kit/commits/3a2c290e651691207f795329c146bcf4740ef681))
+- **quantic:** quantic recommendation interface component created ([#2986](https://github.com/coveo/ui-kit/issues/2986)) ([1c85c60](https://github.com/coveo/ui-kit/commits/1c85c600bec241125f9f91d7ca25b545a706cb67))
+
+# 2.25.0 (2023-06-07)
+
+### Features
+
+- **quantic:** new property fetchOnInit added to the Quantic Case Classification ([#2953](https://github.com/coveo/ui-kit/issues/2953)) ([7caf7d2](https://github.com/coveo/ui-kit/commits/7caf7d26942c847aadc5649d4d47d3ed1d85f501))
 
 ## 2.24.3 (2023-06-01)
 

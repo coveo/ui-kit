@@ -9,7 +9,7 @@ import {
   updateFreezeCurrentValues,
 } from '../../features/facets/facet-set/facet-set-actions';
 import {logFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-analytics-actions';
-import {facetResponseSelectedValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
+import {facetResponseActiveValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
 import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
@@ -98,7 +98,7 @@ export function buildBreadcrumbManager(
         );
         dispatch(executeSearch(analyticsAction));
       },
-      facetResponseSelectedValuesSelector
+      facetResponseActiveValuesSelector
     );
   };
 

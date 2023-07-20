@@ -12,6 +12,7 @@ import {DidYouMeanState} from '../features/did-you-mean/did-you-mean-state';
 import {DocumentSuggestionState} from '../features/document-suggestion/document-suggestion-state';
 import {ExcerptLengthState} from '../features/excerpt-length/excerpt-length-state';
 import {FacetOptionsState} from '../features/facet-options/facet-options-state';
+import {AutomaticFacetSetState} from '../features/facets/automatic-facet-set/automatic-facet-set-state';
 import {CategoryFacetSetState} from '../features/facets/category-facet-set/category-facet-set-state';
 import {FacetOrderState} from '../features/facets/facet-order/facet-order-state';
 import {CategoryFacetSearchSetState} from '../features/facets/facet-search-set/category/category-facet-search-set-state';
@@ -21,6 +22,7 @@ import {DateFacetSetState} from '../features/facets/range-facets/date-facet-set/
 import {NumericFacetSetState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {FieldsState} from '../features/fields/fields-state';
 import {FoldingState} from '../features/folding/folding-state';
+import {GeneratedAnswerState} from '../features/generated-answer/generated-answer-state';
 import {HistoryState} from '../features/history/history-state';
 import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state';
 import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
@@ -385,4 +387,18 @@ export interface AttachedResultsSection {
 
 export interface PlacementSection {
   placement: PlacementSetState;
+}
+
+export interface AutomaticFacetSection {
+  /**
+   * The set of automatic facets.
+   */
+  automaticFacetSet: AutomaticFacetSetState;
+}
+
+export interface GeneratedAnswerSection {
+  /**
+   * The properties related to generative question answering.
+   */
+  generatedAnswer: GeneratedAnswerState;
 }

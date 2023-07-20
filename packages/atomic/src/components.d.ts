@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -32,6 +32,23 @@ export namespace Components {
     interface AtomicAriaLive {
         "registerRegion": (region: string, assertive: boolean) => Promise<void>;
         "updateMessage": (region: string, message: string, assertive: boolean) => Promise<void>;
+    }
+    interface AtomicAutomaticFacet {
+        "facet": AutomaticFacet;
+        "facetId": string;
+        "field": string;
+        "isCollapsed": boolean;
+        "searchStatus": SearchStatus;
+    }
+    interface AtomicAutomaticFacetBuilder {
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  Specifies whether the automatic facets are collapsed.
+         */
+        "areCollapsed": boolean;
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets. Must be a positive integer.
+         */
+        "desiredCount": number;
     }
     interface AtomicBreadbox {
     }
@@ -213,7 +230,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
         /**
@@ -345,6 +362,8 @@ export namespace Components {
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
     interface AtomicFrequentlyBoughtTogether {
+    }
+    interface AtomicGeneratedAnswer {
     }
     interface AtomicHtml {
         /**
@@ -612,6 +631,18 @@ export namespace Components {
           * Global Atomic state.
          */
         "store"?: AtomicInsightStore;
+    }
+    interface AtomicInsightResultAction {
+        /**
+          * Specify the result action icon to display.
+         */
+        "icon": string;
+        /**
+          * The text tooltip to show on the result action icon
+         */
+        "tooltip": string;
+    }
+    interface AtomicInsightResultActionBar {
     }
     interface AtomicInsightResultChildren {
         /**
@@ -2016,6 +2047,18 @@ declare global {
         prototype: HTMLAtomicAriaLiveElement;
         new (): HTMLAtomicAriaLiveElement;
     };
+    interface HTMLAtomicAutomaticFacetElement extends Components.AtomicAutomaticFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicAutomaticFacetElement: {
+        prototype: HTMLAtomicAutomaticFacetElement;
+        new (): HTMLAtomicAutomaticFacetElement;
+    };
+    interface HTMLAtomicAutomaticFacetBuilderElement extends Components.AtomicAutomaticFacetBuilder, HTMLStencilElement {
+    }
+    var HTMLAtomicAutomaticFacetBuilderElement: {
+        prototype: HTMLAtomicAutomaticFacetBuilderElement;
+        new (): HTMLAtomicAutomaticFacetBuilderElement;
+    };
     interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
     }
     var HTMLAtomicBreadboxElement: {
@@ -2124,6 +2167,12 @@ declare global {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
+    interface HTMLAtomicGeneratedAnswerElement extends Components.AtomicGeneratedAnswer, HTMLStencilElement {
+    }
+    var HTMLAtomicGeneratedAnswerElement: {
+        prototype: HTMLAtomicGeneratedAnswerElement;
+        new (): HTMLAtomicGeneratedAnswerElement;
+    };
     interface HTMLAtomicHtmlElement extends Components.AtomicHtml, HTMLStencilElement {
     }
     var HTMLAtomicHtmlElement: {
@@ -2225,6 +2274,18 @@ declare global {
     var HTMLAtomicInsightResultElement: {
         prototype: HTMLAtomicInsightResultElement;
         new (): HTMLAtomicInsightResultElement;
+    };
+    interface HTMLAtomicInsightResultActionElement extends Components.AtomicInsightResultAction, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultActionElement: {
+        prototype: HTMLAtomicInsightResultActionElement;
+        new (): HTMLAtomicInsightResultActionElement;
+    };
+    interface HTMLAtomicInsightResultActionBarElement extends Components.AtomicInsightResultActionBar, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultActionBarElement: {
+        prototype: HTMLAtomicInsightResultActionBarElement;
+        new (): HTMLAtomicInsightResultActionBarElement;
     };
     interface HTMLAtomicInsightResultChildrenElement extends Components.AtomicInsightResultChildren, HTMLStencilElement {
     }
@@ -2804,6 +2865,8 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
+        "atomic-automatic-facet": HTMLAtomicAutomaticFacetElement;
+        "atomic-automatic-facet-builder": HTMLAtomicAutomaticFacetBuilderElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
@@ -2822,6 +2885,7 @@ declare global {
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
+        "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
@@ -2839,6 +2903,8 @@ declare global {
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
+        "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
+        "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
         "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
@@ -2939,6 +3005,23 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicAriaLive {
+    }
+    interface AtomicAutomaticFacet {
+        "facet": AutomaticFacet;
+        "facetId": string;
+        "field": string;
+        "isCollapsed": boolean;
+        "searchStatus": SearchStatus;
+    }
+    interface AtomicAutomaticFacetBuilder {
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  Specifies whether the automatic facets are collapsed.
+         */
+        "areCollapsed"?: boolean;
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets. Must be a positive integer.
+         */
+        "desiredCount": number;
     }
     interface AtomicBreadbox {
     }
@@ -3120,7 +3203,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
@@ -3252,6 +3335,8 @@ declare namespace LocalJSX {
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
     interface AtomicFrequentlyBoughtTogether {
+    }
+    interface AtomicGeneratedAnswer {
     }
     interface AtomicHtml {
         /**
@@ -3498,6 +3583,18 @@ declare namespace LocalJSX {
           * Global Atomic state.
          */
         "store"?: AtomicInsightStore;
+    }
+    interface AtomicInsightResultAction {
+        /**
+          * Specify the result action icon to display.
+         */
+        "icon"?: string;
+        /**
+          * The text tooltip to show on the result action icon
+         */
+        "tooltip"?: string;
+    }
+    interface AtomicInsightResultActionBar {
     }
     interface AtomicInsightResultChildren {
         /**
@@ -4761,6 +4858,8 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
+        "atomic-automatic-facet": AtomicAutomaticFacet;
+        "atomic-automatic-facet-builder": AtomicAutomaticFacetBuilder;
         "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-color-facet": AtomicColorFacet;
@@ -4779,6 +4878,7 @@ declare namespace LocalJSX {
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
+        "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
@@ -4796,6 +4896,8 @@ declare namespace LocalJSX {
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
+        "atomic-insight-result-action": AtomicInsightResultAction;
+        "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
         "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
@@ -4899,6 +5001,8 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "atomic-aria-live": LocalJSX.AtomicAriaLive & JSXBase.HTMLAttributes<HTMLAtomicAriaLiveElement>;
+            "atomic-automatic-facet": LocalJSX.AtomicAutomaticFacet & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetElement>;
+            "atomic-automatic-facet-builder": LocalJSX.AtomicAutomaticFacetBuilder & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetBuilderElement>;
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
@@ -4917,6 +5021,7 @@ declare module "@stencil/core" {
             "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
+            "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
@@ -4934,6 +5039,8 @@ declare module "@stencil/core" {
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
+            "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
+            "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
             "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;

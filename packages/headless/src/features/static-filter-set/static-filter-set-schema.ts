@@ -13,7 +13,7 @@ export const staticFilterValueSchema = new RecordValue({
     caption: requiredEmptyAllowedString,
     expression: requiredEmptyAllowedString,
     state: new StringValue<StaticFilterValueState>({
-      constrainTo: ['idle', 'selected'],
+      constrainTo: ['idle', 'selected', 'excluded'],
     }),
   },
 });

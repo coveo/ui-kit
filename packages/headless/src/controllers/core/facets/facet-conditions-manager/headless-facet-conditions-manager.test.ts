@@ -1,4 +1,4 @@
-import {AnyAction} from 'redux';
+import {AnyAction} from '@reduxjs/toolkit';
 import {
   disableFacet,
   enableFacet,

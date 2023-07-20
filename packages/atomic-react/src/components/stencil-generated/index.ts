@@ -9,6 +9,8 @@ import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
 export const AtomicAriaLive = /*@__PURE__*/createReactComponent<JSX.AtomicAriaLive, HTMLAtomicAriaLiveElement>('atomic-aria-live');
+export const AtomicAutomaticFacet = /*@__PURE__*/createReactComponent<JSX.AtomicAutomaticFacet, HTMLAtomicAutomaticFacetElement>('atomic-automatic-facet');
+export const AtomicAutomaticFacetBuilder = /*@__PURE__*/createReactComponent<JSX.AtomicAutomaticFacetBuilder, HTMLAtomicAutomaticFacetBuilderElement>('atomic-automatic-facet-builder');
 export const AtomicBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicBreadbox, HTMLAtomicBreadboxElement>('atomic-breadbox');
 export const AtomicCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCategoryFacet, HTMLAtomicCategoryFacetElement>('atomic-category-facet');
 export const AtomicColorFacet = /*@__PURE__*/createReactComponent<JSX.AtomicColorFacet, HTMLAtomicColorFacetElement>('atomic-color-facet');
@@ -24,7 +26,6 @@ export const AtomicFormatUnit = /*@__PURE__*/createReactComponent<JSX.AtomicForm
 export const AtomicFrequentlyBoughtTogether = /*@__PURE__*/createReactComponent<JSX.AtomicFrequentlyBoughtTogether, HTMLAtomicFrequentlyBoughtTogetherElement>('atomic-frequently-bought-together');
 export const AtomicHtml = /*@__PURE__*/createReactComponent<JSX.AtomicHtml, HTMLAtomicHtmlElement>('atomic-html');
 export const AtomicIcon = /*@__PURE__*/createReactComponent<JSX.AtomicIcon, HTMLAtomicIconElement>('atomic-icon');
-export const AtomicInsightResultChildren = /*@__PURE__*/createReactComponent<JSX.AtomicInsightResultChildren, HTMLAtomicInsightResultChildrenElement>('atomic-insight-result-children');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
 export const AtomicLoadMoreChildrenResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreChildrenResults, HTMLAtomicLoadMoreChildrenResultsElement>('atomic-load-more-children-results');
 export const AtomicLoadMoreResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreResults, HTMLAtomicLoadMoreResultsElement>('atomic-load-more-results');

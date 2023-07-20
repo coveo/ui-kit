@@ -255,7 +255,6 @@ export function BindStateToController(
     stateProperty: string
   ) => {
     const {disconnectedCallback, initialize} = component;
-    let unsubscribeController = () => {};
 
     component.initialize = function () {
       initialize && initialize.call(this);
@@ -281,7 +280,7 @@ export function BindStateToController(
         );
       }
 
-      unsubscribeController = this[controllerProperty].subscribe(() => {
+      this.unsubscribeController = this[controllerProperty].subscribe(() => {
         this[stateProperty] = this[controllerProperty].state;
         options?.onUpdateCallbackMethod &&
           this[options.onUpdateCallbackMethod]();
@@ -289,7 +288,7 @@ export function BindStateToController(
     };
 
     component.disconnectedCallback = function () {
-      !getElement(this).isConnected && unsubscribeController();
+      !getElement(this).isConnected && this.unsubscribeController?.();
       disconnectedCallback && disconnectedCallback.call(this);
     };
   };

@@ -8,12 +8,14 @@
   "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
   "words": [
     "adjustednumberoflikes",
-    "applitools",
     "ARROWUP",
     "Artemia",
     "Artemiidae",
     "attachtocase",
+    "bazz",
     "behaviour",
+    "bloup",
+    "btoashim",
     "cfcomment",
     "cfpage",
     "cfspace",
@@ -255,6 +257,6 @@
     "ytvideoduration",
     "ytvideoid",
     "ytviewcount",
-    "btoashim"
+    "genqa"
   ]
 }
