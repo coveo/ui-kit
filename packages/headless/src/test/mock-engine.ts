@@ -10,6 +10,7 @@ import thunk from 'redux-thunk';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {InsightAPIClient} from '../api/service/insight/insight-api-client';
 import {analyticsMiddleware} from '../app/analytics-middleware';
+import {CommercePlacementsEngine} from '../app/commerce-placement-engine/commerce-placement-engine';
 import {CoreEngine} from '../app/engine';
 import {InsightEngine} from '../app/insight-engine/insight-engine';
 import {InsightThunkExtraArguments} from '../app/insight-thunk-extra-arguments';
@@ -25,6 +26,7 @@ import {SearchEngine} from '../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments';
 import {CaseAssistEngine} from '../case-assist.index';
 import {CaseAssistAppState} from '../state/case-assist-app-state';
+import {CommercePlacementsAppState} from '../state/commerce-placements-state';
 import {InsightAppState} from '../state/insight-app-state';
 import {ProductListingAppState} from '../state/product-listing-app-state';
 import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
@@ -32,6 +34,7 @@ import {RecommendationAppState} from '../state/recommendation-app-state';
 import {SearchAppState} from '../state/search-app-state';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {buildMockCaseAssistState} from './mock-case-assist-state';
+import {buildMockCommercePlacementsState} from './mock-commerce-platcements-state';
 import {buildMockInsightAPIClient} from './mock-insight-api-client';
 import {buildMockInsightState} from './mock-insight-state';
 import {buildMockProductListingState} from './mock-product-listing-state';
@@ -56,7 +59,8 @@ type AppState =
   | ProductRecommendationsAppState
   | ProductListingAppState
   | CaseAssistAppState
-  | InsightAppState;
+  | InsightAppState
+  | CommercePlacementsAppState;
 
 interface MockEngine {
   actions: AnyAction[];
@@ -140,6 +144,22 @@ export function buildMockProductListingEngine(
   config: Partial<ProductListingEngine<ProductListingAppState>> = {}
 ): MockProductListingEngine {
   return buildMockCoreEngine(config, buildMockProductListingState);
+}
+
+export interface MockCommercePlacementsEngine
+  extends CommercePlacementsEngine<CommercePlacementsAppState>,
+    MockEngine {}
+
+/**
+ * For internal use only.
+ *
+ * Returns a non-functional `ProductListingEngine`.
+ * To be used only for unit testing controllers, not for functional tests.
+ */
+export function buildMockCommercePlacementsEngine(
+  config: Partial<CommercePlacementsEngine<CommercePlacementsAppState>> = {}
+): MockCommercePlacementsEngine {
+  return buildMockCoreEngine(config, buildMockCommercePlacementsState);
 }
 
 export interface MockCaseAssistEngine
