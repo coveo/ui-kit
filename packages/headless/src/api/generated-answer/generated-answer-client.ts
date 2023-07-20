@@ -44,7 +44,7 @@ interface StreamCallbacks {
     error: GeneratedAnswerErrorPayload,
     abortController: AbortController
   ) => void;
-  close: () => void;
+  setIsLoading: (isLoading: boolean) => void;
   resetAnswer: () => void;
 }
 
@@ -60,7 +60,7 @@ export class GeneratedAnswerAPIClient {
     callbacks: StreamCallbacks
   ) {
     const {url, organizationId, streamId, accessToken} = params;
-    const {write, abort, close, resetAnswer} = callbacks;
+    const {write, abort, setIsLoading, resetAnswer} = callbacks;
 
     if (!streamId) {
       this.logger.error('No stream ID found');
@@ -111,26 +111,25 @@ export class GeneratedAnswerAPIClient {
           }
         },
         onmessage: (event) => {
+          setIsLoading(false);
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
             clearTimeout(timeout);
             abort(
               {
                 message: data.errorMessage,
-                code: data.statusCode,
+                code: data.errorCode,
               },
               abortController
             );
             return;
-          }
-          write(data);
-          retryCount = 0;
-          if (data.finishReason === 'COMPLETED') {
+          } else if (data.finishReason === 'COMPLETED') {
             clearTimeout(timeout);
-            close();
           } else {
             refreshTimeout();
           }
+          write(data);
+          retryCount = 0;
         },
         onerror: (err) => {
           clearTimeout(timeout);

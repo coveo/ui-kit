@@ -5,7 +5,6 @@ import {
   likeGeneratedAnswer,
   resetAnswer,
   setIsLoading,
-  setIsStreaming,
   updateCitations,
   updateError,
   updateMessage,
@@ -15,7 +14,6 @@ import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
 const baseState = {
   isLoading: false,
-  isStreaming: false,
   citations: [],
   liked: false,
   disliked: false,
@@ -44,8 +42,6 @@ describe('generated answer slice', () => {
 
       expect(finalState.answer).toBe('I exist therefore I am');
       expect(finalState.error).toBeUndefined();
-      expect(finalState.isLoading).toBe(false);
-      expect(finalState.isStreaming).toBe(true);
     });
   });
 
@@ -61,8 +57,6 @@ describe('generated answer slice', () => {
 
       expect(finalState.citations).toEqual(newCitations);
       expect(finalState.error).toBeUndefined();
-      expect(finalState.isLoading).toBe(false);
-      expect(finalState.isStreaming).toBe(true);
     });
 
     it('Appends the given citations to existing citations', () => {
@@ -99,15 +93,6 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isLoading).toBe(false);
-    });
-
-    it('should set isStreaming to false', () => {
-      const finalState = generatedAnswerReducer(
-        {...baseState, isStreaming: true},
-        updateError(testPayload)
-      );
-
-      expect(finalState.isStreaming).toBe(false);
     });
 
     it('should delete the answer', () => {
@@ -185,7 +170,6 @@ describe('generated answer slice', () => {
   it('#resetAnswer should reset the state to the initial state', () => {
     const state = {
       ...baseState,
-      isStreaming: true,
       isLoading: true,
       answer: 'Tomato Tomato',
       citations: [],
@@ -240,26 +224,6 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isLoading).toEqual(false);
-    });
-  });
-
-  describe('#setIsStreaming', () => {
-    it('should set isStreaming to true when given true', () => {
-      const finalState = generatedAnswerReducer(
-        {...baseState, isStreaming: false},
-        setIsStreaming(true)
-      );
-
-      expect(finalState.isStreaming).toEqual(true);
-    });
-
-    it('should set isStreaming to false when given false', () => {
-      const finalState = generatedAnswerReducer(
-        {...baseState, isStreaming: true},
-        setIsStreaming(false)
-      );
-
-      expect(finalState.isStreaming).toEqual(false);
     });
   });
 });

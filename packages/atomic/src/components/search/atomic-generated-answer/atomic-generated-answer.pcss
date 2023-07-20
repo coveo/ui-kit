@@ -1,36 +1,11 @@
 @import '../../../global/global.pcss';
-@import '../../../global/mixins.pcss';
+
+[part='header-label'] {
+  color: var(--atomic-primary);
+}
 
 [part='generated-text'] {
-  @mixin set-font-size var(--atomic-text-lg);
-
-  &.cursor::after {
-    content: '';
-    width: 8px;
-    height: 1em;
-    margin-left: 0.1em;
-    background: var(--atomic-neutral-dark);
-    display: inline-block;
-    animation: cursor-blink 1.5s steps(2) infinite;
-    vertical-align: text-bottom;
-  }
-}
-
-@keyframes cursor-blink {
-  0% {
-    opacity: 0;
-  }
-}
-
-@define-mixin icon-coloring $color {
-  svg path {
-    &.line {
-      stroke: $color;
-    }
-    &.fill {
-      fill: $color;
-    }
-  }
+  color: var(--atomic-on-background);
 }
 
 .feedback-buttons {
@@ -38,17 +13,13 @@
     width: 2.2rem;
     height: 2.2rem;
 
-    @mixin icon-coloring var(--atomic-neutral-dark);
-
     &.active {
       &.like {
         background: var(--atomic-success-background);
-        @mixin icon-coloring var(--atomic-success);
       }
 
       &.dislike {
         background: var(--atomic-error-background);
-        @mixin icon-coloring var(--atomic-error);
       }
     }
   }
@@ -60,24 +31,14 @@
 }
 
 .source-citations {
-  --height: 2.2em;
-  --index-height: 20px;
-  --max-citation-width: 170px;
-
-  [part='citations-label'] {
-    /* Making sure the label height is the same as the citation for vertical centering. */
-    height: var(--height);
-  }
-
   .citations-container {
-    [part='citation'] {
-      max-width: var(--max-citation-width);
-      height: var(--height);
+    .citation {
+      max-width: 160px;
     }
 
     .citation-index {
-      height: var(--index-height);
-      width: var(--index-height);
+      width: 20px;
+      height: 20px;
     }
   }
 }

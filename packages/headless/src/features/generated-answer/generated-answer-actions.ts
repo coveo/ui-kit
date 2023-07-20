@@ -9,25 +9,21 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client';
 import {
   GeneratedAnswerCitationsPayload,
-  GeneratedAnswerEndOfStreamPayload,
   GeneratedAnswerMessagePayload,
   GeneratedAnswerPayloadType,
   GeneratedAnswerStreamEventData,
 } from '../../api/generated-answer/generated-answer-event-payload';
 import {
   ConfigurationSection,
-  DebugSection,
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
-import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
-import {buildStreamingRequest} from './generated-answer-request';
+import {buildStreamingRequest} from './generated-awswer-request';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
-  GeneratedAnswerSection &
-  DebugSection;
+  GeneratedAnswerSection;
 
 const stringValue = new StringValue({required: true});
 const optionalStringValue = new StringValue();
@@ -86,11 +82,6 @@ export const setIsLoading = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
-export const setIsStreaming = createAction(
-  'generatedAnswer/setIsStreaming',
-  (payload: boolean) => validatePayload(payload, booleanValue)
-);
-
 interface StreamAnswerArgs {
   setAbortControllerRef: (ref: AbortController) => void;
 }
@@ -124,19 +115,8 @@ export const streamAnswer = createAsyncThunk<
           )
         );
         break;
-      case 'genqa.endOfStreamType':
-        dispatch(setIsStreaming(false));
-        dispatch(
-          logGeneratedAnswerStreamEnd(
-            (JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload)
-              .answerGenerated
-          )
-        );
-        break;
       default:
-        if (state.debug) {
-          extra.logger.warn(`Unknown payloadType: "${payloadType}"`);
-        }
+        extra.logger.error(`Unknown payloadType: "${payloadType}"`);
     }
   };
 
@@ -145,7 +125,6 @@ export const streamAnswer = createAsyncThunk<
     request,
     {
       write: (data: GeneratedAnswerStreamEventData) => {
-        dispatch(setIsLoading(false));
         if (data.payload && data.payloadType) {
           handleStreamPayload(data.payloadType, data.payload);
         }
@@ -157,7 +136,7 @@ export const streamAnswer = createAsyncThunk<
         abortController.abort();
         dispatch(updateError(error));
       },
-      close: () => dispatch(setIsStreaming(false)),
+      setIsLoading: (isLoading) => dispatch(setIsLoading(isLoading)),
       resetAnswer: () => dispatch(resetAnswer()),
     }
   );
