@@ -153,7 +153,7 @@ export class SmartSnippetCommon {
           >
             {source && (
               <atomic-smart-snippet-source
-                attributes={this.props.attributes}
+                receivedAttributes={this.props.attributes}
                 source={source}
                 onSelectSource={this.props.getSmartSnippet().selectSource}
                 onBeginDelayedSelectSource={

@@ -527,14 +527,15 @@ describe('Smart Snippet Test Suites', () => {
   });
 
   describe('when there is a valid slot named "attributes"', () => {
-    it('copies the attributes properly', () => {
+    beforeEach(() => {
       const slot = generateComponentHTML('a', {
         target: '_blank',
+        slot: 'attributes',
       });
-      new TestFixture().with(addSmartSnippet({}, [slot])).init();
-      SmartSnippetSelectors.smartSnippet()
-        .find('a')
-        .should('have.attr', 'target', '_blank');
+      new TestFixture().with(addSmartSnippet({}, slot)).init();
+    });
+    it('copies the attributes properly', () => {
+      SmartSnippetSelectors.sourceUrl().should('have.attr', 'target', '_blank');
     });
   });
 });

@@ -129,7 +129,7 @@ export class SmartSnippetSuggestionCommon {
         {
           <atomic-smart-snippet-source
             source={source}
-            attributes={this.props.attributes}
+            receivedAttributes={this.props.attributes}
             onSelectSource={() =>
               this.props
                 .getQuestionsList()
