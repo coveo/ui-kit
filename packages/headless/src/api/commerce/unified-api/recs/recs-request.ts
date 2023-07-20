@@ -1,9 +1,9 @@
 import {BaseParam} from '../../../platform-service-params';
 import {
   ClientIdParam,
-  ImplementationParam,
+  ImplementationIdParam,
   ModeParam,
-  PlacementParam,
+  PlacementIdParam,
   PreviewOptsParam,
   SeedsParam,
   UserParam,
@@ -12,9 +12,9 @@ import {
 } from '../unified-api-params';
 
 export type RecsRequest = BaseParam &
-  PlacementParam &
+  PlacementIdParam &
   ModeParam &
-  ImplementationParam &
+  ImplementationIdParam &
   PreviewOptsParam &
   UserParam &
   ViewParam &

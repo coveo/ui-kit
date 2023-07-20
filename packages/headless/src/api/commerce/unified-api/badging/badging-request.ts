@@ -2,7 +2,7 @@ import {BaseParam} from '../../../platform-service-params';
 import {
   ClientIdParam,
   ModeParam,
-  PlacementParam,
+  PlacementIdParam,
   PreviewOptsParam,
   SeedsParam,
   UserParam,
@@ -10,7 +10,7 @@ import {
 } from '../unified-api-params';
 
 export type BadgingRequest = BaseParam &
-  PlacementParam &
+  PlacementIdParam &
   ModeParam &
   ViewParam &
   PreviewOptsParam &

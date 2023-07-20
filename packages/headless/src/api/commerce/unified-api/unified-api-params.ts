@@ -2,11 +2,11 @@ import {URLPath} from '../../../utils/url-utils';
 import {pickNonBaseParams} from '../../api-client-utils';
 import {BaseParam} from '../../platform-service-params';
 
-export interface PlacementParam {
+export interface PlacementIdParam {
   placementId: string;
 }
 
-export interface ImplementationParam {
+export interface ImplementationIdParam {
   implementationId?: string;
 }
 
@@ -32,7 +32,9 @@ export interface UserParam {
 
 export interface ViewParam {
   view?: {
-    subType: string[];
+    currency: string;
+    locale: string;
+    subtype?: string[];
     type: string;
   };
 }
@@ -60,7 +62,7 @@ export interface SeedsParam {
 }
 
 export const baseUnifiedAPIRequest = (
-  req: BaseParam & ImplementationParam & ModeParam,
+  req: BaseParam & ImplementationIdParam & ModeParam,
   path: string
 ) => {
   const url = new URLPath(
@@ -84,7 +86,7 @@ export const baseUnifiedAPIRequest = (
 };
 
 export function pickNonBaseUnifiedAPIParams<
-  Params extends BaseParam & ImplementationParam & ModeParam
+  Params extends BaseParam & ImplementationIdParam & ModeParam
 >(req: Params) {
   const {implementationId, mode, ...nonBase} = pickNonBaseParams(req);
   return nonBase;
