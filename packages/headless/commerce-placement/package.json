@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "commerce-placement",
+  "description": "Headless Commerce Placement Module",
+  "main": "../dist/commerce-placement/headless.js",
+  "module": "../dist/commerce-placement/headless.esm.js",
+  "browser": "../dist/browser/commerce-placement/headless.esm.js",
+  "types": "../dist/definitions/commerce-placement.index.d.ts",
+  "license": "Apache-2.0"
+}

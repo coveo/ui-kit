@@ -1,0 +1,8 @@
+{
+  "extends": "./base.json",
+  "mainEntryPointFilePath": "<projectFolder>/dist/definitions/commerce-placement.index.d.ts",
+  "docModel": {
+    "enabled": true,
+    "apiJsonFilePath": "<projectFolder>/temp/commerce-placement.api.json"
+  }
+}

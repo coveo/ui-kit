@@ -13,6 +13,7 @@ import {
   resolveEngine,
 } from './src/headless-export-resolvers/engine-resolver';
 import {caseAssistUseCase} from './use-cases/case-assist';
+import {commercePlacementUseCase} from './use-cases/commerce-placement';
 import {insightUseCase} from './use-cases/insight';
 import {productListingUseCase} from './use-cases/product-listing';
 import {productRecommendationUseCase} from './use-cases/product-recommendation';
@@ -63,6 +64,11 @@ const useCases: UseCase[] = [
     name: 'insight',
     entryFile: 'temp/insight.api.json',
     config: insightUseCase,
+  },
+  {
+    name: 'commerce-placement',
+    entryFile: 'temp/commerce-placement.api.json',
+    config: commercePlacementUseCase,
   },
 ];
 
