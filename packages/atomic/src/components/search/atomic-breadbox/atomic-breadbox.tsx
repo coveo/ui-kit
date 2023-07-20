@@ -165,8 +165,8 @@ export class AtomicBreadbox implements InitializableComponent {
       return path.join(SEPARATOR);
     }
 
-    const ellipsedPath = [path[0], ELLIPSIS, ...path.slice(-2)];
-    return ellipsedPath.join(SEPARATOR);
+    const truncatedPath = [path[0], ELLIPSIS, ...path.slice(-2)];
+    return truncatedPath.join(SEPARATOR);
   }
 
   private renderBreadcrumb(
@@ -384,14 +384,13 @@ export class AtomicBreadbox implements InitializableComponent {
 
   private get automaticFacetBreadcrumbs(): Breadcrumb[] {
     return this.breadcrumbManagerState.automaticFacetBreadcrumbs
-      .map(({facetId, field, values}) =>
-        values.map((value) => ({value, facetId, field}))
+      .map(({facetId, field, label, values}) =>
+        values.map((value) => ({value, facetId, field, label}))
       )
       .flat()
-      .filter(({facetId}) => this.bindings.store.state.automaticFacets[facetId])
-      .map(({value, facetId, field}) => ({
+      .map(({value, facetId, field, label}) => ({
         facetId,
-        label: this.bindings.store.state.automaticFacets[facetId]?.label(),
+        label: this.bindings.i18n.t(label ? label : 'no-label'),
         deselect: value.deselect,
         formattedValue: [
           getFieldValueCaption(field, value.value.value, this.bindings.i18n),

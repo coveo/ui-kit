@@ -65,25 +65,36 @@ export type {
   StaticFilterBreadcrumb,
   Breadcrumb,
   BreadcrumbValue,
-  CoreBreadcrumbManagerState,
-  CoreBreadcrumbManager,
   DeselectableValue,
+  CoreBreadcrumbManager,
+  CoreBreadcrumbManagerState,
 };
 
+/**
+ * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
+ */
 export interface BreadcrumbManager extends CoreBreadcrumbManager {
   /**
-   * yes
+   * The state of the `BreadcrumbManager` controller.
    */
   state: BreadcrumbManagerState;
 }
 export interface BreadcrumbManagerState extends CoreBreadcrumbManagerState {
   /**
-   * yes
+   * The list of automatic facet breadcrumbs.
    */
   automaticFacetBreadcrumbs: AutomaticFacetBreadcrumb[];
 }
 
-type AutomaticFacetBreadcrumb = Breadcrumb<FacetValue>;
+/**
+ * Represents a breadcrumb for an automatic facet.
+ */
+export interface AutomaticFacetBreadcrumb extends Breadcrumb<FacetValue> {
+  /**
+   * The label of the underlying facet.
+   */
+  label: string;
+}
 
 /**
  * Creates a `BreadcrumbManager` controller instance.
@@ -224,13 +235,14 @@ export function buildBreadcrumbManager(
   const buildAutomaticFacetBreadcrumb = (
     response: AutomaticFacetResponse
   ): AutomaticFacetBreadcrumb => {
-    const {field} = response;
+    const {field, label} = response;
     const values = response.values
       .filter((value) => value.state === 'selected')
       .map((value) => buildAutomaticFacetBreadcrumbValue(field, value));
     return {
       facetId: field,
       field,
+      label,
       values,
     };
   };
