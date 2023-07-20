@@ -3,6 +3,9 @@ import {buildCommercePlacementEngine} from '../app/commerce-placement-engine/com
 import {
   getBadge,
   getRecs,
+  setLocale,
+  setProductSku,
+  setView,
 } from '../features/placement-set/placement-set-action';
 import {getOrganizationEndpoints} from '../recommendation.index';
 
@@ -21,19 +24,18 @@ describe('commerce placements', () => {
       },
     });
 
+    engine.dispatch(setProductSku('SP00553_00002'));
+    engine.dispatch(setLocale({currency: 'USD', locale: 'en-us'}));
+    engine.dispatch(setView({type: 'product', subtype: []}));
     await engine.dispatch(
       getBadge({
         placementId: '5GKB9hFRTnmC24QxZTlDoA',
-        implementationId: 'CB8mj48FSaC8iWMFTZYJgg',
-        seeds: [{ids: ['SP00553_00002'], src: 'pdp'}],
       })
     );
 
     await engine.dispatch(
       getRecs({
-        placementId: 'ZYFiN7m7S1aCvW3nnaXwRg',
-        implementationId: 'VeZqj8cVRyiPxQP1uEQJ4Q',
-        seeds: [{ids: ['SP00421_00004'], src: 'cart'}],
+        placementId: 'vOMMwnUJQ6WUoIVFYIgH5w',
       })
     );
 
@@ -41,8 +43,10 @@ describe('commerce placements', () => {
       expect(badge.error).toBeUndefined();
     });
 
-    Object.values(engine.state.placement.recs).forEach((recommendation) => {
-      expect(recommendation.error).toBeUndefined();
-    });
+    Object.values(engine.state.placement.recommendations).forEach(
+      (recommendation) => {
+        expect(recommendation.error).toBeUndefined();
+      }
+    );
   });
 });
