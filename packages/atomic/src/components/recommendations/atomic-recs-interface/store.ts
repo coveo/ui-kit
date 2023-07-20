@@ -16,7 +16,6 @@ export function createAtomicRecsStore(): AtomicRecsStore {
     numericFacets: {},
     dateFacets: {},
     categoryFacets: {},
-    automaticFacets: {},
     iconAssetsPath: '',
     facetElements: [],
     fieldsToInclude: [],

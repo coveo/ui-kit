@@ -19,7 +19,6 @@ export type AtomicCommonStoreData = {
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
-  automaticFacets: FacetStore<FacetInfo>;
   loadingFlags: string[];
   iconAssetsPath: string;
   fieldsToInclude: string[];

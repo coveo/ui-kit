@@ -33,7 +33,6 @@ export function createAtomicInsightStore(): AtomicInsightStore {
     numericFacets: {},
     dateFacets: {},
     categoryFacets: {},
-    automaticFacets: {},
     loadingFlags: [],
     iconAssetsPath: '',
     fieldsToInclude: [],

@@ -51,7 +51,6 @@ export function createAtomicStore(): AtomicStore {
     numericFacets: {},
     dateFacets: {},
     categoryFacets: {},
-    automaticFacets: {},
     facetElements: [],
     sortOptions: [],
     iconAssetsPath: '',

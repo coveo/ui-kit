@@ -1,6 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {AutomaticFacet, SearchStatus, FacetValue} from '@coveo/headless';
-import {Component, Prop, State, h, VNode, Element} from '@stencil/core';
+import {Component, Prop, State, h, VNode} from '@stencil/core';
 import {
   FocusTarget,
   FocusTargetController,
@@ -10,7 +10,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/facet-value-checkbox';
@@ -52,7 +51,6 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 export class AtomicAutomaticFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
-  @Element() private host!: HTMLElement;
 
   @Prop({reflect: true}) public field!: string;
   @Prop({reflect: true}) public facetId!: string;
@@ -63,14 +61,6 @@ export class AtomicAutomaticFacet implements InitializableComponent {
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
-  public initialize() {
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.label),
-      facetId: this.facetId,
-      element: this.host,
-    };
-    this.bindings.store.registerFacet('automaticFacets', facetInfo);
-  }
   private get numberOfSelectedValues() {
     return this.facet.state.values.filter((value) => this.isSelected(value))
       .length;
