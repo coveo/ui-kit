@@ -2,35 +2,42 @@ import {
   buildProductListing,
   ProductListing,
   ProductListingState,
-  loadConfigurationActions,
   ResultsPerPage,
   buildResultsPerPage,
   ResultsPerPageState,
+  ProductRecommendation,
+  buildInteractiveResult,
 } from '@coveo/headless/product-listing';
-import {Component, State, Element, Prop, Method, h} from '@stencil/core';
-import {buildProductListingInteractiveResult, ProductListingResult} from '..';
 import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
+  Component,
+  State,
+  Element,
+  Prop,
+  Method,
+  h,
+  Fragment,
+  FunctionalComponent,
+} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayBasicLayout,
+  getResultDisplayClasses,
+  ResultDisplayLayout,
 } from '../../common/layout/display-options';
-import {ResultListCommon} from '../../common/result-list/result-list-common';
-import {
-  ResultListCommonState,
-  ResultRenderingFunction,
-} from '../../common/result-list/result-list-common-interface';
-import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
+import {ProductRecommendationRenderingFunction} from '../../common/result-list/result-list-common-interface';
 import {ProductListingBindings} from '../atomic-product-listing-interface/atomic-product-listing-interface';
+import {
+  ProductListingGrid,
+  ProductListingGridProps,
+  ProductRecommendationRendererProps,
+} from './product-listing-grid';
+import {ProductRecommendationTemplateProvider} from './product-recommendation-template-provider';
 
 /**
  * The `atomic-product-listing` component displays products by applying one or more result templates.
@@ -48,10 +55,10 @@ export class AtomicProductListing
   @InitializeBindings() public bindings!: ProductListingBindings;
   public productListing!: ProductListing;
   public resultsPerPage!: ResultsPerPage;
-  private resultListCommon!: ResultListCommon;
-  private loadingFlag = randomID('firstProductListingLoaded-');
-  private resultRenderingFunction: ResultRenderingFunction;
+  private productRecommendationTemplateProvider!: ProductRecommendationTemplateProvider;
 
+  // private loadingFlag = randomID('firstProductListingLoaded-');
+  private resultRenderingFunction: ProductRecommendationRenderingFunction;
   @Element() public host!: HTMLDivElement;
 
   @State() public error!: Error;
@@ -64,12 +71,12 @@ export class AtomicProductListing
   @State()
   public productListingState!: ProductListingState;
 
-  @FocusTarget()
-  private nextNewResultTarget!: FocusTargetController;
+  // @FocusTarget()
+  // private nextNewResultTarget!: FocusTargetController;
   /**
    * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself.
    */
-  @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'list';
+  @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'grid';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
@@ -87,7 +94,6 @@ export class AtomicProductListing
   /**
    * The non-localized label for the list of products.
    */
-  @Prop({reflect: true}) public label?: string;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -98,13 +104,13 @@ export class AtomicProductListing
    * @param resultRenderingFunction
    */
   @Method() public async setRenderFunction(
-    resultRenderingFunction: ResultRenderingFunction
+    resultRenderingFunction: ProductRecommendationRenderingFunction
   ) {
     this.resultRenderingFunction = resultRenderingFunction;
   }
 
   public initialize() {
-    this.updateOriginLevel2();
+    // this.updateOriginLevel2();
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.numberOfProducts},
     });
@@ -114,133 +120,150 @@ export class AtomicProductListing
         additionalFields: this.bindings.store.getFieldsToInclude(),
       },
     });
-    const resultTemplateProvider = new ResultTemplateProvider({
-      includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.host.querySelectorAll('atomic-product-listing-result-template')
-      ),
-      getResultTemplateRegistered: () => this.resultTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.resultTemplateRegistered = value;
-      },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
-      bindings: this.bindings,
-    });
 
-    this.resultListCommon = new ResultListCommon({
-      resultTemplateProvider,
-      getNumberOfPlaceholders: () => this.numberOfProducts,
-      host: this.host,
-      bindings: this.bindings,
-      getDensity: () => this.density,
-      getLayoutDisplay: () => 'grid',
-      getResultDisplay: () => this.display,
-      getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.nextNewResultTarget,
-      loadingFlag: this.loadingFlag,
-      getResultListState: () => this.resultListCommonState,
-      getResultRenderingFunction: () => this.resultRenderingFunction,
-      renderResult: (props) => (
-        <atomic-product-listing-result
-          {...props}
-        ></atomic-product-listing-result>
-      ),
-      getInteractiveResult: (result: ProductListingResult) =>
-        buildProductListingInteractiveResult(this.bindings.engine, {
-          options: {result},
-        }),
-    });
-  }
-
-  private get resultListCommonState(): ResultListCommonState<ProductListingResult> {
-    return {
-      firstSearchExecuted: this.productListingState.responseId !== '',
-      isLoading: this.productListingState.isLoading,
-      hasError: this.productListingState.error !== null,
-      hasResults: this.productListingState.products.length !== 0,
-      results: this.productRecommendationsAsResuls,
-      searchResponseId: this.productListingState.responseId,
-    };
-  }
-
-  private updateOriginLevel2() {
-    if (this.label) {
-      const action = loadConfigurationActions(
-        this.bindings.engine
-      ).setOriginLevel2({
-        originLevel2: this.label,
-      });
-
-      this.bindings.engine.dispatch(action);
-    }
-  }
-
-  private get productRecommendationsAsResuls(): ProductListingResult[] {
-    const resultList: ProductListingResult[] = [];
-    this.productListingState.products.forEach((product) => {
-      resultList.push({
-        title: product.ec_name || '',
-        uri: product.documentUri,
-
-        printableUri: '',
-
-        clickUri: product.clickUri,
-
-        uniqueId: product.permanentid,
-
-        excerpt: '',
-
-        firstSentences: '',
-
-        summary: null,
-
-        flags: '',
-
-        hasHtmlVersion: false,
-
-        score: 0,
-
-        percentScore: 0,
-
-        rankingInfo: null,
-
-        isTopResult: false,
-
-        isRecommendation: false,
-
-        titleHighlights: [],
-
-        firstSentencesHighlights: [],
-
-        excerptHighlights: [],
-
-        printableUriHighlights: [],
-
-        summaryHighlights: [],
-
-        absentTerms: [],
-
-        raw: {
-          ...product.additionalFields,
-          urihash: product.documentUriHash,
-          ec_images: product.ec_images,
-          ec_brand: product.ec_brand,
-          ec_category: product.ec_category,
-          ec_description: product.ec_item_group_id,
-          ec_price: product.ec_price,
-          ec_promo_price: product.ec_promo_price,
-          ec_rating: product.ec_rating,
-          childResults: product.childResults,
-          totalNumberOfChildResults: product.totalNumberOfChildResults,
+    this.productRecommendationTemplateProvider =
+      new ProductRecommendationTemplateProvider({
+        includeDefaultTemplate: true,
+        templateElements: Array.from(
+          this.host.querySelectorAll('atomic-product-listing-result-template')
+        ),
+        getProductRecommendationTemplateRegistered: () =>
+          this.resultTemplateRegistered,
+        getTemplateHasError: () => this.templateHasError,
+        setProductRecommendationTemplateRegistered: (value: boolean) => {
+          this.resultTemplateRegistered = value;
         },
+        setTemplateHasError: (value: boolean) => {
+          this.templateHasError = value;
+        },
+        bindings: this.bindings,
       });
-    });
-    return resultList;
   }
+
+  // private updateOriginLevel2() {
+  //   if (this.label) {
+  //     const action = loadConfigurationActions(
+  //       this.bindings.engine
+  //     ).setOriginLevel2({
+  //       originLevel2: this.label,
+  //     });
+
+  //     this.bindings.engine.dispatch(action);
+  //   }
+  // }
+
+  public get listClasses() {
+    const classes = getResultDisplayClasses(
+      this.display,
+      this.density,
+      this.imageSize
+    );
+
+    if (
+      this.productListingState.responseId &&
+      this.productListingState.isLoading
+    ) {
+      classes.push('loading');
+    }
+
+    // if (this.displayPlaceholders) {
+    //   classes.push('placeholder');
+    // }
+
+    return classes.join(' ');
+  }
+
   public render() {
-    return this.resultListCommon.render();
+    // this.updateBreakpoints?.(this.host);
+
+    if (!this.productRecommendationTemplateProvider.templatesRegistered) {
+      return;
+    }
+
+    if (this.productListingState.error) {
+      return;
+    }
+
+    if (
+      this.productListingState.responseId &&
+      !this.productListingState.products.length
+    ) {
+      return;
+    }
+
+    return (
+      <Fragment>
+        {/* {this.resultTemplateProvider.hasError && <slot></slot>} */}
+        <div class={`list-wrapper ${this.listClasses}`}>
+          <ResultDisplayWrapper
+            listClasses={this.listClasses}
+            display={this.display}
+          >
+            {/* {this.displayPlaceholders && (
+              <DisplayResultsPlaceholder
+                numberOfPlaceholders={this.getNumberOfPlaceholders()}
+                density={this.density}
+                display={this.display}
+                imageSize={this.imageSize}
+              />
+            )} */}
+            {this.productListingState.responseId && (
+              <ResultListDisplay
+                productRecommendationTemplateProvider={
+                  this.productRecommendationTemplateProvider
+                }
+                listClasses={this.listClasses}
+                bindings={this.bindings}
+                host={this.host}
+                productListingState={this.productListingState}
+                getDensity={() => this.density}
+                getImageSize={() => this.imageSize}
+                getLayoutDisplay={() => this.display}
+                getResultDisplay={() => this.display}
+                renderResult={(props: ProductRecommendationRendererProps) => {
+                  return (
+                    <atomic-product-listing-result
+                      {...props}
+                    ></atomic-product-listing-result>
+                  );
+                }}
+                loadingFlag={''}
+                getInteractiveResult={(product: ProductRecommendation) => {
+                  return buildInteractiveResult(this.bindings.engine, {
+                    options: {result: product},
+                  });
+                }}
+                getResultRenderingFunction={() => this.resultRenderingFunction}
+              />
+            )}
+          </ResultDisplayWrapper>
+        </div>
+      </Fragment>
+    );
   }
 }
+
+const ResultDisplayWrapper: FunctionalComponent<{
+  display?: ResultDisplayLayout;
+  listClasses: string;
+}> = (props, children) => {
+  if (props.display === 'table') {
+    return children;
+  }
+
+  return (
+    <div class={`list-root ${props.listClasses}`} part="result-list">
+      {children}
+    </div>
+  );
+};
+
+const ResultListDisplay: FunctionalComponent<ProductListingGridProps> = (
+  props
+) => {
+  if (!props.productListingState.products.length) {
+    return null;
+  }
+  console.log(props);
+  return <ProductListingGrid {...props} />;
+};

@@ -1,4 +1,5 @@
 import {InteractiveResult} from '@coveo/headless';
+import {ProductRecommendation} from '@coveo/headless/product-listing';
 import {VNode} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {AnyBindings} from '../interface/bindings';
@@ -69,3 +70,7 @@ export interface ResultRendererProps<
 export type ResultRenderingFunction<
   SpecificResult extends AnyResult = AnyResult
 > = ((result: SpecificResult, root: HTMLElement) => string) | undefined;
+
+export type ProductRecommendationRenderingFunction =
+  | ((result: ProductRecommendation, root: HTMLElement) => string)
+  | undefined;

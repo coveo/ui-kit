@@ -25,6 +25,7 @@ export class ResultTemplateProvider {
   private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
 
   constructor(private props: ResultTemplateProviderProps) {
+    console.log('normal constructor', props);
     this.registerResultTemplates();
   }
 
@@ -39,9 +40,11 @@ export class ResultTemplateProvider {
   }
 
   private async registerResultTemplates() {
+    console.log('normal', this.props.bindings.engine);
     this.resultTemplatesManager = buildResultTemplatesManager(
       this.props.bindings.engine
     );
+    console.log('build', this.resultTemplatesManager);
 
     const customTemplates = await Promise.all(
       this.props.templateElements.map(async (resultTemplateElement) => {

@@ -1,5 +1,8 @@
+import {
+  ProductRecommendation,
+  InteractiveResult,
+} from '@coveo/headless/product-listing';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {ProductListingInteractiveResult, ProductListingResult} from '..';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   AtomicCommonStore,
@@ -12,7 +15,7 @@ import {
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
 import {resultComponentClass} from '../../common/result-list/result-list-common';
-import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
+import {ProductRecommendationRenderingFunction} from '../../common/result-list/result-list-common-interface';
 import {
   DisplayConfig,
   InteractiveResultContextEvent,
@@ -43,13 +46,13 @@ export class AtomicProductListingResult {
   /**
    * The result item.
    */
-  @Prop() result!: ProductListingResult;
+  @Prop() result!: ProductRecommendation;
 
   /**
    * The InteractiveResult item.
    * @internal
    */
-  @Prop() interactiveResult!: ProductListingInteractiveResult;
+  @Prop() interactiveResult!: InteractiveResult;
 
   /**
    * Global Atomic state.
@@ -95,10 +98,10 @@ export class AtomicProductListingResult {
    *
    * @internal
    */
-  @Prop() renderingFunction: ResultRenderingFunction;
+  @Prop() renderingFunction: ProductRecommendationRenderingFunction;
 
   @Listen('atomic/resolveResult')
-  public resolveResult(event: ResultContextEvent<ProductListingResult>) {
+  public resolveResult(event: ResultContextEvent<ProductRecommendation>) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);

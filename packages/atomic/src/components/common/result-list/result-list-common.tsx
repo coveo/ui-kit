@@ -200,7 +200,6 @@ const ResultListDisplay: FunctionalComponent<ResultListDisplayProps> = (
   if (!props.getResultListState().results.length) {
     return null;
   }
-
   switch (props.getLayoutDisplay()) {
     case 'table':
       return <TableDisplayResults {...props} />;

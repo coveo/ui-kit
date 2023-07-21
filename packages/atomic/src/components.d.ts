@@ -5,12 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel as LogLevel1, PlatformEnvironment, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult as InteractiveResult1, LogLevel as LogLevel1, PlatformEnvironment, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
-import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
+import { ProductRecommendationRenderingFunction, ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
@@ -18,9 +18,8 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { LogLevel, ProductListingEngine } from "@coveo/headless/product-listing";
+import { InteractiveResult, LogLevel, ProductListingEngine, ProductRecommendation, ProductRecommendationTemplate, ProductRecommendationTemplateCondition } from "@coveo/headless/product-listing";
 import { ProductListingInitializationOptions } from "./components/product-listing/atomic-product-listing-interface/atomic-product-listing-interface";
-import { ProductListingInteractiveResult, ProductListingResult, ProductListingResultTemplate, ProductListingResultTemplateCondition } from "./components/product-listing";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { PlatformEnvironment as PlatformEnvironment1, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
@@ -1008,10 +1007,6 @@ export namespace Components {
          */
         "imageSize": ResultDisplayImageSize;
         /**
-          * The non-localized label for the list of products.
-         */
-        "label"?: string;
-        /**
           * The total number of products to display.
          */
         "numberOfProducts": number;
@@ -1019,7 +1014,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
-        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ProductRecommendationRenderingFunction) => Promise<void>;
     }
     interface AtomicProductListingInterface {
         /**
@@ -1047,7 +1042,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * The product listing interface i18next instance.
          */
@@ -1117,16 +1112,16 @@ export namespace Components {
         /**
           * The InteractiveResult item.
          */
-        "interactiveResult": ProductListingInteractiveResult;
+        "interactiveResult": InteractiveResult;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-product-listing in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction": ResultRenderingFunction;
+        "renderingFunction": ProductRecommendationRenderingFunction;
         /**
           * The result item.
          */
-        "result": ProductListingResult;
+        "result": ProductRecommendation;
         /**
           * Whether an atomic-result-link inside atomic-product-listing should stop click event propagation.
          */
@@ -1140,11 +1135,11 @@ export namespace Components {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
-        "conditions": ProductListingResultTemplateCondition[];
+        "conditions": ProductRecommendationTemplateCondition[];
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ProductListingResultTemplate<DocumentFragment> | null>;
+        "getTemplate": () => Promise<ProductRecommendationTemplate<DocumentFragment> | null>;
     }
     interface AtomicQueryError {
     }
@@ -1284,7 +1279,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
         "fieldsToInclude": string[] | string;
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * Fetches new recommendations.
          */
@@ -1483,7 +1478,7 @@ export namespace Components {
         /**
           * The InteractiveResult item.
          */
-        "interactiveResult": InteractiveResult;
+        "interactiveResult": InteractiveResult1;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -1840,7 +1835,7 @@ export namespace Components {
           * @param organizationId
           * @param env
          */
-        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment1) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
+        "getOrganizationEndpoints": (organizationId: string, env?: PlatformEnvironment) => Promise<{ platform: string; analytics: string; search: string; admin: string; }>;
         /**
           * The search interface i18next instance.
          */
@@ -4068,10 +4063,6 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
-          * The non-localized label for the list of products.
-         */
-        "label"?: string;
-        /**
           * The total number of products to display.
          */
         "numberOfProducts"?: number;
@@ -4154,16 +4145,16 @@ declare namespace LocalJSX {
         /**
           * The InteractiveResult item.
          */
-        "interactiveResult": ProductListingInteractiveResult;
+        "interactiveResult": InteractiveResult;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-product-listing in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction"?: ResultRenderingFunction;
+        "renderingFunction"?: ProductRecommendationRenderingFunction;
         /**
           * The result item.
          */
-        "result": ProductListingResult;
+        "result": ProductRecommendation;
         /**
           * Whether an atomic-result-link inside atomic-product-listing should stop click event propagation.
          */
@@ -4177,7 +4168,7 @@ declare namespace LocalJSX {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
-        "conditions"?: ProductListingResultTemplateCondition[];
+        "conditions"?: ProductRecommendationTemplateCondition[];
     }
     interface AtomicQueryError {
     }
@@ -4488,7 +4479,7 @@ declare namespace LocalJSX {
         /**
           * The InteractiveResult item.
          */
-        "interactiveResult": InteractiveResult;
+        "interactiveResult": InteractiveResult1;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React

@@ -66,6 +66,7 @@ export const TableDisplayResults: FunctionalComponent<
 };
 
 const getFieldTableColumns = (props: ResultListDisplayProps) => {
+  console.log(props);
   if (props.getResultRenderingFunction()) {
     return getFieldTableColumnsFromRenderingFunction(props);
   }
