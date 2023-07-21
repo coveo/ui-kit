@@ -85,6 +85,43 @@ export function mapObject<TKey extends string, TInitialValue, TNewValue>(
   ) as Record<TKey, TNewValue>;
 }
 
+export interface OptionsExtender<TOptions> {
+  (options: TOptions): TOptions | Promise<TOptions>;
+}
+
+export interface EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
+  extend?: OptionsExtender<TEngineOptions>;
+}
+
+export interface ControllersPropsMap {
+  [customName: string]: unknown;
+}
+
+export interface ControllerSnapshot<TState> {
+  initialState: TState;
+}
+
+export interface ControllerSnapshotsMap {
+  [customName: string]: ControllerSnapshot<unknown>;
+}
+
+export interface EngineDefinitionBuildOptionsWithProps<
+  TEngineOptions,
+  TControllersProps extends ControllersPropsMap
+> extends EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
+  controllers: TControllersProps;
+}
+
+type AnyAction = {type: string};
+
+export interface EngineSnapshot<
+  TSearchFulfilledAction extends AnyAction,
+  TControllers extends ControllerSnapshotsMap
+> {
+  searchFulfilledAction: TSearchFulfilledAction;
+  controllers: TControllers;
+}
+
 export function defineSearchEngine<
   TControllerDefinitions extends ControllerDefinitionsMap<
     SearchEngine,
