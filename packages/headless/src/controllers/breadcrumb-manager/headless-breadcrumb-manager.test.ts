@@ -26,6 +26,8 @@ import {
   createMockState,
   MockSearchEngine,
 } from '../../test';
+import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response';
+import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response';
 import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
@@ -410,22 +412,16 @@ describe('headless breadcrumb manager', () => {
       mockSelectedValue = buildMockFacetValue({state: 'selected'});
 
       state = createMockState({
-        search: {
-          ...getSearchInitialState(),
-          response: {
-            ...getSearchInitialState().response,
-            facets: [
-              buildMockFacetResponse({
-                facetId,
+        automaticFacetSet: {
+          desiredCount: 1,
+          set: {
+            [facetId]: buildMockAutomaticFacetSlice({
+              response: buildMockAutomaticFacetResponse({
+                field: facetId,
                 values: [mockSelectedValue],
               }),
-            ],
+            }),
           },
-        },
-        facetSet: {
-          [facetId]: buildMockFacetSlice({
-            request: buildMockFacetRequest({facetId}),
-          }),
         },
       });
       initController();
