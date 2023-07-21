@@ -128,7 +128,9 @@ export class ResultChildrenCommon {
     }
 
     if (!collection.moreResultsAvailable && !this.hasChildren) {
-      return this.renderNoResult();
+      return this.props.getNoResultText()?.trim().length
+        ? this.renderNoResult()
+        : null;
     }
 
     if (!this.hasChildren) {
