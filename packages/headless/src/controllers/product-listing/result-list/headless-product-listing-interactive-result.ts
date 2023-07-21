@@ -1,4 +1,4 @@
-import {logDocumentOpen} from '../../../features/product-listing/product-listing-analytics';
+import {logProductRecommendationOpen} from '../../../features/product-listing/product-listing-analytics';
 import {pushRecentResult} from '../../../features/product-listing/product-listing-recent-results';
 import {
   ProductListingEngine,
@@ -48,7 +48,7 @@ export function buildInteractiveResult(
       return;
     }
     wasOpened = true;
-    engine.dispatch(logDocumentOpen(props.options.result));
+    engine.dispatch(logProductRecommendationOpen(props.options.result));
   };
 
   const action = () => {

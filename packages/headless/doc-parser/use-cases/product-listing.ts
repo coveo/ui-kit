@@ -107,6 +107,9 @@ const actionLoaders: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadProductListingActions',
   },
+  {
+    initializer: 'loadClickAnalyticsActions',
+  },
 ];
 
 const engine: EngineConfiguration = {
