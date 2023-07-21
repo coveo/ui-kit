@@ -46,7 +46,7 @@ const documentIdentifier = (
   }
   return {
     contentIDKey: 'permanentid',
-    contentIDValue: productRecommendation.permanentid || '',
+    contentIDValue: productRecommendation.permanentid,
   };
 };
 
