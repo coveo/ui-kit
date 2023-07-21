@@ -1,3 +1,4 @@
+import {ResultWithFolding} from '@coveo/headless/dist/definitions/features/folding/folding-slice';
 import {
   TestFixture,
   generateComponentHTML,
@@ -89,3 +90,11 @@ export const addGridResultList =
     }
     fixture.withElement(gridResultList);
   };
+
+export const removeResultChildrenFromResponse = (fixture: TestFixture) => {
+  fixture.withCustomResponse((response) =>
+    response.results.forEach((result) => {
+      (result as ResultWithFolding).childResults = [];
+    })
+  );
+};

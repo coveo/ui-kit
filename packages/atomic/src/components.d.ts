@@ -664,7 +664,7 @@ export namespace Components {
          */
         "inheritTemplates": boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText": string;
     }
@@ -1420,7 +1420,7 @@ export namespace Components {
          */
         "inheritTemplates": boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText": string;
     }
@@ -3641,7 +3641,7 @@ declare namespace LocalJSX {
          */
         "inheritTemplates"?: boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText"?: string;
     }
@@ -4354,7 +4354,7 @@ declare namespace LocalJSX {
          */
         "inheritTemplates"?: boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText"?: string;
     }
