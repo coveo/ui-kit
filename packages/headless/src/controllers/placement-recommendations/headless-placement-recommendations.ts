@@ -109,8 +109,6 @@ export function buildPlacementRecommendations(
     'buildPlacementRecommendations'
   );
 
-  dispatch(getRecs({placementId: options.placementId}));
-
   return {
     ...controller,
 
