@@ -30,6 +30,9 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * </atomic-smart-snippet>
  * ```
  *
+ * @slot source-anchor-attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to anchor elements, overriding other attributes.
+ * To be used exclusively in anchor elements, such as: `<a slot="source-anchor-attributes" target="_blank"></a>`.
+ *
  * @part smart-snippet - The wrapper of the entire smart snippet.
  * @part question - The header displaying the question that is answered by the found document excerpt.
  * @part answer - The container displaying the full document excerpt.
@@ -103,7 +106,8 @@ export class AtomicSmartSnippet implements InitializableComponent {
     this.smartSnippetCommon = new SmartSnippetCommon({
       id: this.id,
       modalTagName: 'atomic-smart-snippet-feedback-modal',
-      attributes: getAttributesFromLinkSlot(this.host, 'attributes'),
+      getSourceAnchorAttributes: () =>
+        getAttributesFromLinkSlot(this.host, 'source-anchor-attributes'),
       getHost: () => this.host,
       getBindings: () => this.bindings,
       getModalRef: () => this.modalRef,

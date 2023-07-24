@@ -13,7 +13,7 @@ import {AnyBindings} from '../../interface/bindings';
 
 interface SmartSnippetSuggestionProps {
   id: string;
-  attributes?: Attr[];
+  getSourceAnchorAttributes?: () => Attr[] | undefined;
   getHost: () => HTMLElement;
   getBindings: () => AnyBindings;
   getHeadingLevel: () => number;
@@ -129,7 +129,7 @@ export class SmartSnippetSuggestionCommon {
         {
           <atomic-smart-snippet-source
             source={source}
-            receivedAttributes={this.props.attributes}
+            anchorAttributes={this.props.getSourceAnchorAttributes?.()}
             onSelectSource={() =>
               this.props
                 .getQuestionsList()

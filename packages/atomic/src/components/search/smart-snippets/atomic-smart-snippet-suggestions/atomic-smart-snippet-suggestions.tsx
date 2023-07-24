@@ -31,6 +31,9 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * </atomic-smart-snippet-suggestions>
  * ```
  *
+ * @slot source-anchor-attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to anchor elements, overriding other attributes.
+ * To be used exclusively in anchor elements, such as: `<a slot="source-anchor-attributes" target="_blank"></a>`.
+ *
  * @part container - The wrapper with a border around the entire component.
  * @part heading - The heading above the list of related questions.
  * @part questions - The list of related questions.
@@ -92,7 +95,8 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
 
     this.smartSnippetSuggestionListCommon = new SmartSnippetSuggestionCommon({
       id: this.id,
-      attributes: getAttributesFromLinkSlot(this.host, 'attributes'),
+      getSourceAnchorAttributes: () =>
+        getAttributesFromLinkSlot(this.host, 'source-anchor-attributes'),
       getHost: () => this.host,
       getBindings: () => this.bindings,
       getHeadingLevel: () => this.headingLevel,
