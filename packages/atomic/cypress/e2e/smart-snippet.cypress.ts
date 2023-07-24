@@ -526,11 +526,11 @@ describe('Smart Snippet Test Suites', () => {
     });
   });
 
-  describe('when there is a valid slot named "attributes"', () => {
+  describe('when there is a valid slot named "source-anchor-attributes"', () => {
     beforeEach(() => {
       const slot = generateComponentHTML('a', {
         target: '_blank',
-        slot: 'attributes',
+        slot: 'source-anchor-attributes',
       });
       new TestFixture().with(addSmartSnippet({}, slot)).init();
     });
