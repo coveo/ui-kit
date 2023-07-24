@@ -15,7 +15,7 @@ To achieve its purpose, the pre-release process is executed on every new commit 
 
 The purpose of the scheduled release process is to deploy versions of our packages that we feel confident are safe for implementers to use.
 
-To achieve that purpose, the scheduled release process is triggered manually whenever we feel that the version currently on the main branch is safe. Additionally, every Wednesday, to ensure we don't forget to regularly trigger scheduled releases, a request for approval to deploy is triggered.
+To achieve that purpose, every Wednesday, a scheduled release is triggered, which will request approval to deploy. Additionally, whenever we feel like the version currently on the main branch is safe, we may trigger a scheduled release by triggering the "Create release" workflow.
 
 Whenever a scheduled release is successful, a commit is pushed to the main branch which bumps the version of every publishable package in the repo.
 
