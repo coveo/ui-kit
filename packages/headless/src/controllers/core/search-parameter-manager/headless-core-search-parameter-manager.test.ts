@@ -237,7 +237,6 @@ describe('search parameter manager', () => {
         response: buildMockAutomaticFacetResponse({values: currentValues}),
       });
       engine.state.automaticFacetSet.set = {author: slice};
-
       expect(manager.state.parameters.af).toEqual({author: ['a']});
     });
 
@@ -309,6 +308,7 @@ describe('search parameter manager', () => {
       response: buildMockAutomaticFacetResponse({values: automaticFacetValues}),
     });
     engine.state.automaticFacetSet.set = {a: slice};
+
 
     engine.state.query.q = 'a';
     engine.state.sortCriteria = 'qre';
