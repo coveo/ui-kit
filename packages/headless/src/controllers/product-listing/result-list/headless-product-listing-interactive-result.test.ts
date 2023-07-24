@@ -1,5 +1,5 @@
 import {configuration} from '../../../app/common-reducers';
-import {logDocumentOpen} from '../../../features/product-listing/product-listing-analytics';
+import {logProductRecommendationOpen} from '../../../features/product-listing/product-listing-analytics';
 import {pushRecentResult} from '../../../features/product-listing/product-listing-recent-results';
 import {
   buildMockProductListingEngine,
@@ -29,7 +29,7 @@ describe('InteractiveResult', () => {
       productRecStringParams
     ));
     logDocumentOpenPendingActionType =
-      logDocumentOpen(mockProductRec).pending.type;
+      logProductRecommendationOpen(mockProductRec).pending.type;
     interactiveResult = buildInteractiveResult(engine, {
       options: {result: productRec, selectionDelay: delay},
     });
@@ -46,7 +46,9 @@ describe('InteractiveResult', () => {
   function expectLogDocumentActionPending() {
     const action = findLogDocumentAction();
     expect(action).toEqual(
-      logDocumentOpen(mockProductRec).pending(action!.meta.requestId)
+      logProductRecommendationOpen(mockProductRec).pending(
+        action!.meta.requestId
+      )
     );
   }
 
