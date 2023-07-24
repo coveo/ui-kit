@@ -322,11 +322,6 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
-        /**
-          * Where to open the result link.
-          * @defaultValue `_blank`
-         */
-        "target": ResultTarget;
     }
     interface AtomicFormatCurrency {
         /**
@@ -460,11 +455,6 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
-        /**
-          * Where to open the result link.
-          * @defaultValue `_blank`
-         */
-        "target": ResultTarget;
     }
     interface AtomicInsightFullSearchButton {
         "tooltip": string;
@@ -700,11 +690,6 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
-        /**
-          * Where to open the result link.
-          * @defaultValue `_blank`
-         */
-        "target": ResultTarget;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -1229,6 +1214,11 @@ export namespace Components {
          */
         "display": ResultDisplayBasicLayout;
         /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_blank`
+         */
+        "gridCellLinkTarget": ResultTarget;
+        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
         "headingLevel": number;
@@ -1265,11 +1255,6 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
-        /**
-          * Where to open the result link.
-          * @defaultValue `_blank`
-         */
-        "target": ResultTarget;
     }
     interface AtomicRecsResult {
         /**
@@ -1488,6 +1473,11 @@ export namespace Components {
          */
         "display": ResultDisplayLayout;
         /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_blank`
+         */
+        "gridCellLinkTarget": ResultTarget;
+        /**
           * The expected size of the image displayed in the results.
          */
         "imageSize": ResultDisplayImageSize;
@@ -1496,11 +1486,6 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
-        /**
-          * Where to open the result link.
-          * @defaultValue `_blank`
-         */
-        "target": ResultTarget;
     }
     interface AtomicResultLocalizedText {
         /**
@@ -3320,11 +3305,6 @@ declare namespace LocalJSX {
           * @defaultValue `foldingparent`
          */
         "parentField"?: string;
-        /**
-          * Where to open the result link.
-          * @defaultValue `_blank`
-         */
-        "target"?: ResultTarget;
     }
     interface AtomicFormatCurrency {
         /**
@@ -3454,11 +3434,6 @@ declare namespace LocalJSX {
           * @defaultValue `foldingparent`
          */
         "parentField"?: string;
-        /**
-          * Where to open the result link.
-          * @defaultValue `_blank`
-         */
-        "target"?: ResultTarget;
     }
     interface AtomicInsightFullSearchButton {
         "tooltip"?: string;
@@ -3668,11 +3643,6 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
-        /**
-          * Where to open the result link.
-          * @defaultValue `_blank`
-         */
-        "target"?: ResultTarget;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -4179,6 +4149,11 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayBasicLayout;
         /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_blank`
+         */
+        "gridCellLinkTarget"?: ResultTarget;
+        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
         "headingLevel"?: number;
@@ -4202,11 +4177,6 @@ declare namespace LocalJSX {
           * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
          */
         "recommendation"?: string;
-        /**
-          * Where to open the result link.
-          * @defaultValue `_blank`
-         */
-        "target"?: ResultTarget;
     }
     interface AtomicRecsResult {
         /**
@@ -4418,14 +4388,14 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayLayout;
         /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_blank`
+         */
+        "gridCellLinkTarget"?: ResultTarget;
+        /**
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
-        /**
-          * Where to open the result link.
-          * @defaultValue `_blank`
-         */
-        "target"?: ResultTarget;
     }
     interface AtomicResultLocalizedText {
         /**

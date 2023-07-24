@@ -60,6 +60,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   private resultRenderingFunction: ResultRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
   private display: ResultDisplayLayout = 'list';
+  private gridCellLinkTarget: ResultTarget = '_blank';
 
   @Element() public host!: HTMLDivElement;
 
@@ -83,11 +84,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
-  /**
-   * Where to open the result link.
-   * @defaultValue `_blank`
-   */
-  @Prop() target: ResultTarget = '_blank';
   /**
    * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
    *
@@ -167,7 +163,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       getImageSize: () => this.imageSize,
       nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,
-      target: this.target,
+      gridCellLinkTarget: this.gridCellLinkTarget,
       getResultListState: () => this.foldedResultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
       renderResult: (props) => <atomic-result {...props}></atomic-result>,

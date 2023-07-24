@@ -49,6 +49,7 @@ export class AtomicInsightResultList
   private resultListCommon!: ResultListCommon;
   private loadingFlag = randomID('firstInsightResultLoaded-');
   private display: ResultDisplayLayout = 'list';
+  private gridCellLinkTarget: ResultTarget = '_blank';
   private resultRenderingFunction: ResultRenderingFunction;
 
   @Element() public host!: HTMLDivElement;
@@ -73,13 +74,6 @@ export class AtomicInsightResultList
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
-
-  /**
-   * Where to open the result link.
-   * @defaultValue `_blank`
-   */
-  @Prop() target: ResultTarget = '_blank';
-
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
@@ -123,7 +117,7 @@ export class AtomicInsightResultList
       getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
       host: this.host,
       bindings: this.bindings,
-      target: this.target,
+      gridCellLinkTarget: this.gridCellLinkTarget,
       getDensity: () => this.density,
       getResultDisplay: () => this.display,
       getLayoutDisplay: () => this.display,

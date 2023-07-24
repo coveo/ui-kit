@@ -17,7 +17,13 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
         onClick={(event) => {
           event.preventDefault();
           interactiveResult.select();
-          window.open(unfoldedResult.clickUri, props.target, 'noopener');
+          window.open(
+            unfoldedResult.clickUri,
+            event.ctrlKey || event.metaKey
+              ? '_blank'
+              : props.gridCellLinkTarget,
+            'noopener'
+          );
         }}
       >
         <LinkWithResultAnalytics

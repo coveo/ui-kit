@@ -84,10 +84,11 @@ export class AtomicResultList implements InitializableComponent {
   @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
 
   /**
-   * Where to open the result link.
+   * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
+   * This property is only leveraged when `display` is `grid`.
    * @defaultValue `_blank`
    */
-  @Prop() target: ResultTarget = '_blank';
+  @Prop() gridCellLinkTarget: ResultTarget = '_blank';
 
   /**
    * The expected size of the image displayed in the results.
@@ -136,7 +137,7 @@ export class AtomicResultList implements InitializableComponent {
     this.resultListCommon = new ResultListCommon({
       resultTemplateProvider,
       getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
-      target: this.target,
+      gridCellLinkTarget: this.gridCellLinkTarget,
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,

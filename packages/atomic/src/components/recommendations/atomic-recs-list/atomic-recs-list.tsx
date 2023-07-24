@@ -92,10 +92,11 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    */
   @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'list';
   /**
-   * Where to open the result link.
+   * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
+   * This property is only leveraged when `display` is `grid`.
    * @defaultValue `_blank`
    */
-  @Prop() target: ResultTarget = '_blank';
+  @Prop() gridCellLinkTarget: ResultTarget = '_blank';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
@@ -196,7 +197,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
         this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations,
       host: this.host,
       bindings: this.bindings,
-      target: this.target,
+      gridCellLinkTarget: this.gridCellLinkTarget,
       getDensity: () => this.density,
       getLayoutDisplay: () => 'grid',
       getResultDisplay: () => this.display,
