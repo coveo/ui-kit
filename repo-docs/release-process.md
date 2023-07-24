@@ -31,13 +31,13 @@ When triggered, releases processes will execute a series of [Nx tasks](https://n
 
 This task is only run for the manual release.
 
-The purpose of this task is to lock the main branch, preventing users from merging pull requests of committing.
+The purpose of this task is to lock the main branch, preventing users from merging pull requests while the release is in progress.
 
 Specifically, this prevents new fixes or features from getting merged between the current release and the version bump commit we're about to push. If fixes or features were merged before the upcoming version bump, they would not be taken into account when calculating versions for the next releases.
 
 This task accomplishes its purpose by:
 
-1. Committing a ".git-lock` file to the main branch.
+1. Committing a `.git-lock` file to the main branch.
 2. Updating the repository's settings to enable "Require branches to be up to date before merging" for the main branch.
 
 ## `release:phase1` (bump package versions)
@@ -106,7 +106,7 @@ The purpose of this step is to:
 
 1. Publish some packages to the dev and staging CDN.
 2. After QA approval:
-   1. Publish Quantic to Salesforces.
+   1. Publish Quantic to Salesforce.
    2. Publish packages to the production CDN.
    3. Update the `latest` NPM tag of each package.
 
