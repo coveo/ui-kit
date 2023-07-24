@@ -39,7 +39,7 @@ function serializePair(pair: [string, unknown]) {
     return '';
   }
 
-  if (key === 'f' || key === 'cf' || key === 'sf') {
+  if (key === 'f' || key === 'cf' || key === 'sf' || key === 'af') {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
@@ -148,7 +148,7 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessObjectPairs(pair: string[]) {
   const [key, val] = pair;
-  const objectKey = /^(f|cf|nf|df|sf)-(.+)$/;
+  const objectKey = /^(f|cf|nf|df|sf|af)-(.+)$/;
   const result = objectKey.exec(key);
 
   if (!result) {
@@ -257,6 +257,7 @@ function isValidKey(key: string): key is SearchParameterKey {
       debug: true,
       sf: true,
       tab: true,
+      af: true,
     };
 
   return key in supportedParameters;
@@ -301,8 +302,8 @@ function castUnknownObject(value: string) {
 
 function keyHasObjectValue(
   key: SearchParameterKey
-): key is 'f' | 'cf' | 'nf' | 'df' | 'sf' {
-  const keys = ['f', 'cf', 'nf', 'df', 'sf'];
+): key is 'f' | 'cf' | 'nf' | 'df' | 'sf' | 'af' {
+  const keys = ['f', 'cf', 'nf', 'df', 'sf', 'af'];
   return keys.includes(key);
 }
 
