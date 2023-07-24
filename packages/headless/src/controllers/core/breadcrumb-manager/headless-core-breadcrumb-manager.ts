@@ -169,18 +169,6 @@ export interface DeselectableValue {
   deselect(): void;
 }
 
-type InferFacetSliceValueRequestType<T extends AnyFacetSetState> =
-  T[string]['request']['currentValues'][number];
-
-type InferFacetSliceValueType<T extends AnyFacetSetState> =
-  InferFacetSliceValueRequestType<T> extends FacetValueRequest
-    ? FacetValue
-    : InferFacetSliceValueRequestType<T> extends NumericRangeRequest
-    ? NumericFacetValue
-    : InferFacetSliceValueRequestType<T> extends DateRangeRequest
-    ? DateFacetValue
-    : CategoryFacetValue;
-
 /**
  * @internal
  * Get the breadcrumb of the facet selected
@@ -191,7 +179,7 @@ type InferFacetSliceValueType<T extends AnyFacetSetState> =
  * @param facetValuesSelector facet selector
  * @returns list breadcrumb of the facet selected
  */
-export const getBreadcrumbs = <T extends AnyFacetSetState>(
+export type GetBreadcrumbsConfiguration<T extends AnyFacetSetState> = {
   engine: CoreEngine<
     ConfigurationSection &
       SearchSection &
@@ -199,39 +187,62 @@ export const getBreadcrumbs = <T extends AnyFacetSetState>(
       NumericFacetSection &
       DateFacetSection &
       CategoryFacetSection
-  >,
-  facetSet: T,
+  >;
+  facetSet: T;
   executeToggleSelect: (payload: {
     facetId: string;
     selection: InferFacetSliceValueType<T>;
-  }) => void,
+  }) => void;
   executeToggleExclude: (payload: {
     facetId: string;
     selection: InferFacetSliceValueType<T>;
-  }) => void,
+  }) => void;
   facetValuesSelector: (
-    state: typeof engine['state'],
+    state: CoreEngine<
+      ConfigurationSection &
+        SearchSection &
+        FacetSection &
+        NumericFacetSection &
+        DateFacetSection &
+        CategoryFacetSection
+    >['state'],
     facetId: string
-  ) => InferFacetSliceValueType<T>[]
+  ) => InferFacetSliceValueType<T>[];
+};
+
+type InferFacetSliceValueRequestType<T extends AnyFacetSetState> =
+  T[string]['request']['currentValues'][number];
+
+export type InferFacetSliceValueType<T extends AnyFacetSetState> =
+  InferFacetSliceValueRequestType<T> extends FacetValueRequest
+    ? FacetValue
+    : InferFacetSliceValueRequestType<T> extends NumericRangeRequest
+    ? NumericFacetValue
+    : InferFacetSliceValueRequestType<T> extends DateRangeRequest
+    ? DateFacetValue
+    : CategoryFacetValue;
+
+export const getBreadcrumbs = <T extends AnyFacetSetState>(
+  config: GetBreadcrumbsConfiguration<T>
 ): Breadcrumb<InferFacetSliceValueType<T>>[] => {
-  return Object.keys(facetSet)
+  return Object.keys(config.facetSet)
     .map((facetId) => {
-      const values = facetValuesSelector(engine.state, facetId).map(
-        (selection) => ({
+      const values = config
+        .facetValuesSelector(config.engine.state, facetId)
+        .map((selection) => ({
           value: selection,
           deselect: () => {
             if (selection.state === 'selected') {
-              executeToggleSelect({facetId, selection});
+              config.executeToggleSelect({facetId, selection});
             } else if (selection.state === 'excluded') {
-              executeToggleExclude({facetId, selection});
+              config.executeToggleExclude({facetId, selection});
             }
           },
-        })
-      );
+        }));
 
       return {
         facetId,
-        field: facetSet[facetId]!.request.field,
+        field: config.facetSet[facetId]!.request.field,
         values,
       };
     })

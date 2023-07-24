@@ -12,6 +12,7 @@ import {
 import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {facetResponseActiveValuesSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
+import {FacetSlice} from '../../../features/facets/facet-set/facet-set-state';
 import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
 import {
   toggleExcludeDateFacetValue,
@@ -20,6 +21,7 @@ import {
 import {logDateFacetBreadcrumb} from '../../../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
 import {dateFacetActiveValuesSelector} from '../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 import {dateFacetSetReducer as dateFacetSet} from '../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
+import {DateFacetSlice} from '../../../features/facets/range-facets/date-facet-set/date-facet-set-state';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -27,6 +29,7 @@ import {
 import {logNumericFacetBreadcrumb} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
 import {numericFacetActiveValuesSelector} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 import {numericFacetSetReducer as numericFacetSet} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {NumericFacetSlice} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {
@@ -58,6 +61,7 @@ import {
   DeselectableValue,
   FacetBreadcrumb,
   getBreadcrumbs,
+  GetBreadcrumbsConfiguration,
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
 } from '../../core/breadcrumb-manager/headless-core-breadcrumb-manager';
@@ -91,10 +95,10 @@ export function buildBreadcrumbManager(
   const getState = () => engine.state;
 
   const getFacetBreadcrumbs = (): FacetBreadcrumb[] => {
-    return getBreadcrumbs(
+    const config: GetBreadcrumbsConfiguration<Record<string, FacetSlice>> = {
       engine,
-      getState().facetSet,
-      ({facetId, selection}) => {
+      facetSet: getState().facetSet,
+      executeToggleSelect: ({facetId, selection}) => {
         const analyticsAction = logFacetBreadcrumb({
           facetId: facetId,
           facetValue: selection.value,
@@ -105,7 +109,7 @@ export function buildBreadcrumbManager(
         );
         dispatch(executeSearch(analyticsAction));
       },
-      ({facetId, selection}) => {
+      executeToggleExclude: ({facetId, selection}) => {
         const analyticsAction = logFacetBreadcrumb({
           facetId: facetId,
           facetValue: selection.value,
@@ -116,40 +120,48 @@ export function buildBreadcrumbManager(
         );
         dispatch(executeSearch(analyticsAction));
       },
-      facetResponseActiveValuesSelector
-    );
+      facetValuesSelector: facetResponseActiveValuesSelector,
+    };
+    return getBreadcrumbs(config);
   };
 
   const getNumericFacetBreadcrumbs = (): NumericFacetBreadcrumb[] => {
-    return getBreadcrumbs(
+    const config: GetBreadcrumbsConfiguration<
+      Record<string, NumericFacetSlice>
+    > = {
       engine,
-      getState().numericFacetSet,
-      (payload) => {
+      facetSet: getState().numericFacetSet,
+      executeToggleSelect: (payload) => {
         dispatch(toggleSelectNumericFacetValue(payload));
         dispatch(executeSearch(logNumericFacetBreadcrumb(payload)));
       },
-      (payload) => {
+      executeToggleExclude: (payload) => {
         dispatch(toggleExcludeNumericFacetValue(payload));
         dispatch(executeSearch(logNumericFacetBreadcrumb(payload)));
       },
-      numericFacetActiveValuesSelector
-    );
+      facetValuesSelector: numericFacetActiveValuesSelector,
+    };
+
+    return getBreadcrumbs(config);
   };
 
   const getDateFacetBreadcrumbs = (): DateFacetBreadcrumb[] => {
-    return getBreadcrumbs(
-      engine,
-      getState().dateFacetSet,
-      (payload) => {
-        dispatch(toggleSelectDateFacetValue(payload));
-        dispatch(executeSearch(logDateFacetBreadcrumb(payload)));
-      },
-      (payload) => {
-        dispatch(toggleExcludeDateFacetValue(payload));
-        dispatch(executeSearch(logDateFacetBreadcrumb(payload)));
-      },
-      dateFacetActiveValuesSelector
-    );
+    const config: GetBreadcrumbsConfiguration<Record<string, DateFacetSlice>> =
+      {
+        engine,
+        facetSet: getState().dateFacetSet,
+        executeToggleSelect: (payload) => {
+          dispatch(toggleSelectDateFacetValue(payload));
+          dispatch(executeSearch(logDateFacetBreadcrumb(payload)));
+        },
+        executeToggleExclude: (payload) => {
+          dispatch(toggleExcludeDateFacetValue(payload));
+          dispatch(executeSearch(logDateFacetBreadcrumb(payload)));
+        },
+        facetValuesSelector: dateFacetActiveValuesSelector,
+      };
+
+    return getBreadcrumbs(config);
   };
 
   const buildCategoryFacetBreadcrumb = (facetId: string) => {
