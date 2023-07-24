@@ -6,30 +6,30 @@ This repository contains two release processes, which are triggered on Git commi
 
 The purpose of the pre-release process is to publish new changes from the main branch as frequently as possible. This has two main benefits:
 
-1. This tests whether we broke some parts of the release process so we don't get surprises when we need a manual release.
-2. This enables implementers to test a new feature or fix before we trigger a manual release.
+1. This tests whether we broke some parts of the release process so we don't get surprises when we need a scheduled release.
+2. This enables implementers to test a new feature or fix before we trigger a scheduled release.
 
 To achieve its purpose, the pre-release process is executed on every new commit on the main branch. Additionally, pre-releases do not commit anything to the main branch, which allows them to be deployed even if multiple features are merged on the main branch faster than the CI can release them.
 
-## 2. The manual release process
+## 2. The scheduled release process
 
-The purpose of the manual release process is to deploy versions of our packages that we feel confident are safe for implementers to use.
+The purpose of the scheduled release process is to deploy versions of our packages that we feel confident are safe for implementers to use.
 
-To achieve that purpose, the manual release process is triggered manually whenever we feel that the version currently on the main branch is safe. Additionally, every Wednesday, to ensure we don't forget to regularly trigger manual releases, a request for approval to deploy is triggered.
+To achieve that purpose, the scheduled release process is triggered manually whenever we feel that the version currently on the main branch is safe. Additionally, every Wednesday, to ensure we don't forget to regularly trigger scheduled releases, a request for approval to deploy is triggered.
 
-Whenever a manual release is successful, a commit is pushed to the main branch which bumps the version of every publishable package in the repo.
+Whenever a scheduled release is successful, a commit is pushed to the main branch which bumps the version of every publishable package in the repo.
 
 # Versioning & publishing to NPM
 
 Versions for any given commit are determined based on the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
 
-Specifically, a commit will determine its version by looking for the last manual release version and bumping it based on how breaking the changes are between then and the current commit. This ensures that implementers can safely update their dependencies on our packages without unexpectedly causing errors.
+Specifically, a commit will determine its version by looking for the last scheduled release version and bumping it based on how breaking the changes are between then and the current commit. This ensures that implementers can safely update their dependencies on our packages without unexpectedly causing errors.
 
 When triggered, releases processes will execute a series of [Nx tasks](https://nx.dev/core-features/run-tasks). Some tasks are run at the root of the repository, and some will be run on each individual package.
 
 ## `release:phase0` (lock the main branch)
 
-This task is only run for the manual release.
+This task is only run for the scheduled release.
 
 The purpose of this task is to lock the main branch, preventing users from merging pull requests while the release is in progress.
 
@@ -83,11 +83,11 @@ This task is run once at the root of the repository after every package's versio
 
 The purpose of this task is to re-generate the root `package-lock.json` file using [Arborist](https://www.npmjs.com/package/@npmcli/arborist), which should confirm that the version bumps were successful.
 
-Manual releases will commit the new `package-lock.json` to the main branch, which ensures that contributors can run `npm install` without unnecessary changes being made to their `package-lock.json`.
+Scheduled releases will commit the new `package-lock.json` to the main branch, which ensures that contributors can run `npm install` without unnecessary changes being made to their `package-lock.json`.
 
 ## `release:phase4` (commit version bumps)
 
-This task is only run for the manual release.
+This task is only run for the scheduled release.
 
 This task will create a new "version bump" commit, which will contain:
 
@@ -100,7 +100,7 @@ This task will also revert the changes from `release:phase0` to allow merging ne
 
 # Deploying
 
-Whenever a new version bump is pushed to the main branch by the manual release process, the Jenkins CI will run the `Jenkinsfile` on it.
+Whenever a new version bump is pushed to the main branch by the scheduled release process, the Jenkins CI will run the `Jenkinsfile` on it.
 
 The purpose of this step is to:
 
