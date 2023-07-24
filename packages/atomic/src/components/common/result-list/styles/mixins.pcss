@@ -157,12 +157,20 @@
   }
 
   [part='result-list-grid-clickable'] {
-    content: '';
+    border: 2px solid var(--atomic-primary);
+    border-radius: 2px;
+    color: var(--atomic-primary);
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: underline;
+    text-align: center;
     position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
+  }
+  [part='result-list-grid-clickable']:not(:focus) {
+    clip: rect(1px, 1px, 1px, 1px);
+    overflow: hidden;
+    position: absolute;
+    padding: 0;
   }
 }
 
