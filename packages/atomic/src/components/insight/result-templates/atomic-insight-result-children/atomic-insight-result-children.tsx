@@ -71,7 +71,7 @@ export class AtomicResultChildren
    */
   @Prop({reflect: true}) imageSize?: ResultDisplayImageSize;
   /**
-   * The non-localized copy for an empty result state.
+   * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
    */
   @Prop() public noResultText = 'no-documents-related';
 

@@ -133,6 +133,7 @@ export function getCoreActiveSearchParameters(
     ...getCategoryFacets(state),
     ...getNumericFacets(state),
     ...getDateFacets(state),
+    ...getAutomaticFacets(state),
   };
 }
 
@@ -258,4 +259,18 @@ function getDateFacets(state: Partial<SearchParametersState>) {
 
 function getSelectedRanges<T extends RangeValueRequest>(ranges: T[]) {
   return ranges.filter((range) => range.state === 'selected');
+}
+
+function getAutomaticFacets(state: Partial<SearchParametersState>) {
+  if (state.automaticFacetSet?.facets === undefined) {
+    return {};
+  }
+  const af = Object.entries(state.automaticFacetSet.facets)
+    .map(([facetId, {values}]) => {
+      const selectedValues = getSelectedValues(values);
+      return selectedValues.length ? {[facetId]: selectedValues} : {};
+    })
+    .reduce((acc, obj) => ({...acc, ...obj}), {});
+
+  return Object.keys(af).length ? {af} : {};
 }

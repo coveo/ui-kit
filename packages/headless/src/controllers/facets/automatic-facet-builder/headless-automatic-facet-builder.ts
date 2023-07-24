@@ -77,9 +77,9 @@ export function buildAutomaticFacetBuilder(
 
     get state() {
       const automaticFacets =
-        engine.state.search.response.generateAutomaticFacets.facets.map(
+        engine.state.search.response.generateAutomaticFacets?.facets.map(
           (facet) => buildAutomaticFacet(engine, {field: facet.field})
-        );
+        ) ?? [];
       return {
         automaticFacets,
       };
