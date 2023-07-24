@@ -11,18 +11,11 @@ import {ProductRecommendationTemplateCondition} from './product-recommendations-
  */
 export const getProductRecommendationProperty = (
   productRecommendation: ProductRecommendation,
-  property: string
-) => {
-  const anyProductRecommendation = productRecommendation as unknown as Record<
-    string,
-    unknown
-  >;
-  if (!isNullOrUndefined(anyProductRecommendation[property])) {
-    return anyProductRecommendation[property];
-  }
-
-  return null;
-};
+  property: keyof ProductRecommendation
+) =>
+  isNullOrUndefined(productRecommendation[property])
+    ? null
+    : productRecommendation[property];
 
 /**
  * Creates a condition that verifies if the specified fields are defined.
@@ -30,7 +23,7 @@ export const getProductRecommendationProperty = (
  * @returns (ProductRecommendationTemplateCondition) A function that takes a product recommendation and checks if every field in the specified list is defined.
  */
 export const fieldsMustBeDefined = (
-  fieldNames: string[]
+  fieldNames: (keyof ProductRecommendation)[]
 ): ProductRecommendationTemplateCondition => {
   return (productRecommendation: ProductRecommendation) => {
     return fieldNames.every(
@@ -48,7 +41,7 @@ export const fieldsMustBeDefined = (
  * @returns (ProductRecommendationTemplateCondition) A function that takes a product recommendation and checks if every field in the specified list is not defined.
  */
 export const fieldsMustNotBeDefined = (
-  fieldNames: string[]
+  fieldNames: (keyof ProductRecommendation)[]
 ): ProductRecommendationTemplateCondition => {
   return (productRecommendation: ProductRecommendation) => {
     return fieldNames.every((fieldName) =>
@@ -66,7 +59,7 @@ export const fieldsMustNotBeDefined = (
  * @returns (ProductRecommendationTemplateCondition) A function that takes a product recommendation and checks if the value for the specified field matches any value in the specified list.
  */
 export const fieldMustMatch = (
-  fieldName: string,
+  fieldName: keyof ProductRecommendation,
   valuesToMatch: string[]
 ): ProductRecommendationTemplateCondition => {
   return (result: ProductRecommendation) => {
@@ -87,7 +80,7 @@ export const fieldMustMatch = (
  * @returns (ProductRecommendationTemplateCondition) A function that takes a product recommendation and checks that the value for the specified field does not match any value in the given list.
  */
 export const fieldMustNotMatch = (
-  fieldName: string,
+  fieldName: keyof ProductRecommendation,
   blacklistedValues: string[]
 ): ProductRecommendationTemplateCondition => {
   return (productRecommendation: ProductRecommendation) => {
@@ -105,12 +98,13 @@ export const fieldMustNotMatch = (
 };
 
 const getFieldValuesFromResult = (
-  fieldName: string,
+  fieldName: keyof ProductRecommendation,
   productRecommendation: ProductRecommendation
 ) => {
   const rawValue = getProductRecommendationProperty(
     productRecommendation,
     fieldName
   );
+  // drat
   return isArray(rawValue) ? rawValue : [rawValue];
 };
