@@ -25,6 +25,7 @@ export type {LogLevel} from './app/logger';
 export type {ProductRecommendation} from './api/search/search/product-recommendation';
 
 // Actions
+export * from './features/product-listing/product-listing-click-analytics-actions-loader';
 export * from './features/product-listing/product-listing-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/pagination/pagination-actions-loader';
