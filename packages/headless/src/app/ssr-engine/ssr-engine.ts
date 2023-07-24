@@ -11,6 +11,9 @@ import {
   buildSearchEngine,
 } from '../search-engine/search-engine';
 
+// TODO: Try to simplify the following types
+//  - Can variations with/without props e.g. be combined/simplified?
+
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TController extends Controller
@@ -90,7 +93,7 @@ export interface ControllersMap {
   [customName: string]: Controller;
 }
 
-export interface BuildFunctionWithProps<
+export interface BuildWithProps<
   TEngine extends CoreEngine,
   TEngineOptions,
   TControllersMap extends ControllersMap,
@@ -107,7 +110,7 @@ export interface BuildFunctionWithProps<
   ): Promise<EngineAndControllers<TEngine, TControllersMap>>;
 }
 
-export interface BuildFunctionWithoutProps<
+export interface BuildWithoutProps<
   TEngine extends CoreEngine,
   TEngineOptions,
   TControllersMap extends ControllersMap
@@ -120,7 +123,7 @@ export interface BuildFunctionWithoutProps<
   ): Promise<EngineAndControllers<TEngine, TControllersMap>>;
 }
 
-export type ExecuteOnceFunctionWithoutProps<
+export type FetchInitialStateWithoutProps<
   TControllersSnapshot extends ControllerSnapshotsMap,
   TSearchFulfilledAction extends AnyAction
 > = {
@@ -140,7 +143,7 @@ export interface EngineDefinitionHydrateOptionsWithoutProps<
   searchFulfilledAction: TSearchFulfilledAction;
 }
 
-export type HydrateFunctionWithoutProps<
+export type HydrateInitialStateWithoutProps<
   TEngine extends CoreEngine,
   TControllers extends ControllersMap,
   TSearchFulfilledAction extends AnyAction
@@ -159,16 +162,16 @@ export interface EngineDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions
-> extends ExecuteOnceFunctionWithoutProps<
+> extends FetchInitialStateWithoutProps<
       InferControllerSnapshotsMapFromDefinitions<TControllers>,
       AnyAction
     >,
-    HydrateFunctionWithoutProps<
+    HydrateInitialStateWithoutProps<
       TEngine,
       InferControllersMapFromDefinition<TControllers>,
       AnyAction
     >,
-    BuildFunctionWithoutProps<
+    BuildWithoutProps<
       TEngine,
       TEngineOptions,
       InferControllersMapFromDefinition<TControllers>
@@ -178,7 +181,7 @@ export type EngineDefinitionExecuteOnceOptions<
   TControllersSnapshot extends ControllersPropsMap
 > = {controllers: TControllersSnapshot};
 
-export type ExecuteOnceFunctionWithProps<
+export type FetchInitialStateWithProps<
   TControllersSnapshot extends ControllerSnapshotsMap,
   TSearchFulfilledAction extends AnyAction,
   TControllersProps extends ControllersPropsMap
@@ -200,7 +203,7 @@ export interface EngineDefinitionHydrateOptionsWithProps<
   controllers: TControllersProps;
 }
 
-export type HydrateFunctionWithProps<
+export type HydrateInitialStateWithProps<
   TEngine extends CoreEngine,
   TControllers extends ControllersMap,
   TSearchFulfilledAction extends AnyAction,
@@ -224,18 +227,18 @@ export interface EngineDefinitionWithProps<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions,
   TControllerProps extends ControllersPropsMap
-> extends ExecuteOnceFunctionWithProps<
+> extends FetchInitialStateWithProps<
       InferControllerSnapshotsMapFromDefinitions<TControllers>,
       AnyAction,
       TControllerProps
     >,
-    HydrateFunctionWithProps<
+    HydrateInitialStateWithProps<
       TEngine,
       InferControllersMapFromDefinition<TControllers>,
       AnyAction,
       TControllerProps
     >,
-    BuildFunctionWithProps<
+    BuildWithProps<
       TEngine,
       TEngineOptions,
       InferControllersMapFromDefinition<TControllers>,
