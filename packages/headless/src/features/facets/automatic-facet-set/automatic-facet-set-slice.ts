@@ -15,11 +15,11 @@ export const automaticFacetSetReducer = createReducer(
   (builder) => {
     builder
       .addCase(executeSearch.fulfilled, (state, action) => {
-        state.facets = {};
+        state.set = {};
 
         const facets = action.payload.response.generateAutomaticFacets?.facets;
-        facets?.forEach((facet) => {
-          state.facets[facet.field] = facet;
+        facets?.forEach((response) => {
+          state.set[response.field] = {response};
         });
       })
       .addCase(setDesiredCount, (state, action) => {
@@ -27,7 +27,7 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(toggleSelectAutomaticFacetValue, (state, action) => {
         const {field, selection} = action.payload;
-        const facet = state.facets[field];
+        const facet = state.set[field]?.response;
 
         if (!facet) {
           return;
@@ -43,7 +43,7 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(deselectAllAutomaticFacetValues, (state, action) => {
         const field = action.payload;
-        const facet = state.facets[field];
+        const facet = state.set[field]?.response;
 
         if (!facet) {
           return;
@@ -62,7 +62,7 @@ export const automaticFacetSetReducer = createReducer(
           );
           response.values.push(...values);
 
-          state.facets[field] = response;
+          state.set[field] = {response};
         }
       });
   }
