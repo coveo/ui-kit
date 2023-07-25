@@ -445,7 +445,7 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {
       react_class: [
         'packages/samples/headless-react/src/components/automatic-facet-builder/automatic-facet-builder.class.tsx',
-        'packages/samples/headless-react/src/components/automatic-facet/automatic-facet.fn.tsx',
+        'packages/samples/headless-react/src/components/automatic-facet/automatic-facet.class.tsx',
       ],
       react_fn: [
         'packages/samples/headless-react/src/components/automatic-facet-builder/automatic-facet-builder.fn.tsx',
@@ -459,6 +459,10 @@ const controllers: ControllerConfiguration[] = [
       react_fn: [
         'packages/samples/headless-react/src/components/automatic-facet/automatic-facet.fn.tsx',
         'packages/samples/headless-react/src/components/automatic-facet-builder/automatic-facet-builder.fn.tsx',
+      ],
+      react_class: [
+        'packages/samples/headless-react/src/components/automatic-facet/automatic-facet.class.tsx',
+        'packages/samples/headless-react/src/components/automatic-facet-builder/automatic-facet-builder.class.tsx',
       ],
     },
   },

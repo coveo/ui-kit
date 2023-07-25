@@ -7,7 +7,7 @@ import {
 } from '@coveo/headless';
 import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
-import {AutomaticFacet as AutomaticFacetFn} from '../automatic-facet/automatic-facet.fn';
+import {AutomaticFacet} from '../automatic-facet/automatic-facet.class';
 
 export class AutomaticFacetBuilder extends Component<
   AutomaticFacetBuilderProps,
@@ -43,10 +43,10 @@ export class AutomaticFacetBuilder extends Component<
     }
     const automaticFacets = this.state.automaticFacets.map((facet) => {
       return (
-        <AutomaticFacetFn
+        <AutomaticFacet
           key={facet.state.field}
           controller={facet}
-        ></AutomaticFacetFn>
+        ></AutomaticFacet>
       );
     });
     return automaticFacets;
