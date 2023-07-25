@@ -105,7 +105,7 @@ describe('Breadbox Test Suites', () => {
         numericFacetLabel
       );
       BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
-      BreadboxAssertions.assertBreadcrumbDisplayLength(2);
+      BreadboxAssertions.assertBreadcrumbDisplayLength(3);
     });
 
     describe('when selecting "Clear all" button', () => {
