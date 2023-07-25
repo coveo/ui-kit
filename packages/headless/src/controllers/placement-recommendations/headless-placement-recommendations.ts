@@ -1,11 +1,7 @@
 import {CommercePlacementsEngine} from '../../app/commerce-placement-engine/commerce-placement-engine';
 import {getRecs} from '../../features/placement-set/placement-set-action';
 import '../../features/placement-set/placement-set-interface';
-import {
-  PlacementSetSkus,
-  PlacementSetView,
-  Recommendations,
-} from '../../features/placement-set/placement-set-interface';
+import {Recommendations} from '../../features/placement-set/placement-set-interface';
 import {placementSetReducer} from '../../features/placement-set/placement-set-slice';
 import {PlacementSetState} from '../../features/placement-set/placement-set-state';
 import {loadReducerError} from '../../utils/errors';
@@ -28,16 +24,6 @@ export interface PlacementRecommendationsState {
    * A set of product recommendations returned by a specific Placement.
    */
   recommendations: Recommendations;
-
-  /**
-   * The SKUs used as seeds to get product recommendations from the Placement.
-   */
-  skus: PlacementSetSkus;
-
-  /**
-   * The current view context.
-   */
-  view: PlacementSetView;
 }
 
 export interface PlacementRecommendations extends Controller {
@@ -63,9 +49,9 @@ export interface PlacementRecommendations extends Controller {
 
   /**
    * Not implemented
-   * @param skus The skus
+   * @param productIds The skus
    */
-  trackProductImpressions(skus: string[]): void;
+  trackProductImpressions(productIds: string[]): void;
 
   /**
    * Not implemented
@@ -74,9 +60,9 @@ export interface PlacementRecommendations extends Controller {
 
   /**
    * Not implemented
-   * @param sku The sku
+   * @param productId The sku
    */
-  trackProductClickthrough(sku: string): void;
+  trackProductClickthrough(productId: string): void;
 }
 
 /**
@@ -114,8 +100,6 @@ export function buildPlacementRecommendations(
 
     get state() {
       return {
-        skus: getState().placement.skus,
-        view: getState().placement.view,
         recommendations:
           getState().placement.recommendations[options.placementId],
       };
@@ -136,8 +120,8 @@ export function buildPlacementRecommendations(
       return;
     },
 
-    trackProductImpressions(skus: string[]) {
-      skus;
+    trackProductImpressions(productIds: string[]) {
+      productIds;
       return;
     },
 
@@ -145,8 +129,8 @@ export function buildPlacementRecommendations(
       return;
     },
 
-    trackProductClickthrough(sku: string) {
-      sku;
+    trackProductClickthrough(productId: string) {
+      productId;
       return;
     },
   };

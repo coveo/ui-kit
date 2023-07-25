@@ -1,43 +1,31 @@
-import {Action} from 'redux';
-import {
-  setCartSkus,
-  setOrderSkus,
-  setPlpSkus,
-  setProductSku,
-  setRecsSkus,
-  setSearchSkus,
-  setView,
-} from '../../features/placement-set/placement-set-action';
+// eslint-disable-next-line node/no-extraneous-import
+import {placementSetReducer} from '../../features/placement-set/placement-set-slice';
 import {
   buildMockCommercePlacementsEngine,
   MockCommercePlacementsEngine,
 } from '../../test/mock-engine';
-import {buildPlacementManager} from './headless-placement-manager';
+import {
+  PlacementManagerOptions,
+  buildPlacementManager,
+} from './headless-placement-manager';
 import {PlacementManager} from './headless-placement-manager';
 
 describe('PlacementManager', () => {
-  const expectContainAction = (action: Action) => {
-    const found = engine.actions.find((a) => a.type === action.type);
-    expect(engine.actions).toContainEqual(found);
-  };
-
   let engine: MockCommercePlacementsEngine;
+  let options: PlacementManagerOptions;
   let placementManager: PlacementManager;
 
   function initPlacementManager() {
-    placementManager = buildPlacementManager(engine, {
-      options: {
-        view: {
-          currency: 'USD',
-          locale: 'en-us',
-          type: 'category',
-        },
-      },
-    });
+    placementManager = buildPlacementManager(engine, {options});
   }
 
   beforeEach(() => {
     engine = buildMockCommercePlacementsEngine();
+    options = {
+      currency: 'USD',
+      locale: 'en-us',
+    };
+
     initPlacementManager();
   });
 
@@ -45,43 +33,13 @@ describe('PlacementManager', () => {
     expect(placementManager).toBeTruthy();
   });
 
-  it('setCartSkus dispatches #setCartSkus', () => {
-    placementManager.setCartSkus(['my-sku']);
-    expectContainAction(setCartSkus);
+  it('adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenNthCalledWith(1, {
+      placementSetReducer,
+    });
   });
 
-  it('setOrderSkus dispatches #setOrderSkus', () => {
-    placementManager.setOrderSkus(['my-sku']);
-    expectContainAction(setOrderSkus);
-  });
-
-  it('setPlpSkus dispatches #setPlpSkus', () => {
-    placementManager.setPlpSkus(['my-sku']);
-    expectContainAction(setPlpSkus);
-  });
-
-  it('setProductSku dispatches #setProductSku', () => {
-    placementManager.setProductSku('my-sku');
-    expectContainAction(setProductSku);
-  });
-
-  it('setRecsSkus dispatches #setRecsSkus', () => {
-    placementManager.setRecsSkus(['my-sku']);
-    expectContainAction(setRecsSkus);
-  });
-
-  it('setSearchSkus dispatches #setSearchSkus', () => {
-    placementManager.setSearchSkus(['my-sku']);
-    expectContainAction(setSearchSkus);
-  });
-
-  it('setLocale dispatches #setLocale', () => {
-    placementManager.setLocale('CAD', 'fr-ca');
-    expectContainAction(setView);
-  });
-
-  it('setView dispatches #setView', () => {
-    placementManager.setView('product');
-    expectContainAction(setView);
+  it('exposes a subscribe method', () => {
+    expect(placementManager.subscribe).toBeTruthy();
   });
 });

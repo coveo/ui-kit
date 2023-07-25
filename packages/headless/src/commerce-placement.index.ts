@@ -41,8 +41,7 @@ export type {
   PlacementManager,
   PlacementManagerOptions,
   PlacementManagerProps,
-  PlacementManagerSkusOptions,
-  PlacementManagerViewOptions,
+  PlacementManagerState,
 } from './controllers/placement-manager/headless-placement-manager';
 
 export {buildPlacementManager} from './controllers/placement-manager/headless-placement-manager';

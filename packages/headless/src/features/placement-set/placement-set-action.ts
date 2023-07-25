@@ -37,30 +37,6 @@ export interface AsyncThunkPlacementOptions
   rejectValue: CommerceUnifiedAPIErrorResponse & {placementId: string};
 }
 
-/**
- * The payload to send when setting product SKUs for a Placement content request.
- */
-export interface SetPlacementSetSkusActionCreatorPayload {
-  /**
-   * A set of skus to use for retrieving Placement content.
-   */
-  skus: string[];
-}
-
-/**
- * The payload to send when setting view context for a Placement content request.
- */
-export interface SetPlacementSetViewActionCreatorPayload {
-  /**
-   * The subtypes of the view.
-   */
-  subtype: string[];
-  /**
-   * The type of view for which the Placement content is intended.
-   */
-  type: PlacementViewType | null;
-}
-
 export interface SetPlacementSetLocaleActionCreatorPayload {
   /**
    * The currency used in the view (e.g., "USD").
@@ -71,6 +47,58 @@ export interface SetPlacementSetLocaleActionCreatorPayload {
    * The locale used in the view (e.g., "en-us").
    */
   locale: string;
+}
+
+/**
+ * The payload to send when setting SKUs context for a Placement content request.
+ */
+export interface SetPlacementSetSkusActionCreatorPayload {
+  /**
+   * The SKUs of the products in the user's cart.
+   */
+  cart: string[];
+
+  /**
+   * The SKUs of the products displayed in an active order checkout or confirmation view.
+   */
+  order: string[];
+
+  /**
+   * The SKU of the product displayed in an active product description page (PDP) view.
+   */
+  product: string | null;
+
+  /**
+   * The SKUs of the products displayed in an active product listing page (PLP) view.
+   */
+  plp: string[];
+
+  /**
+   * The SKUs of the products displayed as recommendations in an active view.
+   */
+  recs: string[];
+
+  /**
+   * The permanent IDs of the items displayed in an active search view.
+   */
+  search: string[];
+}
+
+/**
+ * The payload to send when setting view context for a Placement content request.
+ */
+export interface SetPlacementSetViewActionCreatorPayload {
+  /**
+   * The subtypes of the view.
+   *
+   * Typically, these will be the categories of a product listing page.
+   */
+  subtype: string[];
+
+  /**
+   * The type of view for which the Placement content is intended.
+   */
+  type: PlacementViewType | null;
 }
 
 const placementSetSkusValue = new ArrayValue({
@@ -87,66 +115,52 @@ export const setImplementationId = createAction(
   (payload: string) => validatePayload(payload, new StringValue())
 );
 
-export const setCartSkus = createAction(
-  'placements/skus/cart/set',
-  (payload: SetPlacementSetSkusActionCreatorPayload) =>
-    validatePayload(payload, {
-      skus: placementSetSkusValue,
-    })
-);
-
-export const setOrderSkus = createAction(
-  'placements/skus/order/set',
-  (payload: SetPlacementSetSkusActionCreatorPayload) =>
-    validatePayload(payload, {
-      skus: placementSetSkusValue,
-    })
-);
-
-export const setPlpSkus = createAction(
-  'placements/skus/plp/set',
-  (payload: SetPlacementSetSkusActionCreatorPayload) =>
-    validatePayload(payload, {
-      skus: placementSetSkusValue,
-    })
-);
-
-export const setProductSku = createAction(
-  'placements/skus/product/set',
-  (payload: string) => validatePayload(payload, new StringValue())
-);
-
-export const setRecsSkus = createAction(
-  'placements/skus/recs/set',
-  (payload: SetPlacementSetSkusActionCreatorPayload) =>
-    validatePayload(payload, {
-      skus: placementSetSkusValue,
-    })
-);
-
-export const setSearchSkus = createAction(
-  'placements/skus/search/set',
-  (payload: SetPlacementSetSkusActionCreatorPayload) =>
-    validatePayload(payload, {
-      skus: placementSetSkusValue,
-    })
-);
-
-export const setView = createAction(
-  'placement/view/set',
-  (payload: SetPlacementSetViewActionCreatorPayload) =>
-    validatePayload(payload, {
-      subtype: new ArrayValue({each: requiredNonEmptyString}),
-      type: placementSetViewTypeValue,
-    })
-);
-
 export const setLocale = createAction(
-  'placement/locale/set',
+  'placements/locale/set',
   (payload: SetPlacementSetLocaleActionCreatorPayload) =>
     validatePayload(payload, {
       currency: requiredNonEmptyString,
       locale: requiredNonEmptyString,
+    })
+);
+
+export const setPlacementContext = createAction(
+  'placement/context/set',
+  (
+    payload: SetPlacementSetSkusActionCreatorPayload &
+      SetPlacementSetViewActionCreatorPayload
+  ) =>
+    validatePayload(payload, {
+      subtype: new ArrayValue({each: requiredNonEmptyString}),
+      type: placementSetViewTypeValue,
+      cart: placementSetSkusValue,
+      order: placementSetSkusValue,
+      product: new StringValue({required: false, emptyAllowed: false}),
+      plp: placementSetSkusValue,
+      recs: placementSetSkusValue,
+      search: placementSetSkusValue,
+    })
+);
+
+export const setSkus = createAction(
+  'placements/skus/set',
+  (payload: SetPlacementSetSkusActionCreatorPayload) =>
+    validatePayload(payload, {
+      cart: placementSetSkusValue,
+      order: placementSetSkusValue,
+      product: new StringValue({required: false, emptyAllowed: false}),
+      plp: placementSetSkusValue,
+      recs: placementSetSkusValue,
+      search: placementSetSkusValue,
+    })
+);
+
+export const setView = createAction(
+  'placements/view/set',
+  (payload: SetPlacementSetViewActionCreatorPayload) =>
+    validatePayload(payload, {
+      subtype: new ArrayValue({each: requiredNonEmptyString}),
+      type: placementSetViewTypeValue,
     })
 );
 
