@@ -11,8 +11,12 @@ import {
   buildSearchEngine,
 } from '../search-engine/search-engine';
 
-// TODO: Try to simplify the following types
-//  - Can variations with/without props e.g. be combined/simplified?
+/**
+ * TODO: Try to simplify the following types
+ * - Can variations with/without props e.g. be combined/simplified?
+ * Style
+ * - `BuildWith..` -> `BuilderWith..`? Similarly `Fetcher..`, `Hydrator..`
+ **/
 
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine,
@@ -89,8 +93,27 @@ export interface EngineAndControllers<
   controllers: TControllers;
 }
 
+export interface OptionsExtender<TOptions> {
+  (options: TOptions): TOptions | Promise<TOptions>;
+}
+
+export interface EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
+  extend?: OptionsExtender<TEngineOptions>;
+}
+
 export interface ControllersMap {
   [customName: string]: Controller;
+}
+
+export interface ControllersPropsMap {
+  [customName: string]: unknown;
+}
+
+export interface EngineDefinitionBuildOptionsWithProps<
+  TEngineOptions,
+  TControllersProps extends ControllersPropsMap
+> extends EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
+  controllers: TControllersProps;
 }
 
 export interface BuildWithProps<
@@ -177,7 +200,7 @@ export interface EngineDefinitionWithoutProps<
       InferControllersMapFromDefinition<TControllers>
     > {}
 
-export type EngineDefinitionExecuteOnceOptions<
+export type EngineDefinitionFetchInitialStateOptions<
   TControllersSnapshot extends ControllersPropsMap
 > = {controllers: TControllersSnapshot};
 
@@ -192,7 +215,7 @@ export type FetchInitialStateWithProps<
    * Useful for static generation and server-side rendering.
    */
   fetchInitialState(
-    options: EngineDefinitionExecuteOnceOptions<TControllersProps>
+    options: EngineDefinitionFetchInitialStateOptions<TControllersProps>
   ): Promise<EngineSnapshot<TSearchFulfilledAction, TControllersSnapshot>>;
 };
 
@@ -269,7 +292,6 @@ export type EngineDefinition<
 
 export type SearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
-  // TODO: try to import a simplified version of  EngineDefinition
 > = EngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
 
 export type SearchEngineDefinitionOptions<
@@ -290,43 +312,12 @@ export type InferControllerSnapshotsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
 > = {[K in keyof TControllers]: {initialState: TControllers[K]}};
 
-export function mapObject<TKey extends string, TInitialValue, TNewValue>(
-  obj: Record<TKey, TInitialValue>,
-  predicate: (value: TInitialValue, key: TKey) => TNewValue
-): Record<TKey, TNewValue> {
-  return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [
-      key,
-      predicate(value as TInitialValue, key as TKey),
-    ])
-  ) as Record<TKey, TNewValue>;
-}
-
-export interface OptionsExtender<TOptions> {
-  (options: TOptions): TOptions | Promise<TOptions>;
-}
-
-export interface EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
-  extend?: OptionsExtender<TEngineOptions>;
-}
-
-export interface ControllersPropsMap {
-  [customName: string]: unknown;
-}
-
 export interface ControllerSnapshot<TState> {
   initialState: TState;
 }
 
 export interface ControllerSnapshotsMap {
   [customName: string]: ControllerSnapshot<unknown>;
-}
-
-export interface EngineDefinitionBuildOptionsWithProps<
-  TEngineOptions,
-  TControllersProps extends ControllersPropsMap
-> extends EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
-  controllers: TControllersProps;
 }
 
 type AnyAction = {type: string};
@@ -337,6 +328,18 @@ export interface EngineSnapshot<
 > {
   searchFulfilledAction: TSearchFulfilledAction;
   controllers: TControllers;
+}
+
+export function mapObject<TKey extends string, TInitialValue, TNewValue>(
+  obj: Record<TKey, TInitialValue>,
+  predicate: (value: TInitialValue, key: TKey) => TNewValue
+): Record<TKey, TNewValue> {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [
+      key,
+      predicate(value as TInitialValue, key as TKey),
+    ])
+  ) as Record<TKey, TNewValue>;
 }
 
 export function defineSearchEngine<
@@ -390,6 +393,7 @@ export function defineSearchEngine<
           {type: string},
           InferControllerSnapshotsMapFromDefinitions<TControllerDefinitions>
         >
+        // TODO: Fix no-async-promise-executor
       >(async (resolve, reject) => {
         const middleware: Middleware = () => (next) => (action) => {
           next(action);
