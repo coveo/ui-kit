@@ -440,6 +440,28 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildAutomaticFacetBuilder',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/automatic-facet-builder/automatic-facet-builder.class.tsx',
+        'packages/samples/headless-react/src/components/automatic-facet/automatic-facet.fn.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/automatic-facet-builder/automatic-facet-builder.fn.tsx',
+        'packages/samples/headless-react/src/components/automatic-facet/automatic-facet.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildAutomaticFacet',
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/automatic-facet/automatic-facet.fn.tsx',
+        'packages/samples/headless-react/src/components/automatic-facet-builder/automatic-facet-builder.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [
