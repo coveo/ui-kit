@@ -9,7 +9,7 @@ import {
   buildMockSearchAppEngine,
   createMockState,
 } from '../../../test';
-import {buildMockAutomaticFacetResponse} from '../../../test/mock-automatic-facet-response';
+import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 
 describe('automatic facet', () => {
@@ -27,7 +27,7 @@ describe('automatic facet', () => {
   }
 
   function setAutomaticFacet() {
-    state.automaticFacetSet.facets[field] = buildMockAutomaticFacetResponse();
+    state.automaticFacetSet.set[field] = buildMockAutomaticFacetSlice();
   }
 
   beforeEach(() => {
