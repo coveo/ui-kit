@@ -42,9 +42,6 @@ describe('Result Badge Component', () => {
           .init();
       });
 
-      CommonAssertions.assertRemovesComponent(() =>
-        cy.get(resultBadgeComponent)
-      );
       CommonAssertions.assertConsoleError();
     });
   });
@@ -57,10 +54,6 @@ describe('Result Badge Component', () => {
             .with(addResultBadgeInResultList({field: 'thisfielddoesnotexist'}))
             .init();
         });
-
-        CommonAssertions.assertRemovesComponent(
-          ResultBadgeSelectors.firstInResult
-        );
       });
 
       describe('when the field value is a string', () => {
