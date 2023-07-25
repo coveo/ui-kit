@@ -12,6 +12,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -25,6 +26,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  */
 @Component({
   tag: 'atomic-automatic-facet-builder',
+  styleUrl: 'atomic-automatic-facet-builder.pcss',
   shadow: false,
 })
 export class AtomicAutomaticFacetBuilder implements InitializableComponent {
@@ -91,6 +93,11 @@ export class AtomicAutomaticFacetBuilder implements InitializableComponent {
         );
       }
     );
+    if (!this.searchStatus.state.firstSearchExecuted) {
+      return Array.from({length: this.desiredCount}, () => (
+        <FacetPlaceholder numberOfValues={8} isCollapsed={this.areCollapsed} />
+      ));
+    }
 
     return automaticFacets;
   }
