@@ -31,9 +31,12 @@ export class AutomaticFacet extends Component<
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
     return (
       <ul>
-        {this.controller.state.values.map((value) => (
+        {this.state.values.map((value) => (
           <li key={value.value}>
             <input
               type="checkbox"
