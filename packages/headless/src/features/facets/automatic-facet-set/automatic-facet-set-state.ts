@@ -1,5 +1,9 @@
 import {AutomaticFacetResponse} from './interfaces/response';
 
+export type AutomaticFacetSlice = {
+  response: AutomaticFacetResponse;
+};
+
 export type AutomaticFacetSetState = {
   /**
    * The desired count of facets.
@@ -7,14 +11,14 @@ export type AutomaticFacetSetState = {
    */
   desiredCount: number;
   /**
-   * A map of automatic facet field to an automatic facet response.
+   * A map of automatic facet field to an automatic facet slice containing the response.
    */
-  facets: Record<string, AutomaticFacetResponse>;
+  set: Record<string, AutomaticFacetSlice>;
 };
 
 export function getAutomaticFacetSetInitialState(): AutomaticFacetSetState {
   return {
     desiredCount: 1,
-    facets: {},
+    set: {},
   };
 }

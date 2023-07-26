@@ -1,3 +1,16 @@
+# 2.36.0 (2023-07-19)
+
+### Bug Fixes
+
+- **atomic:** fix internationalization in atomic automatic facet ([#3036](https://github.com/coveo/ui-kit/issues/3036)) ([822fca0](https://github.com/coveo/ui-kit/commits/822fca0f2093ebff44b7b0d12cd963d7d67b90b3))
+- unsubscribe component on disconnected callback ([#3027](https://github.com/coveo/ui-kit/issues/3027)) ([92644cf](https://github.com/coveo/ui-kit/commits/92644cf615a38b58927121ced266e2af8b73c761))
+
+### Features
+
+- **atomic:** add the singular automatic facet component ([#3021](https://github.com/coveo/ui-kit/issues/3021)) ([ed45748](https://github.com/coveo/ui-kit/commits/ed4574841f8a130d6e78cfa80365f2129514f31c))
+- **atomic:** added cursor effect and streamEnd event ([#3034](https://github.com/coveo/ui-kit/issues/3034)) ([9c5165d](https://github.com/coveo/ui-kit/commits/9c5165da35fe31ab685d64075fe95fe5339d5fab))
+- **atomic:** change padding in result list ([#3031](https://github.com/coveo/ui-kit/issues/3031)) ([4f62a62](https://github.com/coveo/ui-kit/commits/4f62a629a18b135e8809d29f8378083bb9ad8d8e))
+
 # 2.35.0 (2023-07-12)
 
 ### Bug Fixes
