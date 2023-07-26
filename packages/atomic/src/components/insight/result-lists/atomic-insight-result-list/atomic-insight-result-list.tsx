@@ -49,7 +49,7 @@ export class AtomicInsightResultList
   private resultListCommon!: ResultListCommon;
   private loadingFlag = randomID('firstInsightResultLoaded-');
   private display: ResultDisplayLayout = 'list';
-  private gridCellLinkTarget: ResultTarget = '_blank';
+  private gridCellLinkTarget: ResultTarget = '_self';
   private resultRenderingFunction: ResultRenderingFunction;
 
   @Element() public host!: HTMLDivElement;

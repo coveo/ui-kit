@@ -86,9 +86,9 @@ export class AtomicResultList implements InitializableComponent {
   /**
    * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
    * This property is only leveraged when `display` is `grid`.
-   * @defaultValue `_blank`
+   * @defaultValue `_self`
    */
-  @Prop() gridCellLinkTarget: ResultTarget = '_blank';
+  @Prop() gridCellLinkTarget: ResultTarget = '_self';
 
   /**
    * The expected size of the image displayed in the results.

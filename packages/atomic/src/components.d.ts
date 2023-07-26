@@ -1215,7 +1215,7 @@ export namespace Components {
         "display": ResultDisplayBasicLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_blank`
+          * @defaultValue `_self`
          */
         "gridCellLinkTarget": ResultTarget;
         /**
@@ -1474,7 +1474,7 @@ export namespace Components {
         "display": ResultDisplayLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_blank`
+          * @defaultValue `_self`
          */
         "gridCellLinkTarget": ResultTarget;
         /**
@@ -4150,7 +4150,7 @@ declare namespace LocalJSX {
         "display"?: ResultDisplayBasicLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_blank`
+          * @defaultValue `_self`
          */
         "gridCellLinkTarget"?: ResultTarget;
         /**
@@ -4389,7 +4389,7 @@ declare namespace LocalJSX {
         "display"?: ResultDisplayLayout;
         /**
           * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
-          * @defaultValue `_blank`
+          * @defaultValue `_self`
          */
         "gridCellLinkTarget"?: ResultTarget;
         /**

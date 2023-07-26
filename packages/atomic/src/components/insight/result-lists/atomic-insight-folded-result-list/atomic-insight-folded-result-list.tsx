@@ -59,7 +59,7 @@ export class AtomicInsightFoldedResultList
   private resultRenderingFunction: ResultRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
   private display: ResultDisplayLayout = 'list';
-  private gridCellLinkTarget: ResultTarget = '_blank';
+  private gridCellLinkTarget: ResultTarget = '_self';
 
   @Element() public host!: HTMLDivElement;
 

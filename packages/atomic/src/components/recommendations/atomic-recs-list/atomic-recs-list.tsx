@@ -94,9 +94,9 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   /**
    * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
    * This property is only leveraged when `display` is `grid`.
-   * @defaultValue `_blank`
+   * @defaultValue `_self`
    */
-  @Prop() gridCellLinkTarget: ResultTarget = '_blank';
+  @Prop() gridCellLinkTarget: ResultTarget = '_self';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
