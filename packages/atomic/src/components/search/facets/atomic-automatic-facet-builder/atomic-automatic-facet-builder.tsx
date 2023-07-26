@@ -95,7 +95,7 @@ export class AtomicAutomaticFacetBuilder implements InitializableComponent {
     );
     if (!this.searchStatus.state.firstSearchExecuted) {
       return Array.from({length: this.desiredCount}, () => (
-        <FacetPlaceholder numberOfValues={8} isCollapsed={this.areCollapsed} />
+        <FacetPlaceholder numberOfValues={8} isCollapsed={this.areCollapsed} /> //TODO: Change '8' to variable whenever adding the 'numberOfValues' attribute in the AF query
       ));
     }
 
