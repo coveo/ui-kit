@@ -525,4 +525,17 @@ describe('Smart Snippet Test Suites', () => {
         .should('equal', 'rgb(84, 170, 255)');
     });
   });
+
+  describe('when there is a valid slot named "source-anchor-attributes"', () => {
+    beforeEach(() => {
+      const slot = generateComponentHTML('a', {
+        target: '_blank',
+        slot: 'source-anchor-attributes',
+      });
+      new TestFixture().with(addSmartSnippet({}, slot)).init();
+    });
+    it('copies the attributes properly', () => {
+      SmartSnippetSelectors.sourceUrl().should('have.attr', 'target', '_blank');
+    });
+  });
 });
