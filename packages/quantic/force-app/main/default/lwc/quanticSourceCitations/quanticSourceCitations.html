@@ -1,0 +1,29 @@
+<template>
+  <template lwc:if={citations}>
+    <div class="source-citations">
+      <p>{labels.learnMore}</p>
+      <ol class="citations-container">
+        <template
+          for:each={indexedCitations}
+          for:item="citation"
+          for:index="index"
+        >
+          <li key={citation.id}>
+            <a
+              class="citation-link"
+              title={citation.title}
+              href={citation.uri}
+              target="_blank"
+              onclick={handleCitationClick}
+            >
+              <div>
+                <div>{citation.index}</div>
+              </div>
+              <span class="citation-title">{citation.title}</span>
+            </a>
+          </li>
+        </template>
+      </ol>
+    </div>
+  </template>
+</template>
