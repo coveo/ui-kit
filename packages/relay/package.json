@@ -1,0 +1,26 @@
+{
+  "name": "@coveo/relay",
+  "version": "0.0.5",
+  "description": "A library for sending analytics events using Coveo's Event protocol.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/relay.git"
+  },
+  "keywords": [
+    "Coveo",
+    "analytics",
+    "event"
+  ],
+  "author": "Coveo",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/coveo/relay/issues"
+  },
+  "homepage": "https://github.com/coveo/relay#readme",
+  "scripts": {},
+  "devDependencies": {
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.1.6"
+  }
+}
