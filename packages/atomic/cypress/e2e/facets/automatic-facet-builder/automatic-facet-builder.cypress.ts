@@ -7,6 +7,7 @@ import {addAutomaticFacetBuilder} from './automatic-facet-builder-actions';
 import {
   assertCollapseAutomaticFacets,
   assertContainsAutomaticFacet,
+  assertDisplayPlaceholder,
   automaticFacetBuilderComponent,
 } from './automatic-facet-builder-assertions';
 
@@ -66,5 +67,17 @@ describe('Automatic Facet Builder Test Suites', () => {
       )
       .init();
     assertCollapseAutomaticFacets(false);
+  });
+
+  it('should display placeholders when no search has yet been executed', () => {
+    new TestFixture()
+      .with(
+        addAutomaticFacetBuilder({
+          'desired-count': '1',
+        })
+      )
+      .withoutFirstAutomaticSearch()
+      .init();
+    assertDisplayPlaceholder();
   });
 });

@@ -1867,6 +1867,7 @@ export namespace Components {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
+        "anchorAttributes"?: Attr[];
         "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
@@ -4765,6 +4766,7 @@ declare namespace LocalJSX {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
+        "anchorAttributes"?: Attr[];
         "onBeginDelayedSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;

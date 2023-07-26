@@ -71,7 +71,7 @@ export const addSmartSnippetDefaultOptions: Required<AddSmartSnippetOptions> = {
 };
 
 export const addSmartSnippet =
-  (options: AddSmartSnippetOptions = {}) =>
+  (options: AddSmartSnippetOptions = {}, slot?: HTMLElement) =>
   (fixture: TestFixture) => {
     const element = generateComponentHTML(
       'atomic-smart-snippet',
@@ -80,6 +80,9 @@ export const addSmartSnippet =
     element.append(
       ...toArray(options.content ?? addSmartSnippetDefaultOptions.content)
     );
+    if (slot) {
+      element.append(slot);
+    }
     fixture
       .withStyle(
         `html { font-size: ${
