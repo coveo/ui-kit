@@ -12,8 +12,9 @@ import {
 } from '../search-engine/search-engine';
 
 /**
- * TODO: Try to simplify the following types
- * - Can variations with/without props e.g. be combined/simplified?
+ * TODO:
+ * - Try to simplify the following types
+ *  - Can variations with/without props e.g. be combined/simplified?
  * Style
  * - `BuildWith..` -> `BuilderWith..`? Similarly `Fetcher..`, `Hydrator..`
  **/
