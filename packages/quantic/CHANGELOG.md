@@ -1,3 +1,9 @@
+## 2.27.2 (2023-07-27)
+
+### Bug Fixes
+
+- **quantic:** fixed condition to display the no more child results message ([#3059](https://github.com/coveo/ui-kit/issues/3059)) ([9f27c95](https://github.com/coveo/ui-kit/commits/9f27c959c18909d36b98d717ac88f19b983431af))
+
 ## 2.27.1 (2023-07-19)
 
 ### Bug Fixes
