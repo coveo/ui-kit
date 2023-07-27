@@ -1,0 +1,35 @@
+.source-citations {
+  align-items: center;
+}
+
+.source-citations p{
+  min-width: 75px;
+}
+
+.citation {
+  max-width: 170px;
+}
+
+.citation span {
+  max-width: 100%;
+}
+
+.citation span:hover {
+  background-color: var(--lwc-brandLightActive, rbg(227, 229, 237));
+}
+
+.citation a {
+  text-decoration: none;
+  max-width: 100%;
+}
+
+.citation span a:hover {
+  text-decoration: none;
+}
+
+.citation-index {
+  background-color: var(--lwc-brandBackgroundPrimary, rgb(238, 244, 255));
+  min-width: 20px;
+  min-height: 20px;
+  border-radius: 16px;
+}

@@ -1,26 +1,35 @@
 <template>
   <template lwc:if={citations}>
-    <div class="source-citations">
+    <div class="source-citations slds-grid slds-align_vertical-center">
       <p>{labels.learnMore}</p>
-      <ol class="citations-container">
+      <ol class="citations-container slds-list_horizontal slds-wrap">
         <template
           for:each={indexedCitations}
           for:item="citation"
           for:index="index"
         >
-          <li key={citation.id}>
-            <a
-              class="citation-link"
-              title={citation.title}
-              href={citation.uri}
-              target="_blank"
-              onclick={handleCitationClick}
-            >
-              <div>
-                <div>{citation.index}</div>
-              </div>
-              <span class="citation-title">{citation.title}</span>
-            </a>
+          <li key={citation.id} class="citation slds-m-around_xx-small">
+            <span class="slds-badge slds-align_absolute-center">
+              <span class="slds-align_absolute-center">
+                <a
+                  class="slds-grid slds-gutters_x-small"
+                  title={citation.title}
+                  href={citation.uri}
+                  target="_blank"
+                  onclick={handleCitationClick}
+                >
+                  <div class="citation-index slds-align_absolute-center">
+                    <div>{citation.index}</div>
+                  </div>
+                  <p
+                    class="citation-title slds-m-left_x-small slds-truncate"
+                    title={citation.title}
+                  >
+                    {citation.title}
+                  </p>
+                </a>
+              </span>
+            </span>
           </li>
         </template>
       </ol>
