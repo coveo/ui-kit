@@ -391,9 +391,7 @@ export function defineSearchEngine<
           {type: string},
           InferControllerSnapshotsMapFromDefinitions<TControllerDefinitions>
         >
-        // TODO: Fix no-async-promise-executor
-        // eslint-disable-next-line no-async-promise-executor
-      >(async (resolve, reject) => {
+      >((resolve, reject) => {
         const middleware: Middleware = () => (next) => (action) => {
           next(action);
           if (action.type === 'search/executeSearch/fulfilled') {
