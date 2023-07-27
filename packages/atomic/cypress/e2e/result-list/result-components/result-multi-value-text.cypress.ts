@@ -78,6 +78,7 @@ describe('Result MultiValueText Component', () => {
         .withElement(generateComponentHTML(resultMultiValueTextComponent))
         .init();
     });
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 

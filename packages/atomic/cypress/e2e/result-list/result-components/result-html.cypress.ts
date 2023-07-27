@@ -33,7 +33,7 @@ describe('Result Html Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultHtmlSelectors.shadow);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 
@@ -44,7 +44,7 @@ describe('Result Html Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultHtmlSelectors.firstInResult);
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the field value is not a string', () => {
@@ -58,7 +58,7 @@ describe('Result Html Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultHtmlSelectors.firstInResult);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError(false);
   });
 

@@ -25,7 +25,7 @@ describe('Result Timespan Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultTimespanSelectors.shadow);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 

@@ -36,7 +36,7 @@ describe('Result Link Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultLinkSelectors.shadow);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 

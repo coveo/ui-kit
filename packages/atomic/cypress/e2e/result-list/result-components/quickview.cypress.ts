@@ -32,7 +32,7 @@ describe('Quickview Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(QuickviewSelectors.shadow);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 

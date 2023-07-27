@@ -38,7 +38,7 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultNumberSelectors.shadow);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 

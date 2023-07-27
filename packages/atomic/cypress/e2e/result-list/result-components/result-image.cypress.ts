@@ -34,7 +34,7 @@ describe('Result Image Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultImageSelectors.shadow);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 

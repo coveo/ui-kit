@@ -35,7 +35,7 @@ describe('Result Date Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultDateSelectors.shadow);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 
@@ -46,7 +46,7 @@ describe('Result Date Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultDateSelectors.firstInResult);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError(false);
   });
 
@@ -61,7 +61,7 @@ describe('Result Date Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultDateSelectors.firstInResult);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 

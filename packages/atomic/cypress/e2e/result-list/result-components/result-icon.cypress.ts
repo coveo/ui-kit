@@ -29,7 +29,7 @@ describe('Result Icon Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(() => cy.get(resultIconComponent));
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 

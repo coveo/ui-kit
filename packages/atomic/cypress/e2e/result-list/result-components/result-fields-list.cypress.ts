@@ -67,7 +67,7 @@ describe('Result Fields Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(() => cy.get(fieldsListComponent));
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 

@@ -42,6 +42,7 @@ describe('Result Badge Component', () => {
           .init();
       });
 
+      CommonAssertions.assertRemovesComponent();
       CommonAssertions.assertConsoleError();
     });
   });

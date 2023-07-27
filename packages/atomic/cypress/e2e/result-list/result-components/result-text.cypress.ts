@@ -35,7 +35,7 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultTextSelectors.shadow);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError();
   });
 
@@ -67,7 +67,7 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultTextSelectors.firstInResult);
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the field value is not a string', () => {
@@ -81,7 +81,7 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultTextSelectors.firstInResult);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError(false);
   });
 
@@ -98,7 +98,7 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultTextSelectors.firstInResult);
+    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleErrorMessage(
       'atomic-result-text cannot be used with multi value field'
     );
