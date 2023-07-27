@@ -186,7 +186,9 @@ const getFacetRequests = (state: SectionNeededForFacetMetadata) => {
 const getAutomaticFacets = (
   state: SectionNeededForFacetMetadata
 ): AutomaticFacetResponse[] => {
-  return [...Object.values(state.automaticFacetSet.facets)];
+  return [...Object.values(state.automaticFacetSet.set)].map(
+    (facet) => facet.response
+  );
 };
 
 const mapFacetValueToAnalytics = (
@@ -286,7 +288,7 @@ const getFacetRequest = (
     state.categoryFacetSet[facetId]?.request ||
     state.dateFacetSet[facetId]?.request ||
     state.numericFacetSet[facetId]?.request ||
-    state.automaticFacetSet.facets[facetId]
+    state.automaticFacetSet.set[facetId]?.response
   );
 };
 
