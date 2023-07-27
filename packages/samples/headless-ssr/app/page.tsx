@@ -1,4 +1,4 @@
-import {fetchInitialState} from '@/engine';
+import {fetchInitialState} from '@/app/common/engine';
 import SearchPage from './components/search-page';
 
 export default async function Search() {

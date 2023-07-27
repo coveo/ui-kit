@@ -1,6 +1,6 @@
 'use client';
 
-import {hydrateInitialState} from '@/engine';
+import {hydrateInitialState} from '@/app/common/engine';
 import {buildResultList} from '@coveo/headless';
 import {useEffect, useState} from 'react';
 
@@ -12,18 +12,15 @@ export default function SearchPage({engineSnapshot}: {engineSnapshot: any}) {
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
   return (
-    <>
-      <div>Hydrated engine with {state.results.length} results</div>
-      <div>
-        <ul style={{textAlign: 'left'}}>
-          {state.results?.map((result) => (
-            <li key={result.uniqueId}>
-              <p>{result.title}</p>
-              <p>{result.excerpt}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
+    <div>
+      Hydrated engine with {state.results.length} results
+      <ul>
+        {state.results?.map((result) => (
+          <li key={result.uniqueId}>
+            <a href={result.clickUri}>{result.title}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
