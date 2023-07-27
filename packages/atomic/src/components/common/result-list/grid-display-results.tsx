@@ -33,7 +33,6 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
           onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
           href={unfoldedResult.clickUri}
           title={unfoldedResult.title}
-          ariaHidden={true}
         >
           {unfoldedResult.title}
         </LinkWithResultAnalytics>
