@@ -223,13 +223,10 @@ export function buildBreadcrumbManager(
   };
 
   const getAutomaticFacetBreadcrumbs = (): AutomaticFacetBreadcrumb[] => {
-    const set = getState().automaticFacetSet?.set;
-    if (set) {
-      return Object.values(set).map((slice) =>
-        buildAutomaticFacetBreadcrumb(slice.response)
-      );
-    }
-    return [];
+    const set = getState().automaticFacetSet?.set ?? {};
+    return Object.values(set).map((slice) =>
+      buildAutomaticFacetBreadcrumb(slice.response)
+    );
   };
 
   const buildAutomaticFacetBreadcrumb = (
