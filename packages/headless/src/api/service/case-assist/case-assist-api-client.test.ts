@@ -73,7 +73,7 @@ describe('case assist api client', () => {
         accessToken: request.accessToken,
         origin: 'caseAssistApiFetch',
         requestParams: {
-          visitorId: request.clientId,
+          clientId: request.clientId,
           locale: request.locale,
           fields: request.fields,
         },
@@ -191,7 +191,7 @@ describe('case assist api client', () => {
         accessToken: request.accessToken,
         origin: 'caseAssistApiFetch',
         requestParams: {
-          visitorId: request.clientId,
+          clientId: request.clientId,
           locale: request.locale,
           fields: request.fields,
           context: {
