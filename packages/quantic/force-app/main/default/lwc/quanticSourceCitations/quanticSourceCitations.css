@@ -2,10 +2,6 @@
   align-items: center;
 }
 
-.source-citations p{
-  min-width: 75px;
-}
-
 .citation {
   max-width: 170px;
 }
@@ -15,7 +11,7 @@
 }
 
 .citation span:hover {
-  background-color: var(--lwc-brandLightActive, rbg(227, 229, 237));
+  background-color: #eef4ff;
 }
 
 .citation a {
@@ -25,11 +21,21 @@
 
 .citation span a:hover {
   text-decoration: none;
+  cursor: pointer;
+}
+
+.citation span:hover .citation-title {
+  color: var(--lwc-brandAccessible, #0176d3);
 }
 
 .citation-index {
-  background-color: var(--lwc-brandBackgroundPrimary, rgb(238, 244, 255));
+  background-color: #eef4ff;
   min-width: 20px;
   min-height: 20px;
   border-radius: 16px;
+}
+
+.citation-title {
+  color: var(--lwc-brandDark, #080707);
+  font-weight: var(--lwc-fontWeightRegular);
 }

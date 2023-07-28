@@ -1,31 +1,39 @@
 <template>
-  <template lwc:if={citations}>
-    <div class="source-citations slds-grid slds-align_vertical-center">
+  <template if:true={shouldDisplayCitations}>
+    <div
+      class="source-citations slds-grid slds-align_vertical-center slds-col_bump-left"
+    >
       <p>{labels.learnMore}</p>
-      <ol class="citations-container slds-list_horizontal slds-wrap">
+      <ol class="citations-container slds-list_horizontal slds-wrap slds-m-left_x-small">
         <template
           for:each={indexedCitations}
-          for:item="citation"
+          for:item="indexedCitation"
           for:index="index"
         >
-          <li key={citation.id} class="citation slds-m-around_xx-small">
-            <span class="slds-badge slds-align_absolute-center">
+          <li
+            key={indexedCitation.id}
+            data-key={indexedCitation.id}
+            class="citation slds-m-around_xx-small"
+            onclick={handleCitationClick}
+          >
+            <span
+              class="slds-badge slds-badge_lightest slds-align_absolute-center"
+            >
               <span class="slds-align_absolute-center">
                 <a
-                  class="slds-grid slds-gutters_x-small"
-                  title={citation.title}
-                  href={citation.uri}
+                  class="slds-grid slds-gutters_x-small slds-grid_vertical-align-center"
+                  title={indexedCitation.title}
+                  href={indexedCitation.clickUri}
                   target="_blank"
-                  onclick={handleCitationClick}
                 >
                   <div class="citation-index slds-align_absolute-center">
-                    <div>{citation.index}</div>
+                    <div>{indexedCitation.index}</div>
                   </div>
                   <p
-                    class="citation-title slds-m-left_x-small slds-truncate"
-                    title={citation.title}
+                    class="citation-title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
+                    title={indexedCitation.title}
                   >
-                    {citation.title}
+                    {indexedCitation.title}
                   </p>
                 </a>
               </span>
