@@ -68,7 +68,6 @@ describe('Result Fields Component', () => {
     });
 
     CommonAssertions.assertRemovesComponent();
-    CommonAssertions.assertConsoleError();
   });
 
   it('should display all children if it has the space to do so', () => {

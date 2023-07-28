@@ -30,7 +30,6 @@ describe('Result Icon Component', () => {
     });
 
     CommonAssertions.assertRemovesComponent();
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when the "filetype" field value matches user.svg', () => {

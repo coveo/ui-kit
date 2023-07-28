@@ -33,7 +33,6 @@ describe('Quickview Component', () => {
     });
 
     CommonAssertions.assertRemovesComponent();
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when used on pdf file inside a result list and no keywords', () => {

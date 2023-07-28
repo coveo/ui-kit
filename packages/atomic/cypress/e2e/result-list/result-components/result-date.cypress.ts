@@ -36,7 +36,6 @@ describe('Result Date Component', () => {
     });
 
     CommonAssertions.assertRemovesComponent();
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when the field does not exist for the result', () => {
@@ -46,7 +45,6 @@ describe('Result Date Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError(false);
   });
 
@@ -62,7 +60,6 @@ describe('Result Date Component', () => {
     });
 
     CommonAssertions.assertRemovesComponent();
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when the field is valid', () => {

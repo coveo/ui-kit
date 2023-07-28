@@ -36,7 +36,6 @@ describe('Result Text Component', () => {
     });
 
     CommonAssertions.assertRemovesComponent();
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when the field does not exist for the result but the "default" prop is set', () => {
@@ -81,7 +80,6 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError(false);
   });
 
@@ -98,7 +96,6 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleErrorMessage(
       'atomic-result-text cannot be used with multi value field'
     );

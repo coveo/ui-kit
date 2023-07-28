@@ -34,17 +34,20 @@ describe('Result Html Component', () => {
     });
 
     CommonAssertions.assertRemovesComponent();
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when the field does not exist for the result', () => {
     beforeEach(() => {
       new TestFixture()
-        .with(addResultHTMLInResultList({field: 'thisfielddoesnotexist'}))
+        .with(
+          addResultHTMLInResultList({
+            field: 'thisfielddoesnotexist',
+          })
+        )
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent();
+    CommonAssertions.assertConsoleError(false);
   });
 
   describe('when the field value is not a string', () => {

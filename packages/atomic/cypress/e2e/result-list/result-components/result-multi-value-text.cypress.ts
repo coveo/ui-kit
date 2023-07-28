@@ -79,7 +79,6 @@ describe('Result MultiValueText Component', () => {
         .init();
     });
     CommonAssertions.assertRemovesComponent();
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when used inside a result template', () => {

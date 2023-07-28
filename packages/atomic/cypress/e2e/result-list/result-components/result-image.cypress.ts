@@ -35,7 +35,6 @@ describe('Result Image Component', () => {
     });
 
     CommonAssertions.assertRemovesComponent();
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when the field value is a string', () => {

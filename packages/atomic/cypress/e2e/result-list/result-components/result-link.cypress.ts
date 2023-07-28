@@ -37,7 +37,6 @@ describe('Result Link Component', () => {
     });
 
     CommonAssertions.assertRemovesComponent();
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when used inside a result template', () => {

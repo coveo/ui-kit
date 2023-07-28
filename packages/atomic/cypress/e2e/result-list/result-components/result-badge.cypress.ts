@@ -55,6 +55,8 @@ describe('Result Badge Component', () => {
             .with(addResultBadgeInResultList({field: 'thisfielddoesnotexist'}))
             .init();
         });
+
+        CommonAssertions.assertConsoleError();
       });
 
       describe('when the field value is a string', () => {
