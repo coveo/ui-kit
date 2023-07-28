@@ -313,6 +313,19 @@ export type InferControllerSnapshotsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
 > = {[K in keyof TControllers]: {initialState: TControllers[K]}};
 
+export type InferHydrationResult<
+  T extends EngineDefinition<
+    CoreEngine,
+    ControllerDefinitionsMap<CoreEngine, Controller>,
+    any
+  >
+> = T extends EngineDefinition<infer TEngine, infer TControllers, infer _>
+  ? EngineAndControllers<
+      TEngine,
+      InferControllersMapFromDefinition<TControllers>
+    >
+  : never;
+
 export interface ControllerSnapshot<TState> {
   initialState: TState;
 }
@@ -394,7 +407,8 @@ export function defineSearchEngine<
           {type: string},
           InferControllerSnapshotsMapFromDefinitions<TControllerDefinitions>
         >
-      >((resolve, reject) => {
+        // eslint-disable-next-line no-async-promise-executor
+      >(async (resolve, reject) => {
         const middleware: Middleware = () => (next) => (action) => {
           next(action);
           if (action.type === 'search/executeSearch/fulfilled') {

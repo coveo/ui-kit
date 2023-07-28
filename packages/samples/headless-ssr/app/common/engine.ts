@@ -1,10 +1,16 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
-import {defineSearchEngine} from '@coveo/headless/ssr';
+import {defineSearchEngine, InferHydrationResult} from '@coveo/headless/ssr';
 
-export const {fetchInitialState, hydrateInitialState} = defineSearchEngine({
+const engineDefinition = defineSearchEngine({
   configuration: {
     ...getSampleSearchEngineConfiguration(),
     analytics: {enabled: false},
   },
   controllers: {},
 });
+
+export type SearchHydrationResult = InferHydrationResult<
+  typeof engineDefinition
+>;
+
+export const {fetchInitialState, hydrateInitialState} = engineDefinition;
