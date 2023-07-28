@@ -1,3 +1,16 @@
+# 2.23.0 (2023-07-27)
+
+### Bug Fixes
+
+- **headless:** fixed analytics metadata for instant results search ([#3058](https://github.com/coveo/ui-kit/issues/3058)) ([8e6f33a](https://github.com/coveo/ui-kit/commits/8e6f33ac17e567c0a20699b482a6c291b1212314))
+- **headless:** reset pagination when toggling automatic facet ([#3056](https://github.com/coveo/ui-kit/issues/3056)) ([2c3c4e4](https://github.com/coveo/ui-kit/commits/2c3c4e4c06df17b29a24faf797bfbc9869b0bb13))
+
+### Features
+
+- **headless:** add loadClickAnalyticsActions for PLP to fix interactive result ([#3049](https://github.com/coveo/ui-kit/issues/3049)) ([6f936ea](https://github.com/coveo/ui-kit/commits/6f936ea804f5251e919982b462f075ebbb80660b))
+- **headless:** add url manager support for automatic facets ([#3033](https://github.com/coveo/ui-kit/issues/3033)) ([0e85aca](https://github.com/coveo/ui-kit/commits/0e85aca2123d0acf0b0b03f374008f1e0f6792a0))
+- **headless:** breadcrumb manager facet exclusion ([#3043](https://github.com/coveo/ui-kit/issues/3043)) ([21d8259](https://github.com/coveo/ui-kit/commits/21d8259f37b9431c1c758a0bb68956d23cde1e5f))
+
 # 2.22.0 (2023-07-19)
 
 ### Bug Fixes

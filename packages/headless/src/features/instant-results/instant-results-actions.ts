@@ -82,6 +82,8 @@ export interface FetchInstantResultsActionCreatorPayload {
 export interface FetchInstantResultsThunkReturn {
   results: Result[];
   searchUid: string;
+  totalCountFiltered: number;
+  duration: number;
 }
 
 export type StateNeededByInstantResults = StateNeededByExecuteSearch &
