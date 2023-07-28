@@ -7,6 +7,8 @@ import {
 import * as BreadboxAssertions from './breadbox-assertions';
 import {breadboxComponent, BreadboxSelectors} from './breadbox-selectors';
 import * as CommonAssertions from './common-assertions';
+import {addAutomaticFacetBuilder} from './facets/automatic-facet-builder/automatic-facet-builder-actions';
+import {AutomaticFacetSelectors} from './facets/automatic-facet/automatic-facet-selectors';
 import {
   addCategoryFacet,
   canadaHierarchy,
@@ -53,18 +55,25 @@ describe('Breadbox Test Suites', () => {
       .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
       .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
       .with(addCategoryFacet())
+      .with(
+        addAutomaticFacetBuilder({
+          'desired-count': '1',
+          'are-collapsed': 'false',
+        })
+      )
 
       .init();
   }
 
-  describe('when selecting a standard facet and a numeric facet', () => {
-    const selectionIndex = 1;
+  describe('when selecting a standard facet, a numeric facet and an automatic facet', () => {
+    const selectionIndex = 2;
     function setupBreadboxWithSelectedFacetAndNumericFacet(
       props: TagProps = {}
     ) {
       setupBreadboxWithMultipleFacets(props);
       selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
+      selectIdleCheckboxValueAt(AutomaticFacetSelectors, selectionIndex);
     }
 
     describe('with i18n translated labels', () => {
@@ -96,7 +105,7 @@ describe('Breadbox Test Suites', () => {
         numericFacetLabel
       );
       BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
-      BreadboxAssertions.assertBreadcrumbDisplayLength(2);
+      BreadboxAssertions.assertBreadcrumbDisplayLength(3);
     });
 
     describe('when selecting "Clear all" button', () => {
@@ -114,6 +123,10 @@ describe('Breadbox Test Suites', () => {
         );
         CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
           NumericFacetSelectors,
+          0
+        );
+        CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
+          AutomaticFacetSelectors,
           0
         );
         ColorFacetAssertions.assertNumberOfSelectedBoxValues(0);

@@ -3,6 +3,7 @@ import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-s
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../search/search-actions';
 import {FacetValueState} from '../facet-api/value';
@@ -174,7 +175,7 @@ describe('automatic-facet-set slice', () => {
   });
 
   describe('#restoreSearchParameters', () => {
-    it('it sets #values to the selected values in the payload when a facet is found in the #af payload', () => {
+    it('sets #values to the selected values in the payload when a facet is found in the #af payload', () => {
       const field = 'field';
       const value = 'a';
       const af = {[field]: [value]};
@@ -184,6 +185,43 @@ describe('automatic-facet-set slice', () => {
       const selectedValue = buildMockFacetValue({value, state: 'selected'});
 
       expect(finalState.set[field].response.values).toEqual([selectedValue]);
+    });
+  });
+
+  describe('#deselectAllBreadcrumbs', () => {
+    it('sets all responses #values to "idle"', () => {
+      const field1 = 'field1';
+      const field2 = 'field2';
+      const response1 = buildMockAutomaticFacetResponse({
+        field: field1,
+        values: [
+          buildMockFacetValue({value: 'value1', state: 'selected'}),
+          buildMockFacetValue({value: 'value2', state: 'selected'}),
+        ],
+      });
+      const response2 = buildMockAutomaticFacetResponse({
+        field: field2,
+        values: [
+          buildMockFacetValue({value: 'value1', state: 'selected'}),
+          buildMockFacetValue({value: 'value2', state: 'selected'}),
+        ],
+      });
+      const slice1 = buildMockAutomaticFacetSlice({response: response1});
+      const slice2 = buildMockAutomaticFacetSlice({response: response2});
+
+      state.set[field1] = slice1;
+      state.set[field2] = slice2;
+      const action = deselectAllBreadcrumbs();
+
+      const finalState = automaticFacetSetReducer(state, action);
+      const targetValues = [
+        ...finalState.set[field1].response.values,
+        ...finalState.set[field2].response.values,
+      ];
+
+      expect(targetValues.every((value) => value.state === 'idle')).toEqual(
+        true
+      );
     });
   });
 });
