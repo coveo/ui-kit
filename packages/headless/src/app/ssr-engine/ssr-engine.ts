@@ -13,6 +13,7 @@ import {
 
 /**
  * TODO:
+ * - Simplify (number of steps required for) async hydration
  * - Try to simplify the following types
  *  - Can variations with/without props e.g. be combined/simplified?
  * Style
