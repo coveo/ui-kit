@@ -1,10 +1,12 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {undoable} from '../../app/undoable';
 import {SortState} from '../../controllers/sort/headless-sort';
+import {FacetValue} from '../../product-listing.index';
 import {arrayEqual} from '../../utils/compare-utils';
 import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
 import {ContextState} from '../context/context-state';
 import {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state';
+import {AutomaticFacetSetState} from '../facets/automatic-facet-set/automatic-facet-set-state';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
 import {AnyFacetSetState} from '../facets/generic/interfaces/generic-facet-section';
@@ -43,6 +45,7 @@ const isEqual = (current: HistoryState, next: HistoryState) => {
     isFacetsEqual(current.facetSet, next.facetSet) &&
     isFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
     isFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
+    isAutomaticFacetsEqual(current.automaticFacetSet, next.automaticFacetSet) &&
     isCategoryFacetsEqual(current.categoryFacetSet, next.categoryFacetSet) &&
     isPaginationEqual(current.pagination, next.pagination) &&
     isQueryEqual(current.query, next.query) &&
@@ -152,6 +155,32 @@ const isCategoryFacetsEqual = (
   return true;
 };
 
+const isAutomaticFacetsEqual = (
+  current: AutomaticFacetSetState,
+  next: AutomaticFacetSetState
+) => {
+  for (const [key, value] of Object.entries(next.set)) {
+    if (!current.set[key]) {
+      return false;
+    }
+
+    const currentSelectedValues = (
+      current.set[key].response.values as FacetValue[]
+    ).filter((value) => value.state === 'selected');
+    const nextSelectedValues = (value.response.values as FacetValue[]).filter(
+      (value) => value.state === 'selected'
+    );
+
+    if (
+      JSON.stringify(currentSelectedValues) !==
+      JSON.stringify(nextSelectedValues)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
 const isPaginationEqual = (current: PaginationState, next: PaginationState) =>
   current.firstResult === next.firstResult &&
   current.numberOfResults === next.numberOfResults;

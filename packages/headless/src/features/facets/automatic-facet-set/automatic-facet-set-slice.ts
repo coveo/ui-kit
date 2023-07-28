@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {FacetValue} from '../../../product-listing.index';
+import {change} from '../../history/history-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../search/search-actions';
 import {
@@ -54,6 +55,7 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const af = action.payload.af ?? {};
+        state.set = {};
 
         for (const field in af) {
           const response = buildTemporaryAutomaticFacetResponse(field);
@@ -64,7 +66,11 @@ export const automaticFacetSetReducer = createReducer(
 
           state.set[field] = {response};
         }
-      });
+      })
+      .addCase(
+        change.fulfilled,
+        (state, action) => action.payload?.automaticFacetSet ?? state
+      );
   }
 );
 
