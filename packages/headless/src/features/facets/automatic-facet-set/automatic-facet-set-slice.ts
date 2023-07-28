@@ -90,7 +90,7 @@ export const automaticFacetSetReducer = createReducer(
           return;
         }
 
-        if (Object.keys(action.payload.automaticFacetSet).length === 0) {
+        if (Object.keys(action.payload.automaticFacetSet.set).length === 0) {
           return;
         }
 
