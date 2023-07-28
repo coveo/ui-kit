@@ -28,6 +28,8 @@ const initialEmptyCache: () => InstantResultCache = () => ({
   expiresAt: 0,
   isActive: true,
   searchUid: '',
+  totalCountFiltered: 0,
+  duration: 0,
 });
 
 describe('instant results slice', () => {
@@ -190,7 +192,12 @@ describe('instant results slice', () => {
       it('updates results in correct searchbox and query cache', () => {
         const query = 'some_query';
         const action = fetchInstantResults.fulfilled(
-          {results: [buildMockResult()], searchUid: 'someid'},
+          {
+            results: [buildMockResult()],
+            searchUid: 'someid',
+            totalCountFiltered: 1,
+            duration: 2,
+          },
           'req_id',
           {
             id: id1,
@@ -218,6 +225,8 @@ describe('instant results slice', () => {
           expiresAt: 0,
           isActive: true,
           searchUid: 'someid',
+          totalCountFiltered: 1,
+          duration: 2,
         });
 
         expect(instantResultsReducer(initialState, action)).toEqual(
@@ -227,7 +236,12 @@ describe('instant results slice', () => {
       it('sets correct isLoading, error and expiresAt properties', () => {
         const query = 'some_query';
         const action = fetchInstantResults.fulfilled(
-          {results: [buildMockResult()], searchUid: 'someid'},
+          {
+            results: [buildMockResult()],
+            searchUid: 'someid',
+            duration: 1,
+            totalCountFiltered: 2,
+          },
           'req_id',
           {
             id: id1,
@@ -252,6 +266,8 @@ describe('instant results slice', () => {
           expiresAt: Date.now() + 10000,
           isActive: true,
           searchUid: 'someid',
+          duration: 1,
+          totalCountFiltered: 2,
         });
 
         expect(instantResultsReducer(initialState, action)).toEqual(

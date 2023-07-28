@@ -24,7 +24,7 @@ interface ResultChildrenProps {
   getNoResultText: () => string;
   getDisplayConfig: () => DisplayConfig;
   getImageSize: () => ResultDisplayImageSize | undefined;
-  renderChild: (child: FoldedResult, isLast: boolean) => any;
+  renderChild: (child: FoldedResult, isLast: boolean) => VNode;
   setInitialChildren: (initialChildren: FoldedResult[]) => void;
   toggleShowInitialChildren: () => void;
 }

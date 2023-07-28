@@ -1,3 +1,12 @@
+# 2.37.0 (2023-07-27)
+
+### Features
+
+- **atomic:** add placeholders for automatic facet ([#3055](https://github.com/coveo/ui-kit/issues/3055)) ([c928679](https://github.com/coveo/ui-kit/commits/c9286792285406088033005e77efc10e47560673))
+- **atomic:** empty no-result-text prop hides component when no child results found ([#3042](https://github.com/coveo/ui-kit/issues/3042)) ([24df05b](https://github.com/coveo/ui-kit/commits/24df05b76453a2d8ad1d66843f6f9605e7498cad))
+- **headless:** breadcrumb manager facet exclusion ([#3043](https://github.com/coveo/ui-kit/issues/3043)) ([21d8259](https://github.com/coveo/ui-kit/commits/21d8259f37b9431c1c758a0bb68956d23cde1e5f))
+- **smart-snippet:** allow link \_target modifs ([#3026](https://github.com/coveo/ui-kit/issues/3026)) ([8a9342a](https://github.com/coveo/ui-kit/commits/8a9342ada0bc52c7511f67ab7244e032241bfa4d))
+
 # 2.36.0 (2023-07-19)
 
 ### Bug Fixes

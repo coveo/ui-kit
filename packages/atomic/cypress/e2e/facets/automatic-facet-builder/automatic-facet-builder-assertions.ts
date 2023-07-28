@@ -13,3 +13,7 @@ export function assertCollapseAutomaticFacets(isCollapsed: boolean) {
     .find('[part="values"]')
     .should(isCollapsed ? 'not.exist' : 'be.visible');
 }
+
+export function assertDisplayPlaceholder() {
+  cy.get(automaticFacetBuilderComponent).find('[part="placeholder"]');
+}
