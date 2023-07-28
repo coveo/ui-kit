@@ -13,7 +13,7 @@ describe('case assist api client', () => {
   const accessToken = 'some access token';
   const locale = 'en-CA';
   const caseAssistId = 'some case assist id';
-  const visitorId = 'some visitor id';
+  const clientId = 'some client id';
 
   let client: CaseAssistAPIClient;
   let platformCallMock: jest.Mock;
@@ -41,7 +41,7 @@ describe('case assist api client', () => {
       organizationId: orgId,
       accessToken: accessToken,
       caseAssistId: caseAssistId,
-      visitorId: visitorId,
+      clientId: clientId,
       locale: locale,
       fields: {},
       debug: false,
@@ -73,7 +73,7 @@ describe('case assist api client', () => {
         accessToken: request.accessToken,
         origin: 'caseAssistApiFetch',
         requestParams: {
-          visitorId: request.visitorId,
+          visitorId: request.clientId,
           locale: request.locale,
           fields: request.fields,
         },
@@ -156,7 +156,7 @@ describe('case assist api client', () => {
       organizationId: orgId,
       accessToken: accessToken,
       caseAssistId: caseAssistId,
-      visitorId: visitorId,
+      clientId: clientId,
       locale: locale,
       fields: {},
       debug: false,
@@ -191,7 +191,7 @@ describe('case assist api client', () => {
         accessToken: request.accessToken,
         origin: 'caseAssistApiFetch',
         requestParams: {
-          visitorId: request.visitorId,
+          visitorId: request.clientId,
           locale: request.locale,
           fields: request.fields,
           context: {

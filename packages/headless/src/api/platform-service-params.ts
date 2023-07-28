@@ -24,8 +24,8 @@ export interface NumberOfResultsParam {
   numberOfResults?: number;
 }
 
-export interface VisitorIDParam {
-  visitorId?: string;
+export interface ClientIDParam {
+  clientId?: string;
 }
 
 export interface FoldingParam {
