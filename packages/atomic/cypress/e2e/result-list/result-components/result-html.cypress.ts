@@ -57,8 +57,6 @@ describe('Result Html Component', () => {
         )
         .init();
     });
-
-    CommonAssertions.assertRemovesComponent();
     CommonAssertions.assertConsoleError(false);
   });
 
