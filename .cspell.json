@@ -257,6 +257,7 @@
     "ytvideoduration",
     "ytvideoid",
     "ytviewcount",
-    "genqa"
+    "genqa",
+    "ellipsed"
   ]
 }
