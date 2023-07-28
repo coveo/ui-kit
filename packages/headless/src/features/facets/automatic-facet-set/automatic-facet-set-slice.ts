@@ -1,9 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {FacetValue} from '../../../controllers/core/facets/facet/headless-core-facet';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {change} from '../../history/history-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../search/search-actions';
+import {FacetValue} from '../facet-set/interfaces/response';
 import {
   deselectAllAutomaticFacetValues,
   setDesiredCount,

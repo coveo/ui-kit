@@ -1,4 +1,4 @@
-import {FacetValue} from '../../../../controllers/core/facets/facet/headless-core-facet';
+import {FacetValue} from '../../facet-set/interfaces/response';
 
 export type AutomaticFacetRequest = {
   field: string;

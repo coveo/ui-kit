@@ -1,6 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {undoable} from '../../app/undoable';
-import {FacetValue} from '../../controllers/core/facets/facet/headless-core-facet';
 import {SortState} from '../../controllers/sort/headless-sort';
 import {arrayEqual} from '../../utils/compare-utils';
 import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
@@ -9,6 +8,7 @@ import {DictionaryFieldContextState} from '../dictionary-field-context/dictionar
 import {AutomaticFacetSetState} from '../facets/automatic-facet-set/automatic-facet-set-state';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
+import {FacetValue} from '../facets/facet-set/interfaces/response';
 import {AnyFacetSetState} from '../facets/generic/interfaces/generic-facet-section';
 import {PaginationState} from '../pagination/pagination-state';
 import {QueryState} from '../query/query-state';
