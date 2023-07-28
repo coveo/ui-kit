@@ -9,6 +9,8 @@ export type InstantResultCache = {
   results: Result[];
   isActive: boolean;
   searchUid: string;
+  totalCountFiltered: number;
+  duration: number;
 };
 
 export type InstantResultsState = Record<

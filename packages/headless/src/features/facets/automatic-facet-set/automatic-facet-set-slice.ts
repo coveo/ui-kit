@@ -1,6 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {FacetValue} from '../../../product-listing.index';
 import {change} from '../../history/history-actions';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../search/search-actions';
 import {
@@ -70,7 +71,12 @@ export const automaticFacetSetReducer = createReducer(
       .addCase(
         change.fulfilled,
         (state, action) => action.payload?.automaticFacetSet ?? state
-      );
+      )
+      .addCase(deselectAllBreadcrumbs, (state) => {
+        Object.values(state.set).forEach(({response}) => {
+          response.values.forEach((value) => (value.state = 'idle'));
+        });
+      });
   }
 );
 
