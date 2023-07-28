@@ -95,7 +95,7 @@ export interface EngineAndControllers<
 }
 
 export interface OptionsExtender<TOptions> {
-  (options: TOptions): TOptions;
+  (options: TOptions): TOptions | Promise<TOptions>;
 }
 
 export interface EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
@@ -131,7 +131,7 @@ export interface BuildWithProps<
       TEngineOptions,
       TControllersProps
     >
-  ): EngineAndControllers<TEngine, TControllersMap>;
+  ): Promise<EngineAndControllers<TEngine, TControllersMap>>;
 }
 
 export interface BuildWithoutProps<
@@ -144,7 +144,7 @@ export interface BuildWithoutProps<
    */
   build(
     options?: EngineDefinitionBuildOptionsWithoutProps<TEngineOptions>
-  ): EngineAndControllers<TEngine, TControllersMap>;
+  ): Promise<EngineAndControllers<TEngine, TControllersMap>>;
 }
 
 export type FetchInitialStateWithoutProps<
@@ -179,7 +179,7 @@ export type HydrateInitialStateWithoutProps<
    */
   hydrateInitialState(
     options: EngineDefinitionHydrateOptionsWithoutProps<TSearchFulfilledAction>
-  ): EngineAndControllers<TEngine, TControllers>;
+  ): Promise<EngineAndControllers<TEngine, TControllers>>;
 };
 
 export interface EngineDefinitionWithoutProps<
@@ -243,7 +243,7 @@ export type HydrateInitialStateWithProps<
       TSearchFulfilledAction,
       TControllersProps
     >
-  ): EngineAndControllers<TEngine, TControllers>;
+  ): Promise<EngineAndControllers<TEngine, TControllers>>;
 };
 
 export interface EngineDefinitionWithProps<
@@ -352,13 +352,15 @@ export function defineSearchEngine<
   controllers: controllerDefinitions,
   ...engineOptions
 }: SearchEngineDefinitionOptions<TControllerDefinitions>): SearchEngineDefinition<TControllerDefinitions> {
-  const build: SearchEngineDefinition<TControllerDefinitions>['build'] = (
+  const build: SearchEngineDefinition<TControllerDefinitions>['build'] = async (
     ...[buildOptions]: Parameters<
       SearchEngineDefinition<TControllerDefinitions>['build']
     >
   ) => {
     const engine = buildSearchEngine(
-      buildOptions?.extend ? buildOptions.extend(engineOptions) : engineOptions
+      buildOptions?.extend
+        ? await buildOptions.extend(engineOptions)
+        : engineOptions
     );
     const controllerOptions =
       buildOptions && 'controllers' in buildOptions
@@ -411,7 +413,7 @@ export function defineSearchEngine<
           ...options,
           middlewares: [...(options.middlewares ?? []), middleware],
         });
-        const {engine, controllers} = build({
+        const {engine, controllers} = await build({
           extend,
           ...(executeOptions?.controllers && {
             controllers: executeOptions.controllers,
@@ -421,12 +423,12 @@ export function defineSearchEngine<
       });
 
   const hydrateInitialState: SearchEngineDefinition<TControllerDefinitions>['hydrateInitialState'] =
-    (
+    async (
       ...[hydrateOptions]: Parameters<
         SearchEngineDefinition<TControllerDefinitions>['hydrateInitialState']
       >
     ) => {
-      const {engine, controllers} = build(
+      const {engine, controllers} = await build(
         'controllers' in hydrateOptions
           ? ({
               controllers: hydrateOptions.controllers,
