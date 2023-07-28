@@ -1,4 +1,4 @@
-import {FacetValue} from '../../../../product-listing.index';
+import {FacetValue} from '../../../../controllers/core/facets/facet/headless-core-facet';
 
 export type AutomaticFacetRequest = {
   field: string;

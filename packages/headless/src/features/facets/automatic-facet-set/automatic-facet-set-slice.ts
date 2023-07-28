@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {FacetValue} from '../../../product-listing.index';
+import {FacetValue} from '../../../controllers/core/facets/facet/headless-core-facet';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {change} from '../../history/history-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
@@ -56,22 +56,46 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const af = action.payload.af ?? {};
-        state.set = {};
+
+        if (!state.set) {
+          state.set = {};
+        }
 
         for (const field in af) {
-          const response = buildTemporaryAutomaticFacetResponse(field);
-          const values = af[field].map((value) =>
-            buildTemporarySelectedFacetValue(value)
+          const response =
+            state.set[field]?.response ??
+            buildTemporaryAutomaticFacetResponse(field);
+
+          const selectedValues = af[field] || [];
+          const idleValues = response.values.filter(
+            (facetValue) => !selectedValues.includes(facetValue.value)
           );
-          response.values.push(...values);
+
+          response.values = [
+            ...selectedValues.map((value) => {
+              const facetValueObject = response.values.find(
+                (facetValue) => facetValue.value === value
+              );
+              const numberOfResults = facetValueObject?.numberOfResults;
+              return buildTemporarySelectedFacetValue(value, numberOfResults);
+            }),
+            ...idleValues.map(restoreFacetValueToIdleState),
+          ];
 
           state.set[field] = {response};
         }
       })
-      .addCase(
-        change.fulfilled,
-        (state, action) => action.payload?.automaticFacetSet ?? state
-      )
+      .addCase(change.fulfilled, (_, action) => {
+        if (!action.payload) {
+          return;
+        }
+
+        if (Object.keys(action.payload.automaticFacetSet).length === 0) {
+          return;
+        }
+
+        return action.payload.automaticFacetSet;
+      })
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.values(state.set).forEach(({response}) => {
           response.values.forEach((value) => (value.state = 'idle'));
@@ -92,10 +116,17 @@ function buildTemporaryAutomaticFacetResponse(
   };
 }
 
-function buildTemporarySelectedFacetValue(value: string): FacetValue {
+function buildTemporarySelectedFacetValue(
+  value: string,
+  numberOfResults = 0
+): FacetValue {
   return {
     value,
     state: 'selected',
-    numberOfResults: 0,
+    numberOfResults,
   };
+}
+
+function restoreFacetValueToIdleState(facetValue: FacetValue): FacetValue {
+  return {...facetValue, state: 'idle'};
 }
