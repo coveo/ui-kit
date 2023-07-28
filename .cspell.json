@@ -262,6 +262,8 @@
     "ytlikecount",
     "ytvideoduration",
     "ytvideoid",
-    "ytviewcount"
+    "ytviewcount",
+    "genqa",
+    "ellipsed"
   ]
 }

@@ -1,5 +1,6 @@
 import {configuration} from '../../app/common-reducers';
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
+import {toggleSelectAutomaticFacetValue} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
@@ -35,6 +36,8 @@ import {
   createMockState,
   MockSearchEngine,
 } from '../../test';
+import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response';
+import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response';
 import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
@@ -53,6 +56,7 @@ import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {
+  AutomaticFacetBreadcrumb,
   BreadcrumbManager,
   CategoryFacetBreadcrumb,
   DateFacetBreadcrumb,
@@ -503,6 +507,54 @@ describe('headless breadcrumb manager', () => {
           expect(action).toBeTruthy();
         });
       });
+    });
+  });
+
+  describe('automatic facet breadcrumbs', () => {
+    let mockSelectedValue: FacetValue;
+    let automaticFacetBreadcrumbs: AutomaticFacetBreadcrumb[];
+
+    beforeEach(() => {
+      mockSelectedValue = buildMockFacetValue({state: 'selected'});
+
+      state = createMockState({
+        automaticFacetSet: {
+          desiredCount: 1,
+          set: {
+            [facetId]: buildMockAutomaticFacetSlice({
+              response: buildMockAutomaticFacetResponse({
+                field: facetId,
+                values: [mockSelectedValue],
+              }),
+            }),
+          },
+        },
+      });
+      initController();
+
+      automaticFacetBreadcrumbs =
+        breadcrumbManager.state.automaticFacetBreadcrumbs;
+    });
+
+    it('#state get automatic facet breadcrumbs correctly', () => {
+      expect(automaticFacetBreadcrumbs[0].values[0].value).toBe(
+        mockSelectedValue
+      );
+    });
+
+    it('dispatches an executeSearch action on selection', () => {
+      automaticFacetBreadcrumbs[0].values[0].deselect();
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
+
+    it('dispatches an toggleSelectAutomaticFacetValue action on selection', () => {
+      automaticFacetBreadcrumbs[0].values[0].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleSelectAutomaticFacetValue({
+          field: facetId,
+          selection: mockSelectedValue,
+        })
+      );
     });
   });
 
