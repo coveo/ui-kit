@@ -81,6 +81,10 @@ const exampleCollectionWithAdditionalGrandChild = {
   isLoadingMoreResults: false,
   moreResultsAvailable: false,
 };
+const exampleCollectionWithNoMoreResults = {
+  ...exampleCollection,
+  moreResultsAvailable: false,
+};
 
 const defaultOptions = {
   engineId: exampleEngineId,
@@ -287,6 +291,49 @@ describe('c-quantic-result-children', () => {
         expectProperChildResultsDisplay(element, exampleCollection);
         expect(foldedResultToggleButton).toBeNull();
         expect(noMoreChildrenMessage).not.toBeNull();
+      });
+    });
+
+    describe('when executing a search query after loading the child results', () => {
+      it('should no longer display the no more child results message and display the child results toggle', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        await clickFoldedResultToggleButton(element, loadRelatedItems);
+
+        expect(functionsMocks.loadCollection).toHaveBeenCalledTimes(1);
+        element.collection = exampleCollectionWithNoMoreResults;
+        await flushPromises();
+
+        let foldedResultToggleButton = element.shadowRoot.querySelector(
+          selectors.toggleButton
+        );
+        let noMoreChildrenMessage = element.shadowRoot.querySelector(
+          selectors.noMoreChildrenMessage
+        );
+
+        expectProperChildResultsDisplay(
+          element,
+          exampleCollectionWithNoMoreResults
+        );
+        expect(foldedResultToggleButton).toBeNull();
+        expect(noMoreChildrenMessage).not.toBeNull();
+
+        // Simulates new search query
+        element.collection = exampleCollection;
+        await flushPromises();
+
+        foldedResultToggleButton = element.shadowRoot.querySelector(
+          selectors.toggleButton
+        );
+        noMoreChildrenMessage = element.shadowRoot.querySelector(
+          selectors.noMoreChildrenMessage
+        );
+
+        expectProperChildResultsDisplay(element, exampleCollection);
+        expect(foldedResultToggleButton).not.toBeNull();
+        expect(noMoreChildrenMessage).toBeNull();
+        expect(foldedResultToggleButton.label).toBe(loadRelatedItems);
       });
     });
   });

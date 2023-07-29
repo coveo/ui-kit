@@ -654,7 +654,7 @@ export namespace Components {
          */
         "inheritTemplates": boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText": string;
     }
@@ -1400,7 +1400,7 @@ export namespace Components {
          */
         "inheritTemplates": boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText": string;
     }
@@ -1857,6 +1857,7 @@ export namespace Components {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
+        "anchorAttributes"?: Attr[];
         "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
@@ -3606,7 +3607,7 @@ declare namespace LocalJSX {
          */
         "inheritTemplates"?: boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText"?: string;
     }
@@ -4309,7 +4310,7 @@ declare namespace LocalJSX {
          */
         "inheritTemplates"?: boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText"?: string;
     }
@@ -4745,6 +4746,7 @@ declare namespace LocalJSX {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
+        "anchorAttributes"?: Attr[];
         "onBeginDelayedSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;

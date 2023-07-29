@@ -2,6 +2,8 @@ import {restoreSearchParameters} from '../../features/search-parameters/search-p
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {executeSearch} from '../../features/search/search-actions';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response';
+import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
@@ -10,6 +12,7 @@ import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
+import {buildMockFacetValue} from '../../test/mock-facet-value';
 import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
@@ -201,6 +204,15 @@ describe('search parameter manager', () => {
 
     const tab = buildMockTabSlice({id: 'a', isActive: true});
     engine.state.tabSet = {a: tab};
+
+    const automaticFacetValues = [buildMockFacetValue({state: 'selected'})];
+    engine.state.automaticFacetSet.set = {
+      a: buildMockAutomaticFacetSlice({
+        response: buildMockAutomaticFacetResponse({
+          values: automaticFacetValues,
+        }),
+      }),
+    };
 
     engine.state.query.q = 'a';
     engine.state.query.enableQuerySyntax = true;

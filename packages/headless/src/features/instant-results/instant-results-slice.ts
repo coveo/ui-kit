@@ -56,7 +56,7 @@ export const instantResultsReducer = createReducer(
       cached!.error = null;
     });
     builder.addCase(fetchInstantResults.fulfilled, (state, action) => {
-      const {results, searchUid} = action.payload;
+      const {results, searchUid, totalCountFiltered, duration} = action.payload;
       const {cacheTimeout} = action.meta.arg;
       const cached = getCached(state, action.meta);
 
@@ -66,6 +66,8 @@ export const instantResultsReducer = createReducer(
       cached!.error = null;
       cached!.results = results;
       cached!.expiresAt = cacheTimeout ? cacheTimeout + Date.now() : 0;
+      cached!.totalCountFiltered = totalCountFiltered;
+      cached!.duration = duration;
     });
     builder.addCase(fetchInstantResults.rejected, (state, action) => {
       const cached = getCached(state, action.meta);
@@ -88,6 +90,8 @@ const makeEmptyCache = (
     expiresAt: 0,
     isActive: true,
     searchUid: '',
+    totalCountFiltered: 0,
+    duration: 0,
   };
 };
 

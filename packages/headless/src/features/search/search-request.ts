@@ -77,10 +77,12 @@ function getFacets(state: StateNeededBySearchRequest) {
 }
 
 function getAutomaticFacets(state: StateNeededBySearchRequest) {
-  const facets = state.automaticFacetSet?.facets;
+  const facets = state.automaticFacetSet?.set;
 
   return facets
-    ? Object.values(facets).map(responseToAutomaticFacetRequest)
+    ? Object.values(facets)
+        .map((facet) => facet.response)
+        .map(responseToAutomaticFacetRequest)
     : undefined;
 }
 function responseToAutomaticFacetRequest(

@@ -1,3 +1,29 @@
+# 2.23.0 (2023-07-27)
+
+### Bug Fixes
+
+- **headless:** fixed analytics metadata for instant results search ([#3058](https://github.com/coveo/ui-kit/issues/3058)) ([8e6f33a](https://github.com/coveo/ui-kit/commits/8e6f33ac17e567c0a20699b482a6c291b1212314))
+- **headless:** reset pagination when toggling automatic facet ([#3056](https://github.com/coveo/ui-kit/issues/3056)) ([2c3c4e4](https://github.com/coveo/ui-kit/commits/2c3c4e4c06df17b29a24faf797bfbc9869b0bb13))
+
+### Features
+
+- **headless:** add loadClickAnalyticsActions for PLP to fix interactive result ([#3049](https://github.com/coveo/ui-kit/issues/3049)) ([6f936ea](https://github.com/coveo/ui-kit/commits/6f936ea804f5251e919982b462f075ebbb80660b))
+- **headless:** add url manager support for automatic facets ([#3033](https://github.com/coveo/ui-kit/issues/3033)) ([0e85aca](https://github.com/coveo/ui-kit/commits/0e85aca2123d0acf0b0b03f374008f1e0f6792a0))
+- **headless:** breadcrumb manager facet exclusion ([#3043](https://github.com/coveo/ui-kit/issues/3043)) ([21d8259](https://github.com/coveo/ui-kit/commits/21d8259f37b9431c1c758a0bb68956d23cde1e5f))
+
+# 2.22.0 (2023-07-19)
+
+### Bug Fixes
+
+- **headless:** Issues when loading a collection from different pages in the HIP ([#3029](https://github.com/coveo/ui-kit/issues/3029)) ([18c7b86](https://github.com/coveo/ui-kit/commits/18c7b86547237d7d7e32e9c0754ef9b2f4b528dd))
+
+### Features
+
+- **atomic:** add the singular automatic facet component ([#3021](https://github.com/coveo/ui-kit/issues/3021)) ([ed45748](https://github.com/coveo/ui-kit/commits/ed4574841f8a130d6e78cfa80365f2129514f31c))
+- **atomic:** added cursor effect and streamEnd event ([#3034](https://github.com/coveo/ui-kit/issues/3034)) ([9c5165d](https://github.com/coveo/ui-kit/commits/9c5165da35fe31ab685d64075fe95fe5339d5fab))
+- **headless:** isUserActionView property added to the result interface ([#3017](https://github.com/coveo/ui-kit/issues/3017)) ([e796ab8](https://github.com/coveo/ui-kit/commits/e796ab8c12116fe2297d3487475a1397fd06ebbc))
+- **headless:** support static filter value exclusion ([#3030](https://github.com/coveo/ui-kit/issues/3030)) ([1a6b08e](https://github.com/coveo/ui-kit/commits/1a6b08e222ec1b212328443cb53aa3b2caf8eb81))
+
 # 2.21.0 (2023-07-12)
 
 ### Bug Fixes
