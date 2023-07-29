@@ -1,6 +1,7 @@
 {
-  "name": "headless-ssr",
-  "version": "0.1.0",
+  "name": "@coveo/headless-ssr-samples",
+  "description": "Samples using @cove/headless/ssr utils",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
