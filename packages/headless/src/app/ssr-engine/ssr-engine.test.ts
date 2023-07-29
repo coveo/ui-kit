@@ -1,3 +1,4 @@
+import {buildResultList} from '../../controllers';
 import {getSampleSearchEngineConfiguration} from '../search-engine/search-engine';
 import {SearchEngineDefinition, defineSearchEngine} from './ssr-engine';
 
@@ -22,21 +23,22 @@ describe('SSR', () => {
       expect(typeof hydrateInitialState).toBe('function');
     });
 
-    it('fetches initial state', async () => {
+    it('fetches engine snapshot', async () => {
       const {fetchInitialState} = engineDefinition;
       const engineSnapshot = await fetchInitialState({controllers});
       expect(engineSnapshot).toBeTruthy();
     });
 
-    it('hydrates state', async () => {
+    it('hydrates engine and fetches results using hydrated engine', async () => {
       const {fetchInitialState, hydrateInitialState} = engineDefinition;
       const engineSnapshot = await fetchInitialState({controllers});
-      const {engine, controllers: hydratedControllers} =
-        await hydrateInitialState(engineSnapshot);
+      const {engine} = await hydrateInitialState(engineSnapshot);
       expect(engine.state.configuration.organizationId).toEqual(
         getSampleSearchEngineConfiguration().organizationId
       );
-      expect(hydratedControllers).toStrictEqual(controllers);
+
+      const resultList = buildResultList(engine);
+      expect(resultList.state.results.length).toBe(10);
     });
   });
 });
