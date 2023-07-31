@@ -153,13 +153,6 @@ export const config: Config = {
         alias({
           entries: [
             {
-              find: '@coveo/headless/ssr',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/ssr/headless.esm.js'
-              ),
-            },
-            {
               find: '@coveo/headless/case-assist',
               replacement: path.resolve(
                 __dirname,
