@@ -2,6 +2,10 @@
   align-items: center;
 }
 
+.source__citations p {
+  min-width: 4.375rem;
+}
+
 .citation {
   max-width: 10.625rem;
 }
@@ -35,7 +39,7 @@
   background-color: #eef4ff;
   width: 20px;
   height: 20px;
-  border-radius: var(--lwc-borderRadiusCircle, 1rem);
+  border-radius: var(--lwc-borderRadiusCircle, 50%);
 }
 
 .citation__title {

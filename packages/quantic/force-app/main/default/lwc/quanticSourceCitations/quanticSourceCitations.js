@@ -47,6 +47,6 @@ export default class QuanticSourceCitations extends LightningElement {
 
   handleCitationClick(event) {
     const citationId = event.currentTarget.dataset.key;
-    this.citationClickHandler(citationId);
+    this?.citationClickHandler(citationId);
   }
 }
