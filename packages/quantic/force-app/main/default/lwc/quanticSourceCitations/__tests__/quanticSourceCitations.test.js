@@ -1,9 +1,10 @@
 // @ts-ignore
-import {createElement} from 'lwc';
+import { createElement } from 'lwc';
 import QuanticSourceCitations from '../quanticSourceCitations';
 
+
 const functionsMocks = {
-  mockCitationClickHandler: jest.fn(() => {}),
+  mockCitationClickHandler: jest.fn((citationId) => { return citationId}),
 };
 
 const mockCitations = [
@@ -128,8 +129,8 @@ describe('c-quantic-source-citations', () => {
         citations[0].click();
         await flushPromises();
 
-        expect(element.citationClickHandler).toHaveBeenCalled();
-        expect(element.citationClickHandler).toHaveBeenCalledWith(
+        expect(functionsMocks.mockCitationClickHandler).toHaveBeenCalled();
+        expect(functionsMocks.mockCitationClickHandler).toHaveBeenCalledWith(
           mockCitations[0].id
         );
       });
