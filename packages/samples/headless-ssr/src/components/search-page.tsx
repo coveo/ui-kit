@@ -1,6 +1,6 @@
 'use client';
 
-import {SearchHydrationResult, hydrateInitialState} from '@/app/common/engine';
+import {SearchHydrationResult, hydrateInitialState} from '@/src/common/engine';
 import {useEffect, useState} from 'react';
 import ResultList from './result-list';
 
