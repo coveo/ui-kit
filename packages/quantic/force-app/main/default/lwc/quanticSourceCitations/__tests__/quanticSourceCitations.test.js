@@ -1,10 +1,11 @@
 // @ts-ignore
-import { createElement } from 'lwc';
+import {createElement} from 'lwc';
 import QuanticSourceCitations from '../quanticSourceCitations';
 
-
 const functionsMocks = {
-  mockCitationClickHandler: jest.fn((citationId) => { return citationId}),
+  mockCitationClickHandler: jest.fn((citationId) => {
+    return citationId;
+  }),
 };
 
 const mockCitations = [
