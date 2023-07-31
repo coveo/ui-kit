@@ -88,6 +88,7 @@ describe('Result MultiValueText Component', () => {
           .with(addMultiValueText({field: 'thisfielddoesnotexist'}))
           .init();
       });
+      CommonAssertions.assertConsoleError(false);
     });
 
     describe('when the field value is not a string nor a string array', () => {

@@ -56,7 +56,7 @@ describe('Result Badge Component', () => {
             .init();
         });
 
-        CommonAssertions.assertConsoleError();
+        CommonAssertions.assertConsoleError(false);
       });
 
       describe('when the field value is a string', () => {
