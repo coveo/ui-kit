@@ -1,5 +1,6 @@
 import learnMore from '@salesforce/label/c.quantic_LearnMore';
-import {LightningElement, api} from 'lwc';
+import { LightningElement, api } from 'lwc';
+
 
 /** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
 
@@ -35,6 +36,9 @@ export default class QuanticSourceCitations extends LightningElement {
     return this.citations.map((citation, index) => ({
       ...citation,
       index: index + 1,
+      handleCitationClick: () => {
+        this.citationClickHandler(citation.id);
+      },
     }));
   }
 
@@ -43,10 +47,5 @@ export default class QuanticSourceCitations extends LightningElement {
    */
   get shouldDisplayCitations() {
     return !!this.citations?.length;
-  }
-
-  handleCitationClick(event) {
-    const citationId = event.currentTarget.dataset.key;
-    this?.citationClickHandler(citationId);
   }
 }

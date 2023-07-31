@@ -10,15 +10,15 @@ const mockCitations = [
   {
     id: '1',
     title: 'Example title 1',
-    uri: 'https://test.com',
-    clickUri: 'https://test.com',
+    uri: 'https://example.com/',
+    clickUri: 'https://example.com/',
     permanentid: '1',
   },
   {
     id: '2',
     title: 'Example title 2',
-    uri: 'https://test.com',
-    clickUri: 'https://test.com',
+    uri: 'https://example.com/',
+    clickUri: 'https://example.com/',
     permanentid: '2',
   },
 ];
