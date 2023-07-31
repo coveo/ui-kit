@@ -17,9 +17,16 @@
     "url": "https://github.com/coveo/relay/issues"
   },
   "homepage": "https://github.com/coveo/relay#readme",
-  "scripts": {},
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
   "devDependencies": {
+    "@types/jest": "^29.5.3",
     "eslint-config-custom": "workspace:*",
+    "jest": "^29.6.2",
+    "jest-environment-jsdom": "^29.6.2",
+    "ts-jest": "^29.1.1",
     "tsconfig": "workspace:*",
     "typescript": "^5.1.6"
   }
