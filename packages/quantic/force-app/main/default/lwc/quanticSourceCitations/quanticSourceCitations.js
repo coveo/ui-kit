@@ -27,17 +27,8 @@ export default class QuanticSourceCitations extends LightningElement {
    */
   @api citationClickHandler;
 
-  /** @type {boolean} */
-  isInitialRender = true;
-
-  renderedCallback() {
-    if (this.isInitialRender) {
-      this.isInitialRender = false;
-    }
-  }
-
   /**
-   * Returns the indexed citations (we want index + 1 to be the index).
+   * Returns the indexed citations.
    * @returns {Object}
    */
   get indexedCitations() {
@@ -48,7 +39,7 @@ export default class QuanticSourceCitations extends LightningElement {
   }
 
   /**
-   * Whether or not to display citations.
+   * Indicates whether or not to display citations.
    */
   get shouldDisplayCitations() {
     return !!this.citations?.length;

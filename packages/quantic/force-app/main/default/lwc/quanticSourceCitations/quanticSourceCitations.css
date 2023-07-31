@@ -1,9 +1,13 @@
-.source-citations {
+.source__citations {
   align-items: center;
 }
 
 .citation {
-  max-width: 170px;
+  max-width: 10.625rem;
+}
+
+.citation:hover {
+  cursor: pointer;
 }
 
 .citation span {
@@ -14,28 +18,27 @@
   background-color: #eef4ff;
 }
 
+.citation span:hover .citation__title {
+  color: var(--lwc-brandAccessible, #0176d3);
+}
+
 .citation a {
   text-decoration: none;
   max-width: 100%;
 }
 
-.citation span a:hover {
+.citation a:hover {
   text-decoration: none;
-  cursor: pointer;
 }
 
-.citation span:hover .citation-title {
-  color: var(--lwc-brandAccessible, #0176d3);
-}
-
-.citation-index {
+.citation__index {
   background-color: #eef4ff;
-  min-width: 20px;
-  min-height: 20px;
-  border-radius: 16px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--lwc-borderRadiusCircle, 1rem);
 }
 
-.citation-title {
+.citation__title {
   color: var(--lwc-brandDark, #080707);
-  font-weight: var(--lwc-fontWeightRegular);
+  font-weight: var(--lwc-fontWeightRegular, 400);
 }

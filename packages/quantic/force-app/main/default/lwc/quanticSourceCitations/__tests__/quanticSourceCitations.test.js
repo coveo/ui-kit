@@ -58,7 +58,7 @@ const defaultOptions = {
 
 const selectors = {
   citation: '.citation',
-  citationIndex: '.citation-index div',
+  citationIndex: '.citation__index',
 };
 
 function createTestComponent(options = defaultOptions) {

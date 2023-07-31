@@ -1,44 +1,40 @@
 <template>
   <template if:true={shouldDisplayCitations}>
     <div
-      class="source-citations slds-grid slds-align_vertical-center slds-col_bump-left"
+      class="source__citations slds-grid slds-align_vertical-center slds-col_bump-left"
     >
       <p>{labels.learnMore}</p>
-      <ol
-        class="citations-container slds-list_horizontal slds-wrap slds-m-left_x-small"
-      >
+      <ol class="slds-list_horizontal slds-wrap slds-m-left_x-small">
         <template
           for:each={indexedCitations}
-          for:item="indexedCitation"
+          for:item="citation"
           for:index="index"
         >
           <li
-            key={indexedCitation.id}
-            data-key={indexedCitation.id}
+            key={citation.id}
+            data-key={citation.id}
             class="citation slds-m-around_xx-small"
             onclick={handleCitationClick}
           >
             <span
               class="slds-badge slds-badge_lightest slds-align_absolute-center"
             >
-              <span class="slds-align_absolute-center">
-                <a
-                  class="slds-grid slds-gutters_x-small slds-grid_vertical-align-center"
-                  title={indexedCitation.title}
-                  href={indexedCitation.clickUri}
-                  target="_blank"
+              <a
+                class="slds-grid slds-gutters_x-small slds-grid_vertical-align-center"
+                title={citation.title}
+                href={citation.clickUri}
+                target="_blank"
+              >
+                <div class="citation__index slds-align_absolute-center">
+                  {citation.index}
+                </div>
+                <p
+                  class="citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
+                  title={citation.title}
                 >
-                  <div class="citation-index slds-align_absolute-center">
-                    <div>{indexedCitation.index}</div>
-                  </div>
-                  <p
-                    class="citation-title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
-                    title={indexedCitation.title}
-                  >
-                    {indexedCitation.title}
-                  </p>
-                </a>
-              </span>
+                  {citation.title}
+                </p>
+              </a>
             </span>
           </li>
         </template>
