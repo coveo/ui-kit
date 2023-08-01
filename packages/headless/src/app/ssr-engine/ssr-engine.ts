@@ -314,6 +314,9 @@ export type InferControllerSnapshotsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
 > = {[K in keyof TControllers]: {initialState: TControllers[K]}};
 
+/**
+ * @internal
+ */
 export type InferHydrationResult<
   T extends EngineDefinition<
     CoreEngine,
@@ -357,6 +360,13 @@ export function mapObject<TKey extends string, TInitialValue, TNewValue>(
   ) as Record<TKey, TNewValue>;
 }
 
+/**
+ * @internal
+ *
+ * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
+ * @returns Three utility functions to fetch engine snapshot in SSR, hydrate the snapshot in CSR
+ *  and a build function that can be used for edge cases requiring more control.
+ */
 export function defineSearchEngine<
   TControllerDefinitions extends ControllerDefinitionsMap<
     SearchEngine,
