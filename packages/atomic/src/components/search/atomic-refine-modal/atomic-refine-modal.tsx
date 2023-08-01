@@ -208,9 +208,11 @@ export class AtomicRefineModal implements InitializableComponent {
     if (!isFacetElements && !isAutomaticFacets) {
       return;
     }
-
+    const amountToCollapseNext =
+      this.collapseFacetsAfter - this.bindings.store.getFacetElements().length;
     const automaticFacets = isAutomaticFacets
-      ? this.automaticFacetBuilderState.automaticFacets.map((facet) => {
+      ? this.automaticFacetBuilderState.automaticFacets.map((facet, index) => {
+          const isCollapsed = index >= amountToCollapseNext;
           return (
             <atomic-automatic-facet
               key={facet.state.field}
@@ -218,7 +220,7 @@ export class AtomicRefineModal implements InitializableComponent {
               facetId={facet.state.field}
               facet={facet}
               searchStatus={this.searchStatus}
-              isCollapsed={true}
+              isCollapsed={isCollapsed}
             ></atomic-automatic-facet>
           );
         })
