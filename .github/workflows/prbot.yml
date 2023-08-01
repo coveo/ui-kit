@@ -102,6 +102,8 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-angular
   e2e-atomic-vuejs-test:
     name: 'Run e2e tests on Vue.js sample'
+    env:
+      ELECTRON_EXTRA_LAUNCH_ARGS: '--disable-gpu'
     needs: build
     runs-on: ubuntu-latest
     steps:
