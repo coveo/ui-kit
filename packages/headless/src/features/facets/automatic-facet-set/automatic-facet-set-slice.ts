@@ -56,31 +56,27 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const af = action.payload.af ?? {};
+        const currentFields = Object.keys(state.set);
 
-        if (!state.set) {
-          state.set = {};
+        //unselected facets in set that are not in af
+        for (let i = 0; i < currentFields.length; i++) {
+          const field = currentFields[i];
+
+          if (!(field in af)) {
+            const facet = state.set[field]?.response;
+
+            for (const value of facet.values) {
+              value.state = 'idle';
+            }
+          }
         }
-
+        //add facet in af to facet set
         for (const field in af) {
-          const response =
-            state.set[field]?.response ??
-            buildTemporaryAutomaticFacetResponse(field);
-
-          const selectedValues = af[field] || [];
-          const idleValues = response.values.filter(
-            (facetValue) => !selectedValues.includes(facetValue.value)
+          const response = buildTemporaryAutomaticFacetResponse(field);
+          const values = af[field].map((value) =>
+            buildTemporarySelectedFacetValue(value)
           );
-
-          response.values = [
-            ...selectedValues.map((value) => {
-              const facetValueObject = response.values.find(
-                (facetValue) => facetValue.value === value
-              );
-              const numberOfResults = facetValueObject?.numberOfResults;
-              return buildTemporarySelectedFacetValue(value, numberOfResults);
-            }),
-            ...idleValues.map(restoreFacetValueToIdleState),
-          ];
+          response.values.push(...values);
 
           state.set[field] = {response};
         }
@@ -116,17 +112,10 @@ function buildTemporaryAutomaticFacetResponse(
   };
 }
 
-function buildTemporarySelectedFacetValue(
-  value: string,
-  numberOfResults = 0
-): FacetValue {
+function buildTemporarySelectedFacetValue(value: string): FacetValue {
   return {
     value,
     state: 'selected',
-    numberOfResults,
+    numberOfResults: 0,
   };
-}
-
-function restoreFacetValueToIdleState(facetValue: FacetValue): FacetValue {
-  return {...facetValue, state: 'idle'};
 }
