@@ -2,6 +2,7 @@ import {restoreSearchParameters} from '../../../features/search-parameters/searc
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {buildMockAutomaticFacetResponse} from '../../../test/mock-automatic-facet-response';
+import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
@@ -232,16 +233,16 @@ describe('search parameter manager', () => {
       const idle = buildMockFacetValue({value: 'b', state: 'idle'});
 
       const currentValues = [selected, idle];
-      engine.state.automaticFacetSet.facets = {
-        author: buildMockAutomaticFacetResponse({values: currentValues}),
-      };
-
+      const slice = buildMockAutomaticFacetSlice({
+        response: buildMockAutomaticFacetResponse({values: currentValues}),
+      });
+      engine.state.automaticFacetSet.set = {author: slice};
       expect(manager.state.parameters.af).toEqual({author: ['a']});
     });
 
     it('is not included when there are no facets with selected values', () => {
-      engine.state.automaticFacetSet.facets = {
-        author: buildMockAutomaticFacetResponse(),
+      engine.state.automaticFacetSet.set = {
+        author: buildMockAutomaticFacetSlice(),
       };
       expect(manager.state.parameters).not.toContain('af');
     });
@@ -303,9 +304,11 @@ describe('search parameter manager', () => {
     engine.state.tabSet = {a: tab};
 
     const automaticFacetValues = [buildMockFacetValue({state: 'selected'})];
-    engine.state.automaticFacetSet.facets = {
-      a: buildMockAutomaticFacetResponse({values: automaticFacetValues}),
-    };
+    const slice = buildMockAutomaticFacetSlice({
+      response: buildMockAutomaticFacetResponse({values: automaticFacetValues}),
+    });
+    engine.state.automaticFacetSet.set = {a: slice};
+
 
     engine.state.query.q = 'a';
     engine.state.sortCriteria = 'qre';

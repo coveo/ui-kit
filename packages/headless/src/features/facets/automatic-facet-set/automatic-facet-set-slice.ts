@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {FacetValue} from '../../../product-listing.index';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../search/search-actions';
 import {
@@ -15,11 +16,11 @@ export const automaticFacetSetReducer = createReducer(
   (builder) => {
     builder
       .addCase(executeSearch.fulfilled, (state, action) => {
-        state.facets = {};
+        state.set = {};
 
         const facets = action.payload.response.generateAutomaticFacets?.facets;
-        facets?.forEach((facet) => {
-          state.facets[facet.field] = facet;
+        facets?.forEach((response) => {
+          state.set[response.field] = {response};
         });
       })
       .addCase(setDesiredCount, (state, action) => {
@@ -27,7 +28,7 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(toggleSelectAutomaticFacetValue, (state, action) => {
         const {field, selection} = action.payload;
-        const facet = state.facets[field];
+        const facet = state.set[field]?.response;
 
         if (!facet) {
           return;
@@ -43,7 +44,7 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(deselectAllAutomaticFacetValues, (state, action) => {
         const field = action.payload;
-        const facet = state.facets[field];
+        const facet = state.set[field]?.response;
 
         if (!facet) {
           return;
@@ -62,8 +63,13 @@ export const automaticFacetSetReducer = createReducer(
           );
           response.values.push(...values);
 
-          state.facets[field] = response;
+          state.set[field] = {response};
         }
+      })
+      .addCase(deselectAllBreadcrumbs, (state) => {
+        Object.values(state.set).forEach(({response}) => {
+          response.values.forEach((value) => (value.state = 'idle'));
+        });
       });
   }
 );

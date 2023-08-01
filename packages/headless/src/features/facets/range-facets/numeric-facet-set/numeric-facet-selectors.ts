@@ -25,6 +25,16 @@ export const numericFacetResponseSelector = (
   return undefined;
 };
 
+export const numericFacetActiveValuesSelector = (
+  state: SearchSection & NumericFacetSection,
+  facetId: string
+): NumericFacetValue[] => {
+  const facetResponse = numericFacetResponseSelector(state, facetId) || {
+    values: [],
+  };
+  return facetResponse.values.filter((value) => value.state !== 'idle');
+};
+
 export const numericFacetSelectedValuesSelector = (
   state: SearchSection & NumericFacetSection,
   facetId: string
