@@ -15,9 +15,7 @@ export default function SearchPage({engineSnapshot}: {engineSnapshot: any}) {
     });
   }, [engineSnapshot]);
 
-  if (hydrationResult === null) {
-    return <div>Hydrating engine ..</div>;
-  } else {
+  if (hydrationResult !== null) {
     const {engine, controllers} = hydrationResult;
     return <ResultList engine={engine} controllers={controllers}></ResultList>;
   }
