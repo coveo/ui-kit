@@ -1,11 +1,10 @@
-import {Controller} from '../../controllers';
 import {CoreEngine} from '../engine';
 import {
   ControllersMap,
   ControllersPropsMap,
+  EngineAndControllers,
   OptionsExtender,
 } from './common-ssr-types';
-import {EngineAndControllers} from './ssr-engine';
 
 export interface EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
@@ -46,19 +45,4 @@ export interface BuildWithoutProps<
   build(
     options?: EngineDefinitionBuildOptionsWithoutProps<TEngineOptions>
   ): Promise<EngineAndControllers<TEngine, TControllersMap>>;
-}
-
-export interface ControllerDefinitionWithoutProps<
-  TEngine extends CoreEngine,
-  TController extends Controller
-> {
-  build(engine: TEngine): TController;
-}
-
-export interface ControllerDefinitionWithProps<
-  TEngine extends CoreEngine,
-  TController extends Controller,
-  TProps
-> {
-  buildWithProps(engine: TEngine, props: TProps): TController;
 }
