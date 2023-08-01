@@ -10,6 +10,18 @@ import {
   SearchEngineOptions,
   buildSearchEngine,
 } from '../search-engine/search-engine';
+import {
+  BuildWithProps,
+  BuildWithoutProps,
+  ControllerDefinitionWithProps,
+  ControllerDefinitionWithoutProps,
+  EngineDefinitionBuildOptionsWithProps,
+} from './build-ssr-types';
+import {
+  ControllersMap,
+  ControllersPropsMap,
+  OptionsExtender,
+} from './common-ssr-types';
 
 /**
  * TODO:
@@ -19,21 +31,6 @@ import {
  * Style
  * - `BuildWith..` -> `BuilderWith..`? Similarly `Fetcher..`, `Hydrator..`
  **/
-
-export interface ControllerDefinitionWithoutProps<
-  TEngine extends CoreEngine,
-  TController extends Controller
-> {
-  build(engine: TEngine): TController;
-}
-
-export interface ControllerDefinitionWithProps<
-  TEngine extends CoreEngine,
-  TController extends Controller,
-  TProps
-> {
-  buildWithProps(engine: TEngine, props: TProps): TController;
-}
 
 export type ControllerDefinition<
   TEngine extends CoreEngine,
@@ -93,59 +90,6 @@ export interface EngineAndControllers<
 > {
   engine: TEngine;
   controllers: TControllers;
-}
-
-export interface OptionsExtender<TOptions> {
-  (options: TOptions): TOptions | Promise<TOptions>;
-}
-
-export interface EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
-  extend?: OptionsExtender<TEngineOptions>;
-}
-
-export interface ControllersMap {
-  [customName: string]: Controller;
-}
-
-export interface ControllersPropsMap {
-  [customName: string]: unknown;
-}
-
-export interface EngineDefinitionBuildOptionsWithProps<
-  TEngineOptions,
-  TControllersProps extends ControllersPropsMap
-> extends EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
-  controllers: TControllersProps;
-}
-
-export interface BuildWithProps<
-  TEngine extends CoreEngine,
-  TEngineOptions,
-  TControllersMap extends ControllersMap,
-  TControllersProps extends ControllersPropsMap
-> {
-  /**
-   * Initializes an engine and controllers from the definition.
-   */
-  build(
-    options: EngineDefinitionBuildOptionsWithProps<
-      TEngineOptions,
-      TControllersProps
-    >
-  ): Promise<EngineAndControllers<TEngine, TControllersMap>>;
-}
-
-export interface BuildWithoutProps<
-  TEngine extends CoreEngine,
-  TEngineOptions,
-  TControllersMap extends ControllersMap
-> {
-  /**
-   * Initializes an engine and controllers from the definition.
-   */
-  build(
-    options?: EngineDefinitionBuildOptionsWithoutProps<TEngineOptions>
-  ): Promise<EngineAndControllers<TEngine, TControllersMap>>;
 }
 
 export type FetchInitialStateWithoutProps<
