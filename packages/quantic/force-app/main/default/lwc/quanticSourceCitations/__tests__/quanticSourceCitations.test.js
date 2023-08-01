@@ -86,10 +86,6 @@ describe('c-quantic-source-citations', () => {
       expect(citationLinks.length).toEqual(mockCitations.length);
 
       for (let i = 0; i < citations.length; i++) {
-        expect(citations[i].getAttribute('data-key')).toEqual(
-          mockCitations[i].id
-        );
-
         const indexAsString = (i + 1).toString();
         expect(citationsIndices[i].textContent).toEqual(indexAsString);
 

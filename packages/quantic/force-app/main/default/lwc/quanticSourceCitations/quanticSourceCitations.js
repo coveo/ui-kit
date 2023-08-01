@@ -1,6 +1,5 @@
 import learnMore from '@salesforce/label/c.quantic_LearnMore';
-import { LightningElement, api } from 'lwc';
-
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
 
@@ -15,12 +14,12 @@ export default class QuanticSourceCitations extends LightningElement {
     learnMore,
   };
 
-  // /**
-  //  * The citations used in the generated answer.
-  //  * @api
-  //  * @type {GeneratedAnswerCitation[]}
-  //  */
-  // @api citations;
+  /**
+   * The citations used in the generated answer.
+   * @api
+   * @type {GeneratedAnswerCitation[]}
+   */
+  @api citations;
   /**
    * The function to be executed when a citation is clicked.
    * @api
@@ -28,64 +27,6 @@ export default class QuanticSourceCitations extends LightningElement {
    */
   @api citationClickHandler;
 
-  citations = [
-    {
-      id: '1',
-      title: 'Example title 1',
-      uri: 'https://example.com/',
-      clickUri: 'https://example.com/',
-      permanentid: '1',
-    },
-    {
-      id: '2',
-      title: 'Example title 2',
-      uri: 'https://example.com/',
-      clickUri: 'https://example.com/',
-      permanentid: '2',
-    },
-    {
-      id: '3',
-      title: 'Example title 2',
-      uri: 'https://example.com/',
-      clickUri: 'https://example.com/',
-      permanentid: '3',
-    },
-    {
-      id: '4',
-      title: 'Example title 2',
-      uri: 'https://example.com/',
-      clickUri: 'https://example.com/',
-      permanentid: '4',
-    },
-    {
-      id: '5',
-      title: 'Example title 2',
-      uri: 'https://example.com/',
-      clickUri: 'https://example.com/',
-      permanentid: '5',
-    },
-    {
-      id: '24',
-      title: 'Example title 2',
-      uri: 'https://example.com/',
-      clickUri: 'https://example.com/',
-      permanentid: '25',
-    },
-    {
-      id: '23',
-      title: 'Example title 2',
-      uri: 'https://example.com/',
-      clickUri: 'https://example.com/',
-      permanentid: '23',
-    },
-    {
-      id: '21',
-      title: 'Example title 2',
-      uri: 'https://example.com/',
-      clickUri: 'https://example.com/',
-      permanentid: '21',
-    },
-  ];
   /**
    * Returns the indexed citations.
    * @returns {Object}
@@ -95,7 +36,7 @@ export default class QuanticSourceCitations extends LightningElement {
       ...citation,
       index: index + 1,
       handleCitationClick: () => {
-        this.citationClickHandler(citation.id);
+        this.citationClickHandler?.(citation.id);
       },
     }));
   }

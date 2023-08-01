@@ -1,5 +1,5 @@
-.source__citations p {
-  min-width: 4.375rem;
+.source__citations span {
+  flex-shrink: 0;
 }
 
 .citation {
@@ -23,12 +23,8 @@
 }
 
 .citation a {
-  text-decoration: none;
+  color: var(--lwc-brandAccessible, #0176d3);
   max-width: 100%;
-}
-
-.citation a:hover {
-  text-decoration: none;
 }
 
 .citation__index {
