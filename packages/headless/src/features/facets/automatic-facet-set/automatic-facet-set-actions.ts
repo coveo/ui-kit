@@ -20,7 +20,7 @@ export interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
   selection: FacetValue;
 }
 
-const desiredCountDefinition = new NumberValue({min: 1});
+const desiredCountDefinition = new NumberValue({min: 1, max: 10});
 export const setDesiredCount = createAction(
   'automaticFacet/setDesiredCount',
   (payload: number) => validatePayload(payload, desiredCountDefinition)
