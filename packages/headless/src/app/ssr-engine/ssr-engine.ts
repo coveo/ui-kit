@@ -20,27 +20,7 @@ import {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
 } from './core-engine-ssr-types';
-
-/**
- * TODO:
- * - Simplify (number of steps required for) async hydration
- * - Try to simplify the following types
- *  - Can variations with/without props e.g. be combined/simplified?
- * Style
- * - `BuildWith..` -> `BuilderWith..`? Similarly `Fetcher..`, `Hydrator..`
- **/
-
-export function mapObject<TKey extends string, TInitialValue, TNewValue>(
-  obj: Record<TKey, TInitialValue>,
-  predicate: (value: TInitialValue, key: TKey) => TNewValue
-): Record<TKey, TNewValue> {
-  return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [
-      key,
-      predicate(value as TInitialValue, key as TKey),
-    ])
-  ) as Record<TKey, TNewValue>;
-}
+import {mapObject} from './utils';
 
 /**
  * @beta
