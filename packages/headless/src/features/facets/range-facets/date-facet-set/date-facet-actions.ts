@@ -181,6 +181,15 @@ export const toggleSelectDateFacetValue = createAction(
     })
 );
 
+export const toggleExcludeDateFacetValue = createAction(
+  'dateFacet/toggleExcludeValue',
+  (payload: ToggleSelectDateFacetValueActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      selection: new RecordValue({values: dateFacetValueDefinition}),
+    })
+);
+
 export interface UpdateDateFacetValuesActionCreatorPayload {
   /**
    * The unique identifier of the facet (e.g., `"1"`).

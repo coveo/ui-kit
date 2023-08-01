@@ -77,6 +77,11 @@ export interface SearchParameters {
    * The active tab id.
    */
   tab?: string;
+
+  /**
+   * A record of the automatic facets, where the key is the facet id, and value is an array containing the selected values.
+   */
+  af?: Record<string, string[]>;
 }
 
 export const restoreSearchParameters = createAction(

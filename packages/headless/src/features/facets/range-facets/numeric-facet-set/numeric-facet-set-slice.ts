@@ -14,6 +14,7 @@ import {
   defaultRangeFacetOptions,
   handleRangeFacetSearchParameterRestoration,
   updateRangeValues,
+  toggleExcludeRangeValue,
 } from '../generic/range-facet-reducers';
 import {NumericFacetRequest, NumericRangeRequest} from './interfaces/request';
 import {NumericFacetResponse, NumericFacetValue} from './interfaces/response';
@@ -24,6 +25,7 @@ import {
   updateNumericFacetSortCriterion,
   RegisterNumericFacetActionCreatorPayload,
   updateNumericFacetValues,
+  toggleExcludeNumericFacetValue,
 } from './numeric-facet-actions';
 import {
   getNumericFacetSetInitialState,
@@ -50,6 +52,10 @@ export const numericFacetSetReducer = createReducer(
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         toggleSelectRangeValue(state, facetId, selection);
+      })
+      .addCase(toggleExcludeNumericFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        toggleExcludeRangeValue(state, facetId, selection);
       })
       .addCase(updateNumericFacetValues, (state, action) => {
         const {facetId, values} = action.payload;

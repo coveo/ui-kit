@@ -60,6 +60,11 @@ export const FoldedResultListSelectors = {
       .find(resultComponent)
       .shadow()
       .eq(grandChildIndex),
+  noResultsLabel: () =>
+    FoldedResultListSelectors.resultChildren()
+      .should('have.attr', 'data-atomic-rendered', 'true')
+      .shadow()
+      .find('[part="no-result-root"]'),
   sections: {
     visual: () =>
       FoldedResultListSelectors.firstResult().find(resultSectionTags.visual),

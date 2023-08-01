@@ -1094,10 +1094,10 @@
     </labels>
     <labels>
       <fullName>quantic_OpensInSalesforceSubTab</fullName>
-      <value>Opens in a Salesforce console subtab</value>
+      <value>Opens in a Salesforce subtab</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Opens in a Salesforce console subtab</shortDescription>
+      <shortDescription>Opens in a Salesforce subtab</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_OpensInBrowserTab</fullName>
@@ -1168,5 +1168,54 @@
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Fatal error: unable to initialize the component.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ViewedByCustomer</fullName>
+      <value>Viewed by customer</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Viewed by customer</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_LoadingRecommendations</fullName>
+      <value>Loading recommendations</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Loading recommendations</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_InvalidPositiveIntegerProperty</fullName>
+      <value>The value of the {{0}} property must be an integer greater than 0.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>The value of the property must be an integer greater than 0.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_XOfY</fullName>
+      <value>{{0}} of {{1}}</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>1 of 6</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_TopDocumentsForYou</fullName>
+      <value>Top documents for you</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Top documents for you</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Carousel</fullName>
+      <value>Carousel</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Carousel</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Slide</fullName>
+      <value>Slide</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Slide</shortDescription>
     </labels>
 </CustomLabels>

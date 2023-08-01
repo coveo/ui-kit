@@ -1,0 +1,35 @@
+@import '../../common/result/result.pcss';
+
+atomic-result-section-children {
+  margin-top: 0.875rem;
+  border-left: 1px solid var(--atomic-neutral);
+  padding-left: 1rem;
+}
+
+:host {
+  @apply relative;
+
+  .with-sections:not(.child-result) {
+    @apply p-6;
+  }
+
+  &(:hover) {
+    .with-sections {
+      background-color: var(--atomic-neutral-lighter);
+    }
+
+    atomic-insight-result-action-bar {
+      @apply visible;
+    }
+  }
+
+  &(:first-of-type) {
+    .with-sections:not(.child-result) {
+      @apply pt-8;
+    }
+
+    atomic-insight-result-action-bar {
+      @apply top-0;
+    }
+  }
+}

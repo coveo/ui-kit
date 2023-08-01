@@ -185,7 +185,7 @@ export function buildCoreNumericFilter(
           values: [],
         })
       );
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
     setRange: (range) => {
       const facetValue: NumericFacetValue = {
@@ -205,7 +205,7 @@ export function buildCoreNumericFilter(
       }
 
       dispatch(updateFacetValuesAction);
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
       return true;
     },
     enable() {

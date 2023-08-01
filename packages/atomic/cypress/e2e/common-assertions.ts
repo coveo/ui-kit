@@ -117,12 +117,10 @@ export function assertConsoleWarningMessage(msg: string) {
   });
 }
 
-export function assertRemovesComponent(
-  selector: () => Cypress.Chainable<JQuery<HTMLElement>>
-) {
-  it('should remove the component from the DOM', () => {
-    selector().should('not.exist');
-  });
+export function assertRemovesComponent() {
+  assertConsoleErrorMessage(
+    'Result component is in error and has been removed from the DOM'
+  );
 }
 
 export function assertAriaLiveMessage(

@@ -1,8 +1,10 @@
+import loadingResults from '@salesforce/label/c.quantic_LoadingResults';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {AriaLiveRegion} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").FoldedResultList} FoldedResultList */
@@ -83,6 +85,12 @@ export default class QuanticFoldedResultList extends LightningElement {
   unsubscribeResultsPerPage;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  loadingAriaLiveMessage;
+
+  labels = {
+    loadingResults,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -96,6 +104,7 @@ export default class QuanticFoldedResultList extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.loadingAriaLiveMessage = AriaLiveRegion('loading', this);
     this.headless = getHeadlessBundle(this.engineId);
     this.foldedResultList = this.headless.buildFoldedResultList(engine, {
       options: {
@@ -144,6 +153,9 @@ export default class QuanticFoldedResultList extends LightningElement {
       !this?.state?.hasError &&
       !this?.state?.firstSearchExecuted &&
       !this?.state?.hasResults;
+    if (this.showPlaceholder) {
+      this.loadingAriaLiveMessage.dispatchMessage(this.labels.loadingResults);
+    }
   }
 
   updateResultPerPage() {

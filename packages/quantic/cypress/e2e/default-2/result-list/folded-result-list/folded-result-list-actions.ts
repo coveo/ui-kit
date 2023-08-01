@@ -5,7 +5,7 @@ import {
 
 function foldedResultListActions(selector: FoldedResultListSelector) {
   return {
-    toggleMoreChidResults: () =>
+    toggleMoreChildResults: () =>
       selector
         .childResultsToggleButton()
         .click()

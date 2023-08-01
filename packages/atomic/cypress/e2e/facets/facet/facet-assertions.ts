@@ -1,5 +1,6 @@
 import {
   doSortAlphanumeric,
+  doSortAlphanumericDescending,
   doSortOccurrences,
 } from '../../../utils/componentUtils';
 import {FacetSelectors} from './facet-selectors';
@@ -59,6 +60,17 @@ export function assertValuesSortedAlphanumerically() {
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
       expect(originalValues).to.eql(
         doSortAlphanumeric(originalValues as string[])
+      );
+    });
+  });
+}
+
+export function assertValuesSortedAlphanumericallyDescending() {
+  it('values should be ordered alphanumerically descending', () => {
+    FacetSelectors.valueLabel().as('facetAllValuesLabel');
+    cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
+      expect(originalValues).to.eql(
+        doSortAlphanumericDescending(originalValues as string[])
       );
     });
   });

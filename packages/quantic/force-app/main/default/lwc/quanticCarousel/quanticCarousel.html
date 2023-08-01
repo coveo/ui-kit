@@ -1,0 +1,48 @@
+<template>
+  <template if:true={errorMessage}>
+    <c-quantic-component-error
+      component-name={template.host.localName}
+      message={errorMessage}
+    >
+    </c-quantic-component-error>
+  </template>
+  <template if:false={errorMessage}>
+    <section role="region" aria-roledescription={labels.carousel} aria-label={label}>
+      <div class="slds-grid carousel__container slds-is-relative">
+        <lightning-button-icon
+          class="carousel__previous-navigation slds-is-absolute"
+          disabled={previousButtonIsDisabled}
+          icon-name="utility:chevronleft"
+          onclick={handlePrevious}
+          variant="border-filled"
+          title={labels.previousPage}
+        ></lightning-button-icon>
+        <div class="carousel__slides slds-grid">
+          <slot name="carousel-item"></slot>
+        </div>
+        <lightning-button-icon
+          class="carousel__next-navigation slds-is-absolute"
+          disabled={nextButtonIsDisabled}
+          icon-name="utility:chevronright"
+          onclick={handleNext}
+          variant="border-filled"
+          title={labels.nextPage}
+        ></lightning-button-icon>
+      </div>
+      <ul
+        class="slds-grid slds-var-m-vertical_medium carousel__indicators-container"
+      >
+        <template for:each={carouselIndicators} for:item="indicator">
+          <li key={indicator.index}>
+            <button
+              class={indicator.class}
+              title={indicator.title}
+              onclick={indicator.handleClick}
+              aria-current={indicator.current}
+            ></button>
+          </li>
+        </template>
+      </ul>
+    </section>
+  </template>
+</template>

@@ -1,4 +1,4 @@
-import {AnyAction} from 'redux';
+import {AnyAction} from '@reduxjs/toolkit';
 import {updateQuery} from '../../features/query/query-actions';
 import {queryReducer as query} from '../../features/query/query-slice';
 import {executeSearch} from '../../features/search/search-actions';

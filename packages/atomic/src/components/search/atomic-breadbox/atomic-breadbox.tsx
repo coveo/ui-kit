@@ -382,12 +382,28 @@ export class AtomicBreadbox implements InitializableComponent {
       }));
   }
 
+  private get automaticFacetBreadcrumbs(): Breadcrumb[] {
+    return this.breadcrumbManagerState.automaticFacetBreadcrumbs
+      .flatMap(({facetId, field, label, values}) =>
+        values.map((value) => ({value, facetId, field, label}))
+      )
+      .map(({value, facetId, field, label}) => ({
+        facetId,
+        label: this.bindings.i18n.t(label ? label : 'no-label'),
+        deselect: value.deselect,
+        formattedValue: [
+          getFieldValueCaption(field, value.value.value, this.bindings.i18n),
+        ],
+      }));
+  }
+
   private get allBreadcrumbs(): Breadcrumb[] {
     return [
       ...this.facetBreadcrumbs,
       ...this.categoryFacetBreadcrumbs,
       ...this.numericFacetBreadcrumbs,
       ...this.dateFacetBreadcrumbs,
+      ...this.automaticFacetBreadcrumbs,
     ];
   }
 

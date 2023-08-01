@@ -8,6 +8,7 @@ import {
 import {
   deselectAllFacetValues,
   registerFacet,
+  toggleExcludeFacetValue,
   RegisterFacetActionCreatorPayload,
   toggleSelectFacetValue,
   ToggleSelectFacetValueActionCreatorPayload,
@@ -60,6 +61,16 @@ export interface FacetSetActionCreators {
    * @returns A dispatchable action.
    */
   toggleSelectFacetValue(
+    payload: ToggleSelectFacetValueActionCreatorPayload
+  ): PayloadAction<ToggleSelectFacetValueActionCreatorPayload>;
+
+  /**
+   * Excludes a facet value. If the value does not exist, it is added.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  toggleExcludeFacetValue(
     payload: ToggleSelectFacetValueActionCreatorPayload
   ): PayloadAction<ToggleSelectFacetValueActionCreatorPayload>;
 
@@ -128,6 +139,7 @@ export function loadFacetSetActions(
     deselectAllFacetValues,
     registerFacet,
     toggleSelectFacetValue,
+    toggleExcludeFacetValue,
     updateFacetIsFieldExpanded,
     updateFacetNumberOfValues,
     updateFacetSortCriterion,

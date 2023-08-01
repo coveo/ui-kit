@@ -18,6 +18,7 @@ export function buildMockSearchParameters(
     debug: false,
     sf: {},
     tab: '',
+    af: {},
     ...config,
   };
 }

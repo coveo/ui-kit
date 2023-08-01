@@ -1,3 +1,4 @@
+import {FacetSortOrder} from '../facet-set/interfaces/request';
 import {FacetValueState} from './value';
 
 export interface BaseFacetRequest {
@@ -83,13 +84,20 @@ export interface SortCriteria<
   T extends
     | 'score'
     | 'alphanumeric'
+    | 'alphanumericDescending'
     | 'ascending'
     | 'descending'
     | 'occurrences'
     | 'automatic'
+    | SpecificSortCriteriaExplicitAlphanumeric
 > {
   /** The sort criterion to apply to the returned facet values. */
   sortCriteria: T;
+}
+
+export interface SpecificSortCriteriaExplicitAlphanumeric {
+  type: 'alphanumeric';
+  order: FacetSortOrder;
 }
 
 export interface RangeAlgorithm<T extends 'even' | 'equiprobable'> {

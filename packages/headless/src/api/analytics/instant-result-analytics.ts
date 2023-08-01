@@ -1,3 +1,5 @@
+import {getQueryInitialState} from '../../features/query/query-state';
+import {getSearchInitialState} from '../../features/search/search-state';
 import {InstantResultSection} from '../../state/state-sections';
 import {
   SearchAnalyticsProvider,
@@ -40,14 +42,30 @@ export class InstantResultsAnalyticsProvider extends SearchAnalyticsProvider {
     return null;
   }
 
+  protected get results() {
+    return this.activeInstantResultCache?.results;
+  }
+
+  protected get queryText() {
+    return this.activeInstantResultQuery ?? getQueryInitialState().q;
+  }
+
+  protected get responseTime() {
+    return (
+      this.activeInstantResultCache?.duration ??
+      getSearchInitialState().duration
+    );
+  }
+
+  protected get numberOfResults() {
+    return (
+      this.activeInstantResultCache?.totalCountFiltered ??
+      getSearchInitialState().response.totalCountFiltered
+    );
+  }
+
   public getSearchUID(): string {
     const searchUid = this.activeInstantResultCache?.searchUid;
     return searchUid || super.getSearchUID();
-  }
-
-  public getSearchEventRequestPayload() {
-    const payload = super.getSearchEventRequestPayload();
-    const queryText = this.activeInstantResultQuery || payload.queryText;
-    return {...payload, queryText};
   }
 }

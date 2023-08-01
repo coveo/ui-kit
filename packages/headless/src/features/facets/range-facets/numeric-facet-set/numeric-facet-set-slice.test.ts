@@ -18,6 +18,7 @@ import {
   deselectAllNumericFacetValues,
   RegisterNumericFacetActionCreatorPayload,
   updateNumericFacetValues,
+  toggleExcludeNumericFacetValue,
 } from './numeric-facet-actions';
 import {numericFacetSetReducer} from './numeric-facet-set-slice';
 import {
@@ -113,6 +114,19 @@ describe('numeric-facet-set slice', () => {
     );
 
     expect(RangeFacetReducers.toggleSelectRangeValue).toHaveBeenCalledTimes(1);
+  });
+
+  it('#toggleExcludeNumericFacetValue calls #toggleExcludeRangeValue', () => {
+    const facetId = '1';
+    const selection = buildMockNumericFacetValue();
+    jest.spyOn(RangeFacetReducers, 'toggleExcludeRangeValue');
+
+    numericFacetSetReducer(
+      state,
+      toggleExcludeNumericFacetValue({facetId, selection})
+    );
+
+    expect(RangeFacetReducers.toggleExcludeRangeValue).toHaveBeenCalledTimes(1);
   });
 
   it('#deselectAllNumericFacetValues calls #handleRangeFacetDeselectAll', () => {

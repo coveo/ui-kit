@@ -8,6 +8,10 @@ export function doSortAlphanumeric(originalValues: string[]) {
     .sort((first, second) => first.localeCompare(second));
 }
 
+export function doSortAlphanumericDescending(originalValues: string[]) {
+  return doSortAlphanumeric(originalValues).reverse();
+}
+
 export function doSortOccurrences(originalValues: string[]) {
   const getNumericalValue = (value: string) => {
     const isKilo = value.includes('K') || value.includes('k');

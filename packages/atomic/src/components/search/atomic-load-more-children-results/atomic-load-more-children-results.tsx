@@ -4,8 +4,8 @@ import {buildCustomEvent} from '../../../utils/event-utils';
 import {InitializeBindings} from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
 import {getResultDisplayClasses} from '../../common/layout/display-options';
+import {FoldedResultListStateContext} from '../../common/result-list/result-list-decorators';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {FoldedResultListStateContext} from '../result-lists/result-list-decorators';
 import {
   DisplayConfig,
   ResultContext,

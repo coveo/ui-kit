@@ -6,6 +6,7 @@ import {
   registerNumericFacet,
   RegisterNumericFacetActionCreatorPayload,
   toggleSelectNumericFacetValue,
+  toggleExcludeNumericFacetValue,
   ToggleSelectNumericFacetValueActionCreatorPayload,
   updateNumericFacetSortCriterion,
   UpdateNumericFacetSortCriterionActionCreatorPayload,
@@ -53,6 +54,16 @@ export interface NumericFacetSetActionCreators {
   ): PayloadAction<ToggleSelectNumericFacetValueActionCreatorPayload>;
 
   /**
+   * Toggles exclusion of a numeric facet value.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  toggleExcludeNumericFacetValue(
+    payload: ToggleSelectNumericFacetValueActionCreatorPayload
+  ): PayloadAction<ToggleSelectNumericFacetValueActionCreatorPayload>;
+
+  /**
    * Updates the sort criterion of a numeric facet.
    *
    * @param payload - The action creator payload.
@@ -88,6 +99,7 @@ export function loadNumericFacetSetActions(
     deselectAllNumericFacetValues,
     registerNumericFacet,
     toggleSelectNumericFacetValue,
+    toggleExcludeNumericFacetValue,
     updateNumericFacetSortCriterion,
     updateNumericFacetValues,
   };

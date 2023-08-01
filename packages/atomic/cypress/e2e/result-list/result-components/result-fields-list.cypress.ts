@@ -67,8 +67,7 @@ describe('Result Fields Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(() => cy.get(fieldsListComponent));
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   it('should display all children if it has the space to do so', () => {

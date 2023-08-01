@@ -7,6 +7,7 @@ import {
   logStaticFilterDeselect,
   logStaticFilterSelect,
   registerStaticFilter,
+  toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
 import {
@@ -70,11 +71,25 @@ export interface StaticFilter extends Controller {
   toggleSelect(value: StaticFilterValue): void;
 
   /**
+   * Excludes the specified static filter value.
+   *
+   * @param value - The static filter value to toggle.
+   */
+  toggleExclude(value: StaticFilterValue): void;
+
+  /**
    * Toggles the specified static filter value, deselecting others.
    *
    * @param value - The static filter value to toggle.
    */
   toggleSingleSelect(value: StaticFilterValue): void;
+
+  /**
+   * Excludes the specified static filter value, deselecting others.
+   *
+   * @param value - The static filter value to toggle exclusion.
+   */
+  toggleSingleExclude(value: StaticFilterValue): void;
 
   /**
    * Deselects all static filter values.
@@ -88,6 +103,14 @@ export interface StaticFilter extends Controller {
    * @returns Whether the specified static filter value is selected.
    */
   isValueSelected(value: StaticFilterValue): boolean;
+
+  /**
+   * Checks whether the specified static filter value is excluded.
+   *
+   * @param value - The static filter value to check.
+   * @returns Whether the specified static filter value is excluded.
+   */
+  isValueExcluded(value: StaticFilterValue): boolean;
 
   /**
    * A state of the `StaticFilter` controller.
@@ -160,6 +183,24 @@ export function buildStaticFilter(
       dispatch(executeSearch(analytics));
     },
 
+    toggleExclude(value: StaticFilterValue) {
+      const analytics = getAnalyticsActionForToggledValue(id, value);
+
+      dispatch(toggleExcludeStaticFilterValue({id, value}));
+      dispatch(executeSearch(analytics));
+    },
+
+    toggleSingleExclude(value: StaticFilterValue) {
+      const analytics = getAnalyticsActionForToggledValue(id, value);
+
+      if (value.state === 'idle') {
+        dispatch(deselectAllStaticFilterValues(id));
+      }
+
+      dispatch(toggleExcludeStaticFilterValue({id, value}));
+      dispatch(executeSearch(analytics));
+    },
+
     deselectAll() {
       const analytics = logStaticFilterClearAll({staticFilterId: id});
 
@@ -169,6 +210,10 @@ export function buildStaticFilter(
 
     isValueSelected(value: StaticFilterValue) {
       return value.state === 'selected';
+    },
+
+    isValueExcluded(value: StaticFilterValue) {
+      return value.state === 'excluded';
     },
 
     get state() {

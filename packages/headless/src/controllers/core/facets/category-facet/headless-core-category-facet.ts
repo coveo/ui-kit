@@ -306,17 +306,17 @@ export function buildCoreCategoryFacet(
       dispatch(
         toggleSelectCategoryFacetValue({facetId, selection, retrieveCount})
       );
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     deselectAll() {
       dispatch(deselectAllCategoryFacetValues(facetId));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       dispatch(updateCategoryFacetSortCriterion({facetId, criterion}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     isSortedBy(criterion: CategoryFacetSortCriterion) {
@@ -330,14 +330,14 @@ export function buildCoreCategoryFacet(
       const numberOfValues = values.length + increment;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     showLessValues() {
       const {numberOfValues} = options;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     enable() {

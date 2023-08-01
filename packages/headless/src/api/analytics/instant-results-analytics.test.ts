@@ -3,6 +3,8 @@ import {
   getInstantResultsInitialState,
   InstantResultCache,
 } from '../../features/instant-results/instant-results-state';
+import {buildMockResult} from '../../test';
+import {getObjectHash} from '../../utils/utils';
 import {
   InstantResultsAnalyticsProvider,
   StateNeededByInstantResultsAnalyticsProvider,
@@ -21,28 +23,64 @@ describe('instant results analytics provider', () => {
     expiresAt: 0,
     isActive: false,
     searchUid: '',
+    totalCountFiltered: 0,
+    duration: 0,
   });
 
-  it('should properly return getSearchUID from the instant results state if available', () => {
-    const state = getBaseState();
-    state.instantResults['someid'] = {
-      q: 'somequery',
-      cache: {
-        someSuggestion: {
-          ...makeEmptyCache(),
-          isActive: true,
-          searchUid: 'the_id',
-        },
-        anotherSuggestion: {
-          ...makeEmptyCache(),
-          isActive: false,
-          searchUid: 'not_the_id',
-        },
-      },
+  describe('with an active suggestion', () => {
+    const activeSuggestionCache: InstantResultCache = {
+      ...makeEmptyCache(),
+      isActive: true,
+      searchUid: 'the_id',
+      duration: 123,
+      results: [
+        buildMockResult({
+          uri: 'result/1',
+          raw: {urihash: getObjectHash('result/1')},
+        }),
+        buildMockResult({
+          uri: 'result/2',
+          raw: {urihash: getObjectHash('result/2')},
+        }),
+      ],
     };
+    let provider: InstantResultsAnalyticsProvider;
+    beforeEach(() => {
+      const state = getBaseState();
+      state.instantResults['someid'] = {
+        q: 'somequery',
+        cache: {
+          someSuggestion: activeSuggestionCache,
+          anotherSuggestion: {
+            ...makeEmptyCache(),
+            isActive: false,
+            searchUid: 'not_the_id',
+          },
+        },
+      };
+      provider = new InstantResultsAnalyticsProvider(() => state);
+    });
 
-    expect(
-      new InstantResultsAnalyticsProvider(() => state).getSearchUID()
-    ).toEqual('the_id');
+    it('should properly return getSearchUID from the instant results state if available', () => {
+      expect(provider.getSearchUID()).toEqual('the_id');
+    });
+
+    it('should generate the correct event request payload', () => {
+      expect(provider.getSearchEventRequestPayload()).toEqual({
+        queryText: 'somequery',
+        responseTime: activeSuggestionCache.duration,
+        results: [
+          {
+            documentUri: activeSuggestionCache.results[0].uri,
+            documentUriHash: activeSuggestionCache.results[0].raw.urihash,
+          },
+          {
+            documentUri: activeSuggestionCache.results[1].uri,
+            documentUriHash: activeSuggestionCache.results[1].raw.urihash,
+          },
+        ],
+        numberOfResults: activeSuggestionCache.totalCountFiltered,
+      });
+    });
   });
 });

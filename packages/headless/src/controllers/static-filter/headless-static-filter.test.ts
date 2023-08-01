@@ -2,6 +2,7 @@ import {executeSearch} from '../../features/search/search-actions';
 import {
   deselectAllStaticFilterValues,
   registerStaticFilter,
+  toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
 import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice';
@@ -54,7 +55,7 @@ describe('Static Filter', () => {
     );
   });
   describe('#toggleSelect', () => {
-    it('dispatches #toggleStaticFilterValue', () => {
+    it('dispatches #toggleSelectStaticFilterValue', () => {
       const value = buildMockStaticFilterValue();
       filter.toggleSelect(value);
 
@@ -65,6 +66,24 @@ describe('Static Filter', () => {
     it('dispatches #executeSearch', () => {
       const value = buildMockStaticFilterValue();
       filter.toggleSelect(value);
+
+      const action = engine.findAsyncAction(executeSearch.pending);
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#toggleExclude', () => {
+    it('dispatches #toggleExcludeStaticFilterValue', () => {
+      const value = buildMockStaticFilterValue();
+      filter.toggleExclude(value);
+
+      const action = toggleExcludeStaticFilterValue({id: options.id, value});
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #executeSearch', () => {
+      const value = buildMockStaticFilterValue();
+      filter.toggleExclude(value);
 
       const action = engine.findAsyncAction(executeSearch.pending);
       expect(action).toBeTruthy();
@@ -120,15 +139,84 @@ describe('Static Filter', () => {
     });
   });
 
+  describe('#toggleSingleExcluded', () => {
+    it('with an idle value, it deselects all values and toggle excludes the value', () => {
+      const {id} = options;
+      const value = buildMockStaticFilterValue({state: 'idle'});
+      filter.toggleSingleExclude(value);
+
+      expect(engine.actions).toContainEqual(deselectAllStaticFilterValues(id));
+      expect(engine.actions).toContainEqual(
+        toggleExcludeStaticFilterValue({id, value})
+      );
+    });
+
+    it('with a selected value, it only toggle excludes the value', () => {
+      const {id} = options;
+      const value = buildMockStaticFilterValue({state: 'selected'});
+      filter.toggleSingleExclude(value);
+
+      expect(engine.actions).not.toContainEqual(
+        deselectAllStaticFilterValues(id)
+      );
+      expect(engine.actions).toContainEqual(
+        toggleExcludeStaticFilterValue({id, value})
+      );
+    });
+
+    it('with an excluded value, it only toggle excludes the value', () => {
+      const {id} = options;
+      const value = buildMockStaticFilterValue({state: 'excluded'});
+      filter.toggleSingleExclude(value);
+
+      expect(engine.actions).not.toContainEqual(
+        deselectAllStaticFilterValues(id)
+      );
+      expect(engine.actions).toContainEqual(
+        toggleExcludeStaticFilterValue({id, value})
+      );
+    });
+
+    it('dispatches #executeSearch', () => {
+      const value = buildMockStaticFilterValue();
+      filter.toggleSingleSelect(value);
+
+      const action = engine.findAsyncAction(executeSearch.pending);
+      expect(action).toBeTruthy();
+    });
+  });
+
   describe('#isValueSelected', () => {
     it('when the value state is selected, it returns true', () => {
       const value = buildMockStaticFilterValue({state: 'selected'});
       expect(filter.isValueSelected(value)).toBe(true);
     });
 
+    it('when the value state is excluded, it returns false', () => {
+      const value = buildMockStaticFilterValue({state: 'excluded'});
+      expect(filter.isValueSelected(value)).toBe(false);
+    });
+
     it('when the value state is idle, it returns false', () => {
       const value = buildMockStaticFilterValue({state: 'idle'});
       expect(filter.isValueSelected(value)).toBe(false);
+    });
+  });
+
+  describe('#isValueExcluded', () => {
+    it('when the value state is excluded, it returns true', () => {
+      const value = buildMockStaticFilterValue({state: 'excluded'});
+      expect(filter.isValueExcluded(value)).toBe(true);
+    });
+
+    it('when the value state is selected, it returns false', () => {
+      const value = buildMockStaticFilterValue({state: 'selected'});
+      expect(filter.isValueExcluded(value)).toBe(false);
+    });
+
+    it('when the value state is idle, it returns false', () => {
+      const value = buildMockStaticFilterValue({state: 'idle'});
+      expect(filter.isValueExcluded(value)).toBe(false);
     });
   });
 
@@ -149,6 +237,15 @@ describe('Static Filter', () => {
     it('when at least one value is selected, it is true', () => {
       const id = options.id;
       const value = buildMockStaticFilterValue({state: 'selected'});
+      const slice = buildMockStaticFilterSlice({values: [value]});
+      engine.state.staticFilterSet = {[id]: slice};
+
+      expect(filter.state.hasActiveValues).toBe(true);
+    });
+
+    it('when at least one value is excluded, it is true', () => {
+      const id = options.id;
+      const value = buildMockStaticFilterValue({state: 'excluded'});
       const slice = buildMockStaticFilterSlice({values: [value]});
       engine.state.staticFilterSet = {[id]: slice};
 

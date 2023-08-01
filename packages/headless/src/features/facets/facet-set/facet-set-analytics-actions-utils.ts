@@ -1,10 +1,13 @@
 import {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {
+  AutomaticFacetSection,
   CategoryFacetSection,
   DateFacetSection,
   FacetSection,
   NumericFacetSection,
 } from '../../../state/state-sections';
+import {getAutomaticFacetSetInitialState} from '../automatic-facet-set/automatic-facet-set-state';
+import {AutomaticFacetResponse} from '../automatic-facet-set/interfaces/response';
 import {categoryFacetRequestSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
 import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
 import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
@@ -29,7 +32,8 @@ import {FacetRequest, FacetValueRequest} from './interfaces/request';
 export type SectionNeededForFacetMetadata = FacetSection &
   CategoryFacetSection &
   DateFacetSection &
-  NumericFacetSection;
+  NumericFacetSection &
+  AutomaticFacetSection;
 
 export type FacetSelectionChangeMetadata = {
   facetId: string;
@@ -43,7 +47,7 @@ export const buildFacetBaseMetadata = (
   const facet = getFacetRequest(state, facetId);
 
   const facetField = facet ? facet.field : '';
-  const facetTitle = `${facetField}_${facetId}`;
+  const facetTitle = getFacetTitle(facetField, facetId);
 
   return {facetId, facetField, facetTitle};
 };
@@ -68,10 +72,12 @@ export function getStateNeededForFacetMetadata(
   s: Partial<SectionNeededForFacetMetadata>
 ): SectionNeededForFacetMetadata {
   return {
-    facetSet: s.facetSet || getFacetSetInitialState(),
-    categoryFacetSet: s.categoryFacetSet || getCategoryFacetSetInitialState(),
-    dateFacetSet: s.dateFacetSet || getDateFacetSetInitialState(),
-    numericFacetSet: s.numericFacetSet || getNumericFacetSetInitialState(),
+    facetSet: s.facetSet ?? getFacetSetInitialState(),
+    categoryFacetSet: s.categoryFacetSet ?? getCategoryFacetSetInitialState(),
+    dateFacetSet: s.dateFacetSet ?? getDateFacetSetInitialState(),
+    numericFacetSet: s.numericFacetSet ?? getNumericFacetSetInitialState(),
+    automaticFacetSet:
+      s.automaticFacetSet ?? getAutomaticFacetSetInitialState(),
   };
 }
 
@@ -132,6 +138,31 @@ export const buildFacetStateMetadata = (
     });
   });
 
+  getAutomaticFacets(state).forEach((facet, facetIndex) => {
+    const facetAnalytics = mapAutomaticFacetToAnalytics(facet, facetIndex + 1);
+
+    facet.values.forEach((facetValue, facetValueIndex) => {
+      if (facetValue.state === 'idle') {
+        return;
+      }
+
+      const facetValueAnalytics = mapFacetValueToAnalytics(
+        facetValue,
+        facetValueIndex + 1,
+        'specific'
+      );
+
+      const facetDisplayValueAnalytics =
+        mapFacetDisplayValueToAnalytics(facetValue);
+
+      facetState.push({
+        ...facetAnalytics,
+        ...facetValueAnalytics,
+        ...facetDisplayValueAnalytics,
+      });
+    });
+  });
+
   return facetState;
 };
 
@@ -150,6 +181,14 @@ const getFacetRequests = (state: SectionNeededForFacetMetadata) => {
     ...Object.values(state.dateFacetSet),
     ...Object.values(state.numericFacetSet),
   ].map((facet) => facet.request);
+};
+
+const getAutomaticFacets = (
+  state: SectionNeededForFacetMetadata
+): AutomaticFacetResponse[] => {
+  return [...Object.values(state.automaticFacetSet.set)].map(
+    (facet) => facet.response
+  );
 };
 
 const mapFacetValueToAnalytics = (
@@ -207,16 +246,32 @@ const mapCategoryFacetValueToAnalytics = (
   };
 };
 
+const mapAutomaticFacetToAnalytics = (
+  facet: AutomaticFacetResponse,
+  facetPosition: number
+) => {
+  return {
+    title: getFacetTitle(facet.field, facet.field),
+    field: facet.field,
+    id: facet.field,
+    facetPosition,
+  };
+};
+
 const mapFacetRequestToAnalytics = (
   request: AnyFacetRequest,
   facetPosition: number
 ) => {
   return {
-    title: `${request.field}_${request.facetId}`,
+    title: getFacetTitle(request.field, request.facetId),
     field: request.field,
     id: request.facetId,
     facetPosition,
   };
+};
+
+const getFacetTitle = (field: string, facetId: string) => {
+  return `${field}_${facetId}`;
 };
 
 const getFacetRequest = (
@@ -232,7 +287,8 @@ const getFacetRequest = (
     state.facetSet[facetId]?.request ||
     state.categoryFacetSet[facetId]?.request ||
     state.dateFacetSet[facetId]?.request ||
-    state.numericFacetSet[facetId]?.request
+    state.numericFacetSet[facetId]?.request ||
+    state.automaticFacetSet.set[facetId]?.response
   );
 };
 

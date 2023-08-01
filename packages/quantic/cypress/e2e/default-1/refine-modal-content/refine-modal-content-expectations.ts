@@ -52,11 +52,11 @@ function refineContentExpectations(selector: RefineContentSelector) {
         .logDetail(`${should(display)} the clear all filters button`);
     },
 
-    displayFacetManager: () => {
+    displayFacetManager: (display = true) => {
       selector
         .facetManager()
-        .should('exist')
-        .logDetail('should display the facet manager.');
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} the facet manager`);
     },
 
     displayDuplicatedNumericFacet: () => {

@@ -89,9 +89,7 @@ describe('insight category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       insightCategoryFacet.toggleSelect(selection);
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('executes a search', () => {
@@ -115,9 +113,7 @@ describe('insight category facet', () => {
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('executes a search', () => {
@@ -157,9 +153,7 @@ describe('insight category facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       insightCategoryFacet.showMoreValues();
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches #fetchFacetValues', () => {
@@ -182,9 +176,7 @@ describe('insight category facet', () => {
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches #fetchFacetValues', () => {
@@ -209,9 +201,7 @@ describe('insight category facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       insightCategoryFacet.sortBy('alphanumeric');
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches #executeSearch', () => {

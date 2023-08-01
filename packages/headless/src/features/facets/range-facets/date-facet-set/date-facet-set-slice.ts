@@ -14,6 +14,7 @@ import {
   defaultRangeFacetOptions,
   handleRangeFacetSearchParameterRestoration,
   updateRangeValues,
+  toggleExcludeRangeValue,
 } from '../generic/range-facet-reducers';
 import {
   registerDateFacet,
@@ -22,6 +23,7 @@ import {
   updateDateFacetSortCriterion,
   RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
+  toggleExcludeDateFacetValue,
 } from './date-facet-actions';
 import {
   getDateFacetSetInitialState,
@@ -50,6 +52,10 @@ export const dateFacetSetReducer = createReducer(
       .addCase(toggleSelectDateFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         toggleSelectRangeValue(state, facetId, selection);
+      })
+      .addCase(toggleExcludeDateFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        toggleExcludeRangeValue(state, facetId, selection);
       })
       .addCase(updateDateFacetValues, (state, action) => {
         const {facetId, values} = action.payload;

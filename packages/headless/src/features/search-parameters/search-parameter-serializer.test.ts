@@ -197,7 +197,29 @@ describe('buildSearchParameterSerializer', () => {
         },
       });
     });
+    it('deserializes two automatic facets correctly', () => {
+      const result = deserialize('af-author=a,b&af-filetype=c,d');
+      expect(result).toEqual({
+        af: {
+          author: ['a', 'b'],
+          filetype: ['c', 'd'],
+        },
+      });
+    });
 
+    it('deserializes two automatic facets correctly with special characters', () => {
+      someSpecialCharactersThatNeedsEncoding.forEach((char) => {
+        const result = deserialize(
+          `af-author=${encodeURIComponent(char)},b&af-filetype=c,d`
+        );
+        expect(result).toEqual({
+          af: {
+            author: [char, 'b'],
+            filetype: ['c', 'd'],
+          },
+        });
+      });
+    });
     it('deserializes two facets correctly', () => {
       const result = deserialize('f-author=a,b&f-filetype=c,d');
       expect(result).toEqual({
@@ -464,7 +486,8 @@ describe('buildSearchParameterSerializer', () => {
       ],
     };
     const sf = {fileType: ['a', 'b']};
-    const parameters = buildMockSearchParameters({f, cf, nf, df, sf});
+    const af = {documenttype: ['s', 'sd']};
+    const parameters = buildMockSearchParameters({f, cf, nf, df, sf, af});
 
     const {serialize, deserialize} = buildSearchParameterSerializer();
     const serialized = serialize(parameters);

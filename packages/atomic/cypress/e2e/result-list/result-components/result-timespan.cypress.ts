@@ -25,8 +25,7 @@ describe('Result Timespan Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultTimespanSelectors.shadow);
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the field does not exist for the result', () => {

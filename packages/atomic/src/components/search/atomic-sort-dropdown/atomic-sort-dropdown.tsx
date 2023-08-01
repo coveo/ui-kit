@@ -24,9 +24,9 @@ import {SortDropdownOption} from '../atomic-search-interface/store';
  *
  * @part label - The "Sort by" label of the `<select>` element.
  * @part select-parent - The `<select>` element parent.
- * @part select - The `<select>` element of the drop-down list.
+ * @part select - The `<select>` element of the dropdown list.
  * @part select-separator - The element separating the select from the icon.
- * @part placeholder - The drop-down placeholder for while the search interface is initializing.
+ * @part placeholder - The dropdown placeholder for while the search interface is initializing.
  */
 @Component({
   tag: 'atomic-sort-dropdown',

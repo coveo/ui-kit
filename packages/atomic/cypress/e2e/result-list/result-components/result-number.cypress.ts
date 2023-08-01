@@ -38,8 +38,7 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultNumberSelectors.shadow);
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the field does not exist for the result', () => {
@@ -49,9 +48,6 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(
-      ResultNumberSelectors.firstInResult
-    );
     CommonAssertions.assertConsoleError(false);
   });
 

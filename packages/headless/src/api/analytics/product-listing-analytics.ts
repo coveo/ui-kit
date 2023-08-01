@@ -1,15 +1,24 @@
-import {SearchPageClientProvider} from 'coveo.analytics';
+import {
+  AnalyticsClientSendEventHook,
+  CoveoSearchPageClient,
+  SearchPageClientProvider,
+} from 'coveo.analytics';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
+import {Logger} from 'pino';
+import {SectionNeededForFacetMetadata} from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
 import {
   ConfigurationSection,
   ProductListingSection,
   SearchHubSection,
 } from '../../state/state-sections';
+import {PreprocessRequest} from '../preprocess-request';
 import {getProductListingInitialState} from './../../features/product-listing/product-listing-state';
 import {BaseAnalyticsProvider} from './base-analytics';
 
 export type StateNeededByProductListingAnalyticsProvider =
-  ConfigurationSection & ProductListingSection & Partial<SearchHubSection>;
+  ConfigurationSection &
+    ProductListingSection &
+    Partial<SearchHubSection & SectionNeededForFacetMetadata>;
 
 export class ProductListingAnalyticsProvider
   extends BaseAnalyticsProvider<StateNeededByProductListingAnalyticsProvider>
@@ -50,3 +59,55 @@ export class ProductListingAnalyticsProvider
     return this.state.productListing.products.length;
   }
 }
+
+interface ConfigureProductListingAnalyticsOptions {
+  logger: Logger;
+  analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+  preprocessRequest?: PreprocessRequest;
+  provider?: SearchPageClientProvider;
+  getState(): StateNeededByProductListingAnalyticsProvider;
+}
+
+export const configureProductListingAnalytics = ({
+  logger,
+  getState,
+  analyticsClientMiddleware = (_, p) => p,
+  preprocessRequest,
+  provider = new ProductListingAnalyticsProvider(getState),
+}: ConfigureProductListingAnalyticsOptions) => {
+  const state = getState();
+  const token = state.configuration.accessToken;
+  const endpoint = state.configuration.analytics.apiBaseUrl;
+  const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
+  const enabled = state.configuration.analytics.enabled;
+  const client = new CoveoSearchPageClient(
+    {
+      token,
+      endpoint,
+      runtimeEnvironment,
+      preprocessRequest,
+      beforeSendHooks: [
+        analyticsClientMiddleware,
+        (type, payload) => {
+          logger.info(
+            {
+              ...payload,
+              type,
+              endpoint,
+              token,
+            },
+            'Analytics request'
+          );
+          return payload;
+        },
+      ],
+    },
+    provider
+  );
+
+  if (!enabled) {
+    client.disable();
+  }
+
+  return client;
+};

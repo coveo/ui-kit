@@ -102,7 +102,9 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
       clear() {},
       updateCaptions() {},
       select() {},
+      exclude() {},
       singleSelect() {},
+      singleExclude() {},
       get state() {
         return {
           values: [],

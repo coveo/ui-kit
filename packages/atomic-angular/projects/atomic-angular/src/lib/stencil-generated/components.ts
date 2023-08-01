@@ -27,6 +27,48 @@ export class AtomicAriaLive {
 }
 
 
+export declare interface AtomicAutomaticFacet extends Components.AtomicAutomaticFacet {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['facet', 'facetId', 'field', 'isCollapsed', 'searchStatus']
+})
+@Component({
+  selector: 'atomic-automatic-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['facet', 'facetId', 'field', 'isCollapsed', 'searchStatus']
+})
+export class AtomicAutomaticFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicAutomaticFacetBuilder extends Components.AtomicAutomaticFacetBuilder {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['areCollapsed', 'desiredCount']
+})
+@Component({
+  selector: 'atomic-automatic-facet-builder',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['areCollapsed', 'desiredCount']
+})
+export class AtomicAutomaticFacetBuilder {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicBreadbox extends Components.AtomicBreadbox {}
 
 @ProxyCmp({

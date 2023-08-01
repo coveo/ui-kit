@@ -116,6 +116,7 @@ const categoryMap = {
   utility: 'Utility',
   insightPanel: 'Insight Panel',
   internal: 'Internal',
+  recommendation: 'Recommendation',
 };
 
 function parseClass(element, parentNode, childNodes) {

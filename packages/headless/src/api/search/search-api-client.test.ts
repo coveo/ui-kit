@@ -71,6 +71,12 @@ describe('search api client', () => {
     return new Response(body);
   }
 
+  function getPlatformClientCalls() {
+    return (PlatformClient.call as jest.Mock).mock.calls.map(
+      (call) => call[0] as PlatformClientCallOptions
+    );
+  }
+
   beforeEach(() => {
     state = createMockState();
   });
@@ -225,12 +231,25 @@ describe('search api client', () => {
       searchAPIClient.search(req);
       searchAPIClient.search(req);
       searchAPIClient.search(req);
-      const firstRequest = (PlatformClient.call as jest.Mock).mock.calls[0][0];
-      const secondRequest = (PlatformClient.call as jest.Mock).mock.calls[1][0];
-      const thirdRequest = (PlatformClient.call as jest.Mock).mock.calls[2][0];
-      expect(firstRequest.signal.aborted).toBe(true);
-      expect(secondRequest.signal.aborted).toBe(true);
-      expect(thirdRequest.signal.aborted).toBe(false);
+      expect(getPlatformClientCalls()[0].signal?.aborted).toBe(true);
+      expect(getPlatformClientCalls()[1].signal?.aborted).toBe(true);
+      expect(getPlatformClientCalls()[2].signal?.aborted).toBe(false);
+    });
+
+    it(`when calling SearchAPIClient.search with different origins
+    should abort only the requests with the same origin`, async () => {
+      mockPlatformResponse(() => buildMockSearchEndpointResponse(), 5);
+      const req = (await buildSearchRequest(state)).request;
+      searchAPIClient.search(req);
+      searchAPIClient.search(req, {origin: 'mainSearch'});
+      searchAPIClient.search(req, {origin: 'facetValues'});
+      searchAPIClient.search(req);
+      searchAPIClient.search(req, {origin: 'facetValues'});
+      expect(getPlatformClientCalls()[0].signal?.aborted).toBe(true);
+      expect(getPlatformClientCalls()[1].signal?.aborted).toBe(false);
+      expect(getPlatformClientCalls()[2].signal?.aborted).toBe(true);
+      expect(getPlatformClientCalls()[3].signal?.aborted).toBe(false);
+      expect(getPlatformClientCalls()[4].signal?.aborted).toBe(false);
     });
 
     it(`when calling SearchAPIClient.plan

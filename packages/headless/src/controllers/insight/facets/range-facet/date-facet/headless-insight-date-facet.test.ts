@@ -74,9 +74,7 @@ describe('insight date facet', () => {
     });
 
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches a search', () => {
@@ -100,9 +98,7 @@ describe('insight date facet', () => {
     it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
       dateFacet.sortBy('descending');
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches a search', () => {
@@ -127,9 +123,7 @@ describe('insight date facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       dateFacet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('dispatches a search', () => {

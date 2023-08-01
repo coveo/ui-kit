@@ -1,4 +1,4 @@
-import {AnyAction} from 'redux';
+import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
 import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {

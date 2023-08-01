@@ -1,0 +1,19 @@
+@import '../../../global/global.pcss';
+
+atomic-insight-result-action-bar {
+  @apply flex absolute invisible right-6 top-[-1rem];
+
+  > atomic-insight-result-action:not(:last-child) {
+    button {
+      @apply rounded-r-none border-r-0;
+      &:hover {
+        @apply border-r;
+      }
+    }
+  }
+  > atomic-insight-result-action:not(:first-child) {
+    button {
+      @apply rounded-tl-none rounded-bl-none;
+    }
+  }
+}

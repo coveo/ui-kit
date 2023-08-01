@@ -34,7 +34,7 @@ function ensureEnvVariables() {
 }
 
 async function getMatchingPackageVersion(versionNumber: string) {
-  return (await sfdx.getPackageVersionList()).result.find(
+  return (await sfdx.getPackageVersionList(30)).result.find(
     (pkg) =>
       pkg.Version === versionNumber ||
       pkg.Version.slice(0, -2) === versionNumber
@@ -151,7 +151,7 @@ async function createGithubDiscussionPost(
   packageVersionId: string
 ) {
   const token = process.env.GITHUB_TOKEN || '';
-  const packageDetails = (await sfdx.getPackageVersionList()).result.find(
+  const packageDetails = (await sfdx.getPackageVersionList(0)).result.find(
     (pack) => pack.SubscriberPackageVersionId === packageVersionId
   );
   const discussionTitle = `${packageDetails.Package2Name} v${options.packageVersion}`;

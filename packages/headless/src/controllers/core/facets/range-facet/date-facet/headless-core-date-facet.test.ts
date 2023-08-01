@@ -4,6 +4,7 @@ import {facetOptionsReducer as facetOptions} from '../../../../../features/facet
 import {
   deselectAllDateFacetValues,
   registerDateFacet,
+  toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
@@ -102,6 +103,16 @@ describe('date facet', () => {
     });
   });
 
+  describe('#toggleExclude', () => {
+    it('dispatches a toggleExcludeDateFacetValue with the passed value', () => {
+      const value = buildMockDateFacetValue();
+      dateFacet.toggleExclude(value);
+
+      const action = toggleExcludeDateFacetValue({facetId, selection: value});
+      expect(engine.actions).toContainEqual(action);
+    });
+  });
+
   function testCommonToggleSingleSelect(facetValue: () => DateFacetValue) {
     it('dispatches a #toggleSelect action with the passed facet value', () => {
       dateFacet.toggleSingleSelect(facetValue());
@@ -114,9 +125,7 @@ describe('date facet', () => {
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       dateFacet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
+      expect(engine.actions).toContainEqual(updateFacetOptions());
     });
   }
 
@@ -135,12 +144,64 @@ describe('date facet', () => {
   });
 
   describe('#toggleSingleSelect when the value state is not "idle"', () => {
-    const facetValue = () => buildMockDateFacetValue({state: 'selected'});
+    const selectedFacetValue = () =>
+      buildMockDateFacetValue({state: 'selected'});
+    const excludedFacetValue = () =>
+      buildMockDateFacetValue({state: 'excluded'});
 
-    testCommonToggleSingleSelect(facetValue);
+    testCommonToggleSingleSelect(selectedFacetValue);
+    testCommonToggleSingleSelect(excludedFacetValue);
 
     it('does not dispatch a #deselectAllFacetValues action', () => {
+      dateFacet.toggleSingleSelect(selectedFacetValue());
+
+      expect(engine.actions).not.toContainEqual(
+        deselectAllDateFacetValues(facetId)
+      );
+    });
+  });
+
+  function testCommonToggleExcludeSelect(facetValue: () => DateFacetValue) {
+    it('dispatches a #toggleExclude action with the passed facet value', () => {
+      dateFacet.toggleSingleExclude(facetValue());
+
+      expect(engine.actions).toContainEqual(
+        toggleExcludeDateFacetValue({facetId, selection: facetValue()})
+      );
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      dateFacet.toggleSingleExclude(facetValue());
+
+      expect(engine.actions).toContainEqual(updateFacetOptions());
+    });
+  }
+
+  describe('#toggleSingleExclude when the value state is "idle"', () => {
+    const facetValue = () => buildMockDateFacetValue({state: 'idle'});
+
+    testCommonToggleExcludeSelect(facetValue);
+
+    it('dispatches a #deselectAllFacetValues action', () => {
       dateFacet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(
+        deselectAllDateFacetValues(facetId)
+      );
+    });
+  });
+
+  describe('#toggleSingleExclude when the value state is not "idle"', () => {
+    const selectedFacetValue = () =>
+      buildMockDateFacetValue({state: 'selected'});
+    const excludedFacetValue = () =>
+      buildMockDateFacetValue({state: 'excluded'});
+
+    testCommonToggleExcludeSelect(selectedFacetValue);
+    testCommonToggleExcludeSelect(excludedFacetValue);
+
+    it('does not dispatch a #deselectAllFacetValues action', () => {
+      dateFacet.toggleSingleSelect(selectedFacetValue());
 
       expect(engine.actions).not.toContainEqual(
         deselectAllDateFacetValues(facetId)

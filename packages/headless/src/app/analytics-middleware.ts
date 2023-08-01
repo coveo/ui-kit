@@ -1,4 +1,4 @@
-import {Middleware} from 'redux';
+import {Middleware} from '@reduxjs/toolkit';
 
 export const analyticsMiddleware: Middleware = (api) => (next) => (action) => {
   // Why all these shenanigans ?

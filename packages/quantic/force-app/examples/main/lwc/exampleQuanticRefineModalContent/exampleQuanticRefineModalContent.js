@@ -1,4 +1,5 @@
-import {api, LightningElement, track} from 'lwc';
+import { api, LightningElement, track } from 'lwc';
+
 
 export default class ExampleQuanticRefineModalContent extends LightningElement {
   @api engineId = 'quantic-refine-modal-engine';
@@ -13,6 +14,12 @@ export default class ExampleQuanticRefineModalContent extends LightningElement {
       attribute: 'hideSort',
       label: 'Hide Sort',
       description: 'Whether the Quantic Sort component should be hidden.',
+      defaultValue: false,
+    },
+    {
+      attribute: 'disableDynamicNavigation',
+      label: 'Disable Dynamic Navigation',
+      description: 'Indicates whether the dynamic navigation experience should be disabled.',
       defaultValue: false,
     },
   ];

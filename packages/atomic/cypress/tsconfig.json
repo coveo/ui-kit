@@ -9,6 +9,5 @@
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
-  "include": ["**/*.ts", "**/*.js"],
-  "files": ["../../../node_modules/@applitools/eyes-cypress/index.d.ts"],
+  "include": ["**/*.ts", "**/*.js"]
 }

@@ -1,5 +1,5 @@
 import {NumberValue} from '@coveo/bueno';
-import {Action} from 'redux';
+import {Action} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {updateQuery} from '../../features/query/query-actions';

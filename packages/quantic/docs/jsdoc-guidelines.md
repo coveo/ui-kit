@@ -28,6 +28,7 @@ Each component should be given one or more category values using the `@category`
 - **Search**: Components pertaining to the Search use case.
 - **Case Assist**: Components pertaining to the Case Assist use case.
 - **Insight Panel**: Components pertaining to the Insight Panel use case
+- **Recommendation**: Components pertaining to the Recommendation use case
 - **Result Template**: Components meant to be used within result templates.
 - **Utility**: Components providing a generic utility without pertaining to any specific Coveo Headless use-case.
 - **Internal** Components that are not to be publicly documented.

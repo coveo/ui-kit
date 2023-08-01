@@ -1,6 +1,9 @@
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {executeToggleDateFacetSelect} from './date-facet-controller-actions';
+import {
+  executeToggleDateFacetExclude,
+  executeToggleDateFacetSelect,
+} from './date-facet-controller-actions';
 
 describe('date facet controller actions', () => {
   let engine: MockSearchEngine;
@@ -22,6 +25,27 @@ describe('date facet controller actions', () => {
         }),
         expect.objectContaining({
           type: 'rangeFacet/executeToggleSelect',
+        }),
+        expect.objectContaining({
+          type: 'facetOptions/update',
+          payload: {freezeFacetOrder: true},
+        }),
+      ])
+    );
+  });
+
+  it('#executeToggleDateFacetExclude dispatches the correct actions', () => {
+    const selection = buildMockDateFacetValue();
+    engine.dispatch(executeToggleDateFacetExclude({facetId, selection}));
+
+    expect(engine.actions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'dateFacet/toggleExcludeValue',
+          payload: {facetId, selection},
+        }),
+        expect.objectContaining({
+          type: 'rangeFacet/executeToggleExclude',
         }),
         expect.objectContaining({
           type: 'facetOptions/update',

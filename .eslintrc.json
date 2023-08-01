@@ -3,26 +3,23 @@
     "node_modules",
     "stencil-generated",
     "dist",
-    "www"
+    "www",
+    "!.storybook"
   ],
   "env": {
     "jest": true,
     "es6": true
   },
-  "extends": ["plugin:prettier/recommended", "plugin:@cspell/recommended"],
+  "extends": ["plugin:prettier/recommended"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
   "overrides": [
     {
-      "files": [
-        "**/package-lock.json"
-      ],
+      "files": ["**/package-lock.json"],
       "parser": "eslint-plugin-json-es",
-      "plugins": [
-        "package-lock"
-      ],
+      "plugins": ["package-lock"],
       "rules": {
         "package-lock/lock-file-version": [
           "error",
@@ -34,6 +31,7 @@
     },
     {
       "files": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs"],
+      "extends": ["plugin:@cspell/recommended"],
       "rules": {
         "@cspell/spellchecker": ["warn"]
       }
@@ -41,12 +39,8 @@
     {
       "files": ["**/*.ts", "**/*.tsx"],
       "parser": "@typescript-eslint/parser",
-      "plugins": [
-        "@typescript-eslint"
-      ],
-      "extends": [
-        "./node_modules/gts"
-      ],
+      "plugins": ["@typescript-eslint"],
+      "extends": ["./node_modules/gts"],
       "parserOptions": {
         "jsxPragma": "h"
       },
@@ -68,13 +62,8 @@
       }
     },
     {
-      "files": [
-        "**/*.js",
-        "**/*.jsx"
-      ],
-      "extends": [
-        "eslint:recommended"
-      ],
+      "files": ["**/*.js", "**/*.jsx"],
+      "extends": ["eslint:recommended"],
       "rules": {
         "no-unused-vars": [
           "error",

@@ -101,7 +101,7 @@ export class ResultUtils {
     selector = undefined
   ) {
     const interactiveResult = controllerBuilder(engine, {
-      options: {result: JSON.parse(JSON.stringify(result))},
+      options: {result: result},
     });
 
     const eventsMap = {

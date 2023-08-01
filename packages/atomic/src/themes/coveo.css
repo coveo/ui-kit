@@ -10,6 +10,7 @@
   --atomic-neutral-dark: #626971;
   --atomic-neutral: #e5e8e8;
   --atomic-neutral-light: #f6f7f9;
+  --atomic-neutral-lighter: #f2f2f2;
 
   /* Semantic colors */
   --atomic-background: #ffffff;
@@ -18,6 +19,9 @@
   --atomic-error: #ce3f00;
   --atomic-visited: #752e9c;
   --atomic-disabled: #c5cacf;
+  --atomic-success-background: #d4fcf0;
+  --atomic-error-background: #fcbdc0;
+  --atomic-primary-background: #edf6ff;
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;

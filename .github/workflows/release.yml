@@ -1,5 +1,8 @@
 name: Create release
 on:
+  schedule:
+    # At 13:00 (UTC) every Wednesday.
+    - cron:  '0 13 * * 3'
   workflow_dispatch:
     inputs:
       version:

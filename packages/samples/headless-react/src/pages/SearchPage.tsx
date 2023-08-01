@@ -77,10 +77,14 @@ import {
   RecentResultsList as HeadlessRecentResultsList,
   buildRecentResultsList,
   InstantResults as HeadlessInstantResults,
+  AutomaticFacetBuilder as HeadlessAutomaticFacetBuilder,
   buildInstantResults,
+  buildAutomaticFacetBuilder,
 } from '@coveo/headless';
 import filesize from 'filesize';
 import {Component} from 'react';
+import {AutomaticFacetBuilder} from '../components/automatic-facet-builder/automatic-facet-builder.class';
+import {AutomaticFacetBuilder as AutomaticFacetBuilderFn} from '../components/automatic-facet-builder/automatic-facet-builder.fn';
 import {BreadcrumbManager} from '../components/breadcrumb-manager/breadcrumb-manager.class';
 import {BreadcrumbManager as BreadcrumbManagerFn} from '../components/breadcrumb-manager/breadcrumb-manager.fn';
 import {CategoryFacet} from '../components/category-facet/category-facet.class';
@@ -225,6 +229,7 @@ export class SearchPage extends Component {
   private readonly recentResultsList: HeadlessRecentResultsList;
   private readonly instantResults: HeadlessInstantResults;
   private readonly searchboxInstantResults: HeadlessSearchBox;
+  private readonly automaticFacetBuilder: HeadlessAutomaticFacetBuilder;
 
   private unsubscribeUrlManager!: Unsubscribe;
 
@@ -272,6 +277,10 @@ export class SearchPage extends Component {
     this.querySummary = buildQuerySummary(this.engine);
 
     this.facetManager = buildFacetManager(this.engine);
+
+    this.automaticFacetBuilder = buildAutomaticFacetBuilder(this.engine, {
+      desiredCount: 5,
+    });
 
     this.geographyFacet = buildCategoryFacet(this.engine, {
       options: {
@@ -585,6 +594,7 @@ export class SearchPage extends Component {
             <StaticFilterFn id="filetypes-b" values={this.staticFilterValues} />
           </Section>
           <Section title="facet">
+            <AutomaticFacetBuilder desiredCount={5}></AutomaticFacetBuilder>
             <FacetManager>
               <CategoryFacet
                 field="geographicalhierarchy"
@@ -628,6 +638,9 @@ export class SearchPage extends Component {
               />
               <DateFilter field="date" facetId="date-3" />
             </FacetManager>
+            <AutomaticFacetBuilderFn
+              controller={this.automaticFacetBuilder}
+            ></AutomaticFacetBuilderFn>
             <FacetManagerFn controller={this.facetManager}>
               <CategoryFacetFn controller={this.geographyFacet} />
               <FacetFn controller={this.objectTypeFacet} />

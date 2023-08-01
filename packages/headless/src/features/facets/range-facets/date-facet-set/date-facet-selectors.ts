@@ -29,9 +29,28 @@ export const dateFacetSelectedValuesSelector = (
   state: SearchSection & DateFacetSection,
   facetId: string
 ): DateFacetValue[] => {
-  const facetResponse = dateFacetResponseSelector(state, facetId);
-  if (!facetResponse) {
-    return [];
-  }
+  const facetResponse = dateFacetResponseSelector(state, facetId) || {
+    values: [],
+  };
   return facetResponse.values.filter((value) => value.state === 'selected');
+};
+
+export const dateFacetActiveValuesSelector = (
+  state: SearchSection & DateFacetSection,
+  facetId: string
+): DateFacetValue[] => {
+  const facetResponse = dateFacetResponseSelector(state, facetId) || {
+    values: [],
+  };
+  return facetResponse.values.filter((value) => value.state !== 'idle');
+};
+
+export const dateFacetExcludedValuesSelector = (
+  state: SearchSection & DateFacetSection,
+  facetId: string
+): DateFacetValue[] => {
+  const facetResponse = dateFacetResponseSelector(state, facetId) || {
+    values: [],
+  };
+  return facetResponse.values.filter((value) => value.state === 'excluded');
 };

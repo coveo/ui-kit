@@ -1,5 +1,5 @@
+import {Middleware, MiddlewareAPI} from '@reduxjs/toolkit';
 import pino, {Logger} from 'pino';
-import {Middleware, MiddlewareAPI} from 'redux';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions';
 import {ExpiredTokenError} from '../utils/errors';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';

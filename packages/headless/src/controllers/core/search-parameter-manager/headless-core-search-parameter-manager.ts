@@ -117,7 +117,7 @@ export function enrichParameters(
 export function validateParams(
   engine: CoreEngine,
   parameters: Required<SearchParameters>
-): Boolean {
+): boolean {
   return validateTab(engine, parameters);
 }
 
@@ -133,6 +133,7 @@ export function getCoreActiveSearchParameters(
     ...getCategoryFacets(state),
     ...getNumericFacets(state),
     ...getDateFacets(state),
+    ...getAutomaticFacets(state),
   };
 }
 
@@ -147,7 +148,7 @@ function getQ(state: Partial<SearchParametersState>) {
 }
 
 function getTab(state: Partial<SearchParametersState>) {
-  const activeTab = Object.values(state.tabSet || {}).find(
+  const activeTab = Object.values(state.tabSet ?? {}).find(
     (tab) => tab.isActive
   );
 
@@ -213,7 +214,7 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, slice]) => {
       const {parents} = partitionIntoParentsAndValues(
-        slice!.request.currentValues
+        slice.request.currentValues
       );
       const selectedValues = parents.map((p) => p.value);
 
@@ -258,4 +259,19 @@ function getDateFacets(state: Partial<SearchParametersState>) {
 
 function getSelectedRanges<T extends RangeValueRequest>(ranges: T[]) {
   return ranges.filter((range) => range.state === 'selected');
+}
+
+function getAutomaticFacets(state: Partial<SearchParametersState>) {
+  const set = state.automaticFacetSet?.set;
+  if (set === undefined) {
+    return {};
+  }
+  const af = Object.entries(set)
+    .map(([facetId, {response}]) => {
+      const selectedValues = getSelectedValues(response.values);
+      return selectedValues.length ? {[facetId]: selectedValues} : {};
+    })
+    .reduce((acc, obj) => ({...acc, ...obj}), {});
+
+  return Object.keys(af).length ? {af} : {};
 }

@@ -1,4 +1,4 @@
-import {generateComponentHTML} from '../../fixtures/test-fixture';
+import {TagProps, generateComponentHTML} from '../../fixtures/test-fixture';
 import {
   resultChildrenComponent,
   resultChildrenTemplateComponent,
@@ -7,15 +7,21 @@ import {
 import {resultLinkComponent} from './result-components/result-link-selectors';
 import {resultSectionTags} from './result-list-selectors';
 
-export function buildResultTopChild(children?: HTMLElement): HTMLElement[] {
+export function buildResultTopChild(
+  children?: HTMLElement,
+  props?: TagProps
+): HTMLElement[] {
   return [
     generateComponentHTML(resultLinkComponent),
-    buildResultChildren(children),
+    buildResultChildren(children, props),
   ];
 }
 
-export function buildResultChildren(grandChildren?: HTMLElement): HTMLElement {
-  const children = generateComponentHTML(resultChildrenComponent);
+export function buildResultChildren(
+  grandChildren?: HTMLElement,
+  props?: TagProps
+): HTMLElement {
+  const children = generateComponentHTML(resultChildrenComponent, props);
   const childrenTemplate = generateComponentHTML(
     resultChildrenTemplateComponent
   );
