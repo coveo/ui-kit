@@ -15,6 +15,8 @@ export default function ResultList({
   const [state, setState] = useState(controller.state);
   useEffect(() => {
     controller.subscribe(() => setState(controller.state));
+    // declaring `controller` as a dependency will result in an infinite render loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
