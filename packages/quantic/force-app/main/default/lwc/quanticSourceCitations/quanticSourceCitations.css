@@ -1,3 +1,7 @@
+.source__citations span {
+  height: 1.875rem;
+}
+
 .citation {
   max-width: 10.625rem;
 }
