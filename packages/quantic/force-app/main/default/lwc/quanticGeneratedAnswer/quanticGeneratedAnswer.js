@@ -1,0 +1,138 @@
+import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
+import loading from '@salesforce/label/c.quantic_Loading';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+  getHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
+import {LightningElement, api} from 'lwc';
+// @ts-ignore
+import generatedAnswerTemplate from './generatedAnswer.html';
+// @ts-ignore
+import loadingTemplate from './loading.html';
+
+/** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
+/** @typedef {import("coveo").GeneratedAnswerState} GeneratedAnswerState */
+/** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+
+/**
+ * The `QuanticGeneratedAnswer`
+ * @category Search
+ * @example
+ * <c-quantic-generated-answer engine-id={engineId}></c-quantic-generated-answer>
+ */
+export default class QuanticGeneratedAnswer extends LightningElement {
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
+
+  labels = {
+    generatedAnswerForYou,
+    loading,
+  };
+
+  /** @type {GeneratedAnswer} */
+  generatedAnswer;
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {GeneratedAnswerState} */
+  state;
+  citations;
+  /** @type {'neutral' | 'liked' | 'disliked'} */
+  feedbackState = 'neutral';
+
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize);
+  }
+
+  /**
+   * @param {SearchEngine} engine
+   */
+  initialize = (engine) => {
+    this.headless = getHeadlessBundle(this.engineId);
+
+    this.generatedAnswer = this.headless.buildGeneratedAnswer(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
+    this.unsubscribeGeneratedAnswer = this.generatedAnswer.subscribe(() =>
+      this.updateState()
+    );
+    // this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+    //   this.updateState()
+    // );
+  };
+
+  disconnectedCallback() {
+    this.unsubscribeGeneratedAnswer?.();
+  }
+
+  updateState() {
+    this.state = this.generatedAnswer.state;
+    console.log(this.state);
+    this.citations = this?.state?.citations;
+  }
+
+  /**
+   * handles clicking on a citation.
+   * @param {string} id
+   */
+  handleCitationClick = (id) => {
+    this.generatedAnswer.logCitationClick(id);
+  };
+
+  /**
+   * handles liking the generated answer.
+   * @param {CustomEvent} event
+   */
+  handleLike(event) {
+    event.stopPropagation();
+    this.feedbackState = 'liked';
+    this.generatedAnswer.like();
+    this.generatedAnswer.like?.();
+  }
+
+  /**
+   * handles disliking the generated answer.
+   * @param {CustomEvent} event
+   */
+  handleDislike(event) {
+    event.stopPropagation();
+    this.feedbackState = 'disliked';
+    this.generatedAnswer.dislike();
+  }
+
+  get answer() {
+    return this?.state?.answer;
+  }
+
+  get isLoading() {
+    return this?.state?.isLoading;
+  }
+
+  get isStreaming() {
+    return this?.state?.isStreaming;
+  }
+
+  get shouldDisplayGeneratedAnswer() {
+    return !!this.answer || this.isStreaming;
+  }
+
+  get generatedContentClass() {
+    return `${this.isStreaming ? 'generated-answer__content--streaming' : ''}`;
+  }
+
+  render() {
+    if (this.isLoading) {
+      return loadingTemplate;
+    }
+    return generatedAnswerTemplate;
+  }
+}

@@ -1,0 +1,36 @@
+<template>
+  <template lwc:if={shouldDisplayGeneratedAnswer}>
+    <div
+      data-cy="generated-answer__card"
+      class="slds-box generated-answer__card"
+    >
+      <div
+        class="slds-var-m-bottom_medium slds-grid generated-answer__card-header"
+      >
+        <span class="generated-answer__badge slds-var-p-around_x-small"
+          >{labels.generatedAnswerForYou}</span
+        >
+        <c-quantic-feedback
+          state={feedbackState}
+          onlike={handleLike}
+          ondislike={handleDislike}
+          like-icon-name="utility:like"
+          like-label=""
+          dislike-icon-name="utility:dislike"
+          dislike-label=""
+          size="x-small"
+          question=""
+          hide-explain-why-button
+          data-cy="generated-answer__feedback"
+        ></c-quantic-feedback>
+      </div>
+      <div
+        data-cy="generated-answer__content"
+        class={generatedContentClass}
+      >
+        {answer}
+      </div>
+      <!-- Genrated Answer Citations -->
+    </div>
+  </template>
+</template>

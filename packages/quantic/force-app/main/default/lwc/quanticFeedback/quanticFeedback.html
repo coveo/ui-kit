@@ -2,23 +2,29 @@
   <div class="slds-grid feedback__main-section">
     <span class="slds-var-p-right_medium slds-text-color_weak feedback__question"
       id="feedback__question">{question}</span>
-    <button data-cy="feedback__like-button" aria-describedby="feedback__question" onclick={handleLike} class={likeButtonClass}>
-      <lightning-icon aria-hidden="true" class={likeIconClass} icon-name="utility:success" size="xx-small"
+    <button data-cy="feedback__like-button" aria-describedby="feedback__question" onclick={handleLike}
+      class={likeButtonClass}>
+      <lightning-icon aria-hidden="true" class={likeIconClass} icon-name={likeIconName} size={size}
         variant={likeIconVariant}></lightning-icon>
-      <span class="feedback__button-label slds-var-m-left_xx-small">{labels.yes}</span>
+      <template if:true={likeLabel}>
+        <span class="feedback__button-label slds-var-m-left_xx-small">{likeLabel}</span>
+      </template>
     </button>
-    <button data-cy="feedback__dislike-button" aria-describedby="feedback__question" onclick={handleDislike} class={dislikeButtonClass}>
-      <lightning-icon aria-hidden="true" class={dislikeIconClass} icon-name="utility:clear" size="xx-small"
+    <button data-cy="feedback__dislike-button" aria-describedby="feedback__question" onclick={handleDislike}
+      class={dislikeButtonClass}>
+      <lightning-icon aria-hidden="true" class={dislikeIconClass} icon-name={dislikeIconName} size={size}
         variant={dislikeIconVariant}></lightning-icon>
-      <span class="feedback__button-label slds-var-m-left_xx-small">{labels.no}</span>
+      <template if:true={dislikeLabel}>
+        <span class="feedback__button-label slds-var-m-left_xx-small">{dislikeLabel}</span>
+      </template>
     </button>
   </div>
   <template if:true={displaySuccessMessage}>
     <div class="slds-grid feedback__success-message">
       <span class="slds-var-p-vertical_x-small">{successMessage}</span>
       <template if:false={hideExplainWhyButton}>
-        <lightning-button data-cy="feedback__explain-why-button" class="slds-var-m-left_x-small feedback__explain-why" variant="base" label={labels.explainWhy}
-          onclick={handlePressExplainWhyButton}></lightning-button>
+        <lightning-button data-cy="feedback__explain-why-button" class="slds-var-m-left_x-small feedback__explain-why"
+          variant="base" label={labels.explainWhy} onclick={handlePressExplainWhyButton}></lightning-button>
       </template>
     </div>
   </template>
