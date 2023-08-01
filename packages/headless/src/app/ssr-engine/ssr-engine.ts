@@ -1,7 +1,7 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
-import {Middleware} from '@reduxjs/toolkit';
+import {AnyAction, Middleware} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers';
 import {CoreEngine} from '../engine';
 import {EngineConfiguration} from '../engine-configuration';
@@ -318,6 +318,8 @@ export type InferHydrationResult<
   T extends EngineDefinition<
     CoreEngine,
     ControllerDefinitionsMap<CoreEngine, Controller>,
+    // TODO: Replace with a specific type if possible
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     any
   >
 > = T extends EngineDefinition<infer TEngine, infer TControllers, infer _>
@@ -334,8 +336,6 @@ export interface ControllerSnapshot<TState> {
 export interface ControllerSnapshotsMap {
   [customName: string]: ControllerSnapshot<unknown>;
 }
-
-type AnyAction = {type: string};
 
 export interface EngineSnapshot<
   TSearchFulfilledAction extends AnyAction,
