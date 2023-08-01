@@ -9,6 +9,11 @@ import {
   buildSort,
   SortState,
   buildQuerySummary,
+  AutomaticFacetBuilder,
+  AutomaticFacetBuilderState,
+  buildAutomaticFacetBuilder,
+  buildSearchStatus,
+  SearchStatus,
 } from '@coveo/headless';
 import {
   Component,
@@ -73,6 +78,8 @@ export class AtomicRefineModal implements InitializableComponent {
   private sort!: Sort;
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
+  public automaticFacetBuilder!: AutomaticFacetBuilder;
+  public searchStatus!: SearchStatus;
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
@@ -85,6 +92,9 @@ export class AtomicRefineModal implements InitializableComponent {
   @BindStateToController('facetManager')
   @State()
   public facetManagerState!: FacetManagerState;
+  @BindStateToController('automaticFacetBuilder')
+  @State()
+  private automaticFacetBuilderState!: AutomaticFacetBuilderState;
   @State() @BindStateToController('sort') public sortState!: SortState;
   @State() public error!: Error;
 
@@ -121,6 +131,15 @@ export class AtomicRefineModal implements InitializableComponent {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
+    const desiredCount =
+      this.bindings.engine.state.automaticFacetSet?.desiredCount;
+    if (desiredCount) {
+      this.automaticFacetBuilder = buildAutomaticFacetBuilder(
+        this.bindings.engine,
+        {desiredCount}
+      );
+    }
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.watchEnabled(this.isOpen);
   }
 
@@ -182,9 +201,28 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private renderFilters() {
-    if (!this.bindings.store.getFacetElements().length) {
+    const isFacetElements = this.bindings.store.getFacetElements().length > 0;
+    const isAutomaticFacets =
+      this.automaticFacetBuilderState?.automaticFacets?.length > 0;
+
+    if (!isFacetElements && !isAutomaticFacets) {
       return;
     }
+
+    const automaticFacets = isAutomaticFacets
+      ? this.automaticFacetBuilderState.automaticFacets.map((facet) => {
+          return (
+            <atomic-automatic-facet
+              key={facet.state.field}
+              field={facet.state.field}
+              facetId={facet.state.field}
+              facet={facet}
+              searchStatus={this.searchStatus}
+              isCollapsed={true}
+            ></atomic-automatic-facet>
+          );
+        })
+      : [];
 
     return (
       <Fragment>
@@ -209,6 +247,17 @@ export class AtomicRefineModal implements InitializableComponent {
           )}
         </div>
         <slot name="facets"></slot>
+        <div
+          class="flex flex-col"
+          style={{
+            gap: 'var(--atomic-refine-modal-facet-margin, 20px)',
+            marginTop: isFacetElements
+              ? 'var(--atomic-refine-modal-facet-margin, 20px)'
+              : '',
+          }}
+        >
+          {automaticFacets}
+        </div>
       </Fragment>
     );
   }
