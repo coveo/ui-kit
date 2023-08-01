@@ -115,13 +115,24 @@ export function getClonedFacetElements(
   divSlot.style.flexDirection = 'column';
   divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
 
+  const fieldsToQuery = facetElements.map(
+    (facetElement) => facetElement.attributes[0].value
+  );
+
   const allFacetTags = Array.from(
     new Set(facetElements.map((el) => el.tagName.toLowerCase()))
   );
 
   const allFacetsInOrderInDOM = root.querySelectorAll(allFacetTags.join(','));
 
-  allFacetsInOrderInDOM.forEach((facetElement, index) => {
+  const allVisibleFacetsInOrderInDOM = Array.from(allFacetsInOrderInDOM).filter(
+    (facet) => {
+      const facetField = facet.getAttribute('field');
+      return facetField !== null && fieldsToQuery.includes(facetField);
+    }
+  );
+
+  allVisibleFacetsInOrderInDOM.forEach((facetElement, index) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
     clone.isCollapsed = facetShouldBeInitiallyCollapsed(
       index,

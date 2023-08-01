@@ -1,5 +1,5 @@
 import {createStore} from '@stencil/store';
-import {isInDocument} from '../../../utils/utils';
+import {isInDocument, isVisible} from '../../../utils/utils';
 import {
   FacetInfo,
   FacetStore,
@@ -136,7 +136,8 @@ export function createAtomicCommonStore<
     getFacetElements() {
       return stencilStore
         .get('facetElements')
-        .filter((element) => isInDocument(element));
+        .filter((element) => isInDocument(element))
+        .filter((element) => isVisible(element));
     },
   };
 }

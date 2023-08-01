@@ -186,6 +186,11 @@ export function isInDocument(element: Node) {
   return false;
 }
 
+export function isVisible(element: Node) {
+  const style = window.getComputedStyle(element as HTMLElement);
+  return style.display !== 'none';
+}
+
 export function isPropValuesEqual<ObjectWithProperties extends object>(
   subject: ObjectWithProperties,
   target: ObjectWithProperties,
