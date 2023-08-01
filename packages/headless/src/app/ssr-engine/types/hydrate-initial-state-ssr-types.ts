@@ -1,6 +1,6 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {Controller} from '../../controllers';
-import {CoreEngine} from '../engine';
+import {Controller} from '../../../controllers';
+import {CoreEngine} from '../../engine';
 import {
   ControllerDefinitionsMap,
   ControllersMap,

@@ -1,4 +1,4 @@
-import {CoreEngine} from '../engine';
+import {CoreEngine} from '../../engine';
 import {
   ControllersMap,
   ControllersPropsMap,

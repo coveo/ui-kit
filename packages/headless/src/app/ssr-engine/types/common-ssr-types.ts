@@ -1,5 +1,5 @@
-import {Controller} from '../../controllers';
-import {CoreEngine} from '../engine';
+import {Controller} from '../../../controllers';
+import {CoreEngine} from '../../engine';
 
 export type HasKeys<TObject> = TObject extends {}
   ? keyof TObject extends never

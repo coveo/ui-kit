@@ -8,18 +8,18 @@ import {
   SearchEngineOptions,
   buildSearchEngine,
 } from '../search-engine/search-engine';
-import {EngineDefinitionBuildOptionsWithProps} from './build-ssr-types';
+import {EngineDefinitionBuildOptionsWithProps} from './types/build-ssr-types';
 import {
   ControllerDefinitionsMap,
   InferControllerSnapshotsMapFromDefinitions,
   InferControllersMapFromDefinition,
   OptionsExtender,
-} from './common-ssr-types';
+} from './types/common-ssr-types';
 import {
   EngineSnapshot,
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
-} from './core-engine-ssr-types';
+} from './types/core-engine-ssr-types';
 import {mapObject} from './utils';
 
 /**

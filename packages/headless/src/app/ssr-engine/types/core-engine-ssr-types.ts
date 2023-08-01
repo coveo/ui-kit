@@ -1,11 +1,11 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {Controller} from '../../controllers';
-import {CoreEngine} from '../engine';
-import {EngineConfiguration} from '../engine-configuration';
+import {Controller} from '../../../controllers';
+import {CoreEngine} from '../../engine';
+import {EngineConfiguration} from '../../engine-configuration';
 import {
   SearchEngine,
   SearchEngineOptions,
-} from '../search-engine/search-engine';
+} from '../../search-engine/search-engine';
 import {BuildWithProps, BuildWithoutProps} from './build-ssr-types';
 import {
   ControllerDefinitionsMap,
