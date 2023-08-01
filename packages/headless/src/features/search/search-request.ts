@@ -83,17 +83,18 @@ function getAutomaticFacets(state: StateNeededBySearchRequest) {
     ? Object.values(facets)
         .map((facet) => facet.response)
         .map(responseToAutomaticFacetRequest)
+        .filter((facetRequest) => facetRequest.currentValues.length > 0)
     : undefined;
 }
 function responseToAutomaticFacetRequest(
   response: AutomaticFacetResponse
 ): AutomaticFacetRequest {
   const {field, label, values} = response;
-
+  const selectedValues = values.filter((value) => value.state === 'selected');
   return {
     field,
     label,
-    currentValues: values,
+    currentValues: selectedValues,
   };
 }
 function getAllEnabledFacets(state: StateNeededBySearchRequest) {
@@ -143,11 +144,11 @@ function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
 }
 
 function buildConstantQuery(state: StateNeededBySearchRequest) {
-  const cq = state.advancedSearchQueries?.cq.trim() || '';
-  const activeTab = Object.values(state.tabSet || {}).find(
+  const cq = state.advancedSearchQueries?.cq.trim() ?? '';
+  const activeTab = Object.values(state.tabSet ?? {}).find(
     (tab) => tab.isActive
   );
-  const tabExpression = activeTab?.expression.trim() || '';
+  const tabExpression = activeTab?.expression.trim() ?? '';
   const filterExpressions = getStaticFilterExpressions(state);
 
   return [cq, tabExpression, ...filterExpressions]
@@ -156,7 +157,7 @@ function buildConstantQuery(state: StateNeededBySearchRequest) {
 }
 
 function getStaticFilterExpressions(state: StateNeededBySearchRequest) {
-  const filters = Object.values(state.staticFilterSet || {});
+  const filters = Object.values(state.staticFilterSet ?? {});
   return filters.map((filter) => {
     const selected = filter.values.filter(
       (value) => value.state === 'selected' && !!value.expression.trim()
