@@ -9,7 +9,6 @@ import {
 import {BuildWithProps, BuildWithoutProps} from './build-ssr-types';
 import {
   ControllerDefinitionsMap,
-  ControllerSnapshotsMap,
   ControllersPropsMap,
   HasKeys,
   InferControllerPropsMapFromDefinitions,
@@ -35,6 +34,27 @@ export type EngineDefinitionOptions<
   controllers?: TControllers;
 };
 
+export type EngineDefinition<
+  TEngine extends CoreEngine,
+  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TEngineOptions
+> = HasKeys<InferControllerPropsMapFromDefinitions<TControllers>> extends true
+  ? EngineDefinitionWithProps<
+      TEngine,
+      TControllers,
+      TEngineOptions,
+      InferControllerPropsMapFromDefinitions<TControllers>
+    >
+  : InferControllerPropsMapFromDefinitions<TControllers> extends false
+  ? EngineDefinitionWithoutProps<TEngine, TControllers, TEngineOptions>
+  :
+      | EngineDefinitionWithProps<
+          TEngine,
+          TControllers,
+          TEngineOptions,
+          ControllersPropsMap
+        >
+      | EngineDefinitionWithoutProps<TEngine, TControllers, TEngineOptions>;
 export interface EngineDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
@@ -77,28 +97,6 @@ export interface EngineDefinitionWithProps<
       TControllerProps
     > {}
 
-export type EngineDefinition<
-  TEngine extends CoreEngine,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TEngineOptions
-> = HasKeys<InferControllerPropsMapFromDefinitions<TControllers>> extends true
-  ? EngineDefinitionWithProps<
-      TEngine,
-      TControllers,
-      TEngineOptions,
-      InferControllerPropsMapFromDefinitions<TControllers>
-    >
-  : InferControllerPropsMapFromDefinitions<TControllers> extends false
-  ? EngineDefinitionWithoutProps<TEngine, TControllers, TEngineOptions>
-  :
-      | EngineDefinitionWithProps<
-          TEngine,
-          TControllers,
-          TEngineOptions,
-          ControllersPropsMap
-        >
-      | EngineDefinitionWithoutProps<TEngine, TControllers, TEngineOptions>;
-
 export type SearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
 > = EngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
@@ -106,11 +104,3 @@ export type SearchEngineDefinition<
 export type SearchEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
-
-export interface EngineSnapshot<
-  TSearchFulfilledAction extends AnyAction,
-  TControllers extends ControllerSnapshotsMap
-> {
-  searchFulfilledAction: TSearchFulfilledAction;
-  controllers: TControllers;
-}

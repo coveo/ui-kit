@@ -1,6 +1,7 @@
 import {buildResultList} from '../../controllers';
 import {getSampleSearchEngineConfiguration} from '../search-engine/search-engine';
-import {SearchEngineDefinition, defineSearchEngine} from './ssr-engine';
+import {defineSearchEngine} from './ssr-engine';
+import {SearchEngineDefinition} from './types/core-engine-ssr-types';
 
 describe('SSR', () => {
   describe('define search engine', () => {

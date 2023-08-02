@@ -11,12 +11,12 @@ import {
 import {EngineDefinitionBuildOptionsWithProps} from './types/build-ssr-types';
 import {
   ControllerDefinitionsMap,
+  EngineSnapshot,
   InferControllerSnapshotsMapFromDefinitions,
   InferControllersMapFromDefinition,
   OptionsExtender,
 } from './types/common-ssr-types';
 import {
-  EngineSnapshot,
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
 } from './types/core-engine-ssr-types';

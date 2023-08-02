@@ -1,6 +1,9 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {ControllerSnapshotsMap, ControllersPropsMap} from './common-ssr-types';
-import {EngineSnapshot} from './core-engine-ssr-types';
+import {
+  ControllerSnapshotsMap,
+  ControllersPropsMap,
+  EngineSnapshot,
+} from './common-ssr-types';
 
 export type EngineDefinitionFetchInitialStateOptions<
   TControllersSnapshot extends ControllersPropsMap

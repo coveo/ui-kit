@@ -1,3 +1,4 @@
+import {AnyAction} from '@reduxjs/toolkit';
 import {Controller} from '../../../controllers';
 import {CoreEngine} from '../../engine';
 
@@ -26,6 +27,7 @@ export interface ControllerSnapshot<TState> {
 export interface ControllerSnapshotsMap {
   [customName: string]: ControllerSnapshot<unknown>;
 }
+
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TController extends Controller
@@ -53,6 +55,14 @@ export interface ControllerDefinitionsMap<
   TController extends Controller
 > {
   [customName: string]: ControllerDefinition<TEngine, TController>;
+}
+
+export interface EngineSnapshot<
+  TSearchFulfilledAction extends AnyAction,
+  TControllers extends ControllerSnapshotsMap
+> {
+  searchFulfilledAction: TSearchFulfilledAction;
+  controllers: TControllers;
 }
 
 export interface EngineAndControllers<
