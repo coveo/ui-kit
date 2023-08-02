@@ -3,7 +3,7 @@ import {
   ControllerSnapshotsMap,
   ControllersPropsMap,
   EngineSnapshot,
-} from './common-ssr-types';
+} from './common';
 
 export type EngineDefinitionFetchInitialStateOptions<
   TControllersSnapshot extends ControllersPropsMap

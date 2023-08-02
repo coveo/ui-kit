@@ -2,7 +2,7 @@ import {AnyAction} from '@reduxjs/toolkit';
 import {Controller} from '../../../controllers';
 import {CoreEngine} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
-import {BuildWithProps, BuildWithoutProps} from './build-ssr-types';
+import {BuildWithProps, BuildWithoutProps} from './build';
 import {
   ControllerDefinitionsMap,
   ControllersPropsMap,
@@ -10,15 +10,15 @@ import {
   InferControllerPropsMapFromDefinitions,
   InferControllerSnapshotsMapFromDefinitions,
   InferControllersMapFromDefinition,
-} from './common-ssr-types';
+} from './common';
 import {
   FetchInitialStateWithProps,
   FetchInitialStateWithoutProps,
-} from './fetch-initial-state-ssr-types';
+} from './fetch-initial-state';
 import {
   HydrateInitialStateWithProps,
   HydrateInitialStateWithoutProps,
-} from './hydrate-initial-state-ssr-types';
+} from './hydrate-initial-state';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},

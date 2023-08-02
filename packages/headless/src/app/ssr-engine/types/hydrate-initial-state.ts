@@ -7,8 +7,8 @@ import {
   ControllersPropsMap,
   EngineAndControllers,
   InferControllersMapFromDefinition,
-} from './common-ssr-types';
-import {EngineDefinition} from './core-engine-ssr-types';
+} from './common';
+import {EngineDefinition} from './core-engine';
 
 export interface EngineDefinitionHydrateOptionsWithoutProps<
   TSearchFulfilledAction extends AnyAction

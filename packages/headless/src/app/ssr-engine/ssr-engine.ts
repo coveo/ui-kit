@@ -9,14 +9,14 @@ import {
   SearchEngineOptions,
   buildSearchEngine,
 } from '../search-engine/search-engine';
-import {EngineDefinitionBuildOptionsWithProps} from './types/build-ssr-types';
+import {EngineDefinitionBuildOptionsWithProps} from './types/build';
 import {
   ControllerDefinitionsMap,
   EngineSnapshot,
   InferControllerSnapshotsMapFromDefinitions,
   InferControllersMapFromDefinition,
   OptionsExtender,
-} from './types/common-ssr-types';
+} from './types/common';
 import {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,

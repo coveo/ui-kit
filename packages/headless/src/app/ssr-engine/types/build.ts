@@ -4,7 +4,7 @@ import {
   ControllersPropsMap,
   EngineAndControllers,
   OptionsExtender,
-} from './common-ssr-types';
+} from './common';
 
 export interface EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;

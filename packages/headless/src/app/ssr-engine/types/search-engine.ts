@@ -3,11 +3,8 @@ import {
   SearchEngine,
   SearchEngineOptions,
 } from '../../search-engine/search-engine';
-import {ControllerDefinitionsMap} from './common-ssr-types';
-import {
-  EngineDefinition,
-  EngineDefinitionOptions,
-} from './core-engine-ssr-types';
+import {ControllerDefinitionsMap} from './common';
+import {EngineDefinition, EngineDefinitionOptions} from './core-engine';
 
 export type SearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
