@@ -15,8 +15,8 @@ export default function SearchPage({engineSnapshot}: {engineSnapshot: any}) {
     });
   }, [engineSnapshot]);
 
-  if (hydrationResult !== null) {
-    const {engine, controllers} = hydrationResult;
-    return <ResultList engine={engine} controllers={controllers}></ResultList>;
-  }
+  const {engine} = hydrationResult ?? engineSnapshot;
+  return (
+    engine && <ResultList results={engine.state.search.results}></ResultList>
+  );
 }
