@@ -24,13 +24,15 @@
           data-cy="generated-answer__feedback"
         ></c-quantic-feedback>
       </div>
-      <div
-        data-cy="generated-answer__content"
-        class={generatedContentClass}
-      >
+      <div data-cy="generated-answer__content" class={generatedContentClass}>
         {answer}
       </div>
-      <!-- Genrated Answer Citations -->
+      <div class="slds-var-m-top_medium">
+        <c-quantic-source-citations
+          citations={citations}
+          citation-click-handler={handleCitationClick}
+        ></c-quantic-source-citations>
+      </div>
     </div>
   </template>
 </template>
