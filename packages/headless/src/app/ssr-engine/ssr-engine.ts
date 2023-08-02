@@ -23,7 +23,7 @@ import {
 import {mapObject} from './utils';
 
 /**
- * @beta
+ * @internal
  *
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
  * @returns Three utility functions to fetch engine snapshot in SSR, hydrate the snapshot in CSR

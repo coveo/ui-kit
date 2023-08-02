@@ -57,6 +57,9 @@ export type HydrateInitialStateWithProps<
   ): Promise<EngineAndControllers<TEngine, TControllers>>;
 };
 
+/**
+ * @internal
+ */
 export type InferHydrationResult<
   T extends EngineDefinition<
     CoreEngine,
