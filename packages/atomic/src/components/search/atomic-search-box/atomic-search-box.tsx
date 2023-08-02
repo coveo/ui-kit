@@ -38,6 +38,7 @@ import {once, randomID} from '../../../utils/utils';
 import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchInput} from '../../common/search-box/search-input';
+import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {
@@ -181,6 +182,11 @@ export class AtomicSearchBox {
    * When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
    */
   @Prop({reflect: true}) public enableQuerySyntax = false;
+
+  /**
+    TODO
+   */
+  @Prop({reflect: true}) public textArea = false;
 
   /**
    * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
@@ -751,6 +757,8 @@ export class AtomicSearchBox {
   }
 
   public render() {
+    const TextBoxElement = this.textArea ? SearchTextArea : SearchInput;
+
     this.updateBreakpoints();
     const searchLabel = this.searchBoxCommon.getSearchInputLabel(
       this.minimumQueryLength
@@ -761,7 +769,7 @@ export class AtomicSearchBox {
           style={{display: 'contents'}}
           onFocusExit={() => this.clearSuggestions()}
         >
-          <SearchInput
+          <TextBoxElement
             inputRef={this.inputRef}
             loading={this.searchBoxState.isLoading}
             ref={(el) => (this.inputRef = el as HTMLInputElement)}

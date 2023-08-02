@@ -1636,6 +1636,10 @@ export namespace Components {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout": number;
+        /**
+          * TODO
+         */
+        "textArea": boolean;
     }
     interface AtomicSearchBoxInstantResults {
         /**
@@ -4538,6 +4542,10 @@ declare namespace LocalJSX {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout"?: number;
+        /**
+          * TODO
+         */
+        "textArea"?: boolean;
     }
     interface AtomicSearchBoxInstantResults {
         /**
