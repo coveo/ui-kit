@@ -2,10 +2,6 @@ import {AnyAction} from '@reduxjs/toolkit';
 import {Controller} from '../../../controllers';
 import {CoreEngine} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
-import {
-  SearchEngine,
-  SearchEngineOptions,
-} from '../../search-engine/search-engine';
 import {BuildWithProps, BuildWithoutProps} from './build-ssr-types';
 import {
   ControllerDefinitionsMap,
@@ -96,11 +92,3 @@ export interface EngineDefinitionWithProps<
       InferControllersMapFromDefinition<TControllers>,
       TControllerProps
     > {}
-
-export type SearchEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
-> = EngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
-
-export type SearchEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
-> = EngineDefinitionOptions<SearchEngineOptions, TControllers>;

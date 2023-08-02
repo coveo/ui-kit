@@ -20,7 +20,7 @@ import {
 import {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
-} from './types/core-engine-ssr-types';
+} from './types/search-engine';
 
 /**
  * @internal
