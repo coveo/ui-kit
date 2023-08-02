@@ -1,0 +1,8 @@
+name: BuildPackages
+description: Build all packages
+runs:
+  using: composite
+  steps:
+    - name: Building packages
+      shell: bash
+      run: pnpm build

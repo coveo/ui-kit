@@ -1,0 +1,8 @@
+name: Lint
+description: Lint source files with ESLint
+runs:
+  using: composite
+  steps:
+    - name: Run ESLint
+      shell: bash
+      run: pnpm lint

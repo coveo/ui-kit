@@ -1,0 +1,33 @@
+{
+  "product": "relay",
+  "team_name": "dataplatformfoundation",
+  "general": {
+    "environments_order": {
+      "sequential": ["dev", "stg", "prd"]
+    },
+    "notifications": {
+      "slack_channels": ["analyticsdeployments"]
+    },
+    "team_jenkins": "uabuilds",
+    "start_environment_automatically": true,
+    "prd": {
+      "start_environment_automatically": false
+    }
+  },
+  "ordered_phases": [
+    {
+      "id": "deploy-relay-files",
+      "wait": {
+        "seconds": 1
+      }
+    }
+  ],
+  "certifiers": {},
+  "observatory": {
+    "no_endpoint": true
+  },
+  "package_rollout": {
+    "only_consider_changesets_after": "90d72154b507b5e28e104f922be29efca7708ebc"
+  },
+  "deployment_config_version": 13
+}

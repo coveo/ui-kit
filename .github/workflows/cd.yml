@@ -1,0 +1,39 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Publish package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup
+        uses: ./.github/actions/setup
+      - name: Publish
+        uses: ./.github/actions/publish
+  deploy:
+    name: Deploy package
+    runs-on: [coveo, linux, x64, ec2]
+    needs: [publish]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup
+        uses: ./.github/actions/setup
+      - name: Build
+        uses: ./.github/actions/build-packages
+      - name: Deploy
+        uses: ./.github/actions/deploy

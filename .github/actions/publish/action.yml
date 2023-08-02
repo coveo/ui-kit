@@ -1,0 +1,8 @@
+name: Publish
+description: Publish a new version of the packages on NPM
+runs:
+  using: composite
+  steps:
+    - name: Publish packages on NPM
+      shell: bash
+      run: pnpm publish:npm

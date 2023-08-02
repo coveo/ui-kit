@@ -1,0 +1,10 @@
+name: Deploy
+description: Creates and deploys the packages
+runs:
+  using: composite
+  steps:
+    - uses: coveo/deployment-pipeline-actions/setup-cli@main
+    - name: Create and Deploy Packages
+      shell: bash
+      run: |
+        deployment-package package create --with-deploy
