@@ -14,6 +14,17 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
       <div
         part="result-list-grid-clickable-container outline"
         ref={(element) => props.setNewResultRef(element!, index)}
+        onClick={(event) => {
+          event.preventDefault();
+          interactiveResult.select();
+          window.open(
+            unfoldedResult.clickUri,
+            event.ctrlKey || event.metaKey
+              ? '_blank'
+              : props.gridCellLinkTarget,
+            'noopener'
+          );
+        }}
       >
         <LinkWithResultAnalytics
           part="result-list-grid-clickable"
@@ -22,9 +33,11 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
           onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
           href={unfoldedResult.clickUri}
           title={unfoldedResult.title}
-          tabIndex={-1}
-          ariaHidden={true}
-        />
+          target={props.gridCellLinkTarget}
+          rel="noopener"
+        >
+          {unfoldedResult.title}
+        </LinkWithResultAnalytics>
         {props.renderResult({
           key: props.getResultId(result),
           result: result,

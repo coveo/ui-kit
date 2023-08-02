@@ -4,8 +4,12 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": ["CHANGELOG.md"],
-  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
+  "ignorePaths": [
+    "CHANGELOG.md"
+  ],
+  "import": [
+    "@cspell/dict-fr-fr/cspell-ext.json"
+  ],
   "words": [
     "adjustednumberoflikes",
     "ARROWUP",
@@ -43,10 +47,12 @@
     "exchangemdn",
     "exchangerssfeed",
     "Expandto",
+    "genqa",
     "gmailmessage",
     "gzipped",
     "headless",
     "IIFE",
+    "inat",
     "initializable",
     "inlink",
     "isloading",
