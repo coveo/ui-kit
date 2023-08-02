@@ -87,7 +87,7 @@ export function defineSearchEngine<
           if (action.type === 'search/executeSearch/fulfilled') {
             resolve({
               controllers: mapObject(controllers, (controller) => ({
-                initialState: controller.state,
+                state: controller.state,
               })) as InferControllerSnapshotsMapFromDefinitions<TControllerDefinitions>,
               searchFulfilledAction: JSON.parse(JSON.stringify(action)),
             });

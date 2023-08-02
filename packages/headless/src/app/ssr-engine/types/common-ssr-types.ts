@@ -21,7 +21,7 @@ export interface ControllersMap {
 }
 
 export interface ControllerSnapshot<TState> {
-  initialState: TState;
+  state: TState;
 }
 
 export interface ControllerSnapshotsMap {
@@ -107,4 +107,4 @@ export type InferControllersMapFromDefinition<
 
 export type InferControllerSnapshotsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
-> = {[K in keyof TControllers]: {initialState: TControllers[K]}};
+> = {[K in keyof TControllers]: {state: TControllers[K]}};
