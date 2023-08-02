@@ -181,6 +181,11 @@
                   .result-root.image-large atomic-result-section-visual {
                     border-radius: var(--atomic-border-radius-xl);
                   }
+
+                  atomic-load-more-children-results::part(button) {
+                    margin-bottom: 0;
+                    padding: 0.2rem 0.5rem;
+                  }
                 </style>
                 <atomic-insight-result-action-bar>
                   <atomic-insight-result-action tooltip="test"></atomic-insight-result-action>
@@ -243,6 +248,11 @@
                           .field-label {
                             font-weight: bold;
                             margin-right: 0.25rem;
+                          }
+
+                          atomic-load-more-children-results::part(show-hide-button) {
+                            margin-bottom: 0;
+                            padding: 0.2rem 0.5rem;
                           }
                         </style>
                         <atomic-result-section-title>
