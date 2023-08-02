@@ -1,18 +1,9 @@
 .source-citations__label {
   height: 1.875rem;
-  overflow: hidden;
-}
-
-.citation {
-  max-width: 10.625rem;
 }
 
 .citation:hover {
   cursor: pointer;
-}
-
-.citation__badge {
-  max-width: 100%;
 }
 
 .citation__badge:hover {
@@ -34,7 +25,7 @@
 
 .citation__link {
   color: var(--lwc-brandAccessible, #0176d3);
-  max-width: 100%;
+  max-width: 10.625rem;
 }
 
 .citation__index {
@@ -47,4 +38,5 @@
 .citation__title {
   color: var(--lwc-brandDark, #080707);
   font-weight: var(--lwc-fontWeightRegular, 400);
+  font-size: 13px;
 }
