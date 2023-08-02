@@ -51,6 +51,7 @@ export type EngineDefinition<
           ControllersPropsMap
         >
       | EngineDefinitionWithoutProps<TEngine, TControllers, TEngineOptions>;
+
 export interface EngineDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
