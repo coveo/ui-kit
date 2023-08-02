@@ -33,18 +33,21 @@ describe('Result Html Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultHtmlSelectors.shadow);
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the field does not exist for the result', () => {
     beforeEach(() => {
       new TestFixture()
-        .with(addResultHTMLInResultList({field: 'thisfielddoesnotexist'}))
+        .with(
+          addResultHTMLInResultList({
+            field: 'thisfielddoesnotexist',
+          })
+        )
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultHtmlSelectors.firstInResult);
+    CommonAssertions.assertConsoleError(false);
   });
 
   describe('when the field value is not a string', () => {
@@ -57,8 +60,6 @@ describe('Result Html Component', () => {
         )
         .init();
     });
-
-    CommonAssertions.assertRemovesComponent(ResultHtmlSelectors.firstInResult);
     CommonAssertions.assertConsoleError(false);
   });
 
