@@ -3,6 +3,7 @@
  */
 import {Middleware} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers';
+import {mapObject} from '../../utils/utils';
 import {
   SearchEngine,
   SearchEngineOptions,
@@ -20,7 +21,6 @@ import {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
 } from './types/core-engine-ssr-types';
-import {mapObject} from './utils';
 
 /**
  * @internal
