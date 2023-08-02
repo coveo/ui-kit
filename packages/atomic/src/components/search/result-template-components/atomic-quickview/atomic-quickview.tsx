@@ -126,8 +126,7 @@ export class AtomicQuickview implements InitializableComponent {
     }
   }
 
-  private onClick(event?: MouseEvent) {
-    event?.stopPropagation();
+  private onClick() {
     this.quickview.fetchResultContent();
   }
 
@@ -140,7 +139,7 @@ export class AtomicQuickview implements InitializableComponent {
           title={this.bindings.i18n.t('quickview')}
           style="outline-primary"
           class="p-2"
-          onClick={(event) => this.onClick(event)}
+          onClick={() => this.onClick()}
           ref={this.buttonFocusTarget.setTarget}
         >
           <atomic-icon class="w-5" icon={QuickviewIcon}></atomic-icon>

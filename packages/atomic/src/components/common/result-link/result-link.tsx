@@ -1,6 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {filterProtocol} from '../../../utils/xss-utils';
-import {ResultTarget} from '../layout/display-options';
 
 export interface ResultLinkEventProps {
   onSelect: () => void;
@@ -19,8 +18,6 @@ export interface ResultLinkProps extends ResultLinkEventProps {
   attributes?: Attr[];
   tabIndex?: number;
   ariaHidden?: boolean;
-  target?: ResultTarget;
-  rel?: string;
 }
 
 export const bindAnalyticsToLink = (
@@ -67,9 +64,7 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
     attributes,
     tabIndex,
     ariaHidden,
-    rel,
     stopPropagation = true,
-    target = '_self',
   },
   children
 ) => {
@@ -78,9 +73,7 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
       class={className}
       part={part}
       href={filterProtocol(href)}
-      target={target}
       title={title}
-      rel={rel}
       ref={(el) => {
         if (ref) {
           ref(el);

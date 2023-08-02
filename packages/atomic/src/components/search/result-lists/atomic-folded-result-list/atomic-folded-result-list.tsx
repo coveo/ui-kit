@@ -33,7 +33,6 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
-  ResultTarget,
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
@@ -60,7 +59,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
   private resultRenderingFunction: ResultRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
   private display: ResultDisplayLayout = 'list';
-  private gridCellLinkTarget: ResultTarget = '_self';
 
   @Element() public host!: HTMLDivElement;
 
@@ -163,7 +161,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
       getImageSize: () => this.imageSize,
       nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,
-      gridCellLinkTarget: this.gridCellLinkTarget,
       getResultListState: () => this.foldedResultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
       renderResult: (props) => <atomic-result {...props}></atomic-result>,

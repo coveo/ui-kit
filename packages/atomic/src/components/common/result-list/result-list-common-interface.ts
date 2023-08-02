@@ -8,7 +8,6 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
-  ResultTarget,
 } from '../layout/display-options';
 import {ResultTemplateProvider} from './result-template-provider';
 
@@ -26,7 +25,6 @@ export interface ResultListCommonProps<
   loadingFlag: string;
   resultTemplateProvider: ResultTemplateProvider;
   nextNewResultTarget: FocusTargetController;
-  gridCellLinkTarget: ResultTarget;
   getLayoutDisplay(): ResultDisplayLayout;
   getResultDisplay(): ResultDisplayLayout;
   getDensity(): ResultDisplayDensity;
