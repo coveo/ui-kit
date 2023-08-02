@@ -1,5 +1,6 @@
-.source__citations span {
+.source-citations__label {
   height: 1.875rem;
+  overflow: hidden;
 }
 
 .citation {
@@ -10,19 +11,28 @@
   cursor: pointer;
 }
 
-.citation span {
+.citation__badge {
   max-width: 100%;
 }
 
-.citation span:hover {
+.citation__badge:hover {
   background-color: #eef4ff;
 }
 
-.citation span:hover .citation__title {
+.citation__badge:focus-within {
+  border: 1px solid #0070d2;
+  box-shadow: 0px 0px 3px 0px #0070d2;
+}
+
+.citation__badge:hover .citation__index {
+  background-color: #ffffff;
+}
+
+.citation__badge:hover .citation__title {
   color: var(--lwc-brandAccessible, #0176d3);
 }
 
-.citation a {
+.citation__link {
   color: var(--lwc-brandAccessible, #0176d3);
   max-width: 100%;
 }
