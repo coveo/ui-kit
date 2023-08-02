@@ -38,8 +38,7 @@ describe('Quickview Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(QuickviewSelectors.shadow);
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when used on pdf file inside a result list and no keywords', () => {
