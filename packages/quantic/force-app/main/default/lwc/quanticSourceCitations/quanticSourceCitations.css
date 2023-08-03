@@ -5,20 +5,23 @@
 .citation:hover {
   cursor: pointer;
   color: var(--lwc-brandAccessible, #0176d3);
+}
+
+.citation__badge {
   max-width: 10.625rem;
 }
 
 .citation__badge:hover {
-  background-color: #eef4ff;
+  background-color: var(--lwc-brandLight, #f4f6fe);
 }
 
 .citation__badge:focus {
-  border: 1px solid #0070d2;
-  box-shadow: 0px 0px 3px 0px #0070d2;
+  border: 1px solid var(--lwc-brandAccessible, #0070d2);
+  box-shadow: 0px 0px 3px 0px var(--lwc-brandAccessible, #0070d2);
 }
 
 .citation__badge:hover .citation__index {
-  background-color: #ffffff;
+  background-color: var(--lwc-colorBackgroundAlt, #ffffff);
 }
 
 .citation__badge:hover .citation__title {
@@ -27,7 +30,7 @@
 
 .citation__index {
   color: var(--lwc-brandAccessible, #0176d3);
-  background-color: #eef4ff;
+  background-color: var(--lwc-brandLight, #f4f6fe);
   width: 20px;
   height: 20px;
   border-radius: var(--lwc-borderRadiusCircle, 50%);

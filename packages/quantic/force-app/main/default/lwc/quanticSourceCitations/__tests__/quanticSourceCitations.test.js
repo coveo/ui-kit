@@ -33,6 +33,7 @@ const defaultOptions = {
 const selectors = {
   citation: '.citation',
   citationIndex: '.citation__index',
+  citationBadge: '.citation__badge',
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -81,7 +82,9 @@ describe('c-quantic-source-citations', () => {
       expect(citationsIndices).not.toBeNull();
       expect(citationsIndices.length).toEqual(mockCitations.length);
 
-      const citationLinks = element.shadowRoot.querySelectorAll('a');
+      const citationLinks = element.shadowRoot.querySelectorAll(
+        selectors.citationBadge
+      );
       expect(citationLinks).not.toBeNull();
       expect(citationLinks.length).toEqual(mockCitations.length);
 
@@ -103,7 +106,9 @@ describe('c-quantic-source-citations', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const citationLinks = element.shadowRoot.querySelectorAll('a');
+        const citationLinks = element.shadowRoot.querySelectorAll(
+          selectors.citationBadge
+        );
 
         expect(citationLinks).not.toBeNull();
         expect(citationLinks.length).toEqual(mockCitations.length);
