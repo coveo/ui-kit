@@ -7,7 +7,7 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
 
   pageTitle = 'Quantic Generated Answer';
   pageDescription =
-    'The QuanticGeneratedAnswer component is responsible for displaying query results by applying one or more result templates.';
+    'The QuanticGeneratedAnswer component automatically generates an answer using Covel machine learning models to answer the query executed by the user.';
   options = [
   ];
 

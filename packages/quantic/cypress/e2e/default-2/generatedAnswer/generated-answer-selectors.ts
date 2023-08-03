@@ -7,6 +7,10 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   generatedAnswer: () => CypressSelector;
   likeButton: () => CypressSelector;
   dislikeButton: () => CypressSelector;
+  citations: () => CypressSelector;
+  citationTitle: (index: number) => CypressSelector;
+  citationIndex: (index: number) => CypressSelector;
+  citationLink: (index: number) => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -26,4 +30,22 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__feedback"] [data-cy="feedback__dislike-button"]'
     ),
+  citations: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__citations"]'
+    ),
+  citationTitle: (index: number) =>
+    GeneratedAnswerSelectors.get()
+      .find('[data-cy="generated-answer__citations"] .citation__title')
+      .eq(index),
+
+  citationIndex: (index: number) =>
+    GeneratedAnswerSelectors.get()
+      .find('[data-cy="generated-answer__citations"] .citation__index')
+      .eq(index),
+
+  citationLink: (index: number) =>
+    GeneratedAnswerSelectors.get()
+      .find('[data-cy="generated-answer__citations"] .citation__link')
+      .eq(index),
 };

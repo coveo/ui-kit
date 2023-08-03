@@ -5,7 +5,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {LightningElement, api} from 'lwc';
+import { LightningElement, api } from 'lwc';
 // @ts-ignore
 import generatedAnswerTemplate from './generatedAnswer.html';
 // @ts-ignore
@@ -18,7 +18,7 @@ import loadingTemplate from './loading.html';
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 
 /**
- * The `QuanticGeneratedAnswer`
+ * The `QuanticGeneratedAnswer` component automatically generates an answer using Covel machine learning models to answer the query executed by the user.
  * @category Search
  * @example
  * <c-quantic-generated-answer engine-id={engineId}></c-quantic-generated-answer>
@@ -38,11 +38,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   /** @type {GeneratedAnswer} */
   generatedAnswer;
-  /** @type {SearchStatus} */
-  searchStatus;
   /** @type {GeneratedAnswerState} */
   state;
-  citations;
   /** @type {'neutral' | 'liked' | 'disliked'} */
   feedbackState = 'neutral';
 
@@ -59,15 +56,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
-
     this.generatedAnswer = this.headless.buildGeneratedAnswer(engine);
-    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeGeneratedAnswer = this.generatedAnswer.subscribe(() =>
       this.updateState()
     );
-    // this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
-    //   this.updateState()
-    // );
   };
 
   disconnectedCallback() {
@@ -76,8 +68,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   updateState() {
     this.state = this.generatedAnswer.state;
-    console.log(this.state);
-    this.citations = this?.state?.citations;
+    if (this.state?.liked) {
+      this.feedbackState = 'liked'
+    } else if (this.state?.disliked) {
+      this.feedbackState = 'disliked'
+    } else {
+      this.feedbackState = 'neutral'
+    }
   }
 
   /**
@@ -95,7 +92,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   handleLike(event) {
     event.stopPropagation();
     this.feedbackState = 'liked';
-    this.generatedAnswer.like();
     this.generatedAnswer.like?.();
   }
 
@@ -106,11 +102,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   handleDislike(event) {
     event.stopPropagation();
     this.feedbackState = 'disliked';
-    this.generatedAnswer.dislike();
+    this.generatedAnswer.dislike?.();
   }
 
   get answer() {
     return this?.state?.answer;
+  }
+
+  get citations() {
+    return this?.state?.citations;
   }
 
   get isLoading() {
@@ -122,7 +122,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldDisplayGeneratedAnswer() {
-    return !!this.answer || this.isStreaming;
+    return !!this.answer || this.isStreaming || !!this.citations?.length;
   }
 
   get generatedContentClass() {

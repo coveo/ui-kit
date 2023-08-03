@@ -36,6 +36,13 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .log('should display the dislike button');
     },
 
+    displayCitations: (display: boolean) => {
+      selector
+        .citations()
+        .should(display ? 'exist' : 'not.exist')
+        .log('should display the source citations');
+    },
+
     likeButtonIsChecked: (checked: boolean) => {
       selector
         .likeButton()
@@ -43,7 +50,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           checked ? 'have.class' : 'not.have.class',
           'feedback__button--liked'
         )
-        .log('should display the dislike button');
+        .log('the like button should be in a liked state');
     },
 
     dislikeButtonIsChecked: (checked: boolean) => {
@@ -53,7 +60,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           checked ? 'have.class' : 'not.have.class',
           'feedback__button--disliked'
         )
-        .log('should display the dislike button');
+        .log('the dislike button should be in a disliked state');
     },
 
     generatedAnswerContains: (answer: string) => {
@@ -61,6 +68,39 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .generatedAnswer()
         .contains(answer)
         .log(`the generated answer should contain "${answer}"`);
+    },
+
+    citationTitleContains: (index: number, title: string) => {
+      selector
+        .citationTitle(index)
+        .then((element) => {
+          expect(element.get(0).innerText).to.equal(title);
+        })
+        .log(
+          `the citation at the index ${index} should contain the title "${title}"`
+        );
+    },
+
+    citationIndexContains: (index: number, value: string) => {
+      selector
+        .citationIndex(index)
+        .then((element) => {
+          expect(element.get(0).innerText).to.equal(value);
+        })
+        .log(
+          `the citation at the index ${index} should contain the index "${value}"`
+        );
+    },
+
+    citationLinkContains: (index: number, value: string) => {
+      selector
+        .citationLink(index)
+        .then((element) => {
+          expect(element.get(0).getAttribute('href')).to.equal(value);
+        })
+        .log(
+          `the citation ar the index ${index} should contain link "${value}"`
+        );
     },
 
     logStreamIdInAnalytics(streamId: string) {
@@ -122,6 +162,31 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           expect(customData).to.have.property(
             'generativeQuestionAnsweringId',
             streamId
+          );
+        }
+      );
+    },
+
+    logOpenGeneratedAnswerSource(
+      streamId: string,
+      citation: {id: string; permanentid: string}
+    ) {
+      logCustomGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.OpenGeneratedAnswerSource,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(analyticsBody).to.have.property(
+            'eventType',
+            'generatedAnswer'
+          );
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+          expect(customData).to.have.property('id', citation.id);
+          expect(customData).to.have.property(
+            'permanentId',
+            citation.permanentid
           );
         }
       );

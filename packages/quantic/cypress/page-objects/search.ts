@@ -70,6 +70,7 @@ export const InterceptAliases = {
       LikeGeneratedAnswer: uaAlias('likeGeneratedAnswer'),
       DislikeGeneratedAnswer: uaAlias('dislikeGeneratedAnswer'),
       GeneratedAnswerStreamEnd: uaAlias('generatedAnswerStreamEnd'),
+      OpenGeneratedAnswerSource: uaAlias('openGeneratedAnswerSource'),
     },
   },
   QuerySuggestions: '@coveoQuerySuggest',

@@ -79,6 +79,53 @@ describe('quantic-generated-answer', () => {
       });
     });
 
+    describe('when a citation event is received', () => {
+      const inactiveLink = 'javascript:void(0);';
+      const streamId = crypto.randomUUID();
+      const firstTestCitation = {
+        id: 'some-id-1',
+        title: 'Some Title 1',
+        uri: 'https://www.coveo.com',
+        permanentid: 'some-permanent-id-1',
+        clickUri: inactiveLink,
+      };
+      const secondTestCitation = {
+        id: 'some-id-2',
+        title: 'Some Title 2',
+        uri: 'https://www.coveo.com',
+        permanentid: 'some-permanent-id-2',
+        clickUri: inactiveLink,
+      };
+      const testCitations = [firstTestCitation, secondTestCitation];
+      const testMessagePayload = {
+        payloadType: 'genqa.citationsType',
+        payload: JSON.stringify({
+          citations: testCitations,
+        }),
+        finishReason: 'COMPLETED',
+      };
+
+      beforeEach(() => {
+        mockSearchWithGeneratedAnswer(streamId);
+        mockStreamResponse(streamId, testMessagePayload);
+        visitGeneratedAnswer();
+      });
+
+      it('should properly display the source citations', () => {
+        Expect.displayCitations(true);
+        testCitations.forEach((citation, index) => {
+          Expect.citationTitleContains(index, citation.title);
+          Expect.citationIndexContains(index, `${index + 1}`);
+          Expect.citationLinkContains(index, citation.clickUri);
+        });
+      });
+
+      it('should log the correct analytics event when a citation is clicked', () => {
+        Actions.clickCitation(0);
+        Expect.logOpenGeneratedAnswerSource(streamId, testCitations[0]);
+      });
+    });
+
     describe('when an end of stream event is received', () => {
       const streamId = crypto.randomUUID();
 
