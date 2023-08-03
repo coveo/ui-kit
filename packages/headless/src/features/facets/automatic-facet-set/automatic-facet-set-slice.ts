@@ -59,9 +59,7 @@ export const automaticFacetSetReducer = createReducer(
         const currentFields = Object.keys(state.set);
 
         //unselected facets in set that are not in af
-        for (let i = 0; i < currentFields.length; i++) {
-          const field = currentFields[i];
-
+        for (const field of currentFields) {
           if (!(field in af)) {
             const facet = state.set[field]?.response;
 
