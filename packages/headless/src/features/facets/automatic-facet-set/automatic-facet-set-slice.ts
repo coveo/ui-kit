@@ -81,7 +81,7 @@ export const automaticFacetSetReducer = createReducer(
           }
         }
 
-        //unselect certain values not present in af that are selected in facet set
+        //sync value state for facets in af
         for (const field in af) {
           const facet = state.set[field]?.response;
           if (!facet) {
@@ -89,23 +89,9 @@ export const automaticFacetSetReducer = createReducer(
           }
           const values = facet.values;
           for (const value of values) {
-            if (
-              !af[field].includes(value.value) &&
-              value.state === 'selected'
-            ) {
+            if (!af[field].includes(value.value)) {
               value.state = 'idle';
-            }
-          }
-        }
-        //select certain values present in af that are idle in facet set
-        for (const field in af) {
-          const facet = state.set[field]?.response;
-          if (!facet) {
-            continue;
-          }
-          const values = facet.values;
-          for (const value of values) {
-            if (af[field].includes(value.value) && value.state === 'idle') {
+            } else if (value.state === 'idle') {
               value.state = 'selected';
             }
           }
