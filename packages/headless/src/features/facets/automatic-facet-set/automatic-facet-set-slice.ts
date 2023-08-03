@@ -58,25 +58,57 @@ export const automaticFacetSetReducer = createReducer(
         const af = action.payload.af ?? {};
         const currentFields = Object.keys(state.set);
 
-        //unselected facets in set that are not in af
-        for (const field of currentFields) {
-          if (!(field in af)) {
-            const facet = state.set[field]?.response;
-
-            for (const value of facet.values) {
-              value.state = 'idle';
-            }
-          }
-        }
-        //add facet in af to facet set
+        //add af not in facet set
         for (const field in af) {
+          if (state.set[field]) {
+            continue;
+          }
           const response = buildTemporaryAutomaticFacetResponse(field);
           const values = af[field].map((value) =>
             buildTemporarySelectedFacetValue(value)
           );
           response.values.push(...values);
-
           state.set[field] = {response};
+        }
+
+        //unselected facets in set that are not in af
+        for (const field of currentFields) {
+          if (!(field in af)) {
+            const facet = state.set[field]?.response;
+            for (const value of facet.values) {
+              value.state = 'idle';
+            }
+          }
+        }
+
+        //unselect certain values not present in af that are selected in facet set
+        for (const field in af) {
+          const facet = state.set[field]?.response;
+          if (!facet) {
+            continue;
+          }
+          const values = facet.values;
+          for (const value of values) {
+            if (
+              !af[field].includes(value.value) &&
+              value.state === 'selected'
+            ) {
+              value.state = 'idle';
+            }
+          }
+        }
+        //select certain values present in af that are idle in facet set
+        for (const field in af) {
+          const facet = state.set[field]?.response;
+          if (!facet) {
+            continue;
+          }
+          const values = facet.values;
+          for (const value of values) {
+            if (af[field].includes(value.value) && value.state === 'idle') {
+              value.state = 'selected';
+            }
+          }
         }
       })
       .addCase(change.fulfilled, (_, action) => {
