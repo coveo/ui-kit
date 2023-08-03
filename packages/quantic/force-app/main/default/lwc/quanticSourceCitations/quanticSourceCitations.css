@@ -4,13 +4,15 @@
 
 .citation:hover {
   cursor: pointer;
+  color: var(--lwc-brandAccessible, #0176d3);
+  max-width: 10.625rem;
 }
 
 .citation__badge:hover {
   background-color: #eef4ff;
 }
 
-.citation__badge:focus-within {
+.citation__badge:focus {
   border: 1px solid #0070d2;
   box-shadow: 0px 0px 3px 0px #0070d2;
 }
@@ -23,16 +25,8 @@
   color: var(--lwc-brandAccessible, #0176d3);
 }
 
-.citation__link {
-  color: var(--lwc-brandAccessible, #0176d3);
-  max-width: 10.625rem;
-}
-
-.citation__link:focus-visible {
-  outline: none;
-}
-
 .citation__index {
+  color: var(--lwc-brandAccessible, #0176d3);
   background-color: #eef4ff;
   width: 20px;
   height: 20px;
