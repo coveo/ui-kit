@@ -60,7 +60,7 @@ export default class QuanticRecommendationInterface extends LightningElement {
   /** @type {boolean} */
   ariaLiveEventsBound = false;
   /** @type {string} */
-  analyticsOriginContext = 'quantic recommendations';
+  analyticsOriginContext = 'quantic_recommendation';
 
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.recommendation).then(() => {
