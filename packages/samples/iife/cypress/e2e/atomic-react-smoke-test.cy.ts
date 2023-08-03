@@ -30,7 +30,7 @@ describe('smoke test', {viewportHeight: 2000, viewportWidth: 2000}, () => {
       .should('exist')
       .shadow()
       .find('div[part="container"]')
-      .contains('Results 1-10')
+      .contains('Results 1-15')
       .contains('for test');
 
     cy.get('atomic-result-list')
