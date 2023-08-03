@@ -166,9 +166,9 @@ const isAutomaticFacetsEqual = (
 
     const currentSelectedValues = (
       current.set[key].response.values as FacetValue[]
-    ).filter((value) => value.state === 'selected');
+    ).filter((value) => value.state !== 'idle');
     const nextSelectedValues = (value.response.values as FacetValue[]).filter(
-      (value) => value.state === 'selected'
+      (value) => value.state !== 'idle'
     );
 
     if (
