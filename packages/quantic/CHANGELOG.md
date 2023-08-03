@@ -1,3 +1,15 @@
+## 2.27.2 (2023-07-27)
+
+### Bug Fixes
+
+- **quantic:** fixed condition to display the no more child results message ([#3059](https://github.com/coveo/ui-kit/issues/3059)) ([9f27c95](https://github.com/coveo/ui-kit/commits/9f27c959c18909d36b98d717ac88f19b983431af))
+
+## 2.27.1 (2023-07-19)
+
+### Bug Fixes
+
+- **quantic:** optimized the time needed to perform a quick view open operation ([#3016](https://github.com/coveo/ui-kit/issues/3016)) ([547c049](https://github.com/coveo/ui-kit/commits/547c049f00376bc3186dc190ace6361fe933e86b))
+
 # 2.27.0 (2023-07-12)
 
 ### Features
