@@ -5,7 +5,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import { LightningElement, api } from 'lwc';
+import {LightningElement, api} from 'lwc';
 // @ts-ignore
 import generatedAnswerTemplate from './generatedAnswer.html';
 // @ts-ignore
@@ -68,12 +68,16 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   updateState() {
     this.state = this.generatedAnswer.state;
+    this.updateFeedbackState();
+  }
+
+  updateFeedbackState() {
     if (this.state?.liked) {
-      this.feedbackState = 'liked'
+      this.feedbackState = 'liked';
     } else if (this.state?.disliked) {
-      this.feedbackState = 'disliked'
+      this.feedbackState = 'disliked';
     } else {
-      this.feedbackState = 'neutral'
+      this.feedbackState = 'neutral';
     }
   }
 
@@ -91,7 +95,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   handleLike(event) {
     event.stopPropagation();
-    this.feedbackState = 'liked';
     this.generatedAnswer.like?.();
   }
 
@@ -101,7 +104,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    */
   handleDislike(event) {
     event.stopPropagation();
-    this.feedbackState = 'disliked';
     this.generatedAnswer.dislike?.();
   }
 
