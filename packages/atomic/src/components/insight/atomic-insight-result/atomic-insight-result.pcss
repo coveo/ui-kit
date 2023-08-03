@@ -1,11 +1,5 @@
 @import '../../common/result/result.pcss';
 
-atomic-result-section-children {
-  margin-top: 0.875rem;
-  border-left: 1px solid var(--atomic-neutral);
-  padding-left: 1rem;
-}
-
 :host {
   @apply relative;
 
@@ -31,5 +25,10 @@ atomic-result-section-children {
     atomic-insight-result-action-bar {
       @apply top-0;
     }
+  }
+
+  atomic-load-more-children-results::part(button) {
+    margin-bottom: 0;
+    padding: 0.2rem 0.5rem;
   }
 }
