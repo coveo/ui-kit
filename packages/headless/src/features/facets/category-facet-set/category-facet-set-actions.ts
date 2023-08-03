@@ -178,3 +178,24 @@ export const updateCategoryFacetSortCriterion = createAction(
       criterion: new Value<CategoryFacetSortCriterion>(),
     })
 );
+
+export interface UpdateCategoryFacetBasePathActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The base path shared by all values for the facet.
+   */
+  basePath: string[];
+}
+
+export const updateCategoryFacetBasePath = createAction(
+  'categoryFacet/updateBasePath',
+  (payload: UpdateCategoryFacetBasePathActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      basePath: new Value<string[]>(),
+    })
+);

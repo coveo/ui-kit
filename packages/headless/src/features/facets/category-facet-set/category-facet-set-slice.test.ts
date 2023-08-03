@@ -24,6 +24,7 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
   RegisterCategoryFacetActionCreatorPayload,
+  updateCategoryFacetBasePath,
 } from './category-facet-set-actions';
 import {categoryFacetSetReducer} from './category-facet-set-slice';
 import {
@@ -725,6 +726,36 @@ describe('category facet slice', () => {
         expectedRequest
       );
       expect(spy).toHaveBeenCalled();
+    });
+  });
+
+  describe('#updateCategoryFacetBasePath', () => {
+    it('sets the correct basePath by copy', () => {
+      const basePath: string[] = ['my', 'base', 'path'];
+      const request = buildMockCategoryFacetRequest({facetId, field: 'a'});
+      state[facetId] = buildMockCategoryFacetSlice({request});
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        updateCategoryFacetBasePath({facetId, basePath})
+      );
+      const finalBasePath = finalState[facetId]?.request.basePath;
+      expect(finalBasePath).not.toBe(basePath);
+      expect(finalBasePath.length).toBe(basePath.length);
+      for (let index = 0; index < basePath.length; index++) {
+        expect(finalBasePath[index]).toBe(basePath[index]);
+      }
+    });
+
+    it('does nothing when the facetID is not registered', () => {
+      const basePath: string[] = ['my', 'base', 'path'];
+
+      expect(() =>
+        categoryFacetSetReducer(
+          state,
+          updateCategoryFacetBasePath({facetId, basePath})
+        )
+      ).not.toThrow();
     });
   });
 
