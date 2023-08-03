@@ -52,13 +52,13 @@ export declare interface AtomicAutomaticFacetBuilder extends Components.AtomicAu
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['areCollapsed', 'desiredCount']
+  inputs: ['areCollapsed', 'desiredCount', 'numberOfValues']
 })
 @Component({
   selector: 'atomic-automatic-facet-builder',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['areCollapsed', 'desiredCount']
+  inputs: ['areCollapsed', 'desiredCount', 'numberOfValues']
 })
 export class AtomicAutomaticFacetBuilder {
   protected el: HTMLElement;

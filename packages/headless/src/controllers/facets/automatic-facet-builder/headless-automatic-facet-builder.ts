@@ -1,7 +1,10 @@
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {setDesiredCount} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
+import {
+  setDesiredCount,
+  setNumberOfValues,
+} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {
@@ -48,6 +51,18 @@ export interface AutomaticFacetBuilderProps {
    * Must be a positive integer.
    */
   desiredCount: number;
+
+  /**
+   * @beta - This prop is part of the automatic facets feature.
+   * Automatic facets are currently in beta testing and should be available soon.
+   *
+   * The desired number of automatically generated facet values.
+   * Must be a positive integer.
+   *    * Minimum: `1`
+   *
+   * @defaultValue `8`
+   */
+  numberOfValues?: number;
 }
 
 /**
@@ -69,6 +84,7 @@ export function buildAutomaticFacetBuilder(
   }
   const {dispatch} = engine;
   dispatch(setDesiredCount(props.desiredCount));
+  dispatch(setNumberOfValues(props.numberOfValues ?? 8));
 
   const controller = buildController(engine);
 

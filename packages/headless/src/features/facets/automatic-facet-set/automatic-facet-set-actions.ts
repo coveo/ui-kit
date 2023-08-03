@@ -26,6 +26,12 @@ export const setDesiredCount = createAction(
   (payload: number) => validatePayload(payload, desiredCountDefinition)
 );
 
+const numberOfValuesDefinition = new NumberValue({default: 8, min: 1});
+export const setNumberOfValues = createAction(
+  'automaticFacet/setNumberOfValues',
+  (payload: number) => validatePayload(payload, numberOfValuesDefinition)
+);
+
 export const deselectAllAutomaticFacetValues = createAction(
   'automaticFacet/deselectAll',
   (payload: string) => validatePayload(payload, facetIdDefinition)

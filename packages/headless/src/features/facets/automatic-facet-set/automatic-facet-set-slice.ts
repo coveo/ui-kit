@@ -6,6 +6,7 @@ import {executeSearch} from '../../search/search-actions';
 import {
   deselectAllAutomaticFacetValues,
   setDesiredCount,
+  setNumberOfValues,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
 import {getAutomaticFacetSetInitialState} from './automatic-facet-set-state';
@@ -25,6 +26,9 @@ export const automaticFacetSetReducer = createReducer(
       })
       .addCase(setDesiredCount, (state, action) => {
         state.desiredCount = action.payload;
+      })
+      .addCase(setNumberOfValues, (state, action) => {
+        state.numberOfValues = action.payload;
       })
       .addCase(toggleSelectAutomaticFacetValue, (state, action) => {
         const {field, selection} = action.payload;

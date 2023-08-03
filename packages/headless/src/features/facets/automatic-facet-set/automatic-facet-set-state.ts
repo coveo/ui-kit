@@ -11,6 +11,11 @@ export type AutomaticFacetSetState = {
    */
   desiredCount: number;
   /**
+   * The desired number of automatically generated facet values.
+   * Must be a positive integer.
+   */
+  numberOfValues: number;
+  /**
    * A map of automatic facet field to an automatic facet slice containing the response.
    */
   set: Record<string, AutomaticFacetSlice>;
@@ -19,6 +24,7 @@ export type AutomaticFacetSetState = {
 export function getAutomaticFacetSetInitialState(): AutomaticFacetSetState {
   return {
     desiredCount: 1,
+    numberOfValues: 8,
     set: {},
   };
 }
