@@ -12,8 +12,8 @@ import {
 import {EngineDefinitionBuildOptionsWithProps} from './types/build';
 import {
   ControllerDefinitionsMap,
-  EngineSnapshot,
-  InferControllerSnapshotsMapFromDefinitions,
+  EngineInitialState,
+  InferControllerInitialStateMapFromDefinitions,
   InferControllersMapFromDefinition,
   OptionsExtender,
 } from './types/common';
@@ -26,7 +26,7 @@ import {
  * @internal
  *
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
- * @returns Three utility functions to fetch engine snapshot in SSR, hydrate the snapshot in CSR
+ * @returns Three utility functions to fetch initial state of engine in SSR, hydrate the state in CSR
  *  and a build function that can be used for edge cases requiring more control.
  */
 export function defineSearchEngine<
@@ -76,9 +76,9 @@ export function defineSearchEngine<
       >
     ) =>
       new Promise<
-        EngineSnapshot<
+        EngineInitialState<
           {type: string},
-          InferControllerSnapshotsMapFromDefinitions<TControllerDefinitions>
+          InferControllerInitialStateMapFromDefinitions<TControllerDefinitions>
         >
         // eslint-disable-next-line no-async-promise-executor
       >(async (resolve, reject) => {
@@ -88,7 +88,7 @@ export function defineSearchEngine<
             resolve({
               controllers: mapObject(controllers, (controller) => ({
                 state: controller.state,
-              })) as InferControllerSnapshotsMapFromDefinitions<TControllerDefinitions>,
+              })) as InferControllerInitialStateMapFromDefinitions<TControllerDefinitions>,
               searchFulfilledAction: JSON.parse(JSON.stringify(action)),
             });
           }

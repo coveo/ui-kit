@@ -22,9 +22,9 @@ export type HydrateInitialStateWithoutProps<
   TSearchFulfilledAction extends AnyAction
 > = {
   /**
-   * Creates a new engine from the snapshot of a previous engine.
+   * Creates a new engine from the snapshot of the engine created in SSR with fetchInitialState.
    *
-   * Useful when hydrating a server-side-rendered engine.
+   * Useful when hydrating a server-side-rendered engine in CSR.
    */
   hydrateInitialState(
     options: EngineDefinitionHydrateOptionsWithoutProps<TSearchFulfilledAction>
@@ -45,7 +45,7 @@ export type HydrateInitialStateWithProps<
   TControllersProps extends ControllersPropsMap
 > = {
   /**
-   * Creates a new engine from the snapshot of a previous engine.
+   * Creates a new engine from the snapshot of the engine created in SSR with fetchInitialState.
    *
    * Useful when hydrating a server-side-rendered engine.
    */

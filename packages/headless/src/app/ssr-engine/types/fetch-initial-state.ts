@@ -1,16 +1,16 @@
 import {AnyAction} from '@reduxjs/toolkit';
 import {
-  ControllerSnapshotsMap,
+  ControllerInitialStateMap,
   ControllersPropsMap,
-  EngineSnapshot,
+  EngineInitialState,
 } from './common';
 
 export type EngineDefinitionFetchInitialStateOptions<
-  TControllersSnapshot extends ControllersPropsMap
-> = {controllers: TControllersSnapshot};
+  TControllersInitialState extends ControllersPropsMap
+> = {controllers: TControllersInitialState};
 
 export type FetchInitialStateWithoutProps<
-  TControllersSnapshot extends ControllerSnapshotsMap,
+  TControllersInitialState extends ControllerInitialStateMap,
   TSearchFulfilledAction extends AnyAction
 > = {
   /**
@@ -19,12 +19,12 @@ export type FetchInitialStateWithoutProps<
    * Useful for static generation and server-side rendering.
    */
   fetchInitialState(): Promise<
-    EngineSnapshot<TSearchFulfilledAction, TControllersSnapshot>
+    EngineInitialState<TSearchFulfilledAction, TControllersInitialState>
   >;
 };
 
 export type FetchInitialStateWithProps<
-  TControllersSnapshot extends ControllerSnapshotsMap,
+  TControllersInitialState extends ControllerInitialStateMap,
   TSearchFulfilledAction extends AnyAction,
   TControllersProps extends ControllersPropsMap
 > = {
@@ -35,5 +35,7 @@ export type FetchInitialStateWithProps<
    */
   fetchInitialState(
     options: EngineDefinitionFetchInitialStateOptions<TControllersProps>
-  ): Promise<EngineSnapshot<TSearchFulfilledAction, TControllersSnapshot>>;
+  ): Promise<
+    EngineInitialState<TSearchFulfilledAction, TControllersInitialState>
+  >;
 };

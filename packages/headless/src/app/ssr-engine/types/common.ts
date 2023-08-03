@@ -20,12 +20,12 @@ export interface ControllersMap {
   [customName: string]: Controller;
 }
 
-export interface ControllerSnapshot<TState> {
+export interface ControllerInitialState<TState> {
   state: TState;
 }
 
-export interface ControllerSnapshotsMap {
-  [customName: string]: ControllerSnapshot<unknown>;
+export interface ControllerInitialStateMap {
+  [customName: string]: ControllerInitialState<unknown>;
 }
 
 export interface ControllerDefinitionWithoutProps<
@@ -57,9 +57,9 @@ export interface ControllerDefinitionsMap<
   [customName: string]: ControllerDefinition<TEngine, TController>;
 }
 
-export interface EngineSnapshot<
+export interface EngineInitialState<
   TSearchFulfilledAction extends AnyAction,
-  TControllers extends ControllerSnapshotsMap
+  TControllers extends ControllerInitialStateMap
 > {
   searchFulfilledAction: TSearchFulfilledAction;
   controllers: TControllers;
@@ -105,6 +105,6 @@ export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};
 
-export type InferControllerSnapshotsMapFromDefinitions<
+export type InferControllerInitialStateMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
 > = {[K in keyof TControllers]: {state: TControllers[K]}};
