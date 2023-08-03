@@ -60,15 +60,14 @@ export const automaticFacetSetReducer = createReducer(
 
         //add af not in facet set
         for (const field in af) {
-          if (state.set[field]) {
-            continue;
+          if (!state.set[field]) {
+            const response = buildTemporaryAutomaticFacetResponse(field);
+            const values = af[field].map((value) =>
+              buildTemporarySelectedFacetValue(value)
+            );
+            response.values.push(...values);
+            state.set[field] = {response};
           }
-          const response = buildTemporaryAutomaticFacetResponse(field);
-          const values = af[field].map((value) =>
-            buildTemporarySelectedFacetValue(value)
-          );
-          response.values.push(...values);
-          state.set[field] = {response};
         }
 
         //unselected facets in set that are not in af
@@ -84,15 +83,14 @@ export const automaticFacetSetReducer = createReducer(
         //sync value state for facets in af
         for (const field in af) {
           const facet = state.set[field]?.response;
-          if (!facet) {
-            continue;
-          }
-          const values = facet.values;
-          for (const value of values) {
-            if (!af[field].includes(value.value)) {
-              value.state = 'idle';
-            } else if (value.state === 'idle') {
-              value.state = 'selected';
+          if (facet) {
+            const values = facet.values;
+            for (const value of values) {
+              if (!af[field].includes(value.value)) {
+                value.state = 'idle';
+              } else if (value.state === 'idle') {
+                value.state = 'selected';
+              }
             }
           }
         }
