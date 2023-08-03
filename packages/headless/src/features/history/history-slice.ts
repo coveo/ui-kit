@@ -112,10 +112,10 @@ const isFacetsEqual = (current: AnyFacetSetState, next: AnyFacetSetState) => {
 
     const currentSelectedValues = (
       current[key].request.currentValues as AnyFacetValueRequest[]
-    ).filter((value) => value.state === 'selected');
+    ).filter((value) => value.state !== 'idle');
     const nextSelectedValues = (
       value.request.currentValues as AnyFacetValueRequest[]
-    ).filter((value) => value.state === 'selected');
+    ).filter((value) => value.state !== 'idle');
 
     if (
       JSON.stringify(currentSelectedValues) !==
