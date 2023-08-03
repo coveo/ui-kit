@@ -36,6 +36,7 @@ export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
   isAppLoaded(): boolean;
   getUniqueIDFromEngine(engine: AnyEngineType): string;
   getFacetElements(): HTMLElement[];
+  getVisibleFacetElementsLength(): number;
   registerFacet<T extends FacetType, U extends string>(
     facetType: T,
     data: StoreData[T][U] & {facetId: U; element: HTMLElement}
@@ -136,8 +137,13 @@ export function createAtomicCommonStore<
     getFacetElements() {
       return stencilStore
         .get('facetElements')
+        .filter((element) => isInDocument(element));
+    },
+    getVisibleFacetElementsLength() {
+      return stencilStore
+        .get('facetElements')
         .filter((element) => isInDocument(element))
-        .filter((element) => isVisible(element));
+        .filter((element) => isVisible(element)).length;
     },
   };
 }

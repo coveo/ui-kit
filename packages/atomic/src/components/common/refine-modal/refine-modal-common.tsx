@@ -115,29 +115,22 @@ export function getClonedFacetElements(
   divSlot.style.flexDirection = 'column';
   divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
 
-  const fieldsToQuery = facetElements.map(
-    (facetElement) => facetElement.attributes[0].value
-  );
-
   const allFacetTags = Array.from(
     new Set(facetElements.map((el) => el.tagName.toLowerCase()))
   );
 
   const allFacetsInOrderInDOM = root.querySelectorAll(allFacetTags.join(','));
-
-  const allVisibleFacetsInOrderInDOM = Array.from(allFacetsInOrderInDOM).filter(
-    (facet) => {
-      const facetField = facet.getAttribute('field');
-      return facetField !== null && fieldsToQuery.includes(facetField);
-    }
-  );
-
-  allVisibleFacetsInOrderInDOM.forEach((facetElement, index) => {
+  let index = 0;
+  allFacetsInOrderInDOM.forEach((facetElement) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
-    clone.isCollapsed = facetShouldBeInitiallyCollapsed(
-      index,
-      collapseFacetsAfter
-    );
+    if (!facetElement.classList.contains('atomic-hidden')) {
+      index += 1;
+      clone.isCollapsed = facetShouldBeInitiallyCollapsed(
+        index,
+        collapseFacetsAfter
+      );
+    }
+
     clone.classList.remove(popoverClass);
     clone.setAttribute(isRefineModalFacet, '');
     divSlot.append(clone);

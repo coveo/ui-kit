@@ -209,7 +209,8 @@ export class AtomicRefineModal implements InitializableComponent {
       return;
     }
     const amountToCollapseNext =
-      this.collapseFacetsAfter - this.bindings.store.getFacetElements().length;
+      this.collapseFacetsAfter -
+      this.bindings.store.getVisibleFacetElementsLength();
     const automaticFacets = isAutomaticFacets
       ? this.automaticFacetBuilderState.automaticFacets.map((facet, index) => {
           const isCollapsed = index >= amountToCollapseNext;
