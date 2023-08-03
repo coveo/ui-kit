@@ -58,7 +58,7 @@ export const automaticFacetSetReducer = createReducer(
         const af = action.payload.af ?? {};
         const currentFields = Object.keys(state.set);
 
-        // Add af not in facet set
+        // Add facets in af that are not in facet set
         for (const field in af) {
           if (!state.set[field]) {
             const response = buildTemporaryAutomaticFacetResponse(field);
@@ -80,7 +80,7 @@ export const automaticFacetSetReducer = createReducer(
           }
         }
 
-        // Sync value state for facets in af
+        // Sync value state for facets in set and af
         for (const field in af) {
           const facet = state.set[field]?.response;
           if (facet) {
