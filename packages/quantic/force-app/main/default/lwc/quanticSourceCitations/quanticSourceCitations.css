@@ -28,6 +28,10 @@
   max-width: 10.625rem;
 }
 
+.citation__link:focus-visible {
+  outline: none;
+}
+
 .citation__index {
   background-color: #eef4ff;
   width: 20px;
