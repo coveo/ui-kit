@@ -79,6 +79,18 @@ export const addFoldedResultList =
     fixture.withElement(foldedResultList);
   };
 
+export const addGridResultList =
+  (template?: HTMLElement, tags?: TagProps) => (fixture: TestFixture) => {
+    const gridResultList = generateComponentHTML(resultListComponent, {
+      ...tags,
+      display: 'grid',
+    });
+    if (template) {
+      gridResultList.appendChild(template);
+    }
+    fixture.withElement(gridResultList);
+  };
+
 export const removeResultChildrenFromResponse = (fixture: TestFixture) => {
   fixture.withCustomResponse((response) =>
     response.results.forEach((result) => {

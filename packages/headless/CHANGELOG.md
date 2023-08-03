@@ -1,3 +1,14 @@
+# 2.24.0 (2023-08-02)
+
+### Bug Fixes
+
+- **test:** fix false positives from remove component assertion ([#3053](https://github.com/coveo/ui-kit/issues/3053)) ([23e5f0b](https://github.com/coveo/ui-kit/commits/23e5f0bf9a39cd6e7f704dcb66050ad1ac06fc50))
+
+### Features
+
+- **atomic, headless:** add breadbox support for automatic facets ([#3048](https://github.com/coveo/ui-kit/issues/3048)) ([1958cc6](https://github.com/coveo/ui-kit/commits/1958cc6e9ff8626f80b9f38ecd4514e15be6a4f9))
+- **headless:** send clientId instead of visitorId in case assist ([#3067](https://github.com/coveo/ui-kit/issues/3067)) ([4370fdd](https://github.com/coveo/ui-kit/commits/4370fdd7fd77d31f9af1d5aeaa097a4eea6b2757))
+
 # 2.23.0 (2023-07-27)
 
 ### Bug Fixes
