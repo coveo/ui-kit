@@ -15,7 +15,6 @@ import loadingTemplate from './loading.html';
 /** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
 /** @typedef {import("coveo").GeneratedAnswerState} GeneratedAnswerState */
 /** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
-/** @typedef {import("coveo").SearchStatus} SearchStatus */
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Covel machine learning models to answer the query executed by the user.
