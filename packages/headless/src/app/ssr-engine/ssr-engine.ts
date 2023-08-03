@@ -12,6 +12,7 @@ import {
 import {EngineDefinitionBuildOptionsWithProps} from './types/build';
 import {
   ControllerDefinitionsMap,
+  ControllersMap,
   EngineInitialState,
   InferControllerInitialStateMapFromDefinitions,
   InferControllersMapFromDefinition,
@@ -80,13 +81,13 @@ export function defineSearchEngine<
           {type: string},
           InferControllerInitialStateMapFromDefinitions<TControllerDefinitions>
         >
-        // eslint-disable-next-line no-async-promise-executor
-      >(async (resolve, reject) => {
+      >((resolve, reject) => {
+        let initialControllers: ControllersMap;
         const middleware: Middleware = () => (next) => (action) => {
           next(action);
           if (action.type === 'search/executeSearch/fulfilled') {
             resolve({
-              controllers: mapObject(controllers, (controller) => ({
+              controllers: mapObject(initialControllers, (controller) => ({
                 state: controller.state,
               })) as InferControllerInitialStateMapFromDefinitions<TControllerDefinitions>,
               searchFulfilledAction: JSON.parse(JSON.stringify(action)),
@@ -96,17 +97,21 @@ export function defineSearchEngine<
             reject(JSON.parse(JSON.stringify(action)));
           }
         };
+
         const extend: OptionsExtender<SearchEngineOptions> = (options) => ({
           ...options,
           middlewares: [...(options.middlewares ?? []), middleware],
         });
-        const {engine, controllers} = await build({
+
+        build({
           extend,
           ...(executeOptions?.controllers && {
             controllers: executeOptions.controllers,
           }),
+        }).then(({engine, controllers}) => {
+          initialControllers = controllers;
+          engine.executeFirstSearch();
         });
-        engine.executeFirstSearch();
       });
 
   const hydrateInitialState: SearchEngineDefinition<TControllerDefinitions>['hydrateInitialState'] =
