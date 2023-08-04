@@ -23,6 +23,7 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "cypress": "10.8.0"
+    "cypress": "10.8.0",
+    "cypress-web-vitals": "4.0.1"
   }
 }
