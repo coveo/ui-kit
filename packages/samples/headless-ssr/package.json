@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "e2e": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
     "@coveo/headless": "2.24.0",
@@ -20,5 +21,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "5.1.6"
+  },
+  "devDependencies": {
+    "cypress": "10.8.0"
   }
 }
