@@ -15,6 +15,11 @@ import loadingTemplate from './loading.html';
 /** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
 /** @typedef {import("coveo").GeneratedAnswerState} GeneratedAnswerState */
 /** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
+/** @typedef { 'neutral' | 'liked' | 'disliked'} FeedbackState */
+
+const FEEDBACK_LIKED_STATE = 'liked';
+const FEEDBACK_DISLIKED_STATE = 'disliked';
+const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
@@ -39,7 +44,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   generatedAnswer;
   /** @type {GeneratedAnswerState} */
   state;
-  /** @type {'neutral' | 'liked' | 'disliked'} */
+  /** @type {FeedbackState} */
   feedbackState = 'neutral';
 
   connectedCallback() {
@@ -72,11 +77,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   updateFeedbackState() {
     if (this.state?.liked) {
-      this.feedbackState = 'liked';
+      this.feedbackState = FEEDBACK_LIKED_STATE;
     } else if (this.state?.disliked) {
-      this.feedbackState = 'disliked';
+      this.feedbackState = FEEDBACK_DISLIKED_STATE;
     } else {
-      this.feedbackState = 'neutral';
+      this.feedbackState = FEEDBACK_NEUTRAL_STATE;
     }
   }
 
@@ -112,6 +117,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get citations() {
     return this?.state?.citations;
+  }
+
+  get hasCitations() {
+    return !!this.citations.length
   }
 
   get isLoading() {

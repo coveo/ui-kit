@@ -27,13 +27,15 @@
       <div data-cy="generated-answer__content" class={generatedContentClass}>
         {answer}
       </div>
-      <div class="slds-var-m-top_small">
-        <c-quantic-source-citations
-          data-cy="generated-answer__citations"
-          citations={citations}
-          citation-click-handler={handleCitationClick}
-        ></c-quantic-source-citations>
-      </div>
+      <template lwc:if={hasCitations}>
+        <div class="slds-var-m-top_small">
+          <c-quantic-source-citations
+            data-cy="generated-answer__citations"
+            citations={citations}
+            citation-click-handler={handleCitationClick}
+          ></c-quantic-source-citations>
+        </div>
+      </template>
     </div>
   </template>
 </template>

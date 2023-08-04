@@ -4,7 +4,7 @@ export const generatedAnswerComponent = 'c-quantic-generated-answer';
 
 export interface GeneratedAnswerSelector extends ComponentSelector {
   generatedAnswerCard: () => CypressSelector;
-  generatedAnswer: () => CypressSelector;
+  generatedAnswerContent: () => CypressSelector;
   likeButton: () => CypressSelector;
   dislikeButton: () => CypressSelector;
   citations: () => CypressSelector;
@@ -18,7 +18,7 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
 
   generatedAnswerCard: () =>
     GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__card"]'),
-  generatedAnswer: () =>
+  generatedAnswerContent: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__content"]'
     ),
@@ -46,6 +46,6 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
 
   citationLink: (index: number) =>
     GeneratedAnswerSelectors.get()
-      .find('[data-cy="generated-answer__citations"] .citation__link')
+      .find('[data-cy="generated-answer__citations"] .citation__badge')
       .eq(index),
 };

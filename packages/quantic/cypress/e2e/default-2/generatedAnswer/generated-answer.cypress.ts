@@ -115,7 +115,7 @@ describe('quantic-generated-answer', () => {
         Expect.displayCitations(true);
         testCitations.forEach((citation, index) => {
           Expect.citationTitleContains(index, citation.title);
-          Expect.citationIndexContains(index, `${index + 1}`);
+          Expect.citationNumberContains(index, `${index + 1}`);
           Expect.citationLinkContains(index, citation.clickUri);
         });
       });

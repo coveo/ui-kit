@@ -65,7 +65,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
 
     generatedAnswerContains: (answer: string) => {
       selector
-        .generatedAnswer()
+        .generatedAnswerContent()
         .contains(answer)
         .log(`the generated answer should contain "${answer}"`);
     },
@@ -81,14 +81,14 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         );
     },
 
-    citationIndexContains: (index: number, value: string) => {
+    citationNumberContains: (index: number, value: string) => {
       selector
         .citationIndex(index)
         .then((element) => {
           expect(element.get(0).innerText).to.equal(value);
         })
         .log(
-          `the citation at the index ${index} should contain the index "${value}"`
+          `the citation at the index ${index} should contain the number "${value}"`
         );
     },
 
