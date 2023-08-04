@@ -1,9 +1,23 @@
 import 'cypress-web-vitals';
 
 describe('headless ssr smoke tests', () => {
+  const numResults = 10;
+  const numResultsMsg = `Hydrated engine with ${numResults} results`;
+  const msgSelector = '#hydrated-msg';
+  it('renders page in SSR as expected', () => {
+    cy.intercept('/', (req) => {
+      req.continue((resp) => {
+        const dom = new DOMParser().parseFromString(resp.body, 'text/html');
+        expect(dom.body).to.contain(numResultsMsg);
+        expect(dom.querySelectorAll('li').length).to.equal(numResults);
+      });
+    });
+    cy.visit('/');
+  });
+
   it('renders page in CSR as expected', () => {
-    const numResults = 10;
-    cy.visit('/').contains(`Hydrated engine with ${numResults} results`);
+    cy.visit('/');
+    cy.get(msgSelector).should('contain.text', numResultsMsg);
     cy.get('li').should('have.length', numResults);
   });
 
