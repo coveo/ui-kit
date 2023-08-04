@@ -11,7 +11,7 @@
 
 .generated-answer__content--streaming::after {
   content: '';
-  width: 8px;
+  width: 0.5rem;
   height: .9rem;
   margin-left: 0.1rem;
   background: var(--lwc-brand-accessible, #0176d3);
