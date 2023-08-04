@@ -1,9 +1,10 @@
 import 'cypress-web-vitals';
 
-describe('headless ssr smoke tests', () => {
+describe('headless ssr example', () => {
   const numResults = 10;
   const numResultsMsg = `Hydrated engine with ${numResults} results`;
   const msgSelector = '#hydrated-msg';
+  const timestampSelector = '#timestamp';
   it('renders page in SSR as expected', () => {
     cy.intercept('/', (req) => {
       req.continue((resp) => {
@@ -21,8 +22,29 @@ describe('headless ssr smoke tests', () => {
     cy.get('li').should('have.length', numResults);
   });
 
+  it('renders result list in both SSR and CSR', () => {
+    const interceptAlias = 'searchResults';
+    cy.intercept('/').as(interceptAlias);
+
+    cy.visit('/');
+    cy.wait(`@${interceptAlias}`).then((intercept) => {
+      const dom = new DOMParser().parseFromString(
+        intercept.response?.body,
+        'text/html'
+      );
+      const ssrTimestamp = Date.parse(
+        dom.querySelector(timestampSelector)!.innerHTML
+      );
+      expect(ssrTimestamp).to.not.be.undefined;
+      cy.get(timestampSelector).should((timeStampElement) => {
+        const csrTimestamp = Date.parse(timeStampElement.text());
+        expect(csrTimestamp).to.be.greaterThan(ssrTimestamp);
+      });
+    });
+  });
+
   it('should pass the web-vitals audits', () => {
-    //
+    // TODO: Add input based vitals after interactive elements are added to test page (e.g. search box)
     const VITALS_THRESHOLD = {thresholds: {fcp: 30, lcp: 30, cls: 0, ttfb: 10}};
     cy.vitals(VITALS_THRESHOLD);
   });
