@@ -9,7 +9,7 @@ import { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedR
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
+import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
@@ -1214,6 +1214,11 @@ export namespace Components {
          */
         "display": ResultDisplayBasicLayout;
         /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget": ResultTarget;
+        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
         "headingLevel": number;
@@ -1467,6 +1472,11 @@ export namespace Components {
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
         "display": ResultDisplayLayout;
+        /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget": ResultTarget;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -4140,6 +4150,11 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayBasicLayout;
         /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget"?: ResultTarget;
+        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
         "headingLevel"?: number;
@@ -4373,6 +4388,11 @@ declare namespace LocalJSX {
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
         "display"?: ResultDisplayLayout;
+        /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget"?: ResultTarget;
         /**
           * The expected size of the image displayed in the results.
          */

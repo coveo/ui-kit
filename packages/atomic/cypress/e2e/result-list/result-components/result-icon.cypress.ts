@@ -29,8 +29,7 @@ describe('Result Icon Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(() => cy.get(resultIconComponent));
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the "filetype" field value matches user.svg', () => {

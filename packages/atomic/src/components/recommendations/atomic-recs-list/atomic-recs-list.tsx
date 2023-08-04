@@ -32,6 +32,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayBasicLayout,
+  ResultTarget,
 } from '../../common/layout/display-options';
 import {ResultListCommon} from '../../common/result-list/result-list-common';
 import {
@@ -90,6 +91,12 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    * To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'list';
+  /**
+   * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
+   * This property is only leveraged when `display` is `grid`.
+   * @defaultValue `_self`
+   */
+  @Prop() gridCellLinkTarget: ResultTarget = '_self';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
@@ -190,6 +197,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
         this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations,
       host: this.host,
       bindings: this.bindings,
+      gridCellLinkTarget: this.gridCellLinkTarget,
       getDensity: () => this.density,
       getLayoutDisplay: () => 'grid',
       getResultDisplay: () => this.display,

@@ -1,3 +1,14 @@
+# 2.38.0 (2023-08-02)
+
+### Bug Fixes
+
+- **atomic:** center magnifying glass icon in search box submit button ([#3066](https://github.com/coveo/ui-kit/issues/3066)) ([f445ba7](https://github.com/coveo/ui-kit/commits/f445ba76c1a8f6c6acabead4947d760a6cb44937))
+- **test:** fix false positives from remove component assertion ([#3053](https://github.com/coveo/ui-kit/issues/3053)) ([23e5f0b](https://github.com/coveo/ui-kit/commits/23e5f0bf9a39cd6e7f704dcb66050ad1ac06fc50))
+
+### Features
+
+- **atomic, headless:** add breadbox support for automatic facets ([#3048](https://github.com/coveo/ui-kit/issues/3048)) ([1958cc6](https://github.com/coveo/ui-kit/commits/1958cc6e9ff8626f80b9f38ecd4514e15be6a4f9))
+
 # 2.37.0 (2023-07-27)
 
 ### Features
