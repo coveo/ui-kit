@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "e2e": "cypress open --browser chrome --e2e"
+    "prod": "npm run build && npm run start",
+    "e2e": "cypress run --browser chrome --e2e"
   },
   "dependencies": {
     "@coveo/headless": "2.24.0",
