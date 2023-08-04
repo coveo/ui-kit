@@ -70,7 +70,7 @@ describe('quantic-generated-answer', () => {
           Expect.dislikeButtonIsChecked(false);
         });
 
-        scope('when liking the generated answer', () => {
+        scope('when disliking the generated answer', () => {
           Actions.dislikeGeneratedAnswer();
           Expect.logDislikeGeneratedAnswer(streamId);
           Expect.likeButtonIsChecked(false);
