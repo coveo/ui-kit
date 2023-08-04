@@ -4,7 +4,7 @@ import {Result} from '@coveo/headless';
 
 export default function ResultList({results}: {results: Result[]}) {
   return (
-    <div>
+    <div id="hydrated-msg">
       Hydrated engine with {results?.length} results
       <ul>
         {results?.map((result) => (
@@ -13,6 +13,12 @@ export default function ResultList({results}: {results: Result[]}) {
           </li>
         ))}
       </ul>
+      <div>
+        Rendered on{' '}
+        <span id="timestamp" suppressHydrationWarning>
+          {new Date().toISOString()}
+        </span>
+      </div>
     </div>
   );
 }
