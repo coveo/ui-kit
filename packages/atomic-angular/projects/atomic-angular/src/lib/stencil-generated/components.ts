@@ -48,19 +48,19 @@ export class AtomicAutomaticFacet {
 }
 
 
-export declare interface AtomicAutomaticFacetBuilder extends Components.AtomicAutomaticFacetBuilder {}
+export declare interface AtomicAutomaticFacetGenerator extends Components.AtomicAutomaticFacetGenerator {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
   inputs: ['areCollapsed', 'desiredCount']
 })
 @Component({
-  selector: 'atomic-automatic-facet-builder',
+  selector: 'atomic-automatic-facet-generator',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   inputs: ['areCollapsed', 'desiredCount']
 })
-export class AtomicAutomaticFacetBuilder {
+export class AtomicAutomaticFacetGenerator {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();

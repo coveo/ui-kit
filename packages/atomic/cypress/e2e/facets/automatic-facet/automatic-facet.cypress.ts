@@ -1,6 +1,6 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
 import * as CommonAssertions from '../../common-assertions';
-import {addAutomaticFacetBuilder} from '../automatic-facet-builder/automatic-facet-builder-actions';
+import {addAutomaticFacetBuilder} from '../automatic-facet-generator/automatic-facet-generator-actions';
 import * as AutomaticFacetAssertions from '../automatic-facet/automatic-facet-assertions';
 import {
   pressClearButton,
