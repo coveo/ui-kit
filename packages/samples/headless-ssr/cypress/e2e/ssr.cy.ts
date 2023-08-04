@@ -8,7 +8,8 @@ describe('headless ssr smoke tests', () => {
   });
 
   it('should pass the web-vitals audits', () => {
-    const VITALS_THRESHOLD = {}; // TODO
-    cy.vitals();
+    //
+    const VITALS_THRESHOLD = {thresholds: {fcp: 30, lcp: 30, cls: 0, ttfb: 10}};
+    cy.vitals(VITALS_THRESHOLD);
   });
 });
