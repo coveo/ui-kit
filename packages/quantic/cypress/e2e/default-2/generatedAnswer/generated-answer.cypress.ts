@@ -55,6 +55,7 @@ describe('quantic-generated-answer', () => {
       it('should display the correct message', () => {
         Expect.displayGeneratedAnswerCard(true);
         Expect.generatedAnswerContains(testText);
+        Expect.generatedAnswerIsStreaming(false);
       });
 
       it('should display feedback buttons', () => {
@@ -76,6 +77,30 @@ describe('quantic-generated-answer', () => {
           Expect.likeButtonIsChecked(false);
           Expect.dislikeButtonIsChecked(true);
         });
+      });
+    });
+
+    describe('when the generated answer is still streaming', () => {
+      const streamId = crypto.randomUUID();
+
+      const testText = 'Some text';
+      const testMessagePayload = {
+        payloadType: 'genqa.messageType',
+        payload: JSON.stringify({
+          textDelta: testText,
+        }),
+      };
+
+      beforeEach(() => {
+        mockSearchWithGeneratedAnswer(streamId);
+        mockStreamResponse(streamId, testMessagePayload);
+        visitGeneratedAnswer();
+      });
+
+      it('should display the correct message and the streaming cursor', () => {
+        Expect.displayGeneratedAnswerCard(true);
+        Expect.generatedAnswerContains(testText);
+        Expect.generatedAnswerIsStreaming(true);
       });
     });
 

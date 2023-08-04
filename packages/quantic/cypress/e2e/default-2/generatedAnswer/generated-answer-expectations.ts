@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {should} from '../../common-selectors';
 import {
   GeneratedAnswerSelector,
   GeneratedAnswerSelectors,
@@ -19,28 +20,28 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
       selector
         .generatedAnswerCard()
         .should(display ? 'exist' : 'not.exist')
-        .log('should display the generated answer card');
+        .log(`${should(display)} display the generated answer card`);
     },
 
     displayLikeButton: (display: boolean) => {
       selector
         .likeButton()
         .should(display ? 'exist' : 'not.exist')
-        .log('should display the like button');
+        .log(`${should(display)} display the like button`);
     },
 
     displayDislikeButton: (display: boolean) => {
       selector
         .dislikeButton()
         .should(display ? 'exist' : 'not.exist')
-        .log('should display the dislike button');
+        .log(`${should(display)} display the dislike button`);
     },
 
     displayCitations: (display: boolean) => {
       selector
         .citations()
         .should(display ? 'exist' : 'not.exist')
-        .log('should display the source citations');
+        .log(`${should(display)} display the source citations`);
     },
 
     likeButtonIsChecked: (checked: boolean) => {
@@ -50,7 +51,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           checked ? 'have.class' : 'not.have.class',
           'feedback__button--liked'
         )
-        .log('the like button should be in a liked state');
+        .log(`the like button ${should(checked)} be in a liked state`);
     },
 
     dislikeButtonIsChecked: (checked: boolean) => {
@@ -60,7 +61,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
           checked ? 'have.class' : 'not.have.class',
           'feedback__button--disliked'
         )
-        .log('the dislike button should be in a disliked state');
+        .log(`the dislike button ${should(checked)} be in a disliked state`);
     },
 
     generatedAnswerContains: (answer: string) => {
@@ -68,6 +69,16 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         .generatedAnswerContent()
         .contains(answer)
         .log(`the generated answer should contain "${answer}"`);
+    },
+
+    generatedAnswerIsStreaming: (isStreaming: boolean) => {
+      selector
+        .generatedAnswerContent()
+        .should(
+          isStreaming ? 'have.class' : 'not.have.class',
+          'generated-answer__content--streaming'
+        )
+        .log(`the generated answer ${should(isStreaming)} be streaming`);
     },
 
     citationTitleContains: (index: number, title: string) => {
