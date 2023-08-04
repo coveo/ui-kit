@@ -70,7 +70,7 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
 
   private validateProps() {
     new Schema({
-      desiredCount: new NumberValue({min: 1, required: true}),
+      desiredCount: new NumberValue({min: 1, max: 10, required: true}),
       areCollapsed: new BooleanValue({default: true, required: false}),
     }).validate({
       desiredCount: this.desiredCount,
