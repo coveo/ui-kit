@@ -15,7 +15,27 @@
 /**
  * @type {Cypress.PluginConfig}
  */
-module.exports = (_on, _config) => {
+module.exports = (on, _config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+
+  // auto open devtools in headed mode (does not appear in screenshots, recording)
+  // https://github.com/cypress-io/cypress/issues/2024
+  on('before:browser:launch', (browser = {}, launchOptions) => {
+    if (browser.family === 'chromium' && browser.name !== 'electron') {
+      launchOptions.args.push('--auto-open-devtools-for-tabs');
+      // Workaround to use new headless mode until Cypress can be upgraded to >= 12.15 (KIT-2576)
+      // https://developer.chrome.com/articles/new-headless/
+      const version = parseInt(browser.majorVersion);
+      if (version >= 112) {
+        launchOptions.args.push('--headless=new');
+      }
+    } else if (browser.family === 'firefox') {
+      launchOptions.args.push('-devtools');
+    } else if (browser.name === 'electron') {
+      launchOptions.preferences.devTools = true;
+    }
+
+    return launchOptions;
+  });
 };
