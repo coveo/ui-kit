@@ -9,9 +9,6 @@ import {
   buildSort,
   SortState,
   buildQuerySummary,
-  AutomaticFacetBuilder,
-  AutomaticFacetBuilderState,
-  buildAutomaticFacetBuilder,
   buildSearchStatus,
   SearchStatus,
 } from '@coveo/headless';
@@ -78,7 +75,6 @@ export class AtomicRefineModal implements InitializableComponent {
   private sort!: Sort;
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
-  public automaticFacetBuilder!: AutomaticFacetBuilder;
   public searchStatus!: SearchStatus;
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
@@ -92,9 +88,6 @@ export class AtomicRefineModal implements InitializableComponent {
   @BindStateToController('facetManager')
   @State()
   public facetManagerState!: FacetManagerState;
-  @BindStateToController('automaticFacetBuilder')
-  @State()
-  private automaticFacetBuilderState!: AutomaticFacetBuilderState;
   @State() @BindStateToController('sort') public sortState!: SortState;
   @State() public error!: Error;
 
@@ -124,6 +117,7 @@ export class AtomicRefineModal implements InitializableComponent {
           this.bindings.interfaceElement
         )
       );
+      this.host.append(this.getSlottedAutomaticFacets());
     }
   }
 
@@ -131,14 +125,6 @@ export class AtomicRefineModal implements InitializableComponent {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
-    const desiredCount =
-      this.bindings.engine.state.automaticFacetSet?.desiredCount;
-    if (desiredCount) {
-      this.automaticFacetBuilder = buildAutomaticFacetBuilder(
-        this.bindings.engine,
-        {desiredCount}
-      );
-    }
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.watchEnabled(this.isOpen);
   }
@@ -202,30 +188,10 @@ export class AtomicRefineModal implements InitializableComponent {
 
   private renderFilters() {
     const isFacetElements = this.bindings.store.getFacetElements().length > 0;
-    const isAutomaticFacets =
-      this.automaticFacetBuilderState?.automaticFacets?.length > 0;
 
-    if (!isFacetElements && !isAutomaticFacets) {
+    if (!isFacetElements) {
       return;
     }
-    const amountToCollapseNext =
-      this.collapseFacetsAfter -
-      this.bindings.store.getVisibleFacetElementsLength();
-    const automaticFacets = isAutomaticFacets
-      ? this.automaticFacetBuilderState.automaticFacets.map((facet, index) => {
-          const isCollapsed = index >= amountToCollapseNext;
-          return (
-            <atomic-automatic-facet
-              key={facet.state.field}
-              field={facet.state.field}
-              facetId={facet.state.field}
-              facet={facet}
-              searchStatus={this.searchStatus}
-              isCollapsed={isCollapsed}
-            ></atomic-automatic-facet>
-          );
-        })
-      : [];
 
     return (
       <Fragment>
@@ -250,19 +216,29 @@ export class AtomicRefineModal implements InitializableComponent {
           )}
         </div>
         <slot name="facets"></slot>
-        <div
-          class="flex flex-col"
-          style={{
-            gap: 'var(--atomic-refine-modal-facet-margin, 20px)',
-            marginTop: isFacetElements
-              ? 'var(--atomic-refine-modal-facet-margin, 20px)'
-              : '',
-          }}
-        >
-          {automaticFacets}
-        </div>
+        <slot name="automatic-facets"></slot>
       </Fragment>
     );
+  }
+
+  private getSlottedAutomaticFacets() {
+    const tag = 'atomic-automatic-facet-slot-content';
+    const facetsDiv = this.host.querySelector(tag);
+
+    if (facetsDiv) {
+      facetsDiv.remove();
+    }
+
+    const divSlot = document.createElement(tag);
+    const isFacetElements =
+      this.bindings.store.getVisibleFacetElementsLength() > 0;
+    const amountToCollapseNext =
+      this.collapseFacetsAfter -
+      this.bindings.store.getVisibleFacetElementsLength();
+    divSlot.setAttribute('is-there-static-facets', `${isFacetElements}`);
+    divSlot.setAttribute('amount-to-collapse-next', `${amountToCollapseNext}`);
+
+    return divSlot;
   }
 
   private renderBody() {
