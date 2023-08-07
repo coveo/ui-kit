@@ -680,4 +680,8 @@
       <label>Cette réponse m'a été utile</label>
       <name>quantic_ThisAnswerWasHelpful</name>
     </customLabels>
+    <customLabels>
+        <label>En savoir plus</label>
+        <name>quantic_LearnMore</name>
+    </customLabels>
 </Translations>
