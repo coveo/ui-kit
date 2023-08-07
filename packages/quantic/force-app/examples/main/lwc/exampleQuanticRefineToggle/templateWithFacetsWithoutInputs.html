@@ -36,7 +36,7 @@
     </c-configurator>
     <c-quantic-search-interface slot="preview" engine-id={engineId}>
       <c-quantic-facet-manager engine-id={engineId}>
-        <template if:true={facetWithoutInputs}>
+        <template lwc:if={facetWithoutInputs}>
           <c-quantic-facet-manager engine-id={engineId}>
             <c-quantic-facet
               engine-id={engineId}

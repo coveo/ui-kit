@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
-      <template if:true={showPreview}>
+      <template lwc:if={showPreview}>
         <c-event-listener expected-events={expectedEvents}>
           <c-quantic-card-container title="Preview">
             <div class="slds-card__body_inner slds-p-top_small">

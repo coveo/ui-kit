@@ -21,7 +21,7 @@
         checked={isChecked}
       ></lightning-input>
     </template>
-    <template if:true={isChecked}>
+    <template lwc:if={isChecked}>
       <span
         class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small facet__value-text facet__value_selected"
         title={formattedFacetValue}
@@ -33,7 +33,7 @@
       </span>
     </template>
     <template if:false={isChecked}>
-      <template if:true={isStandardFacet}>
+      <template lwc:if={isStandardFacet}>
         <span
           class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small facet__value-text facet__value_idle"
           title={formattedFacetValue}

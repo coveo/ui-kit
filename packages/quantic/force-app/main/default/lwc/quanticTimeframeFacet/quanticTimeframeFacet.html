@@ -6,11 +6,11 @@
   <template lwc:else>
     <slot><!-- Timeframes --></slot>
 
-    <template if:true={showPlaceholder}>
+    <template lwc:if={showPlaceholder}>
       <c-quantic-placeholder variant="card" number-of-rows="5"></c-quantic-placeholder>
     </template>
     <template if:false={showPlaceholder}>
-      <template if:true={showFacet}>
+      <template lwc:if={showFacet}>
         <c-quantic-card-container title={label} onheaderclick={toggleFacetVisibility} onheaderkeydown={toggleFacetVisibility}>
           <lightning-button-icon
             slot="actions"
@@ -23,7 +23,7 @@
             aria-hidden="true"
           ></lightning-button-icon>
   
-          <template if:true={hasActiveValues}>
+          <template lwc:if={hasActiveValues}>
             <button
               class="facet__clear-filter slds-button slds-grid slds-grid_vertical-align-center slds-p-horizontal_x-small slds-m-top_small"
               onclick={clearSelections}
@@ -41,7 +41,7 @@
           </template>
   
           <template if:false={isCollapsed}>
-            <template if:true={withDatePicker}>
+            <template lwc:if={withDatePicker}>
               <div class="slds-grid slds-gutters slds-grid_vertical slds-p-around_x-small">
                 <form onsubmit={handleApply}>
                   <div class="slds-col slds-grid slds-gutters slds-grid_vertical-align-center">
@@ -96,7 +96,7 @@
               </div>
             </template>
   
-            <template if:true={showValues}>
+            <template lwc:if={showValues}>
               <fieldset>
                 <legend class="slds-assistive-text">{field}</legend>
                 <ul class="slds-has-dividers_around-space slds-m-top_medium">

@@ -4,7 +4,7 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={hasBreadcrumbs}>
+    <template lwc:if={hasBreadcrumbs}>
       <div class="slds-grid slds-grid_vertical-align-start slds-size_1-of-1 slds-var-m-vertical_x-small">
         <div class="slds-col slds-truncate slds-col_bump-right breadcrumb-manager__column">
           <ul>
@@ -17,7 +17,7 @@
                       <c-quantic-pill label={breadcrumbValue.formattedValue} ondeselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
                     </li>
                   </template>
-                  <template if:true={breadcrumb.showMoreButton}>
+                  <template lwc:if={breadcrumb.showMoreButton}>
                     <li>
                       <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
                     </li>
@@ -34,7 +34,7 @@
                       <c-quantic-pill label={breadcrumbValue.formattedValue} ondeselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
                     </li>
                   </template>
-                  <template if:true={breadcrumb.showMoreButton}>
+                  <template lwc:if={breadcrumb.showMoreButton}>
                     <li>
                       <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
                     </li>
@@ -61,7 +61,7 @@
                       <c-quantic-pill label={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
                     </li>
                   </template>
-                  <template if:true={breadcrumb.showMoreButton}>
+                  <template lwc:if={breadcrumb.showMoreButton}>
                     <li>
                       <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
                     </li>

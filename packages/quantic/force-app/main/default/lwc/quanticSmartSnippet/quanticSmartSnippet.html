@@ -4,7 +4,7 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={answerFound}>
+    <template lwc:if={answerFound}>
       <div class="smart-snippet slds-var-m-bottom_xx-small">
         <lightning-card data-cy="smart-snippet-card" title={question}>
           <div class="slds-p-horizontal_medium slds-p-top_small slds-border_top">
@@ -14,7 +14,7 @@
                   actions={smartSnippetAnswerActions}></c-quantic-smart-snippet-answer>
               </div>
             </div>
-            <template if:true={snippetHeightExceedsMaxHeight}>
+            <template lwc:if={snippetHeightExceedsMaxHeight}>
               <div class="slds-align_absolute-center slds-var-m-bottom_small">
                 <lightning-button data-cy="smart-snippet-answer-toggle" icon-name={toggleSmartSnippetAnswerIcon}
                   variant="base" label={toggleSmartSnippetAnswerLabel} title={toggleSmartSnippetAnswerLabel}

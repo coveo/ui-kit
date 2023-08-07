@@ -12,7 +12,7 @@
         class="slds-current-color slds-var-p-vertical_x-small slds-button__icon_right">
       </lightning-icon>
     </slot>
-    <template if:true={activeFiltersCount}>
+    <template lwc:if={activeFiltersCount}>
       <div
         class="refine-button_filters-badge slds-is-absolute slds-align_absolute-center slds-text-title slds-var-p-around_xxx-small">
         <span class="slds-truncate">{activeFiltersCount}</span>
@@ -32,7 +32,7 @@
     </div>
     <div class="slds-align_absolute-center" slot="content">
       <div class="refine-modal__content">
-        <template if:true={refineButtonDisabled}>
+        <template lwc:if={refineButtonDisabled}>
           <div class="slds-align_absolute-center slds-text-color_weak refine-modal__empty-message">
             {labels.noFilterForCurrentTab}
           </div>

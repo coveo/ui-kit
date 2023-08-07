@@ -7,7 +7,7 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticResultText` component displays a given result field value.
  * @category Result Template
  * @example
- * <template if:true={result.raw.source}>
+ * <template lwc:if={result.raw.source}>
  *   <c-quantic-result-text result={result} label="Source" field="source"></c-quantic-result-text>
  * </template>
  */

@@ -9,7 +9,7 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticResultMultiValueText` component displays a given result multi-value field value.
  * @category Result Template
  * @example
- * <template if:true={result.raw.language}>
+ * <template lwc:if={result.raw.language}>
  *   <c-quantic-result-multi-value-text result={result} label="Languages" field="language" max-values-to-display="4"></c-quantic-result-multi-value-text>
  * </template>
  */

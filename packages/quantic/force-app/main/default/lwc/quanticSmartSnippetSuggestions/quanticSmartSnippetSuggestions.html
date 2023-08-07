@@ -4,7 +4,7 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={shouldDisplaySmartSnippetSuggestions}>
+    <template lwc:if={shouldDisplaySmartSnippetSuggestions}>
       <div data-cy="smart-snippet-suggestions-card" class="slds-card">
         <p
           class="slds-text-heading_small slds-var-p-around_small slds-border_bottom smart-snippet-suggestions__title"

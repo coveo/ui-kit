@@ -1,6 +1,6 @@
 <template>
   <div class="result__label slds-grid slds-grid_vertical-align-center">
-    <template if:true={error}>
+    <template lwc:if={error}>
       <div class="error-message slds-text-color_destructive">{error}</div>
     </template>
     <template if:false={error}>

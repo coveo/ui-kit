@@ -12,7 +12,7 @@
                     onclick={handleSuggestionSelection}
                     onmouseover={handleSuggestionHover}
                     onmousedown={preventDefault}>
-                    <template if:true={suggestion.isSelected}>
+                    <template lwc:if={suggestion.isSelected}>
                         <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-has-focus" role="option" aria-selected="true">
                             <span class="slds-media__figure slds-listbox__option-icon"></span>
                             <span class="slds-media__body">

@@ -1,9 +1,9 @@
 <template>
-  <template if:true={hasInitializationError}>
+  <template lwc:if={hasInitializationError}>
     <c-quantic-component-error component-name={template.host.localName}>
     </c-quantic-component-error>
   </template>
-  <template if:true={shouldDisplayBadge}>
+  <template lwc:if={shouldDisplayBadge}>
     <div class="slds-align_absolute-center">
       <lightning-icon
         icon-name="utility:profile_alt"

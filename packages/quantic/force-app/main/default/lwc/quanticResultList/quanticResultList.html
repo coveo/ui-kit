@@ -4,7 +4,7 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={showPlaceholder}>
+    <template lwc:if={showPlaceholder}>
       <c-quantic-placeholder
         variant="resultList"
         number-of-rows={numberOfResults}

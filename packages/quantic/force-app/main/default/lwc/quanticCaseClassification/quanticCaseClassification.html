@@ -8,7 +8,7 @@
       <legend class="slds-form-element__legend slds-form-element__label slds-text-heading_small">
         {label}
       </legend>
-      <template if:true={loading}>
+      <template lwc:if={loading}>
         <div class="loading-holder slds-var-m-top_x-small">
           <lightning-spinner alternative-text={labels.loading} size="small"></lightning-spinner>
         </div>
@@ -33,13 +33,13 @@
                 </div>
               </template>
             </template>
-            <template if:true={isMoreOptionsVisible}>
+            <template lwc:if={isMoreOptionsVisible}>
               <template if:false={isSelectVisible}>
                 <lightning-button class="slds-var-m-top_x-small" variant="base" label={selectPlaceholder}
                   title={selectPlaceholder} onclick={showSelect}>
                 </lightning-button>
               </template>
-              <template if:true={isSelectVisible}>
+              <template lwc:if={isSelectVisible}>
                 <lightning-combobox class="slds-var-m-top_x-small" value={value} variant="label-hidden"
                   placeholder={selectPlaceholder} options={options} onchange={handleSelectChange}></lightning-combobox>
               </template>
@@ -63,7 +63,7 @@
             </template>
           </div>
         </div>
-        <template if:true={hasError}>
+        <template lwc:if={hasError}>
           <div class="slds-form-element__help" id="case-classification-error-message">
             {errorMessage}
           </div>

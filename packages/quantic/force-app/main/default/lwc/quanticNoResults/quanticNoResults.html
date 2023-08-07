@@ -4,7 +4,7 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={showNoResultsPanel}>
+    <template lwc:if={showNoResultsPanel}>
       <div class="slds-grid slds-grid_vertical">
         <div
           class="slds-col slds-size_12-of-12 slds-var-m-vertical_x-large slds-illustration slds-illustration_small"
@@ -21,7 +21,7 @@
             ></lightning-formatted-rich-text>
           </div>
           <p class="slds-text-body_small slds-text-align_center">
-            <template if:true={hasBreadcrumbs}>
+            <template lwc:if={hasBreadcrumbs}>
               <lightning-formatted-rich-text
                 value={labels.noResultsWithFilters}
               ></lightning-formatted-rich-text>
@@ -33,7 +33,7 @@
             </template>
           </p>
         </div>
-        <template if:true={showUndoButton}>
+        <template lwc:if={showUndoButton}>
           <div class="slds-m-vertical_x-large slds-align_absolute-center">
             <lightning-button
               variant="brand"

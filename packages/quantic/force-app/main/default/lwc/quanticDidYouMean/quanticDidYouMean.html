@@ -4,8 +4,8 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={hasQueryCorrection}>
-      <template if:true={wasAutomaticallyCorrected}>
+    <template lwc:if={hasQueryCorrection}>
+      <template lwc:if={wasAutomaticallyCorrected}>
         <div class="slds-var-m-vertical_x-small">
           <p class="mb-1">
             <lightning-formatted-rich-text

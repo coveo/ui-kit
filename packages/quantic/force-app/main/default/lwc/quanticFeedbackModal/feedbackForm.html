@@ -1,5 +1,5 @@
 <template>
-  <template if:true={isValidated}>
+  <template lwc:if={isValidated}>
     <lightning-modal-header label={labels.explainWhy}></lightning-modal-header>
     <lightning-modal-body>
       <div class="slds-var-p-around_x-large">
@@ -7,7 +7,7 @@
           options={options} value={feedbackValue} type="radio" onchange={handleFeedbackChange}
           message-when-value-missing={labels.selectOneOfOptions}></lightning-radio-group>
         <div class="details-input__container">
-          <template if:true={shouldDisplayDetailsInput}>
+          <template lwc:if={shouldDisplayDetailsInput}>
             <lightning-textarea data-cy="feedback-modal-body__details-input" required={detailsAreRequired} value={detailsValue} label={labels.provideDetails}
               message-when-value-missing={labels.fillOutField} onchange={handleDetailsChange}></lightning-textarea>
           </template>

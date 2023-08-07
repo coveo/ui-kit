@@ -1,11 +1,11 @@
 <template>
-  <template if:true={error}>
+  <template lwc:if={error}>
     <div class="error-message slds-text-color_destructive">{error}</div>
   </template>
-  <template if:true={isValid}>
-    <template if:true={hasTextToDisplay}>
+  <template lwc:if={isValid}>
+    <template lwc:if={hasTextToDisplay}>
       <div class="slds-badge slds-var-p-horizontal_medium slds-truncate result-badge">
-        <template if:true={hasLabel}>
+        <template lwc:if={hasLabel}>
           {label}
         </template>
         <template if:false={hasLabel}>

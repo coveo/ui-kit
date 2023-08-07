@@ -1,12 +1,12 @@
 <template>
   <div class="slds-wrap slds-grid_vertical-align-center slds-size_1-of-1 slds-list_horizontal">
-    <template if:true={error}>
+    <template lwc:if={error}>
       <div class="error-message slds-text-color_destructive">{error}</div>
     </template>
     <template if:false={error}>
       <template for:each={foldedParents} for:item="parent">
         <div class="result-parenturi__container slds-grid slds-grid_vertical-align-center" key={parent.id}>
-          <template if:true={parent.isFolded}>
+          <template lwc:if={parent.isFolded}>
             <button class="slds-button expand-parenturi__container" variant="base" label="..." title="Expand URI" aria-label="Expand URI" onclick={expandParents}>...</button>
           </template>
           <template if:false={parent.isFolded}>

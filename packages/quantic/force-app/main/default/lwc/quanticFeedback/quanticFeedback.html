@@ -13,7 +13,7 @@
       <span class="feedback__button-label slds-var-m-left_xx-small">{labels.no}</span>
     </button>
   </div>
-  <template if:true={displaySuccessMessage}>
+  <template lwc:if={displaySuccessMessage}>
     <div class="slds-grid feedback__success-message">
       <span class="slds-var-p-vertical_x-small">{successMessage}</span>
       <template if:false={hideExplainWhyButton}>

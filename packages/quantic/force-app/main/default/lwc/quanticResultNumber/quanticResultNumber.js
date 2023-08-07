@@ -8,7 +8,7 @@ import {LightningElement, api} from 'lwc';
  * The `QuanticResultNumber` component displays a given result number field value.
  * @category Result Template
  * @example
- * <template if:true={result.raw.ytlikecount}>
+ * <template lwc:if={result.raw.ytlikecount}>
  *   <c-quantic-result-number result={result} label="Likes" field="ytlikecount"></c-quantic-result-number>
  * </template>
  */

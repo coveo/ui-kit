@@ -4,7 +4,7 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={isStandalone}>
+    <template lwc:if={isStandalone}>
       <c-quantic-search-interface engine-id={standaloneEngineId} search-hub={searchHub} pipeline={pipeline} skip-first-search disable-state-in-url>
         <div class="slds-form-element">
           <div class="slds-form-element__control">
@@ -17,7 +17,7 @@
               >
                 <div class="searchbox__container">
                   <div class={searchBoxContainerClass} role="none">
-                    <template if:true={withoutSubmitButton}>
+                    <template lwc:if={withoutSubmitButton}>
                       <lightning-icon
                         class="slds-icon slds-input__icon slds-input__icon_left searchbox__search-icon"
                         icon-name="utility:search"

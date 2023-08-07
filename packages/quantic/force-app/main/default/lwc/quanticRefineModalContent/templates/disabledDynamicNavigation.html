@@ -12,14 +12,14 @@
         ></c-quantic-sort>
       </div>
     </template>
-    <template if:true={hasFacets}>
+    <template lwc:if={hasFacets}>
       <div
         class="slds-align_absolute-center filters-header slds-var-m-bottom_small"
       >
-        <template if:true={someFacetsRendered}>
+        <template lwc:if={someFacetsRendered}>
           <div class="slds-text-heading_small">{labels.filters}</div>
         </template>
-        <template if:true={hasActiveFilters}>
+        <template lwc:if={hasActiveFilters}>
           <lightning-button
             variant="base"
             label={labels.clearAllFilters}
@@ -29,7 +29,7 @@
         </template>
       </div>
       <template for:each={facets} for:item="facet">
-        <template if:true={facet.isNumeric}>
+        <template lwc:if={facet.isNumeric}>
           <c-quantic-numeric-facet
             engine-id={engineId}
             facet-id={facet.facetId}
@@ -44,7 +44,7 @@
             is-collapsed
           ></c-quantic-numeric-facet>
         </template>
-        <template if:true={facet.isCategory}>
+        <template lwc:if={facet.isCategory}>
           <c-quantic-category-facet
             engine-id={engineId}
             facet-id={facet.facetId}
@@ -61,7 +61,7 @@
             is-collapsed
           ></c-quantic-category-facet>
         </template>
-        <template if:true={facet.isTimeframe}>
+        <template lwc:if={facet.isTimeframe}>
           <c-quantic-timeframe-facet
             engine-id={engineId}
             facet-id={facet.facetId}
@@ -84,7 +84,7 @@
             </template>
           </c-quantic-timeframe-facet>
         </template>
-        <template if:true={facet.isDate}>
+        <template lwc:if={facet.isDate}>
           <c-quantic-date-facet
             engine-id={engineId}
             facet-id={facet.facetId}
@@ -96,7 +96,7 @@
             is-collapsed
           ></c-quantic-date-facet>
         </template>
-        <template if:true={facet.isDefault}>
+        <template lwc:if={facet.isDefault}>
           <c-quantic-facet
             engine-id={engineId}
             facet-id={facet.facetId}

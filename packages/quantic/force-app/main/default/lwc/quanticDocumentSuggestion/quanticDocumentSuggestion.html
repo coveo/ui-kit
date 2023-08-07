@@ -4,13 +4,13 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={loading}>
+    <template lwc:if={loading}>
       <div class="loading-holder">
         <lightning-spinner alternative-text={labels.loading}></lightning-spinner>
       </div>
     </template>
     <template if:false={loading}>
-      <template if:true={hasSuggestions}>
+      <template lwc:if={hasSuggestions}>
         <div class="slds-card">
           <lightning-accordion active-section-name={openedDocuments} allow-multiple-sections-open
             class="slds-p-vertical_xx-small">
@@ -27,7 +27,7 @@
                     ">
                     <p class="excerpt">{it.value.excerpt}</p>
                     <div class="row slds-var-p-top_medium">
-                      <template if:true={showQuickview}>
+                      <template lwc:if={showQuickview}>
                         <c-quantic-result-quickview engine-id={engineId}
                           preview-button-icon="utility:new_window" preview-button-label={labels.readMore}
                           preview-button-variant="outline-brand" result={it.value}>

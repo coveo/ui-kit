@@ -4,10 +4,10 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={showPlaceholder}>
+    <template lwc:if={showPlaceholder}>
       <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
     </template>
-    <template if:true={hasParentsOrValues}>
+    <template lwc:if={hasParentsOrValues}>
       <c-quantic-card-container title={label} onheaderclick={toggleFacetVisibility} onheaderkeydown={toggleFacetVisibility}>
         <lightning-button-icon
           class={actionButtonCssClasses}
@@ -22,7 +22,7 @@
         </lightning-button-icon>
         <template if:false={isCollapsed}>
           <ul class="slds-has-dividers_around-space slds-m-top_medium">
-            <template if:true={withSearch}>
+            <template lwc:if={withSearch}>
               <div onchange={handleKeyUp} class="slds-size_1-of-1">
                 <lightning-input
                   class="facet__searchbox-input slds-p-horizontal_x-small slds-var-p-bottom_x-small"
@@ -35,7 +35,7 @@
               </div>
             </template>
             <template if:false={isFacetSearchActive}>
-              <template if:true={hasParents}>
+              <template lwc:if={hasParents}>
                 <li class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
                   <div
                     role="button"
@@ -59,7 +59,7 @@
                   ></c-quantic-category-facet-value>
                 </li>
               </template>
-              <template if:true={activeParent}>
+              <template lwc:if={activeParent}>
                 <li class="facet__active-parent slds-grid slds-grid_vertical-align-center slds-p-around_x-small slds-m-left_medium">
                   <div
                     role="button"
@@ -90,8 +90,8 @@
                 </fieldset>
               </li>
             </template>
-            <template if:true={isFacetSearchActive}>
-              <template if:true={hasSearchResults}>
+            <template lwc:if={isFacetSearchActive}>
+              <template lwc:if={hasSearchResults}>
                 <template for:each={facetSearchResults} for:item="result">
                   <c-quantic-category-facet-value
                     key={result.index}
@@ -110,7 +110,7 @@
                     </span>
                   </li>
                 </template>
-                <template if:true={canShowMoreSearchResults}>
+                <template lwc:if={canShowMoreSearchResults}>
                   <li>
                     <span class="slds-truncate facet__search-results_more-matches">{moreMatchesForLabel}</span>
                   </li>
@@ -119,12 +119,12 @@
             </template>
           </ul>
           <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
-            <template if:true={canShowLess}>
+            <template lwc:if={canShowLess}>
               <button variant="base" class="facet__show-less slds-p-around_none" onclick={showLess} aria-label={showLessFacetValuesLabel} title={showLessFacetValuesLabel}>
                 <span class="facet__show-less_text">{labels.showLess}</span>
               </button>
             </template>
-            <template if:true={canShowMore}>
+            <template lwc:if={canShowMore}>
               <button variant="base" class="facet__show-more slds-p-around_none" onclick={showMore} aria-label={showMoreFacetValuesLabel} title={showMoreFacetValuesLabel}>
                 <span class="facet__show-more_text">{labels.showMore}</span>
               </button>

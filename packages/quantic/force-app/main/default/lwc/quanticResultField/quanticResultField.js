@@ -16,7 +16,7 @@ import stringTemplate from './stringTemplate.html';
  * The `QuanticResultField` component properly displays a given result field according to its type.
  * @category Result Template
  * @example
- * <template if:true={result.raw.source}>
+ * <template lwc:if={result.raw.source}>
  *   <c-quantic-result-field result={result} label="Source" field="source" type="string"></c-quantic-result-field>
  * </template>
  */

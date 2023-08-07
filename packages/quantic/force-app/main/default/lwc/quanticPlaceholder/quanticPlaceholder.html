@@ -1,7 +1,7 @@
 <template>
-  <template if:true={shouldDisplay}>
+  <template lwc:if={shouldDisplay}>
     <div class="slds-p-horizontal_x-small">
-      <template if:true={isCardVariant}>
+      <template lwc:if={isCardVariant}>
         <div class="placeholder__card-container slds-grid_vertical">
           <div class="slds-col slds-m-bottom_large">
             <div class="grey placeholder__card-header placeholder__rounded placeholder__animation"></div>
@@ -14,7 +14,7 @@
           </template>
         </div>
       </template>
-      <template if:true={isResultListVariant}>
+      <template lwc:if={isResultListVariant}>
         <template for:each={rows} for:item="row">
           <div key={row.index} class="placeholder__result-container slds-grid slds-gutters slds-grid_vertical-align-start">
             <div class="slds-col slds-m-bottom_large">
