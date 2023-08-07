@@ -13,7 +13,7 @@ const selectors = {
 };
 
 const exampleAnswer =
-  '<div class="smart-snippet-answer" data-cy="smart-snippet-answer" x-test_quanticsmartsnippetanswer=""><div x-test_quanticsmartsnippetanswer=""><p x-test_quanticsmartsnippetanswer="">Example smart snippet answer</p><a href="#" x-test_quanticsmartsnippetanswer="">Example inline link</a></div></div>';
+  '<div x-test_quanticsmartsnippetanswer=""><p x-test_quanticsmartsnippetanswer="">Example smart snippet answer</p><a href="#" x-test_quanticsmartsnippetanswer="">Example inline link</a></div>';
 const exampleAnswerWithInvalidLink =
   '<div><a>Example invalid inline link</a></div>';
 const exampleActions = {
