@@ -37,8 +37,8 @@ import {
   AtomicSearchBoxQuerySuggestions,
   getOrganizationEndpoints,
   SearchEngineConfiguration,
+  getSampleSearchEngineConfiguration,
 } from '@coveo/atomic-react';
-import {getSampleEngineConfiguration} from '@coveo/headless/dist/definitions/app/engine-configuration';
 import React, {FunctionComponent, useMemo} from 'react';
 
 type Sample = 'service' | 'electronics';
@@ -69,7 +69,7 @@ function getElectronicsConfiguration(): SearchEngineConfiguration {
 function getConfigurationForSample(sample: Sample) {
   switch (sample) {
     case 'service':
-      return getSampleEngineConfiguration();
+      return getSampleSearchEngineConfiguration();
     case 'electronics':
       return getElectronicsConfiguration();
   }
