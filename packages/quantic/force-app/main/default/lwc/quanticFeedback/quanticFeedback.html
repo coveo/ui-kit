@@ -2,19 +2,19 @@
   <div class="slds-grid feedback__main-section">
     <span class="slds-var-p-right_medium slds-text-color_weak feedback__question"
       id="feedback__question">{question}</span>
-    <button data-cy="feedback__like-button" aria-describedby="feedback__question" onclick={handleLike}
+    <button aria-label={likeLabel} data-cy="feedback__like-button" aria-describedby="feedback__question" onclick={handleLike}
       class={likeButtonClass}>
       <lightning-icon aria-hidden="true" class={likeIconClass} icon-name={likeIconName} size={size}
         variant={likeIconVariant}></lightning-icon>
-      <template if:true={likeLabel}>
+      <template if:false={hideLabels}>
         <span class="feedback__button-label slds-var-m-left_xx-small">{likeLabel}</span>
       </template>
     </button>
-    <button data-cy="feedback__dislike-button" aria-describedby="feedback__question" onclick={handleDislike}
+    <button aria-label={dislikeLabel} data-cy="feedback__dislike-button" aria-describedby="feedback__question" onclick={handleDislike}
       class={dislikeButtonClass}>
       <lightning-icon aria-hidden="true" class={dislikeIconClass} icon-name={dislikeIconName} size={size}
         variant={dislikeIconVariant}></lightning-icon>
-      <template if:true={dislikeLabel}>
+      <template if:false={hideLabels}>
         <span class="feedback__button-label slds-var-m-left_xx-small">{dislikeLabel}</span>
       </template>
     </button>

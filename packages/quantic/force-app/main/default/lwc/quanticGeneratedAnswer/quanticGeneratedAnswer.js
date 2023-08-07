@@ -1,5 +1,7 @@
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
 import loading from '@salesforce/label/c.quantic_Loading';
+import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
+import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -38,6 +40,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   labels = {
     generatedAnswerForYou,
     loading,
+    thisAnswerWasNotHelpful,
+    thisAnswerWasHelpful,
   };
 
   /** @type {GeneratedAnswer} */
@@ -120,7 +124,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get hasCitations() {
-    return !!this.citations.length
+    return !!this.citations.length;
   }
 
   get isLoading() {
@@ -136,7 +140,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get generatedContentClass() {
-    return `generated-answer__content ${this.isStreaming ? 'generated-answer__content--streaming' : ''}`;
+    return `generated-answer__content ${
+      this.isStreaming ? 'generated-answer__content--streaming' : ''
+    }`;
   }
 
   render() {

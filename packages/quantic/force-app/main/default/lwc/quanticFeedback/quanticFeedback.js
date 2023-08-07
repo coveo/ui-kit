@@ -70,6 +70,12 @@ export default class QuanticFeedback extends LightningElement {
    */
   @api dislikeLabel = this.labels.no;
   /**
+   * Indicates whether the labels of feedback buttons should be hidden.
+   * @api
+   * @type {boolean}
+   */
+  @api hideLabels = false;
+  /**
    * The size of the feedback icons.
    * @api
    * @type {'xx-small' | 'x-small' | 'small' | 'medium' | 'large'}

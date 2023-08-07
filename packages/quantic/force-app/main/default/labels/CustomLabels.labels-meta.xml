@@ -1225,4 +1225,18 @@
       <protected>false</protected>
       <shortDescription>Generated answer for you</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_ThisAnswerWasNotHelpful</fullName>
+      <value>This answer was not helpful</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>This answer was not helpful</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ThisAnswerWasHelpful</fullName>
+      <value>This answer was helpful</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>This answer was helpful</shortDescription>
+    </labels>
 </CustomLabels>

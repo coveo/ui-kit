@@ -15,12 +15,13 @@
           onlike={handleLike}
           ondislike={handleDislike}
           like-icon-name="utility:like"
-          like-label=""
+          like-label={labels.thisAnswerWasHelpful}
           dislike-icon-name="utility:dislike"
-          dislike-label=""
+          dislike-label={labels.thisAnswerWasNotHelpful}
           size="x-small"
           question=""
           hide-explain-why-button
+          hide-labels
           data-cy="generated-answer__feedback"
         ></c-quantic-feedback>
       </div>

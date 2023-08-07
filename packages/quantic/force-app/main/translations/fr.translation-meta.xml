@@ -672,4 +672,12 @@
       <label>Réponse générée pour vous</label>
       <name>quantic_GeneratedAnswerForYou</name>
     </customLabels>
+    <customLabels>
+      <label>Cette réponse ne m'a pas été utile</label>
+      <name>quantic_ThisAnswerWasNotHelpful</name>
+    </customLabels>
+    <customLabels>
+      <label>Cette réponse m'a été utile</label>
+      <name>quantic_ThisAnswerWasHelpful</name>
+    </customLabels>
 </Translations>
