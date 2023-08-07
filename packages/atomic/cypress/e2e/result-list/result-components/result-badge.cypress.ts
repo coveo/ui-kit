@@ -42,9 +42,7 @@ describe('Result Badge Component', () => {
           .init();
       });
 
-      CommonAssertions.assertRemovesComponent(() =>
-        cy.get(resultBadgeComponent)
-      );
+      CommonAssertions.assertRemovesComponent();
       CommonAssertions.assertConsoleError();
     });
   });
@@ -58,9 +56,7 @@ describe('Result Badge Component', () => {
             .init();
         });
 
-        CommonAssertions.assertRemovesComponent(
-          ResultBadgeSelectors.firstInResult
-        );
+        CommonAssertions.assertConsoleError(false);
       });
 
       describe('when the field value is a string', () => {
