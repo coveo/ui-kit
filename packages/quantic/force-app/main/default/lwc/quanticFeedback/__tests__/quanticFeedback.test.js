@@ -10,13 +10,35 @@ const functionsMocks = {
 
 const exampleQuestion = 'Example question';
 const exampleSuccessMessage = 'Example success Message';
+const defaultLikeIconName = 'utility:success';
+const defaultLikeLabel = 'yes';
+const defaultDislikeIconName = 'utility:clear';
+const defaultDislikeLabel = 'no';
+const defaultSize = 'xx-small';
+
+jest.mock(
+  '@salesforce/label/c.quantic_Yes',
+  () => ({default: defaultLikeLabel}),
+  {
+    virtual: true,
+  }
+);
+jest.mock(
+  '@salesforce/label/c.quantic_No',
+  () => ({default: defaultDislikeLabel}),
+  {
+    virtual: true,
+  }
+);
 
 const selectors = {
   feedbackQuestion: '.feedback__question',
   likeButton: '.feedback__like-button',
-  likeButtonIcon: '.feedback__like-button > lightning-icon ',
+  likeButtonIcon: '.feedback__like-button > lightning-icon',
+  likeButtonLabel: '.feedback__like-button > .feedback__button-label',
   dislikeButton: '.feedback__dislike-button',
-  dislikeButtonIcon: '.feedback__dislike-button > lightning-icon ',
+  dislikeButtonIcon: '.feedback__dislike-button > lightning-icon',
+  dislikeButtonLabel: '.feedback__dislike-button > .feedback__button-label',
   successMessage: '.feedback__success-message',
   explainWhyButton: '.feedback__explain-why',
 };
@@ -90,15 +112,30 @@ describe('c-quantic-feedback', () => {
       const likeButtonIcon = element.shadowRoot.querySelector(
         selectors.likeButtonIcon
       );
+      const likeButtonLabel = element.shadowRoot.querySelector(
+        selectors.likeButtonLabel
+      );
       const dislikeButton = element.shadowRoot.querySelector(
         selectors.dislikeButton
       );
       const dislikeButtonIcon = element.shadowRoot.querySelector(
         selectors.dislikeButtonIcon
       );
+      const dislikeButtonLabel = element.shadowRoot.querySelector(
+        selectors.dislikeButtonLabel
+      );
 
       expect(likeButtonIcon.variant).toBeNull();
+      expect(likeButtonIcon.size).toBe(defaultSize);
+      expect(likeButtonIcon.iconName).toBe(defaultLikeIconName);
+      expect(likeButtonLabel.textContent).toBe(defaultLikeLabel);
+      expect(likeButton.ariaLabel).toBe(defaultLikeLabel);
       expect(dislikeButtonIcon.variant).toBeNull();
+      expect(dislikeButtonIcon.size).toBe(defaultSize);
+      expect(dislikeButtonIcon.iconName).toBe(defaultDislikeIconName);
+      expect(dislikeButtonLabel.textContent).toBe(defaultDislikeLabel);
+      expect(dislikeButton.ariaLabel).toBe(defaultDislikeLabel);
+
       expect(likeButton.classList.contains('feedback__button--neutral')).toBe(
         true
       );
@@ -147,6 +184,85 @@ describe('c-quantic-feedback', () => {
 
         expect(dislikeButton).not.toBeNull();
         expect(functionsMocks.exampleHandleDislike).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('when custom properties are passed', () => {
+      const customLikeIconName = 'utility:like';
+      const customLikeLabel = 'like';
+      const customDislikeIconName = 'utility:dislike';
+      const customDislikeLabel = 'dislike';
+      const customSize = 'large';
+      it('should display the feedback buttons properly', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          likeIconName: customLikeIconName,
+          likeLabel: customLikeLabel,
+          dislikeIconName: customDislikeIconName,
+          dislikeLabel: customDislikeLabel,
+          size: customSize,
+        });
+        await flushPromises();
+
+
+        const likeButton = element.shadowRoot.querySelector(
+          selectors.likeButton
+        );
+        const dislikeButton = element.shadowRoot.querySelector(
+          selectors.dislikeButton
+        );
+        const likeButtonIcon = element.shadowRoot.querySelector(
+          selectors.likeButtonIcon
+        );
+        const likeButtonLabel = element.shadowRoot.querySelector(
+          selectors.likeButtonLabel
+        );
+        const dislikeButtonIcon = element.shadowRoot.querySelector(
+          selectors.dislikeButtonIcon
+        );
+        const dislikeButtonLabel = element.shadowRoot.querySelector(
+          selectors.dislikeButtonLabel
+        );
+
+        expect(likeButtonIcon.variant).toBeNull();
+        expect(likeButtonIcon.size).toBe(customSize);
+        expect(likeButtonIcon.iconName).toBe(customLikeIconName);
+        expect(likeButtonLabel.textContent).toBe(customLikeLabel);
+        expect(likeButton.ariaLabel).toBe(customLikeLabel);
+        expect(dislikeButtonIcon.variant).toBeNull();
+        expect(dislikeButtonIcon.size).toBe(customSize);
+        expect(dislikeButtonIcon.iconName).toBe(customDislikeIconName);
+        expect(dislikeButtonLabel.textContent).toBe(customDislikeLabel);
+        expect(dislikeButton.ariaLabel).toBe(customDislikeLabel);
+      });
+    });
+
+    describe('when the property hideLabels is set to true', () => {
+      it('should display the feedback buttons properly', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          hideLabels: true
+        });
+        await flushPromises();
+
+
+        const likeButton = element.shadowRoot.querySelector(
+          selectors.likeButton
+        );
+        const dislikeButton = element.shadowRoot.querySelector(
+          selectors.dislikeButton
+        );
+        const likeButtonLabel = element.shadowRoot.querySelector(
+          selectors.likeButtonLabel
+        );
+        const dislikeButtonLabel = element.shadowRoot.querySelector(
+          selectors.dislikeButtonLabel
+        );
+
+        expect(likeButtonLabel).toBeNull();
+        expect(likeButton.ariaLabel).toBe(defaultLikeLabel);
+        expect(dislikeButtonLabel).toBeNull();
+        expect(dislikeButton.ariaLabel).toBe(defaultDislikeLabel);
       });
     });
   });
