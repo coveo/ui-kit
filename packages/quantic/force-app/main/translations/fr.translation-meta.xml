@@ -668,4 +668,8 @@
         <label>Slide</label>
         <name>quantic_Slide</name>
     </customLabels>
+    <customLabels>
+        <label>En savoir plus</label>
+        <name>quantic_LearnMore</name>
+    </customLabels>
 </Translations>
