@@ -16,6 +16,7 @@ export interface ProductListingState {
   error: ProductListingAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
+  version: string;
 }
 
 export const getProductListingInitialState = (): ProductListingState => ({
@@ -32,4 +33,31 @@ export const getProductListingInitialState = (): ProductListingState => ({
   error: null,
   isLoading: false,
   responseId: '',
+  version: '',
+});
+
+export interface ProductListingV2State {
+  listingId: string;
+  locale: string; // TODO(nico): action for setting this
+  mode: string; // TODO(nico): action for setting this
+  clientId: string;
+  error: ProductListingAPIErrorStatusResponse | null;
+  isLoading: boolean;
+  responseId: string;
+  products: ProductRecommendation[];
+  facets: AnyFacetResponse[];
+  version: string;
+}
+
+export const getProductListingV2InitialState = (): ProductListingV2State => ({
+  listingId: '',
+  locale: '',
+  mode: '',
+  clientId: '',
+  error: null,
+  isLoading: false,
+  responseId: '',
+  products: [],
+  facets: [],
+  version: 'v2'
 });

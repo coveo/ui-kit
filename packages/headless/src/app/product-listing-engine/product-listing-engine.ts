@@ -8,8 +8,8 @@ import {
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
-import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice';
-import {ProductListingAppState} from '../../state/product-listing-app-state';
+import {productListingReducer as productListing, productListingV2Reducer as productListingV2} from '../../features/product-listing/product-listing-slice';
+import {ProductListingAppState, ProductListingAppStateV2} from '../../state/product-listing-app-state';
 import {
   buildEngine,
   CoreEngine,
@@ -17,7 +17,10 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
+import {
+  ProductListingThunkExtraArguments,
+  ProductListingV2ThunkExtraArguments
+} from '../product-listing-thunk-extra-arguments';
 import {SearchEngineConfiguration} from '../search-engine/search-engine-configuration';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
@@ -35,6 +38,13 @@ type ProductListingEngineState =
   StateFromReducersMapObject<ProductListingEngineReducers> &
     Partial<ProductListingAppState>;
 
+const productListingV2EngineReducers = {productListing: productListingV2};
+type ProductListingV2EngineReducers = typeof productListingV2EngineReducers;
+
+type ProductListingV2EngineState =
+    StateFromReducersMapObject<ProductListingV2EngineReducers> &
+    Partial<ProductListingAppStateV2>;
+
 /**
  * The engine for powering production listing experiences.
  */
@@ -43,6 +53,12 @@ export interface ProductListingEngine<State extends object = {}>
     State & ProductListingEngineState,
     ProductListingThunkExtraArguments
   > {}
+
+export interface ProductListingV2Engine<State extends object = {}>
+    extends CoreEngine<
+        State & ProductListingV2EngineState,
+        ProductListingV2ThunkExtraArguments
+        > {}
 
 /**
  * The product listing engine options.
@@ -54,6 +70,14 @@ export interface ProductListingEngineOptions
    */
   configuration: ProductListingEngineConfiguration;
 }
+export interface ProductListingV2EngineOptions
+    extends ExternalEngineOptions<ProductListingV2EngineState> {
+  /**
+   * The product listing engine configuration options.
+   */
+  configuration: ProductListingEngineConfiguration;
+}
+
 
 /**
  * Creates a product listing engine instance.
@@ -81,6 +105,39 @@ export function buildProductListingEngine(
   const augmentedOptions: EngineOptions<ProductListingEngineReducers> = {
     ...options,
     reducers: productListingEngineReducers,
+  };
+
+  const engine = buildEngine(augmentedOptions, thunkArguments);
+
+  return {
+    ...engine,
+
+    get state() {
+      return engine.state;
+    },
+  };
+}
+
+export function buildProductListingV2Engine(
+    options: ProductListingV2EngineOptions
+): ProductListingV2Engine {
+  const logger = buildLogger(options.loggerOptions);
+  validateConfiguration(options.configuration, logger);
+
+  const productListingClient = createProductListingClient(
+      options.configuration,
+      logger,
+      createSearchAPIClient(options.configuration, logger)
+  );
+
+  const thunkArguments: ProductListingThunkExtraArguments = {
+    ...buildThunkExtraArguments(options.configuration, logger),
+    apiClient: productListingClient,
+  };
+
+  const augmentedOptions: EngineOptions<ProductListingV2EngineReducers> = {
+    ...options,
+    reducers: productListingV2EngineReducers,
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);

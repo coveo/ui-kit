@@ -1,6 +1,9 @@
 import {Logger} from 'pino';
-import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
-import {ProductListingAppState} from '../../../state/product-listing-app-state';
+import {
+  ProductListingThunkExtraArguments,
+  ProductListingV2ThunkExtraArguments
+} from '../../../app/product-listing-thunk-extra-arguments';
+import {ProductListingAppState, ProductListingAppStateV2} from '../../../state/product-listing-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {FacetSearchRequest} from '../../search/facet-search/facet-search-request';
@@ -25,6 +28,14 @@ export interface AsyncThunkProductListingOptions<
   state: T;
   rejectValue: ProductListingAPIErrorStatusResponse;
   extra: ProductListingThunkExtraArguments;
+}
+
+export interface AsyncThunkProductListingV2Options<
+  T extends Partial<ProductListingAppStateV2>
+> {
+  state: T;
+  rejectValue: ProductListingAPIErrorStatusResponse;
+  extra: ProductListingV2ThunkExtraArguments;
 }
 
 /**
@@ -52,6 +63,7 @@ export interface ProductListingAPISuccessResponse<TContent> {
 /**
  * Defines the content of a Product Listing API error response.
  */
+// TODO(nico): Make work with V2
 export interface ProductListingAPIErrorStatusResponse {
   statusCode: number;
   message: string;

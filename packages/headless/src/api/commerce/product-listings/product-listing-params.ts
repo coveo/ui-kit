@@ -38,13 +38,13 @@ export interface ProductListingRequestParam {
   userContext?: ContextPayload;
 }
 
-// TODO: Complete
+// TODO(nico): Use interfaces for nested params
 export interface ProductListingV2RequestParam {
   listingId: string;
   locale: string;
   mode: string;
   clientId: string;
-  selectedFacets: {
+  selectedFacets?: {
     facetId?: string;
     type?: string;
     field?: string;
@@ -81,7 +81,7 @@ export interface ProductListingV2RequestParam {
       groupId?: string;
       productId?: string;
       sku?: string;
-    }[];
+    };
   };
 }
 
@@ -104,9 +104,9 @@ export const baseProductListingRequest = (
   'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
 > => {
   const {platformUrl, organizationId, accessToken, version} = req;
-  const baseUrl = `${platformUrl}/rest/organizations/${organizationId}/commerce/${
-    version === 'v2' ? 'v2' : 'v1/products'
-  }/listing`;
+  const baseUrl = version === 'v2'
+      ? `${platformUrl}/rest/organizations/${organizationId}/properties/a/commerce/v2/listing`
+      : `${platformUrl}/rest/organizations/${organizationId}/commerce/v1/products`
   const queryString = buildQueryString(queryStringArguments);
   const effectiveUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 

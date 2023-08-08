@@ -1,13 +1,16 @@
-import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, Schema, StringValue, EnumValue} from '@coveo/bueno';
 import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client';
 import {configuration} from '../../app/common-reducers';
-import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine';
+import {ProductListingEngine, ProductListingV2Engine} from '../../app/product-listing-engine/product-listing-engine';
 import {
-  fetchProductListing,
-  setAdditionalFields,
+  fetchProductListing, fetchProductListingV2,
+  setAdditionalFields, setProductListingId,
   setProductListingUrl,
 } from '../../features/product-listing/product-listing-actions';
-import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice';
+import {
+  productListingReducer as productListing,
+  productListingV2Reducer as productListingV2
+} from '../../features/product-listing/product-listing-slice';
 import {ProductRecommendation} from '../../product-listing.index';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
@@ -22,6 +25,50 @@ const optionsSchema = new Schema({
     each: new StringValue({
       emptyAllowed: false,
     }),
+  }),
+});
+
+
+export enum SortBy {
+  /**
+   * Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value.
+   */
+  Relevancy = 'relevancy',
+  /**
+   * Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value.
+   */
+  QRE = 'qre',
+  /**
+   * Uses the date field to sort the query results. This field typically contains the last modification date of each item. May be in ascending or descending order.
+   */
+  Date = 'date',
+  /**
+   * Uses the value of a specific sortable field to sort the query results. May be in ascending or descending order.
+   */
+  Field = 'field',
+  /**
+   * Does not sort the query results; the index will return result items in an essentially random order.
+   */
+  NoSort = 'nosort',
+}
+
+export enum Mode {
+  Live = 'live',
+  Sample = 'sample'
+}
+
+const optionsV2Schema = new Schema({
+  id: new StringValue({
+    required: true,
+    emptyAllowed: false,
+  }),
+  locale: new StringValue({
+    required: true,
+    emptyAllowed: false,
+  }),
+  mode: new EnumValue<Mode>({
+    enum: Mode,
+    required: true,
   }),
 });
 
@@ -42,6 +89,19 @@ export interface ProductListingProps {
    * The initial options that should be applied to this `ProductListing` controller.
    */
   options?: ProductListingOptions;
+}
+
+export interface ProductListingV2Options {
+  id: string;
+  locale: string;
+  mode: string;
+}
+
+export interface ProductListingV2Props {
+  /**
+   * The initial options that should be applied to this `ProductListing` controller.
+   */
+  options?: ProductListingV2Options;
 }
 
 /**
@@ -71,6 +131,28 @@ export interface ProductListing extends Controller {
   state: ProductListingState;
 }
 
+/**
+ * The `ProductListing` controller allows the end user to configure and retrieve product listing data.
+ */
+export interface ProductListingV2 extends Controller {
+  /**
+   * Changes the current id used to retrieve product listing.
+   * @param id - The new id.
+   */
+  setId(id: string): void;
+
+  /**
+   * Refreshes the product listing.
+   */
+  refresh(): void;
+
+  /**
+   * A scoped and simplified part of the headless state that is relevant to the `ProductListing` controller.
+   * */
+  state: ProductListingV2State;
+}
+
+
 export interface ProductListingState {
   products: ProductRecommendation[];
   error: ProductListingAPIErrorStatusResponse | null;
@@ -78,6 +160,14 @@ export interface ProductListingState {
   responseId: string;
   additionalFields: string[];
   url: string;
+}
+
+export interface ProductListingV2State {
+  products: ProductRecommendation[];
+  error: ProductListingAPIErrorStatusResponse | null;
+  isLoading: boolean;
+  responseId: string;
+  listingId: string;
 }
 
 export type ProductListingControllerState = ProductListing['state'];
@@ -151,9 +241,66 @@ export function buildProductListing(
   };
 }
 
+export function buildProductListingV2(
+    engine: ProductListingV2Engine,
+    props: ProductListingV2Props = {}
+): ProductListingV2 {
+  if (!loadBaseProductListingV2Reducers(engine)) {
+    throw loadReducerError;
+  }
+
+  const controller = buildController(engine);
+  const {dispatch} = engine;
+  const getState = () => engine.state;
+
+  const options = {
+    ...props.options,
+  };
+
+  validateOptions(engine, optionsV2Schema, options, 'buildProductListingV2');
+
+  dispatch(
+      setProductListingId({
+        id: options.id!,
+      })
+  );
+
+  return {
+    ...controller,
+
+    get state() {
+      const {listingId, products, error, isLoading, responseId} =
+          getState().productListing;
+      return {
+        listingId,
+        products,
+        error,
+        isLoading,
+        responseId,
+      };
+    },
+
+    setId: (id: string) =>
+        dispatch(
+            setProductListingId({
+              id,
+            })
+        ),
+
+    refresh: () => dispatch(fetchProductListingV2()),
+  };
+}
+
 function loadBaseProductListingReducers(
   engine: ProductListingEngine
 ): engine is ProductListingEngine {
   engine.addReducers({productListing, configuration});
+  return true;
+}
+
+function loadBaseProductListingV2Reducers(
+  engine: ProductListingV2Engine
+): engine is ProductListingV2Engine {
+  engine.addReducers({productListingV2, configuration});
   return true;
 }

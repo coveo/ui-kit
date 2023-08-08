@@ -1,6 +1,9 @@
 import {Schema} from '@coveo/bueno';
 import {DocumentIdentifier, PartialDocumentInformation} from 'coveo.analytics';
-import {ProductListingAnalyticsProvider} from '../../api/analytics/product-listing-analytics';
+import {
+  ProductListingAnalyticsProvider,
+  ProductListingV2AnalyticsProvider
+} from '../../api/analytics/product-listing-analytics';
 import {ProductRecommendation, Result} from '../../product-listing.index';
 import {ProductListingAppState} from '../../state/product-listing-app-state';
 import {
@@ -8,7 +11,7 @@ import {
   makeAnalyticsAction,
   makeProductListingAnalyticsAction,
   resultPartialDefinition,
-  ProductListingAction,
+  ProductListingAction, ProductListingV2Action, makeProductListingV2AnalyticsAction,
 } from '../analytics/analytics-utils';
 
 export const logProductListing = (): ProductListingAction =>
@@ -18,6 +21,14 @@ export const logProductListing = (): ProductListingAction =>
     (client) => client.makeInterfaceLoad(),
     (getState) => new ProductListingAnalyticsProvider(getState)
   );
+
+export const logProductListingV2 = (): ProductListingV2Action =>
+    makeProductListingV2AnalyticsAction(
+        'analytics/productListingv2/load',
+        AnalyticsType.Search,
+        (client) => client.makeInterfaceLoad(),
+        (getState) => new ProductListingV2AnalyticsProvider(getState)
+    );
 
 export const logProductRecommendationOpen = (
   productRec: ProductRecommendation
