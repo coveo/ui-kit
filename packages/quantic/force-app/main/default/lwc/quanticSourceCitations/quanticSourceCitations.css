@@ -38,7 +38,6 @@
 }
 
 .citation__title {
-  color: var(--lwc-brandDark, #080707);
   font-weight: var(--lwc-fontWeightRegular, 400);
   font-size: 14px;
 }
