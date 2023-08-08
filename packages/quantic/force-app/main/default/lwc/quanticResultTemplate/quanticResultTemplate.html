@@ -1,9 +1,11 @@
 <template>
   <div class={templateClass}>
     <div class={headerCssClass}>
-      <div aria-hidden={isAnyPreviewOpen} class="slds-col slds-m-right_small slds-order_2 slds-small-order_2 slds-medium-order_1 slds-large-order_1">
-        <slot name="label" onslotchange={handleHeaderSlotChange}></slot>
-      </div>
+      <template if:false={hideLabel}>
+        <div aria-hidden={isAnyPreviewOpen} class="slds-col slds-m-right_small slds-order_2 slds-small-order_2 slds-medium-order_1 slds-large-order_1">
+          <slot name="label" onslotchange={handleHeaderSlotChange}></slot>
+        </div>
+      </template>
       <div aria-hidden={isAnyPreviewOpen} class={badgesSlotCssClass}>
         <slot name="badges" onslotchange={handleHeaderSlotChange}></slot>
       </div>
