@@ -1,4 +1,4 @@
-import {FacetValue} from '../../../../product-listing.index';
+import {FacetValue} from '../../facet-set/interfaces/response';
 
 export type AutomaticFacetRequest = {
   field: string;
