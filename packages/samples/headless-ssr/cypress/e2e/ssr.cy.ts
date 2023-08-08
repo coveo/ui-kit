@@ -9,7 +9,9 @@ describe('headless ssr example', () => {
     cy.intercept('/', (req) => {
       req.continue((resp) => {
         const dom = new DOMParser().parseFromString(resp.body, 'text/html');
-        expect(dom.body).to.contain(numResultsMsg);
+        expect(dom.querySelector(msgSelector)?.textContent).to.equal(
+          numResultsMsg
+        );
         expect(dom.querySelectorAll('li').length).to.equal(numResults);
       });
     });
@@ -18,7 +20,7 @@ describe('headless ssr example', () => {
 
   it('renders page in CSR as expected', () => {
     cy.visit('/');
-    cy.get(msgSelector).should('contain.text', numResultsMsg);
+    cy.get(msgSelector).should('have.text', numResultsMsg);
     cy.get('li').should('have.length', numResults);
   });
 

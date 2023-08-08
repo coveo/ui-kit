@@ -4,8 +4,10 @@ import {Result} from '@coveo/headless';
 
 export default function ResultList({results}: {results: Result[]}) {
   return (
-    <div id="hydrated-msg">
-      Hydrated engine with {results?.length} results
+    <div>
+      <span id="hydrated-msg">
+        Hydrated engine with {results?.length} results
+      </span>
       <ul>
         {results?.map((result) => (
           <li key={result.uniqueId}>
