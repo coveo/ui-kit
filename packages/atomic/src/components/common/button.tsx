@@ -8,7 +8,7 @@ import {
 
 export interface ButtonProps {
   style: ButtonStyle;
-  onClick?(): void;
+  onClick?(event?: MouseEvent): void;
   class?: string;
   text?: string;
   part?: string;
