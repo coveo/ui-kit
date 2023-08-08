@@ -12,6 +12,10 @@ export interface ProductListingsParam
   extends ProductListingBaseParam,
     ProductListingRequestParam {}
 
+export interface ProductListingsV2Param
+  extends ProductListingBaseParam,
+    ProductListingV2RequestParam {}
+
 export interface ProductListingBaseParam {
   accessToken: string;
   organizationId: string;
@@ -34,6 +38,53 @@ export interface ProductListingRequestParam {
   userContext?: ContextPayload;
 }
 
+// TODO: Complete
+export interface ProductListingV2RequestParam {
+  listingId: string;
+  locale: string;
+  mode: string;
+  clientId: string;
+  selectedFacets: {
+    facetId?: string;
+    type?: string;
+    field?: string;
+    values?: {
+      value?: string;
+      start?: number | string;
+      end?: number | string;
+      isInclusive?: boolean;
+    }[];
+  }[];
+  selectedPage?: {
+    page?: number;
+  };
+  selectedSort?: {
+    type?: string;
+    field?: {
+      field?: string;
+      direction?: string;
+    }[];
+  };
+  context: {
+    user: {
+      userId?: string;
+      email?: string;
+      ipAddress: string;
+      userAgent: string;
+    };
+    view: {
+      url: string;
+      referrerUrl?: string;
+      pageType: string;
+    };
+    cart?: {
+      groupId?: string;
+      productId?: string;
+      sku?: string;
+    }[];
+  };
+}
+
 /**
  * Builds a base request for calling the Product Listing API.
  *
@@ -44,7 +95,7 @@ export interface ProductListingRequestParam {
  * @returns The built request information.
  */
 export const baseProductListingRequest = (
-  req: ProductListingsParam,
+  req: ProductListingBaseParam,
   method: HttpMethods,
   contentType: HTTPContentType,
   queryStringArguments: Record<string, string> = {}
@@ -54,8 +105,8 @@ export const baseProductListingRequest = (
 > => {
   const {platformUrl, organizationId, accessToken, version} = req;
   const baseUrl = `${platformUrl}/rest/organizations/${organizationId}/commerce/${
-    version || 'v1'
-  }/products/listing`;
+    version === 'v2' ? 'v2' : 'v1/products'
+  }/listing`;
   const queryString = buildQueryString(queryStringArguments);
   const effectiveUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 

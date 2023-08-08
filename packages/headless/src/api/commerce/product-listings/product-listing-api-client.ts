@@ -12,8 +12,11 @@ import {
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {
   buildProductListingRequest,
+  buildProductListingV2Request,
   ProductListingRequest,
   ProductListingSuccessResponse,
+  ProductListingV2Request,
+  ProductListingV2SuccessResponse,
 } from './product-listing-request';
 
 export interface AsyncThunkProductListingOptions<
@@ -93,6 +96,24 @@ export class ProductListingAPIClient implements FacetSearchAPIClient {
     const body = await response.json();
     return response.ok
       ? {success: body as ProductListingSuccessResponse}
+      : {error: body as ProductListingAPIErrorStatusResponse};
+  }
+
+  async getListing(
+    req: ProductListingV2Request
+  ): Promise<ProductListingAPIResponse<ProductListingV2SuccessResponse>> {
+    const response = await PlatformClient.call({
+      ...buildProductListingV2Request(req),
+      ...this.options,
+    });
+
+    if (response instanceof Error) {
+      return buildAPIResponseFromErrorOrThrow(response);
+    }
+
+    const body = await response.json();
+    return response.ok
+      ? {success: body as ProductListingV2SuccessResponse}
       : {error: body as ProductListingAPIErrorStatusResponse};
   }
 
