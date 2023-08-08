@@ -26,10 +26,7 @@ import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const ResultListPage: FunctionComponent = () => {
   return (
-    <AtomicPageWrapper
-      accessToken="xxc23ce82a-3733-496e-b37e-9736168c4fd9"
-      organizationId="electronicscoveodemocomo0n2fu8v"
-    >
+    <AtomicPageWrapper sample="electronics">
       <AtomicResultList
         display="grid"
         imageSize="large"

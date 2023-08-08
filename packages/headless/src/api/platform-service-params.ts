@@ -24,6 +24,10 @@ export interface NumberOfResultsParam {
   numberOfResults?: number;
 }
 
+export interface ClientIDParam {
+  clientId?: string;
+}
+
 export interface VisitorIDParam {
   visitorId?: string;
 }

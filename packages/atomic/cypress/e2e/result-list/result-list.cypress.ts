@@ -8,6 +8,7 @@ import {
 } from './folded-result-list-selectors';
 import {
   addFoldedResultList,
+  addGridResultList,
   addResultList,
   buildTemplateWithSections,
 } from './result-list-actions';
@@ -31,7 +32,18 @@ const resultListConfig = {
   title: 'Result List Component',
 };
 
-const configs = [foldedResultListConfig, resultListConfig] as const;
+const gridResultListConfig = {
+  componentSelectors: ResultListSelectors,
+  componentTag: resultListComponent,
+  addResultFn: addGridResultList,
+  title: 'Grid result List Component',
+};
+
+const configs = [
+  foldedResultListConfig,
+  resultListConfig,
+  gridResultListConfig,
+] as const;
 
 configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
   describe(title, () => {
