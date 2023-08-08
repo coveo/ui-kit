@@ -123,7 +123,9 @@ export function getClonedFacetElements(
     new Set(facetElements.map((el) => el.tagName.toLowerCase()))
   );
 
-  const allFacetsInOrderInDOM = root.querySelectorAll(allFacetTags.join(','));
+  const allFacetsInOrderInDOM = allFacetTags.length
+    ? root.querySelectorAll(allFacetTags.join(','))
+    : [];
 
   allFacetsInOrderInDOM.forEach((facetElement, index) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
