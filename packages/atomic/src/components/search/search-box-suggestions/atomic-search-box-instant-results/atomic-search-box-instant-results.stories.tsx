@@ -59,7 +59,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
         </template>
       </atomic-result-template>`;
     },
-    parentElement: () => {
+    parentElement: function () {
       const parent = document.createElement('atomic-search-box');
       const suggestions = document.createElement(
         'atomic-search-box-query-suggestions'

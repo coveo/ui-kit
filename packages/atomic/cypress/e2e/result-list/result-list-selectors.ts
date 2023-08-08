@@ -36,6 +36,10 @@ export const ResultListSelectors = {
   result: () => ResultListSelectors.shadow().find(resultComponent),
   resultGridClickable: () =>
     ResultListSelectors.shadow().find('[part="result-list-grid-clickable"]'),
+  resultGridClickableContainer: () =>
+    ResultListSelectors.shadow().find(
+      '[part="result-list-grid-clickable-container"]'
+    ),
   firstResult: () => ResultListSelectors.result().first().shadow(),
   firstResultRoot: () => ResultListSelectors.firstResult().find(resultRoot),
   sections: {

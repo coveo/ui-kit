@@ -5,7 +5,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   'atomic-numeric-range',
   {start: 0, end: 1000},
   {
-    parentElement: () => {
+    parentElement: function () {
       const numericFacet = document.createElement('atomic-numeric-facet');
       numericFacet.setAttribute('field', 'ytviewcount');
       return numericFacet;

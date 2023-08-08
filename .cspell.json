@@ -4,8 +4,12 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": ["CHANGELOG.md"],
-  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
+  "ignorePaths": [
+    "CHANGELOG.md"
+  ],
+  "import": [
+    "@cspell/dict-fr-fr/cspell-ext.json"
+  ],
   "words": [
     "adjustednumberoflikes",
     "ARROWUP",
@@ -23,6 +27,7 @@
     "childid",
     "clickableuri",
     "clientid",
+    "Columbellidae",
     "configurator",
     "constante",
     "Contextualizer",
@@ -38,14 +43,21 @@
     "dynamicscrmitem",
     "Ecommerce",
     "electronicscoveodemocomo",
+    "ellipsed",
     "exchangedsn",
     "exchangemdn",
     "exchangerssfeed",
     "Expandto",
+    "fashioncoveodemocomgzh",
+    "genqa",
+    "genqa",
+    "ginglymos",
+    "Ginglymostomatidae",
     "gmailmessage",
     "gzipped",
     "headless",
     "IIFE",
+    "inat",
     "initializable",
     "inlink",
     "isloading",
@@ -89,6 +101,7 @@
     "notanactualfield",
     "nrwl",
     "Numberof",
+    "nusse",
     "omnibox",
     "ondeselect",
     "onhighlightchange",
@@ -257,7 +270,7 @@
     "ytvideoduration",
     "ytvideoid",
     "ytviewcount",
-    "genqa",
-    "ellipsed"
+    "γίγγλυμος",
+    "στόμα"
   ]
 }
