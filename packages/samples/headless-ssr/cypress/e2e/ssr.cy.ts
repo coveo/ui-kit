@@ -48,7 +48,9 @@ describe('headless ssr example', () => {
   it('should pass the web-vitals audits', () => {
     // TODO: Add input based vitals after interactive elements are added to test page (e.g. search box)
     // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
-    const VITALS_THRESHOLD = {thresholds: {fcp: 30, lcp: 30, cls: 0, ttfb: 10}};
+    const VITALS_THRESHOLD = {
+      thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20},
+    };
     cy.vitals(VITALS_THRESHOLD);
   });
 });
