@@ -25,7 +25,10 @@ import {numericFacetSetReducer as numericFacetSet} from '../../../features/facet
 import {executeSearch} from '../../../features/search/search-actions';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {getSearchInitialState} from '../../../features/search/search-state';
-import {toggleExcludeStaticFilterValue, toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
+import {
+  toggleExcludeStaticFilterValue,
+  toggleSelectStaticFilterValue,
+} from '../../../features/static-filter-set/static-filter-set-actions';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';

@@ -16,6 +16,7 @@ export function ProductRecommendationsPage() {
           accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
           organizationId: 'electronicscoveodemocomo0n2fu8v',
           platformUrl: 'https://platform.cloud.coveo.com',
+          searchHub: 'UI_KIT_E2E',
         },
       }),
     []

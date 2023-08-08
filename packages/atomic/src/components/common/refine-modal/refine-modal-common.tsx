@@ -33,6 +33,9 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
   const flushFacetElements = () => {
     props.host.querySelector('div[slot="facets"]')?.remove();
   };
+  const flushAutomaticFacetElements = () => {
+    props.host.querySelector('atomic-automatic-facet-slot-content')?.remove();
+  };
 
   const renderHeader = () => {
     return (
@@ -91,6 +94,7 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
       onAnimationEnded={() => {
         if (!props.isOpen) {
           flushFacetElements();
+          flushAutomaticFacetElements();
         }
       }}
       exportparts={exportparts}

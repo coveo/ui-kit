@@ -1,10 +1,10 @@
 import {
   BaseParam,
+  ClientIDParam,
   ContextParam,
   DebugParam,
   LocaleParam,
   NumberOfResultsParam,
-  VisitorIDParam,
 } from '../../../platform-service-params';
 import {
   baseCaseAssistRequest,
@@ -15,7 +15,7 @@ import {
 
 export type GetDocumentSuggestionsRequest = BaseParam &
   CaseAssistIdParam &
-  VisitorIDParam &
+  ClientIDParam &
   LocaleParam &
   FieldsParam &
   ContextParam &
@@ -46,7 +46,7 @@ export const buildGetDocumentSuggestionsRequest = (
 };
 
 const prepareRequestParams = (req: GetDocumentSuggestionsRequest) => ({
-  visitorId: req.visitorId,
+  clientId: req.clientId,
   locale: req.locale,
   fields: prepareSuggestionRequestFields(req.fields),
   context: req.context,
