@@ -7,7 +7,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
     currency: 'USD',
   },
   {
-    parentElement: () => {
+    parentElement: function () {
       const numericFacetElement = document.createElement(
         'atomic-numeric-facet'
       );
