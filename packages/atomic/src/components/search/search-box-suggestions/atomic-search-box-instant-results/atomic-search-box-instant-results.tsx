@@ -113,7 +113,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
-    if (!this.bindings.suggestedQuery() || this.bindings.store.isMobile()) {
+    if (this.bindings.store.isMobile()) {
       return [];
     }
     const results = this.instantResults.state.results.length
