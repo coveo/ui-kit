@@ -123,7 +123,7 @@ export function getClonedFacetElements(
   let index = 0;
   allFacetsInOrderInDOM.forEach((facetElement) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
-    if (!facetElement.classList.contains('atomic-hidden')) {
+    if (window.getComputedStyle(facetElement).display !== 'none') {
       index += 1;
       clone.isCollapsed = facetShouldBeInitiallyCollapsed(
         index,
