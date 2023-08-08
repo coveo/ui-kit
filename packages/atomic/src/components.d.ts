@@ -51,7 +51,6 @@ export namespace Components {
         "desiredCount": number;
     }
     interface AtomicAutomaticFacetSlotContent {
-        "amountToCollapseNext": number;
         "isThereStaticFacets": boolean;
     }
     interface AtomicBreadbox {
@@ -3046,7 +3045,6 @@ declare namespace LocalJSX {
         "desiredCount": number;
     }
     interface AtomicAutomaticFacetSlotContent {
-        "amountToCollapseNext": number;
         "isThereStaticFacets": boolean;
     }
     interface AtomicBreadbox {

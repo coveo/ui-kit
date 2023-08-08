@@ -34,7 +34,6 @@ export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
   public searchStatus!: SearchStatus;
 
   @Prop({reflect: true}) public isThereStaticFacets!: boolean;
-  @Prop({reflect: true}) public amountToCollapseNext!: number;
 
   public initialize() {
     const desiredCount =
@@ -49,8 +48,7 @@ export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
   }
   public render() {
     const automaticFacets =
-      this.automaticFacetBuilder?.state.automaticFacets.map((facet, index) => {
-        const isCollapsed = index >= this.amountToCollapseNext;
+      this.automaticFacetBuilder?.state.automaticFacets.map((facet) => {
         return (
           <atomic-automatic-facet
             key={facet.state.field}
@@ -58,7 +56,7 @@ export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
             facetId={facet.state.field}
             facet={facet}
             searchStatus={this.searchStatus}
-            isCollapsed={isCollapsed}
+            isCollapsed={true}
           ></atomic-automatic-facet>
         );
       });

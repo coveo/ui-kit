@@ -124,17 +124,13 @@ export function getClonedFacetElements(
   );
 
   const allFacetsInOrderInDOM = root.querySelectorAll(allFacetTags.join(','));
-  let index = 0;
-  allFacetsInOrderInDOM.forEach((facetElement) => {
-    const clone = facetElement.cloneNode(true) as BaseFacetElement;
-    if (window.getComputedStyle(facetElement).display !== 'none') {
-      index += 1;
-      clone.isCollapsed = facetShouldBeInitiallyCollapsed(
-        index,
-        collapseFacetsAfter
-      );
-    }
 
+  allFacetsInOrderInDOM.forEach((facetElement, index) => {
+    const clone = facetElement.cloneNode(true) as BaseFacetElement;
+    clone.isCollapsed = facetShouldBeInitiallyCollapsed(
+      index,
+      collapseFacetsAfter
+    );
     clone.classList.remove(popoverClass);
     clone.setAttribute(isRefineModalFacet, '');
     divSlot.append(clone);

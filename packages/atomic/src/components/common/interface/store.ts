@@ -1,5 +1,5 @@
 import {createStore} from '@stencil/store';
-import {isInDocument, isVisible} from '../../../utils/utils';
+import {isInDocument} from '../../../utils/utils';
 import {
   FacetInfo,
   FacetStore,
@@ -36,7 +36,6 @@ export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
   isAppLoaded(): boolean;
   getUniqueIDFromEngine(engine: AnyEngineType): string;
   getFacetElements(): HTMLElement[];
-  getVisibleFacetElementsLength(): number;
   registerFacet<T extends FacetType, U extends string>(
     facetType: T,
     data: StoreData[T][U] & {facetId: U; element: HTMLElement}
@@ -138,12 +137,6 @@ export function createAtomicCommonStore<
       return stencilStore
         .get('facetElements')
         .filter((element) => isInDocument(element));
-    },
-    getVisibleFacetElementsLength() {
-      return stencilStore
-        .get('facetElements')
-        .filter((element) => isInDocument(element))
-        .filter((element) => isVisible(element)).length;
     },
   };
 }
