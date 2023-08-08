@@ -15,6 +15,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
+ * The `atomic-automatic-facet-slot-content` component is used internally by the `atomic-refine-modal` to generate
+ * automatic facets via a <slot> pattern. The <slot> pattern is needed for the parts to work within the shadow dom.
  */
 @Component({
   tag: 'atomic-automatic-facet-slot-content',

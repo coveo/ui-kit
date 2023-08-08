@@ -117,7 +117,7 @@ export class AtomicRefineModal implements InitializableComponent {
           this.bindings.interfaceElement
         )
       );
-      this.host.append(this.getSlottedAutomaticFacets());
+      this.host.append(this.getAutomaticFacetSlotContent());
     }
   }
 
@@ -221,7 +221,7 @@ export class AtomicRefineModal implements InitializableComponent {
     );
   }
 
-  private getSlottedAutomaticFacets() {
+  private getAutomaticFacetSlotContent() {
     const tag = 'atomic-automatic-facet-slot-content';
     const facetsDiv = this.host.querySelector(tag);
 
