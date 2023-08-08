@@ -5,13 +5,13 @@ import {
   buildAutomaticFacetBuilder,
   buildSearchStatus,
 } from '@coveo/headless';
-import {Component, Prop, State, h} from '@stencil/core';
+import {Component, Host, Prop, State, h} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+} from '../../../../utils/initialization-utils';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
@@ -21,17 +21,16 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   shadow: false,
 })
 export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
-  private automaticFacetBuilder!: AutomaticFacetBuilder;
   @InitializeBindings() public bindings!: Bindings;
-  public searchStatus!: SearchStatus;
+  @State() public error!: Error;
 
+  private automaticFacetBuilder!: AutomaticFacetBuilder;
   @BindStateToController('automaticFacetBuilder')
   @State()
   public automaticFacetBuilderState!: AutomaticFacetBuilderState;
 
-  @State() public error!: Error;
+  public searchStatus!: SearchStatus;
 
-  @Prop({reflect: true}) public slot = 'automatic-facets';
   @Prop({reflect: true}) public isThereStaticFacets!: boolean;
   @Prop({reflect: true}) public amountToCollapseNext!: number;
 
@@ -62,7 +61,8 @@ export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
         );
       });
     return (
-      <div
+      <Host
+        slot="automatic-facets"
         class="flex flex-col"
         style={{
           gap: 'var(--atomic-refine-modal-facet-margin, 20px)',
@@ -72,7 +72,7 @@ export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
         }}
       >
         {automaticFacets}
-      </div>
+      </Host>
     );
   }
 }

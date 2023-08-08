@@ -53,7 +53,6 @@ export namespace Components {
     interface AtomicAutomaticFacetSlotContent {
         "amountToCollapseNext": number;
         "isThereStaticFacets": boolean;
-        "slot": string;
     }
     interface AtomicBreadbox {
     }
@@ -3039,7 +3038,6 @@ declare namespace LocalJSX {
     interface AtomicAutomaticFacetSlotContent {
         "amountToCollapseNext": number;
         "isThereStaticFacets": boolean;
-        "slot"?: string;
     }
     interface AtomicBreadbox {
     }
