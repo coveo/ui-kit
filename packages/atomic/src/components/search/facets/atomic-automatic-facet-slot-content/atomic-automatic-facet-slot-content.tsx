@@ -27,7 +27,7 @@ export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
   @State() public error!: Error;
 
   private automaticFacetGenerator!: AutomaticFacetGenerator;
-  @BindStateToController('automaticFacetBuilder')
+  @BindStateToController('automaticFacetGenerator')
   @State()
   public automaticFacetGeneratorState!: AutomaticFacetGeneratorState;
 
