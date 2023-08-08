@@ -14,8 +14,8 @@ import {
 import {logFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetResponseActiveValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
 import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
-import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
 import {FacetSlice} from '../../features/facets/facet-set/facet-set-state';
+import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 import {
   toggleExcludeDateFacetValue,

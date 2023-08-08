@@ -15,7 +15,7 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
         return r;
       },
     },
-    parentElement: () => {
+    parentElement: function () {
       const resultNumberElement = document.createElement(
         'atomic-result-number'
       );
