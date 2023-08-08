@@ -5,7 +5,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   'atomic-search-box-query-suggestions',
   {},
   {
-    parentElement: () => {
+    parentElement: function () {
       return document.createElement('atomic-search-box');
     },
   }

@@ -112,7 +112,7 @@ export class ResultChildrenCommon {
     );
   }
 
-  private renderChildren(children: FoldedResult[]) {
+  private renderChildren(children: FoldedResult[]): VNode | VNode[] {
     return this.renderChildrenWrapper(
       children.map((child, i) =>
         this.props.renderChild(child, i === children.length - 1)

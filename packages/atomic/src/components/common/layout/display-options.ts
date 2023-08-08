@@ -4,6 +4,7 @@ export type ResultDisplayBasicLayout = 'list' | 'grid';
 export type ResultDisplayLayout = ResultDisplayBasicLayout | 'table';
 export type ResultDisplayDensity = 'comfortable' | 'normal' | 'compact';
 export type ResultDisplayImageSize = 'large' | 'small' | 'icon' | 'none';
+export type ResultTarget = '_self' | '_blank' | '_parent' | '_top';
 
 function getDisplayClass(display: ResultDisplayLayout) {
   switch (display) {
