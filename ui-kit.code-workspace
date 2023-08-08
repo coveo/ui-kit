@@ -53,8 +53,16 @@
       "path": "./packages/samples/headless-react"
     },
     {
+      "name": "🚀 Next.js samples (Headless)",
+      "path": "./packages/samples/headless-next"
+    },
+    {
       "name": "🚀 React samples (Atomic)",
       "path": "./packages/samples/atomic-react"
+    },
+    {
+      "name": "🚀 Server-side-rendering samples (Headless)",
+      "path": "./packages/samples/headless-ssr"
     },
     {
       "name": "🚀 Next.js samples (Atomic)",
@@ -88,7 +96,9 @@
       "🚀 IIFE samples",
       "🚀 Stencil samples",
       "🚀 React samples (Headless)",
+      "🚀 Next.js samples (Headless)",
       "🚀 React samples (Atomic)",
+      "🚀 Server-side-rendering samples (Headless)",
       "🚀 Next.js samples (Atomic)",
       "🚀 Angular samples",
       "🚀 Vue.js samples",
