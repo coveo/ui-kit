@@ -222,19 +222,15 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private getAutomaticFacetSlotContent() {
-    const tag = 'atomic-automatic-facet-slot-content';
-    const facetsDiv = this.host.querySelector(tag);
-
-    if (facetsDiv) {
-      facetsDiv.remove();
-    }
-
-    const divSlot = document.createElement(tag);
     const isFacetElements =
       this.bindings.store.getVisibleFacetElementsLength() > 0;
     const amountToCollapseNext =
       this.collapseFacetsAfter -
       this.bindings.store.getVisibleFacetElementsLength();
+
+    const divSlot = document.createElement(
+      'atomic-automatic-facet-slot-content'
+    );
     divSlot.setAttribute('is-there-static-facets', `${isFacetElements}`);
     divSlot.setAttribute('amount-to-collapse-next', `${amountToCollapseNext}`);
 
