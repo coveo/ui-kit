@@ -20,16 +20,16 @@ import {
 } from '../automatic-facet/headless-automatic-facet';
 
 /**
- * The `AutomaticFacetBuilder` headless controller offers a high-level interface for rendering automatic facets.
+ * The `AutomaticFacetGenerator` headless controller offers a high-level interface for rendering automatic facets.
  */
-export interface AutomaticFacetBuilder extends Controller {
+export interface AutomaticFacetGenerator extends Controller {
   /**
-   * The state of the `AutomaticFacetBuilder` controller.
+   * The state of the `AutomaticFacetGenerator` controller.
    */
-  state: AutomaticFacetBuilderState;
+  state: AutomaticFacetGeneratorState;
 }
 
-export interface AutomaticFacetBuilderState {
+export interface AutomaticFacetGeneratorState {
   /**
    * @beta - This property is part of the automatic facets feature.
    * Automatic facets are currently in beta testing and should be available soon.
@@ -39,7 +39,7 @@ export interface AutomaticFacetBuilderState {
   automaticFacets: AutomaticFacet[];
 }
 
-export interface AutomaticFacetBuilderProps {
+export interface AutomaticFacetGeneratorProps {
   /**
    * @beta - This property is part of the automatic facets feature.
    * Automatic facets are currently in beta testing and should be available soon.
@@ -54,17 +54,17 @@ export interface AutomaticFacetBuilderProps {
  * @beta - This function is part of the automatic facets feature.
  * Automatic facets are currently in beta testing and should be available soon.
  *
- * Creates a `AutomaticFacetBuilder` instance.
+ * Creates a `AutomaticFacetGenerator` instance.
  *
  * @param engine - The headless engine.
  * @param props - The automatic facets props. Automatic facets are currently in beta testing and should be available soon.
- * @returns A `AutomaticFacetBuilder` controller instance.
+ * @returns A `AutomaticFacetGenerator` controller instance.
  */
-export function buildAutomaticFacetBuilder(
+export function buildAutomaticFacetGenerator(
   engine: SearchEngine,
-  props: AutomaticFacetBuilderProps
-): AutomaticFacetBuilder {
-  if (!loadAutomaticFacetBuilderReducers(engine)) {
+  props: AutomaticFacetGeneratorProps
+): AutomaticFacetGenerator {
+  if (!loadAutomaticFacetGeneratorReducers(engine)) {
     throw loadReducerError;
   }
   const {dispatch} = engine;
@@ -87,7 +87,7 @@ export function buildAutomaticFacetBuilder(
   };
 }
 
-function loadAutomaticFacetBuilderReducers(
+function loadAutomaticFacetGeneratorReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
   AutomaticFacetSection & ConfigurationSection & SearchSection
