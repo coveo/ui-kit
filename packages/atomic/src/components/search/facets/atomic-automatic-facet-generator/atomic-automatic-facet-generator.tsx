@@ -3,6 +3,7 @@ import {
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorState,
   SearchStatus,
+  SearchStatusState,
   buildAutomaticFacetGenerator,
   buildSearchStatus,
 } from '@coveo/headless';
@@ -33,12 +34,15 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
 
+  public automaticFacetGenerator!: AutomaticFacetGenerator;
   @BindStateToController('automaticFacetGenerator')
   @State()
   private automaticFacetGeneratorState!: AutomaticFacetGeneratorState;
 
-  public automaticFacetGenerator!: AutomaticFacetGenerator;
   public searchStatus!: SearchStatus;
+  @BindStateToController('searchStatus')
+  @State()
+  public searchStatusState!: SearchStatusState;
 
   /**
    * @beta - This prop is part of the automatic facets feature.
