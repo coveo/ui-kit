@@ -1,5 +1,7 @@
 .source-citations__label {
   height: 1.875rem;
+  font-size: 14px;
+  color: var(--lwc-colorTextPlaceholder, #747474);
 }
 
 .citation:hover {
@@ -39,5 +41,6 @@
 
 .citation__title {
   font-weight: var(--lwc-fontWeightRegular, 400);
+  color: var(--lwc-colorTextPlaceholder, #747474);
   font-size: 14px;
 }
