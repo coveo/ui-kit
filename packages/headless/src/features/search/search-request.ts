@@ -83,6 +83,7 @@ function getAutomaticFacets(state: StateNeededBySearchRequest) {
     ? Object.values(facets)
         .map((facet) => facet.response)
         .map(responseToAutomaticFacetRequest)
+        .filter((facetRequest) => facetRequest.currentValues.length > 0)
     : undefined;
 }
 function responseToAutomaticFacetRequest(
@@ -90,10 +91,11 @@ function responseToAutomaticFacetRequest(
 ): AutomaticFacetRequest {
   const {field, label, values} = response;
 
+  const selectedValues = values.filter((value) => value.state === 'selected');
   return {
     field,
     label,
-    currentValues: values,
+    currentValues: selectedValues,
   };
 }
 function getAllEnabledFacets(state: StateNeededBySearchRequest) {

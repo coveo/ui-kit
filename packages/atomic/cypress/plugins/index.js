@@ -15,7 +15,28 @@
 /**
  * @type {Cypress.PluginConfig}
  */
-module.exports = (_on, _config) => {
+module.exports = (on, _config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+  on('before:browser:launch', (browser = {}, launchOptions) => {
+    if (browser.family === 'chromium' && browser.name !== 'electron') {
+      if (browser.isHeadless) {
+        // Workaround to use new headless mode until Cypress can be upgraded to >= 12.15 (KIT-2576)
+        // https://developer.chrome.com/articles/new-headless/
+        const version = parseInt(browser.majorVersion);
+        if (version >= 112) {
+          launchOptions.args.push('--headless=new');
+        }
+      } else {
+        // auto open devtools in headed (local dev) mode to increase visibility of errors in console
+        launchOptions.args.push('--auto-open-devtools-for-tabs');
+      }
+    } else if (browser.family === 'firefox') {
+      launchOptions.args.push('-devtools');
+    } else if (browser.name === 'electron') {
+      launchOptions.preferences.devTools = true;
+    }
+
+    return launchOptions;
+  });
 };
