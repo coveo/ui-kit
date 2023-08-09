@@ -166,6 +166,7 @@ describe('category facet', () => {
     });
   });
 
+  describe.skip('when the search response has a category facet with nested values *and* non-nested values', () => {});
   describe('when the category facet has a selected leaf value with no children', () => {
     const selectedValue = buildMockCategoryFacetValue({
       value: 'A',
