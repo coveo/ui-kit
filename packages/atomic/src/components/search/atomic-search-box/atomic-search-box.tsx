@@ -106,6 +106,7 @@ export class AtomicSearchBox {
   private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
+  private textAreaRef!: HTMLTextAreaElement;
   private leftPanelRef: HTMLElement | undefined;
   private rightPanelRef: HTMLElement | undefined;
   private querySetActions!: QuerySetActionCreators;
@@ -756,38 +757,57 @@ export class AtomicSearchBox {
     );
   }
 
-  public render() {
-    const TextBoxElement = this.textArea ? SearchTextArea : SearchInput;
+  private renderTextBox = (searchLabel: string) => {
+    const props = {
+      loading: this.searchBoxState.isLoading,
+      bindings: this.bindings,
+      value: this.searchBoxState.value,
+      title: searchLabel,
+      ariaLabel: searchLabel,
+      onFocus: () => this.onFocus(),
+      onInput: (e: Event) =>
+        this.onInput(
+          (e.target as HTMLInputElement | HTMLTextAreaElement).value
+        ),
+      onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
+      onClear: () => this.searchBox.clear(),
+      popup: {
+        id: this.searchBoxCommon.popupId,
+        activeDescendant: this.activeDescendant,
+        expanded: this.isExpanded,
+        hasSuggestions: this.searchBoxCommon.hasSuggestions,
+      },
+    };
 
+    return this.textArea ? (
+      <SearchTextArea
+        textAreaRef={this.textAreaRef}
+        ref={(el) => (this.textAreaRef = el as HTMLTextAreaElement)}
+        {...props}
+      />
+    ) : (
+      <SearchInput
+        inputRef={this.inputRef}
+        ref={(el) => (this.inputRef = el as HTMLInputElement)}
+        {...props}
+      />
+    );
+  };
+
+  public render() {
     this.updateBreakpoints();
+
     const searchLabel = this.searchBoxCommon.getSearchInputLabel(
       this.minimumQueryLength
     );
+
     return [
       <SearchBoxWrapper disabled={this.isSearchDisabled}>
         <atomic-focus-detector
           style={{display: 'contents'}}
           onFocusExit={() => this.clearSuggestions()}
         >
-          <TextBoxElement
-            inputRef={this.inputRef}
-            loading={this.searchBoxState.isLoading}
-            ref={(el) => (this.inputRef = el as HTMLInputElement)}
-            bindings={this.bindings}
-            value={this.searchBoxState.value}
-            title={searchLabel}
-            ariaLabel={searchLabel}
-            onFocus={() => this.onFocus()}
-            onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
-            onKeyDown={(e) => this.onKeyDown(e)}
-            onClear={() => this.searchBox.clear()}
-            popup={{
-              id: this.searchBoxCommon.popupId,
-              activeDescendant: this.activeDescendant,
-              expanded: this.isExpanded,
-              hasSuggestions: this.searchBoxCommon.hasSuggestions,
-            }}
-          />
+          {this.renderTextBox(searchLabel)}
           {this.renderSuggestions()}
           <SubmitButton
             bindings={this.bindings}

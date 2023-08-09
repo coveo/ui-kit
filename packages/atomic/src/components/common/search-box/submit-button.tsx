@@ -14,7 +14,7 @@ export const SubmitButton: FunctionalComponent<Props> = ({
 }) => (
   <Button
     style="primary"
-    class="flex items-center justify-center w-12 h-auto rounded-r-md rounded-l-none -my-px -mr-px"
+    class="flex items-center justify-center w-12 h-auto rounded-r-md rounded-l-none -my-px -mr-px shrink-0"
     part="submit-button"
     ariaLabel={bindings.i18n.t('search')}
     onClick={() => {

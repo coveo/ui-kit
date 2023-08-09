@@ -3,8 +3,8 @@ import {JSXBase} from '@stencil/core/internal';
 import {AnyBindings} from '../interface/bindings';
 import {ClearButton} from './clear-button';
 
-interface Props extends JSXBase.InputHTMLAttributes<HTMLTextAreaElement> {
-  inputRef: HTMLInputElement;
+interface Props extends JSXBase.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  textAreaRef: HTMLTextAreaElement;
   loading: boolean;
   bindings: AnyBindings;
   value: string;
@@ -32,18 +32,33 @@ function getPopupAttributes(props: Required<Props>['popup']) {
   };
 }
 
-function resizeTextArea(elem: HTMLElement) {
-  const startingHeight = '1em';
-  if (elem) {
-    elem.style.height = startingHeight;
-    elem.style.height = `${elem.scrollHeight}px`;
+function syncTextWithReplica(elem: HTMLTextAreaElement) {
+  const parent = elem.parentNode;
+  if (parent) {
+    (parent as HTMLElement).dataset.replicatedValue = elem.value;
+  }
+}
+
+function collapseTextArea(elem: HTMLTextAreaElement) {
+  const parent = elem.parentNode;
+  if (parent) {
+    (parent as HTMLElement).classList.remove('expanded');
+  }
+}
+
+function expandTextArea(elem: HTMLTextAreaElement) {
+  const parent = elem.parentNode;
+  if (parent) {
+    (parent as HTMLElement).classList.add('expanded');
   }
 }
 
 export const SearchTextArea: FunctionalComponent<Props> = ({
-  inputRef,
+  textAreaRef,
   loading,
   bindings,
+  onInput,
+  onFocus,
   onKeyDown,
   value,
   ariaLabel,
@@ -51,21 +66,36 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
   popup,
   ...defaultInputProps
 }) => (
-  <div class="grow flex items-center">
-    <textarea
-      part="textarea"
-      aria-label={ariaLabel}
-      placeholder={bindings.i18n.t('search')}
-      class="h-full resize-none outline-none bg-transparent w-0 grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
-      onKeyDown={(e) => {
-        onKeyDown?.(e);
-        resizeTextArea(e.target as HTMLElement);
-      }}
-      autocomplete="off"
-      {...(popup && getPopupAttributes(popup))}
-      {...defaultInputProps}
-      value={value}
-    />
+  <div class="grow flex items-center overflow-hidden">
+    <div class="grow-wrap grow grid overflow-hidden">
+      <textarea
+        part="textarea"
+        aria-label={ariaLabel}
+        placeholder={bindings.i18n.t('search')}
+        class="placeholder-neutral-dark"
+        rows={1}
+        onInput={(e) => {
+          onInput?.(e);
+          syncTextWithReplica(e.target as HTMLTextAreaElement);
+        }}
+        onKeyDown={(e) => {
+          onKeyDown?.(e);
+          syncTextWithReplica(e.target as HTMLTextAreaElement);
+        }}
+        onBlur={(e) => {
+          collapseTextArea(e.target as HTMLTextAreaElement);
+        }}
+        onFocus={(e) => {
+          onFocus?.(e);
+          expandTextArea(e.target as HTMLTextAreaElement);
+        }}
+        autocomplete="off"
+        {...(popup && getPopupAttributes(popup))}
+        {...defaultInputProps}
+        value={value}
+      />
+    </div>
+
     {loading && (
       <span
         part="loading"
@@ -74,10 +104,11 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
     )}
     {!loading && value && (
       <ClearButton
-        inputRef={inputRef}
+        inputRef={textAreaRef}
         bindings={bindings}
         onClick={() => {
           onClear();
+          syncTextWithReplica(textAreaRef);
         }}
       />
     )}
