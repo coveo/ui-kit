@@ -239,7 +239,7 @@ export const buildProductListingRequest = async (
 export const buildProductListingRequestV2 = async (
     state: StateNeededByFetchProductListingV2
 ): Promise<ProductListingV2Request> => {
-    // TODO(nico): Use facets, pagination, sort, selected page, context
+    // TODO(nico): Use facets, sort, selected page, context
     // const facets = getFacets(state);
     // const visitorId = await getVisitorID(state.configuration.analytics);
 
@@ -277,7 +277,16 @@ export const buildProductListingRequestV2 = async (
                 productId: "1",
                 sku: "1"
             }
-        }
+        },
+        ...(state.pagination && {
+            selectedPage: {
+                page:
+                    Math.ceil(
+                        state.pagination.firstResult /
+                        (state.pagination.numberOfResults || 1)
+                    ) + 1,
+            },
+        }),
     };
 };
 

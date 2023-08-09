@@ -1,5 +1,5 @@
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {ProductListingEngine, ProductListingV2Engine} from '../../../app/product-listing-engine/product-listing-engine';
+import {fetchProductListing, fetchProductListingV2} from '../../../features/product-listing/product-listing-actions';
 import {
   buildCorePager,
   PagerInitialState,
@@ -45,6 +45,37 @@ export function buildPager(
     previousPage() {
       pager.previousPage();
       dispatch(fetchProductListing());
+    },
+  };
+}
+
+export function buildPagerV2(
+    engine: ProductListingV2Engine,
+    props: PagerProps = {}
+): Pager {
+  const {dispatch} = engine;
+  const pager = buildCorePager(engine, props);
+
+  return {
+    ...pager,
+
+    get state() {
+      return pager.state;
+    },
+
+    selectPage(page: number) {
+      pager.selectPage(page);
+      dispatch(fetchProductListingV2());
+    },
+
+    nextPage() {
+      pager.nextPage();
+      dispatch(fetchProductListingV2());
+    },
+
+    previousPage() {
+      pager.previousPage();
+      dispatch(fetchProductListingV2());
     },
   };
 }
