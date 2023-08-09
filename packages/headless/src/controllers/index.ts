@@ -415,11 +415,11 @@ export type {
 export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
 
 export type {
-  AutomaticFacetBuilder,
-  AutomaticFacetBuilderProps,
-  AutomaticFacetBuilderState,
-} from './facets/automatic-facet-builder/headless-automatic-facet-builder';
-export {buildAutomaticFacetBuilder} from './facets/automatic-facet-builder/headless-automatic-facet-builder';
+  AutomaticFacetGenerator,
+  AutomaticFacetGeneratorProps,
+  AutomaticFacetGeneratorState,
+} from './facets/automatic-facet-generator/headless-automatic-facet-generator';
+export {buildAutomaticFacetGenerator} from './facets/automatic-facet-generator/headless-automatic-facet-generator';
 
 export type {
   GeneratedAnswer,

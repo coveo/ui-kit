@@ -4,20 +4,20 @@ import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/f
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {MockSearchEngine, buildMockSearchAppEngine} from '../../../test';
 import {
-  AutomaticFacetBuilderProps,
-  AutomaticFacetBuilder,
-  buildAutomaticFacetBuilder,
-} from './headless-automatic-facet-builder';
+  AutomaticFacetGeneratorProps,
+  AutomaticFacetGenerator,
+  buildAutomaticFacetGenerator,
+} from './headless-automatic-facet-generator';
 
 describe('automatic facets', () => {
   let engine: MockSearchEngine;
-  let automaticFacets: AutomaticFacetBuilder;
-  let props: AutomaticFacetBuilderProps;
+  let automaticFacets: AutomaticFacetGenerator;
+  let props: AutomaticFacetGeneratorProps;
 
   beforeEach(() => {
     props = {desiredCount: 5};
     engine = buildMockSearchAppEngine();
-    automaticFacets = buildAutomaticFacetBuilder(engine, props);
+    automaticFacets = buildAutomaticFacetGenerator(engine, props);
   });
 
   it('should add the correct reducers to engine', () => {
