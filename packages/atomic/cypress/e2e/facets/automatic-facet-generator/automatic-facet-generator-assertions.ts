@@ -1,13 +1,14 @@
 import {automaticFacetComponent} from '../automatic-facet/automatic-facet-selectors';
 
-export const automaticFacetBuilderComponent = 'atomic-automatic-facet-builder';
+export const automaticFacetGeneratorComponent =
+  'atomic-automatic-facet-generator';
 
 export function assertContainsAutomaticFacet() {
-  cy.get(automaticFacetBuilderComponent).find(automaticFacetComponent);
+  cy.get(automaticFacetGeneratorComponent).find(automaticFacetComponent);
 }
 
 export function assertCollapseAutomaticFacets(isCollapsed: boolean) {
-  cy.get(automaticFacetBuilderComponent)
+  cy.get(automaticFacetGeneratorComponent)
     .find(automaticFacetComponent)
     .shadow()
     .find('[part="values"]')
@@ -15,5 +16,5 @@ export function assertCollapseAutomaticFacets(isCollapsed: boolean) {
 }
 
 export function assertDisplayPlaceholder() {
-  cy.get(automaticFacetBuilderComponent).find('[part="placeholder"]');
+  cy.get(automaticFacetGeneratorComponent).find('[part="placeholder"]');
 }
