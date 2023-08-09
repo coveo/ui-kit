@@ -50,6 +50,9 @@ export type ControllerDefinition<
   | ControllerDefinitionWithoutProps<TEngine, TController>
   | ControllerDefinitionWithProps<TEngine, TController, unknown>;
 
+/**
+ * @internal
+ */
 export interface ControllerDefinitionsMap<
   TEngine extends CoreEngine,
   TController extends Controller
