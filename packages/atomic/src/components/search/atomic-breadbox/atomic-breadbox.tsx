@@ -389,7 +389,7 @@ export class AtomicBreadbox implements InitializableComponent {
       )
       .map(({value, facetId, field, label}) => ({
         facetId,
-        label: this.bindings.i18n.t(label ? label : field),
+        label: label ? label : field,
         deselect: value.deselect,
         formattedValue: [
           getFieldValueCaption(field, value.value.value, this.bindings.i18n),
