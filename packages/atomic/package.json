@@ -95,11 +95,6 @@
     "rollup-plugin-html": "0.2.1",
     "tailwindcss": "3.3.3"
   },
-  "overrides": {
-    "@stencil/postcss": {
-      "postcss": "8.4.27"
-    }
-  },
   "peerDependencies": {
     "@coveo/headless": "2.24.0"
   },
