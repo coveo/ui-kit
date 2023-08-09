@@ -36,12 +36,6 @@ export default class QuanticResultTemplate extends LightningElement {
    * @type {boolean}
    */
   @api hideBorder = false;
-  /**
-   * Specifies whether the label of the result template should be hidden.
-   * @api
-   * @type {boolean}
-   */
-  @api hideLabel = false;
 
   /** @type {boolean} */
   isHeaderEmpty = true;

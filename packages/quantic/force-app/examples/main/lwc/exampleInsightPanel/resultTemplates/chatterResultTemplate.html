@@ -2,9 +2,9 @@
   <c-quantic-result-template
     is-any-preview-open={isAnyPreviewOpen}
     result-preview-should-not-be-accessible={resultPreviewShouldNotBeAccessible}
-    hide-label
   >
     <c-quantic-colored-result-badge
+      slot="label"
       label={result.raw.objecttype}
     ></c-quantic-colored-result-badge>
     <div slot="badges" class="slds-grid slds-grid_vertical-align-center">
