@@ -1,0 +1,25 @@
+{
+  "name": "@coveo/headless-react",
+  "version": "0.0.0",
+  "description": "React utilities for SSR (Server Side Rendering) with headless",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git"
+  },
+  "keywords": [
+    "headless",
+    "react",
+    "nextjs",
+    "ssr"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/coveo/ui-kit/issues"
+  },
+  "homepage": "https://github.com/coveo/ui-kit#readme"
+}
