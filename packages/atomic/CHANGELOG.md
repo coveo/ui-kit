@@ -1,3 +1,17 @@
+# 2.39.0 (2023-08-09)
+
+### Bug Fixes
+
+- **atomic:** add automatic facets to atomic refine modal ([#3069](https://github.com/coveo/ui-kit/issues/3069)) ([9b422ce](https://github.com/coveo/ui-kit/commits/9b422ce8865e4923e4df2fbe16c28f8639bc2170))
+- **atomic:** css parts not working for automatic facets in refine modal ([#3071](https://github.com/coveo/ui-kit/issues/3071)) ([3f899fd](https://github.com/coveo/ui-kit/commits/3f899fdf6fa670360b5e126a0125abba3a1ca140))
+- **atomic:** fix DOM exception when using refine modal with no facets ([#3072](https://github.com/coveo/ui-kit/issues/3072)) ([0a29cf3](https://github.com/coveo/ui-kit/commits/0a29cf39f1c82c40de56da86ea9fc40cd75148f6))
+- **atomic:** fixed styling of insight folded results when children ar… ([#3075](https://github.com/coveo/ui-kit/issues/3075)) ([b12d67d](https://github.com/coveo/ui-kit/commits/b12d67d90aaf77070e41c84e021d1a4a440f8c85))
+- remove `{{variable}}` from GPT translated locales ([#3073](https://github.com/coveo/ui-kit/issues/3073)) ([3410d93](https://github.com/coveo/ui-kit/commits/3410d9353233965a22efbbc0ddc9bffda895cc09))
+
+### Features
+
+- **atomic:** add skip link to grid results ([#3045](https://github.com/coveo/ui-kit/issues/3045)) ([049b420](https://github.com/coveo/ui-kit/commits/049b4201e72b91a49b2ec63ea2577fe3bed6a9e9))
+
 # 2.38.0 (2023-08-02)
 
 ### Bug Fixes

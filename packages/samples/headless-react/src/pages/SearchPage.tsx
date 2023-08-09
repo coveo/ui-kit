@@ -77,14 +77,14 @@ import {
   RecentResultsList as HeadlessRecentResultsList,
   buildRecentResultsList,
   InstantResults as HeadlessInstantResults,
-  AutomaticFacetBuilder as HeadlessAutomaticFacetBuilder,
+  AutomaticFacetGenerator as HeadlessAutomaticFacetGenerator,
   buildInstantResults,
-  buildAutomaticFacetBuilder,
+  buildAutomaticFacetGenerator,
 } from '@coveo/headless';
 import filesize from 'filesize';
 import {Component} from 'react';
-import {AutomaticFacetBuilder} from '../components/automatic-facet-builder/automatic-facet-builder.class';
-import {AutomaticFacetBuilder as AutomaticFacetBuilderFn} from '../components/automatic-facet-builder/automatic-facet-builder.fn';
+import {AutomaticFacetGenerator} from '../components/automatic-facet-generator/automatic-facet-generator.class';
+import {AutomaticFacetGenerator as AutomaticFacetGeneratorFn} from '../components/automatic-facet-generator/automatic-facet-generator.fn';
 import {BreadcrumbManager} from '../components/breadcrumb-manager/breadcrumb-manager.class';
 import {BreadcrumbManager as BreadcrumbManagerFn} from '../components/breadcrumb-manager/breadcrumb-manager.fn';
 import {CategoryFacet} from '../components/category-facet/category-facet.class';
@@ -229,7 +229,7 @@ export class SearchPage extends Component {
   private readonly recentResultsList: HeadlessRecentResultsList;
   private readonly instantResults: HeadlessInstantResults;
   private readonly searchboxInstantResults: HeadlessSearchBox;
-  private readonly automaticFacetBuilder: HeadlessAutomaticFacetBuilder;
+  private readonly automaticFacetGenerator: HeadlessAutomaticFacetGenerator;
 
   private unsubscribeUrlManager!: Unsubscribe;
 
@@ -278,7 +278,7 @@ export class SearchPage extends Component {
 
     this.facetManager = buildFacetManager(this.engine);
 
-    this.automaticFacetBuilder = buildAutomaticFacetBuilder(this.engine, {
+    this.automaticFacetGenerator = buildAutomaticFacetGenerator(this.engine, {
       desiredCount: 5,
     });
 
@@ -594,7 +594,7 @@ export class SearchPage extends Component {
             <StaticFilterFn id="filetypes-b" values={this.staticFilterValues} />
           </Section>
           <Section title="facet">
-            <AutomaticFacetBuilder desiredCount={5}></AutomaticFacetBuilder>
+            <AutomaticFacetGenerator desiredCount={5}></AutomaticFacetGenerator>
             <FacetManager>
               <CategoryFacet
                 field="geographicalhierarchy"
@@ -638,9 +638,9 @@ export class SearchPage extends Component {
               />
               <DateFilter field="date" facetId="date-3" />
             </FacetManager>
-            <AutomaticFacetBuilderFn
-              controller={this.automaticFacetBuilder}
-            ></AutomaticFacetBuilderFn>
+            <AutomaticFacetGeneratorFn
+              controller={this.automaticFacetGenerator}
+            ></AutomaticFacetGeneratorFn>
             <FacetManagerFn controller={this.facetManager}>
               <CategoryFacetFn controller={this.geographyFacet} />
               <FacetFn controller={this.objectTypeFacet} />

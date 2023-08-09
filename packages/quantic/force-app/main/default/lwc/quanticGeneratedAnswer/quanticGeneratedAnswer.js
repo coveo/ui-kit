@@ -65,7 +65,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
     this.generatedAnswer = this.headless.buildGeneratedAnswer(engine);
-    // @ts-ignore
     this.unsubscribeGeneratedAnswer = this.generatedAnswer.subscribe(() =>
       this.updateState()
     );

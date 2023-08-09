@@ -60,8 +60,8 @@ const SearchPage: NextPage = () => {
             'electronicscoveodemocomo0n2fu8v'
           ),
           search: {
-            pipeline: 'Search',
-            searchHub: 'MainSearch',
+            pipeline: 'UI_KIT_E2E',
+            searchHub: 'UI_KIT_E2E',
           },
         },
       }),

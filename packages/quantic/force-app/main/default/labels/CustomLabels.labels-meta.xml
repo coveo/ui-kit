@@ -1241,9 +1241,9 @@
     </labels>
     <labels>
       <fullName>quantic_LearnMore</fullName>
-      <value>Learn More</value>
+      <value>Learn more</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Learn More</shortDescription>
+      <shortDescription>Learn more</shortDescription>
     </labels>
 </CustomLabels>
