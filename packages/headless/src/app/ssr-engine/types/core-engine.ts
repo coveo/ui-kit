@@ -10,6 +10,8 @@ import {
   InferControllerPropsMapFromDefinitions,
   InferControllerInitialStateMapFromDefinitions,
   InferControllersMapFromDefinition,
+  ControllerInitialStateMap,
+  ControllersMap,
 } from './common';
 import {
   FetchInitialStateWithProps,
@@ -41,7 +43,7 @@ export type EngineDefinition<
       TEngineOptions,
       InferControllerPropsMapFromDefinitions<TControllers>
     >
-  : InferControllerPropsMapFromDefinitions<TControllers> extends false
+  : HasKeys<InferControllerPropsMapFromDefinitions<TControllers>> extends false
   ? EngineDefinitionWithoutProps<TEngine, TControllers, TEngineOptions>
   :
       | EngineDefinitionWithProps<
@@ -93,3 +95,29 @@ export interface EngineDefinitionWithProps<
       InferControllersMapFromDefinition<TControllers>,
       TControllerProps
     > {}
+
+/**
+ * @internal
+ */
+export type InferInitialState<
+  T extends
+    | FetchInitialStateWithoutProps<ControllerInitialStateMap, AnyAction>
+    | FetchInitialStateWithProps<
+        ControllerInitialStateMap,
+        AnyAction,
+        ControllersPropsMap
+      >
+> = Awaited<ReturnType<T['fetchInitialState']>>;
+/**
+ * @internal
+ */
+export type InferLiveState<
+  T extends
+    | HydrateInitialStateWithoutProps<CoreEngine, ControllersMap, AnyAction>
+    | HydrateInitialStateWithProps<
+        CoreEngine,
+        ControllersMap,
+        AnyAction,
+        ControllersPropsMap
+      >
+> = Awaited<ReturnType<T['hydrateInitialState']>>;

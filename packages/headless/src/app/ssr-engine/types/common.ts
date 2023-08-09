@@ -27,7 +27,9 @@ export interface ControllerInitialState<TState> {
 export interface ControllerInitialStateMap {
   [customName: string]: ControllerInitialState<unknown>;
 }
-
+/**
+ * @internal
+ */
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TController extends Controller
@@ -35,6 +37,9 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: TEngine): TController;
 }
 
+/**
+ * @internal
+ */
 export interface ControllerDefinitionWithProps<
   TEngine extends CoreEngine,
   TController extends Controller,
@@ -43,6 +48,9 @@ export interface ControllerDefinitionWithProps<
   buildWithProps(engine: TEngine, props: TProps): TController;
 }
 
+/**
+ * @internal
+ */
 export type ControllerDefinition<
   TEngine extends CoreEngine,
   TController extends Controller
@@ -105,6 +113,16 @@ export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};
 
+export type InferControllerInitialStateFromDefinition<
+  TDefinition extends ControllerDefinition<CoreEngine, Controller>
+> = TDefinition extends ControllerDefinition<infer _, infer TController>
+  ? ControllerInitialState<TController['state']>
+  : never;
+
 export type InferControllerInitialStateMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
-> = {[K in keyof TControllers]: {state: TControllers[K]}};
+> = {
+  [K in keyof TControllers]: InferControllerInitialStateFromDefinition<
+    TControllers[K]
+  >;
+};
