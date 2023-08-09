@@ -1,18 +1,39 @@
-'use client';
+import {
+  ResultList as ResultListController,
+  ResultListState,
+} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
-import {Result} from '@coveo/headless';
+interface ResultListProps {
+  initialState: ResultListState;
+  controller?: ResultListController;
+}
 
-export default function ResultList({results}: {results: Result[]}) {
+export const ResultList: FunctionComponent<ResultListProps> = (props) => {
+  const {initialState, controller} = props;
+  const [state, setState] = useState(initialState);
+
+  useEffect(
+    () => controller?.subscribe(() => setState({...controller.state})),
+    [controller]
+  );
+
+  if (!state.results.length) {
+    return <div>No results</div>;
+  }
+
   return (
     <div>
-      Hydrated engine with {results?.length} results
-      <ul>
-        {results?.map((result) => (
+      <ul style={{textAlign: 'left'}}>
+        {state.results.map((result) => (
           <li key={result.uniqueId}>
-            <a href={result.clickUri}>{result.title}</a>
+            <article>
+              <h3>{result.title}</h3>
+              <p>{result.excerpt}</p>
+            </article>
           </li>
         ))}
       </ul>
     </div>
   );
-}
+};
