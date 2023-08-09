@@ -1,15 +1,25 @@
-{ // TODO: Config copied over from @coveo/headless. Re-evaluate fit for this package.
+{
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "isolatedModules": true,
-    "declaration": false,
-    "lib": ["DOM", "ES2019"],
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "allowUnreachableCode": false,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": ["node", "jest"]
+    "removeComments": false,
+    "sourceMap": true,
+    "declaration": true,
+    "jsx": "react",
+    "outDir": "dist/",
+    "moduleResolution": "Node",
+    "module": "ES2022",
+    "target": "ES2022",
+    "lib": ["dom", "ES2022"]
   },
-  "exclude": ["./dist/**"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["**/__tests__/**"]
 }

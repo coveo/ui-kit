@@ -23,7 +23,8 @@
     "@coveo/headless": "2.24.0"
   },
   "peerDependencies": {
-    "react": "^18"
+    "react": "^18",
+    "react-dom": "^18"
   },
   "engines": {
     "node": ">=18"
