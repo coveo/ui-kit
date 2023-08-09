@@ -84,7 +84,7 @@ export interface RegisterCategoryFacetActionCreatorPayload {
   sortCriteria?: CategoryFacetSortCriterion;
 }
 
-const registerCategoryFacetPayloadDefinition = {
+const categoryFacetPayloadDefinition = {
   facetId: facetIdDefinition,
   field: requiredNonEmptyString,
   delimitingCharacter: new StringValue({required: false, emptyAllowed: true}),
@@ -99,7 +99,7 @@ const registerCategoryFacetPayloadDefinition = {
 export const registerCategoryFacet = createAction(
   'categoryFacet/register',
   (payload: RegisterCategoryFacetActionCreatorPayload) =>
-    validatePayload(payload, registerCategoryFacetPayloadDefinition)
+    validatePayload(payload, categoryFacetPayloadDefinition)
 );
 
 export interface ToggleSelectCategoryFacetValueActionCreatorPayload {
@@ -134,7 +134,8 @@ export const toggleSelectCategoryFacetValue = createAction(
 
 export const deselectAllCategoryFacetValues = createAction(
   'categoryFacet/deselectAll',
-  (payload: string) => validatePayload(payload, facetIdDefinition)
+  (payload: string) =>
+    validatePayload(payload, categoryFacetPayloadDefinition.facetId)
 );
 
 export interface UpdateCategoryFacetNumberOfValuesActionCreatorPayload {
@@ -153,8 +154,8 @@ export const updateCategoryFacetNumberOfValues = createAction(
   'categoryFacet/updateNumberOfValues',
   (payload: UpdateCategoryFacetNumberOfValuesActionCreatorPayload) =>
     validatePayload(payload, {
-      facetId: facetIdDefinition,
-      numberOfValues: new NumberValue({required: true, min: 1}),
+      facetId: categoryFacetPayloadDefinition.facetId,
+      numberOfValues: categoryFacetPayloadDefinition.numberOfValues,
     })
 );
 
@@ -174,7 +175,7 @@ export const updateCategoryFacetSortCriterion = createAction(
   'categoryFacet/updateSortCriterion',
   (payload: UpdateCategoryFacetSortCriterionActionCreatorPayload) =>
     validatePayload(payload, {
-      facetId: facetIdDefinition,
+      facetId: categoryFacetPayloadDefinition.facetId,
       criterion: new Value<CategoryFacetSortCriterion>(),
     })
 );
@@ -195,7 +196,7 @@ export const updateCategoryFacetBasePath = createAction(
   'categoryFacet/updateBasePath',
   (payload: UpdateCategoryFacetBasePathActionCreatorPayload) =>
     validatePayload(payload, {
-      facetId: facetIdDefinition,
-      basePath: new Value<string[]>(),
+      facetId: categoryFacetPayloadDefinition.facetId,
+      basePath: new ArrayValue({each: requiredNonEmptyString}),
     })
 );
