@@ -7,6 +7,7 @@ import {addAutomaticFacetGenerator} from './automatic-facet-generator-actions';
 import {
   assertCollapseAutomaticFacets,
   assertContainsAutomaticFacet,
+  assertDisplayNothing,
   assertDisplayPlaceholder,
   automaticFacetGeneratorComponent,
 } from './automatic-facet-generator-assertions';
@@ -79,5 +80,17 @@ describe('Automatic Facet Generator Test Suites', () => {
       .withoutFirstAutomaticSearch()
       .init();
     assertDisplayPlaceholder();
+  });
+
+  it('should display nothing when response is empty', () => {
+    new TestFixture()
+      .with(
+        addAutomaticFacetGenerator({
+          'desired-count': '1',
+        })
+      )
+      .withoutAutomaticFacets()
+      .init();
+    assertDisplayNothing();
   });
 });
