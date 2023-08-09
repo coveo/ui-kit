@@ -59,6 +59,8 @@ export default class QuanticRecommendationInterface extends LightningElement {
   hasRendered = false;
   /** @type {boolean} */
   ariaLiveEventsBound = false;
+  /** @type {string} */
+  analyticsOriginContext = 'quantic_recommendation';
 
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.recommendation).then(() => {
@@ -72,6 +74,9 @@ export default class QuanticRecommendationInterface extends LightningElement {
                 pipeline: this.pipeline,
                 locale: LOCALE,
                 timezone: TIMEZONE,
+                analytics: {
+                  originContext: this.analyticsOriginContext,
+                },
               },
             };
             setEngineOptions(
