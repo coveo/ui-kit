@@ -25,5 +25,5 @@ export default function SearchPage({
   const results = hydrationResult
     ? hydrationResult.controllers.resultList.state.results
     : initialState.controllers.resultList.state.results;
-  return results && <ResultList results={results}></ResultList>;
+  return <ResultList results={results}></ResultList>;
 }
