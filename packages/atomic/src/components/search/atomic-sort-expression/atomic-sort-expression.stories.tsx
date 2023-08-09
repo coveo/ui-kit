@@ -5,7 +5,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   'atomic-sort-expression',
   {label: 'Relevance', expression: 'relevancy'},
   {
-    parentElement: () => {
+    parentElement: function () {
       return document.createElement('atomic-sort-dropdown');
     },
   }
