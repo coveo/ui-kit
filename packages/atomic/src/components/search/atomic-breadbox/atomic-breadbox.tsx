@@ -5,6 +5,7 @@ import {
   FacetManager,
   FacetManagerState,
   buildFacetManager,
+  FacetValueState,
 } from '@coveo/headless';
 import {Component, h, State, Element, VNode} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
@@ -26,6 +27,7 @@ interface Breadcrumb {
   facetId: string;
   label: string;
   formattedValue: string[];
+  state?: FacetValueState;
   content?: VNode;
   deselect: () => void;
 }
@@ -174,6 +176,18 @@ export class AtomicBreadbox implements InitializableComponent {
     index: number,
     totalBreadcrumbs: number
   ) {
+    const classNames = [
+      'py-2',
+      'px-3',
+      'flex',
+      'items-center',
+      'btn-pill',
+      'group',
+    ];
+    if (breadcrumb.state === 'excluded') {
+      classNames.push('excluded-value');
+    }
+
     const fullValue = Array.isArray(breadcrumb.formattedValue)
       ? breadcrumb.formattedValue.join(SEPARATOR)
       : breadcrumb.formattedValue;
@@ -188,7 +202,7 @@ export class AtomicBreadbox implements InitializableComponent {
         <Button
           part="breadcrumb-button"
           style="outline-bg-neutral"
-          class="py-2 px-3 flex items-center btn-pill group"
+          class={classNames.join(' ')}
           title={title}
           ariaLabel={this.bindings.i18n.t('remove-filter-on', {
             value: title,
@@ -327,6 +341,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .map(({value, facetId, field}) => ({
         facetId,
         label: this.bindings.store.state.facets[facetId]?.label(),
+        state: value.value.state,
         deselect: value.deselect,
         formattedValue: [
           getFieldValueCaption(field, value.value.value, this.bindings.i18n),
@@ -356,6 +371,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .map(({value, facetId}) => ({
         facetId,
         label: this.bindings.store.state.numericFacets[facetId].label(),
+        state: value.value.state,
         deselect: value.deselect,
         formattedValue: [
           this.bindings.store.state.numericFacets[facetId].format(value.value),
@@ -375,6 +391,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .map(({value, facetId}) => ({
         facetId,
         label: this.bindings.store.state.dateFacets[facetId].label(),
+        state: value.value.state,
         deselect: value.deselect,
         formattedValue: [
           this.bindings.store.state.dateFacets[facetId].format(value.value),
@@ -390,6 +407,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .map(({value, facetId, field, label}) => ({
         facetId,
         label: this.bindings.i18n.t(label ? label : 'no-label'),
+        state: value.value.state,
         deselect: value.deselect,
         formattedValue: [
           getFieldValueCaption(field, value.value.value, this.bindings.i18n),

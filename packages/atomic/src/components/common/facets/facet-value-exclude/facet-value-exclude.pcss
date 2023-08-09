@@ -21,20 +21,3 @@
 .value-checkbox:hover + label .value-label {
   @apply text-primary;
 }
-
-/**
- * Exclude logic TODO:
- */
-.value-checkbox + label .value-exclude {
-  /* visibility: hidden; */
-  margin-left: auto;
-}
-
-.value-checkbox:focus-visible + label .value-exclude,
-.value-checkbox:hover + label .value-exclude {
-  visibility: visible;
-  &:hover,
-  &:focus-visible {
-    /* TODO: create ripple effect */
-  }
-}

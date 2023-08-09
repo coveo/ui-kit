@@ -137,6 +137,7 @@ export interface FacetValueProps {
   numberOfResults: number;
   isSelected: boolean;
   onClick(): void;
+  onExclude?(): void;
   searchQuery?: string;
   class?: string;
   part?: string;
@@ -451,6 +452,7 @@ export class FacetCommon {
             this.displayValuesAs === 'link'
               ? this.facet.facetSearch.singleSelect(value)
               : this.facet.facetSearch.select(value),
+          () => {}, // TODO:
           false,
           false,
           showLessFocus,
@@ -473,6 +475,7 @@ export class FacetCommon {
             this.displayValuesAs === 'link'
               ? this.facet.toggleSingleSelect(value)
               : this.facet.toggleSelect(value),
+          () => this.facet.toggleExclude(value),
           i === 0,
           i ===
             (this.sortCriteria === 'automatic'
@@ -487,7 +490,8 @@ export class FacetCommon {
 
   private renderValue(
     facetValue: FacetValue,
-    onClick: () => void,
+    onSelect: () => void,
+    onExclude: () => void,
     isShowLessFocusTarget: boolean,
     isShowMoreFocusTarget: boolean,
     showLessFocus: FocusTargetController,
@@ -507,7 +511,8 @@ export class FacetCommon {
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
-            onClick={onClick}
+            onClick={onSelect}
+            onExclude={onExclude}
             searchQuery={this.facet.state.facetSearch.query}
             buttonRef={(element) => {
               isShowLessFocusTarget && showLessFocus.setTarget(element);
@@ -528,7 +533,8 @@ export class FacetCommon {
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
-            onClick={onClick}
+            onClick={onSelect}
+            onExclude={onExclude}
             searchQuery={this.facet.state.facetSearch.query}
             buttonRef={(element) => {
               isShowLessFocusTarget && showLessFocus.setTarget(element);
@@ -549,7 +555,8 @@ export class FacetCommon {
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
-            onClick={onClick}
+            onClick={onSelect}
+            onExclude={onExclude}
             searchQuery={this.facet.state.facetSearch.query}
             buttonRef={(element) => {
               isShowLessFocusTarget && showLessFocus.setTarget(element);

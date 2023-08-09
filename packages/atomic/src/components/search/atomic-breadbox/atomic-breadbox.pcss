@@ -4,3 +4,10 @@
 .max-w-snippet {
   max-width: 30ch;
 }
+
+[part='breadcrumb-label'],
+[part='breadcrumb-value'] {
+  text-decoration: line-through;
+  color: var(--atomic-error);
+  /* TODO: prevent mouse hover from turning label to blue */
+}

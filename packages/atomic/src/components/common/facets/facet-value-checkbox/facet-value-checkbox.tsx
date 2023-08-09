@@ -3,6 +3,7 @@ import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/utils';
 import {Checkbox} from '../../checkbox';
 import {FacetValueProps} from '../facet-common';
+import {FacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
 
 export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
   props,
@@ -46,6 +47,13 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
             text: count,
           })}
         </span>
+        <FacetValueExclude
+          onClick={() => props.onExclude?.()}
+          part="value-exclude"
+          class="value-exclude"
+          // onMouseEnter={(e: MouseEvent) => createRipple(e, {color: 'primary'})}
+          // TODO: create ripple effect
+        ></FacetValueExclude>
       </label>
     </li>
   );
