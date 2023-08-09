@@ -6,7 +6,8 @@ import {
   hydrateInitialState,
 } from '@/src/common/engine';
 import {useEffect, useState} from 'react';
-import ResultList from './result-list';
+import {ResultList} from './result-list';
+import {SearchBox} from './search-box';
 
 export default function SearchPage({
   initialState,
@@ -22,8 +23,18 @@ export default function SearchPage({
     });
   }, [initialState]);
 
-  const results = hydrationResult
-    ? hydrationResult.controllers.resultList.state.results
-    : initialState.controllers.resultList.state.results;
-  return results && <ResultList results={results}></ResultList>;
+  return (
+    <>
+      <SearchBox
+        initialState={initialState.controllers.searchBox.state}
+        controller={hydrationResult?.controllers.searchBox}
+      />
+      <ResultList
+        results={
+          (hydrationResult ? hydrationResult : initialState).controllers
+            .resultList.state.results
+        }
+      />
+    </>
+  );
 }

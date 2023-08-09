@@ -2,7 +2,7 @@
 
 import {Result} from '@coveo/headless';
 
-export default function ResultList({results}: {results: Result[]}) {
+export function ResultList({results}: {results: Result[]}) {
   return (
     <div>
       Hydrated engine with {results?.length} results

@@ -7,6 +7,7 @@ import {
 } from '@coveo/headless';
 import {
   ControllerDefinitionWithoutProps,
+  defineSearchBox,
   defineSearchEngine,
   InferInitialState,
   InferLiveState,
@@ -35,7 +36,10 @@ const engineDefinition = defineSearchEngine({
     ...getSampleSearchEngineConfiguration(),
     analytics: {enabled: false},
   },
-  controllers: {resultList: defineCustomResultList()},
+  controllers: {
+    searchBox: defineSearchBox({options: {numberOfSuggestions: 4}}),
+    resultList: defineCustomResultList(),
+  },
 });
 
 export type SearchInitialState = InferInitialState<typeof engineDefinition>;
