@@ -1,13 +1,13 @@
-import {AutomaticFacetBuilder as HeadlessAutomaticFacetBuilder} from '@coveo/headless';
+import {AutomaticFacetGenerator as HeadlessAutomaticFacetGenerator} from '@coveo/headless';
 import {FunctionComponent, useEffect, useState} from 'react';
 import {AutomaticFacet as AutomaticFacetFn} from '../automatic-facet/automatic-facet.fn';
 
-interface AutomaticFacetBuilderProps {
-  controller: HeadlessAutomaticFacetBuilder;
+interface AutomaticFacetGeneratorProps {
+  controller: HeadlessAutomaticFacetGenerator;
 }
 
-export const AutomaticFacetBuilder: FunctionComponent<
-  AutomaticFacetBuilderProps
+export const AutomaticFacetGenerator: FunctionComponent<
+  AutomaticFacetGeneratorProps
 > = (props) => {
   const {controller} = props;
   const [state, setState] = useState(controller.state);
@@ -29,9 +29,9 @@ export const AutomaticFacetBuilder: FunctionComponent<
 
 /**
  * ```tsx
- * const props: AutomaticFacetBuilderProps = {desiredCount: 5}
- * const controller = buildAutomaticFacetBuilder(engine, props);
+ * const props: AutomaticFacetGeneratorProps = {desiredCount: 5}
+ * const controller = buildAutomaticFacetGenerator(engine, props);
  *
- * <AutomaticFacetBuilder controller={controller} />;
+ * <AutomaticFacetGenerator controller={controller} />;
  * ```
  */

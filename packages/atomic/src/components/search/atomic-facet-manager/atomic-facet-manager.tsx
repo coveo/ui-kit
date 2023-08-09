@@ -100,7 +100,7 @@ export class AtomicFacetManager implements InitializableComponent {
     const facets = children.filter(
       (child) =>
         this.isPseudoFacet(child) ||
-        child.tagName === 'ATOMIC-AUTOMATIC-FACET-BUILDER'
+        child.tagName === 'ATOMIC-AUTOMATIC-FACET-GENERATOR'
     ) as BaseFacetElement[];
 
     return facets;
