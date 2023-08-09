@@ -21,7 +21,8 @@
     "product-recommendation/",
     "product-listing/",
     "insight/",
-    "case-assist/"
+    "case-assist/",
+    "ssr/"
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
@@ -71,5 +72,8 @@
     "jest-fetch-mock": "3.0.3",
     "pad-stream": "^4.0.0",
     "ts-node": "10.9.1"
+  },
+  "engines": {
+    "node": ">=12"
   }
 }

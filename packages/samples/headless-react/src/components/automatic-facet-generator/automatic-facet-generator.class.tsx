@@ -1,26 +1,26 @@
 import {
-  buildAutomaticFacetBuilder,
-  AutomaticFacetBuilderProps,
-  AutomaticFacetBuilderState,
-  AutomaticFacetBuilder as HeadlessAutomaticFacetBuilder,
+  buildAutomaticFacetGenerator,
+  AutomaticFacetGeneratorProps,
+  AutomaticFacetGeneratorState,
+  AutomaticFacetGenerator as HeadlessAutomaticFacetGenerator,
   Unsubscribe,
 } from '@coveo/headless';
 import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {AutomaticFacet} from '../automatic-facet/automatic-facet.class';
 
-export class AutomaticFacetBuilder extends Component<
-  AutomaticFacetBuilderProps,
-  AutomaticFacetBuilderState
+export class AutomaticFacetGenerator extends Component<
+  AutomaticFacetGeneratorProps,
+  AutomaticFacetGeneratorState
 > {
   static contextType = AppContext;
   context!: ContextType<typeof AppContext>;
 
-  private controller!: HeadlessAutomaticFacetBuilder;
+  private controller!: HeadlessAutomaticFacetGenerator;
   private unsubscribe: Unsubscribe = () => {};
 
   componentDidMount() {
-    this.controller = buildAutomaticFacetBuilder(
+    this.controller = buildAutomaticFacetGenerator(
       this.context.engine!,
       this.props
     );
