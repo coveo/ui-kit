@@ -22,10 +22,10 @@
   "dependencies": {
     "@coveo/headless": "2.24.0"
   },
-  "engines": {
-    "node": ">=18"
-  },
   "peerDependencies": {
     "react": "^18"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
