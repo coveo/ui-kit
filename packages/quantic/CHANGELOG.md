@@ -1,3 +1,11 @@
+# 2.28.0 (2023-08-09)
+
+### Features
+
+- **quantic:** GEN AI source citations component created for quantic ([#3063](https://github.com/coveo/ui-kit/issues/3063)) ([399dca8](https://github.com/coveo/ui-kit/commits/399dca8c347b854e502e7a3531246e9fc1b46737))
+- **quantic:** origin context added to analytics of the recommendations components ([#3041](https://github.com/coveo/ui-kit/issues/3041)) ([f50febd](https://github.com/coveo/ui-kit/commits/f50febd894f320116ff9a7ea0874455dcb296301))
+- **quantic:** quantic generated answer component created ([#3068](https://github.com/coveo/ui-kit/issues/3068)) ([8aa4c5e](https://github.com/coveo/ui-kit/commits/8aa4c5e22418078e3b931a882861af0cdec0370a))
+
 ## 2.27.2 (2023-07-27)
 
 ### Bug Fixes
