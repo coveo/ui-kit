@@ -8,10 +8,6 @@ const functionsMocks = {
   exampleCancelPendingSelect: jest.fn(() => {}),
 };
 
-const selectors = {
-  smartSnippetAnswer: '.smart-snippet-answer',
-};
-
 const exampleAnswer =
   '<div x-test_quanticsmartsnippetanswer=""><p x-test_quanticsmartsnippetanswer="">Example smart snippet answer</p><a href="#" x-test_quanticsmartsnippetanswer="">Example inline link</a></div>';
 const exampleAnswerWithInvalidLink =
@@ -71,13 +67,17 @@ describe('c-quantic-smart-snippet-answer', () => {
     const element = createTestComponent();
     await flushPromises();
 
-    const answer = element.shadowRoot.querySelector(
-      selectors.smartSnippetAnswer
-    );
-
+    const answer = element.shadowRoot.querySelector('div > p');
     expect(answer).not.toBeNull();
+
+    const answerLink = element.shadowRoot.querySelector('div > a');
+    expect(answerLink).not.toBeNull();
+
     // eslint-disable-next-line @lwc/lwc/no-inner-html
-    expect(answer.innerHTML).toBe(exampleAnswer);
+    expect(answer.innerHTML).toEqual('Example smart snippet answer');
+
+    // eslint-disable-next-line @lwc/lwc/no-inner-html
+    expect(answerLink.innerHTML).toEqual('Example inline link');
   });
 
   describe('the analytics bindings of the inline links within the smart snippet answer', () => {
@@ -92,7 +92,7 @@ describe('c-quantic-smart-snippet-answer', () => {
         expect(action).toHaveBeenCalledTimes(1);
       });
 
-      it(`should not execute the proper action when the ${eventName} is triggered on an ivalid link`, async () => {
+      it(`should not execute the proper action when the ${eventName} is triggered on an invalid link`, async () => {
         const element = createTestComponent({
           ...defaultOptions,
           answer: exampleAnswerWithInvalidLink,
@@ -120,7 +120,6 @@ describe('c-quantic-smart-snippet-answer', () => {
       );
 
       expect(answer).not.toBeNull();
-      expect(answer).toBeTruthy();
     });
   });
 });
