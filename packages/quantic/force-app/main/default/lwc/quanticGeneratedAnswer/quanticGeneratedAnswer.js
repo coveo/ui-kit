@@ -11,9 +11,11 @@ import {
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
-import generatedAnswerTemplate from './generatedAnswer.html';
+import generatedAnswerTemplate from './templates/generatedAnswer.html';
 // @ts-ignore
-import loadingTemplate from './loading.html';
+import loadingTemplate from './templates/loading.html';
+// @ts-ignore
+import retryPromptTemplate from './templates/retryPrompt.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
@@ -182,6 +184,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   render() {
     if (this.isLoading) {
       return loadingTemplate;
+    }
+    if (this.hasRetryableError) {
+      return retryPromptTemplate;
     }
     return generatedAnswerTemplate;
   }
