@@ -7,6 +7,9 @@ export interface AutomaticFacetGeneratorOptions {
    *
    * The desired count of automatic facets.
    * Must be a positive integer.
+   *
+   * Minimum: `1`
+   * Maximum: `10`
    */
   desiredCount: number;
 
@@ -16,8 +19,8 @@ export interface AutomaticFacetGeneratorOptions {
    *
    * The desired number of automatically generated facet values.
    * Must be a positive integer.
-   *    * Minimum: `1`
    *
+   * Minimum: `1`
    * @defaultValue `8`
    */
   numberOfValues?: number;
