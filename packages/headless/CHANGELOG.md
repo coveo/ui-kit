@@ -1,3 +1,13 @@
+# 2.25.0 (2023-08-09)
+
+### Bug Fixes
+
+- **headless:** back/forward on first selection of an automatic facet ([#3062](https://github.com/coveo/ui-kit/issues/3062)) ([4b69228](https://github.com/coveo/ui-kit/commits/4b692285332fe505ee7f3231d62ef6dd094e3996))
+
+### Features
+
+- scaffold initial headless sub-package for server-side rendering utils ([#3064](https://github.com/coveo/ui-kit/issues/3064)) ([c82d62c](https://github.com/coveo/ui-kit/commits/c82d62c568292f197f67c59df5608ae998b86c4d))
+
 # 2.24.0 (2023-08-02)
 
 ### Bug Fixes

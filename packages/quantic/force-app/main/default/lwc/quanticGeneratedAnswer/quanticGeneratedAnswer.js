@@ -79,11 +79,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer = this.headless.buildGeneratedAnswer(engine);
     this.searchStatus = this.headless.buildSearchStatus(engine);
 
-    // @ts-ignore
     this.unsubscribeGeneratedAnswer = this.generatedAnswer.subscribe(() =>
       this.updateState()
     );
-
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateSearchStatusState()
     );

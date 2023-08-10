@@ -26,7 +26,7 @@ export interface ResultListCommonProps<
   loadingFlag: string;
   resultTemplateProvider: ResultTemplateProvider;
   nextNewResultTarget: FocusTargetController;
-  gridCellLinkTarget: ResultTarget;
+  gridCellLinkTarget?: ResultTarget;
   getLayoutDisplay(): ResultDisplayLayout;
   getResultDisplay(): ResultDisplayLayout;
   getDensity(): ResultDisplayDensity;

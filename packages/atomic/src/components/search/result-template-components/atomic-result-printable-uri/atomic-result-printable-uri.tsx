@@ -77,7 +77,7 @@ export class AtomicResultPrintableUri {
         <button
           aria-label={this.bindings.i18n.t('collapsed-uri-parts')}
           onClick={(e) => {
-            e.preventDefault();
+            e.stopPropagation();
             this.expandedPartFocus.focusOnNextTarget();
             this.listExpanded = true;
           }}

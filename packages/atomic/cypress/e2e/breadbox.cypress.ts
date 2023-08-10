@@ -7,7 +7,7 @@ import {
 import * as BreadboxAssertions from './breadbox-assertions';
 import {breadboxComponent, BreadboxSelectors} from './breadbox-selectors';
 import * as CommonAssertions from './common-assertions';
-import {addAutomaticFacetBuilder} from './facets/automatic-facet-builder/automatic-facet-builder-actions';
+import {addAutomaticFacetGenerator} from './facets/automatic-facet-generator/automatic-facet-generator-actions';
 import {AutomaticFacetSelectors} from './facets/automatic-facet/automatic-facet-selectors';
 import {
   addCategoryFacet,
@@ -56,7 +56,7 @@ describe('Breadbox Test Suites', () => {
       .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
       .with(addCategoryFacet())
       .with(
-        addAutomaticFacetBuilder({
+        addAutomaticFacetGenerator({
           'desired-count': '1',
           'are-collapsed': 'false',
         })
