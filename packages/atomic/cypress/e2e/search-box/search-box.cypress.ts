@@ -155,7 +155,10 @@ describe('Search Box Test Suites', () => {
 
     describe('analytics', () => {
       it('should log interface load with a correct number of results for query that return only one result', () => {
-        new TestFixture().with(setupSearchboxOnly()).withHash('q=singh').init();
+        new TestFixture()
+          .with(setupSearchboxOnly())
+          .withHash('q=singhr')
+          .init();
 
         cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
           expect(analyticsBody.numberOfResults).to.equal(1);
@@ -166,7 +169,7 @@ describe('Search Box Test Suites', () => {
         new TestFixture()
           .with(setupSearchboxOnly())
           .with(addResultList())
-          .withHash('q=singh')
+          .withHash('q=singhr')
           .init();
 
         cy.expectSearchEvent('interfaceLoad').should((analyticsBody) => {
@@ -203,7 +206,10 @@ describe('Search Box Test Suites', () => {
       });
 
       it('should log search box submit with a correct number of results when the query changes', () => {
-        new TestFixture().with(setupSearchboxOnly()).withHash('q=singh').init();
+        new TestFixture()
+          .with(setupSearchboxOnly())
+          .withHash('q=singhr')
+          .init();
 
         SearchBoxSelectors.inputBox().clear();
         SearchBoxSelectors.inputBox().type('test', {force: true, delay: 100});
@@ -422,7 +428,6 @@ describe('Search Box Test Suites', () => {
 
         it('correctly hides recent queries when there is a match and there is a duplicate', () => {
           setupDuplicateRecentQueriesAndSuggestions();
-          // eslint-disable-next-line @cspell/spellchecker
           SearchBoxSelectors.inputBox().type('dupl');
           SearchBoxSelectors.recentQueriesItem().should('have.length', 0);
         });
@@ -607,7 +612,6 @@ describe('Search Box Test Suites', () => {
     });
 
     it('uses the query syntax', () => {
-      // eslint-disable-next-line @cspell/spellchecker
       SearchBoxSelectors.inputBox().type('@urihash=Wl1SZoqFsR8bpsbG');
       SearchBoxSelectors.submitButton().click();
       ResultTextSelectors.firstInResult().should('have.text', 'bushy lichens');
