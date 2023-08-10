@@ -70,9 +70,7 @@ export function buildAutomaticFacetGenerator(
   }
 
   const {dispatch} = engine;
-  console.log(props.options);
   const options = buildOptions(props.options);
-  console.log(options);
   dispatch(setOptions(options));
 
   const controller = buildController(engine);
