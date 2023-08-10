@@ -1,5 +1,5 @@
 import {configuration} from '../../../app/common-reducers';
-import {setDesiredCount} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
+import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {MockSearchEngine, buildMockSearchAppEngine} from '../../../test';
@@ -15,7 +15,7 @@ describe('automatic facets', () => {
   let props: AutomaticFacetGeneratorProps;
 
   beforeEach(() => {
-    props = {desiredCount: 5};
+    props = {options: {desiredCount: 5, numberOfValues: 6}};
     engine = buildMockSearchAppEngine();
     automaticFacets = buildAutomaticFacetGenerator(engine, props);
   });
@@ -28,8 +28,8 @@ describe('automatic facets', () => {
     });
   });
 
-  it('should dispatch #setDesiredCount', () => {
-    expect(engine.actions).toContainEqual(setDesiredCount(props.desiredCount));
+  it('should dispatch #setOptions', () => {
+    expect(engine.actions).toContainEqual(setOptions(props.options));
   });
 
   it('should return automatic facets as empty array if the response is empty', () => {
