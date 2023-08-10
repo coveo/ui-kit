@@ -1,5 +1,5 @@
-import {configuration} from '../../../app/common-reducers';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import { configuration } from '../../../app/common-reducers';
+import { updateFacetOptions } from '../../../features/facet-options/facet-options-actions';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
@@ -7,29 +7,30 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
-import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
+import { categoryFacetSetReducer as categoryFacetSet } from '../../../features/facets/category-facet-set/category-facet-set-slice';
+import { defaultCategoryFacetOptions } from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/interfaces/request';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import { CategoryFacetResponse } from '../../../features/facets/category-facet-set/interfaces/response';
+import { categoryFacetSearchSetReducer as categoryFacetSearchSet } from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {SearchAppState} from '../../../state/search-app-state';
+import { searchReducer as search } from '../../../features/search/search-slice';
+import { SearchAppState } from '../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
 } from '../../../test';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
-import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
+import { buildMockCategoryFacetRequest } from '../../../test/mock-category-facet-request';
+import { buildMockCategoryFacetResponse } from '../../../test/mock-category-facet-response';
+import { buildMockCategoryFacetSearch } from '../../../test/mock-category-facet-search';
+import { buildMockCategoryFacetSlice } from '../../../test/mock-category-facet-slice';
+import { buildMockCategoryFacetValue } from '../../../test/mock-category-facet-value';
 import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
 import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
 import {
@@ -39,27 +40,27 @@ import {
 } from './headless-category-facet';
 
 describe('category facet', () => {
-  const facetId = '1';
+  const facetId = 'categoryhierarchy';
   let options: CategoryFacetOptions;
   let state: SearchAppState;
   let engine: MockSearchEngine;
   let categoryFacet: CategoryFacet;
 
   function initCategoryFacet() {
-    engine = buildMockSearchAppEngine({state});
-    categoryFacet = buildCategoryFacet(engine, {options});
+    engine = buildMockSearchAppEngine({ state });
+    categoryFacet = buildCategoryFacet(engine, { options });
   }
 
   function setFacetRequest(config: Partial<CategoryFacetRequest> = {}) {
-    const request = buildMockCategoryFacetRequest({facetId, ...config});
-    state.categoryFacetSet[facetId] = buildMockCategoryFacetSlice({request});
+    const request = buildMockCategoryFacetRequest({ facetId, ...config });
+    state.categoryFacetSet[facetId] = buildMockCategoryFacetSlice({ request });
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
 
   beforeEach(() => {
     options = {
       facetId,
-      field: 'geography',
+      field: 'ec_category',
     };
 
     state = createMockState();
@@ -125,7 +126,7 @@ describe('category facet', () => {
   it(`when the search response has a category facet with a single level of values,
   #state.values contains the same values`, () => {
     const values = [buildMockCategoryFacetValue()];
-    const response = buildMockCategoryFacetResponse({facetId, values});
+    const response = buildMockCategoryFacetResponse({ facetId, values });
 
     state.search.response.facets = [response];
     expect(categoryFacet.state.values).toBe(values);
@@ -133,8 +134,8 @@ describe('category facet', () => {
 
   describe('when the search response has a category facet with nested values', () => {
     const innerValues = [
-      buildMockCategoryFacetValue({value: 'C'}),
-      buildMockCategoryFacetValue({value: 'D'}),
+      buildMockCategoryFacetValue({ value: 'C' }),
+      buildMockCategoryFacetValue({ value: 'D' }),
     ];
     const middleValue = buildMockCategoryFacetValue({
       value: 'B',
@@ -166,7 +167,115 @@ describe('category facet', () => {
     });
   });
 
-  describe.skip('when the search response has a category facet with nested values *and* non-nested values', () => {});
+  describe('when the search response has a category facet with nested values *and* non-nested values', () => {
+    buildMockCategoryFacetValue
+    
+    beforeEach(() => {
+      const response: CategoryFacetResponse =
+      {
+        "facetId": "categoryhierarchy",
+        "field": "ec_category",
+        "moreValuesAvailable": false,
+        "values": [
+          {
+            "value": "Clothing",
+            "state": "selected",
+            "numberOfResults": 813,
+            "isAutoSelected": true,
+            "children": [
+              {
+                "value": "Workwear - Men's Shirts",
+                "state": "idle",
+                "numberOfResults": 305,
+                "children": [],
+                "path": [
+                  "Clothing",
+                  "Workwear - Men's Shirts"
+                ],
+                "isLeafValue": false
+              },
+              {
+                "value": "Corporate - Shirts/Blouses",
+                "state": "idle",
+                "numberOfResults": 196,
+                "children": [],
+                "path": [
+                  "Clothing",
+                  "Corporate - Shirts/Blouses"
+                ],
+                "isLeafValue": false
+              },
+              {
+                "value": "Corporate - Polo/T-Shirts",
+                "state": "idle",
+                "numberOfResults": 86,
+                "children": [],
+                "path": [
+                  "Clothing",
+                  "Corporate - Polo/T-Shirts"
+                ],
+                "isLeafValue": false
+              },
+              {
+                "value": "Workwear - Men's Polo/T-Shirt",
+                "state": "idle",
+                "numberOfResults": 81,
+                "children": [],
+                "path": [
+                  "Clothing",
+                  "Workwear - Men's Polo/T-Shirt"
+                ],
+                "isLeafValue": false
+              },
+              {
+                "value": "Workwear - Women's Shirts",
+                "state": "idle",
+                "numberOfResults": 69,
+                "children": [],
+                "path": [
+                  "Clothing",
+                  "Workwear - Women's Shirts"
+                ],
+                "isLeafValue": false
+              },
+              {
+                "value": "Specialised FR - Shirts",
+                "state": "idle",
+                "numberOfResults": 48,
+                "children": [],
+                "path": [
+                  "Clothing",
+                  "Specialised FR - Shirts"
+                ],
+                "isLeafValue": false
+              }
+            ],
+            "path": [
+              "Clothing"
+            ],
+            "isLeafValue": false
+          },
+          {
+            "value": "Hygiene & Cleaning",
+            "state": "idle",
+            "numberOfResults": 3,
+            "children": [],
+            "path": [
+              "Hygiene & Cleaning"
+            ],
+            "isLeafValue": false
+          }
+        ],
+        "indexScore": 0.2942857142857143
+      }
+      state.search.response.facets = [response];
+    });
+
+    it('show me the state', () => {
+      expect(JSON.stringify(categoryFacet.state, null, 2)).toBe("");
+    })
+  });
+
   describe('when the category facet has a selected leaf value with no children', () => {
     const selectedValue = buildMockCategoryFacetValue({
       value: 'A',
@@ -193,7 +302,7 @@ describe('category facet', () => {
 
   describe('#toggleSelect', () => {
     it('dispatches #toggleCategoryFacetValue with the passed selection', () => {
-      const selection = buildMockCategoryFacetValue({value: 'A'});
+      const selection = buildMockCategoryFacetValue({ value: 'A' });
       categoryFacet.toggleSelect(selection);
 
       const action = toggleSelectCategoryFacetValue({
@@ -207,7 +316,7 @@ describe('category facet', () => {
     it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retrieveCount', () => {
       options.numberOfValues = 10;
       initCategoryFacet();
-      const selection = buildMockCategoryFacetValue({value: 'A'});
+      const selection = buildMockCategoryFacetValue({ value: 'A' });
       categoryFacet.toggleSelect(selection);
 
       const action = toggleSelectCategoryFacetValue({
@@ -219,14 +328,14 @@ describe('category facet', () => {
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      const selection = buildMockCategoryFacetValue({value: 'A'});
+      const selection = buildMockCategoryFacetValue({ value: 'A' });
       categoryFacet.toggleSelect(selection);
 
       expect(engine.actions).toContainEqual(updateFacetOptions());
     });
 
     it('executes a search', () => {
-      const selection = buildMockCategoryFacetValue({value: 'A'});
+      const selection = buildMockCategoryFacetValue({ value: 'A' });
       categoryFacet.toggleSelect(selection);
 
       const action = engine.actions.find(
@@ -259,15 +368,15 @@ describe('category facet', () => {
 
   describe('#state.hasActiveValues', () => {
     it('when there is a selected value, it is true', () => {
-      const values = [buildMockCategoryFacetValue({state: 'selected'})];
-      const response = buildMockCategoryFacetResponse({facetId, values});
+      const values = [buildMockCategoryFacetValue({ state: 'selected' })];
+      const response = buildMockCategoryFacetResponse({ facetId, values });
       state.search.response.facets = [response];
 
       expect(categoryFacet.state.hasActiveValues).toBe(true);
     });
 
     it('when nothing is selected, it is false', () => {
-      const response = buildMockCategoryFacetResponse({facetId});
+      const response = buildMockCategoryFacetResponse({ facetId });
       state.search.response.facets = [response];
 
       expect(categoryFacet.state.hasActiveValues).toBe(false);
@@ -349,7 +458,7 @@ describe('category facet', () => {
             children: [nestedChild],
           }),
         ];
-        const response = buildMockCategoryFacetResponse({facetId, values});
+        const response = buildMockCategoryFacetResponse({ facetId, values });
 
         state.search.response.facets = [response];
         expect(categoryFacet.state.canShowMoreValues).toBe(true);
@@ -368,7 +477,7 @@ describe('category facet', () => {
 
       const value = buildMockCategoryFacetValue();
       const values = [value, value];
-      const response = buildMockCategoryFacetResponse({facetId, values});
+      const response = buildMockCategoryFacetResponse({ facetId, values });
       state.search.response.facets = [response];
 
       expect(categoryFacet.state.canShowLessValues).toBe(true);
@@ -388,7 +497,7 @@ describe('category facet', () => {
 
     it('with a value, it dispatches #updateCategoryFacetNumberOfResults with the correct number of values', () => {
       const values = [buildMockCategoryFacetValue()];
-      const response = buildMockCategoryFacetResponse({facetId, values});
+      const response = buildMockCategoryFacetResponse({ facetId, values });
       state.search.response.facets = [response];
 
       initCategoryFacet();

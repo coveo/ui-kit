@@ -25,8 +25,8 @@ export interface CategoryFacetValue {
   /**
    * Whether more facet values are available.
    * */
-  moreValuesAvailable: boolean;
-
+  moreValuesAvailable?: boolean;
+  isAutoSelected?: boolean;
   /**
    * The facet value.
    * */

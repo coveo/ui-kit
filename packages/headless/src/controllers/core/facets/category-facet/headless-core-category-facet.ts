@@ -358,7 +358,7 @@ export function buildCoreCategoryFacet(
       const hasActiveValues = parents.length !== 0;
       const canShowMoreValues =
         parents.length > 0
-          ? parents[parents.length - 1].moreValuesAvailable
+          ? parents[parents.length - 1].moreValuesAvailable ?? false
           : response?.moreValuesAvailable || false;
       const canShowLessValues = values.length > options.numberOfValues;
 
