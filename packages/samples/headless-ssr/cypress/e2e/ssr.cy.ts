@@ -51,6 +51,7 @@ describe('headless ssr example', () => {
     const VITALS_THRESHOLD = {
       thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20},
     };
+    cy.visit('/');
     cy.vitals(VITALS_THRESHOLD);
   });
 });
