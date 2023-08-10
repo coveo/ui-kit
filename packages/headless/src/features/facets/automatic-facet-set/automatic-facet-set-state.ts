@@ -24,6 +24,7 @@ export type AutomaticFacetSetState = {
 export function getAutomaticFacetSetInitialState(): AutomaticFacetSetState {
   return {
     desiredCount: 1,
+    numberOfValues: 8,
     set: {},
   };
 }
