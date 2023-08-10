@@ -8,17 +8,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/cache@v3
-      # https://nextjs.org/docs/pages/building-your-application/deploying/ci-build-caching
-      with:
-        path: |
-          ~/.npm
-          ${{ github.workspace }}/.next/cache
-        # Generate a new cache whenever packages or source files change.
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
-        # If source files changed but packages didn't, rebuild from a prior cache.
-        restore-keys: |
-          ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
