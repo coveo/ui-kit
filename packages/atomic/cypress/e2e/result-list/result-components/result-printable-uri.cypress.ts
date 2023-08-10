@@ -5,6 +5,7 @@ import {
 } from '../../../fixtures/test-fixture';
 import * as CommonAssertions from '../../common-assertions';
 import {
+  addGridResultList,
   addResultList,
   buildTemplateWithoutSections,
 } from '../result-list-actions';
@@ -47,9 +48,7 @@ describe('Result Printable Uri Component', () => {
     });
 
     CommonAssertions.assertConsoleError();
-    CommonAssertions.assertRemovesComponent(() =>
-      cy.get(resultPrintableUriComponent)
-    );
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the "max-number-of-parts" prop is not a number', () => {
@@ -68,9 +67,7 @@ describe('Result Printable Uri Component', () => {
     });
 
     CommonAssertions.assertConsoleError();
-    CommonAssertions.assertRemovesComponent(
-      ResultPrintableUriSelectors.firstInResult
-    );
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the "max-number-of-parts" prop is less than 3', () => {
@@ -89,9 +86,7 @@ describe('Result Printable Uri Component', () => {
     });
 
     CommonAssertions.assertConsoleError();
-    CommonAssertions.assertRemovesComponent(() =>
-      cy.get(resultPrintableUriComponent)
-    );
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when there is no "parents" property in the result object', () => {
@@ -128,7 +123,8 @@ describe('Result Printable Uri Component', () => {
 
   describe('when there is a "parents" property in the result object and "max-number-of-parts" is 3', () => {
     const addResultListWithPrintableUri =
-      (children?: HTMLElement[]) => (fixture: TestFixture) => {
+      (children?: HTMLElement[], grid = false) =>
+      (fixture: TestFixture) => {
         const printableUriEl = generateComponentHTML(
           resultPrintableUriComponent,
           {
@@ -137,7 +133,9 @@ describe('Result Printable Uri Component', () => {
         );
         children?.forEach((slot) => printableUriEl.appendChild(slot));
         fixture.with(
-          addResultList(buildTemplateWithoutSections([printableUriEl]))
+          grid
+            ? addGridResultList(buildTemplateWithoutSections([printableUriEl]))
+            : addResultList(buildTemplateWithoutSections([printableUriEl]))
         );
       };
 
@@ -218,6 +216,25 @@ describe('Result Printable Uri Component', () => {
         ResultPrintableUriSelectors.links()
           .should('have.attr', 'download', 'test')
           .should('have.attr', 'target', '_self');
+      });
+    });
+
+    describe('when rendered within a grid result', () => {
+      beforeEach(() => {
+        new TestFixture()
+          .with(addResultListWithPrintableUri(undefined, true))
+          .with(addUriParentsInResponse(4))
+          .init();
+      });
+
+      describe('after clicking on the ellipsis', () => {
+        beforeEach(() => {
+          ResultPrintableUriSelectors.ellipsisButton().click();
+        });
+
+        ResultPrintableUriAssertions.assertFocusLink(1);
+        ResultPrintableUriAssertions.assertDisplayEllipsis(false);
+        ResultPrintableUriAssertions.assertDisplayParentsCount(4);
       });
     });
   });

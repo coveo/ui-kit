@@ -202,6 +202,19 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
         }
       );
     },
+
+    logRetryGeneratedAnswer(streamId: string) {
+      logCustomGeneratedAnswerEvent(
+        InterceptAliases.UA.GeneratedAnswer.RetryGeneratedAnswer,
+        (analyticsBody: {customData: object; eventType: string}) => {
+          const customData = analyticsBody?.customData;
+          expect(customData).to.have.property(
+            'generativeQuestionAnsweringId',
+            streamId
+          );
+        }
+      );
+    },
   };
 }
 

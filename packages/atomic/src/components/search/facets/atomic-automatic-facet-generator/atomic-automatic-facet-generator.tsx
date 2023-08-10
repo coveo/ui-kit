@@ -1,8 +1,9 @@
-import {BooleanValue, NumberValue, Schema} from '@coveo/bueno';
+import {BooleanValue, Schema} from '@coveo/bueno';
 import {
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorState,
   SearchStatus,
+  SearchStatusState,
   buildAutomaticFacetGenerator,
   buildSearchStatus,
 } from '@coveo/headless';
@@ -33,12 +34,15 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
 
+  public automaticFacetGenerator!: AutomaticFacetGenerator;
   @BindStateToController('automaticFacetGenerator')
   @State()
   private automaticFacetGeneratorState!: AutomaticFacetGeneratorState;
 
-  public automaticFacetGenerator!: AutomaticFacetGenerator;
   public searchStatus!: SearchStatus;
+  @BindStateToController('searchStatus')
+  @State()
+  public searchStatusState!: SearchStatusState;
 
   /**
    * @beta - This prop is part of the automatic facets feature.
@@ -70,10 +74,8 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
 
   private validateProps() {
     new Schema({
-      desiredCount: new NumberValue({min: 1, required: true}),
       areCollapsed: new BooleanValue({default: true, required: false}),
     }).validate({
-      desiredCount: this.desiredCount,
       areCollapsed: this.areCollapsed,
     });
   }
