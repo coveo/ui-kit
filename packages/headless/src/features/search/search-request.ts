@@ -66,6 +66,7 @@ export const buildSearchRequest = async (
     ...(state.automaticFacetSet && {
       generateAutomaticFacets: {
         desiredCount: state.automaticFacetSet.desiredCount,
+        numberOfValues: state.automaticFacetSet.numberOfValues,
         currentFacets: automaticFacets,
       },
     }),

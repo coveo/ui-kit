@@ -1,7 +1,7 @@
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {setDesiredCount} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
+import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {
@@ -18,7 +18,12 @@ import {
   AutomaticFacet,
   buildAutomaticFacet,
 } from '../automatic-facet/headless-automatic-facet';
+import {
+  AutomaticFacetGeneratorOptions,
+  buildOptions,
+} from './headless-automatic-facet-generator-options';
 
+export type {AutomaticFacetGeneratorOptions};
 /**
  * The `AutomaticFacetGenerator` headless controller offers a high-level interface for rendering automatic facets.
  */
@@ -41,13 +46,9 @@ export interface AutomaticFacetGeneratorState {
 
 export interface AutomaticFacetGeneratorProps {
   /**
-   * @beta - This property is part of the automatic facets feature.
-   * Automatic facets are currently in beta testing and should be available soon.
-   *
-   * The desired count of automatic facets.
-   * Must be a positive integer.
-   */
-  desiredCount: number;
+   * The options for the `AutomaticFacetGenerator` controller.
+   * */
+  options: AutomaticFacetGeneratorOptions;
 }
 
 /**
@@ -67,8 +68,12 @@ export function buildAutomaticFacetGenerator(
   if (!loadAutomaticFacetGeneratorReducers(engine)) {
     throw loadReducerError;
   }
+
   const {dispatch} = engine;
-  dispatch(setDesiredCount(props.desiredCount));
+  console.log(props.options);
+  const options = buildOptions(props.options);
+  console.log(options);
+  dispatch(setOptions(options));
 
   const controller = buildController(engine);
 

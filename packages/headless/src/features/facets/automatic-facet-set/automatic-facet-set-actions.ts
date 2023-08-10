@@ -1,5 +1,6 @@
 import {NumberValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options';
 import {
   requiredNonEmptyString,
   validatePayload,
@@ -10,6 +11,8 @@ import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {
   DESIRED_COUNT_MAXIMUM,
   DESIRED_COUNT_MINIMUM,
+  NUMBER_OF_VALUE_DEFAULT,
+  NUMBER_OF_VALUE_MINIMUM,
 } from './automatic-facet-set-constants';
 
 export interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
@@ -23,14 +26,22 @@ export interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
    */
   selection: FacetValue;
 }
-
+const numberOfValuesDefinition = new NumberValue({
+  min: NUMBER_OF_VALUE_MINIMUM,
+  default: NUMBER_OF_VALUE_DEFAULT,
+});
 const desiredCountDefinition = new NumberValue({
   min: DESIRED_COUNT_MINIMUM,
   max: DESIRED_COUNT_MAXIMUM,
 });
-export const setDesiredCount = createAction(
-  'automaticFacet/setDesiredCount',
-  (payload: number) => validatePayload(payload, desiredCountDefinition)
+const optionsSchema = {
+  desiredCount: desiredCountDefinition,
+  numberOfValues: numberOfValuesDefinition,
+};
+export const setOptions = createAction(
+  'automaticFacet/setOptions',
+  (payload: AutomaticFacetGeneratorOptions) =>
+    validatePayload(payload, optionsSchema)
 );
 
 export const deselectAllAutomaticFacetValues = createAction(
