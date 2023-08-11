@@ -187,6 +187,14 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private renderFilters() {
+    const isFacetElements = this.bindings.store.getFacetElements().length > 0;
+    const isAutomaticFacets =
+      this.bindings.engine.state.automaticFacetSet?.set !== undefined;
+
+    if (!isFacetElements && !isAutomaticFacets) {
+      return;
+    }
+
     return (
       <Fragment>
         <div
