@@ -187,12 +187,6 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private renderFilters() {
-    const isFacetElements = this.bindings.store.getFacetElements().length > 0;
-
-    if (!isFacetElements) {
-      return;
-    }
-
     return (
       <Fragment>
         <div
