@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "npm run test:relay-node",
+    "test:relay-node": "node ./tests/relay-node.js && node ./tests/relay-node.mjs"
   },
   "dependencies": {
+    "@coveo/relay": "workspace:*",
     "next": "^13.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

@@ -2,6 +2,26 @@
   "name": "@coveo/relay",
   "version": "0.0.5",
   "description": "A library for sending analytics events using Coveo's Event protocol.",
+  "files": [
+    "lib/**/*"
+  ],
+  "types": "./lib/cjs/types/relay.d.ts",
+  "exports": {
+    "node": {
+      "import": {
+        "types": "./lib/esm/types/relay.d.ts",
+        "default": "./lib/esm/relay.mjs"
+      },
+      "require": {
+        "types": "./lib/cjs/types/relay.d.ts",
+        "default": "./lib/cjs/relay.js"
+      }
+    },
+    "default": {
+      "types": "./lib/esm/types/relay.d.ts",
+      "default": "./lib/esm/relay.js"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/relay.git"
@@ -18,14 +38,20 @@
   },
   "homepage": "https://github.com/coveo/relay#readme",
   "scripts": {
+    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "build:esm": "rollup --config ./config/rollup.config.mjs",
+    "build:cjs": "tsc -p ./config/tsconfig.cjs.json",
+    "clean": "rm -rf ./lib",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.2",
     "@types/jest": "^29.5.3",
     "eslint-config-custom": "workspace:*",
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2",
+    "rollup": "^3.28.0",
     "ts-jest": "^29.1.1",
     "tsconfig": "workspace:*",
     "typescript": "^5.1.6"
