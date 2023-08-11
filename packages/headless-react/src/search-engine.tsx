@@ -15,7 +15,7 @@ import {
   useSyncExternalStore,
 } from 'react';
 import {
-  ContextLiveState,
+  ContextCSRState,
   ContextState,
   ControllerHook,
   InferControllerHooksMapFromDefinition,
@@ -26,12 +26,12 @@ function capitalize(s: string) {
   return `${s.slice(0, 1).toUpperCase()}${s.slice(1)}`;
 }
 
-function isLiveContext<
+function isCSRContext<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 >(
   ctx: Exclude<ContextState<TEngine, TControllers>, null>
-): ctx is ContextLiveState<TEngine, TControllers> {
+): ctx is ContextCSRState<TEngine, TControllers> {
   return 'engine' in ctx;
 }
 
@@ -46,25 +46,20 @@ function buildControllerHook<
   return () => {
     const ctx = useContext(context);
     if (ctx === null) {
-      throw 'Missing initial state or live provider.';
+      throw 'Missing SSR state or CSR provider.';
     }
     const subscribe = useCallback(
       (listener: () => void) =>
-        isLiveContext(ctx)
-          ? ctx.controllers[key].subscribe(listener)
-          : () => {},
+        isCSRContext(ctx) ? ctx.controllers[key].subscribe(listener) : () => {},
       [ctx]
     );
-    const getInitialState = useCallback(
-      () => ctx.controllers[key].state,
-      [ctx]
-    );
+    const getSSRState = useCallback(() => ctx.controllers[key].state, [ctx]);
     // TODO: Eval need for `useSyncMemoizedStore() instead of useSyncExternalStore()`
-    // const state = useSyncMemoizedStore(subscribe, getInitialState);
+    // const state = useSyncMemoizedStore(subscribe, getSSRState);
     // TODO: Eval `getServerSnapshot()` of `useSyncExternalStore`
-    const state = useSyncExternalStore(subscribe, getInitialState);
+    const state = useSyncExternalStore(subscribe, getSSRState);
     const methods = useMemo(() => {
-      if (!isLiveContext(ctx)) {
+      if (!isCSRContext(ctx)) {
         return undefined;
       }
       const controller = ctx.controllers[key];
@@ -89,9 +84,9 @@ export function defineSearchEngine<
     useEngine() {
       const ctx = useContext(context);
       if (ctx === null) {
-        throw 'Missing initial state or live provider.';
+        throw 'Missing SSR state or CSR provider.';
       }
-      return isLiveContext(ctx) ? ctx.engine : undefined;
+      return isCSRContext(ctx) ? ctx.engine : undefined;
     },
     controllers: (options.controllers
       ? Object.fromEntries(
@@ -101,11 +96,11 @@ export function defineSearchEngine<
           ])
         )
       : {}) as InferControllerHooksMapFromDefinition<TControllers>,
-    InitialStateProvider: ({controllers, children}) => {
+    SSRStateProvider: ({controllers, children}) => {
       const {Provider} = context;
       return <Provider value={{controllers}}>{children}</Provider>;
     },
-    LiveProvider: ({controllers, engine, children}) => {
+    CSRProvider: ({controllers, engine, children}) => {
       const {Provider} = context;
       return <Provider value={{engine, controllers}}>{children}</Provider>;
     },

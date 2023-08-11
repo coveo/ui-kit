@@ -7,18 +7,18 @@ import {
 import {InferControllerFromDefinition} from '@coveo/headless/dist/definitions/app/ssr-engine/types/common';
 import {
   ControllerDefinitionsMap,
-  InferControllersMapFromDefinition,
-  InferControllerInitialStateMapFromDefinitions,
+  InferControllersMapFromDefinition, // TODO: Rename Initial/Live to SSR/CSR in headless/ssr package
+  InferControllerInitialStateMapFromDefinitions as InferControllerSSRStateMapFromDefinitions,
   EngineDefinition,
 } from '@coveo/headless/ssr';
 import {FunctionComponent, PropsWithChildren} from 'react';
 
-export type ContextInitialState<
+export type ContextSSRState<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-> = {controllers: InferControllerInitialStateMapFromDefinitions<TControllers>};
+> = {controllers: InferControllerSSRStateMapFromDefinitions<TControllers>};
 
-export type ContextLiveState<
+export type ContextCSRState<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 > = {
@@ -30,8 +30,8 @@ export type ContextState<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 > =
-  | ContextInitialState<TEngine, TControllers>
-  | ContextLiveState<TEngine, TControllers>
+  | ContextSSRState<TEngine, TControllers>
+  | ContextCSRState<TEngine, TControllers>
   | null;
 
 export type ControllerHook<TController extends Controller> = () => {
@@ -54,12 +54,12 @@ export type ReactEngineDefinition<
 > = EngineDefinition<TEngine, TControllers, TEngineOptions> & {
   controllers: InferControllerHooksMapFromDefinition<TControllers>;
   useEngine(): TEngine | undefined;
-  InitialStateProvider: FunctionComponent<
+  SSRStateProvider: FunctionComponent<
     PropsWithChildren<{
-      controllers: InferControllerInitialStateMapFromDefinitions<TControllers>;
+      controllers: InferControllerSSRStateMapFromDefinitions<TControllers>;
     }>
   >;
-  LiveProvider: FunctionComponent<
+  CSRProvider: FunctionComponent<
     PropsWithChildren<{
       engine: TEngine;
       controllers: InferControllersMapFromDefinition<TControllers>;
