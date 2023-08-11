@@ -18,12 +18,14 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc --build",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch --colors --no-cache"
   },
   "dependencies": {
     "@coveo/headless": "2.24.0"
   },
   "devDependencies": {
+    "@testing-library/react": "14.0.0",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "@typescript-eslint/eslint-plugin": "6.3.0",
