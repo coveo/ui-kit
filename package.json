@@ -4,14 +4,19 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{js,ts,tsx,json,md,yml}\"",
+    "format": "prettier --write \"**/*.{js,mjs,ts,tsx,json,md,yml}\"",
     "test": "turbo run test",
+    "version-bump": "node ./scripts/version-bump.mjs",
     "publish:npm": "echo \"publish packages\""
   },
   "devDependencies": {
+    "@actions/github": "^5.1.1",
+    "@coveo/semantic-monorepo-tools": "^2.1.9",
+    "conventional-changelog-angular": "^6.0.0",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
     "prettier": "^2.5.1",
+    "ts-dedent": "^2.2.0",
     "turbo": "latest"
   },
   "name": "relay",
