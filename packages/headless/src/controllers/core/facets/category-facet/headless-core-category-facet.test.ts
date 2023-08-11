@@ -295,7 +295,7 @@ describe('category facet', () => {
         expect(categoryFacet.state.canShowMoreValues).toBe(true);
       });
 
-      it('if #moreValuesAvailable is true, #state.canShowMore is true', () => {
+      it('if #moreValuesAvailable is false, #state.canShowMore is false', () => {
         const values = [
           buildMockCategoryFacetValue({
             numberOfResults: 10,
