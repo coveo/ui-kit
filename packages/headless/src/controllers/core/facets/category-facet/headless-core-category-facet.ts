@@ -141,10 +141,28 @@ export interface CoreCategoryFacetState {
   /** The facet ID. */
   facetId: string;
 
-  /** The facet's parent values. */
+  /**
+   * The facet's values, represented in their hierarchical form
+   * if there's an hierarchy, flat otherwise.
+   */
+  valuesAsTrees: CategoryFacetValue[];
+
+  /**
+   * Whether `valuesAsTree` contains hierarchical values, or flat values.
+   */
+  isHierarchical: boolean;
+
+  /**
+   * The facet's parent values.
+   * @deprecated uses `valuesAsTrees` instead.
+   *
+   */
   parents: CategoryFacetValue[];
 
-  /** The facet's values. */
+  /**
+   * The facet's values.
+   * @deprecated use `valuesAsTrees` instead.
+   */
   values: CategoryFacetValue[];
 
   /** The facet's active `sortCriterion`. */
@@ -353,19 +371,35 @@ export function buildCoreCategoryFacet(
       const response = getResponse();
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();
-
+      const valuesAsTrees = response?.values ?? [];
+      const isHierarchical =
+        valuesAsTrees.some((value) => value.children.length > 0) ?? false;
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
-      const hasActiveValues = parents.length !== 0;
+      let selectedValue: CategoryFacetValue | undefined = undefined;
+      const valueToVisit = [...valuesAsTrees];
+      while (valueToVisit.length > 0) {
+        const currentValue = valueToVisit.pop()!;
+        if (currentValue.state === 'selected') {
+          selectedValue = currentValue;
+          break;
+        }
+        valueToVisit.push(...currentValue.children);
+      }
+      const hasActiveValues = !!selectedValue;
       const canShowMoreValues =
-        parents.length > 0
-          ? parents[parents.length - 1].moreValuesAvailable
-          : response?.moreValuesAvailable || false;
-      const canShowLessValues = values.length > options.numberOfValues;
+        (isHierarchical
+          ? selectedValue?.moreValuesAvailable
+          : response?.moreValuesAvailable) ?? false;
+      const canShowLessValues = isHierarchical
+        ? (selectedValue?.children.length ?? -1) > values.length
+        : values.length > options.numberOfValues;
 
       return {
         facetId,
         parents,
         values,
+        isHierarchical,
+        valuesAsTrees,
         isLoading,
         hasActiveValues,
         canShowMoreValues,
