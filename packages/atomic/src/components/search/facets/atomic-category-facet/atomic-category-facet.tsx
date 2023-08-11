@@ -7,35 +7,21 @@ import {
   SearchStatus,
   SearchStatusState,
   buildSearchStatus,
-  CategoryFacetValue,
   buildFacetConditionsManager,
   FacetConditionsManager,
 } from '@coveo/headless';
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  Element,
-  Fragment,
-  VNode,
-} from '@stencil/core';
-import LeftArrow from '../../../../images/arrow-left-rounded.svg';
+import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
-import {
-  getFieldCaptions,
-  getFieldValueCaption,
-} from '../../../../utils/field-utils';
+import {getFieldCaptions} from '../../../../utils/field-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
-import {Button} from '../../../common/button';
 import {
   parseDependsOn,
   validateDependsOn,
@@ -53,14 +39,13 @@ import {
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
-import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
-import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {initializePopover} from '../atomic-popover/popover-type';
 import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
 import {FlatCategoryFacet} from './value-rendering/flat';
+import {HierarchicalCategoryFacet} from './value-rendering/hierarchical';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -375,126 +360,6 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderAllCategoriesButton() {
-    const allCategories = this.bindings.i18n.t('all-categories');
-    return (
-      <Button
-        style="text-neutral"
-        part="all-categories-button"
-        onClick={() => {
-          this.focusTargets.activeValueFocus.focusAfterSearch();
-          this.facet.deselectAll();
-        }}
-      >
-        <atomic-icon
-          aria-hidden="true"
-          icon={LeftArrow}
-          part="back-arrow"
-        ></atomic-icon>
-        <span class="truncate">{allCategories}</span>
-      </Button>
-    );
-  }
-
-  private renderWithHierarchy() {
-    return (
-      <li class="contents">
-        {this.renderAllCategoriesButton()}
-        <ul part="sub-parents">
-          {this.renderValuesTree(this.facetState.valuesAsTrees)}
-        </ul>
-      </li>
-    );
-  }
-
-  private renderValuesTree(currentValues: CategoryFacetValue[]): VNode[] {
-    return currentValues.map((parent) => {
-      const renderedChildren = this.renderValuesTree(parent.children);
-      return this.renderHierarchicalValue(parent, renderedChildren);
-    });
-  }
-
-  private renderHierarchicalValue(
-    facetValue: CategoryFacetValue,
-    children: VNode[]
-  ): VNode {
-    const displayValue = getFieldValueCaption(
-      this.field,
-      facetValue.value,
-      this.bindings.i18n
-    );
-
-    return facetValue.state === 'selected' || facetValue.children.length === 0
-      ? this.otherKindValue(facetValue, displayValue, children)
-      : this.unfoldedValue(facetValue, displayValue, children);
-  }
-
-  private otherKindValue(
-    facetValue: CategoryFacetValue,
-    displayValue: string,
-    children: VNode[]
-  ) {
-    return (
-      <FacetValueLink
-        displayValue={displayValue}
-        numberOfResults={facetValue.numberOfResults}
-        isSelected={true}
-        i18n={this.bindings.i18n}
-        onClick={() => {
-          this.activeValueFocus.focusAfterSearch();
-          this.facet.toggleSelect(facetValue);
-        }}
-        searchQuery={this.facetState.facetSearch.query}
-        part={`active-parent ${this.getIsLeafOrNodePart(facetValue)}`}
-        class="contents"
-        buttonRef={this.activeValueFocus.setTarget}
-        subList={children.length > 0 && <ul part="values">{children}</ul>}
-      >
-        <FacetValueLabelHighlight
-          displayValue={displayValue}
-          isSelected={facetValue.state === 'selected'}
-        ></FacetValueLabelHighlight>
-      </FacetValueLink>
-    );
-  }
-
-  private unfoldedValue(
-    facetValue: CategoryFacetValue,
-    displayValue: string,
-    children: VNode[]
-  ) {
-    const ariaLabel = this.bindings.i18n.t('facet-value', {
-      value: displayValue,
-      count: facetValue.numberOfResults,
-    });
-    return (
-      <li class="contents">
-        <Button
-          style="text-neutral"
-          part="parent-button"
-          ariaPressed="false"
-          onClick={() => {
-            this.activeValueFocus.focusAfterSearch();
-            this.facet.toggleSelect(facetValue);
-          }}
-          ariaLabel={ariaLabel}
-        >
-          <atomic-icon
-            icon={LeftArrow}
-            part="back-arrow"
-            class="back-arrow"
-          ></atomic-icon>
-          <span class="truncate">{displayValue}</span>
-        </Button>
-        {children.length > 0 && <ul part="sub-parents">{children}</ul>}
-      </li>
-    );
-  }
-
-  private getIsLeafOrNodePart(value: CategoryFacetValue) {
-    return value.isLeafValue ? 'leaf-value' : 'node-value';
-  }
-
   private renderSearchResults() {
     return (
       <ul part="search-results" class="mt-3">
@@ -591,7 +456,21 @@ export class AtomicCategoryFacet
               <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
                 {this.facetState.isHierarchical ? (
                   <ul part="parents" class="mt-3">
-                    {this.renderWithHierarchy()}
+                    <HierarchicalCategoryFacet
+                      facet={this.facet}
+                      facetSearchQuery={this.facetState.facetSearch.query}
+                      facetValues={this.facetState.valuesAsTrees}
+                      field={this.field}
+                      focusTargets={{
+                        activeValue: this.activeValueFocus,
+                        showLessFocus: this.showLessFocus,
+                        showMoreFocus: this.showMoreFocus,
+                      }}
+                      i18n={this.bindings.i18n}
+                      resultIndexToFocusOnShowMore={
+                        this.resultIndexToFocusOnShowMore
+                      }
+                    ></HierarchicalCategoryFacet>
                   </ul>
                 ) : (
                   <ul part="values" class="mt-3">
