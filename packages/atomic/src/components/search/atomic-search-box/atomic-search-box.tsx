@@ -35,6 +35,7 @@ import {
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../utils/utils';
+import {NewSubmitButton} from '../../common/search-box/new-submit-button';
 import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchInput} from '../../common/search-box/search-input';
@@ -800,6 +801,7 @@ export class AtomicSearchBox {
     const searchLabel = this.searchBoxCommon.getSearchInputLabel(
       this.minimumQueryLength
     );
+    const Submit = this.textArea ? NewSubmitButton : SubmitButton;
 
     return [
       <SearchBoxWrapper disabled={this.isSearchDisabled}>
@@ -809,7 +811,7 @@ export class AtomicSearchBox {
         >
           {this.renderTextBox(searchLabel)}
           {this.renderSuggestions()}
-          <SubmitButton
+          <Submit
             bindings={this.bindings}
             disabled={this.isSearchDisabled}
             onClick={() => this.searchBox.submit()}

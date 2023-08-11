@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
 import {AnyBindings} from '../interface/bindings';
-import {ClearButton} from './clear-button';
+import {NewClearButton} from './new-clear-button';
 
 interface Props extends JSXBase.TextareaHTMLAttributes<HTMLTextAreaElement> {
   textAreaRef: HTMLTextAreaElement;
@@ -33,23 +33,33 @@ function getPopupAttributes(props: Required<Props>['popup']) {
 }
 
 function syncTextWithReplica(elem: HTMLTextAreaElement) {
-  const parent = elem.parentNode;
+  const parent = elem.parentNode as HTMLElement;
+  if (elem.value === '\n') {
+    return;
+  }
   if (parent) {
-    (parent as HTMLElement).dataset.replicatedValue = elem.value;
+    parent.dataset.replicatedValue = elem.value;
+  }
+}
+
+function resetReplicaText(elem: HTMLTextAreaElement) {
+  const parent = elem.parentNode as HTMLElement;
+  if (parent) {
+    delete parent.dataset.replicatedValue;
   }
 }
 
 function collapseTextArea(elem: HTMLTextAreaElement) {
-  const parent = elem.parentNode;
+  const parent = elem.parentNode as HTMLElement;
   if (parent) {
-    (parent as HTMLElement).classList.remove('expanded');
+    parent.classList.remove('expanded');
   }
 }
 
 function expandTextArea(elem: HTMLTextAreaElement) {
-  const parent = elem.parentNode;
+  const parent = elem.parentNode as HTMLElement;
   if (parent) {
-    (parent as HTMLElement).classList.add('expanded');
+    parent.classList.add('expanded');
   }
 }
 
@@ -66,7 +76,7 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
   popup,
   ...defaultInputProps
 }) => (
-  <div class="grow flex items-center overflow-hidden">
+  <div class="grow flex overflow-hidden">
     <div class="grow-wrap grow grid overflow-hidden">
       <textarea
         part="textarea"
@@ -80,14 +90,22 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
         }}
         onKeyDown={(e) => {
           onKeyDown?.(e);
+          if (['Enter', 'Tab'].includes(e.key)) {
+            e.preventDefault();
+            return;
+          }
           syncTextWithReplica(e.target as HTMLTextAreaElement);
         }}
         onBlur={(e) => {
           collapseTextArea(e.target as HTMLTextAreaElement);
         }}
+        onChange={(e) => {
+          syncTextWithReplica(e.target as HTMLTextAreaElement);
+        }}
         onFocus={(e) => {
+          const target = e.target as HTMLTextAreaElement;
           onFocus?.(e);
-          expandTextArea(e.target as HTMLTextAreaElement);
+          expandTextArea(target);
         }}
         autocomplete="off"
         {...(popup && getPopupAttributes(popup))}
@@ -97,18 +115,20 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
     </div>
 
     {loading && (
-      <span
-        part="loading"
-        class="loading w-5 h-5 rounded-full bg-gradient-to-r animate-spin mr-3 grid place-items-center"
-      ></span>
+      <div class="searchbox-button-wrapper flex items-center justify-center ml-2">
+        <span
+          part="loading"
+          class="loading w-5 h-5 rounded-full bg-gradient-to-r animate-spin mr-2 grid place-items-center"
+        ></span>
+      </div>
     )}
     {!loading && value && (
-      <ClearButton
+      <NewClearButton
         inputRef={textAreaRef}
         bindings={bindings}
         onClick={() => {
           onClear();
-          syncTextWithReplica(textAreaRef);
+          resetReplicaText(textAreaRef);
         }}
       />
     )}
