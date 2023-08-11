@@ -17,6 +17,7 @@
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "scripts": {
+    "build": "tsc --build",
     "test": "jest"
   },
   "dependencies": {
