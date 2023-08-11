@@ -13,7 +13,7 @@ runs:
       with:
         browser: chrome
         command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        working-directory: ./packages/samples/headless-ssr
+        project: ./packages/samples/headless-ssr
         start: npm run prod
         wait-on: 'http://localhost:3000'
         install: true # Packages uses newer Cypress v12
