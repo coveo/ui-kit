@@ -1,5 +1,9 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {AnyFacetValuesCondition, AnyFacetValueRequest} from '@coveo/headless';
+import {
+  AnyFacetValuesCondition,
+  AnyFacetValueRequest,
+  FacetValueState,
+} from '@coveo/headless';
 import {VNode, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
@@ -137,13 +141,17 @@ export interface FacetValueProps {
   numberOfResults: number;
   isSelected: boolean;
   onClick(): void;
-  onExclude?(): void;
   searchQuery?: string;
   class?: string;
   part?: string;
   additionalPart?: string;
   buttonRef?: (element?: HTMLButtonElement) => void;
 }
+
+export type TriStateFacetValueProps = Omit<FacetValueProps, 'isSelected'> & {
+  state: FacetValueState;
+  onExclude(): void;
+};
 
 function isCategoryFacetValueRequest(
   value: AnyFacetValueRequest
@@ -512,6 +520,7 @@ export class FacetCommon {
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onSelect}
+            state={facetValue.state}
             onExclude={onExclude}
             searchQuery={this.facet.state.facetSearch.query}
             buttonRef={(element) => {
@@ -534,7 +543,6 @@ export class FacetCommon {
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onSelect}
-            onExclude={onExclude}
             searchQuery={this.facet.state.facetSearch.query}
             buttonRef={(element) => {
               isShowLessFocusTarget && showLessFocus.setTarget(element);
@@ -556,7 +564,6 @@ export class FacetCommon {
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onSelect}
-            onExclude={onExclude}
             searchQuery={this.facet.state.facetSearch.query}
             buttonRef={(element) => {
               isShowLessFocusTarget && showLessFocus.setTarget(element);
