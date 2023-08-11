@@ -11,7 +11,15 @@ import {
   buildFacetConditionsManager,
   FacetConditionsManager,
 } from '@coveo/headless';
-import { Component, h, State, Prop, Element, Fragment, VNode, FunctionalComponent } from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Element,
+  Fragment,
+  VNode,
+} from '@stencil/core';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
 import {
   AriaLiveRegion,
@@ -26,32 +34,33 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import { ArrayProp, MapProp } from '../../../../utils/props-utils';
-import { Button, ButtonProps } from '../../../common/button';
+import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {Button} from '../../../common/button';
 import {
   parseDependsOn,
   validateDependsOn,
 } from '../../../common/facets/facet-common';
-import { BaseFacet } from '../../../common/facets/facet-common';
-import { FacetInfo } from '../../../common/facets/facet-common-store';
-import { FacetContainer } from '../../../common/facets/facet-container/facet-container';
-import { FacetHeader } from '../../../common/facets/facet-header/facet-header';
-import { FacetPlaceholder } from '../../../common/facets/facet-placeholder/facet-placeholder';
-import { announceFacetSearchResultsWithAriaLive } from '../../../common/facets/facet-search/facet-search-aria-live';
-import { FacetSearchInput } from '../../../common/facets/facet-search/facet-search-input';
-import { FacetSearchMatches } from '../../../common/facets/facet-search/facet-search-matches';
+import {BaseFacet} from '../../../common/facets/facet-common';
+import {FacetInfo} from '../../../common/facets/facet-common-store';
+import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
+import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
+import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
 import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
-import { FacetShowMoreLess } from '../../../common/facets/facet-show-more-less/facet-show-more-less';
-import { FacetValueLabelHighlight } from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
-import { FacetValueLink } from '../../../common/facets/facet-value-link/facet-value-link';
-import { FacetValuesGroup } from '../../../common/facets/facet-values-group/facet-values-group';
-import { Hidden } from '../../../common/hidden';
-import { Bindings } from '../../atomic-search-interface/atomic-search-interface';
-import { initializePopover } from '../atomic-popover/popover-type';
-import { CategoryFacetSearchResult } from '../category-facet-search-result/category-facet-search-result';
+import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {Hidden} from '../../../common/hidden';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {initializePopover} from '../atomic-popover/popover-type';
+import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
+import {FlatCategoryFacet} from './value-rendering/flat';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -118,39 +127,39 @@ export class AtomicCategoryFacet
   /**
    * Specifies a unique identifier for the facet.
    */
-  @Prop({ mutable: true, reflect: true }) public facetId?: string;
+  @Prop({mutable: true, reflect: true}) public facetId?: string;
   /**
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
-  @Prop({ reflect: true }) public label = 'no-label';
+  @Prop({reflect: true}) public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop({ reflect: true }) public field!: string;
+  @Prop({reflect: true}) public field!: string;
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    */
-  @Prop({ reflect: true }) public numberOfValues = 8;
+  @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
    * When "true", the search is only enabled when more facet values are available.
    */
-  @Prop({ reflect: true }) public withSearch = false;
+  @Prop({reflect: true}) public withSearch = false;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'alphanumeric' and 'occurrences'.
    */
   // TODO: add automatic (occurrences when not expanded, alphanumeric when expanded)
-  @Prop({ reflect: true }) public sortCriteria: CategoryFacetSortCriterion =
+  @Prop({reflect: true}) public sortCriteria: CategoryFacetSortCriterion =
     'occurrences';
   /**
    * The character that separates values of a multi-value field.
    *
    * *Note:* If you use the [example formatting](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet/#usage-notes) for the associated multi-value field, you must set this value to `|` or the facet won't display properly.
    */
-  @Prop({ reflect: true }) public delimitingCharacter = ';';
+  @Prop({reflect: true}) public delimitingCharacter = ';';
   /**
    * The base path shared by all values for the facet.
    *
@@ -160,32 +169,32 @@ export class AtomicCategoryFacet
    * ```
    */
   @ArrayProp()
-  @Prop({ reflect: true, mutable: true })
+  @Prop({reflect: true, mutable: true})
   public basePath: string[] | string = '[]';
 
   /**
    * Whether to use basePath as a filter for the results.
    */
-  @Prop({ reflect: true }) public filterByBasePath = true;
+  @Prop({reflect: true}) public filterByBasePath = true;
   /**
    * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
-  @Prop({ reflect: true, mutable: true }) public isCollapsed = false;
+  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
    */
-  @Prop({ reflect: true }) public headingLevel = 0;
+  @Prop({reflect: true}) public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
-  @Prop({ reflect: true }) public filterFacetCount = true;
+  @Prop({reflect: true}) public filterFacetCount = true;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    * Default: `1000`
    */
-  @Prop({ reflect: true }) public injectionDepth = 1000;
+  @Prop({reflect: true}) public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   /**
@@ -232,14 +241,14 @@ export class AtomicCategoryFacet
       field: this.field,
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
-      facetSearch: { numberOfValues: this.numberOfValues },
+      facetSearch: {numberOfValues: this.numberOfValues},
       basePath: [...this.basePath],
       delimitingCharacter: this.delimitingCharacter,
       filterByBasePath: this.filterByBasePath,
       injectionDepth: this.injectionDepth,
       filterFacetCount: this.filterFacetCount,
     };
-    this.facet = buildCategoryFacet(this.bindings.engine, { options });
+    this.facet = buildCategoryFacet(this.bindings.engine, {options});
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
@@ -305,10 +314,6 @@ export class AtomicCategoryFacet
     return true;
   }
 
-  private get hasParents() {
-    return !!this.facetState.parents.length;
-  }
-
   private initializeDependenciesManager() {
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
@@ -335,9 +340,9 @@ export class AtomicCategoryFacet
           this.facet.deselectAll();
         }}
         headerRef={(header) => {
-          this.focusTargets.headerFocus.setTarget(header);
-          if (!this.hasParents) {
-            this.focusTargets.activeValueFocus.setTarget(header);
+          this.headerFocus.setTarget(header);
+          if (!this.facetState.isHierarchical) {
+            this.activeValueFocus.setTarget(header);
           }
         }}
       ></FacetHeader>
@@ -391,19 +396,44 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderHierarchicalValue(facetValue: CategoryFacetValue, children: VNode[]): VNode {
+  private renderWithHierarchy() {
+    return (
+      <li class="contents">
+        {this.renderAllCategoriesButton()}
+        <ul part="sub-parents">
+          {this.renderValuesTree(this.facetState.valuesAsTrees)}
+        </ul>
+      </li>
+    );
+  }
+
+  private renderValuesTree(currentValues: CategoryFacetValue[]): VNode[] {
+    return currentValues.map((parent) => {
+      const renderedChildren = this.renderValuesTree(parent.children);
+      return this.renderHierarchicalValue(parent, renderedChildren);
+    });
+  }
+
+  private renderHierarchicalValue(
+    facetValue: CategoryFacetValue,
+    children: VNode[]
+  ): VNode {
     const displayValue = getFieldValueCaption(
       this.field,
       facetValue.value,
       this.bindings.i18n
     );
 
-    return facetValue.state === 'selected' || facetValue.children.length === 0 ? this.otherKindValue(facetValue, displayValue, children) : (
-      this.unfoldedValue(facetValue, displayValue, children)
-    );
+    return facetValue.state === 'selected' || facetValue.children.length === 0
+      ? this.otherKindValue(facetValue, displayValue, children)
+      : this.unfoldedValue(facetValue, displayValue, children);
   }
 
-  private otherKindValue(facetValue: CategoryFacetValue, displayValue: string, children: VNode[]) {
+  private otherKindValue(
+    facetValue: CategoryFacetValue,
+    displayValue: string,
+    children: VNode[]
+  ) {
     return (
       <FacetValueLink
         displayValue={displayValue}
@@ -411,8 +441,8 @@ export class AtomicCategoryFacet
         isSelected={true}
         i18n={this.bindings.i18n}
         onClick={() => {
-          this.focusTargets.activeValueFocus.focusAfterSearch();
-          this.facet.deselectAll();
+          this.activeValueFocus.focusAfterSearch();
+          this.facet.toggleSelect(facetValue);
         }}
         searchQuery={this.facetState.facetSearch.query}
         part={`active-parent ${this.getIsLeafOrNodePart(facetValue)}`}
@@ -428,91 +458,36 @@ export class AtomicCategoryFacet
     );
   }
 
-  private unfoldedValue(facetValue: CategoryFacetValue, displayValue: string, children: VNode[]) {
+  private unfoldedValue(
+    facetValue: CategoryFacetValue,
+    displayValue: string,
+    children: VNode[]
+  ) {
     const ariaLabel = this.bindings.i18n.t('facet-value', {
       value: displayValue,
       count: facetValue.numberOfResults,
     });
-    return <li class="contents"><Button
-      style="text-neutral"
-      part="parent-button"
-      ariaPressed="false"
-      onClick={() => {
-        this.activeValueFocus.focusAfterSearch();
-        this.facet.toggleSelect(facetValue);
-      }}
-      ariaLabel={ariaLabel}
-    >
-      <atomic-icon
-        icon={LeftArrow}
-        part="back-arrow"
-        class="back-arrow"
-      ></atomic-icon>
-      <span class="truncate">{displayValue}</span>
-    </Button>{children.length > 0 && <ul part="sub-parents">{children}</ul>}</li>;
-  }
-
-  private renderWithHierarchy() {
     return (
       <li class="contents">
-        {this.renderAllCategoriesButton()}
-        <ul part="sub-parents">{this.renderValuesTree(this.facetState.parents)}</ul>
+        <Button
+          style="text-neutral"
+          part="parent-button"
+          ariaPressed="false"
+          onClick={() => {
+            this.activeValueFocus.focusAfterSearch();
+            this.facet.toggleSelect(facetValue);
+          }}
+          ariaLabel={ariaLabel}
+        >
+          <atomic-icon
+            icon={LeftArrow}
+            part="back-arrow"
+            class="back-arrow"
+          ></atomic-icon>
+          <span class="truncate">{displayValue}</span>
+        </Button>
+        {children.length > 0 && <ul part="sub-parents">{children}</ul>}
       </li>
-    );
-  }
-
-  private renderValuesTree(currentValues: CategoryFacetValue[]): VNode[] {
-    return currentValues.map(parent => {
-      const renderedChildren = this.renderValuesTree(parent.children);
-      return this.renderHierarchicalValue(parent, renderedChildren)
-    });
-  }
-
-  private renderChild(
-    facetValue: CategoryFacetValue,
-    isShowLessFocusTarget: boolean,
-    isShowMoreFocusTarget: boolean
-  ) {
-    const displayValue = getFieldValueCaption(
-      this.field,
-      facetValue.value,
-      this.bindings.i18n
-    );
-    const isSelected = facetValue.state === 'selected';
-    return (
-      <FacetValueLink
-        displayValue={displayValue}
-        numberOfResults={facetValue.numberOfResults}
-        isSelected={isSelected}
-        i18n={this.bindings.i18n}
-        onClick={() => {
-          this.focusTargets.activeValueFocus.focusAfterSearch();
-          this.facet.toggleSelect(facetValue);
-        }}
-        searchQuery={this.facetState.facetSearch.query}
-        buttonRef={(element) => {
-          isShowLessFocusTarget &&
-            this.focusTargets.showLessFocus.setTarget(element);
-          isShowMoreFocusTarget &&
-            this.focusTargets.showMoreFocus.setTarget(element);
-        }}
-        additionalPart={this.getIsLeafOrNodePart(facetValue)}
-      >
-        <FacetValueLabelHighlight
-          displayValue={displayValue}
-          isSelected={isSelected}
-        ></FacetValueLabelHighlight>
-      </FacetValueLink>
-    );
-  }
-
-  private renderWithoutHierarchy() {
-    if (!this.facetState.values.length) {
-      return;
-    }
-
-    return this.facetState.values.map((value, i) =>
-      this.renderChild(value, i === 0, i === this.resultIndexToFocusOnShowMore)
     );
   }
 
@@ -552,13 +527,14 @@ export class AtomicCategoryFacet
 
   private renderShowMoreLess() {
     return (
-      <div class={this.hasParents ? 'pl-9' : ''}>
+      <div class={this.facetState.isHierarchical ? 'pl-9' : ''}>
         <FacetShowMoreLess
           label={this.label}
           i18n={this.bindings.i18n}
           onShowMore={() => {
-            this.resultIndexToFocusOnShowMore = this.facetState.values.length;
-            this.focusTargets.showMoreFocus.focusAfterSearch();
+            this.resultIndexToFocusOnShowMore =
+              this.facetState.valuesAsTrees.length;
+            this.showMoreFocus.focusAfterSearch();
             this.facet.showMoreValues();
           }}
           onShowLess={() => {
@@ -586,7 +562,7 @@ export class AtomicCategoryFacet
       );
     }
 
-    if (!this.facetState.values.length && !this.facetState.parents.length) {
+    if (!this.facetState.valuesAsTrees) {
       return <Hidden></Hidden>;
     }
 
@@ -613,13 +589,27 @@ export class AtomicCategoryFacet
           ) : (
             <Fragment>
               <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
-                {this.hasParents ? (
+                {this.facetState.isHierarchical ? (
                   <ul part="parents" class="mt-3">
                     {this.renderWithHierarchy()}
                   </ul>
                 ) : (
                   <ul part="values" class="mt-3">
-                    {this.renderWithoutHierarchy()}
+                    <FlatCategoryFacet
+                      facet={this.facet}
+                      facetSearchQuery={this.facetState.facetSearch.query}
+                      facetValues={this.facetState.valuesAsTrees}
+                      field={this.field}
+                      focusTargets={{
+                        activeValue: this.activeValueFocus,
+                        showLessFocus: this.showLessFocus,
+                        showMoreFocus: this.showMoreFocus,
+                      }}
+                      i18n={this.bindings.i18n}
+                      resultIndexToFocusOnShowMore={
+                        this.resultIndexToFocusOnShowMore
+                      }
+                    ></FlatCategoryFacet>
                   </ul>
                 )}
               </FacetValuesGroup>
