@@ -52,7 +52,9 @@ export type ReactEngineDefinition<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions,
 > = EngineDefinition<TEngine, TControllers, TEngineOptions> & {
-  SnapshotProvider: FunctionComponent<
+  controllers: InferControllerHooksMapFromDefinition<TControllers>;
+  useEngine(): TEngine | undefined;
+  InitialStateProvider: FunctionComponent<
     PropsWithChildren<{
       controllers: InferControllerInitialStateMapFromDefinitions<TControllers>;
     }>
@@ -63,8 +65,6 @@ export type ReactEngineDefinition<
       controllers: InferControllersMapFromDefinition<TControllers>;
     }>
   >;
-  controllers: InferControllerHooksMapFromDefinition<TControllers>;
-  useEngine(): TEngine | undefined;
 };
 
 export type ReactSearchEngineDefinition<
