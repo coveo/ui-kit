@@ -3,23 +3,24 @@ import {
   assertConsoleError,
   assertContainsComponentError,
 } from '../../common-assertions';
-import {addAutomaticFacetBuilder} from './automatic-facet-builder-actions';
+import {addAutomaticFacetGenerator} from './automatic-facet-generator-actions';
 import {
   assertCollapseAutomaticFacets,
   assertContainsAutomaticFacet,
+  assertDisplayNothing,
   assertDisplayPlaceholder,
-  automaticFacetBuilderComponent,
-} from './automatic-facet-builder-assertions';
+  automaticFacetGeneratorComponent,
+} from './automatic-facet-generator-assertions';
 
-describe('Automatic Facet Builder Test Suites', () => {
+describe('Automatic Facet Generator Test Suites', () => {
   it('should throw an error when desiredCount property is invalid', () => {
     new TestFixture()
-      .with(addAutomaticFacetBuilder({'desired-count': 'potato'}))
+      .with(addAutomaticFacetGenerator({'desired-count': 'potato'}))
       .init();
     assertConsoleError();
     assertContainsComponentError(
       {
-        shadow: () => cy.get(automaticFacetBuilderComponent).shadow(),
+        shadow: () => cy.get(automaticFacetGeneratorComponent).shadow(),
       },
       true
     );
@@ -27,19 +28,19 @@ describe('Automatic Facet Builder Test Suites', () => {
 
   it('should display atomic-automatic-facet when desiredCount is valid', () => {
     new TestFixture()
-      .with(addAutomaticFacetBuilder({'desired-count': '1'}))
+      .with(addAutomaticFacetGenerator({'desired-count': '1'}))
       .init();
     assertContainsAutomaticFacet();
   });
 
   it('should throw an error when areCollapsed property is invalid', () => {
     new TestFixture()
-      .with(addAutomaticFacetBuilder({'are-collapsed': 'potato'}))
+      .with(addAutomaticFacetGenerator({'are-collapsed': 'potato'}))
       .init();
     assertConsoleError();
     assertContainsComponentError(
       {
-        shadow: () => cy.get(automaticFacetBuilderComponent).shadow(),
+        shadow: () => cy.get(automaticFacetGeneratorComponent).shadow(),
       },
       true
     );
@@ -48,7 +49,7 @@ describe('Automatic Facet Builder Test Suites', () => {
   it('should collapse the facets when areCollapsed property is `true`', () => {
     new TestFixture()
       .with(
-        addAutomaticFacetBuilder({
+        addAutomaticFacetGenerator({
           'are-collapsed': 'true',
           'desired-count': '1',
         })
@@ -60,7 +61,7 @@ describe('Automatic Facet Builder Test Suites', () => {
   it('should not collapse the facets when areCollapsed property is `false`', () => {
     new TestFixture()
       .with(
-        addAutomaticFacetBuilder({
+        addAutomaticFacetGenerator({
           'are-collapsed': 'false',
           'desired-count': '1',
         })
@@ -72,12 +73,24 @@ describe('Automatic Facet Builder Test Suites', () => {
   it('should display placeholders when no search has yet been executed', () => {
     new TestFixture()
       .with(
-        addAutomaticFacetBuilder({
+        addAutomaticFacetGenerator({
           'desired-count': '1',
         })
       )
       .withoutFirstAutomaticSearch()
       .init();
     assertDisplayPlaceholder();
+  });
+
+  it('should display nothing when response is empty', () => {
+    new TestFixture()
+      .with(
+        addAutomaticFacetGenerator({
+          'desired-count': '1',
+        })
+      )
+      .withoutAutomaticFacets()
+      .init();
+    assertDisplayNothing();
   });
 });

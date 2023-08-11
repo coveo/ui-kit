@@ -1,3 +1,35 @@
+## 2.25.1 (2023-08-10)
+
+### Bug Fixes
+
+- **atomic,headless:** add maximum value of 10 for 'desiredCount' ([#3089](https://github.com/coveo/ui-kit/issues/3089)) ([35bb410](https://github.com/coveo/ui-kit/commits/35bb4104eb9e31ec3e398f3b3fedc7ff714e4f9b))
+- **headless:** make the generated answer interface extend from the controller interface ([#3085](https://github.com/coveo/ui-kit/issues/3085)) ([62b6709](https://github.com/coveo/ui-kit/commits/62b6709f8d363886883f26a7aa7d0b6c748437db))
+
+### Performance Improvements
+
+- **headless:** remove non-selected values in automatic facet request ([#3088](https://github.com/coveo/ui-kit/issues/3088)) ([acc2574](https://github.com/coveo/ui-kit/commits/acc257458b7607f27e7c5ca28e0419942527558c))
+
+# 2.25.0 (2023-08-09)
+
+### Bug Fixes
+
+- **headless:** back/forward on first selection of an automatic facet ([#3062](https://github.com/coveo/ui-kit/issues/3062)) ([4b69228](https://github.com/coveo/ui-kit/commits/4b692285332fe505ee7f3231d62ef6dd094e3996))
+
+### Features
+
+- scaffold initial headless sub-package for server-side rendering utils ([#3064](https://github.com/coveo/ui-kit/issues/3064)) ([c82d62c](https://github.com/coveo/ui-kit/commits/c82d62c568292f197f67c59df5608ae998b86c4d))
+
+# 2.24.0 (2023-08-02)
+
+### Bug Fixes
+
+- **test:** fix false positives from remove component assertion ([#3053](https://github.com/coveo/ui-kit/issues/3053)) ([23e5f0b](https://github.com/coveo/ui-kit/commits/23e5f0bf9a39cd6e7f704dcb66050ad1ac06fc50))
+
+### Features
+
+- **atomic, headless:** add breadbox support for automatic facets ([#3048](https://github.com/coveo/ui-kit/issues/3048)) ([1958cc6](https://github.com/coveo/ui-kit/commits/1958cc6e9ff8626f80b9f38ecd4514e15be6a4f9))
+- **headless:** send clientId instead of visitorId in case assist ([#3067](https://github.com/coveo/ui-kit/issues/3067)) ([4370fdd](https://github.com/coveo/ui-kit/commits/4370fdd7fd77d31f9af1d5aeaa097a4eea6b2757))
+
 # 2.23.0 (2023-07-27)
 
 ### Bug Fixes

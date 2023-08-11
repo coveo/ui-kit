@@ -4,10 +4,15 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": ["CHANGELOG.md"],
-  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
+  "ignorePaths": [
+    "CHANGELOG.md"
+  ],
+  "import": [
+    "@cspell/dict-fr-fr/cspell-ext.json"
+  ],
   "words": [
     "adjustednumberoflikes",
+    "Animalia",
     "ARROWUP",
     "Artemia",
     "Artemiidae",
@@ -39,14 +44,20 @@
     "dynamicscrmitem",
     "Ecommerce",
     "electronicscoveodemocomo",
+    "ellipsed",
     "exchangedsn",
     "exchangemdn",
     "exchangerssfeed",
     "Expandto",
+    "fashioncoveodemocomgzh",
+    "genqa",
+    "ginglymos",
+    "Ginglymostomatidae",
     "gmailmessage",
     "gzipped",
     "headless",
     "IIFE",
+    "inat",
     "initializable",
     "inlink",
     "isloading",
@@ -259,10 +270,6 @@
     "ytvideoduration",
     "ytvideoid",
     "ytviewcount",
-    "genqa",
-    "Ginglymostomatidae",
-    "ginglymos",
-    "ellipsed",
     "γίγγλυμος",
     "στόμα"
   ]

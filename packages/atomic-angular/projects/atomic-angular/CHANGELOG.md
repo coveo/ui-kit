@@ -1,3 +1,9 @@
+# 2.12.0 (2023-08-09)
+
+### Features
+
+- **atomic:** add skip link to grid results ([#3045](https://github.com/coveo/ui-kit/issues/3045)) ([049b420](https://github.com/coveo/ui-kit/commits/049b4201e72b91a49b2ec63ea2577fe3bed6a9e9))
+
 # 2.11.0 (2023-07-19)
 
 ### Features

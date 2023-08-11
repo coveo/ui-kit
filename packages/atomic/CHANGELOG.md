@@ -1,3 +1,41 @@
+# 2.40.0 (2023-08-10)
+
+### Bug Fixes
+
+- **atomic,headless:** add maximum value of 10 for 'desiredCount' ([#3089](https://github.com/coveo/ui-kit/issues/3089)) ([35bb410](https://github.com/coveo/ui-kit/commits/35bb4104eb9e31ec3e398f3b3fedc7ff714e4f9b))
+- **atomic:** fix grid result breadcrumbs ([#3100](https://github.com/coveo/ui-kit/issues/3100)) ([6fc30f4](https://github.com/coveo/ui-kit/commits/6fc30f43a97cb1742e8810f4149b3acf0edc024c))
+- **atomic:** make automatic facet placholders disappear when empty response ([#3091](https://github.com/coveo/ui-kit/issues/3091)) ([397e8ba](https://github.com/coveo/ui-kit/commits/397e8bae361a713d41867a2e3c59abe0da2920d4))
+- **atomic:** Make gridCellLinkTarget optional ([#3097](https://github.com/coveo/ui-kit/issues/3097)) ([7b1eed3](https://github.com/coveo/ui-kit/commits/7b1eed38ddc0dbf760920a7b35263775acd15b7b))
+
+### Features
+
+- **atomic:** change default label to the field for automatic facets ([#3090](https://github.com/coveo/ui-kit/issues/3090)) ([a3060ca](https://github.com/coveo/ui-kit/commits/a3060ca818712830d3f6def708da2e3449dd4041))
+
+# 2.39.0 (2023-08-09)
+
+### Bug Fixes
+
+- **atomic:** add automatic facets to atomic refine modal ([#3069](https://github.com/coveo/ui-kit/issues/3069)) ([9b422ce](https://github.com/coveo/ui-kit/commits/9b422ce8865e4923e4df2fbe16c28f8639bc2170))
+- **atomic:** css parts not working for automatic facets in refine modal ([#3071](https://github.com/coveo/ui-kit/issues/3071)) ([3f899fd](https://github.com/coveo/ui-kit/commits/3f899fdf6fa670360b5e126a0125abba3a1ca140))
+- **atomic:** fix DOM exception when using refine modal with no facets ([#3072](https://github.com/coveo/ui-kit/issues/3072)) ([0a29cf3](https://github.com/coveo/ui-kit/commits/0a29cf39f1c82c40de56da86ea9fc40cd75148f6))
+- **atomic:** fixed styling of insight folded results when children ar… ([#3075](https://github.com/coveo/ui-kit/issues/3075)) ([b12d67d](https://github.com/coveo/ui-kit/commits/b12d67d90aaf77070e41c84e021d1a4a440f8c85))
+- remove `{{variable}}` from GPT translated locales ([#3073](https://github.com/coveo/ui-kit/issues/3073)) ([3410d93](https://github.com/coveo/ui-kit/commits/3410d9353233965a22efbbc0ddc9bffda895cc09))
+
+### Features
+
+- **atomic:** add skip link to grid results ([#3045](https://github.com/coveo/ui-kit/issues/3045)) ([049b420](https://github.com/coveo/ui-kit/commits/049b4201e72b91a49b2ec63ea2577fe3bed6a9e9))
+
+# 2.38.0 (2023-08-02)
+
+### Bug Fixes
+
+- **atomic:** center magnifying glass icon in search box submit button ([#3066](https://github.com/coveo/ui-kit/issues/3066)) ([f445ba7](https://github.com/coveo/ui-kit/commits/f445ba76c1a8f6c6acabead4947d760a6cb44937))
+- **test:** fix false positives from remove component assertion ([#3053](https://github.com/coveo/ui-kit/issues/3053)) ([23e5f0b](https://github.com/coveo/ui-kit/commits/23e5f0bf9a39cd6e7f704dcb66050ad1ac06fc50))
+
+### Features
+
+- **atomic, headless:** add breadbox support for automatic facets ([#3048](https://github.com/coveo/ui-kit/issues/3048)) ([1958cc6](https://github.com/coveo/ui-kit/commits/1958cc6e9ff8626f80b9f38ecd4514e15be6a4f9))
+
 # 2.37.0 (2023-07-27)
 
 ### Features

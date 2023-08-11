@@ -9,6 +9,8 @@ import {
   buildSort,
   SortState,
   buildQuerySummary,
+  buildSearchStatus,
+  SearchStatus,
 } from '@coveo/headless';
 import {
   Component,
@@ -73,6 +75,7 @@ export class AtomicRefineModal implements InitializableComponent {
   private sort!: Sort;
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
+  public searchStatus!: SearchStatus;
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
@@ -114,6 +117,7 @@ export class AtomicRefineModal implements InitializableComponent {
           this.bindings.interfaceElement
         )
       );
+      this.host.append(this.getAutomaticFacetSlotContent());
     }
   }
 
@@ -121,6 +125,7 @@ export class AtomicRefineModal implements InitializableComponent {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.watchEnabled(this.isOpen);
   }
 
@@ -182,7 +187,9 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private renderFilters() {
-    if (!this.bindings.store.getFacetElements().length) {
+    const isFacetElements = this.bindings.store.getFacetElements().length > 0;
+
+    if (!isFacetElements) {
       return;
     }
 
@@ -209,8 +216,20 @@ export class AtomicRefineModal implements InitializableComponent {
           )}
         </div>
         <slot name="facets"></slot>
+        <slot name="automatic-facets"></slot>
       </Fragment>
     );
+  }
+
+  private getAutomaticFacetSlotContent() {
+    const isFacetElements = this.bindings.store.getFacetElements().length > 0;
+
+    const divSlot = document.createElement(
+      'atomic-automatic-facet-slot-content'
+    );
+    divSlot.setAttribute('is-there-static-facets', `${isFacetElements}`);
+
+    return divSlot;
   }
 
   private renderBody() {

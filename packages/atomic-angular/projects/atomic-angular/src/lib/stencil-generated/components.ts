@@ -48,19 +48,19 @@ export class AtomicAutomaticFacet {
 }
 
 
-export declare interface AtomicAutomaticFacetBuilder extends Components.AtomicAutomaticFacetBuilder {}
+export declare interface AtomicAutomaticFacetGenerator extends Components.AtomicAutomaticFacetGenerator {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
   inputs: ['areCollapsed', 'desiredCount']
 })
 @Component({
-  selector: 'atomic-automatic-facet-builder',
+  selector: 'atomic-automatic-facet-generator',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   inputs: ['areCollapsed', 'desiredCount']
 })
-export class AtomicAutomaticFacetBuilder {
+export class AtomicAutomaticFacetGenerator {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -738,14 +738,14 @@ export declare interface AtomicRecsList extends Components.AtomicRecsList {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
   methods: ['setRenderFunction', 'previousPage', 'nextPage']
 })
 @Component({
   selector: 'atomic-recs-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation']
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation']
 })
 export class AtomicRecsList {
   protected el: HTMLElement;
@@ -1080,14 +1080,14 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['density', 'display', 'imageSize'],
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['density', 'display', 'imageSize']
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize']
 })
 export class AtomicResultList {
   protected el: HTMLElement;
