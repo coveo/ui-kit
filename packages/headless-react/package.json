@@ -16,10 +16,14 @@
   ],
   "license": "Apache-2.0",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc --build",
-    "test": "react-scripts test --env=./jest.setup.js",
-    "test:watch": "jest --watch --colors --no-cache"
+    "test": "jest",
+    "test:watch": "jest --watch --colors --no-cache",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@coveo/headless": "2.24.0"
@@ -30,9 +34,10 @@
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "@typescript-eslint/eslint-plugin": "6.3.0",
+    "eslint-plugin-jest-dom": "5.0.2",
     "eslint-plugin-react": "7.33.1",
+    "eslint-plugin-testing-library": "5.11.1",
     "gts": "5.0.0",
-    "react-scripts": "5.0.1",
     "typescript": "5.1.6"
   },
   "peerDependencies": {

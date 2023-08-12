@@ -1,8 +1,12 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "react"],
-  "extends": ["./node_modules/gts"],
+  "plugins": ["@typescript-eslint", "react", "testing-library", "jest-dom"],
+  "extends": [
+    "./node_modules/gts",
+    "plugin:testing-library/react",
+    "plugin:jest-dom/recommended"
+  ],
   "rules": {
     "react/jsx-uses-vars": "error",
     "react/jsx-uses-react": "error",
@@ -15,5 +19,5 @@
       }
     ]
   },
-  "ignorePatterns": ["dist/"]
+  "ignorePatterns": ["dist/", "**/*.js"]
 }
