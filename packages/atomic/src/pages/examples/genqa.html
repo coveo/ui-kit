@@ -39,6 +39,12 @@
       atomic-search-layout {
         row-gap: var(--atomic-layout-spacing-y);
       }
+
+      atomic-layout-section[section='search'] {
+        z-index: 10;
+        height: 49px;
+        position: relative;
+      }
     </style>
   </head>
 
@@ -47,7 +53,7 @@
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
-          <atomic-search-box></atomic-search-box>
+          <atomic-search-box text-area></atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>

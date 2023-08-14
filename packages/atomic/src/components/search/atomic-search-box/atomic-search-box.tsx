@@ -20,6 +20,7 @@ import {
   Element,
   Event,
   EventEmitter,
+  Host,
 } from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {isMacOS} from '../../../utils/device-utils';
@@ -366,6 +367,10 @@ export class AtomicSearchBox {
       return this.rightPanelRef;
     }
     return this.leftPanelRef || this.rightPanelRef;
+  }
+
+  private get hostClasses() {
+    return this.textArea ? 'absolute w-full z-10' : '';
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
@@ -731,7 +736,7 @@ export class AtomicSearchBox {
             ? 'suggestions-double-list'
             : 'suggestions-single-list'
         }`}
-        class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
+        class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral overflow-hidden ${
           this.searchBoxCommon.showSuggestions ? '' : 'hidden'
         }`}
         role="application"
@@ -803,28 +808,32 @@ export class AtomicSearchBox {
     );
     const Submit = this.textArea ? NewSubmitButton : SubmitButton;
 
-    return [
-      <SearchBoxWrapper disabled={this.isSearchDisabled}>
-        <atomic-focus-detector
-          style={{display: 'contents'}}
-          onFocusExit={() => this.clearSuggestions()}
-        >
-          {this.renderTextBox(searchLabel)}
-          {this.renderSuggestions()}
-          <Submit
-            bindings={this.bindings}
-            disabled={this.isSearchDisabled}
-            onClick={() => this.searchBox.submit()}
-            title={searchLabel}
-          />
-        </atomic-focus-detector>
-      </SearchBoxWrapper>,
-      !this.suggestions.length && (
-        <slot>
-          <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
-          <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
-        </slot>
-      ),
-    ];
+    return (
+      <Host class={this.hostClasses}>
+        {[
+          <SearchBoxWrapper disabled={this.isSearchDisabled}>
+            <atomic-focus-detector
+              style={{display: 'contents'}}
+              onFocusExit={() => this.clearSuggestions()}
+            >
+              {this.renderTextBox(searchLabel)}
+              {this.renderSuggestions()}
+              <Submit
+                bindings={this.bindings}
+                disabled={this.isSearchDisabled}
+                onClick={() => this.searchBox.submit()}
+                title={searchLabel}
+              />
+            </atomic-focus-detector>
+          </SearchBoxWrapper>,
+          !this.suggestions.length && (
+            <slot>
+              <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+              <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+            </slot>
+          ),
+        ]}
+      </Host>
+    );
   }
 }
