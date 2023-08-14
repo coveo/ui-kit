@@ -11,8 +11,8 @@ export type {
   ControllerDefinitionWithProps,
 } from './app/ssr-engine/types/common';
 export type {
-  InferInitialState,
-  InferLiveState,
+  InferSSRState,
+  InferCSRState,
 } from './app/ssr-engine/types/core-engine';
 
 export {defineSearchEngine} from './app/ssr-engine/ssr-engine';

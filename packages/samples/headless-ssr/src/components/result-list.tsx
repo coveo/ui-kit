@@ -24,6 +24,9 @@ export const ResultList: FunctionComponent<ResultListProps> = (props) => {
 
   return (
     <div>
+      <span id="hydrated-msg">
+        Hydrated engine with {results?.length} results
+      </span>
       <ul style={{textAlign: 'left'}}>
         {state.results.map((result) => (
           <li key={result.uniqueId}>
@@ -34,6 +37,12 @@ export const ResultList: FunctionComponent<ResultListProps> = (props) => {
           </li>
         ))}
       </ul>
+      <div>
+        Rendered on{' '}
+        <span id="timestamp" suppressHydrationWarning>
+          {new Date().toISOString()}
+        </span>
+      </div>
     </div>
   );
 };

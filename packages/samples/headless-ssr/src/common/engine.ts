@@ -2,8 +2,8 @@ import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {
   defineSearchEngine,
   defineResultList,
-  InferInitialState,
-  InferLiveState,
+  InferSSRState,
+  InferCSRState,
 } from '@coveo/headless/ssr';
 
 const engineDefinition = defineSearchEngine({
@@ -14,7 +14,7 @@ const engineDefinition = defineSearchEngine({
   controllers: {resultList: defineResultList()},
 });
 
-export type SearchInitialState = InferInitialState<typeof engineDefinition>;
-export type SearchLiveState = InferLiveState<typeof engineDefinition>;
+export type SearchSSRState = InferSSRState<typeof engineDefinition>;
+export type SearchCSRState = InferCSRState<typeof engineDefinition>;
 
 export const {fetchInitialState, hydrateInitialState} = engineDefinition;

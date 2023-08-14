@@ -7,6 +7,10 @@ import {
 import {facetValueDefinition} from '../facet-set/facet-set-validate-payload';
 import {FacetValue} from '../facet-set/interfaces/response';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
+import {
+  DESIRED_COUNT_MAXIMUM,
+  DESIRED_COUNT_MINIMUM,
+} from './automatic-facet-set-constants';
 
 export interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
   /**
@@ -20,7 +24,10 @@ export interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
   selection: FacetValue;
 }
 
-const desiredCountDefinition = new NumberValue({min: 1});
+const desiredCountDefinition = new NumberValue({
+  min: DESIRED_COUNT_MINIMUM,
+  max: DESIRED_COUNT_MAXIMUM,
+});
 export const setDesiredCount = createAction(
   'automaticFacet/setDesiredCount',
   (payload: number) => validatePayload(payload, desiredCountDefinition)
