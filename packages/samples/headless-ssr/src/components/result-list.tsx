@@ -25,7 +25,7 @@ export const ResultList: FunctionComponent<ResultListProps> = (props) => {
   return (
     <div>
       <span id="hydrated-msg">
-        Hydrated engine with {results?.length} results
+        Hydrated engine with {state.results.length} results
       </span>
       <ul style={{textAlign: 'left'}}>
         {state.results.map((result) => (
