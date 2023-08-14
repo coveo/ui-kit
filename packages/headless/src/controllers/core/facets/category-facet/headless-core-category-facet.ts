@@ -387,12 +387,12 @@ export function buildCoreCategoryFacet(
       }
       const hasActiveValues = !!selectedValue;
       const canShowMoreValues =
-        (isHierarchical
-          ? selectedValue?.moreValuesAvailable
-          : response?.moreValuesAvailable) ?? false;
-      const canShowLessValues = isHierarchical
-        ? (selectedValue?.children.length ?? -1) > values.length
-        : values.length > options.numberOfValues;
+        selectedValue?.moreValuesAvailable ??
+        response?.moreValuesAvailable ??
+        false;
+      const canShowLessValues = selectedValue
+        ? selectedValue.children.length > options.numberOfValues
+        : valuesAsTrees.length > options.numberOfValues;
 
       return {
         facetId,
