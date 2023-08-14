@@ -99,7 +99,7 @@ export interface EngineDefinitionWithProps<
 /**
  * @internal
  */
-export type InferInitialState<
+export type InferSSRState<
   T extends
     | FetchInitialStateWithoutProps<ControllerInitialStateMap, AnyAction>
     | FetchInitialStateWithProps<
@@ -111,7 +111,7 @@ export type InferInitialState<
 /**
  * @internal
  */
-export type InferLiveState<
+export type InferCSRState<
   T extends
     | HydrateInitialStateWithoutProps<CoreEngine, ControllersMap, AnyAction>
     | HydrateInitialStateWithProps<
