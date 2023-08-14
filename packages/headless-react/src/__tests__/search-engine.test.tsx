@@ -1,10 +1,18 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import '@testing-library/jest-dom';
 import {render} from '@testing-library/react';
+import React from 'react';
 import {defineSearchEngine} from '../search-engine';
 
 describe('Headless react SSR utils', () => {
   // TODO: add test using `defineResultList` controller once https://github.com/coveo/ui-kit/pull/3099 is merged.
+
+  let errorSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    errorSpy = jest.spyOn(global.console, 'error');
+  });
+
   it('defines react search engine', () => {
     const config = getSampleSearchEngineConfiguration();
     const {
@@ -41,5 +49,6 @@ describe('Headless react SSR utils', () => {
     const SSRControllers = await fetchInitialState({controllers: {}});
 
     render(<SSRStateProvider controllers={SSRControllers.controllers} />);
+    expect(errorSpy).not.toHaveBeenCalled();
   });
 });
