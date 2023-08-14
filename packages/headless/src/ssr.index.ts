@@ -25,3 +25,10 @@ export type {
   SearchBoxMethods,
 } from './controllers/ssr/search-box/headless-ssr-search-box';
 export {defineSearchBox} from './controllers/ssr/search-box/headless-ssr-search-box';
+export type {
+  ResultList,
+  ResultListOptions,
+  ResultListProps,
+  ResultListState,
+} from './controllers/ssr/result-list/headless-ssr-result-list';
+export {defineResultList} from './controllers/ssr/result-list/headless-ssr-result-list';

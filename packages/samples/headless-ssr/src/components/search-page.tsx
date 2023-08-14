@@ -6,6 +6,7 @@ import {
   hydrateInitialState,
 } from '@/src/common/engine';
 import {useEffect, useState} from 'react';
+import {HydrationMetadata} from './hydration-metadata';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';
 
@@ -14,9 +15,9 @@ export default function SearchPage({
 }: {
   initialState: SearchSSRState;
 }) {
-  const [hydrationResult, setHydrationResult] = useState<SearchCSRState | null>(
-    null
-  );
+  const [hydrationResult, setHydrationResult] = useState<
+    SearchCSRState | undefined
+  >(undefined);
 
   useEffect(() => {
     hydrateInitialState(initialState).then(({engine, controllers}) => {
@@ -26,15 +27,17 @@ export default function SearchPage({
 
   return (
     <>
+      <HydrationMetadata
+        initialState={initialState}
+        hydrationResult={hydrationResult}
+      />
       <SearchBox
         initialState={initialState.controllers.searchBox.state}
         controller={hydrationResult?.controllers.searchBox}
       />
       <ResultList
-        results={
-          (hydrationResult ? hydrationResult : initialState).controllers
-            .resultList.state.results
-        }
+        initialState={initialState.controllers.resultList.state}
+        controller={hydrationResult?.controllers.resultList}
       />
     </>
   );
