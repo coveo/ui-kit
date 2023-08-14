@@ -684,4 +684,12 @@
         <label>En savoir plus</label>
         <name>quantic_LearnMore</name>
     </customLabels>
+    <customLabels>
+      <label>Réessayer</label>
+      <name>quantic_TryAgain</name>
+  </customLabels>
+  <customLabels>
+    <label>Quelque chose s'est mal passé lors de la tentative de génération d'une réponse.</label>
+    <name>quantic_CouldNotGenerateAnAnswer</name>
+</customLabels>
 </Translations>
