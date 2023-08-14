@@ -9,8 +9,8 @@ import {
   ControllerDefinitionWithoutProps,
   defineSearchBox,
   defineSearchEngine,
-  InferInitialState,
-  InferLiveState,
+  InferSSRState,
+  InferCSRState,
 } from '@coveo/headless/ssr';
 
 // Custom controller to fetch results from snapshot
@@ -42,7 +42,7 @@ const engineDefinition = defineSearchEngine({
   },
 });
 
-export type SearchInitialState = InferInitialState<typeof engineDefinition>;
-export type SearchLiveState = InferLiveState<typeof engineDefinition>;
+export type SearchSSRState = InferSSRState<typeof engineDefinition>;
+export type SearchCSRState = InferCSRState<typeof engineDefinition>;
 
 export const {fetchInitialState, hydrateInitialState} = engineDefinition;

@@ -1,13 +1,4 @@
-.generated-answer__card-header {
-  justify-content: space-between;
-  align-items: center;
-}
-
-.generated-answer__badge {
-  background-color: var(--lwc-brand-background-primary, #eef4ff);
-  color: var(--lwc-brand-primary, #1b96ff);
-  border-radius: var(--lwc-border-radius-medium, 0.25rem);
-}
+@import '../quanticGeneratedAnswer.css';
 
 .generated-answer__content {
   white-space: pre-wrap;

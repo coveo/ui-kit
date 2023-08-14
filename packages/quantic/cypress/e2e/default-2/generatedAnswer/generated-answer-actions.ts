@@ -28,6 +28,12 @@ function generatedAnswerActions(selector: GeneratedAnswerSelector) {
         })
         .click()
         .logAction(`When clicking on the citation link at the index ${index}`),
+
+    clickRetry: () =>
+      selector
+        .retryButton()
+        .click()
+        .logAction('When clicking on the retry button of the generated answer'),
   };
 }
 

@@ -45,6 +45,51 @@ describe('Automatic Facet Test Suites', () => {
     );
   });
 
+  describe('verify label', () => {
+    const fieldName = 'field';
+    function setupForLabelLogic(responseLabel: string | undefined) {
+      new TestFixture()
+        .with(
+          addAutomaticFacetGenerator({
+            'desired-count': '1',
+            'are-collapsed': 'false',
+          })
+        )
+        .withCustomResponse((r) => {
+          r.generateAutomaticFacets = {
+            facets: [
+              {
+                field: fieldName,
+                label: responseLabel,
+                values: [],
+              },
+            ],
+          };
+        })
+        .init();
+    }
+
+    describe('when it is defined in the response', () => {
+      beforeEach(() => setupForLabelLogic('label'));
+
+      AutomaticFacetAssertions.assertLabel(
+        AutomaticFacetSelectors,
+        'label',
+        'label'
+      );
+    });
+
+    describe('when it is undefined in the response', () => {
+      beforeEach(() => setupForLabelLogic(undefined));
+
+      AutomaticFacetAssertions.assertLabel(
+        AutomaticFacetSelectors,
+        fieldName,
+        'field'
+      );
+    });
+  });
+
   describe('when selecting a value', () => {
     const index = 1;
     function setupSelectValue() {

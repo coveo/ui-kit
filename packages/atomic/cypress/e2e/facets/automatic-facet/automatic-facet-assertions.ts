@@ -53,3 +53,13 @@ export function assertLogClearFacetValues() {
     });
   });
 }
+
+export function assertLabel(
+  BaseFacetSelector: BaseFacetSelector,
+  labelValue: string,
+  fieldOrLabel: string
+) {
+  it(`should have the ${fieldOrLabel} value as the value`, () => {
+    BaseFacetSelector.labelButton().contains(labelValue);
+  });
+}

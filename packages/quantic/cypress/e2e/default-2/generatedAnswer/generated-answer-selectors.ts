@@ -11,6 +11,7 @@ export interface GeneratedAnswerSelector extends ComponentSelector {
   citationTitle: (index: number) => CypressSelector;
   citationIndex: (index: number) => CypressSelector;
   citationLink: (index: number) => CypressSelector;
+  retryButton: () => CypressSelector;
 }
 
 export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
@@ -48,4 +49,8 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get()
       .find('[data-cy="generated-answer__citations"] .citation__badge')
       .eq(index),
+  retryButton: () =>
+    GeneratedAnswerSelectors.get().find(
+      '[data-cy="generated-answer__retry-button"]'
+    ),
 };

@@ -5,7 +5,9 @@ import {Result} from '@coveo/headless';
 export function ResultList({results}: {results: Result[]}) {
   return (
     <div>
-      Hydrated engine with {results?.length} results
+      <span id="hydrated-msg">
+        Hydrated engine with {results?.length} results
+      </span>
       <ul>
         {results?.map((result) => (
           <li key={result.uniqueId}>
@@ -13,6 +15,12 @@ export function ResultList({results}: {results: Result[]}) {
           </li>
         ))}
       </ul>
+      <div>
+        Rendered on{' '}
+        <span id="timestamp" suppressHydrationWarning>
+          {new Date().toISOString()}
+        </span>
+      </div>
     </div>
   );
 }

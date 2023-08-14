@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  SearchInitialState,
-  SearchLiveState,
+  SearchSSRState,
+  SearchCSRState,
   hydrateInitialState,
 } from '@/src/common/engine';
 import {useEffect, useState} from 'react';
@@ -12,10 +12,11 @@ import {SearchBox} from './search-box';
 export default function SearchPage({
   initialState,
 }: {
-  initialState: SearchInitialState;
+  initialState: SearchSSRState;
 }) {
-  const [hydrationResult, setHydrationResult] =
-    useState<SearchLiveState | null>(null);
+  const [hydrationResult, setHydrationResult] = useState<SearchCSRState | null>(
+    null
+  );
 
   useEffect(() => {
     hydrateInitialState(initialState).then(({engine, controllers}) => {
