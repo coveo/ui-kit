@@ -84,6 +84,9 @@
         "@lwc/jest-serializer": "11.4.0",
         "@lwc/jest-transformer": "11.4.0"
       }
+    },
+    "@coveo/atomic": {
+      "postcss": "8.4.27"
     }
   },
   "workspaces": [

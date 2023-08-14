@@ -1,7 +1,9 @@
+import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
 import loading from '@salesforce/label/c.quantic_Loading';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
+import tryAgain from '@salesforce/label/c.quantic_TryAgain';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -9,15 +11,19 @@ import {
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
 // @ts-ignore
-import generatedAnswerTemplate from './generatedAnswer.html';
+import generatedAnswerTemplate from './templates/generatedAnswer.html';
 // @ts-ignore
-import loadingTemplate from './loading.html';
+import loadingTemplate from './templates/loading.html';
+// @ts-ignore
+import retryPromptTemplate from './templates/retryPrompt.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
 /** @typedef {import("coveo").GeneratedAnswerState} GeneratedAnswerState */
 /** @typedef {import("coveo").GeneratedAnswerCitation} GeneratedAnswerCitation */
 /** @typedef { 'neutral' | 'liked' | 'disliked'} FeedbackState */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
+/** @typedef {import("coveo").SearchStatusState} SearchStatusState */
 
 const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
@@ -25,7 +31,7 @@ const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
- * @category Search
+ * @category Internal
  * @example
  * <c-quantic-generated-answer engine-id={engineId}></c-quantic-generated-answer>
  */
@@ -42,6 +48,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     loading,
     thisAnswerWasNotHelpful,
     thisAnswerWasHelpful,
+    tryAgain,
+    couldNotGenerateAnAnswer,
   };
 
   /** @type {GeneratedAnswer} */
@@ -50,6 +58,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   state;
   /** @type {FeedbackState} */
   feedbackState = 'neutral';
+  /** @type {SearchStatus} */
+  searchStatus;
+  /** @type {SearchStatusState} */
+  searchStatusState;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -65,9 +77,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
     this.generatedAnswer = this.headless.buildGeneratedAnswer(engine);
-    // @ts-ignore
+    this.searchStatus = this.headless.buildSearchStatus(engine);
+
     this.unsubscribeGeneratedAnswer = this.generatedAnswer.subscribe(() =>
       this.updateState()
+    );
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateSearchStatusState()
     );
   };
 
@@ -78,6 +94,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   updateState() {
     this.state = this.generatedAnswer.state;
     this.updateFeedbackState();
+  }
+
+  updateSearchStatusState() {
+    this.searchStatusState = this.searchStatus.state;
   }
 
   updateFeedbackState() {
@@ -116,6 +136,10 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.generatedAnswer.dislike?.();
   }
 
+  handleRetry() {
+    this.generatedAnswer.retry();
+  }
+
   get answer() {
     return this?.state?.answer;
   }
@@ -137,7 +161,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldDisplayGeneratedAnswer() {
-    return !!this.answer || this.isStreaming || !!this.citations?.length;
+    return (
+      !!this.answer ||
+      this.isStreaming ||
+      this.citations?.length > 0 ||
+      this.hasRetryableError
+    );
   }
 
   get generatedContentClass() {
@@ -146,9 +175,16 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }`;
   }
 
+  get hasRetryableError() {
+    return !this?.searchStatusState?.hasError && this.state?.error?.isRetryable;
+  }
+
   render() {
     if (this.isLoading) {
       return loadingTemplate;
+    }
+    if (this.hasRetryableError) {
+      return retryPromptTemplate;
     }
     return generatedAnswerTemplate;
   }

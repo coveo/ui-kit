@@ -1,0 +1,2 @@
+export const DESIRED_COUNT_MAXIMUM = 10;
+export const DESIRED_COUNT_MINIMUM = 1;

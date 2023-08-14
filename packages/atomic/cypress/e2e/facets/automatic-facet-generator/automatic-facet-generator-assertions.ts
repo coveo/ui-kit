@@ -18,3 +18,7 @@ export function assertCollapseAutomaticFacets(isCollapsed: boolean) {
 export function assertDisplayPlaceholder() {
   cy.get(automaticFacetGeneratorComponent).find('[part="placeholder"]');
 }
+
+export function assertDisplayNothing() {
+  cy.get(automaticFacetGeneratorComponent).children().should('not.exist');
+}

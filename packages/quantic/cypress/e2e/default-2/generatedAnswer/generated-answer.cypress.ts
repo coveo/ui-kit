@@ -4,6 +4,9 @@ import {
   mockSearchWithGeneratedAnswer,
   mockSearchWithoutGeneratedAnswer,
   mockStreamResponse,
+  mockStreamError,
+  InterceptAliases,
+  getStreamInterceptAlias,
 } from '../../../page-objects/search';
 import {scope} from '../../../reporters/detailed-collector';
 import {GeneratedAnswerActions as Actions} from './generated-answer-actions';
@@ -184,13 +187,54 @@ describe('quantic-generated-answer', () => {
       };
 
       beforeEach(() => {
-        mockSearchWithGeneratedAnswer;
+        mockSearchWithGeneratedAnswer(streamId);
         mockStreamResponse(streamId, testErrorPayload);
         visitGeneratedAnswer();
       });
 
       it('should not display the component', () => {
         Expect.displayGeneratedAnswerCard(false);
+      });
+    });
+
+    describe('when the stream connection fails', () => {
+      const streamId = crypto.randomUUID();
+
+      describe('Non-retryable error (4XX)', () => {
+        beforeEach(() => {
+          mockSearchWithGeneratedAnswer(streamId);
+          mockStreamError(streamId, 406);
+          visitGeneratedAnswer();
+          cy.wait(getStreamInterceptAlias(streamId));
+        });
+
+        it('should not show the component', () => {
+          Expect.displayGeneratedAnswerCard(false);
+        });
+      });
+
+      describe('Retryable error', () => {
+        [500, 429].forEach((errorCode) => {
+          describe(`${errorCode} error`, () => {
+            beforeEach(() => {
+              mockSearchWithGeneratedAnswer(streamId);
+              mockStreamError(streamId, errorCode);
+              visitGeneratedAnswer();
+            });
+
+            it('should retry the stream 3 times then offer a retry button', () => {
+              for (let times = 0; times < 3; times++) {
+                Expect.displayGeneratedAnswerCard(false);
+                cy.wait(getStreamInterceptAlias(streamId));
+              }
+              Expect.displayGeneratedAnswerCard(true);
+
+              Actions.clickRetry();
+              cy.wait(InterceptAliases.Search);
+              Expect.logRetryGeneratedAnswer(streamId);
+            });
+          });
+        });
       });
     });
   });
