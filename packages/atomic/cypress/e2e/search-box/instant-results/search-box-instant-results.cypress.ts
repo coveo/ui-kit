@@ -18,7 +18,7 @@ import {searchBoxComponent, SearchBoxSelectors} from '../search-box-selectors';
 import * as InstantResultsAssertions from './search-box-instant-results-assertions';
 import {InstantResultsSelectors} from './search-box-instant-results-selectors';
 
-const delay = (force = false) => ({delay: 200, force});
+const delay = (force = false) => ({delay: 400, force});
 const downKeys = (count: number) => Array(count).fill('{downarrow}').join('');
 
 const setInstantResults = (count: number) => (fixture: TestFixture) => {
@@ -299,7 +299,7 @@ describe('Instant Results Test Suites', () => {
       beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type('{downarrow}', {
-          delay: 200,
+          delay: 400,
           force: true,
         });
         cy.wait(TestFixture.interceptAliases.Search);

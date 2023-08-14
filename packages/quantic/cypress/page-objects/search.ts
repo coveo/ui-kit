@@ -71,6 +71,7 @@ export const InterceptAliases = {
       DislikeGeneratedAnswer: uaAlias('dislikeGeneratedAnswer'),
       GeneratedAnswerStreamEnd: uaAlias('generatedAnswerStreamEnd'),
       OpenGeneratedAnswerSource: uaAlias('openGeneratedAnswerSource'),
+      RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
     },
   },
   QuerySuggestions: '@coveoQuerySuggest',
@@ -416,6 +417,24 @@ export function mockStreamResponse(streamId: string, body: unknown) {
       request.reply(200, `data: ${JSON.stringify(body)} \n\n`, {
         'content-type': 'text/event-stream',
       });
+    }
+  ).as(getStreamInterceptAlias(streamId).substring(1));
+}
+
+export function mockStreamError(streamId: string, errorCode: number) {
+  cy.intercept(
+    {
+      method: 'GET',
+      url: `**/machinelearning/streaming/${streamId}`,
+    },
+    (request) => {
+      request.reply(
+        errorCode,
+        {},
+        {
+          'content-type': 'text/event-stream',
+        }
+      );
     }
   ).as(getStreamInterceptAlias(streamId).substring(1));
 }
