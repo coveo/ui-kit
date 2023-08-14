@@ -21,6 +21,5 @@
     "target": "ES2022",
     "lib": ["dom", "ES2022"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["**/__tests__/**"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
