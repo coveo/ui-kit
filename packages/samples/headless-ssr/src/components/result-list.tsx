@@ -18,22 +18,13 @@ export const ResultList: FunctionComponent<ResultListProps> = (props) => {
     [controller]
   );
 
-  if (!state.results.length) {
-    return <div>No results</div>;
-  }
-
   return (
-    <div>
-      <ul style={{textAlign: 'left'}}>
-        {state.results.map((result) => (
-          <li key={result.uniqueId}>
-            <article>
-              <h3>{result.title}</h3>
-              <p>{result.excerpt}</p>
-            </article>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul>
+      {state.results.map((result) => (
+        <li key={result.uniqueId}>
+          <h3>{result.title}</h3>
+        </li>
+      ))}
+    </ul>
   );
 };
