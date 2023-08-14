@@ -148,6 +148,11 @@ export interface CoreCategoryFacetState {
   valuesAsTrees: CategoryFacetValue[];
 
   /**
+   * The facet's selected value if any, undefined otherwise.
+   */
+  activeValue: CategoryFacetValue | undefined;
+
+  /**
    * Whether `valuesAsTree` contains hierarchical values, or flat values.
    */
   isHierarchical: boolean;
@@ -344,8 +349,9 @@ export function buildCoreCategoryFacet(
 
     showMoreValues() {
       const {numberOfValues: increment} = options;
-      const {values} = this.state;
-      const numberOfValues = values.length + increment;
+      const {activeValue, valuesAsTrees} = this.state;
+      const numberOfValues =
+        activeValue?.children.length ?? valuesAsTrees.length + increment;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetOptions());
@@ -375,23 +381,23 @@ export function buildCoreCategoryFacet(
       const isHierarchical =
         valuesAsTrees.some((value) => value.children.length > 0) ?? false;
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
-      let selectedValue: CategoryFacetValue | undefined = undefined;
+      let activeValue: CategoryFacetValue | undefined = undefined;
       const valueToVisit = [...valuesAsTrees];
       while (valueToVisit.length > 0) {
         const currentValue = valueToVisit.pop()!;
         if (currentValue.state === 'selected') {
-          selectedValue = currentValue;
+          activeValue = currentValue;
           break;
         }
         valueToVisit.push(...currentValue.children);
       }
-      const hasActiveValues = !!selectedValue;
+      const hasActiveValues = !!activeValue;
       const canShowMoreValues =
-        selectedValue?.moreValuesAvailable ??
+        activeValue?.moreValuesAvailable ??
         response?.moreValuesAvailable ??
         false;
-      const canShowLessValues = selectedValue
-        ? selectedValue.children.length > options.numberOfValues
+      const canShowLessValues = activeValue
+        ? activeValue.children.length > options.numberOfValues
         : valuesAsTrees.length > options.numberOfValues;
 
       return {
@@ -400,6 +406,7 @@ export function buildCoreCategoryFacet(
         values,
         isHierarchical,
         valuesAsTrees,
+        activeValue,
         isLoading,
         hasActiveValues,
         canShowMoreValues,
