@@ -1,7 +1,6 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import '@testing-library/jest-dom';
 import {render} from '@testing-library/react';
-import React from 'react';
 import {defineSearchEngine} from '../search-engine';
 
 describe('Headless react SSR utils', () => {
@@ -41,7 +40,7 @@ describe('Headless react SSR utils', () => {
     expect(rest).toEqual({}); // No other return values
   });
 
-  it('renders provider', async () => {
+  it('renders provider without error', async () => {
     const config = getSampleSearchEngineConfiguration();
     const {fetchInitialState, SSRStateProvider} = defineSearchEngine({
       configuration: config,
