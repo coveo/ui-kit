@@ -12,7 +12,13 @@ export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
 }) => (
   <>
     <div>
-      Hydrated: <span id="hydrated-indicator">{csrResult ? 'yes' : 'no'}</span>
+      Hydrated:{' '}
+      <input
+        id="hydrated-indicator"
+        type="checkbox"
+        readOnly
+        checked={!!csrResult}
+      />
     </div>
     <span id="hydrated-msg">
       Rendered engine with{' '}

@@ -13,5 +13,5 @@ export function spyOnConsole() {
 }
 
 export function waitForHydration() {
-  cy.get('#hydrated-indicator').should('have.text', 'yes');
+  cy.get('#hydrated-indicator').should('be.checked');
 }
