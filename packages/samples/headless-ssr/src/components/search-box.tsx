@@ -33,14 +33,3 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
     </form>
   );
 };
-
-// usage
-
-/**
- * ```tsx
- * const options: SearchBoxOptions = {numberOfSuggestions: 8};
- * const controller = buildSearchBox(engine, {options});
- *
- * <SearchBox controller={controller} />;
- * ```
- */
