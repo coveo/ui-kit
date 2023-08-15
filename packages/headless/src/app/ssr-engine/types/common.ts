@@ -20,14 +20,16 @@ export interface ControllersMap {
   [customName: string]: Controller;
 }
 
-export interface ControllerInitialState<TState> {
+export interface ControllerSSRState<TState> {
   state: TState;
 }
 
-export interface ControllerInitialStateMap {
-  [customName: string]: ControllerInitialState<unknown>;
+export interface ControllerSSRStateMap {
+  [customName: string]: ControllerSSRState<unknown>;
 }
-
+/**
+ * @internal
+ */
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TController extends Controller
@@ -35,6 +37,9 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: TEngine): TController;
 }
 
+/**
+ * @internal
+ */
 export interface ControllerDefinitionWithProps<
   TEngine extends CoreEngine,
   TController extends Controller,
@@ -43,6 +48,9 @@ export interface ControllerDefinitionWithProps<
   buildWithProps(engine: TEngine, props: TProps): TController;
 }
 
+/**
+ * @internal
+ */
 export type ControllerDefinition<
   TEngine extends CoreEngine,
   TController extends Controller
@@ -60,9 +68,9 @@ export interface ControllerDefinitionsMap<
   [customName: string]: ControllerDefinition<TEngine, TController>;
 }
 
-export interface EngineInitialState<
+export interface EngineSSRState<
   TSearchFulfilledAction extends AnyAction,
-  TControllers extends ControllerInitialStateMap
+  TControllers extends ControllerSSRStateMap
 > {
   searchFulfilledAction: TSearchFulfilledAction;
   controllers: TControllers;
@@ -114,9 +122,16 @@ export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};
 
-/**
- * @internal
- */
-export type InferControllerInitialStateMapFromDefinitions<
+export type InferControllerSSRStateFromDefinition<
+  TDefinition extends ControllerDefinition<CoreEngine, Controller>
+> = TDefinition extends ControllerDefinition<infer _, infer TController>
+  ? ControllerSSRState<TController['state']>
+  : never;
+
+export type InferControllerSSRStateMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
-> = {[K in keyof TControllers]: {state: TControllers[K]}};
+> = {
+  [K in keyof TControllers]: InferControllerSSRStateFromDefinition<
+    TControllers[K]
+  >;
+};

@@ -1,21 +1,31 @@
 'use client';
 
-import {SearchHydrationResult, hydrateInitialState} from '@/src/common/engine';
+import {
+  SearchSSRState,
+  SearchCSRState,
+  hydrateInitialState,
+} from '@/src/common/engine';
 import {useEffect, useState} from 'react';
-import ResultList from './result-list';
+import {HydrationMetadata} from './hydration-metadata';
+import {ResultList} from './result-list';
 
-export default function SearchPage({engineSnapshot}: {engineSnapshot: any}) {
-  const [hydrationResult, setHydrationResult] =
-    useState<SearchHydrationResult | null>(null);
+export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
+  const [csrResult, setCSRResult] = useState<SearchCSRState | undefined>(
+    undefined
+  );
 
   useEffect(() => {
-    hydrateInitialState(engineSnapshot).then(({engine, controllers}) => {
-      setHydrationResult({engine, controllers});
+    hydrateInitialState(ssrState).then(({engine, controllers}) => {
+      setCSRResult({engine, controllers});
     });
-  }, [engineSnapshot]);
-
-  const results = hydrationResult
-    ? hydrationResult.engine.state.search.results
-    : engineSnapshot.controllers.resultList.state;
-  return results && <ResultList results={results}></ResultList>;
+  }, [ssrState]);
+  return (
+    <>
+      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
+      <ResultList
+        initialState={ssrState.controllers.resultList.state}
+        controller={csrResult?.controllers.resultList}
+      />
+    </>
+  );
 }
