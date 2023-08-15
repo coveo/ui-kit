@@ -46,7 +46,7 @@ describe('headless ssr example', () => {
     });
   });
 
-  it.skip('should pass the web-vitals audits', () => {
+  it('should pass the web-vitals audits', () => {
     // TODO: Add input based vitals after interactive elements are added to test page (e.g. search box)
     // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
     const VITALS_THRESHOLD = {
