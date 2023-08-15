@@ -18,7 +18,7 @@
 
   > textarea,
   &::after {
-    @apply whitespace-nowrap z-10 h-full outline-none resize-none bg-transparent text-neutral-dark text-lg grow px-4 py-3.5;
+    @apply whitespace-nowrap z-10 h-full outline-none resize-none bg-transparent text-neutral-dark text-lg grow p-3.5 px-4;
     /* Place on top of each other */
     grid-area: 1 / 1 / 2 / 2;
   }
@@ -27,10 +27,7 @@
     > textarea,
     &::after {
       @apply whitespace-pre-wrap;
+      max-height: 6em;
     }
   }
-}
-
-.searchbox-button-wrapper {
-  height: 47px;
 }

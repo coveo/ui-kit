@@ -12,10 +12,10 @@ export const NewSubmitButton: FunctionalComponent<Props> = ({
   onClick,
   ...defaultButtonProps
 }) => (
-  <div class="searchbox-button-wrapper flex items-center justify-center mr-2">
+  <div class="py-2 flex items-start justify-center mr-2">
     <Button
       style="text-primary"
-      class="flex items-center justify-center h-8 w-8 rounded-full shrink-0"
+      class="flex items-center justify-center w-8 h-8 rounded-full shrink-0"
       part="submit-button"
       ariaLabel={bindings.i18n.t('search')}
       onClick={() => {

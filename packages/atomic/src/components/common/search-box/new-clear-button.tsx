@@ -14,7 +14,7 @@ export const NewClearButton: FunctionalComponent<Props> = ({
   onClick,
   ...defaultButtonProps
 }) => (
-  <div class="searchbox-button-wrapper flex items-center justify-center ml-2">
+  <div class="py-2 flex items-start justify-center ml-2">
     <Button
       style="text-transparent"
       part="clear-button"

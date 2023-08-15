@@ -817,13 +817,13 @@ export class AtomicSearchBox {
               onFocusExit={() => this.clearSuggestions()}
             >
               {this.renderTextBox(searchLabel)}
-              {this.renderSuggestions()}
               <Submit
                 bindings={this.bindings}
                 disabled={this.isSearchDisabled}
                 onClick={() => this.searchBox.submit()}
                 title={searchLabel}
               />
+              {this.renderSuggestions()}
             </atomic-focus-detector>
           </SearchBoxWrapper>,
           !this.suggestions.length && (
