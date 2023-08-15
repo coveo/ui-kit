@@ -22,7 +22,6 @@ export type {
   SearchBoxOptions,
   SearchBoxProps,
   SearchBoxState,
-  SearchBoxMethods,
 } from './controllers/ssr/search-box/headless-ssr-search-box';
 export {defineSearchBox} from './controllers/ssr/search-box/headless-ssr-search-box';
 export type {

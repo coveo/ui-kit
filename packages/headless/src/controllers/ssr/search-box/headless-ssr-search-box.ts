@@ -1,6 +1,5 @@
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {ControllerDefinitionWithoutProps} from '../../../app/ssr-engine/types/common';
-import {Controller} from '../../controller/headless-controller';
 import {
   SearchBox,
   SearchBoxProps,
@@ -13,11 +12,6 @@ export type {
   SearchBoxState,
   SearchBox,
 } from '../../search-box/headless-search-box';
-
-/**
- * @internal
- */
-export type SearchBoxMethods = Omit<SearchBox, keyof Controller>;
 
 /**
  * @internal

@@ -2,7 +2,6 @@ import {
   SearchBoxState,
   SearchBox as SearchBoxController,
 } from '@coveo/headless';
-import {SearchBoxMethods} from '@coveo/headless/ssr';
 import {useEffect, useState, FunctionComponent} from 'react';
 
 interface SearchBoxProps {
