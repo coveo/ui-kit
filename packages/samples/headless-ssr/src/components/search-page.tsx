@@ -10,34 +10,26 @@ import {HydrationMetadata} from './hydration-metadata';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';
 
-export default function SearchPage({
-  initialState,
-}: {
-  initialState: SearchSSRState;
-}) {
-  const [hydrationResult, setHydrationResult] = useState<
-    SearchCSRState | undefined
-  >(undefined);
+export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
+  const [csrResult, setCSRResult] = useState<SearchCSRState | undefined>(
+    undefined
+  );
 
   useEffect(() => {
-    hydrateInitialState(initialState).then(({engine, controllers}) => {
-      setHydrationResult({engine, controllers});
+    hydrateInitialState(ssrState).then(({engine, controllers}) => {
+      setCSRResult({engine, controllers});
     });
-  }, [initialState]);
-
+  }, [ssrState]);
   return (
     <>
-      <HydrationMetadata
-        initialState={initialState}
-        hydrationResult={hydrationResult}
-      />
+      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
       <SearchBox
-        initialState={initialState.controllers.searchBox.state}
-        controller={hydrationResult?.controllers.searchBox}
+        initialState={ssrState.controllers.searchBox.state}
+        controller={csrResult?.controllers.searchBox}
       />
       <ResultList
-        initialState={initialState.controllers.resultList.state}
-        controller={hydrationResult?.controllers.resultList}
+        initialState={ssrState.controllers.resultList.state}
+        controller={csrResult?.controllers.resultList}
       />
     </>
   );

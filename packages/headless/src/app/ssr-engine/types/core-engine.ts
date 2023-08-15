@@ -8,9 +8,9 @@ import {
   ControllersPropsMap,
   HasKeys,
   InferControllerPropsMapFromDefinitions,
-  InferControllerInitialStateMapFromDefinitions,
+  InferControllerSSRStateMapFromDefinitions,
   InferControllersMapFromDefinition,
-  ControllerInitialStateMap,
+  ControllerSSRStateMap,
   ControllersMap,
 } from './common';
 import {
@@ -59,7 +59,7 @@ export interface EngineDefinitionWithoutProps<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions
 > extends FetchInitialStateWithoutProps<
-      InferControllerInitialStateMapFromDefinitions<TControllers>,
+      InferControllerSSRStateMapFromDefinitions<TControllers>,
       AnyAction
     >,
     HydrateInitialStateWithoutProps<
@@ -79,7 +79,7 @@ export interface EngineDefinitionWithProps<
   TEngineOptions,
   TControllerProps extends ControllersPropsMap
 > extends FetchInitialStateWithProps<
-      InferControllerInitialStateMapFromDefinitions<TControllers>,
+      InferControllerSSRStateMapFromDefinitions<TControllers>,
       AnyAction,
       TControllerProps
     >,
@@ -101,9 +101,9 @@ export interface EngineDefinitionWithProps<
  */
 export type InferSSRState<
   T extends
-    | FetchInitialStateWithoutProps<ControllerInitialStateMap, AnyAction>
+    | FetchInitialStateWithoutProps<ControllerSSRStateMap, AnyAction>
     | FetchInitialStateWithProps<
-        ControllerInitialStateMap,
+        ControllerSSRStateMap,
         AnyAction,
         ControllersPropsMap
       >

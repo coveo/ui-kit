@@ -1,9 +1,9 @@
 import 'cypress-web-vitals';
-import {ConsoleAliases, stubConsole, waitForHydration} from './ssr-e2e-utils';
+import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
 
 describe('headless ssr example', () => {
   const numResults = 10;
-  const numResultsMsg = `Rendered engine with ${numResults} results`;
+  const numResultsMsg = `Rendered page with ${numResults} results`;
   const msgSelector = '#hydrated-msg';
   const timestampSelector = '#timestamp';
   it('renders page in SSR as expected', () => {
@@ -57,7 +57,7 @@ describe('headless ssr example', () => {
   });
 
   it('should not log any error nor warning', () => {
-    stubConsole();
+    spyOnConsole();
     cy.visit('/');
     waitForHydration();
     cy.wait(1000);
