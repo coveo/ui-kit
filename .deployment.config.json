@@ -16,9 +16,14 @@
   },
   "ordered_phases": [
     {
-      "id": "deploy-relay-files",
-      "wait": {
-        "seconds": 1
+      "id": "playground",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/relay/playground/",
+        "source": "apps/playground/out/",
+        "parameters": {
+          "acl": "public-read"
+        }
       }
     }
   ],

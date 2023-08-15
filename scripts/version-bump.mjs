@@ -133,7 +133,7 @@ const runPackageBump = async (pkg) => {
   const newVersion = getNextVersion(currentVersion, bumpInfo);
   const newVersionTag = `${versionPrefix}${newVersion}`;
 
-  if (isNewVersionGreaterThanCurrentVersion({newVersion, currentVersion})) {
+  if (isNewVersionGreaterThanCurrentVersion({ newVersion, currentVersion })) {
     await bumpVersion({ newVersion, name, lastTag });
     await gitTag(newVersionTag);
     await updateChangelog({
