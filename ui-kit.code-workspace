@@ -129,6 +129,5 @@
     "[postcss]": {
       "editor.formatOnSave": true
     },
-    "dimmer.enabled": false,
   }
 }
