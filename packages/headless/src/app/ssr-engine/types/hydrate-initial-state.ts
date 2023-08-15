@@ -1,14 +1,10 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {Controller} from '../../../controllers';
 import {CoreEngine} from '../../engine';
 import {
-  ControllerDefinitionsMap,
   ControllersMap,
   ControllersPropsMap,
   EngineAndControllers,
-  InferControllersMapFromDefinition,
 } from './common';
-import {EngineDefinition} from './core-engine';
 
 export interface EngineDefinitionHydrateOptionsWithoutProps<
   TSearchFulfilledAction extends AnyAction
@@ -56,21 +52,3 @@ export type HydrateInitialStateWithProps<
     >
   ): Promise<EngineAndControllers<TEngine, TControllers>>;
 };
-
-/**
- * @internal
- */
-export type InferHydrationResult<
-  T extends EngineDefinition<
-    CoreEngine,
-    ControllerDefinitionsMap<CoreEngine, Controller>,
-    // TODO: Replace with a specific type if possible
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    any
-  >
-> = T extends EngineDefinition<infer TEngine, infer TControllers, infer _>
-  ? EngineAndControllers<
-      TEngine,
-      InferControllersMapFromDefinition<TControllers>
-    >
-  : never;
