@@ -7,8 +7,8 @@ import {
 import {InferControllerFromDefinition} from '@coveo/headless/dist/definitions/app/ssr-engine/types/common';
 import {
   ControllerDefinitionsMap,
-  InferControllersMapFromDefinition, // TODO: Rename Initial/Live to SSR/CSR in headless/ssr package
-  InferControllerInitialStateMapFromDefinitions as InferControllerSSRStateMapFromDefinitions,
+  InferControllersMapFromDefinition,
+  InferControllerSSRStateMapFromDefinitions,
   EngineDefinition,
 } from '@coveo/headless/ssr';
 import {FunctionComponent, PropsWithChildren} from 'react';
