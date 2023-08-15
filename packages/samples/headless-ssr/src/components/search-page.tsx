@@ -8,23 +8,17 @@ import {
 import {useEffect, useState} from 'react';
 import ResultList from './result-list';
 
-export default function SearchPage({
-  initialState,
-}: {
-  initialState: SearchSSRState;
-}) {
-  const [hydrationResult, setHydrationResult] = useState<SearchCSRState | null>(
-    null
-  );
+export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
+  const [csrResult, setCSRResult] = useState<SearchCSRState | null>(null);
 
   useEffect(() => {
-    hydrateInitialState(initialState).then(({engine, controllers}) => {
-      setHydrationResult({engine, controllers});
+    hydrateInitialState(ssrState).then(({engine, controllers}) => {
+      setCSRResult({engine, controllers});
     });
-  }, [initialState]);
+  }, [ssrState]);
 
-  const results = hydrationResult
-    ? hydrationResult.controllers.resultList.state.results
-    : initialState.controllers.resultList.state.results;
+  const results = csrResult
+    ? csrResult.controllers.resultList.state.results
+    : ssrState.controllers.resultList.state.results;
   return <ResultList results={results}></ResultList>;
 }
