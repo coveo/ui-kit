@@ -21,7 +21,7 @@ export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
       />
     </div>
     <span id="hydrated-msg">
-      Rendered engine with{' '}
+      Rendered page with{' '}
       {(csrResult ?? ssrState).controllers.resultList.state.results.length}{' '}
       results
     </span>

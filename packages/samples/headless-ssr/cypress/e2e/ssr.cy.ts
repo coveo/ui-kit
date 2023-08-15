@@ -3,7 +3,7 @@ import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
 
 describe('headless ssr example', () => {
   const numResults = 10;
-  const numResultsMsg = `Rendered engine with ${numResults} results`;
+  const numResultsMsg = `Rendered page with ${numResults} results`;
   const msgSelector = '#hydrated-msg';
   const timestampSelector = '#timestamp';
   it('renders page in SSR as expected', () => {
