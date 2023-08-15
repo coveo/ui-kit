@@ -351,7 +351,7 @@ export function buildCoreCategoryFacet(
       const {numberOfValues: increment} = options;
       const {activeValue, valuesAsTrees} = this.state;
       const numberOfValues =
-        activeValue?.children.length ?? valuesAsTrees.length + increment;
+        (activeValue?.children.length ?? valuesAsTrees.length) + increment;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetOptions());
