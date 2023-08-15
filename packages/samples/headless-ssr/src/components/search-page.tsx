@@ -6,19 +6,26 @@ import {
   hydrateInitialState,
 } from '@/src/common/engine';
 import {useEffect, useState} from 'react';
-import ResultList from './result-list';
+import {HydrationMetadata} from './hydration-metadata';
+import {ResultList} from './result-list';
 
 export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
-  const [csrResult, setCSRResult] = useState<SearchCSRState | null>(null);
+  const [csrResult, setCSRResult] = useState<SearchCSRState | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     hydrateInitialState(ssrState).then(({engine, controllers}) => {
       setCSRResult({engine, controllers});
     });
   }, [ssrState]);
-
-  const results = csrResult
-    ? csrResult.controllers.resultList.state.results
-    : ssrState.controllers.resultList.state.results;
-  return <ResultList results={results}></ResultList>;
+  return (
+    <>
+      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
+      <ResultList
+        initialState={ssrState.controllers.resultList.state}
+        controller={csrResult?.controllers.resultList}
+      />
+    </>
+  );
 }

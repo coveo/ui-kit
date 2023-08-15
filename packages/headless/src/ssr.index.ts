@@ -16,3 +16,11 @@ export type {
 } from './app/ssr-engine/types/core-engine';
 
 export {defineSearchEngine} from './app/ssr-engine/ssr-engine';
+
+export type {
+  ResultList,
+  ResultListOptions,
+  ResultListProps,
+  ResultListState,
+} from './controllers/ssr/result-list/headless-ssr-result-list';
+export {defineResultList} from './controllers/ssr/result-list/headless-ssr-result-list';
