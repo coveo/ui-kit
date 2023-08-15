@@ -4,11 +4,11 @@ export const ConsoleAliases = {
   log: '@consoleLog',
 };
 
-export function stubConsole() {
+export function spyOnConsole() {
   cy.window().then((win) => {
-    cy.stub(win.console, 'error').as(ConsoleAliases.error.substring(1));
-    cy.stub(win.console, 'warn').as(ConsoleAliases.warn.substring(1));
-    cy.stub(win.console, 'log').as(ConsoleAliases.log.substring(1));
+    cy.spy(win.console, 'error').as(ConsoleAliases.error.substring(1));
+    cy.spy(win.console, 'warn').as(ConsoleAliases.warn.substring(1));
+    cy.spy(win.console, 'log').as(ConsoleAliases.log.substring(1));
   });
 }
 

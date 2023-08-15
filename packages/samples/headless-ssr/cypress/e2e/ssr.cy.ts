@@ -1,5 +1,5 @@
 import 'cypress-web-vitals';
-import {ConsoleAliases, stubConsole, waitForHydration} from './ssr-e2e-utils';
+import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
 
 describe('headless ssr example', () => {
   const numResults = 10;
@@ -57,7 +57,7 @@ describe('headless ssr example', () => {
   });
 
   it('should not log any error nor warning', () => {
-    stubConsole();
+    spyOnConsole();
     cy.visit('/');
     waitForHydration();
     cy.wait(1000);
