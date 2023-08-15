@@ -3,6 +3,7 @@ import {ProductListingEngine} from '../../../app/product-listing-engine/product-
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
+import {CategoryFacetValueNode} from '../../../features/facets/category-facet-set/interfaces/value';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {
   logFacetClearAll,
@@ -40,6 +41,7 @@ import {buildCategoryFacetSearch} from './headless-product-listing-category-face
 
 export type {
   CategoryFacetValue,
+  CategoryFacetValueNode,
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
   CategoryFacetProps,

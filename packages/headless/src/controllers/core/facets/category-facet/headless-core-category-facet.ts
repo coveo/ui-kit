@@ -21,6 +21,7 @@ import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/
 import {partitionIntoParentsAndValues} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
+import {CategoryFacetValueNode} from '../../../../features/facets/category-facet-set/interfaces/value';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
@@ -48,6 +49,7 @@ import {
 
 export type {
   CategoryFacetValue,
+  CategoryFacetValueNode,
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
 };
@@ -145,12 +147,12 @@ export interface CoreCategoryFacetState {
    * The facet's values, represented in their hierarchical form
    * if there's an hierarchy, flat otherwise.
    */
-  valuesAsTrees: CategoryFacetValue[];
+  valuesAsTrees: CategoryFacetValueNode[];
 
   /**
    * The facet's selected value if any, undefined otherwise.
    */
-  activeValue: CategoryFacetValue | undefined;
+  activeValue: CategoryFacetValueNode | undefined;
 
   /**
    * Whether `valuesAsTree` contains hierarchical values, or flat values.
@@ -377,11 +379,11 @@ export function buildCoreCategoryFacet(
       const response = getResponse();
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();
-      const valuesAsTrees = response?.values ?? [];
+      const valuesAsTrees = compileResponseIntoNodes(response?.values, options);
       const isHierarchical =
         valuesAsTrees.some((value) => value.children.length > 0) ?? false;
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
-      let activeValue: CategoryFacetValue | undefined = undefined;
+      let activeValue: CategoryFacetValueNode | undefined = undefined;
       const valueToVisit = [...valuesAsTrees];
       while (valueToVisit.length > 0) {
         const currentValue = valueToVisit.pop()!;
@@ -435,4 +437,19 @@ function loadCategoryFacetReducers(
     search,
   });
   return true;
+}
+function compileResponseIntoNodes(
+  values: CategoryFacetValue[] | undefined,
+  options: Required<CategoryFacetOptions>
+): CategoryFacetValueNode[] {
+  if (!values?.length) {
+    return [];
+  }
+
+  return values.map<CategoryFacetValueNode>((value) => ({
+    ...value,
+    children: compileResponseIntoNodes(value.children, options),
+    canShowMoreValue: value.moreValuesAvailable,
+    canShowLessValue: value.children.length > options.numberOfValues,
+  }));
 }

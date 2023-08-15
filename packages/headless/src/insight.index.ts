@@ -98,6 +98,7 @@ export type {
   CategoryFacetState,
   CategoryFacet,
   CategoryFacetValue,
+  CategoryFacetValueNode,
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
