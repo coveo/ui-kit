@@ -25,7 +25,6 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
-  ResultTarget,
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
@@ -49,7 +48,6 @@ export class AtomicInsightResultList
   private resultListCommon!: ResultListCommon;
   private loadingFlag = randomID('firstInsightResultLoaded-');
   private display: ResultDisplayLayout = 'list';
-  private gridCellLinkTarget: ResultTarget = '_self';
   private resultRenderingFunction: ResultRenderingFunction;
 
   @Element() public host!: HTMLDivElement;
@@ -117,7 +115,6 @@ export class AtomicInsightResultList
       getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
       host: this.host,
       bindings: this.bindings,
-      gridCellLinkTarget: this.gridCellLinkTarget,
       getDensity: () => this.density,
       getResultDisplay: () => this.display,
       getLayoutDisplay: () => this.display,

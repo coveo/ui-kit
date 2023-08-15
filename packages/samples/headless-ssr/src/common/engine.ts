@@ -1,35 +1,20 @@
+import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {
-  buildController,
-  getSampleSearchEngineConfiguration,
-  SearchEngine,
-} from '@coveo/headless';
-import {defineSearchEngine, InferHydrationResult} from '@coveo/headless/ssr';
-
-// Custom controller to fetch results from snapshot
-//  as snapshot doesn't have an engine that can be accessed directly.
-function defineCustomResultList() {
-  return {
-    build(engine: SearchEngine) {
-      return {
-        ...buildController(engine),
-        get state() {
-          return engine.state.search.results;
-        },
-      };
-    },
-  };
-}
+  defineSearchEngine,
+  defineResultList,
+  InferSSRState,
+  InferCSRState,
+} from '@coveo/headless/ssr';
 
 const engineDefinition = defineSearchEngine({
   configuration: {
     ...getSampleSearchEngineConfiguration(),
     analytics: {enabled: false},
   },
-  controllers: {resultList: defineCustomResultList()},
+  controllers: {resultList: defineResultList()},
 });
 
-export type SearchHydrationResult = InferHydrationResult<
-  typeof engineDefinition
->;
+export type SearchSSRState = InferSSRState<typeof engineDefinition>;
+export type SearchCSRState = InferCSRState<typeof engineDefinition>;
 
 export const {fetchInitialState, hydrateInitialState} = engineDefinition;

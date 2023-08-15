@@ -8,8 +8,10 @@ import {
   ControllersPropsMap,
   HasKeys,
   InferControllerPropsMapFromDefinitions,
-  InferControllerInitialStateMapFromDefinitions,
+  InferControllerSSRStateMapFromDefinitions,
   InferControllersMapFromDefinition,
+  ControllerSSRStateMap,
+  ControllersMap,
 } from './common';
 import {
   FetchInitialStateWithProps,
@@ -41,7 +43,7 @@ export type EngineDefinition<
       TEngineOptions,
       InferControllerPropsMapFromDefinitions<TControllers>
     >
-  : InferControllerPropsMapFromDefinitions<TControllers> extends false
+  : HasKeys<InferControllerPropsMapFromDefinitions<TControllers>> extends false
   ? EngineDefinitionWithoutProps<TEngine, TControllers, TEngineOptions>
   :
       | EngineDefinitionWithProps<
@@ -57,7 +59,7 @@ export interface EngineDefinitionWithoutProps<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions
 > extends FetchInitialStateWithoutProps<
-      InferControllerInitialStateMapFromDefinitions<TControllers>,
+      InferControllerSSRStateMapFromDefinitions<TControllers>,
       AnyAction
     >,
     HydrateInitialStateWithoutProps<
@@ -77,7 +79,7 @@ export interface EngineDefinitionWithProps<
   TEngineOptions,
   TControllerProps extends ControllersPropsMap
 > extends FetchInitialStateWithProps<
-      InferControllerInitialStateMapFromDefinitions<TControllers>,
+      InferControllerSSRStateMapFromDefinitions<TControllers>,
       AnyAction,
       TControllerProps
     >,
@@ -93,3 +95,29 @@ export interface EngineDefinitionWithProps<
       InferControllersMapFromDefinition<TControllers>,
       TControllerProps
     > {}
+
+/**
+ * @internal
+ */
+export type InferSSRState<
+  T extends
+    | FetchInitialStateWithoutProps<ControllerSSRStateMap, AnyAction>
+    | FetchInitialStateWithProps<
+        ControllerSSRStateMap,
+        AnyAction,
+        ControllersPropsMap
+      >
+> = Awaited<ReturnType<T['fetchInitialState']>>;
+/**
+ * @internal
+ */
+export type InferCSRState<
+  T extends
+    | HydrateInitialStateWithoutProps<CoreEngine, ControllersMap, AnyAction>
+    | HydrateInitialStateWithProps<
+        CoreEngine,
+        ControllersMap,
+        AnyAction,
+        ControllersPropsMap
+      >
+> = Awaited<ReturnType<T['hydrateInitialState']>>;

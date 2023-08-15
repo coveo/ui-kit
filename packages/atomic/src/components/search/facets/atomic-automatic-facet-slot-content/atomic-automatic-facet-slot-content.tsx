@@ -1,8 +1,8 @@
 import {
-  AutomaticFacetBuilder,
-  AutomaticFacetBuilderState,
+  AutomaticFacetGenerator,
+  AutomaticFacetGeneratorState,
   SearchStatus,
-  buildAutomaticFacetBuilder,
+  buildAutomaticFacetGenerator,
   buildSearchStatus,
 } from '@coveo/headless';
 import {Component, Host, Prop, State, h} from '@stencil/core';
@@ -26,10 +26,10 @@ export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
 
-  private automaticFacetBuilder!: AutomaticFacetBuilder;
-  @BindStateToController('automaticFacetBuilder')
+  private automaticFacetGenerator!: AutomaticFacetGenerator;
+  @BindStateToController('automaticFacetGenerator')
   @State()
-  public automaticFacetBuilderState!: AutomaticFacetBuilderState;
+  public automaticFacetGeneratorState!: AutomaticFacetGeneratorState;
 
   public searchStatus!: SearchStatus;
 
@@ -39,7 +39,7 @@ export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
     const desiredCount =
       this.bindings.engine.state.automaticFacetSet?.desiredCount;
     if (desiredCount) {
-      this.automaticFacetBuilder = buildAutomaticFacetBuilder(
+      this.automaticFacetGenerator = buildAutomaticFacetGenerator(
         this.bindings.engine,
         {desiredCount}
       );
@@ -48,7 +48,7 @@ export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
   }
   public render() {
     const automaticFacets =
-      this.automaticFacetBuilder?.state.automaticFacets.map((facet) => {
+      this.automaticFacetGenerator?.state.automaticFacets.map((facet) => {
         return (
           <atomic-automatic-facet
             key={facet.state.field}

@@ -1241,9 +1241,23 @@
     </labels>
     <labels>
       <fullName>quantic_LearnMore</fullName>
-      <value>Learn More</value>
+      <value>Learn more</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Learn More</shortDescription>
+      <shortDescription>Learn more</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_TryAgain</fullName>
+      <value>Try again</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Try again</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_CouldNotGenerateAnAnswer</fullName>
+      <value>Something went wrong and we couldn't generate an answer.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Something went wrong and we couldn't generate an answer.</shortDescription>
     </labels>
 </CustomLabels>
