@@ -1,28 +1,20 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
+import {defineResultList} from '@coveo/headless/ssr';
 import '@testing-library/jest-dom';
 import {render} from '@testing-library/react';
-import {capitalize, defineSearchEngine} from './search-engine';
+import {defineSearchEngine} from './search-engine';
 
 describe('Headless react SSR utils', () => {
   // TODO: add test using `defineResultList` controller once https://github.com/coveo/ui-kit/pull/3099 is merged.
 
   let errorSpy: jest.SpyInstance;
+  const sampleConfig = getSampleSearchEngineConfiguration();
 
   beforeEach(() => {
     errorSpy = jest.spyOn(global.console, 'error');
   });
 
-  test.each([
-    ['foo', 'Foo'],
-    ['fOO', 'FOO'],
-    ['Foo', 'Foo'],
-    ['FOO', 'FOO'],
-  ])('capitalize %s', (input, output) => {
-    expect(capitalize(input)).toEqual(output);
-  });
-
   test('defines react search engine', () => {
-    const config = getSampleSearchEngineConfiguration();
     const {
       fetchInitialState,
       hydrateInitialState,
@@ -33,7 +25,7 @@ describe('Headless react SSR utils', () => {
       CSRProvider,
       ...rest
     } = defineSearchEngine({
-      configuration: config,
+      configuration: sampleConfig,
     });
 
     [
@@ -47,6 +39,14 @@ describe('Headless react SSR utils', () => {
 
     expect(controllers).toEqual({});
     expect(rest).toEqual({}); // No other return values
+  });
+
+  test('creates a hook based on given controller', () => {
+    const {controllers} = defineSearchEngine({
+      configuration: sampleConfig,
+      controllers: {resultList: defineResultList()},
+    });
+    expect(typeof controllers.useResultList).toEqual('function');
   });
 
   describe('renders providers without error', () => {
