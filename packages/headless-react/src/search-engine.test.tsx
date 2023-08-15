@@ -1,7 +1,7 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import '@testing-library/jest-dom';
 import {render} from '@testing-library/react';
-import {defineSearchEngine} from '../search-engine';
+import {capitalize, defineSearchEngine} from './search-engine';
 
 describe('Headless react SSR utils', () => {
   // TODO: add test using `defineResultList` controller once https://github.com/coveo/ui-kit/pull/3099 is merged.
@@ -12,7 +12,16 @@ describe('Headless react SSR utils', () => {
     errorSpy = jest.spyOn(global.console, 'error');
   });
 
-  it('defines react search engine', () => {
+  test.each([
+    ['foo', 'Foo'],
+    ['fOO', 'FOO'],
+    ['Foo', 'Foo'],
+    ['FOO', 'FOO'],
+  ])('capitalize %s', (input, output) => {
+    expect(capitalize(input)).toEqual(output);
+  });
+
+  test('defines react search engine', () => {
     const config = getSampleSearchEngineConfiguration();
     const {
       fetchInitialState,
@@ -40,14 +49,30 @@ describe('Headless react SSR utils', () => {
     expect(rest).toEqual({}); // No other return values
   });
 
-  it('renders provider without error', async () => {
+  describe('renders providers without error', () => {
     const config = getSampleSearchEngineConfiguration();
     const {fetchInitialState, SSRStateProvider} = defineSearchEngine({
       configuration: config,
     });
-    const SSRControllers = await fetchInitialState({controllers: {}});
+    test('SSRProvider', async () => {
+      const SSRControllers = await fetchInitialState({controllers: {}});
 
-    render(<SSRStateProvider controllers={SSRControllers.controllers} />);
-    expect(errorSpy).not.toHaveBeenCalled();
+      render(<SSRStateProvider controllers={SSRControllers.controllers} />);
+      expect(errorSpy).not.toHaveBeenCalled();
+    });
+
+    // TODO: Add CSR test
+    // test('CSR Provider', () => {
+    //   type CSRSearchState = Infer
+    //   function useHydrate(SSRState) {
+    //     const [CSRState, setCSRState] = useState(SearchCSRS)
+
+    //   }
+    //   function TestHydration() {
+
+    //   }
+    //   render(<CSRProvider engine={} controllers={}></CSRProvider>);
+    //   expect(errorSpy).not.toHaveBeenCalled();
+    //  })
   });
 });
