@@ -13,7 +13,7 @@ const engineDefinition = defineSearchEngine({
     analytics: {enabled: false},
   },
   controllers: {
-    searchBox: defineSearchBox({options: {numberOfSuggestions: 4}}),
+    searchBox: defineSearchBox(),
     resultList: defineResultList(),
   },
 });
