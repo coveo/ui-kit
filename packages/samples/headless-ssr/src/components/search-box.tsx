@@ -12,8 +12,6 @@ interface SearchBoxProps {
 export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
   const {initialState, controller} = props;
   const [state, setState] = useState(initialState);
-  const isEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) =>
-    e.key === 'Enter';
 
   useEffect(
     () => controller?.subscribe?.(() => setState({...controller.state})),
@@ -21,23 +19,18 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
   );
 
   return (
-    <div>
+    <form
+      className="search-box"
+      onSubmit={(e) => {
+        e.preventDefault();
+        controller?.submit();
+      }}
+    >
       <input
         value={state.value}
         onChange={(e) => controller?.updateText(e.target.value)}
-        onKeyDown={(e) => isEnterKey(e) && controller?.submit()}
       />
-      <ul>
-        {state.suggestions.map((suggestion) => {
-          const value = suggestion.rawValue;
-          return (
-            <li key={value} onClick={() => controller?.selectSuggestion(value)}>
-              {value}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    </form>
   );
 };
 

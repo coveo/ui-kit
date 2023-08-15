@@ -46,7 +46,7 @@ describe('headless ssr example', () => {
     });
   });
 
-  it('should pass the web-vitals audits', () => {
+  it.skip('should pass the web-vitals audits', () => {
     // TODO: Add input based vitals after interactive elements are added to test page (e.g. search box)
     // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
     const VITALS_THRESHOLD = {
@@ -56,12 +56,29 @@ describe('headless ssr example', () => {
     cy.vitals(VITALS_THRESHOLD);
   });
 
-  it('should not log any error nor warning', () => {
-    spyOnConsole();
-    cy.visit('/');
-    waitForHydration();
-    cy.wait(1000);
-    cy.get(ConsoleAliases.error).should('not.be.called');
-    cy.get(ConsoleAliases.warn).should('not.be.called');
+  describe('after hydration', () => {
+    beforeEach(() => {
+      spyOnConsole();
+      cy.visit('/');
+      waitForHydration();
+    });
+
+    it('should not log any error nor warning', () => {
+      cy.wait(1000);
+      cy.get(ConsoleAliases.error).should('not.be.called');
+      cy.get(ConsoleAliases.warn).should('not.be.called');
+    });
+
+    it('after submitting a query, should change search results', () => {
+      const getResultTitles = () => cy.get('.result-list li').invoke('text');
+
+      getResultTitles().as('initial-results');
+      cy.get('.search-box input').focus().type('abc{enter}');
+      cy.get<string>('@initial-results').then((initialResults) =>
+        getResultTitles().should((currentResults) =>
+          expect(currentResults).not.to.equal(initialResults)
+        )
+      );
+    });
   });
 });

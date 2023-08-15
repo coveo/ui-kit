@@ -19,7 +19,7 @@ export const ResultList: FunctionComponent<ResultListProps> = (props) => {
   );
 
   return (
-    <ul>
+    <ul className="result-list">
       {state.results.map((result) => (
         <li key={result.uniqueId}>
           <h3>{result.title}</h3>
