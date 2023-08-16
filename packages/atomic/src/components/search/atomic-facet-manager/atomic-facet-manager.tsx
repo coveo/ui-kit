@@ -8,7 +8,6 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {Component, h, Element, State, Prop} from '@stencil/core';
-import {isTagNameAutomaticFacetGenerator} from '../../../utils/automatic-facet-generator-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -18,14 +17,11 @@ import {
   AutomaticFacetGeneratorElement,
   BaseFacetElement,
   FacetManagerElements,
-  facetShouldBeInitiallyCollapsed,
+  isTagNameAutomaticFacetGenerator,
+  sortFacetVisibility,
+  updateCollapsedState,
 } from '../../common/facets/facet-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-
-interface VisibilitySortedFacets {
-  visibleFacets: BaseFacetElement[];
-  invisibleFacets: BaseFacetElement[];
-}
 
 /**
  * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
@@ -72,21 +68,23 @@ export class AtomicFacetManager implements InitializableComponent {
 
   private sortFacets = () => {
     if (!this.searchStatusState.firstSearchExecuted) {
-      this.updateCollapsedState(this.facets);
+      updateCollapsedState(this.facets, this.collapseFacetsAfter);
       return;
     }
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
 
-    const {visibleFacets, invisibleFacets} =
-      this.sortFacetVisibility(sortedFacets);
+    const {visibleFacets, invisibleFacets} = sortFacetVisibility(
+      sortedFacets,
+      this.bindings.store.getAllFacets()
+    );
 
     const finalElements: FacetManagerElements = [];
 
     const generator: AutomaticFacetGeneratorElement =
       this.automaticFacetGenerator;
 
-    this.updateCollapsedState(visibleFacets);
+    updateCollapsedState(visibleFacets, this.collapseFacetsAfter);
     this.updateCollapseFacetsAfter(generator, visibleFacets.length);
 
     finalElements.push(...visibleFacets);
@@ -95,37 +93,6 @@ export class AtomicFacetManager implements InitializableComponent {
 
     this.host.append(...finalElements);
   };
-
-  private updateCollapsedState(facets: BaseFacetElement[]) {
-    if (this.collapseFacetsAfter === -1) {
-      return;
-    }
-
-    facets.forEach((facet, index) => {
-      facet.isCollapsed = facetShouldBeInitiallyCollapsed(
-        index,
-        this.collapseFacetsAfter
-      );
-    });
-  }
-
-  private sortFacetVisibility(
-    sortedFacets: BaseFacetElement[]
-  ): VisibilitySortedFacets {
-    const visibleFacets: BaseFacetElement[] = [];
-    const invisibleFacets: BaseFacetElement[] = [];
-    const facetsStore = this.bindings.store.getAllFacets();
-
-    sortedFacets.forEach((facet) => {
-      if (facetsStore[facet.facetId] && facetsStore[facet.facetId].isHidden()) {
-        invisibleFacets.push(facet);
-      } else {
-        visibleFacets.push(facet);
-      }
-    });
-
-    return {visibleFacets, invisibleFacets};
-  }
 
   private updateCollapseFacetsAfter(
     generator: AutomaticFacetGeneratorElement,

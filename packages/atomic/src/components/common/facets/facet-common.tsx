@@ -7,6 +7,7 @@ import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../utils/field-utils';
+import {FacetInfoMap} from '../../search/atomic-search-interface/store';
 import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {Hidden} from '../hidden';
 import {AnyBindings} from '../interface/bindings';
@@ -256,6 +257,48 @@ export function facetShouldBeInitiallyCollapsed(
   collapseFacetsAfter: number
 ) {
   return facetIndex + 1 > collapseFacetsAfter;
+}
+
+interface VisibilitySortedFacets {
+  visibleFacets: BaseFacetElement[];
+  invisibleFacets: BaseFacetElement[];
+}
+export function sortFacetVisibility(
+  facetElements: BaseFacetElement[],
+  facetInfoMap: FacetInfoMap
+): VisibilitySortedFacets {
+  const visibleFacets: BaseFacetElement[] = [];
+  const invisibleFacets: BaseFacetElement[] = [];
+
+  facetElements.forEach((facet) => {
+    if (facetInfoMap[facet.facetId] && facetInfoMap[facet.facetId].isHidden()) {
+      invisibleFacets.push(facet);
+    } else {
+      visibleFacets.push(facet);
+    }
+  });
+
+  return {visibleFacets, invisibleFacets};
+}
+
+export function updateCollapsedState(
+  facets: BaseFacetElement[],
+  collapseFacetsAfter: number
+) {
+  if (collapseFacetsAfter === -1) {
+    return;
+  }
+
+  facets.forEach((facet, index) => {
+    facet.isCollapsed = facetShouldBeInitiallyCollapsed(
+      index,
+      collapseFacetsAfter
+    );
+  });
+}
+
+export function isTagNameAutomaticFacetGenerator(tagName: string) {
+  return tagName === 'ATOMIC-AUTOMATIC-FACET-GENERATOR';
 }
 
 interface FacetCommonOptions {
