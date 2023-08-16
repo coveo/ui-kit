@@ -13,7 +13,9 @@ describe('headless ssr example', () => {
         expect(dom.querySelector(msgSelector)?.textContent).to.equal(
           numResultsMsg
         );
-        expect(dom.querySelectorAll('li').length).to.equal(numResults);
+        expect(dom.querySelectorAll('.result-list li').length).to.equal(
+          numResults
+        );
       });
     });
     cy.visit('/');
@@ -22,7 +24,7 @@ describe('headless ssr example', () => {
   it('renders page in CSR as expected', () => {
     cy.visit('/');
     cy.get(msgSelector).should('have.text', numResultsMsg);
-    cy.get('li').should('have.length', numResults);
+    cy.get('.result-list li').should('have.length', numResults);
   });
 
   it('renders result list in SSR and then in CSR', () => {
