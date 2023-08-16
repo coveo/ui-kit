@@ -12,7 +12,6 @@ import {
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
   AriaLiveRegion,
-  FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
 import {
@@ -209,8 +208,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({mutable: true})
   public customSort: string[] | string = '[]';
 
-  @FocusTarget()
-  private showLessFocus!: FocusTargetController;
+  private showLessFocus?: FocusTargetController;
 
   @FocusTarget()
   private showMoreFocus!: FocusTargetController;
