@@ -19,6 +19,7 @@ import {productRecommendationUseCase} from './use-cases/product-recommendation';
 import {recommendationUseCase} from './use-cases/recommendation';
 import {searchUseCase} from './use-cases/search';
 import {UseCaseConfiguration} from './use-cases/use-case-configuration';
+import {commerceUseCase} from './use-cases/commerce';
 
 interface UseCase {
   name: string;
@@ -63,6 +64,11 @@ const useCases: UseCase[] = [
     name: 'insight',
     entryFile: 'temp/insight.api.json',
     config: insightUseCase,
+  },
+  {
+    name: 'commerce',
+    entryFile: 'temp/commerce.api.json',
+    config: commerceUseCase,
   },
 ];
 
