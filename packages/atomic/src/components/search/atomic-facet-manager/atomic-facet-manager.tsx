@@ -8,6 +8,7 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {Component, h, Element, State, Prop} from '@stencil/core';
+import {isTagNameAutomaticFacetGenerator} from '../../../utils/automatic-facet-generator-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -69,8 +70,28 @@ export class AtomicFacetManager implements InitializableComponent {
     }
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
-    this.updateCollapsedState(sortedFacets);
-    this.host.append(...sortedFacets);
+    const facets = this.bindings.store.getAllFacets();
+    console.log(facets);
+
+    const visibleFacets: BaseFacetElement[] = [];
+    const invisibleFacets: BaseFacetElement[] = [];
+
+    sortedFacets.forEach((facet) => {
+      if (
+        isTagNameAutomaticFacetGenerator(facet.tagName) &&
+        facets[facet.facetId] &&
+        facets[facet.facetId].isHidden()
+      ) {
+        invisibleFacets.push(facet);
+      } else {
+        visibleFacets.push(facet);
+      }
+    });
+
+    const finalSortedFacets = [...visibleFacets, ...invisibleFacets];
+
+    this.updateCollapsedState(finalSortedFacets);
+    this.host.append(...finalSortedFacets);
   };
 
   private updateCollapsedState(facets: BaseFacetElement[]) {
@@ -79,13 +100,30 @@ export class AtomicFacetManager implements InitializableComponent {
     }
 
     facets.forEach((facet, index) => {
-      facet.isCollapsed = facetShouldBeInitiallyCollapsed(
-        index,
-        this.collapseFacetsAfter
-      );
+      if (isTagNameAutomaticFacetGenerator(facet.tagName)) {
+        if (this.collapseFacetsAfter === -1) {
+          facet.collapseFacetsAfter = -1;
+        } else {
+          facet.collapseFacetsAfter =
+            this.generatedFindNumberCollapseFacetsAFter(
+              index,
+              this.collapseFacetsAfter
+            );
+        }
+      } else {
+        facet.isCollapsed = facetShouldBeInitiallyCollapsed(
+          index,
+          this.collapseFacetsAfter
+        );
+      }
     });
   }
-
+  private generatedFindNumberCollapseFacetsAFter(
+    index: number,
+    collapseFacetAfter: number
+  ): number {
+    return collapseFacetAfter - index;
+  }
   private validateProps() {
     new Schema({
       collapseFacetAfter: new NumberValue({min: -1, required: true}),
@@ -100,7 +138,7 @@ export class AtomicFacetManager implements InitializableComponent {
     const facets = children.filter(
       (child) =>
         this.isPseudoFacet(child) ||
-        child.tagName === 'ATOMIC-AUTOMATIC-FACET-GENERATOR'
+        isTagNameAutomaticFacetGenerator(child.tagName)
     ) as BaseFacetElement[];
 
     return facets;

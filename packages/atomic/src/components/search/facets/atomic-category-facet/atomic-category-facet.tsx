@@ -256,6 +256,7 @@ export class AtomicCategoryFacet
       label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
+      isHidden: () => this.isHidden,
     };
     this.bindings.store.registerFacet('categoryFacets', facetInfo);
     initializePopover(this.host, {
@@ -271,6 +272,14 @@ export class AtomicCategoryFacet
       return;
     }
     this.dependenciesManager?.stopWatching();
+  }
+
+  private get isHidden() {
+    return (
+      this.searchStatusState.hasError ||
+      !this.facet.state.enabled ||
+      (!this.facet.state.values.length && !this.facet.state.parents.length)
+    );
   }
 
   public componentShouldUpdate(

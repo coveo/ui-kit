@@ -195,11 +195,16 @@ export class NumericFacetCommon {
     this.dependenciesManager?.stopWatching();
   }
 
+  private get isHidden() {
+    return !this.shouldRenderFacet || !this.enabled;
+  }
+
   private registerFacetToStore() {
     const facetInfo: FacetInfo = {
       label: () => this.props.bindings.i18n.t(this.props.label),
       facetId: this.facetId!,
       element: this.props.host,
+      isHidden: () => this.isHidden,
     };
 
     this.props.bindings.store.registerFacet('numericFacets', {
