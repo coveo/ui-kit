@@ -1,8 +1,9 @@
 import 'cypress-web-vitals';
+import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
 
 describe('headless ssr example', () => {
   const numResults = 10;
-  const numResultsMsg = `Hydrated engine with ${numResults} results`;
+  const numResultsMsg = `Rendered page with ${numResults} results`;
   const msgSelector = '#hydrated-msg';
   const timestampSelector = '#timestamp';
   it('renders page in SSR as expected', () => {
@@ -53,5 +54,14 @@ describe('headless ssr example', () => {
     };
     cy.visit('/');
     cy.vitals(VITALS_THRESHOLD);
+  });
+
+  it('should not log any error nor warning', () => {
+    spyOnConsole();
+    cy.visit('/');
+    waitForHydration();
+    cy.wait(1000);
+    cy.get(ConsoleAliases.error).should('not.be.called');
+    cy.get(ConsoleAliases.warn).should('not.be.called');
   });
 });

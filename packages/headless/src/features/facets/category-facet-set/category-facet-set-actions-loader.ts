@@ -8,13 +8,15 @@ import {
 import {
   deselectAllCategoryFacetValues,
   registerCategoryFacet,
-  RegisterCategoryFacetActionCreatorPayload,
   toggleSelectCategoryFacetValue,
-  ToggleSelectCategoryFacetValueActionCreatorPayload,
   updateCategoryFacetNumberOfValues,
-  UpdateCategoryFacetNumberOfValuesActionCreatorPayload,
   updateCategoryFacetSortCriterion,
+  updateCategoryFacetBasePath,
+  RegisterCategoryFacetActionCreatorPayload,
+  ToggleSelectCategoryFacetValueActionCreatorPayload,
+  UpdateCategoryFacetNumberOfValuesActionCreatorPayload,
   UpdateCategoryFacetSortCriterionActionCreatorPayload,
+  UpdateCategoryFacetBasePathActionCreatorPayload,
 } from './category-facet-set-actions';
 
 export type {
@@ -22,6 +24,7 @@ export type {
   ToggleSelectCategoryFacetValueActionCreatorPayload,
   UpdateCategoryFacetNumberOfValuesActionCreatorPayload,
   UpdateCategoryFacetSortCriterionActionCreatorPayload,
+  UpdateCategoryFacetBasePathActionCreatorPayload,
   UpdateFacetAutoSelectionActionCreatorPayload,
 };
 
@@ -68,7 +71,7 @@ export interface CategoryFacetSetActionCreators {
   ): PayloadAction<UpdateCategoryFacetNumberOfValuesActionCreatorPayload>;
 
   /**
-   * Updates the the sort criterion for the category facet.
+   * Updates the sort criterion for the category facet.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -85,6 +88,16 @@ export interface CategoryFacetSetActionCreators {
   updateFacetAutoSelection(
     payload: UpdateFacetAutoSelectionActionCreatorPayload
   ): PayloadAction<UpdateFacetAutoSelectionActionCreatorPayload>;
+
+  /**
+   * Updates the base path for the category facet.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  updateCategoryFacetBasePath(
+    payload: UpdateCategoryFacetBasePathActionCreatorPayload
+  ): PayloadAction<UpdateCategoryFacetBasePathActionCreatorPayload>;
 }
 
 /**
@@ -105,5 +118,6 @@ export function loadCategoryFacetSetActions(
     updateCategoryFacetNumberOfValues,
     updateCategoryFacetSortCriterion,
     updateFacetAutoSelection,
+    updateCategoryFacetBasePath,
   };
 }

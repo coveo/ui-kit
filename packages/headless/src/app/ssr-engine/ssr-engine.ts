@@ -13,8 +13,8 @@ import {EngineDefinitionBuildOptionsWithProps} from './types/build';
 import {
   ControllerDefinitionsMap,
   ControllersMap,
-  EngineInitialState,
-  InferControllerInitialStateMapFromDefinitions,
+  EngineSSRState,
+  InferControllerSSRStateMapFromDefinitions,
   InferControllersMapFromDefinition,
   OptionsExtender,
 } from './types/common';
@@ -77,9 +77,9 @@ export function defineSearchEngine<
       >
     ) =>
       new Promise<
-        EngineInitialState<
+        EngineSSRState<
           {type: string},
-          InferControllerInitialStateMapFromDefinitions<TControllerDefinitions>
+          InferControllerSSRStateMapFromDefinitions<TControllerDefinitions>
         >
       >((resolve, reject) => {
         let initialControllers: ControllersMap;
@@ -89,7 +89,7 @@ export function defineSearchEngine<
             resolve({
               controllers: mapObject(initialControllers, (controller) => ({
                 state: controller.state,
-              })) as InferControllerInitialStateMapFromDefinitions<TControllerDefinitions>,
+              })) as InferControllerSSRStateMapFromDefinitions<TControllerDefinitions>,
               searchFulfilledAction: JSON.parse(JSON.stringify(action)),
             });
           }
