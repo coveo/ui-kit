@@ -15,10 +15,17 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
+  AutomaticFacetGeneratorElement,
   BaseFacetElement,
+  FacetManagerElements,
   facetShouldBeInitiallyCollapsed,
 } from '../../common/facets/facet-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+
+interface VisibilitySortedFacets {
+  visibleFacets: BaseFacetElement[];
+  invisibleFacets: BaseFacetElement[];
+}
 
 /**
  * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
@@ -70,28 +77,23 @@ export class AtomicFacetManager implements InitializableComponent {
     }
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
-    const facets = this.bindings.store.getAllFacets();
-    console.log(facets);
 
-    const visibleFacets: BaseFacetElement[] = [];
-    const invisibleFacets: BaseFacetElement[] = [];
+    const {visibleFacets, invisibleFacets} =
+      this.sortFacetVisibility(sortedFacets);
 
-    sortedFacets.forEach((facet) => {
-      if (
-        isTagNameAutomaticFacetGenerator(facet.tagName) &&
-        facets[facet.facetId] &&
-        facets[facet.facetId].isHidden()
-      ) {
-        invisibleFacets.push(facet);
-      } else {
-        visibleFacets.push(facet);
-      }
-    });
+    const finalElements: FacetManagerElements = [];
 
-    const finalSortedFacets = [...visibleFacets, ...invisibleFacets];
+    const generator: AutomaticFacetGeneratorElement =
+      this.automaticFacetGenerator;
 
-    this.updateCollapsedState(finalSortedFacets);
-    this.host.append(...finalSortedFacets);
+    this.updateCollapsedState(visibleFacets);
+    this.updateCollapseFacetsAfter(generator, visibleFacets.length);
+
+    finalElements.push(...visibleFacets);
+    finalElements.push(generator);
+    finalElements.push(...invisibleFacets);
+
+    this.host.append(...finalElements);
   };
 
   private updateCollapsedState(facets: BaseFacetElement[]) {
@@ -100,30 +102,38 @@ export class AtomicFacetManager implements InitializableComponent {
     }
 
     facets.forEach((facet, index) => {
-      if (isTagNameAutomaticFacetGenerator(facet.tagName)) {
-        if (this.collapseFacetsAfter === -1) {
-          facet.collapseFacetsAfter = -1;
-        } else {
-          facet.collapseFacetsAfter =
-            this.generatedFindNumberCollapseFacetsAFter(
-              index,
-              this.collapseFacetsAfter
-            );
-        }
-      } else {
-        facet.isCollapsed = facetShouldBeInitiallyCollapsed(
-          index,
-          this.collapseFacetsAfter
-        );
-      }
+      facet.isCollapsed = facetShouldBeInitiallyCollapsed(
+        index,
+        this.collapseFacetsAfter
+      );
     });
   }
-  private generatedFindNumberCollapseFacetsAFter(
-    index: number,
-    collapseFacetAfter: number
-  ): number {
-    return collapseFacetAfter - index;
+
+  private sortFacetVisibility(
+    sortedFacets: BaseFacetElement[]
+  ): VisibilitySortedFacets {
+    const visibleFacets: BaseFacetElement[] = [];
+    const invisibleFacets: BaseFacetElement[] = [];
+    const facetsStore = this.bindings.store.getAllFacets();
+
+    sortedFacets.forEach((facet) => {
+      if (facetsStore[facet.facetId] && facetsStore[facet.facetId].isHidden()) {
+        invisibleFacets.push(facet);
+      } else {
+        visibleFacets.push(facet);
+      }
+    });
+
+    return {visibleFacets, invisibleFacets};
   }
+
+  private updateCollapseFacetsAfter(
+    generator: AutomaticFacetGeneratorElement,
+    index: number
+  ) {
+    generator.collapseFacetsAfter = this.collapseFacetsAfter - index;
+  }
+
   private validateProps() {
     new Schema({
       collapseFacetAfter: new NumberValue({min: -1, required: true}),
@@ -132,16 +142,24 @@ export class AtomicFacetManager implements InitializableComponent {
     });
   }
 
-  private get facets() {
+  private get facets(): BaseFacetElement[] {
     const children = Array.from(this.host.children);
 
-    const facets = children.filter(
-      (child) =>
-        this.isPseudoFacet(child) ||
-        isTagNameAutomaticFacetGenerator(child.tagName)
+    const facets = children.filter((child) =>
+      this.isPseudoFacet(child)
     ) as BaseFacetElement[];
 
     return facets;
+  }
+
+  private get automaticFacetGenerator(): AutomaticFacetGeneratorElement {
+    const children = Array.from(this.host.children);
+
+    const automaticFacetGenerator = children.find((child) =>
+      isTagNameAutomaticFacetGenerator(child.tagName)
+    ) as AutomaticFacetGeneratorElement;
+
+    return automaticFacetGenerator;
   }
 
   private isPseudoFacet(el: Element): el is BaseFacetElement {

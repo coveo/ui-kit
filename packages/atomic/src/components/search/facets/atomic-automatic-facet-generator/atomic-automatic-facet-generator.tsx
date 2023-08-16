@@ -62,9 +62,7 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    *
    * This value is overwritten by the `collapseFacetsAfter` value in facet-manager if component is within this component
    */
-
-  @Prop()
-  public collapseFacetsAfter?: number;
+  @Prop() public collapseFacetsAfter?: number;
 
   public initialize() {
     this.validateProps();
@@ -89,10 +87,9 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
     if (this.collapseFacetsAfter === -1) {
       return false;
     }
-    if (this.collapseFacetsAfter) {
-      return index + 1 > this.collapseFacetsAfter;
-    }
-    return true;
+    return this.collapseFacetsAfter
+      ? index + 1 > this.collapseFacetsAfter
+      : true;
   }
 
   public render() {

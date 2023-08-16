@@ -84,8 +84,14 @@ export type BaseFacetElement<FacetType extends AnyFacetType = AnyFacetType> =
     SortCriterionProp<FacetType> &
     DisplayValuesAsProp &
     CollapsedProp &
-    HeadingLevelProp &
-    CollapseFacetsAfter;
+    HeadingLevelProp;
+
+export type AutomaticFacetGeneratorElement = HTMLElement & CollapseFacetsAfter;
+
+export type FacetManagerElements = (
+  | BaseFacetElement
+  | AutomaticFacetGeneratorElement
+)[];
 
 type StateProp<FacetType extends AnyFacetType> = FacetType extends Facet
   ? {facetState: FacetState}
@@ -232,10 +238,6 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   if (hasInputRange) {
     return true;
   }
-
-  // if (!searchStatusState.hasResults) {
-  //   return false;
-  // }
 
   const onlyValuesWithResultsOrActive =
     facetValues.filter(
