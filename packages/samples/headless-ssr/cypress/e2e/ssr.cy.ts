@@ -70,14 +70,21 @@ describe('headless ssr example', () => {
     });
 
     it('after submitting a query, should change search results', () => {
-      const getResultTitles = () => cy.get('.result-list li').invoke('text');
+      const getResultTitles = () =>
+        cy
+          .get('.result-list li')
+          .invoke('map', function (this: HTMLElement) {
+            return this.innerText;
+          })
+          .invoke('toArray');
 
       getResultTitles().as('initial-results');
       cy.get('.search-box input').focus().type('abc{enter}');
       cy.get<string>('@initial-results').then((initialResults) =>
-        getResultTitles().should((currentResults) =>
-          expect(currentResults).not.to.equal(initialResults)
-        )
+        getResultTitles().should((currentResults) => {
+          expect(currentResults).not.to.deep.equal(initialResults);
+          expect(currentResults).to.have.length(numResults);
+        })
       );
     });
   });
