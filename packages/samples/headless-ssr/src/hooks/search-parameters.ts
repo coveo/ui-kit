@@ -9,7 +9,7 @@ import {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
 import {CoveoNextJsSearchParametersSerializer} from '../common/search-parameters-serializer';
 
 interface UseSyncSearchParametersProps {
-  initialState: SearchParameterManagerState;
+  ssrState: SearchParameterManagerState;
   controller?: SearchParameterManager;
 }
 
@@ -50,11 +50,14 @@ function useCoveoSearchParameters(
   return searchParameters;
 }
 
-export function useSyncSearchParameters(props: UseSyncSearchParametersProps) {
+export function useSyncSearchParameters({
+  ssrState,
+  controller,
+}: UseSyncSearchParametersProps) {
   const urlSearchParams = useUrlSearchParams();
   const coveoSearchParameters = useCoveoSearchParameters(
-    props.initialState.parameters,
-    props.controller
+    ssrState.parameters,
+    controller
   );
   const urlFromCoveoSearchParameters = useMemo(() => {
     const newUrl = getUrl();
@@ -69,8 +72,8 @@ export function useSyncSearchParameters(props: UseSyncSearchParametersProps) {
 
   const updateCoveoSearchParameters = useCallback(
     (coveoSearchParameters: SearchParameters) =>
-      props.controller?.synchronize(coveoSearchParameters),
-    [props.controller]
+      controller?.synchronize(coveoSearchParameters),
+    [controller]
   );
   const updateUrlSearchParams = useCallback(
     (options: {href: string; isInitialState: boolean}) =>
@@ -101,8 +104,8 @@ export function useSyncSearchParameters(props: UseSyncSearchParametersProps) {
       return;
     }
     updateUrlSearchParams({
-      isInitialState: !props.controller,
+      isInitialState: !controller,
       href: urlFromCoveoSearchParameters.href,
     });
-  }, [updateUrlSearchParams, props.controller, urlFromCoveoSearchParameters]);
+  }, [updateUrlSearchParams, controller, urlFromCoveoSearchParameters]);
 }

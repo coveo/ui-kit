@@ -30,7 +30,7 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
   }, [ssrState]);
 
   useSyncSearchParameters({
-    initialState: ssrState.controllers.searchParameters.state,
+    ssrState: ssrState.controllers.searchParameters.state,
     controller: csrResult?.controllers.searchParameters,
   });
 
