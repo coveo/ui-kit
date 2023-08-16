@@ -27,34 +27,32 @@ const packages = [
   { name: "@coveo/relay", path: `${PATH}/packages/relay` },
 ];
 
-export const isNewVersionGreaterThanCurrentVersion = ({
-  currentVersion,
-  newVersion,
-}) => {
-  const current = parseVersion(currentVersion);
-  const newV = parseVersion(newVersion);
+/**
+ * @todo LENS-1125: versionCompare, parseVersion and recursiveVersionCompare functions could be part to a Core helpers file
+ * The versionCompare function should be imported in the script instead
+ */
 
-  return isNewGreaterThanCurrent({ newV, current, i: 0 });
+const versionCompare = (version1, version2) => {
+  const v1 = parseVersion(version1);
+  const v2 = parseVersion(version2);
+
+  return recursiveVersionCompare(v1, v2, 0);
 };
 
 const parseVersion = (version) => {
   return version.split(".").map((num) => parseInt(num, 10));
 };
 
-const isNewGreaterThanCurrent = ({ newV, current, i }) => {
-  if (i > newV.length) {
-    return false;
+const recursiveVersionCompare = (version1, version2, i) => {
+  if (i > version1.length) {
+    return 0;
   }
 
-  if (newV[i] === current[i]) {
-    return isNewGreaterThanCurrent({
-      newV,
-      current,
-      i: i + 1,
-    });
+  if (version1[i] === version2[i]) {
+    return recursiveVersionCompare(version1, version2, i + 1);
   }
 
-  return newV[i] > current[i];
+  return version1[i] > version2[i] ? 1 : -1;
 };
 
 const hasChangesOccured = async () => {
@@ -72,6 +70,7 @@ const hasChangesOccured = async () => {
     return true;
   } catch (e) {
     console.error(e);
+    process.exit(1);
   }
 };
 
@@ -133,7 +132,7 @@ const runPackageBump = async (pkg) => {
   const newVersion = getNextVersion(currentVersion, bumpInfo);
   const newVersionTag = `${versionPrefix}${newVersion}`;
 
-  if (isNewVersionGreaterThanCurrentVersion({ newVersion, currentVersion })) {
+  if (versionCompare(newVersion, currentVersion) >= 1) {
     await bumpVersion({ newVersion, name, lastTag });
     await gitTag(newVersionTag);
     await updateChangelog({
@@ -170,6 +169,7 @@ const bumpVersions = async () => {
     await commitAndPush();
   } catch (e) {
     console.error(e);
+    process.exit(1);
   }
 };
 

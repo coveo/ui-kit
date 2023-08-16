@@ -13,6 +13,8 @@
     },
     "test": {
       "dependsOn": ["^build"]
-    }
+    },
+    "npm:publish": {},
+    "npm:tag": {}
   }
 }

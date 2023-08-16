@@ -43,7 +43,9 @@
     "build:cjs": "tsc -p ./config/tsconfig.cjs.json",
     "clean": "rm -rf ./lib",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "npm:publish": "node ./scripts/publish.mjs",
+    "npm:tag": "node ./scripts/update-npm-tag.mjs"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.2",

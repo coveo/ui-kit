@@ -5,4 +5,4 @@ runs:
   steps:
     - name: Publish packages on NPM
       shell: bash
-      run: pnpm publish:npm
+      run: pnpm npm:publish:alpha

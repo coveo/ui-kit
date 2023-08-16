@@ -1,9 +1,12 @@
 name: Deploy
 description: Creates and deploys the packages
+inputs:
+  COMMIT_HASH:
+    description: Short commit hash of the version bump
 runs:
   using: composite
   steps:
     - uses: coveo/deployment-pipeline-actions/setup-cli@main
     - name: Create and Deploy Packages
       shell: bash
-      run: deployment-package package create --with-deploy
+      run: deployment-package package create --with-deploy --resolve COMMIT_HASH=${inputs.COMMIT_HASH}

@@ -1,0 +1,23 @@
+node('linux && docker') {
+  def commitHash = params.commitHash
+
+  checkout([
+    $class: 'GitSCM',
+    branches: [[name: commitHash]],
+    extensions: [],
+    userRemoteConfigs: [[credentialsId: 'github-app-dev', url: 'https://github.com/coveo/relay']]
+  ])
+
+  withDockerContainer(image: 'node:18', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
+    stage('Npm login') {
+      withCredentials([
+      string(credentialsId: 'npmjs_com_token', variable: 'NPM_TOKEN')]) {
+        sh 'npm run npm:login:ci'
+      }
+    }
+
+    stage('Npm tag') {
+      sh 'npm run npm:tag:latest'
+    }
+  }
+}

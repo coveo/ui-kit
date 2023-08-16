@@ -25,6 +25,32 @@
           "acl": "public-read"
         }
       }
+    },
+    {
+      "id": "stg-release",
+      "team_jenkins": {
+        "disabled": true,
+        "job_name": "relay-stg-release",
+        "extra_parameters": {
+          "commitHash": "$[COMMIT_HASH]"
+        },
+        "stg": {
+          "disabled": false
+        }
+      }
+    },
+    {
+      "id": "prd-release",
+      "team_jenkins": {
+        "disabled": true,
+        "job_name": "relay-prd-release",
+        "extra_parameters": {
+          "commitHash": "$[COMMIT_HASH]"
+        },
+        "prd": {
+          "disabled": false
+        }
+      }
     }
   ],
   "certifiers": {},
