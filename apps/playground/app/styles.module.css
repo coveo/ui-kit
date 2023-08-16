@@ -1,0 +1,29 @@
+.container {
+  width: 960px;
+  margin: 0 auto;
+}
+
+.main {
+  height: 600px;
+  display: flex;
+  gap: 24px;
+}
+
+.section {
+  flex: 1;
+}
+
+.controls {
+  margin-bottom: 8px;
+}
+
+.controls button {
+  margin-right: 8px;
+}
+
+.validation-box {
+  width: 100%;
+  border: solid black 1px;
+  font-family: Consolas, monospace;
+  padding: 8px;
+}
