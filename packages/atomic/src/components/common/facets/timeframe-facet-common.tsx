@@ -274,6 +274,7 @@ export class TimeframeFacetCommon {
   private renderValue(facetValue: DateFacetValue) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
+    const isExcluded = facetValue.state === 'excluded';
     return (
       <FacetValueLink
         displayValue={displayValue}
@@ -285,6 +286,7 @@ export class TimeframeFacetCommon {
         <FacetValueLabelHighlight
           displayValue={displayValue}
           isSelected={isSelected}
+          isExcluded={isExcluded}
         ></FacetValueLabelHighlight>
       </FacetValueLink>
     );

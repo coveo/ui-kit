@@ -37,7 +37,9 @@ export const FacetValueExclude: FunctionalComponent<ExcludeProps> = (props) => {
       onMouseEnter={(e) => props.onMouseEnter?.(e)}
     >
       <atomic-icon
-        class={'w-4 p-1 rounded bg-neutral'}
+        class={
+          'w-4 p-1 rounded test-class bg-neutral hover:bg-error hover:fill-white'
+        }
         icon={Tick}
         part="icon"
       ></atomic-icon>

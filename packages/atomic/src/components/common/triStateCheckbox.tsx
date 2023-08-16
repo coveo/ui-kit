@@ -1,6 +1,7 @@
 import {FacetValueState} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import Tick from '../../images/checkbox.svg';
+import Close from '../../images/close.svg';
 import {CheckboxProps} from './checkbox';
 
 export type TriStateCheckboxProps = Omit<CheckboxProps, 'checked'> & {
@@ -10,21 +11,22 @@ export type TriStateCheckboxProps = Omit<CheckboxProps, 'checked'> & {
 export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
   props
 ) => {
-  const isChecked = props.state === 'selected';
+  const isSelected = props.state === 'selected';
   const isExcluded = props.state === 'excluded';
   const partName = props.part ?? 'checkbox';
 
-  const classNames = [
-    'w-4 h-4 grid place-items-center rounded no-outline hover:border-primary-light focus-visible:border-primary-light',
-  ];
+  const classNames = ['w-4 h-4 grid place-items-center rounded no-outline '];
   const parts = [partName];
-  if (isChecked) {
+  if (isSelected) {
     classNames.push(
-      'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light'
+      'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light hover:border-primary-light focus-visible:border-primary-light'
     );
     parts.push(`${partName}-checked`);
-  } else if (props.state === 'excluded') {
-    classNames.push('TODO:');
+  } else if (isExcluded) {
+    classNames.push(
+      'excluded bg-error hover:bg-error-light focus-visible:bg-error-light hover:border-error-light focus-visible:border-error-light'
+    );
+    parts.push(`${partName}-excluded`);
   } else {
     classNames.push('border border-neutral-dark');
   }
@@ -37,7 +39,7 @@ export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
     id: props.id,
     class: classNames.join(' '),
     part: parts.join(' '),
-    'aria-pressed': isChecked ? 'true' : isExcluded ? 'mixed' : 'false',
+    'aria-pressed': isSelected ? 'true' : isExcluded ? 'mixed' : 'false',
     'aria-label': props.ariaLabel ?? props.text,
     value: props.text,
     ref: props.ref,
@@ -47,13 +49,13 @@ export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
     <button
       {...attributes}
       role="checkbox"
-      onClick={() => props.onToggle?.(!isChecked)}
+      onClick={() => props.onToggle?.(!isSelected)}
       onMouseDown={(e) => props.onMouseDown?.(e)}
     >
       <atomic-icon
-        style={{stroke: 'white'}}
-        class={`w-3/5 ${isChecked ? 'block' : isExcluded ? 'TODO:' : 'hidden'}`}
-        icon={Tick}
+        style={{stroke: 'white', fill: 'white'}}
+        class={`w-3/5 ${isSelected || isExcluded ? 'block' : 'hidden'}`}
+        icon={isSelected ? Tick : Close}
         part={props.iconPart}
       ></atomic-icon>
     </button>

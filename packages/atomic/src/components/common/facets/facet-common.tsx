@@ -511,6 +511,7 @@ export class FacetCommon {
       this.bindings.i18n
     );
     const isSelected = facetValue.state === 'selected';
+    const isExcluded = facetValue.state === 'excluded';
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
@@ -531,6 +532,7 @@ export class FacetCommon {
             <FacetValueLabelHighlight
               displayValue={displayValue}
               isSelected={isSelected}
+              isExcluded={isExcluded}
               searchQuery={this.facet.state.facetSearch.query}
             ></FacetValueLabelHighlight>
           </FacetValueCheckbox>

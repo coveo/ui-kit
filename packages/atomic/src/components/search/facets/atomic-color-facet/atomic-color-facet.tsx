@@ -368,6 +368,7 @@ export class AtomicColorFacet
       this.bindings.i18n
     );
     const isSelected = facetValue.state === 'selected';
+    const isExcluded = facetValue.state === 'excluded';
     const partValueWithDisplayValue = displayValue.replace(/[^a-z0-9]/gi, '');
     const partValueWithAPIValue = facetValue.value.replace(/[^a-z0-9]/gi, '');
     switch (this.displayValuesAs) {
@@ -413,6 +414,7 @@ export class AtomicColorFacet
             <FacetValueLabelHighlight
               displayValue={displayValue}
               isSelected={isSelected}
+              isExcluded={isExcluded}
               searchQuery={this.facetState.facetSearch.query}
             ></FacetValueLabelHighlight>
           </FacetValueBox>

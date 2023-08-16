@@ -17,9 +17,14 @@
   @apply bg-neutral-light;
 }
 
-.value-checkbox:focus-visible + label .value-label,
-.value-checkbox:hover + label .value-label {
+.value-checkbox.selected:focus-visible + label .value-label,
+.value-checkbox.selected:hover + label .value-label {
   @apply text-primary;
+}
+
+.value-checkbox.excluded:focus-visible + label .value-label,
+.value-checkbox.excluded:hover + label .value-label {
+  @apply text-error;
 }
 
 /**
@@ -30,11 +35,6 @@
   margin-left: auto;
 }
 
-.value-checkbox:focus-visible + label .value-exclude,
 .value-checkbox:hover + label .value-exclude {
   visibility: visible;
-  &:hover,
-  &:focus-visible {
-    /* TODO: create ripple effect */
-  }
 }
