@@ -72,9 +72,9 @@ describe('headless ssr example', () => {
     it('after submitting a query, should change search results', () => {
       const getResultTitles = () => cy.get('.result-list li').invoke('text');
 
-      getResultTitles().as('initial-results');
+      getResultTitles().as('initialResults');
       cy.get('.search-box input').focus().type('abc{enter}');
-      cy.get<string>('@initial-results').then((initialResults) =>
+      cy.get<string>('@initialResults').then((initialResults) =>
         getResultTitles().should((currentResults) =>
           expect(currentResults).not.to.equal(initialResults)
         )

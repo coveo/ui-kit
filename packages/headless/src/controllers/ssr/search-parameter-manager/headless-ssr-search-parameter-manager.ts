@@ -1,0 +1,29 @@
+import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {ControllerDefinitionWithProps} from '../../../app/ssr-engine/types/common';
+import {
+  SearchParameterManager,
+  SearchParameterManagerInitialState,
+  buildSearchParameterManager,
+} from '../../search-parameter-manager/headless-search-parameter-manager';
+
+export type {
+  SearchParameterManagerInitialState,
+  SearchParameterManagerState,
+  SearchParameterManager,
+} from '../../search-parameter-manager/headless-search-parameter-manager';
+
+export interface SearchParameterManagerBuildProps {
+  initialState: SearchParameterManagerInitialState;
+}
+
+/**
+ * @internal
+ */
+export const defineSearchParameterManager = (): ControllerDefinitionWithProps<
+  SearchEngine,
+  SearchParameterManager,
+  SearchParameterManagerBuildProps
+> => ({
+  buildWithProps: (engine, props) =>
+    buildSearchParameterManager(engine, {initialState: props.initialState}),
+});
