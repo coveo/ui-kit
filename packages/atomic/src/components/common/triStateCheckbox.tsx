@@ -24,7 +24,7 @@ export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
     parts.push(`${partName}-checked`);
   } else if (isExcluded) {
     classNames.push(
-      'excluded bg-error hover:bg-error-light focus-visible:bg-error-light hover:border-error-light focus-visible:border-error-light'
+      'excluded bg-error hover:bg-error focus-visible:bg-error hover:border-error focus-visible:border-error'
     );
     parts.push(`${partName}-excluded`);
   } else {

@@ -2,7 +2,9 @@ export type ButtonStyle =
   | 'primary'
   | 'outline-primary'
   | 'outline-neutral'
+  | 'outline-error'
   | 'outline-bg-neutral'
+  | 'outline-bg-error'
   | 'text-primary'
   | 'text-neutral'
   | 'text-transparent'
@@ -16,8 +18,12 @@ export function getClassNameForButtonStyle(buttonStyle: ButtonStyle) {
       return 'btn-outline-primary';
     case 'outline-neutral':
       return 'btn-outline-neutral';
+    case 'outline-error':
+      return 'btn-outline-error';
     case 'outline-bg-neutral':
       return 'btn-outline-bg-neutral';
+    case 'outline-bg-error':
+      return 'btn-outline-bg-error';
     case 'text-primary':
       return 'btn-text-primary';
     case 'text-neutral':

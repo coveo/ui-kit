@@ -184,9 +184,6 @@ export class AtomicBreadbox implements InitializableComponent {
       'btn-pill',
       'group',
     ];
-    if (breadcrumb.state === 'excluded') {
-      classNames.push('excluded-value');
-    }
 
     const fullValue = Array.isArray(breadcrumb.formattedValue)
       ? breadcrumb.formattedValue.join(SEPARATOR)
@@ -196,12 +193,17 @@ export class AtomicBreadbox implements InitializableComponent {
       : breadcrumb.formattedValue;
     const title = `${breadcrumb.label}: ${fullValue}`;
     const isLastBreadcrumb = totalBreadcrumbs === 1;
+    const activeColor = breadcrumb.state === 'excluded' ? 'error' : 'primary';
 
     return (
       <li class="breadcrumb" key={value}>
         <Button
           part="breadcrumb-button"
-          style="outline-bg-neutral"
+          style={
+            breadcrumb.state === 'excluded'
+              ? 'outline-error'
+              : 'outline-bg-neutral'
+          }
           class={classNames.join(' ')}
           title={title}
           ariaLabel={this.bindings.i18n.t('remove-filter-on', {
@@ -228,13 +230,17 @@ export class AtomicBreadbox implements InitializableComponent {
         >
           <span
             part="breadcrumb-label"
-            class="max-w-snippet truncate text-neutral-dark mr-0.5 group-hover:text-primary group-focus-visible:text-primary"
+            class={`max-w-snippet truncate mr-0.5 group-hover:text-${activeColor} group-focus-visible:text-${activeColor}`}
           >
             {this.bindings.i18n.t('with-colon', {text: breadcrumb.label})}
           </span>
           <span
             part="breadcrumb-value"
-            class={breadcrumb.content ? '' : 'max-w-snippet truncate'}
+            class={
+              breadcrumb.content
+                ? ''
+                : `max-w-snippet truncate ${breadcrumb.state}`
+            }
           >
             {breadcrumb.content ?? value}
           </span>
