@@ -28,7 +28,7 @@ function capitalize(s: string) {
 
 function isCSRContext<
   TEngine extends CoreEngine,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<TEngine, Controller>
 >(
   ctx: Exclude<ContextState<TEngine, TControllers>, null>
 ): ctx is ContextCSRState<TEngine, TControllers> {
@@ -38,7 +38,7 @@ function isCSRContext<
 function buildControllerHook<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TKey extends keyof TControllers,
+  TKey extends keyof TControllers
 >(
   context: Context<ContextState<TEngine, TControllers>>,
   key: TKey
@@ -72,8 +72,13 @@ function buildControllerHook<
   };
 }
 
+/**
+ * @internal
+ * @param options
+ * @returns
+ */
 export function defineSearchEngine<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
 >(
   options: SearchEngineDefinitionOptions<TControllers>
 ): ReactSearchEngineDefinition<TControllers> {

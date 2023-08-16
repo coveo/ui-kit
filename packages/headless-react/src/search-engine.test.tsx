@@ -1,14 +1,16 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
-import {defineResultList} from '@coveo/headless/ssr';
+import {InferCSRState, defineResultList} from '@coveo/headless/ssr';
 import '@testing-library/jest-dom';
 import {render} from '@testing-library/react';
+import {useEffect, useState} from 'react';
 import {defineSearchEngine} from './search-engine';
 
 describe('Headless react SSR utils', () => {
-  // TODO: add test using `defineResultList` controller once https://github.com/coveo/ui-kit/pull/3099 is merged.
-
   let errorSpy: jest.SpyInstance;
-  const sampleConfig = getSampleSearchEngineConfiguration();
+  const sampleConfig = {
+    ...getSampleSearchEngineConfiguration(),
+    analytics: {enabled: false}, // TODO: KIT-2585 Remove after analytics SSR support is added
+  };
 
   beforeEach(() => {
     errorSpy = jest.spyOn(global.console, 'error');
@@ -50,29 +52,69 @@ describe('Headless react SSR utils', () => {
   });
 
   describe('renders providers without error', () => {
-    const config = getSampleSearchEngineConfiguration();
-    const {fetchInitialState, SSRStateProvider} = defineSearchEngine({
-      configuration: config,
+    const engineDefinition = defineSearchEngine({
+      configuration: sampleConfig,
+      controllers: {resultList: defineResultList()},
     });
-    test('SSRProvider', async () => {
-      const SSRControllers = await fetchInitialState({controllers: {}});
+    const {
+      fetchInitialState,
+      hydrateInitialState,
+      SSRStateProvider,
+      CSRProvider,
+      controllers,
+    } = engineDefinition;
 
-      render(<SSRStateProvider controllers={SSRControllers.controllers} />);
+    type CSRSearchState = InferCSRState<typeof engineDefinition>;
+
+    test('SSRProvider', async () => {
+      const ssrState = await fetchInitialState();
+      render(<SSRStateProvider controllers={ssrState.controllers} />);
       expect(errorSpy).not.toHaveBeenCalled();
     });
 
-    // TODO: Add CSR test
-    // test('CSR Provider', () => {
-    //   type CSRSearchState = Infer
-    //   function useHydrate(SSRState) {
-    //     const [CSRState, setCSRState] = useState(SearchCSRS)
+    test('CSR Provider', async () => {
+      const ssrState = await fetchInitialState();
+      function TestResultList() {
+        const {state} = controllers.useResultList();
+        return (
+          <ul>
+            {state.results.map((result) => (
+              <li key={result.uniqueId}>{result.title}</li>
+            ))}
+          </ul>
+        );
+      }
 
-    //   }
-    //   function TestHydration() {
+      function TestResultsPage() {
+        const [csrResult, setCSRResult] = useState<CSRSearchState | undefined>(
+          undefined
+        );
+        useEffect(() => {
+          hydrateInitialState(ssrState).then(({engine, controllers}) => {
+            setCSRResult({engine, controllers});
+          });
+        });
 
-    //   }
-    //   render(<CSRProvider engine={} controllers={}></CSRProvider>);
-    //   expect(errorSpy).not.toHaveBeenCalled();
-    //  })
+        if (csrResult) {
+          return (
+            <CSRProvider
+              engine={csrResult.engine}
+              controllers={csrResult.controllers}
+            >
+              <TestResultList />
+            </CSRProvider>
+          );
+        } else {
+          return (
+            <SSRStateProvider controllers={ssrState.controllers}>
+              <TestResultList />
+            </SSRStateProvider>
+          );
+        }
+      }
+
+      render(<TestResultsPage />);
+      expect(errorSpy).not.toHaveBeenCalled();
+    });
   });
 });
