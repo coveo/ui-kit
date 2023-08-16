@@ -5,13 +5,15 @@ import {
 import {useEffect, useState, FunctionComponent} from 'react';
 
 interface ResultListProps {
-  initialState: ResultListState;
+  ssrState: ResultListState;
   controller?: ResultListController;
 }
 
-export const ResultList: FunctionComponent<ResultListProps> = (props) => {
-  const {initialState, controller} = props;
-  const [state, setState] = useState(initialState);
+export const ResultList: FunctionComponent<ResultListProps> = ({
+  ssrState,
+  controller,
+}) => {
+  const [state, setState] = useState(ssrState);
 
   useEffect(
     () => controller?.subscribe(() => setState({...controller.state})),

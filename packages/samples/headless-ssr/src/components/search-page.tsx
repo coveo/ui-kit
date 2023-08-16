@@ -24,11 +24,11 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
     <>
       <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
       <SearchBox
-        initialState={ssrState.controllers.searchBox.state}
+        ssrState={ssrState.controllers.searchBox.state}
         controller={csrResult?.controllers.searchBox}
       />
       <ResultList
-        initialState={ssrState.controllers.resultList.state}
+        ssrState={ssrState.controllers.resultList.state}
         controller={csrResult?.controllers.resultList}
       />
     </>

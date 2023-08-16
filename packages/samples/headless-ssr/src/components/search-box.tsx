@@ -5,13 +5,15 @@ import {
 import {useEffect, useState, FunctionComponent} from 'react';
 
 interface SearchBoxProps {
-  initialState: SearchBoxState;
+  ssrState: SearchBoxState;
   controller?: SearchBoxController;
 }
 
-export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
-  const {initialState, controller} = props;
-  const [state, setState] = useState(initialState);
+export const SearchBox: FunctionComponent<SearchBoxProps> = ({
+  ssrState,
+  controller,
+}) => {
+  const [state, setState] = useState(ssrState);
 
   useEffect(
     () => controller?.subscribe?.(() => setState({...controller.state})),
