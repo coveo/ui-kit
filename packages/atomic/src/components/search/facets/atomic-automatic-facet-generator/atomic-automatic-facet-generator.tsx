@@ -1,4 +1,4 @@
-import {BooleanValue, Schema} from '@coveo/bueno';
+import {NumberValue, Schema} from '@coveo/bueno';
 import {
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorState,
@@ -57,9 +57,14 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    * @beta - This prop is part of the automatic facets feature.
    * Automatic facets are currently in beta testing and should be available soon.
    *
-   * Specifies whether the automatic facets are collapsed.
+   * Using the value `0` collapses all facets.
+   * Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+   *
+   * This value is overwritten by the `collapseFacetsAfter` value in facet-manager if component is within this component
    */
-  @Prop() public areCollapsed = true;
+
+  @Prop()
+  public collapseFacetsAfter?: number;
 
   public initialize() {
     this.validateProps();
@@ -74,15 +79,25 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
 
   private validateProps() {
     new Schema({
-      areCollapsed: new BooleanValue({default: true, required: false}),
+      collapseFacetAfter: new NumberValue({min: -1, required: false}),
     }).validate({
-      areCollapsed: this.areCollapsed,
+      collapseFacetAfter: this.collapseFacetsAfter,
     });
+  }
+
+  private shouldCollapseFacet(index: number): boolean {
+    if (this.collapseFacetsAfter === -1) {
+      return false;
+    }
+    if (this.collapseFacetsAfter) {
+      return index + 1 > this.collapseFacetsAfter;
+    }
+    return true;
   }
 
   public render() {
     const automaticFacets =
-      this.automaticFacetGeneratorState.automaticFacets.map((facet) => {
+      this.automaticFacetGeneratorState.automaticFacets.map((facet, index) => {
         return (
           <atomic-automatic-facet
             key={facet.state.field}
@@ -90,13 +105,16 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
             facetId={facet.state.field}
             facet={facet}
             searchStatus={this.searchStatus}
-            isCollapsed={this.areCollapsed}
+            isCollapsed={this.shouldCollapseFacet(index)}
           ></atomic-automatic-facet>
         );
       });
     if (!this.searchStatus.state.firstSearchExecuted) {
-      return Array.from({length: this.desiredCount}, () => (
-        <FacetPlaceholder numberOfValues={8} isCollapsed={this.areCollapsed} /> //TODO: Change '8' to variable whenever adding the 'numberOfValues' attribute in the AF query
+      return Array.from({length: this.desiredCount}, (_, index) => (
+        <FacetPlaceholder
+          numberOfValues={8}
+          isCollapsed={this.shouldCollapseFacet(index)}
+        /> //TODO: Change '8' to variable whenever adding the 'numberOfValues' attribute in the AF query
       ));
     }
 

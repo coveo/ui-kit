@@ -185,6 +185,14 @@ export class AtomicRatingRangeFacet
     this.dependenciesManager?.stopWatching();
   }
 
+  private get isHidden() {
+    return (
+      !this.valuesToRender.length ||
+      this.searchStatusState.hasError ||
+      !this.facet.state.enabled
+    );
+  }
+
   private initializeFacet() {
     const options: NumericFacetOptions = {
       facetId: this.facetId,
@@ -202,6 +210,7 @@ export class AtomicRatingRangeFacet
       label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
+      isHidden: () => this.isHidden,
     };
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
@@ -344,7 +353,7 @@ export class AtomicRatingRangeFacet
   }
 
   private get valuesToRender() {
-    return this.facetState.values.filter(
+    return this.facet.state.values.filter(
       (value) => value.numberOfResults || value.state !== 'idle'
     );
   }

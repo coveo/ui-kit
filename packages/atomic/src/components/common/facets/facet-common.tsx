@@ -84,7 +84,8 @@ export type BaseFacetElement<FacetType extends AnyFacetType = AnyFacetType> =
     SortCriterionProp<FacetType> &
     DisplayValuesAsProp &
     CollapsedProp &
-    HeadingLevelProp;
+    HeadingLevelProp &
+    CollapseFacetsAfter;
 
 type StateProp<FacetType extends AnyFacetType> = FacetType extends Facet
   ? {facetState: FacetState}
@@ -130,6 +131,8 @@ type DisplayValuesAsProp = {
 type CollapsedProp = {isCollapsed?: boolean};
 
 type HeadingLevelProp = {headingLevel?: number};
+
+type CollapseFacetsAfter = {collapseFacetsAfter?: number};
 
 export interface FacetValueProps {
   i18n: i18n;
@@ -221,7 +224,7 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   searchStatusState: SearchStatusState;
   facetValues: Pick<FacetValue, 'numberOfResults' | 'state'>[];
 }) {
-  const {hasInput, hasInputRange, searchStatusState, facetValues} = facetRange;
+  const {hasInput, hasInputRange, facetValues} = facetRange;
   if (!hasInput) {
     return false;
   }
@@ -230,9 +233,9 @@ export function shouldDisplayInputForFacetRange(facetRange: {
     return true;
   }
 
-  if (!searchStatusState.hasResults) {
-    return false;
-  }
+  // if (!searchStatusState.hasResults) {
+  //   return false;
+  // }
 
   const onlyValuesWithResultsOrActive =
     facetValues.filter(
@@ -315,6 +318,7 @@ export class FacetCommon {
       label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
+      isHidden: () => this.isHidden,
     };
     this.bindings.store.registerFacet('facets', facetInfo);
     initializePopover(this.host, {
@@ -340,6 +344,10 @@ export class FacetCommon {
       return;
     }
     this.dependenciesManager?.stopWatching();
+  }
+
+  private get isHidden() {
+    return !this.facet.state.enabled || !this.facet.state.values.length;
   }
 
   public componentShouldUpdate(
