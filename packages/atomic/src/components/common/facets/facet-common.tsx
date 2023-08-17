@@ -305,6 +305,9 @@ export function updateCollapseFacetsAfter(
   index: number,
   collapseFacetsAfter: number
 ) {
+  if (!generator) {
+    return;
+  }
   const value = collapseFacetsAfter - index;
   if (value > 0) {
     generator.collapseFacetsAfter = value;

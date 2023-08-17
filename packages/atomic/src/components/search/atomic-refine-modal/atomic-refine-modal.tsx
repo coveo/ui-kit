@@ -152,18 +152,21 @@ export class AtomicRefineModal implements InitializableComponent {
 
     const visibleFacetsClone = this.cloneFacets(visibleFacets);
     const invisibleFacetsClone = this.cloneFacets(invisibleFacets);
-    const generator = this.makeAutomaticFacetGenerator();
 
     updateCollapsedState(visibleFacetsClone, this.collapseFacetsAfter);
-    updateCollapseFacetsAfter(
-      generator,
-      visibleFacets.length,
-      this.collapseFacetsAfter
-    );
 
     divSlot.append(...visibleFacetsClone);
     divSlot.append(...invisibleFacetsClone);
-    divSlot.append(generator);
+
+    const generator = this.makeAutomaticFacetGenerator();
+    if (generator) {
+      updateCollapseFacetsAfter(
+        generator,
+        visibleFacets.length,
+        this.collapseFacetsAfter
+      );
+      divSlot.append(generator);
+    }
 
     return divSlot;
   }
@@ -179,6 +182,9 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private makeAutomaticFacetGenerator() {
+    if (!this.bindings.engine.state.automaticFacetSet?.desiredCount) {
+      return;
+    }
     const generator = document.createElement(
       'atomic-automatic-facet-generator'
     );
