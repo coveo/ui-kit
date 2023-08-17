@@ -1490,13 +1490,13 @@ Example:
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'textArea']
+  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'textarea']
 })
 @Component({
   selector: 'atomic-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'textArea']
+  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'textarea']
 })
 export class AtomicSearchBox {
   protected el: HTMLElement;
