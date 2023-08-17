@@ -800,7 +800,7 @@ export class AtomicSearchBox {
     return (
       <textarea
         aria-hidden
-        part="textarea"
+        part="textarea-spacer"
         class="invisible text-lg py-3.5 px-4"
         rows={1}
       ></textarea>
