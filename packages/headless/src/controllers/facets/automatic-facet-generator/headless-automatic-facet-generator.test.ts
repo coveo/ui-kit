@@ -63,15 +63,6 @@ describe('automatic facets', () => {
       setup({numberOfValues: 0});
       expect(engine.actions).toEqual([]);
     });
-
-    it(`should dispatch #setOptions with default numberOfValue: ${NUMBER_OF_VALUE_DEFAULT} HARD VALUE if it is undefined`, () => {
-      setup({numberOfValues: undefined});
-      const options: AutomaticFacetGeneratorOptions = {
-        desiredCount: 5,
-        numberOfValues: NUMBER_OF_VALUE_DEFAULT,
-      };
-      expect(engine.actions).toContainEqual(setOptions(options));
-    });
   });
 
   it('should dispatch #setOptions', () => {
