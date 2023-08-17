@@ -1,6 +1,14 @@
 import 'cypress-web-vitals';
 import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
 
+const getResultTitles = () =>
+  cy
+    .get('.result-list li')
+    .invoke('map', function (this: HTMLElement) {
+      return this.innerText;
+    })
+    .invoke('toArray');
+
 describe('headless ssr example', () => {
   const numResults = 10;
   const numResultsMsg = `Rendered page with ${numResults} results`;
@@ -13,7 +21,9 @@ describe('headless ssr example', () => {
         expect(dom.querySelector(msgSelector)?.textContent).to.equal(
           numResultsMsg
         );
-        expect(dom.querySelectorAll('li').length).to.equal(numResults);
+        expect(dom.querySelectorAll('.result-list li').length).to.equal(
+          numResults
+        );
       });
     });
     cy.visit('/');
@@ -22,7 +32,7 @@ describe('headless ssr example', () => {
   it('renders page in CSR as expected', () => {
     cy.visit('/');
     cy.get(msgSelector).should('have.text', numResultsMsg);
-    cy.get('li').should('have.length', numResults);
+    cy.get('.result-list li').should('have.length', numResults);
   });
 
   it('renders result list in SSR and then in CSR', () => {
@@ -47,13 +57,20 @@ describe('headless ssr example', () => {
   });
 
   it('should pass the web-vitals audits', () => {
-    // TODO: Add input based vitals after interactive elements are added to test page (e.g. search box)
     // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
-    const VITALS_THRESHOLD = {
-      thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20},
+    const VITALS_THRESHOLD: Cypress.ReportWebVitalsConfig = {
+      thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20, fid: 100, inp: 100},
     };
-    cy.visit('/');
-    cy.vitals(VITALS_THRESHOLD);
+    cy.startVitalsCapture({url: '/'});
+    getResultTitles().as('initial-results');
+    waitForHydration();
+    cy.get('.search-box input').focus().type('abc{enter}');
+    cy.get<string>('@initial-results').then((initialResults) =>
+      getResultTitles().should((currentResults) =>
+        expect(currentResults).not.to.deep.equal(initialResults)
+      )
+    );
+    cy.reportVitals(VITALS_THRESHOLD);
   });
 
   describe('after hydration', () => {
@@ -70,14 +87,13 @@ describe('headless ssr example', () => {
     });
 
     it('after submitting a query, should change search results', () => {
-      const getResultTitles = () => cy.get('.result-list li').invoke('text');
-
-      getResultTitles().as('initialResults');
+      getResultTitles().as('initial-results');
       cy.get('.search-box input').focus().type('abc{enter}');
-      cy.get<string>('@initialResults').then((initialResults) =>
-        getResultTitles().should((currentResults) =>
-          expect(currentResults).not.to.equal(initialResults)
-        )
+      cy.get<string>('@initial-results').then((initialResults) =>
+        getResultTitles().should((currentResults) => {
+          expect(currentResults).not.to.deep.equal(initialResults);
+          expect(currentResults).to.have.length(numResults);
+        })
       );
     });
   });
