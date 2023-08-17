@@ -17,14 +17,14 @@ import {GeneratedAnswerState} from '../../features/generated-answer/generated-an
 import {executeSearch} from '../../features/search/search-actions';
 import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
-import {buildController} from '../controller/headless-controller';
+import {Controller, buildController} from '../controller/headless-controller';
 
 export type {GeneratedAnswerState, GeneratedAnswerCitation};
 
 /**
  * @internal
  */
-export interface GeneratedAnswer {
+export interface GeneratedAnswer extends Controller {
   /**
    * The state of the GeneratedAnswer controller.
    */

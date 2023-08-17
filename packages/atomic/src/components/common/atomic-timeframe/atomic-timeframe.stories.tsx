@@ -14,7 +14,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
         }
       </style>
     `,
-    parentElement: () => {
+    parentElement: function () {
       return document.createElement('atomic-timeframe-facet');
     },
   }

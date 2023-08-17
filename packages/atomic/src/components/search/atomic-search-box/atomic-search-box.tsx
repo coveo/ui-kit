@@ -630,10 +630,7 @@ export class AtomicSearchBox {
   ) {
     const id = `${this.id}-${side}-suggestion-${item.key}`;
 
-    const isSelected =
-      id === this.activeDescendant ||
-      (this.suggestedQuery === item.query &&
-        !this.panelInFocus?.getAttribute('part')?.includes(side));
+    const isSelected = id === this.activeDescendant;
 
     if (index === lastIndex && item.hideIfLast) {
       return null;
