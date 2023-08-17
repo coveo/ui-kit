@@ -28,7 +28,10 @@ import {InsightConfigurationState} from '../features/insight-configuration/insig
 import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {PaginationState} from '../features/pagination/pagination-state';
-import {ProductListingState, ProductListingV2State} from '../features/product-listing/product-listing-state';
+import {
+  ProductListingState,
+  ProductListingV2State,
+} from '../features/product-listing/product-listing-state';
 import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
 import {QuerySetState} from '../features/query-set/query-set-state';
 import {QuerySuggestSet} from '../features/query-suggest/query-suggest-state';
@@ -396,10 +399,6 @@ export interface AutomaticFacetSection {
    * The set of automatic facets.
    */
   automaticFacetSet: AutomaticFacetSetState;
-}
-
-export interface ProductListingV2FacetsSection {
-  facetSet: AutomaticFacetSetState;
 }
 
 export interface GeneratedAnswerSection {

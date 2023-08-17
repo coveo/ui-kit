@@ -31,7 +31,6 @@ export type ProductListingAppState = ConfigurationSection &
   VersionSection &
   ContextSection;
 
-// TODO: Complete
 export type ProductListingAppStateV2 = ConfigurationSection &
   ProductListingV2Section &
   FacetSearchSection &

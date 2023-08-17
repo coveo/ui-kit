@@ -58,13 +58,7 @@ export interface ProductListingV2RequestParam {
   selectedPage?: {
     page?: number;
   };
-  selectedSort?: {
-    type?: string;
-    field?: {
-      field?: string;
-      direction?: string;
-    }[];
-  };
+  selectedSort?: SortCriterion;
   context: {
     user: {
       userId?: string;

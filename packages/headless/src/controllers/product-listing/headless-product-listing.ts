@@ -1,15 +1,20 @@
 import {ArrayValue, Schema, StringValue, EnumValue} from '@coveo/bueno';
 import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client';
 import {configuration} from '../../app/common-reducers';
-import {ProductListingEngine, ProductListingV2Engine} from '../../app/product-listing-engine/product-listing-engine';
 import {
-  fetchProductListing, fetchProductListingV2,
-  setAdditionalFields, setProductListingId,
+  ProductListingEngine,
+  ProductListingV2Engine,
+} from '../../app/product-listing-engine/product-listing-engine';
+import {
+  fetchProductListing,
+  fetchProductListingV2,
+  setAdditionalFields,
+  setProductListingId,
   setProductListingUrl,
 } from '../../features/product-listing/product-listing-actions';
 import {
   productListingReducer as productListing,
-  productListingV2Reducer as productListingV2
+  productListingV2Reducer as productListingV2,
 } from '../../features/product-listing/product-listing-slice';
 import {ProductRecommendation} from '../../product-listing.index';
 import {loadReducerError} from '../../utils/errors';
@@ -28,33 +33,9 @@ const optionsSchema = new Schema({
   }),
 });
 
-
-export enum SortBy {
-  /**
-   * Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value.
-   */
-  Relevancy = 'relevancy',
-  /**
-   * Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value.
-   */
-  QRE = 'qre',
-  /**
-   * Uses the date field to sort the query results. This field typically contains the last modification date of each item. May be in ascending or descending order.
-   */
-  Date = 'date',
-  /**
-   * Uses the value of a specific sortable field to sort the query results. May be in ascending or descending order.
-   */
-  Field = 'field',
-  /**
-   * Does not sort the query results; the index will return result items in an essentially random order.
-   */
-  NoSort = 'nosort',
-}
-
 export enum Mode {
   Live = 'live',
-  Sample = 'sample'
+  Sample = 'sample',
 }
 
 const optionsV2Schema = new Schema({
@@ -99,7 +80,7 @@ export interface ProductListingV2Options {
 
 export interface ProductListingV2Props {
   /**
-   * The initial options that should be applied to this `ProductListing` controller.
+   * The initial options that should be applied to this `ProductListingV2` controller.
    */
   options?: ProductListingV2Options;
 }
@@ -147,11 +128,10 @@ export interface ProductListingV2 extends Controller {
   refresh(): void;
 
   /**
-   * A scoped and simplified part of the headless state that is relevant to the `ProductListing` controller.
+   * A scoped and simplified part of the headless state that is relevant to the `ProductListingV2` controller.
    * */
   state: ProductListingV2State;
 }
-
 
 export interface ProductListingState {
   products: ProductRecommendation[];
@@ -242,8 +222,8 @@ export function buildProductListing(
 }
 
 export function buildProductListingV2(
-    engine: ProductListingV2Engine,
-    props: ProductListingV2Props = {}
+  engine: ProductListingV2Engine,
+  props: ProductListingV2Props = {}
 ): ProductListingV2 {
   if (!loadBaseProductListingV2Reducers(engine)) {
     throw loadReducerError;
@@ -260,9 +240,9 @@ export function buildProductListingV2(
   validateOptions(engine, optionsV2Schema, options, 'buildProductListingV2');
 
   dispatch(
-      setProductListingId({
-        id: options.id!,
-      })
+    setProductListingId({
+      id: options.id!,
+    })
   );
 
   return {
@@ -270,7 +250,7 @@ export function buildProductListingV2(
 
     get state() {
       const {listingId, products, error, isLoading, responseId} =
-          getState().productListing;
+        getState().productListing;
       return {
         listingId,
         products,
@@ -281,11 +261,11 @@ export function buildProductListingV2(
     },
 
     setId: (id: string) =>
-        dispatch(
-            setProductListingId({
-              id,
-            })
-        ),
+      dispatch(
+        setProductListingId({
+          id,
+        })
+      ),
 
     refresh: () => dispatch(fetchProductListingV2()),
   };

@@ -244,9 +244,8 @@ export const buildProductListingRequest = async (
 export const buildProductListingRequestV2 = async (
   state: StateNeededByFetchProductListingV2
 ): Promise<ProductListingV2Request> => {
-  // TODO: Use facets, sort, selected page, context
+  // TODO: Use sort, selected page, context
   const facets = getFacets(state);
-  // TODO: Map over facets to plp v2-compatible ones
   // const visitorId = await getVisitorID(state.configuration.analytics);
 
   const baseParams = {
