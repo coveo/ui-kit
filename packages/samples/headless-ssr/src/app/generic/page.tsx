@@ -1,5 +1,5 @@
-import {fetchInitialState} from '@/src/app/ssr/common/engine';
-import SearchPage from '@/src/app/ssr/components/search-page';
+import {fetchInitialState} from '@/src/app/generic/common/engine';
+import SearchPage from '@/src/app/generic/components/search-page';
 
 // Entry point SSR function
 export default async function Search() {

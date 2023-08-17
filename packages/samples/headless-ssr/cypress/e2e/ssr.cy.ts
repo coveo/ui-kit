@@ -2,7 +2,7 @@ import 'cypress-web-vitals';
 import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
 
 describe('headless ssr example', () => {
-  const route = '/ssr';
+  const route = '/generic';
   const numResults = 10;
   const numResultsMsg = `Rendered page with ${numResults} results`;
   const msgSelector = '#hydrated-msg';
