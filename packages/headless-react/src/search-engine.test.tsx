@@ -16,6 +16,10 @@ describe('Headless react SSR utils', () => {
     errorSpy = jest.spyOn(global.console, 'error');
   });
 
+  afterEach(() => {
+    errorSpy.mockClear();
+  });
+
   test('defines react search engine', () => {
     const {
       fetchInitialState,
@@ -52,6 +56,7 @@ describe('Headless react SSR utils', () => {
   });
 
   describe('renders providers without error', () => {
+    const resultItemClassName = 'result-item';
     const engineDefinition = defineSearchEngine({
       configuration: sampleConfig,
       controllers: {resultList: defineResultList()},
@@ -66,6 +71,30 @@ describe('Headless react SSR utils', () => {
 
     type CSRSearchState = InferCSRState<typeof engineDefinition>;
 
+    function TestResultList() {
+      const {state} = controllers.useResultList();
+      return (
+        <ul role="result-list">
+          {state.results.map((result) => (
+            <li className={resultItemClassName} key={result.uniqueId}>
+              {result.title}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    test('should throw error when controller hook is used without context', () => {
+      let err = undefined;
+      try {
+        render(<TestResultList></TestResultList>);
+      } catch (e) {
+        err = e as Error;
+      }
+      expect(err?.message).toMatch('Missing SSR state or CSR provider.');
+      expect(errorSpy).toHaveBeenCalled();
+    });
+
     test('SSRProvider', async () => {
       const ssrState = await fetchInitialState();
       render(<SSRStateProvider controllers={ssrState.controllers} />);
@@ -74,16 +103,6 @@ describe('Headless react SSR utils', () => {
 
     test('CSR Provider', async () => {
       const ssrState = await fetchInitialState();
-      function TestResultList() {
-        const {state} = controllers.useResultList();
-        return (
-          <ul>
-            {state.results.map((result) => (
-              <li key={result.uniqueId}>{result.title}</li>
-            ))}
-          </ul>
-        );
-      }
 
       function TestResultsPage() {
         const [csrResult, setCSRResult] = useState<CSRSearchState | undefined>(
@@ -114,7 +133,11 @@ describe('Headless react SSR utils', () => {
       }
 
       render(<TestResultsPage />);
+      // screen.debug();
+      // TODO (before merge): fix error "When testing, code that causes React state updates should be wrapped into act"
+      // await screen.findByRole(resultItemClassName);
       expect(errorSpy).not.toHaveBeenCalled();
+      // expect((await screen.findAllByRole('li')).length).toBe(10);
     });
   });
 });
