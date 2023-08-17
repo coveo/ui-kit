@@ -4,7 +4,7 @@ import {
   SearchSSRState,
   SearchCSRState,
   hydrateInitialState,
-} from '@/src/common/engine';
+} from '@/src/app/generic/common/engine';
 import {useEffect, useState} from 'react';
 import {HydrationMetadata} from './hydration-metadata';
 import {ResultList} from './result-list';
