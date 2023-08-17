@@ -25,8 +25,12 @@ export const automaticFacetSetReducer = createReducer(
         });
       })
       .addCase(setOptions, (state, action) => {
-        state.desiredCount = action.payload.desiredCount;
-        state.numberOfValues = action.payload.numberOfValues;
+        if (action.payload.desiredCount) {
+          state.desiredCount = action.payload.desiredCount;
+        }
+        if (action.payload.numberOfValues) {
+          state.numberOfValues = action.payload.numberOfValues;
+        }
       })
       .addCase(toggleSelectAutomaticFacetValue, (state, action) => {
         const {field, selection} = action.payload;

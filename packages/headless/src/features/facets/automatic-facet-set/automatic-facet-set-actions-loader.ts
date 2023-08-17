@@ -20,8 +20,8 @@ export interface AutomaticFacetsActionCreators {
    * @returns A dispatchable action.
    */
   setOptions(
-    options: AutomaticFacetGeneratorOptions
-  ): PayloadAction<AutomaticFacetGeneratorOptions>;
+    options: Partial<AutomaticFacetGeneratorOptions>
+  ): PayloadAction<Partial<AutomaticFacetGeneratorOptions>>;
 
   /**
    * Deselects all values of an automatic facet.

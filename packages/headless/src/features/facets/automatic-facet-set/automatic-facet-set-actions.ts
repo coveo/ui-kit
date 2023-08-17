@@ -9,6 +9,7 @@ import {facetValueDefinition} from '../facet-set/facet-set-validate-payload';
 import {FacetValue} from '../facet-set/interfaces/response';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {
+  DESIRED_COUNT_DEFAULT,
   DESIRED_COUNT_MAXIMUM,
   DESIRED_COUNT_MINIMUM,
   NUMBER_OF_VALUE_DEFAULT,
@@ -26,21 +27,27 @@ export interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
    */
   selection: FacetValue;
 }
+
 const numberOfValuesDefinition = new NumberValue({
   min: NUMBER_OF_VALUE_MINIMUM,
   default: NUMBER_OF_VALUE_DEFAULT,
+  required: false,
 });
+
 const desiredCountDefinition = new NumberValue({
   min: DESIRED_COUNT_MINIMUM,
   max: DESIRED_COUNT_MAXIMUM,
+  default: DESIRED_COUNT_DEFAULT,
+  required: false,
 });
+
 const optionsSchema = {
   desiredCount: desiredCountDefinition,
   numberOfValues: numberOfValuesDefinition,
 };
 export const setOptions = createAction(
   'automaticFacet/setOptions',
-  (payload: AutomaticFacetGeneratorOptions) =>
+  (payload: Partial<AutomaticFacetGeneratorOptions>) =>
     validatePayload(payload, optionsSchema)
 );
 

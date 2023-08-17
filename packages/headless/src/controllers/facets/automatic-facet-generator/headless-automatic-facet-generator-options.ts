@@ -1,5 +1,3 @@
-import {NUMBER_OF_VALUE_DEFAULT} from '../../../features/facets/automatic-facet-set/automatic-facet-set-constants';
-
 export interface AutomaticFacetGeneratorOptions {
   /**
    * @beta - This property is part of the automatic facets feature.
@@ -10,8 +8,9 @@ export interface AutomaticFacetGeneratorOptions {
    *
    * Minimum: `1`
    * Maximum: `10`
+   * @defaultValue `5`
    */
-  desiredCount: number;
+  desiredCount?: number;
 
   /**
    * @beta - This prop is part of the automatic facets feature.
@@ -31,6 +30,6 @@ export function buildOptions(
 ): AutomaticFacetGeneratorOptions {
   return {
     desiredCount: options.desiredCount,
-    numberOfValues: options.numberOfValues ?? NUMBER_OF_VALUE_DEFAULT,
+    numberOfValues: options.numberOfValues,
   };
 }

@@ -1,3 +1,7 @@
+import {
+  DESIRED_COUNT_DEFAULT,
+  NUMBER_OF_VALUE_DEFAULT,
+} from './automatic-facet-set-constants';
 import {AutomaticFacetResponse} from './interfaces/response';
 
 export type AutomaticFacetSlice = {
@@ -14,7 +18,7 @@ export type AutomaticFacetSetState = {
    * The desired number of automatically generated facet values.
    * Must be a positive integer.
    */
-  numberOfValues?: number;
+  numberOfValues: number;
   /**
    * A map of automatic facet field to an automatic facet slice containing the response.
    */
@@ -23,8 +27,8 @@ export type AutomaticFacetSetState = {
 
 export function getAutomaticFacetSetInitialState(): AutomaticFacetSetState {
   return {
-    desiredCount: 1,
-    numberOfValues: 8,
+    desiredCount: DESIRED_COUNT_DEFAULT,
+    numberOfValues: NUMBER_OF_VALUE_DEFAULT,
     set: {},
   };
 }
