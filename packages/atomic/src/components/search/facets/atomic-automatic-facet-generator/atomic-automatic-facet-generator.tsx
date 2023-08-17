@@ -60,7 +60,7 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    * Using the value `0` collapses all facets.
    * Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
    *
-   * This value is overwritten by the `collapseFacetsAfter` value in facet-manager if component is within this component
+   * Note: The value of `collapseFacetsAfter` in this component can be overridden by the `collapseFacetsAfter` property in the `atomic-facet-manager` component, if this component is a child of it.
    */
   @Prop() public collapseFacetsAfter?: number;
 
