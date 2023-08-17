@@ -58,7 +58,7 @@ const setRecentQueries = (count: number) => () => {
 };
 
 const addTextAreaSearchBox = (options: AddSearchBoxOptions = {}) => {
-  const textAreaProp = {'text-area': 'true'};
+  const textAreaProp = {textarea: 'true'};
   const props = options?.props
     ? {...options.props, ...textAreaProp}
     : textAreaProp;
