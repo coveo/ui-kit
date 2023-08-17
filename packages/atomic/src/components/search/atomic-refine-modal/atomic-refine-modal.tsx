@@ -33,9 +33,11 @@ import {
   sortFacetVisibility,
   updateCollapsedState,
 } from '../../common/facets/facet-common';
+import {isRefineModalFacet} from '../../common/interface/store';
 import {RefineModalCommon} from '../../common/refine-modal/refine-modal-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {SortDropdownOption} from '../atomic-search-interface/store';
+import {popoverClass} from '../facets/atomic-popover/popover-type';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -153,7 +155,10 @@ export class AtomicRefineModal implements InitializableComponent {
     );
 
     const visibleFacetsClone = visibleFacets.map((facet) => {
-      return facet.cloneNode(true) as BaseFacetElement;
+      const clone = facet.cloneNode(true) as BaseFacetElement;
+      clone.classList.remove(popoverClass);
+      clone.setAttribute(isRefineModalFacet, '');
+      return clone;
     });
     const invisibleFacetsClone = invisibleFacets.map((facet) => {
       return facet.cloneNode(true) as BaseFacetElement;
