@@ -187,9 +187,28 @@ export class AtomicSearchBox {
   @Prop({reflect: true}) public enableQuerySyntax = false;
 
   /**
-    TODO
+   * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element.
+   * The resulting component will expand to support multi-line queries.
+   * When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its ::after pseudo-element as well as the `"textarea-spacer"` part.
+   * The buttons within the search box are likely to need adjusting as well.
+   *
+   * Example:
+   * ```css
+   * <style>
+   *   atomic-search-box::part(textarea),
+   *   atomic-search-box::part(textarea)::after,
+   *   atomic-search-box::part(textarea-spacer) {
+   *     font-size: x-large;
+   *   }
+   *
+   *   atomic-search-box::part(submit-button-wrapper),
+   *   atomic-search-box::part(clear-button-wrapper) {
+   *     padding-top: 0.75rem;
+   *   }
+   * </style>
+   * ```
    */
-  @Prop({reflect: true}) public textArea = false;
+  @Prop({reflect: true}) public textarea = false;
 
   /**
    * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
@@ -778,7 +797,7 @@ export class AtomicSearchBox {
       },
     };
 
-    return this.textArea ? (
+    return this.textarea ? (
       <SearchTextArea
         textAreaRef={this.textAreaRef}
         ref={(el) => (this.textAreaRef = el as HTMLTextAreaElement)}
@@ -798,7 +817,7 @@ export class AtomicSearchBox {
       <textarea
         aria-hidden
         part="textarea-spacer"
-        class="invisible text-lg py-3.5 px-4"
+        class="invisible text-lg py-3.5 px-4 w-full"
         rows={1}
       ></textarea>
     );
@@ -810,15 +829,15 @@ export class AtomicSearchBox {
     const searchLabel = this.searchBoxCommon.getSearchInputLabel(
       this.minimumQueryLength
     );
-    const Submit = this.textArea ? TextAreaSubmitButton : SubmitButton;
+    const Submit = this.textarea ? TextAreaSubmitButton : SubmitButton;
 
     return (
       <Host>
-        {this.textArea ? this.renderAbsolutePositionSpacer() : null}
+        {this.textarea ? this.renderAbsolutePositionSpacer() : null}
         {[
           <SearchBoxWrapper
             disabled={this.isSearchDisabled}
-            textArea={this.textArea}
+            textArea={this.textarea}
           >
             <atomic-focus-detector
               style={{display: 'contents'}}

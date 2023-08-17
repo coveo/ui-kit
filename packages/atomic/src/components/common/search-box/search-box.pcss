@@ -16,7 +16,7 @@
     visibility: hidden;
   }
 
-  > textarea,
+  > [part='textarea'],
   &::after {
     @apply whitespace-nowrap z-10 h-full outline-none resize-none bg-transparent text-neutral-dark text-lg grow p-3.5 px-4;
     /* Place on top of each other */
@@ -24,10 +24,10 @@
   }
 
   &.expanded {
-    > textarea,
+    > [part='textarea'],
     &::after {
       @apply whitespace-pre-wrap;
-      max-height: 6em;
+      max-height: 8em;
     }
   }
 }
