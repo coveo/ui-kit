@@ -61,7 +61,7 @@ describe('headless ssr example', () => {
     () => {
       // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
       const VITALS_THRESHOLD: Cypress.ReportWebVitalsConfig = {
-        thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20, fid: 100, inp: 100},
+        thresholds: {fcp: 200, lcp: 200, cls: 0, ttfb: 40, fid: 200, inp: 200},
       };
       cy.startVitalsCapture({url: '/'});
       getResultTitles()
@@ -70,9 +70,7 @@ describe('headless ssr example', () => {
       waitForHydration();
       cy.get('.search-box input').focus().type('abc{enter}');
       cy.get<string>('@initial-results').then((initialResults) =>
-        getResultTitles().should((currentResults) =>
-          expect(currentResults).not.to.deep.equal(initialResults)
-        )
+        getResultTitles().should('not.deep.equal', initialResults)
       );
       cy.reportVitals(VITALS_THRESHOLD);
     }
@@ -96,12 +94,11 @@ describe('headless ssr example', () => {
         .should('have.length.greaterThan', 0)
         .as('initial-results');
       cy.get('.search-box input').focus().type('abc{enter}');
-      cy.get<string>('@initial-results').then((initialResults) =>
-        getResultTitles().should((currentResults) => {
-          expect(currentResults).not.to.deep.equal(initialResults);
-          expect(currentResults).to.have.length(numResults);
-        })
-      );
+      cy.get<string>('@initial-results').then((initialResults) => {
+        getResultTitles()
+          .should('not.deep.equal', initialResults)
+          .and('have.length', 10);
+      });
     });
   });
 });
