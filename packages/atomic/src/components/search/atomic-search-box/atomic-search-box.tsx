@@ -796,6 +796,17 @@ export class AtomicSearchBox {
     );
   };
 
+  private renderAbsolutePositionSpacer() {
+    return (
+      <textarea
+        aria-hidden
+        part="textarea"
+        class="invisible text-lg py-3.5 px-4"
+        rows={1}
+      ></textarea>
+    );
+  }
+
   public render() {
     this.updateBreakpoints();
 
@@ -806,12 +817,7 @@ export class AtomicSearchBox {
 
     return (
       <Host>
-        <textarea
-          aria-hidden
-          class="invisible text-lg py-3.5 px-4"
-          rows={1}
-        ></textarea>
-
+        {this.textArea ? this.renderAbsolutePositionSpacer() : null}
         {[
           <SearchBoxWrapper
             disabled={this.isSearchDisabled}
