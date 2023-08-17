@@ -69,13 +69,13 @@ export const FacetValueCheckbox: FunctionalComponent<
         onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         aria-hidden="true"
       >
+        {renderExclusion()}
         {children}
         <span part="value-count" class="value-count">
           {props.i18n.t('between-parentheses', {
             text: count,
           })}
         </span>
-        {renderExclusion()}
       </label>
     </li>
   );

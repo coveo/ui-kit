@@ -34,11 +34,12 @@ export const FacetValueExclude: FunctionalComponent<ExcludeProps> = (props) => {
     <button
       {...attributes}
       onClick={() => props.onClick?.()}
+      class="peer order-last ml-auto group-hover:visible invisible"
       onMouseEnter={(e) => props.onMouseEnter?.(e)}
     >
       <atomic-icon
         class={
-          'w-4 p-1 rounded test-class bg-neutral hover:bg-error hover:fill-white'
+          'w-4 p-1 rounded bg-neutral order-last hover:bg-error hover:fill-white'
         }
         icon={Tick}
         part="icon"

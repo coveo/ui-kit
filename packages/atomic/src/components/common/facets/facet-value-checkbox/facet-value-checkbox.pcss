@@ -9,12 +9,7 @@
 }
 
 .value-checkbox + label {
-  @apply w-full flex pl-8 pr-2 py-2.5 text-on-background cursor-pointer truncate hover:bg-neutral-light;
-}
-
-.value-checkbox:focus-visible + label,
-.value-checkbox:hover + label {
-  @apply bg-neutral-light;
+  @apply w-full flex flex-row pl-8 pr-2 py-2.5 text-on-background cursor-pointer truncate hover:bg-neutral-light;
 }
 
 .value-checkbox.selected:focus-visible + label .value-label,
@@ -25,16 +20,4 @@
 .value-checkbox.excluded:focus-visible + label .value-label,
 .value-checkbox.excluded:hover + label .value-label {
   @apply text-error;
-}
-
-/**
- * Exclude logic TODO:
- */
-.value-checkbox + label .value-exclude {
-  visibility: hidden;
-  margin-left: auto;
-}
-
-.value-checkbox:hover + label .value-exclude {
-  visibility: visible;
 }
