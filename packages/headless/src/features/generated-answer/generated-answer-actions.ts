@@ -152,9 +152,9 @@ export const streamAnswer = createAsyncThunk<
       },
       abort: (
         error: GeneratedAnswerErrorPayload,
-        abortController: AbortController
+        abortController?: AbortController
       ) => {
-        abortController.abort();
+        abortController?.abort();
         dispatch(updateError(error));
       },
       close: () => dispatch(setIsStreaming(false)),
