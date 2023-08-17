@@ -398,6 +398,10 @@ export interface AutomaticFacetSection {
   automaticFacetSet: AutomaticFacetSetState;
 }
 
+export interface ProductListingV2FacetsSection {
+  facetSet: AutomaticFacetSetState;
+}
+
 export interface GeneratedAnswerSection {
   /**
    * The properties related to generative question answering.

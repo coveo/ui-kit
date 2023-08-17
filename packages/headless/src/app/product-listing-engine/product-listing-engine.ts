@@ -18,8 +18,7 @@ import {
 } from '../engine';
 import {buildLogger} from '../logger';
 import {
-  ProductListingThunkExtraArguments,
-  ProductListingV2ThunkExtraArguments
+  ProductListingThunkExtraArguments
 } from '../product-listing-thunk-extra-arguments';
 import {SearchEngineConfiguration} from '../search-engine/search-engine-configuration';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
@@ -57,7 +56,7 @@ export interface ProductListingEngine<State extends object = {}>
 export interface ProductListingV2Engine<State extends object = {}>
     extends CoreEngine<
         State & ProductListingV2EngineState,
-        ProductListingV2ThunkExtraArguments
+        ProductListingThunkExtraArguments
         > {}
 
 /**

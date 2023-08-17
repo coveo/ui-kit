@@ -5,6 +5,7 @@ import {getOrganizationEndpoints} from '../api/platform-client';
 import {waitForNextStateChange} from '../test/functional-test-utils';
 import {buildPagerV2} from '../controllers/product-listing/pager/headless-product-listing-pager';
 import {buildProductListingV2} from '../controllers/product-listing/headless-product-listing';
+import {buildFacetsV2} from '../controllers/product-listing/facet/headless-product-listing-facet';
 
 describe('product listing v2', () => {
     let engine: ProductListingV2Engine;
@@ -13,7 +14,7 @@ describe('product listing v2', () => {
         engine = buildProductListingV2Engine({
             configuration: {
                 organizationId: 'saqdemo5fjlck8f',
-                accessToken: 'nope',
+                accessToken: 'x9338f6e6-4566-43a7-b33c-ac9fdacacad0',
                 organizationEndpoints: {
                     ...organizationEndpoints,
                     platform: `http://localhost:8100`,
@@ -74,5 +75,22 @@ describe('product listing v2', () => {
             hasPreviousPage: true,
             maxPage: 2,
         })
+    })
+
+    it('should support facets', async () => {
+        const productListingController = buildProductListingV2(engine, {
+            options: {
+                id : 'some-listing-id',
+                mode: 'live',
+                locale: 'en'
+            }
+        })
+        const facetsController = buildFacetsV2(engine)
+        await waitForNextStateChange(productListingController, {
+            action: () => productListingController.refresh(),
+            expectedSubscriberCalls: 2,
+        });
+
+        expect(facetsController.state.facets).not.toEqual([])
     })
 })

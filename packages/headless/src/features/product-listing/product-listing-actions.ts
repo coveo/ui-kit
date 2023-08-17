@@ -240,7 +240,8 @@ export const buildProductListingRequestV2 = async (
     state: StateNeededByFetchProductListingV2
 ): Promise<ProductListingV2Request> => {
     // TODO(nico): Use facets, sort, selected page, context
-    // const facets = getFacets(state);
+    const facets = getFacets(state);
+    // TODO(nico): Map over facets to plp v2-compatible ones
     // const visitorId = await getVisitorID(state.configuration.analytics);
 
     const baseParams = {
@@ -260,6 +261,7 @@ export const buildProductListingRequestV2 = async (
     return {
         ...baseParams,
         ...productListingParams,
+        selectedFacets: facets,
         context: {
             user: {
                 userId: "1",

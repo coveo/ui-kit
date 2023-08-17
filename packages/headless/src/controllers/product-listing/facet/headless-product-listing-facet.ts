@@ -1,6 +1,6 @@
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {ProductListingEngine, ProductListingV2Engine} from '../../../app/product-listing-engine/product-listing-engine';
 import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
@@ -19,8 +19,9 @@ import {
 } from '../../../features/facets/facet-set/facet-set-product-listing-utils';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {fetchProductListing, fetchProductListingV2} from '../../../features/product-listing/product-listing-actions';
 import {
+  AutomaticFacetSection,
   ConfigurationSection,
   FacetSearchSection,
   FacetSection,
@@ -40,6 +41,15 @@ import {
   CoreFacet,
   CoreFacetState,
 } from '../../core/facets/facet/headless-core-facet';
+import {buildController, Controller} from '../../controller/headless-controller';
+import {
+  deselectAllAutomaticFacetValues,
+  toggleSelectAutomaticFacetValue
+} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
+import {AutomaticFacet, AutomaticFacetProps} from '../../facets/automatic-facet/headless-automatic-facet';
+import {
+  automaticFacetSetReducer as automaticFacetSet
+} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
 
 export type {
   FacetOptions,
@@ -167,6 +177,84 @@ export function buildFacet(
   };
 }
 
+export interface Facets extends Controller {
+  state: FacetsState;
+}
+
+export interface FacetsState {
+  facets: AutomaticFacet[];
+}
+
+// TODO(nico): We might need to extract a "core" automatic facets controller
+export function buildFacetsV2(
+    engine: ProductListingV2Engine
+): Facets {
+  if (!loadAutomaticFacetBuilderReducers(engine)) {
+    throw loadReducerError;
+  }
+  const controller = buildController(engine);
+
+  return {
+    ...controller,
+
+    get state() {
+      const facets =
+          engine.state.productListing.facets.map(
+              (facet) => buildAutomaticFacet(engine, {field: facet.field})
+          ) ?? [];
+      return {
+        facets,
+      };
+    },
+  };
+}
+
+
+export function buildAutomaticFacet(
+    engine: ProductListingV2Engine,
+    props: AutomaticFacetProps
+): AutomaticFacet {
+  const {dispatch} = engine;
+  const controller = buildController(engine);
+
+  const {field} = props;
+
+  return {
+    ...controller,
+
+    toggleSelect(selection: FacetValue) {
+      dispatch(toggleSelectAutomaticFacetValue({field, selection}));
+      dispatch(fetchProductListingV2());
+      dispatch(
+          getProductListingAnalyticsActionForToggleFacetSelect(
+              field,
+              selection
+          )
+      );
+    },
+
+    deselectAll() {
+      dispatch(deselectAllAutomaticFacetValues(field));
+      dispatch(fetchProductListingV2());
+    },
+
+    get state() {
+      const response = engine.state.automaticFacetSet?.set[field]?.response;
+
+      const defaultState = {field: '', values: [], label: ''};
+
+      return response
+          ? {
+            field: response.field,
+            label: response.label,
+            values: response.values,
+          }
+          : defaultState;
+    },
+  };
+}
+
+
 function loadFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
@@ -174,5 +262,15 @@ function loadFacetReducers(
   ProductListingThunkExtraArguments
 > {
   engine.addReducers({facetSet, configuration, facetSearchSet});
+  return true;
+}
+
+function loadAutomaticFacetBuilderReducers(
+    engine: CoreEngine
+): engine is CoreEngine<
+    AutomaticFacetSection & ConfigurationSection,
+    ProductListingThunkExtraArguments
+    > {
+  engine.addReducers({automaticFacetSet, configuration});
   return true;
 }

@@ -3,6 +3,3 @@ import {ClientThunkExtraArguments} from './thunk-extra-arguments';
 
 export interface ProductListingThunkExtraArguments
   extends ClientThunkExtraArguments<ProductListingAPIClient> {}
-
-export interface ProductListingV2ThunkExtraArguments
-    extends ClientThunkExtraArguments<ProductListingAPIClient> {}
