@@ -40,13 +40,14 @@ class FatalError extends Error {
 }
 
 interface StreamCallbacks {
-  write: (data: GeneratedAnswerStreamEventData) => void;
+  write: (data: GeneratedAnswerStreamEventData, streamId: string) => void;
   abort: (
     error: GeneratedAnswerErrorPayload,
+    streamId: string,
     abortController?: AbortController
   ) => void;
-  close: () => void;
-  resetAnswer: () => void;
+  close: (streamId: string) => void;
+  resetAnswer: (streamId: string) => void;
 }
 
 export class GeneratedAnswerAPIClient {
@@ -73,7 +74,7 @@ export class GeneratedAnswerAPIClient {
 
     const retryStream = () => {
       abortController?.abort();
-      resetAnswer();
+      resetAnswer(streamId);
       stream();
     };
 
@@ -120,15 +121,16 @@ export class GeneratedAnswerAPIClient {
                 message: data.errorMessage,
                 code: data.statusCode,
               },
+              streamId,
               abortController ?? undefined
             );
             return;
           }
-          write(data);
+          write(data, streamId);
           retryCount = 0;
           if (data.finishReason === 'COMPLETED') {
             clearTimeout(timeout);
-            close();
+            close(streamId);
           } else {
             refreshTimeout();
           }
@@ -136,7 +138,7 @@ export class GeneratedAnswerAPIClient {
         onerror: (err) => {
           clearTimeout(timeout);
           if (err instanceof FatalError) {
-            abort(err, abortController ?? undefined);
+            abort(err, streamId, abortController ?? undefined);
             throw err;
           }
           if (++retryCount > MAX_RETRIES) {
@@ -145,11 +147,11 @@ export class GeneratedAnswerAPIClient {
               message: 'Failed to complete stream.',
               code: RETRYABLE_STREAM_ERROR_CODE,
             };
-            abort(error, abortController ?? undefined);
+            abort(error, streamId, abortController ?? undefined);
             throw new FatalError(error);
           }
           this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
-          resetAnswer();
+          resetAnswer(streamId);
         },
       });
 
