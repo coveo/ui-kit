@@ -2,12 +2,11 @@ import 'cypress-web-vitals';
 import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
 
 const getResultTitles = () =>
-  cy
-    .get('.result-list li')
-    .invoke('map', function (this: HTMLElement) {
+  (
+    cy.get('.result-list li').invoke('map', function (this: HTMLElement) {
       return this.innerText;
-    })
-    .invoke('toArray');
+    }) as Cypress.Chainable<JQuery<string>>
+  ).invoke('toArray');
 
 describe('headless ssr example', () => {
   const numResults = 10;
@@ -62,7 +61,9 @@ describe('headless ssr example', () => {
       thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20, fid: 100, inp: 100},
     };
     cy.startVitalsCapture({url: '/'});
-    getResultTitles().as('initial-results');
+    getResultTitles()
+      .should('have.length.greaterThan', 0)
+      .as('initial-results');
     waitForHydration();
     cy.get('.search-box input').focus().type('abc{enter}');
     cy.get<string>('@initial-results').then((initialResults) =>
@@ -87,7 +88,9 @@ describe('headless ssr example', () => {
     });
 
     it('after submitting a query, should change search results', () => {
-      getResultTitles().as('initial-results');
+      getResultTitles()
+        .should('have.length.greaterThan', 0)
+        .as('initial-results');
       cy.get('.search-box input').focus().type('abc{enter}');
       cy.get<string>('@initial-results').then((initialResults) =>
         getResultTitles().should((currentResults) => {
