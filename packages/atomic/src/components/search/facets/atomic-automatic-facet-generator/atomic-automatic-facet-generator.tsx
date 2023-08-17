@@ -49,7 +49,10 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    * Automatic facets are currently in beta testing and should be available soon.
    *
    * The desired count of automatic facets.
-   * Must be a positive integer.
+   *
+   * Minimum: `1`
+   * Maximum: `10`
+   * @defaultValue `5`
    */
   @Prop() public desiredCount!: number;
 
@@ -66,7 +69,9 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    * Automatic facets are currently in beta testing and should be available soon.
    *
    * The desired number of automatically generated facet values.
-   * Must be a positive integer.
+   *
+   * Minimum: `1`
+   * @defaultValue `8`
    */
   @Prop() public numberOfValues = 8;
 

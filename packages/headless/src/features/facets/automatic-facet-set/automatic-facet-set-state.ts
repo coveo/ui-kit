@@ -11,12 +11,17 @@ export type AutomaticFacetSlice = {
 export type AutomaticFacetSetState = {
   /**
    * The desired count of facets.
-   * Must be a positive integer.
+   *
+   * Minimum: `1`
+   * Maximum: `10`
+   * @defaultValue `5`
    */
   desiredCount: number;
   /**
    * The desired number of automatically generated facet values.
-   * Must be a positive integer.
+   *
+   * Minimum: `1`
+   * @defaultValue `8`
    */
   numberOfValues: number;
   /**
