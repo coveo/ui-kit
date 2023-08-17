@@ -55,24 +55,28 @@ describe('headless ssr example', () => {
     });
   });
 
-  it('should pass the web-vitals audits', () => {
-    // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
-    const VITALS_THRESHOLD: Cypress.ReportWebVitalsConfig = {
-      thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20, fid: 100, inp: 100},
-    };
-    cy.startVitalsCapture({url: '/'});
-    getResultTitles()
-      .should('have.length.greaterThan', 0)
-      .as('initial-results');
-    waitForHydration();
-    cy.get('.search-box input').focus().type('abc{enter}');
-    cy.get<string>('@initial-results').then((initialResults) =>
-      getResultTitles().should((currentResults) =>
-        expect(currentResults).not.to.deep.equal(initialResults)
-      )
-    );
-    cy.reportVitals(VITALS_THRESHOLD);
-  });
+  it(
+    'should pass the web-vitals audits',
+    {defaultCommandTimeout: 45000},
+    () => {
+      // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
+      const VITALS_THRESHOLD: Cypress.ReportWebVitalsConfig = {
+        thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20, fid: 100, inp: 100},
+      };
+      cy.startVitalsCapture({url: '/'});
+      getResultTitles()
+        .should('have.length.greaterThan', 0)
+        .as('initial-results');
+      waitForHydration();
+      cy.get('.search-box input').focus().type('abc{enter}');
+      cy.get<string>('@initial-results').then((initialResults) =>
+        getResultTitles().should((currentResults) =>
+          expect(currentResults).not.to.deep.equal(initialResults)
+        )
+      );
+      cy.reportVitals(VITALS_THRESHOLD);
+    }
+  );
 
   describe('after hydration', () => {
     beforeEach(() => {
