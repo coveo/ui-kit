@@ -2,26 +2,29 @@ import {ArrayValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
 import {
-    AsyncThunkProductListingOptions,
-    AsyncThunkProductListingV2Options
+  AsyncThunkProductListingOptions,
+  AsyncThunkProductListingV2Options,
 } from '../../api/commerce/product-listings/product-listing-api-client';
 import {
-    ProductListingRequest,
-    ProductListingSuccessResponse, ProductListingV2Request, ProductListingV2SuccessResponse,
+  ProductListingRequest,
+  ProductListingSuccessResponse,
+  ProductListingV2Request,
+  ProductListingV2SuccessResponse,
 } from '../../api/commerce/product-listings/product-listing-request';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {
-    CategoryFacetSection,
-    ConfigurationSection,
-    ContextSection,
-    DateFacetSection,
-    FacetOptionsSection,
-    FacetOrderSection,
-    FacetSection,
-    NumericFacetSection,
-    PaginationSection,
-    ProductListingSection, ProductListingV2Section,
-    StructuredSortSection,
+  CategoryFacetSection,
+  ConfigurationSection,
+  ContextSection,
+  DateFacetSection,
+  FacetOptionsSection,
+  FacetOrderSection,
+  FacetSection,
+  NumericFacetSection,
+  PaginationSection,
+  ProductListingSection,
+  ProductListingV2Section,
+  StructuredSortSection,
 } from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {validatePayload} from '../../utils/validate-payload';
@@ -32,7 +35,10 @@ import {
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../search/search-analytics-actions';
 import {SortBy} from '../sort/sort';
-import {logProductListing, logProductListingV2} from './product-listing-analytics';
+import {
+  logProductListing,
+  logProductListingV2,
+} from './product-listing-analytics';
 import {ProductListingState} from './product-listing-state';
 
 export interface SetProductListingUrlPayload {
@@ -54,18 +60,18 @@ export const setProductListingUrl = createAction(
 );
 
 export interface SetProductListingIdPayload {
-    id: string;
+  id: string;
 }
 
 export const setProductListingId = createAction(
-    'productlistingv2/setId',
-    (payload: SetProductListingIdPayload) =>
-        validatePayload(payload, {
-          id: new StringValue({
-            required: true,
-            emptyAllowed: false,
-          }),
-        })
+  'productlistingV2/setId',
+  (payload: SetProductListingIdPayload) =>
+    validatePayload(payload, {
+      id: new StringValue({
+        required: true,
+        emptyAllowed: false,
+      }),
+    })
 );
 
 export interface SetAdditionalFieldsPayload {
@@ -138,51 +144,51 @@ export const fetchProductListing = createAsyncThunk<
 );
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
-    ProductListingV2Section &
-    Partial<
-        PaginationSection &
-        StructuredSortSection &
-        FacetSection &
-        NumericFacetSection &
-        CategoryFacetSection &
-        DateFacetSection &
-        FacetOptionsSection &
-        FacetOrderSection &
-        ContextSection
-        >;
+  ProductListingV2Section &
+  Partial<
+    PaginationSection &
+      StructuredSortSection &
+      FacetSection &
+      NumericFacetSection &
+      CategoryFacetSection &
+      DateFacetSection &
+      FacetOptionsSection &
+      FacetOrderSection &
+      ContextSection
+  >;
 
 export interface FetchProductListingV2ThunkReturn {
-    /** The successful search response. */
-    response: ProductListingV2SuccessResponse;
-    analyticsAction: PreparableAnalyticsAction<
-        {analyticsType: AnalyticsType.Search},
-        StateNeededByFetchProductListingV2
-        >;
+  /** The successful search response. */
+  response: ProductListingV2SuccessResponse;
+  analyticsAction: PreparableAnalyticsAction<
+    {analyticsType: AnalyticsType.Search},
+    StateNeededByFetchProductListingV2
+  >;
 }
 
 export const fetchProductListingV2 = createAsyncThunk<
-    FetchProductListingV2ThunkReturn,
-    void,
-    AsyncThunkProductListingV2Options<StateNeededByFetchProductListingV2>
-    >(
-    'productlistingv2/fetch',
-    async (_action, {getState, dispatch, rejectWithValue, extra}) => {
-        const state = getState();
-        const {apiClient} = extra;
-        const fetched = await apiClient.getListing(
-            await buildProductListingRequestV2(state)
-        );
+  FetchProductListingV2ThunkReturn,
+  void,
+  AsyncThunkProductListingV2Options<StateNeededByFetchProductListingV2>
+>(
+  'productlistingV2/fetch',
+  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
+    const state = getState();
+    const {apiClient} = extra;
+    const fetched = await apiClient.getListing(
+      await buildProductListingRequestV2(state)
+    );
 
-        if (isErrorResponse(fetched)) {
-            dispatch(logQueryError(fetched.error));
-            return rejectWithValue(fetched.error);
-        }
-
-        return {
-            response: fetched.success,
-            analyticsAction: logProductListingV2(),
-        };
+    if (isErrorResponse(fetched)) {
+      dispatch(logQueryError(fetched.error));
+      return rejectWithValue(fetched.error);
     }
+
+    return {
+      response: fetched.success,
+      analyticsAction: logProductListingV2(),
+    };
+  }
 );
 
 export const buildProductListingRequest = async (
@@ -235,61 +241,60 @@ export const buildProductListingRequest = async (
   };
 };
 
-
 export const buildProductListingRequestV2 = async (
-    state: StateNeededByFetchProductListingV2
+  state: StateNeededByFetchProductListingV2
 ): Promise<ProductListingV2Request> => {
-    // TODO(nico): Use facets, sort, selected page, context
-    const facets = getFacets(state);
-    // TODO(nico): Map over facets to plp v2-compatible ones
-    // const visitorId = await getVisitorID(state.configuration.analytics);
+  // TODO: Use facets, sort, selected page, context
+  const facets = getFacets(state);
+  // TODO: Map over facets to plp v2-compatible ones
+  // const visitorId = await getVisitorID(state.configuration.analytics);
 
-    const baseParams = {
-        accessToken: state.configuration.accessToken,
-        organizationId: state.configuration.organizationId,
-        platformUrl: state.configuration.platformUrl,
-        version: state.productListing?.version,
-    }
+  const baseParams = {
+    accessToken: state.configuration.accessToken,
+    organizationId: state.configuration.organizationId,
+    platformUrl: state.configuration.platformUrl,
+    version: state.productListing?.version,
+  };
 
-    const productListingParams = {
-        listingId: state.productListing.listingId,
-        locale: state.productListing.locale || 'en-US',
-        mode: state.productListing.mode || 'live',
-        clientId: state.productListing.clientId || 'some-client-id', // Dummy value since the api requires one
-    }
+  const productListingParams = {
+    listingId: state.productListing.listingId,
+    locale: state.productListing.locale || 'en-US',
+    mode: state.productListing.mode || 'live',
+    clientId: state.productListing.clientId || 'some-client-id', // Dummy value since the api requires one
+  };
 
-    return {
-        ...baseParams,
-        ...productListingParams,
-        selectedFacets: facets,
-        context: {
-            user: {
-                userId: "1",
-                email: "1",
-                ipAddress: "1",
-                userAgent: "1"
-            },
-            view: {
-                url: "1",
-                referrerUrl: "1",
-                pageType: "a"
-            },
-            cart: {
-                groupId: "1",
-                productId: "1",
-                sku: "1"
-            }
-        },
-        ...(state.pagination && {
-            selectedPage: {
-                page:
-                    Math.ceil(
-                        state.pagination.firstResult /
-                        (state.pagination.numberOfResults || 1)
-                    ) + 1,
-            },
-        }),
-    };
+  return {
+    ...baseParams,
+    ...productListingParams,
+    selectedFacets: facets,
+    context: {
+      user: {
+        userId: '1',
+        email: '1',
+        ipAddress: '1',
+        userAgent: '1',
+      },
+      view: {
+        url: '1',
+        referrerUrl: '1',
+        pageType: 'a',
+      },
+      cart: {
+        groupId: '1',
+        productId: '1',
+        sku: '1',
+      },
+    },
+    ...(state.pagination && {
+      selectedPage: {
+        page:
+          Math.ceil(
+            state.pagination.firstResult /
+              (state.pagination.numberOfResults || 1)
+          ) + 1,
+      },
+    }),
+  };
 };
 
 function hasOneAdvancedParameterActive(
@@ -298,11 +303,15 @@ function hasOneAdvancedParameterActive(
   return advanced.debug;
 }
 
-function getFacets(state: StateNeededByFetchProductListing|StateNeededByFetchProductListingV2) {
+function getFacets(
+  state: StateNeededByFetchProductListing | StateNeededByFetchProductListingV2
+) {
   return sortFacets(getAllFacets(state), state.facetOrder ?? []);
 }
 
-function getAllFacets(state: StateNeededByFetchProductListing|StateNeededByFetchProductListingV2) {
+function getAllFacets(
+  state: StateNeededByFetchProductListing | StateNeededByFetchProductListingV2
+) {
   return [
     ...getFacetRequests(state.facetSet ?? {}),
     ...getFacetRequests(state.numericFacetSet ?? {}),

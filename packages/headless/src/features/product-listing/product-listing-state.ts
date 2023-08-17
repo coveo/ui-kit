@@ -38,8 +38,8 @@ export const getProductListingInitialState = (): ProductListingState => ({
 
 export interface ProductListingV2State {
   listingId: string;
-  locale: string; // TODO(nico): action for setting this
-  mode: string; // TODO(nico): action for setting this
+  locale: string; // TODO: action for setting this
+  mode: string; // TODO: action for setting this
   clientId: string;
   error: ProductListingAPIErrorStatusResponse | null;
   isLoading: boolean;
@@ -59,5 +59,5 @@ export const getProductListingV2InitialState = (): ProductListingV2State => ({
   responseId: '',
   products: [],
   facets: [],
-  version: 'v2'
+  version: 'v2',
 });

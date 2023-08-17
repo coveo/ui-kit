@@ -1,8 +1,16 @@
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
-import {ProductListingEngine, ProductListingV2Engine} from '../../../app/product-listing-engine/product-listing-engine';
+import {
+  ProductListingEngine,
+  ProductListingV2Engine,
+} from '../../../app/product-listing-engine/product-listing-engine';
 import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {
+  deselectAllAutomaticFacetValues,
+  toggleSelectAutomaticFacetValue,
+} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
+import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {
@@ -19,7 +27,10 @@ import {
 } from '../../../features/facets/facet-set/facet-set-product-listing-utils';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
-import {fetchProductListing, fetchProductListingV2} from '../../../features/product-listing/product-listing-actions';
+import {
+  fetchProductListing,
+  fetchProductListingV2,
+} from '../../../features/product-listing/product-listing-actions';
 import {
   AutomaticFacetSection,
   ConfigurationSection,
@@ -27,6 +38,10 @@ import {
   FacetSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
 import {
   buildCoreFacet,
@@ -41,15 +56,10 @@ import {
   CoreFacet,
   CoreFacetState,
 } from '../../core/facets/facet/headless-core-facet';
-import {buildController, Controller} from '../../controller/headless-controller';
 import {
-  deselectAllAutomaticFacetValues,
-  toggleSelectAutomaticFacetValue
-} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {AutomaticFacet, AutomaticFacetProps} from '../../facets/automatic-facet/headless-automatic-facet';
-import {
-  automaticFacetSetReducer as automaticFacetSet
-} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
+  AutomaticFacet,
+  AutomaticFacetProps,
+} from '../../facets/automatic-facet/headless-automatic-facet';
 
 export type {
   FacetOptions,
@@ -185,10 +195,8 @@ export interface FacetsState {
   facets: AutomaticFacet[];
 }
 
-// TODO(nico): We might need to extract a "core" automatic facets controller
-export function buildFacetsV2(
-    engine: ProductListingV2Engine
-): Facets {
+// TODO: We might need to extract a "core" automatic facets controller
+export function buildFacetsV2(engine: ProductListingV2Engine): Facets {
   if (!loadAutomaticFacetBuilderReducers(engine)) {
     throw loadReducerError;
   }
@@ -199,9 +207,9 @@ export function buildFacetsV2(
 
     get state() {
       const facets =
-          engine.state.productListing.facets.map(
-              (facet) => buildAutomaticFacet(engine, {field: facet.field})
-          ) ?? [];
+        engine.state.productListing.facets.map((facet) =>
+          buildAutomaticFacet(engine, {field: facet.field})
+        ) ?? [];
       return {
         facets,
       };
@@ -209,10 +217,9 @@ export function buildFacetsV2(
   };
 }
 
-
 export function buildAutomaticFacet(
-    engine: ProductListingV2Engine,
-    props: AutomaticFacetProps
+  engine: ProductListingV2Engine,
+  props: AutomaticFacetProps
 ): AutomaticFacet {
   const {dispatch} = engine;
   const controller = buildController(engine);
@@ -226,10 +233,7 @@ export function buildAutomaticFacet(
       dispatch(toggleSelectAutomaticFacetValue({field, selection}));
       dispatch(fetchProductListingV2());
       dispatch(
-          getProductListingAnalyticsActionForToggleFacetSelect(
-              field,
-              selection
-          )
+        getProductListingAnalyticsActionForToggleFacetSelect(field, selection)
       );
     },
 
@@ -244,16 +248,15 @@ export function buildAutomaticFacet(
       const defaultState = {field: '', values: [], label: ''};
 
       return response
-          ? {
+        ? {
             field: response.field,
             label: response.label,
             values: response.values,
           }
-          : defaultState;
+        : defaultState;
     },
   };
 }
-
 
 function loadFacetReducers(
   engine: CoreEngine
@@ -266,11 +269,11 @@ function loadFacetReducers(
 }
 
 function loadAutomaticFacetBuilderReducers(
-    engine: CoreEngine
+  engine: CoreEngine
 ): engine is CoreEngine<
-    AutomaticFacetSection & ConfigurationSection,
-    ProductListingThunkExtraArguments
-    > {
+  AutomaticFacetSection & ConfigurationSection,
+  ProductListingThunkExtraArguments
+> {
   engine.addReducers({automaticFacetSet, configuration});
   return true;
 }

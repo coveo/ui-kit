@@ -10,7 +10,8 @@ import {
   FacetSection,
   NumericFacetSection,
   PaginationSection,
-  ProductListingSection, ProductListingV2Section,
+  ProductListingSection,
+  ProductListingV2Section,
   StructuredSortSection,
   VersionSection,
 } from './state-sections';
@@ -30,18 +31,18 @@ export type ProductListingAppState = ConfigurationSection &
   VersionSection &
   ContextSection;
 
-// TODO(nico): Complete
+// TODO: Complete
 export type ProductListingAppStateV2 = ConfigurationSection &
-    ProductListingV2Section &
-    FacetSearchSection &
-    FacetSection &
-    NumericFacetSection &
-    CategoryFacetSection &
-    CategoryFacetSearchSection &
-    DateFacetSection &
-    FacetOptionsSection &
-    FacetOrderSection &
-    StructuredSortSection &
-    PaginationSection &
-    VersionSection &
-    ContextSection;
+  ProductListingV2Section &
+  FacetSearchSection &
+  FacetSection &
+  NumericFacetSection &
+  CategoryFacetSection &
+  CategoryFacetSearchSection &
+  DateFacetSection &
+  FacetOptionsSection &
+  FacetOrderSection &
+  StructuredSortSection &
+  PaginationSection &
+  VersionSection &
+  ContextSection;
