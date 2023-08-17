@@ -1,3 +1,23 @@
+## 2.40.2 (2023-08-16)
+
+### Bug Fixes
+
+- **atomic:** address search box suggestion accessibility problem ([#3086](https://github.com/coveo/ui-kit/issues/3086)) ([0e03273](https://github.com/coveo/ui-kit/commits/0e032731f99db688a3a49406e3e90360973d45c6))
+- **atomic:** automatic facets not showing in refine modal when no static facets ([#3104](https://github.com/coveo/ui-kit/issues/3104)) ([69f2db5](https://github.com/coveo/ui-kit/commits/69f2db5f4ec9ddee61b1b0a411940f7359b79c2e))
+
+# 2.40.0 (2023-08-10)
+
+### Bug Fixes
+
+- **atomic,headless:** add maximum value of 10 for 'desiredCount' ([#3089](https://github.com/coveo/ui-kit/issues/3089)) ([35bb410](https://github.com/coveo/ui-kit/commits/35bb4104eb9e31ec3e398f3b3fedc7ff714e4f9b))
+- **atomic:** fix grid result breadcrumbs ([#3100](https://github.com/coveo/ui-kit/issues/3100)) ([6fc30f4](https://github.com/coveo/ui-kit/commits/6fc30f43a97cb1742e8810f4149b3acf0edc024c))
+- **atomic:** make automatic facet placholders disappear when empty response ([#3091](https://github.com/coveo/ui-kit/issues/3091)) ([397e8ba](https://github.com/coveo/ui-kit/commits/397e8bae361a713d41867a2e3c59abe0da2920d4))
+- **atomic:** Make gridCellLinkTarget optional ([#3097](https://github.com/coveo/ui-kit/issues/3097)) ([7b1eed3](https://github.com/coveo/ui-kit/commits/7b1eed38ddc0dbf760920a7b35263775acd15b7b))
+
+### Features
+
+- **atomic:** change default label to the field for automatic facets ([#3090](https://github.com/coveo/ui-kit/issues/3090)) ([a3060ca](https://github.com/coveo/ui-kit/commits/a3060ca818712830d3f6def708da2e3449dd4041))
+
 # 2.39.0 (2023-08-09)
 
 ### Bug Fixes
