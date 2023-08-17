@@ -122,8 +122,8 @@ export class AtomicRefineModal implements InitializableComponent {
       if (this.host.querySelector('div[slot="facets"]')) {
         return;
       }
-      const facetSlot = this.createFacetSlot();
-      this.host.append(facetSlot);
+
+      this.host.append(this.createFacetSlot());
     }
   }
 

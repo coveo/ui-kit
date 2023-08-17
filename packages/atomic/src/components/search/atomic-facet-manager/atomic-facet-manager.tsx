@@ -3,9 +3,6 @@ import {
   FacetManager,
   buildFacetManager,
   FacetManagerState,
-  buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
 } from '@coveo/headless';
 import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
@@ -34,11 +31,6 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 export class AtomicFacetManager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private facetManager!: FacetManager;
-  public searchStatus!: SearchStatus;
-
-  @BindStateToController('searchStatus')
-  @State()
-  private searchStatusState!: SearchStatusState;
 
   @Element() private host!: HTMLDivElement;
 
@@ -60,7 +52,6 @@ export class AtomicFacetManager implements InitializableComponent {
 
   public initialize() {
     this.validateProps();
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
 
     // An update has to be forced for the facets to be visually updated, without being interacted with.
