@@ -12,6 +12,9 @@ export type {
   SearchParameterManager,
 } from '../../search-parameter-manager/headless-search-parameter-manager';
 
+/**
+ * @internal
+ */
 export interface SearchParameterManagerBuildProps {
   initialState: SearchParameterManagerInitialState;
 }
