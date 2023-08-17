@@ -7,12 +7,15 @@ interface Props extends Partial<ButtonProps> {
   bindings: AnyBindings;
 }
 
-export const NewSubmitButton: FunctionalComponent<Props> = ({
+export const TextAreaSubmitButton: FunctionalComponent<Props> = ({
   bindings,
   onClick,
   ...defaultButtonProps
 }) => (
-  <div class="py-2 flex items-start justify-center mr-2">
+  <div
+    part="submit-button-wrapper"
+    class="py-2 flex items-start justify-center mr-2"
+  >
     <Button
       style="text-primary"
       class="flex items-center justify-center w-8 h-8 rounded-full shrink-0"

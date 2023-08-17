@@ -24,10 +24,8 @@ export function buildSearchLayout(
     }
   }
   
-  ${sectionSelector('search')}[expanding] {
+  ${sectionSelector('search')} {
     z-index: 10;
-    height: 49px;
-    position: relative;
   }`;
 
   const facets = () => {

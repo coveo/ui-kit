@@ -8,13 +8,16 @@ interface Props extends Partial<ButtonProps> {
   inputRef: HTMLInputElement | HTMLTextAreaElement | null;
 }
 
-export const NewClearButton: FunctionalComponent<Props> = ({
+export const TextAreaClearButton: FunctionalComponent<Props> = ({
   inputRef,
   bindings,
   onClick,
   ...defaultButtonProps
 }) => (
-  <div class="py-2 flex items-start justify-center ml-2">
+  <div
+    part="clear-button-wrapper"
+    class="py-2 flex items-start justify-center ml-2"
+  >
     <Button
       style="text-transparent"
       part="clear-button"

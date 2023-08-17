@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
 import {AnyBindings} from '../interface/bindings';
-import {NewClearButton} from './new-clear-button';
+import {TextAreaClearButton} from './text-area-clear-button';
 
 interface Props extends JSXBase.TextareaHTMLAttributes<HTMLTextAreaElement> {
   textAreaRef: HTMLTextAreaElement;
@@ -123,7 +123,7 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
       </div>
     )}
     {!loading && value && (
-      <NewClearButton
+      <TextAreaClearButton
         inputRef={textAreaRef}
         bindings={bindings}
         onClick={() => {

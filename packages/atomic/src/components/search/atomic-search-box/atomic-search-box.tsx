@@ -36,12 +36,12 @@ import {
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../utils/utils';
-import {NewSubmitButton} from '../../common/search-box/new-submit-button';
 import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
+import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {
   SearchBoxSuggestionElement,
@@ -367,10 +367,6 @@ export class AtomicSearchBox {
       return this.rightPanelRef;
     }
     return this.leftPanelRef || this.rightPanelRef;
-  }
-
-  private get hostClasses() {
-    return this.textArea ? 'absolute w-full z-10' : '';
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
@@ -806,12 +802,21 @@ export class AtomicSearchBox {
     const searchLabel = this.searchBoxCommon.getSearchInputLabel(
       this.minimumQueryLength
     );
-    const Submit = this.textArea ? NewSubmitButton : SubmitButton;
+    const Submit = this.textArea ? TextAreaSubmitButton : SubmitButton;
 
     return (
-      <Host class={this.hostClasses}>
+      <Host>
+        <textarea
+          aria-hidden
+          class="invisible text-lg py-3.5 px-4"
+          rows={1}
+        ></textarea>
+
         {[
-          <SearchBoxWrapper disabled={this.isSearchDisabled}>
+          <SearchBoxWrapper
+            disabled={this.isSearchDisabled}
+            textArea={this.textArea}
+          >
             <atomic-focus-detector
               style={{display: 'contents'}}
               onFocusExit={() => this.clearSuggestions()}
