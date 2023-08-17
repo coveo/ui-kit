@@ -1,3 +1,13 @@
+## 2.30.1 (2023-08-16)
+
+### Bug Fixes
+
+- **quantic:** js doc comment of the new quantic generated answer component fixed ([#3106](https://github.com/coveo/ui-kit/issues/3106)) ([38e1735](https://github.com/coveo/ui-kit/commits/38e1735f028f694fd921d142306c333e378d3342))
+
+### Features
+
+- **quantic:** retry prompt added to the quantic generated answer component ([#3095](https://github.com/coveo/ui-kit/issues/3095)) ([545aa53](https://github.com/coveo/ui-kit/commits/545aa533f51f80fa4425a43b9a754c8273848d1e))
+
 # 2.29.0 (2023-08-10)
 
 ### Bug Fixes

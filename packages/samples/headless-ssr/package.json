@@ -6,13 +6,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "prod": "next start",
     "lint": "next lint",
-    "prod": "npm run build && npm run start",
-    "e2e": "cypress run --browser chrome --e2e"
+    "e2e": "cypress run --browser chrome --e2e",
+    "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
-    "@coveo/headless": "2.25.1",
+    "@coveo/headless": "2.26.1",
     "@types/node": "20.4.9",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",

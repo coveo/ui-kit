@@ -20,4 +20,8 @@ export const RefineModalSelectors = {
   footerButton: () =>
     RefineModalSelectors.shadow().find('[part="footer-button"]'),
   facets: () => cy.get(refineModalComponent).find('[slot="facets"]'),
+  automaticFacets: () =>
+    cy.get(refineModalComponent).find('[slot="automatic-facets"]'),
+  filterSection: () =>
+    RefineModalSelectors.shadow().find('[part="filter-section"]'),
 };
