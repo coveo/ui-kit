@@ -128,6 +128,7 @@ export interface AuthenticationParam {
 export interface AutomaticFacetsParams {
   generateAutomaticFacets?: {
     desiredCount: number;
+    numberOfValues?: number;
     currentFacets?: AutomaticFacetRequest[];
   };
 }

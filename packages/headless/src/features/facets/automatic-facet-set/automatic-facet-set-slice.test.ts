@@ -1,3 +1,4 @@
+import {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options';
 import {buildMockAutomaticFacetResponse} from '../../../test/mock-automatic-facet-response';
 import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
@@ -9,7 +10,7 @@ import {executeSearch} from '../../search/search-actions';
 import {FacetValueState} from '../facet-api/value';
 import {
   deselectAllAutomaticFacetValues,
-  setDesiredCount,
+  setOptions,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
 import {automaticFacetSetReducer} from './automatic-facet-set-slice';
@@ -59,13 +60,27 @@ describe('automatic-facet-set slice', () => {
     });
   });
 
-  it('sets state.desiredCount when #setDesiredCount', () => {
-    const desiredCount = 5;
-    const action = setDesiredCount(desiredCount);
+  it('sets state.desiredCount when #setOptions', () => {
+    const options: AutomaticFacetGeneratorOptions = {desiredCount: 8};
+
+    const action = setOptions(options);
 
     const finalState = automaticFacetSetReducer(state, action);
 
-    expect(finalState.desiredCount).toEqual(desiredCount);
+    expect(finalState.desiredCount).toEqual(options.desiredCount);
+  });
+
+  it('sets state.numberOfValues when #setOptions', () => {
+    const options: AutomaticFacetGeneratorOptions = {
+      desiredCount: 8,
+      numberOfValues: 6,
+    };
+
+    const action = setOptions(options);
+
+    const finalState = automaticFacetSetReducer(state, action);
+
+    expect(finalState.numberOfValues).toEqual(options.numberOfValues);
   });
 
   describe('#toggleSelectAutomaticFacetValue', () => {
