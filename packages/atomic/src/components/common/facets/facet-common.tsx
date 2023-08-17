@@ -296,6 +296,16 @@ export function updateCollapsedState(
     );
   });
 }
+export function updateCollapseFacetsAfter(
+  generator: AutomaticFacetGeneratorElement,
+  index: number,
+  collapseFacetsAfter: number
+) {
+  const value = collapseFacetsAfter - index;
+  if (value > 0) {
+    generator.collapseFacetsAfter = value;
+  }
+}
 
 export function isTagNameAutomaticFacetGenerator(tagName: string) {
   return tagName === 'ATOMIC-AUTOMATIC-FACET-GENERATOR';
