@@ -79,17 +79,16 @@ export class AtomicFacetManager implements InitializableComponent {
       this.bindings.store.getAllFacets()
     );
 
-    const finalElements: FacetManagerElements = [];
-
     const generator: AutomaticFacetGeneratorElement =
       this.automaticFacetGenerator;
 
     updateCollapsedState(visibleFacets, this.collapseFacetsAfter);
     this.updateCollapseFacetsAfter(generator, visibleFacets.length);
 
+    const finalElements: FacetManagerElements = [];
     finalElements.push(...visibleFacets);
-    finalElements.push(generator);
     finalElements.push(...invisibleFacets);
+    finalElements.push(generator);
 
     this.host.append(...finalElements);
   };
@@ -98,7 +97,10 @@ export class AtomicFacetManager implements InitializableComponent {
     generator: AutomaticFacetGeneratorElement,
     index: number
   ) {
-    generator.collapseFacetsAfter = this.collapseFacetsAfter - index;
+    const value = this.collapseFacetsAfter - index;
+    if (value > 0) {
+      generator.collapseFacetsAfter = value;
+    }
   }
 
   private validateProps() {
