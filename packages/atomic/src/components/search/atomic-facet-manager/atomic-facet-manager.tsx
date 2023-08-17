@@ -14,11 +14,12 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
-  AutomaticFacetGeneratorElement,
-  BaseFacetElement,
   FacetManagerElements,
-  isTagNameAutomaticFacetGenerator,
+  getFacetsInChildren,
+  getGeneratorInChildren,
   sortFacetVisibility,
+  sortFacetsViaManager,
+  updateCollapseFacetsAfter,
   updateCollapsedState,
 } from '../../common/facets/facet-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
@@ -67,23 +68,27 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   private sortFacets = () => {
+    const facets = getFacetsInChildren(this.host.children);
     if (!this.searchStatusState.firstSearchExecuted) {
-      updateCollapsedState(this.facets, this.collapseFacetsAfter);
+      updateCollapsedState(facets, this.collapseFacetsAfter);
       return;
     }
-    const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
-    const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
+
+    const sortedFacets = sortFacetsViaManager(facets, this.facetManager);
 
     const {visibleFacets, invisibleFacets} = sortFacetVisibility(
       sortedFacets,
       this.bindings.store.getAllFacets()
     );
 
-    const generator: AutomaticFacetGeneratorElement =
-      this.automaticFacetGenerator;
+    const generator = getGeneratorInChildren(this.host.children);
 
     updateCollapsedState(visibleFacets, this.collapseFacetsAfter);
-    this.updateCollapseFacetsAfter(generator, visibleFacets.length);
+    updateCollapseFacetsAfter(
+      generator,
+      visibleFacets.length,
+      this.collapseFacetsAfter
+    );
 
     const finalElements: FacetManagerElements = [];
     finalElements.push(...visibleFacets);
@@ -93,46 +98,12 @@ export class AtomicFacetManager implements InitializableComponent {
     this.host.append(...finalElements);
   };
 
-  private updateCollapseFacetsAfter(
-    generator: AutomaticFacetGeneratorElement,
-    index: number
-  ) {
-    const value = this.collapseFacetsAfter - index;
-    if (value > 0) {
-      generator.collapseFacetsAfter = value;
-    }
-  }
-
   private validateProps() {
     new Schema({
       collapseFacetAfter: new NumberValue({min: -1, required: true}),
     }).validate({
       collapseFacetAfter: this.collapseFacetsAfter,
     });
-  }
-
-  private get facets(): BaseFacetElement[] {
-    const children = Array.from(this.host.children);
-
-    const facets = children.filter((child) =>
-      this.isPseudoFacet(child)
-    ) as BaseFacetElement[];
-
-    return facets;
-  }
-
-  private get automaticFacetGenerator(): AutomaticFacetGeneratorElement {
-    const children = Array.from(this.host.children);
-
-    const automaticFacetGenerator = children.find((child) =>
-      isTagNameAutomaticFacetGenerator(child.tagName)
-    ) as AutomaticFacetGeneratorElement;
-
-    return automaticFacetGenerator;
-  }
-
-  private isPseudoFacet(el: Element): el is BaseFacetElement {
-    return 'facetId' in el;
   }
 
   disconnectedCallback() {

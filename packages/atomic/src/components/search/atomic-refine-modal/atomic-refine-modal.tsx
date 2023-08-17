@@ -31,10 +31,11 @@ import {
 } from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
 import {
-  AutomaticFacetGeneratorElement,
   BaseFacetElement,
-  isTagNameAutomaticFacetGenerator,
+  getFacetsInChildren,
+  getGeneratorInChildren,
   sortFacetVisibility,
+  sortFacetsViaManager,
   updateCollapseFacetsAfter,
   updateCollapsedState,
 } from '../../common/facets/facet-common';
@@ -138,16 +139,14 @@ export class AtomicRefineModal implements InitializableComponent {
   private createFacetSlot(): HTMLDivElement {
     const divSlot = document.createElement('div');
     divSlot.setAttribute('slot', 'facets');
-    divSlot.style.display = 'flex';
-    divSlot.style.flexDirection = 'column';
-    divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
+    this.addElementStyle(divSlot);
 
-    const facetElements = this.queryCurrentFacets();
+    const facets = this.queryCurrentFacets();
 
-    const sortedFacetsElements = this.sortFacets(facetElements);
+    const sortedFacets = sortFacetsViaManager(facets, this.facetManager);
 
     const {visibleFacets, invisibleFacets} = sortFacetVisibility(
-      sortedFacetsElements,
+      sortedFacets,
       this.bindings.store.getAllFacets()
     );
 
@@ -165,10 +164,6 @@ export class AtomicRefineModal implements InitializableComponent {
     divSlot.append(...visibleFacetsClone);
     divSlot.append(...invisibleFacetsClone);
     divSlot.append(generator);
-
-    console.log('visible', visibleFacets);
-    console.log('invisible', invisibleFacets);
-    console.log('generator', generator);
 
     return divSlot;
   }
@@ -192,19 +187,9 @@ export class AtomicRefineModal implements InitializableComponent {
       'desired-count',
       `${this.bindings.engine.state.automaticFacetSet?.desiredCount}`
     );
-    generator.style.display = 'flex';
-    generator.style.flexDirection = 'column';
-    generator.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
+    this.addElementStyle(generator);
 
     return generator;
-  }
-
-  private sortFacets(facets: BaseFacetElement[]): BaseFacetElement[] {
-    const payload = facets.map((f) => ({
-      facetId: f.facetId,
-      payload: f,
-    }));
-    return this.facetManager.sort(payload).map((f) => f.payload);
   }
 
   private queryCurrentFacets(): BaseFacetElement[] {
@@ -228,31 +213,26 @@ export class AtomicRefineModal implements InitializableComponent {
     if (!facetContainer) {
       return;
     }
-    const children = Array.from(facetContainer.children);
 
-    const facets = children.filter((child) =>
-      this.isPseudoFacet(child)
-    ) as BaseFacetElement[];
-
-    const generator = children.find((child) =>
-      isTagNameAutomaticFacetGenerator(child.tagName)
-    ) as AutomaticFacetGeneratorElement;
-
+    const facets = getFacetsInChildren(facetContainer.children);
     const {visibleFacets} = sortFacetVisibility(
       facets,
       this.bindings.store.getAllFacets()
     );
+    const generator = getGeneratorInChildren(facetContainer.children);
+
     updateCollapsedState(visibleFacets, this.collapseFacetsAfter);
     updateCollapseFacetsAfter(
       generator,
       visibleFacets.length,
       this.collapseFacetsAfter
     );
-    console.log(facets);
   }
 
-  private isPseudoFacet(el: Element): el is BaseFacetElement {
-    return 'facetId' in el;
+  private addElementStyle(el: HTMLElement) {
+    el.style.display = 'flex';
+    el.style.flexDirection = 'column';
+    el.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
   }
 
   private get options() {

@@ -1,5 +1,9 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {AnyFacetValuesCondition, AnyFacetValueRequest} from '@coveo/headless';
+import {
+  AnyFacetValuesCondition,
+  AnyFacetValueRequest,
+  FacetManager,
+} from '@coveo/headless';
 import {VNode, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
@@ -309,6 +313,43 @@ export function updateCollapseFacetsAfter(
 
 export function isTagNameAutomaticFacetGenerator(tagName: string) {
   return tagName === 'ATOMIC-AUTOMATIC-FACET-GENERATOR';
+}
+
+function isPseudoFacet(el: Element): el is BaseFacetElement {
+  return 'facetId' in el;
+}
+
+export function getFacetsInChildren(
+  collection: HTMLCollection
+): BaseFacetElement[] {
+  const children = Array.from(collection);
+  const facets = children.filter((child) =>
+    isPseudoFacet(child)
+  ) as BaseFacetElement[];
+
+  return facets;
+}
+export function getGeneratorInChildren(
+  collection: HTMLCollection
+): AutomaticFacetGeneratorElement {
+  const children = Array.from(collection);
+
+  const automaticFacetGenerator = children.find((child) =>
+    isTagNameAutomaticFacetGenerator(child.tagName)
+  ) as AutomaticFacetGeneratorElement;
+
+  return automaticFacetGenerator;
+}
+
+export function sortFacetsViaManager(
+  facets: BaseFacetElement[],
+  facetManager: FacetManager
+): BaseFacetElement[] {
+  const payload = facets.map((f) => ({
+    facetId: f.facetId,
+    payload: f,
+  }));
+  return facetManager.sort(payload).map((f) => f.payload);
 }
 
 interface FacetCommonOptions {
