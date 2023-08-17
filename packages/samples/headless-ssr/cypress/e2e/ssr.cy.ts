@@ -2,12 +2,13 @@ import 'cypress-web-vitals';
 import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
 
 describe('headless ssr example', () => {
+  const route = '/ssr';
   const numResults = 10;
   const numResultsMsg = `Rendered page with ${numResults} results`;
   const msgSelector = '#hydrated-msg';
   const timestampSelector = '#timestamp';
   it('renders page in SSR as expected', () => {
-    cy.intercept('/', (req) => {
+    cy.intercept(route, (req) => {
       req.continue((resp) => {
         const dom = new DOMParser().parseFromString(resp.body, 'text/html');
         expect(dom.querySelector(msgSelector)?.textContent).to.equal(
@@ -16,20 +17,20 @@ describe('headless ssr example', () => {
         expect(dom.querySelectorAll('li').length).to.equal(numResults);
       });
     });
-    cy.visit('/');
+    cy.visit(route);
   });
 
   it('renders page in CSR as expected', () => {
-    cy.visit('/');
+    cy.visit(route);
     cy.get(msgSelector).should('have.text', numResultsMsg);
     cy.get('li').should('have.length', numResults);
   });
 
   it('renders result list in SSR and then in CSR', () => {
     const interceptAlias = 'searchResults';
-    cy.intercept('/').as(interceptAlias);
+    cy.intercept(route).as(interceptAlias);
 
-    cy.visit('/');
+    cy.visit(route);
     cy.wait(`@${interceptAlias}`).then((intercept) => {
       const dom = new DOMParser().parseFromString(
         intercept.response?.body,
@@ -52,13 +53,13 @@ describe('headless ssr example', () => {
     const VITALS_THRESHOLD = {
       thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20},
     };
-    cy.visit('/');
+    cy.visit(route);
     cy.vitals(VITALS_THRESHOLD);
   });
 
   it('should not log any error nor warning', () => {
     spyOnConsole();
-    cy.visit('/');
+    cy.visit(route);
     waitForHydration();
     cy.wait(1000);
     cy.get(ConsoleAliases.error).should('not.be.called');
