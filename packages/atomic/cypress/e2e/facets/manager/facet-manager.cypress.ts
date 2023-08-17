@@ -10,7 +10,6 @@ import {
 } from './facet-manager-assertions';
 
 describe('Facet Manager Test Suite', () => {
-  describe('when there are only static facets, ', () => {});
   it('by default, should only keep the first 4 facets expanded', () => {
     new TestFixture().with(addFacetManager()).init();
     assertHasNumberOfExpandedFacets(4);
