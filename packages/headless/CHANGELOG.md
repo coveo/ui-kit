@@ -1,3 +1,14 @@
+## 2.26.1 (2023-08-16)
+
+### Bug Fixes
+
+- **headless:** fixed ssr type inference ([#3098](https://github.com/coveo/ui-kit/issues/3098)) ([804af40](https://github.com/coveo/ui-kit/commits/804af40141ee0c3cc680ab1cc5a3a7ac4e62c155))
+
+### Features
+
+- **headless:** add categoryFacet/updateBasePath action ([#3077](https://github.com/coveo/ui-kit/issues/3077)) ([304b550](https://github.com/coveo/ui-kit/commits/304b55096b0a244dc05630e06e2399dff7eeeb89))
+- **headless:** added defineResultList SSR controller ([#3099](https://github.com/coveo/ui-kit/issues/3099)) ([9fce780](https://github.com/coveo/ui-kit/commits/9fce7809eacb97387ba1b1523cbf678f949bdfef))
+
 ## 2.25.1 (2023-08-10)
 
 ### Bug Fixes
