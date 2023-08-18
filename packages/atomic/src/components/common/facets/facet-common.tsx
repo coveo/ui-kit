@@ -312,6 +312,9 @@ export function updateCollapseFacetsAfter(
   if (value > 0) {
     generator.collapseFacetsAfter = value;
   }
+  if (collapseFacetsAfter === -1) {
+    generator.collapseFacetsAfter = collapseFacetsAfter;
+  }
 }
 
 export function isTagNameAutomaticFacetGenerator(tagName: string) {
