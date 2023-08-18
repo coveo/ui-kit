@@ -41,10 +41,7 @@ class FatalError extends Error {
 
 interface StreamCallbacks {
   write: (data: GeneratedAnswerStreamEventData) => void;
-  abort: (
-    error: GeneratedAnswerErrorPayload,
-    abortController?: AbortController
-  ) => void;
+  abort: (error: GeneratedAnswerErrorPayload) => void;
   close: () => void;
   resetAnswer: () => void;
 }
@@ -134,7 +131,8 @@ export class GeneratedAnswerAPIClient {
         onerror: (err) => {
           clearTimeout(timeout);
           if (err instanceof FatalError) {
-            abort(err, abortController ?? undefined);
+            abortController?.abort();
+            abort(err);
             throw err;
           }
           if (++retryCount > MAX_RETRIES) {
@@ -143,7 +141,8 @@ export class GeneratedAnswerAPIClient {
               message: 'Failed to complete stream.',
               code: RETRYABLE_STREAM_ERROR_CODE,
             };
-            abort(error, abortController ?? undefined);
+            abortController?.abort();
+            abort(error);
             throw new FatalError(error);
           }
           this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
