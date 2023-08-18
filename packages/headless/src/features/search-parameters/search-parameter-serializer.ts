@@ -251,6 +251,7 @@ function isValidKey(key: string): key is SearchParameterKey {
       numberOfResults: true,
       sortCriteria: true,
       f: true,
+      fExcluded: true,
       cf: true,
       nf: true,
       df: true,

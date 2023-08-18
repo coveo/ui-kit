@@ -38,6 +38,15 @@ export function logParametersChange(
     return logFacetAnalyticsAction(previousParameters.f, newParameters.f);
   }
 
+  if (
+    areFacetParamsEqual(previousParameters.fExcluded, newParameters.fExcluded)
+  ) {
+    return logFacetAnalyticsAction(
+      previousParameters.fExcluded,
+      newParameters.fExcluded
+    );
+  }
+
   if (areFacetParamsEqual(previousParameters.cf, newParameters.cf)) {
     return logFacetAnalyticsAction(previousParameters.cf, newParameters.cf);
   }
