@@ -22,10 +22,6 @@ export function buildSearchLayout(
       justify-self: start;
       width: 80%;
     }
-  }
-  
-  ${sectionSelector('search')} {
-    z-index: 10;
   }`;
 
   const facets = () => {
