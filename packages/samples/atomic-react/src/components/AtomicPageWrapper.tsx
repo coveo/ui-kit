@@ -48,13 +48,10 @@ type Options = {
   instantResults?: boolean;
   recentQueries?: boolean;
   advancedQuery?: string;
-  pipeline?: string;
-  searchHub?: string;
 };
+
 type Props = {
   sample: Sample;
-  accessToken: string;
-  organizationId: string;
   options?: Options;
   children: React.ReactNode;
 };
@@ -83,24 +80,9 @@ function getConfigurationForSample(sample: Sample) {
 
 export const AtomicPageWrapper: FunctionComponent<Props> = ({
   sample,
-  accessToken,
-  organizationId,
-  options = {pipeline: 'Search', searchHub: 'MainSearch'},
+  options = {},
   children,
 }) => {
-  const engine = useMemo(() => {
-    return buildSearchEngine({
-      configuration: {
-        accessToken,
-        organizationId,
-        organizationEndpoints: getOrganizationEndpoints(organizationId),
-        search: {
-          pipeline: options.pipeline,
-          searchHub: options.searchHub,
-        },
-      },
-    });
-  }, [accessToken, organizationId, options.pipeline, options.searchHub]);
   const engine = useMemo(
     () =>
       buildSearchEngine({

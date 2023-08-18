@@ -23,11 +23,9 @@ import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 export const FoldedResultListPage: FunctionComponent = () => {
   return (
     <AtomicPageWrapper
-      accessToken="xx564559b1-0045-48e1-953c-3addd1ee4457"
-      organizationId="searchuisamples"
-      options={{advancedQuery: '@source=iNaturalistTaxons', pipeline: ''}}
+      sample="service"
+      options={{advancedQuery: '@source=iNaturalistTaxons'}}
     >
-    <AtomicPageWrapper sample="service">
       <AtomicFoldedResultList imageSize="large" template={MyTemplate} />
     </AtomicPageWrapper>
   );
