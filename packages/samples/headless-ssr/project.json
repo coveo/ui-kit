@@ -4,7 +4,7 @@
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx next build",
+        "command": "npm run build:next",
         "cwd": "packages/samples/headless-ssr"
       }
     },
