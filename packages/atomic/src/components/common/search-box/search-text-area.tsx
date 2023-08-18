@@ -69,6 +69,8 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
   bindings,
   onInput,
   onFocus,
+  onBlur,
+  onChange,
   onKeyDown,
   value,
   ariaLabel,
@@ -97,14 +99,16 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
           syncTextWithReplica(e.target as HTMLTextAreaElement);
         }}
         onBlur={(e) => {
+          onBlur?.(e);
           collapseTextArea(e.target as HTMLTextAreaElement);
         }}
         onChange={(e) => {
+          onChange?.(e);
           syncTextWithReplica(e.target as HTMLTextAreaElement);
         }}
         onFocus={(e) => {
-          const target = e.target as HTMLTextAreaElement;
           onFocus?.(e);
+          const target = e.target as HTMLTextAreaElement;
           expandTextArea(target);
         }}
         autocomplete="off"
