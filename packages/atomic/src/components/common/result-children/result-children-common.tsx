@@ -24,7 +24,7 @@ interface ResultChildrenProps {
   getNoResultText: () => string;
   getDisplayConfig: () => DisplayConfig;
   getImageSize: () => ResultDisplayImageSize | undefined;
-  renderChild: (child: FoldedResult, isLast: boolean) => any;
+  renderChild: (child: FoldedResult, isLast: boolean) => VNode;
   setInitialChildren: (initialChildren: FoldedResult[]) => void;
   toggleShowInitialChildren: () => void;
 }
@@ -112,7 +112,7 @@ export class ResultChildrenCommon {
     );
   }
 
-  private renderChildren(children: FoldedResult[]) {
+  private renderChildren(children: FoldedResult[]): VNode | VNode[] {
     return this.renderChildrenWrapper(
       children.map((child, i) =>
         this.props.renderChild(child, i === children.length - 1)
@@ -128,7 +128,9 @@ export class ResultChildrenCommon {
     }
 
     if (!collection.moreResultsAvailable && !this.hasChildren) {
-      return this.renderNoResult();
+      return this.props.getNoResultText()?.trim().length
+        ? this.renderNoResult()
+        : null;
     }
 
     if (!this.hasChildren) {

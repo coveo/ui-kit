@@ -1,3 +1,38 @@
+## 2.30.1 (2023-08-16)
+
+### Bug Fixes
+
+- **quantic:** js doc comment of the new quantic generated answer component fixed ([#3106](https://github.com/coveo/ui-kit/issues/3106)) ([38e1735](https://github.com/coveo/ui-kit/commits/38e1735f028f694fd921d142306c333e378d3342))
+
+### Features
+
+- **quantic:** retry prompt added to the quantic generated answer component ([#3095](https://github.com/coveo/ui-kit/issues/3095)) ([545aa53](https://github.com/coveo/ui-kit/commits/545aa533f51f80fa4425a43b9a754c8273848d1e))
+
+# 2.29.0 (2023-08-10)
+
+### Bug Fixes
+
+- **headless:** make the generated answer interface extend from the controller interface ([#3085](https://github.com/coveo/ui-kit/issues/3085)) ([62b6709](https://github.com/coveo/ui-kit/commits/62b6709f8d363886883f26a7aa7d0b6c748437db))
+- **quantic:** Fix some styling issues for the source citations component ([#3087](https://github.com/coveo/ui-kit/issues/3087)) ([5756285](https://github.com/coveo/ui-kit/commits/575628522c4eaac4c61dc84b36841338dd7728a5))
+
+### Features
+
+- **quantic:** Replace quanticResultLabel by quanticColoredResultBadge in ExampleInsightPanel ([#3092](https://github.com/coveo/ui-kit/issues/3092)) ([a9ac7b3](https://github.com/coveo/ui-kit/commits/a9ac7b36450504886ae57b3619fc33e94ecbbd13))
+
+# 2.28.0 (2023-08-09)
+
+### Features
+
+- **quantic:** GEN AI source citations component created for quantic ([#3063](https://github.com/coveo/ui-kit/issues/3063)) ([399dca8](https://github.com/coveo/ui-kit/commits/399dca8c347b854e502e7a3531246e9fc1b46737))
+- **quantic:** origin context added to analytics of the recommendations components ([#3041](https://github.com/coveo/ui-kit/issues/3041)) ([f50febd](https://github.com/coveo/ui-kit/commits/f50febd894f320116ff9a7ea0874455dcb296301))
+- **quantic:** quantic generated answer component created ([#3068](https://github.com/coveo/ui-kit/issues/3068)) ([8aa4c5e](https://github.com/coveo/ui-kit/commits/8aa4c5e22418078e3b931a882861af0cdec0370a))
+
+## 2.27.2 (2023-07-27)
+
+### Bug Fixes
+
+- **quantic:** fixed condition to display the no more child results message ([#3059](https://github.com/coveo/ui-kit/issues/3059)) ([9f27c95](https://github.com/coveo/ui-kit/commits/9f27c959c18909d36b98d717ac88f19b983431af))
+
 ## 2.27.1 (2023-07-19)
 
 ### Bug Fixes

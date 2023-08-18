@@ -66,6 +66,7 @@ export const buildSearchRequest = async (
     ...(state.automaticFacetSet && {
       generateAutomaticFacets: {
         desiredCount: state.automaticFacetSet.desiredCount,
+        numberOfValues: state.automaticFacetSet.numberOfValues,
         currentFacets: automaticFacets,
       },
     }),
@@ -77,10 +78,13 @@ function getFacets(state: StateNeededBySearchRequest) {
 }
 
 function getAutomaticFacets(state: StateNeededBySearchRequest) {
-  const facets = state.automaticFacetSet?.facets;
+  const facets = state.automaticFacetSet?.set;
 
   return facets
-    ? Object.values(facets).map(responseToAutomaticFacetRequest)
+    ? Object.values(facets)
+        .map((facet) => facet.response)
+        .map(responseToAutomaticFacetRequest)
+        .filter((facetRequest) => facetRequest.currentValues.length > 0)
     : undefined;
 }
 function responseToAutomaticFacetRequest(
@@ -88,10 +92,11 @@ function responseToAutomaticFacetRequest(
 ): AutomaticFacetRequest {
   const {field, label, values} = response;
 
+  const selectedValues = values.filter((value) => value.state === 'selected');
   return {
     field,
     label,
-    currentValues: values,
+    currentValues: selectedValues,
   };
 }
 function getAllEnabledFacets(state: StateNeededBySearchRequest) {

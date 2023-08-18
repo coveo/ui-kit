@@ -47,7 +47,7 @@ export class SearchAnalyticsProvider
     return {
       queryText: this.queryText,
       responseTime: this.responseTime,
-      results: this.mapResultsToAnalyticsDocument(),
+      results: this.resultURIs,
       numberOfResults: this.numberOfResults,
     };
   }
@@ -90,22 +90,26 @@ export class SearchAnalyticsProvider
     return baseObject;
   }
 
-  private mapResultsToAnalyticsDocument() {
-    return this.state.search?.response.results.map((r) => ({
+  private get resultURIs() {
+    return this.results?.map((r) => ({
       documentUri: r.uri,
       documentUriHash: r.raw.urihash,
     }));
   }
 
-  private get queryText() {
+  protected get results() {
+    return this.state.search?.response.results;
+  }
+
+  protected get queryText() {
     return this.state.query?.q || getQueryInitialState().q;
   }
 
-  private get responseTime() {
+  protected get responseTime() {
     return this.state.search?.duration || getSearchInitialState().duration;
   }
 
-  private get numberOfResults() {
+  protected get numberOfResults() {
     return (
       this.state.search?.response.totalCountFiltered ||
       getSearchInitialState().response.totalCountFiltered

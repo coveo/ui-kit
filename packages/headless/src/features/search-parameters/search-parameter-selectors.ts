@@ -30,5 +30,6 @@ export function initialSearchParameterSelector(
     debug: getDebugInitialState(),
     sf: {},
     tab: '',
+    af: {},
   };
 }
