@@ -1,7 +1,7 @@
 import 'cypress-web-vitals';
 import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
 
-describe('headless ssr example', () => {
+describe('Framework agnostic @coveo/headless/ssr utils', () => {
   const route = '/generic';
   const numResults = 10;
   const numResultsMsg = `Rendered page with ${numResults} results`;
