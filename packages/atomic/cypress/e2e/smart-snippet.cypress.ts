@@ -31,7 +31,7 @@ function buildAnswerWithHeight(height: number) {
 
 describe('Smart Snippet Test Suites', () => {
   describe('with no heading level', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture().with(addSmartSnippet()).init();
     });
 
@@ -76,7 +76,7 @@ describe('Smart Snippet Test Suites', () => {
 
   describe('with a specific heading level', () => {
     const headingLevel = 5;
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addSmartSnippet({props: {'heading-level': headingLevel}}))
         .init();
@@ -100,7 +100,7 @@ describe('Smart Snippet Test Suites', () => {
   });
 
   describe('when maximumHeight is smaller than collapsedHeight', () => {
-    before(() => {
+    beforeEach(() => {
       const value = 50;
       new TestFixture()
         .with(
@@ -119,7 +119,7 @@ describe('Smart Snippet Test Suites', () => {
   });
 
   describe('when the snippet height is equal to maximumHeight', () => {
-    before(() => {
+    beforeEach(() => {
       const height = 300;
       new TestFixture()
         .with(
@@ -144,7 +144,7 @@ describe('Smart Snippet Test Suites', () => {
   describe('when the snippet height is greater than maximumHeight', () => {
     const height = 300;
     const heightWhenCollapsed = 150;
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addSmartSnippet({
@@ -167,7 +167,7 @@ describe('Smart Snippet Test Suites', () => {
     CommonAssertions.assertAccessibility(smartSnippetComponent);
 
     describe('then pressing show more', () => {
-      before(() => {
+      beforeEach(() => {
         SmartSnippetSelectors.showMoreButton().click();
       });
 
@@ -176,7 +176,7 @@ describe('Smart Snippet Test Suites', () => {
       SmartSnippetAssertions.assertAnswerHeight(height);
 
       describe('then pressing show less', () => {
-        before(() => {
+        beforeEach(() => {
           SmartSnippetSelectors.showLessButton().click();
         });
 
@@ -189,7 +189,7 @@ describe('Smart Snippet Test Suites', () => {
   });
 
   describe('when the snippet starts and ends with inline elements', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addSmartSnippet({
@@ -213,7 +213,7 @@ describe('Smart Snippet Test Suites', () => {
   });
 
   describe('when the snippet contains elements with margins', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addSmartSnippet({
@@ -236,7 +236,7 @@ describe('Smart Snippet Test Suites', () => {
   });
 
   describe('when the snippet contains collapsing margins', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addSmartSnippet({
@@ -265,7 +265,7 @@ describe('Smart Snippet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setup);
+      beforeEach(setup);
 
       SmartSnippetAssertions.assertLikeButtonChecked(true);
       SmartSnippetAssertions.assertDislikeButtonChecked(false);
@@ -286,7 +286,7 @@ describe('Smart Snippet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setup);
+      beforeEach(setup);
 
       SmartSnippetAssertions.assertLikeButtonChecked(false);
       SmartSnippetAssertions.assertDislikeButtonChecked(true);
@@ -480,7 +480,7 @@ describe('Smart Snippet Test Suites', () => {
   });
 
   describe('with custom styling in a template element', () => {
-    before(() => {
+    beforeEach(() => {
       const styleEl = generateComponentHTML('style');
       styleEl.innerHTML = `
         b {
@@ -503,7 +503,7 @@ describe('Smart Snippet Test Suites', () => {
   });
 
   describe('with custom styling in an attribute', () => {
-    before(() => {
+    beforeEach(() => {
       const style = `
         b {
           color: rgb(84, 170, 255);
@@ -523,6 +523,19 @@ describe('Smart Snippet Test Suites', () => {
         .find('b')
         .invoke('css', 'color')
         .should('equal', 'rgb(84, 170, 255)');
+    });
+  });
+
+  describe('when there is a valid slot named "source-anchor-attributes"', () => {
+    beforeEach(() => {
+      const slot = generateComponentHTML('a', {
+        target: '_blank',
+        slot: 'source-anchor-attributes',
+      });
+      new TestFixture().with(addSmartSnippet({}, slot)).init();
+    });
+    it('copies the attributes properly', () => {
+      SmartSnippetSelectors.sourceUrl().should('have.attr', 'target', '_blank');
     });
   });
 });

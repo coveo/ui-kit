@@ -13,6 +13,7 @@ export function buildMockSearchResponse(
     searchUid: '',
     totalCountFiltered: 0,
     facets: [],
+    generateAutomaticFacets: {facets: []},
     queryCorrections: [emptyCorrection()],
     triggers: [],
     questionAnswer: emptyQuestionAnswer(),
@@ -20,6 +21,7 @@ export function buildMockSearchResponse(
     splitTestRun: '',
     termsToHighlight: {},
     phrasesToHighlight: {},
+    extendedResults: {},
     ...config,
   };
 }

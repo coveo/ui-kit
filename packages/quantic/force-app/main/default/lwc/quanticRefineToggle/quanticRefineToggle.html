@@ -1,5 +1,10 @@
 <template>
-  <button aria-hidden={modalIsOpen} class="slds-button slds-button_neutral refine-button slds-is-relative"
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <button aria-hidden={modalIsOpen} class="slds-button slds-button_neutral refine-button slds-is-relative"
     onclick={openModal} title={buttonTitle} disabled={refineButtonDisabled}>
     <slot name="button-content">
       {labels.sortAndFilters}
@@ -32,7 +37,7 @@
             {labels.noFilterForCurrentTab}
           </div>
         </template>
-        <c-quantic-refine-modal-content engine-id={engineId}></c-quantic-refine-modal-content>
+        <c-quantic-refine-modal-content engine-id={engineId} disable-dynamic-navigation={disableDynamicNavigation}></c-quantic-refine-modal-content>
       </div>
     </div>
     <div class="slds-align_absolute-center slds-var-p-vertical_medium slds-border_top refine-modal__footer"
@@ -43,4 +48,5 @@
       </button>
     </div>
   </c-quantic-modal>
+  </template>
 </template>

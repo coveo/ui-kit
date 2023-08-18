@@ -35,8 +35,7 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultTextSelectors.shadow);
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the field does not exist for the result but the "default" prop is set', () => {
@@ -67,7 +66,7 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultTextSelectors.firstInResult);
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the field value is not a string', () => {
@@ -81,7 +80,6 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultTextSelectors.firstInResult);
     CommonAssertions.assertConsoleError(false);
   });
 
@@ -98,7 +96,6 @@ describe('Result Text Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultTextSelectors.firstInResult);
     CommonAssertions.assertConsoleErrorMessage(
       'atomic-result-text cannot be used with multi value field'
     );
@@ -147,8 +144,9 @@ describe('Result Text Component', () => {
         ResultTextSelectors.firstInResult().should('have.text', rawValue);
         ResultTextSelectors.highlight().should('have.text', highlightedValue);
       });
-
-      CommonAssertions.assertAccessibility(ResultTextSelectors.firstInResult);
+      it('should be accessible', () => {
+        CommonAssertions.assertAccessibility(ResultTextSelectors.firstInResult);
+      });
     });
 
     describe('when the "shouldHighlight" prop is false', () => {

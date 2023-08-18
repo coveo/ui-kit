@@ -17,7 +17,6 @@ module.exports = {
   addons: [
     '@storybook/addon-controls',
     '@storybook/addon-viewport',
-    '@storybook/addon-a11y',
     './preset.js',
   ],
   /** @type {import('webpack')['config']['getNormalizedWebpackOptions']} */

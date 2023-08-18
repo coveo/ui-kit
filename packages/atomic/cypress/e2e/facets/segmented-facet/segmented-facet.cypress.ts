@@ -20,7 +20,7 @@ describe('Segmented Facet Test Suites', () => {
   }
 
   describe('verify rendering', () => {
-    before(setupSegmentedFacet);
+    beforeEach(setupSegmentedFacet);
 
     CommonAssertions.assertAccessibility(segmentedFacetComponent);
     CommonAssertions.assertContainsComponentError(
@@ -44,14 +44,14 @@ describe('Segmented Facet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupSelectSegmentedFacet);
+      beforeEach(setupSelectSegmentedFacet);
 
       CommonAssertions.assertAccessibility(segmentedFacetComponent);
       FacetAssertions.assertNumberOfSelectedBoxValues(1);
       FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues - 1);
     });
     describe('verify analytics', () => {
-      before(setupSelectSegmentedFacet);
+      beforeEach(setupSelectSegmentedFacet);
       FacetAssertions.assertLogFacetSelect(field, selectionIndex);
     });
   });
@@ -71,7 +71,7 @@ describe('Segmented Facet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupCustomSegmentedFacet);
+      beforeEach(setupCustomSegmentedFacet);
 
       CommonAssertions.assertAccessibility(segmentedFacetComponent);
       CommonFacetAssertions.assertLabelContains(
@@ -83,7 +83,7 @@ describe('Segmented Facet Test Suites', () => {
   });
 
   describe('when no search has yet been executed', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addSegmentedFacet({field, label}))
         .withoutFirstAutomaticSearch()
@@ -103,7 +103,7 @@ describe('Segmented Facet Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupSegmentedFacetNoLabel);
+      beforeEach(setupSegmentedFacetNoLabel);
 
       CommonAssertions.assertAccessibility(segmentedFacetComponent);
       CommonFacetAssertions.assertDisplayFacet(SegmentedFacetSelectors, true);
@@ -113,7 +113,7 @@ describe('Segmented Facet Test Suites', () => {
   });
 
   describe('when field returns no results', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addSegmentedFacet({field: 'notanactualfield', label}))
         .init();
@@ -131,7 +131,7 @@ describe('Segmented Facet Test Suites', () => {
   });
 
   describe('with a selected path in the URL', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addSegmentedFacet({field, label}))
         .withHash(`f-${field}=Cervantes`)
@@ -148,12 +148,52 @@ describe('Segmented Facet Test Suites', () => {
   });
 
   describe('with custom #sortCriteria, occurrences', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(addSegmentedFacet({field, label, 'sort-criteria': 'occurrences'}))
         .init();
     });
 
     FacetAssertions.assertValuesSortedByOccurrences();
+  });
+
+  describe('with allowed-values', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addSegmentedFacet({
+            field: 'objecttype',
+            'allowed-values': JSON.stringify(['FAQ', 'File']),
+          })
+        )
+        .init();
+    });
+
+    it('returns only allowed values', () => {
+      SegmentedFacetSelectors.valueLabel()
+        .should('contain.text', 'FAQ')
+        .should('contain.text', 'File')
+        .should('not.contain.text', 'Message');
+    });
+  });
+
+  describe('with custom-sort', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addSegmentedFacet({
+            field: 'filetype',
+            'custom-sort': JSON.stringify(['txt', 'rssitem']),
+          })
+        )
+        .init();
+    });
+
+    it('returns values sorted in the proper order', () => {
+      SegmentedFacetSelectors.valueLabel().eq(0).should('contain.text', 'txt');
+      SegmentedFacetSelectors.valueLabel()
+        .eq(1)
+        .should('contain.text', 'rssitem');
+    });
   });
 });

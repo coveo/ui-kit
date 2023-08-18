@@ -24,7 +24,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
     const expectedNumberOfCollapsedSections = 1;
     const expectedNumberOfExpandedSections =
       defaultRelatedQuestions.length - expectedNumberOfCollapsedSections;
-    before(() => {
+    beforeEach(() => {
       new TestFixture().with(addSmartSnippetSuggestions()).init();
       SmartSnippetSuggestionsSelectors.questionCollapsedButton().each((e) =>
         cy.wrap(e).click()
@@ -67,7 +67,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
   });
 
   describe('with no heading level and no expanded section', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture().with(addSmartSnippetSuggestions()).init();
     });
 
@@ -98,7 +98,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
   });
 
   describe('with no heading level and all expanded sections', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture().with(addSmartSnippetSuggestions()).init();
       SmartSnippetSuggestionsSelectors.questionCollapsedButton().each(
         ($element) => cy.wrap($element).click()
@@ -143,7 +143,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
 
   describe('with a specific heading level and no expanded section', () => {
     const headingLevel = 5;
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addSmartSnippetSuggestions({props: {'heading-level': headingLevel}})
@@ -167,7 +167,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
   });
 
   describe('when the snippet starts and ends with text nodes', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addSmartSnippetSuggestions({
@@ -195,7 +195,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
   });
 
   describe('when the snippet contains elements with margins', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addSmartSnippetSuggestions({
@@ -222,7 +222,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
   });
 
   describe('when the snippet contains collapsing margins', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addSmartSnippetSuggestions({
@@ -388,7 +388,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
   });
 
   describe('with custom styling in a template element', () => {
-    before(() => {
+    beforeEach(() => {
       const styleEl = generateComponentHTML('style');
       styleEl.innerHTML = `
         b {
@@ -417,7 +417,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
   });
 
   describe('with custom styling in an attribute', () => {
-    before(() => {
+    beforeEach(() => {
       const style = `
         b {
           color: rgb(84, 170, 255);

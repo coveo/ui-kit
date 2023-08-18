@@ -21,6 +21,7 @@ import {
   addFoldedResultList,
   buildTemplateWithoutSections,
   buildTemplateWithSections,
+  removeResultChildrenFromResponse,
 } from './result-list-actions';
 
 const setSourceAndSortCriteria = () => {
@@ -49,6 +50,34 @@ describe('Folded Result List Component', () => {
     FoldedResultListSelectors.childResultAtIndex(1)
       .find(resultLinkComponent)
       .contains(ExpectedHierarchy.children[1].name);
+  });
+
+  it('should show a "no results" label when no child results are found', () => {
+    new TestFixture()
+      .with(setSourceAndSortCriteria)
+      .with(
+        addFoldedResultList(buildTemplateWithoutSections(buildResultTopChild()))
+      )
+      .with(removeResultChildrenFromResponse)
+      .init();
+
+    FoldedResultListSelectors.noResultsLabel().should('be.visible');
+  });
+
+  it('should not show a "no results" label when no child results are found when no-result-text is empty', () => {
+    new TestFixture()
+      .with(setSourceAndSortCriteria)
+      .with(
+        addFoldedResultList(
+          buildTemplateWithoutSections(
+            buildResultTopChild(undefined, {'no-result-text': ''})
+          )
+        )
+      )
+      .with(removeResultChildrenFromResponse)
+      .init();
+
+    FoldedResultListSelectors.noResultsLabel().should('not.exist');
   });
 
   it('renders content before and after children only when there are children', () => {
@@ -152,15 +181,14 @@ describe('Folded Result List Component', () => {
       cy.wait(TestFixture.interceptAliases.UA);
     }
 
-    before(() => {
+    beforeEach(() => {
       setupCollection();
     });
 
     assertRendersWholeCollection();
 
     describe('should restore initial results when collapsing collection', () => {
-      before(() => {
-        setupCollection();
+      beforeEach(() => {
         FoldedResultListSelectors.collapseButton().click();
         cy.wait(200);
       });
@@ -170,7 +198,7 @@ describe('Folded Result List Component', () => {
   });
 
   describe('with an invalid configuration', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(setSourceAndSortCriteria)
         .with(

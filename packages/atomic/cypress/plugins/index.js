@@ -18,22 +18,30 @@
 module.exports = (on, _config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-
-  // auto open devtools in headed mode (does not appear in screenshots, recording)
-  // https://docs.cypress.io/api/plugins/browser-launch-api#Usage
   on('before:browser:launch', (browser = {}, launchOptions) => {
     if (browser.family === 'chromium' && browser.name !== 'electron') {
-      launchOptions.args.push(
-        '--auto-open-devtools-for-tabs',
-        '--start-fullscreen',
-        // To prevent CI error "ERROR:gpu_memory_buffer_support_x11.cc(44)] dri3 extension not supported."
-        '--disable-gpu'
-      );
+      if (browser.isHeadless) {
+        launchOptions.args.push(
+          // To prevent CI error "ERROR:gpu_memory_buffer_support_x11.cc(44)] dri3 extension not supported."
+          '--disable-gpu'
+        );
+        // Workaround to use new headless mode until Cypress can be upgraded to >= 12.15 (KIT-2576)
+        // https://developer.chrome.com/articles/new-headless/
+        const version = parseInt(browser.majorVersion);
+        if (version >= 112) {
+          launchOptions.args.push('--headless=new');
+        }
+      } else {
+        // auto open devtools in headed (local dev) mode to increase visibility of errors in console
+        launchOptions.args.push(
+          '--auto-open-devtools-for-tabs',
+          '--start-fullscreen'
+        );
+      }
     } else if (browser.family === 'firefox') {
       launchOptions.args.push('-devtools');
     } else if (browser.name === 'electron') {
       launchOptions.preferences.devTools = true;
-      launchOptions.preferences.fullscreen = true;
     }
 
     return launchOptions;

@@ -5,6 +5,7 @@ import {
 } from '../../../fixtures/test-fixture';
 import * as CommonAssertions from '../../common-assertions';
 import {
+  addGridResultList,
   addResultList,
   buildTemplateWithoutSections,
 } from '../result-list-actions';
@@ -40,20 +41,18 @@ const addUriParentsInResponse =
 
 describe('Result Printable Uri Component', () => {
   describe('when not used inside a result template', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with((e) => addTag(e, resultPrintableUriComponent, {}))
         .init();
     });
 
     CommonAssertions.assertConsoleError();
-    CommonAssertions.assertRemovesComponent(() =>
-      cy.get(resultPrintableUriComponent)
-    );
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the "max-number-of-parts" prop is not a number', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addResultList(
@@ -68,13 +67,11 @@ describe('Result Printable Uri Component', () => {
     });
 
     CommonAssertions.assertConsoleError();
-    CommonAssertions.assertRemovesComponent(
-      ResultPrintableUriSelectors.firstInResult
-    );
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the "max-number-of-parts" prop is less than 3', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addResultList(
@@ -89,13 +86,11 @@ describe('Result Printable Uri Component', () => {
     });
 
     CommonAssertions.assertConsoleError();
-    CommonAssertions.assertRemovesComponent(() =>
-      cy.get(resultPrintableUriComponent)
-    );
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when there is no "parents" property in the result object', () => {
-    before(() => {
+    beforeEach(() => {
       new TestFixture()
         .with(
           addResultList(
@@ -128,7 +123,8 @@ describe('Result Printable Uri Component', () => {
 
   describe('when there is a "parents" property in the result object and "max-number-of-parts" is 3', () => {
     const addResultListWithPrintableUri =
-      (children?: HTMLElement[]) => (fixture: TestFixture) => {
+      (children?: HTMLElement[], grid = false) =>
+      (fixture: TestFixture) => {
         const printableUriEl = generateComponentHTML(
           resultPrintableUriComponent,
           {
@@ -137,12 +133,14 @@ describe('Result Printable Uri Component', () => {
         );
         children?.forEach((slot) => printableUriEl.appendChild(slot));
         fixture.with(
-          addResultList(buildTemplateWithoutSections([printableUriEl]))
+          grid
+            ? addGridResultList(buildTemplateWithoutSections([printableUriEl]))
+            : addResultList(buildTemplateWithoutSections([printableUriEl]))
         );
       };
 
     describe('when the number of parts is 3', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addResultListWithPrintableUri())
           .with(addUriParentsInResponse(3))
@@ -162,7 +160,7 @@ describe('Result Printable Uri Component', () => {
     });
 
     describe('when the number of parts is 4', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addResultListWithPrintableUri())
           .with(addUriParentsInResponse(4))
@@ -171,12 +169,15 @@ describe('Result Printable Uri Component', () => {
 
       ResultPrintableUriAssertions.assertDisplayEllipsis(true);
       ResultPrintableUriAssertions.assertDisplayParentsCount(2);
-      CommonAssertions.assertAccessibility(
-        ResultPrintableUriSelectors.firstInResult
-      );
+
+      it('should be accessible', () => {
+        CommonAssertions.assertAccessibility(
+          ResultPrintableUriSelectors.firstInResult
+        );
+      });
 
       describe('after clicking on the ellipsis', () => {
-        before(() => {
+        beforeEach(() => {
           ResultPrintableUriSelectors.ellipsisButton().click();
         });
 
@@ -187,7 +188,7 @@ describe('Result Printable Uri Component', () => {
     });
 
     describe('when the number of parts is 20', () => {
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(addResultListWithPrintableUri())
           .with(addUriParentsInResponse(20))
@@ -199,7 +200,7 @@ describe('Result Printable Uri Component', () => {
     });
 
     describe('when there is a valid slot named "attributes"', () => {
-      before(() => {
+      beforeEach(() => {
         const attributesSlot = generateComponentHTML('a', {
           download: 'test',
           target: '_self',
@@ -215,6 +216,25 @@ describe('Result Printable Uri Component', () => {
         ResultPrintableUriSelectors.links()
           .should('have.attr', 'download', 'test')
           .should('have.attr', 'target', '_self');
+      });
+    });
+
+    describe('when rendered within a grid result', () => {
+      beforeEach(() => {
+        new TestFixture()
+          .with(addResultListWithPrintableUri(undefined, true))
+          .with(addUriParentsInResponse(4))
+          .init();
+      });
+
+      describe('after clicking on the ellipsis', () => {
+        beforeEach(() => {
+          ResultPrintableUriSelectors.ellipsisButton().click();
+        });
+
+        ResultPrintableUriAssertions.assertFocusLink(1);
+        ResultPrintableUriAssertions.assertDisplayEllipsis(false);
+        ResultPrintableUriAssertions.assertDisplayParentsCount(4);
       });
     });
   });

@@ -35,8 +35,7 @@ describe('Result Date Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultDateSelectors.shadow);
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the field does not exist for the result', () => {
@@ -46,7 +45,6 @@ describe('Result Date Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultDateSelectors.firstInResult);
     CommonAssertions.assertConsoleError(false);
   });
 
@@ -61,8 +59,7 @@ describe('Result Date Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultDateSelectors.firstInResult);
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the field is valid', () => {
@@ -82,7 +79,9 @@ describe('Result Date Component', () => {
       ResultDateSelectors.firstInResult().should('have.text', '2021-09-03');
     });
 
-    CommonAssertions.assertAccessibility(ResultDateSelectors.firstInResult);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultDateSelectors.firstInResult);
+    });
   });
 
   describe('when using relative time', () => {

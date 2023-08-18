@@ -64,12 +64,22 @@ export const InterceptAliases = {
     ),
     ShowLessFoldedResults: uaAlias('showLessFoldedResults'),
     ShowMoreFoldedResults: uaAlias('showMoreFoldedResults'),
+    RecommendationInterfaceLoad: uaAlias('recommendationInterfaceLoad'),
+    RecommendationOpen: uaAlias('recommendationOpen'),
+    GeneratedAnswer: {
+      LikeGeneratedAnswer: uaAlias('likeGeneratedAnswer'),
+      DislikeGeneratedAnswer: uaAlias('dislikeGeneratedAnswer'),
+      GeneratedAnswerStreamEnd: uaAlias('generatedAnswerStreamEnd'),
+      OpenGeneratedAnswerSource: uaAlias('openGeneratedAnswerSource'),
+      RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
+    },
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
   ResultHtml: '@coveoResultHtml',
   Insight: '@CoveoInsight',
+  GenQAStream: '@genQAStream',
 };
 
 export const routeMatchers = {
@@ -198,11 +208,14 @@ export function mockSearchNoResults(useCase?: string) {
   }).as(getQueryAlias(useCase).substring(1));
 }
 
-export function mockSearchWithResults(results?: Array<object>) {
+export function mockSearchWithResults(
+  results?: Array<object>,
+  useCase?: string
+) {
   const defaultResults = [
     {title: 'Result', uri: 'uri', raw: {uriHash: 'resulthash'}},
   ];
-  cy.intercept(routeMatchers.search, (req) => {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.results = results ?? defaultResults;
       res.body.totalCount = res.body.results.length;
@@ -369,4 +382,59 @@ export function mockSearchWithoutSmartSnippetSuggestions(useCase?: string) {
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithGeneratedAnswer(streamId: string) {
+  cy.intercept(getRoute(), (req) => {
+    req.continue((res) => {
+      res.body.extendedResults = {
+        generativeQuestionAnsweringId: streamId,
+      };
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithoutGeneratedAnswer() {
+  cy.intercept(getRoute(), (req) => {
+    req.continue((res) => {
+      res.body.extendedResults = {};
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export const getStreamInterceptAlias = (streamId: string) =>
+  `${InterceptAliases.GenQAStream}-${streamId}`;
+
+export function mockStreamResponse(streamId: string, body: unknown) {
+  cy.intercept(
+    {
+      method: 'GET',
+      url: `**/machinelearning/streaming/${streamId}`,
+    },
+    (request) => {
+      request.reply(200, `data: ${JSON.stringify(body)} \n\n`, {
+        'content-type': 'text/event-stream',
+      });
+    }
+  ).as(getStreamInterceptAlias(streamId).substring(1));
+}
+
+export function mockStreamError(streamId: string, errorCode: number) {
+  cy.intercept(
+    {
+      method: 'GET',
+      url: `**/machinelearning/streaming/${streamId}`,
+    },
+    (request) => {
+      request.reply(
+        errorCode,
+        {},
+        {
+          'content-type': 'text/event-stream',
+        }
+      );
+    }
+  ).as(getStreamInterceptAlias(streamId).substring(1));
 }

@@ -1,5 +1,3 @@
-import {resolve} from 'node:path';
-import {promisify} from 'node:util';
 import {execute} from '../exec.mjs';
 import {getPackageManifestFromPackagePath} from '../packages.mjs';
 

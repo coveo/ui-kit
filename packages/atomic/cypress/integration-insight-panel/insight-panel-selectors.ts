@@ -1,11 +1,15 @@
 export const InsightPanelsSelectors = {
   interface: () => cy.get('atomic-insight-interface'),
-  resultList: () =>
-    InsightPanelsSelectors.interface().find('atomic-insight-result-list'),
+  foldedResultList: () =>
+    InsightPanelsSelectors.interface().find(
+      'atomic-insight-folded-result-list'
+    ),
   results: () =>
-    InsightPanelsSelectors.resultList().shadow().find('atomic-insight-result'),
+    InsightPanelsSelectors.foldedResultList()
+      .shadow()
+      .find('atomic-insight-result'),
   resultsPlaceholder: () =>
-    InsightPanelsSelectors.resultList()
+    InsightPanelsSelectors.foldedResultList()
       .shadow()
       .find('atomic-result-placeholder'),
   pager: () => InsightPanelsSelectors.interface().find('atomic-insight-pager'),
@@ -28,6 +32,10 @@ export const InsightPanelsSelectors = {
     InsightPanelsSelectors.interface().find('atomic-insight-edit-toggle'),
   historyToggle: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-history-toggle'),
+  fullSearchButton: () =>
+    InsightPanelsSelectors.interface().find(
+      'atomic-insight-full-search-button'
+    ),
   tabs: () => InsightPanelsSelectors.interface().find('atomic-insight-tabs'),
   tabBar: () => InsightPanelsSelectors.tabs().find('tab-bar').shadow(),
   tabPopover: () =>
@@ -59,4 +67,8 @@ export const InsightPanelsSelectors = {
     InsightPanelsSelectors.interface().find(
       'atomic-insight-smart-snippet-feedback-modal'
     ),
+  resultActionBar: () =>
+    InsightPanelsSelectors.results()
+      .shadow()
+      .find('atomic-insight-result-action-bar'),
 };

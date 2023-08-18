@@ -62,6 +62,12 @@ export default class QuanticRecentResultsList extends LightningElement {
    */
   @api target = '_self';
   /**
+   * Indicates whether the card of the recent results list should be completely hidden when it is empty.
+   * @api
+   * @type {boolean}
+   */
+  @api hideWhenEmpty;
+  /**
    * Whether the component is collapsed.
    * @api
    * @type {boolean}
@@ -85,6 +91,8 @@ export default class QuanticRecentResultsList extends LightningElement {
   recentResultsList;
   /** @type {Function} */
   unsubscribe;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -146,5 +154,16 @@ export default class QuanticRecentResultsList extends LightningElement {
   get actionButtonLabel() {
     const label = this.isCollapsed ? this.labels.expand : this.labels.collapse;
     return I18nUtils.format(label, this.label);
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
+  }
+
+  get shouldDisplayRecentResultsCard() {
+    return this.hasResults || !this.hideWhenEmpty;
   }
 }

@@ -7,12 +7,11 @@ dist
 .size-snapshot.json
 reports/*.xml
 !.vscode/extensions.json
-.yarn/*
-!.yarn/releases
-yarn.lock
 .dccache
 sarifs
 **.cy.ts.mp4
+.cspellcache
+scripts/translation-gpt/temporary.json
 
 # CI Release
 topology.json

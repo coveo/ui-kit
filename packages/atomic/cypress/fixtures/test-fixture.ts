@@ -166,6 +166,15 @@ export class TestFixture {
     });
   }
 
+  public withoutAutomaticFacets() {
+    return this.withCustomResponse((r) => {
+      r.generateAutomaticFacets = {
+        facets: [],
+      };
+      return r;
+    });
+  }
+
   public withError() {
     this.returnError = true;
     return this;

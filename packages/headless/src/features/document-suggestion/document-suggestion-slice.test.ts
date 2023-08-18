@@ -12,7 +12,7 @@ import {
 describe('document suggestion slice', () => {
   let state: DocumentSuggestionState;
   const mockDocument: DocumentSuggestionResponse = {
-    clickUri: 'www.clikuri.com',
+    clickUri: 'www.clickuri.com',
     title: 'Mock Document',
     excerpt: 'This is a dang good mock document.',
     fields: {

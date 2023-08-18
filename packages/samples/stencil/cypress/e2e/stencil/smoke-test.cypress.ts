@@ -81,7 +81,7 @@ describe('smoke test', () => {
   }
 
   describe('when navigating directly to the /search', () => {
-    before(() => {
+    beforeEach(() => {
       setup();
     });
 
@@ -89,7 +89,7 @@ describe('smoke test', () => {
   });
 
   describe('when navigating back to the /search', () => {
-    before(() => {
+    beforeEach(() => {
       setup();
 
       cy.get('a#home').click();
@@ -101,7 +101,7 @@ describe('smoke test', () => {
   });
 
   describe('testing the /hsp sample', () => {
-    before(() => {
+    beforeEach(() => {
       setupHSP();
     });
 

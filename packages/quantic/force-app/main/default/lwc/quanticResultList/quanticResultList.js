@@ -4,7 +4,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+import {AriaLiveRegion} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
@@ -61,6 +61,8 @@ export default class QuanticResultList extends LightningElement {
   loadingAriaLiveMessage;
   /** @type {string} */
   openPreviewId;
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   labels = {
     loadingResults,
@@ -137,9 +139,7 @@ export default class QuanticResultList extends LightningElement {
       !this.searchStatus?.state?.firstSearchExecuted &&
       !!this.numberOfResults;
     if (this.showPlaceholder) {
-      this.loadingAriaLiveMessage.dispatchMessage(
-        I18nUtils.format(this.labels.loadingResults)
-      );
+      this.loadingAriaLiveMessage.dispatchMessage(this.labels.loadingResults);
     }
   }
 
@@ -156,5 +156,12 @@ export default class QuanticResultList extends LightningElement {
 
   get results() {
     return this.state?.results || [];
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 }

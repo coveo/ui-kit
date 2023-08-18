@@ -34,6 +34,13 @@ export default class ExampleQuanticRecentResultsList extends LightningElement {
         'Where to display the linked URLs, as the name for a browsing context.',
       defaultValue: '_self',
     },
+    {
+      attribute: 'hideWhenEmpty',
+      label: 'Hide when empty',
+      description:
+        'Indicates whether the card of the recent results list should be completely hidden when it is empty.',
+      defaultValue: false,
+    },
   ];
 
   get notConfigured() {

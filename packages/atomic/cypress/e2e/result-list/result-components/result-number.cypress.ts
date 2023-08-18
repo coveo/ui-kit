@@ -38,8 +38,7 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultNumberSelectors.shadow);
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the field does not exist for the result', () => {
@@ -49,9 +48,6 @@ describe('Result Number Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(
-      ResultNumberSelectors.firstInResult
-    );
     CommonAssertions.assertConsoleError(false);
   });
 
@@ -107,8 +103,11 @@ describe('Result Number Component', () => {
         prepareExistingFieldValue(value).withLanguage('en').init();
         ResultNumberSelectors.firstInResult().should('have.text', '1,234.5');
       });
-
-      CommonAssertions.assertAccessibility(ResultNumberSelectors.firstInResult);
+      it('should be accessible', () => {
+        CommonAssertions.assertAccessibility(
+          ResultNumberSelectors.firstInResult
+        );
+      });
     });
 
     describe('with a format', () => {

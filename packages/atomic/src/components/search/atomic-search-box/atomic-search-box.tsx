@@ -621,10 +621,7 @@ export class AtomicSearchBox {
   ) {
     const id = `${this.id}-${side}-suggestion-${item.key}`;
 
-    const isSelected =
-      id === this.activeDescendant ||
-      (this.suggestedQuery === item.query &&
-        !this.panelInFocus?.getAttribute('part')?.includes(side));
+    const isSelected = id === this.activeDescendant;
 
     if (index === lastIndex && item.hideIfLast) {
       return null;
@@ -757,7 +754,10 @@ export class AtomicSearchBox {
     );
     return [
       <SearchBoxWrapper disabled={this.isSearchDisabled}>
-        <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
+        <atomic-focus-detector
+          style={{display: 'contents'}}
+          onFocusExit={() => this.clearSuggestions()}
+        >
           <SearchInput
             inputRef={this.inputRef}
             loading={this.searchBoxState.isLoading}

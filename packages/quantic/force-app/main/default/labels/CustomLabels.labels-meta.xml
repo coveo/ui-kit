@@ -1094,10 +1094,10 @@
     </labels>
     <labels>
       <fullName>quantic_OpensInSalesforceSubTab</fullName>
-      <value>Opens in a Salesforce console subtab</value>
+      <value>Opens in a Salesforce subtab</value>
       <language>en_US</language>
       <protected>false</protected>
-      <shortDescription>Opens in a Salesforce console subtab</shortDescription>
+      <shortDescription>Opens in a Salesforce subtab</shortDescription>
     </labels>
     <labels>
       <fullName>quantic_OpensInBrowserTab</fullName>
@@ -1105,5 +1105,159 @@
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>Opens in the browser tab</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ComponentError</fullName>
+        <value>{{0}} component error</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>c-quantic-pager component error</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_LookAtDeveloperConsole</fullName>
+      <value>Look at the developer console for more information.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Look at the developer console</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_InvalidMaxNumberOfDocumentSuggestions</fullName>
+      <value>The maximum number of document suggestions must be an integer greater than 0.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Invalid maximum number of document suggestions.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_InvalidNumberOfAutoOpenedDocuments</fullName>
+      <value>The number of automatically opened document suggestions must be an integer greater that 0.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Invalid number of automatically opened document suggestions.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_SalesforceFieldNotFound</fullName>
+      <value>The Salesforce field API name "{{0}}" is not found.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Salesforce field not found.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_InvalidMaxNumberOfSuggestions</fullName>
+      <value>The maximum number of suggestions must be an integer greater than 0.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Invalid maximum number of suggestions.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_PropertyIsRequired</fullName>
+      <value>The "{{0}}" property is required, please set its value.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>The property is required.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ComponentInitializationError</fullName>
+      <value>Component initialization error</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Component initialization error</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_UnableToInitializeComponent</fullName>
+      <value>Fatal error: Unable to initialize the {{0}} component.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Fatal error: unable to initialize the component.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ViewedByCustomer</fullName>
+      <value>Viewed by customer</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Viewed by customer</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_LoadingRecommendations</fullName>
+      <value>Loading recommendations</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Loading recommendations</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_InvalidPositiveIntegerProperty</fullName>
+      <value>The value of the {{0}} property must be an integer greater than 0.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>The value of the property must be an integer greater than 0.</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_XOfY</fullName>
+      <value>{{0}} of {{1}}</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>1 of 6</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_TopDocumentsForYou</fullName>
+      <value>Top documents for you</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Top documents for you</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Carousel</fullName>
+      <value>Carousel</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Carousel</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Slide</fullName>
+      <value>Slide</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Slide</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_GeneratedAnswerForYou</fullName>
+      <value>Generated answer for you</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Generated answer for you</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ThisAnswerWasNotHelpful</fullName>
+      <value>This answer was not helpful</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>This answer was not helpful</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ThisAnswerWasHelpful</fullName>
+      <value>This answer was helpful</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>This answer was helpful</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_LearnMore</fullName>
+      <value>Learn more</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Learn more</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_TryAgain</fullName>
+      <value>Try again</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Try again</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_CouldNotGenerateAnAnswer</fullName>
+      <value>Something went wrong and we couldn't generate an answer.</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Something went wrong and we couldn't generate an answer.</shortDescription>
     </labels>
 </CustomLabels>

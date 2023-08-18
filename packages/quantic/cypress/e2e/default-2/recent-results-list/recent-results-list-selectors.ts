@@ -10,6 +10,7 @@ export interface RecentResultsListSelector extends ComponentSelector {
   lastResult: () => CypressSelector;
   emptyList: () => CypressSelector;
   result: (value: string) => CypressSelector;
+  recentResultsCard: () => CypressSelector;
 }
 
 export const RecentResultsListSelectors: RecentResultsListSelector = {
@@ -27,4 +28,6 @@ export const RecentResultsListSelectors: RecentResultsListSelector = {
   emptyList: () => RecentResultsListSelectors.get().find('.empty-list-message'),
   result: (value: string) =>
     RecentResultsListSelectors.resultLinks().contains(value),
+  recentResultsCard: () =>
+    RecentResultsListSelectors.get().find('[data-cy="recent-results-card"]'),
 };
