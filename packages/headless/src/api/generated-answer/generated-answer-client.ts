@@ -40,14 +40,13 @@ class FatalError extends Error {
 }
 
 interface StreamCallbacks {
-  write: (data: GeneratedAnswerStreamEventData, streamId: string) => void;
+  write: (data: GeneratedAnswerStreamEventData) => void;
   abort: (
     error: GeneratedAnswerErrorPayload,
-    streamId: string,
     abortController?: AbortController
   ) => void;
-  close: (streamId: string) => void;
-  resetAnswer: (streamId: string) => void;
+  close: () => void;
+  resetAnswer: () => void;
 }
 
 export class GeneratedAnswerAPIClient {
@@ -74,7 +73,7 @@ export class GeneratedAnswerAPIClient {
 
     const retryStream = () => {
       abortController?.abort();
-      resetAnswer(streamId);
+      resetAnswer();
       stream();
     };
 
@@ -116,21 +115,18 @@ export class GeneratedAnswerAPIClient {
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
             clearTimeout(timeout);
-            abort(
-              {
-                message: data.errorMessage,
-                code: data.statusCode,
-              },
-              streamId,
-              abortController ?? undefined
-            );
+            abortController?.abort();
+            abort({
+              message: data.errorMessage,
+              code: data.statusCode,
+            });
             return;
           }
-          write(data, streamId);
+          write(data);
           retryCount = 0;
           if (data.finishReason === 'COMPLETED') {
             clearTimeout(timeout);
-            close(streamId);
+            close();
           } else {
             refreshTimeout();
           }
@@ -138,7 +134,7 @@ export class GeneratedAnswerAPIClient {
         onerror: (err) => {
           clearTimeout(timeout);
           if (err instanceof FatalError) {
-            abort(err, streamId, abortController ?? undefined);
+            abort(err, abortController ?? undefined);
             throw err;
           }
           if (++retryCount > MAX_RETRIES) {
@@ -147,11 +143,11 @@ export class GeneratedAnswerAPIClient {
               message: 'Failed to complete stream.',
               code: RETRYABLE_STREAM_ERROR_CODE,
             };
-            abort(error, streamId, abortController ?? undefined);
+            abort(error, abortController ?? undefined);
             throw new FatalError(error);
           }
           this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
-          resetAnswer(streamId);
+          resetAnswer();
         },
       });
 

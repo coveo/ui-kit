@@ -144,9 +144,9 @@ export const streamAnswer = createAsyncThunk<
   const abortController = extra.streamingClient?.streamGeneratedAnswer(
     request,
     {
-      write: (data: GeneratedAnswerStreamEventData, streamId: string) => {
+      write: (data: GeneratedAnswerStreamEventData) => {
         if (
-          streamId ===
+          request.streamId ===
           state.search.extendedResults.generativeQuestionAnsweringId
         ) {
           dispatch(setIsLoading(false));
@@ -155,30 +155,25 @@ export const streamAnswer = createAsyncThunk<
           }
         }
       },
-      abort: (
-        error: GeneratedAnswerErrorPayload,
-        streamId: string,
-        abortController?: AbortController
-      ) => {
+      abort: (error: GeneratedAnswerErrorPayload) => {
         if (
-          streamId ===
+          request.streamId ===
           state.search.extendedResults.generativeQuestionAnsweringId
         ) {
-          abortController?.abort();
           dispatch(updateError(error));
         }
       },
-      close: (streamId: string) => {
+      close: () => {
         if (
-          streamId ===
+          request.streamId ===
           state.search.extendedResults.generativeQuestionAnsweringId
         ) {
           dispatch(setIsStreaming(false));
         }
       },
-      resetAnswer: (streamId: string) => {
+      resetAnswer: () => {
         if (
-          streamId ===
+          request.streamId ===
           state.search.extendedResults.generativeQuestionAnsweringId
         ) {
           dispatch(resetAnswer());
