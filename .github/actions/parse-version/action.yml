@@ -10,5 +10,7 @@ outputs:
   atomic-minor:
     description: 'The minor version of Atomic (e.g., 2.12)'
 runs:
-  using: 'node16' # TODO: Update to node18, yaml schema allowed values: 12, 16
+  # TODO(KIT-2443): Update to node LTS, currently yaml schema allows only: 12, 16
+  #   https://json.schemastore.org/github-action.json: "enum": ["node12", "node16"]
+  using: 'node16'
   main: 'index.js'
