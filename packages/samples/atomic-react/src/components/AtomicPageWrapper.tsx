@@ -43,43 +43,42 @@ import React, {FunctionComponent, useMemo} from 'react';
 type Options = {
   instantResults?: boolean;
   recentQueries?: boolean;
-  foldedResults?: boolean;
+  advancedQuery?: string;
+  pipeline?: string;
+  searchHub?: string;
 };
 type Props = {
   accessToken: string;
   organizationId: string;
-  children: React.ReactNode;
   options?: Options;
+  children: React.ReactNode;
 };
 
 export const AtomicPageWrapper: FunctionComponent<Props> = ({
   accessToken,
   organizationId,
+  options = {pipeline: 'Search', searchHub: 'MainSearch'},
   children,
-  options = {},
 }) => {
   const engine = useMemo(() => {
-    const searchConfig = options.foldedResults
-      ? {}
-      : {
-          pipeline: 'Search',
-          searchHub: 'MainSearch',
-        };
     return buildSearchEngine({
       configuration: {
         accessToken,
         organizationId,
         organizationEndpoints: getOrganizationEndpoints(organizationId),
-        search: searchConfig,
+        search: {
+          pipeline: options.pipeline,
+          searchHub: options.searchHub,
+        },
       },
     });
-  }, [accessToken, organizationId, options.foldedResults]);
+  }, [accessToken, organizationId, options.pipeline, options.searchHub]);
 
-  if (options.foldedResults) {
+  if (options.advancedQuery) {
     const action = loadAdvancedSearchQueryActions(
       engine
     ).updateAdvancedSearchQueries({
-      aq: '@source=iNaturalistTaxons',
+      aq: options.advancedQuery,
     });
     engine.dispatch(action);
   }
