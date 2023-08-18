@@ -1,3 +1,16 @@
 {
-  "name": "headless-ssr-samples"
+  "name": "headless-ssr-samples",
+  "targets": {
+    "cached:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx next build",
+        "cwd": "packages/samples/headless-ssr"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
 }

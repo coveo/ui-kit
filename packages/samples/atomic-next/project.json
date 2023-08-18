@@ -1,3 +1,21 @@
 {
-  "name": "atomic-next-samples"
+  "name": "atomic-next-samples",
+  "targets": {
+    "cached:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx next build",
+          "tsc --noEmit",
+          "tsc --module commonjs --noEmit"
+        ],
+        "parallel": true,
+        "cwd": "packages/samples/atomic-next"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
 }

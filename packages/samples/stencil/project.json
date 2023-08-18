@@ -1,10 +1,8 @@
 {
   "name": "atomic-stencil-samples",
   "namedInputs": {
-    "production": [
-      "sharedGlobals",
-      "sharedTypescriptSources",
-      "{projectRoot}/stencil.config.ts",
+    "negativeBuildOutputs": [
+      "!{projectRoot}/www",
       "!{projectRoot}/src/components.d.ts"
     ]
   },

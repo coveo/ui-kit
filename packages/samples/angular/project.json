@@ -1,3 +1,18 @@
 {
-  "name": "atomic-angular-samples"
+  "name": "atomic-angular-samples",
+  "targets": {
+    "cached:build": {
+      "dependsOn": ["^build", "clean"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run build:assets", "npm run build:angular"],
+        "parallel": false,
+        "cwd": "packages/samples/angular"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
 }

@@ -1,3 +1,18 @@
 {
-  "name": "atomic-vuejs-samples"
+  "name": "atomic-vuejs-samples",
+  "targets": {
+    "cached:build": {
+      "dependsOn": ["^build", "clean"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run build:assets", "npm run build:vue"],
+        "parallel": false,
+        "cwd": "packages/samples/vuejs"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
 }

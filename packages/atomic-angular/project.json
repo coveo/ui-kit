@@ -1,6 +1,19 @@
 {
   "name": "atomic-angular-builder",
   "targets": {
+    "cached:build": {
+      "dependsOn": ["^build", "clean"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run build:bundles", "npm run build:assets"],
+        "parallel": false,
+        "cwd": "packages/atomic-angular"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    },
     "release:phase1": {
       "executor": "nx:run-commands",
       "options": {
@@ -11,12 +24,12 @@
     "release:phase2": {
       "executor": "nx:run-commands",
       "options": {
-        "parallel": false,
         "commands": [
           "cp ../../../../../.npmrc .",
           "npm link ../../../../../node_modules/@coveo/release",
           "npx -p=@coveo/release npm-publish"
         ],
+        "parallel": true,
         "cwd": "packages/atomic-angular/projects/atomic-angular/dist"
       }
     }

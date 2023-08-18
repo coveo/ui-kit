@@ -1,3 +1,17 @@
 {
-  "name": "headless-react-samples"
+  "name": "headless-react-samples",
+  "targets": {
+    "cached:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run build:client", "npm run build:server"],
+        "parallel": true,
+        "cwd": "packages/samples/headless-react"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
 }

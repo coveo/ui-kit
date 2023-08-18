@@ -19,7 +19,7 @@
     "typescript": "4.6.4"
   },
   "scripts": {
-    "build": "tsc --noEmit && tsc --module commonjs --noEmit",
+    "build": "nx build",
     "dev": "npm run build:assets && npm run dev:nextjs",
     "dev:nextjs": "next dev",
     "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",

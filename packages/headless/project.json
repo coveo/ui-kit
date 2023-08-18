@@ -1,1 +1,28 @@
-{}
+{
+  "namedInputs": {
+    "negativeBuildOutputs": [
+      "!{projectRoot}/dist",
+      "!{projectRoot}/temp",
+      "!{workspaceRoot}/packages/atomic/src/external-builds"
+    ]
+  },
+  "targets": {
+    "cached:build": {
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/temp",
+        "packages/atomic/src/external-builds"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run build:prod", "npm run build:doc"],
+        "parallel": false,
+        "cwd": "packages/headless"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
+}

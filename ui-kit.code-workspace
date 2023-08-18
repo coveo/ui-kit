@@ -108,7 +108,6 @@
     "jest.autoRevealOutput": "off",
     "npm.packageManager": "npm",
     "files.exclude": {
-      "**/node_modules/": true,
       "packages/": true,
       "utils/": true
     },

@@ -1,9 +1,9 @@
 {
   "namedInputs": {
-    "production": [
-      "sharedGlobals",
-      "sharedTypescriptSources",
-      "{projectRoot}/stencil.config.ts",
+    "negativeBuildOutputs": [
+      "!{projectRoot}/dist",
+      "!{projectRoot}/www",
+      "!{projectRoot}/loader",
       "!{projectRoot}/src/components.d.ts"
     ]
   },
