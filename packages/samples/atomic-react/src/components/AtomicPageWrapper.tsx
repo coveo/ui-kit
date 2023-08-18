@@ -36,9 +36,13 @@ import {
   Bindings,
   AtomicSearchBoxQuerySuggestions,
   getOrganizationEndpoints,
+  SearchEngineConfiguration,
+  getSampleSearchEngineConfiguration,
   loadAdvancedSearchQueryActions,
 } from '@coveo/atomic-react';
 import React, {FunctionComponent, useMemo} from 'react';
+
+type Sample = 'service' | 'electronics';
 
 type Options = {
   instantResults?: boolean;
@@ -48,13 +52,37 @@ type Options = {
   searchHub?: string;
 };
 type Props = {
+  sample: Sample;
   accessToken: string;
   organizationId: string;
   options?: Options;
   children: React.ReactNode;
 };
 
+function getElectronicsConfiguration(): SearchEngineConfiguration {
+  const accessToken = 'xxc23ce82a-3733-496e-b37e-9736168c4fd9';
+  const organizationId = 'electronicscoveodemocomo0n2fu8v';
+  const pipeline = 'UI_KIT_E2E';
+  const searchHub = 'UI_KIT_E2E';
+  return {
+    accessToken,
+    organizationId,
+    organizationEndpoints: getOrganizationEndpoints(organizationId),
+    search: {pipeline, searchHub},
+  };
+}
+
+function getConfigurationForSample(sample: Sample) {
+  switch (sample) {
+    case 'service':
+      return getSampleSearchEngineConfiguration();
+    case 'electronics':
+      return getElectronicsConfiguration();
+  }
+}
+
 export const AtomicPageWrapper: FunctionComponent<Props> = ({
+  sample,
   accessToken,
   organizationId,
   options = {pipeline: 'Search', searchHub: 'MainSearch'},
@@ -73,6 +101,13 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
       },
     });
   }, [accessToken, organizationId, options.pipeline, options.searchHub]);
+  const engine = useMemo(
+    () =>
+      buildSearchEngine({
+        configuration: getConfigurationForSample(sample),
+      }),
+    [sample]
+  );
 
   if (options.advancedQuery) {
     const action = loadAdvancedSearchQueryActions(

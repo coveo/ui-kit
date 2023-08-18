@@ -1,30 +1,43 @@
 import {configuration} from '../../app/common-reducers';
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
+import {toggleSelectAutomaticFacetValue} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
 import {
+  toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../features/facets/facet-set/facet-set-actions';
 import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
-import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {
+  toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {dateFacetSetReducer as dateFacetSet} from '../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {
+  toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {executeSearch} from '../../features/search/search-actions';
 import {searchReducer as search} from '../../features/search/search-slice';
 import {getSearchInitialState} from '../../features/search/search-state';
-import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
+import {
+  toggleExcludeStaticFilterValue,
+  toggleSelectStaticFilterValue,
+} from '../../features/static-filter-set/static-filter-set-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
 } from '../../test';
+import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response';
+import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response';
 import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
@@ -43,6 +56,7 @@ import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {
+  AutomaticFacetBreadcrumb,
   BreadcrumbManager,
   CategoryFacetBreadcrumb,
   DateFacetBreadcrumb,
@@ -146,7 +160,32 @@ describe('headless breadcrumb manager', () => {
       );
     });
 
-    it('dispatches a toggleSelectFacetValue action when #deselectBreadcrumb is called', () => {
+    it('dispatches an executeSearch action on exclusion', () => {
+      facetBreadcrumbs[0].values[0].deselect();
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
+
+    it('dispatches an toggleExcludeFacetValue action on exclusion', () => {
+      facetBreadcrumbs[0].values[0].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleSelectFacetValue({
+          facetId,
+          selection: mockSelectedValue,
+        })
+      );
+    });
+
+    it('dispatches an updateFreezeCurrentValues action on exclusion', () => {
+      facetBreadcrumbs[0].values[0].deselect();
+      expect(engine.actions).toContainEqual(
+        updateFreezeCurrentValues({
+          facetId,
+          freezeCurrentValues: false,
+        })
+      );
+    });
+
+    it('dispatches a toggleSelectFacetValue action when #deselectBreadcrumb is called for a selected facet value', () => {
       breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[0]);
       expect(engine.actions).toContainEqual(
         toggleSelectFacetValue({
@@ -155,14 +194,26 @@ describe('headless breadcrumb manager', () => {
         })
       );
     });
+
+    it('dispatches a toggleExcludeFacetValue action when #deselectBreadcrumb is called for an excluded facet value', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[1]);
+      expect(engine.actions).toContainEqual(
+        toggleExcludeFacetValue({
+          facetId,
+          selection: mockExcludedValue,
+        })
+      );
+    });
   });
 
   describe('date facet breadcrumbs', () => {
     let mockSelectedValue: DateFacetValue;
+    let mockExcludedValue: DateFacetValue;
     let facetBreadcrumbs: DateFacetBreadcrumb[];
 
     beforeEach(() => {
       mockSelectedValue = buildMockDateFacetValue({state: 'selected'});
+      mockExcludedValue = buildMockDateFacetValue({state: 'excluded'});
 
       state = createMockState({
         search: {
@@ -172,7 +223,7 @@ describe('headless breadcrumb manager', () => {
             facets: [
               buildMockDateFacetResponse({
                 facetId,
-                values: [mockSelectedValue],
+                values: [mockSelectedValue, mockExcludedValue],
               }),
             ],
           },
@@ -190,6 +241,7 @@ describe('headless breadcrumb manager', () => {
 
     it('#state gets date facet breadcrumbs correctly', () => {
       expect(facetBreadcrumbs[0].values[0].value).toBe(mockSelectedValue);
+      expect(facetBreadcrumbs[0].values[1].value).toBe(mockExcludedValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -207,7 +259,7 @@ describe('headless breadcrumb manager', () => {
       );
     });
 
-    it('dispatches a toggleSelectDateFacetValue action when #deselectBreadcrumb is called', () => {
+    it('dispatches a toggleSelectDateFacetValue action when #deselectBreadcrumb is called for a selected facet value', () => {
       breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[0]);
       expect(engine.actions).toContainEqual(
         toggleSelectDateFacetValue({
@@ -216,14 +268,26 @@ describe('headless breadcrumb manager', () => {
         })
       );
     });
+
+    it('dispatches a toggleExcludeDateFacetValue action when #deselectBreadcrumb is called for an excluded facet value', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[1]);
+      expect(engine.actions).toContainEqual(
+        toggleExcludeDateFacetValue({
+          facetId,
+          selection: mockExcludedValue,
+        })
+      );
+    });
   });
 
   describe('numeric facet breadcrumbs', () => {
     let mockSelectedValue: NumericFacetValue;
+    let mockExcludedValue: NumericFacetValue;
     let facetBreadcrumbs: NumericFacetBreadcrumb[];
 
     beforeEach(() => {
       mockSelectedValue = buildMockNumericFacetValue({state: 'selected'});
+      mockExcludedValue = buildMockNumericFacetValue({state: 'excluded'});
 
       state = createMockState({
         search: {
@@ -233,7 +297,7 @@ describe('headless breadcrumb manager', () => {
             facets: [
               buildMockNumericFacetResponse({
                 facetId,
-                values: [mockSelectedValue],
+                values: [mockSelectedValue, mockExcludedValue],
               }),
             ],
           },
@@ -251,6 +315,7 @@ describe('headless breadcrumb manager', () => {
 
     it('#state gets numeric facet breadcrumbs correctly', () => {
       expect(facetBreadcrumbs[0].values[0].value).toBe(mockSelectedValue);
+      expect(facetBreadcrumbs[0].values[1].value).toBe(mockExcludedValue);
     });
 
     it('dispatches an executeSearch action on selection', () => {
@@ -258,8 +323,23 @@ describe('headless breadcrumb manager', () => {
       expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
     });
 
-    it('dispatches a toggleSelectNumericFacetValue action on selection', () => {
-      facetBreadcrumbs[0].values[0].deselect();
+    it('dispatches an executeSearch action on exclusion', () => {
+      facetBreadcrumbs[0].values[1].deselect();
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
+
+    it('dispatches a toggleExcludeNumericFacetValue action on exclusion', () => {
+      facetBreadcrumbs[0].values[1].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleExcludeNumericFacetValue({
+          facetId,
+          selection: mockExcludedValue,
+        })
+      );
+    });
+
+    it('dispatches a toggleSelectNumericFacetValue action when #deselectBreadcrumb is called for a selected facet value', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[0]);
       expect(engine.actions).toContainEqual(
         toggleSelectNumericFacetValue({
           facetId,
@@ -267,13 +347,12 @@ describe('headless breadcrumb manager', () => {
         })
       );
     });
-
-    it('dispatches a toggleSelectNumericFacetValue action when #deselectBreadcrumb is called', () => {
-      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[0]);
+    it('dispatches a toggleExcludeNumericFacetValue action when #deselectBreadcrumb is called for an excluded facet value', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[1]);
       expect(engine.actions).toContainEqual(
-        toggleSelectNumericFacetValue({
+        toggleExcludeNumericFacetValue({
           facetId,
-          selection: mockSelectedValue,
+          selection: mockExcludedValue,
         })
       );
     });
@@ -339,7 +418,7 @@ describe('headless breadcrumb manager', () => {
       );
     });
 
-    it('dispatches a deselectAllCategoryFacetValues action when #deselectBreadcrumb is called', () => {
+    it('dispatches a deselectAllCategoryFacetValues action when #deselectBreadcrumb is called for a selected facet value', () => {
       breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0]);
       expect(engine.actions).toContainEqual(
         deselectAllCategoryFacetValues(facetId)
@@ -354,10 +433,17 @@ describe('headless breadcrumb manager', () => {
       caption: 'c',
       state: 'selected',
     });
+    const excluded = buildMockStaticFilterValue({
+      caption: 'd',
+      state: 'excluded',
+    });
 
     beforeEach(() => {
       state.staticFilterSet = {
-        [id]: buildMockStaticFilterSlice({id, values: [idle, selected]}),
+        [id]: buildMockStaticFilterSlice({
+          id,
+          values: [idle, selected, excluded],
+        }),
       };
     });
 
@@ -369,8 +455,10 @@ describe('headless breadcrumb manager', () => {
       expect(firstFilter.id).toBe(id);
 
       const {values} = firstFilter;
-      expect(values.length).toBe(1);
+      expect(values.length).toBe(2);
+
       expect(values[0].value.caption).toBe(selected.caption);
+      expect(values[1].value.caption).toBe(excluded.caption);
     });
 
     it('#state.hasBreadcrumbs returns true', () => {
@@ -378,25 +466,96 @@ describe('headless breadcrumb manager', () => {
     });
 
     describe('#deselectBreadcrumb with a static filter breadcrumb value dispatches the correct actions', () => {
-      beforeEach(() => {
-        const {staticFilterBreadcrumbs} = breadcrumbManager.state;
-        const [firstBreadcrumb] = staticFilterBreadcrumbs[0].values;
-
-        breadcrumbManager.deselectBreadcrumb(firstBreadcrumb);
-      });
-
-      it('dispatches #toggleSelectStaticFilterValue', () => {
-        const toggleSelect = toggleSelectStaticFilterValue({
-          id,
-          value: selected,
+      describe('#selected values', () => {
+        beforeEach(() => {
+          const {staticFilterBreadcrumbs} = breadcrumbManager.state;
+          const [selectedBreadcrumb] = staticFilterBreadcrumbs[0].values;
+          breadcrumbManager.deselectBreadcrumb(selectedBreadcrumb);
         });
-        expect(engine.actions).toContainEqual(toggleSelect);
+
+        it('dispatches #toggleSelectStaticFilterValue', () => {
+          const toggleSelect = toggleSelectStaticFilterValue({
+            id,
+            value: selected,
+          });
+          expect(engine.actions).toContainEqual(toggleSelect);
+        });
+
+        it('dispatches #executeSearch', () => {
+          const action = engine.findAsyncAction(executeSearch.pending);
+          expect(action).toBeTruthy();
+        });
       });
 
-      it('dispatches #executeSearch', () => {
-        const action = engine.findAsyncAction(executeSearch.pending);
-        expect(action).toBeTruthy();
+      describe('#excluded values', () => {
+        beforeEach(() => {
+          const {staticFilterBreadcrumbs} = breadcrumbManager.state;
+          const [, excludedBreadcrumb] = staticFilterBreadcrumbs[0].values;
+          breadcrumbManager.deselectBreadcrumb(excludedBreadcrumb);
+        });
+
+        it('dispatches #toggleExcludeStaticFilterValue', () => {
+          const toggleExclude = toggleExcludeStaticFilterValue({
+            id,
+            value: excluded,
+          });
+          expect(engine.actions).toContainEqual(toggleExclude);
+        });
+
+        it('dispatches #executeSearch', () => {
+          const action = engine.findAsyncAction(executeSearch.pending);
+          expect(action).toBeTruthy();
+        });
       });
+    });
+  });
+
+  describe('automatic facet breadcrumbs', () => {
+    let mockSelectedValue: FacetValue;
+    let automaticFacetBreadcrumbs: AutomaticFacetBreadcrumb[];
+
+    beforeEach(() => {
+      mockSelectedValue = buildMockFacetValue({state: 'selected'});
+
+      state = createMockState({
+        automaticFacetSet: {
+          desiredCount: 1,
+          numberOfValues: 8,
+          set: {
+            [facetId]: buildMockAutomaticFacetSlice({
+              response: buildMockAutomaticFacetResponse({
+                field: facetId,
+                values: [mockSelectedValue],
+              }),
+            }),
+          },
+        },
+      });
+      initController();
+
+      automaticFacetBreadcrumbs =
+        breadcrumbManager.state.automaticFacetBreadcrumbs;
+    });
+
+    it('#state get automatic facet breadcrumbs correctly', () => {
+      expect(automaticFacetBreadcrumbs[0].values[0].value).toBe(
+        mockSelectedValue
+      );
+    });
+
+    it('dispatches an executeSearch action on selection', () => {
+      automaticFacetBreadcrumbs[0].values[0].deselect();
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
+
+    it('dispatches an toggleSelectAutomaticFacetValue action on selection', () => {
+      automaticFacetBreadcrumbs[0].values[0].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleSelectAutomaticFacetValue({
+          field: facetId,
+          selection: mockSelectedValue,
+        })
+      );
     });
   });
 
@@ -411,7 +570,18 @@ describe('headless breadcrumb manager', () => {
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
   });
 
-  it('hasBreadcrumbs returns false when no facet value is selected', () => {
+  it('hasBreadcrumbs returns true when a facet value is excluded', () => {
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
+      request: buildMockNumericFacetRequest({facetId}),
+    });
+    const mockSelectedValue = buildMockNumericFacetValue({state: 'excluded'});
+    state.search.response.facets = [
+      buildMockNumericFacetResponse({facetId, values: [mockSelectedValue]}),
+    ];
+    expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
+  });
+
+  it('hasBreadcrumbs returns false when no facet value is selected or excluded', () => {
     state.search.response.facets = [];
     expect(breadcrumbManager.state.hasBreadcrumbs).toBe(false);
   });

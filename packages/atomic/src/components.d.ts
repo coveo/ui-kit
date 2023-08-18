@@ -9,7 +9,7 @@ import { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedR
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
+import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout, ResultTarget } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
@@ -40,15 +40,24 @@ export namespace Components {
         "isCollapsed": boolean;
         "searchStatus": SearchStatus;
     }
-    interface AtomicAutomaticFacetBuilder {
+    interface AtomicAutomaticFacetGenerator {
         /**
           * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  Specifies whether the automatic facets are collapsed.
          */
         "areCollapsed": boolean;
         /**
-          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets. Must be a positive integer.
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets.  Minimum: `1` Maximum: `10`
+          * @defaultValue `5`
          */
         "desiredCount": number;
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired number of automatically generated facet values.  Minimum: `1`
+          * @defaultValue `8`
+         */
+        "numberOfValues": number;
+    }
+    interface AtomicAutomaticFacetSlotContent {
+        "isThereStaticFacets": boolean;
     }
     interface AtomicBreadbox {
     }
@@ -654,7 +663,7 @@ export namespace Components {
          */
         "inheritTemplates": boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText": string;
     }
@@ -1214,6 +1223,11 @@ export namespace Components {
          */
         "display": ResultDisplayBasicLayout;
         /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget": ResultTarget;
+        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
         "headingLevel": number;
@@ -1400,7 +1414,7 @@ export namespace Components {
          */
         "inheritTemplates": boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText": string;
     }
@@ -1467,6 +1481,11 @@ export namespace Components {
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
         "display": ResultDisplayLayout;
+        /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget": ResultTarget;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -1857,6 +1876,7 @@ export namespace Components {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
+        "anchorAttributes"?: Attr[];
         "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
@@ -2053,11 +2073,17 @@ declare global {
         prototype: HTMLAtomicAutomaticFacetElement;
         new (): HTMLAtomicAutomaticFacetElement;
     };
-    interface HTMLAtomicAutomaticFacetBuilderElement extends Components.AtomicAutomaticFacetBuilder, HTMLStencilElement {
+    interface HTMLAtomicAutomaticFacetGeneratorElement extends Components.AtomicAutomaticFacetGenerator, HTMLStencilElement {
     }
-    var HTMLAtomicAutomaticFacetBuilderElement: {
-        prototype: HTMLAtomicAutomaticFacetBuilderElement;
-        new (): HTMLAtomicAutomaticFacetBuilderElement;
+    var HTMLAtomicAutomaticFacetGeneratorElement: {
+        prototype: HTMLAtomicAutomaticFacetGeneratorElement;
+        new (): HTMLAtomicAutomaticFacetGeneratorElement;
+    };
+    interface HTMLAtomicAutomaticFacetSlotContentElement extends Components.AtomicAutomaticFacetSlotContent, HTMLStencilElement {
+    }
+    var HTMLAtomicAutomaticFacetSlotContentElement: {
+        prototype: HTMLAtomicAutomaticFacetSlotContentElement;
+        new (): HTMLAtomicAutomaticFacetSlotContentElement;
     };
     interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
     }
@@ -2866,7 +2892,8 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
         "atomic-automatic-facet": HTMLAtomicAutomaticFacetElement;
-        "atomic-automatic-facet-builder": HTMLAtomicAutomaticFacetBuilderElement;
+        "atomic-automatic-facet-generator": HTMLAtomicAutomaticFacetGeneratorElement;
+        "atomic-automatic-facet-slot-content": HTMLAtomicAutomaticFacetSlotContentElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
@@ -3013,15 +3040,24 @@ declare namespace LocalJSX {
         "isCollapsed": boolean;
         "searchStatus": SearchStatus;
     }
-    interface AtomicAutomaticFacetBuilder {
+    interface AtomicAutomaticFacetGenerator {
         /**
           * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  Specifies whether the automatic facets are collapsed.
          */
         "areCollapsed"?: boolean;
         /**
-          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets. Must be a positive integer.
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired count of automatic facets.  Minimum: `1` Maximum: `10`
+          * @defaultValue `5`
          */
         "desiredCount": number;
+        /**
+          * @beta - This prop is part of the automatic facets feature. Automatic facets are currently in beta testing and should be available soon.  The desired number of automatically generated facet values.  Minimum: `1`
+          * @defaultValue `8`
+         */
+        "numberOfValues"?: number;
+    }
+    interface AtomicAutomaticFacetSlotContent {
+        "isThereStaticFacets": boolean;
     }
     interface AtomicBreadbox {
     }
@@ -3606,7 +3642,7 @@ declare namespace LocalJSX {
          */
         "inheritTemplates"?: boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText"?: string;
     }
@@ -4139,6 +4175,11 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayBasicLayout;
         /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget"?: ResultTarget;
+        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
          */
         "headingLevel"?: number;
@@ -4309,7 +4350,7 @@ declare namespace LocalJSX {
          */
         "inheritTemplates"?: boolean;
         /**
-          * The non-localized copy for an empty result state.
+          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
          */
         "noResultText"?: string;
     }
@@ -4372,6 +4413,11 @@ declare namespace LocalJSX {
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
         "display"?: ResultDisplayLayout;
+        /**
+          * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)). This property is only leveraged when `display` is `grid`.
+          * @defaultValue `_self`
+         */
+        "gridCellLinkTarget"?: ResultTarget;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -4745,6 +4791,7 @@ declare namespace LocalJSX {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
+        "anchorAttributes"?: Attr[];
         "onBeginDelayedSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
@@ -4859,7 +4906,8 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
         "atomic-automatic-facet": AtomicAutomaticFacet;
-        "atomic-automatic-facet-builder": AtomicAutomaticFacetBuilder;
+        "atomic-automatic-facet-generator": AtomicAutomaticFacetGenerator;
+        "atomic-automatic-facet-slot-content": AtomicAutomaticFacetSlotContent;
         "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-color-facet": AtomicColorFacet;
@@ -5002,7 +5050,8 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "atomic-aria-live": LocalJSX.AtomicAriaLive & JSXBase.HTMLAttributes<HTMLAtomicAriaLiveElement>;
             "atomic-automatic-facet": LocalJSX.AtomicAutomaticFacet & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetElement>;
-            "atomic-automatic-facet-builder": LocalJSX.AtomicAutomaticFacetBuilder & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetBuilderElement>;
+            "atomic-automatic-facet-generator": LocalJSX.AtomicAutomaticFacetGenerator & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetGeneratorElement>;
+            "atomic-automatic-facet-slot-content": LocalJSX.AtomicAutomaticFacetSlotContent & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetSlotContentElement>;
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;

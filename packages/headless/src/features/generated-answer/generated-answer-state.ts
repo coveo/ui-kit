@@ -2,6 +2,7 @@ import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answ
 
 export interface GeneratedAnswerState {
   isLoading: boolean;
+  isStreaming: boolean;
   answer?: string;
   citations: GeneratedAnswerCitation[];
   liked: boolean;
@@ -16,6 +17,7 @@ export interface GeneratedAnswerState {
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
     isLoading: false,
+    isStreaming: false,
     citations: [],
     liked: false,
     disliked: false,

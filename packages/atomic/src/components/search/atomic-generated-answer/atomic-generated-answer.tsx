@@ -113,6 +113,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
           <GeneratedContent
             answer={this.generatedAnswerState.answer}
             citations={this.generatedAnswerState.citations}
+            isStreaming={this.generatedAnswerState.isStreaming}
             citationsLabel={this.bindings.i18n.t('more-info')}
             onCitationClick={(citation) =>
               this.generatedAnswer.logCitationClick(citation.id)

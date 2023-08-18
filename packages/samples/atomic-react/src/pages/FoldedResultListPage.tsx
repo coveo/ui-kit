@@ -27,6 +27,7 @@ export const FoldedResultListPage: FunctionComponent = () => {
       organizationId="searchuisamples"
       options={{advancedQuery: '@source=iNaturalistTaxons', pipeline: ''}}
     >
+    <AtomicPageWrapper sample="service">
       <AtomicFoldedResultList imageSize="large" template={MyTemplate} />
     </AtomicPageWrapper>
   );

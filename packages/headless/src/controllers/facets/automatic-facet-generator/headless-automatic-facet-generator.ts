@@ -1,7 +1,7 @@
 import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {setDesiredCount} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
+import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
 import {searchReducer as search} from '../../../features/search/search-slice';
 import {
@@ -18,18 +18,23 @@ import {
   AutomaticFacet,
   buildAutomaticFacet,
 } from '../automatic-facet/headless-automatic-facet';
+import {
+  AutomaticFacetGeneratorOptions,
+  buildOptions,
+} from './headless-automatic-facet-generator-options';
 
+export type {AutomaticFacetGeneratorOptions};
 /**
- * The `AutomaticFacetBuilder` headless controller offers a high-level interface for rendering automatic facets.
+ * The `AutomaticFacetGenerator` headless controller offers a high-level interface for rendering automatic facets.
  */
-export interface AutomaticFacetBuilder extends Controller {
+export interface AutomaticFacetGenerator extends Controller {
   /**
-   * The state of the `AutomaticFacetBuilder` controller.
+   * The state of the `AutomaticFacetGenerator` controller.
    */
-  state: AutomaticFacetBuilderState;
+  state: AutomaticFacetGeneratorState;
 }
 
-export interface AutomaticFacetBuilderState {
+export interface AutomaticFacetGeneratorState {
   /**
    * @beta - This property is part of the automatic facets feature.
    * Automatic facets are currently in beta testing and should be available soon.
@@ -39,36 +44,34 @@ export interface AutomaticFacetBuilderState {
   automaticFacets: AutomaticFacet[];
 }
 
-export interface AutomaticFacetBuilderProps {
+export interface AutomaticFacetGeneratorProps {
   /**
-   * @beta - This property is part of the automatic facets feature.
-   * Automatic facets are currently in beta testing and should be available soon.
-   *
-   * The desired count of automatic facets.
-   * Must be a positive integer.
-   */
-  desiredCount: number;
+   * The options for the `AutomaticFacetGenerator` controller.
+   * */
+  options: AutomaticFacetGeneratorOptions;
 }
 
 /**
  * @beta - This function is part of the automatic facets feature.
  * Automatic facets are currently in beta testing and should be available soon.
  *
- * Creates a `AutomaticFacetBuilder` instance.
+ * Creates a `AutomaticFacetGenerator` instance.
  *
  * @param engine - The headless engine.
  * @param props - The automatic facets props. Automatic facets are currently in beta testing and should be available soon.
- * @returns A `AutomaticFacetBuilder` controller instance.
+ * @returns A `AutomaticFacetGenerator` controller instance.
  */
-export function buildAutomaticFacetBuilder(
+export function buildAutomaticFacetGenerator(
   engine: SearchEngine,
-  props: AutomaticFacetBuilderProps
-): AutomaticFacetBuilder {
-  if (!loadAutomaticFacetBuilderReducers(engine)) {
+  props: AutomaticFacetGeneratorProps
+): AutomaticFacetGenerator {
+  if (!loadAutomaticFacetGeneratorReducers(engine)) {
     throw loadReducerError;
   }
+
   const {dispatch} = engine;
-  dispatch(setDesiredCount(props.desiredCount));
+  const options = buildOptions(props.options);
+  dispatch(setOptions(options));
 
   const controller = buildController(engine);
 
@@ -77,9 +80,9 @@ export function buildAutomaticFacetBuilder(
 
     get state() {
       const automaticFacets =
-        engine.state.search.response.generateAutomaticFacets.facets.map(
+        engine.state.search.response.generateAutomaticFacets?.facets.map(
           (facet) => buildAutomaticFacet(engine, {field: facet.field})
-        );
+        ) ?? [];
       return {
         automaticFacets,
       };
@@ -87,7 +90,7 @@ export function buildAutomaticFacetBuilder(
   };
 }
 
-function loadAutomaticFacetBuilderReducers(
+function loadAutomaticFacetGeneratorReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
   AutomaticFacetSection & ConfigurationSection & SearchSection

@@ -1,6 +1,6 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
 import * as CommonAssertions from '../../common-assertions';
-import {addAutomaticFacetBuilder} from '../automatic-facet-builder/automatic-facet-builder-actions';
+import {addAutomaticFacetGenerator} from '../automatic-facet-generator/automatic-facet-generator-actions';
 import * as AutomaticFacetAssertions from '../automatic-facet/automatic-facet-assertions';
 import {
   pressClearButton,
@@ -16,7 +16,7 @@ describe('Automatic Facet Test Suites', () => {
   function setup() {
     new TestFixture()
       .with(
-        addAutomaticFacetBuilder({
+        addAutomaticFacetGenerator({
           'desired-count': '1',
           'are-collapsed': 'false',
         })
@@ -43,6 +43,51 @@ describe('Automatic Facet Test Suites', () => {
       AutomaticFacetSelectors,
       false
     );
+  });
+
+  describe('verify label', () => {
+    const fieldName = 'field';
+    function setupForLabelLogic(responseLabel: string | undefined) {
+      new TestFixture()
+        .with(
+          addAutomaticFacetGenerator({
+            'desired-count': '1',
+            'are-collapsed': 'false',
+          })
+        )
+        .withCustomResponse((r) => {
+          r.generateAutomaticFacets = {
+            facets: [
+              {
+                field: fieldName,
+                label: responseLabel,
+                values: [],
+              },
+            ],
+          };
+        })
+        .init();
+    }
+
+    describe('when it is defined in the response', () => {
+      beforeEach(() => setupForLabelLogic('label'));
+
+      AutomaticFacetAssertions.assertLabel(
+        AutomaticFacetSelectors,
+        'label',
+        'label'
+      );
+    });
+
+    describe('when it is undefined in the response', () => {
+      beforeEach(() => setupForLabelLogic(undefined));
+
+      AutomaticFacetAssertions.assertLabel(
+        AutomaticFacetSelectors,
+        fieldName,
+        'field'
+      );
+    });
   });
 
   describe('when selecting a value', () => {

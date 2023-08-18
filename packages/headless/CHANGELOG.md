@@ -1,3 +1,72 @@
+## 2.26.1 (2023-08-16)
+
+### Bug Fixes
+
+- **headless:** fixed ssr type inference ([#3098](https://github.com/coveo/ui-kit/issues/3098)) ([804af40](https://github.com/coveo/ui-kit/commits/804af40141ee0c3cc680ab1cc5a3a7ac4e62c155))
+
+### Features
+
+- **headless:** add categoryFacet/updateBasePath action ([#3077](https://github.com/coveo/ui-kit/issues/3077)) ([304b550](https://github.com/coveo/ui-kit/commits/304b55096b0a244dc05630e06e2399dff7eeeb89))
+- **headless:** added defineResultList SSR controller ([#3099](https://github.com/coveo/ui-kit/issues/3099)) ([9fce780](https://github.com/coveo/ui-kit/commits/9fce7809eacb97387ba1b1523cbf678f949bdfef))
+
+## 2.25.1 (2023-08-10)
+
+### Bug Fixes
+
+- **atomic,headless:** add maximum value of 10 for 'desiredCount' ([#3089](https://github.com/coveo/ui-kit/issues/3089)) ([35bb410](https://github.com/coveo/ui-kit/commits/35bb4104eb9e31ec3e398f3b3fedc7ff714e4f9b))
+- **headless:** make the generated answer interface extend from the controller interface ([#3085](https://github.com/coveo/ui-kit/issues/3085)) ([62b6709](https://github.com/coveo/ui-kit/commits/62b6709f8d363886883f26a7aa7d0b6c748437db))
+
+### Performance Improvements
+
+- **headless:** remove non-selected values in automatic facet request ([#3088](https://github.com/coveo/ui-kit/issues/3088)) ([acc2574](https://github.com/coveo/ui-kit/commits/acc257458b7607f27e7c5ca28e0419942527558c))
+
+# 2.25.0 (2023-08-09)
+
+### Bug Fixes
+
+- **headless:** back/forward on first selection of an automatic facet ([#3062](https://github.com/coveo/ui-kit/issues/3062)) ([4b69228](https://github.com/coveo/ui-kit/commits/4b692285332fe505ee7f3231d62ef6dd094e3996))
+
+### Features
+
+- scaffold initial headless sub-package for server-side rendering utils ([#3064](https://github.com/coveo/ui-kit/issues/3064)) ([c82d62c](https://github.com/coveo/ui-kit/commits/c82d62c568292f197f67c59df5608ae998b86c4d))
+
+# 2.24.0 (2023-08-02)
+
+### Bug Fixes
+
+- **test:** fix false positives from remove component assertion ([#3053](https://github.com/coveo/ui-kit/issues/3053)) ([23e5f0b](https://github.com/coveo/ui-kit/commits/23e5f0bf9a39cd6e7f704dcb66050ad1ac06fc50))
+
+### Features
+
+- **atomic, headless:** add breadbox support for automatic facets ([#3048](https://github.com/coveo/ui-kit/issues/3048)) ([1958cc6](https://github.com/coveo/ui-kit/commits/1958cc6e9ff8626f80b9f38ecd4514e15be6a4f9))
+- **headless:** send clientId instead of visitorId in case assist ([#3067](https://github.com/coveo/ui-kit/issues/3067)) ([4370fdd](https://github.com/coveo/ui-kit/commits/4370fdd7fd77d31f9af1d5aeaa097a4eea6b2757))
+
+# 2.23.0 (2023-07-27)
+
+### Bug Fixes
+
+- **headless:** fixed analytics metadata for instant results search ([#3058](https://github.com/coveo/ui-kit/issues/3058)) ([8e6f33a](https://github.com/coveo/ui-kit/commits/8e6f33ac17e567c0a20699b482a6c291b1212314))
+- **headless:** reset pagination when toggling automatic facet ([#3056](https://github.com/coveo/ui-kit/issues/3056)) ([2c3c4e4](https://github.com/coveo/ui-kit/commits/2c3c4e4c06df17b29a24faf797bfbc9869b0bb13))
+
+### Features
+
+- **headless:** add loadClickAnalyticsActions for PLP to fix interactive result ([#3049](https://github.com/coveo/ui-kit/issues/3049)) ([6f936ea](https://github.com/coveo/ui-kit/commits/6f936ea804f5251e919982b462f075ebbb80660b))
+- **headless:** add url manager support for automatic facets ([#3033](https://github.com/coveo/ui-kit/issues/3033)) ([0e85aca](https://github.com/coveo/ui-kit/commits/0e85aca2123d0acf0b0b03f374008f1e0f6792a0))
+- **headless:** breadcrumb manager facet exclusion ([#3043](https://github.com/coveo/ui-kit/issues/3043)) ([21d8259](https://github.com/coveo/ui-kit/commits/21d8259f37b9431c1c758a0bb68956d23cde1e5f))
+
+# 2.22.0 (2023-07-19)
+
+### Bug Fixes
+
+- **headless:** Issues when loading a collection from different pages in the HIP ([#3029](https://github.com/coveo/ui-kit/issues/3029)) ([18c7b86](https://github.com/coveo/ui-kit/commits/18c7b86547237d7d7e32e9c0754ef9b2f4b528dd))
+
+### Features
+
+- **atomic:** add the singular automatic facet component ([#3021](https://github.com/coveo/ui-kit/issues/3021)) ([ed45748](https://github.com/coveo/ui-kit/commits/ed4574841f8a130d6e78cfa80365f2129514f31c))
+- **atomic:** added cursor effect and streamEnd event ([#3034](https://github.com/coveo/ui-kit/issues/3034)) ([9c5165d](https://github.com/coveo/ui-kit/commits/9c5165da35fe31ab685d64075fe95fe5339d5fab))
+- **headless:** isUserActionView property added to the result interface ([#3017](https://github.com/coveo/ui-kit/issues/3017)) ([e796ab8](https://github.com/coveo/ui-kit/commits/e796ab8c12116fe2297d3487475a1397fd06ebbc))
+- **headless:** support static filter value exclusion ([#3030](https://github.com/coveo/ui-kit/issues/3030)) ([1a6b08e](https://github.com/coveo/ui-kit/commits/1a6b08e222ec1b212328443cb53aa3b2caf8eb81))
+
 # 2.21.0 (2023-07-12)
 
 ### Bug Fixes
