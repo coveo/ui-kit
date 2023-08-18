@@ -3,6 +3,7 @@ import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
+  logFacetExclude,
 } from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
@@ -117,10 +118,16 @@ function logFacetAnalyticsAction(
   const addedIds = newIds.filter((id) => !previousIds.includes(id));
   if (addedIds.length) {
     const facetId = addedIds[0];
-    return logFacetSelect({
-      facetId,
-      facetValue: newFacets[facetId][0],
-    });
+    const facetValue = newFacets[facetId][0];
+    return facetValue === 'selected'
+      ? logFacetSelect({
+          facetId,
+          facetValue: facetValue,
+        })
+      : logFacetExclude({
+          facetId,
+          facetValue: facetValue,
+        });
   }
 
   const facetIdWithDifferentValues = newIds.find((key) =>
@@ -140,10 +147,15 @@ function logFacetAnalyticsAction(
   );
 
   if (addedValues.length) {
-    return logFacetSelect({
-      facetId: facetIdWithDifferentValues,
-      facetValue: addedValues[0],
-    });
+    return addedValues[0] === 'selected'
+      ? logFacetSelect({
+          facetId: facetIdWithDifferentValues,
+          facetValue: addedValues[0],
+        })
+      : logFacetExclude({
+          facetId: facetIdWithDifferentValues,
+          facetValue: addedValues[0],
+        });
   }
 
   const removedValues = previousValues.filter(
