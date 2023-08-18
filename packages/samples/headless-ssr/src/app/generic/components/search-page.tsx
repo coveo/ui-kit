@@ -21,11 +21,11 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
   }, [ssrState]);
   return (
     <>
-      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
       <ResultList
         initialState={ssrState.controllers.resultList.state}
         controller={csrResult?.controllers.resultList}
       />
+      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
     </>
   );
 }
