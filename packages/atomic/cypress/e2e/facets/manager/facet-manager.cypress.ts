@@ -134,7 +134,7 @@ describe('Facet Manager Test Suite', () => {
 
     it(`should only keep the first ${DEFAULT_COLLAPSE_FACETS_AFTER} facets expanded by default`, () => {
       setup({}, addFacetManagerWithBothTypesOfFacets);
-      assertHasNumberOfExpandedAutomaticFacets(collapsedStaticFacets);
+      assertHasNumberOfExpandedFacets(collapsedStaticFacets);
       assertHasNumberOfExpandedAutomaticFacets(
         DEFAULT_COLLAPSE_FACETS_AFTER - collapsedStaticFacets
       );
