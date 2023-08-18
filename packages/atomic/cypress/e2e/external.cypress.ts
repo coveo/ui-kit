@@ -3,6 +3,7 @@ import {RouteAlias, setupIntercepts} from '../fixtures/fixture-common';
 describe('External Test Suite', () => {
   describe('when modifying state of a component (search box) that is a child of an atomic-external component', () => {
     beforeEach(() => {
+      setupIntercepts();
       cy.visit('examples/external.html');
       cy.wait(RouteAlias.UA);
       cy.wait(RouteAlias.UA);
