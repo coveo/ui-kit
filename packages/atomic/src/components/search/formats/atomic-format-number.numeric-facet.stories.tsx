@@ -5,7 +5,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   'atomic-format-number',
   {},
   {
-    parentElement: () => {
+    parentElement: function () {
       const numericFacetElement = document.createElement(
         'atomic-numeric-facet'
       );

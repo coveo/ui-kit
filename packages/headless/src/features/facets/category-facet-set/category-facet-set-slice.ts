@@ -19,6 +19,7 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
   RegisterCategoryFacetActionCreatorPayload,
+  updateCategoryFacetBasePath,
 } from './category-facet-set-actions';
 import {
   CategoryFacetSetState,
@@ -72,6 +73,16 @@ export const categoryFacetSetReducer = createReducer(
         }
 
         request.sortCriteria = criterion;
+      })
+      .addCase(updateCategoryFacetBasePath, (state, action) => {
+        const {facetId, basePath} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request) {
+          return;
+        }
+
+        request.basePath = [...basePath];
       })
       .addCase(toggleSelectCategoryFacetValue, (state, action) => {
         const {facetId, selection, retrieveCount} = action.payload;

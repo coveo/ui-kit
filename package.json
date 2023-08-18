@@ -83,6 +83,9 @@
         "@lwc/jest-serializer": "11.4.0",
         "@lwc/jest-transformer": "11.4.0"
       }
+    },
+    "@coveo/atomic": {
+      "postcss": "8.4.27"
     }
   },
   "workspaces": [
@@ -114,17 +117,6 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
-    ]
-  },
-  "lint-staged": {
-    "**/*.{ts?(x),?(m)js} !(**/stencil-generated/*.ts)": [
-      "eslint --fix --max-warnings=0"
-    ],
-    "**/{*.{scss,css,pcss,html,md},{package,nx,project}.json}": [
-      "prettier --write"
-    ],
-    "**/*.md": [
-      "cspell --no-progress --show-suggestions --show-context --no-must-find-files"
     ]
   },
   "engines": {

@@ -4,10 +4,15 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": ["CHANGELOG.md"],
-  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
+  "ignorePaths": [
+    "CHANGELOG.md"
+  ],
+  "import": [
+    "@cspell/dict-fr-fr/cspell-ext.json"
+  ],
   "words": [
     "adjustednumberoflikes",
+    "Animalia",
     "ARROWUP",
     "Artemia",
     "Artemiidae",
@@ -15,6 +20,7 @@
     "bazz",
     "behaviour",
     "bloup",
+    "bpsb",
     "btoashim",
     "cfcomment",
     "cfpage",
@@ -23,6 +29,7 @@
     "childid",
     "clickableuri",
     "clientid",
+    "Columbellidae",
     "configurator",
     "constante",
     "Contextualizer",
@@ -35,17 +42,24 @@
     "coversationid",
     "Debouncer",
     "debouncers",
+    "dupl",
     "dynamicscrmitem",
     "Ecommerce",
     "electronicscoveodemocomo",
+    "ellipsed",
     "exchangedsn",
     "exchangemdn",
     "exchangerssfeed",
     "Expandto",
+    "fashioncoveodemocomgzh",
+    "genqa",
+    "ginglymos",
+    "Ginglymostomatidae",
     "gmailmessage",
     "gzipped",
     "headless",
     "IIFE",
+    "inat",
     "initializable",
     "inlink",
     "isloading",
@@ -60,6 +74,7 @@
     "kbsolution",
     "kbtechnicalarticle",
     "labelledby",
+    "lskdfjghsjdgfjsdgfhkjsdhfgkjsdgfksjdhgfkjsdgkjgdsfjh",
     "mdapi",
     "messageid",
     "metadatas",
@@ -89,6 +104,7 @@
     "notanactualfield",
     "nrwl",
     "Numberof",
+    "nusse",
     "omnibox",
     "ondeselect",
     "onhighlightchange",
@@ -130,6 +146,7 @@
     "sfpriority",
     "sfstatus",
     "sftitle",
+    "singhr",
     "skus",
     "slds",
     "sncost",
@@ -253,10 +270,12 @@
     "Unsubscriber",
     "uparrow",
     "upvoted",
+    "visi",
     "ytlikecount",
     "ytvideoduration",
     "ytvideoid",
     "ytviewcount",
-    "genqa"
+    "γίγγλυμος",
+    "στόμα"
   ]
 }

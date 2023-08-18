@@ -12,9 +12,9 @@ export const GeneratedAnswerSelectors = {
     GeneratedAnswerSelectors.shadow().find('.feedback-button.like'),
   dislikeButton: () =>
     GeneratedAnswerSelectors.shadow().find('.feedback-button.dislike'),
-  citation: () => GeneratedAnswerSelectors.shadow().find('.citation'),
+  citation: () => GeneratedAnswerSelectors.shadow().find('[part="citation"]'),
   citationsLabel: () =>
-    GeneratedAnswerSelectors.shadow().find('.citations-label'),
+    GeneratedAnswerSelectors.shadow().find('[part="citations-label"]'),
   citationTitle: () =>
     GeneratedAnswerSelectors.citation().find('.citation-title'),
   citationIndex: () =>
