@@ -20,7 +20,6 @@ export type SearchCSRState = InferCSRState<typeof engineDefinition>;
 export const {
   fetchInitialState,
   hydrateInitialState,
-  useEngine,
   SSRStateProvider,
   CSRProvider,
 } = engineDefinition;

@@ -31,8 +31,7 @@ export type ContextState<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 > =
   | ContextSSRState<TEngine, TControllers>
-  | ContextCSRState<TEngine, TControllers>
-  | null;
+  | ContextCSRState<TEngine, TControllers>;
 
 export type ControllerHook<TController extends Controller> = () => {
   state: TController['state'];

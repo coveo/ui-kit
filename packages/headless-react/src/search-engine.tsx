@@ -38,7 +38,7 @@ function isCSRContext<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 >(
-  ctx: Exclude<ContextState<TEngine, TControllers>, null>
+  ctx: ContextState<TEngine, TControllers>
 ): ctx is ContextCSRState<TEngine, TControllers> {
   return 'engine' in ctx;
 }
@@ -88,7 +88,10 @@ export function defineSearchEngine<
 >(
   options: SearchEngineDefinitionOptions<TControllers>
 ): ReactSearchEngineDefinition<TControllers> {
-  const context = createContext<ContextState<SearchEngine, TControllers>>(null);
+  const context = createContext<ContextState<
+    SearchEngine,
+    TControllers
+  > | null>(null);
 
   return {
     ...defineBaseSearchEngine({...options}),
@@ -103,7 +106,10 @@ export function defineSearchEngine<
       ? Object.fromEntries(
           Object.keys(options.controllers).map((key) => [
             `use${capitalize(key)}`,
-            buildControllerHook(context, key as keyof TControllers),
+            buildControllerHook(
+              context as Context<ContextState<SearchEngine<{}>, TControllers>>,
+              key as keyof TControllers
+            ),
           ])
         )
       : {}) as InferControllerHooksMapFromDefinition<TControllers>,
