@@ -5,7 +5,6 @@ import {
   InferSSRState,
   InferCSRState,
 } from '@coveo/headless/ssr';
-import exp from 'constants';
 
 const engineDefinition = defineSearchEngine({
   configuration: {

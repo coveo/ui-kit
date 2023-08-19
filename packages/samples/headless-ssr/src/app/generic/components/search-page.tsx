@@ -19,6 +19,7 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
       setCSRResult({engine, controllers});
     });
   }, [ssrState]);
+
   return (
     <>
       <ResultList

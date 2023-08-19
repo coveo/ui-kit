@@ -22,6 +22,14 @@ import {
   ReactSearchEngineDefinition,
 } from './types';
 
+export class MissingEngineProviderError extends Error {
+  constructor(
+    message = 'Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.'
+  ) {
+    super(message);
+  }
+}
+
 function capitalize(s: string) {
   return `${s.slice(0, 1).toUpperCase()}${s.slice(1)}`;
 }
@@ -46,7 +54,7 @@ function buildControllerHook<
   return () => {
     const ctx = useContext(context);
     if (ctx === null) {
-      throw 'Missing SSR state or CSR provider.';
+      throw new MissingEngineProviderError();
     }
     const subscribe = useCallback(
       (listener: () => void) =>
@@ -87,7 +95,7 @@ export function defineSearchEngine<
     useEngine() {
       const ctx = useContext(context);
       if (ctx === null) {
-        throw 'Missing SSR state or CSR provider.';
+        throw new MissingEngineProviderError();
       }
       return isCSRContext(ctx) ? ctx.engine : undefined;
     },
