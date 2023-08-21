@@ -63,7 +63,7 @@ export interface ProductListingV2RequestParam {
     user: {
       userId?: string;
       email?: string;
-      ipAddress: string;
+      userIp: string;
       userAgent: string;
     };
     view: {

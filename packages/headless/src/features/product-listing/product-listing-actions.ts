@@ -270,7 +270,7 @@ export const buildProductListingRequestV2 = async (
       user: {
         userId: '1',
         email: '1',
-        ipAddress: '1',
+        userIp: '1',
         userAgent: '1',
       },
       view: {
