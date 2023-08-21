@@ -92,7 +92,7 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
         }}
         onKeyDown={(e) => {
           onKeyDown?.(e);
-          if (['Enter'].includes(e.key)) {
+          if (e.key === 'Enter') {
             e.preventDefault();
             return;
           }
