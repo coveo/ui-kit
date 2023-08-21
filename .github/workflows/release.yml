@@ -4,16 +4,33 @@ on:
   push:
     tags:
       - "**/v**"
-    branches:
-      - main
 
 concurrency:
   group: "${{ github.workflow }} @ ${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
+  get-branch:
+    name: Get branch
+    runs-on: ubuntu-latest
+    outputs:
+      branchName: ${{ steps.branch.outputs.branchName }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup
+        uses: ./.github/actions/setup
+      - name: Set Branch Name
+        id: branch
+        shell: bash
+        run: |
+          echo "branchName=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
   publish:
     name: Publish package
+    needs: [get-branch]
+    if: needs.get-branch-outputs.branchName == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
