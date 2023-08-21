@@ -1,4 +1,5 @@
 import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
+import {SortCriterion} from '../../../features/sort/sort';
 import {ProductRecommendation} from '../../search/search/product-recommendation';
 import {
   baseProductListingRequest,
@@ -71,17 +72,7 @@ export interface ProductListingV2SuccessResponse {
     totalPages: number;
   };
   sort: {
-    appliedSort: {
-      type: string;
-      field: string;
-      direction: string;
-      displayName: string;
-    };
-    availableSorts: {
-      type: string;
-      field: string;
-      direction: string;
-      displayName: string;
-    }[];
+    appliedSort: SortCriterion;
+    availableSorts: SortCriterion[];
   };
 }

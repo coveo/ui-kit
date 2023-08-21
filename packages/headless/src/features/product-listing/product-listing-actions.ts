@@ -244,13 +244,12 @@ export const buildProductListingRequest = async (
 export const buildProductListingRequestV2 = async (
   state: StateNeededByFetchProductListingV2
 ): Promise<ProductListingV2Request> => {
-  // TODO: Use sort, selected page, context
-  const facets = getFacets(state);
-  // const visitorId = await getVisitorID(state.configuration.analytics);
+  const selectedFacets = getFacets(state);
 
   const baseParams = {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
+    propertyId: state.productListing.propertyId,
     platformUrl: state.configuration.platformUrl,
     version: state.productListing?.version,
   };
@@ -258,32 +257,18 @@ export const buildProductListingRequestV2 = async (
   const productListingParams = {
     listingId: state.productListing.listingId,
     locale: state.productListing.locale || 'en-US',
-    mode: state.productListing.mode || 'live',
+    mode: state.productListing.mode,
     clientId: state.productListing.clientId || 'some-client-id', // Dummy value since the api requires one
   };
 
   return {
     ...baseParams,
     ...productListingParams,
-    selectedFacets: facets,
-    context: {
-      user: {
-        userId: '1',
-        email: '1',
-        userIp: '1',
-        userAgent: '1',
-      },
-      view: {
-        url: '1',
-        referrerUrl: '1',
-        pageType: 'a',
-      },
-      cart: {
-        groupId: '1',
-        productId: '1',
-        sku: '1',
-      },
-    },
+    selectedFacets,
+    context: state.productListing.context,
+    ...(state.sort && {
+      selectedSort: state.sort,
+    }),
     ...(state.pagination && {
       selectedPage: {
         page:

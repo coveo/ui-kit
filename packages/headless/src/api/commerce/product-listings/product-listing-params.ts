@@ -1,7 +1,9 @@
 import {ContextPayload} from '../../../controllers/product-listing/context/headless-product-listing-context';
 import {Mode} from '../../../controllers/product-listing/headless-product-listing';
 import {FacetOptions} from '../../../features/facet-options/facet-options';
+import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {AnyFacetRequest} from '../../../features/facets/generic/interfaces/generic-facet-request';
+import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {SortCriterion} from '../../../features/sort/sort';
 import {
   HTTPContentType,
@@ -39,14 +41,8 @@ export interface ProductListingRequestParam {
   userContext?: ContextPayload;
 }
 
-// TODO: Use interfaces for nested params
-export interface ProductListingV2RequestParam {
-  listingId: string;
-  locale: string;
-  mode: Mode;
-  clientId: string;
-  selectedFacets?: {
-    facetId?: string;
+/*
+facetId?: string;
     type?: string;
     field?: string;
     values?: {
@@ -56,28 +52,45 @@ export interface ProductListingV2RequestParam {
       isInclusive?: boolean;
     }[];
   }[];
+ */
+
+export interface SelectedFacets
+  extends Pick<AnyFacetRequest, 'field' | 'type' | 'facetId'> {
+  values?: (FacetValueRequest | RangeValueRequest)[];
+}
+
+export interface Context {
+  user: {
+    userId?: string;
+    email?: string;
+    userIp: string;
+    userAgent: string;
+  };
+  view: {
+    url: string;
+    referrerUrl?: string;
+    pageType: string;
+  };
+  cart?: {
+    groupId?: string;
+    productId?: string;
+    sku?: string;
+  }[];
+}
+
+// TODO: Use interfaces for nested params
+export interface ProductListingV2RequestParam {
+  propertyId: string;
+  listingId: string;
+  locale: string;
+  mode: Mode;
+  clientId: string;
+  selectedFacets?: SelectedFacets[];
   selectedPage?: {
     page?: number;
   };
   selectedSort?: SortCriterion;
-  context: {
-    user: {
-      userId?: string;
-      email?: string;
-      userIp: string;
-      userAgent: string;
-    };
-    view: {
-      url: string;
-      referrerUrl?: string;
-      pageType: string;
-    };
-    cart?: {
-      groupId?: string;
-      productId?: string;
-      sku?: string;
-    };
-  };
+  context: Context;
 }
 
 /**
@@ -99,10 +112,13 @@ export const baseProductListingRequest = (
   'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
 > => {
   const {platformUrl, organizationId, accessToken, version} = req;
-  const baseUrl =
-    version === 'v2'
-      ? `${platformUrl}/rest/organizations/${organizationId}/properties/a/commerce/v2/listing`
-      : `${platformUrl}/rest/organizations/${organizationId}/commerce/v1/products`;
+  let baseUrl;
+  if (version === 'v2') {
+    const {propertyId} = req as ProductListingsV2Param;
+    baseUrl = `${platformUrl}/rest/organizations/${organizationId}/properties/${propertyId}/commerce/v2/listing`;
+  } else {
+    baseUrl = `${platformUrl}/rest/organizations/${organizationId}/commerce/v1/products`;
+  }
   const queryString = buildQueryString(queryStringArguments);
   const effectiveUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 

@@ -1,5 +1,7 @@
 import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client';
+import {Context} from '../../api/commerce/product-listings/product-listing-params';
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
+import {Mode} from '../../controllers/product-listing/headless-product-listing';
 import {AnyFacetResponse} from '../facets/generic/interfaces/generic-facet-response';
 
 export interface ProductListingState {
@@ -37,9 +39,10 @@ export const getProductListingInitialState = (): ProductListingState => ({
 });
 
 export interface ProductListingV2State {
+  propertyId: string;
   listingId: string;
   locale: string; // TODO: action for setting this
-  mode: string; // TODO: action for setting this
+  mode: Mode; // TODO: action for setting this
   clientId: string;
   error: ProductListingAPIErrorStatusResponse | null;
   isLoading: boolean;
@@ -47,12 +50,14 @@ export interface ProductListingV2State {
   products: ProductRecommendation[];
   facets: AnyFacetResponse[];
   version: string;
+  context: Context;
 }
 
 export const getProductListingV2InitialState = (): ProductListingV2State => ({
+  propertyId: '',
   listingId: '',
   locale: '',
-  mode: '',
+  mode: Mode.Live,
   clientId: '',
   error: null,
   isLoading: false,
@@ -60,4 +65,24 @@ export const getProductListingV2InitialState = (): ProductListingV2State => ({
   products: [],
   facets: [],
   version: 'v2',
+  context: {
+    user: {
+      userId: '',
+      email: '',
+      userIp: '',
+      userAgent: '',
+    },
+    view: {
+      url: '',
+      referrerUrl: '',
+      pageType: '',
+    },
+    cart: [
+      {
+        groupId: '',
+        productId: '',
+        sku: '',
+      },
+    ],
+  },
 });
