@@ -49,7 +49,10 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    * Automatic facets are currently in beta testing and should be available soon.
    *
    * The desired count of automatic facets.
-   * Must be a positive integer.
+   *
+   * Minimum: `1`
+   * Maximum: `10`
+   * @defaultValue `5`
    */
   @Prop() public desiredCount!: number;
 
@@ -61,13 +64,27 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    */
   @Prop() public areCollapsed = true;
 
+  /**
+   * @beta - This prop is part of the automatic facets feature.
+   * Automatic facets are currently in beta testing and should be available soon.
+   *
+   * The desired number of automatically generated facet values.
+   *
+   * Minimum: `1`
+   * @defaultValue `8`
+   */
+  @Prop() public numberOfValues = 8;
+
   public initialize() {
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.automaticFacetGenerator = buildAutomaticFacetGenerator(
       this.bindings.engine,
       {
-        desiredCount: this.desiredCount,
+        options: {
+          desiredCount: this.desiredCount,
+          numberOfValues: this.numberOfValues,
+        },
       }
     );
   }
@@ -96,7 +113,10 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
       });
     if (!this.searchStatus.state.firstSearchExecuted) {
       return Array.from({length: this.desiredCount}, () => (
-        <FacetPlaceholder numberOfValues={8} isCollapsed={this.areCollapsed} /> //TODO: Change '8' to variable whenever adding the 'numberOfValues' attribute in the AF query
+        <FacetPlaceholder
+          numberOfValues={this.numberOfValues}
+          isCollapsed={this.areCollapsed}
+        />
       ));
     }
 

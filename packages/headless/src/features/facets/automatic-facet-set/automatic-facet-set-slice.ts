@@ -6,7 +6,7 @@ import {executeSearch} from '../../search/search-actions';
 import {FacetValue} from '../facet-set/interfaces/response';
 import {
   deselectAllAutomaticFacetValues,
-  setDesiredCount,
+  setOptions,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
 import {getAutomaticFacetSetInitialState} from './automatic-facet-set-state';
@@ -24,8 +24,13 @@ export const automaticFacetSetReducer = createReducer(
           state.set[response.field] = {response};
         });
       })
-      .addCase(setDesiredCount, (state, action) => {
-        state.desiredCount = action.payload;
+      .addCase(setOptions, (state, action) => {
+        if (action.payload.desiredCount) {
+          state.desiredCount = action.payload.desiredCount;
+        }
+        if (action.payload.numberOfValues) {
+          state.numberOfValues = action.payload.numberOfValues;
+        }
       })
       .addCase(toggleSelectAutomaticFacetValue, (state, action) => {
         const {field, selection} = action.payload;

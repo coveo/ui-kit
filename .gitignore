@@ -11,7 +11,7 @@ reports/*.xml
 sarifs
 **.cy.ts.mp4
 .cspellcache
-utils/translation-gpt/temporary.json
+scripts/translation-gpt/temporary.json
 
 # CI Release
 topology.json

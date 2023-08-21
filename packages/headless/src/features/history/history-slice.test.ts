@@ -83,6 +83,7 @@ describe('history slice', () => {
       categoryFacetSet: {foo: buildMockCategoryFacetSlice()},
       automaticFacetSet: {
         desiredCount: 5,
+        numberOfValues: 8,
         set: {foo: buildMockAutomaticFacetSlice()},
       },
       facetOptions: {freezeFacetOrder: false, facets: {}},
