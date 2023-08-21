@@ -418,6 +418,7 @@ export type {
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorProps,
   AutomaticFacetGeneratorState,
+  AutomaticFacetGeneratorOptions,
 } from './facets/automatic-facet-generator/headless-automatic-facet-generator';
 export {buildAutomaticFacetGenerator} from './facets/automatic-facet-generator/headless-automatic-facet-generator';
 
