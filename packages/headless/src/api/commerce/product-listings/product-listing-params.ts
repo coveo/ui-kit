@@ -1,4 +1,5 @@
 import {ContextPayload} from '../../../controllers/product-listing/context/headless-product-listing-context';
+import {Mode} from '../../../controllers/product-listing/headless-product-listing';
 import {FacetOptions} from '../../../features/facet-options/facet-options';
 import {AnyFacetRequest} from '../../../features/facets/generic/interfaces/generic-facet-request';
 import {SortCriterion} from '../../../features/sort/sort';
@@ -42,7 +43,7 @@ export interface ProductListingRequestParam {
 export interface ProductListingV2RequestParam {
   listingId: string;
   locale: string;
-  mode: string;
+  mode: Mode;
   clientId: string;
   selectedFacets?: {
     facetId?: string;
