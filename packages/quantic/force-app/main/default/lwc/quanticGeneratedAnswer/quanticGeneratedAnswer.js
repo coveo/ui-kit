@@ -31,7 +31,7 @@ const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
- * @category Search
+ * @category Internal
  * @example
  * <c-quantic-generated-answer engine-id={engineId}></c-quantic-generated-answer>
  */

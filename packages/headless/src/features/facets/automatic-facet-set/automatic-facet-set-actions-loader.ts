@@ -1,9 +1,10 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options';
 import {
   ToggleSelectAutomaticFacetValueActionCreatorPayload,
+  setOptions,
   deselectAllAutomaticFacetValues,
-  setDesiredCount,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions';
 import {automaticFacetSetReducer as automaticFacetSet} from './automatic-facet-set-slice';
@@ -13,12 +14,14 @@ import {automaticFacetSetReducer as automaticFacetSet} from './automatic-facet-s
  */
 export interface AutomaticFacetsActionCreators {
   /**
-   * Sets the desired count of automatic facets.
+   * Sets the options of the automatic facet generator.
    *
-   * @param desiredCount - Desired count of automatic facets.
+   * @param options - Options of the automatic facet generator containing both the desiredCount and the numberOfValues.
    * @returns A dispatchable action.
    */
-  setDesiredCount(desiredCount: number): PayloadAction<number>;
+  setOptions(
+    options: Partial<AutomaticFacetGeneratorOptions>
+  ): PayloadAction<Partial<AutomaticFacetGeneratorOptions>>;
 
   /**
    * Deselects all values of an automatic facet.
@@ -51,7 +54,7 @@ export function loadAutomaticFacetSetActions(
   engine.addReducers({automaticFacetSet});
 
   return {
-    setDesiredCount,
+    setOptions,
     deselectAllAutomaticFacetValues,
     toggleSelectAutomaticFacetValue,
   };

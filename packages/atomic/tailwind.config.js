@@ -100,6 +100,5 @@ module.exports = {
         variants('outlineColor')
       );
     }),
-    require('@tailwindcss/line-clamp'),
   ],
 };
