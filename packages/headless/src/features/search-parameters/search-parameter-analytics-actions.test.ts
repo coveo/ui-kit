@@ -5,6 +5,7 @@ import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
+  logFacetExclude,
 } from '../facets/facet-set/facet-set-analytics-actions';
 import {
   logPageNumber,
@@ -53,11 +54,13 @@ describe('logParametersChange', () => {
     );
   });
 
-  testFacetLogging('f', expectIdenticalActionType);
+  testFacetSelectLogging('f', expectIdenticalActionType);
 
-  testFacetLogging('af', expectIdenticalActionType);
+  testFacetSelectLogging('af', expectIdenticalActionType);
 
-  testFacetLogging('cf', expectIdenticalActionType);
+  testFacetSelectLogging('cf', expectIdenticalActionType);
+
+  testFacetExcludeLogging(expectIdenticalActionType);
 
   it('should log a generic #logInterfaceChange when an unmanaged parameter', () => {
     expectIdenticalActionType(
@@ -67,13 +70,15 @@ describe('logParametersChange', () => {
   });
 });
 
-function testFacetLogging(
+function testFacetSelectLogging(
   parameter: string,
   expectIdenticalActionType: (
     action1: SearchAction,
     action2: SearchAction
   ) => void
 ) {
+  testFacetLogging(parameter, expectIdenticalActionType);
+
   it(`should log #logFacetSelect when an ${parameter} parameter is added`, () => {
     expectIdenticalActionType(
       logParametersChange({}, {[parameter]: {author: ['Cervantes']}}),
@@ -81,6 +86,50 @@ function testFacetLogging(
     );
   });
 
+  it(`should log #logFacetSelect when an ${parameter} parameter is modified & a value added`, () => {
+    expectIdenticalActionType(
+      logParametersChange(
+        {[parameter]: {author: ['Cervantes']}},
+        {[parameter]: {author: ['Cervantes', 'Orwell']}}
+      ),
+      logFacetSelect({facetId: 'author', facetValue: 'Orwell'})
+    );
+  });
+}
+
+function testFacetExcludeLogging(
+  expectIdenticalActionType: (
+    action1: SearchAction,
+    action2: SearchAction
+  ) => void
+) {
+  /*testFacetLogging('fExcluded', expectIdenticalActionType);
+
+  it('should log #logFacetSelect when an fExcluded parameter is added', () => {
+    expectIdenticalActionType(
+      logParametersChange({}, {fExcluded: {author: ['Cervantes']}}),
+      logFacetExclude({facetId: 'author', facetValue: 'Cervantes'})
+    );
+  });*/
+
+  it('should log #logFacetSelect when an fExcluded parameter is modified & a value added', () => {
+    expectIdenticalActionType(
+      logParametersChange(
+        {fExcluded: {author: ['Cervantes']}},
+        {fExcluded: {author: ['Cervantes', 'Orwell']}}
+      ),
+      logFacetExclude({facetId: 'author', facetValue: 'Orwell'})
+    );
+  });
+}
+
+function testFacetLogging(
+  parameter: string,
+  expectIdenticalActionType: (
+    action1: SearchAction,
+    action2: SearchAction
+  ) => void
+) {
   it(`should log #logFacetDeselect when an ${parameter} parameter with a single value is removed`, () => {
     expectIdenticalActionType(
       logParametersChange({[parameter]: {author: ['Cervantes']}}, {}),
@@ -92,16 +141,6 @@ function testFacetLogging(
     expectIdenticalActionType(
       logParametersChange({[parameter]: {author: ['Cervantes', 'Orwell']}}, {}),
       logFacetClearAll('author')
-    );
-  });
-
-  it(`should log #logFacetSelect when an ${parameter} parameter is modified & a value added`, () => {
-    expectIdenticalActionType(
-      logParametersChange(
-        {[parameter]: {author: ['Cervantes']}},
-        {[parameter]: {author: ['Cervantes', 'Orwell']}}
-      ),
-      logFacetSelect({facetId: 'author', facetValue: 'Orwell'})
     );
   });
 

@@ -51,6 +51,12 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual('f-author=a,b&f-filetype=c,d');
     });
 
+    it('serializes the #fExcluded parameter correctly', () => {
+      const fExcluded = {author: ['a', 'b'], filetype: ['c', 'd']};
+      const result = serialize({fExcluded});
+      expect(result).toEqual('fExcluded-author=a,b&fExcluded-filetype=c,d');
+    });
+
     it('serializes special characters in the #f parameter correctly', () => {
       someSpecialCharactersThatNeedsEncoding.forEach((specialChar) => {
         const f = {author: ['a', specialChar]};

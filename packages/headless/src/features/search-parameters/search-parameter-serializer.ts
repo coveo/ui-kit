@@ -39,7 +39,13 @@ function serializePair(pair: [string, unknown]) {
     return '';
   }
 
-  if (key === 'f' || key === 'cf' || key === 'sf' || key === 'af') {
+  if (
+    key === 'f' ||
+    key === 'fExcluded' ||
+    key === 'cf' ||
+    key === 'sf' ||
+    key === 'af'
+  ) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
@@ -303,8 +309,8 @@ function castUnknownObject(value: string) {
 
 function keyHasObjectValue(
   key: SearchParameterKey
-): key is 'f' | 'cf' | 'nf' | 'df' | 'sf' | 'af' {
-  const keys = ['f', 'cf', 'nf', 'df', 'sf', 'af'];
+): key is 'f' | 'fExcluded' | 'cf' | 'nf' | 'df' | 'sf' | 'af' {
+  const keys = ['f', 'fExcluded', 'cf', 'nf', 'df', 'sf', 'af'];
   return keys.includes(key);
 }
 
