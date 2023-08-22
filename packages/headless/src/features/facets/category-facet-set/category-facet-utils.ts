@@ -38,11 +38,11 @@ export function getActiveValueFromValueTree(
 ): CategoryFacetValue | undefined {
   const valueToVisit = [...valuesAsTrees];
   while (valueToVisit.length > 0) {
-    const currentValue = valueToVisit.pop()!;
+    const currentValue = valueToVisit.shift()!;
     if (currentValue.state === 'selected') {
       return currentValue;
     }
-    valueToVisit.push(...currentValue.children);
+    valueToVisit.unshift(...currentValue.children);
   }
   return undefined;
 }
