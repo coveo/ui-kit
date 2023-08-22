@@ -11,6 +11,8 @@ import {timeframeFacetComponent} from './facets/timeframe-facet/timeframe-facet-
 import {
   addRefineToggle,
   addRefineToggleRangeVariations,
+  addRefineToggleWithAutomaticFacets,
+  addRefineToggleWithoutFacets,
 } from './refine-toggle-actions';
 import {
   refineModalComponent,
@@ -94,6 +96,44 @@ describe('Refine Toggle Test Suites', () => {
       RefineModalSelectors.focusTrap().should('exist');
 
       cy.get(`${facetManagerComponent}[aria-hidden="true"]`).should('exist');
+    });
+  });
+
+  describe('when the modal is opened with no facets', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addRefineToggleWithoutFacets())
+        .withMobileViewport()
+        .init();
+      RefineToggleSelectors.buttonOpen().click();
+    });
+    CommonAssertions.assertContainsComponentError(RefineModalSelectors, false);
+    CommonAssertions.assertConsoleError(false);
+    CommonAssertions.assertAccessibility(refineModalComponent);
+
+    it('should not display the filter section', () => {
+      RefineModalSelectors.filterSection().should('not.exist');
+    });
+  });
+
+  describe('when the modal is opened with automatic facets only', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addRefineToggleWithAutomaticFacets())
+        .withMobileViewport()
+        .init();
+      RefineToggleSelectors.buttonOpen().click();
+    });
+    CommonAssertions.assertContainsComponentError(RefineModalSelectors, false);
+    CommonAssertions.assertConsoleError(false);
+    CommonAssertions.assertAccessibility(refineModalComponent);
+
+    it('should display the filter section', () => {
+      RefineModalSelectors.filterSection().should('exist');
+    });
+
+    it('should display the automatic facets', () => {
+      RefineModalSelectors.automaticFacets().should('exist');
     });
   });
 

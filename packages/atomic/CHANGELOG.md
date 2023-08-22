@@ -1,3 +1,16 @@
+# 2.41.0 (2023-08-21)
+
+### Features
+
+- **atomic, headless:** add numberOfValues property in automatic facet generator ([#3101](https://github.com/coveo/ui-kit/issues/3101)) ([8fcd1ed](https://github.com/coveo/ui-kit/commits/8fcd1edba96c2226ddc9fca6c3774e9842f3bca2))
+
+## 2.40.2 (2023-08-16)
+
+### Bug Fixes
+
+- **atomic:** address search box suggestion accessibility problem ([#3086](https://github.com/coveo/ui-kit/issues/3086)) ([0e03273](https://github.com/coveo/ui-kit/commits/0e032731f99db688a3a49406e3e90360973d45c6))
+- **atomic:** automatic facets not showing in refine modal when no static facets ([#3104](https://github.com/coveo/ui-kit/issues/3104)) ([69f2db5](https://github.com/coveo/ui-kit/commits/69f2db5f4ec9ddee61b1b0a411940f7359b79c2e))
+
 # 2.40.0 (2023-08-10)
 
 ### Bug Fixes
