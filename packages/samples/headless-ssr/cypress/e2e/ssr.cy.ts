@@ -59,7 +59,14 @@ describe('headless ssr example', () => {
   it('should pass the web-vitals audits', () => {
     // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
     const VITALS_THRESHOLD: Cypress.ReportWebVitalsConfig = {
-      thresholds: {fcp: 200, lcp: 200, cls: 0, ttfb: 40, fid: 200, inp: 200},
+      thresholds: {
+        fcp: 200,
+        lcp: 200,
+        cls: 0,
+        ttfb: 40,
+        fid: 200, // TODO: Make sure that the time for re-rendering after the interactions below is properly counted.
+        inp: 200,
+      },
     };
     cy.startVitalsCapture({url: route});
     getResultTitles()
