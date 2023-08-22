@@ -2,8 +2,6 @@
 
 import {useEffect, useReducer, useRef} from 'react';
 
-export {createContext} from 'react';
-
 export function useSyncMemoizedStore<T>(
   subscribe: (listener: () => void) => () => void,
   getSnapshot: () => T

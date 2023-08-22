@@ -7,7 +7,7 @@ import {
   mapObject,
 } from '@coveo/headless/ssr';
 import {useContext, useCallback, useMemo, Context} from 'react';
-import {createContext, useSyncMemoizedStore} from './client-wrapper';
+import React from 'react';
 import {
   ContextCSRState,
   ContextState,
@@ -48,7 +48,7 @@ export function createSingletonContext<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 >() {
   return singleton(() =>
-    createContext<ContextState<SearchEngine, TControllers> | null>(null)
+    React.createContext<ContextState<SearchEngine, TControllers> | null>(null)
   );
 }
 
@@ -82,7 +82,7 @@ function buildControllerHook<
       [ctx]
     );
     const getSSRState = useCallback(() => ctx.controllers[key].state, [ctx]);
-    const state = useSyncMemoizedStore(subscribe, getSSRState);
+    const state = React.useSyncExternalStore(subscribe, getSSRState);
     const methods = useMemo(() => {
       if (!isCSRContext(ctx)) {
         return undefined;
