@@ -27,21 +27,23 @@ export class MissingEngineProviderError extends Error {
 function capitalize(s: string) {
   return `${s.slice(0, 1).toUpperCase()}${s.slice(1)}`;
 }
-function singleton<T>(getter: () => T) {
+
+function singleton<T>(valueGetter: () => T) {
   let currentValue: T;
-  let hasValue = false;
+  let gotValue = false;
   return {
     get() {
-      if (hasValue) {
+      if (gotValue) {
         return currentValue;
       }
-      currentValue = getter();
-      hasValue = true;
+      currentValue = valueGetter();
+      gotValue = true;
       return currentValue;
     },
   };
 }
 
+// Wrapper to workaround limitation that `createContext()` cannot be called directly during SSR in next.js
 export function createSingletonContext<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 >() {
@@ -80,9 +82,6 @@ function buildControllerHook<
       [ctx]
     );
     const getSSRState = useCallback(() => ctx.controllers[key].state, [ctx]);
-    // TODO: Eval need for `useSyncMemoizedStore() instead of useSyncExternalStore()`
-    // const state = useSyncMemoizedStore(subscribe, getSSRState);
-    // TODO: Eval `getServerSnapshot()` of `useSyncExternalStore`
     const state = useSyncMemoizedStore(subscribe, getSSRState);
     const methods = useMemo(() => {
       if (!isCSRContext(ctx)) {
@@ -100,6 +99,8 @@ function buildControllerHook<
 
 /**
  * @internal
+ * Returns controller hooks and SSR, CSR context providers that can be used to interact with a search engine
+ *  in the server and client side respectively.
  */
 export function defineSearchEngine<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
