@@ -120,7 +120,7 @@ export function defineSearchEngine<
       ? Object.fromEntries(
           Object.keys(options.controllers).map((key) => [
             `use${capitalize(key)}`,
-            buildControllerHook(singletonContext, key as keyof TControllers),
+            buildControllerHook(singletonContext, key),
           ])
         )
       : {}) as InferControllerHooksMapFromDefinition<TControllers>,
