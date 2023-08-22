@@ -6,7 +6,7 @@ import {
   defineSearchEngine as defineBaseSearchEngine,
   mapObject,
 } from '@coveo/headless/ssr';
-import {useContext, useCallback, useMemo} from 'react';
+import {useContext, useCallback, useMemo, Context} from 'react';
 import {createContext, useSyncMemoizedStore} from './client-wrapper';
 import {
   ContextCSRState,
@@ -42,7 +42,7 @@ function singleton<T>(getter: () => T) {
   };
 }
 
-export function singletonContext<
+export function createSingletonContext<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 >() {
   return singleton(() =>
@@ -64,13 +64,13 @@ function buildControllerHook<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TKey extends keyof TControllers,
 >(
+  singletonContext: {
+    get(): Context<ContextState<TEngine, TControllers> | null>;
+  },
   key: TKey
 ): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
   return () => {
-    const ctx = useContext(singletonContext().get()) as ContextState<
-      TEngine,
-      TControllers
-    >;
+    const ctx = useContext(singletonContext.get());
     if (ctx === null) {
       throw new MissingEngineProviderError();
     }
@@ -106,10 +106,11 @@ export function defineSearchEngine<
 >(
   options: SearchEngineDefinitionOptions<TControllers>
 ): ReactSearchEngineDefinition<TControllers> {
+  const singletonContext = createSingletonContext();
   return {
     ...defineBaseSearchEngine({...options}),
     useEngine() {
-      const ctx = useContext(singletonContext().get());
+      const ctx = useContext(singletonContext.get());
       if (ctx === null) {
         throw new MissingEngineProviderError();
       }
@@ -119,16 +120,16 @@ export function defineSearchEngine<
       ? Object.fromEntries(
           Object.keys(options.controllers).map((key) => [
             `use${capitalize(key)}`,
-            buildControllerHook(key as keyof TControllers),
+            buildControllerHook(singletonContext, key as keyof TControllers),
           ])
         )
       : {}) as InferControllerHooksMapFromDefinition<TControllers>,
     SSRStateProvider: ({controllers, children}) => {
-      const {Provider} = singletonContext().get();
+      const {Provider} = singletonContext.get();
       return <Provider value={{controllers}}>{children}</Provider>;
     },
     CSRProvider: ({controllers, engine, children}) => {
-      const {Provider} = singletonContext().get();
+      const {Provider} = singletonContext.get();
       return <Provider value={{engine, controllers}}>{children}</Provider>;
     },
   };
