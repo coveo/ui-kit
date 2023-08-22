@@ -31,8 +31,10 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
       </CSRProvider>
     );
   } else {
-    <SSRStateProvider controllers={ssrState.controllers}>
-      <ResultList />
-    </SSRStateProvider>;
+    return (
+      <SSRStateProvider controllers={ssrState.controllers}>
+        <ResultList />
+      </SSRStateProvider>
+    );
   }
 }
