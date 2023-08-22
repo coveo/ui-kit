@@ -478,6 +478,7 @@ describe('buildSearchParameterSerializer', () => {
 
   it('can serialize and deserialize all search parameters', () => {
     const f = {author: ['a', 'b']};
+    const fExcluded = {source: ['a', 'b']};
     const cf = {geography: ['a', 'b']};
     const nf = {
       size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
@@ -493,7 +494,15 @@ describe('buildSearchParameterSerializer', () => {
     };
     const sf = {fileType: ['a', 'b']};
     const af = {documenttype: ['s', 'sd']};
-    const parameters = buildMockSearchParameters({f, cf, nf, df, sf, af});
+    const parameters = buildMockSearchParameters({
+      f,
+      cf,
+      nf,
+      df,
+      sf,
+      af,
+      fExcluded,
+    });
 
     const {serialize, deserialize} = buildSearchParameterSerializer();
     const serialized = serialize(parameters);

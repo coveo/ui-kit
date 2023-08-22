@@ -129,8 +129,8 @@ export function getCoreActiveSearchParameters(
     ...getQ(state),
     ...getTab(state),
     ...getSortCriteria(state),
-    ...getSelectedFacets(state),
-    ...getExcludedFacets(state),
+    ...getFacets(state, getSelectedValues, 'f'),
+    ...getFacets(state, getExcludedValues, 'fExcluded'),
     ...getCategoryFacets(state),
     ...getNumericFacets(state),
     ...getDateFacets(state),
@@ -186,36 +186,24 @@ function getSortCriteria(state: Partial<SearchParametersState>) {
   return shouldInclude ? {sortCriteria} : {};
 }
 
-function getSelectedFacets(state: Partial<SearchParametersState>) {
+function getFacets(
+  state: Partial<SearchParametersState>,
+  valuesSelector: (currentValues: FacetValueRequest[]) => string[],
+  out: keyof SearchParameters
+) {
   if (state.facetSet === undefined) {
     return {};
   }
 
-  const f = Object.entries(state.facetSet)
+  const facets = Object.entries(state.facetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, {request}]) => {
-      const selectedValues = getSelectedValues(request.currentValues);
-      return selectedValues.length ? {[facetId]: selectedValues} : {};
+      const facetValues = valuesSelector(request.currentValues);
+      return facetValues.length ? {[facetId]: facetValues} : {};
     })
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
-  return Object.keys(f).length ? {f} : {};
-}
-
-function getExcludedFacets(state: Partial<SearchParametersState>) {
-  if (state.facetSet === undefined) {
-    return {};
-  }
-
-  const fExcluded = Object.entries(state.facetSet)
-    .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
-    .map(([facetId, {request}]) => {
-      const excludedValues = getExcludedValues(request.currentValues);
-      return excludedValues.length ? {[facetId]: excludedValues} : {};
-    })
-    .reduce((acc, obj) => ({...acc, ...obj}), {});
-
-  return Object.keys(fExcluded).length ? {fExcluded} : {};
+  return Object.keys(facets).length ? {[out]: facets} : {};
 }
 
 function getSelectedValues(values: FacetValueRequest[]) {

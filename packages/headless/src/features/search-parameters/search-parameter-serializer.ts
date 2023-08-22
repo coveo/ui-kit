@@ -127,16 +127,16 @@ function serializeRangeFacets(
 
 function deserialize(fragment: string): SearchParameters {
   const parts = fragment.split(delimiter);
-  const keyValuePairs = parts
+  const test = parts
     .map((part) => splitOnFirstEqual(part))
-    .map(preprocessObjectPairs)
-    .filter(isValidPair)
-    .map(cast);
+    .map(preprocessObjectPairs);
+
+  const keyValuePairs = test.filter(isValidPair).map(cast);
 
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
 
-    if (keyHasObjectValue(key)) {
+    if (keyHasObjectValue(key) || isSpecificFacetKey(key)) {
       const mergedValues = {...acc[key], ...(val as object)};
       return {...acc, [key]: mergedValues};
     }
@@ -154,7 +154,7 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessObjectPairs(pair: string[]) {
   const [key, val] = pair;
-  const objectKey = /^(f|cf|nf|df|sf|af)-(.+)$/;
+  const objectKey = /^(f|fExcluded|cf|nf|df|sf|af)-(.+)$/;
   const result = objectKey.exec(key);
 
   if (!result) {
@@ -289,7 +289,7 @@ function cast<K extends SearchParameterKey>(pair: [K, string]): [K, unknown] {
     return [key, parseInt(value)];
   }
 
-  if (keyHasObjectValue(key)) {
+  if (keyHasObjectValue(key) || isSpecificFacetKey(key)) {
     return [key, castUnknownObject(value)];
   }
 
@@ -307,10 +307,15 @@ function castUnknownObject(value: string) {
   return ret;
 }
 
-function keyHasObjectValue(
+function keyHasObjectValue(key: SearchParameterKey): key is 'af' | 'sf' {
+  const keys = ['af', 'sf'];
+  return keys.includes(key);
+}
+
+function isSpecificFacetKey(
   key: SearchParameterKey
-): key is 'f' | 'fExcluded' | 'cf' | 'nf' | 'df' | 'sf' | 'af' {
-  const keys = ['f', 'fExcluded', 'cf', 'nf', 'df', 'sf', 'af'];
+): key is 'f' | 'cf' | 'df' | 'nf' | 'fExcluded' {
+  const keys = ['f', 'cf', 'df', 'nf', 'fExcluded'];
   return keys.includes(key);
 }
 

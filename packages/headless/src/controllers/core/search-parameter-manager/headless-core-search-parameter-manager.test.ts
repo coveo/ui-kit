@@ -293,7 +293,10 @@ describe('search parameter manager', () => {
   });
 
   it('is possible to access every relevant search parameter using #state.parameters given a certain initial state', () => {
-    const facetValues = [buildMockFacetValueRequest({state: 'selected'})];
+    const facetValues = [
+      buildMockFacetValueRequest({state: 'selected'}),
+      buildMockFacetValueRequest({state: 'excluded'}),
+    ];
     engine.state.facetSet = {
       author: buildMockFacetSlice({
         request: buildMockFacetRequest({currentValues: facetValues}),
