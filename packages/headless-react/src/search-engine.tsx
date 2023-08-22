@@ -8,6 +8,7 @@ import {
 } from '@coveo/headless/ssr';
 import {useContext, useCallback, useMemo, Context} from 'react';
 import React from 'react';
+import {useSyncMemoizedStore} from './client-wrapper';
 import {
   ContextCSRState,
   ContextState,
@@ -82,7 +83,7 @@ function buildControllerHook<
       [ctx]
     );
     const getSSRState = useCallback(() => ctx.controllers[key].state, [ctx]);
-    const state = React.useSyncExternalStore(subscribe, getSSRState);
+    const state = useSyncMemoizedStore(subscribe, getSSRState);
     const methods = useMemo(() => {
       if (!isCSRContext(ctx)) {
         return undefined;
