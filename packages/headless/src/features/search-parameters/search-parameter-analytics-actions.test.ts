@@ -103,14 +103,14 @@ function testFacetExcludeLogging(
     action2: SearchAction
   ) => void
 ) {
-  /*testFacetLogging('fExcluded', expectIdenticalActionType);
+  testFacetLogging('fExcluded', expectIdenticalActionType);
 
   it('should log #logFacetSelect when an fExcluded parameter is added', () => {
     expectIdenticalActionType(
       logParametersChange({}, {fExcluded: {author: ['Cervantes']}}),
       logFacetExclude({facetId: 'author', facetValue: 'Cervantes'})
     );
-  });*/
+  });
 
   it('should log #logFacetSelect when an fExcluded parameter is modified & a value added', () => {
     expectIdenticalActionType(
