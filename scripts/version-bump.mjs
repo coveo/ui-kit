@@ -20,6 +20,7 @@ import { promisify } from "util";
 const PATH = ".";
 const REPO_OWNER = "coveo";
 const REPO_NAME = "relay";
+const GIT_SSH_REMOTE = "DEPLOY_KEY";
 
 const convention = await angularChangelogConvention;
 const packages = [
@@ -157,7 +158,7 @@ const commitAndPush = async () => {
     `;
 
     await gitCommit(commitMessage, ".");
-    await gitPush();
+    await gitPush({remote: GIT_SSH_REMOTE});
     await gitPushTags();
   }
 };
