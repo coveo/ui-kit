@@ -1,11 +1,8 @@
 'use client';
 
-import {Controller, CoreEngine} from '@coveo/headless';
-import {ControllerDefinitionsMap} from '@coveo/headless/ssr';
-import {Context, useContext, useEffect, useReducer, useRef} from 'react';
-import {ContextState} from './types';
+import {useEffect, useReducer, useRef} from 'react';
 
-export {useSyncExternalStore, createContext} from 'react';
+export {createContext} from 'react';
 
 export function useSyncMemoizedStore<T>(
   subscribe: (listener: () => void) => () => void,

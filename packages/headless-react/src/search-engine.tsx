@@ -27,10 +27,32 @@ export class MissingEngineProviderError extends Error {
 function capitalize(s: string) {
   return `${s.slice(0, 1).toUpperCase()}${s.slice(1)}`;
 }
+function singleton<T>(getter: () => T) {
+  let currentValue: T;
+  let hasValue = false;
+  return {
+    get() {
+      if (hasValue) {
+        return currentValue;
+      }
+      currentValue = getter();
+      hasValue = true;
+      return currentValue;
+    },
+  };
+}
+
+export function singletonContext<
+  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
+>() {
+  return singleton(() =>
+    createContext<ContextState<SearchEngine, TControllers> | null>(null)
+  );
+}
 
 function isCSRContext<
   TEngine extends CoreEngine,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>
+  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 >(
   ctx: ContextState<TEngine, TControllers>
 ): ctx is ContextCSRState<TEngine, TControllers> {
@@ -40,7 +62,7 @@ function isCSRContext<
 function buildControllerHook<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TKey extends keyof TControllers
+  TKey extends keyof TControllers,
 >(
   context: Context<ContextState<TEngine, TControllers>>,
   key: TKey
@@ -78,19 +100,14 @@ function buildControllerHook<
  * @internal
  */
 export function defineSearchEngine<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
+  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 >(
   options: SearchEngineDefinitionOptions<TControllers>
 ): ReactSearchEngineDefinition<TControllers> {
-  const context = createContext<ContextState<
-    SearchEngine,
-    TControllers
-  > | null>(null);
-
   return {
     ...defineBaseSearchEngine({...options}),
     useEngine() {
-      const ctx = useContext(context);
+      const ctx = useContext(singletonContext().get());
       if (ctx === null) {
         throw new MissingEngineProviderError();
       }
@@ -101,18 +118,20 @@ export function defineSearchEngine<
           Object.keys(options.controllers).map((key) => [
             `use${capitalize(key)}`,
             buildControllerHook(
-              context as Context<ContextState<SearchEngine<{}>, TControllers>>,
+              singletonContext().get() as Context<
+                ContextState<SearchEngine<{}>, TControllers>
+              >,
               key as keyof TControllers
             ),
           ])
         )
       : {}) as InferControllerHooksMapFromDefinition<TControllers>,
     SSRStateProvider: ({controllers, children}) => {
-      const {Provider} = context;
+      const {Provider} = singletonContext().get();
       return <Provider value={{controllers}}>{children}</Provider>;
     },
     CSRProvider: ({controllers, engine, children}) => {
-      const {Provider} = context;
+      const {Provider} = singletonContext().get();
       return <Provider value={{engine, controllers}}>{children}</Provider>;
     },
   };
