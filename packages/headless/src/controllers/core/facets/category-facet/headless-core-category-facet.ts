@@ -18,7 +18,10 @@ import {categoryFacetResponseSelector} from '../../../../features/facets/categor
 import {categoryFacetRequestSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
-import {partitionIntoParentsAndValues} from '../../../../features/facets/category-facet-set/category-facet-utils';
+import {
+  getActiveValueFromValueTree,
+  partitionIntoParentsAndValues,
+} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
@@ -381,16 +384,7 @@ export function buildCoreCategoryFacet(
       const isHierarchical =
         valuesAsTrees.some((value) => value.children.length > 0) ?? false;
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
-      let activeValue: CategoryFacetValue | undefined = undefined;
-      const valueToVisit = [...valuesAsTrees];
-      while (valueToVisit.length > 0) {
-        const currentValue = valueToVisit.pop()!;
-        if (currentValue.state === 'selected') {
-          activeValue = currentValue;
-          break;
-        }
-        valueToVisit.push(...currentValue.children);
-      }
+      const activeValue = getActiveValueFromValueTree(valuesAsTrees);
       const hasActiveValues = !!activeValue;
       const canShowMoreValues =
         activeValue?.moreValuesAvailable ??

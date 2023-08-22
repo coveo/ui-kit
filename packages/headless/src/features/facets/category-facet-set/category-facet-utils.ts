@@ -32,3 +32,17 @@ export function partitionIntoParentsAndValues<
 
   return {parents, values};
 }
+
+export function getActiveValueFromValueTree(
+  valuesAsTrees: CategoryFacetValue[]
+): CategoryFacetValue | undefined {
+  const valueToVisit = [...valuesAsTrees];
+  while (valueToVisit.length > 0) {
+    const currentValue = valueToVisit.pop()!;
+    if (currentValue.state === 'selected') {
+      return currentValue;
+    }
+    valueToVisit.push(...currentValue.children);
+  }
+  return undefined;
+}
