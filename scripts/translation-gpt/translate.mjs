@@ -78,6 +78,10 @@ async function main() {
       continue;
     }
 
+    console.log(
+      `${translationKey}: Fetching translation for ${languagesThatNeedTranslation.length} languages from API.`
+    );
+
     try {
       const res = await fetch(env.COVEO_AZURE_OPEN_AI_ENDPOINT, {
         method: 'POST',
@@ -123,7 +127,7 @@ async function main() {
 
   writeFileSync(
     '../../packages/atomic/src/locales.json',
-    readFileSync('temporary.json')
+    readFileSync('temporary.json') + '\n'
   );
   writeFileSync('temporary.json', JSON.stringify({}, null, 2));
 }

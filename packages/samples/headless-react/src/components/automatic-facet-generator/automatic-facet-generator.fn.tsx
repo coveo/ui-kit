@@ -29,8 +29,8 @@ export const AutomaticFacetGenerator: FunctionComponent<
 
 /**
  * ```tsx
- * const props: AutomaticFacetGeneratorProps = {desiredCount: 5}
- * const controller = buildAutomaticFacetGenerator(engine, props);
+ * const options: AutomaticFacetGeneratorOptions = {desiredCount: 5, numberOfValues: 6}
+ * const controller = buildAutomaticFacetGenerator(engine, {options});
  *
  * <AutomaticFacetGenerator controller={controller} />;
  * ```
