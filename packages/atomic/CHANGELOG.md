@@ -1,3 +1,9 @@
+# 2.41.0 (2023-08-21)
+
+### Features
+
+- **atomic, headless:** add numberOfValues property in automatic facet generator ([#3101](https://github.com/coveo/ui-kit/issues/3101)) ([8fcd1ed](https://github.com/coveo/ui-kit/commits/8fcd1edba96c2226ddc9fca6c3774e9842f3bca2))
+
 ## 2.40.2 (2023-08-16)
 
 ### Bug Fixes

@@ -9,12 +9,13 @@ const getResultTitles = () =>
   ).invoke('toArray');
 
 describe('headless ssr example', () => {
+  const route = '/generic';
   const numResults = 10;
   const numResultsMsg = `Rendered page with ${numResults} results`;
   const msgSelector = '#hydrated-msg';
   const timestampSelector = '#timestamp';
   it('renders page in SSR as expected', () => {
-    cy.intercept('/', (req) => {
+    cy.intercept(route, (req) => {
       req.continue((resp) => {
         const dom = new DOMParser().parseFromString(resp.body, 'text/html');
         expect(dom.querySelector(msgSelector)?.textContent).to.equal(
@@ -25,20 +26,20 @@ describe('headless ssr example', () => {
         );
       });
     });
-    cy.visit('/');
+    cy.visit(route);
   });
 
   it('renders page in CSR as expected', () => {
-    cy.visit('/');
+    cy.visit(route);
     cy.get(msgSelector).should('have.text', numResultsMsg);
     cy.get('.result-list li').should('have.length', numResults);
   });
 
   it('renders result list in SSR and then in CSR', () => {
     const interceptAlias = 'searchResults';
-    cy.intercept('/').as(interceptAlias);
+    cy.intercept(route).as(interceptAlias);
 
-    cy.visit('/');
+    cy.visit(route);
     cy.wait(`@${interceptAlias}`).then((intercept) => {
       const dom = new DOMParser().parseFromString(
         intercept.response?.body,
@@ -60,7 +61,7 @@ describe('headless ssr example', () => {
     const VITALS_THRESHOLD: Cypress.ReportWebVitalsConfig = {
       thresholds: {fcp: 200, lcp: 200, cls: 0, ttfb: 40, fid: 200, inp: 200},
     };
-    cy.startVitalsCapture({url: '/'});
+    cy.startVitalsCapture({url: route});
     getResultTitles()
       .should('have.length.greaterThan', 0)
       .as('initial-results');
@@ -75,7 +76,7 @@ describe('headless ssr example', () => {
   describe('after hydration', () => {
     beforeEach(() => {
       spyOnConsole();
-      cy.visit('/');
+      cy.visit(route);
       waitForHydration();
     });
 

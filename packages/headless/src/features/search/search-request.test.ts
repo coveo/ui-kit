@@ -190,6 +190,24 @@ describe('search request', () => {
     expect(facets).toContainEqual(request);
   });
 
+  it('#searchRequest returns the state #generateAutomaticFacets.desiredCount', async () => {
+    state.automaticFacetSet.desiredCount = 5;
+    const params = (await buildSearchRequest(state)).request;
+
+    expect(params.generateAutomaticFacets?.desiredCount).toBe(
+      state.automaticFacetSet.desiredCount
+    );
+  });
+
+  it('#searchRequest returns the state #generateAutomaticFacets.numberOfValues', async () => {
+    state.automaticFacetSet.numberOfValues = 5;
+    const params = (await buildSearchRequest(state)).request;
+
+    expect(params.generateAutomaticFacets?.numberOfValues).toBe(
+      state.automaticFacetSet.numberOfValues
+    );
+  });
+
   it('#searchRequest strips automatic facets with no selected values', async () => {
     const selectedValue = buildMockFacetValue({state: 'selected'});
     const request = buildMockAutomaticFacetRequest({

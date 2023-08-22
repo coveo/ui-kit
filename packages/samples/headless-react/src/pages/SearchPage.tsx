@@ -279,7 +279,9 @@ export class SearchPage extends Component {
     this.facetManager = buildFacetManager(this.engine);
 
     this.automaticFacetGenerator = buildAutomaticFacetGenerator(this.engine, {
-      desiredCount: 5,
+      options: {
+        desiredCount: 5,
+      },
     });
 
     this.geographyFacet = buildCategoryFacet(this.engine, {
