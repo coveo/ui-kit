@@ -6,7 +6,7 @@ import {
   defineSearchEngine as defineBaseSearchEngine,
   mapObject,
 } from '@coveo/headless/ssr';
-import {Context, useContext, useCallback, useMemo} from 'react';
+import {useContext, useCallback, useMemo} from 'react';
 import {createContext, useSyncMemoizedStore} from './client-wrapper';
 import {
   ContextCSRState,
@@ -64,11 +64,13 @@ function buildControllerHook<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TKey extends keyof TControllers,
 >(
-  context: Context<ContextState<TEngine, TControllers>>,
   key: TKey
 ): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
   return () => {
-    const ctx = useContext(context);
+    const ctx = useContext(singletonContext().get()) as ContextState<
+      TEngine,
+      TControllers
+    >;
     if (ctx === null) {
       throw new MissingEngineProviderError();
     }
@@ -117,12 +119,7 @@ export function defineSearchEngine<
       ? Object.fromEntries(
           Object.keys(options.controllers).map((key) => [
             `use${capitalize(key)}`,
-            buildControllerHook(
-              singletonContext().get() as Context<
-                ContextState<SearchEngine<{}>, TControllers>
-              >,
-              key as keyof TControllers
-            ),
+            buildControllerHook(key as keyof TControllers),
           ])
         )
       : {}) as InferControllerHooksMapFromDefinition<TControllers>,
