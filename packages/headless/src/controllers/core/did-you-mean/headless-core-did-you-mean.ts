@@ -103,7 +103,7 @@ export function buildCoreDidYouMean(engine: CoreEngine): DidYouMean {
     },
 
     applyCorrection() {
-      this.state.hasQueryCorrection &&
+      this.state.automaticallyCorrectQuery &&
         dispatch(
           applyDidYouMeanCorrection(this.state.queryCorrection.correctedQuery)
         );
