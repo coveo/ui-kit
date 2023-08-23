@@ -33,31 +33,32 @@ function getPopupAttributes(props: Required<Props>['popup']) {
 }
 
 function syncTextWithReplica(elem: HTMLTextAreaElement, value?: string) {
-  const parent = elem.parentNode as HTMLElement;
+  const parent = elem?.parentNode as HTMLElement;
+  if (!parent) {
+    return;
+  }
   if (elem.value === '\n') {
     return;
   }
-  if (parent) {
-    parent.dataset.replicatedValue = value ?? elem.value;
-  }
+  parent.dataset.replicatedValue = value ?? elem.value;
 }
 
 function resetReplicaText(elem: HTMLTextAreaElement) {
-  const parent = elem.parentNode as HTMLElement;
+  const parent = elem?.parentNode as HTMLElement;
   if (parent) {
     delete parent.dataset.replicatedValue;
   }
 }
 
 function collapseTextArea(elem: HTMLTextAreaElement) {
-  const parent = elem.parentNode as HTMLElement;
+  const parent = elem?.parentNode as HTMLElement;
   if (parent) {
     parent.classList.remove('expanded');
   }
 }
 
 function expandTextArea(elem: HTMLTextAreaElement) {
-  const parent = elem.parentNode as HTMLElement;
+  const parent = elem?.parentNode as HTMLElement;
   if (parent) {
     parent.classList.add('expanded');
   }
