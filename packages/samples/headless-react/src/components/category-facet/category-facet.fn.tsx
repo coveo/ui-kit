@@ -34,44 +34,34 @@ export const CategoryFacet: FunctionComponent<CategoryFacetProps> = (props) => {
     );
   }
 
-  function renderParents() {
+  function renderValues() {
     return (
       state.hasActiveValues && (
         <div>
           Filtering by: {renderClearButton()}
-          {state.parents.map((parentValue, i) => {
-            const isSelectedValue = i === state.parents.length - 1;
-
-            return (
-              <span key={getUniqueKeyForValue(parentValue)}>
-                &rarr;
-                {!isSelectedValue ? (
-                  <button onClick={() => controller.toggleSelect(parentValue)}>
-                    {parentValue.value}
-                  </button>
-                ) : (
-                  <span>{parentValue.value}</span>
-                )}
-              </span>
-            );
-          })}
+          <ul>{state.valuesAsTrees.map(renderFacetValue)}</ul>
         </div>
       )
     );
   }
 
-  function renderActiveValues() {
+  function renderFacetValue(value: CategoryFacetValue) {
     return (
-      <ul>
-        {state.values.map((value) => (
-          <li key={getUniqueKeyForValue(value)}>
-            <button onClick={() => controller.toggleSelect(value)}>
-              {value.value} ({value.numberOfResults}{' '}
-              {value.numberOfResults === 1 ? 'result' : 'results'})
-            </button>
-          </li>
-        ))}
-      </ul>
+      <li key={getUniqueKeyForValue(value)}>
+        {value.children.length === 0
+          ? renderChildValue(value)
+          : value.children.map(renderFacetValue)}
+        {value.state === 'selected' && renderCanShowMoreLess()}
+      </li>
+    );
+  }
+
+  function renderChildValue(value: CategoryFacetValue) {
+    return (
+      <button onClick={() => controller.toggleSelect(value)}>
+        {value.value} ({value.numberOfResults}{' '}
+        {value.numberOfResults === 1 ? 'result' : 'results'})
+      </button>
     );
   }
 
@@ -88,18 +78,14 @@ export const CategoryFacet: FunctionComponent<CategoryFacetProps> = (props) => {
     );
   }
 
-  if (!state.hasActiveValues && state.values.length === 0) {
+  if (!state.hasActiveValues && state.valuesAsTrees.length === 0) {
     return <div>No facet values</div>;
   }
 
   return (
     <ul>
       <li>{renderSearch()}</li>
-      <li>
-        {renderParents()}
-        {renderActiveValues()}
-        {renderCanShowMoreLess()}
-      </li>
+      <li>{renderValues()}</li>
     </ul>
   );
 };
