@@ -32,13 +32,13 @@ function getPopupAttributes(props: Required<Props>['popup']) {
   };
 }
 
-function syncTextWithReplica(elem: HTMLTextAreaElement) {
+function syncTextWithReplica(elem: HTMLTextAreaElement, value?: string) {
   const parent = elem.parentNode as HTMLElement;
   if (elem.value === '\n') {
     return;
   }
   if (parent) {
-    parent.dataset.replicatedValue = elem.value;
+    parent.dataset.replicatedValue = value ?? elem.value;
   }
 }
 
@@ -72,6 +72,7 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
   onBlur,
   onChange,
   onKeyDown,
+  onKeyUp,
   value,
   ariaLabel,
   onClear,
@@ -88,7 +89,7 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
         rows={1}
         onInput={(e) => {
           onInput?.(e);
-          syncTextWithReplica(e.target as HTMLTextAreaElement);
+          syncTextWithReplica(textAreaRef);
         }}
         onKeyDown={(e) => {
           onKeyDown?.(e);
@@ -96,20 +97,29 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
             e.preventDefault();
             return;
           }
-          syncTextWithReplica(e.target as HTMLTextAreaElement);
+          syncTextWithReplica(textAreaRef);
+        }}
+        onKeyUp={(e) => {
+          onKeyUp?.(e);
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            return;
+          }
+          syncTextWithReplica(textAreaRef);
         }}
         onBlur={(e) => {
           onBlur?.(e);
-          collapseTextArea(e.target as HTMLTextAreaElement);
+          collapseTextArea(textAreaRef);
+          syncTextWithReplica(textAreaRef);
         }}
         onChange={(e) => {
           onChange?.(e);
-          syncTextWithReplica(e.target as HTMLTextAreaElement);
+          syncTextWithReplica(textAreaRef);
         }}
         onFocus={(e) => {
           onFocus?.(e);
-          const target = e.target as HTMLTextAreaElement;
-          expandTextArea(target);
+          syncTextWithReplica(textAreaRef);
+          expandTextArea(textAreaRef);
         }}
         autocomplete="off"
         {...(popup && getPopupAttributes(popup))}

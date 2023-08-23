@@ -641,6 +641,11 @@ export class AtomicSearchBox {
     }
   }
 
+  private triggerTextAreaChange(value: string) {
+    this.textAreaRef.value = value;
+    this.textAreaRef.dispatchEvent(new window.Event('change'));
+  }
+
   private renderSuggestion(
     item: SearchBoxSuggestionElement,
     index: number,
@@ -683,6 +688,9 @@ export class AtomicSearchBox {
         isDoubleList={this.isDoubleList}
         onClick={(e: Event) => {
           this.searchBoxCommon.onSuggestionClick(item, e);
+          if (this.textarea) {
+            this.triggerTextAreaChange(item.query ?? '');
+          }
         }}
         onMouseOver={() => {
           this.onSuggestionMouseOver(item, side, id);
@@ -802,6 +810,10 @@ export class AtomicSearchBox {
         textAreaRef={this.textAreaRef}
         ref={(el) => (this.textAreaRef = el as HTMLTextAreaElement)}
         {...props}
+        onClear={() => {
+          props.onClear();
+          this.triggerTextAreaChange('');
+        }}
       />
     ) : (
       <SearchInput

@@ -8,15 +8,23 @@ interface Props {
 export const SearchBoxWrapper: FunctionalComponent<Props> = (
   props,
   children
-) => (
-  <div
-    part="wrapper"
-    class={`flex bg-background w-full border border-neutral rounded-md focus-within:ring ${
-      props.disabled
-        ? 'focus-within:border-disabled focus-within:ring-neutral'
-        : 'focus-within:border-primary focus-within:ring-ring-primary'
-    } ${props.textArea ? 'absolute top-0 left-0' : 'relative h-full'}`}
-  >
-    {children}
-  </div>
-);
+) => {
+  const getClasses = () => {
+    const baseClasses =
+      'flex bg-background w-full border border-neutral rounded-md focus-within:ring';
+    const focusClasses = props.disabled
+      ? 'focus-within:border-disabled focus-within:ring-neutral'
+      : 'focus-within:border-primary focus-within:ring-ring-primary';
+    const inputTypeClasses = props.textArea
+      ? 'absolute top-0 left-0'
+      : 'relative h-full';
+
+    return [baseClasses, focusClasses, inputTypeClasses].join(' ');
+  };
+
+  return (
+    <div part="wrapper" class={getClasses()}>
+      {children}
+    </div>
+  );
+};
