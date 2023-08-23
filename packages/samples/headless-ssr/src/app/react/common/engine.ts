@@ -1,18 +1,8 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {defineSearchEngine} from '@coveo/headless-react';
-import {
-  defineResultList,
-  InferSSRState,
-  InferCSRState,
-} from '@coveo/headless/ssr';
+import {InferSSRState, InferCSRState} from '@coveo/headless/ssr';
+import {config} from '../../common/search-engine-config';
 
-const engineDefinition = defineSearchEngine({
-  configuration: {
-    ...getSampleSearchEngineConfiguration(),
-    analytics: {enabled: false},
-  },
-  controllers: {resultList: defineResultList()},
-});
+const engineDefinition = defineSearchEngine(config);
 
 export type SearchSSRState = InferSSRState<typeof engineDefinition>;
 export type SearchCSRState = InferCSRState<typeof engineDefinition>;
@@ -24,4 +14,4 @@ export const {
   CSRProvider,
 } = engineDefinition;
 
-export const {useResultList} = engineDefinition.controllers;
+export const {useResultList, useSearchBox} = engineDefinition.controllers;
