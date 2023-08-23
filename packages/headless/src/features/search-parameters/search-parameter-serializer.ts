@@ -39,13 +39,7 @@ function serializePair(pair: [string, unknown]) {
     return '';
   }
 
-  if (
-    key === 'f' ||
-    key === 'fExcluded' ||
-    key === 'cf' ||
-    key === 'sf' ||
-    key === 'af'
-  ) {
+  if (isSpecificFacetKey(key)) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
@@ -127,16 +121,16 @@ function serializeRangeFacets(
 
 function deserialize(fragment: string): SearchParameters {
   const parts = fragment.split(delimiter);
-  const test = parts
+  const keyValuePairs = parts
     .map((part) => splitOnFirstEqual(part))
-    .map(preprocessObjectPairs);
-
-  const keyValuePairs = test.filter(isValidPair).map(cast);
+    .map(preprocessObjectPairs)
+    .filter(isValidPair)
+    .map(cast);
 
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
 
-    if (keyHasObjectValue(key) || isSpecificFacetKey(key)) {
+    if (keyHasObjectValue(key)) {
       const mergedValues = {...acc[key], ...(val as object)};
       return {...acc, [key]: mergedValues};
     }
@@ -289,7 +283,7 @@ function cast<K extends SearchParameterKey>(pair: [K, string]): [K, unknown] {
     return [key, parseInt(value)];
   }
 
-  if (keyHasObjectValue(key) || isSpecificFacetKey(key)) {
+  if (keyHasObjectValue(key)) {
     return [key, castUnknownObject(value)];
   }
 
@@ -307,14 +301,16 @@ function castUnknownObject(value: string) {
   return ret;
 }
 
-function keyHasObjectValue(key: SearchParameterKey): key is 'af' | 'sf' {
-  const keys = ['af', 'sf'];
+function keyHasObjectValue(
+  key: SearchParameterKey
+): key is 'f' | 'af' | 'cf' | 'df' | 'nf' | 'sf' | 'fExcluded' {
+  const keys = ['f', 'fExcluded', 'cf', 'nf', 'df', 'sf', 'af'];
   return keys.includes(key);
 }
 
 function isSpecificFacetKey(
   key: SearchParameterKey
-): key is 'f' | 'cf' | 'df' | 'nf' | 'fExcluded' {
+): key is 'f' | 'af' | 'cf' | 'sf' | 'fExcluded' {
   const keys = ['f', 'cf', 'df', 'nf', 'fExcluded'];
   return keys.includes(key);
 }
