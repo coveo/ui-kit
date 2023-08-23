@@ -5,7 +5,9 @@ import {render} from '@testing-library/react';
 import {useEffect, useState} from 'react';
 import {defineSearchEngine} from './search-engine';
 
-describe('Headless react SSR utils', () => {
+// TODO(KIT-2692): Disabled until JSDOM env error can be fixed
+//  Error: "TypeError: Cannot read properties of undefined (reading 'html')"
+describe.skip('Headless react SSR utils', () => {
   let errorSpy: jest.SpyInstance;
   const sampleConfig = {
     ...getSampleSearchEngineConfiguration(),
