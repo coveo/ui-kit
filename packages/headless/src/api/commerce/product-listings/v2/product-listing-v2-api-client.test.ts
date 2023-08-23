@@ -8,7 +8,7 @@ import {
   ProductListingV2Request,
 } from './product-listing-v2-request';
 
-describe('product listing api client', () => {
+describe('product listing v2 api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
   const organizationId = 'some org id';
   const accessToken = 'some access token';
@@ -32,7 +32,7 @@ describe('product listing api client', () => {
     PlatformClient.call = platformCallMock;
   };
 
-  describe('getProducts', () => {
+  describe('getListing', () => {
     const buildGetListingV2Request = (
       req: Partial<ProductListingV2Request> = {}
     ): ProductListingV2Request => ({
