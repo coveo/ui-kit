@@ -1,5 +1,7 @@
-import {readFileSync, writeFileSync} from 'fs';
+import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {env} from 'process';
+
+const keysToValidate = process.argv.slice(2);
 
 const fileToValidate = JSON.parse(
   readFileSync('../../packages/atomic/src/locales.json')
@@ -23,10 +25,8 @@ const prompt = (translations) =>
   Give me the answer back in JSON format where each key is the language code, and each value is an object with two property: "translation" and "validation".
   
   "translation" Should be the translated string in english.
-  "validation" should contain exactly and only true if the meaning of the "translation" is similar to the "validator" property.
-
-  Otherwise, "validation" should contain an explanation about why it is not similar or why the meaning is different.
-
+  If the meaning of the "translation" is similar to the "validator" property "validation" should contain exactly and only true. Else it should contain an explanation on why "validator" is different from the "translation".
+  
   The JSON object is: 
   
   ${JSON.stringify(translations, null, 2)}
@@ -36,6 +36,8 @@ async function main() {
   let allIdentifiedProblems = {};
 
   for (const translationKey of Object.keys(fileToValidate)) {
+    if (keysToValidate.length > 0 && !keysToValidate.includes(translationKey))
+      continue;
     try {
       const englishTranslation = fileToValidate[translationKey]['en'];
       const translationsToValidate = fileToValidate[translationKey];
@@ -66,7 +68,7 @@ async function main() {
 
       Object.entries(answer).forEach(
         ([languageCode, {validation, translation}]) => {
-          if (true) {
+          if (validation !== true) {
             const problem = {
               languageCode,
               translation,

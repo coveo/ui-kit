@@ -1,3 +1,24 @@
+# 2.27.0 (2023-08-21)
+
+### Bug Fixes
+
+- **headless:** adapted the usage of the AbortController to make GenQI Quantic component work with locker service ([#3115](https://github.com/coveo/ui-kit/issues/3115)) ([b99864a](https://github.com/coveo/ui-kit/commits/b99864ad998e13d88bdd6ef7adf59be3abb783aa))
+
+### Features
+
+- **atomic, headless:** add numberOfValues property in automatic facet generator ([#3101](https://github.com/coveo/ui-kit/issues/3101)) ([8fcd1ed](https://github.com/coveo/ui-kit/commits/8fcd1edba96c2226ddc9fca6c3774e9842f3bca2))
+
+## 2.26.1 (2023-08-16)
+
+### Bug Fixes
+
+- **headless:** fixed ssr type inference ([#3098](https://github.com/coveo/ui-kit/issues/3098)) ([804af40](https://github.com/coveo/ui-kit/commits/804af40141ee0c3cc680ab1cc5a3a7ac4e62c155))
+
+### Features
+
+- **headless:** add categoryFacet/updateBasePath action ([#3077](https://github.com/coveo/ui-kit/issues/3077)) ([304b550](https://github.com/coveo/ui-kit/commits/304b55096b0a244dc05630e06e2399dff7eeeb89))
+- **headless:** added defineResultList SSR controller ([#3099](https://github.com/coveo/ui-kit/issues/3099)) ([9fce780](https://github.com/coveo/ui-kit/commits/9fce7809eacb97387ba1b1523cbf678f949bdfef))
+
 ## 2.25.1 (2023-08-10)
 
 ### Bug Fixes
