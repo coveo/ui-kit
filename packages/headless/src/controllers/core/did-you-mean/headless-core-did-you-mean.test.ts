@@ -41,4 +41,12 @@ describe('did you mean', () => {
     dym.applyCorrection();
     expect(engine.actions).toContainEqual(applyDidYouMeanCorrection('bar'));
   });
+
+  it('should allow to disable automatic query correction', () => {
+    engine.state.didYouMean.automaticallyCorrectQuery = false;
+    initDidYouMean();
+
+    dym.applyCorrection();
+    expect(engine.actions).not.toContainEqual(applyDidYouMeanCorrection('bar'));
+  });
 });

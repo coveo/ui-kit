@@ -58,6 +58,11 @@ export interface DidYouMeanState {
    * Specifies if there is a query correction to apply.
    */
   hasQueryCorrection: boolean;
+
+  /**
+   * Whether to automatically correct queries that will return no results.
+   */
+  automaticallyCorrectQuery: boolean;
 }
 
 /**
@@ -93,13 +98,15 @@ export function buildCoreDidYouMean(engine: CoreEngine): DidYouMean {
         hasQueryCorrection:
           state.didYouMean.queryCorrection.correctedQuery !== '' ||
           state.didYouMean.wasCorrectedTo !== '',
+        automaticallyCorrectQuery: state.didYouMean.automaticallyCorrectQuery,
       };
     },
 
     applyCorrection() {
-      dispatch(
-        applyDidYouMeanCorrection(this.state.queryCorrection.correctedQuery)
-      );
+      this.state.hasQueryCorrection &&
+        dispatch(
+          applyDidYouMeanCorrection(this.state.queryCorrection.correctedQuery)
+        );
     },
   };
 }
