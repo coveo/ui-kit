@@ -8,6 +8,7 @@ import {
   SSRStateProvider,
 } from '@/src/app/react/common/engine';
 import {useEffect, useState} from 'react';
+import {HydrationMetadata} from '../../common/hydration-metadata';
 import ResultList from './result-list';
 
 export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
@@ -28,12 +29,14 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
         controllers={csrResult.controllers}
       >
         <ResultList />
+        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
       </CSRProvider>
     );
   } else {
     return (
       <SSRStateProvider controllers={ssrState.controllers}>
         <ResultList />
+        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
       </SSRStateProvider>
     );
   }

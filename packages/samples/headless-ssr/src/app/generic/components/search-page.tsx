@@ -6,7 +6,7 @@ import {
   hydrateInitialState,
 } from '@/src/app/generic/common/engine';
 import {useEffect, useState} from 'react';
-import {HydrationMetadata} from './hydration-metadata';
+import {HydrationMetadata} from '../../common/hydration-metadata';
 import {ResultList} from './result-list';
 
 export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
