@@ -3,7 +3,9 @@ import { buildNodeEnvironment } from "./node/node";
 
 export interface Environment {
   runtime: "browser" | "node";
-  getReferrer: () => string | null;
+  getReferrerUrl: () => string | null;
+  getUrl: () => string | null;
+  getUserAgent: () => string | null;
 }
 
 export function currentEnvironment(): Environment {

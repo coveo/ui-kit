@@ -10,7 +10,15 @@ describe("buildNodeEnvironment", () => {
     expect(buildNodeEnvironment().runtime).toBe("node");
   });
 
-  it("getReferrer returns null", () => {
-    expect(buildNodeEnvironment().getReferrer()).toBe(null);
+  it("getReferrerUrl returns null", () => {
+    expect(buildNodeEnvironment().getReferrerUrl()).toBe(null);
+  });
+
+  it("getUrl returns null", () => {
+    expect(buildNodeEnvironment().getUrl()).toBe(null);
+  });
+
+  it("getUserAgent returns null", () => {
+    expect(buildNodeEnvironment().getUserAgent()).toBe(null);
   });
 });
