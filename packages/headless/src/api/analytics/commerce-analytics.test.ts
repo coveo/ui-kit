@@ -1,12 +1,12 @@
 import {buildMockProductListingV2State} from '../../test/mock-product-listing-v2-state';
 import {buildMockProductRecommendation} from '../../test/mock-product-recommendation';
 import {
-  ProductListingV2AnalyticsProvider,
-  StateNeededByProductListingV2AnalyticsProvider,
+  CommerceAnalyticsProvider,
+  StateNeededByCommerceAnalyticsProvider,
 } from './commerce-analytics';
 
-describe('listing analytics', () => {
-  const getBaseState = (): StateNeededByProductListingV2AnalyticsProvider =>
+describe('commerce analytics', () => {
+  const getBaseState = (): StateNeededByCommerceAnalyticsProvider =>
     buildMockProductListingV2State();
 
   it('should properly return getSearchEventRequestPayload', () => {
@@ -16,9 +16,7 @@ describe('listing analytics', () => {
       buildMockProductRecommendation(),
     ];
     expect(
-      new ProductListingV2AnalyticsProvider(
-        () => state
-      ).getSearchEventRequestPayload()
+      new CommerceAnalyticsProvider(() => state).getSearchEventRequestPayload()
     ).toMatchObject({
       queryText: '',
       responseTime: 0,
@@ -30,8 +28,8 @@ describe('listing analytics', () => {
   it('should properly return getSearchUID from recommendation.responseId', () => {
     const state = getBaseState();
     state.productListing!.responseId = 'the_id';
-    expect(
-      new ProductListingV2AnalyticsProvider(() => state).getSearchUID()
-    ).toEqual('the_id');
+    expect(new CommerceAnalyticsProvider(() => state).getSearchUID()).toEqual(
+      'the_id'
+    );
   });
 });

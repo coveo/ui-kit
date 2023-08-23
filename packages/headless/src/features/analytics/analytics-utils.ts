@@ -29,9 +29,9 @@ import {
   StateNeededByCaseAssistAnalytics,
 } from '../../api/analytics/case-assist-analytics';
 import {
-  StateNeededByProductListingV2AnalyticsProvider,
-  ProductListingV2AnalyticsProvider,
-  configureProductListingV2Analytics,
+  StateNeededByCommerceAnalyticsProvider,
+  CommerceAnalyticsProvider,
+  configureCommerceAnalytics,
 } from '../../api/analytics/commerce-analytics';
 import {
   configureInsightAnalytics,
@@ -170,7 +170,7 @@ export type ProductListingV2Action<
   T extends AnalyticsType = AnalyticsType.Search
 > = PreparableAnalyticsAction<
   {analyticsType: T},
-  StateNeededByProductListingV2AnalyticsProvider
+  StateNeededByCommerceAnalyticsProvider
 >;
 
 export interface AsyncThunkAnalyticsOptions<
@@ -600,9 +600,9 @@ export const makeProductListingAnalyticsAction = <
   );
 };
 
-export const makeProductListingV2AnalyticsAction = <
+export const makeCommerceAnalyticsAction = <
   EventType extends AnalyticsType,
-  StateNeeded extends StateNeededByProductListingV2AnalyticsProvider = StateNeededByProductListingV2AnalyticsProvider
+  StateNeeded extends StateNeededByCommerceAnalyticsProvider = StateNeededByCommerceAnalyticsProvider
 >(
   prefix: string,
   analyticsType: EventType,
@@ -611,9 +611,9 @@ export const makeProductListingV2AnalyticsAction = <
     state: StateNeeded
   ) => Promise<EventBuilder | null> | null,
   provider: (
-    getState: () => StateNeededByProductListingV2AnalyticsProvider
+    getState: () => StateNeededByCommerceAnalyticsProvider
   ) => SearchPageClientProvider = (getState) =>
-    new ProductListingV2AnalyticsProvider(getState)
+    new CommerceAnalyticsProvider(getState)
 ): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded> => {
   return makePreparableAnalyticsAction(
     prefix,
@@ -623,7 +623,7 @@ export const makeProductListingV2AnalyticsAction = <
       preprocessRequest,
       logger,
     }) => {
-      const client = configureProductListingV2Analytics({
+      const client = configureCommerceAnalytics({
         getState,
         logger,
         analyticsClientMiddleware,

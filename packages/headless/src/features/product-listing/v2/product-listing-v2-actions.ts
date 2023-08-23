@@ -27,7 +27,7 @@ import {
 } from '../../analytics/analytics-utils';
 import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../../search/search-analytics-actions';
-import {logProductListingV2} from './product-listing-v2-analytics';
+import {logProductListingV2Load} from './product-listing-v2-analytics';
 
 export interface SetProductListingUrlPayload {
   /**
@@ -126,7 +126,7 @@ export const fetchProductListing = createAsyncThunk<
 
     return {
       response: fetched.success,
-      analyticsAction: logProductListingV2(),
+      analyticsAction: logProductListingV2Load(),
     };
   }
 );

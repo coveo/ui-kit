@@ -1,6 +1,6 @@
 import {Schema} from '@coveo/bueno';
 import {DocumentIdentifier, PartialDocumentInformation} from 'coveo.analytics';
-import {ProductListingV2AnalyticsProvider} from '../../../api/analytics/commerce-analytics';
+import {CommerceAnalyticsProvider} from '../../../api/analytics/commerce-analytics';
 import {ProductRecommendation, Result} from '../../../product-listing.index';
 import {ProductListingV2AppState} from '../../../state/commerce-app-state';
 import {
@@ -8,22 +8,22 @@ import {
   makeAnalyticsAction,
   resultPartialDefinition,
   ProductListingV2Action,
-  makeProductListingV2AnalyticsAction,
+  makeCommerceAnalyticsAction,
 } from '../../analytics/analytics-utils';
 
-export const logProductListingV2 = (): ProductListingV2Action =>
-  makeProductListingV2AnalyticsAction(
-    'analytics/productListing/v2/load',
+export const logProductListingV2Load = (): ProductListingV2Action =>
+  makeCommerceAnalyticsAction(
+    'analytics/commerce/product-listing/load',
     AnalyticsType.Search,
     (client) => client.makeInterfaceLoad(),
-    (getState) => new ProductListingV2AnalyticsProvider(getState)
+    (getState) => new CommerceAnalyticsProvider(getState)
   );
 
-export const logProductRecommendationOpen = (
+export const logProductListingV2Open = (
   productRec: ProductRecommendation
 ): ProductListingV2Action<AnalyticsType.Click> =>
   makeAnalyticsAction(
-    'analytics/productListing/open',
+    'analytics/commerce/product-listing/open',
     AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(productRec);
@@ -32,7 +32,7 @@ export const logProductRecommendationOpen = (
         documentIdentifier(productRec)
       );
     },
-    (getState) => new ProductListingV2AnalyticsProvider(getState)
+    (getState) => new CommerceAnalyticsProvider(getState)
   );
 
 const documentIdentifier = (

@@ -15,13 +15,12 @@ import {PreprocessRequest} from '../preprocess-request';
 import {getProductListingInitialState} from './../../features/product-listing/product-listing-state';
 import {BaseAnalyticsProvider} from './base-analytics';
 
-export type StateNeededByProductListingV2AnalyticsProvider =
-  ConfigurationSection &
-    ProductListingV2Section &
-    Partial<SearchHubSection & SectionNeededForFacetMetadata>;
+export type StateNeededByCommerceAnalyticsProvider = ConfigurationSection &
+  ProductListingV2Section &
+  Partial<SearchHubSection & SectionNeededForFacetMetadata>;
 
-export class ProductListingV2AnalyticsProvider
-  extends BaseAnalyticsProvider<StateNeededByProductListingV2AnalyticsProvider>
+export class CommerceAnalyticsProvider
+  extends BaseAnalyticsProvider<StateNeededByCommerceAnalyticsProvider>
   implements SearchPageClientProvider
 {
   private initialState = getProductListingInitialState();
@@ -60,21 +59,21 @@ export class ProductListingV2AnalyticsProvider
   }
 }
 
-interface ConfigureProductListingV2AnalyticsOptions {
+interface ConfigureCommerceAnalyticsOptions {
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   preprocessRequest?: PreprocessRequest;
   provider?: SearchPageClientProvider;
-  getState(): StateNeededByProductListingV2AnalyticsProvider;
+  getState(): StateNeededByCommerceAnalyticsProvider;
 }
 
-export const configureProductListingV2Analytics = ({
+export const configureCommerceAnalytics = ({
   logger,
   getState,
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
-  provider = new ProductListingV2AnalyticsProvider(getState),
-}: ConfigureProductListingV2AnalyticsOptions) => {
+  provider = new CommerceAnalyticsProvider(getState),
+}: ConfigureCommerceAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
