@@ -1,6 +1,13 @@
 import 'cypress-web-vitals';
 import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
 
+const getResultTitles = () =>
+  (
+    cy.get('.result-list li').invoke('map', function (this: HTMLElement) {
+      return this.innerText;
+    }) as Cypress.Chainable<JQuery<string>>
+  ).invoke('toArray');
+
 describe('headless ssr example', () => {
   const route = '/generic';
   const numResults = 10;
@@ -14,7 +21,9 @@ describe('headless ssr example', () => {
         expect(dom.querySelector(msgSelector)?.textContent).to.equal(
           numResultsMsg
         );
-        expect(dom.querySelectorAll('li').length).to.equal(numResults);
+        expect(dom.querySelectorAll('.result-list li').length).to.equal(
+          numResults
+        );
       });
     });
     cy.visit(route);
@@ -23,7 +32,7 @@ describe('headless ssr example', () => {
   it('renders page in CSR as expected', () => {
     cy.visit(route);
     cy.get(msgSelector).should('have.text', numResultsMsg);
-    cy.get('li').should('have.length', numResults);
+    cy.get('.result-list li').should('have.length', numResults);
   });
 
   it('renders result list in SSR and then in CSR', () => {
@@ -48,21 +57,52 @@ describe('headless ssr example', () => {
   });
 
   it('should pass the web-vitals audits', () => {
-    // TODO: Add input based vitals after interactive elements are added to test page (e.g. search box)
     // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
-    const VITALS_THRESHOLD = {
-      thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20},
+    const VITALS_THRESHOLD: Cypress.ReportWebVitalsConfig = {
+      thresholds: {
+        fcp: 200,
+        lcp: 200,
+        cls: 0,
+        ttfb: 40,
+        fid: 200, // TODO: Make sure that the time for re-rendering after the interactions below is properly counted.
+        inp: 200,
+      },
     };
-    cy.visit(route);
-    cy.vitals(VITALS_THRESHOLD);
+    cy.startVitalsCapture({url: route});
+    getResultTitles()
+      .should('have.length.greaterThan', 0)
+      .as('initial-results');
+    waitForHydration();
+    cy.get('.search-box input').focus().type('abc{enter}');
+    cy.get<string>('@initial-results').then((initialResults) =>
+      getResultTitles().should('not.deep.equal', initialResults)
+    );
+    cy.reportVitals(VITALS_THRESHOLD);
   });
 
-  it('should not log any error nor warning', () => {
-    spyOnConsole();
-    cy.visit(route);
-    waitForHydration();
-    cy.wait(1000);
-    cy.get(ConsoleAliases.error).should('not.be.called');
-    cy.get(ConsoleAliases.warn).should('not.be.called');
+  describe('after hydration', () => {
+    beforeEach(() => {
+      spyOnConsole();
+      cy.visit(route);
+      waitForHydration();
+    });
+
+    it('should not log any error nor warning', () => {
+      cy.wait(1000);
+      cy.get(ConsoleAliases.error).should('not.be.called');
+      cy.get(ConsoleAliases.warn).should('not.be.called');
+    });
+
+    it('after submitting a query, should change search results', () => {
+      getResultTitles()
+        .should('have.length.greaterThan', 0)
+        .as('initial-results');
+      cy.get('.search-box input').focus().type('abc{enter}');
+      cy.get<string>('@initial-results').then((initialResults) => {
+        getResultTitles()
+          .should('not.deep.equal', initialResults)
+          .and('have.length', 10);
+      });
+    });
   });
 });

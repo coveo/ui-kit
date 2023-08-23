@@ -12,7 +12,7 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        command-prefix: 'npm run e2e'
         working-directory: ./packages/samples/headless-ssr
         start: npm run prod
         wait-on: 'http://localhost:3000'

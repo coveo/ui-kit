@@ -17,14 +17,14 @@
     "no": "Søk",
     "pl": "Wyszukaj",
     "pt": "Pesquisar",
-    "pt-br": "Pesquisar",
+    "pt-BR": "Pesquisar",
     "ru": "Искать",
     "sv": "Sök",
     "th": "ค้นหา",
     "tr": "Ara",
     "zh": "搜索",
-    "zh-cn": "搜索",
-    "zh-tw": "搜尋"
+    "zh-CN": "搜索",
+    "zh-TW": "搜尋"
   },
   "no-title": {
     "en": "No title",
@@ -44,14 +44,14 @@
     "no": "Ingen tittel",
     "pl": "Brak tytułu",
     "pt": "Sem título",
-    "pt-br": "Sem título",
+    "pt-BR": "Sem título",
     "ru": "Без названия",
     "sv": "Ingen Titel",
     "th": "ไม่มีชื่อ",
     "tr": "Başlık yok",
     "zh": "无标题",
-    "zh-cn": "无标题",
-    "zh-tw": "無標題"
+    "zh-CN": "无标题",
+    "zh-TW": "無標題"
   },
   "search-ellipsis": {
     "en": "Search...",
@@ -71,14 +71,14 @@
     "no": "Søk...",
     "pl": "Szukaj...",
     "pt": "Pesquisar...",
-    "pt-br": "Buscar...",
+    "pt-BR": "Buscar...",
     "ru": "Поиск...",
     "sv": "Sök...",
     "th": "ค้นหา...",
     "tr": "Ara...",
     "zh": "搜索...",
-    "zh-cn": "搜索...",
-    "zh-tw": "搜尋..."
+    "zh-CN": "搜索...",
+    "zh-TW": "搜尋..."
   },
   "left": {
     "en": "Left",
@@ -98,14 +98,14 @@
     "no": "Venstre",
     "pl": "Lewo",
     "pt": "Esquerda",
-    "pt-br": "Esquerda",
+    "pt-BR": "Esquerda",
     "ru": "Левый",
     "sv": "Vänster",
     "th": "ซ้าย",
     "tr": "Sol",
     "zh": "左",
-    "zh-cn": "左",
-    "zh-tw": "左"
+    "zh-CN": "左",
+    "zh-TW": "左"
   },
   "right": {
     "en": "Right",
@@ -125,14 +125,14 @@
     "no": "Høyre",
     "pl": "Prawo",
     "pt": "Direito",
-    "pt-br": "Direita",
+    "pt-BR": "Direita",
     "ru": "Право",
     "sv": "Höger",
     "th": "ขวา",
     "tr": "Sağ",
     "zh": "右",
-    "zh-cn": "右",
-    "zh-tw": "右"
+    "zh-CN": "右",
+    "zh-TW": "右"
   },
   "search-box": {
     "en": "Input field to perform a search. Insert a query. To send, press Enter.",
@@ -152,14 +152,14 @@
     "no": "Innmatingsfelt for å utføre en søk. Sett inn en forespørsel. For å sende, trykk Enter.",
     "pl": "Pole wprowadzania do wykonania wyszukiwania. Wprowadź zapytanie. Aby wysłać, naciśnij Enter.",
     "pt": "Campo de entrada para realizar uma pesquisa. Insira uma consulta. Para enviar, pressione Enter.",
-    "pt-br": "Campo de entrada para realizar uma pesquisa. Insira uma consulta. Para enviar, pressione Enter.",
+    "pt-BR": "Campo de entrada para realizar uma pesquisa. Insira uma consulta. Para enviar, pressione Enter.",
     "ru": "Поле ввода для выполнения поиска. Введите запрос. Чтобы отправить, нажмите Enter.",
     "sv": "Inmatningsfält för att utföra en sökning. Infoga en förfrågan. För att skicka, tryck på Enter.",
     "th": "ช่องป้อนข้อมูลสำหรับการค้นหา ป้อนคิวรี เพื่อส่ง กด Enter",
     "tr": "Arama yapmak için giriş alanı. Bir sorgu ekleyin. Göndermek için Enter tuşuna basın.",
     "zh": "执行搜索的输入字段。插入查询。要发送，请按Enter。",
-    "zh-cn": "执行搜索的输入字段。插入查询。要发送，请按Enter。",
-    "zh-tw": "執行搜尋的輸入欄位。插入查詢。要傳送，請按Enter。"
+    "zh-CN": "执行搜索的输入字段。插入查询。要发送，请按Enter。",
+    "zh-TW": "執行搜尋的輸入欄位。插入查詢。要傳送，請按Enter。"
   },
   "search-box-with-suggestions": {
     "en": "Search field with suggestions. To begin navigating suggestions, while focused, press Down Arrow. To send, press Enter.",
@@ -179,14 +179,14 @@
     "no": "Søkefelt med forslag. Trykk på Pil ned for å navigere i forslagene. Trykk på Enter for å sende.",
     "pl": "Pole wyszukiwania z sugestiami. Aby rozpocząć nawigowanie sugestiami, gdy jest ustawiony fokus, naciśnij strzałkę w dół. Aby wysłać, naciśnij klawisz Enter.",
     "pt": "Campo de pesquisa com sugestões. Para começar a navegar pelas sugestões, enquanto estiver em foco, pressione a seta para baixo. Para enviar, pressione Enter.",
-    "pt-br": "Campo de pesquisa com sugestões. Para começar a navegar nas sugestões, enquanto estiver em foco, pressione a seta para baixo. Para enviar, pressione Enter.",
+    "pt-BR": "Campo de pesquisa com sugestões. Para começar a navegar nas sugestões, enquanto estiver em foco, pressione a seta para baixo. Para enviar, pressione Enter.",
     "ru": "Поле поиска с предложениями. Чтобы начать навигацию по предложениям, когда фокус находится на поле, нажмите стрелку вниз. Чтобы отправить, нажмите клавишу Enter.",
     "sv": "Sökfält med förslag. För att börja navigera förslagen, medan du är fokuserad, tryck Pil ned. För att skicka, tryck Enter.",
     "th": "ช่องค้นหาพร้อมข้อเสนอแนะ หากต้องการนำทางข้อเสนอแนะขณะโฟกัสกล่องข้อความ ให้กดลูกศรลง หากต้องการส่งข้อความ ให้กด Enter",
     "tr": "Önerilerle arama kutusu. Odaklanırken önerilerden geçmek için Aşağı Ok'a basın. Göndermek için Enter'a basın.",
     "zh": "带建议的搜索栏。在有焦点的情况下开始导航建议，按下方向键。按 Enter 发送。",
-    "zh-cn": "带有建议的搜索栏。在有焦点的情况下开始导航建议，按下方向键。按 Enter 发送。",
-    "zh-tw": "帶有建議的搜尋欄。在有焦點的情況下開始導覽建議，按下方向鍵。按 Enter 發送。"
+    "zh-CN": "带有建议的搜索栏。在有焦点的情况下开始导航建议，按下方向键。按 Enter 发送。",
+    "zh-TW": "帶有建議的搜尋欄。在有焦點的情況下開始導覽建議，按下方向鍵。按 Enter 發送。"
   },
   "search-box-with-suggestions-macos": {
     "en": "Search field with suggestions. Suggestions may be available under this field. To send, press Enter.",
@@ -206,14 +206,14 @@
     "no": "Søkefelt med forslag. Forslag kan være tilgjengelige under dette feltet. For å sende, trykk på Enter.",
     "pl": "Pole wyszukiwania z sugestiami. Sugestie mogą być dostępne pod tym polem. Aby wysłać, naciśnij klawisz Enter.",
     "pt": "Campo de pesquisa com sugestões. As sugestões podem estar disponíveis abaixo deste campo. Para enviar, pressione Enter.",
-    "pt-br": "Campo de pesquisa com sugestões. As sugestões podem estar disponíveis abaixo deste campo. Para enviar, pressione Enter.",
+    "pt-BR": "Campo de pesquisa com sugestões. As sugestões podem estar disponíveis abaixo deste campo. Para enviar, pressione Enter.",
     "ru": "Поле поиска с предложениями. Предложения могут быть доступны под этим полем. Чтобы отправить, нажмите Enter.",
     "sv": "Sökruta med förslag. Förslag kan finnas tillgängliga under detta fält. För att skicka, tryck på Enter.",
     "th": "ช่องค้นหาพร้อมข้อเสนอแนะ ข้อเสนอแนะอาจมีให้ในช่องนี้ หากต้องการส่งให้กด Enter",
     "tr": "Önerilerle arama alanı. Öneriler, bu alanın altında bulunabilir. Göndermek için Enter tuşuna basın.",
     "zh": "带有建议的搜索栏。建议可能在此字段下可用。要发送，请按Enter。",
-    "zh-cn": "带有建议的搜索栏。建议可能在此字段下可用。要发送，请按Enter。",
-    "zh-tw": "帶有建議的搜尋列。建議可能在此欄位下可用。若要發送，請按Enter。"
+    "zh-CN": "带有建议的搜索栏。建议可能在此字段下可用。要发送，请按Enter。",
+    "zh-TW": "帶有建議的搜尋列。建議可能在此欄位下可用。若要發送，請按Enter。"
   },
   "search-box-with-suggestions-keyboardless": {
     "en": "Search field with suggestions. Suggestions may be available under this field. To send, press Enter.",
@@ -233,14 +233,14 @@
     "no": "Søkefelt med forslag. Forslag kan være tilgjengelige under dette feltet. For å sende, trykk Enter.",
     "pl": "Pole wyszukiwania z sugestiami. Sugestie mogą być dostępne pod tym polem. Aby wysłać, naciśnij Enter.",
     "pt": "Campo de pesquisa com sugestões. Sugestões podem estar disponíveis abaixo deste campo. Para enviar, pressione Enter.",
-    "pt-br": "Campo de pesquisa com sugestões. Sugestões podem estar disponíveis abaixo deste campo. Para enviar, pressione Enter.",
+    "pt-BR": "Campo de pesquisa com sugestões. Sugestões podem estar disponíveis abaixo deste campo. Para enviar, pressione Enter.",
     "ru": "Поле поиска с подсказками. Подсказки могут быть доступны под этим полем. Для отправки нажмите клавишу Enter.",
     "sv": "Sökfält med förslag. Förslag kan finnas tillgängliga under detta fält. För att skicka, tryck på Enter.",
     "th": "ช่องค้นหาพร้อมคำแนะนำ คำแนะนำอาจมีให้ในช่องนี้ หากต้องการส่ง กด Enter",
     "tr": "Önerilerle arama kutusu. Öneriler bu kutunun altında bulunabilir. Göndermek için Enter tuşuna basın.",
     "zh": "带建议的搜索框。建议可能在此字段下方。要发送，请按Enter。",
-    "zh-cn": "带建议的搜索框。建议可能在此字段下方。要发送，请按Enter。",
-    "zh-tw": "具建議的搜尋欄。建議可能在這個欄位下面。按Enter鍵以傳送。"
+    "zh-CN": "带建议的搜索框。建议可能在此字段下方。要发送，请按Enter。",
+    "zh-TW": "具建議的搜尋欄。建議可能在這個欄位下面。按Enter鍵以傳送。"
   },
   "search-suggestions-single-list": {
     "en": "Search suggestions. To navigate between suggestions, press Up Arrow or Down Arrow. To select a suggestion, press Enter.",
@@ -260,14 +260,14 @@
     "no": "Søkeforslag. For å navigere mellom forslagene, trykker du på Pil opp eller Pil ned. For å velge et forslag, trykker du på Enter.",
     "pl": "Sugestie wyszukiwania. Aby nawigować między sugestiami, naciśnij strzałkę w górę lub w dół. Aby wybrać sugestię, naciśnij klawisz Enter.",
     "pt": "Sugestões de pesquisa. Para navegar entre sugestões, pressione a seta para cima ou para baixo. Para selecionar uma sugestão, pressione Enter.",
-    "pt-br": "Sugestões de pesquisa. Para navegar entre as sugestões, pressione Setas para cima ou para baixo. Para selecionar uma sugestão, pressione Enter.",
+    "pt-BR": "Sugestões de pesquisa. Para navegar entre as sugestões, pressione Setas para cima ou para baixo. Para selecionar uma sugestão, pressione Enter.",
     "ru": "Варианты поиска. Для навигации между вариантами используйте стрелки вверх или вниз. Чтобы выбрать вариант, нажмите клавишу Enter.",
     "sv": "Söksuggestions. För att navigera mellan förslagen, tryck på upp- eller nedpilen. För att välja ett förslag, tryck på Enter.",
     "th": "เสนอคำค้นหา. เพื่อนำทางระหว่างเสนอคำค้นหา กดลูกศรขึ้นหรือลง หากต้องการเลือกเสนอคำค้นหา กด Enter",
     "tr": "Arama önerileri. Öneriler arasında gezinmek için Yukarı Ok veya Aşağı Ok tuşuna basın. Bir öneriyi seçmek için Enter tuşuna basın.",
     "zh": "搜索建议。要在建议之间导航，请按上箭头或下箭头。要选择建议，请按 Enter。",
-    "zh-cn": "搜索建议。要在建议之间导航，请按向上箭头或向下箭头。要选择建议，请按 Enter。",
-    "zh-tw": "搜尋建議。若要在建議間導覽，請按上箭頭或下箭頭；若要選取建議，請按 Enter。"
+    "zh-CN": "搜索建议。要在建议之间导航，请按向上箭头或向下箭头。要选择建议，请按 Enter。",
+    "zh-TW": "搜尋建議。若要在建議間導覽，請按上箭頭或下箭頭；若要選取建議，請按 Enter。"
   },
   "search-suggestions-double-list": {
     "en": "Two lists of search box suggestions side-by-side. To navigate between suggestions, press Up Arrow or Down Arrow. To toggle between the two lists, press Left Arrow or Right Arrow. To select a suggestion, press Enter.",
@@ -287,14 +287,14 @@
     "no": "To lister med søkeboksforslag side om side. For å navigere mellom forslag, trykk Opp eller Ned Arrow. For å bytte mellom de to listene, trykk Venstre eller Høyre Arrow. For å velge et forslag, trykk Enter.",
     "pl": "Dwie listy sugestii pola wyszukiwania obok siebie. Aby nawigować między sugestiami, naciśnij strzałkę w górę lub w dół. Aby przełączać się między dwoma listami, naciśnij strzałkę w lewo lub w prawo. Aby wybrać sugestię, naciśnij klawisz Enter.",
     "pt": "Duas listas de sugestões de caixa de pesquisa lado a lado. Para navegar entre as sugestões, pressione a seta para cima ou para baixo. Para alternar entre as duas listas, pressione a seta para a esquerda ou para a direita. Para selecionar uma sugestão, pressione Enter.",
-    "pt-br": "Duas listas de sugestões de caixa de pesquisa lado a lado. Para navegar entre as sugestões, pressione a seta para cima ou para baixo. Para alternar entre as duas listas, pressione a seta para a esquerda ou para a direita. Para selecionar uma sugestão, pressione Enter.",
+    "pt-BR": "Duas listas de sugestões de caixa de pesquisa lado a lado. Para navegar entre as sugestões, pressione a seta para cima ou para baixo. Para alternar entre as duas listas, pressione a seta para a esquerda ou para a direita. Para selecionar uma sugestão, pressione Enter.",
     "ru": "Два списка подсказок для поля поиска рядом друг с другом. Для перемещения между подсказками нажмите стрелку вверх или вниз. Чтобы переключиться между двумя списками, нажмите стрелку влево или вправо. Чтобы выбрать подсказку, нажмите клавишу Enter.",
     "sv": "Två listor med sökrute förslag sida vid sida. För att navigera mellan förslag tryck upp eller ner pil. För att växla mellan två listor, tryck vänster eller höger pil. För att välja ett förslag, tryck på Enter.",
     "th": "สองรายการของเคล็ดลับกล่องค้นหาเคียงข้างกัน เพื่อนำทางระหว่างคำแนะนำให้กดปุ่มลูกศรขึ้นหรือลง อ้างอิงไปยังสองรายการให้กดปุ่มลูกศรซ้ายหรือขวา ในการเลือกคำแนะนำให้กดปุ่ม Enter",
     "tr": "Arama kutusu önerilerinin yan yana iki listesi. Öneriler arasında gezinmek için Yukarı veya Aşağı Ok tuşlarına basın. İki listesi arasında geçiş yapmak için Sol veya Sağ Ok tuşuna basın. Bir öneri seçmek için Enter tuşuna basın.",
     "zh": "两个搜索框建议列表并排显示。要在建议之间导航，请按上箭头或下箭头。要在两个列表之间切换，请按左箭头或右箭头。要选择要建议，请按Enter。",
-    "zh-cn": "两个搜索框建议列表并排显示。要在建议之间导航，请按上箭头或下箭头。要在两个列表之间切换，请按左箭头或右箭头。要选择要建议，请按Enter。",
-    "zh-tw": "兩個搜尋框建議列表並排顯示。要在建議之間導航，請按上箭頭或下箭頭。要在兩個列表之間切換，請按左箭頭或右箭頭。要選擇要建議，請按Enter。"
+    "zh-CN": "两个搜索框建议列表并排显示。要在建议之间导航，请按上箭头或下箭头。要在两个列表之间切换，请按左箭头或右箭头。要选择要建议，请按Enter。",
+    "zh-TW": "兩個搜尋框建議列表並排顯示。要在建議之間導航，請按上箭頭或下箭頭。要在兩個列表之間切換，請按左箭頭或右箭頭。要選擇要建議，請按Enter。"
   },
   "search-suggestion-single-list": {
     "en": "{{label}}. {{position}} of {{count}}.",
@@ -314,14 +314,14 @@
     "no": "{{label}}. {{position}} av {{count}}.",
     "pl": "{{label}}. {{position}} z {{count}}.",
     "pt": "{{label}}. {{position}} de {{count}}.",
-    "pt-br": "{{label}}. {{position}} de {{count}}.",
+    "pt-BR": "{{label}}. {{position}} de {{count}}.",
     "ru": "{{label}}. {{position}} из {{count}}.",
     "sv": "{{label}}. {{position}} av {{count}}.",
     "th": "{{label}}. {{position}} จาก {{count}}.",
     "tr": "{{label}}. {{count}} içinde {{position}}.",
     "zh": "{{label}}。{{position}} / {{count}}。",
-    "zh-cn": "{{label}}。{{position}} / {{count}}。",
-    "zh-tw": "{{label}}。{{position}} / {{count}}。"
+    "zh-CN": "{{label}}。{{position}} / {{count}}。",
+    "zh-TW": "{{label}}。{{position}} / {{count}}。"
   },
   "search-suggestion-double-list": {
     "en": "{{label}}. {{position}} of {{count}}. In {{side}} list.",
@@ -341,14 +341,14 @@
     "no": "{{label}}. {{position}} av {{count}}. I {{side}} listen.",
     "pl": "{{label}}. {{position}} z {{count}}. Na liście {{side}}.",
     "pt": "{{label}}. {{position}} de {{count}}. Na lista {{side}}.",
-    "pt-br": "{{label}}. {{position}} de {{count}}. Na lista {{side}}.",
+    "pt-BR": "{{label}}. {{position}} de {{count}}. Na lista {{side}}.",
     "ru": "{{label}}. {{position}} из {{count}}. В списке {{side}}.",
     "sv": "{{label}}. {{position}} av {{count}}. I {{side}}-listan.",
     "th": "{{label}}. {{position}} จาก {{count}}. ในรายการ {{side}}",
     "tr": "{{label}}. {{count}} adet içinde {{position}}. {{side}} listesinde.",
     "zh": "{{label}}。{{position}} of {{count}}。在{{side}}列表中。",
-    "zh-cn": "{{label}}。{{position}} of {{count}}。在{{side}}列表中。",
-    "zh-tw": "{{label}}。{{position}} of {{count}}。在{{side}}列表中。"
+    "zh-CN": "{{label}}。{{position}} of {{count}}。在{{side}}列表中。",
+    "zh-TW": "{{label}}。{{position}} of {{count}}。在{{side}}列表中。"
   },
   "search-suggestion-button": {
     "en": "{{label}}. Button",
@@ -368,14 +368,14 @@
     "no": "{{label}}. Knapp",
     "pl": "{{label}}. Przycisk",
     "pt": "{{label}}. Botão",
-    "pt-br": "{{label}}. Botão",
+    "pt-BR": "{{label}}. Botão",
     "ru": "{{label}}. Кнопка",
     "sv": "{{label}}. Knapp",
     "th": "{{label}}. ปุ่ม",
     "tr": "{{label}}. Düğme",
     "zh": "{{label}}。按钮",
-    "zh-cn": "{{label}}。按钮",
-    "zh-tw": "{{label}}. 按鈕"
+    "zh-CN": "{{label}}。按钮",
+    "zh-TW": "{{label}}. 按鈕"
   },
   "search-disabled": {
     "en": "Enter a query with minimum of {{length}} character(s) to enable search.",
@@ -395,41 +395,41 @@
     "no": "Skriv inn en forespørsel med minst {{length}} tegn for å aktivere søk.",
     "pl": "Wprowadź zapytanie zawierające co najmniej {{length}} znaków, aby włączyć wyszukiwanie.",
     "pt": "Digite uma consulta com um mínimo de {{length}} caractere(s) para habilitar a pesquisa.",
-    "pt-br": "Digite uma consulta com um mínimo de {{length}} caractere(s) para habilitar a pesquisa.",
+    "pt-BR": "Digite uma consulta com um mínimo de {{length}} caractere(s) para habilitar a pesquisa.",
     "ru": "Введите запрос с минимальным количеством символов {{length}}, чтобы включить поиск.",
     "sv": "Ange en fråga med minst {{length}} tecken för att aktivera sökningen.",
     "th": "ป้อนคำค้นหาด้วยจำนวนตัว {{length}} ตัวอักษรขั้นต่ำเพื่อเปิดใช้งานการค้นหา",
     "tr": "Aramayı etkinleştirmek için en az {{length}} karakter içeren bir sorgu girin.",
     "zh": "输入至少{{length}}个字符的查询以启用搜索。",
-    "zh-cn": "输入至少{{length}}个字符的查询以启用搜索。",
-    "zh-tw": "輸入至少{{length}}個字元的查詢以啟用搜尋。"
+    "zh-CN": "输入至少{{length}}个字符的查询以启用搜索。",
+    "zh-TW": "輸入至少{{length}}個字元的查詢以啟用搜尋。"
   },
   "query-suggestion-label": {
-    "en": "“{{query}}”",
-    "fr": "« {{text}} »",
-    "cs": "„{{query}}“",
-    "da": "“{{query}}”",
-    "de": "„{{query}}“",
-    "el": "«{{query}}»",
-    "es": "“{{query}}”",
-    "fi": "”{{query}}”",
-    "hu": "„{{query}}”",
-    "id": "“{{query}}”",
-    "it": "“{{query}}”",
-    "ja": "「{{query}}」",
-    "ko": "“{{query}}”",
-    "nl": "“{{query}}”",
-    "no": "«{{query}}»",
-    "pl": "„{{query}}“",
-    "pt": "“{{query}}”",
-    "pt-br": "“{{query}}”",
-    "ru": "«{{query}}»",
-    "sv": "”{{query}}”",
-    "th": "“{{query}}”",
-    "tr": "“{{query}}”",
-    "zh": "“{{query}}”",
-    "zh-cn": "“{{query}}”",
-    "zh-tw": "「{{query}}」"
+    "en": "“{{query}}”, suggested query",
+    "fr": "Requête suggérée pour « {{query}} »",
+    "cs": "Navržený dotaz pro „{{query}}“",
+    "da": "Foreslået søgning for «{{query}}»",
+    "de": "Vorgeschlagene Abfrage für „{{query}}“",
+    "el": "Προτεινόμενο αίτημα για τη «{{query}}»",
+    "es": "Consulta suggerida para «{{query}}»",
+    "fi": "Ehdotettu haku termille ”{{query}}”",
+    "hu": "Javasolt lekérdezés erre: „{{query}}”",
+    "id": "Permintaan yang disarankan untuk “{{query}}”",
+    "it": "Richiesta suggerita per \"{{query}}\"",
+    "ja": "「{{query}}」の提案されたクエリ",
+    "ko": "‘{{query}}’ 추천 검색어",
+    "nl": "Voorgestelde zoekopdracht voor '{{query}}'",
+    "no": "Foreslått søk for «{{query}}»",
+    "pl": "Zapropowane zapytanie dla „{{query}}”",
+    "pt": "Consulta sugerida para “{{query}}”",
+    "pt-BR": "Consulta sugerida para '{{query}}'",
+    "ru": "Рекомендуемый запрос для «{{query}}»",
+    "sv": "Föreslagen sökning för ”{{query}}”",
+    "th": "คำค้นที่แนะนำสำหรับ '{{query}}'",
+    "tr": "Önerilen sorgu için \"{{query}}\"",
+    "zh": "推荐的搜索查询：“{{query}}”",
+    "zh-CN": "“{{query}}”的建议查询",
+    "zh-TW": "建議查詢：「{{query}}」"
   },
   "recent-query-suggestion-label": {
     "en": "“{{query}}”, recent query",
@@ -449,14 +449,14 @@
     "no": "Nylig søkt etter \"{{query}}\"",
     "pl": "Ostatnie zapytanie \"{{query}}\"",
     "pt": "Consulta recente \"{{query}}\"",
-    "pt-br": "Consulta recente \"{{query}}\"",
+    "pt-BR": "Consulta recente \"{{query}}\"",
     "ru": "Недавний запрос «{{query}}»",
     "sv": "Senaste sökning \"{{query}}\"",
     "th": "คำค้นหาล่าสุด \"{{query}}\"",
     "tr": "Son arama \"{{query}}\"",
     "zh": "最近搜索 \"{{query}}\"",
-    "zh-cn": "最近的搜索 \"{{query}}\"",
-    "zh-tw": "最近的查詢 \"{{query}}\""
+    "zh-CN": "最近的搜索 \"{{query}}\"",
+    "zh-TW": "最近的查詢 \"{{query}}\""
   },
   "instant-results-suggestion-label": {
     "en": "{{title}}, instant result",
@@ -476,14 +476,14 @@
     "no": "{{title}}, øyeblikkelig resultat",
     "pl": "{{title}}, natychmiastowy wynik",
     "pt": "{{title}}, resultado imediato",
-    "pt-br": "{{title}}, resultado imediato",
+    "pt-BR": "{{title}}, resultado imediato",
     "ru": "{{title}}, мгновенный результат",
     "sv": "{{title}}, omedelbart resultat",
     "th": "{{title}}, ผลลัพธ์ทันที",
     "tr": "{{title}}, anında sonuç",
     "zh": "{{title}}，即时结果",
-    "zh-cn": "{{title}}，即时结果",
-    "zh-tw": "{{title}}，即時結果"
+    "zh-CN": "{{title}}，即时结果",
+    "zh-TW": "{{title}}，即時結果"
   },
   "facet-search-input": {
     "en": "Search",
@@ -503,14 +503,14 @@
     "no": "Søk",
     "pl": "Wyszukaj",
     "pt": "Pesquisar",
-    "pt-br": "Pesquisar",
+    "pt-BR": "Pesquisar",
     "ru": "Искать",
     "sv": "Sök",
     "th": "ค้นหา",
     "tr": "Ara",
     "zh": "搜索",
-    "zh-cn": "搜索",
-    "zh-tw": "搜尋"
+    "zh-CN": "搜索",
+    "zh-TW": "搜尋"
   },
   "facet-search": {
     "en": "Search for values in the {{label}} facet",
@@ -530,14 +530,14 @@
     "no": "Søk etter verdier i {{label}}-egenskapen",
     "pl": "Wyszukaj wartości w aspekcie {{label}}",
     "pt": "Procurar valores no facet {{label}}",
-    "pt-br": "Procure valores no facet {{label}}",
+    "pt-BR": "Procure valores no facet {{label}}",
     "ru": "Искать значения в фасете {{label}}",
     "sv": "Sök efter värden i fasetten {{label}}",
     "th": "ค้นหาค่าในด้าน {{label}}",
     "tr": "{{label}} ögesinde değer ara",
     "zh": "在 {{label}} 分面中搜索值",
-    "zh-cn": "在 {{label}} 分面中搜索值",
-    "zh-tw": "在 {{label}} 標籤中搜尋值"
+    "zh-CN": "在 {{label}} 分面中搜索值",
+    "zh-TW": "在 {{label}} 標籤中搜尋值"
   },
   "facet-value": {
     "en": "Inclusion filter on {{value}}; {{count}} result",
@@ -557,14 +557,14 @@
     "no": "Inklusjonsfilter på {{value}}; {{count}} resultat",
     "pl": "Filtr włączenia na {{value}}; {{count}} wynik",
     "pt": "Filtro de inclusão em {{value}}; {{count}} resultado",
-    "pt-br": "Filtro de inclusão em {{value}}; {{count}} resultados",
+    "pt-BR": "Filtro de inclusão em {{value}}; {{count}} resultados",
     "ru": "Фильтр включения на {{value}}; {{count}} результат",
     "sv": "Inklusionsfilter på {{value}}; {{count}} resultat",
     "th": "ตัวกรองการรวมเข้ากันบน {{value}}; {{count}} ผลลัพธ์",
     "tr": "{{value}} üzerinde dahil filtresi; {{count}} sonuç",
     "zh": "包含 {{value}} 的包含过滤器; {{count}} 结果",
-    "zh-cn": "包含{{value}}的包含过滤器; {{count}}结果",
-    "zh-tw": "{{value}} 的包含濾波器; {{count}} 結果"
+    "zh-CN": "包含{{value}}的包含过滤器; {{count}}结果",
+    "zh-TW": "{{value}} 的包含濾波器; {{count}} 結果"
   },
   "facet-value_plural": {
     "en": "Inclusion filter on {{value}}; {{count}} results",
@@ -584,14 +584,14 @@
     "no": "Inkluderingsfilter på {{value}}; {{count}} resultater",
     "pl": "Filtr włączenia na {{value}}; {{count}} wyniki",
     "pt": "Filtro de inclusão em {{value}}; {{count}} resultados",
-    "pt-br": "Filtro de inclusão em {{value}}; {{count}} resultados",
+    "pt-BR": "Filtro de inclusão em {{value}}; {{count}} resultados",
     "ru": "Фильтр включения по {{value}}; {{count}} результатов",
     "sv": "Inklusionsfilter på {{value}}; {{count}} resultat",
     "th": "ตัวกรองการรวมของ {{value}}; {{count}} ผลลัพธ์",
     "tr": "{{value}} dahil etme filtresi; {{count}} sonuç",
     "zh": "包含 {{value}} 的筛选器; {{count}} 个结果",
-    "zh-cn": "包含 {{value}} 的筛选器; {{count}} 个结果",
-    "zh-tw": "包含 {{value}} 的篩選器; {{count}} 個結果"
+    "zh-CN": "包含 {{value}} 的筛选器; {{count}} 个结果",
+    "zh-TW": "包含 {{value}} 的篩選器; {{count}} 個結果"
   },
   "remove-filter-on": {
     "en": "Remove inclusion filter on {{value}}",
@@ -611,14 +611,14 @@
     "no": "Fjern inkluderingsfilter på {{value}}",
     "pl": "Usuń filtr włączenia dla {{value}}",
     "pt": "Remover filtro de inclusão em {{value}}",
-    "pt-br": "Remover filtro de inclusão em {{value}}",
+    "pt-BR": "Remover filtro de inclusão em {{value}}",
     "ru": "Удалить фильтр включения на {{value}}",
     "sv": "Ta bort filtreringsalternativet för inkludering på {{value}}",
     "th": "ลบตัวกรองการรวมกันออกจาก {{value}}",
     "tr": "{{value}} için dahil filtresi kaldır",
     "zh": "移除{{value}}包含过滤器",
-    "zh-cn": "移除{{value}}包含过滤器",
-    "zh-tw": "移除包含{{value}}的篩選器"
+    "zh-CN": "移除{{value}}包含过滤器",
+    "zh-TW": "移除包含{{value}}的篩選器"
   },
   "query-suggestion-list": {
     "en": "Search suggestions. Select one to search.",
@@ -638,14 +638,14 @@
     "no": "Søkeforslag. Velg en for å søke.",
     "pl": "Sugestie wyszukiwania. Wybierz jedną do wyszukiwania.",
     "pt": "Sugestões de pesquisa. Selecione um para pesquisar.",
-    "pt-br": "Sugestões de pesquisa. Selecione uma para pesquisar.",
+    "pt-BR": "Sugestões de pesquisa. Selecione uma para pesquisar.",
     "ru": "Поисковые подсказки. Выберите одну для поиска.",
     "sv": "Sökförslag. Välj en att söka.",
     "th": "คำแนะนำในการค้นหา โปรดเลือกหนึ่งเพื่อค้นหา",
     "tr": "Arama önerileri. Aramak için birini seçin.",
     "zh": "搜索建议。选择一个进行搜索。",
-    "zh-cn": "搜索建议。选择一个进行搜索。",
-    "zh-tw": "搜尋建議。選擇一個進行搜尋。"
+    "zh-CN": "搜索建议。选择一个进行搜索。",
+    "zh-TW": "搜尋建議。選擇一個進行搜尋。"
   },
   "tab-search": {
     "en": "Search for values in the {{label}} tab.",
@@ -665,14 +665,14 @@
     "no": "Søk etter verdier i {{label}}-fanen.",
     "pl": "Wyszukaj wartości w karcie {{label}}.",
     "pt": "Pesquisar valores na guia {{label}}.",
-    "pt-br": "Pesquisar valores na guia {{label}}.",
+    "pt-BR": "Pesquisar valores na guia {{label}}.",
     "ru": "Искать значения во вкладке {{label}}.",
     "sv": "Sök efter värden i fliken {{label}}.",
     "th": "ค้นหาค่าในแท็บ {{label}}",
     "tr": "{{label}} sekmesinde değerleri arayın.",
     "zh": "在{{label}}选项卡中搜索值。",
-    "zh-cn": "在{{label}}选项卡中搜索值。",
-    "zh-tw": "在 {{label}} 索引標籤中搜尋值。"
+    "zh-CN": "在{{label}}选项卡中搜索值。",
+    "zh-TW": "在 {{label}} 索引標籤中搜尋值。"
   },
   "clear": {
     "en": "Clear",
@@ -692,14 +692,14 @@
     "no": "Klart",
     "pl": "Czysto",
     "pt": "Limpo",
-    "pt-br": "Claro",
+    "pt-BR": "Claro",
     "ru": "Ясно",
     "sv": "Klart",
     "th": "ใส",
     "tr": "Açık",
     "zh": "晴朗",
-    "zh-cn": "晴朗",
-    "zh-tw": "晴朗"
+    "zh-CN": "晴朗",
+    "zh-TW": "晴朗"
   },
   "all-categories": {
     "en": "All Categories",
@@ -719,14 +719,14 @@
     "no": "Alle kategorier",
     "pl": "Wszystkie kategorie",
     "pt": "Todas as categorias",
-    "pt-br": "Todas as Categorias",
+    "pt-BR": "Todas as Categorias",
     "ru": "Все категории",
     "sv": "Alla kategorier",
     "th": "หมวดหมู่ทั้งหมด",
     "tr": "Tüm Kategoriler",
     "zh": "所有类别",
-    "zh-cn": "所有类别",
-    "zh-tw": "所有分類"
+    "zh-CN": "所有类别",
+    "zh-TW": "所有分類"
   },
   "show-all-results": {
     "en": "See all results",
@@ -746,14 +746,14 @@
     "no": "Vis alle resultater",
     "pl": "Zobacz wszystkie wyniki",
     "pt": "Ver todos os resultados",
-    "pt-br": "Ver todos os resultados",
+    "pt-BR": "Ver todos os resultados",
     "ru": "Просмотреть все результаты",
     "sv": "Se alla resultat",
     "th": "ดูผลลัพธ์ทั้งหมด",
     "tr": "Tüm sonuçları görüntüle",
     "zh": "查看所有结果",
-    "zh-cn": "查看所有结果",
-    "zh-tw": "查看所有結果"
+    "zh-CN": "查看所有结果",
+    "zh-TW": "查看所有結果"
   },
   "show-more": {
     "en": "Show more",
@@ -773,14 +773,14 @@
     "no": "Vis mer",
     "pl": "Pokaż więcej",
     "pt": "Mostrar mais",
-    "pt-br": "Mostrar mais",
+    "pt-BR": "Mostrar mais",
     "ru": "Показывать больше",
     "sv": "Visa mer",
     "th": "แสดงเพิ่มขึ้น",
     "tr": "Daha fazla göster",
     "zh": "显示较多的值",
-    "zh-cn": "显示较多的值",
-    "zh-tw": "顯示較多的值"
+    "zh-CN": "显示较多的值",
+    "zh-TW": "顯示較多的值"
   },
   "show-less": {
     "en": "Show less",
@@ -800,14 +800,14 @@
     "no": "Vis mindre",
     "pl": "Pokaż mniej",
     "pt": "Mostrar menos",
-    "pt-br": "Mostrar menos",
+    "pt-BR": "Mostrar menos",
     "ru": "Показывать меньше",
     "sv": "Visa mindre",
     "th": "แสดงน้อยลง",
     "tr": "Daha az göster",
     "zh": "显示较少的值",
-    "zh-cn": "显示较少的值",
-    "zh-tw": "顯示較少的值"
+    "zh-CN": "显示较少的值",
+    "zh-TW": "顯示較少的值"
   },
   "show-less-facet-values": {
     "en": "Show less values for the {{label}} facet",
@@ -827,14 +827,14 @@
     "no": "Vis færre verdier for {{label}} facetten",
     "pl": "Pokaż mniejszą liczbę wartości dla cechy {{label}}",
     "pt": "Mostrar menos valores para a característica {{label}}",
-    "pt-br": "Mostrar menos valores para a característica {{label}}",
+    "pt-BR": "Mostrar menos valores para a característica {{label}}",
     "ru": "Показать меньше значений для особенности {{label}}",
     "sv": "Visa färre värden för {{label}} attributet",
     "th": "แสดงค่าน้อยลงสำหรับ {{label}} คุณลักษณะ",
     "tr": "{{label}} özelliği için daha az değer göster",
     "zh": "显示 {{label}} 特征的较少值",
-    "zh-cn": "显示 {{label}} 特征的较少值",
-    "zh-tw": "顯示 {{label}} 特徵的較少值"
+    "zh-CN": "显示 {{label}} 特征的较少值",
+    "zh-TW": "顯示 {{label}} 特徵的較少值"
   },
   "show-more-facet-values": {
     "en": "Show more values for the {{label}} facet",
@@ -854,14 +854,14 @@
     "no": "Vis flere verdier for {{label}} fasen",
     "pl": "Pokaż więcej wartości dla cechy {{label}}",
     "pt": "Mostrar mais valores para a faceta {{label}}",
-    "pt-br": "Mostrar mais valores para a categoria {{label}}",
+    "pt-BR": "Mostrar mais valores para a categoria {{label}}",
     "ru": "Показать больше значений для атрибута {{label}}",
     "sv": "Visa fler värden för {{label}}-attributet",
     "th": "แสดงค่าเพิ่มเติมสำหรับบริเวณ {{label}}",
     "tr": "{{label}} öğesine daha fazla değer göster",
     "zh": "显示{{label}}属性的更多值",
-    "zh-cn": "显示{{label}}属性的更多值",
-    "zh-tw": "顯示更多 {{label}} 特性值"
+    "zh-CN": "显示{{label}}属性的更多值",
+    "zh-TW": "顯示更多 {{label}} 特性值"
   },
   "facet-values": {
     "en": "Values for the {{label}} facet",
@@ -881,14 +881,14 @@
     "no": "Verdier for {{label}} facet",
     "pl": "Wartości dla cechy {{label}}",
     "pt": "Valores para a faceta {{label}}",
-    "pt-br": "Valores para o facet de {{label}}",
+    "pt-BR": "Valores para o facet de {{label}}",
     "ru": "Значения для сущности {{label}}",
     "sv": "Värden för {{label}} -facetten",
     "th": "คุณลักษณะ-{{label}}",
     "tr": "{{label}} özniteliği için Değerler",
     "zh": "{{label}} 方面的取值",
-    "zh-cn": "{{label}} 特征的取值",
-    "zh-tw": "{{label}}屬性值"
+    "zh-CN": "{{label}} 特征的取值",
+    "zh-TW": "{{label}}屬性值"
   },
   "facet-search-results": {
     "en": "Values found for {{query}} in the {{label}} facet",
@@ -908,14 +908,14 @@
     "no": "Verdier funnet for {{query}} i {{label}} facet",
     "pl": "Znaleziono wartości dla {{query}} w kategorii {{label}}",
     "pt": "Valores encontrados para {{query}} na faceta de {{label}}",
-    "pt-br": "Valores encontrados para {{query}} na faceta {{label}}",
+    "pt-BR": "Valores encontrados para {{query}} na faceta {{label}}",
     "ru": "Найдены значения для {{query}} в области {{label}}",
     "sv": "Värden hittade för {{query}} i {{label}} objektet",
     "th": "ค่าที่พบสำหรับ {{query}} ในลักษณะ {{label}}",
     "tr": "{{label}} ögesinde {{query}} için bulunan değerler",
     "zh": "在{{label}}维度中找到{{query}}的值",
-    "zh-cn": "在{{label}}维度中找到{{query}}的值",
-    "zh-tw": "在{{label}}資訊欄位中找到{{query}}的值"
+    "zh-CN": "在{{label}}维度中找到{{query}}的值",
+    "zh-TW": "在{{label}}資訊欄位中找到{{query}}的值"
   },
   "facet-search-results-count": {
     "en": "{{count}} value found in the {{label}} facet",
@@ -935,14 +935,14 @@
     "no": "{{count}} verdi funnet i facetten {{label}}",
     "pl": "Znaleziono {{count}} wartości w kategorii {{label}}",
     "pt": "{{count}} valor encontrado no facet {{label}}",
-    "pt-br": "{{count}} valor encontrado no facet {{label}}",
+    "pt-BR": "{{count}} valor encontrado no facet {{label}}",
     "ru": "{{count}} значение найдено в категории {{label}}",
     "sv": "{{count}} värde hittat i facetten {{label}}",
     "th": "พบ {{count}} ค่าในป้ายชื่อ {{label}}",
     "tr": "{{label}} fasıllarında {{count}} değer bulundu",
     "zh": "在{{label}}分类中找到{{count}}个值",
-    "zh-cn": "在{{label}}分类中找到{{count}}个值",
-    "zh-tw": "在{{label}}分類中找到{{count}}個值"
+    "zh-CN": "在{{label}}分类中找到{{count}}个值",
+    "zh-TW": "在{{label}}分類中找到{{count}}個值"
   },
   "facet-search-results-count_plural": {
     "en": "{{count}} values found in the {{label}} facet",
@@ -962,14 +962,14 @@
     "no": "{{count}} verdier funnet i {{label}}-kategorien",
     "pl": "{{count}} wartości znaleziono w kategorii {{label}}",
     "pt": "{{count}} valores encontrados na categoria {{label}}",
-    "pt-br": "{{count}} valores encontrados na categoria {{label}}",
+    "pt-BR": "{{count}} valores encontrados na categoria {{label}}",
     "ru": "{{count}} значений найдено в категории {{label}}",
     "sv": "{{count}} värden hittades i kategorin {{label}}",
     "th": "พบค่า {{count}} ค่าใน {{label}}",
     "tr": "{{count}} değer {{label}} kategorisinde bulundu",
     "zh": "{{count}}个值在{{label}}分类中找到",
-    "zh-cn": "{{count}}个值在{{label}}分类中找到",
-    "zh-tw": "{{count}} 個值在 {{label}} 分類中找到"
+    "zh-CN": "{{count}}个值在{{label}}分类中找到",
+    "zh-TW": "{{count}} 個值在 {{label}} 分類中找到"
   },
   "pagination": {
     "en": "Pagination",
@@ -989,14 +989,14 @@
     "no": "Paginering",
     "pl": "Paginacja",
     "pt": "Paginação",
-    "pt-br": "Paginação",
+    "pt-BR": "Paginação",
     "ru": "Нумерация страниц",
     "sv": "Sidindelning",
     "th": "หน้า",
     "tr": "Sayfalama",
     "zh": "分页",
-    "zh-cn": "分页",
-    "zh-tw": "分頁"
+    "zh-CN": "分页",
+    "zh-TW": "分頁"
   },
   "next": {
     "en": "Next",
@@ -1016,14 +1016,14 @@
     "no": "Neste",
     "pl": "Następna",
     "pt": "Próximo",
-    "pt-br": "Próximo",
+    "pt-BR": "Próximo",
     "ru": "Следующая",
     "sv": "Nästa",
     "th": "ถัดไป",
     "tr": "Sonraki",
     "zh": "下一页",
-    "zh-cn": "下一页",
-    "zh-tw": "下一頁"
+    "zh-CN": "下一页",
+    "zh-TW": "下一頁"
   },
   "previous": {
     "en": "Previous",
@@ -1043,23 +1043,23 @@
     "no": "Forrige",
     "pl": "Poprzednia",
     "pt": "Anterior",
-    "pt-br": "Anterior",
+    "pt-BR": "Anterior",
     "ru": "Предыдущая",
     "sv": "Tidigare",
     "th": "ก่อนหน้า",
     "tr": "Önceki",
     "zh": "上一页",
-    "zh-cn": "上一页",
-    "zh-tw": "上一頁"
+    "zh-CN": "上一页",
+    "zh-TW": "上一頁"
   },
   "page-number": {
     "en": "Page {{page}}",
     "fr": "Page {{page}}",
     "pt": "Página {{page}}",
-    "pt-br": "Página {{page}}",
+    "pt-BR": "Página {{page}}",
     "zh": "第{{page}}页",
-    "zh-cn": "第{{page}}页",
-    "zh-tw": "第{{page}}頁",
+    "zh-CN": "第{{page}}页",
+    "zh-TW": "第{{page}}頁",
     "cs": "Stránka {{page}}",
     "da": "Side {{page}}",
     "de": "Seite {{page}}",
@@ -1097,14 +1097,14 @@
     "no": "Ingen verdier funnet.",
     "pl": "Nie znaleziono wartości.",
     "pt": "Nenhum valor encontrado.",
-    "pt-br": "Nenhum valor encontrado.",
+    "pt-BR": "Nenhum valor encontrado.",
     "ru": "Значения не найдены.",
     "sv": "Inga värden hittades.",
     "th": "ไม่พบค่า",
     "tr": "Değer bulunamadı.",
     "zh": "未找到任何值。",
-    "zh-cn": "未找到任何值。",
-    "zh-tw": "查無任何資料。"
+    "zh-CN": "未找到任何值。",
+    "zh-TW": "查無任何資料。"
   },
   "results-per-page": {
     "en": "Results per page",
@@ -1124,14 +1124,14 @@
     "no": "Resultater per side",
     "pl": "Liczba wyników na stronę",
     "pt": "Resultados por página",
-    "pt-br": "Resultados por página",
+    "pt-BR": "Resultados por página",
     "ru": "Результатов на странице",
     "sv": "Resultat per sida",
     "th": "ผลลัพธ์ต่อหน้า",
     "tr": "Sayfa başına sonuç",
     "zh": "每一页的结果",
-    "zh-cn": "每一页的结果",
-    "zh-tw": "每頁的結果數"
+    "zh-CN": "每一页的结果",
+    "zh-TW": "每頁的結果數"
   },
   "sort": {
     "en": "Sort",
@@ -1151,14 +1151,14 @@
     "no": "Sorter",
     "pl": "Sortuj",
     "pt": "Ordenar",
-    "pt-br": "Ordenar",
+    "pt-BR": "Ordenar",
     "ru": "Сортировка",
     "sv": "Sortera",
     "th": "เรียงลำดับ",
     "tr": "Sırala",
     "zh": "排序",
-    "zh-cn": "排序",
-    "zh-tw": "排序"
+    "zh-CN": "排序",
+    "zh-TW": "排序"
   },
   "filters": {
     "en": "Filters",
@@ -1178,14 +1178,14 @@
     "no": "Filtre",
     "pl": "Filtry",
     "pt": "Filtros",
-    "pt-br": "Filtros",
+    "pt-BR": "Filtros",
     "ru": "Фильтры",
     "sv": "Filter",
     "th": "ตัวกรอง",
     "tr": "Filtreler",
     "zh": "过滤器",
-    "zh-cn": "过滤器",
-    "zh-tw": "篩選器"
+    "zh-CN": "过滤器",
+    "zh-TW": "篩選器"
   },
   "sort-by": {
     "en": "Sort by",
@@ -1205,14 +1205,14 @@
     "no": "Sorter etter",
     "pl": "Sortuj wg",
     "pt": "Classificar por",
-    "pt-br": "Classificar por",
+    "pt-BR": "Classificar por",
     "ru": "Сортировать по",
     "sv": "Sortera efter",
     "th": "จัดเรียงตาม",
     "tr": "Sıralama ölçütü",
     "zh": "排序方式",
-    "zh-cn": "排序方式",
-    "zh-tw": "排序依據"
+    "zh-CN": "排序方式",
+    "zh-TW": "排序依據"
   },
   "relevance": {
     "en": "Relevance",
@@ -1232,14 +1232,14 @@
     "no": "Relevans",
     "pl": "Trafność",
     "pt": "Relevância",
-    "pt-br": "Relevância",
+    "pt-BR": "Relevância",
     "ru": "Релевантность",
     "sv": "Relevans",
     "th": "ความสัมพันธ์กัน",
     "tr": "Uygunluk",
     "zh": "关联",
-    "zh-cn": "关联",
-    "zh-tw": "關聯"
+    "zh-CN": "关联",
+    "zh-TW": "關聯"
   },
   "most-recent": {
     "en": "Most recent",
@@ -1259,14 +1259,14 @@
     "no": "Siste",
     "pl": "Najnowszy",
     "pt": "Mais recente",
-    "pt-br": "Mais recente",
+    "pt-BR": "Mais recente",
     "ru": "Самое последнее",
     "sv": "Senaste",
     "th": "ล่าสุด",
     "tr": "En yeni",
     "zh": "最新",
-    "zh-cn": "最近",
-    "zh-tw": "最近"
+    "zh-CN": "最近",
+    "zh-TW": "最近"
   },
   "clear-filters": {
     "en": "Clear filter",
@@ -1286,14 +1286,14 @@
     "no": "Fjern filter",
     "pl": "Wyczyść filtr",
     "pt": "Limpar filtro",
-    "pt-br": "Limpar filtro",
+    "pt-BR": "Limpar filtro",
     "ru": "Очистить фильтр",
     "sv": "Rensa filter",
     "th": "ล้างกรอง",
     "tr": "Filtreyi Temizle",
     "zh": "清除筛选器",
-    "zh-cn": "清除筛选器",
-    "zh-tw": "清除篩選器"
+    "zh-CN": "清除筛选器",
+    "zh-TW": "清除篩選器"
   },
   "clear-filters_plural": {
     "en": "Clear {{count}} filters",
@@ -1313,14 +1313,14 @@
     "no": "Fjern {{count}} filter",
     "pl": "Wyczyść {{count}} filtry",
     "pt": "Limpar {{count}} filtros",
-    "pt-br": "Limpar {{count}} filtros",
+    "pt-BR": "Limpar {{count}} filtros",
     "ru": "Очистить {{count}} фильтра",
     "sv": "Rensa {{count}} filter",
     "th": "ล้าง {{count}} ตัวกรอง",
     "tr": "{{count}} filtre temizle",
     "zh": "清除{{count}}个筛选器",
-    "zh-cn": "清除{{count}}个筛选器",
-    "zh-tw": "清除 {{count}} 個篩選器"
+    "zh-CN": "清除{{count}}个筛选器",
+    "zh-TW": "清除 {{count}} 個篩選器"
   },
   "clear-filters-for-facet": {
     "en": "Clear {{count}} filter for the {{label}} facet",
@@ -1340,14 +1340,14 @@
     "no": "Tøm {{count}} filter i kategorien {{label}}",
     "pl": "Usuń {{count}} fiiltr dla cechy {{label}}",
     "pt": "Limpar {{count}} filtro para o facet {{label}}",
-    "pt-br": "Limpar {{count}} filtro para o {{label}} facet",
+    "pt-BR": "Limpar {{count}} filtro para o {{label}} facet",
     "ru": "Сбросить {{count}} фильтр для фасета {{label}}",
     "sv": "Rensa {{count}} filter för kategorin {{label}}",
     "th": "ลบ {{count}} ตัวกรองสำหรับ {{label}}",
     "tr": "{{label}} özelliği için {{count}} filtre temizle",
     "zh": "清除 {{label}} 篩選條件的 {{count}} 個篩選",
-    "zh-cn": "清除 {{label}} 筛选条件的 {{count}} 个筛选",
-    "zh-tw": "清除 {{label}} 的 {{count}} 個篩選"
+    "zh-CN": "清除 {{label}} 筛选条件的 {{count}} 个筛选",
+    "zh-TW": "清除 {{label}} 的 {{count}} 個篩選"
   },
   "clear-filters-for-facet_plural": {
     "en": "Clear {{count}} filters for the {{label}} facet",
@@ -1367,14 +1367,14 @@
     "no": "Fjern {{count}} filter for egenskapen {{label}}",
     "pl": "Wyczyść {{count}} filtry dla cechy {{label}}",
     "pt": "Limpar {{count}} filtros para o recurso {{label}}",
-    "pt-br": "Limpar {{count}} filtros para o recurso {{label}}",
+    "pt-BR": "Limpar {{count}} filtros para o recurso {{label}}",
     "ru": "Очистить {{count}} фильтров для функции {{label}}",
     "sv": "Rensa {{count}} filter för funktionen {{label}}",
     "th": "เคลียร์ {{count}} ตัวกรองสำหรับแอตทริบิวต์ {{label}}",
     "tr": "{{label}} faceti için {{count}} filtre temizle",
     "zh": "清除{{label}}特性的{{count}}个筛选器",
-    "zh-cn": "清除{{label}}的{{count}}个筛选器",
-    "zh-tw": "清除{{label}}特性的{{count}}個篩選器"
+    "zh-CN": "清除{{label}}的{{count}}个筛选器",
+    "zh-TW": "清除{{label}}特性的{{count}}個篩選器"
   },
   "collapse-facet": {
     "en": "Collapse the {{label}} facet",
@@ -1394,14 +1394,14 @@
     "no": "Skjul filter for {{label}}",
     "pl": "Zwiń filtr {{label}}",
     "pt": "Recolher o filtro {{label}}",
-    "pt-br": "Recolher o filtro de {{label}}",
+    "pt-BR": "Recolher o filtro de {{label}}",
     "ru": "Свернуть фильтр {{label}}",
     "sv": "Dölj filter för {{label}}",
     "th": "ยุบตัวตัวกรอง {{label}}",
     "tr": "{{label}} filtresini daralt",
     "zh": "收起{{label}}筛选器",
-    "zh-cn": "收起{{label}}筛选器",
-    "zh-tw": "折疊{{label}}篩選器"
+    "zh-CN": "收起{{label}}筛选器",
+    "zh-TW": "折疊{{label}}篩選器"
   },
   "expand-facet": {
     "en": "Expand the {{label}} facet",
@@ -1421,14 +1421,14 @@
     "no": "Utvid {{label}}-filteret",
     "pl": "Rozwiń {{label}} kategorię",
     "pt": "Expanda a categoria {{label}}",
-    "pt-br": "Expandir a categoria {{label}}",
+    "pt-BR": "Expandir a categoria {{label}}",
     "ru": "Развернуть фасет {{label}}",
     "sv": "Expandera filter {{label}}",
     "th": "ขยาย facet {{label}}",
     "tr": "{{label}} yüzeyini genişlet",
     "zh": "展开{{label}}筛选器",
-    "zh-cn": "展开{{label}}筛选器",
-    "zh-tw": "展開{{label}}篩選器"
+    "zh-CN": "展开{{label}}筛选器",
+    "zh-TW": "展開{{label}}篩選器"
   },
   "showing-results-of": {
     "en": "Result {{first}} of {{total}}",
@@ -1448,14 +1448,14 @@
     "no": "Resultat-{{first}} av {{total}}",
     "pl": "Wynik {{first}} z {{total}}",
     "pt": "Resultado {{first}} de {{total}}",
-    "pt-br": "Resultado {{first}} de {{total}}",
+    "pt-BR": "Resultado {{first}} de {{total}}",
     "ru": "Результат {{first}} из {{total}}",
     "sv": "Resultat {{first}} av {{total}}",
     "th": "ผลลัพธ์ที่ {{first}} จาก {{total}}",
     "tr": "{{total}} / {{first}} sonuç",
     "zh": "结果数 {{first}}，总数 {{total}}",
-    "zh-cn": "结果数 {{first}}，总数 {{total}}",
-    "zh-tw": "結果數 {{first}}，總數 {{total}}"
+    "zh-CN": "结果数 {{first}}，总数 {{total}}",
+    "zh-TW": "結果數 {{first}}，總數 {{total}}"
   },
   "showing-results-of_plural": {
     "en": "Results {{first}}-{{last}} of {{total}}",
@@ -1475,14 +1475,14 @@
     "no": "Resultater-{{first}}-{{last}} av {{total}}",
     "pl": "Wyniki {{first}}-{{last}} z {{total}}",
     "pt": "Resultados {{first}}-{{last}} de {{total}}",
-    "pt-br": "Resultados {{first}}-{{last}} de {{total}}",
+    "pt-BR": "Resultados {{first}}-{{last}} de {{total}}",
     "ru": "Результаты {{first}}-{{last}} из {{total}}",
     "sv": "Resultaten {{first}}-{{last}} av {{total}}",
     "th": "ผลลัพธ์ที่ {{first}}-{{last}} จาก {{total}}",
     "tr": "{{total}} / {{first}}-{{last}} sonuç",
     "zh": "结果数 {{first}}-{{last}}，总数 {{total}}",
-    "zh-cn": "结果数 {{first}}-{{last}}，总数 {{total}}",
-    "zh-tw": "結果數 {{first}}-{{last}}，總數 {{total}}"
+    "zh-CN": "结果数 {{first}}-{{last}}，总数 {{total}}",
+    "zh-TW": "結果數 {{first}}-{{last}}，總數 {{total}}"
   },
   "showing-results-of-with-query": {
     "en": "Result {{first}} of {{total}} for {{query}}",
@@ -1502,14 +1502,14 @@
     "no": "Resultat-{{first}} av {{total}} for {{query}}",
     "pl": "Wynik {{first}} z {{total}} za {{query}}",
     "pt": "Resultado {{first}} de {{total}} para {{query}}",
-    "pt-br": "Resultado {{first}} de {{total}} para {{query}}",
+    "pt-BR": "Resultado {{first}} de {{total}} para {{query}}",
     "ru": "Результат {{first}} из {{total}} на {{query}}",
     "sv": "Resultat {{first}} av {{total}} för {{query}}",
     "th": "ผลลัพธ์ที่ {{first}} จาก {{total}} สำหรับ{{query}}",
     "tr": "{{query}} için {{total}} / {{first}} sonuç",
     "zh": "结果数 {{first}}，总数 {{total}}, 搜索 {{query}}",
-    "zh-cn": "结果数 {{first}}，总数 {{total}}, 搜索 {{query}}",
-    "zh-tw": "结果数 {{first}}，总数 {{total}}, 搜索 {{query}}"
+    "zh-CN": "结果数 {{first}}，总数 {{total}}, 搜索 {{query}}",
+    "zh-TW": "结果数 {{first}}，总数 {{total}}, 搜索 {{query}}"
   },
   "showing-results-of-with-query_plural": {
     "en": "Results {{first}}-{{last}} of {{total}} for {{query}}",
@@ -1529,14 +1529,14 @@
     "no": "Resultater-{{first}}-{{last}} av {{total}} for {{query}}",
     "pl": "Wyniki {{first}}-{{last}} z {{total}} za {{query}}",
     "pt": "Resultados {{first}}-{{last}} de {{total}} para {{query}}",
-    "pt-br": "Resultados {{first}}-{{last}} de {{total}} para {{query}}",
+    "pt-BR": "Resultados {{first}}-{{last}} de {{total}} para {{query}}",
     "ru": "Результаты {{first}}-{{last}} из {{total}} на {{query}}",
     "sv": "Resultaten {{first}}-{{last}} av {{total}} för {{query}}",
     "th": "ผลลัพธ์ที่ {{first}}-{{last}} จาก {{total}} สำหรับ{{query}}",
     "tr": "{{query}} için {{total}} / {{first}}-{{last}} sonuç",
     "zh": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}",
-    "zh-cn": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}",
-    "zh-tw": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}"
+    "zh-CN": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}",
+    "zh-TW": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}"
   },
   "showing-results-of-load-more": {
     "en": "Showing {{last}} of {{total}} results",
@@ -1556,14 +1556,14 @@
     "no": "Viser {{last}} av {{total}} resultater",
     "pl": "Pokazano {{last}} z {{total}} wyników",
     "pt": "Mostrando {{last}} de um total de {{total}} resultados",
-    "pt-br": "Mostrando {{last}} de {{total}} resultados",
+    "pt-BR": "Mostrando {{last}} de {{total}} resultados",
     "ru": "Показаны результаты {{last}} из {{total}}",
     "sv": "Visar {{last}} av {{total}} resultat",
     "th": "แสดงผลลัพท์ที่ {{last}} จากทั้งหมด {{total}}",
     "tr": "{{total}} sonuçtan {{last}} gösteriliyor",
     "zh": "显示{{total}}个结果中的第{{last}}个",
-    "zh-cn": "显示 {{total}} 个结果中的第 {{last}} 个",
-    "zh-tw": "顯示 {{last}} / {{total}} 項結果"
+    "zh-CN": "显示 {{total}} 个结果中的第 {{last}} 个",
+    "zh-TW": "顯示 {{last}} / {{total}} 項結果"
   },
   "load-more-results": {
     "en": "Load more results",
@@ -1583,14 +1583,14 @@
     "no": "Last inn flere resultater",
     "pl": "Ładuj więcej wyników",
     "pt": "Carregar mais resultados",
-    "pt-br": "Carregar mais resultados",
+    "pt-BR": "Carregar mais resultados",
     "ru": "Загрузить больше результатов",
     "sv": "Visa fler resultat",
     "th": "โหลดผลลัพธ์เพิ่มเติม",
     "tr": "Daha fazla sonuç yükle",
     "zh": "加载更多结果",
-    "zh-cn": "加载更多结果",
-    "zh-tw": "載入更多結果"
+    "zh-CN": "加载更多结果",
+    "zh-TW": "載入更多結果"
   },
   "load-all-results": {
     "en": "Load all results",
@@ -1610,14 +1610,14 @@
     "no": "Last inn alle resultater",
     "pl": "Załaduj wszystkie wyniki",
     "pt": "Carregar todos os resultados",
-    "pt-br": "Carregar todos os resultados",
+    "pt-BR": "Carregar todos os resultados",
     "ru": "Загрузить все результаты",
     "sv": "Ladda alla resultat",
     "th": "โหลดผลลัพธ์ทั้งหมด",
     "tr": "Tüm sonuçları yükle",
     "zh": "加载所有结果",
-    "zh-cn": "加载所有结果",
-    "zh-tw": "載入所有結果"
+    "zh-CN": "加载所有结果",
+    "zh-TW": "載入所有結果"
   },
   "collapse-results": {
     "en": "Collapse results",
@@ -1637,14 +1637,14 @@
     "no": "Skjul resultater",
     "pl": "Zwiń wyniki",
     "pt": "Recolher resultados",
-    "pt-br": "Recolher resultados",
+    "pt-BR": "Recolher resultados",
     "ru": "Свернуть результаты",
     "sv": "Dölj resultat",
     "th": "ยุบผลลัพธ์",
     "tr": "Sonuçları Kapat",
     "zh": "折叠结果",
-    "zh-cn": "折叠结果",
-    "zh-tw": "折疊結果"
+    "zh-CN": "折叠结果",
+    "zh-TW": "折疊結果"
   },
   "no-documents-related": {
     "en": "No documents are related to this one.",
@@ -1664,14 +1664,14 @@
     "no": "Ingen dokumenter er relatert til denne.",
     "pl": "Brak dokumentów związanych z tym.",
     "pt": "Não há documentos relacionados a este.",
-    "pt-br": "Não há documentos relacionados a este.",
+    "pt-BR": "Não há documentos relacionados a este.",
     "ru": "Нет документов, связанных с этим.",
     "sv": "Inga dokument är relaterade till detta.",
     "th": "ไม่มีเอกสารที่เกี่ยวข้องกับเอกสารนี้",
     "tr": "Bu belgeyle ilgili belge yok.",
     "zh": "没有与此相关的文件。",
-    "zh-cn": "没有关联此文件。",
-    "zh-tw": "沒有文件與此相關。"
+    "zh-CN": "没有关联此文件。",
+    "zh-TW": "沒有文件與此相關。"
   },
   "in-seconds": {
     "en": "in {{count}} second",
@@ -1691,14 +1691,14 @@
     "no": "om {{count}} sekund",
     "pl": "w {{count}} sekundę",
     "pt": "em {{count}} segundo",
-    "pt-br": "em {{count}} segundo",
+    "pt-BR": "em {{count}} segundo",
     "ru": "через {{count}} секунду",
     "sv": "I {{count}} sekund ",
     "th": "ใน {{count}} วินาที",
     "tr": "{{count}} saniye içinde",
     "zh": "用时 {{count}} 秒",
-    "zh-cn": "用时 {{count}} 秒",
-    "zh-tw": "用時 {{count}} 秒"
+    "zh-CN": "用时 {{count}} 秒",
+    "zh-TW": "用時 {{count}} 秒"
   },
   "in-seconds_plural": {
     "en": "in {{count}} seconds",
@@ -1718,14 +1718,14 @@
     "no": "om {{count}} sekunder",
     "pl": "w {{count}} sekundę(sekundy/sekund)",
     "pt": "em {{count}} segundos",
-    "pt-br": "em {{count}} segundos",
+    "pt-BR": "em {{count}} segundos",
     "ru": "через {{count}} секунд",
     "sv": "I {{count}} sekund sekunder",
     "th": "ใน {{count}} วินาที",
     "tr": "{{count}} saniye içinde",
     "zh": "用时 {{count}} 秒",
-    "zh-cn": "用时 {{count}} 秒",
-    "zh-tw": "用時 {{count}} 秒"
+    "zh-CN": "用时 {{count}} 秒",
+    "zh-TW": "用時 {{count}} 秒"
   },
   "no-results-for": {
     "en": "We couldn't find anything for {{query}}",
@@ -1745,14 +1745,14 @@
     "no": "Ingen resultater for {{query}}",
     "pl": "Brak wyników dla zapytania {{query}}",
     "pt": "Nenhum resultado para {{query}}",
-    "pt-br": "Nenhum resultado para {{query}}",
+    "pt-BR": "Nenhum resultado para {{query}}",
     "ru": "Нет результатов по {{query}}",
     "sv": "Inga resultat för {{query}}",
     "th": "ไม่พบผลลัพธ์สำหรับ {{query}}",
     "tr": "{{query}} için sonuç yok",
     "zh": "没有找到与 {{query}} 相关的结果",
-    "zh-cn": "没有找到与 {{query}} 相关的结果",
-    "zh-tw": "沒有找到與 {{query}} 相關的結果"
+    "zh-CN": "没有找到与 {{query}} 相关的结果",
+    "zh-TW": "沒有找到與 {{query}} 相關的結果"
   },
   "no-results-for-did-you-mean": {
     "en": "We couldn't find anything for {{query}}",
@@ -1772,14 +1772,14 @@
     "no": "Ingen resultater for {{query}}",
     "pl": "Brak wyników dla zapytania {{query}}",
     "pt": "Nenhum resultado para {{query}}",
-    "pt-br": "Nenhum resultado para {{query}}",
+    "pt-BR": "Nenhum resultado para {{query}}",
     "ru": "Нет результатов по {{query}}",
     "sv": "Inga resultat för {{query}}",
     "th": "ไม่พบผลลัพธ์สำหรับ {{query}}",
     "tr": "{{query}} için sonuç yok",
     "zh": "没有找到与 {{query}} 相关的结果",
-    "zh-cn": "没有找到与 {{query}} 相关的结果",
-    "zh-tw": "沒有找到與 {{query}} 相關的結果"
+    "zh-CN": "没有找到与 {{query}} 相关的结果",
+    "zh-TW": "沒有找到與 {{query}} 相關的結果"
   },
   "showing-results-for": {
     "en": "Showing results for {{query}}",
@@ -1799,14 +1799,14 @@
     "no": "Viser resultater for {{query}}",
     "pl": "Pokaż wyniki dla {{query}}",
     "pt": "Mostrando resultados para {{query}}",
-    "pt-br": "Mostrando resultados para {{query}}",
+    "pt-BR": "Mostrando resultados para {{query}}",
     "ru": "Показать результаты для {{query}}",
     "sv": "Visar resultat för {{query}}",
     "th": "แสดงผลลัพธ์สำหรับ {{query}}",
     "tr": "{{query}} için sonuçlar gösteriliyor",
     "zh": "显示{{query}}的结果",
-    "zh-cn": "显示{{query}}的结果",
-    "zh-tw": "顯示{{query}}的結果"
+    "zh-CN": "显示{{query}}的结果",
+    "zh-TW": "顯示{{query}}的結果"
   },
   "search-instead-for": {
     "en": "Search instead for {{query}}",
@@ -1826,14 +1826,14 @@
     "no": "Søk heller etter {{query}}",
     "pl": "Szukaj zamiast {{query}}",
     "pt": "Buscar em vez disso por {{query}}",
-    "pt-br": "Pesquisar em vez disso por {{query}}",
+    "pt-BR": "Pesquisar em vez disso por {{query}}",
     "ru": "Искать вместо {{query}}",
     "sv": "Sök i stället för {{query}}",
     "th": "ค้นหาแทนที่สำหรับ {{query}}",
     "tr": "{{query}} yerine ara",
     "zh": "查找替代{{query}}",
-    "zh-cn": "查找替代{{query}}",
-    "zh-tw": "搜尋代替{{query}}"
+    "zh-CN": "查找替代{{query}}",
+    "zh-TW": "搜尋代替{{query}}"
   },
   "search-tips": {
     "en": "You may want to try using different keywords, deselecting filters, or checking for spelling mistakes.",
@@ -1853,14 +1853,14 @@
     "no": "Du kan prøve å bruke forskjellige nøkkelord, fjerne filter eller sjekke for stavefeil.",
     "pl": "Możesz spróbować użyć innych słów kluczowych, odznaczyć filtry lub sprawdzić błędy ortograficzne.",
     "pt": "Você pode tentar usar palavras-chave diferentes, desmarcar filtros ou verificar erros de ortografia.",
-    "pt-br": "Você pode tentar usar palavras-chave diferentes, desmarcar filtros ou verificar os erros de ortografia.",
+    "pt-BR": "Você pode tentar usar palavras-chave diferentes, desmarcar filtros ou verificar os erros de ortografia.",
     "ru": "Вы можете попробовать использовать другие ключевые слова, отменить фильтры или проверить правописание.",
     "sv": "Du kan försöka använda olika nyckelord, avmarkera filter eller kontrollera stavfel.",
     "th": "คุณอาจต้องการลองใช้คำค้นหาที่แตกต่างกันเล็กน้อยเช่น ยกเลิกตัวกรองหรือตรวจสอบการสะกดคำผิด",
     "tr": "Farklı anahtar kelimeler deneyebilir, filtreleri seçimden çıkarabilir veya yazım hatalarını kontrol edebilirsiniz.",
     "zh": "您可以尝试使用不同的关键字，取消选择过滤器或检查拼写错误。",
-    "zh-cn": "您可以尝试使用不同的关键字，取消选择过滤器或检查拼写错误。",
-    "zh-tw": "您可以嘗試使用不同的關鍵字，取消選擇篩選器或檢查拼寫錯誤。"
+    "zh-CN": "您可以尝试使用不同的关键字，取消选择过滤器或检查拼写错误。",
+    "zh-TW": "您可以嘗試使用不同的關鍵字，取消選擇篩選器或檢查拼寫錯誤。"
   },
   "no-results": {
     "en": "No results",
@@ -1880,14 +1880,14 @@
     "no": "Ingen resultater",
     "pl": "Brak wyników",
     "pt": "Sem resultados",
-    "pt-br": "Sem resultados",
+    "pt-BR": "Sem resultados",
     "ru": "Нет результатов",
     "sv": "Inga resultat",
     "th": "ไม่มีผลลัพธ์",
     "tr": "Sonuç bulunamadı",
     "zh": "没有结果",
-    "zh-cn": "没有结果",
-    "zh-tw": "沒有結果"
+    "zh-CN": "没有结果",
+    "zh-TW": "沒有結果"
   },
   "more-matches-for": {
     "en": "More matches for {{query}}",
@@ -1907,14 +1907,14 @@
     "no": "Flere treff for {{query}}",
     "pl": "Więcej wyników dla {{query}}",
     "pt": "Mais resultados para {{query}}",
-    "pt-br": "Mais resultados para {{query}}",
+    "pt-BR": "Mais resultados para {{query}}",
     "ru": "Больше совпадений для {{query}}",
     "sv": "Fler träffar för {{query}}",
     "th": "ผลการค้นหาเพิ่มเติมสำหรับ {{query}}",
     "tr": "{{query}} için daha fazla eşleşme",
     "zh": "{{query}}的更多匹配",
-    "zh-cn": "{{query}}的更多匹配",
-    "zh-tw": "{{query}}更多相符項目"
+    "zh-CN": "{{query}}的更多匹配",
+    "zh-TW": "{{query}}更多相符項目"
   },
   "no-matches-found-for": {
     "en": "No matches found for {{query}}",
@@ -1934,14 +1934,14 @@
     "no": "Ingen treff funnet for {{query}}",
     "pl": "Nie znaleziono wyników dla {{query}}",
     "pt": "Nenhum resultado encontrado para {{query}}",
-    "pt-br": "Não há resultados para {{query}}",
+    "pt-BR": "Não há resultados para {{query}}",
     "ru": "Нет совпадений для {{query}}",
     "sv": "Inga träffar för {{query}}",
     "th": "ไม่พบผลลัพธ์สำหรับ {{query}}",
     "tr": "{{query}} için eşleşme bulunamadı",
     "zh": "没有发现匹配项{{query}}",
-    "zh-cn": "{{query}} 没有匹配项",
-    "zh-tw": "未找到符合 {{query}} 的項目"
+    "zh-CN": "{{query}} 没有匹配项",
+    "zh-TW": "未找到符合 {{query}} 的項目"
   },
   "recent-searches": {
     "en": "Recent searches",
@@ -1961,14 +1961,14 @@
     "no": "Nylige søk",
     "pl": "Ostatnie wyszukiwania",
     "pt": "Pesquisas recentes",
-    "pt-br": "Pesquisas recentes",
+    "pt-BR": "Pesquisas recentes",
     "ru": "Недавние поисковые запросы",
     "sv": "Senaste sökningar",
     "th": "การค้นหาล่าสุด",
     "tr": "Son aramalar",
     "zh": "最新搜索",
-    "zh-cn": "最近搜索",
-    "zh-tw": "最新搜尋"
+    "zh-CN": "最近搜索",
+    "zh-TW": "最新搜尋"
   },
   "clear-recent-searches": {
     "en": "Clear recent searches",
@@ -1988,14 +1988,14 @@
     "no": "Fjern siste søk",
     "pl": "Wyczyść ostatnie wyszukiwania",
     "pt": "Limpar pesquisas recentes",
-    "pt-br": "Limpar pesquisas recentes",
+    "pt-BR": "Limpar pesquisas recentes",
     "ru": "Очистить недавние запросы",
     "sv": "Rensa senaste sökningar",
     "th": "ล้างการค้นหาล่าสุด",
     "tr": "Son aramaları temizle",
     "zh": "清除最近搜索",
-    "zh-cn": "清除最近搜索",
-    "zh-tw": "清除最近搜尋"
+    "zh-CN": "清除最近搜索",
+    "zh-TW": "清除最近搜尋"
   },
   "cancel-last-action": {
     "en": "Cancel last action",
@@ -2015,23 +2015,23 @@
     "no": "Avbryt siste handling",
     "pl": "Anuluj ostatnią czynność",
     "pt": "Cancelar a última ação",
-    "pt-br": "Cancelar a última ação",
+    "pt-BR": "Cancelar a última ação",
     "ru": "Отменить последнее действие",
     "sv": "Avbryt senaste åtgärd",
     "th": "ยกเลิกการกระทำล่าสุด",
     "tr": "Son işlemi iptal et",
     "zh": "取消最后一个动作",
-    "zh-cn": "取消最后一个动作",
-    "zh-tw": "取消最後一個動作"
+    "zh-CN": "取消最后一个动作",
+    "zh-TW": "取消最後一個動作"
   },
   "cancel": {
     "en": "Cancel",
     "fr": "Annuler",
     "pt": "Cancelar",
-    "pt-br": "Cancelar",
+    "pt-BR": "Cancelar",
     "zh": "取消",
-    "zh-cn": "取消",
-    "zh-tw": "取消",
+    "zh-CN": "取消",
+    "zh-TW": "取消",
     "cs": "Zrušit",
     "da": "Annuller",
     "de": "Abbrechen",
@@ -2069,14 +2069,14 @@
     "no": "Sjekk staving for dine nøkkelord",
     "pl": "Sprawdź pisownię słów kluczowych.",
     "pt": "Verifique a ortografia das suas palavras-chave.",
-    "pt-br": "Verifique a ortografia das suas palavras-chave.",
+    "pt-BR": "Verifique a ortografia das suas palavras-chave.",
     "ru": "Проверьте правописание ключевых слов",
     "sv": "Kontrollera stavningen på dina nyckelord",
     "th": "ตรวจสอบตัวสะกดของคำสำคัญของคุณ",
     "tr": "Anahtar sözcüklerinizin yazılımını kontrol edin.",
     "zh": "检查关键字的拼写。",
-    "zh-cn": "检查关键字的拼写。",
-    "zh-tw": "檢查關鍵字的拼寫。"
+    "zh-CN": "检查关键字的拼写。",
+    "zh-TW": "檢查關鍵字的拼寫。"
   },
   "try-using-fewer-keywords": {
     "en": "Try using fewer, different or more general keywords.",
@@ -2096,14 +2096,14 @@
     "no": "Prøv å bruke færre, andre eller flere generelle nøkkelord.",
     "pl": "Spróbuj użyć różnych lub bardziej ogólnych słów kluczowych albo zmniejsz ich liczbę.",
     "pt": "Tente usar palavras-chave menores, diferentes ou mais simples.",
-    "pt-br": "Tente usar palavras-chave menores, diferentes ou mais simples.",
+    "pt-BR": "Tente usar palavras-chave menores, diferentes ou mais simples.",
     "ru": "Попытайтесь использовать меньшее количество, другие и более общие ключевые слова.",
     "sv": "Försök att använda färre, annorlunda eller mer generella nyckelord",
     "th": "ลองใช้คำสำคัญที่น้อยลง แตกต่าง หรือมีความหมายกว้างขึ้น",
     "tr": "Daha az, farklı veya daha fazla genel anahtar sözcük kullanmayı deneyin.",
     "zh": "尝试使用更少、更常用或不同的关键字。",
-    "zh-cn": "尝试使用更少、更常用或不同的关键字。",
-    "zh-tw": "嘗試使用更少、更常用或不同的關鍵字。"
+    "zh-CN": "尝试使用更少、更常用或不同的关键字。",
+    "zh-TW": "嘗試使用更少、更常用或不同的關鍵字。"
   },
   "select-fewer-filters": {
     "en": "Select fewer filters to broaden your search.",
@@ -2123,14 +2123,14 @@
     "no": "Velg færre filtre for å utvide søket ditt",
     "pl": "Zmniejsz liczbę filtrów, aby poszerzyć zakres wyszukiwania.",
     "pt": "Selecione filtros menores para ampliar a sua pesquisa.",
-    "pt-br": "Selecione filtros menores para ampliar a sua pesquisa.",
+    "pt-BR": "Selecione filtros menores para ampliar a sua pesquisa.",
     "ru": "Сократите количество фильтров для расширения поиска.",
     "sv": "Välj färre filter för att bredda din sökning.",
     "th": "เลือกตัวกรองให้น้อยลงเพื่อขยายขอบเขตการค้นหาของคุณ",
     "tr": "Aramanızı genişletmek için daha az filtre seçin.",
     "zh": "选择较少的筛选条件以扩大您的搜索范围。",
-    "zh-cn": "选择较少的筛选条件以扩大您的搜索范围。",
-    "zh-tw": "選擇較少的篩選條件以擴大您的搜尋範圍。"
+    "zh-CN": "选择较少的筛选条件以扩大您的搜索范围。",
+    "zh-TW": "選擇較少的篩選條件以擴大您的搜尋範圍。"
   },
   "author": {
     "en": "Author",
@@ -2150,14 +2150,14 @@
     "no": "Forfatter",
     "pl": "Autor",
     "pt": "Autor",
-    "pt-br": "Autor",
+    "pt-BR": "Autor",
     "ru": "Автор",
     "sv": "Författare",
     "th": "ผู้สร้าง",
     "tr": "Yazan",
     "zh": "作者",
-    "zh-cn": "作者",
-    "zh-tw": "作者"
+    "zh-CN": "作者",
+    "zh-TW": "作者"
   },
   "file-type": {
     "en": "File type",
@@ -2177,14 +2177,14 @@
     "no": "Filtype",
     "pl": "Typ pliku",
     "pt": "Tipo de arquivo",
-    "pt-br": "Tipo de arquivo",
+    "pt-BR": "Tipo de arquivo",
     "ru": "Тип файла",
     "sv": "Filtyp",
     "th": "ประเภทไฟล์",
     "tr": "Dosya türü",
     "zh": "文件类型",
-    "zh-cn": "文件类型",
-    "zh-tw": "檔案類型"
+    "zh-CN": "文件类型",
+    "zh-TW": "檔案類型"
   },
   "language": {
     "en": "Language",
@@ -2204,14 +2204,14 @@
     "no": "Språk",
     "pl": "Język",
     "pt": "Idioma",
-    "pt-br": "Idioma",
+    "pt-BR": "Idioma",
     "ru": "Язык",
     "sv": "Språk",
     "th": "ภาษา",
     "tr": "Dil",
     "zh": "语言",
-    "zh-cn": "语言",
-    "zh-tw": "語言設定"
+    "zh-CN": "语言",
+    "zh-TW": "語言設定"
   },
   "source": {
     "en": "Source",
@@ -2231,14 +2231,14 @@
     "no": "Kilde",
     "pl": "Źródło",
     "pt": "Fonte",
-    "pt-br": "Fonte",
+    "pt-BR": "Fonte",
     "ru": "Источник",
     "sv": "Källa",
     "th": "แหล่งที่มา",
     "tr": "Kaynak",
     "zh": "源",
-    "zh-cn": "源",
-    "zh-tw": "來源"
+    "zh-CN": "源",
+    "zh-TW": "來源"
   },
   "printable-uri": {
     "en": "Source path of the result",
@@ -2258,14 +2258,14 @@
     "no": "Kildebane til resultatet",
     "pl": "Ścieżka źródłowa wyniku",
     "pt": "Caminho de origem do resultado",
-    "pt-br": "Caminho de origem do resultado",
+    "pt-BR": "Caminho de origem do resultado",
     "ru": "Исходный путь результата",
     "sv": "Källsökväg för resultat",
     "th": "เส้นทางมาจากแหล่งข้อมูลของผลลัพธ์",
     "tr": "Sonucun kaynak yolu",
     "zh": "结果源路径",
-    "zh-cn": "结果源路径",
-    "zh-tw": "結果來源路徑"
+    "zh-CN": "结果源路径",
+    "zh-TW": "結果來源路徑"
   },
   "collapsed-uri-parts": {
     "en": "Collapsed URI parts",
@@ -2285,14 +2285,14 @@
     "no": "Kollapsede URI-deler",
     "pl": "Zmniejszone części URI",
     "pt": "Partes de URI colapsadas",
-    "pt-br": "Partes de URI colapsadas",
+    "pt-BR": "Partes de URI colapsadas",
     "ru": "Свернутые части URI",
     "sv": "Kollapserade URI-delar",
     "th": "ส่วนของ URI ที่ย่อ",
     "tr": "Daraltılmış URI parçaları",
     "zh": "折叠的URI部分",
-    "zh-cn": "已折叠的URI部分",
-    "zh-tw": "折疊的URI部分"
+    "zh-CN": "已折叠的URI部分",
+    "zh-TW": "折疊的URI部分"
   },
   "disconnected": {
     "en": "No access.",
@@ -2312,14 +2312,14 @@
     "no": "Ingen tilgang.",
     "pl": "Brak dostępu.",
     "pt": "Sem acesso.",
-    "pt-br": "Sem acesso.",
+    "pt-BR": "Sem acesso.",
     "ru": "Нет доступа.",
     "sv": "Ingen åtkomst.",
     "th": "ไม่มีการเข้าถึง",
     "tr": "Erişim yok.",
     "zh": "无权访问。",
-    "zh-cn": "无权访问。",
-    "zh-tw": "無權訪問。"
+    "zh-CN": "无权访问。",
+    "zh-TW": "無權訪問。"
   },
   "check-your-connection": {
     "en": "Your query couldn't be sent to the following URL: {{url}}. Verify your connection.",
@@ -2339,14 +2339,14 @@
     "no": "Forespørselen din kunne ikke sendes til følgende URL: {{url}}. Bekreft forbindelsen din.",
     "pl": "Twoje zapytanie nie mogło zostać wysłane pod następujący adres URL: {{url}}. Sprawdź swoje połączenie.",
     "pt": "Sua consulta não pôde ser enviada para o seguinte URL: {{url}}. Verifique sua conexão.",
-    "pt-br": "Sua consulta não pôde ser enviada para o seguinte URL: {{url}}. Verifique sua conexão.",
+    "pt-BR": "Sua consulta não pôde ser enviada para o seguinte URL: {{url}}. Verifique sua conexão.",
     "ru": "Не удалось отправить запрос на указанный URL-адрес: {{url}}. Проверьте свое подключение.",
     "sv": "Din förfrågan kunde inte skickas till följande webbadress: {{url}}. Kontrollera din anslutning.",
     "th": "ไม่สามารถส่งคำค้นของคุณไปยัง URL ต่อไปนี้: {{url}} โปรดตรวจสอบการเชื่อมต่อของคุณ",
     "tr": "Sorgunuz aşağıdaki URL'ye gönderilemedi: {{url}}. Bağlantınızı doğrulayın.",
     "zh": "无法将您的查询发送到以下URL：{{url}}。请验证您的连接。",
-    "zh-cn": "无法将您的查询发送到以下URL：{{url}}。请验证您的连接。",
-    "zh-tw": "您的查詢無法傳送到以下 URL：{{url}}。請檢查您的連線。"
+    "zh-CN": "无法将您的查询发送到以下URL：{{url}}。请验证您的连接。",
+    "zh-TW": "您的查詢無法傳送到以下 URL：{{url}}。請檢查您的連線。"
   },
   "no-endpoints": {
     "en": "Your organization {{org}} has no available content.",
@@ -2366,14 +2366,14 @@
     "no": "Organisasjonen din {{org}} har ingen tilgjengelig innhold.",
     "pl": "Twoja organizacja {{org}} nie ma dostępnego treści.",
     "pt": "Sua organização {{org}} não possui conteúdo disponível.",
-    "pt-br": "Sua organização {{org}} não tem conteúdo disponível.",
+    "pt-BR": "Sua organização {{org}} não tem conteúdo disponível.",
     "ru": "Ваша организация {{org}} не имеет доступного контента.",
     "sv": "Erhållande av {{org}} har inget tillgängligt innehåll.",
     "th": "องค์กรของคุณ {{org}} ไม่มีเนื้อหาที่มีอยู่",
     "tr": "{{org}}Düzeniniz tarafından kullanılabilecek içerik yok.",
     "zh": "您的组织 {{org}} 没有可用的内容。",
-    "zh-cn": "您的组织{{org}}没有可用内容。",
-    "zh-tw": "您的組織 {{org}} 沒有可用的內容。"
+    "zh-CN": "您的组织{{org}}没有可用内容。",
+    "zh-TW": "您的組織 {{org}} 沒有可用的內容。"
   },
   "invalid-token": {
     "en": "Ensure that the token is valid.",
@@ -2393,14 +2393,14 @@
     "no": "Sørg for at token er gyldig.",
     "pl": "Upewnij się, że token jest ważny.",
     "pt": "Certifique-se de que o token é válido.",
-    "pt-br": "Certifique-se de que o token é válido.",
+    "pt-BR": "Certifique-se de que o token é válido.",
     "ru": "Убедитесь, что токен действителен.",
     "sv": "Se till att token är giltig.",
     "th": "ตรวจสอบว่าโทเค็นถูกต้องหรือไม่",
     "tr": "Token'in geçerli olduğundan emin olun.",
     "zh": "确保令牌是有效的。",
-    "zh-cn": "确保令牌是有效的。",
-    "zh-tw": "確保令牌是有效的。"
+    "zh-CN": "确保令牌是有效的。",
+    "zh-TW": "確保令牌是有效的。"
   },
   "add-sources": {
     "en": "Add content sources or wait for your newly created sources to finish indexing.",
@@ -2420,14 +2420,14 @@
     "no": "Legg til innholdskilder eller vent på at de nylig opprettede kildene dine er ferdig indeksert.",
     "pl": "Dodaj źródła treści lub poczekaj, aż nowo utworzone źródła zakończą indeksowanie.",
     "pt": "Adicione fontes de conteúdo ou aguarde até que suas novas fontes terminem a indexação.",
-    "pt-br": "Adicione fontes de conteúdo ou aguarde até que suas novas fontes terminem a indexação.",
+    "pt-BR": "Adicione fontes de conteúdo ou aguarde até que suas novas fontes terminem a indexação.",
     "ru": "Добавьте источники контента или дождитесь завершения индексации только что созданных источников.",
     "sv": "Lägg till innehållskällor eller vänta på att dina nyss skapade källor ska slutföra indexeringen.",
     "th": "เพิ่มแหล่งข้อมูลหรือรอให้แหล่งข้อมูลที่สร้างใหม่ของคุณดำเนินการจัดทำดัชนีเสร็จสมบูรณ์",
     "tr": "İçerik kaynaklarını ekleyin veya yeni oluşturduğunuz kaynakların dizine eklenmesini bekleyin.",
     "zh": "添加内容来源或等待您新建的来源完成索引。",
-    "zh-cn": "添加内容来源或等待您新建的来源完成索引。",
-    "zh-tw": "新增內容來源或等待您新建的來源完成索引。"
+    "zh-CN": "添加内容来源或等待您新建的来源完成索引。",
+    "zh-TW": "新增內容來源或等待您新建的來源完成索引。"
   },
   "coveo-online-help": {
     "en": "Coveo Online Help",
@@ -2447,14 +2447,14 @@
     "no": "Coveo nettbasert hjelp",
     "pl": "Pomoc Coveo Online",
     "pt": "Ajuda Online da Coveo",
-    "pt-br": "Ajuda Online da Coveo",
+    "pt-BR": "Ajuda Online da Coveo",
     "ru": "Онлайн-помощь Coveo",
     "sv": "Coveo Online-hjälp",
     "th": "ความช่วยเหลือออนไลน์ของ Coveo",
     "tr": "Coveo Çevrimiçi Yardımı",
     "zh": "Coveo 在线帮助",
-    "zh-cn": "Coveo 在线帮助",
-    "zh-tw": "Coveo 線上說明"
+    "zh-CN": "Coveo 在线帮助",
+    "zh-TW": "Coveo 線上說明"
   },
   "cannot-access": {
     "en": "Your organization {{org}} cannot be accessed.",
@@ -2474,14 +2474,14 @@
     "no": "Din organisasjon {{org}} kan ikke åpnes.",
     "pl": "Nie można uzyskać dostępu do organizacji {{org}}.",
     "pt": "Sua organização {{org}} não pode ser acessada.",
-    "pt-br": "Sua organização {{org}} não pode ser acessada.",
+    "pt-BR": "Sua organização {{org}} não pode ser acessada.",
     "ru": "Ваша организация {{org}} не может быть доступна.",
     "sv": "Din organisation {{org}} kan inte nås.",
     "th": "ไม่สามารถเข้าถึงองค์กร {{org}} ของคุณได้",
     "tr": "{{org}} adlı örgütünüze erişilemiyor.",
     "zh": "您的组织{{org}}无法访问。",
-    "zh-cn": "无法访问您的组织{{org}}。",
-    "zh-tw": "您的組織{{org}}無法存取。"
+    "zh-CN": "无法访问您的组织{{org}}。",
+    "zh-TW": "您的組織{{org}}無法存取。"
   },
   "something-went-wrong": {
     "en": "Something went wrong.",
@@ -2501,14 +2501,14 @@
     "no": "Noe gikk galt på serveren.",
     "pl": "Wystąpił problem dotyczący serwera.",
     "pt": "Algo deu errado no servidor.",
-    "pt-br": "Algo deu errado no servidor.",
+    "pt-BR": "Algo deu errado no servidor.",
     "ru": "Что-то случилось с сервером.",
     "sv": "Det blev någonting fel på servern.",
     "th": "เกิดข้อผิดพลาดบางอย่างกับเซิร์ฟเวอร์",
     "tr": "Sunucuda bir şeyler ters gitti.",
     "zh": "服务器出现了错误。",
-    "zh-cn": "服务器出现了错误。",
-    "zh-tw": "伺服器出現了錯誤。"
+    "zh-CN": "服务器出现了错误。",
+    "zh-TW": "伺服器出現了錯誤。"
   },
   "if-problem-persists": {
     "en": "If the problem persists contact the administrator.",
@@ -2528,14 +2528,14 @@
     "no": "Kontakt administratoren hvis problemet vedvarer.",
     "pl": "Jeśli ten problem będzie się powtarzać, skontaktuj się z administratorem.",
     "pt": "Se o problema persistir entre em contato com o administrador.",
-    "pt-br": "Se o problema persistir entre em contato com o administrador.",
+    "pt-BR": "Se o problema persistir entre em contato com o administrador.",
     "ru": "При постоянном возникновении этой проблемы обратитесь к администратору.",
     "sv": "Om problemet fortgår kontakta administratör",
     "th": "หากปัญหายังคงอยู่ โปรดติดต่อผู้ดูแล",
     "tr": "Sorun devam ederse yöneticiye danışın.",
     "zh": "如果问题仍然存在，请联系管理员。",
-    "zh-cn": "如果问题仍然存在，请联系管理员。",
-    "zh-tw": "如果問題仍然存在，請連絡管理員。"
+    "zh-CN": "如果问题仍然存在，请联系管理员。",
+    "zh-TW": "如果問題仍然存在，請連絡管理員。"
   },
   "more-info": {
     "en": "Learn more",
@@ -2555,14 +2555,14 @@
     "no": "Mer informasjon",
     "pl": "Więcej informacji",
     "pt": "Mais Informações",
-    "pt-br": "Mais Informações",
+    "pt-BR": "Mais Informações",
     "ru": "Дополнительная информация",
     "sv": "Mer information",
     "th": "ข้อมูลเพิ่มเติม",
     "tr": "Daha Fazla Bilgi",
     "zh": "更多信息",
-    "zh-cn": "更多信息",
-    "zh-tw": "更多資訊"
+    "zh-CN": "更多信息",
+    "zh-TW": "更多資訊"
   },
   "clear-all-filters": {
     "en": "Clear All Filters",
@@ -2582,14 +2582,14 @@
     "no": "Tøm alle filtre",
     "pl": "Wyczyść wszystkie filtry",
     "pt": "Desmarcar todos os filtros",
-    "pt-br": "Desmarcar todos os filtros",
+    "pt-BR": "Desmarcar todos os filtros",
     "ru": "Сброс всех фильтров",
     "sv": "Rensa Alla Filter",
     "th": "ล้างตัวกรองทั้งหมด",
     "tr": "Tüm Filtreleri Temizleyin",
     "zh": "清除所有筛选条件",
-    "zh-cn": "清除所有筛选条件",
-    "zh-tw": "清除所有篩選條件"
+    "zh-CN": "清除所有筛选条件",
+    "zh-TW": "清除所有篩選條件"
   },
   "n-more": {
     "en": "{{value}} more...",
@@ -2609,14 +2609,14 @@
     "no": "{{value}} mer...",
     "pl": "{{value}} więcej...",
     "pt": "{{value}} mais...",
-    "pt-br": "{{value}} mais...",
+    "pt-BR": "{{value}} mais...",
     "ru": "еще {{value}}…",
     "sv": "{{value}} fler…",
     "th": "{{value}} เพิ่มเติม...",
     "tr": "{{value}} daha fazla…",
     "zh": "{{value}} 更多...",
-    "zh-cn": "{{value}} 更多...",
-    "zh-tw": "{{value}} 更多..."
+    "zh-CN": "{{value}} 更多...",
+    "zh-TW": "{{value}} 更多..."
   },
   "show-n-more-filters": {
     "en": "Show {{value}} more filters",
@@ -2636,14 +2636,14 @@
     "no": "Vis {{value}} flere filtere",
     "pl": "Pokaż {{value}} kolejne filtry",
     "pt": "Mostrar {{value}} filtros adicionais",
-    "pt-br": "Mostrar mais {{value}} filtros",
+    "pt-BR": "Mostrar mais {{value}} filtros",
     "ru": "Показать еще {{value}} фильтров",
     "sv": "Visa {{value}} fler filter",
     "th": "แสดงตัวกรองอื่นเพิ่มเติม {{value}} ",
     "tr": "{{value}} daha fazla filtre göster",
     "zh": "显示 {{value}} 个更多筛选器",
-    "zh-cn": "显示 {{value}} 个更多筛选器",
-    "zh-tw": "顯示 {{value}} 個額外篩選器"
+    "zh-CN": "显示 {{value}} 个更多筛选器",
+    "zh-TW": "顯示 {{value}} 個額外篩選器"
   },
   "query-auto-corrected-to": {
     "en": "Query was automatically corrected to {{query}}",
@@ -2663,14 +2663,14 @@
     "no": "Forespørsel ble automatisk korrigert til {{query}}",
     "pl": "Zapytanie zostało automatycznie poprawione na {{query}}",
     "pt": "A consulta foi corrigida automaticamente para {{query}}",
-    "pt-br": "A consulta foi corrigida automaticamente para {{query}}",
+    "pt-BR": "A consulta foi corrigida automaticamente para {{query}}",
     "ru": "Запрос автоматически исправлен на {{query}}",
     "sv": "Förfrågan korrigerades automatiskt till {{query}}",
     "th": "คิวรีได้รับการแก้ไขโดยอัตโนมัติเป็น {{query}}",
     "tr": "Sorgu otomatik olarak {{query}} şeklinde düzeltildi",
     "zh": "查询自动更正为 {{query}}",
-    "zh-cn": "查询自动更正为 {{query}}",
-    "zh-tw": "查詢自動校正為 {{query}}"
+    "zh-CN": "查询自动更正为 {{query}}",
+    "zh-TW": "查詢自動校正為 {{query}}"
   },
   "did-you-mean": {
     "en": "Did you mean: {{query}}",
@@ -2690,14 +2690,14 @@
     "no": "Mente du: {{query}}",
     "pl": "Czy chodziło Ci o: {{query}}",
     "pt": "Você quis dizer: {{query}}",
-    "pt-br": "Você quis dizer: {{query}}",
+    "pt-BR": "Você quis dizer: {{query}}",
     "ru": "Вы имели ввиду: {{query}}",
     "sv": "Menade du: {{query}}",
     "th": "คุณหมายถึง: {{query}} หรือไม่",
     "tr": "Şunu mu demek istediniz: {{query}}",
     "zh": "您要找的是不是： {{query}}",
-    "zh-cn": "您要找的是不是： {{query}}",
-    "zh-tw": "您要找的是不是： {{query}}"
+    "zh-CN": "您要找的是不是： {{query}}",
+    "zh-TW": "您要找的是不是： {{query}}"
   },
   "close": {
     "en": "Close",
@@ -2717,14 +2717,14 @@
     "no": "Lukk",
     "pl": "Zamknij",
     "pt": "Fechar",
-    "pt-br": "Fechar",
+    "pt-BR": "Fechar",
     "ru": "Закрыть",
     "sv": "Stäng",
     "th": "ปิด",
     "tr": "Kapat",
     "zh": "关闭",
-    "zh-cn": "关闭",
-    "zh-tw": "關閉"
+    "zh-CN": "关闭",
+    "zh-TW": "關閉"
   },
   "no-label": {
     "en": "No label",
@@ -2744,14 +2744,14 @@
     "no": "Ingen merking",
     "pl": "Bez etykiety",
     "pt": "Sem etiqueta",
-    "pt-br": "Sem rótulo",
+    "pt-BR": "Sem rótulo",
     "ru": "Без метки",
     "sv": "Ingen etikett",
     "th": "ไม่มีป้ายชื่อ",
     "tr": "Etiket yok",
     "zh": "无标签",
-    "zh-cn": "无标签",
-    "zh-tw": "沒有標籤"
+    "zh-CN": "无标签",
+    "zh-TW": "沒有標籤"
   },
   "to": {
     "en": "{{- start}} to {{- end}}",
@@ -2771,21 +2771,21 @@
     "no": "{{- start}} til {{- end}}",
     "pl": "{{- start}} do {{- end}}",
     "pt": "{{- start}} até {{- end}}",
-    "pt-br": "{{- start}} até {{- end}}",
+    "pt-BR": "{{- start}} até {{- end}}",
     "ru": "{{- start}} до {{- end}}",
     "sv": "{{- start}} till {{- end}}",
     "th": "{{- start}} ถึง {{- end}}",
     "tr": "{{- start}} - {{- end}} arasında",
     "zh": "{{- start}} 到 {{- end}}",
-    "zh-cn": "{{- start}} 到 {{- end}}",
-    "zh-tw": "{{- start}} 到 {{- end}}"
+    "zh-CN": "{{- start}} 到 {{- end}}",
+    "zh-TW": "{{- start}} 到 {{- end}}"
   },
   "min": {
     "en": "Min",
     "fr": "Min",
     "zh": "最小值",
-    "zh-cn": "最小值",
-    "zh-tw": "最小值",
+    "zh-CN": "最小值",
+    "zh-TW": "最小值",
     "cs": "Min",
     "da": "Min",
     "de": "Min",
@@ -2801,7 +2801,7 @@
     "no": "Min",
     "pl": "Min",
     "pt": "Min",
-    "pt-br": "Min",
+    "pt-BR": "Min",
     "ru": "Min",
     "sv": "Min",
     "th": "Min",
@@ -2811,8 +2811,8 @@
     "en": "Max",
     "fr": "Max",
     "zn": "最大值",
-    "zh-cn": "最大值",
-    "zh-tw": "最大值",
+    "zh-CN": "最大值",
+    "zh-TW": "最大值",
     "cs": "Max",
     "da": "Max",
     "de": "Max",
@@ -2828,7 +2828,7 @@
     "no": "Max",
     "pl": "Max",
     "pt": "Max",
-    "pt-br": "Max",
+    "pt-BR": "Max",
     "ru": "Макс",
     "sv": "Max",
     "th": "แม็กซ์",
@@ -2853,14 +2853,14 @@
     "no": "Søk",
     "pl": "Zastosuj",
     "pt": "Aplicar",
-    "pt-br": "Aplicar",
+    "pt-BR": "Aplicar",
     "ru": "Применять",
     "sv": "Ansök",
     "th": "สมัคร",
     "tr": "Uygula",
     "zh": "应用",
-    "zh-cn": "应用",
-    "zh-tw": "應用"
+    "zh-CN": "应用",
+    "zh-TW": "應用"
   },
   "yes": {
     "en": "Yes",
@@ -2880,14 +2880,14 @@
     "no": "Ja",
     "pl": "Tak",
     "pt": "Sim",
-    "pt-br": "Sim",
+    "pt-BR": "Sim",
     "ru": "Да",
     "sv": "Ja",
     "th": "ใช่",
     "tr": "Evet",
     "zh": "是",
-    "zh-cn": "是",
-    "zh-tw": "是"
+    "zh-CN": "是",
+    "zh-TW": "是"
   },
   "no": {
     "en": "No",
@@ -2907,14 +2907,14 @@
     "no": "Nei",
     "pl": "Nie",
     "pt": "Não",
-    "pt-br": "Não",
+    "pt-BR": "Não",
     "ru": "Нет",
     "sv": "Nej",
     "th": "ไม่",
     "tr": "Hayır",
     "zh": "不",
-    "zh-cn": "不",
-    "zh-tw": "不"
+    "zh-CN": "不",
+    "zh-TW": "不"
   },
   "popover": {
     "en": "Popover menu for the {{label}} facet",
@@ -2934,14 +2934,14 @@
     "no": "Popover-meny for {{label}}-facetten",
     "pl": "Menu wyskakujące dla elementu {{label}}",
     "pt": "Menu popover para a faceta {{label}}",
-    "pt-br": "Menu suspenso para a faceta {{label}}",
+    "pt-BR": "Menu suspenso para a faceta {{label}}",
     "ru": "Меню всплывающих окон для фасета {{label}}",
     "sv": "Popover-menyn för {{label}}-facetten",
     "th": "เมนูบีบอัดสำหรับ {{label}}",
     "tr": "{{label}} fasit için popover menüsü",
     "zh": "{{label}} 方面的弹出式菜单",
-    "zh-cn": "{{label}} facet的弹出菜单",
-    "zh-tw": "{{label}} 摘要的彈出式選單"
+    "zh-CN": "{{label}} facet的弹出菜单",
+    "zh-TW": "{{label}} 摘要的彈出式選單"
   },
   "number-input-minimum": {
     "en": "Enter a minimum numerical value for the {{label}} facet",
@@ -2961,14 +2961,14 @@
     "no": "Angi en minimum numerisk verdi for {{label}}-filteret",
     "pl": "Wprowadź minimalną wartość liczbową dla pola {{label}}",
     "pt": "Insira um valor numérico mínimo para o filtro {{label}}",
-    "pt-br": "Insira um valor numérico mínimo para o filtro de {{label}}",
+    "pt-BR": "Insira um valor numérico mínimo para o filtro de {{label}}",
     "ru": "Введите минимальное числовое значение для фасета {{label}}",
     "sv": "Ange det minsta numeriska värdet för {{label}}-filtret",
     "th": "ป้อนค่าต่ำสุดของตัวเลขสำหรับคุณลักษณะ {{label}}",
     "tr": "{{label}} özelliği için minimum sayısal değeri girin",
     "zh": "输入{{label}}属性的最小数字值",
-    "zh-cn": "输入{{label}}属性的最小数字值",
-    "zh-tw": "輸入{{label}}特性的最小數字值"
+    "zh-CN": "输入{{label}}属性的最小数字值",
+    "zh-TW": "輸入{{label}}特性的最小數字值"
   },
   "number-input-maximum": {
     "en": "Enter a maximum numerical value for the {{label}} facet",
@@ -2988,14 +2988,14 @@
     "no": "Skriv inn en maksimum numerisk verdi for {{label}} -attributtet",
     "pl": "Wprowadź maksymalną wartość liczbową dla funkcji {{label}}",
     "pt": "Insira um valor numérico máximo para a faceta de {{label}}",
-    "pt-br": "Insira um valor numérico máximo para a facet {{label}}",
+    "pt-BR": "Insira um valor numérico máximo para a facet {{label}}",
     "ru": "Введите максимальное числовое значение для характеристики {{label}}",
     "sv": "Ange ett maximalt numeriskt värde för {{label}}-facet",
     "th": "ป้อนค่าต่ำสุดสำหรับคุณลักษณะ {{label}}",
     "tr": "{{label}} özelliği için maksimum sayısal değeri girin",
     "zh": "输入{{label}}属相的最大数字值",
-    "zh-cn": "输入 {{label}} 属性的最大数字值。",
-    "zh-tw": "輸入 {{label}} 特徵的最大數值"
+    "zh-CN": "输入 {{label}} 属性的最大数字值。",
+    "zh-TW": "輸入 {{label}} 特徵的最大數值"
   },
   "number-input-apply": {
     "en": "Apply custom numerical values for the {{label}} facet",
@@ -3015,14 +3015,14 @@
     "no": "Bruk egendefinerte numeriske verdier for {{label}} -filteret",
     "pl": "Zastosuj niestandardowe wartości numeryczne do filtra {{label}}",
     "pt": "Aplicar valores numéricos personalizados para o filtro {{label}}",
-    "pt-br": "Aplicar valores numéricos personalizados para o filtro {{label}}",
+    "pt-BR": "Aplicar valores numéricos personalizados para o filtro {{label}}",
     "ru": "Применить индивидуальные числовые значения для фасета {{label}}",
     "sv": "Tillämpa anpassade numeriska värden för {{label}} facetten",
     "th": "ปรับใช้ค่าตัวเลขที่กำหนดเองสำหรับตัวกรอง {{label}}",
     "tr": "{{label}} özelliği için özel sayısal değerler uygula",
     "zh": "为 {{label}} 属性应用自定义数字值",
-    "zh-cn": "为 {{label}} 过滤器应用自定义数字值",
-    "zh-tw": "應用自訂數值套用於 {{label}} 篩選器"
+    "zh-CN": "为 {{label}} 过滤器应用自定义数字值",
+    "zh-TW": "應用自訂數值套用於 {{label}} 篩選器"
   },
   "start": {
     "en": "Start",
@@ -3042,14 +3042,14 @@
     "no": "Start",
     "pl": "Start",
     "pt": "Iniciar",
-    "pt-br": "Iniciar",
+    "pt-BR": "Iniciar",
     "ru": "Старт",
     "sv": "Start",
     "th": "เริ่มต้น",
     "tr": "Başlat",
     "zh": "开始",
-    "zh-cn": "开始",
-    "zh-tw": "開始"
+    "zh-CN": "开始",
+    "zh-TW": "開始"
   },
   "date-input-start": {
     "en": "Enter a start date for the {{label}} facet",
@@ -3069,14 +3069,14 @@
     "no": "Angi en startdato for {{label}}-facetten",
     "pl": "Wprowadź datę początkową dla cechy {{label}}",
     "pt": "Digite uma data de início para o recurso {{label}}",
-    "pt-br": "Digite uma data de início para o recurso {{label}}",
+    "pt-BR": "Digite uma data de início para o recurso {{label}}",
     "ru": "Введите начальную дату для атрибута {{label}}",
     "sv": "Ange ett startdatum för facetten {{label}}",
     "th": "ป้อนวันที่เริ่มต้นสำหรับแอตทริบิวต์ {{label}}",
     "tr": "{{label}} özelliği için bir başlangıç tarihi girin",
     "zh": "为 {{label}} 方面输入开始日期",
-    "zh-cn": "为 {{label}} 方面输入开始日期",
-    "zh-tw": "請輸入 {{label}} 特性的開始日期"
+    "zh-CN": "为 {{label}} 方面输入开始日期",
+    "zh-TW": "請輸入 {{label}} 特性的開始日期"
   },
   "date-input-end": {
     "en": "Enter an end date for the {{label}} facet",
@@ -3096,14 +3096,14 @@
     "no": "Skriv inn en sluttdato for filteret {{label}}",
     "pl": "Wprowadź datę końcową dla filtra {{label}}",
     "pt": "Insira uma data de término para a faceta {{label}}",
-    "pt-br": "Insira uma data de término para a característica {{label}}",
+    "pt-BR": "Insira uma data de término para a característica {{label}}",
     "ru": "Введите дату окончания для фасета {{label}}",
     "sv": "Ange ett slutdatum för {{label}} egenskapen",
     "th": "ป้อนวันที่สิ้นสุดสำหรับ Facet {{label}}",
     "tr": "{{label}} özelliği için bir bitiş tarihi girin",
     "zh": "输入{{label}}特征的结束日期",
-    "zh-cn": "输入{{label}}特性的结束日期",
-    "zh-tw": "輸入{{label}}特徵的結束日期"
+    "zh-CN": "输入{{label}}特性的结束日期",
+    "zh-TW": "輸入{{label}}特徵的結束日期"
   },
   "date-input-apply": {
     "en": "Apply custom start and end dates for the {{label}} facet",
@@ -3123,14 +3123,14 @@
     "no": "Bruk tilpassede start- og sluttdatoer for facetten {{label}}",
     "pl": "Zastosuj niestandardowe daty początkowe i końcowe dla pola {{label}}",
     "pt": "Aplicar datas personalizadas de início e término para a faceta {{label}}",
-    "pt-br": "Aplicar datas personalizadas de início e término para a faceta {{label}}",
+    "pt-BR": "Aplicar datas personalizadas de início e término para a faceta {{label}}",
     "ru": "Применить индивидуальные даты начала и окончания фасета {{label}}",
     "sv": "Använd anpassade start- och slutdatum för fasetten {{label}}",
     "th": "ใช้วันที่เริ่มต้นและสิ้นสุดที่กำหนดเองสำหรับตัวกรอง{{label}}",
     "tr": "{{label}} özelliği için özel başlangıç ve bitiş tarihleri uygulama",
     "zh": "为{{label}}推出自定义的起止日期",
-    "zh-cn": "为{{label}}启用自定义的开始和结束日期",
-    "zh-tw": "套用自訂的起訖日期到 {{label}} 面向"
+    "zh-CN": "为{{label}}启用自定义的开始和结束日期",
+    "zh-TW": "套用自訂的起訖日期到 {{label}} 面向"
   },
   "past-minute": {
     "en": "Past minute",
@@ -3150,14 +3150,14 @@
     "no": "Ett minutt siden",
     "pl": "Minutę temu",
     "pt": "Há um minuto",
-    "pt-br": "Há um minuto",
+    "pt-BR": "Há um minuto",
     "ru": "Минуту назад",
     "sv": "En minut sedan",
     "th": "หนึ่งนาทีที่แล้ว",
     "tr": "Geçen dakika",
     "zh": "一分钟前",
-    "zh-cn": "一分钟前",
-    "zh-tw": "一分鐘前"
+    "zh-CN": "一分钟前",
+    "zh-TW": "一分鐘前"
   },
   "past-minute_plural": {
     "en": "Past {{count}} minutes",
@@ -3177,14 +3177,14 @@
     "no": "{{count}} minutter siden",
     "pl": "{{count}} minut temu",
     "pt": "{{count}} minutos atrás",
-    "pt-br": "{{count}} minutos atrás",
+    "pt-BR": "{{count}} minutos atrás",
     "ru": "{{count}} минут назад",
     "sv": "{{count}} minuter sedan",
     "th": "{{count}} นาทีที่ผ่านมา",
     "tr": "{{count}} dakika önce",
     "zh": "{{count}}分钟前",
-    "zh-cn": "{{count}}分钟前",
-    "zh-tw": "{{count}}分鐘前"
+    "zh-CN": "{{count}}分钟前",
+    "zh-TW": "{{count}}分鐘前"
   },
   "past-hour": {
     "en": "Past hour",
@@ -3204,14 +3204,14 @@
     "no": "Siste time",
     "pl": "Ostatnia godzina",
     "pt": "Última hora",
-    "pt-br": "Última hora",
+    "pt-BR": "Última hora",
     "ru": "Последний час",
     "sv": "Senaste timmen",
     "th": "ชั่วโมงที่ผ่านมา",
     "tr": "Son saat",
     "zh": "过去小时",
-    "zh-cn": "过去小时",
-    "zh-tw": "過去小時"
+    "zh-CN": "过去小时",
+    "zh-TW": "過去小時"
   },
   "past-hour_plural": {
     "en": "Past {{count}} hours",
@@ -3231,14 +3231,14 @@
     "no": "Siste {{count}} timer",
     "pl": "Przeszłe {{count}} godzin(y)",
     "pt": "{{count}} horas passadas",
-    "pt-br": "{{count}} horas passadas",
+    "pt-BR": "{{count}} horas passadas",
     "ru": "Прошло {{count}} часов",
     "sv": "{{count}} timmar sedan",
     "th": "{{count}} ชั่วโมงที่ผ่านมา",
     "tr": "{{count}} saat önce",
     "zh": "{{count}}小时前",
-    "zh-cn": "{{count}}小时前",
-    "zh-tw": "過去 {{count}} 小時"
+    "zh-CN": "{{count}}小时前",
+    "zh-TW": "過去 {{count}} 小時"
   },
   "past-day": {
     "en": "Past day",
@@ -3258,14 +3258,14 @@
     "no": "I går",
     "pl": "Wczoraj",
     "pt": "Ontem",
-    "pt-br": "Dia anterior",
+    "pt-BR": "Dia anterior",
     "ru": "Прошлый день",
     "sv": "Föregående dag",
     "th": "วันก่อนหน้า",
     "tr": "Dün",
     "zh": "昨天",
-    "zh-cn": "昨天",
-    "zh-tw": "昨天"
+    "zh-CN": "昨天",
+    "zh-TW": "昨天"
   },
   "past-day_plural": {
     "en": "Past {{count}} days",
@@ -3285,14 +3285,14 @@
     "no": "De siste {{count}} dagene",
     "pl": "Przez ostatnie {{count}} dni",
     "pt": "{{count}} dias atrás",
-    "pt-br": "{{count}} dias atrás",
+    "pt-BR": "{{count}} dias atrás",
     "ru": "За последние {{count}} дней",
     "sv": "Senaste {{count}} dagarna",
     "th": "ผ่านมา {{count}} วัน",
     "tr": "{{count}} gün önce",
     "zh": "过去{{count}}天",
-    "zh-cn": "过去{{count}}天",
-    "zh-tw": "過去{{count}}天"
+    "zh-CN": "过去{{count}}天",
+    "zh-TW": "過去{{count}}天"
   },
   "past-week": {
     "en": "Past week",
@@ -3312,14 +3312,14 @@
     "no": "Siste uke",
     "pl": "Zeszły tydzień",
     "pt": "Semana passada",
-    "pt-br": "Semana passada",
+    "pt-BR": "Semana passada",
     "ru": "Прошлая неделя",
     "sv": "Förra veckan",
     "th": "อาทิตย์ที่ผ่านมา",
     "tr": "Geçen hafta",
     "zh": "上周",
-    "zh-cn": "上周",
-    "zh-tw": "上週"
+    "zh-CN": "上周",
+    "zh-TW": "上週"
   },
   "past-week_plural": {
     "en": "Past {{count}} weeks",
@@ -3339,14 +3339,14 @@
     "no": "Siste {{count}} uker",
     "pl": "Ostatnie {{count}} tygodnie",
     "pt": "{{count}} semanas passadas",
-    "pt-br": "{{count}} semanas passadas",
+    "pt-BR": "{{count}} semanas passadas",
     "ru": "{{count}} прошлых недель",
     "sv": "Förgångna {{count}} veckor",
     "th": "{{count}} สัปดาห์ที่ผ่านมา",
     "tr": "{{count}} hafta önceki",
     "zh": "过去{{count}}周",
-    "zh-cn": "过去{{count}}周",
-    "zh-tw": "過去{{count}}週"
+    "zh-CN": "过去{{count}}周",
+    "zh-TW": "過去{{count}}週"
   },
   "past-month": {
     "en": "Past month",
@@ -3366,14 +3366,14 @@
     "no": "Siste måned",
     "pl": "Ostatni miesiąc",
     "pt": "Mês passado",
-    "pt-br": "Mês passado",
+    "pt-BR": "Mês passado",
     "ru": "Прошлый месяц",
     "sv": "Förra månaden",
     "th": "เดือนที่แล้ว",
     "tr": "Geçen ay",
     "zh": "上个月",
-    "zh-cn": "上个月",
-    "zh-tw": "上個月"
+    "zh-CN": "上个月",
+    "zh-TW": "上個月"
   },
   "past-month_plural": {
     "en": "Past {{count}} months",
@@ -3393,14 +3393,14 @@
     "no": "Siste {{count}} måneder",
     "pl": "Ostatnie {{count}} miesięcy",
     "pt": "{{count}} meses atrás",
-    "pt-br": "{{count}} meses passados",
+    "pt-BR": "{{count}} meses passados",
     "ru": "Прошлые {{count}} месяцев",
     "sv": "De senaste {{count}} månaderna",
     "th": "{{count}} เดือนที่ผ่านมา",
     "tr": "{{count}} ay önce",
     "zh": "过去{{count}}个月",
-    "zh-cn": "过去{{count}}个月",
-    "zh-tw": "過去{{count}}個月"
+    "zh-CN": "过去{{count}}个月",
+    "zh-TW": "過去{{count}}個月"
   },
   "past-quarter": {
     "en": "Past quarter",
@@ -3420,14 +3420,14 @@
     "no": "Forrige kvartal",
     "pl": "Poprzedni kwartał",
     "pt": "Último trimestre",
-    "pt-br": "Último trimestre",
+    "pt-BR": "Último trimestre",
     "ru": "Прошлый квартал",
     "sv": "Föregående kvartal",
     "th": "ไตรมาสที่ผ่านมา",
     "tr": "Geçen çeyrek",
     "zh": "过去的季度",
-    "zh-cn": "过去的季度",
-    "zh-tw": "過去一季"
+    "zh-CN": "过去的季度",
+    "zh-TW": "過去一季"
   },
   "past-quarter_plural": {
     "en": "Past {{count}} quarters",
@@ -3447,14 +3447,14 @@
     "no": "De siste {{count}} kvartalene",
     "pl": "{{count}} ostatnich kwartałów",
     "pt": "{{count}} trimestres passados",
-    "pt-br": "{{count}} trimestres passados",
+    "pt-BR": "{{count}} trimestres passados",
     "ru": "Прошлое {{count}} квартала",
     "sv": "Föregående {{count}} kvartal",
     "th": "{{count}} ไตรมาสก่อนหน้า",
     "tr": "{{count}} dönem önceki çeyrek dönemler",
     "zh": "{{count}}个季度前",
-    "zh-cn": "{{count}}个季度前",
-    "zh-tw": "過去{{count}}個季度"
+    "zh-CN": "{{count}}个季度前",
+    "zh-TW": "過去{{count}}個季度"
   },
   "past-year": {
     "en": "Past year",
@@ -3474,14 +3474,14 @@
     "no": "Siste år",
     "pl": "Zeszły rok",
     "pt": "Ano passado",
-    "pt-br": "Ano passado",
+    "pt-BR": "Ano passado",
     "ru": "Прошлый год",
     "sv": "Förra året",
     "th": "ปีที่แล้ว",
     "tr": "Geçen yıl",
     "zh": "去年",
-    "zh-cn": "去年",
-    "zh-tw": "去年"
+    "zh-CN": "去年",
+    "zh-TW": "去年"
   },
   "past-year_plural": {
     "en": "Past {{count}} years",
@@ -3501,14 +3501,14 @@
     "no": "De siste {{count}} årene",
     "pl": "Ostatnie {{count}} lata",
     "pt": "{{count}} anos passados",
-    "pt-br": "{{count}} anos passados",
+    "pt-BR": "{{count}} anos passados",
     "ru": "{{count}} лет назад",
     "sv": "{{count}} senaste åren",
     "th": "{{count}} ปีที่ผ่านมา",
     "tr": "{{count}} yıl önce",
     "zh": "{{count}}年前",
-    "zh-cn": "{{count}}年前",
-    "zh-tw": "過去{{count}}年"
+    "zh-CN": "{{count}}年前",
+    "zh-TW": "過去{{count}}年"
   },
   "next-minute": {
     "en": "Next minute",
@@ -3528,14 +3528,14 @@
     "no": "Neste minutt",
     "pl": "Następna minuta",
     "pt": "Próximo minuto",
-    "pt-br": "Próximo minuto",
+    "pt-BR": "Próximo minuto",
     "ru": "Следующая минута",
     "sv": "Nästa minut",
     "th": "นาทีหน้า",
     "tr": "Gelecek dakika",
     "zh": "下一分钟",
-    "zh-cn": "下一分钟",
-    "zh-tw": "下一分鐘"
+    "zh-CN": "下一分钟",
+    "zh-TW": "下一分鐘"
   },
   "next-minute_plural": {
     "en": "Next {{count}} minutes",
@@ -3555,14 +3555,14 @@
     "no": "Neste {{count}} minutter",
     "pl": "Następne {{count}} minut",
     "pt": "Próximos {{count}} minutos",
-    "pt-br": "Próximos {{count}} minutos",
+    "pt-BR": "Próximos {{count}} minutos",
     "ru": "Следующие {{count}} минут",
     "sv": "Nästa {{count}} minuter",
     "th": "อีก {{count}} นาทีถัดไป",
     "tr": "Gelecek {{count}} dakika",
     "zh": "接下来{{count}}分钟",
-    "zh-cn": "接下来{{count}}分钟",
-    "zh-tw": "接下來{{count}}分鐘"
+    "zh-CN": "接下来{{count}}分钟",
+    "zh-TW": "接下來{{count}}分鐘"
   },
   "next-hour": {
     "en": "Next hour",
@@ -3582,14 +3582,14 @@
     "no": "Neste time",
     "pl": "Następna godzina",
     "pt": "Próxima hora",
-    "pt-br": "Próxima hora",
+    "pt-BR": "Próxima hora",
     "ru": "Следующий час",
     "sv": "Nästa timme",
     "th": "ชั่วโมงถัดไป",
     "tr": "Gelecek saat",
     "zh": "下一个小时",
-    "zh-cn": "下一个小时",
-    "zh-tw": "下一個小時"
+    "zh-CN": "下一个小时",
+    "zh-TW": "下一個小時"
   },
   "next-hour_plural": {
     "en": "Next {{count}} hours",
@@ -3609,14 +3609,14 @@
     "no": "Neste {{count}} timer",
     "pl": "Następne {{count}} godzin",
     "pt": "Próximas {{count}} horas",
-    "pt-br": "Próximas {{count}} horas",
+    "pt-BR": "Próximas {{count}} horas",
     "ru": "Следующие {{count}} часов",
     "sv": "Nästa {{count}} timmar",
     "th": "ชั่วโมงถัดไป {{count}} ชั่วโมง",
     "tr": "Önümüzdeki {{count}} saat",
     "zh": "接下来{{count}}小时",
-    "zh-cn": "接下来{{count}}小时",
-    "zh-tw": "接下來 {{count}} 小時"
+    "zh-CN": "接下来{{count}}小时",
+    "zh-TW": "接下來 {{count}} 小時"
   },
   "next-day": {
     "en": "Next day",
@@ -3636,14 +3636,14 @@
     "no": "Neste dag",
     "pl": "Następny dzień",
     "pt": "Próximo dia",
-    "pt-br": "Próximo dia",
+    "pt-BR": "Próximo dia",
     "ru": "Следующий день",
     "sv": "Nästa dag",
     "th": "วันถัดไป",
     "tr": "Sonraki gün",
     "zh": "明天",
-    "zh-cn": "明天",
-    "zh-tw": "明日"
+    "zh-CN": "明天",
+    "zh-TW": "明日"
   },
   "next-day_plural": {
     "en": "Next {{count}} days",
@@ -3663,14 +3663,14 @@
     "no": "Neste {{count}} dager",
     "pl": "Następne {{count}} dni",
     "pt": "Próximos {{count}} dias",
-    "pt-br": "Próximos {{count}} dias",
+    "pt-BR": "Próximos {{count}} dias",
     "ru": "Следующие {{count}} дней",
     "sv": "Nästa {{count}} dagar",
     "th": "{{count}} วันถัดไป",
     "tr": "{{count}} sonraki gün",
     "zh": "接下来 {{count}} 天",
-    "zh-cn": "接下来 {{count}} 天",
-    "zh-tw": "接下來 {{count}} 天"
+    "zh-CN": "接下来 {{count}} 天",
+    "zh-TW": "接下來 {{count}} 天"
   },
   "next-week": {
     "en": "Next week",
@@ -3690,14 +3690,14 @@
     "no": "Neste uke",
     "pl": "Następny tydzień",
     "pt": "Próxima semana",
-    "pt-br": "Semana que vem",
+    "pt-BR": "Semana que vem",
     "ru": "На следующей неделе",
     "sv": "Nästa vecka",
     "th": "สัปดาห์หน้า",
     "tr": "Gelecek hafta",
     "zh": "下周",
-    "zh-cn": "下周",
-    "zh-tw": "下週"
+    "zh-CN": "下周",
+    "zh-TW": "下週"
   },
   "next-week_plural": {
     "en": "Next {{count}} weeks",
@@ -3717,14 +3717,14 @@
     "no": "Neste {{count}} uker",
     "pl": "Następne {{count}} tygodnie",
     "pt": "Próximas {{count}} semanas",
-    "pt-br": "Próximas {{count}} semanas",
+    "pt-BR": "Próximas {{count}} semanas",
     "ru": "Следующие {{count}} недели",
     "sv": "Nästa {{count}} veckor",
     "th": "อีก {{count}} สัปดาห์",
     "tr": "Gelecek {{count}} hafta",
     "zh": "接下来{{count}}周",
-    "zh-cn": "接下来{{count}}周",
-    "zh-tw": "接下來{{count}}週"
+    "zh-CN": "接下来{{count}}周",
+    "zh-TW": "接下來{{count}}週"
   },
   "next-month": {
     "en": "Next month",
@@ -3744,14 +3744,14 @@
     "no": "Neste måned",
     "pl": "Następny miesiąc",
     "pt": "Próximo mês",
-    "pt-br": "Próximo mês",
+    "pt-BR": "Próximo mês",
     "ru": "Следующий месяц",
     "sv": "Nästa månad",
     "th": "เดือนหน้า",
     "tr": "Gelecek ay",
     "zh": "下个月",
-    "zh-cn": "下个月",
-    "zh-tw": "下個月"
+    "zh-CN": "下个月",
+    "zh-TW": "下個月"
   },
   "next-month_plural": {
     "en": "Next {{count}} months",
@@ -3771,14 +3771,14 @@
     "no": "Neste {{count}} måneder",
     "pl": "Następne {{count}} miesięcy",
     "pt": "Próximos {{count}} meses",
-    "pt-br": "Próximos {{count}} meses",
+    "pt-BR": "Próximos {{count}} meses",
     "ru": "Следующие {{count}} месяцев",
     "sv": "Nästa {{count}} månader",
     "th": "เดือนต่อไป {{count}} เดือน",
     "tr": "Sonraki {{count}} ay",
     "zh": "接下来{{count}}个月",
-    "zh-cn": "接下来{{count}}个月",
-    "zh-tw": "接下來 {{count}} 個月"
+    "zh-CN": "接下来{{count}}个月",
+    "zh-TW": "接下來 {{count}} 個月"
   },
   "next-quarter": {
     "en": "Next quarter",
@@ -3798,14 +3798,14 @@
     "no": "Neste kvartal",
     "pl": "Następny kwartał",
     "pt": "Próximo trimestre",
-    "pt-br": "Próximo trimestre",
+    "pt-BR": "Próximo trimestre",
     "ru": "Следующий квартал",
     "sv": "Nästa kvartal",
     "th": "ไตรมาสหน้า",
     "tr": "Gelecek çeyrek",
     "zh": "下个季度",
-    "zh-cn": "下个季度",
-    "zh-tw": "下一季"
+    "zh-CN": "下个季度",
+    "zh-TW": "下一季"
   },
   "next-quarter_plural": {
     "en": "Next {{count}} quarters",
@@ -3825,14 +3825,14 @@
     "no": "Neste {{count}} kvartaler",
     "pl": "Następne {{count}} kwartały",
     "pt": "Próximos {{count}} trimestres",
-    "pt-br": "Próximos {{count}} trimestres",
+    "pt-BR": "Próximos {{count}} trimestres",
     "ru": "Следующие {{count}} квартала",
     "sv": "Nästa {{count}} kvartal",
     "th": "ไตรมาสถัดไป {{count}}",
     "tr": "Sonraki {{count}} çeyrek",
     "zh": "下 {{count}} 季度",
-    "zh-cn": "下 {{count}} 季度",
-    "zh-tw": "下 {{count}} 季"
+    "zh-CN": "下 {{count}} 季度",
+    "zh-TW": "下 {{count}} 季"
   },
   "next-year": {
     "en": "Next year",
@@ -3852,14 +3852,14 @@
     "no": "Neste år",
     "pl": "Przyszły rok",
     "pt": "Próximo ano",
-    "pt-br": "Ano que vem",
+    "pt-BR": "Ano que vem",
     "ru": "Следующий год",
     "sv": "Nästa år",
     "th": "ปีหน้า",
     "tr": "Gelecek yıl",
     "zh": "明年",
-    "zh-cn": "明年",
-    "zh-tw": "明年"
+    "zh-CN": "明年",
+    "zh-TW": "明年"
   },
   "next-year_plural": {
     "en": "Next {{count}} years",
@@ -3879,14 +3879,14 @@
     "no": "Neste {{count}} år",
     "pl": "Następne {{count}} lat",
     "pt": "Próximos {{count}} anos",
-    "pt-br": "Próximos {{count}} anos",
+    "pt-BR": "Próximos {{count}} anos",
     "ru": "Следующие {{count}} лет",
     "sv": "Nästa {{count}} år",
     "th": "{{count}} ปีถัดไป",
     "tr": "Gelecek {{count}} yıl",
     "zh": "未来{{count}}年",
-    "zh-cn": "未来{{count}}年",
-    "zh-tw": "未來{{count}}年"
+    "zh-CN": "未来{{count}}年",
+    "zh-TW": "未來{{count}}年"
   },
   "in": {
     "en": "in",
@@ -3906,14 +3906,14 @@
     "no": "i",
     "pl": "w",
     "pt": "em",
-    "pt-br": "em",
+    "pt-BR": "em",
     "ru": "в",
     "sv": "i",
     "th": "ใน",
     "tr": "içinde",
     "zh": "裡面",
-    "zh-cn": "里面",
-    "zh-tw": "裡面"
+    "zh-CN": "里面",
+    "zh-TW": "裡面"
   },
   "under": {
     "en": "{{child}} under {{parent}}",
@@ -3933,14 +3933,14 @@
     "no": "{{child}} under {{parent}}",
     "pl": "{{child}} pod {{parent}}",
     "pt": "{{child}} abaixo de {{parent}}",
-    "pt-br": "{{child}} embaixo de {{parent}}",
+    "pt-BR": "{{child}} embaixo de {{parent}}",
     "ru": "{{child}} под {{parent}}",
     "sv": "{{child}} under {{parent}}",
     "th": "{{child}} ใต้ {{parent}}",
     "tr": "{{parent}} altında {{child}}",
     "zh": "{{parent}} 下 {{child}}",
-    "zh-cn": "{{parent}} 下 {{child}}",
-    "zh-tw": "{{parent}} 下面 {{child}}"
+    "zh-CN": "{{parent}} 下 {{child}}",
+    "zh-TW": "{{parent}} 下面 {{child}}"
   },
   "preview-result": {
     "en": "Preview the result",
@@ -3960,14 +3960,14 @@
     "no": "Forhåndsvis resultatet",
     "pl": "Podgląd wyniku",
     "pt": "Pré-visualizar o resultado",
-    "pt-br": "Visualizar prévia do resultado",
+    "pt-BR": "Visualizar prévia do resultado",
     "ru": "Просмотр результата",
     "sv": "Förhandsgranska resultatet",
     "th": "ดูตัวอย่างผลลัพธ์",
     "tr": "Sonucu önizleyin",
     "zh": "预览结果",
-    "zh-cn": "预览结果",
-    "zh-tw": "預覽結果"
+    "zh-CN": "预览结果",
+    "zh-TW": "預覽結果"
   },
   "sort-and-filter": {
     "en": "Sort & Filter",
@@ -3987,14 +3987,14 @@
     "no": "Sorter og filtrer",
     "pl": "Sortuj i filtruj",
     "pt": "Ordenar e filtrar",
-    "pt-br": "Ordenar e filtrar",
+    "pt-BR": "Ordenar e filtrar",
     "ru": "Сортировать и фильтровать",
     "sv": "Sortera och filtrera",
     "th": "เรียงลำดับและกรอง",
     "tr": "Sırala ve Filtrele",
     "zh": "排序和过滤",
-    "zh-cn": "排序和过滤",
-    "zh-tw": "排序及篩選"
+    "zh-CN": "排序和过滤",
+    "zh-TW": "排序及篩選"
   },
   "view-results": {
     "en": "View results",
@@ -4014,14 +4014,14 @@
     "no": "Se resultater",
     "pl": "Wyświetl wyniki",
     "pt": "Ver resultados",
-    "pt-br": "Ver resultados",
+    "pt-BR": "Ver resultados",
     "ru": "Просмотреть результаты",
     "sv": "Visa resultat",
     "th": "ดูผลการค้นหา",
     "tr": "Sonuçları görüntüle",
     "zh": "查看结果",
-    "zh-cn": "查看结果",
-    "zh-tw": "查看結果"
+    "zh-CN": "查看结果",
+    "zh-TW": "查看結果"
   },
   "organization-is-paused": {
     "en": "Your organization {{org}} is paused due to inactivity and search is currently unavailable.",
@@ -4041,14 +4041,14 @@
     "no": "Organisasjonen din {{org}} er satt på pause på grunn av inaktivitet, og søket er for øyeblikket utilgjengelig.",
     "pl": "Twoja organizacja {{org}} została wstrzymana z powodu braku aktywności, a wyszukiwanie jest obecnie niedostępne.",
     "pt": "Sua organização {{org}} está pausada devido a inatividade e a busca não está disponível no momento.",
-    "pt-br": "Sua organização {{org}} está em pausa devido à inatividade e a pesquisa não está disponível no momento.",
+    "pt-BR": "Sua organização {{org}} está em pausa devido à inatividade e a pesquisa não está disponível no momento.",
     "ru": "Ваша организация {{org}} приостановлена из-за бездействия, а поиск в настоящее время недоступен.",
     "sv": "Din organisation {{org}} har pausats på grund av inaktivitet och sökning är för närvarande inte tillgängligt.",
     "th": "องค์กรของคุณ {{org}} ถูกระงับเนื่องจากไม่มีกิจกรรมและการค้นหายังไม่สามารถใช้ได้ในขณะนี้",
     "tr": "{{org}} organizasyonunuz hareketsizlik nedeniyle duraklatıldı ve arama şu anda kullanılamıyor.",
     "zh": "由于不活动，您的 {{org}} 组织已暂停，目前无法搜索。",
-    "zh-cn": "由于不活动，您的组织 {{org}} 已暂停，目前无法搜索。",
-    "zh-tw": "您的組織 {{org}} 因閒置已暫停，目前無法進行搜尋。"
+    "zh-CN": "由于不活动，您的组织 {{org}} 已暂停，目前无法搜索。",
+    "zh-TW": "您的組織 {{org}} 因閒置已暫停，目前無法進行搜尋。"
   },
   "organization-will-resume": {
     "en": "Your organization is resuming and will be available shortly.",
@@ -4068,14 +4068,14 @@
     "no": "Organisasjonen din blir gjenopptatt og vil bli tilgjengelig snart.",
     "pl": "Twoja organizacja zostanie wznowiona i wkrótce będzie dostępna.",
     "pt": "Sua organização está retomando e estará disponível em breve.",
-    "pt-br": "Sua organização está retomando e estará disponível em breve.",
+    "pt-BR": "Sua organização está retomando e estará disponível em breve.",
     "ru": "Ваша организация возобновляется и скоро будет доступна.",
     "sv": "Din organisation återupptas och kommer snart att vara tillgänglig.",
     "th": "องค์กรของคุณกำลังกลับมาและจะสามารถใช้ได้เร็ว ๆ นี้",
     "tr": "Organizasyonunuz devam ediyor ve kısa sürede yeniden kullanıma sunulacak.",
     "zh": "您的组织正在恢复，并将很快可用。",
-    "zh-cn": "您的组织正在恢复，并将很快可用。",
-    "zh-tw": "您的組織正在恢復中，即將回復可用。"
+    "zh-CN": "您的组织正在恢复，并将很快可用。",
+    "zh-TW": "您的組織正在恢復中，即將回復可用。"
   },
   "rating": {
     "en": "Rating",
@@ -4095,14 +4095,14 @@
     "no": "Vurdering",
     "pl": "Ocena",
     "pt": "Classificação",
-    "pt-br": "Avaliação",
+    "pt-BR": "Avaliação",
     "ru": "Рейтинг",
     "sv": "Betyg",
     "th": "การจัดอันดับ",
     "tr": "Değerlendirme",
     "zh": "评分",
-    "zh-cn": "评级",
-    "zh-tw": "評分"
+    "zh-CN": "评级",
+    "zh-TW": "評分"
   },
   "and-up": {
     "en": "& up",
@@ -4122,14 +4122,14 @@
     "no": "& opp",
     "pl": "& w górę",
     "pt": "& para cima",
-    "pt-br": "& para cima",
+    "pt-BR": "& para cima",
     "ru": "& вверх",
     "sv": "& upp",
     "th": "& ขึ้น",
     "tr": "& yukarı",
     "zh": "& 向上",
-    "zh-cn": "& 向上",
-    "zh-tw": "& 往上"
+    "zh-CN": "& 向上",
+    "zh-TW": "& 往上"
   },
   "only": {
     "en": "only",
@@ -4149,14 +4149,14 @@
     "no": "kun",
     "pl": "tylko",
     "pt": "somente",
-    "pt-br": "apenas",
+    "pt-BR": "apenas",
     "ru": "только",
     "sv": "endast",
     "th": "เพียง",
     "tr": "sadece",
     "zh": "只",
-    "zh-cn": "只",
-    "zh-tw": "只"
+    "zh-CN": "只",
+    "zh-TW": "只"
   },
   "loading-results": {
     "en": "Loading new results",
@@ -4176,14 +4176,14 @@
     "no": "Laster inn nye resultater",
     "pl": "Wczytywanie nowych wyników",
     "pt": "Carregando novos resultados",
-    "pt-br": "Carregando novos resultados",
+    "pt-BR": "Carregando novos resultados",
     "ru": "Загрузка новых результатов",
     "sv": "Laddar nya resultat",
     "th": "กำลังโหลดผลลัพธ์ใหม่",
     "tr": "Yeni sonuçlar yükleniyor",
     "zh": "正在加载新结果",
-    "zh-cn": "正在加载新结果",
-    "zh-tw": "載入新結果中"
+    "zh-CN": "正在加载新结果",
+    "zh-TW": "載入新結果中"
   },
   "query-suggestions-available": {
     "en": "{{count}} search suggestion available.",
@@ -4203,14 +4203,14 @@
     "no": "{{count}} søkeforslag tilgjengelig.",
     "pl": "{{count}} sugestia wyszukiwania dostępna.",
     "pt": "{{count}} sugestão de pesquisa disponível.",
-    "pt-br": "{{count}} sugestão de pesquisa disponível.",
+    "pt-BR": "{{count}} sugestão de pesquisa disponível.",
     "ru": "{{count}} предложение поиска доступно.",
     "sv": "{{count}} sökförslag tillgängliga.",
     "th": "{{count}} ข้อเสนอค้นหาที่พร้อมใช้งาน",
     "tr": "{{count}} arama önerisi mevcut.",
     "zh": "有{{count}}个搜索建议可用。",
-    "zh-cn": "{{count}} 个搜索建议可用。",
-    "zh-tw": "{{count}} 個搜尋建議可用。"
+    "zh-CN": "{{count}} 个搜索建议可用。",
+    "zh-TW": "{{count}} 個搜尋建議可用。"
   },
   "query-suggestions-available_plural": {
     "en": "{{count}} search suggestions are available.",
@@ -4230,14 +4230,14 @@
     "no": "{{count}} søkeforslag er tilgjengelige.",
     "pl": "{{count}} sugestie wyszukiwania są dostępne.",
     "pt": "{{count}} sugestões de pesquisa estão disponíveis.",
-    "pt-br": "{{count}} sugestões de pesquisa estão disponíveis.",
+    "pt-BR": "{{count}} sugestões de pesquisa estão disponíveis.",
     "ru": "{{count}} предложений для поиска доступны.",
     "sv": "{{count}} sökförslag finns tillgängliga.",
     "th": "มีเคล็ดลับการค้นหา {{count}} รายการที่สามารถใช้ได้",
     "tr": "{{count}} arama önerisi mevcut.",
     "zh": "有{{count}}个搜索建议可用。",
-    "zh-cn": "{{count}} 种搜索建议可用。",
-    "zh-tw": "{{count}} 個搜尋建議可用。"
+    "zh-CN": "{{count}} 种搜索建议可用。",
+    "zh-TW": "{{count}} 個搜尋建議可用。"
   },
   "query-suggestions-unavailable": {
     "en": "There are no search suggestions.",
@@ -4257,14 +4257,14 @@
     "no": "Ingen søkeforslag tilgjengelig.",
     "pl": "Nie ma sugestii wyszukiwania.",
     "pt": "Não há sugestões de pesquisa disponíveis.",
-    "pt-br": "Não há sugestões de pesquisa disponíveis.",
+    "pt-BR": "Não há sugestões de pesquisa disponíveis.",
     "ru": "Нет предложений поиска.",
     "sv": "Det finns inga sökförslag.",
     "th": "ไม่มีข้อเสนอค้นหา",
     "tr": "Arama önerileri yok.",
     "zh": "没有搜索建议。",
-    "zh-cn": "没有搜索建议。",
-    "zh-tw": "沒有搜尋建議。"
+    "zh-CN": "没有搜索建议。",
+    "zh-TW": "沒有搜尋建議。"
   },
   "stars": {
     "en": "one star out of {{max}}",
@@ -4284,14 +4284,14 @@
     "no": "en stjerne ut av {{max}}",
     "pl": "jedna gwiazdka z {{max}}",
     "pt": "uma estrela de {{max}}",
-    "pt-br": "uma estrela de {{max}}",
+    "pt-BR": "uma estrela de {{max}}",
     "ru": "одна звезда из {{max}}",
     "sv": "en stjärna av {{max}}",
     "th": "ดาวหนึ่งจาก {{max}}",
     "tr": "{{max}} yıldızdan biri",
     "zh": "{{max}}颗星中的一颗",
-    "zh-cn": "{{max}}颗星中的一颗",
-    "zh-tw": "{{max}}顆星中的其中一顆"
+    "zh-CN": "{{max}}颗星中的一颗",
+    "zh-TW": "{{max}}顆星中的其中一顆"
   },
   "stars_plural": {
     "en": "{{count}} stars out of {{max}}",
@@ -4311,14 +4311,14 @@
     "no": "{{count}} stjerner av {{max}}",
     "pl": "{{count}} gwiazdek z {{max}}",
     "pt": "{{count}} estrelas de {{max}}",
-    "pt-br": "{{count}} estrelas de {{max}}",
+    "pt-BR": "{{count}} estrelas de {{max}}",
     "ru": "{{count}} звезд из {{max}}",
     "sv": "{{count}} stjärnor av {{max}}",
     "th": "{{count}} ดาวจาก {{max}}",
     "tr": "{{max}} üzerinden {{count}} yıldız",
     "zh": "{{max}}星，{{count}}星",
-    "zh-cn": "{{max}}颗星，{{count}}颗星",
-    "zh-tw": "{{max}}顆星，{{count}}顆星"
+    "zh-CN": "{{max}}颗星，{{count}}颗星",
+    "zh-TW": "{{max}}顆星，{{count}}顆星"
   },
   "stars-only": {
     "en": "only {{count}} stars out of {{count}}",
@@ -4338,14 +4338,14 @@
     "no": "bare {{count}} stjerner ut av {{count}}",
     "pl": "tylko {{count}} gwiazdek z {{count}}",
     "pt": "apenas {{count}} estrelas de {{count}}",
-    "pt-br": "apenas {{count}} estrelas de {{count}}",
+    "pt-BR": "apenas {{count}} estrelas de {{count}}",
     "ru": "только {{count}} звезд из {{count}}",
     "sv": "endast {{count}} stjärnor av {{count}}",
     "th": "เพียง {{count}} ดาวจาก {{count}}",
     "tr": "{{count}} yıldızın sadece {{count}} tanesi",
     "zh": "仅 {{count}} / {{count}} 颗星",
-    "zh-cn": "仅 {{count}} / {{count}} 颗星",
-    "zh-tw": "僅有 {{count}} / {{count}} 顆星"
+    "zh-CN": "仅 {{count}} / {{count}} 颗星",
+    "zh-TW": "僅有 {{count}} / {{count}} 顆星"
   },
   "stars-range": {
     "en": "{{value}} out of {{count}} stars & up",
@@ -4365,21 +4365,21 @@
     "no": "{{value}} stjerner eller høyere av totalt {{count}}",
     "pl": "{{value}} gwiazdek i więcej z ogólnej liczby {{count}}",
     "pt": "{{value}} estrelas ou mais de um total de {{count}}",
-    "pt-br": "{{value}} estrelas ou mais de um total de {{count}}",
+    "pt-BR": "{{value}} estrelas ou mais de um total de {{count}}",
     "ru": "{{value}} звезды и выше среди {{count}}",
     "sv": "{{value}} stjärnor eller fler av totalt {{count}}",
     "th": "{{value}} ดาว หรือมากกว่าจากทั้งหมด {{count}}",
     "tr": "{{count}} yıldızın {{value}} ve üstü",
     "zh": "{{count}} 颗星中 {{value}} 颗及以上的",
-    "zh-cn": "{{count}}颗星中{{value}}颗及以上的",
-    "zh-tw": "{{count}}顆星中{{value}}顆或以上的"
+    "zh-CN": "{{count}}颗星中{{value}}颗及以上的",
+    "zh-TW": "{{count}}顆星中{{value}}顆或以上的"
   },
   "with-colon": {
     "en": "{{text}}:",
     "fr": "{{text}} :",
-    "zh-cn": "{{text}}：",
+    "zh-CN": "{{text}}：",
     "zh": "{{text}}：",
-    "zh-tw": "{{text}}：",
+    "zh-TW": "{{text}}：",
     "cs": "{{text}}:",
     "da": "{{text}}:",
     "de": "{{text}}:",
@@ -4395,7 +4395,7 @@
     "no": "{{text}}:",
     "pl": "{{text}}:",
     "pt": "{{text}}:",
-    "pt-br": "{{text}}:",
+    "pt-BR": "{{text}}:",
     "ru": "{{text}}:",
     "sv": "{{text}}:",
     "th": "{{text}}:",
@@ -4404,9 +4404,9 @@
   "between-quotations": {
     "en": "“{{text}}”",
     "fr": "« {{text}} »",
-    "zh-cn": "“{{text}}”",
+    "zh-CN": "“{{text}}”",
     "zh": "“{{text}}”",
-    "zh-tw": "「{{text}}」",
+    "zh-TW": "「{{text}}」",
     "cs": "„{{text}}“",
     "da": "”{{text}}”",
     "de": "„{{text}}“",
@@ -4422,7 +4422,7 @@
     "no": "”{{text}}”",
     "pl": "„{{text}}”",
     "pt": "“{{text}}”",
-    "pt-br": "“{{text}}”",
+    "pt-BR": "“{{text}}”",
     "ru": "«{{text}}»",
     "sv": "”{{text}}”",
     "th": "“{{text}}”",
@@ -4431,9 +4431,29 @@
   "between-parentheses": {
     "en": "({{text}})",
     "fr": "({{text}})",
-    "zh-cn": "（{{text}}）",
-    "zh": "（{{text}}）",
-    "zh-tw": "（{{text}}）"
+    "cs": "({{text}})",
+    "da": "({{text}})",
+    "de": "({{text}})",
+    "el": "({{text}})",
+    "es": "({{text}})",
+    "fi": "({{text}})",
+    "hu": "({{text}})",
+    "id": "({{text}})",
+    "it": "({{text}})",
+    "ja": "({{text}})",
+    "ko": "({{text}})",
+    "nl": "({{text}})",
+    "no": "({{text}})",
+    "pl": "({{text}})",
+    "pt": "({{text}})",
+    "pt-BR": "({{text}})",
+    "ru": "({{text}})",
+    "sv": "({{text}})",
+    "th": "({{text}})",
+    "tr": "({{text}})",
+    "zh-CN": "({{text}})",
+    "zh": "({{text}})",
+    "zh-TW": "({{text}})"
   },
   "notifications": {
     "en": "Notifications",
@@ -4453,14 +4473,14 @@
     "no": "Varsler",
     "pl": "Powiadomienia",
     "pt": "Notificações",
-    "pt-br": "Notificações",
+    "pt-BR": "Notificações",
     "ru": "Уведомления",
     "sv": "Notiser",
     "th": "การแจ้งเตือน",
     "tr": "Bildirimler",
     "zh": "通知",
-    "zh-cn": "通知",
-    "zh-tw": "通知"
+    "zh-CN": "通知",
+    "zh-TW": "通知"
   },
   "notification-n": {
     "en": "Notification {{n}}: {{text}}",
@@ -4480,14 +4500,14 @@
     "no": "Varsling {{n}}: {{text}}",
     "pl": "Powiadomienie {{n}}: {{text}}",
     "pt": "Notificação {{n}}: {{text}}",
-    "pt-br": "Notificação {{n}}: {{text}}",
+    "pt-BR": "Notificação {{n}}: {{text}}",
     "ru": "Уведомление {{n}}: {{text}}",
     "sv": "Avisering {{n}}: {{text}}",
     "th": "การแจ้งเตือน {{n}}: {{text}}",
     "tr": "Bildirim {{n}}: {{text}}",
     "zh": "通知 {{n}}: {{text}}",
-    "zh-cn": "通知 {{n}}: {{text}}",
-    "zh-tw": "通知 {{n}}: {{text}}"
+    "zh-CN": "通知 {{n}}: {{text}}",
+    "zh-TW": "通知 {{n}}: {{text}}"
   },
   "smart-snippet": {
     "en": "Potential answer to your question",
@@ -4507,14 +4527,14 @@
     "no": "Potensielt svar på spørsmålet ditt",
     "pl": "Potencjalna odpowiedź na Twoje pytanie",
     "pt": "Resposta potencial à sua pergunta",
-    "pt-br": "Resposta potencial para sua pergunta",
+    "pt-BR": "Resposta potencial para sua pergunta",
     "ru": "Потенциальный ответ на ваш вопрос",
     "sv": "Möjligt svar på din fråga",
     "th": "คำตอบที่เป็นไปได้สำหรับคำถามของคุณ",
     "tr": "Sorunuza potansiyel cevap",
     "zh": "您的问题的潜在答案",
-    "zh-cn": "您的问题的潜在答案",
-    "zh-tw": "您問題的潛在答案"
+    "zh-CN": "您的问题的潜在答案",
+    "zh-TW": "您問題的潛在答案"
   },
   "smart-snippet-source": {
     "en": "Source of the answer",
@@ -4534,14 +4554,14 @@
     "no": "Kilde til svaret",
     "pl": "Źródło odpowiedzi",
     "pt": "Fonte da resposta",
-    "pt-br": "Fonte da resposta",
+    "pt-BR": "Fonte da resposta",
     "ru": "Источник ответа",
     "sv": "Källa till svaret",
     "th": "แหล่งของคำตอบ",
     "tr": "Cevabın kaynağı",
     "zh": "答案来源",
-    "zh-cn": "答案来源",
-    "zh-tw": "答案來源"
+    "zh-CN": "答案来源",
+    "zh-TW": "答案來源"
   },
   "smart-snippet-feedback-inquiry": {
     "en": "Was this information useful?",
@@ -4561,14 +4581,14 @@
     "no": "Var denne informasjonen nyttig?",
     "pl": "Czy ta informacja była przydatna?",
     "pt": "Esta informação foi útil?",
-    "pt-br": "Esta informação foi útil?",
+    "pt-BR": "Esta informação foi útil?",
     "ru": "Была ли эта информация полезной?",
     "sv": "Var denna information användbar?",
     "th": "ข้อมูลนี้มีประโยชน์หรือไม่",
     "tr": "Bu bilgi yararlı mıydı?",
     "zh": "这些信息是否有用？",
-    "zh-cn": "这些信息是否有用？",
-    "zh-tw": "這些資訊對您有用嗎？"
+    "zh-CN": "这些信息是否有用？",
+    "zh-TW": "這些資訊對您有用嗎？"
   },
   "smart-snippet-feedback-thanks": {
     "en": "Thank you for your feedback!",
@@ -4588,14 +4608,14 @@
     "no": "Takk for tilbakemeldingen din!",
     "pl": "Dziękujemy za przesłaną opinię!",
     "pt": "Obrigado pelo seu feedback!",
-    "pt-br": "Obrigado pelo seu feedback!",
+    "pt-BR": "Obrigado pelo seu feedback!",
     "ru": "Спасибо за ваш отзыв!",
     "sv": "Tack för din feedback!",
     "th": "ขอบคุณสำหรับความคิดเห็นของคุณ!",
     "tr": "Geri bildiriminiz için teşekkür ederiz!",
     "zh": "感谢您的反馈！",
-    "zh-cn": "感谢您的反馈！",
-    "zh-tw": "感謝您的回饋！"
+    "zh-CN": "感谢您的反馈！",
+    "zh-TW": "感謝您的回饋！"
   },
   "smart-snippet-feedback-explain-why": {
     "en": "Explain why",
@@ -4615,14 +4635,14 @@
     "no": "Forklar hvorfor",
     "pl": "Wyjaśnij, dlaczego",
     "pt": "Explicar porquê",
-    "pt-br": "Explique por quê",
+    "pt-BR": "Explique por quê",
     "ru": "Объясните, почему",
     "sv": "Förklara varför",
     "th": "อธิบายเหตุผล",
     "tr": "Neden açıkla",
     "zh": "解释为什么",
-    "zh-cn": "说明原因",
-    "zh-tw": "解釋為什麼"
+    "zh-CN": "说明原因",
+    "zh-TW": "解釋為什麼"
   },
   "smart-snippet-feedback-select-reason": {
     "en": "Select the reason",
@@ -4642,14 +4662,14 @@
     "no": "Velg årsaken ",
     "pl": "Wybierz przyczynę ",
     "pt": "Selecione o motivo ",
-    "pt-br": "Selecione o motivo ",
+    "pt-BR": "Selecione o motivo ",
     "ru": "Выберите причину ",
     "sv": "Välj anledningen ",
     "th": "เลือกเหตุผล",
     "tr": "Sebep seçin",
     "zh": "选择原因",
-    "zh-cn": "选择原因",
-    "zh-tw": "選擇原因"
+    "zh-CN": "选择原因",
+    "zh-TW": "選擇原因"
   },
   "smart-snippet-feedback-details": {
     "en": "Details",
@@ -4669,14 +4689,14 @@
     "no": "Detaljer",
     "pl": "Szczegóły",
     "pt": "Detalhes",
-    "pt-br": "Detalhes",
+    "pt-BR": "Detalhes",
     "ru": "Детали",
     "sv": "Detaljer",
     "th": "รายละเอียด",
     "tr": "Detaylar",
     "zh": "詳細信息",
-    "zh-cn": "详情",
-    "zh-tw": "詳細資訊"
+    "zh-CN": "详情",
+    "zh-TW": "詳細資訊"
   },
   "smart-snippet-feedback-send": {
     "en": "Send feedback",
@@ -4696,14 +4716,14 @@
     "no": "Send tilbakemelding",
     "pl": "Wyślij opinię",
     "pt": "Enviar feedback",
-    "pt-br": "Enviar comentários",
+    "pt-BR": "Enviar comentários",
     "ru": "Отправить отзыв",
     "sv": "Skicka feedback",
     "th": "ส่งความคิดเห็น",
     "tr": "Geribildirim gönder",
     "zh": "发送反馈",
-    "zh-cn": "发送反馈",
-    "zh-tw": "傳送回饋"
+    "zh-CN": "发送反馈",
+    "zh-TW": "傳送回饋"
   },
   "smart-snippet-feedback-reason-does-not-answer": {
     "en": "This didn't answer my question at all",
@@ -4723,14 +4743,14 @@
     "no": "Dette besvarte ikke spørsmålet mitt i det hele tatt",
     "pl": "To w ogóle nie odpowiedziało na moje pytanie",
     "pt": "Isso não respondeu minha pergunta de forma alguma",
-    "pt-br": "Isso não respondeu minha pergunta de jeito nenhum",
+    "pt-BR": "Isso não respondeu minha pergunta de jeito nenhum",
     "ru": "Это совсем не ответило на мой вопрос",
     "sv": "Det här besvarade inte min fråga alls",
     "th": "สิ่งนี้ไม่ตอบคำถามของฉันเลย",
     "tr": "Bu hiçbir şekilde sorumu yanıtlamadı",
     "zh": "这根本没有回答我的问题",
-    "zh-cn": "这根本没有回答我的问题",
-    "zh-tw": "這根本沒有回答我的問題"
+    "zh-CN": "这根本没有回答我的问题",
+    "zh-TW": "這根本沒有回答我的問題"
   },
   "smart-snippet-feedback-reason-partially-answers": {
     "en": "This only partially answered my question",
@@ -4750,14 +4770,14 @@
     "no": "Dette besvarte bare delvis spørsmålet mitt",
     "pl": "To tylko częściowo odpowiedziało na moje pytanie",
     "pt": "Isso respondeu apenas parcialmente a minha pergunta",
-    "pt-br": "Esta resposta só respondeu parcialmente minha pergunta",
+    "pt-BR": "Esta resposta só respondeu parcialmente minha pergunta",
     "ru": "Это ответило только частично на мой вопрос",
     "sv": "Detta besvarade endast delvis min fråga",
     "th": "นี้ตอบคำถามของฉันเพียงบางส่วนเท่านั้น",
     "tr": "Bu sadece sorumu kısmen yanıtladı",
     "zh": "这只是部分地回答了我的问题",
-    "zh-cn": "这只是部分地回答了我的问题",
-    "zh-tw": "這只是部分地回答了我的問題"
+    "zh-CN": "这只是部分地回答了我的问题",
+    "zh-TW": "這只是部分地回答了我的問題"
   },
   "smart-snippet-feedback-reason-was-not-a-question": {
     "en": "My request wasn't meant to be perceived as a question",
@@ -4777,14 +4797,14 @@
     "no": "Min forespørsel var ikke ment å oppfattes som et spørsmål",
     "pl": "Moja prośba nie była w zamierzeniu odebrana jako pytanie",
     "pt": "Meu pedido não foi destinado a ser percebido como uma pergunta",
-    "pt-br": "Minha solicitação não foi destinada a ser percebida como uma pergunta",
+    "pt-BR": "Minha solicitação não foi destinada a ser percebida como uma pergunta",
     "ru": "Моя просьба не была предназначена для восприятия как вопрос",
     "sv": "Min begäran var inte avsedd att uppfattas som en fråga",
     "th": "คำขอของฉันไม่ได้มีจุดมุ่งหมายที่จะรับรู้เป็นคำถาม",
     "tr": "Benim isteğim bir soru olarak algılanmak için yapılmadı",
     "zh": "我的请求并非意图被视为问题",
-    "zh-cn": "我的请求并非意图被视为问题",
-    "zh-tw": "我的請求不是要被視為問題"
+    "zh-CN": "我的请求并非意图被视为问题",
+    "zh-TW": "我的請求不是要被視為問題"
   },
   "smart-snippet-feedback-reason-other": {
     "en": "Other",
@@ -4804,14 +4824,14 @@
     "no": "Annet",
     "pl": "Inne",
     "pt": "Outro",
-    "pt-br": "Outro",
+    "pt-BR": "Outro",
     "ru": "Другое",
     "sv": "Annat",
     "th": "อื่นๆ",
     "tr": "Diğer",
     "zh": "其他",
-    "zh-cn": "其他",
-    "zh-tw": "其他"
+    "zh-CN": "其他",
+    "zh-TW": "其他"
   },
   "smart-snippet-people-also-ask": {
     "en": "People also ask",
@@ -4831,14 +4851,14 @@
     "no": "Ofte stilte spørsmål",
     "pl": "Najczęściej zadawane pytania",
     "pt": "Perguntas frequentes",
-    "pt-br": "Perguntas frequentes",
+    "pt-BR": "Perguntas frequentes",
     "ru": "Частые вопросы",
     "sv": "Vanliga frågor",
     "th": "คำถามที่พบบ่อย",
     "tr": "Sıkça sorulan sorular",
     "zh": "常见问题",
-    "zh-cn": "常见问题",
-    "zh-tw": "常見問題"
+    "zh-CN": "常见问题",
+    "zh-TW": "常見問題"
   },
   "edit-insight": {
     "en": "Edit insight",
@@ -4858,14 +4878,14 @@
     "no": "Redigering innsikt",
     "pl": "Wgląd w edycję",
     "pt": "Visão de edição",
-    "pt-br": "Visão de edição",
+    "pt-BR": "Visão de edição",
     "ru": "Инсайт редактирования",
     "sv": "Redigeringsinsikt",
     "th": "แก้ไขเข้าใจ",
     "tr": "Düzenleme içgörüsü",
     "zh": "编辑洞察",
-    "zh-cn": "编辑洞察",
-    "zh-tw": "編輯洞察"
+    "zh-CN": "编辑洞察",
+    "zh-TW": "編輯洞察"
   },
   "insight-history": {
     "en": "Insight action history",
@@ -4885,14 +4905,14 @@
     "no": "Insight-handlingshistorikk",
     "pl": "Historia akcji Insight",
     "pt": "Histórico de ações do Insight",
-    "pt-br": "Histórico de ações do Insight",
+    "pt-BR": "Histórico de ações do Insight",
     "ru": "История действий Insight",
     "sv": "Insight-åtgärdshistorik",
     "th": "ประวัติการดำเนินการของ Insight",
     "tr": "İçgörü işlem geçmişi",
     "zh": "Insight操作历史",
-    "zh-cn": "Insight操作历史",
-    "zh-tw": "Insight操作歷史"
+    "zh-CN": "Insight操作历史",
+    "zh-TW": "Insight操作歷史"
   },
   "insight-related-cases": {
     "en": "Insights related to this case",
@@ -4912,14 +4932,14 @@
     "no": "Innsikt relatert til denne saken",
     "pl": "Intuicje związane z tą sprawą",
     "pt": "Insights relacionados a este caso",
-    "pt-br": "Informações relevantes a partir deste caso",
+    "pt-BR": "Informações relevantes a partir deste caso",
     "ru": "Инсайты, связанные с этим случаем",
     "sv": "Insikter relaterade till detta fall",
     "th": "ความเข้าใจที่เกี่ยวข้องกับเคสนี้",
     "tr": "Bu durumla ilgili bilgiler",
     "zh": "与此案件相关的见解",
-    "zh-cn": "与本案有关的见解",
-    "zh-tw": "與此案件相關的洞見"
+    "zh-CN": "与本案有关的见解",
+    "zh-TW": "與此案件相關的洞見"
   },
   "full-search": {
     "en": "Button to access full search",
@@ -4939,14 +4959,14 @@
     "no": "Knapp for å få tilgang til fullstendig søk",
     "pl": "Przycisk do dostępu do pełnego wyszukiwania",
     "pt": "Botão para acessar a busca completa",
-    "pt-br": "Botão para acessar a pesquisa completa",
+    "pt-BR": "Botão para acessar a pesquisa completa",
     "ru": "Кнопка для доступа к полному поиску",
     "sv": "Knapp för att komma åt fullständig sökning",
     "th": "ปุ่มเพื่อเข้าถึงการค้นหาเต็มรูปแบบ",
     "tr": "Tam aramaya erişmek için düğme",
     "zh": "访问完整搜索的按钮",
-    "zh-cn": "访问完整搜索的按钮",
-    "zh-tw": "訪問完整搜尋的按鈕"
+    "zh-CN": "访问完整搜索的按钮",
+    "zh-TW": "訪問完整搜尋的按鈕"
   },
   "calendar-last-day": {
     "en": "[Yesterday]",
@@ -4966,14 +4986,14 @@
     "no": "[I går]",
     "pl": "[Wczoraj]",
     "pt": "[Ontem]",
-    "pt-br": "[Ontem]",
+    "pt-BR": "[Ontem]",
     "ru": "[Вчера]",
     "sv": "[Igår]",
     "th": "[เมื่อวาน]",
     "tr": "[Dün]",
     "zh": "[昨天]",
-    "zh-cn": "[昨天]",
-    "zh-tw": "[昨天]"
+    "zh-CN": "[昨天]",
+    "zh-TW": "[昨天]"
   },
   "calendar-same-day": {
     "en": "[Today]",
@@ -4993,14 +5013,14 @@
     "no": "[I dag]",
     "pl": "[Dzisiaj]",
     "pt": "[Hoje]",
-    "pt-br": "[Hoje]",
+    "pt-BR": "[Hoje]",
     "ru": "[Сегодня]",
     "sv": "[Idag]",
     "th": "[วันนี้]",
     "tr": "[Bugün]",
     "zh": "[今天]",
-    "zh-cn": "[今天]",
-    "zh-tw": "[今天]"
+    "zh-CN": "[今天]",
+    "zh-TW": "[今天]"
   },
   "calendar-next-day": {
     "en": "[Tomorrow]",
@@ -5020,14 +5040,14 @@
     "no": "[I morgen]",
     "pl": "[Jutro]",
     "pt": "[Amanhã]",
-    "pt-br": "[Amanhã]",
+    "pt-BR": "[Amanhã]",
     "ru": "[Завтра]",
     "sv": "[Imorgon]",
     "th": "[พรุ่งนี้]",
     "tr": "[Yarın]",
     "zh": "[明天]",
-    "zh-cn": "[明天]",
-    "zh-tw": "[明天]"
+    "zh-CN": "[明天]",
+    "zh-TW": "[明天]"
   },
   "calendar-next-week": {
     "en": "dddd",
@@ -5047,14 +5067,14 @@
     "no": "Neste uke",
     "pl": "Przyszły tydzień",
     "pt": "Próxima semana",
-    "pt-br": "Semana que vem",
+    "pt-BR": "Semana que vem",
     "ru": "На следующей неделе",
     "sv": "Nästa vecka",
     "th": "สัปดาห์หน้า",
     "tr": "Gelecek hafta",
     "zh": "下周",
-    "zh-cn": "下周",
-    "zh-tw": "下週"
+    "zh-CN": "下周",
+    "zh-TW": "下週"
   },
   "calendar-last-week": {
     "en": "[Last] dddd",
@@ -5074,14 +5094,14 @@
     "no": "[Siste] dddd",
     "pl": "[Ostatni] dddd",
     "pt": "[Último] dddd",
-    "pt-br": "[Última] dddd",
+    "pt-BR": "[Última] dddd",
     "ru": "[Прошлую] dddd",
     "sv": "[Förra] dddd",
     "th": "[สัปดาห์ที่ผ่านมา] dddd",
     "tr": "[Geçen] dddd",
     "zh": "[上] dddd",
-    "zh-cn": "[上] dddd",
-    "zh-tw": "[上] dddd"
+    "zh-CN": "[上] dddd",
+    "zh-TW": "[上] dddd"
   },
   "approx_year": {
     "en": "About a year",
@@ -5101,14 +5121,14 @@
     "no": "Omtrent et år",
     "pl": "Około roku",
     "pt": "Mais ou menos um ano",
-    "pt-br": "Aproximadamente um ano",
+    "pt-BR": "Aproximadamente um ano",
     "ru": "Около года",
     "sv": "Ungefär ett år",
     "th": "ประมาณหนึ่งปี",
     "tr": "Yaklaşık bir yıl",
     "zh": "大约一年",
-    "zh-cn": "大约一年",
-    "zh-tw": "約一年"
+    "zh-CN": "大约一年",
+    "zh-TW": "約一年"
   },
   "approx_year_plural": {
     "en": "About {{count}} years",
@@ -5128,14 +5148,14 @@
     "no": "Omtrent {{count}} år siden",
     "pl": "Około {{count}} lat temu",
     "pt": "Há cerca de {{count}} anos",
-    "pt-br": "Há cerca de {{count}} anos",
+    "pt-BR": "Há cerca de {{count}} anos",
     "ru": "Примерно {{count}} лет назад",
     "sv": "Omkring {{count}} år sedan",
     "th": "เกือบ {{count}} ปีที่แล้ว",
     "tr": "Yaklaşık {{count}} yıl önce",
     "zh": "大约{{count}}年前",
-    "zh-cn": "大约{{count}}年前",
-    "zh-tw": "大約{{count}}年前"
+    "zh-CN": "大约{{count}}年前",
+    "zh-TW": "大約{{count}}年前"
   },
   "approx_month": {
     "en": "About a month",
@@ -5155,14 +5175,14 @@
     "no": "Om lag en måned",
     "pl": "Ok. miesiąc",
     "pt": "Cerca de um mês",
-    "pt-br": "Aproximadamente um mês",
+    "pt-BR": "Aproximadamente um mês",
     "ru": "Около месяца",
     "sv": "Ungefär en månad",
     "th": "ประมาณหนึ่งเดือน",
     "tr": "Yaklaşık bir ay",
     "zh": "大约一个月",
-    "zh-cn": "大约一个月",
-    "zh-tw": "大約一個月"
+    "zh-CN": "大约一个月",
+    "zh-TW": "大約一個月"
   },
   "approx_month_plural": {
     "en": "About {{count}} months",
@@ -5182,14 +5202,14 @@
     "no": "Omtrent {{count}} måneder",
     "pl": "Okolo {{count}} miesięcy",
     "pt": "Aproximadamente {{count}} meses",
-    "pt-br": "Aproximadamente {{count}} meses",
+    "pt-BR": "Aproximadamente {{count}} meses",
     "ru": "Примерно {{count}} месяцев",
     "sv": "Ungefär {{count}} månader",
     "th": "ประมาณ {{count}} เดือน",
     "tr": "{{count}} ay kadar",
     "zh": "大约{{count}}个月",
-    "zh-cn": "大约{{count}}个月",
-    "zh-tw": "約 {{count}} 個月"
+    "zh-CN": "大约{{count}}个月",
+    "zh-TW": "約 {{count}} 個月"
   },
   "approx_day": {
     "en": "About a day",
@@ -5209,14 +5229,14 @@
     "no": "Omtrent en dag",
     "pl": "Okolo jednego dnia",
     "pt": "Aproximadamente um dia",
-    "pt-br": "Por volta de um dia",
+    "pt-BR": "Por volta de um dia",
     "ru": "Примерно день",
     "sv": "Ungefär en dag",
     "th": "ประมาณหนึ่งวัน",
     "tr": "Yaklaşık bir gün",
     "zh": "大约一天",
-    "zh-cn": "约一天",
-    "zh-tw": "大約一天"
+    "zh-CN": "约一天",
+    "zh-TW": "大約一天"
   },
   "day_plural": {
     "en": "About {{count}} days",
@@ -5236,14 +5256,14 @@
     "no": "Ca. {{count}} dager",
     "pl": "Ok. {{count}} dni",
     "pt": "Aproximadamente {{count}} dias",
-    "pt-br": "Aproximadamente {{count}} dias",
+    "pt-BR": "Aproximadamente {{count}} dias",
     "ru": "Около {{count}} дней",
     "sv": "Ca. {{count}} dagar",
     "th": "ประมาณ {{count}} วัน",
     "tr": "{{count}} gün sonra",
     "zh": "约{{count}} 天左右",
-    "zh-cn": "约{{count}} 天左右",
-    "zh-tw": "大約 {{count}} 天"
+    "zh-CN": "约{{count}} 天左右",
+    "zh-TW": "大約 {{count}} 天"
   },
   "quickview": {
     "en": "Quick View",
@@ -5252,7 +5272,7 @@
     "da": "Hurtigvis",
     "de": "Schnellansicht",
     "el": "Γρήγορη επισκόπηση",
-    "es-es": "Vista rápida",
+    "es-ES": "Vista rápida",
     "fi": "Pikanäkymä",
     "hu": "Gyorsnézet",
     "id": "Tampilan Cepat",
@@ -5262,13 +5282,13 @@
     "nl": "Snelle weergave",
     "no": "Hurtigvisning",
     "pl": "Szybki podgląd",
-    "pt-br": "Visualização rápida",
+    "pt-BR": "Visualização rápida",
     "ru": "Быстрый просмотр",
     "sv": "Snabbvy",
     "th": "มุมมองด่วน",
     "tr": "Hızlı Bakış",
-    "zh-cn": "快速查看",
-    "zh-tw": "快速檢視",
+    "zh-CN": "快速查看",
+    "zh-TW": "快速檢視",
     "es": "Vista rápida",
     "pt": "Visualização rápida",
     "zh": "快速查看"
@@ -5291,14 +5311,14 @@
     "no": "Nøkkelord markering",
     "pl": "Podkreślenie słów kluczowych",
     "pt": "Realce de palavras-chave",
-    "pt-br": "Realce de palavras-chave",
+    "pt-BR": "Realce de palavras-chave",
     "ru": "Выделение ключевых слов",
     "sv": "Nyckelord markerad",
     "th": "เน้นคำหลัก",
     "tr": "Anahtar kelimeleri vurgula",
     "zh": "關鍵詞突出顯示",
-    "zh-cn": "关键词突出显示",
-    "zh-tw": "關鍵字突出顯示"
+    "zh-CN": "关键词突出显示",
+    "zh-TW": "關鍵字突出顯示"
   },
   "minimize": {
     "en": "Minimize",
@@ -5318,14 +5338,14 @@
     "no": "Minimer",
     "pl": "Zminimalizuj",
     "pt": "Minimizar",
-    "pt-br": "Minimizar",
+    "pt-BR": "Minimizar",
     "ru": "Свернуть",
     "sv": "Minimera",
     "th": "ย่อหน้าต่าง",
     "tr": "Simge Durumuna Küçült",
     "zh": "最小化",
-    "zh-cn": "最小化",
-    "zh-tw": "最小化"
+    "zh-CN": "最小化",
+    "zh-TW": "最小化"
   },
   "quickview-add-word": {
     "en": "Add highlights",
@@ -5345,14 +5365,14 @@
     "no": "Legg til høydepunkter",
     "pl": "Dodaj zakładki",
     "pt": "Adicionar destaques",
-    "pt-br": "Adicionar destaques",
+    "pt-BR": "Adicionar destaques",
     "ru": "Добавить подсветки",
     "sv": "Lägg till höjdpunkter",
     "th": "เพิ่มไฮไลท์",
     "tr": "Vurgular ekle",
     "zh": "添加亮点",
-    "zh-cn": "添加亮点",
-    "zh-tw": "新增亮點"
+    "zh-CN": "添加亮点",
+    "zh-TW": "新增亮點"
   },
   "quickview-remove-word": {
     "en": "Remove highlights",
@@ -5372,14 +5392,14 @@
     "no": "Fjern uthevinger",
     "pl": "Usuń wyróżnienia",
     "pt": "Remover destaques",
-    "pt-br": "Remover destaques",
+    "pt-BR": "Remover destaques",
     "ru": "Удалить выделения",
     "sv": "Ta bort markeringar",
     "th": "ลบไฮไลท์",
     "tr": "Vurguları kaldır",
     "zh": "清除高亮",
-    "zh-cn": "清除高亮",
-    "zh-tw": "清除高亮"
+    "zh-CN": "清除高亮",
+    "zh-TW": "清除高亮"
   },
   "quickview-next": {
     "en": "Next quickview",
@@ -5399,14 +5419,14 @@
     "no": "Neste hurtigvisning",
     "pl": "Następna szybka wizualizacja",
     "pt": "Próxima visualização rápida",
-    "pt-br": "Próximo quickview",
+    "pt-BR": "Próximo quickview",
     "ru": "Следующий быстрый просмотр",
     "sv": "Nästa snabb översikt",
     "th": "ดูตัวอย่างเร็วถัดไป",
     "tr": "Sonraki hızlı görünüm",
     "zh": "下一个快速查看",
-    "zh-cn": "下一个快速查看",
-    "zh-tw": "下一個快速檢視"
+    "zh-CN": "下一个快速查看",
+    "zh-TW": "下一個快速檢視"
   },
   "quickview-previous": {
     "en": "Previous quickview",
@@ -5426,14 +5446,14 @@
     "no": "Forrige hurtigvisning",
     "pl": "Poprzednie szybkie podgląd",
     "pt": "Visualização rápida anterior",
-    "pt-br": "Visualização rápida anterior",
+    "pt-BR": "Visualização rápida anterior",
     "ru": "Предыдущий быстрый просмотр",
     "sv": "Föregående snabbvisning",
     "th": "การดูรายการก่อนหน้า",
     "tr": "Önceki hızlı bakış",
     "zh": "上一次快速查看",
-    "zh-cn": "上一个快速查看",
-    "zh-tw": "上一個小量快速檢視"
+    "zh-CN": "上一个快速查看",
+    "zh-TW": "上一個小量快速檢視"
   },
   "quickview-toggle-navigation": {
     "en": "Toggle keywords navigation",
@@ -5453,14 +5473,14 @@
     "no": "Bytt nøkkelord navigasjon",
     "pl": "Przełącz nawigację słów kluczowych",
     "pt": "Alternar navegação de palavras-chave",
-    "pt-br": "Alternar navegação de palavras-chave",
+    "pt-BR": "Alternar navegação de palavras-chave",
     "ru": "Переключить навигацию по ключевым словам",
     "sv": "Växla nyckelord navigation",
     "th": "สลับการนำทางไปยังคำหลัก",
     "tr": "Anahtar kelime gezinmesini değiştir",
     "zh": "切换关键字导航",
-    "zh-cn": "切换关键字导航",
-    "zh-tw": "切換關鍵字導航"
+    "zh-CN": "切换关键字导航",
+    "zh-TW": "切換關鍵字導航"
   },
   "quickview-navigate-keywords": {
     "en": "Navigate between {{occurrences}} occurrences of {{keyword}}",
@@ -5480,14 +5500,14 @@
     "no": "Navigerer mellom {{occurrences}} forekomster av {{keyword}}",
     "pl": "Przemieszczaj się między {{occurrences}} wystąpieniami słowa kluczowego {{keyword}}",
     "pt": "Navegue entre as {{occurrences}} ocorrências da palavra-chave {{keyword}}",
-    "pt-br": "Navegar entre {{occurrences}} ocorrências da palavra-chave {{keyword}}",
+    "pt-BR": "Navegar entre {{occurrences}} ocorrências da palavra-chave {{keyword}}",
     "ru": "Перемещайтесь между {{occurrences}} вхождениями ключевого слова {{keyword}}",
     "sv": "Navigera mellan {{occurrences}} förekomster av {{keyword}}",
     "th": "ไปยัง {{occurrences}} ครั้งของ {{keyword}}",
     "tr": "{{keyword}}'nin {{occurrences}} örnekleri arasında gezinin",
     "zh": "在{{keyword}}的{{occurrences}}个出现之间导航",
-    "zh-cn": "在{{keyword}}的{{occurrences}}个出现之间导航",
-    "zh-tw": "在{{keyword}}的{{occurrences}}個出現之間導航"
+    "zh-CN": "在{{keyword}}的{{occurrences}}个出现之间导航",
+    "zh-TW": "在{{keyword}}的{{occurrences}}個出現之間導航"
   },
   "quickview-loading": {
     "en": "Loading new quickview",
@@ -5507,14 +5527,14 @@
     "no": "Laster ny rask visning",
     "pl": "Wczytywanie nowej szybkiej wizualizacji",
     "pt": "Carregando nova visualização rápida",
-    "pt-br": "Carregando nova visualização rápida",
+    "pt-BR": "Carregando nova visualização rápida",
     "ru": "Загрузка нового быстрого предварительного просмотра",
     "sv": "Laddar ny snabbvisning",
     "th": "กำลังโหลดมุมมองสั้นใหม่",
     "tr": "Yeni hızlı görünüm yükleniyor",
     "zh": "正在加载新快速查看",
-    "zh-cn": "正在加载新的快速查看",
-    "zh-tw": "正在載入新的快速檢視"
+    "zh-CN": "正在加载新的快速查看",
+    "zh-TW": "正在載入新的快速檢視"
   },
   "quickview-loaded": {
     "en": "Quickview for result {{title}} loaded. {{first}} out of {{last}} available.",
@@ -5534,14 +5554,14 @@
     "no": "Hurtigvisning for resultat {{title}} lastet. {{first}} av {{last}} tilgjengelige.",
     "pl": "Szybki podgląd dla wyniku {{title}} został załadowany. {{first}} z {{last}} dostępnych.",
     "pt": "Visualização rápida para o resultado {{title}} carregada. {{first}} de {{last}} disponíveis.",
-    "pt-br": "Visualização rápida para o resultado {{title}} carregada. {{first}} de {{last}} disponíveis.",
+    "pt-BR": "Visualização rápida para o resultado {{title}} carregada. {{first}} de {{last}} disponíveis.",
     "ru": "Быстрый просмотр результата {{title}} загружен. {{first}} из {{last}} доступно.",
     "sv": "Snabbvisning för resultat {{title}} laddat. {{first}} av {{last}} tillgängliga.",
     "th": "ดูผลการค้นหา {{title}} อย่างรวดเร็วโหลดสำเร็จแล้ว {{last}} จาก {{first}} พร้อมใช้งาน",
     "tr": "{{title}} sonucu için hızlı görüntüleme yüklendi. {{first}}/{{last}} mevcut.",
     "zh": "快速查看 {{title}} 结果已加载。共 {{last}} 条结果中的第 {{first}} 条可用。",
-    "zh-cn": "快速查看 {{title}} 结果已加载。共 {{last}} 条结果中的第 {{first}} 条可用。",
-    "zh-tw": "已載入 {{title}} 結果的快速檢視。{{first}}/{{last}} 可用。"
+    "zh-CN": "快速查看 {{title}} 结果已加载。共 {{last}} 条结果中的第 {{first}} 条可用。",
+    "zh-TW": "已載入 {{title}} 結果的快速檢視。{{first}}/{{last}} 可用。"
   },
   "more": {
     "en": "More",
@@ -5561,14 +5581,14 @@
     "no": "Mer",
     "pl": "Więcej",
     "pt": "Mais",
-    "pt-br": "Mais",
+    "pt-BR": "Mais",
     "ru": "Больше",
     "sv": "Mer",
     "th": "มากขึ้น",
     "tr": "Daha fazla",
     "zh": "更多",
-    "zh-cn": "更多",
-    "zh-tw": "更多"
+    "zh-CN": "更多",
+    "zh-TW": "更多"
   },
   "tab-popover": {
     "en": "Popover menu for more tabs",
@@ -5588,14 +5608,14 @@
     "no": "Popover-meny for flere faner",
     "pl": "Menu wyskakujące dla więcej kart",
     "pt": "Menu popover para mais guias",
-    "pt-br": "Menu popover para mais abas",
+    "pt-BR": "Menu popover para mais abas",
     "ru": "Всплывающее меню для дополнительных вкладок",
     "sv": "Popoversmeny för fler flikar",
     "th": "เมนูโปโฝเวอร์สำหรับแท็บเพิ่มเติม",
     "tr": "Daha fazla sekmeler için Popover menüsü",
     "zh": "弹出式菜单以获取更多选项卡",
-    "zh-cn": "用于更多选项卡的弹出式菜单",
-    "zh-tw": "用於更多標籤的快顯式選單"
+    "zh-CN": "用于更多选项卡的弹出式菜单",
+    "zh-TW": "用於更多標籤的快顯式選單"
   },
   "generated-answer-title": {
     "en": "Generated answer for you",
@@ -5615,14 +5635,14 @@
     "no": "Generert svar for deg",
     "pl": "Wygenerowana odpowiedź dla Ciebie",
     "pt": "Resposta gerada para você",
-    "pt-br": "Resposta gerada para você",
+    "pt-BR": "Resposta gerada para você",
     "ru": "Сгенерированный ответ для вас",
     "sv": "Genererat svar för dig",
     "th": "คำตอบที่สร้างขึ้นสำหรับคุณ",
     "tr": "Sizin için oluşturulan cevap",
     "zh": "生成的答案给您",
-    "zh-cn": "生成的答案给您",
-    "zh-tw": "針對您生成的答案"
+    "zh-CN": "生成的答案给您",
+    "zh-TW": "針對您生成的答案"
   },
   "this-answer-was-helpful": {
     "en": "This answer was helpful",
@@ -5642,14 +5662,14 @@
     "no": "Dette svaret var nyttig",
     "pl": "Ta odpowiedź była pomocna",
     "pt": "Esta resposta foi útil",
-    "pt-br": "Esta resposta foi útil",
+    "pt-BR": "Esta resposta foi útil",
     "ru": "Этот ответ помог",
     "sv": "Det här svaret var användbart",
     "th": "คำตอบนี้เป็นประโยชน์",
     "tr": "Bu cevap yardımcı oldu",
     "zh": "这个答案有帮助",
-    "zh-cn": "此答案有帮助",
-    "zh-tw": "這個答案有幫助"
+    "zh-CN": "此答案有帮助",
+    "zh-TW": "這個答案有幫助"
   },
   "this-answer-was-not-helpful": {
     "en": "This answer was not helpful",
@@ -5669,14 +5689,14 @@
     "no": "Dette svaret var ikke til hjelp",
     "pl": "Ta odpowiedź nie była pomocna",
     "pt": "Esta resposta não foi útil",
-    "pt-br": "Esta resposta não foi útil",
+    "pt-BR": "Esta resposta não foi útil",
     "ru": "Этот ответ не помог",
     "sv": "Det här svaret var inte till hjälp",
     "th": "คำตอบนี้ไม่เป็นประโยชน์",
     "tr": "Bu yanıt yararlı değildi",
     "zh": "此答案无帮助",
-    "zh-cn": "此答案无帮助",
-    "zh-tw": "此答案沒有幫助"
+    "zh-CN": "此答案无帮助",
+    "zh-TW": "此答案沒有幫助"
   },
   "generated-answer-loading": {
     "en": "Looking for an answer...",
@@ -5696,14 +5716,14 @@
     "no": "Leter etter et svar...",
     "pl": "Szukam odpowiedzi...",
     "pt": "Procurando uma resposta...",
-    "pt-br": "Procurando por uma resposta...",
+    "pt-BR": "Procurando por uma resposta...",
     "ru": "Идет поиск ответа...",
     "sv": "Söker efter ett svar...",
     "th": "กำลังมองหาคำตอบ...",
     "tr": "Cevap aranıyor...",
     "zh": "寻找答案中...",
-    "zh-cn": "正在寻找答案...",
-    "zh-tw": "正在尋找答案..."
+    "zh-CN": "正在寻找答案...",
+    "zh-TW": "正在尋找答案..."
   },
   "retry": {
     "en": "Retry",
@@ -5723,14 +5743,14 @@
     "no": "Prøv igjen",
     "pl": "Ponów próbę",
     "pt": "Tentar novamente",
-    "pt-br": "Tentar novamente",
+    "pt-BR": "Tentar novamente",
     "ru": "Повторить попытку",
     "sv": "Försök igen",
     "th": "ลองใหม่",
     "tr": "Yeniden dene",
     "zh": "重试",
-    "zh-cn": "重试",
-    "zh-tw": "重試"
+    "zh-CN": "重试",
+    "zh-TW": "重試"
   },
   "retry-stream-message": {
     "en": "Oops! Something went wrong while trying to generate an answer.",
@@ -5750,13 +5770,13 @@
     "no": "Oops! Noe gikk galt under forsøk på å generere et svar.",
     "pl": "Ups! Coś poszło nie tak podczas próby wygenerowania odpowiedzi.",
     "pt": "Oops! Algo deu errado ao tentar gerar uma resposta.",
-    "pt-br": "Oops! Algo deu errado ao tentar gerar uma resposta.",
+    "pt-BR": "Oops! Algo deu errado ao tentar gerar uma resposta.",
     "ru": "Упс! Что-то пошло не так при попытке сгенерировать ответ.",
     "sv": "Hoppsan! Något gick fel när du försökte generera ett svar.",
     "th": "อุ๊ปส์! เกิดข้อผิดพลาดขึ้นขณะพยายามสร้างคำตอบ",
     "tr": "Hata! Bir yanıt oluşturmaya çalışırken bir şeyler yanlış gitti.",
     "zh": "哎呀！在生成答案时出错了。",
-    "zh-cn": "哎呀！在生成答案时出错了。",
-    "zh-tw": "糟糕！在生成答案時出了些問題。"
+    "zh-CN": "哎呀！在生成答案时出错了。",
+    "zh-TW": "糟糕！在生成答案時出了些問題。"
   }
 }
