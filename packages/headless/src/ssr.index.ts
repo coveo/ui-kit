@@ -18,6 +18,13 @@ export type {
 export {defineSearchEngine} from './app/ssr-engine/ssr-engine';
 
 export type {
+  SearchBox,
+  SearchBoxOptions,
+  SearchBoxProps,
+  SearchBoxState,
+} from './controllers/ssr/search-box/headless-ssr-search-box';
+export {defineSearchBox} from './controllers/ssr/search-box/headless-ssr-search-box';
+export type {
   ResultList,
   ResultListOptions,
   ResultListProps,
