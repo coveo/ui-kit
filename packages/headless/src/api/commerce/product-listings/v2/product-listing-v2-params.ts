@@ -47,7 +47,6 @@ export interface Context {
   }[];
 }
 
-// TODO: Use interfaces for nested params
 export interface ProductListingV2RequestParam {
   propertyId: string;
   listingId: string;
