@@ -44,7 +44,13 @@
   },
   "dependencies": {
     "@coveo/bueno": "0.43.7",
-    "@coveo/headless": "2.27.0"
+    "@coveo/headless": "2.27.0",
+    "fetch-event-source-locker": "npm:@microsoft/fetch-event-source@2.0.1"
+  },
+  "overrides": {
+    "@coveo/headless": {
+      "@microsoft/fetch-event-source": "$fetch-event-source-locker"
+    }
   },
   "engines": {
     "node": ">=14.0.0"
