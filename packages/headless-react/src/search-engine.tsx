@@ -7,6 +7,7 @@ import {
   mapObject,
 } from '@coveo/headless/ssr';
 import {useContext, useCallback, useMemo, Context} from 'react';
+// Workaround to prevent Nextjs erroring about importing CSR only hooks
 import React from 'react';
 import {useSyncMemoizedStore} from './client-wrapper';
 import {
@@ -44,7 +45,7 @@ function singleton<T>(valueGetter: () => T) {
   };
 }
 
-// Wrapper to workaround limitation that `createContext()` cannot be called directly during SSR in next.js
+// Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
 export function createSingletonContext<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 >() {

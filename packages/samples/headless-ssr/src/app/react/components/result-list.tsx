@@ -4,7 +4,6 @@ export default function ResultList() {
   const {state} = useResultList();
 
   return (
-    // TODO (refactor): Extract out common parts of components into common/ and reuse
     <ul>
       {state.results.map((result) => (
         <li key={result.uniqueId}>

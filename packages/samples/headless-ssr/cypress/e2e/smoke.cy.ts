@@ -1,7 +1,8 @@
 import 'cypress-web-vitals';
 import {ConsoleAliases, spyOnConsole, waitForHydration} from './utils';
 
-['generic', 'react'].forEach((route) => {
+const routes = ['generic', 'react'];
+routes.forEach((route) => {
   describe(`${route} Headless SSR utils`, () => {
     const numResults = 10;
     const numResultsMsg = `Rendered page with ${numResults} results`;
