@@ -22,21 +22,26 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
     });
   }, [ssrState]);
 
+  const content = (
+    <>
+      <ResultList />
+      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
+    </>
+  );
+
   if (csrResult) {
     return (
       <CSRProvider
         engine={csrResult.engine}
         controllers={csrResult.controllers}
       >
-        <ResultList />
-        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
+        {content}
       </CSRProvider>
     );
   } else {
     return (
       <SSRStateProvider controllers={ssrState.controllers}>
-        <ResultList />
-        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
+        {content}
       </SSRStateProvider>
     );
   }
