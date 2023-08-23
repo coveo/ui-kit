@@ -4,6 +4,7 @@ import {SearchAppState} from '../..';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {GeneratedAnswerErrorPayload} from '../../features/generated-answer/generated-answer-actions';
+import {createAbortController} from '../../utils/abort-controller-polyfill';
 import {URLPath} from '../../utils/url-utils';
 import {resetTimeout} from '../../utils/utils';
 import {SearchAPIClient} from '../search/search-api-client';
@@ -40,10 +41,7 @@ class FatalError extends Error {
 
 interface StreamCallbacks {
   write: (data: GeneratedAnswerStreamEventData) => void;
-  abort: (
-    error: GeneratedAnswerErrorPayload,
-    abortController: AbortController
-  ) => void;
+  abort: (error: GeneratedAnswerErrorPayload) => void;
   close: () => void;
   resetAnswer: () => void;
 }
@@ -80,7 +78,7 @@ export class GeneratedAnswerAPIClient {
       timeout = resetTimeout(retryStream, timeout, MAX_TIMEOUT);
     };
 
-    const abortController = new AbortController();
+    const abortController = createAbortController();
 
     const stream = () =>
       fetchEventSource(buildStreamingUrl(url, organizationId, streamId), {
@@ -89,7 +87,7 @@ export class GeneratedAnswerAPIClient {
           Authorization: `Bearer ${accessToken}`,
           accept: '*/*',
         },
-        signal: abortController.signal,
+        signal: abortController?.signal,
         async onopen(response) {
           if (
             response.ok &&
@@ -114,13 +112,11 @@ export class GeneratedAnswerAPIClient {
           const data: GeneratedAnswerStreamEventData = JSON.parse(event.data);
           if (data.finishReason === 'ERROR') {
             clearTimeout(timeout);
-            abort(
-              {
-                message: data.errorMessage,
-                code: data.statusCode,
-              },
-              abortController
-            );
+            abortController?.abort();
+            abort({
+              message: data.errorMessage,
+              code: data.statusCode,
+            });
             return;
           }
           write(data);
@@ -135,7 +131,8 @@ export class GeneratedAnswerAPIClient {
         onerror: (err) => {
           clearTimeout(timeout);
           if (err instanceof FatalError) {
-            abort(err, abortController);
+            abortController?.abort();
+            abort(err);
             throw err;
           }
           if (++retryCount > MAX_RETRIES) {
@@ -144,7 +141,8 @@ export class GeneratedAnswerAPIClient {
               message: 'Failed to complete stream.',
               code: RETRYABLE_STREAM_ERROR_CODE,
             };
-            abort(error, abortController);
+            abortController?.abort();
+            abort(error);
             throw new FatalError(error);
           }
           this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
