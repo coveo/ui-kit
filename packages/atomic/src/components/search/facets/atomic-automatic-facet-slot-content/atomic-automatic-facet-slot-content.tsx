@@ -38,10 +38,17 @@ export class AtomicAutomaticFacetSlotContent implements InitializableComponent {
   public initialize() {
     const desiredCount =
       this.bindings.engine.state.automaticFacetSet?.desiredCount;
+    const numberOfValues =
+      this.bindings.engine.state.automaticFacetSet?.numberOfValues;
     if (desiredCount) {
       this.automaticFacetGenerator = buildAutomaticFacetGenerator(
         this.bindings.engine,
-        {desiredCount}
+        {
+          options: {
+            desiredCount,
+            numberOfValues,
+          },
+        }
       );
     }
     this.searchStatus = buildSearchStatus(this.bindings.engine);

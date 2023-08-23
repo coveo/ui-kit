@@ -520,6 +520,7 @@ describe('headless breadcrumb manager', () => {
       state = createMockState({
         automaticFacetSet: {
           desiredCount: 1,
+          numberOfValues: 8,
           set: {
             [facetId]: buildMockAutomaticFacetSlice({
               response: buildMockAutomaticFacetResponse({
