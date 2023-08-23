@@ -3,10 +3,10 @@ import {SortCriterion} from '../../../../features/sort/sort';
 import {ProductRecommendation} from '../../../search/search/product-recommendation';
 import {
   baseProductListingV2Request,
-  ProductListingsV2Param,
+  ProductListingV2RequestParam,
 } from './product-listing-v2-params';
 
-export type ProductListingV2Request = ProductListingsV2Param;
+export type ProductListingV2Request = ProductListingV2RequestParam;
 
 export const buildProductListingV2Request = (req: ProductListingV2Request) => {
   const queryStringArguments: Record<string, string> = {};

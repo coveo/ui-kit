@@ -13,17 +13,6 @@ export enum Mode {
   Sample = 'Sample',
 }
 
-export interface ProductListingsV2Param
-  extends ProductListingV2BaseParam,
-    ProductListingV2RequestParam {}
-
-export interface ProductListingV2BaseParam {
-  accessToken: string;
-  organizationId: string;
-  platformUrl: string;
-  propertyId: string;
-}
-
 export interface SelectedFacets
   extends Pick<AnyFacetRequest, 'field' | 'type' | 'facetId'> {
   values?: (FacetValueRequest | RangeValueRequest)[];
@@ -49,6 +38,10 @@ export interface Context {
 }
 
 export interface ProductListingV2RequestParam {
+  accessToken: string;
+  organizationId: string;
+  platformUrl: string;
+  propertyId: string;
   listingId: string;
   locale: string;
   mode: Mode;
@@ -71,7 +64,7 @@ export interface ProductListingV2RequestParam {
  * @returns The built request information.
  */
 export const baseProductListingV2Request = (
-  req: ProductListingV2BaseParam,
+  req: ProductListingV2RequestParam,
   method: HttpMethods,
   contentType: HTTPContentType,
   queryStringArguments: Record<string, string> = {}
