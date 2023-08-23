@@ -311,7 +311,7 @@ function keyHasObjectValue(
 function isSpecificFacetKey(
   key: SearchParameterKey
 ): key is 'f' | 'af' | 'cf' | 'sf' | 'fExcluded' {
-  const keys = ['f', 'cf', 'df', 'nf', 'fExcluded'];
+  const keys = ['f', 'af', 'cf', 'sf', 'fExcluded'];
   return keys.includes(key);
 }
 
