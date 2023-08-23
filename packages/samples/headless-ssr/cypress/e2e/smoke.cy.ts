@@ -1,5 +1,10 @@
 import 'cypress-web-vitals';
-import {ConsoleAliases, spyOnConsole, waitForHydration} from './utils';
+import {
+  ConsoleAliases,
+  getResultTitles,
+  spyOnConsole,
+  waitForHydration,
+} from './utils';
 
 const routes = ['generic', 'react'];
 routes.forEach((route) => {
@@ -8,6 +13,7 @@ routes.forEach((route) => {
     const numResultsMsg = `Rendered page with ${numResults} results`;
     const msgSelector = '#hydrated-msg';
     const timestampSelector = '#timestamp';
+    const resultListSelector = '.result-list li';
     it('renders page in SSR as expected', () => {
       cy.intercept(route, (req) => {
         req.continue((resp) => {
@@ -15,7 +21,9 @@ routes.forEach((route) => {
           expect(dom.querySelector(msgSelector)?.textContent).to.equal(
             numResultsMsg
           );
-          expect(dom.querySelectorAll('li').length).to.equal(numResults);
+          expect(dom.querySelectorAll(resultListSelector).length).to.equal(
+            numResults
+          );
         });
       });
       cy.visit(route);
@@ -24,7 +32,7 @@ routes.forEach((route) => {
     it('renders page in CSR as expected', () => {
       cy.visit(route);
       cy.get(msgSelector).should('have.text', numResultsMsg);
-      cy.get('li').should('have.length', numResults);
+      cy.get(resultListSelector).should('have.length', numResults);
     });
 
     it('renders result list in SSR and then in CSR', () => {
@@ -49,22 +57,54 @@ routes.forEach((route) => {
     });
 
     it('should pass the web-vitals audits', () => {
-      // TODO: Add input based vitals after interactive elements are added to test page (e.g. search box)
       // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
-      const VITALS_THRESHOLD = {
-        thresholds: {fcp: 100, lcp: 100, cls: 0, ttfb: 20},
+      const VITALS_THRESHOLD: Cypress.ReportWebVitalsConfig = {
+        thresholds: {
+          fcp: 100,
+          lcp: 100,
+          cls: 0,
+          ttfb: 20,
+          // TODO: Ensure validity of following input based vitals with interactive elements
+          fid: 200,
+          inp: 200,
+        },
       };
-      cy.visit(route);
-      cy.vitals(VITALS_THRESHOLD);
+      cy.startVitalsCapture({url: route});
+      getResultTitles()
+        .should('have.length.greaterThan', 0)
+        .as('initial-results');
+      waitForHydration();
+      cy.get('.search-box input').focus().type('abc{enter}');
+      cy.get<string>('@initial-results').then((initialResults) =>
+        getResultTitles().should('not.deep.equal', initialResults)
+      );
+      cy.reportVitals(VITALS_THRESHOLD);
     });
+  });
 
-    it('should not log any error nor warning', () => {
+  describe(`${route} Headless SSR utils after hydration`, () => {
+    beforeEach(() => {
       spyOnConsole();
       cy.visit(route);
       waitForHydration();
+    });
+
+    it('should not log any error nor warning', () => {
       cy.wait(1000);
       cy.get(ConsoleAliases.error).should('not.be.called');
       cy.get(ConsoleAliases.warn).should('not.be.called');
+    });
+
+    it('after submitting a query, should change search results', () => {
+      getResultTitles()
+        .should('have.length.greaterThan', 0)
+        .as('initial-results');
+      cy.get('.search-box input').focus().type('abc{enter}');
+      cy.get<string>('@initial-results').then((initialResults) => {
+        getResultTitles()
+          .should('not.deep.equal', initialResults)
+          .and('have.length', 10);
+      });
     });
   });
 });
