@@ -145,8 +145,9 @@ export interface CoreCategoryFacetState {
   facetId: string;
 
   /**
-   * The facet's values, represented in their hierarchical form
-   * if there's an hierarchy, flat otherwise.
+   * The root facet values.
+   * Child values might be available in `valuesAsTrees[i].children[j]`
+   * @example `{value: 'foo' }
    */
   valuesAsTrees: CategoryFacetValue[];
 
@@ -156,7 +157,7 @@ export interface CoreCategoryFacetState {
   activeValue: CategoryFacetValue | undefined;
 
   /**
-   * Whether `valuesAsTree` contains hierarchical values, or flat values.
+   * Whether `valuesAsTree` contains hierarchical values (i.e. facet values with children), or only 'flat' values (i.e. facet values without children).
    */
   isHierarchical: boolean;
 
