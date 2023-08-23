@@ -10,6 +10,7 @@ import {
 import {useEffect, useState} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
 import ResultList from './result-list';
+import SearchBox from './search-box';
 
 export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
   const [csrResult, setCSRResult] = useState<SearchCSRState | undefined>(
@@ -24,6 +25,7 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
 
   const content = (
     <>
+      <SearchBox />
       <ResultList />
       <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
     </>
