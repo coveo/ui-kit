@@ -23,7 +23,6 @@ export function buildFetchProductListingV2Response(
       facets: response.facets ?? [],
       products: response.products ?? [],
       responseId: response.responseId ?? '',
-      ...(response || {}),
     },
     analyticsAction: logProductListingV2Load(),
   };
