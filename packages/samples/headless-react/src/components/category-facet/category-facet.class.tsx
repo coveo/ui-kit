@@ -62,46 +62,34 @@ export class CategoryFacet extends Component<
     );
   }
 
-  private renderParents() {
+  private renderValues() {
     return (
       this.state.hasActiveValues && (
         <div>
           Filtering by: {this.renderClearButton()}
-          {this.state.parents.map((parentValue, i) => {
-            const isSelectedValue = i === this.state.parents.length - 1;
-
-            return (
-              <span key={this.getUniqueKeyForValue(parentValue)}>
-                &rarr;
-                {!isSelectedValue ? (
-                  <button
-                    onClick={() => this.controller.toggleSelect(parentValue)}
-                  >
-                    {parentValue.value}
-                  </button>
-                ) : (
-                  <span>{parentValue.value}</span>
-                )}
-              </span>
-            );
-          })}
+          {this.state.valuesAsTrees.map(this.renderFacetValue)}
         </div>
       )
     );
   }
 
-  private renderActiveValues() {
+  private renderFacetValue(value: CategoryFacetValue) {
     return (
-      <ul>
-        {this.state.values.map((value) => (
-          <li key={this.getUniqueKeyForValue(value)}>
-            <button onClick={() => this.controller.toggleSelect(value)}>
-              {value.value} ({value.numberOfResults}{' '}
-              {value.numberOfResults === 1 ? 'result' : 'results'})
-            </button>
-          </li>
-        ))}
-      </ul>
+      <li key={this.getUniqueKeyForValue(value)}>
+        {value.children.length === 0
+          ? this.renderChildValue(value)
+          : value.children.map(this.renderFacetValue)}
+        {value.state === 'selected' && this.renderCanShowMoreLess()}
+      </li>
+    );
+  }
+
+  private renderChildValue(value: CategoryFacetValue) {
+    return (
+      <button onClick={() => this.controller.toggleSelect(value)}>
+        {value.value} ({value.numberOfResults}{' '}
+        {value.numberOfResults === 1 ? 'result' : 'results'})
+      </button>
     );
   }
 
@@ -134,11 +122,7 @@ export class CategoryFacet extends Component<
     return (
       <ul>
         <li>{this.renderSearch()}</li>
-        <li>
-          {this.renderParents()}
-          {this.renderActiveValues()}
-          {this.renderCanShowMoreLess()}
-        </li>
+        <li>{this.renderValues()}</li>
       </ul>
     );
   }
