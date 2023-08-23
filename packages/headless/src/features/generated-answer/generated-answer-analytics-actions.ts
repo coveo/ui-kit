@@ -69,21 +69,22 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
     }
   );
 
-export const logGeneratedAnswerStreamEnd = (
-  answerGenerated: boolean
-): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/streamEnd',
-    AnalyticsType.Custom,
-    (client, state) => {
-      const generativeQuestionAnsweringId =
-        generativeQuestionAnsweringIdSelector(state);
-      if (!generativeQuestionAnsweringId) {
-        return null;
-      }
-      return client.makeGeneratedAnswerStreamEnd({
-        generativeQuestionAnsweringId,
-        answerGenerated,
-      });
-    }
-  );
+// TODO: un-uncomment; this is currently failing the build because client.makeRetryGeneratedAnswer doesn't exist.
+// export const logGeneratedAnswerStreamEnd = (
+//   answerGenerated: boolean
+// ): CustomAction =>
+//   makeAnalyticsAction(
+//     'analytics/generatedAnswer/streamEnd',
+//     AnalyticsType.Custom,
+//     (client, state) => {
+//       const generativeQuestionAnsweringId =
+//         generativeQuestionAnsweringIdSelector(state);
+//       if (!generativeQuestionAnsweringId) {
+//         return null;
+//       }
+//       return client.makeRetryGeneratedAnswer({
+//         generativeQuestionAnsweringId,
+//         answerGenerated,
+//       });
+//     }
+//   );

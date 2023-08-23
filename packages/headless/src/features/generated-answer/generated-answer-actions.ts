@@ -9,7 +9,7 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client';
 import {
   GeneratedAnswerCitationsPayload,
-  GeneratedAnswerEndOfStreamPayload,
+  /* GeneratedAnswerEndOfStreamPayload, */
   GeneratedAnswerMessagePayload,
   GeneratedAnswerPayloadType,
   GeneratedAnswerStreamEventData,
@@ -21,7 +21,8 @@ import {
   SearchSection,
 } from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
-import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
+// TODO: uncomment; this is making the build fail because this import doesn't exist
+// import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
 import {buildStreamingRequest} from './generated-answer-request';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
@@ -124,7 +125,8 @@ export const streamAnswer = createAsyncThunk<
           )
         );
         break;
-      case 'genqa.endOfStreamType':
+      // TODO: uncomment; this is making the build fail because logGeneratedAnswerStreamEnd doesn't exist
+      /*case 'genqa.endOfStreamType':
         dispatch(setIsStreaming(false));
         dispatch(
           logGeneratedAnswerStreamEnd(
@@ -132,7 +134,7 @@ export const streamAnswer = createAsyncThunk<
               .answerGenerated
           )
         );
-        break;
+        break; */
       default:
         if (state.debug) {
           extra.logger.warn(`Unknown payloadType: "${payloadType}"`);

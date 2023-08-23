@@ -29,6 +29,11 @@ import {
   StateNeededByCaseAssistAnalytics,
 } from '../../api/analytics/case-assist-analytics';
 import {
+  StateNeededByProductListingV2AnalyticsProvider,
+  ProductListingV2AnalyticsProvider,
+  configureProductListingV2Analytics,
+} from '../../api/analytics/commerce-analytics';
+import {
   configureInsightAnalytics,
   InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
@@ -159,6 +164,13 @@ export type ProductListingAction<
 > = PreparableAnalyticsAction<
   {analyticsType: T},
   StateNeededByProductListingAnalyticsProvider
+>;
+
+export type ProductListingV2Action<
+  T extends AnalyticsType = AnalyticsType.Search
+> = PreparableAnalyticsAction<
+  {analyticsType: T},
+  StateNeededByProductListingV2AnalyticsProvider
 >;
 
 export interface AsyncThunkAnalyticsOptions<
@@ -564,6 +576,54 @@ export const makeProductListingAnalyticsAction = <
       logger,
     }) => {
       const client = configureProductListingAnalytics({
+        getState,
+        logger,
+        analyticsClientMiddleware,
+        preprocessRequest,
+        provider: provider(getState),
+      });
+      const builder = await getBuilder(client, getState());
+      return {
+        description: builder?.description,
+        log: async ({state}) => {
+          const response = await builder?.log({
+            searchUID: provider(() => state).getSearchUID(),
+          });
+          logger.info(
+            {client: client.coveoAnalyticsClient, response},
+            'Analytics response'
+          );
+          return {analyticsType};
+        },
+      };
+    }
+  );
+};
+
+export const makeProductListingV2AnalyticsAction = <
+  EventType extends AnalyticsType,
+  StateNeeded extends StateNeededByProductListingV2AnalyticsProvider = StateNeededByProductListingV2AnalyticsProvider
+>(
+  prefix: string,
+  analyticsType: EventType,
+  getBuilder: (
+    client: CoveoSearchPageClient,
+    state: StateNeeded
+  ) => Promise<EventBuilder | null> | null,
+  provider: (
+    getState: () => StateNeededByProductListingV2AnalyticsProvider
+  ) => SearchPageClientProvider = (getState) =>
+    new ProductListingV2AnalyticsProvider(getState)
+): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded> => {
+  return makePreparableAnalyticsAction(
+    prefix,
+    async ({
+      getState,
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    }) => {
+      const client = configureProductListingV2Analytics({
         getState,
         logger,
         analyticsClientMiddleware,
