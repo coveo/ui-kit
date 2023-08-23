@@ -32,8 +32,10 @@ export function buildDidYouMean(engine: InsightEngine): DidYouMean {
     },
 
     applyCorrection() {
-      controller.applyCorrection();
-      dispatch(executeSearch(logDidYouMeanClick()));
+      if (this.state.automaticallyCorrectQuery) {
+        controller.applyCorrection();
+        dispatch(executeSearch(logDidYouMeanClick()));
+      }
     },
   };
 }

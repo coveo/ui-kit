@@ -103,10 +103,9 @@ export function buildCoreDidYouMean(engine: CoreEngine): DidYouMean {
     },
 
     applyCorrection() {
-      this.state.automaticallyCorrectQuery &&
-        dispatch(
-          applyDidYouMeanCorrection(this.state.queryCorrection.correctedQuery)
-        );
+      dispatch(
+        applyDidYouMeanCorrection(this.state.queryCorrection.correctedQuery)
+      );
     },
   };
 }
