@@ -21,7 +21,6 @@ export interface ProductListingV2BaseParam {
   accessToken: string;
   organizationId: string;
   platformUrl: string;
-  version?: string;
 }
 
 export interface SelectedFacets
