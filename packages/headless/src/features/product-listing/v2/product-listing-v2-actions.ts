@@ -138,17 +138,14 @@ export const buildProductListingRequestV2 = async (
 
   return {
     accessToken: state.configuration.accessToken,
+    platformUrl: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
     trackingId: state.productListing.trackingId,
-    platformUrl: state.configuration.platformUrl,
-    locale: state.productListing.locale || 'en-us-usd',
+    locale: state.productListing.locale,
     mode: state.productListing.mode,
-    clientId: state.productListing.clientId || 'some-client-id', // Dummy value since the api requires one
-    selectedFacets,
+    clientId: state.productListing.clientId,
     context: state.productListing.context,
-    ...(state.sort && {
-      selectedSort: state.sort,
-    }),
+    selectedFacets,
     ...(state.pagination && {
       selectedPage: {
         page:
@@ -157,6 +154,9 @@ export const buildProductListingRequestV2 = async (
               (state.pagination.numberOfResults || 1)
           ) + 1,
       },
+    }),
+    ...(state.sort && {
+      selectedSort: state.sort,
     }),
   };
 };
