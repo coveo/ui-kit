@@ -17,7 +17,6 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
 import {ProductListingV2ThunkExtraArguments} from '../product-listing-v2-thunk-extra-arguments';
 import {SearchEngineConfiguration} from '../search-engine/search-engine-configuration';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
@@ -39,7 +38,7 @@ type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngine<
     State & CommerceEngineState,
-    ProductListingThunkExtraArguments
+    ProductListingV2ThunkExtraArguments
   > {}
 
 export interface CommerceEngineOptions
