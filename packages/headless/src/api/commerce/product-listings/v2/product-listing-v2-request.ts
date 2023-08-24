@@ -28,8 +28,6 @@ const prepareRequestParams = (req: ProductListingV2Request) => {
 };
 
 export interface ProductListingV2SuccessResponse {
-  listingId: string;
-  locale: string;
   responseId: string;
   products: ProductRecommendation[];
   facets: AnyFacetResponse[];

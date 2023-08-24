@@ -43,9 +43,8 @@ describe('product listing v2 api client', () => {
       clientId: req.clientId ?? '',
       context: req.context ?? {
         user: {userAgent: '', userIp: ''},
-        view: {pageType: '', url: ''},
+        view: {url: ''},
       },
-      listingId: req.listingId ?? '',
       locale: req.locale ?? '',
       mode: req.mode ?? Mode.Sample,
     });
@@ -71,7 +70,6 @@ describe('product listing v2 api client', () => {
         requestParams: {
           clientId: request.clientId,
           context: request.context,
-          listingId: request.listingId,
           locale: request.locale,
           mode: request.mode,
         },
@@ -107,8 +105,6 @@ describe('product listing v2 api client', () => {
         facets: [],
         pagination: {page: 0, perPage: 0, totalCount: 0, totalPages: 0},
         responseId: '',
-        listingId: '',
-        locale: '',
         sort: {
           appliedSort: {by: SortBy.Relevance},
           availableSorts: [{by: SortBy.Relevance}],

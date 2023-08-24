@@ -27,8 +27,7 @@ export interface Context {
   };
   view: {
     url: string;
-    referrerUrl?: string;
-    pageType: string;
+    labels?: Record<string, string>;
   };
   cart?: {
     groupId?: string;
@@ -38,11 +37,10 @@ export interface Context {
 }
 
 export interface ProductListingV2RequestParam {
+  platformUrl: string;
   accessToken: string;
   organizationId: string;
-  platformUrl: string;
   trackingId: string;
-  listingId: string;
   locale: string;
   mode: Mode;
   clientId: string;
