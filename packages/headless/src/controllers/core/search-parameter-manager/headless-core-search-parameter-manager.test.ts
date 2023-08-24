@@ -118,6 +118,34 @@ describe('search parameter manager', () => {
     });
   });
 
+  describe('#state.parameters.fExcluded', () => {
+    it('only includes excluded values when a facet has some', () => {
+      const excluded = buildMockFacetValueRequest({
+        value: 'a',
+        state: 'excluded',
+      });
+      const idle = buildMockFacetValueRequest({value: 'b', state: 'idle'});
+      const selected = buildMockFacetValueRequest({
+        value: 'c',
+        state: 'selected',
+      });
+
+      const currentValues = [excluded, idle, selected];
+      engine.state.facetSet = {
+        author: buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues}),
+        }),
+      };
+
+      expect(manager.state.parameters.fExcluded).toEqual({author: ['a']});
+    });
+
+    it('is not included when there are no facets with selected values', () => {
+      engine.state.facetSet = {author: buildMockFacetSlice()};
+      expect(manager.state.parameters).not.toContain('fExcluded');
+    });
+  });
+
   describe('#state.parameters.cf', () => {
     it('only includes selected values when a category facet has some', () => {
       const selected = buildMockCategoryFacetValueRequest({
@@ -265,7 +293,10 @@ describe('search parameter manager', () => {
   });
 
   it('is possible to access every relevant search parameter using #state.parameters given a certain initial state', () => {
-    const facetValues = [buildMockFacetValueRequest({state: 'selected'})];
+    const facetValues = [
+      buildMockFacetValueRequest({state: 'selected'}),
+      buildMockFacetValueRequest({state: 'excluded'}),
+    ];
     engine.state.facetSet = {
       author: buildMockFacetSlice({
         request: buildMockFacetRequest({currentValues: facetValues}),
@@ -308,7 +339,6 @@ describe('search parameter manager', () => {
       response: buildMockAutomaticFacetResponse({values: automaticFacetValues}),
     });
     engine.state.automaticFacetSet.set = {a: slice};
-
 
     engine.state.query.q = 'a';
     engine.state.sortCriteria = 'qre';
