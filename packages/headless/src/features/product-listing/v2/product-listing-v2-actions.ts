@@ -1,5 +1,4 @@
-import {ArrayValue, StringValue} from '@coveo/bueno';
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkProductListingV2Options} from '../../../api/commerce/product-listings/v2/product-listing-v2-api-client';
 import {
   ProductListingV2Request,
@@ -20,7 +19,6 @@ import {
   StructuredSortSection,
 } from '../../../state/state-sections';
 import {sortFacets} from '../../../utils/facet-utils';
-import {validatePayload} from '../../../utils/validate-payload';
 import {
   AnalyticsType,
   PreparableAnalyticsAction,
@@ -28,60 +26,6 @@ import {
 import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {logProductListingV2Load} from './product-listing-v2-analytics';
-
-export interface SetProductListingUrlPayload {
-  /**
-   * The url used to determine which product listing to fetch.
-   */
-  url: string;
-}
-
-export const setProductListingUrl = createAction(
-  'productlisting/v2/setUrl',
-  (payload: SetProductListingUrlPayload) =>
-    validatePayload(payload, {
-      url: new StringValue({
-        required: true,
-        url: true,
-      }),
-    })
-);
-
-export interface SetProductListingIdPayload {
-  id: string;
-}
-
-export const setProductListingId = createAction(
-  'productlisting/v2/setId',
-  (payload: SetProductListingIdPayload) =>
-    validatePayload(payload, {
-      id: new StringValue({
-        required: true,
-        emptyAllowed: false,
-      }),
-    })
-);
-
-export interface SetAdditionalFieldsPayload {
-  /**
-   * The additional fields to fetch with the product listing.
-   */
-  additionalFields: string[];
-}
-
-export const setAdditionalFields = createAction(
-  'productlisting/v2/setAdditionalFields',
-  (payload: SetAdditionalFieldsPayload) =>
-    validatePayload(payload, {
-      additionalFields: new ArrayValue({
-        required: true,
-        each: new StringValue({
-          required: true,
-          emptyAllowed: false,
-        }),
-      }),
-    })
-);
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &

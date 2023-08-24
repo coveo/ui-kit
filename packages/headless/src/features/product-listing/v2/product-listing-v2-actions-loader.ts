@@ -1,4 +1,4 @@
-import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkProductListingV2Options} from '../../../api/commerce/product-listings/v2/product-listing-v2-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {productListingV2Reducer as productListing} from '../../../features/product-listing/v2/product-listing-v2-slice';
@@ -15,29 +15,15 @@ import {
   LogFacetUpdateSortActionCreatorPayload,
 } from '../../facets/facet-set/facet-set-product-listing-analytics-actions';
 import {
-  SetProductListingUrlPayload,
   FetchProductListingV2ThunkReturn,
   fetchProductListing,
-  setProductListingUrl,
   StateNeededByFetchProductListingV2,
 } from './product-listing-v2-actions';
-
-export type {SetProductListingUrlPayload};
 
 /**
  * The product listings action creators.
  */
 export interface ProductListingActionCreators {
-  /**
-   * Updates the product listing url field.
-   *
-   * @param payload - The action creator payload.
-   * @returns A dispatchable action.
-   */
-  setProductListingUrl(
-    payload: SetProductListingUrlPayload
-  ): PayloadAction<SetProductListingUrlPayload>;
-
   /**
    * Refreshes the product listing.
    *
@@ -62,7 +48,6 @@ export function loadProductListingActions(
   engine.addReducers({productListing});
 
   return {
-    setProductListingUrl,
     fetchProductListing,
   };
 }
