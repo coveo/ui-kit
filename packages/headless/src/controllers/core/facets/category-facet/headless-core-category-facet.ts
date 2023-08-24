@@ -18,7 +18,10 @@ import {categoryFacetResponseSelector} from '../../../../features/facets/categor
 import {categoryFacetRequestSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
-import {partitionIntoParentsAndValues} from '../../../../features/facets/category-facet-set/category-facet-utils';
+import {
+  getActiveValueFromValueTree,
+  partitionIntoParentsAndValues,
+} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
@@ -141,10 +144,34 @@ export interface CoreCategoryFacetState {
   /** The facet ID. */
   facetId: string;
 
-  /** The facet's parent values. */
+  /**
+   * The root facet values.
+   * Child values might be available in `valuesAsTrees[i].children[j]`
+   * @example `{value: 'foo' }
+   */
+  valuesAsTrees: CategoryFacetValue[];
+
+  /**
+   * The facet's selected value if any, undefined otherwise.
+   */
+  activeValue: CategoryFacetValue | undefined;
+
+  /**
+   * Whether `valuesAsTree` contains hierarchical values (i.e. facet values with children), or only 'flat' values (i.e. facet values without children).
+   */
+  isHierarchical: boolean;
+
+  /**
+   * The facet's parent values.
+   * @deprecated uses `valuesAsTrees` instead.
+   *
+   */
   parents: CategoryFacetValue[];
 
-  /** The facet's values. */
+  /**
+   * The facet's values.
+   * @deprecated use `valuesAsTrees` instead.
+   */
   values: CategoryFacetValue[];
 
   /** The facet's active `sortCriterion`. */
@@ -326,8 +353,9 @@ export function buildCoreCategoryFacet(
 
     showMoreValues() {
       const {numberOfValues: increment} = options;
-      const {values} = this.state;
-      const numberOfValues = values.length + increment;
+      const {activeValue, valuesAsTrees} = this.state;
+      const numberOfValues =
+        (activeValue?.children.length ?? valuesAsTrees.length) + increment;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetOptions());
@@ -353,19 +381,27 @@ export function buildCoreCategoryFacet(
       const response = getResponse();
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();
-
+      const valuesAsTrees = response?.values ?? [];
+      const isHierarchical =
+        valuesAsTrees.some((value) => value.children.length > 0) ?? false;
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
-      const hasActiveValues = parents.length !== 0;
+      const activeValue = getActiveValueFromValueTree(valuesAsTrees);
+      const hasActiveValues = !!activeValue;
       const canShowMoreValues =
-        parents.length > 0
-          ? parents[parents.length - 1].moreValuesAvailable
-          : response?.moreValuesAvailable || false;
-      const canShowLessValues = values.length > options.numberOfValues;
+        activeValue?.moreValuesAvailable ??
+        response?.moreValuesAvailable ??
+        false;
+      const canShowLessValues = activeValue
+        ? activeValue.children.length > options.numberOfValues
+        : valuesAsTrees.length > options.numberOfValues;
 
       return {
         facetId,
         parents,
         values,
+        isHierarchical,
+        valuesAsTrees,
+        activeValue,
         isLoading,
         hasActiveValues,
         canShowMoreValues,
