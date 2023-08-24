@@ -22,6 +22,11 @@ export const FacetSelectors = {
       '[part~="value-checkbox"][part~="value-checkbox-checked"][aria-checked="true"]'
     );
   },
+  excludedCheckboxValue() {
+    return this.shadow().find(
+      '[part~="value-checkbox"][part~="value-checkbox-excluded"][aria-checked="true"]'
+    );
+  },
   idleCheckboxValue() {
     return this.shadow().find(
       '[part~="value-checkbox"]:not([part~="value-checkbox-checked"])[aria-checked="false"]'
@@ -37,6 +42,11 @@ export const FacetSelectors = {
   },
   idleCheckboxValueLabel() {
     return this.idleCheckboxValue().parent().find('[part="value-label"]');
+  },
+  excludeButton() {
+    return this.idleCheckboxValue()
+      .parent()
+      .find('[part="value-exclude-button"]');
   },
   selectedLinkValue() {
     return this.shadow().find(

@@ -11,6 +11,7 @@ export interface BaseFacetSelector extends ComponentSelector {
 
 export interface FacetWithCheckboxSelector extends ComponentSelector {
   selectedCheckboxValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  excludedCheckboxValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
   idleCheckboxValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
   checkboxValueWithText: (
     text: string

@@ -17,6 +17,7 @@ import {
   selectIdleLinkValueAt,
   typeFacetSearchQuery,
   pressClearSearchButton,
+  excludeIdleCheckboxValueAt,
 } from '../facet-common-actions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
 import {
@@ -111,6 +112,8 @@ describe('Facet v1 Test Suites', () => {
 
           FacetAssertions.assertLogFacetSelect(field, secondSelectionIndex);
         });
+
+        describe('TODO: when excluding a value', () => {});
 
         describe('when selecting the "Clear" button', () => {
           function setupClearCheckboxValues() {
@@ -1000,6 +1003,31 @@ describe('Facet v1 Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
         BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
         BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
+          FacetSelectors
+        );
+        BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
+        BreadboxAssertions.assertBreadcrumbDisplayLength(index.length);
+      });
+    });
+
+    describe('when excluding 3 values', () => {
+      const index = [0, 1, 2];
+      function setupSelectedMultipleFacets() {
+        setupBreadboxWithFacet();
+        index.forEach((position, i) => {
+          excludeIdleCheckboxValueAt(FacetSelectors, position);
+          cy.wait(TestFixture.interceptAliases.Search);
+          BreadboxSelectors.breadcrumbButton().should('have.length', i + 1);
+        });
+      }
+
+      describe('verify rendering', () => {
+        beforeEach(setupSelectedMultipleFacets);
+        CommonAssertions.assertAccessibility(breadboxComponent);
+        BreadboxAssertions.assertDisplayBreadcrumb(true);
+        // BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true); // TODO: KIT-2687
+        BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+        BreadboxAssertions.assertExcludedCheckboxFacetsInBreadcrumb(
           FacetSelectors
         );
         BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);

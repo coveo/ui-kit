@@ -24,6 +24,7 @@ import {
 } from './facets/color-facet/color-facet-actions';
 import * as ColorFacetAssertions from './facets/color-facet/color-facet-assertions';
 import {
+  excludeIdleCheckboxValueAt,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
 } from './facets/facet-common-actions';
@@ -43,6 +44,7 @@ import {
 } from './facets/timeframe-facet/timeframe-facet-action';
 import {TimeframeFacetSelectors} from './facets/timeframe-facet/timeframe-facet-selectors';
 
+// TODO: use assertExcludedCheckboxFacetsInBreadcrumb somewhere
 describe('Breadbox Test Suites', () => {
   function setupBreadboxWithMultipleFacets(props: TagProps = {}) {
     new TestFixture()
@@ -73,6 +75,7 @@ describe('Breadbox Test Suites', () => {
       setupBreadboxWithMultipleFacets(props);
       selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
+      excludeIdleCheckboxValueAt(FacetSelectors, selectionIndex);
       selectIdleCheckboxValueAt(AutomaticFacetSelectors, selectionIndex);
     }
 
@@ -221,6 +224,35 @@ describe('Breadbox Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbShowMore(true);
         BreadboxAssertions.assertDisplayAllBreadcrumb(false);
       });
+    });
+  });
+
+  describe('when excluding a standard facet', () => {
+    const activeValues = [0, 1];
+
+    function setupFacetWithMultipleExcludedValues() {
+      // TODO: support facet exclusion in search parameter manager #3122 (KIT-2684)
+      new TestFixture()
+        .with(addBreadbox())
+        .with(addFacet({field: 'author', label}))
+        .withHash(`f-author=${activeValues.join(',')}`)
+        .init();
+      BreadboxSelectors.breadcrumbButton().then((buttons) =>
+        cy.wrap(buttons.filter(':visible').length).as('numberOfVisibleButtons')
+      );
+    }
+
+    describe('verify rendering', () => {
+      beforeEach(setupFacetWithMultipleExcludedValues);
+      CommonAssertions.assertAccessibility(breadboxComponent);
+      BreadboxAssertions.assertDisplayBreadcrumb(true);
+      BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+      BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+      BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
+        FacetSelectors
+      );
+      BreadboxAssertions.assertBreadcrumbDisplayLength(activeValues.length);
+      BreadboxAssertions.assertDisplayBreadcrumbShowMore(true);
     });
   });
 });

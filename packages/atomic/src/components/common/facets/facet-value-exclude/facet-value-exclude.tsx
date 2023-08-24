@@ -42,7 +42,7 @@ export const FacetValueExclude: FunctionalComponent<ExcludeProps> = (props) => {
           'w-4 p-1 rounded bg-neutral order-last hover:bg-error hover:fill-white'
         }
         icon={Tick}
-        part="icon"
+        part="value-exclude-button"
       ></atomic-icon>
     </button>
   );

@@ -37,6 +37,37 @@ export function selectIdleCheckboxValueAt(
     });
 }
 
+export function excludeIdleCheckboxValueAt(
+  FacetWithCheckboxSelector: FacetWithCheckboxSelector,
+  index: number
+) {
+  FacetWithCheckboxSelector.idleCheckboxValueLabel()
+    .eq(index)
+    .then((idleCheckboxValueLabel) => {
+      const hasAriaLabel = !!idleCheckboxValueLabel.attr('aria-label');
+      const text = hasAriaLabel
+        ? idleCheckboxValueLabel.attr('aria-label')!
+        : idleCheckboxValueLabel.text();
+      FacetWithCheckboxSelector.idleCheckboxValueLabel()
+        .filter(
+          hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`
+        )
+        .its('length')
+        .should(
+          'eq',
+          1,
+          'There should not be any other value similar to this one.'
+        );
+      cy.wrap(idleCheckboxValueLabel).click().wait(2000);
+      FacetWithCheckboxSelector.checkboxValueWithText(text).should(
+        'have.attr',
+        'aria-checked',
+        'true'
+      );
+    });
+  throw 'TODO:';
+}
+
 export function selectIdleLinkValueAt(
   FacetWithLinkSelector: FacetWithLinkSelector,
   index: number
