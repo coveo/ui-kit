@@ -10,9 +10,9 @@ import {
 
 describe('product listing v2 api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
-  const organizationId = 'some org id';
-  const accessToken = 'some access token';
-  const propertyId = 'some property';
+  const organizationId = 'some-org-id';
+  const accessToken = 'some-access-token';
+  const trackingId = 'some-tracking-id';
 
   let client: ProductListingV2APIClient;
   let platformCallMock: jest.Mock;
@@ -39,7 +39,7 @@ describe('product listing v2 api client', () => {
       accessToken: accessToken,
       organizationId: organizationId,
       platformUrl: platformUrl,
-      propertyId: propertyId,
+      trackingId: trackingId,
       clientId: req.clientId ?? '',
       context: req.context ?? {
         user: {userAgent: '', userIp: ''},
@@ -65,7 +65,7 @@ describe('product listing v2 api client', () => {
       expect(mockRequest).toMatchObject({
         method: 'POST',
         contentType: 'application/json',
-        url: `${platformUrl}/rest/organizations/${organizationId}/properties/${propertyId}/commerce/v2/listing`,
+        url: `${platformUrl}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/listing`,
         accessToken: request.accessToken,
         origin: 'commerceApiFetch',
         requestParams: {

@@ -41,7 +41,7 @@ export interface ProductListingV2RequestParam {
   accessToken: string;
   organizationId: string;
   platformUrl: string;
-  propertyId: string;
+  trackingId: string;
   listingId: string;
   locale: string;
   mode: Mode;
@@ -73,8 +73,8 @@ export const baseProductListingV2Request = (
   'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
 > => {
   const {platformUrl, organizationId, accessToken} = req;
-  const {propertyId} = req;
-  const baseUrl = `${platformUrl}/rest/organizations/${organizationId}/properties/${propertyId}/commerce/v2/listing`;
+  const {trackingId} = req;
+  const baseUrl = `${platformUrl}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/listing`;
   const queryString = buildQueryString(queryStringArguments);
   const effectiveUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
