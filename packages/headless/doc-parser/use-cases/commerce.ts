@@ -2,14 +2,12 @@ import {ActionLoaderConfiguration} from '../src/headless-export-resolvers/action
 import {ControllerConfiguration} from '../src/headless-export-resolvers/controller-resolver';
 import {EngineConfiguration} from '../src/headless-export-resolvers/engine-resolver';
 
-const controllers: ControllerConfiguration[] = [
-];
+const controllers: ControllerConfiguration[] = [];
 
-const actionLoaders: ActionLoaderConfiguration[] = [
-];
+const actionLoaders: ActionLoaderConfiguration[] = [];
 
 const engine: EngineConfiguration = {
-    initializer: 'buildCommerceEngine',
+  initializer: 'buildCommerceEngine',
 };
 
 export const commerceUseCase = {controllers, actionLoaders, engine};
