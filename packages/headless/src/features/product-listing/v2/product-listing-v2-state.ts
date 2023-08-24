@@ -6,8 +6,8 @@ import {AnyFacetResponse} from '../../facets/generic/interfaces/generic-facet-re
 
 export interface ProductListingV2State {
   trackingId: string;
-  locale: string; // TODO: action for setting this
-  mode: Mode; // TODO: action for setting this
+  locale: string;
+  mode: Mode;
   clientId: string;
   error: ProductListingV2APIErrorStatusResponse | null;
   isLoading: boolean;
