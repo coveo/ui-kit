@@ -17,6 +17,7 @@ import {
   InferControllerHooksMapFromDefinition,
   ReactSearchEngineDefinition,
 } from './types';
+import {SingletonGetter, capitalize, singleton} from './utils';
 
 export class MissingEngineProviderError extends Error {
   constructor() {
@@ -24,25 +25,6 @@ export class MissingEngineProviderError extends Error {
       'Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.'
     );
   }
-}
-
-function capitalize(s: string) {
-  return `${s.slice(0, 1).toUpperCase()}${s.slice(1)}`;
-}
-
-function singleton<T>(valueGetter: () => T) {
-  let currentValue: T;
-  let gotValue = false;
-  return {
-    get() {
-      if (gotValue) {
-        return currentValue;
-      }
-      currentValue = valueGetter();
-      gotValue = true;
-      return currentValue;
-    },
-  };
 }
 
 // Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
@@ -68,9 +50,9 @@ function buildControllerHook<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TKey extends keyof TControllers,
 >(
-  singletonContext: {
-    get(): Context<ContextState<TEngine, TControllers> | null>;
-  },
+  singletonContext: SingletonGetter<
+    Context<ContextState<TEngine, TControllers> | null>
+  >,
   key: TKey
 ): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
   return () => {
