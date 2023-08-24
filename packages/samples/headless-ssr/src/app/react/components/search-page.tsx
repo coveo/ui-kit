@@ -7,12 +7,19 @@ import {
   CSRProvider,
   SSRStateProvider,
 } from '@/src/app/react/common/engine';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, PropsWithChildren} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
 import ResultList from './result-list';
 import SearchBox from './search-box';
 
-export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
+interface SearchPageProviderProps {
+  ssrState: SearchSSRState;
+}
+
+function SearchPageProvider({
+  ssrState,
+  children,
+}: PropsWithChildren<SearchPageProviderProps>) {
   const [csrResult, setCSRResult] = useState<SearchCSRState | undefined>(
     undefined
   );
@@ -23,28 +30,31 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
     });
   }, [ssrState]);
 
-  const content = (
-    <>
-      <SearchBox />
-      <ResultList />
-      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
-    </>
-  );
-
   if (csrResult) {
     return (
       <CSRProvider
         engine={csrResult.engine}
         controllers={csrResult.controllers}
       >
-        {content}
+        {children}
+        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
       </CSRProvider>
     );
   } else {
     return (
       <SSRStateProvider controllers={ssrState.controllers}>
-        {content}
+        {children}
+        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
       </SSRStateProvider>
     );
   }
+}
+
+export default function SearchPage({ssrState}: SearchPageProviderProps) {
+  return (
+    <SearchPageProvider ssrState={ssrState}>
+      <SearchBox />
+      <ResultList />
+    </SearchPageProvider>
+  );
 }
