@@ -21,7 +21,7 @@ import {
 } from './product-listing-v2-actions';
 
 /**
- * The product listings action creators.
+ * The product listing action creators.
  */
 export interface ProductListingActionCreators {
   /**
@@ -37,7 +37,7 @@ export interface ProductListingActionCreators {
 }
 
 /**
- * Loads the `productListing` reducer and returns possible action creators.
+ * Loads the product listing reducer and returns the possible action creators.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
@@ -59,7 +59,7 @@ export interface ProductListingAnalyticsActionCreators {
   /**
    * The event to log when all selected values in a facet are deselected.
    *
-   * @param facetId - The facet id.
+   * @param facetId - The facet ID.
    * @returns A dispatchable action.
    */
   logFacetClearAll(facetId: string): ProductListingAction;
@@ -85,7 +85,7 @@ export interface ProductListingAnalyticsActionCreators {
   ): ProductListingAction;
 
   /**
-   * The event to log when shrinking a facet to show fewer values.
+   * The event to log when collapsing a facet to show fewer values.
    *
    * @param facetId - The facet id.
    * @returns A dispatchable action.
@@ -112,7 +112,7 @@ export interface ProductListingAnalyticsActionCreators {
 }
 
 /**
- * Returns possible product listing analytics action creators.
+ * Returns the possible product listing analytics action creators.
  *
  * @param engine - The product listing engine.
  * @returns An object holding the action creators.
