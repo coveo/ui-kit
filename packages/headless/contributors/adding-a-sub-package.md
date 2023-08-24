@@ -39,8 +39,6 @@ Headless provides exports through multiple sub packages. A sub-package groups to
 4. Inside the new directory, add a `package.json` file. Add the paths to your bundled files and type definitions. Make sure to mark the package as `private` so it doesn't get published individually.
 
    ```json
-   // headless/case-assist/package.json
-
    {
      "private": true,
      "name": "case-assist",
