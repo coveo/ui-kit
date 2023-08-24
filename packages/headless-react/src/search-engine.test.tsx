@@ -7,7 +7,7 @@ import {defineSearchEngine} from './search-engine';
 
 // TODO(KIT-2692): Disabled until JSDOM env error can be fixed
 //  Error: "TypeError: Cannot read properties of undefined (reading 'html')"
-describe.skip('Headless react SSR utils', () => {
+describe('Headless react SSR utils', () => {
   let errorSpy: jest.SpyInstance;
   const sampleConfig = {
     ...getSampleSearchEngineConfiguration(),
@@ -93,7 +93,9 @@ describe.skip('Headless react SSR utils', () => {
       } catch (e) {
         err = e as Error;
       }
-      expect(err?.message).toMatch('Missing SSR state or CSR provider.');
+      expect(err?.message).toMatch(
+        'Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.'
+      );
       expect(errorSpy).toHaveBeenCalled();
     });
 
