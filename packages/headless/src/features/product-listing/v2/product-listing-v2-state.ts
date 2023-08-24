@@ -14,7 +14,6 @@ export interface ProductListingV2State {
   responseId: string;
   products: ProductRecommendation[];
   facets: AnyFacetResponse[];
-  version: string;
   context: Context;
 }
 
@@ -28,7 +27,6 @@ export const getProductListingV2InitialState = (): ProductListingV2State => ({
   responseId: '',
   products: [],
   facets: [],
-  version: 'v2',
   context: {
     user: {
       userIp: '',
