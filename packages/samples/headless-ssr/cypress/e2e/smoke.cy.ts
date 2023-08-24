@@ -1,19 +1,20 @@
 import 'cypress-web-vitals';
 import {
   ConsoleAliases,
-  getResultTitles,
+  compareWithInitialResults,
+  numResults,
   spyOnConsole,
   waitForHydration,
 } from './utils';
 
+const numResultsMsg = `Rendered page with ${numResults} results`;
+const msgSelector = '#hydrated-msg';
+const timestampSelector = '#timestamp';
+const resultListSelector = '.result-list li';
 const routes = ['generic', 'react'];
+
 routes.forEach((route) => {
   describe(`${route} Headless SSR utils`, () => {
-    const numResults = 10;
-    const numResultsMsg = `Rendered page with ${numResults} results`;
-    const msgSelector = '#hydrated-msg';
-    const timestampSelector = '#timestamp';
-    const resultListSelector = '.result-list li';
     it('renders page in SSR as expected', () => {
       cy.intercept(route, (req) => {
         req.continue((resp) => {
@@ -70,14 +71,7 @@ routes.forEach((route) => {
         },
       };
       cy.startVitalsCapture({url: route});
-      getResultTitles()
-        .should('have.length.greaterThan', 0)
-        .as('initial-results');
-      waitForHydration();
-      cy.get('.search-box input').focus().type('abc{enter}');
-      cy.get<string>('@initial-results').then((initialResults) =>
-        getResultTitles().should('not.deep.equal', initialResults)
-      );
+      compareWithInitialResults();
       cy.reportVitals(VITALS_THRESHOLD);
     });
   });
@@ -96,15 +90,7 @@ routes.forEach((route) => {
     });
 
     it('after submitting a query, should change search results', () => {
-      getResultTitles()
-        .should('have.length.greaterThan', 0)
-        .as('initial-results');
-      cy.get('.search-box input').focus().type('abc{enter}');
-      cy.get<string>('@initial-results').then((initialResults) => {
-        getResultTitles()
-          .should('not.deep.equal', initialResults)
-          .and('have.length', 10);
-      });
+      compareWithInitialResults();
     });
   });
 });
