@@ -1,16 +1,16 @@
-import {ProductRecommendation} from '../../../../api/search/search/product-recommendation';
-import {configuration} from '../../../../app/common-reducers';
+import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
+import {configuration} from '../../../app/common-reducers';
+import {logProductRecommendationOpen} from '../../../features/product-listing/product-listing-analytics';
+import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
 import {
   buildMockCommerceEngine,
   MockCommerceEngine,
-} from '../../../../test/mock-engine';
-import {buildMockProductRecommendation} from '../../../../test/mock-product-recommendation';
-import {logProductRecommendationOpen} from '../../product-listing-analytics';
-import {pushRecentResult} from '../../product-listing-recent-results';
+} from '../../../test/mock-engine';
+import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
 import {
   buildInteractiveResult,
   InteractiveResult,
-} from './product-listing-v2-interactive-result';
+} from './headless-product-listing-v2-interactive-result';
 
 describe('InteractiveResult', () => {
   let engine: MockCommerceEngine;
