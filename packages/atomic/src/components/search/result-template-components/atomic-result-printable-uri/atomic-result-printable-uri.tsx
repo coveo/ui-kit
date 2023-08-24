@@ -146,7 +146,11 @@ export class AtomicResultPrintableUri {
           this.interactiveResult.cancelPendingSelect()
         }
         attributes={this.linkAttributes}
-        ref={shouldSetTarget ? this.focusTarget.setTarget : undefined}
+        ref={
+          shouldSetTarget
+            ? (el?: HTMLAnchorElement) => this.focusTarget.setTarget(el)
+            : undefined
+        }
       >
         {content}
       </LinkWithResultAnalytics>
