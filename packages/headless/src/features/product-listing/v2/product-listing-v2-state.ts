@@ -5,8 +5,7 @@ import {ProductRecommendation} from '../../../api/search/search/product-recommen
 import {AnyFacetResponse} from '../../facets/generic/interfaces/generic-facet-response';
 
 export interface ProductListingV2State {
-  propertyId: string;
-  listingId: string;
+  trackingId: string;
   locale: string; // TODO: action for setting this
   mode: Mode; // TODO: action for setting this
   clientId: string;
@@ -20,8 +19,7 @@ export interface ProductListingV2State {
 }
 
 export const getProductListingV2InitialState = (): ProductListingV2State => ({
-  propertyId: '',
-  listingId: '',
+  trackingId: '',
   locale: '',
   mode: Mode.Live,
   clientId: '',
@@ -33,22 +31,12 @@ export const getProductListingV2InitialState = (): ProductListingV2State => ({
   version: 'v2',
   context: {
     user: {
-      userId: '',
-      email: '',
       userIp: '',
       userAgent: '',
     },
     view: {
       url: '',
-      referrerUrl: '',
-      pageType: '',
     },
-    cart: [
-      {
-        groupId: '',
-        productId: '',
-        sku: '',
-      },
-    ],
+    cart: [],
   },
 });

@@ -139,14 +139,12 @@ export const buildProductListingRequestV2 = async (
   const baseParams = {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
-    propertyId: state.productListing.propertyId,
+    trackingId: state.productListing.trackingId,
     platformUrl: state.configuration.platformUrl,
-    version: state.productListing?.version,
   };
 
   const productListingParams = {
-    listingId: state.productListing.listingId,
-    locale: state.productListing.locale || 'en-US',
+    locale: state.productListing.locale || 'en-us-usd',
     mode: state.productListing.mode,
     clientId: state.productListing.clientId || 'some-client-id', // Dummy value since the api requires one
   };
