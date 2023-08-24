@@ -44,6 +44,11 @@ export interface SearchParameters {
   f?: Record<string, string[]>;
 
   /**
+   * A record of the excluded facets, where the key is the facet id, and value is an array containing the excluded values.
+   */
+  fExcluded?: Record<string, string[]>;
+
+  /**
    * A zero-based index of the first result.
    */
   firstResult?: number;

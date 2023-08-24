@@ -67,22 +67,27 @@ export const facetSetReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const f = action.payload.f || {};
+        const fExcluded = action.payload.fExcluded || {};
         const facetIds = Object.keys(state);
 
         facetIds.forEach((id) => {
           const {request} = state[id]!;
           const selectedValues = f[id] || [];
+          const excludedValues = fExcluded[id] || [];
           const idleValues = request.currentValues.filter(
-            (facetValue) => !selectedValues.includes(facetValue.value)
+            (facetValue) =>
+              !selectedValues.includes(facetValue.value) &&
+              !excludedValues.includes(facetValue.value)
           );
 
           request.currentValues = [
             ...selectedValues.map(buildSelectedFacetValueRequest),
+            ...excludedValues.map(buildExcludedFacetValueRequest),
             ...idleValues.map(restoreFacetValueToIdleState),
           ];
           request.preventAutoSelect = selectedValues.length > 0;
           request.numberOfValues = Math.max(
-            selectedValues.length,
+            selectedValues.length + excludedValues.length,
             request.numberOfValues
           );
         });

@@ -24,6 +24,7 @@ export function initialSearchParameterSelector(
       getPaginationInitialState().defaultNumberOfResults,
     sortCriteria: getSortCriteriaInitialState(),
     f: {},
+    fExcluded: {},
     cf: {},
     nf: {},
     df: {},
