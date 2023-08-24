@@ -1,7 +1,7 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  preset: 'ts-jest/presets/js-with-ts',
-  testEnvironment: 'jest-environment-jsdom',
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
   setupFiles: ['./jest.setup.js'],
   collectCoverage: true,
   collectCoverageFrom: ['./src/**.ts', './src/**.tsx'],
