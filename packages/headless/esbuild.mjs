@@ -29,7 +29,7 @@ function getUmdGlobalName(useCase) {
     'case-assist': 'CoveoHeadlessCaseAssist',
     insight: 'CoveoHeadlessInsight',
     ssr: 'CoveoHeadlessSSR',
-    commerce: 'CoveoHeadlessCommerce'
+    commerce: 'CoveoHeadlessCommerce',
   };
 
   const globalName = map[useCase];
