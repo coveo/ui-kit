@@ -19,10 +19,10 @@ import {
 } from './types';
 
 export class MissingEngineProviderError extends Error {
-  constructor(
-    message = 'Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.'
-  ) {
-    super(message);
+  constructor() {
+    super(
+      'Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.'
+    );
   }
 }
 

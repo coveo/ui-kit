@@ -103,7 +103,7 @@ describe.skip('Headless react SSR utils', () => {
       expect(errorSpy).not.toHaveBeenCalled();
     });
 
-    test('CSR Provider', async () => {
+    test('CSRProvider', async () => {
       const ssrState = await fetchInitialState();
 
       function TestResultsPage() {
