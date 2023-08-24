@@ -1,6 +1,6 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
+import {ProductListingV2APIClient} from '../../api/commerce/product-listings/v2/product-listing-v2-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
@@ -18,6 +18,7 @@ import {
 } from '../engine';
 import {buildLogger} from '../logger';
 import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
+import {ProductListingV2ThunkExtraArguments} from '../product-listing-v2-thunk-extra-arguments';
 import {SearchEngineConfiguration} from '../search-engine/search-engine-configuration';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
@@ -61,7 +62,7 @@ export function buildCommerceEngine(
     createSearchAPIClient(options.configuration, logger)
   );
 
-  const thunkArguments: ProductListingThunkExtraArguments = {
+  const thunkArguments: ProductListingV2ThunkExtraArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: commerceClient,
   };
@@ -119,7 +120,7 @@ function createCommerceAPIClient(
   logger: Logger,
   searchAPIClient: SearchAPIClient
 ) {
-  return new ProductListingAPIClient(
+  return new ProductListingV2APIClient(
     {
       logger,
       preprocessRequest:
