@@ -58,6 +58,7 @@ export const facetOptionsReducer = createReducer(
       .addCase(restoreSearchParameters, (state, action) => {
         [
           ...Object.keys(action.payload.f ?? {}),
+          ...Object.keys(action.payload.fExcluded ?? {}),
           ...Object.keys(action.payload.cf ?? {}),
           ...Object.keys(action.payload.nf ?? {}),
           ...Object.keys(action.payload.df ?? {}),
