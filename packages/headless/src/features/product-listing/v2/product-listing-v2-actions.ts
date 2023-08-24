@@ -136,22 +136,14 @@ export const buildProductListingRequestV2 = async (
 ): Promise<ProductListingV2Request> => {
   const selectedFacets = getFacets(state);
 
-  const baseParams = {
+  return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     trackingId: state.productListing.trackingId,
     platformUrl: state.configuration.platformUrl,
-  };
-
-  const productListingParams = {
     locale: state.productListing.locale || 'en-us-usd',
     mode: state.productListing.mode,
     clientId: state.productListing.clientId || 'some-client-id', // Dummy value since the api requires one
-  };
-
-  return {
-    ...baseParams,
-    ...productListingParams,
     selectedFacets,
     context: state.productListing.context,
     ...(state.sort && {
