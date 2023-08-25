@@ -1,5 +1,10 @@
 name: 'Setup & build'
 description: 'Setup node, install dependencies & build'
+inputs:
+  load-cache:
+    description: "Whether to restore the Nx cache."
+    required: false
+    default: 'true'
 runs:
   using: composite
   steps:
@@ -23,11 +28,13 @@ runs:
       with:
         path: ~/.cache/Cypress
         key: cy-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
-    - uses: actions/cache@v3
+    - if: inputs.load-cache == 'true'
+      uses: actions/cache/restore@v3
       id: nx-cache
       with:
         path: node_modules/.cache/nx
         key: nx-${{ github.sha }}
+        fail-on-cache-miss: true
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
