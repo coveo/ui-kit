@@ -1,7 +1,7 @@
 import {SortBy} from '../../../../product-listing.index';
 import {buildMockProductListingV2APIClient} from '../../../../test/mock-product-listing-v2-api-client';
 import {PlatformClient} from '../../../platform-client';
-import {ProductListingV2APIClient} from './product-listing-v2-api-client';
+import {ProductListingAPIClient} from './product-listing-v2-api-client';
 import {Mode} from './product-listing-v2-params';
 import {
   ProductListingV2SuccessResponse,
@@ -14,7 +14,7 @@ describe('product listing v2 api client', () => {
   const accessToken = 'some-access-token';
   const trackingId = 'some-tracking-id';
 
-  let client: ProductListingV2APIClient;
+  let client: ProductListingAPIClient;
   let platformCallMock: jest.Mock;
 
   beforeEach(() => {

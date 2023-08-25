@@ -1,4 +1,4 @@
-import {ProductListingV2APIErrorStatusResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-api-client';
+import {ProductListingAPIErrorStatusResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-api-client';
 import {Context} from '../../../api/commerce/product-listings/v2/product-listing-v2-params';
 import {Mode} from '../../../api/commerce/product-listings/v2/product-listing-v2-params';
 import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
@@ -9,7 +9,7 @@ export interface ProductListingV2State {
   locale: string;
   mode: Mode;
   clientId: string;
-  error: ProductListingV2APIErrorStatusResponse | null;
+  error: ProductListingAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
   products: ProductRecommendation[];

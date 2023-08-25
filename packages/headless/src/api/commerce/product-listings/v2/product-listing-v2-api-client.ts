@@ -12,44 +12,44 @@ import {
 import {buildAPIResponseFromErrorOrThrow} from '../../../search/search-api-error-response';
 import {
   buildProductListingV2Request,
-  ProductListingV2Request,
-  ProductListingV2SuccessResponse,
+  ProductListingV2Request as ProductListingRequest,
+  ProductListingV2SuccessResponse as ProductListingSuccessResponse,
 } from './product-listing-v2-request';
 
 export interface AsyncThunkProductListingV2Options<
   T extends Partial<ProductListingV2AppState>
 > {
   state: T;
-  rejectValue: ProductListingV2APIErrorStatusResponse;
+  rejectValue: ProductListingAPIErrorStatusResponse;
   extra: ProductListingV2ThunkExtraArguments;
 }
 
 /**
- * Initialization options for the `ProductListingV2APIClient`.
+ * The initialization options for the product listing API client.
  */
-export interface ProductListingV2APIClientOptions {
+export interface ProductListingAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
 }
 
 /**
- * Defines a Product Listing API response. It can represent an error or a successful response.
+ * A product listing API response.
  */
 export type ProductListingAPIResponse<TSuccessContent> =
   | ProductListingAPISuccessResponse<TSuccessContent>
   | ProductListingAPIErrorResponse;
 
 /**
- * Defines a Product Listing API successful response.
+ * A product listing API successful response.
  */
 export interface ProductListingAPISuccessResponse<TContent> {
   success: TContent;
 }
 
 /**
- * Defines the content of a Product Listing API error response.
+ * The content of a product listing API error response.
  */
-export interface ProductListingV2APIErrorStatusResponse {
+export interface ProductListingAPIErrorStatusResponse {
   statusCode: number;
   message: string;
   type: string;
@@ -57,30 +57,24 @@ export interface ProductListingV2APIErrorStatusResponse {
 }
 
 /**
- * Defines a Product Listing API error response.
+ * A Product Listing API error response.
  */
 export interface ProductListingAPIErrorResponse {
-  error: ProductListingV2APIErrorStatusResponse;
+  error: ProductListingAPIErrorStatusResponse;
 }
 
 /**
- * The client to use to interface with the Product Listing API.
+ * The client to use to interface with the product listing API.
  */
-export class ProductListingV2APIClient implements FacetSearchAPIClient {
+export class ProductListingAPIClient implements FacetSearchAPIClient {
   constructor(
-    private options: ProductListingV2APIClientOptions,
+    private options: ProductListingAPIClientOptions,
     private searchAPIClient: SearchAPIClient
   ) {}
 
-  /**
-   * Retrieves the product listing from the API.
-   *
-   * @param req - The request parameters.
-   * @returns The products for the requested product listing.
-   */
   async getListing(
-    req: ProductListingV2Request
-  ): Promise<ProductListingAPIResponse<ProductListingV2SuccessResponse>> {
+    req: ProductListingRequest
+  ): Promise<ProductListingAPIResponse<ProductListingSuccessResponse>> {
     const response = await PlatformClient.call({
       ...buildProductListingV2Request(req),
       ...this.options,
@@ -92,8 +86,8 @@ export class ProductListingV2APIClient implements FacetSearchAPIClient {
 
     const body = await response.json();
     return response.ok
-      ? {success: body as ProductListingV2SuccessResponse}
-      : {error: body as ProductListingV2APIErrorStatusResponse};
+      ? {success: body as ProductListingSuccessResponse}
+      : {error: body as ProductListingAPIErrorStatusResponse};
   }
 
   async facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse> {
