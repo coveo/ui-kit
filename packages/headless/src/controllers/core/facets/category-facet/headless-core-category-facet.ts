@@ -19,6 +19,7 @@ import {categoryFacetRequestSelector} from '../../../../features/facets/category
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
+  getActiveValueAncestry,
   getActiveValueFromValueTree,
   partitionIntoParentsAndValues,
 } from '../../../../features/facets/category-facet-set/category-facet-utils';
@@ -170,9 +171,16 @@ export interface CoreCategoryFacetState {
 
   /**
    * The facet's values.
-   * @deprecated use `valuesAsTrees` instead.
+   * @deprecated use `selectedValueAncestry` instead.
    */
   values: CategoryFacetValue[];
+
+  /**
+   * The selected facet values ancestry.
+   * The first element is the "root" of the selected value ancestry tree.
+   * The last element is the selected value itself.
+   */
+  selectedValueAncestry: CategoryFacetValue[];
 
   /** The facet's active `sortCriterion`. */
   sortCriteria: CategoryFacetSortCriterion;
@@ -270,7 +278,7 @@ export interface CategoryFacetSearchResult {
   count: number;
 
   /**
-   * The hierarchical path to the facet value.
+   * The hierarchical path to the selected facet value.
    */
   path: string[];
 }
@@ -386,6 +394,10 @@ export function buildCoreCategoryFacet(
         valuesAsTrees.some((value) => value.children.length > 0) ?? false;
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
       const activeValue = getActiveValueFromValueTree(valuesAsTrees);
+      const ancestryMap = new Map<CategoryFacetValue, CategoryFacetValue>();
+      const selectedValueAncestry = activeValue
+        ? getActiveValueAncestry(activeValue, ancestryMap)
+        : [];
       const hasActiveValues = !!activeValue;
       const canShowMoreValues =
         activeValue?.moreValuesAvailable ??
@@ -398,6 +410,7 @@ export function buildCoreCategoryFacet(
       return {
         facetId,
         parents,
+        selectedValueAncestry,
         values,
         isHierarchical,
         valuesAsTrees,

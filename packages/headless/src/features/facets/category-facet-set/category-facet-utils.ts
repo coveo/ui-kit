@@ -8,6 +8,14 @@ type CategoryFacetValuePartition<T extends GenericCategoryFacetValue> = {
   values: T[];
 };
 
+export function findActiveValueAncestry<T extends GenericCategoryFacetValue>(
+  valuesAsTree: T[]
+): T[] {
+  const ancestryMap = new Map<T, T>();
+  const activeValue = getActiveValueFromValueTree(valuesAsTree, ancestryMap);
+  return activeValue ? getActiveValueAncestry(activeValue, ancestryMap) : [];
+}
+
 export function partitionIntoParentsAndValues<
   T extends GenericCategoryFacetValue
 >(nestedValues: T[] | undefined): CategoryFacetValuePartition<T> {
@@ -33,16 +41,42 @@ export function partitionIntoParentsAndValues<
   return {parents, values};
 }
 
-export function getActiveValueFromValueTree(
-  valuesAsTrees: CategoryFacetValue[]
-): CategoryFacetValue | undefined {
+export function getActiveValueFromValueTree<
+  TValue extends GenericCategoryFacetValue
+>(
+  valuesAsTrees: TValue[],
+  ancestryMap?: Map<TValue, TValue>
+): TValue | undefined {
   const valueToVisit = [...valuesAsTrees];
   while (valueToVisit.length > 0) {
     const currentValue = valueToVisit.shift()!;
     if (currentValue.state === 'selected') {
       return currentValue;
     }
-    valueToVisit.unshift(...currentValue.children);
+    if (ancestryMap) {
+      for (const childValue of currentValue.children) {
+        ancestryMap.set(childValue as TValue, currentValue);
+      }
+    }
+    valueToVisit.unshift(...(currentValue.children as TValue[]));
   }
   return undefined;
+}
+
+export function getActiveValueAncestry<
+  TValue extends GenericCategoryFacetValue
+>(
+  activeValue: TValue | undefined,
+  valueToParentMap: Map<TValue, TValue>
+): TValue[] {
+  const activeValueAncestry: TValue[] = [];
+  if (!activeValue) {
+    return [];
+  }
+  let lastParent: TValue | undefined = activeValue;
+  do {
+    activeValueAncestry.unshift(lastParent);
+    lastParent = valueToParentMap.get(lastParent);
+  } while (lastParent);
+  return activeValueAncestry;
 }
