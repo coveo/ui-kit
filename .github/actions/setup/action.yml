@@ -19,16 +19,16 @@ runs:
           node_modules/
           utils/atomic-storybook/node_modules/
           !node_modules/.cache/nx/
-        key: npm-${{ hashFiles('**/package-lock.json') }}
+        key: npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
+    - uses: actions/cache@v3
+      with:
+        path: ~/.cache/Cypress
+        key: cy-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
     - uses: actions/cache@v3
       id: nx-cache
       with:
         path: node_modules/.cache/nx
         key: nx-${{ github.sha }}
-    - uses: actions/cache@v3
-      with:
-        path: ~/.cache/Cypress
-        key: cy-${{ hashFiles('**/package-lock.json') }}
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
