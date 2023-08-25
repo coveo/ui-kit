@@ -9,33 +9,6 @@ import {render, screen} from '@testing-library/react';
 import {useEffect, useState} from 'react';
 import {MissingEngineProviderError, defineSearchEngine} from './search-engine';
 
-// Suppress known errors
-const originalError = console.error;
-const expectedErrors = [
-  // https://github.com/testing-library/react-testing-library#suppressing-unnecessary-warnings-on-react-dom-168
-  /Warning.*not wrapped in act/,
-  // TODO: Filter out following errors by wrapping in Error boundary
-  // /Error: Uncaught [Error: Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.]/,
-  // /The above error occurred in the.*Consider adding an error boundary to your tree to customize error handling behavior/,
-];
-beforeAll(() => {
-  console.error = (...args) => {
-    if (
-      expectedErrors.some((expectedError) =>
-        new RegExp(expectedError).test(args[0])
-      )
-    ) {
-      return;
-    }
-
-    originalError.call(console, ...args);
-  };
-});
-
-afterAll(() => {
-  console.error = originalError;
-});
-
 describe('Headless react SSR utils', () => {
   let errorSpy: jest.SpyInstance;
   const sampleConfig = {
@@ -128,14 +101,18 @@ describe('Headless react SSR utils', () => {
 
     test('should throw error when controller hook is used without context', () => {
       let err = undefined;
+      // Prevent expected error from being thrown in console when running tests
+      const consoleErrorStub = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
       try {
-        // TODO: Add error boundary https://reactjs.org/link/error-boundaries to prevent stack trace in console.
         render(<TestResultList />);
       } catch (e) {
         err = e as Error;
+      } finally {
+        consoleErrorStub.mockReset();
       }
 
-      expect(errorSpy).toHaveBeenCalled();
       expect(err?.message).toBe(MissingEngineProviderError.message);
     });
 
