@@ -49,9 +49,12 @@
       "!{projectRoot}/next-env.d.ts"
     ],
     "negativeNonBuildOutputs": [],
+    "buildInputs": ["{projectRoot}/**"],
     "production": [
       "sharedGlobals",
-      "{projectRoot}/**",
+      "commonConfigTypescript",
+      "commonScripts",
+      "buildInputs",
       "negativeNonBuildOutputs",
       "negativeBuildOutputs",
       "negativeCommonNonProduction"

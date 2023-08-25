@@ -9,10 +9,7 @@
       "!{projectRoot}/loader",
       "!{projectRoot}/src/components.d.ts"
     ],
-    "production": [
-      "sharedGlobals",
-      "commonConfigTypescript",
-      "commonScripts",
+    "buildInputs": [
       "{projectRoot}/stencil.config.ts",
       "{projectRoot}/collection-manifest.json",
       "{projectRoot}/tailwind.config.js",
@@ -20,10 +17,7 @@
       "{projectRoot}/stencil-plugin/**",
       "!{projectRoot}/src/external-builds/**",
       "!{projectRoot}/src/generated/**",
-      "!{projectRoot}/src/components/search/atomic-search-interface/lang/**",
-      "negativeNonBuildOutputs",
-      "negativeBuildOutputs",
-      "negativeCommonNonProduction"
+      "!{projectRoot}/src/components/search/atomic-search-interface/lang/**"
     ]
   },
   "targets": {
