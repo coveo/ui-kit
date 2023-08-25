@@ -589,6 +589,25 @@ describe('category facet slice', () => {
           expect(currentValues).toEqual([parent]);
         });
       });
+
+      describe('when the selected value is the parent', () => {
+        const selection = buildMockCategoryFacetValue({
+          value: 'A',
+          state: 'selected',
+        });
+        const action = toggleSelectCategoryFacetValue({
+          facetId,
+          selection,
+          retrieveCount,
+        });
+
+        it('sets the parent/selected value state to idle', () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          expect(finalState[facetId]?.request.currentValues[0].state).toBe(
+            'idle'
+          );
+        });
+      });
     });
 
     describe('when #currentValues contains two parents', () => {

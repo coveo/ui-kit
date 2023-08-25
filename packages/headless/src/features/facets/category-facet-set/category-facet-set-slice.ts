@@ -91,7 +91,7 @@ export const categoryFacetSetReducer = createReducer(
         if (!request) {
           return;
         }
-
+        const newState = selection.state === 'selected' ? 'idle' : 'selected';
         const {path} = selection;
         const pathToSelection = path.slice(0, path.length - 1);
         const children = ensurePathAndReturnChildren(
@@ -104,7 +104,7 @@ export const categoryFacetSetReducer = createReducer(
           const lastSelectedParent = children[0];
 
           lastSelectedParent.retrieveChildren = true;
-          lastSelectedParent.state = 'selected';
+          lastSelectedParent.state = newState;
           lastSelectedParent.children = [];
           return;
         }
@@ -113,7 +113,7 @@ export const categoryFacetSetReducer = createReducer(
           selection.value,
           retrieveCount
         );
-        newParent.state = 'selected';
+        newParent.state = newState;
         children.push(newParent);
         request.numberOfValues = 1;
       })
