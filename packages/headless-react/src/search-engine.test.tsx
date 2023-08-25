@@ -3,7 +3,7 @@ import {InferCSRState, defineResultList} from '@coveo/headless/ssr';
 import '@testing-library/jest-dom';
 import {render} from '@testing-library/react';
 import {useEffect, useState} from 'react';
-import {defineSearchEngine} from './search-engine';
+import {MissingEngineProviderError, defineSearchEngine} from './search-engine';
 
 // Suppress known errors
 const originalError = console.error;
@@ -40,7 +40,7 @@ describe('Headless react SSR utils', () => {
   };
 
   beforeEach(() => {
-    errorSpy = jest.spyOn(global.console, 'error');
+    errorSpy = jest.spyOn(console, 'error');
   });
 
   afterEach(() => {
@@ -119,10 +119,9 @@ describe('Headless react SSR utils', () => {
       } catch (e) {
         err = e as Error;
       }
-      expect(err?.message).toMatch(
-        'Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.'
-      );
+
       expect(errorSpy).toHaveBeenCalled();
+      expect(err?.message).toBe(MissingEngineProviderError.message);
     });
 
     test('SSRProvider', async () => {

@@ -20,10 +20,10 @@ import {
 import {SingletonGetter, capitalize, singleton} from './utils';
 
 export class MissingEngineProviderError extends Error {
+  static message =
+    'Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.';
   constructor() {
-    super(
-      'Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.'
-    );
+    super(MissingEngineProviderError.message);
   }
 }
 
