@@ -24,9 +24,6 @@
     "release:phase1-3": "nx run-many --targets=release:phase2 --all --parallel=false --output-style=stream && npx -p=@coveo/release reify",
     "release:phase4": "npx -p=@coveo/release git-publish-all"
   },
-  "dependencies": {
-    "patch-package": "8.0.0"
-  },
   "devDependencies": {
     "@actions/core": "1.9.1",
     "@actions/github": "5.1.1",
@@ -66,6 +63,7 @@
     "jest": "27.5.1",
     "lint-staged": "13.1.0",
     "nx": "15.7.0",
+    "patch-package": "8.0.0",
     "prettier": "2.7.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
