@@ -1,7 +1,11 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
-import {InferCSRState, defineResultList} from '@coveo/headless/ssr';
+import {
+  InferCSRState,
+  defineResultList,
+  defineSearchBox,
+} from '@coveo/headless/ssr';
 import '@testing-library/jest-dom';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import {useEffect, useState} from 'react';
 import {MissingEngineProviderError, defineSearchEngine} from './search-engine';
 
@@ -77,13 +81,18 @@ describe('Headless react SSR utils', () => {
   test('creates a hook based on given controller', () => {
     const {controllers} = defineSearchEngine({
       configuration: sampleConfig,
-      controllers: {resultList: defineResultList()},
+      controllers: {
+        resultList: defineResultList(),
+        searchBox: defineSearchBox(),
+      },
     });
     expect(typeof controllers.useResultList).toEqual('function');
+    expect(typeof controllers.useSearchBox).toEqual('function');
   });
 
-  describe('renders providers without error', () => {
-    const resultItemClassName = 'result-item';
+  describe('context providers', () => {
+    const resultItemTestId = 'result-item';
+    const numResults = 10;
     const engineDefinition = defineSearchEngine({
       configuration: sampleConfig,
       controllers: {resultList: defineResultList()},
@@ -101,9 +110,9 @@ describe('Headless react SSR utils', () => {
     function TestResultList() {
       const {state} = controllers.useResultList();
       return (
-        <ul role="result-list">
+        <ul>
           {state.results.map((result) => (
-            <li className={resultItemClassName} key={result.uniqueId}>
+            <li key={result.uniqueId} data-testid={resultItemTestId}>
               {result.title}
             </li>
           ))}
@@ -111,11 +120,17 @@ describe('Headless react SSR utils', () => {
       );
     }
 
+    async function checkRenderedResultList() {
+      const results = await screen.findAllByTestId(resultItemTestId);
+      expect(errorSpy).not.toHaveBeenCalled();
+      expect(results).toHaveLength(numResults);
+    }
+
     test('should throw error when controller hook is used without context', () => {
       let err = undefined;
       try {
         // TODO: Add error boundary https://reactjs.org/link/error-boundaries to prevent stack trace in console.
-        render(<TestResultList></TestResultList>);
+        render(<TestResultList />);
       } catch (e) {
         err = e as Error;
       }
@@ -124,13 +139,18 @@ describe('Headless react SSR utils', () => {
       expect(err?.message).toBe(MissingEngineProviderError.message);
     });
 
-    test('SSRProvider', async () => {
+    test('should render with SSRProvider', async () => {
       const ssrState = await fetchInitialState();
-      render(<SSRStateProvider controllers={ssrState.controllers} />);
-      expect(errorSpy).not.toHaveBeenCalled();
+      render(
+        <SSRStateProvider controllers={ssrState.controllers}>
+          <TestResultList />
+        </SSRStateProvider>
+      );
+
+      await checkRenderedResultList();
     });
 
-    test('CSRProvider', async () => {
+    test('should render with CSRProvider', async () => {
       const ssrState = await fetchInitialState();
 
       function TestResultsPage() {
@@ -143,29 +163,21 @@ describe('Headless react SSR utils', () => {
           });
         });
 
-        if (csrResult) {
-          return (
+        return (
+          csrResult && (
             <CSRProvider
               engine={csrResult.engine}
               controllers={csrResult.controllers}
             >
               <TestResultList />
             </CSRProvider>
-          );
-        } else {
-          return (
-            <SSRStateProvider controllers={ssrState.controllers}>
-              <TestResultList />
-            </SSRStateProvider>
-          );
-        }
+          )
+        );
       }
 
       render(<TestResultsPage />);
-      // screen.debug();
-      // await screen.findByRole(resultItemClassName);
-      expect(errorSpy).not.toHaveBeenCalled();
-      // expect((await screen.findAllByRole('li')).length).toBe(10);
+
+      await checkRenderedResultList();
     });
   });
 });
