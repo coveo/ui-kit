@@ -1,3 +1,15 @@
+# 2.42.0 (2023-08-24)
+
+### Features
+
+- **atomic:** added textarea search box ([#3118](https://github.com/coveo/ui-kit/issues/3118)) ([a436d52](https://github.com/coveo/ui-kit/commits/a436d52174d03fd27d1716607492d783b39debb9))
+
+## 2.41.1 (2023-08-23)
+
+### Bug Fixes
+
+- **atomic:** change language code for region specific languages ([#3121](https://github.com/coveo/ui-kit/issues/3121)) ([c75c586](https://github.com/coveo/ui-kit/commits/c75c58661a4b6b497fd815aa09d697ba0b0fb6de))
+
 # 2.41.0 (2023-08-21)
 
 ### Features
