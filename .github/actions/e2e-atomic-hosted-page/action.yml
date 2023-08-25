@@ -12,7 +12,7 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        command-prefix: 'npx -w @coveo/atomic-hosted-page cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
         start: npx nx run atomic-hosted-page:dev
         wait-on: 'http://localhost:3335'
         install: false
