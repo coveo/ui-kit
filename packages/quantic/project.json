@@ -4,7 +4,8 @@
   "namedInputs": {
     "negativeBuildOutputs": [
       "!{projectRoot}/docs/out",
-      "!{projectRoot}/force-app/main/default/staticresources"
+      "!{projectRoot}/force-app/main/default/staticresources/coveobueno",
+      "!{projectRoot}/force-app/main/default/staticresources/coveoheadless"
     ],
     "negativeNonBuildOutputs": ["!{projectRoot}/reports"]
   },
@@ -12,7 +13,8 @@
     "cached:build": {
       "outputs": [
         "{projectRoot}/docs/out",
-        "{projectRoot}/force-app/main/default/staticresources"
+        "{projectRoot}/force-app/main/default/staticresources/coveobueno",
+        "{projectRoot}/force-app/main/default/staticresources/coveoheadless"
       ],
       "executor": "nx:run-commands",
       "options": {
