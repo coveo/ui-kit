@@ -8,8 +8,6 @@ export function buildFetchProductListingV2Response(
 ): FetchProductListingV2ThunkReturn {
   return {
     response: {
-      listingId: response.listingId ?? '',
-      locale: response.locale ?? '',
       sort: response.sort ?? {
         appliedSort: {by: SortBy.Relevance},
         availableSorts: [{by: SortBy.Relevance}],
