@@ -15,6 +15,8 @@ const defaultLikeLabel = 'yes';
 const defaultDislikeIconName = 'utility:clear';
 const defaultDislikeLabel = 'no';
 const defaultSize = 'xx-small';
+const tooltipLikeLabel = 'This answer was helpful';
+const tooltipDislikeLabel = 'This answer was not helpful';
 
 jest.mock(
   '@salesforce/label/c.quantic_Yes',
@@ -30,6 +32,21 @@ jest.mock(
     virtual: true,
   }
 );
+jest.mock(
+  '@salesforce/label/c.quantic_ThisAnswerWasHelpful',
+  () => ({default: tooltipLikeLabel}),
+  {
+    virtual: true,
+  }
+);
+jest.mock(
+  '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful',
+  () => ({default: tooltipDislikeLabel}),
+  {
+    virtual: true,
+  }
+);
+
 
 const selectors = {
   feedbackQuestion: '.feedback__question',
@@ -153,6 +170,24 @@ describe('c-quantic-feedback', () => {
       );
 
       expect(successMessage).toBeNull();
+    });
+
+    it('should have a title attribute with the right label on the like button', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const button = element.shadowRoot.querySelector(selectors.likeButton);
+
+      expect(button.title).toEqual(tooltipLikeLabel);
+    });
+
+    it('should have a title attribute with the right label on the dislike button', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const button = element.shadowRoot.querySelector(selectors.dislikeButton);
+
+      expect(button.title).toEqual(tooltipDislikeLabel);
     });
 
     describe('when the like button is clicked', () => {
