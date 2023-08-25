@@ -4,6 +4,7 @@ import {
   defineResultList,
   InferSSRState,
   InferCSRState,
+  defineSearchBox,
 } from '@coveo/headless/ssr';
 
 const engineDefinition = defineSearchEngine({
@@ -11,7 +12,10 @@ const engineDefinition = defineSearchEngine({
     ...getSampleSearchEngineConfiguration(),
     analytics: {enabled: false},
   },
-  controllers: {resultList: defineResultList()},
+  controllers: {
+    searchBox: defineSearchBox(),
+    resultList: defineResultList(),
+  },
 });
 
 export type SearchSSRState = InferSSRState<typeof engineDefinition>;

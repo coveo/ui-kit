@@ -16,7 +16,7 @@ export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
       <input
         id="hydrated-indicator"
         type="checkbox"
-        readOnly
+        disabled
         checked={!!csrResult}
       />
     </div>

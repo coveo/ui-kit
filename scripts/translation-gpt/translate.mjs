@@ -30,14 +30,14 @@ const supportedLanguages = [
   'no',
   'pl',
   'pt',
-  'pt-br',
+  'pt-BR',
   'ru',
   'sv',
   'th',
   'tr',
   'zh',
-  'zh-cn',
-  'zh-tw',
+  'zh-CN',
+  'zh-TW',
 ];
 
 const prompt = (

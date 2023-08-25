@@ -1,3 +1,9 @@
+# 2.28.0 (2023-08-24)
+
+### Features
+
+- **headless:** support facet exclusion in search parameter manager ([#3122](https://github.com/coveo/ui-kit/issues/3122)) ([338e740](https://github.com/coveo/ui-kit/commits/338e740bfa108cead0785f34490192ed3bd50fd6))
+
 # 2.27.0 (2023-08-21)
 
 ### Bug Fixes
