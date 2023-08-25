@@ -1,5 +1,4 @@
 import {Logger} from 'pino';
-import {TextDecoder} from 'web-encoding';
 import {URLPath} from '../../../utils/url-utils';
 import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
 import {PlatformClient} from '../../platform-client';
@@ -66,6 +65,12 @@ export const getHtml = async (
 
   if (response instanceof Error) {
     throw response;
+  }
+
+  // Global TextDecoder interface must be manually populated when running in certain environments (namely Jest)
+  if (typeof window.TextDecoder === 'undefined') {
+    const {TextDecoder} = require('util');
+    window.TextDecoder = TextDecoder;
   }
 
   const encoding = findEncoding(response);
