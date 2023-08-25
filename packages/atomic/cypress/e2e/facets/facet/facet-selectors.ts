@@ -24,7 +24,7 @@ export const FacetSelectors = {
   },
   excludedCheckboxValue() {
     return this.shadow().find(
-      '[part~="value-checkbox"][part~="value-checkbox-excluded"][aria-checked="true"]'
+      '[part~="value-checkbox"][part~="value-checkbox-excluded"][aria-pressed="mixed"]'
     );
   },
   idleCheckboxValue() {

@@ -74,7 +74,6 @@ describe('Breadbox Test Suites', () => {
       setupBreadboxWithMultipleFacets(props);
       selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
-      excludeIdleCheckboxValueAt(FacetSelectors, selectionIndex);
       selectIdleCheckboxValueAt(AutomaticFacetSelectors, selectionIndex);
     }
 
@@ -227,15 +226,14 @@ describe('Breadbox Test Suites', () => {
   });
 
   describe('when excluding from a standard facet', () => {
-    const excludedValues = [0, 1];
+    const selectionIndex = 2;
 
     function setupFacetWithMultipleExcludedValues() {
       new TestFixture()
         .with(addBreadbox())
         .with(addFacet({field: 'author', label}))
-        .withHash(`fExcluded-author=${excludedValues.join(',')}`)
         .init();
-      excludeIdleCheckboxValueAt(FacetSelectors, excludedValues.length);
+      excludeIdleCheckboxValueAt(FacetSelectors, selectionIndex);
     }
 
     describe('verify rendering', () => {
@@ -244,11 +242,11 @@ describe('Breadbox Test Suites', () => {
       BreadboxAssertions.assertDisplayBreadcrumb(true);
       // BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true); // TODO: KIT-2687
       BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
-      BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
+      BreadboxAssertions.assertExcludedCheckboxFacetsInBreadcrumb(
         FacetSelectors
       );
-      BreadboxAssertions.assertBreadcrumbDisplayLength(excludedValues.length);
-      BreadboxAssertions.assertDisplayBreadcrumbShowMore(true);
+      BreadboxAssertions.assertBreadcrumbDisplayLength(1);
+      BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
     });
   });
 });

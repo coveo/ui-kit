@@ -14,20 +14,10 @@ export function selectIdleCheckboxValueAt(
   FacetWithCheckboxSelector.idleCheckboxValueLabel()
     .eq(index)
     .then((idleCheckboxValueLabel) => {
-      const hasAriaLabel = !!idleCheckboxValueLabel.attr('aria-label');
-      const text = hasAriaLabel
-        ? idleCheckboxValueLabel.attr('aria-label')!
-        : idleCheckboxValueLabel.text();
-      FacetWithCheckboxSelector.idleCheckboxValueLabel()
-        .filter(
-          hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`
-        )
-        .its('length')
-        .should(
-          'eq',
-          1,
-          'There should not be any other value similar to this one.'
-        );
+      const text = ensureLabelUniqueness(
+        FacetWithCheckboxSelector,
+        idleCheckboxValueLabel
+      );
       cy.wrap(idleCheckboxValueLabel).click().wait(2000);
       FacetWithCheckboxSelector.checkboxValueWithText(text).should(
         'have.attr',
@@ -41,29 +31,24 @@ export function excludeIdleCheckboxValueAt(
   FacetWithCheckboxSelector: FacetWithCheckboxSelector,
   index: number
 ) {
-  FacetWithCheckboxSelector.excludeButton()
+  FacetWithCheckboxSelector.idleCheckboxValueLabel()
     .eq(index)
-    .then((excludeButton) => {
-      const hasAriaLabel = !!excludeButton.attr('aria-label');
-      const text = hasAriaLabel
-        ? excludeButton.attr('aria-label')!
-        : excludeButton.text();
-      FacetWithCheckboxSelector.idleCheckboxValueLabel()
-        .filter(
-          hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`
-        )
-        .its('length')
-        .should(
-          'eq',
-          1,
-          'There should not be any other value similar to this one.'
-        );
-      cy.wrap(excludeButton).click().wait(2000);
-      FacetWithCheckboxSelector.checkboxValueWithText(text).should(
-        'have.attr',
-        'aria-pressed',
-        'mixed'
+    .then((idleCheckboxValueLabel) => {
+      const text = ensureLabelUniqueness(
+        FacetWithCheckboxSelector,
+        idleCheckboxValueLabel
       );
+
+      FacetWithCheckboxSelector.excludeButton()
+        .eq(index)
+        .then((excludeButton) => {
+          cy.wrap(excludeButton).click({force: true}).wait(2000);
+          FacetWithCheckboxSelector.checkboxValueWithText(text).should(
+            'have.attr',
+            'aria-pressed',
+            'mixed'
+          );
+        });
     });
 }
 
@@ -162,4 +147,24 @@ export function pressClearSearchButton(
 ) {
   FacetWithSearchSelector.searchClearButton().click();
   FacetWithSearchSelector.searchClearButton().should('not.exist');
+}
+
+function ensureLabelUniqueness(
+  FacetWithCheckboxSelector: FacetWithCheckboxSelector,
+  idleCheckboxValueLabel: JQuery<HTMLElement>
+) {
+  const hasAriaLabel = !!idleCheckboxValueLabel.attr('aria-label');
+  const text = hasAriaLabel
+    ? idleCheckboxValueLabel.attr('aria-label')!
+    : idleCheckboxValueLabel.text();
+
+  FacetWithCheckboxSelector.idleCheckboxValueLabel()
+    .filter(hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`)
+    .its('length')
+    .should(
+      'eq',
+      1,
+      'There should not be any other value similar to this one.'
+    );
+  return text;
 }
