@@ -33,6 +33,9 @@ describe('AsyncSearchThunkProcessor', () => {
           results,
           response: buildMockSearchResponse({results}),
         }),
+        didYouMean: {
+          automaticallyCorrectQuery: true,
+        },
       }),
       rejectWithValue: jest.fn(),
     };
