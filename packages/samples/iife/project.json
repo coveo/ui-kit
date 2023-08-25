@@ -1,5 +1,6 @@
 {
   "name": "iife-samples",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "namedInputs": {
     "negativeBuildOutputs": ["!{projectRoot}/www/cdn"]
   },

@@ -1,4 +1,6 @@
 {
+  "name": "atomic",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "namedInputs": {
     "negativeBuildOutputs": [
       "!{projectRoot}/dist",

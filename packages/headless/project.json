@@ -1,4 +1,6 @@
 {
+  "name": "headless",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "namedInputs": {
     "negativeBuildOutputs": [
       "!{projectRoot}/dist",
@@ -11,7 +13,7 @@
       "outputs": [
         "{projectRoot}/dist",
         "{projectRoot}/temp",
-        "packages/atomic/src/external-builds"
+        "{workspaceRoot}/packages/atomic/src/external-builds"
       ],
       "executor": "nx:run-commands",
       "options": {

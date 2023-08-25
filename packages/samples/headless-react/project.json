@@ -1,5 +1,6 @@
 {
   "name": "headless-react-samples",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "targets": {
     "cached:build": {
       "executor": "nx:run-commands",

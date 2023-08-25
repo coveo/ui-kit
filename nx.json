@@ -9,7 +9,11 @@
   },
   "plugins": ["@coveo/nx-plugin"],
   "namedInputs": {
-    "sharedGlobals": [{"runtime": "node -v"}],
+    "sharedGlobals": [
+      {
+        "runtime": "node -v"
+      }
+    ],
     "commonConfigTypescript": [
       "{workspaceRoot}/tsconfig.json",
       "{projectRoot}/tsconfig.json",
@@ -101,5 +105,6 @@
       "dependsOn": ["release:build", "release:phase1"]
     }
   },
-  "defaultBase": "master"
+  "defaultBase": "master",
+  "$schema": "./node_modules/nx/schemas/nx-schema.json"
 }

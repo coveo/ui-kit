@@ -1,5 +1,6 @@
 {
   "name": "atomic-angular-builder",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "namedInputs": {
     "negativeBuildOutputs": ["!{projectRoot}/projects/atomic-angular/dist"]
   },

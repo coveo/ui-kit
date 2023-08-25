@@ -1,5 +1,6 @@
 {
   "name": "atomic-react-samples",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "namedInputs": {
     "negativeBuildOutputs": ["!{projectRoot}/public/dist"]
   },

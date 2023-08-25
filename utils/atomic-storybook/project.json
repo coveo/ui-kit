@@ -1,4 +1,6 @@
 {
+  "name": "atomic-storybook",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "implicitDependencies": ["atomic"],
   "namedInputs": {
     "negativeBuildOutputs": ["!{projectRoot}/storybook-static"]
