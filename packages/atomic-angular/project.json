@@ -1,7 +1,11 @@
 {
   "name": "atomic-angular-builder",
+  "namedInputs": {
+    "negativeBuildOutputs": ["!{projectRoot}/projects/atomic-angular/dist"]
+  },
   "targets": {
     "cached:build": {
+      "outputs": ["{projectRoot}/projects/atomic-angular/dist"],
       "dependsOn": ["^build", "clean"],
       "executor": "nx:run-commands",
       "options": {
