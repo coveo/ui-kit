@@ -5,8 +5,33 @@ import {render} from '@testing-library/react';
 import {useEffect, useState} from 'react';
 import {defineSearchEngine} from './search-engine';
 
-// TODO(KIT-2692): Disabled until JSDOM env error can be fixed
-//  Error: "TypeError: Cannot read properties of undefined (reading 'html')"
+// Suppress known errors
+const originalError = console.error;
+const expectedErrors = [
+  // https://github.com/testing-library/react-testing-library#suppressing-unnecessary-warnings-on-react-dom-168
+  /Warning.*not wrapped in act/,
+  // TODO: Filter out following errors by wrapping in Error boundary
+  // /Error: Uncaught [Error: Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.]/,
+  // /The above error occurred in the.*Consider adding an error boundary to your tree to customize error handling behavior/,
+];
+beforeAll(() => {
+  console.error = (...args) => {
+    if (
+      expectedErrors.some((expectedError) =>
+        new RegExp(expectedError).test(args[0])
+      )
+    ) {
+      return;
+    }
+
+    originalError.call(console, ...args);
+  };
+});
+
+afterAll(() => {
+  console.error = originalError;
+});
+
 describe('Headless react SSR utils', () => {
   let errorSpy: jest.SpyInstance;
   const sampleConfig = {
@@ -89,6 +114,7 @@ describe('Headless react SSR utils', () => {
     test('should throw error when controller hook is used without context', () => {
       let err = undefined;
       try {
+        // TODO: Add error boundary https://reactjs.org/link/error-boundaries to prevent stack trace in console.
         render(<TestResultList></TestResultList>);
       } catch (e) {
         err = e as Error;
@@ -138,7 +164,6 @@ describe('Headless react SSR utils', () => {
 
       render(<TestResultsPage />);
       // screen.debug();
-      // TODO (before merge): fix error "When testing, code that causes React state updates should be wrapped into act"
       // await screen.findByRole(resultItemClassName);
       expect(errorSpy).not.toHaveBeenCalled();
       // expect((await screen.findAllByRole('li')).length).toBe(10);
