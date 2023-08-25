@@ -172,6 +172,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     }
     if (
       state.didYouMean?.enableDidYouMean === false ||
+      state.didYouMean?.automaticallyCorrectQuery === false ||
       successResponse.results.length !== 0 ||
       successResponse.queryCorrections.length === 0
     ) {
@@ -180,9 +181,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
     const originalQuery = this.getCurrentQuery();
     const {correctedQuery} = successResponse.queryCorrections[0];
-    const retried = await this.automaticallyRetryQueryWithCorrection(
-      correctedQuery
-    );
+
+    const retried = state.didYouMean?.automaticallyCorrectQuery
+      ? await this.automaticallyRetryQueryWithCorrection(correctedQuery)
+      : fetched;
 
     if (isErrorResponse(retried.response)) {
       this.dispatch(logQueryError(retried.response.error));

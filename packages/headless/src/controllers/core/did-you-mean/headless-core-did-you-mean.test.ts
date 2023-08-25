@@ -42,11 +42,12 @@ describe('did you mean', () => {
     expect(engine.actions).toContainEqual(applyDidYouMeanCorrection('bar'));
   });
 
-  it('should allow to disable automatic query correction', () => {
+  it('should allow to update query correction when automatic correction is disabled', () => {
+    engine.state.didYouMean.queryCorrection.correctedQuery = 'bar';
     engine.state.didYouMean.automaticallyCorrectQuery = false;
     initDidYouMean();
 
     dym.applyCorrection();
-    expect(engine.actions).not.toContainEqual(applyDidYouMeanCorrection('bar'));
+    expect(engine.actions).toContainEqual(applyDidYouMeanCorrection('bar'));
   });
 });

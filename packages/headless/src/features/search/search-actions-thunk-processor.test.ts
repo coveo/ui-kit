@@ -15,8 +15,8 @@ import {
 
 describe('AsyncSearchThunkProcessor', () => {
   let config: AsyncThunkConfig;
+  const results = [buildMockResult()];
   beforeEach(() => {
-    const results = [buildMockResult()];
     config = {
       analyticsAction: logSearchboxSubmit(),
       dispatch: jest.fn(),
@@ -128,6 +128,50 @@ describe('AsyncSearchThunkProcessor', () => {
       queryCorrections:
         originalResponseWithNoResultsAndCorrection.queryCorrections,
     });
+  });
+
+  it('process properly when there are no results returned, there is a did you mean correction, and automatic correction is disabled', async () => {
+    const processor = new AsyncSearchThunkProcessor<{}>({
+      ...config,
+      getState: jest.fn().mockReturnValue({
+        configuration: getConfigurationInitialState(),
+        search: buildMockSearchState({
+          results,
+          response: buildMockSearchResponse({results}),
+        }),
+        didYouMean: {
+          automaticallyCorrectQuery: false,
+        },
+      }),
+    });
+
+    const searchResponse = buildMockSearchResponse({
+      results: [],
+      queryCorrections: [
+        {
+          correctedQuery: 'bar',
+          wordCorrections: [
+            {correctedWord: 'foo', length: 3, offset: 0, originalWord: 'foo'},
+          ],
+        },
+      ],
+    });
+
+    const fetched = {
+      response: {
+        success: searchResponse,
+      },
+      duration: 123,
+      queryExecuted: 'foo',
+      requestExecuted: buildMockSearchRequest(),
+    };
+
+    const processed = (await processor.process(
+      fetched
+    )) as ExecuteSearchThunkReturn;
+
+    expect(processed.response).toMatchObject(searchResponse);
+    expect(config.extra.apiClient.search).not.toHaveBeenCalled();
   });
 
   it('process properly when there is a query trigger', async () => {
