@@ -7,6 +7,7 @@ import {findEncoding} from '../encoding-finder';
 import {SearchAPIErrorWithStatusCode} from '../search-api-error-response';
 import {baseSearchRequest} from '../search-api-params';
 import {HtmlRequest} from './html-request';
+import {polyfillTextDecoder} from './text-decoder-polyfill';
 
 export interface HtmlApiClient {
   html: (req: HtmlRequest) => Promise<
@@ -68,10 +69,7 @@ export const getHtml = async (
   }
 
   // Global TextDecoder interface must be manually populated when running in certain environments (namely Jest)
-  if (typeof window.TextDecoder === 'undefined') {
-    const {TextDecoder} = require('util');
-    window.TextDecoder = TextDecoder;
-  }
+  polyfillTextDecoder();
 
   const encoding = findEncoding(response);
   const buffer = await response.arrayBuffer();
