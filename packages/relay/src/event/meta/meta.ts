@@ -1,10 +1,11 @@
-import { Environment } from "../environment/environment";
+import { Environment } from "../../environment/environment";
+import { RelayOptions } from "../../relay";
 
 interface Config {
   trackingId: string;
 }
 
-interface Meta {
+export interface Meta {
   type: string;
   config: Config;
   ts: number;
@@ -13,6 +14,11 @@ interface Meta {
   userAgent: string | null;
   referrerUrl: string | null;
   url: string | null;
+}
+
+function getConfig(options: RelayOptions): Config {
+  const { trackingId } = options;
+  return { trackingId };
 }
 
 /**
@@ -30,10 +36,11 @@ function getSource(): string {
 
 export function createMeta(
   type: string,
-  config: Config,
+  options: RelayOptions,
   environment: Environment
 ): Readonly<Meta> {
   const { getReferrerUrl, getUrl, getUserAgent } = environment;
+  const config = getConfig(options);
 
   return {
     type,

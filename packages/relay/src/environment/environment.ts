@@ -3,6 +3,7 @@ import { buildNodeEnvironment } from "./node/node";
 
 export interface Environment {
   runtime: "browser" | "node";
+  fetch: (url: string, init?: RequestInit) => Promise<Response>;
   getReferrerUrl: () => string | null;
   getUrl: () => string | null;
   getUserAgent: () => string | null;

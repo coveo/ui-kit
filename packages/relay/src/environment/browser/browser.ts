@@ -9,6 +9,7 @@ function getReferrerUrl() {
 export function buildBrowserEnvironment(): Environment {
   return {
     runtime: "browser",
+    fetch: (url: string, init?: RequestInit) => fetch(url, init),
     getReferrerUrl: () => getReferrerUrl(),
     getUrl: () => window.location.href,
     getUserAgent: () => navigator.userAgent,

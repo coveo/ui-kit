@@ -1,19 +1,17 @@
-import { Environment } from "../environment/environment";
+import { createMockEnvironment } from "../../__mocks__/environment";
+import { createMockOptions } from "../../__mocks__/relay";
 import { createMeta } from "./meta";
 
 describe("createMeta", () => {
-  const mockEnv: Environment = {
+  const mockEnv = createMockEnvironment({
     runtime: "browser",
+    fetch: jest.fn(),
     getReferrerUrl: () => "https://www.perdu.com",
     getUrl: () => "https://www.perdu.com/whoops",
     getUserAgent: () => "I am userAgent",
-  };
-
-  const defaultConfig = {
-    trackingId: "Barca",
-  };
-
-  const defaultMeta = createMeta("itemView", defaultConfig, mockEnv);
+  });
+  const defaultOptions = createMockOptions();
+  const defaultMeta = createMeta("itemView", defaultOptions, mockEnv);
 
   it("returns meta with the clientId field", () => {
     expect(defaultMeta.clientId).toBe("2136b353-74be-42d7-904f-ea33a8f4a43c");
@@ -30,7 +28,7 @@ describe("createMeta", () => {
   it("returns meta with the ts field, being the current timestamp", () => {
     jest.useFakeTimers().setSystemTime(new Date("2023-08-15T00:00:00.000Z"));
 
-    const specfiedtimeMeta = createMeta("itemView", defaultConfig, mockEnv);
+    const specfiedtimeMeta = createMeta("itemView", defaultOptions, mockEnv);
     expect(specfiedtimeMeta.ts).toBe(1692057600000);
   });
 
@@ -47,6 +45,6 @@ describe("createMeta", () => {
   });
 
   it("returns meta with the config set as parameter", () => {
-    expect(defaultMeta.config).toEqual({ trackingId: "Barca" });
+    expect(defaultMeta.config).toEqual({ trackingId: "website" });
   });
 });
