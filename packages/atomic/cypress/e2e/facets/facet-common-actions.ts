@@ -41,13 +41,13 @@ export function excludeIdleCheckboxValueAt(
   FacetWithCheckboxSelector: FacetWithCheckboxSelector,
   index: number
 ) {
-  FacetWithCheckboxSelector.idleCheckboxValueLabel()
+  FacetWithCheckboxSelector.excludeButton()
     .eq(index)
-    .then((idleCheckboxValueLabel) => {
-      const hasAriaLabel = !!idleCheckboxValueLabel.attr('aria-label');
+    .then((excludeButton) => {
+      const hasAriaLabel = !!excludeButton.attr('aria-label');
       const text = hasAriaLabel
-        ? idleCheckboxValueLabel.attr('aria-label')!
-        : idleCheckboxValueLabel.text();
+        ? excludeButton.attr('aria-label')!
+        : excludeButton.text();
       FacetWithCheckboxSelector.idleCheckboxValueLabel()
         .filter(
           hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`
@@ -58,14 +58,13 @@ export function excludeIdleCheckboxValueAt(
           1,
           'There should not be any other value similar to this one.'
         );
-      cy.wrap(idleCheckboxValueLabel).click().wait(2000);
+      cy.wrap(excludeButton).click().wait(2000);
       FacetWithCheckboxSelector.checkboxValueWithText(text).should(
         'have.attr',
-        'aria-checked',
-        'true'
+        'aria-pressed',
+        'mixed'
       );
     });
-  throw 'TODO:';
 }
 
 export function selectIdleLinkValueAt(

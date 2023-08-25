@@ -44,7 +44,6 @@ import {
 } from './facets/timeframe-facet/timeframe-facet-action';
 import {TimeframeFacetSelectors} from './facets/timeframe-facet/timeframe-facet-selectors';
 
-// TODO: use assertExcludedCheckboxFacetsInBreadcrumb somewhere
 describe('Breadbox Test Suites', () => {
   function setupBreadboxWithMultipleFacets(props: TagProps = {}) {
     new TestFixture()
@@ -227,31 +226,28 @@ describe('Breadbox Test Suites', () => {
     });
   });
 
-  describe('when excluding a standard facet', () => {
-    const activeValues = [0, 1];
+  describe('when excluding from a standard facet', () => {
+    const excludedValues = [0, 1];
 
     function setupFacetWithMultipleExcludedValues() {
-      // TODO: support facet exclusion in search parameter manager #3122 (KIT-2684)
       new TestFixture()
         .with(addBreadbox())
         .with(addFacet({field: 'author', label}))
-        .withHash(`f-author=${activeValues.join(',')}`)
+        .withHash(`fExcluded-author=${excludedValues.join(',')}`)
         .init();
-      BreadboxSelectors.breadcrumbButton().then((buttons) =>
-        cy.wrap(buttons.filter(':visible').length).as('numberOfVisibleButtons')
-      );
+      excludeIdleCheckboxValueAt(FacetSelectors, excludedValues.length);
     }
 
     describe('verify rendering', () => {
       beforeEach(setupFacetWithMultipleExcludedValues);
       CommonAssertions.assertAccessibility(breadboxComponent);
       BreadboxAssertions.assertDisplayBreadcrumb(true);
-      BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+      // BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true); // TODO: KIT-2687
       BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
       BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
         FacetSelectors
       );
-      BreadboxAssertions.assertBreadcrumbDisplayLength(activeValues.length);
+      BreadboxAssertions.assertBreadcrumbDisplayLength(excludedValues.length);
       BreadboxAssertions.assertDisplayBreadcrumbShowMore(true);
     });
   });

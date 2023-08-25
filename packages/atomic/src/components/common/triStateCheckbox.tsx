@@ -40,6 +40,7 @@ export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
     class: classNames.join(' '),
     part: parts.join(' '),
     'aria-pressed': isSelected ? 'true' : isExcluded ? 'mixed' : 'false',
+    'aria-checked': isSelected.toString(),
     'aria-label': props.ariaLabel ?? props.text,
     value: props.text,
     ref: props.ref,
