@@ -1,3 +1,4 @@
+import {TextDecoder} from '@polkadot/x-textdecoder';
 import {Logger} from 'pino';
 import {URLPath} from '../../../utils/url-utils';
 import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
@@ -7,7 +8,6 @@ import {findEncoding} from '../encoding-finder';
 import {SearchAPIErrorWithStatusCode} from '../search-api-error-response';
 import {baseSearchRequest} from '../search-api-params';
 import {HtmlRequest} from './html-request';
-import {polyfillTextDecoder} from './text-decoder-polyfill';
 
 export interface HtmlApiClient {
   html: (req: HtmlRequest) => Promise<
@@ -67,9 +67,6 @@ export const getHtml = async (
   if (response instanceof Error) {
     throw response;
   }
-
-  // Global TextDecoder interface must be manually populated when running in certain environments (namely Jest)
-  polyfillTextDecoder();
 
   const encoding = findEncoding(response);
   const buffer = await response.arrayBuffer();
