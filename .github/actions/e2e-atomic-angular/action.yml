@@ -17,8 +17,7 @@ runs:
       with:
         browser: chrome
         command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        working-directory: ./packages/samples/angular
-        start: npm run dev
+        start: npx nx run atomic-angular-samples:dev
         wait-on: 'http://localhost:4200'
         install: false
         record: false

@@ -13,8 +13,7 @@ runs:
       with:
         browser: chrome
         command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        working-directory: ./packages/samples/stencil
-        start: npm run dev
+        start: npx nx run atomic-stencil-samples:dev
         wait-on: 'http://localhost:3666'
         install: false
         record: false

@@ -13,8 +13,7 @@ runs:
       with:
         browser: chrome
         command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        working-directory: ./packages/samples/iife
-        start: npm run prod
+        start: npx nx run iife-samples:prod
         wait-on: 'http://localhost:3000'
         install: false
         record: false

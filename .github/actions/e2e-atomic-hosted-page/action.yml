@@ -13,8 +13,7 @@ runs:
       with:
         browser: chrome
         command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        working-directory: ./packages/atomic-hosted-page
-        start: npm run dev
+        start: npx nx run atomic-hosted-page:dev
         wait-on: 'http://localhost:3335'
         install: false
         record: false

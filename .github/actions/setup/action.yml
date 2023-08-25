@@ -10,10 +10,15 @@ runs:
       run: npm i -g npm@9
       shell: bash
     - uses: actions/cache@v3
+      id: npm-cache
       with:
-        path: ~/.npm
+        path: |
+          node_modules/
+          utils/atomic-storybook/node_modules/
+          !node_modules/.cache/nx/
         key: npm-${{ hashFiles('**/package-lock.json') }}
     - uses: actions/cache@v3
+      id: nx-cache
       with:
         path: node_modules/.cache/nx
         key: nx-${{ github.sha }}
@@ -21,7 +26,9 @@ runs:
       with:
         path: ~/.cache/Cypress
         key: cy-${{ hashFiles('**/package-lock.json') }}
-    - run: npm ci
+    - if: steps.npm-cache.outputs.cache-hit != 'true'
+      run: npm ci
       shell: bash
-    - run: npm run build
+    - if: steps.nx-cache.outputs.cache-hit != 'true'
+      run: npm run build
       shell: bash

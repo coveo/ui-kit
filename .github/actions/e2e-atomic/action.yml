@@ -16,9 +16,8 @@ runs:
       with:
         browser: chrome
         command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        working-directory: ./packages/atomic
         spec: ${{ inputs.spec }}
-        start: npm run prod
+        start: npx nx run atomic:prod
         wait-on: 'http://localhost:3333'
         install: false
         record: false
