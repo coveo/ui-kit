@@ -7,9 +7,9 @@ import {
   mapObject,
 } from '@coveo/headless/ssr';
 import {useContext, useCallback, useMemo, Context} from 'react';
-// Workaround to prevent Nextjs erroring about importing CSR only hooks
+// Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
-import {useSyncMemoizedStore} from './client-wrapper';
+import {useSyncMemoizedStore} from './client-utils';
 import {
   ContextCSRState,
   ContextState,
