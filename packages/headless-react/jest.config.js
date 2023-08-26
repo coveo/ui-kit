@@ -7,8 +7,7 @@ module.exports = {
   collectCoverageFrom: ['./src/**.ts', './src/**.tsx'],
   coverageThreshold: {
     global: {
-      // TODO: KIT-2679 enable coverage threshold after adding more tests
-      // lines: 90,
+      lines: 90,
     },
   },
 };
