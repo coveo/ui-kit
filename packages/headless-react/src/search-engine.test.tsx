@@ -1,12 +1,8 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
-import {
-  InferCSRState,
-  defineResultList,
-  defineSearchBox,
-} from '@coveo/headless/ssr';
+import {defineResultList, defineSearchBox} from '@coveo/headless/ssr';
 import '@testing-library/jest-dom';
-import {render, screen} from '@testing-library/react';
-import {useEffect, useState} from 'react';
+import {render, renderHook, screen} from '@testing-library/react';
+import {PropsWithChildren} from 'react';
 import {MissingEngineProviderError, defineSearchEngine} from './search-engine';
 
 describe('Headless react SSR utils', () => {
@@ -76,9 +72,8 @@ describe('Headless react SSR utils', () => {
       SSRStateProvider,
       CSRProvider,
       controllers,
+      useEngine,
     } = engineDefinition;
-
-    type CSRSearchState = InferCSRState<typeof engineDefinition>;
 
     function TestResultList() {
       const {state} = controllers.useResultList();
@@ -99,21 +94,31 @@ describe('Headless react SSR utils', () => {
       expect(results).toHaveLength(numResults);
     }
 
-    test('should throw error when controller hook is used without context', () => {
+    function checkRenderError(
+      renderFunction: CallableFunction,
+      expectedErrMsg: string
+    ) {
       let err = undefined;
       // Prevent expected error from being thrown in console when running tests
       const consoleErrorStub = jest
         .spyOn(console, 'error')
         .mockImplementation(() => {});
       try {
-        render(<TestResultList />);
+        renderFunction();
       } catch (e) {
         err = e as Error;
       } finally {
         consoleErrorStub.mockReset();
       }
 
-      expect(err?.message).toBe(MissingEngineProviderError.message);
+      expect(err?.message).toBe(expectedErrMsg);
+    }
+
+    test('should throw error when controller hook is used without context', () => {
+      checkRenderError(
+        () => render(<TestResultList />),
+        MissingEngineProviderError.message
+      );
     });
 
     test('should render with SSRProvider', async () => {
@@ -127,34 +132,59 @@ describe('Headless react SSR utils', () => {
       await checkRenderedResultList();
     });
 
-    test('should render with CSRProvider', async () => {
+    test('should hydrate results with CSRProvider', async () => {
       const ssrState = await fetchInitialState();
+      const {engine, controllers} = await hydrateInitialState(ssrState);
 
-      function TestResultsPage() {
-        const [csrResult, setCSRResult] = useState<CSRSearchState | undefined>(
-          undefined
-        );
-        useEffect(() => {
-          hydrateInitialState(ssrState).then(({engine, controllers}) => {
-            setCSRResult({engine, controllers});
-          });
-        });
-
-        return (
-          csrResult && (
-            <CSRProvider
-              engine={csrResult.engine}
-              controllers={csrResult.controllers}
-            >
-              <TestResultList />
-            </CSRProvider>
-          )
-        );
-      }
-
-      render(<TestResultsPage />);
+      render(
+        <CSRProvider engine={engine} controllers={controllers}>
+          <TestResultList />
+        </CSRProvider>
+      );
 
       await checkRenderedResultList();
+    });
+
+    describe('useEngine hook', () => {
+      test('should throw error with no context', async () => {
+        checkRenderError(
+          () => renderHook(() => useEngine()),
+          MissingEngineProviderError.message
+        );
+      });
+
+      test('should not return engine with SSRProvider', async () => {
+        const ssrState = await fetchInitialState();
+        function ssrStateProviderWrapper({children}: PropsWithChildren) {
+          return (
+            <SSRStateProvider controllers={ssrState.controllers}>
+              {children}
+            </SSRStateProvider>
+          );
+        }
+
+        const {result} = renderHook(() => useEngine(), {
+          wrapper: ssrStateProviderWrapper,
+        });
+        expect(result.current).toBeUndefined();
+      });
+
+      test('should return engine with CSRProvider', async () => {
+        const ssrState = await fetchInitialState();
+        const {engine, controllers} = await hydrateInitialState(ssrState);
+        function csrStateProviderWrapper({children}: PropsWithChildren) {
+          return (
+            <CSRProvider controllers={controllers} engine={engine}>
+              {children}
+            </CSRProvider>
+          );
+        }
+
+        const {result} = renderHook(() => useEngine(), {
+          wrapper: csrStateProviderWrapper,
+        });
+        expect(result.current).toStrictEqual(engine);
+      });
     });
   });
 });
