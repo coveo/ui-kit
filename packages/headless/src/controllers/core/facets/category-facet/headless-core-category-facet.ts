@@ -19,8 +19,7 @@ import {categoryFacetRequestSelector} from '../../../../features/facets/category
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
-  getActiveValueAncestry,
-  getActiveValueFromValueTree,
+  findActiveValueAncestry,
   partitionIntoParentsAndValues,
 } from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
@@ -393,11 +392,10 @@ export function buildCoreCategoryFacet(
       const isHierarchical =
         valuesAsTrees.some((value) => value.children.length > 0) ?? false;
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
-      const activeValue = getActiveValueFromValueTree(valuesAsTrees);
-      const ancestryMap = new Map<CategoryFacetValue, CategoryFacetValue>();
-      const selectedValueAncestry = activeValue
-        ? getActiveValueAncestry(activeValue, ancestryMap)
-        : [];
+      const selectedValueAncestry = findActiveValueAncestry(valuesAsTrees);
+      const activeValue = selectedValueAncestry.length
+        ? selectedValueAncestry[selectedValueAncestry.length - 1]
+        : undefined;
       const hasActiveValues = !!activeValue;
       const canShowMoreValues =
         activeValue?.moreValuesAvailable ??

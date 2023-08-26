@@ -8,14 +8,6 @@ type CategoryFacetValuePartition<T extends GenericCategoryFacetValue> = {
   values: T[];
 };
 
-export function findActiveValueAncestry<T extends GenericCategoryFacetValue>(
-  valuesAsTree: T[]
-): T[] {
-  const ancestryMap = new Map<T, T>();
-  const activeValue = getActiveValueFromValueTree(valuesAsTree, ancestryMap);
-  return activeValue ? getActiveValueAncestry(activeValue, ancestryMap) : [];
-}
-
 export function partitionIntoParentsAndValues<
   T extends GenericCategoryFacetValue
 >(nestedValues: T[] | undefined): CategoryFacetValuePartition<T> {
@@ -41,9 +33,15 @@ export function partitionIntoParentsAndValues<
   return {parents, values};
 }
 
-export function getActiveValueFromValueTree<
-  TValue extends GenericCategoryFacetValue
->(
+export function findActiveValueAncestry<T extends GenericCategoryFacetValue>(
+  valuesAsTree: T[]
+): T[] {
+  const ancestryMap = new Map<T, T>();
+  const activeValue = getActiveValueFromValueTree(valuesAsTree, ancestryMap);
+  return activeValue ? getActiveValueAncestry(activeValue, ancestryMap) : [];
+}
+
+function getActiveValueFromValueTree<TValue extends GenericCategoryFacetValue>(
   valuesAsTrees: TValue[],
   ancestryMap?: Map<TValue, TValue>
 ): TValue | undefined {
@@ -63,9 +61,7 @@ export function getActiveValueFromValueTree<
   return undefined;
 }
 
-export function getActiveValueAncestry<
-  TValue extends GenericCategoryFacetValue
->(
+function getActiveValueAncestry<TValue extends GenericCategoryFacetValue>(
   activeValue: TValue | undefined,
   valueToParentMap: Map<TValue, TValue>
 ): TValue[] {
