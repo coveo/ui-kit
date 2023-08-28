@@ -1,7 +1,6 @@
-import '@testing-library/jest-dom';
-import {act, render, screen} from '@testing-library/react';
+import {renderHook} from '@testing-library/react';
 import {useEffect} from 'react';
-import {useSyncMemoizedStore, Subscriber} from './client-utils';
+import {useSyncMemoizedStore} from './client-utils';
 
 describe('useSyncMemoizedStore', () => {
   test('should return the initial snapshot', () => {
@@ -10,14 +9,11 @@ describe('useSyncMemoizedStore', () => {
     const subscribe = jest.fn(() => unsubscribe);
     const getSnapshot = jest.fn(() => snapshot);
 
-    const TestComponent = () => {
-      const state = useSyncMemoizedStore(subscribe, getSnapshot);
-      return <div>{JSON.stringify(state)}</div>;
-    };
+    const {result} = renderHook(() =>
+      useSyncMemoizedStore(subscribe, getSnapshot)
+    );
 
-    render(<TestComponent />);
-
-    expect(screen.getByText(JSON.stringify(snapshot))).toBeInTheDocument();
+    expect(result.current).toEqual(snapshot);
   });
 
   test('should update the state when the store changes', () => {
@@ -29,20 +25,13 @@ describe('useSyncMemoizedStore', () => {
       .mockReturnValueOnce(snapshot1)
       .mockReturnValueOnce(snapshot2);
 
-    interface TestProps {
-      id: string;
-    }
+    const {result, rerender} = renderHook(() =>
+      useSyncMemoizedStore(subscribe, getSnapshot)
+    );
 
-    function TestComponent({id}: TestProps) {
-      const state = useSyncMemoizedStore(subscribe, getSnapshot);
-      return <div key={id}>{JSON.stringify(state)}</div>;
-    }
-
-    const {rerender} = render(<TestComponent id="1" />);
-    expect(screen.getByText(JSON.stringify(snapshot1))).toBeInTheDocument();
-
-    rerender(<TestComponent id="2" />);
-    expect(screen.getByText(JSON.stringify(snapshot2))).toBeInTheDocument();
+    expect(result.current).toEqual(snapshot1);
+    rerender();
+    expect(result.current).toEqual(snapshot2);
   });
 
   test('should unsubscribe and re-subscribe to new function when subscribe function is changed', () => {
@@ -53,23 +42,16 @@ describe('useSyncMemoizedStore', () => {
     const subscribe2 = jest.fn(() => unsubscribe2);
     const getSnapshot = jest.fn(() => snapshot);
 
-    interface TestProps {
-      subscribe: Subscriber;
-    }
+    const {rerender} = renderHook(
+      ({subscribe}) => useSyncMemoizedStore(subscribe, getSnapshot),
+      {initialProps: {subscribe: subscribe1}}
+    );
 
-    function TestComponent({subscribe}: TestProps) {
-      const state = useSyncMemoizedStore(subscribe, getSnapshot);
-      return <div>{JSON.stringify(state)}</div>;
-    }
-
-    const {rerender} = render(<TestComponent subscribe={subscribe1} />);
-
-    expect(screen.getByText(JSON.stringify(snapshot))).toBeInTheDocument();
     expect(subscribe1).toHaveBeenCalledTimes(1);
     expect(unsubscribe1).not.toHaveBeenCalled();
     expect(subscribe2).not.toHaveBeenCalled();
 
-    rerender(<TestComponent subscribe={subscribe2} />);
+    rerender({subscribe: subscribe2});
     expect(unsubscribe1).toHaveBeenCalledTimes(1);
     expect(subscribe2).toHaveBeenCalledTimes(1);
     expect(unsubscribe2).not.toHaveBeenCalled();
@@ -82,22 +64,14 @@ describe('useSyncMemoizedStore', () => {
     const getSnapshot1 = jest.fn(() => snapshot1);
     const getSnapshot2 = jest.fn(() => snapshot2);
 
-    interface TestProps {
-      getSnapshot: () => {};
-    }
+    const {result, rerender} = renderHook(
+      ({getSnapshot}) => useSyncMemoizedStore(subscribe, getSnapshot),
+      {initialProps: {getSnapshot: getSnapshot1}}
+    );
 
-    function TestComponent({getSnapshot}: TestProps) {
-      const state = useSyncMemoizedStore(subscribe, getSnapshot);
-      return <div>{JSON.stringify(state)}</div>;
-    }
-
-    const {rerender} = render(<TestComponent getSnapshot={getSnapshot1} />);
-
-    expect(screen.getByText(JSON.stringify(snapshot1))).toBeInTheDocument();
-
-    rerender(<TestComponent getSnapshot={getSnapshot2} />);
-
-    expect(screen.getByText(JSON.stringify(snapshot2))).toBeInTheDocument();
+    expect(result.current).toEqual(snapshot1);
+    rerender({getSnapshot: getSnapshot2});
+    expect(result.current).toEqual(snapshot2);
   });
 
   it('should re-render only when the subscribe listener is called', () => {
@@ -107,20 +81,14 @@ describe('useSyncMemoizedStore', () => {
     const getSnapshot = jest.fn(() => snapshot);
     const effect = jest.fn();
 
-    const TestComponent = () => {
+    const {result} = renderHook(() => {
       const state = useSyncMemoizedStore(subscribe, getSnapshot);
       useEffect(effect, [state]);
-      return <div>{JSON.stringify(state)}</div>;
-    };
-
-    render(<TestComponent />);
-
-    expect(screen.getByText(JSON.stringify(snapshot))).toBeInTheDocument();
-
-    act(() => {
-      subscribe();
+      return state;
     });
 
+    expect(result.current).toEqual(snapshot);
+    subscribe();
     expect(effect).toHaveBeenCalledTimes(1);
   });
 });
