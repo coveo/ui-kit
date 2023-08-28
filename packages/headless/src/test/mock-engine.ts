@@ -150,12 +150,6 @@ export interface MockCommerceEngine
   extends CommerceEngine<ProductListingV2AppState>,
     MockEngine {}
 
-/**
- * For internal use only.
- *
- * Returns a non-functional `CommerceEngine`.
- * To be used only for unit testing controllers, not for functional tests.
- */
 export function buildMockCommerceEngine(
   config: Partial<CommerceEngine<ProductListingV2AppState>> = {}
 ): MockCommerceEngine {
