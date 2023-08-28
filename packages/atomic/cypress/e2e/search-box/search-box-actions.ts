@@ -61,3 +61,12 @@ export function typeSearchInput(query: string, verifyInput = '') {
   SearchBoxSelectors.inputBox().type(`${query}{enter}`, {force: true});
   SearchBoxAssertions.assertHasText(verifyInput || query);
 }
+
+export function typeSearchTextArea(query: string, verifyInput = '') {
+  SearchBoxSelectors.textArea().click();
+  SearchBoxSelectors.textArea().type(`${query}{enter}`, {force: true});
+  SearchBoxAssertions.assertHasText(
+    verifyInput || query,
+    SearchBoxSelectors.textArea
+  );
+}

@@ -129,7 +129,8 @@ export function getCoreActiveSearchParameters(
     ...getQ(state),
     ...getTab(state),
     ...getSortCriteria(state),
-    ...getFacets(state),
+    ...getFacets(state, getSelectedValues, 'f'),
+    ...getFacets(state, getExcludedValues, 'fExcluded'),
     ...getCategoryFacets(state),
     ...getNumericFacets(state),
     ...getDateFacets(state),
@@ -185,24 +186,32 @@ function getSortCriteria(state: Partial<SearchParametersState>) {
   return shouldInclude ? {sortCriteria} : {};
 }
 
-function getFacets(state: Partial<SearchParametersState>) {
+function getFacets(
+  state: Partial<SearchParametersState>,
+  valuesSelector: (currentValues: FacetValueRequest[]) => string[],
+  out: keyof SearchParameters
+) {
   if (state.facetSet === undefined) {
     return {};
   }
 
-  const f = Object.entries(state.facetSet)
+  const facets = Object.entries(state.facetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, {request}]) => {
-      const selectedValues = getSelectedValues(request.currentValues);
-      return selectedValues.length ? {[facetId]: selectedValues} : {};
+      const facetValues = valuesSelector(request.currentValues);
+      return facetValues.length ? {[facetId]: facetValues} : {};
     })
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
-  return Object.keys(f).length ? {f} : {};
+  return Object.keys(facets).length ? {[out]: facets} : {};
 }
 
 function getSelectedValues(values: FacetValueRequest[]) {
   return values.filter((fv) => fv.state === 'selected').map((fv) => fv.value);
+}
+
+function getExcludedValues(values: FacetValueRequest[]) {
+  return values.filter((fv) => fv.state === 'excluded').map((fv) => fv.value);
 }
 
 function getCategoryFacets(state: Partial<SearchParametersState>) {
