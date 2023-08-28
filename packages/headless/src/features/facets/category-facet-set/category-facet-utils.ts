@@ -1,3 +1,4 @@
+import {CategoryFacetValueCommon} from './interfaces/commons';
 import {CategoryFacetValueRequest} from './interfaces/request';
 import {CategoryFacetValue} from './interfaces/response';
 
@@ -33,43 +34,52 @@ export function partitionIntoParentsAndValues<
   return {parents, values};
 }
 
-export function findActiveValueAncestry<T extends GenericCategoryFacetValue>(
-  valuesAsTree: T[]
-): T[] {
-  const ancestryMap = new Map<T, T>();
+export function findActiveValueAncestry(
+  valuesAsTress: CategoryFacetValueRequest[]
+): CategoryFacetValueRequest[];
+export function findActiveValueAncestry(
+  valuesAsTress: CategoryFacetValue[]
+): CategoryFacetValue[];
+export function findActiveValueAncestry(
+  valuesAsTree: CategoryFacetValueCommon[]
+): CategoryFacetValueCommon[] {
+  const ancestryMap = new Map<
+    CategoryFacetValueCommon,
+    CategoryFacetValueCommon
+  >();
   const activeValue = getActiveValueFromValueTree(valuesAsTree, ancestryMap);
   return activeValue ? getActiveValueAncestry(activeValue, ancestryMap) : [];
 }
 
-function getActiveValueFromValueTree<TValue extends GenericCategoryFacetValue>(
-  valuesAsTrees: TValue[],
-  ancestryMap?: Map<TValue, TValue>
-): TValue | undefined {
-  const valueToVisit = [...valuesAsTrees];
+function getActiveValueFromValueTree(
+  valuesAsTrees: CategoryFacetValueCommon[],
+  ancestryMap?: Map<CategoryFacetValueCommon, CategoryFacetValueCommon>
+): CategoryFacetValueCommon | undefined {
+  const valueToVisit: CategoryFacetValueCommon[] = [...valuesAsTrees];
   while (valueToVisit.length > 0) {
-    const currentValue = valueToVisit.shift()!;
+    const currentValue: CategoryFacetValueCommon = valueToVisit.shift()!;
     if (currentValue.state === 'selected') {
       return currentValue;
     }
     if (ancestryMap) {
       for (const childValue of currentValue.children) {
-        ancestryMap.set(childValue as TValue, currentValue);
+        ancestryMap.set(childValue, currentValue);
       }
     }
-    valueToVisit.unshift(...(currentValue.children as TValue[]));
+    valueToVisit.unshift(...currentValue.children);
   }
   return undefined;
 }
 
-function getActiveValueAncestry<TValue extends GenericCategoryFacetValue>(
-  activeValue: TValue | undefined,
-  valueToParentMap: Map<TValue, TValue>
-): TValue[] {
-  const activeValueAncestry: TValue[] = [];
+function getActiveValueAncestry(
+  activeValue: CategoryFacetValueCommon | undefined,
+  valueToParentMap: Map<CategoryFacetValueCommon, CategoryFacetValueCommon>
+): CategoryFacetValueCommon[] {
+  const activeValueAncestry: CategoryFacetValueCommon[] = [];
   if (!activeValue) {
     return [];
   }
-  let lastParent: TValue | undefined = activeValue;
+  let lastParent: CategoryFacetValueCommon | undefined = activeValue;
   do {
     activeValueAncestry.unshift(lastParent);
     lastParent = valueToParentMap.get(lastParent);
