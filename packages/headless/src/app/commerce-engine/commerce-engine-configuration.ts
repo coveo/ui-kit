@@ -6,7 +6,7 @@ import {
 } from '../engine-configuration';
 
 /**
- * The commerce engine configuration.
+ * The commerce engine configuration options.
  */
 export interface CommerceEngineConfiguration extends EngineConfiguration {}
 
@@ -15,11 +15,6 @@ export const commerceEngineConfigurationSchema =
     ...engineConfigurationDefinitions,
   });
 
-/**
- * Creates a sample commerce engine configuration.
- *
- * @returns The sample commerce engine configuration.
- */
 export function getSampleCommerceEngineConfiguration(): CommerceEngineConfiguration {
   return {
     ...getSampleEngineConfiguration(),
