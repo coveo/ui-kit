@@ -27,7 +27,7 @@ export interface Context {
   };
   view: {
     url: string;
-    labels?: Record<string, string>;
+    labels?: Map<string, string>;
   };
   cart?: {
     groupId?: string;
