@@ -1,16 +1,14 @@
 import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 
 polyfillCryptoNode();
+export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 
 export type {
   CommerceEngine,
   CommerceEngineConfiguration,
   CommerceEngineOptions,
 } from './app/commerce-engine/commerce-engine';
-export {
-  buildCommerceEngine,
-  getSampleCommerceEngineConfiguration,
-} from './app/commerce-engine/commerce-engine';
+export {buildCommerceEngine} from './app/commerce-engine/commerce-engine';
 
 export type {CoreEngine, ExternalEngineOptions} from './app/engine';
 export type {
@@ -18,8 +16,7 @@ export type {
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration';
-export type {LoggerOptions} from './app/logger';
-export type {LogLevel} from './app/logger';
+export type {LogLevel, LoggerOptions} from './app/logger';
 
 export type {ProductRecommendation} from './api/search/search/product-recommendation';
 
