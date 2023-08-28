@@ -44,7 +44,7 @@ jest.mock(
 );
 
 const {
-  findActiveValueAncestry: actualfindActiveValueAncestry,
+  findActiveValueAncestry: actualFindActiveValueAncestry,
   partitionIntoParentsAndValues: actualPartitionIntoParentsAndValues,
 } = jest.requireActual(
   '../../../../features/facets/category-facet-set/category-facet-utils'
@@ -78,7 +78,7 @@ describe('category facet', () => {
       field: 'geography',
     };
     findActiveValueAncestryMock.mockImplementation(
-      actualfindActiveValueAncestry
+      actualFindActiveValueAncestry
     );
     partitionIntoParentsAndValuesMock.mockImplementation(
       actualPartitionIntoParentsAndValues

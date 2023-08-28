@@ -29,7 +29,7 @@ describe('#findActiveValueAncestry', () => {
       ],
     ];
 
-    it('should return an array containing only the selected Value if the selected Value is at the root', () => {
+    it('should return an array containing only the selected Value if the selected value is at the root', () => {
       expect(findActiveValueAncestry([selectedValue])).toEqual([selectedValue]);
     });
 
