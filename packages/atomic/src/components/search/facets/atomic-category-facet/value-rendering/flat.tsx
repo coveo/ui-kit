@@ -53,13 +53,13 @@ export const FlatCategoryFacet: FunctionalComponent<FlatCategoryFacetProps> = ({
           facet.toggleSelect(facetValue);
         }}
         searchQuery={facetSearchQuery}
-        buttonRef={(element) => {
-          isShowLessFocusTarget &&
-            focusTargets.showLessFocus.setTarget(element);
-          isShowMoreFocusTarget &&
-            focusTargets.showMoreFocus.setTarget(element);
-        }}
-        additionalPart={leafOrNodePart}
+        buttonRef={getShowLessMoreButtonRef(
+          isShowLessFocusTarget,
+          focusTargets.showLessFocus,
+          isShowMoreFocusTarget,
+          focusTargets.showMoreFocus
+        )}
+        part={leafOrNodePart}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
