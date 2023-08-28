@@ -1,3 +1,19 @@
+# 2.28.0 (2023-08-24)
+
+### Features
+
+- **headless:** support facet exclusion in search parameter manager ([#3122](https://github.com/coveo/ui-kit/issues/3122)) ([338e740](https://github.com/coveo/ui-kit/commits/338e740bfa108cead0785f34490192ed3bd50fd6))
+
+# 2.27.0 (2023-08-21)
+
+### Bug Fixes
+
+- **headless:** adapted the usage of the AbortController to make GenQI Quantic component work with locker service ([#3115](https://github.com/coveo/ui-kit/issues/3115)) ([b99864a](https://github.com/coveo/ui-kit/commits/b99864ad998e13d88bdd6ef7adf59be3abb783aa))
+
+### Features
+
+- **atomic, headless:** add numberOfValues property in automatic facet generator ([#3101](https://github.com/coveo/ui-kit/issues/3101)) ([8fcd1ed](https://github.com/coveo/ui-kit/commits/8fcd1edba96c2226ddc9fca6c3774e9842f3bca2))
+
 ## 2.26.1 (2023-08-16)
 
 ### Bug Fixes

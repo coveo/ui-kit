@@ -1,3 +1,15 @@
+# 2.14.0 (2023-08-24)
+
+### Features
+
+- **atomic:** added textarea search box ([#3118](https://github.com/coveo/ui-kit/issues/3118)) ([a436d52](https://github.com/coveo/ui-kit/commits/a436d52174d03fd27d1716607492d783b39debb9))
+
+# 2.13.0 (2023-08-21)
+
+### Features
+
+- **atomic, headless:** add numberOfValues property in automatic facet generator ([#3101](https://github.com/coveo/ui-kit/issues/3101)) ([8fcd1ed](https://github.com/coveo/ui-kit/commits/8fcd1edba96c2226ddc9fca6c3774e9842f3bca2))
+
 # 2.12.0 (2023-08-09)
 
 ### Features

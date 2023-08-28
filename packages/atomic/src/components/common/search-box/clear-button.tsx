@@ -5,7 +5,7 @@ import {AnyBindings} from '../interface/bindings';
 
 interface Props extends Partial<ButtonProps> {
   bindings: AnyBindings;
-  inputRef: HTMLInputElement | null;
+  inputRef: HTMLInputElement | HTMLTextAreaElement | null;
 }
 
 export const ClearButton: FunctionalComponent<Props> = ({
@@ -17,7 +17,7 @@ export const ClearButton: FunctionalComponent<Props> = ({
   <Button
     style="text-transparent"
     part="clear-button"
-    class="w-8 h-8 mr-1.5 text-neutral-dark"
+    class="w-8 h-8 mr-1.5 text-neutral-dark shrink-0"
     onClick={() => {
       onClick?.();
       inputRef?.focus();
