@@ -15,10 +15,7 @@ import {
   InsightSearchStatusState,
   loadInsightNumericFacetSetActions,
 } from '..';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -156,8 +153,7 @@ export class AtomicInsightNumericFacet
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
-  @FocusTarget()
-  private headerFocus!: FocusTargetController;
+  private headerFocus?: FocusTargetController;
 
   public initialize() {
     this.numericFacetCommon = new NumericFacetCommon({
@@ -187,6 +183,13 @@ export class AtomicInsightNumericFacet
       initializeFilter: () => this.initializeFilter(),
     });
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
+  }
+
+  private get focusTarget(): FocusTargetController {
+    if (!this.headerFocus) {
+      this.headerFocus = new FocusTargetController(this);
+    }
+    return this.headerFocus;
   }
 
   public disconnectedCallback() {
@@ -272,7 +275,7 @@ export class AtomicInsightNumericFacet
       hasError: this.searchStatusState.hasError,
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
-      headerFocus: this.headerFocus,
+      headerFocus: this.focusTarget,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
     });
   }
