@@ -68,6 +68,7 @@ const useCases: UseCase[] = [
 
 function resolveUseCase(useCase: UseCase): ResolvedUseCase {
   const {name, entryFile, config} = useCase;
+  process.env['currentUseCaseName'] = name;
   const apiModel = new ApiModel();
   const apiPackage = apiModel.loadPackage(entryFile);
   const entryPoint = apiPackage.entryPoints[0];
