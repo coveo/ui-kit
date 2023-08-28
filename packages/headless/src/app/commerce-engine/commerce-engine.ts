@@ -16,11 +16,9 @@ import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CommerceEngineConfiguration,
   commerceEngineConfigurationSchema,
-  getSampleCommerceEngineConfiguration,
 } from './commerce-engine-configuration';
 
 export type {CommerceEngineConfiguration};
-export {getSampleCommerceEngineConfiguration};
 
 const commerceEngineReducers = {productListing: productListingV2Reducer};
 type CommerceEngineReducers = typeof commerceEngineReducers;
@@ -28,12 +26,18 @@ type CommerceEngineReducers = typeof commerceEngineReducers;
 type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &
   Partial<ProductListingV2AppState>;
 
+/**
+ * The engine for powering commerce experiences.
+ */
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngine<
     State & CommerceEngineState,
     ProductListingV2ThunkExtraArguments
   > {}
 
+/**
+ * The commerce engine options.
+ */
 export interface CommerceEngineOptions
   extends ExternalEngineOptions<CommerceEngineState> {
   /**
@@ -42,6 +46,12 @@ export interface CommerceEngineOptions
   configuration: CommerceEngineConfiguration;
 }
 
+/**
+ * Creates a commerce engine instance.
+ *
+ * @param options - The commerce engine options.
+ * @returns A commerce engine instance.
+ */
 export function buildCommerceEngine(
   options: CommerceEngineOptions
 ): CommerceEngine {
