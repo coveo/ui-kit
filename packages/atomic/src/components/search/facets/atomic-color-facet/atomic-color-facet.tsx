@@ -339,7 +339,7 @@ export class AtomicColorFacet
         isCollapsed={this.isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-        headerRef={this.focusTargets.headerFocus.setTarget}
+        headerRef={(el) => this.focusTargets.headerFocus.setTarget(el)}
       ></FacetHeader>
     );
   }
