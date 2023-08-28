@@ -1,6 +1,4 @@
 import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
-import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
-import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import no from '@salesforce/label/c.quantic_No';
 import wasThisUseful from '@salesforce/label/c.quantic_WasThisUseful';
 import yes from '@salesforce/label/c.quantic_Yes';
@@ -19,9 +17,7 @@ export default class QuanticFeedback extends LightningElement {
     yes,
     no,
     wasThisUseful,
-    explainWhy,
-    thisAnswerWasHelpful,
-    thisAnswerWasNotHelpful
+    explainWhy
   };
 
   /**
