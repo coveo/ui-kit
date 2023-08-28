@@ -52,15 +52,6 @@ export interface ProductListingV2RequestParam {
   context: Context;
 }
 
-/**
- * Builds a base request for calling the Product Listing API.
- *
- * @param req - The Product Listing request parameters.
- * @param method - The HTTP method used to issue the request.
- * @param contentType - The request content type.
- * @param queryStringArguments - The arguments to pass in the query string.
- * @returns The built request information.
- */
 export const baseProductListingV2Request = (
   req: ProductListingV2RequestParam,
   method: HttpMethods,
