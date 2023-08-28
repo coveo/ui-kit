@@ -55,7 +55,7 @@ export const fetchProductListing = createAsyncThunk<
   void,
   AsyncThunkProductListingV2Options<StateNeededByFetchProductListingV2>
 >(
-  'productlisting/v2/fetch',
+  'commerce/product-listing/fetch',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;

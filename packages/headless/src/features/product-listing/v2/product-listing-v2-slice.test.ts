@@ -41,7 +41,10 @@ describe('product-listing-v2-slice', () => {
       statusCode: 500,
       type: 'type',
     };
-    const action = {type: 'productlisting/v2/fetch/rejected', payload: err};
+    const action = {
+      type: 'commerce/product-listing/fetch/rejected',
+      payload: err,
+    };
     const finalState = productListingV2Reducer(state, action);
     expect(finalState.error).toEqual(err);
     expect(finalState.isLoading).toBe(false);
