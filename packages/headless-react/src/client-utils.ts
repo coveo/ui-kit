@@ -1,23 +1,31 @@
 'use client';
 
-import {useEffect, useReducer, useRef} from 'react';
+import {useEffect, useReducer} from 'react';
+
+/**
+ * Subscriber is a function that takes a single argument, which is another function `listener` that returns `void`. The Subscriber function itself returns another function that can be used to unsubscribe the `listener`.
+ */
+export type Subscriber = (listener: () => void) => () => void;
+
+export type SnapshotGetter<T> = () => T;
 
 /**
  * Alternate for `useSyncExternalStore` which runs into infinite loops when hooks are used in `getSnapshot`
  * https://github.com/facebook/react/issues/24529
  */
 export function useSyncMemoizedStore<T>(
-  subscribe: (listener: () => void) => () => void,
-  getSnapshot: () => T
+  subscribe: Subscriber,
+  getSnapshot: SnapshotGetter<T>
 ) {
-  const stateRef = useRef(getSnapshot());
+  let latestSnapshot = getSnapshot();
+  const getLatestSnapshot = () => latestSnapshot;
   const [, forceRender] = useReducer((s) => s + 1, 0);
 
   useEffect(() => {
     let isMounted = true;
     const unsubscribe = subscribe(() => {
       if (isMounted) {
-        stateRef.current = getSnapshot();
+        latestSnapshot = getSnapshot();
         forceRender();
       }
     });
@@ -27,5 +35,5 @@ export function useSyncMemoizedStore<T>(
     };
   }, [subscribe, getSnapshot]);
 
-  return stateRef.current;
+  return getLatestSnapshot();
 }
