@@ -44,6 +44,75 @@ describe('Category Facet Test Suites', () => {
       new TestFixture().with(addCategoryFacet()).init();
     }
 
+    function setupWithTwoValueTrees() {
+      new TestFixture()
+        .with(addCategoryFacet())
+        .withCustomResponse((r) => {
+          r.facets[0].values = [
+            {
+              value: 'North America',
+              state: 'selected',
+              numberOfResults: 112,
+              isAutoSelected: true,
+              children: [
+                {
+                  value: 'United States',
+                  state: 'idle',
+                  numberOfResults: 50,
+                  children: [],
+                  path: ['North America', 'United States'],
+                  isLeafValue: false,
+                },
+                {
+                  value: 'Canada',
+                  state: 'idle',
+                  numberOfResults: 23,
+                  children: [],
+                  path: ['North America', 'Canada'],
+                  isLeafValue: false,
+                },
+                {
+                  value: 'Anguilla',
+                  state: 'idle',
+                  numberOfResults: 1,
+                  children: [],
+                  path: ['North America', 'Anguilla'],
+                  isLeafValue: false,
+                },
+                {
+                  value: 'Antigua and Barbuda',
+                  state: 'idle',
+                  numberOfResults: 1,
+                  children: [],
+                  path: ['North America', 'Antigua and Barbuda'],
+                  isLeafValue: false,
+                },
+                {
+                  value: 'Aruba',
+                  state: 'idle',
+                  numberOfResults: 1,
+                  children: [],
+                  path: ['North America', 'Aruba'],
+                  isLeafValue: false,
+                },
+              ],
+              path: ['North America'],
+              isLeafValue: false,
+            },
+            {
+              value: 'Africa',
+              state: 'idle',
+              numberOfResults: 68,
+              children: [],
+              path: ['Africa'],
+              isLeafValue: false,
+            },
+          ];
+          return r;
+        })
+        .init();
+    }
+
     describe('verify rendering', () => {
       beforeEach(setupWithDefaultSettings);
 
@@ -85,128 +154,162 @@ describe('Category Facet Test Suites', () => {
     });
 
     describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
-      function setupGoDeeperOneLevel() {
-        setupWithDefaultSettings();
-        selectChildValueAt(canadaHierarchyIndex[0]);
-      }
+      describe('when the API return a single value tree', () => {
+        function setupGoDeeperOneLevel() {
+          setupWithDefaultSettings();
+          selectChildValueAt(canadaHierarchyIndex[0]);
+        }
 
-      const selectedPath = canadaHierarchy.slice(0, 1);
-
-      describe('verify rendering', () => {
-        beforeEach(setupGoDeeperOneLevel);
-
-        CommonAssertions.assertAccessibility(categoryFacetComponent);
-        CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
-        CommonFacetAssertions.assertDisplayClearButton(
-          CategoryFacetSelectors,
-          false
-        );
-        CategoryFacetAssertions.assertNumberOfChildValues(
-          defaultNumberOfValues
-        );
-        CategoryFacetAssertions.assertNumberOfParentValues(1);
-        CommonFacetAssertions.assertDisplayShowMoreButton(
-          CategoryFacetSelectors,
-          true
-        );
-        CommonFacetAssertions.assertDisplayShowLessButton(
-          CategoryFacetSelectors,
-          false
-        );
-        CategoryFacetAssertions.assertPathInUrl(selectedPath);
-
-        describe('when collapsing the facet', () => {
-          beforeEach(() => {
-            CategoryFacetSelectors.labelButton().click();
-          });
-
-          CategoryFacetAssertions.assertNumberOfChildValues(0);
-          CategoryFacetAssertions.assertNumberOfParentValues(0);
-          CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
-          CommonFacetAssertions.assertDisplayClearButton(
-            CategoryFacetSelectors,
-            true
-          );
-        });
-      });
-
-      describe('verify analytics', () => {
-        beforeEach(setupGoDeeperOneLevel);
-        CategoryFacetAssertions.assertLogFacetSelect(selectedPath);
-      });
-
-      describe('when selecting the "Show more" button', () => {
-        beforeEach(() => {
-          setupGoDeeperOneLevel();
-          pressShowMore(CategoryFacetSelectors);
-        });
+        const selectedPath = canadaHierarchy.slice(0, 1);
 
         describe('verify rendering', () => {
+          beforeEach(setupGoDeeperOneLevel);
+
+          CommonAssertions.assertAccessibility(categoryFacetComponent);
+          CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
+          CommonFacetAssertions.assertDisplayClearButton(
+            CategoryFacetSelectors,
+            false
+          );
           CategoryFacetAssertions.assertNumberOfChildValues(
-            defaultNumberOfValues * 2
+            defaultNumberOfValues
+          );
+          CategoryFacetAssertions.assertNumberOfParentValues(1);
+          CommonFacetAssertions.assertDisplayShowMoreButton(
+            CategoryFacetSelectors,
+            true
           );
           CommonFacetAssertions.assertDisplayShowLessButton(
             CategoryFacetSelectors,
-            true
+            false
           );
+          CategoryFacetAssertions.assertPathInUrl(selectedPath);
+
+          describe('when collapsing the facet', () => {
+            beforeEach(() => {
+              CategoryFacetSelectors.labelButton().click();
+            });
+
+            CategoryFacetAssertions.assertNumberOfChildValues(0);
+            CategoryFacetAssertions.assertNumberOfParentValues(0);
+            CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
+            CommonFacetAssertions.assertDisplayClearButton(
+              CategoryFacetSelectors,
+              true
+            );
+          });
         });
 
         describe('verify analytics', () => {
-          CategoryFacetAssertions.assertLogFacetShowMore();
+          beforeEach(setupGoDeeperOneLevel);
+          CategoryFacetAssertions.assertLogFacetSelect(selectedPath);
         });
 
-        describe('when selecting the "Show less" button', () => {
+        describe('when selecting the "Show more" button', () => {
           beforeEach(() => {
-            pressShowLess(CategoryFacetSelectors);
+            setupGoDeeperOneLevel();
+            pressShowMore(CategoryFacetSelectors);
           });
 
           describe('verify rendering', () => {
             CategoryFacetAssertions.assertNumberOfChildValues(
-              defaultNumberOfValues
+              defaultNumberOfValues * 2
             );
             CommonFacetAssertions.assertDisplayShowLessButton(
               CategoryFacetSelectors,
-              false
+              true
             );
           });
 
           describe('verify analytics', () => {
-            CategoryFacetAssertions.assertLogFacetShowLess();
+            CategoryFacetAssertions.assertLogFacetShowMore();
+          });
+
+          describe('when selecting the "Show less" button', () => {
+            beforeEach(() => {
+              pressShowLess(CategoryFacetSelectors);
+            });
+
+            describe('verify rendering', () => {
+              CategoryFacetAssertions.assertNumberOfChildValues(
+                defaultNumberOfValues
+              );
+              CommonFacetAssertions.assertDisplayShowLessButton(
+                CategoryFacetSelectors,
+                false
+              );
+            });
+
+            describe('verify analytics', () => {
+              CategoryFacetAssertions.assertLogFacetShowLess();
+            });
+          });
+        });
+
+        describe('when selecting the "All Categories" button', () => {
+          function setupClear() {
+            setupGoDeeperOneLevel();
+            pressAllCategoriesButton();
+          }
+          beforeEach(setupClear);
+          describe('verify rendering', () => {
+            CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
+            CategoryFacetAssertions.assertNumberOfParentValues(0);
+            CategoryFacetAssertions.assertNoPathInUrl();
+          });
+
+          describe('verify analytics', () => {
+            CategoryFacetAssertions.assertLogClearFacetValues();
+          });
+        });
+
+        describe('when clicking the active value', () => {
+          function setupClear() {
+            setupGoDeeperOneLevel();
+            pressActiveParent();
+          }
+          beforeEach(setupClear);
+          describe('verify rendering', () => {
+            CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
+            CategoryFacetAssertions.assertNumberOfParentValues(0);
+            CategoryFacetAssertions.assertNoPathInUrl();
+          });
+
+          describe('verify analytics', () => {
+            CategoryFacetAssertions.assertLogClearFacetValues();
           });
         });
       });
 
-      describe('when selecting the "All Categories" button', () => {
-        function setupClear() {
-          setupGoDeeperOneLevel();
-          pressAllCategoriesButton();
+      describe('when the API return more than one value tree', () => {
+        function setupGoDeeperOneLevel() {
+          setupWithTwoValueTrees();
         }
-        beforeEach(setupClear);
+
+        const selectedPath = canadaHierarchy.slice(0, 1);
+
         describe('verify rendering', () => {
-          CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
-          CategoryFacetAssertions.assertNumberOfParentValues(0);
-          CategoryFacetAssertions.assertNoPathInUrl();
-        });
+          beforeEach(setupGoDeeperOneLevel);
 
-        describe('verify analytics', () => {
-          CategoryFacetAssertions.assertLogClearFacetValues();
-        });
-      });
-
-      describe('when clicking the active value', () => {
-        function setupClear() {
-          setupGoDeeperOneLevel();
-          pressActiveParent();
-        }
-        beforeEach(setupClear);
-        describe('verify rendering', () => {
-          CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
-          CategoryFacetAssertions.assertNumberOfParentValues(0);
-          CategoryFacetAssertions.assertNoPathInUrl();
-        });
-
-        describe('verify analytics', () => {
-          CategoryFacetAssertions.assertLogClearFacetValues();
+          CommonAssertions.assertAccessibility(categoryFacetComponent);
+          CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
+          CommonFacetAssertions.assertDisplayClearButton(
+            CategoryFacetSelectors,
+            false
+          );
+          CategoryFacetAssertions.assertNumberOfChildValues(
+            defaultNumberOfValues
+          );
+          CategoryFacetAssertions.assertNumberOfParentValues(1);
+          CommonFacetAssertions.assertDisplayShowMoreButton(
+            CategoryFacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertDisplayShowLessButton(
+            CategoryFacetSelectors,
+            false
+          );
+          CategoryFacetAssertions.assertPathInUrl(selectedPath);
         });
       });
     });
