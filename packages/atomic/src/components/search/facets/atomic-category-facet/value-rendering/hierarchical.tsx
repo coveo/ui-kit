@@ -7,6 +7,7 @@ import {getFieldValueCaption} from '../../../../../utils/field-utils';
 import {Button} from '../../../../common/button';
 import {FacetValueLabelHighlight} from '../../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueLink} from '../../../../common/facets/facet-value-link/facet-value-link';
+import {getOnClickForUnselectedValue} from './commons';
 
 interface HierarchicalCategoryFacetProps {
   facet: CategoryFacet;
@@ -38,10 +39,7 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
       <Button
         style="text-neutral"
         part="all-categories-button"
-        onClick={() => {
-          focusTargets.activeValue.focusAfterSearch();
-          facet.deselectAll();
-        }}
+        onClick={getOnClickForUnselectedValue(facet, focusTargets.activeValue)}
       >
         <atomic-icon
           aria-hidden="true"
@@ -113,10 +111,7 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
         numberOfResults={facetValue.numberOfResults}
         isSelected={true}
         i18n={i18n}
-        onClick={() => {
-          focusTargets.activeValue.focusAfterSearch();
-          facet.toggleSelect(facetValue);
-        }}
+        onClick={getOnClickForUnselectedValue(facet, focusTargets.activeValue)}
         searchQuery={facetSearchQuery}
         part={`value-link ${getIsLeafOrNodePart(facetValue)}`}
         class="contents"
@@ -145,10 +140,10 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
           style="text-neutral"
           part="parent-button"
           ariaPressed="false"
-          onClick={() => {
-            focusTargets.activeValue.focusAfterSearch();
-            facet.toggleSelect(facetValue);
-          }}
+          onClick={getOnClickForUnselectedValue(
+            facet,
+            focusTargets.activeValue
+          )}
           ariaLabel={ariaLabel}
         >
           <atomic-icon
