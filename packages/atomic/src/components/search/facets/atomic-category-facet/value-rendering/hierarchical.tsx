@@ -65,13 +65,16 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
     children: VNode[]
   ): VNode {
     const displayValue = getFieldValueCaption(field, facetValue.value, i18n);
-
-    return facetValue.state === 'selected' || facetValue.children.length === 0
-      ? otherKindValue(facetValue, displayValue, children)
-      : unfoldedValue(facetValue, displayValue, children);
+    if (facetValue.state === 'selected') {
+      return renderSelectedValue(facetValue, displayValue, children);
+    }
+    if (facetValue.children.length === 0) {
+      return renderLeafValue(facetValue, displayValue);
+    }
+    return renderNodeValue(facetValue, displayValue, children);
   }
 
-  function otherKindValue(
+  function renderSelectedValue(
     facetValue: CategoryFacetValue,
     displayValue: string,
     children: VNode[]
@@ -84,7 +87,7 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
         i18n={i18n}
         onClick={() => {
           focusTargets.activeValue.focusAfterSearch();
-          facet.toggleSelect(facetValue);
+          facet.deselectAll();
         }}
         searchQuery={facetSearchQuery}
         part={`active-parent ${getIsLeafOrNodePart(facetValue)}`}
@@ -100,7 +103,34 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
     );
   }
 
-  function unfoldedValue(
+  function renderLeafValue(
+    facetValue: CategoryFacetValue,
+    displayValue: string
+  ) {
+    return (
+      <FacetValueLink
+        displayValue={displayValue}
+        numberOfResults={facetValue.numberOfResults}
+        isSelected={true}
+        i18n={i18n}
+        onClick={() => {
+          focusTargets.activeValue.focusAfterSearch();
+          facet.toggleSelect(facetValue);
+        }}
+        searchQuery={facetSearchQuery}
+        part={`value-link ${getIsLeafOrNodePart(facetValue)}`}
+        class="contents"
+        buttonRef={focusTargets.activeValue.setTarget}
+      >
+        <FacetValueLabelHighlight
+          displayValue={displayValue}
+          isSelected={facetValue.state === 'selected'}
+        ></FacetValueLabelHighlight>
+      </FacetValueLink>
+    );
+  }
+
+  function renderNodeValue(
     facetValue: CategoryFacetValue,
     displayValue: string,
     children: VNode[]

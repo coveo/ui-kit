@@ -410,7 +410,7 @@ export class AtomicCategoryFacet
       );
     }
 
-    if (!this.facetState.valuesAsTrees) {
+    if (!this.facetState.valuesAsTrees.length) {
       return <Hidden></Hidden>;
     }
 
