@@ -299,7 +299,7 @@ export class AtomicRatingFacet
         isCollapsed={this.isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-        headerRef={this.focusTarget.setTarget}
+        headerRef={(el) => this.focusTarget.setTarget(el)}
       ></FacetHeader>
     );
   }
