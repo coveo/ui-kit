@@ -43,23 +43,23 @@ export function findActiveValueAncestry(
 export function findActiveValueAncestry(
   valuesAsTree: CategoryFacetValueCommon[]
 ): CategoryFacetValueCommon[] {
+  const {activeValue, ancestryMap} =
+    getActiveValueAndAncestryFromValueTree(valuesAsTree);
+  return activeValue ? getActiveValueAncestry(activeValue, ancestryMap) : [];
+}
+
+function getActiveValueAndAncestryFromValueTree(
+  valuesAsTrees: CategoryFacetValueCommon[]
+) {
+  const valueToVisit: CategoryFacetValueCommon[] = [...valuesAsTrees];
   const ancestryMap = new Map<
     CategoryFacetValueCommon,
     CategoryFacetValueCommon
   >();
-  const activeValue = getActiveValueFromValueTree(valuesAsTree, ancestryMap);
-  return activeValue ? getActiveValueAncestry(activeValue, ancestryMap) : [];
-}
-
-function getActiveValueFromValueTree(
-  valuesAsTrees: CategoryFacetValueCommon[],
-  ancestryMap?: Map<CategoryFacetValueCommon, CategoryFacetValueCommon>
-): CategoryFacetValueCommon | undefined {
-  const valueToVisit: CategoryFacetValueCommon[] = [...valuesAsTrees];
   while (valueToVisit.length > 0) {
     const currentValue: CategoryFacetValueCommon = valueToVisit.shift()!;
     if (currentValue.state === 'selected') {
-      return currentValue;
+      return {activeValue: currentValue, ancestryMap};
     }
     if (ancestryMap) {
       for (const childValue of currentValue.children) {
@@ -68,7 +68,7 @@ function getActiveValueFromValueTree(
     }
     valueToVisit.unshift(...currentValue.children);
   }
-  return undefined;
+  return {};
 }
 
 function getActiveValueAncestry(
