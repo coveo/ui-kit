@@ -116,8 +116,11 @@ export type {
   CategoryFacetValueRequest,
   CategoryFacetSortCriterion,
 } from './features/facets/category-facet-set/interfaces/request';
-export type {CategoryFacetValue} from './features/facets/category-facet-set/interfaces/response';
 export type {DateRangeRequest} from './features/facets/range-facets/date-facet-set/interfaces/request';
+export type {
+  CategoryFacetValue,
+  CategoryFacetValueCommon,
+} from './features/facets/category-facet-set/interfaces/response';
 export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
 export type {
   FacetValueRequest,

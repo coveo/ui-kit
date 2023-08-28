@@ -11,7 +11,7 @@ import {
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
-  getActiveValueFromValueTree,
+  findActiveValueAncestry,
   partitionIntoParentsAndValues,
 } from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {
@@ -44,7 +44,7 @@ jest.mock(
 );
 
 const {
-  getActiveValueFromValueTree: actualGetActiveValueFromValueTree,
+  findActiveValueAncestry: actualFindActiveValueAncestry,
   partitionIntoParentsAndValues: actualPartitionIntoParentsAndValues,
 } = jest.requireActual(
   '../../../../features/facets/category-facet-set/category-facet-utils'
@@ -56,9 +56,7 @@ describe('category facet', () => {
   let state: SearchAppState;
   let engine: MockSearchEngine;
   let categoryFacet: CoreCategoryFacet;
-  const getActiveValueFromValueTreeMock = jest.mocked(
-    getActiveValueFromValueTree
-  );
+  const findActiveValueAncestryMock = jest.mocked(findActiveValueAncestry);
   const partitionIntoParentsAndValuesMock = jest.mocked(
     partitionIntoParentsAndValues
   );
@@ -79,8 +77,8 @@ describe('category facet', () => {
       facetId,
       field: 'geography',
     };
-    getActiveValueFromValueTreeMock.mockImplementation(
-      actualGetActiveValueFromValueTree
+    findActiveValueAncestryMock.mockImplementation(
+      actualFindActiveValueAncestry
     );
     partitionIntoParentsAndValuesMock.mockImplementation(
       actualPartitionIntoParentsAndValues
@@ -135,13 +133,13 @@ describe('category facet', () => {
     expect(categoryFacet.subscribe).toBeDefined();
   });
 
-  it('#state.activeValue is the return value of #getActiveValueFromValueTree', () => {
+  it('#state.activeValue is the return value of #findActiveValueAncestry', () => {
     const referencedReturnValue = buildMockCategoryFacetValue();
-    getActiveValueFromValueTreeMock.mockReturnValueOnce(referencedReturnValue);
+    findActiveValueAncestryMock.mockReturnValueOnce([referencedReturnValue]);
 
     initCategoryFacet();
 
-    expect(getActiveValueFromValueTree).toBeCalledTimes(1);
+    expect(findActiveValueAncestry).toBeCalledTimes(1);
     expect(categoryFacet.state.activeValue).toBe(referencedReturnValue);
   });
 
@@ -279,6 +277,12 @@ describe('category facet', () => {
 
     it('#state.parents contains the selected leaf value', () => {
       expect(categoryFacet.state.parents).toEqual([selectedValue]);
+    });
+
+    it('#state.selectedValueAncestry contains the selected leaf value', () => {
+      expect(categoryFacet.state.selectedValueAncestry).toEqual([
+        selectedValue,
+      ]);
     });
 
     it('#state.values is an empty array', () => {
