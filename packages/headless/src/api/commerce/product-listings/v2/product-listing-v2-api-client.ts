@@ -18,31 +18,19 @@ export interface AsyncThunkProductListingV2Options<
   extra: ProductListingV2ThunkExtraArguments;
 }
 
-/**
- * The initialization options for the product listing API client.
- */
 export interface ProductListingAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
 }
 
-/**
- * A product listing API response.
- */
 export type ProductListingAPIResponse<TSuccessContent> =
   | ProductListingAPISuccessResponse<TSuccessContent>
   | ProductListingAPIErrorResponse;
 
-/**
- * A product listing API successful response.
- */
 export interface ProductListingAPISuccessResponse<TContent> {
   success: TContent;
 }
 
-/**
- * The content of a product listing API error response.
- */
 export interface ProductListingAPIErrorStatusResponse {
   statusCode: number;
   message: string;
@@ -50,16 +38,10 @@ export interface ProductListingAPIErrorStatusResponse {
   ignored?: boolean;
 }
 
-/**
- * A Product Listing API error response.
- */
 export interface ProductListingAPIErrorResponse {
   error: ProductListingAPIErrorStatusResponse;
 }
 
-/**
- * The client to use to interface with the product listing API.
- */
 export class ProductListingAPIClient {
   constructor(private options: ProductListingAPIClientOptions) {}
 
