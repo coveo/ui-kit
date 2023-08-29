@@ -11,6 +11,13 @@ import {
 
 export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
 
+/**
+ * Creates a `Pager` controller instance for the product listing.
+ *
+ * @param engine - The headless commerce engine.
+ * @param props - The configurable `Pager` properties.
+ * @returns A `Pager` controller instance.
+ * */
 export function buildPager(
   engine: CommerceEngine,
   props: PagerProps = {}
