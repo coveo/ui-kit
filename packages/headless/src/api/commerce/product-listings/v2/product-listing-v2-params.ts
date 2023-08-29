@@ -8,10 +8,7 @@ import {
   PlatformClientCallOptions,
 } from '../../../platform-client';
 
-export enum Mode {
-  Live = 'live',
-  Sample = 'sample',
-}
+export type ModeParam = 'live' | 'sample';
 
 export interface SelectedFacets
   extends Pick<AnyFacetRequest, 'field' | 'type' | 'facetId'> {
@@ -42,7 +39,7 @@ export interface ProductListingV2RequestParam {
   organizationId: string;
   trackingId: string;
   locale: string;
-  mode: Mode;
+  mode: ModeParam;
   clientId: string;
   selectedFacets?: SelectedFacets[];
   selectedPage?: {

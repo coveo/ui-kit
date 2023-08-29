@@ -2,7 +2,6 @@ import {SortBy} from '../../../../product-listing.index';
 import {buildMockProductListingV2APIClient} from '../../../../test/mock-product-listing-v2-api-client';
 import {PlatformClient} from '../../../platform-client';
 import {ProductListingAPIClient} from './product-listing-v2-api-client';
-import {Mode} from './product-listing-v2-params';
 import {
   ProductListingV2SuccessResponse,
   ProductListingV2Request,
@@ -46,7 +45,7 @@ describe('product listing v2 api client', () => {
         view: {url: ''},
       },
       locale: req.locale ?? '',
-      mode: req.mode ?? Mode.Sample,
+      mode: req.mode ?? 'sample',
     });
 
     it('should call the platform endpoint with the correct arguments', async () => {
