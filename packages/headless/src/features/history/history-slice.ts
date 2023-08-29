@@ -7,7 +7,7 @@ import {ContextState} from '../context/context-state';
 import {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state';
 import {AutomaticFacetSetState} from '../facets/automatic-facet-set/automatic-facet-set-state';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
-import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
+import {findActiveValueAncestry} from '../facets/category-facet-set/category-facet-utils';
 import {FacetValue} from '../facets/facet-set/interfaces/response';
 import {AnyFacetSetState} from '../facets/generic/interfaces/generic-facet-section';
 import {PaginationState} from '../pagination/pagination-state';
@@ -137,12 +137,12 @@ const isCategoryFacetsEqual = (
       return false;
     }
 
-    const currentSelectedValues = partitionIntoParentsAndValues(
+    const currentSelectedValues = findActiveValueAncestry(
       current[key]?.request.currentValues
-    ).parents.map(({value}) => value);
-    const nextSelectedValues = partitionIntoParentsAndValues(
+    ).map(({value}) => value);
+    const nextSelectedValues = findActiveValueAncestry(
       value?.request.currentValues
-    ).parents.map(({value}) => value);
+    ).map(({value}) => value);
 
     if (
       JSON.stringify(currentSelectedValues) !==

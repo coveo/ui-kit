@@ -28,6 +28,9 @@
       "inputs": ["^production", "production"],
       "dependsOn": ["^build"]
     },
+    "dev": {
+      "dependsOn": ["^build"]
+    },
     "prod": {
       "dependsOn": ["build"]
     },
