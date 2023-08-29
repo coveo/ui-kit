@@ -15,22 +15,28 @@ export interface SelectedFacets
   values?: (FacetValueRequest | RangeValueRequest)[];
 }
 
+export interface UserContext {
+  userAgent: string;
+  userIp: string;
+  email?: string;
+  userId?: string;
+}
+
+export interface ViewContext {
+  url: string;
+  labels?: Record<string, string>;
+}
+
+export interface CartProduct {
+  groupId?: string;
+  productId?: string;
+  sku?: string;
+}
+
 export interface Context {
-  user: {
-    userId?: string;
-    email?: string;
-    userIp: string;
-    userAgent: string;
-  };
-  view: {
-    url: string;
-    labels?: Map<string, string>;
-  };
-  cart?: {
-    groupId?: string;
-    productId?: string;
-    sku?: string;
-  }[];
+  user: UserContext;
+  view: ViewContext;
+  cart: CartProduct[];
 }
 
 export interface ProductListingV2RequestParam {
