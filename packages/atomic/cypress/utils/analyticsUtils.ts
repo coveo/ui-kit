@@ -18,8 +18,18 @@ function isSearchEventRequest(
 
 function isClickEventRequest(
   request: AnyEventRequest
-): request is ClickEventRequest {
-  return 'documentUri' in request;
+): ClickEventRequest | null {
+  try {
+    const possiblyParsed = JSON.parse(
+      decodeURIComponent(request).replace('clickEvent=', '')
+    );
+    if ('documentUri' in possiblyParsed) {
+      return possiblyParsed as ClickEventRequest;
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 function isCustomEventRequest(
