@@ -91,11 +91,9 @@ export type BaseFacetElement<FacetType extends AnyFacetType = AnyFacetType> =
     CollapsedProp &
     HeadingLevelProp;
 
-export type AutomaticFacetGeneratorElement = HTMLElement & CollapseFacetsAfter;
-
 export type FacetManagerElements = (
   | BaseFacetElement
-  | AutomaticFacetGeneratorElement
+  | HTMLAtomicAutomaticFacetGeneratorElement
 )[];
 
 type StateProp<FacetType extends AnyFacetType> = FacetType extends Facet
@@ -142,8 +140,6 @@ type DisplayValuesAsProp = {
 type CollapsedProp = {isCollapsed?: boolean};
 
 type HeadingLevelProp = {headingLevel?: number};
-
-type CollapseFacetsAfter = {collapseFacetsAfter?: number};
 
 export interface FacetValueProps {
   i18n: i18n;
@@ -256,13 +252,6 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   return true;
 }
 
-export function facetShouldBeInitiallyCollapsed(
-  facetIndex: number,
-  collapseFacetsAfter: number
-) {
-  return facetIndex + 1 > collapseFacetsAfter;
-}
-
 interface VisibilitySortedFacets {
   visibleFacets: BaseFacetElement[];
   invisibleFacets: BaseFacetElement[];
@@ -285,23 +274,20 @@ export function sortFacetVisibility(
   return {visibleFacets, invisibleFacets};
 }
 
-export function updateCollapsedState(
+export function collapseFacetsAfter(
   facets: BaseFacetElement[],
-  collapseFacetsAfter: number
+  visibleFacetsCount: number
 ) {
-  if (collapseFacetsAfter === -1) {
+  if (visibleFacetsCount === -1) {
     return;
   }
 
   facets.forEach((facet, index) => {
-    facet.isCollapsed = facetShouldBeInitiallyCollapsed(
-      index,
-      collapseFacetsAfter
-    );
+    facet.isCollapsed = index + 1 > visibleFacetsCount;
   });
 }
 export function updateCollapseFacetsAfter(
-  generator: AutomaticFacetGeneratorElement,
+  generator: HTMLAtomicAutomaticFacetGeneratorElement,
   index: number,
   collapseFacetsAfter: number
 ) {
@@ -337,12 +323,12 @@ export function getFacetsInChildren(
 }
 export function getGeneratorInChildren(
   collection: HTMLCollection
-): AutomaticFacetGeneratorElement {
+): HTMLAtomicAutomaticFacetGeneratorElement {
   const children = Array.from(collection);
 
   const automaticFacetGenerator = children.find((child) =>
     isTagNameAutomaticFacetGenerator(child.tagName)
-  ) as AutomaticFacetGeneratorElement;
+  ) as HTMLAtomicAutomaticFacetGeneratorElement;
 
   return automaticFacetGenerator;
 }

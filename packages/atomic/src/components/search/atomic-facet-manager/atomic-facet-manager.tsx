@@ -17,7 +17,7 @@ import {
   sortFacetVisibility,
   sortFacetsViaManager,
   updateCollapseFacetsAfter,
-  updateCollapsedState,
+  collapseFacetsAfter,
 } from '../../common/facets/facet-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
@@ -70,7 +70,8 @@ export class AtomicFacetManager implements InitializableComponent {
 
     const generator = getGeneratorInChildren(this.host.children);
 
-    updateCollapsedState(visibleFacets, this.collapseFacetsAfter);
+    collapseFacetsAfter(visibleFacets, this.collapseFacetsAfter);
+
     updateCollapseFacetsAfter(
       generator,
       visibleFacets.length,

@@ -37,7 +37,7 @@ import {
   sortFacetVisibility,
   sortFacetsViaManager,
   updateCollapseFacetsAfter,
-  updateCollapsedState,
+  collapseFacetsAfter,
 } from '../../common/facets/facet-common';
 import {isRefineModalFacet} from '../../common/interface/store';
 import {RefineModalCommon} from '../../common/refine-modal/refine-modal-common';
@@ -153,7 +153,7 @@ export class AtomicRefineModal implements InitializableComponent {
     const visibleFacetsClone = this.cloneFacets(visibleFacets);
     const invisibleFacetsClone = this.cloneFacets(invisibleFacets);
 
-    updateCollapsedState(visibleFacetsClone, this.collapseFacetsAfter);
+    collapseFacetsAfter(visibleFacetsClone, this.collapseFacetsAfter);
 
     divSlot.append(...visibleFacetsClone);
     divSlot.append(...invisibleFacetsClone);
@@ -227,7 +227,7 @@ export class AtomicRefineModal implements InitializableComponent {
     );
     const generator = getGeneratorInChildren(facetContainer.children);
 
-    updateCollapsedState(visibleFacets, this.collapseFacetsAfter);
+    collapseFacetsAfter(visibleFacets, this.collapseFacetsAfter);
     updateCollapseFacetsAfter(
       generator,
       visibleFacets.length,

@@ -55,30 +55,21 @@ export const addFacetManagerWithStaticFacets =
   };
 
 export const addFacetManagerWithAutomaticFacets =
-  (props: TagProps = {}, generatorCollapseFacetsAfter?: number) =>
+  (props: TagProps = {}, generatorCollapseFacetsAfter = 0) =>
   (env: TestFixture) => {
     const manager = generateComponentHTML(facetManagerComponent, props);
-
-    if (generatorCollapseFacetsAfter) {
-      manager.append(
-        generateComponentHTML(automaticFacetGeneratorComponent, {
-          desiredCount: '3',
-          collapseFacetsAfter: generatorCollapseFacetsAfter,
-        })
-      );
-    } else {
-      manager.append(
-        generateComponentHTML(automaticFacetGeneratorComponent, {
-          desiredCount: '3',
-        })
-      );
-    }
+    manager.append(
+      generateComponentHTML(automaticFacetGeneratorComponent, {
+        desiredCount: '3',
+        collapseFacetsAfter: generatorCollapseFacetsAfter || 3,
+      })
+    );
 
     env.withElement(manager);
   };
 
 export const addFacetManagerWithBothTypesOfFacets =
-  (props: TagProps = {}, generatorCollapseFacetsAfter?: number) =>
+  (props: TagProps = {}, generatorCollapseFacetsAfter = 0) =>
   (env: TestFixture) => {
     const manager = generateComponentHTML(facetManagerComponent, props);
 
@@ -94,13 +85,7 @@ export const addFacetManagerWithBothTypesOfFacets =
       manager.append(
         generateComponentHTML(automaticFacetGeneratorComponent, {
           desiredCount: '3',
-          collapseFacetsAfter: generatorCollapseFacetsAfter,
-        })
-      );
-    } else {
-      manager.append(
-        generateComponentHTML(automaticFacetGeneratorComponent, {
-          desiredCount: '3',
+          collapseFacetsAfter: generatorCollapseFacetsAfter || 3,
         })
       );
     }
