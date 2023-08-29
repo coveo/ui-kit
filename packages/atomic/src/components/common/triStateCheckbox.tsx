@@ -26,7 +26,7 @@ export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
     classNames.push(
       'excluded bg-error hover:bg-error focus-visible:bg-error hover:border-error focus-visible:border-error'
     );
-    parts.push(`${partName}-excluded`);
+    parts.push(`${partName}-checked`);
   } else {
     classNames.push('border border-neutral-dark');
   }
@@ -40,7 +40,6 @@ export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
     class: classNames.join(' '),
     part: parts.join(' '),
     'aria-pressed': isSelected ? 'true' : isExcluded ? 'mixed' : 'false',
-    'aria-checked': isSelected.toString(),
     'aria-label': props.ariaLabel ?? props.text,
     value: props.text,
     ref: props.ref,
@@ -49,7 +48,7 @@ export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
   return (
     <button
       {...attributes}
-      role="checkbox"
+      role="button"
       onClick={() => props.onToggle?.(!isSelected)}
       onMouseDown={(e) => props.onMouseDown?.(e)}
     >

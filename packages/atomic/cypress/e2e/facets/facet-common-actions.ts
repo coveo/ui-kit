@@ -14,6 +14,7 @@ export function selectIdleCheckboxValueAt(
   FacetWithCheckboxSelector.idleCheckboxValueLabel()
     .eq(index)
     .then((idleCheckboxValueLabel) => {
+      const hasTriState = isTriStateCheckbox(FacetWithCheckboxSelector);
       const text = ensureLabelUniqueness(
         FacetWithCheckboxSelector,
         idleCheckboxValueLabel
@@ -21,7 +22,7 @@ export function selectIdleCheckboxValueAt(
       cy.wrap(idleCheckboxValueLabel).click().wait(2000);
       FacetWithCheckboxSelector.checkboxValueWithText(text).should(
         'have.attr',
-        'aria-checked',
+        hasTriState ? 'aria-pressed' : 'aria-checked',
         'true'
       );
     });
@@ -167,4 +168,10 @@ function ensureLabelUniqueness(
       'There should not be any other value similar to this one.'
     );
   return text;
+}
+
+function isTriStateCheckbox(
+  FacetWithCheckboxSelector: FacetWithCheckboxSelector
+) {
+  return !!FacetWithCheckboxSelector.excludeButton;
 }

@@ -19,17 +19,17 @@ export const FacetSelectors = {
   },
   selectedCheckboxValue() {
     return this.shadow().find(
-      '[part~="value-checkbox"][part~="value-checkbox-checked"][aria-checked="true"]'
+      '[part~="value-checkbox"][part~="value-checkbox-checked"][aria-pressed="true"]'
     );
   },
   excludedCheckboxValue() {
     return this.shadow().find(
-      '[part~="value-checkbox"][part~="value-checkbox-excluded"][aria-pressed="mixed"]'
+      '[part~="value-checkbox"][part~="value-checkbox-checked"][aria-pressed="mixed"]'
     );
   },
   idleCheckboxValue() {
     return this.shadow().find(
-      '[part~="value-checkbox"]:not([part~="value-checkbox-checked"])[aria-checked="false"]'
+      '[part~="value-checkbox"]:not([part~="value-checkbox-checked"])[aria-pressed="false"]'
     );
   },
   checkboxValueWithText(text: string) {
