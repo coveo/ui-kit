@@ -48,7 +48,6 @@ export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
         icon={props.isCollapsed ? ArrowBottomIcon : ArrowTopIcon}
       ></atomic-icon>
     </Button>,
-    // TODO: KIT-2687: should also take into account excluded facet values
     props.onClearFilters && props.numberOfSelectedValues > 0 && (
       <Button
         style="text-primary"

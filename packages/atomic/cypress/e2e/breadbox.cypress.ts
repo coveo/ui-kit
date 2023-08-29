@@ -240,7 +240,7 @@ describe('Breadbox Test Suites', () => {
       beforeEach(setupFacetWithMultipleExcludedValues);
       CommonAssertions.assertAccessibility(breadboxComponent);
       BreadboxAssertions.assertDisplayBreadcrumb(true);
-      // BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true); // TODO: KIT-2687
+      BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
       BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
       BreadboxAssertions.assertExcludedCheckboxFacetsInBreadcrumb(
         FacetSelectors

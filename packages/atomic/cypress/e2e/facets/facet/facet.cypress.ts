@@ -1025,7 +1025,7 @@ describe('Facet v1 Test Suites', () => {
         beforeEach(setupSelectedMultipleFacets);
         CommonAssertions.assertAccessibility(breadboxComponent);
         BreadboxAssertions.assertDisplayBreadcrumb(true);
-        // BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true); // TODO: KIT-2687
+        BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
         BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
         BreadboxAssertions.assertExcludedCheckboxFacetsInBreadcrumb(
           FacetSelectors

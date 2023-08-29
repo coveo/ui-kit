@@ -386,8 +386,7 @@ export class FacetCommon {
   }
 
   private get numberOfSelectedValues() {
-    return this.facet.state.values.filter(({state}) => state === 'selected')
-      .length;
+    return this.facet.state.values.filter(({state}) => state !== 'idle').length;
   }
 
   private renderSearchInput() {
