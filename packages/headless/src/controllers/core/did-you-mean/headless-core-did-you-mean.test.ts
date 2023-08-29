@@ -8,14 +8,18 @@ import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../../test/mock-engine';
-import {buildCoreDidYouMean, DidYouMean} from './headless-core-did-you-mean';
+import {
+  buildCoreDidYouMean,
+  DidYouMean,
+  DidYouMeanProps,
+} from './headless-core-did-you-mean';
 
 describe('did you mean', () => {
   let dym: DidYouMean;
   let engine: MockSearchEngine;
 
-  function initDidYouMean() {
-    dym = buildCoreDidYouMean(engine);
+  function initDidYouMean(props: DidYouMeanProps = {}) {
+    dym = buildCoreDidYouMean(engine, props);
   }
 
   beforeEach(() => {
@@ -44,8 +48,7 @@ describe('did you mean', () => {
 
   it('should allow to update query correction when automatic correction is disabled', () => {
     engine.state.didYouMean.queryCorrection.correctedQuery = 'bar';
-    engine.state.didYouMean.automaticallyCorrectQuery = false;
-    initDidYouMean();
+    initDidYouMean({automaticallyCorrectQuery: true});
 
     dym.applyCorrection();
     expect(engine.actions).toContainEqual(applyDidYouMeanCorrection('bar'));

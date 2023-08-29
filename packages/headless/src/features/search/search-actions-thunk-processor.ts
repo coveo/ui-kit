@@ -167,24 +167,29 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   ): Promise<ValidReturnTypeFromProcessingStep<RejectionType> | null> {
     const state = this.getState();
     const successResponse = this.getSuccessResponse(fetched);
-    if (!successResponse) {
+    if (!successResponse || !state.didYouMean) {
       return null;
     }
-    if (
-      state.didYouMean?.enableDidYouMean === false ||
-      state.didYouMean?.automaticallyCorrectQuery === false ||
-      successResponse.results.length !== 0 ||
-      successResponse.queryCorrections.length === 0
-    ) {
+
+    const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
+    const {results, queryCorrections} = successResponse;
+
+    const shouldBeAutomaticallyRetried =
+      results.length === 0 &&
+      queryCorrections.length !== 0 &&
+      enableDidYouMean &&
+      automaticallyCorrectQuery;
+
+    if (!shouldBeAutomaticallyRetried) {
       return null;
     }
 
     const originalQuery = this.getCurrentQuery();
     const {correctedQuery} = successResponse.queryCorrections[0];
 
-    const retried = state.didYouMean?.automaticallyCorrectQuery
-      ? await this.automaticallyRetryQueryWithCorrection(correctedQuery)
-      : fetched;
+    const retried = await this.automaticallyRetryQueryWithCorrection(
+      correctedQuery
+    );
 
     if (isErrorResponse(retried.response)) {
       this.dispatch(logQueryError(retried.response.error));

@@ -6,6 +6,7 @@ import {configuration} from '../../../app/common-reducers';
 import {CoreEngine} from '../../../app/engine';
 import {
   applyDidYouMeanCorrection,
+  disableAutomaticQueryCorrection,
   enableDidYouMean,
 } from '../../../features/did-you-mean/did-you-mean-actions';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
@@ -21,6 +22,12 @@ import {
 
 export type {QueryCorrection, WordCorrection};
 
+export interface DidYouMeanProps {
+  /**
+   * Whether to automatically correct queries that will return no results.
+   */
+  automaticallyCorrectQuery?: boolean;
+}
 export interface DidYouMean extends Controller {
   /**
    * Apply query correction using the query correction, if any, currently present in the state.
@@ -58,11 +65,6 @@ export interface DidYouMeanState {
    * Specifies if there is a query correction to apply.
    */
   hasQueryCorrection: boolean;
-
-  /**
-   * Whether to automatically correct queries that will return no results.
-   */
-  automaticallyCorrectQuery: boolean;
 }
 
 /**
@@ -71,8 +73,13 @@ export interface DidYouMeanState {
  * automatically triggers a new query with the suggested term.
  *
  * @param engine - The headless engine.
+ * @param props - The configurable `DidYouMean` controller properties.
+ * @returns A `DidYouMean` controller instance.
  */
-export function buildCoreDidYouMean(engine: CoreEngine): DidYouMean {
+export function buildCoreDidYouMean(
+  engine: CoreEngine,
+  props: DidYouMeanProps = {}
+): DidYouMean {
   if (!loadDidYouMeanReducers(engine)) {
     throw loadReducerError;
   }
@@ -81,6 +88,10 @@ export function buildCoreDidYouMean(engine: CoreEngine): DidYouMean {
   const {dispatch} = engine;
 
   dispatch(enableDidYouMean());
+
+  if (props.automaticallyCorrectQuery === false) {
+    dispatch(disableAutomaticQueryCorrection());
+  }
 
   const getState = () => engine.state;
 
@@ -98,7 +109,6 @@ export function buildCoreDidYouMean(engine: CoreEngine): DidYouMean {
         hasQueryCorrection:
           state.didYouMean.queryCorrection.correctedQuery !== '' ||
           state.didYouMean.wasCorrectedTo !== '',
-        automaticallyCorrectQuery: state.didYouMean.automaticallyCorrectQuery,
       };
     },
 

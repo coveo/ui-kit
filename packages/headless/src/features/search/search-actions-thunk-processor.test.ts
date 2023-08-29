@@ -34,6 +34,7 @@ describe('AsyncSearchThunkProcessor', () => {
           response: buildMockSearchResponse({results}),
         }),
         didYouMean: {
+          enableDidYouMean: true,
           automaticallyCorrectQuery: true,
         },
       }),
@@ -143,6 +144,7 @@ describe('AsyncSearchThunkProcessor', () => {
           response: buildMockSearchResponse({results}),
         }),
         didYouMean: {
+          enableDidYouMean: true,
           automaticallyCorrectQuery: false,
         },
       }),

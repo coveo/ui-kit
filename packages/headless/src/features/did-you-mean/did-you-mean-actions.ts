@@ -9,11 +9,11 @@ export const enableDidYouMean = createAction('didYouMean/enable');
 export const disableDidYouMean = createAction('didYouMean/disable');
 
 export const disableAutomaticQueryCorrection = createAction(
-  'didYouMean/correction/disable'
+  'didYouMean/automaticCorrections/disable'
 );
 
 export const enableAutomaticQueryCorrection = createAction(
-  'didYouMean/correction/enable'
+  'didYouMean/automaticCorrections/enable'
 );
 
 export const applyDidYouMeanCorrection = createAction(
