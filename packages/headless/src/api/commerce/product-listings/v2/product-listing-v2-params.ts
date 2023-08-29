@@ -10,7 +10,7 @@ import {
 
 export enum Mode {
   Live = 'live',
-  Sample = 'Sample',
+  Sample = 'sample',
 }
 
 export interface SelectedFacets
@@ -55,29 +55,19 @@ export interface ProductListingV2RequestParam {
 export const baseProductListingV2Request = (
   req: ProductListingV2RequestParam,
   method: HttpMethods,
-  contentType: HTTPContentType,
-  queryStringArguments: Record<string, string> = {}
+  contentType: HTTPContentType
 ): Pick<
   PlatformClientCallOptions,
   'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
 > => {
-  const {platformUrl, organizationId, accessToken} = req;
-  const {trackingId} = req;
+  const {platformUrl, organizationId, accessToken, trackingId} = req;
   const baseUrl = `${platformUrl}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/listing`;
-  const queryString = buildQueryString(queryStringArguments);
-  const effectiveUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
   return {
     accessToken,
     method,
     contentType,
-    url: effectiveUrl,
+    url: baseUrl,
     origin: 'commerceApiFetch',
   };
-};
-
-const buildQueryString = (args: Record<string, string>): string => {
-  return Object.keys(args)
-    .map((argName) => `${argName}=${encodeURIComponent(args[argName])}`)
-    .join('&');
 };

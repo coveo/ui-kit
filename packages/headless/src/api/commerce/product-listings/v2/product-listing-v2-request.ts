@@ -9,15 +9,8 @@ import {
 export type ProductListingV2Request = ProductListingV2RequestParam;
 
 export const buildProductListingV2Request = (req: ProductListingV2Request) => {
-  const queryStringArguments: Record<string, string> = {};
-
   return {
-    ...baseProductListingV2Request(
-      req,
-      'POST',
-      'application/json',
-      queryStringArguments
-    ),
+    ...baseProductListingV2Request(req, 'POST', 'application/json'),
     requestParams: prepareRequestParams(req),
   };
 };
