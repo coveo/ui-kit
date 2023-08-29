@@ -1,3 +1,4 @@
+// TODO: Remove workaround after https://github.com/coveo/ui-kit/pull/3134 is merged
 import {TextDecoder, TextEncoder} from 'util';
 
 Object.assign(global, {
