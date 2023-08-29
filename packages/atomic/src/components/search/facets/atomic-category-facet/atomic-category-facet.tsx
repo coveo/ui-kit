@@ -325,9 +325,9 @@ export class AtomicCategoryFacet
           this.facet.deselectAll();
         }}
         headerRef={(header) => {
-          this.headerFocus.setTarget(header);
+          this.focusTargets.headerFocus.setTarget(header);
           if (!this.facetState.isHierarchical) {
-            this.activeValueFocus.setTarget(header);
+            this.focusTargets.activeValueFocus.setTarget(header);
           }
         }}
       ></FacetHeader>
@@ -357,6 +357,25 @@ export class AtomicCategoryFacet
         }}
         onClear={() => this.facet.facetSearch.clear()}
       ></FacetSearchInput>
+    );
+  }
+
+  private renderSearchResultsAndMatches() {
+    return (
+      <Fragment>
+        {this.facetState.facetSearch.values.length ? (
+          <FacetValuesGroup
+            i18n={this.bindings.i18n}
+            label={this.label}
+            query={this.facetState.facetSearch.query}
+          >
+            {this.renderSearchResults()}
+          </FacetValuesGroup>
+        ) : (
+          <div class="mt-3"></div>
+        )}
+        {this.renderMatches()}
+      </Fragment>
     );
   }
 
@@ -399,7 +418,7 @@ export class AtomicCategoryFacet
           onShowMore={() => {
             this.resultIndexToFocusOnShowMore =
               this.facetState.valuesAsTrees.length;
-            this.showMoreFocus.focusAfterSearch();
+            this.focusTargets.showMoreFocus.focusAfterSearch();
             this.facet.showMoreValues();
           }}
           onShowLess={() => {
@@ -430,67 +449,32 @@ export class AtomicCategoryFacet
     if (!this.facetState.valuesAsTrees.length) {
       return <Hidden></Hidden>;
     }
-
+    const CategoryFacetValueRenderer = this.facetState.isHierarchical
+      ? HierarchicalCategoryFacet
+      : FlatCategoryFacet;
     return (
       <FacetContainer>
         {this.renderHeader()}
         {!this.isCollapsed && [
           this.renderSearchInput(),
           shouldDisplaySearchResults(this.facetState.facetSearch) ? (
-            <Fragment>
-              {this.facetState.facetSearch.values.length ? (
-                <FacetValuesGroup
-                  i18n={this.bindings.i18n}
-                  label={this.label}
-                  query={this.facetState.facetSearch.query}
-                >
-                  {this.renderSearchResults()}
-                </FacetValuesGroup>
-              ) : (
-                <div class="mt-3"></div>
-              )}
-              {this.renderMatches()}
-            </Fragment>
+            this.renderSearchResultsAndMatches()
           ) : (
             <Fragment>
               <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
-                {this.facetState.isHierarchical ? (
-                  <ul part="parents" class="mt-3">
-                    <HierarchicalCategoryFacet
-                      facet={this.facet}
-                      facetSearchQuery={this.facetState.facetSearch.query}
-                      facetValues={this.facetState.valuesAsTrees}
-                      field={this.field}
-                      focusTargets={{
-                        activeValue: this.activeValueFocus,
-                        showLessFocus: this.showLessFocus,
-                        showMoreFocus: this.showMoreFocus,
-                      }}
-                      i18n={this.bindings.i18n}
-                      resultIndexToFocusOnShowMore={
-                        this.resultIndexToFocusOnShowMore
-                      }
-                    ></HierarchicalCategoryFacet>
-                  </ul>
-                ) : (
-                  <ul part="values" class="mt-3">
-                    <FlatCategoryFacet
-                      facet={this.facet}
-                      facetSearchQuery={this.facetState.facetSearch.query}
-                      facetValues={this.facetState.valuesAsTrees}
-                      field={this.field}
-                      focusTargets={{
-                        activeValue: this.activeValueFocus,
-                        showLessFocus: this.showLessFocus,
-                        showMoreFocus: this.showMoreFocus,
-                      }}
-                      i18n={this.bindings.i18n}
-                      resultIndexToFocusOnShowMore={
-                        this.resultIndexToFocusOnShowMore
-                      }
-                    ></FlatCategoryFacet>
-                  </ul>
-                )}
+                {
+                  <CategoryFacetValueRenderer
+                    facet={this.facet}
+                    facetSearchQuery={this.facetState.facetSearch.query}
+                    facetValues={this.facetState.valuesAsTrees}
+                    field={this.field}
+                    focusTargets={this.focusTargets}
+                    i18n={this.bindings.i18n}
+                    resultIndexToFocusOnShowMore={
+                      this.resultIndexToFocusOnShowMore
+                    }
+                  ></CategoryFacetValueRenderer>
+                }
               </FacetValuesGroup>
               {this.renderShowMoreLess()}
             </Fragment>
