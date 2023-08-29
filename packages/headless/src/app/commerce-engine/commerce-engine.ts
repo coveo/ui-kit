@@ -88,7 +88,7 @@ function validateConfiguration(
   try {
     commerceEngineConfigurationSchema.validate(configuration);
   } catch (error) {
-    logger.error('Product Listing engine configuration error', error);
+    logger.error('Commerce engine configuration error', error);
     throw error;
   }
 }
