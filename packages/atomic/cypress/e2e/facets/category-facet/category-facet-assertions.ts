@@ -28,8 +28,19 @@ export type ExpectedHierarchy =
   | ExpectedHierarchyValues
   | ExpectedHierarchyRoot;
 
-export function assertNumberOfChildValues(value: number) {
+export function assertNumberOfLinkValues(value: number) {
   it(`should display ${value} number of idle link values`, () => {
+    if (value > 0) {
+      CategoryFacetSelectors.linkValue().its('length').should('eq', value);
+      return;
+    }
+
+    CategoryFacetSelectors.linkValue().should('not.exist');
+  });
+}
+
+export function assertNumberOfChildValues(value: number) {
+  it(`should display ${value} number of idle child values`, () => {
     if (value > 0) {
       CategoryFacetSelectors.childValue().its('length').should('eq', value);
       return;
@@ -165,7 +176,7 @@ export function assertValuesSortedAlphanumerically() {
 
 export function assertFirstChildContains(value: string) {
   it(`first child value should contain ${value}`, () => {
-    CategoryFacetSelectors.childValue().first().contains(value);
+    CategoryFacetSelectors.linkValue().first().contains(value);
   });
 }
 
