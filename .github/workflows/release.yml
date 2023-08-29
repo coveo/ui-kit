@@ -41,8 +41,6 @@ jobs:
         uses: ./.github/actions/setup
       - name: Git Setup
         uses: ./.github/actions/git-setup
-        env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
       - name: Publish
         uses: ./.github/actions/publish
         env:

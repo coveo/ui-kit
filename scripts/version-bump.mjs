@@ -13,14 +13,11 @@ import {
   writeChangelog,
 } from "@coveo/semantic-monorepo-tools";
 import angularChangelogConvention from "conventional-changelog-angular";
-import { exec as syncExec } from "child_process";
 import { dedent } from "ts-dedent";
-import { promisify } from "util";
 
 const PATH = ".";
 const REPO_OWNER = "coveo";
 const REPO_NAME = "relay";
-const GIT_SSH_REMOTE = "DEPLOY_KEY";
 
 const convention = await angularChangelogConvention;
 const packages = [
@@ -56,25 +53,6 @@ const recursiveVersionCompare = (version1, version2, i) => {
   return version1[i] > version2[i] ? 1 : -1;
 };
 
-const hasChangesOccured = async () => {
-  const exec = promisify(syncExec);
-  try {
-    const { stdout, stderr } = await exec("git status");
-
-    if (typeof stderr != "string") {
-      console.error(stderr);
-      return false;
-    }
-
-    if (stdout.includes("nothing to commit")) return false;
-
-    return true;
-  } catch (e) {
-    console.error(e);
-    process.exit(1);
-  }
-};
-
 const getVersionPrefix = (name) => `${name}/v`;
 
 const updateChangelog = async ({
@@ -103,9 +81,15 @@ const updateChangelog = async ({
 const bumpVersion = async ({ newVersion, name, lastTag }) => {
   console.info(`\x1b[32m Bumping ${name} to version ${newVersion} \n`);
 
-  const excludedPackages = packages
+  const packagesExceptCurrent = packages
     .filter((pkg) => pkg.name != name)
     .map((pkg) => pkg.name);
+
+  const excludedPackages = [
+    "eslint-config-custom",
+    "tsconfig",
+    ...packagesExceptCurrent,
+  ];
 
   await pnpmBumpVersion(newVersion, lastTag, [name], excludedPackages);
 };
@@ -135,7 +119,6 @@ const runPackageBump = async (pkg) => {
 
   if (versionCompare(newVersion, currentVersion) >= 1) {
     await bumpVersion({ newVersion, name, lastTag });
-    await gitTag(newVersionTag);
     await updateChangelog({
       parsedCommits,
       newVersion,
@@ -143,12 +126,13 @@ const runPackageBump = async (pkg) => {
       lastTag,
       path,
     });
+
+    return newVersionTag;
   }
 };
 
-const commitAndPush = async () => {
-  if (hasChangesOccured()) {
-    const commitMessage = dedent`
+const commitAndPush = async (tags) => {
+  const commitMessage = dedent`
     [version bump][skip ci] chore(release): relay publish
 
     **/CHANGELOG.md
@@ -157,17 +141,28 @@ const commitAndPush = async () => {
     pnpm-lock.yaml
     `;
 
-    await gitCommit(commitMessage, ".");
-    await gitPush({remote: GIT_SSH_REMOTE});
-    await gitPushTags();
+  await gitCommit(commitMessage, ".");
+
+  for (const tag of tags) {
+    await gitTag(tag);
   }
+
+  await gitPush();
+  await gitPushTags();
 };
 
 const bumpVersions = async () => {
   try {
-    await Promise.all(packages.map(async (pkg) => await runPackageBump(pkg)));
+    const rawTags = await Promise.all(
+      packages.map(async (pkg) => await runPackageBump(pkg))
+    );
+    const tags = rawTags.filter((tag) => !!tag);
 
-    await commitAndPush();
+    if (!tags.length) {
+      return;
+    }
+
+    await commitAndPush(tags);
   } catch (e) {
     console.error(e);
     process.exit(1);
