@@ -16,20 +16,23 @@ function isSearchEventRequest(
   return 'results' in request;
 }
 
-function isClickEventRequest(
+export function parseClickEventRequest(
   request: AnyEventRequest
 ): ClickEventRequest | null {
   try {
-    const possiblyParsed = JSON.parse(
+    return JSON.parse(
       decodeURIComponent(request).replace('clickEvent=', '')
-    );
-    if ('documentUri' in possiblyParsed) {
-      return possiblyParsed as ClickEventRequest;
-    }
-    return null;
-  } catch {
+    ) as ClickEventRequest;
+  } catch (e) {
     return null;
   }
+}
+
+function isClickEventRequest(
+  request: AnyEventRequest
+): ClickEventRequest | null {
+  const parsed = parseClickEventRequest(request);
+  return parsed ? 'documentUri' in parsed : null;
 }
 
 function isCustomEventRequest(
@@ -76,10 +79,8 @@ export class AnalyticsTracker {
   }
 
   static getLastClickEvent() {
-    return findLast(
-      this.analytics,
-      isClickEventRequest
-    ) as ClickEventRequest | null;
+    const last = findLast(this.analytics, isClickEventRequest);
+    return parseClickEventRequest(last);
   }
 
   static getLastCustomEvent(eventType: string) {

@@ -31,12 +31,16 @@ function logFoldingActionEvent(
   cy.wait(eventName)
     .then((interception) => {
       const analyticsBody = interception.request.body;
-      const customData = analyticsBody?.customData;
+
       if (eventType === 'click') {
-        expect(analyticsBody).to.have.property('documentTitle', title);
-        expect(analyticsBody).to.have.property('documentUri', uri);
-        expect(analyticsBody).to.have.property('documentUrl', uri);
-        expect(analyticsBody).to.have.property('documentPosition', position);
+        const parsedBody = JSON.parse(
+          decodeURIComponent(analyticsBody).replace('clickEvent=', '')
+        );
+        const customData = parsedBody.customData;
+        expect(parsedBody).to.have.property('documentTitle', title);
+        expect(parsedBody).to.have.property('documentUri', uri);
+        expect(parsedBody).to.have.property('documentUrl', uri);
+        expect(parsedBody).to.have.property('documentPosition', position);
         expect(customData).to.have.property(
           'contentIDKey',
           documentId?.contentIdKey

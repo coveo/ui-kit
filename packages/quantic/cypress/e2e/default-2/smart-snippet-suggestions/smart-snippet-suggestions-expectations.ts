@@ -33,8 +33,20 @@ function logSmartSnippetSuggestionsEvent(
   } = suggestion;
   cy.wait(eventName)
     .then((interception) => {
-      const analyticsBody = interception.request.body;
-      const customData = analyticsBody?.customData;
+      let analyticsBody: Record<string, unknown>;
+      let customData: Record<string, unknown>;
+      if (eventType === 'click') {
+        analyticsBody = JSON.parse(
+          decodeURIComponent(interception.request.body).replace(
+            'clickEvent=',
+            ''
+          )
+        );
+        customData = analyticsBody.customData as Record<string, unknown>;
+      } else {
+        analyticsBody = interception.request.body;
+        customData = analyticsBody.customData as Record<string, unknown>;
+      }
       const documentIdPayload = customData?.documentId;
       expect(customData).to.have.property('answerSnippet', answerSnippet);
       expect(customData).to.have.property('question', question);
