@@ -8,15 +8,14 @@ import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
   CategoryFacetSection,
   ConfigurationSection,
-  ContextSection,
   DateFacetSection,
-  FacetOptionsSection,
   FacetOrderSection,
   FacetSection,
   NumericFacetSection,
   PaginationSection,
   ProductListingV2Section,
   StructuredSortSection,
+  VersionSection,
 } from '../../../state/state-sections';
 import {sortFacets} from '../../../utils/facet-utils';
 import {
@@ -30,15 +29,14 @@ import {logProductListingV2Load} from './product-listing-v2-analytics';
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
   Partial<
-    PaginationSection &
-      StructuredSortSection &
-      FacetSection &
+    FacetSection &
       NumericFacetSection &
       CategoryFacetSection &
       DateFacetSection &
-      FacetOptionsSection &
       FacetOrderSection &
-      ContextSection
+      StructuredSortSection &
+      PaginationSection &
+      VersionSection
   >;
 
 export interface FetchProductListingV2ThunkReturn {
