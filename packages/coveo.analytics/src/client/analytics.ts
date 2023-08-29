@@ -393,7 +393,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
                     this.afterSendHooks.map((hook) => hook(eventType, {...parametersToSend, ...remainingPayload}))
                 );
                 await this.deferExecution();
-                return (await this.sendFromBufferWithFetch()) as TResponse | void;
+                return (await this.sendFromBuffer()) as TResponse | void;
             },
         };
     }
@@ -406,11 +406,11 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return new Promise((resolve) => setTimeout(resolve, 0));
     }
 
-    private async sendFromBufferWithFetch(): Promise<AnyEventResponse | void> {
+    private async sendFromBuffer(): Promise<AnyEventResponse | void> {
         const popped = this.bufferedRequests.shift();
         if (popped) {
             const {eventType, payload} = popped;
-            return this.runtime.client.sendEvent(eventType, payload);
+            return this.runtime.getClientDependingOnEventType(eventType).sendEvent(eventType, payload);
         }
     }
 

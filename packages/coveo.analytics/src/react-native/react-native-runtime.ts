@@ -42,4 +42,8 @@ export class ReactNativeRuntime implements IRuntimeEnvironment {
             },
         });
     }
+
+    public getClientDependingOnEventType() {
+        return this.client;
+    }
 }

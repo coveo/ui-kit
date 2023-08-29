@@ -4,10 +4,12 @@ import {hasLocalStorage, hasCookieStorage} from '../detector';
 import {AnalyticsRequestClient, IAnalyticsClientOptions, NoopAnalyticsClient} from './analyticsRequestClient';
 import {AnalyticsFetchClient} from './analyticsFetchClient';
 import {BufferedRequest} from './analytics';
+import {EventType} from '../events';
 
 export interface IRuntimeEnvironment {
     storage: WebStorage;
     client: AnalyticsRequestClient;
+    getClientDependingOnEventType(eventType: EventType): AnalyticsRequestClient;
 }
 
 export class BrowserRuntime implements IRuntimeEnvironment {
@@ -33,6 +35,10 @@ export class BrowserRuntime implements IRuntimeEnvironment {
             }
         });
     }
+
+    public getClientDependingOnEventType(eventType: EventType) {
+        return eventType === 'click' && this.beaconClient.isAvailable() ? this.beaconClient : this.client;
+    }
 }
 
 export class NodeJSRuntime implements IRuntimeEnvironment {
@@ -43,9 +49,17 @@ export class NodeJSRuntime implements IRuntimeEnvironment {
         this.storage = storage || new NullStorage();
         this.client = new AnalyticsFetchClient(clientOptions);
     }
+
+    getClientDependingOnEventType(eventType: EventType): AnalyticsRequestClient {
+        return this.client;
+    }
 }
 
 export class NoopRuntime implements IRuntimeEnvironment {
     public storage = new NullStorage();
     public client = new NoopAnalyticsClient();
+
+    getClientDependingOnEventType(eventType: EventType): AnalyticsRequestClient {
+        return this.client;
+    }
 }
