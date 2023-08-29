@@ -61,7 +61,7 @@ describe('product-listing-v2-slice', () => {
     expect(finalState.error).toBeNull();
   });
 
-  it('set the isLoading state to true during getProductRecommendations.pending', () => {
+  it('set the isLoading state to true during fetchProductListing.pending', () => {
     const pendingAction = fetchProductListing.pending('');
     const finalState = productListingV2Reducer(state, pendingAction);
     expect(finalState.isLoading).toBe(true);
