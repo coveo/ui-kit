@@ -25,6 +25,10 @@ module.exports = {
       '<rootDir>/force-app/test/jest-mocks/quantic/quanticResult/quanticResult',
     '^lightning/navigation$':
       '<rootDir>/force-app/test/jest-mocks/lightning/navigation/navigation',
+    '^c/quanticResultActionStyles$':
+      '<rootDir>/force-app/main/default/lwc/quanticResultActionStyles/quanticResultActionStyles',
+    '^c/searchBoxStyle$':
+      '<rootDir>/force-app/main/default/lwc/searchBoxStyle/searchBoxStyle',
   },
   modulePathIgnorePatterns: ['.cache'],
   // add any custom configurations here
