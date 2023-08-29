@@ -1,27 +1,18 @@
-import type {CategoryFacet, CategoryFacetValue} from '@coveo/headless';
-import {Fragment, FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
-import {FocusTargetController} from '../../../../../utils/accessibility-utils';
+import type {CategoryFacetValue} from '@coveo/headless';
+import {FunctionalComponent, h} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../../utils/field-utils';
 import {FacetValueLabelHighlight} from '../../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueLink} from '../../../../common/facets/facet-value-link/facet-value-link';
-import {getOnClickForUnselectedValue} from './commons';
+import {
+  CategoryFacetValueRendererProps,
+  getIsLeafOrNodePart,
+  getOnClickForUnselectedValue,
+  isValueSelected,
+} from './commons';
 
-interface FlatCategoryFacetProps {
-  facet: CategoryFacet;
-  facetValues: CategoryFacetValue[];
-  resultIndexToFocusOnShowMore: number;
-  field: string;
-  i18n: i18n;
-  facetSearchQuery: string;
-  focusTargets: {
-    activeValue: FocusTargetController;
-    showLessFocus: FocusTargetController;
-    showMoreFocus: FocusTargetController;
-  };
-}
-
-export const FlatCategoryFacet: FunctionalComponent<FlatCategoryFacetProps> = ({
+export const FlatCategoryFacet: FunctionalComponent<
+  CategoryFacetValueRendererProps
+> = ({
   focusTargets,
   facet,
   facetSearchQuery,
@@ -29,19 +20,14 @@ export const FlatCategoryFacet: FunctionalComponent<FlatCategoryFacetProps> = ({
   field,
   i18n,
   resultIndexToFocusOnShowMore,
-}: FlatCategoryFacetProps) => {
-  if (!facetValues.length) {
-    return <Fragment></Fragment>;
-  }
-
+}: CategoryFacetValueRendererProps) => {
   const renderChild = function (
     facetValue: CategoryFacetValue,
     isShowLessFocusTarget: boolean,
     isShowMoreFocusTarget: boolean
   ) {
     const displayValue = getFieldValueCaption(field, facetValue.value, i18n);
-    const isSelected = facetValue.state === 'selected';
-    const leafOrNodePart = facetValue.isLeafValue ? 'leaf-value' : 'node-value';
+    const isSelected = isValueSelected(facetValue);
 
     return (
       <FacetValueLink
@@ -49,7 +35,11 @@ export const FlatCategoryFacet: FunctionalComponent<FlatCategoryFacetProps> = ({
         numberOfResults={facetValue.numberOfResults}
         isSelected={isSelected}
         i18n={i18n}
-        onClick={getOnClickForUnselectedValue(facet, focusTargets.activeValue)}
+        onClick={getOnClickForUnselectedValue(
+          facet,
+          facetValue,
+          focusTargets.activeValueFocus
+        )}
         searchQuery={facetSearchQuery}
         buttonRef={(element) => {
           isShowLessFocusTarget &&
@@ -57,7 +47,7 @@ export const FlatCategoryFacet: FunctionalComponent<FlatCategoryFacetProps> = ({
           isShowMoreFocusTarget &&
             focusTargets.showMoreFocus.setTarget(element);
         }}
-        additionalPart={leafOrNodePart}
+        additionalPart={getIsLeafOrNodePart(facetValue)}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
@@ -67,7 +57,11 @@ export const FlatCategoryFacet: FunctionalComponent<FlatCategoryFacetProps> = ({
     );
   };
 
-  return facetValues.map((value, i) =>
-    renderChild(value, i === 0, i === resultIndexToFocusOnShowMore)
+  return (
+    <ul part="values" class="mt-3">
+      {facetValues.map((value, i) =>
+        renderChild(value, i === 0, i === resultIndexToFocusOnShowMore)
+      )}
+    </ul>
   );
 };

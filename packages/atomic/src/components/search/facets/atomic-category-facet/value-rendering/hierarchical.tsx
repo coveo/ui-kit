@@ -1,30 +1,19 @@
-import {CategoryFacet, CategoryFacetValue} from '@coveo/headless';
+import {CategoryFacetValue} from '@coveo/headless';
 import {FunctionalComponent, VNode, h} from '@stencil/core';
-import {i18n} from 'i18next';
 import LeftArrow from '../../../../../images/arrow-left-rounded.svg';
-import {FocusTargetController} from '../../../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../../../utils/field-utils';
 import {Button} from '../../../../common/button';
 import {FacetValueLabelHighlight} from '../../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueLink} from '../../../../common/facets/facet-value-link/facet-value-link';
-import {getOnClickForUnselectedValue} from './commons';
-
-interface HierarchicalCategoryFacetProps {
-  facet: CategoryFacet;
-  facetValues: CategoryFacetValue[];
-  resultIndexToFocusOnShowMore: number;
-  field: string;
-  i18n: i18n;
-  facetSearchQuery: string;
-  focusTargets: {
-    activeValue: FocusTargetController;
-    showLessFocus: FocusTargetController;
-    showMoreFocus: FocusTargetController;
-  };
-}
+import {
+  CategoryFacetValueRendererProps,
+  getIsLeafOrNodePart,
+  getOnClickForUnselectedValue,
+  isValueSelected,
+} from './commons';
 
 export const HierarchicalCategoryFacet: FunctionalComponent<
-  HierarchicalCategoryFacetProps
+  CategoryFacetValueRendererProps
 > = ({
   focusTargets,
   facet,
@@ -32,14 +21,17 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
   facetValues,
   field,
   i18n,
-}: HierarchicalCategoryFacetProps) => {
+}: CategoryFacetValueRendererProps) => {
   function renderAllCategoriesButton() {
     const allCategories = i18n.t('all-categories');
     return (
       <Button
         style="text-neutral"
         part="all-categories-button"
-        onClick={getOnClickForUnselectedValue(facet, focusTargets.activeValue)}
+        onClick={() => {
+          focusTargets.activeValueFocus.focusAfterSearch();
+          facet.deselectAll();
+        }}
       >
         <atomic-icon
           aria-hidden="true"
@@ -63,7 +55,7 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
     children: VNode[]
   ): VNode {
     const displayValue = getFieldValueCaption(field, facetValue.value, i18n);
-    if (facetValue.state === 'selected') {
+    if (isValueSelected(facetValue)) {
       return renderSelectedValue(facetValue, displayValue, children);
     }
     if (facetValue.children.length === 0) {
@@ -84,18 +76,18 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
         isSelected={true}
         i18n={i18n}
         onClick={() => {
-          focusTargets.activeValue.focusAfterSearch();
+          focusTargets.activeValueFocus.focusAfterSearch();
           facet.deselectAll();
         }}
         searchQuery={facetSearchQuery}
         part={`active-parent ${getIsLeafOrNodePart(facetValue)}`}
         class="contents"
-        buttonRef={focusTargets.activeValue.setTarget}
+        buttonRef={focusTargets.activeValueFocus.setTarget}
         subList={children.length > 0 && <ul part="values">{children}</ul>}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
-          isSelected={facetValue.state === 'selected'}
+          isSelected={true}
         ></FacetValueLabelHighlight>
       </FacetValueLink>
     );
@@ -109,17 +101,20 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
       <FacetValueLink
         displayValue={displayValue}
         numberOfResults={facetValue.numberOfResults}
-        isSelected={true}
+        isSelected={false}
         i18n={i18n}
-        onClick={getOnClickForUnselectedValue(facet, focusTargets.activeValue)}
+        onClick={() => {
+          focusTargets.activeValueFocus.focusAfterSearch();
+          facet.toggleSelect(facetValue);
+        }}
         searchQuery={facetSearchQuery}
         part={`value-link ${getIsLeafOrNodePart(facetValue)}`}
         class="contents"
-        buttonRef={focusTargets.activeValue.setTarget}
+        buttonRef={focusTargets.activeValueFocus.setTarget}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
-          isSelected={facetValue.state === 'selected'}
+          isSelected={false}
         ></FacetValueLabelHighlight>
       </FacetValueLink>
     );
@@ -142,7 +137,8 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
           ariaPressed="false"
           onClick={getOnClickForUnselectedValue(
             facet,
-            focusTargets.activeValue
+            facetValue,
+            focusTargets.activeValueFocus
           )}
           ariaLabel={ariaLabel}
         >
@@ -158,13 +154,12 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
     );
   }
 
-  function getIsLeafOrNodePart(value: CategoryFacetValue) {
-    return value.isLeafValue ? 'leaf-value' : 'node-value';
-  }
   return (
-    <li class="contents">
-      {renderAllCategoriesButton()}
-      <ul part="sub-parents">{renderValuesTree(facetValues)}</ul>
-    </li>
+    <ul part="parents" class="mt-3">
+      <li class="contents">
+        {renderAllCategoriesButton()}
+        <ul part="sub-parents">{renderValuesTree(facetValues)}</ul>
+      </li>
+    </ul>
   );
 };
