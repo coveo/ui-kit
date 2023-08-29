@@ -22,7 +22,6 @@ export interface CategoryFacetValue extends CategoryFacetValueCommon {
    * Whether more facet values are available.
    * */
   moreValuesAvailable?: boolean;
-  isAutoSelected?: boolean;
   /**
    * When the hierarchical value has no children, this property is true.
    */
