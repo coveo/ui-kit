@@ -126,7 +126,7 @@ describe('Category Facet Test Suites', () => {
         CategoryFacetSelectors,
         false
       );
-      CategoryFacetAssertions.assertNumberOfChildValues(defaultNumberOfValues);
+      CategoryFacetAssertions.assertNumberOfLinkValues(defaultNumberOfValues);
       CategoryFacetAssertions.assertNumberOfParentValues(0);
       CommonFacetAssertions.assertDisplayShowMoreButton(
         CategoryFacetSelectors,
@@ -190,7 +190,7 @@ describe('Category Facet Test Suites', () => {
               CategoryFacetSelectors.labelButton().click();
             });
 
-            CategoryFacetAssertions.assertNumberOfChildValues(0);
+            CategoryFacetAssertions.assertNumberOfLinkValues(0);
             CategoryFacetAssertions.assertNumberOfParentValues(0);
             CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
             CommonFacetAssertions.assertDisplayClearButton(
@@ -212,7 +212,7 @@ describe('Category Facet Test Suites', () => {
           });
 
           describe('verify rendering', () => {
-            CategoryFacetAssertions.assertNumberOfChildValues(
+            CategoryFacetAssertions.assertNumberOfLinkValues(
               defaultNumberOfValues * 2
             );
             CommonFacetAssertions.assertDisplayShowLessButton(
@@ -231,7 +231,7 @@ describe('Category Facet Test Suites', () => {
             });
 
             describe('verify rendering', () => {
-              CategoryFacetAssertions.assertNumberOfChildValues(
+              CategoryFacetAssertions.assertNumberOfLinkValues(
                 defaultNumberOfValues
               );
               CommonFacetAssertions.assertDisplayShowLessButton(
@@ -286,7 +286,7 @@ describe('Category Facet Test Suites', () => {
           setupWithTwoValueTrees();
         }
 
-        const selectedPath = canadaHierarchy.slice(0, 1);
+        const additionalLinkValues = 1;
 
         describe('verify rendering', () => {
           beforeEach(setupGoDeeperOneLevel);
@@ -296,6 +296,9 @@ describe('Category Facet Test Suites', () => {
           CommonFacetAssertions.assertDisplayClearButton(
             CategoryFacetSelectors,
             false
+          );
+          CategoryFacetAssertions.assertNumberOfLinkValues(
+            defaultNumberOfValues + additionalLinkValues
           );
           CategoryFacetAssertions.assertNumberOfChildValues(
             defaultNumberOfValues
@@ -309,7 +312,6 @@ describe('Category Facet Test Suites', () => {
             CategoryFacetSelectors,
             false
           );
-          CategoryFacetAssertions.assertPathInUrl(selectedPath);
         });
       });
     });
@@ -356,7 +358,7 @@ describe('Category Facet Test Suites', () => {
       describe('verify rendering', () => {
         CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
         CategoryFacetAssertions.assertNumberOfParentValues(4);
-        CategoryFacetAssertions.assertNumberOfChildValues(0);
+        CategoryFacetAssertions.assertNumberOfLinkValues(0);
         CommonFacetAssertions.assertDisplayShowMoreButton(
           CategoryFacetSelectors,
           false,
@@ -384,7 +386,7 @@ describe('Category Facet Test Suites', () => {
         describe('verify rendering', () => {
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
           CategoryFacetAssertions.assertNumberOfParentValues(1);
-          CategoryFacetAssertions.assertNumberOfChildValues(
+          CategoryFacetAssertions.assertNumberOfLinkValues(
             defaultNumberOfValues
           );
           CommonFacetAssertions.assertDisplayShowMoreButton(
@@ -487,7 +489,7 @@ describe('Category Facet Test Suites', () => {
 
       describe('verify rendering', () => {
         beforeEach(setupShowMore);
-        CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues * 2);
+        CategoryFacetAssertions.assertNumberOfLinkValues(numberOfValues * 2);
         CommonFacetAssertions.assertDisplayShowMoreButton(
           CategoryFacetSelectors,
           true
@@ -513,7 +515,7 @@ describe('Category Facet Test Suites', () => {
             )
             .init();
           pressShowMore(CategoryFacetSelectors);
-          CategoryFacetSelectors.childValue()
+          CategoryFacetSelectors.linkValue()
             .its('length')
             .should('eq', numberOfValues * 2);
           pressShowMore(CategoryFacetSelectors);
@@ -540,7 +542,7 @@ describe('Category Facet Test Suites', () => {
         }
         beforeEach(setupShowLess);
         describe('verify rendering', () => {
-          CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues);
+          CategoryFacetAssertions.assertNumberOfLinkValues(numberOfValues);
           CommonFacetAssertions.assertDisplayShowMoreButton(
             CategoryFacetSelectors,
             true
@@ -568,14 +570,14 @@ describe('Category Facet Test Suites', () => {
 
     beforeEach(setupCustomNumberOfValues);
 
-    CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues);
+    CategoryFacetAssertions.assertNumberOfLinkValues(numberOfValues);
 
     describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
       beforeEach(() => {
         selectChildValueAt(0);
       });
 
-      CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues);
+      CategoryFacetAssertions.assertNumberOfLinkValues(numberOfValues);
     });
   });
 
@@ -775,7 +777,7 @@ describe('Category Facet Test Suites', () => {
           );
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
           CategoryFacetAssertions.assertNumberOfFacetSearchResults(0);
-          CategoryFacetAssertions.assertNumberOfChildValues(1);
+          CategoryFacetAssertions.assertNumberOfLinkValues(1);
           CategoryFacetAssertions.assertNumberOfParentValues(2);
           CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
         });

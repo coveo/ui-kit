@@ -40,6 +40,9 @@ export const CategoryFacetSelectors = {
   values() {
     return this.shadow().find('[part="values"]');
   },
+  linkValue() {
+    return this.shadow().find('[part~="value-link"]');
+  },
   childValue() {
     return this.values().find('[part~="value-link"]');
   },
