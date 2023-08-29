@@ -98,7 +98,7 @@ export const PagerCommon: FunctionalComponent<PagerProps> = (props) => {
         class="btn-page focus-visible:bg-neutral-light p-1 min-w-[2.5rem] min-h-[2.5rem]"
         part={parts.join(' ')}
         text={page.toLocaleString(props.bindings.i18n.language)}
-        ref={isSelected ? props.activePage?.setTarget : undefined}
+        ref={isSelected ? (el) => props.activePage?.setTarget(el) : undefined}
       ></RadioButton>
     );
   };

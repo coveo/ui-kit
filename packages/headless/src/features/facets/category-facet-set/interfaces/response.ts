@@ -1,12 +1,8 @@
 import {BaseFacetResponse} from '../../facet-api/response';
-import {FacetValueState} from '../../facet-api/value';
+import {CategoryFacetValueCommon} from './commons';
 
-export interface CategoryFacetValue {
-  /**
-   * Whether a facet value is filtering results (`selected`) or not (`idle`).
-   * */
-  state: FacetValueState;
-
+export type {CategoryFacetValueCommon} from './commons';
+export interface CategoryFacetValue extends CategoryFacetValueCommon {
   /**
    * The number of results that match the facet value.
    * */
@@ -27,10 +23,6 @@ export interface CategoryFacetValue {
    * */
   moreValuesAvailable: boolean;
 
-  /**
-   * The facet value.
-   * */
-  value: string;
   /**
    * When the hierarchical value has no children, this property is true.
    */

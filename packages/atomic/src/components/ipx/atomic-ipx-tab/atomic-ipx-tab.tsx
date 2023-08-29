@@ -52,7 +52,7 @@ export class AtomicIPXTab implements InitializableComponent {
    * Activates the tab.
    */
   @Method()
-  select() {
+  public async select() {
     this.tab.select();
   }
 

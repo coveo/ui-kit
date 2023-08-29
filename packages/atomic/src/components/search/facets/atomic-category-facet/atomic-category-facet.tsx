@@ -15,7 +15,6 @@ import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
 import {
   AriaLiveRegion,
-  FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
 import {
@@ -210,17 +209,13 @@ export class AtomicCategoryFacet
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
-  @FocusTarget()
-  private showLessFocus!: FocusTargetController;
+  private showLessFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private showMoreFocus!: FocusTargetController;
+  private showMoreFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private headerFocus!: FocusTargetController;
+  private headerFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private activeValueFocus!: FocusTargetController;
+  private activeValueFocus?: FocusTargetController;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
@@ -264,6 +259,28 @@ export class AtomicCategoryFacet
       numberOfSelectedValues: () => (this.facetState.hasActiveValues ? 1 : 0),
     });
     this.initializeDependenciesManager();
+  }
+
+  private get focusTargets() {
+    if (!this.showLessFocus) {
+      this.showLessFocus = new FocusTargetController(this);
+    }
+    if (!this.showMoreFocus) {
+      this.showMoreFocus = new FocusTargetController(this);
+    }
+    if (!this.headerFocus) {
+      this.headerFocus = new FocusTargetController(this);
+    }
+    if (!this.activeValueFocus) {
+      this.activeValueFocus = new FocusTargetController(this);
+    }
+
+    return {
+      showLessFocus: this.showLessFocus,
+      showMoreFocus: this.showMoreFocus,
+      headerFocus: this.headerFocus,
+      activeValueFocus: this.activeValueFocus,
+    };
   }
 
   public disconnectedCallback() {
@@ -314,13 +331,13 @@ export class AtomicCategoryFacet
         headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
         onClearFilters={() => {
-          this.headerFocus.focusAfterSearch();
+          this.focusTargets.headerFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
         headerRef={(header) => {
-          this.headerFocus.setTarget(header);
+          this.focusTargets.headerFocus.setTarget(header);
           if (!this.hasParents) {
-            this.activeValueFocus.setTarget(header);
+            this.focusTargets.activeValueFocus.setTarget(header);
           }
         }}
       ></FacetHeader>
@@ -360,7 +377,7 @@ export class AtomicCategoryFacet
         style="text-neutral"
         part="all-categories-button"
         onClick={() => {
-          this.activeValueFocus.focusAfterSearch();
+          this.focusTargets.activeValueFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
       >
@@ -391,7 +408,7 @@ export class AtomicCategoryFacet
         part="parent-button"
         ariaPressed="false"
         onClick={() => {
-          this.activeValueFocus.focusAfterSearch();
+          this.focusTargets.activeValueFocus.focusAfterSearch();
           this.facet.toggleSelect(facetValue);
         }}
         ariaLabel={ariaLabel}
@@ -445,13 +462,13 @@ export class AtomicCategoryFacet
         isSelected={true}
         i18n={this.bindings.i18n}
         onClick={() => {
-          this.activeValueFocus.focusAfterSearch();
+          this.focusTargets.activeValueFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
         searchQuery={this.facetState.facetSearch.query}
         part={`active-parent ${this.getIsLeafOrNodePart(activeParent)}`}
         class="contents"
-        buttonRef={this.activeValueFocus.setTarget}
+        buttonRef={this.focusTargets.activeValueFocus.setTarget}
         subList={<ul part="values">{this.renderChildren()}</ul>}
       >
         <FacetValueLabelHighlight
@@ -480,13 +497,15 @@ export class AtomicCategoryFacet
         isSelected={isSelected}
         i18n={this.bindings.i18n}
         onClick={() => {
-          this.activeValueFocus.focusAfterSearch();
+          this.focusTargets.activeValueFocus.focusAfterSearch();
           this.facet.toggleSelect(facetValue);
         }}
         searchQuery={this.facetState.facetSearch.query}
         buttonRef={(element) => {
-          isShowLessFocusTarget && this.showLessFocus.setTarget(element);
-          isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
+          isShowLessFocusTarget &&
+            this.focusTargets.showLessFocus.setTarget(element);
+          isShowMoreFocusTarget &&
+            this.focusTargets.showMoreFocus.setTarget(element);
         }}
         additionalPart={this.getIsLeafOrNodePart(facetValue)}
       >
@@ -522,7 +541,7 @@ export class AtomicCategoryFacet
             i18n={this.bindings.i18n}
             searchQuery={this.facetState.facetSearch.query}
             onClick={() => {
-              this.activeValueFocus.focusAfterSearch();
+              this.focusTargets.activeValueFocus.focusAfterSearch();
               this.facet.facetSearch.select(value);
             }}
           ></CategoryFacetSearchResult>
@@ -550,11 +569,11 @@ export class AtomicCategoryFacet
           i18n={this.bindings.i18n}
           onShowMore={() => {
             this.resultIndexToFocusOnShowMore = this.facetState.values.length;
-            this.showMoreFocus.focusAfterSearch();
+            this.focusTargets.showMoreFocus.focusAfterSearch();
             this.facet.showMoreValues();
           }}
           onShowLess={() => {
-            this.showLessFocus.focusAfterSearch();
+            this.focusTargets.showLessFocus.focusAfterSearch();
             this.facet.showLessValues();
           }}
           canShowLessValues={this.facetState.canShowLessValues}
