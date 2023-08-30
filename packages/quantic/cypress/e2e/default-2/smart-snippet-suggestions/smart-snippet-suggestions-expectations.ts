@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {getAnalyticsBodyFromInterception} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {
   SmartSnippetSuggestionsSelector,
@@ -33,20 +34,8 @@ function logSmartSnippetSuggestionsEvent(
   } = suggestion;
   cy.wait(eventName)
     .then((interception) => {
-      let analyticsBody: Record<string, unknown>;
-      let customData: Record<string, unknown>;
-      if (eventType === 'click') {
-        analyticsBody = JSON.parse(
-          decodeURIComponent(interception.request.body).replace(
-            'clickEvent=',
-            ''
-          )
-        );
-        customData = analyticsBody.customData as Record<string, unknown>;
-      } else {
-        analyticsBody = interception.request.body;
-        customData = analyticsBody.customData as Record<string, unknown>;
-      }
+      const analyticsBody = getAnalyticsBodyFromInterception(interception);
+      const customData = analyticsBody?.customData;
       const documentIdPayload = customData?.documentId;
       expect(customData).to.have.property('answerSnippet', answerSnippet);
       expect(customData).to.have.property('question', question);
