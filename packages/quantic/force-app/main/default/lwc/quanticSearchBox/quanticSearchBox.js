@@ -223,7 +223,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   handleKeyValues() {
-    if (this.searchBox.state.value !== this.input.value) {
+    if (this.searchBox?.state?.value !== this.input.value) {
       this.suggestionList?.resetSelection();
       this.searchBox.updateText(this.input.value);
     }
@@ -276,6 +276,7 @@ export default class QuanticSearchBox extends LightningElement {
     if (!this.textarea) {
       return;
     }
+    this.input.value = this.input.value.replace(/\n/g, '');
     this.input.style.height = '';
     this.input.style.whiteSpace = 'pre-wrap';
     this.input.style.height = this.input.scrollHeight + "px";
