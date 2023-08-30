@@ -23,6 +23,10 @@ export interface DidYouMeanState {
    * The original query that was originally performed when an automatic correction is executed.
    */
   originalQuery: string;
+  /**
+   * Whether to automatically correct queries that will return no results.
+   */
+  automaticallyCorrectQuery: boolean;
 }
 
 export const emptyCorrection = () => ({
@@ -38,5 +42,6 @@ export function getDidYouMeanInitialState(): DidYouMeanState {
     wasAutomaticallyCorrected: false,
     queryCorrection: emptyCorrection(),
     originalQuery: '',
+    automaticallyCorrectQuery: true,
   };
 }
