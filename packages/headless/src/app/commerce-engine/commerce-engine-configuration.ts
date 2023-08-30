@@ -1,8 +1,8 @@
 import {Schema} from '@coveo/bueno';
+import {getOrganizationEndpoints} from '../..';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
-  getSampleEngineConfiguration,
 } from '../engine-configuration';
 
 /**
@@ -17,6 +17,11 @@ export const commerceEngineConfigurationSchema =
 
 export function getSampleCommerceEngineConfiguration(): CommerceEngineConfiguration {
   return {
-    ...getSampleEngineConfiguration(),
+    organizationId: 'fashioncoveodemocomgzh7iep8',
+    // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
+    accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
+    organizationEndpoints: getOrganizationEndpoints(
+      'fashioncoveodemocomgzh7iep8'
+    ),
   };
 }
