@@ -2,8 +2,8 @@
     "name": "coveo.analytics",
     "version": "2.28.14",
     "description": "📈 Coveo analytics client (node and browser compatible) ",
-    "main": "dist/library.js",
-    "module": "dist/library.es.js",
+    "main": "dist/library.cjs",
+    "module": "dist/browser.mjs",
     "browser": "dist/coveoua.browser.js",
     "types": "dist/definitions/coveoua/library.d.ts",
     "scripts": {
@@ -65,9 +65,10 @@
         "plist": "3.0.5"
     },
     "files": [
+        "modules/",
         "dist/**/*.d.ts",
-        "dist/**/*.js",
-        "dist/**/*.js.map",
+        "dist/**/*.{js, mjs, cjs}",
+        "dist/**/*.{js, mjs, cjs}.map",
         "src/**/*.ts",
         "react-native/",
         "LICENSE"

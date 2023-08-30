@@ -1,0 +1,11 @@
+{
+    "name": "modules",
+    "private": true,
+    "main": "../dist/library.cjs",
+    "module": "../dist/library.mjs",
+    "browser": "../dist/browser.mjs",
+    "types": "../dist/definitions/coveoua/library.d.ts",
+    "files": [
+        "../dist"
+    ]
+}

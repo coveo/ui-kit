@@ -10,6 +10,10 @@ import {resolve} from 'path';
 import packageJson from './package.json' assert {type: 'json'};
 import * as url from 'url';
 
+/**
+ * @typedef {import('rollup').RollupOptions} RollupOptions
+ */
+
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const browserFetch = () =>
@@ -33,7 +37,10 @@ const versionReplace = () =>
         'process.env.PKG_VERSION': JSON.stringify(packageJson.version),
     });
 
-const browserUMD = {
+/**
+ * @satisfies {RollupOptions}
+ */
+const coveouaConfig = {
     input: './src/coveoua/browser.ts',
     output: [
         {
@@ -75,12 +82,15 @@ const browserUMD = {
     ],
 };
 
-const nodeCJS = {
+/**
+ * @satisfies {RollupOptions}
+ */
+const nodeModulesConfig = {
     input: './src/coveoua/library.ts',
-    output: {
-        file: './dist/library.js',
-        format: 'cjs',
-    },
+    output: /** @type {const} */ (['cjs', 'es']).map((format) => ({
+        file: `./dist/library.${format === 'cjs' ? 'cjs' : 'mjs'}`,
+        format,
+    })),
     plugins: [
         nodeResolve({mainFields: ['main'], preferBuiltins: true}),
         versionReplace(),
@@ -90,10 +100,13 @@ const nodeCJS = {
     ],
 };
 
-const browserESM = {
+/**
+ * @satisfies {RollupOptions}
+ */
+const browserModulesConfig = {
     input: './src/coveoua/headless.ts',
     output: {
-        file: './dist/library.es.js',
+        file: `./dist/browser.mjs`,
         format: 'es',
     },
     plugins: [
@@ -107,7 +120,10 @@ const browserESM = {
     ],
 };
 
-const libRN = {
+/**
+ * @satisfies {RollupOptions}
+ */
+const reactNativeConfig = {
     external: ['react-native', 'cross-fetch'],
     input: './src/react-native/index.ts',
     output: {
@@ -126,4 +142,4 @@ const libRN = {
     ],
 };
 
-export default [browserUMD, nodeCJS, browserESM, libRN];
+export default [coveouaConfig, nodeModulesConfig, browserModulesConfig, reactNativeConfig];
