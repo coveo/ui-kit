@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-unpublished-import
 import {CyHttpMessages, Interception} from 'cypress/types/net-stubbing';
 import {ComponentErrorSelector, should} from './common-selectors';
 
