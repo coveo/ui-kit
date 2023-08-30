@@ -3,7 +3,7 @@ import {FacetInfo} from '../../../common/facets/facet-common-store';
 
 export interface PopoverChildFacet extends FacetInfo {
   hasValues: () => boolean;
-  numberOfSelectedValues: () => number;
+  numberOfActiveValues: () => number;
 }
 
 export const popoverClass = 'popover-nested';

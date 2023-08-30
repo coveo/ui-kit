@@ -329,7 +329,7 @@ export class FacetCommon {
     initializePopover(this.host, {
       ...facetInfo,
       hasValues: () => !!this.facet.state.values.length,
-      numberOfSelectedValues: () => this.numberOfSelectedValues,
+      numberOfActiveValues: () => this.numberOfActiveValues,
     });
   }
 
@@ -376,7 +376,7 @@ export class FacetCommon {
           headerFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfActiveValues={this.numberOfActiveValues}
         isCollapsed={isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={onToggleCollapse}
@@ -385,7 +385,7 @@ export class FacetCommon {
     );
   }
 
-  private get numberOfSelectedValues() {
+  private get numberOfActiveValues() {
     return this.facet.state.values.filter(({state}) => state !== 'idle').length;
   }
 

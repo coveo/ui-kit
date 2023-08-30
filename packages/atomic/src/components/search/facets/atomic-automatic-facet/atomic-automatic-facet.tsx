@@ -130,7 +130,7 @@ export class AtomicAutomaticFacet implements InitializableComponent {
           this.headerFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfActiveValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         headingLevel={0}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
