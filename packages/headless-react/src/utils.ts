@@ -18,3 +18,17 @@ export function singleton<T>(valueGetter: () => T): SingletonGetter<T> {
     },
   };
 }
+
+// Duplicated from packages/headless/src/utils to keep headless exported API surface clean
+// TODO: Explore using a third party lib such as https://www.npmjs.com/package/map-obj to remove duplication
+export function mapObject<TKey extends string, TInitialValue, TNewValue>(
+  obj: Record<TKey, TInitialValue>,
+  predicate: (value: TInitialValue, key: TKey) => TNewValue
+): Record<TKey, TNewValue> {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [
+      key,
+      predicate(value as TInitialValue, key as TKey),
+    ])
+  ) as Record<TKey, TNewValue>;
+}

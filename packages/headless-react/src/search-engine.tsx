@@ -4,7 +4,6 @@ import {
   InferControllerFromDefinition,
   SearchEngineDefinitionOptions,
   defineSearchEngine as defineBaseSearchEngine,
-  mapObject,
 } from '@coveo/headless/ssr';
 import {useContext, useCallback, useMemo, Context} from 'react';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
@@ -17,7 +16,7 @@ import {
   InferControllerHooksMapFromDefinition,
   ReactSearchEngineDefinition,
 } from './types';
-import {SingletonGetter, capitalize, singleton} from './utils';
+import {SingletonGetter, capitalize, singleton, mapObject} from './utils';
 
 export class MissingEngineProviderError extends Error {
   static message =
