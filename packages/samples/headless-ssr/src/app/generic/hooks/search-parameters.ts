@@ -5,6 +5,7 @@ import {
   SearchParameterManager,
   SearchParameterManagerState,
 } from '@coveo/headless/ssr';
+import {useSearchParams} from 'next/navigation';
 import {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
 import {CoveoNextJsSearchParametersSerializer} from '../common/search-parameters-serializer';
 
@@ -18,20 +19,6 @@ function getUrl() {
     return null;
   }
   return new URL(document.location.href);
-}
-
-function useUrlSearchParams() {
-  const [urlSearchParams, onUrlSearchParamsChanged] = useReducer(
-    () => getUrl()?.searchParams,
-    undefined as never
-  );
-  useEffect(() => {
-    window.addEventListener('popstate', onUrlSearchParamsChanged);
-    return () =>
-      window.removeEventListener('popstate', onUrlSearchParamsChanged);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return urlSearchParams;
 }
 
 function useCoveoSearchParameters(
@@ -54,7 +41,7 @@ export function useSyncSearchParameters({
   ssrState,
   controller,
 }: UseSyncSearchParametersProps) {
-  const urlSearchParams = useUrlSearchParams();
+  const urlSearchParams = useSearchParams();
   const coveoSearchParameters = useCoveoSearchParameters(
     ssrState.parameters,
     controller
