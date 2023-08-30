@@ -1,13 +1,22 @@
-import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
+import {
+  ConsoleAliases,
+  getResultTitles,
+  spyOnConsole,
+  waitForHydration,
+} from './ssr-e2e-utils';
 
 const searchStateKey = 'search-state';
 
 describe('headless ssr with search parameter manager example', () => {
+  const route = '/generic';
   describe('when loading a page without search parameters, after hydration', () => {
     beforeEach(() => {
       spyOnConsole();
-      cy.visit('/');
+      cy.visit(route);
       waitForHydration();
+      getResultTitles()
+        .should('have.length.greaterThan', 0)
+        .as('initial-results');
     });
 
     it('should not update the search parameters', () => {
@@ -23,15 +32,16 @@ describe('headless ssr with search parameter manager example', () => {
       );
 
       describe('after the url was updated', () => {
-        beforeEach(() =>
-          cy
-            .url()
-            .should((href) =>
-              expect(new URL(href).searchParams.has(searchStateKey)).to.equal(
-                true
-              )
+        beforeEach(() => {
+          cy.url().should((href) =>
+            expect(new URL(href).searchParams.has(searchStateKey)).to.equal(
+              true
             )
-        );
+          );
+          cy.get<string>('@initial-results').then((initialResults) => {
+            getResultTitles().should('not.deep.equal', initialResults);
+          });
+        });
 
         it('should have the correct search parameters', () => {
           cy.url().should((href) => {
@@ -59,6 +69,9 @@ describe('headless ssr with search parameter manager example', () => {
 
           it('should update the page', () => {
             cy.get('.search-box input').should('have.value', '');
+            cy.get<string>('@initial-results').then((initialResults) => {
+              getResultTitles().should('deep.equal', initialResults);
+            });
           });
 
           it('should not log an error nor warning', () => {
@@ -76,7 +89,7 @@ describe('headless ssr with search parameter manager example', () => {
       const searchParams = new URLSearchParams({
         [searchStateKey]: JSON.stringify({q: query}),
       });
-      return `/?${searchParams.toString()}`;
+      return `${route}?${searchParams.toString()}`;
     }
 
     it('renders page in SSR as expected', () => {
@@ -120,7 +133,7 @@ describe('headless ssr with search parameter manager example', () => {
       const searchParams = new URLSearchParams({
         [searchStateKey]: JSON.stringify({q: ''}),
       });
-      return `/?${searchParams.toString()}`;
+      return `${route}?${searchParams.toString()}`;
     }
 
     it('renders page in SSR as expected', () => {
