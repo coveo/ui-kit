@@ -4,6 +4,8 @@ import {
   enableDidYouMean,
   disableDidYouMean,
   applyDidYouMeanCorrection,
+  enableAutomaticQueryCorrection,
+  disableAutomaticQueryCorrection,
 } from './did-you-mean-actions';
 import {emptyCorrection, getDidYouMeanInitialState} from './did-you-mean-state';
 
@@ -16,6 +18,12 @@ export const didYouMeanReducer = createReducer(
       })
       .addCase(disableDidYouMean, (state) => {
         state.enableDidYouMean = false;
+      })
+      .addCase(enableAutomaticQueryCorrection, (state) => {
+        state.automaticallyCorrectQuery = true;
+      })
+      .addCase(disableAutomaticQueryCorrection, (state) => {
+        state.automaticallyCorrectQuery = false;
       })
       .addCase(executeSearch.pending, (state) => {
         state.queryCorrection = emptyCorrection();
