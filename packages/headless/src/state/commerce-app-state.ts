@@ -11,7 +11,7 @@ import {
   VersionSection,
 } from './state-sections';
 
-export type ProductListingV2AppState = ConfigurationSection &
+export type CommerceAppState = ConfigurationSection &
   ProductListingV2Section &
   FacetSection &
   NumericFacetSection &

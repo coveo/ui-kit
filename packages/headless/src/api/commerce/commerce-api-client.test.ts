@@ -1,19 +1,17 @@
-import {SortBy} from '../../../../product-listing.index';
-import {buildMockProductListingV2APIClient} from '../../../../test/mock-product-listing-v2-api-client';
-import {PlatformClient} from '../../../platform-client';
-import {ProductListingAPIClient} from './product-listing-v2-api-client';
-import {
-  ProductListingV2SuccessResponse,
-  ProductListingV2Request,
-} from './product-listing-v2-request';
+import {SortBy} from '../../product-listing.index';
+import {buildMockProductListingV2APIClient} from '../../test/mock-commerce-api-client';
+import {PlatformClient} from '../platform-client';
+import {CommerceAPIClient} from './commerce-api-client';
+import {ProductListingV2Request} from './product-listings/v2/product-listing-v2-request';
+import {ProductListingV2} from './product-listings/v2/product-listing-v2-response';
 
-describe('product listing v2 api client', () => {
+describe('commerce api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
   const organizationId = 'some-org-id';
   const accessToken = 'some-access-token';
   const trackingId = 'some-tracking-id';
 
-  let client: ProductListingAPIClient;
+  let client: CommerceAPIClient;
   let platformCallMock: jest.Mock;
 
   beforeEach(() => {
@@ -31,13 +29,13 @@ describe('product listing v2 api client', () => {
     PlatformClient.call = platformCallMock;
   };
 
-  describe('getListing', () => {
+  describe('getProductListing', () => {
     const buildGetListingV2Request = (
       req: Partial<ProductListingV2Request> = {}
     ): ProductListingV2Request => ({
       accessToken: accessToken,
       organizationId: organizationId,
-      platformUrl: platformUrl,
+      url: platformUrl,
       trackingId: trackingId,
       clientId: req.clientId ?? '',
       context: req.context ?? {
@@ -56,7 +54,7 @@ describe('product listing v2 api client', () => {
         json: () => Promise.resolve('some content'),
       });
 
-      await client.getListing(request);
+      await client.getProductListing(request);
 
       expect(platformCallMock).toBeCalled();
       const mockRequest = platformCallMock.mock.calls[0][0];
@@ -89,7 +87,7 @@ describe('product listing v2 api client', () => {
         json: () => Promise.resolve(expectedError),
       });
 
-      const response = await client.getListing(request);
+      const response = await client.getProductListing(request);
 
       expect(response).toMatchObject({
         error: expectedError,
@@ -99,7 +97,7 @@ describe('product listing v2 api client', () => {
     it('should return success response on success', async () => {
       const request = buildGetListingV2Request();
 
-      const expectedBody: ProductListingV2SuccessResponse = {
+      const expectedBody: ProductListingV2 = {
         products: [],
         facets: [],
         pagination: {page: 0, perPage: 0, totalCount: 0, totalPages: 0},
@@ -115,7 +113,7 @@ describe('product listing v2 api client', () => {
         json: () => Promise.resolve(expectedBody),
       });
 
-      const response = await client.getListing(request);
+      const response = await client.getProductListing(request);
 
       expect(response).toMatchObject({
         success: expectedBody,

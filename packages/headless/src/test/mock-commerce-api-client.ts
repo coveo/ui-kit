@@ -1,14 +1,14 @@
 import pino from 'pino';
 import {
-  ProductListingAPIClient,
-  ProductListingAPIClientOptions,
-} from '../api/commerce/product-listings/v2/product-listing-v2-api-client';
+  CommerceAPIClient,
+  CommerceAPIClientOptions,
+} from '../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
 
 export function buildMockProductListingV2APIClient(
-  options?: Partial<ProductListingAPIClientOptions>
+  options?: Partial<CommerceAPIClientOptions>
 ) {
-  return new ProductListingAPIClient({
+  return new CommerceAPIClient({
     preprocessRequest: NoopPreprocessRequest,
     logger: pino({level: 'silent'}),
     ...options,

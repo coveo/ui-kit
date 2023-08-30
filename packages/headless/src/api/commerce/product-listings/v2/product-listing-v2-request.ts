@@ -1,12 +1,29 @@
-import {AnyFacetResponse} from '../../../../features/facets/generic/interfaces/generic-facet-response';
-import {SortCriterion} from '../../../../features/sort/sort';
-import {ProductRecommendation} from '../../../search/search/product-recommendation';
 import {
-  baseProductListingV2Request,
-  ProductListingV2RequestParam,
-} from './product-listing-v2-params';
+  HTTPContentType,
+  HttpMethods,
+  PlatformClientCallOptions,
+} from '../../../platform-client';
+import {BaseParam} from '../../../platform-service-params';
+import {
+  ClientIdParam,
+  ContextParam,
+  LocaleParam,
+  ModeParam,
+  SelectedFacetsParam,
+  SelectedPageParam,
+  SelectedSortParam,
+  TrackingIdParam,
+} from '../../commerce-api-params';
 
-export type ProductListingV2Request = ProductListingV2RequestParam;
+export type ProductListingV2Request = BaseParam &
+  TrackingIdParam &
+  LocaleParam &
+  ModeParam &
+  ClientIdParam &
+  ContextParam &
+  SelectedFacetsParam &
+  SelectedPageParam &
+  SelectedSortParam;
 
 export const buildProductListingV2Request = (req: ProductListingV2Request) => {
   return {
@@ -16,22 +33,26 @@ export const buildProductListingV2Request = (req: ProductListingV2Request) => {
 };
 
 const prepareRequestParams = (req: ProductListingV2Request) => {
-  const {accessToken, platformUrl, organizationId, ...params} = req;
+  const {...params} = req;
   return params;
 };
 
-export interface ProductListingV2SuccessResponse {
-  responseId: string;
-  products: ProductRecommendation[];
-  facets: AnyFacetResponse[];
-  pagination: {
-    page: number;
-    perPage: number;
-    totalCount: number;
-    totalPages: number;
+export const baseProductListingV2Request = (
+  req: ProductListingV2Request,
+  method: HttpMethods,
+  contentType: HTTPContentType
+): Pick<
+  PlatformClientCallOptions,
+  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
+> => {
+  const {url, organizationId, accessToken, trackingId} = req;
+  const baseUrl = `${url}/rest/organizations/${organizationId}/trackings/${trackingId}/commerce/v2/listing`;
+
+  return {
+    accessToken,
+    method,
+    contentType,
+    url: baseUrl,
+    origin: 'commerceApiFetch',
   };
-  sort: {
-    appliedSort: SortCriterion;
-    availableSorts: SortCriterion[];
-  };
-}
+};

@@ -1,4 +1,4 @@
-import {ProductListingV2SuccessResponse} from '../api/commerce/product-listings/v2/product-listing-v2-request';
+import {ProductListingV2SuccessResponse} from '../api/commerce/product-listings/v2/product-listing-v2-response';
 import {FetchProductListingV2ThunkReturn} from '../features/product-listing/v2/product-listing-v2-actions';
 import {logProductListingV2Load} from '../features/product-listing/v2/product-listing-v2-analytics';
 import {SortBy} from '../features/sort/sort';

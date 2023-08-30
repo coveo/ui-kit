@@ -1,9 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkProductListingV2Options} from '../../../api/commerce/product-listings/v2/product-listing-v2-api-client';
-import {
-  ProductListingV2Request,
-  ProductListingV2SuccessResponse,
-} from '../../../api/commerce/product-listings/v2/product-listing-v2-request';
+import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
+import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2/product-listing-v2-request';
+import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
   CategoryFacetSection,
@@ -51,13 +49,13 @@ export interface FetchProductListingV2ThunkReturn {
 export const fetchProductListing = createAsyncThunk<
   FetchProductListingV2ThunkReturn,
   void,
-  AsyncThunkProductListingV2Options<StateNeededByFetchProductListingV2>
+  AsyncThunkCommerceOptions<StateNeededByFetchProductListingV2>
 >(
   'commerce/product-listing/fetch',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;
-    const fetched = await apiClient.getListing(
+    const fetched = await apiClient.getProductListing(
       await buildProductListingRequestV2(state)
     );
 
@@ -80,7 +78,7 @@ export const buildProductListingRequestV2 = async (
 
   return {
     accessToken: state.configuration.accessToken,
-    platformUrl: state.configuration.platformUrl,
+    url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
     trackingId: state.productListing.trackingId,
     locale: state.productListing.locale,

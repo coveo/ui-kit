@@ -1,9 +1,10 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {ProductListingAPIClient} from '../../api/commerce/product-listings/v2/product-listing-v2-api-client';
+import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {productListingV2Reducer} from '../../features/product-listing/v2/product-listing-v2-slice';
-import {ProductListingV2AppState} from '../../state/commerce-app-state';
+import {CommerceAppState} from '../../state/commerce-app-state';
+import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
   buildEngine,
   CoreEngine,
@@ -11,7 +12,6 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {ProductListingV2ThunkExtraArguments} from '../product-listing-v2-thunk-extra-arguments';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CommerceEngineConfiguration,
@@ -24,7 +24,7 @@ const commerceEngineReducers = {productListing: productListingV2Reducer};
 type CommerceEngineReducers = typeof commerceEngineReducers;
 
 type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &
-  Partial<ProductListingV2AppState>;
+  Partial<CommerceAppState>;
 
 /**
  * The engine for powering commerce experiences.
@@ -32,7 +32,7 @@ type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngine<
     State & CommerceEngineState,
-    ProductListingV2ThunkExtraArguments
+    CommerceThunkExtraArguments
   > {}
 
 /**
@@ -60,7 +60,7 @@ export function buildCommerceEngine(
 
   const commerceClient = createCommerceAPIClient(options.configuration, logger);
 
-  const thunkArguments: ProductListingV2ThunkExtraArguments = {
+  const thunkArguments: CommerceThunkExtraArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: commerceClient,
   };
@@ -97,7 +97,7 @@ function createCommerceAPIClient(
   configuration: CommerceEngineConfiguration,
   logger: Logger
 ) {
-  return new ProductListingAPIClient({
+  return new CommerceAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
   });

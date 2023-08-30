@@ -2,7 +2,7 @@ import {Schema} from '@coveo/bueno';
 import {DocumentIdentifier, PartialDocumentInformation} from 'coveo.analytics';
 import {CommerceAnalyticsProvider} from '../../../api/analytics/commerce-analytics';
 import {ProductRecommendation, Result} from '../../../product-listing.index';
-import {ProductListingV2AppState} from '../../../state/commerce-app-state';
+import {CommerceAppState} from '../../../state/commerce-app-state';
 import {
   AnalyticsType,
   makeAnalyticsAction,
@@ -80,7 +80,7 @@ const validateResultPayload = (productRecommendation: ProductRecommendation) =>
 
 const partialRecommendationInformation = (
   result: ProductRecommendation,
-  state: Partial<ProductListingV2AppState>
+  state: Partial<CommerceAppState>
 ): PartialDocumentInformation => {
   const resultIndex =
     state.productListing?.products.findIndex(

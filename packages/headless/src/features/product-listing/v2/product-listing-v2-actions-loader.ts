@@ -1,5 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkProductListingV2Options} from '../../../api/commerce/product-listings/v2/product-listing-v2-api-client';
+import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {productListingV2Reducer as productListing} from '../../../features/product-listing/v2/product-listing-v2-slice';
 import {ProductListingV2Action} from '../../analytics/analytics-utils';
@@ -32,7 +32,7 @@ export interface ProductListingActionCreators {
   fetchProductListing(): AsyncThunkAction<
     FetchProductListingV2ThunkReturn,
     void,
-    AsyncThunkProductListingV2Options<StateNeededByFetchProductListingV2>
+    AsyncThunkCommerceOptions<StateNeededByFetchProductListingV2>
   >;
 }
 
