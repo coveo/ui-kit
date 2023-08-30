@@ -1,10 +1,8 @@
 import {Logger} from 'pino';
-import {TextDecoder} from 'web-encoding';
 import {URLPath} from '../../../utils/url-utils';
 import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest, RequestMetadata} from '../../preprocess-request';
-import {findEncoding} from '../encoding-finder';
 import {SearchAPIErrorWithStatusCode} from '../search-api-error-response';
 import {baseSearchRequest} from '../search-api-params';
 import {HtmlRequest} from './html-request';
@@ -68,10 +66,7 @@ export const getHtml = async (
     throw response;
   }
 
-  const encoding = findEncoding(response);
-  const buffer = await response.arrayBuffer();
-  const decoder = new TextDecoder(encoding);
-  const body = decoder.decode(buffer);
+  const body = await response.text();
 
   if (isSuccessHtmlResponse(body)) {
     return {success: body};
