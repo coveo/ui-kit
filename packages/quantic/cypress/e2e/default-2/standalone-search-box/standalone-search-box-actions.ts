@@ -6,9 +6,9 @@ import {
 
 const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
   return {
-    typeInSearchBox: (query: string) => {
+    typeInSearchBox: (query: string, textarea = false) => {
       selector
-        .input()
+        .input(textarea)
         .then((searchbox) => {
           let updateText = '';
           query.split('').forEach((letter) => {
@@ -24,16 +24,16 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
     submitSearch: () => {
       selector.searchButton().click().logAction('when submitting query');
     },
-    focusSearchBox: () => {
-      selector.input().then((searchbox) => {
+    focusSearchBox: (textarea = false) => {
+      selector.input(textarea).then((searchbox) => {
         cy.wrap(searchbox).focus();
       });
     },
     clickFirstSuggestion: () => {
       selector.suggestionList().first().click({force: true});
     },
-    pressEnter: () => {
-      selector.input().then((searchbox) => {
+    pressEnter: (textarea = false) => {
+      selector.input(textarea).then((searchbox) => {
         cy.wrap(searchbox).trigger('keyup', {key: 'Enter'});
       });
     },
