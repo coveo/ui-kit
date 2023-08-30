@@ -9,10 +9,7 @@ import {
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -79,8 +76,7 @@ export class AtomicPager implements InitializableComponent {
    */
   @Prop({reflect: true}) nextButtonIcon = ArrowRightIcon;
 
-  @FocusTarget()
-  private activePage!: FocusTargetController;
+  private activePage?: FocusTargetController;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -92,7 +88,7 @@ export class AtomicPager implements InitializableComponent {
   public render() {
     return (
       <PagerCommon
-        activePage={this.activePage}
+        activePage={this.focusTarget}
         bindings={this.bindings}
         eventEmitter={this.scrollToTopEvent}
         pager={this.pager}
@@ -102,5 +98,12 @@ export class AtomicPager implements InitializableComponent {
         searchStatusState={this.searchStatusState}
       />
     );
+  }
+
+  private get focusTarget() {
+    if (!this.activePage) {
+      this.activePage = new FocusTargetController(this);
+    }
+    return this.activePage;
   }
 }
