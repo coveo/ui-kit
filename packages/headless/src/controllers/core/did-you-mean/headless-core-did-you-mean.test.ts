@@ -1,6 +1,7 @@
 import {configuration} from '../../../app/common-reducers';
 import {
   applyDidYouMeanCorrection,
+  disableAutomaticQueryCorrection,
   enableDidYouMean,
 } from '../../../features/did-you-mean/did-you-mean-actions';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
@@ -46,9 +47,25 @@ describe('did you mean', () => {
     expect(engine.actions).toContainEqual(applyDidYouMeanCorrection('bar'));
   });
 
+  it('should dispatch disableAutomaticQueryCorrection at initialization when specified', () => {
+    initDidYouMean({automaticallyCorrectQuery: false});
+
+    dym.applyCorrection();
+    expect(engine.actions).toContainEqual(disableAutomaticQueryCorrection());
+  });
+
+  it('should not dispatch disableAutomaticQueryCorrection at initialization when specified', () => {
+    initDidYouMean({automaticallyCorrectQuery: true});
+
+    dym.applyCorrection();
+    expect(engine.actions).not.toContainEqual(
+      disableAutomaticQueryCorrection()
+    );
+  });
+
   it('should allow to update query correction when automatic correction is disabled', () => {
     engine.state.didYouMean.queryCorrection.correctedQuery = 'bar';
-    initDidYouMean({automaticallyCorrectQuery: true});
+    initDidYouMean({automaticallyCorrectQuery: false});
 
     dym.applyCorrection();
     expect(engine.actions).toContainEqual(applyDidYouMeanCorrection('bar'));

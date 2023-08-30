@@ -24,7 +24,11 @@ export type {QueryCorrection, WordCorrection};
 
 export interface DidYouMeanProps {
   /**
-   * Whether to automatically correct queries that will return no results.
+   * Whether to automatically apply corrections for queries that would otherwise return no results.
+   * When `automaticallyCorrectQuery` is `true`, the controller automatically triggers a new query using the suggested term.
+   * When `automaticallyCorrectQuery` is `false`, the controller returns the suggested term without triggering a new query.
+   *
+   * The default value is `true`.
    */
   automaticallyCorrectQuery?: boolean;
 }
