@@ -82,7 +82,7 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
         searchQuery={facetSearchQuery}
         part={`active-parent ${getIsLeafOrNodePart(facetValue)}`}
         class="contents"
-        buttonRef={focusTargets.activeValueFocus.setTarget}
+       buttonRef={(el)=> focusTargets.activeValueFocus.setTarget(el)}
         subList={children.length > 0 && <ul part="values">{children}</ul>}
       >
         <FacetValueLabelHighlight
