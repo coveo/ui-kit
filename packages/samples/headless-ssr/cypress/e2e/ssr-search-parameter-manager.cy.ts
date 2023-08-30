@@ -42,7 +42,7 @@ describe('headless ssr with search parameter manager example', () => {
           });
         });
 
-        it('only has two history states', () => {
+        it('has only two history states', () => {
           cy.go('back');
           cy.go('back');
           cy.url().should('eq', 'about:blank');
@@ -108,7 +108,7 @@ describe('headless ssr with search parameter manager example', () => {
         });
       });
 
-      it('only has one history state', () => {
+      it('has only one history state', () => {
         cy.go('back');
         cy.url().should('eq', 'about:blank');
       });
@@ -151,7 +151,7 @@ describe('headless ssr with search parameter manager example', () => {
         });
       });
 
-      it('only has one history state', () => {
+      it('has only one history state', () => {
         cy.go('back');
         cy.url().should('eq', 'about:blank');
       });
