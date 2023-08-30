@@ -59,10 +59,6 @@ export interface SelectedFacetParameters
 }
 
 export interface SelectedPageParam {
-  selectedPage?: SelectedPageParameters;
-}
-
-export interface SelectedPageParameters {
   page?: number;
 }
 
