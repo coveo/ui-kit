@@ -1,7 +1,4 @@
-import {
-  CyHttpMessages,
-  Interception,
-} from '../../../../node_modules/cypress/types/net-stubbing';
+import {CyHttpMessages, Interception} from 'cypress/types/net-stubbing';
 import {ComponentErrorSelector, should} from './common-selectors';
 
 export function logUaEvent(
