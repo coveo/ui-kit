@@ -25,4 +25,5 @@ export default async function Search(url: {
   return <SearchPage ssrState={ssrState}></SearchPage>;
 }
 
+// A page with search parameters cannot be statically rendered, since its rendered state should look different based on the current search parameters.
 export const dynamic = 'force-dynamic';
