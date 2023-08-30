@@ -11,12 +11,6 @@ export interface LocaleParam {
   locale: string;
 }
 
-export interface ModeParam {
-  mode?: Mode;
-}
-
-export type Mode = 'live' | 'sample';
-
 export interface ClientIdParam {
   clientId: string;
 }
