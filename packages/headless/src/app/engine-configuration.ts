@@ -188,11 +188,9 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
 
 export function getSampleEngineConfiguration(): EngineConfiguration {
   return {
-    organizationId: 'fashioncoveodemocomgzh7iep8',
+    organizationId: 'searchuisamples',
     // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
-    accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
-    organizationEndpoints: getOrganizationEndpoints(
-      'fashioncoveodemocomgzh7iep8'
-    ),
+    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    organizationEndpoints: getOrganizationEndpoints('searchuisamples'),
   };
 }
