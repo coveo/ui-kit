@@ -121,6 +121,7 @@ export type {
   CategoryFacetSearchState,
   CategoryFacetState,
   CategoryFacetValue,
+  CategoryFacetValueCommon,
   CategoryFacetSearchResult,
   CoreCategoryFacet,
   CoreCategoryFacetState,

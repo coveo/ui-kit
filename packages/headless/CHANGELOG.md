@@ -1,3 +1,21 @@
+# 2.29.0 (2023-08-30)
+
+### Bug Fixes
+
+- **headless:** bump coveo.analytics to fix click tracking issue on ios safari ([#3141](https://github.com/coveo/ui-kit/issues/3141)) ([402473f](https://github.com/coveo/ui-kit/commits/402473fe67709e70f27c1edfd92fa8e7227e07e7))
+- **headless:** consider only selected value ancestry for analytics, history and breadcrumbs ([#3137](https://github.com/coveo/ui-kit/issues/3137)) ([fdc644b](https://github.com/coveo/ui-kit/commits/fdc644b4e8fc96385c498a5d9bc2abfa414df9ee))
+
+### Features
+
+- **headless:** add did-you-mean option to disable automatic query correction ([#3127](https://github.com/coveo/ui-kit/issues/3127)) ([242a8f9](https://github.com/coveo/ui-kit/commits/242a8f9d2a88d62ccd680f3b55e45b278f9b48f5))
+- **headless:** exposes category facet values hierarchically ([#3105](https://github.com/coveo/ui-kit/issues/3105)) ([4b6b0af](https://github.com/coveo/ui-kit/commits/4b6b0af0c8fe245a6e7e4a5c180373696faaa56a))
+
+# 2.28.0 (2023-08-24)
+
+### Features
+
+- **headless:** support facet exclusion in search parameter manager ([#3122](https://github.com/coveo/ui-kit/issues/3122)) ([338e740](https://github.com/coveo/ui-kit/commits/338e740bfa108cead0785f34490192ed3bd50fd6))
+
 # 2.27.0 (2023-08-21)
 
 ### Bug Fixes

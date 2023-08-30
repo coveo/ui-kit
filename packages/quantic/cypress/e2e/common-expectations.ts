@@ -1,3 +1,5 @@
+// eslint-disable-next-line node/no-unpublished-import
+import {CyHttpMessages, Interception} from 'cypress/types/net-stubbing';
 import {ComponentErrorSelector, should} from './common-selectors';
 
 export function logUaEvent(
@@ -9,7 +11,7 @@ export function logUaEvent(
   return cy
     .wait(requestAlias)
     .then((interception) => {
-      const analyticsBody = interception.request.body;
+      const analyticsBody = getAnalyticsBodyFromInterception(interception);
 
       Object.keys(bodyData).forEach((key: string) => {
         expect(analyticsBody).to.have.property(key, bodyData[key]);
@@ -45,4 +47,27 @@ export function ComponentErrorExpectations(selector: ComponentErrorSelector) {
         .logDetail('should display the correct component error message');
     },
   };
+}
+
+export function getAnalyticsBodyFromInterception(interception: Interception) {
+  return getAnalyticsBodyFromRequest(interception.request);
+}
+
+export function getAnalyticsBodyFromRequest(
+  req: CyHttpMessages.IncomingRequest
+) {
+  // Some analytics request won't be application/json, but will be form-url-encoded (specifically, click events).
+  // Need to decode them if that's the case
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let analyticsBody: Record<string, any>;
+  if (typeof req.body === 'string') {
+    analyticsBody = JSON.parse(
+      decodeURIComponent(req.body).replace('clickEvent=', '')
+    );
+  } else {
+    analyticsBody = req.body;
+  }
+
+  return analyticsBody;
 }

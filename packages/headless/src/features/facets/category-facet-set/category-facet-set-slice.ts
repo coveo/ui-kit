@@ -25,7 +25,7 @@ import {
   CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
-import {partitionIntoParentsAndValues} from './category-facet-utils';
+import {findActiveValueAncestry} from './category-facet-utils';
 import {CategoryFacetOptionalParameters} from './interfaces/options';
 import {
   CategoryFacetRequest,
@@ -285,11 +285,7 @@ function isRequestInvalid(
   request: CategoryFacetRequest,
   response: CategoryFacetResponse
 ) {
-  const requestParents = partitionIntoParentsAndValues(
-    request.currentValues
-  ).parents;
-  const responseParents = partitionIntoParentsAndValues(
-    response.values
-  ).parents;
+  const requestParents = findActiveValueAncestry(request.currentValues);
+  const responseParents = findActiveValueAncestry(response.values);
   return requestParents.length !== responseParents.length;
 }

@@ -2,7 +2,12 @@ import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {logSearchEvent} from '../analytics/analytics-actions';
 import {executeSearch} from '../search/search-actions';
-import {enableDidYouMean, disableDidYouMean} from './did-you-mean-actions';
+import {
+  enableDidYouMean,
+  disableDidYouMean,
+  disableAutomaticQueryCorrection,
+  enableAutomaticQueryCorrection,
+} from './did-you-mean-actions';
 import {didYouMeanReducer} from './did-you-mean-slice';
 import {getDidYouMeanInitialState, DidYouMeanState} from './did-you-mean-state';
 
@@ -90,5 +95,21 @@ describe('did you mean slice', () => {
     );
 
     expect(didYouMeanReducer(state, searchAction).originalQuery).toBe('');
+  });
+
+  it('should handle enable autocorrection', () => {
+    state.automaticallyCorrectQuery = false;
+    expect(
+      didYouMeanReducer(state, enableAutomaticQueryCorrection)
+        .automaticallyCorrectQuery
+    ).toBe(true);
+  });
+
+  it('should handle disable autocorrection', () => {
+    state.automaticallyCorrectQuery = true;
+    expect(
+      didYouMeanReducer(state, disableAutomaticQueryCorrection)
+        .automaticallyCorrectQuery
+    ).toBe(false);
   });
 });

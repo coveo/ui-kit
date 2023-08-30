@@ -1,6 +1,9 @@
 import {Interception} from '../../../../../../node_modules/cypress/types/net-stubbing';
 import {InterceptAliases} from '../../../page-objects/search';
-import {ComponentErrorExpectations} from '../../common-expectations';
+import {
+  ComponentErrorExpectations,
+  getAnalyticsBodyFromInterception,
+} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {ConsoleExpectations} from '../../console-expectations';
 import {EventExpectations} from '../../event-expectations';
@@ -130,7 +133,7 @@ export function recommendationListExpectations(
     logRecommendationOpen: (index: number, recommendationsAlias: string) => {
       cy.wait(InterceptAliases.UA.RecommendationOpen)
         .then((interception) => {
-          const analyticsBody = interception.request.body;
+          const analyticsBody = getAnalyticsBodyFromInterception(interception);
           const customData = analyticsBody?.customData;
           cy.get<Array<Result>>(recommendationsAlias).then(
             (recommendations) => {
