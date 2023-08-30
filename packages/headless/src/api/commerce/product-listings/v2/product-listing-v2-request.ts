@@ -33,8 +33,17 @@ export const buildProductListingV2Request = (req: ProductListingV2Request) => {
 };
 
 const prepareRequestParams = (req: ProductListingV2Request) => {
-  const {...params} = req;
-  return params;
+  const {clientId, context, locale, mode, page, selectedFacets, selectedSort} =
+    req;
+  return {
+    clientId,
+    context,
+    locale,
+    mode,
+    page,
+    selectedFacets,
+    selectedSort,
+  };
 };
 
 export const baseProductListingV2Request = (
