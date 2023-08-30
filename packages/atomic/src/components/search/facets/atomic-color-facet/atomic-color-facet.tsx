@@ -270,7 +270,7 @@ export class AtomicColorFacet
     initializePopover(this.host, {
       ...facetInfo,
       hasValues: () => !!this.facet.state.values.length,
-      numberOfSelectedValues: () => this.numberOfSelectedValues,
+      numberOfActiveValues: () => this.numberOfSelectedValues,
     });
     this.initializeDependenciesManager();
   }
@@ -321,7 +321,7 @@ export class AtomicColorFacet
           this.headerFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfActiveValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
