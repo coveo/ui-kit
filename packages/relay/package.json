@@ -5,21 +5,21 @@
   "files": [
     "lib/**/*"
   ],
-  "types": "./lib/cjs/types/relay.d.ts",
+  "types": "./lib/types/relay.d.ts",
   "exports": {
     "node": {
       "import": {
-        "types": "./lib/esm/types/relay.d.ts",
-        "default": "./lib/esm/relay.mjs"
+        "types": "./lib/types/relay.d.ts",
+        "default": "./lib/relay.mjs"
       },
       "require": {
-        "types": "./lib/cjs/types/relay.d.ts",
-        "default": "./lib/cjs/relay.js"
+        "types": "./lib/types/relay.d.ts",
+        "default": "./lib/relay.cjs"
       }
     },
     "default": {
-      "types": "./lib/esm/types/relay.d.ts",
-      "default": "./lib/esm/relay.js"
+      "types": "./lib/types/relay.d.ts",
+      "default": "./lib/relay.js"
     }
   },
   "repository": {
@@ -38,9 +38,7 @@
   },
   "homepage": "https://github.com/coveo/relay#readme",
   "scripts": {
-    "build": "npm run clean && npm run build:esm && npm run build:cjs",
-    "build:esm": "rollup --config ./config/rollup.config.mjs",
-    "build:cjs": "tsc -p ./config/tsconfig.cjs.json",
+    "build": "npm run clean && rollup --config ./config/rollup.config.mjs",
     "clean": "rm -rf ./lib",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -48,6 +46,7 @@
     "npm:tag": "node ./scripts/update-npm-tag.mjs"
   },
   "devDependencies": {
+    "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-typescript": "^11.1.2",
     "@types/jest": "^29.5.3",
     "eslint-config-custom": "workspace:*",

@@ -1,4 +1,12 @@
 {
   "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM"],
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "../lib",
+    "declarationDir": "../lib/types"
+  },
   "exclude": ["node_modules", "../**/*.test.ts", "../src/__mocks__/**/*.ts"]
 }

@@ -7,6 +7,7 @@ import {
   ValidationReport,
   ValidationResponse,
 } from "./validate/validate";
+import { version } from "./version";
 
 type RelayPayload = Record<string, unknown>;
 
@@ -19,6 +20,7 @@ interface RelayOptions {
 
 interface Relay {
   validate: (type: string, payload: RelayPayload) => Promise<ValidationReport>;
+  version: string;
 }
 
 export function createRelay(options: RelayOptions): Relay {
@@ -30,6 +32,7 @@ export function createRelay(options: RelayOptions): Relay {
         environment,
         event: createRelayEvent(type, payload, options, environment),
       }),
+    version,
   };
 }
 

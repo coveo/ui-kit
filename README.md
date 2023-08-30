@@ -1,6 +1,7 @@
 # Relay
 
 The Relay repository contains a client-side library and set of related tools for sending events from the browser using Coveo's Event protocol. It consists of multiple components:
+
 - The core relay library in `packages/relay`: Relay is an event agnostic library which is responsible for enriching, packaging and sending browser event streams into Coveo's backend.
 - The relay playground in `apps/playground`: The playground is a sample webpage that can be used to experiment with and validate Event Protocol payloads.
 
@@ -9,6 +10,7 @@ Relay can be used standalone, or be embedded in Coveo front end packages as the 
 ## Relay design principles and scope
 
 The core relay library should adhere to a few core design principles:
+
 - Relay is responsible for handling any concerns that are relevant to generic event logging, including but not limited to:
   - Enriching events with information that is only present in the browser (e.g. userAgent, local time).
   - Tracking and persisting a unique identifier for a user (e.g. clientId)
@@ -26,6 +28,7 @@ The core relay library should adhere to a few core design principles:
 ## Event structure
 
 The basic event structure for a generic client side event is as follows:
+
 ```
 {
   <event parameters>
@@ -38,9 +41,9 @@ The basic event structure for a generic client side event is as follows:
    }
 }
 ```
+
 This means an event payload can be freely defined, with the exception of the reserved keyword 'meta', which is exclusively intended to contain event metadata populated by Relay. Prior to logging events with the Coveo platform, ensure that you create appropriate event schemas in the [schema repository](https://github.com/coveo/analytics_schema).
 
 If you want to log information from a Coveo owned backend service, do not use Relay. Instead, log them on the appropriate server side endpoint, see [this guide](https://coveord.atlassian.net/wiki/spaces/DATA/pages/3175383082/Server+side+event+logging)
 
 ## API
-

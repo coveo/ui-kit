@@ -17,6 +17,7 @@ Relay is written in modern typescript with an eye on functional programming, rat
 ### Classes and interfaces
 
 As a guideline, it helps to think of classes as being in one of these two cases:
+
 1. (Immutable) data objects: In JavaScript these are typically json structures. Rather than forcing them to be classes and modeling them out explicitly, they can be encapsulated using an equivalent interface definition, which significantly simplifies code and readability.
 2. Processing logic: These should be implemented by pure functions, not by class methods. Processing methods that could be considered similar can be defined together in a single file.
 
@@ -41,12 +42,15 @@ If you find yourself declaring classes which mix data storage with stateful logi
 Use destructuring patterns with care, and where appropriate. Destructuring is useful when your function has many parameters (some of which are effectively acting as config switches):
 
 Rather than
+
 ```
 function write(value:number, overwrite: boolean, immediate: boolean) {...}
 
 write(6, true, false)
 ```
+
 we prefer the more readable
+
 ```
 
 interface FunctionOptions { overwrite: boolean, immediate: boolean };
@@ -60,4 +64,4 @@ Overuse of destructuring patterns leads to function argument types being defined
 - If your function requires more than 3 basic types (e.g. boolean or string) consider a destructuring pattern.
 - If your function has a subset of parameters that act as "logic" switches in the function, consider a destructuring pattern.
 - Don't use destructuring when your function only uses typed Data objects. Here, the typename will guide the user to the meaning of the parameter and the destructuring just adds overhead.
-- Don't use destructuring on functions that receive large call volumne.
+- Don't use destructuring on functions that receive large call volume.

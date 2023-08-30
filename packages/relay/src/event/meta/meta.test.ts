@@ -2,6 +2,10 @@ import { createMockEnvironment } from "../../__mocks__/environment";
 import { createMockOptions } from "../../__mocks__/relay";
 import { createMeta } from "./meta";
 
+jest.mock("../../version", () => ({
+  version: "0.0.5",
+}));
+
 describe("createMeta", () => {
   const mockEnv = createMockEnvironment({
     runtime: "browser",

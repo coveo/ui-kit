@@ -1,5 +1,6 @@
 import { Environment } from "../../environment/environment";
 import { RelayOptions } from "../../relay";
+import { version } from "../../version";
 
 interface Config {
   trackingId: string;
@@ -21,12 +22,8 @@ function getConfig(options: RelayOptions): Config {
   return { trackingId };
 }
 
-/**
- * @todo LENS-1130: Hardcoded source value at the moment.
- * The Relay current version should be injected during bundle time.
- */
 function getSource(): string {
-  return `relay@0.0.5`;
+  return `relay@${version}`;
 }
 
 /**
