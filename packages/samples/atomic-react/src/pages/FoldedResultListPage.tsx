@@ -15,13 +15,17 @@ import {
   FoldedResult,
   AtomicResultSectionChildren,
   AtomicFoldedResultList,
+  AtomicResultImage,
 } from '@coveo/atomic-react';
 import React, {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const FoldedResultListPage: FunctionComponent = () => {
   return (
-    <AtomicPageWrapper sample="service">
+    <AtomicPageWrapper
+      sample="service"
+      options={{advancedQuery: '@source=iNaturalistTaxons'}}
+    >
       <AtomicFoldedResultList imageSize="large" template={MyTemplate} />
     </AtomicPageWrapper>
   );
@@ -55,7 +59,10 @@ function MyTemplate(result: FoldedResult) {
         )}
       </AtomicResultSectionBadges>
       <AtomicResultSectionVisual>
-        <img loading="lazy" src="https://picsum.photos/350" />
+        <AtomicResultImage
+          field="ec_images"
+          fallback="https://picsum.photos/350"
+        />
       </AtomicResultSectionVisual>
       <AtomicResultSectionTitle>
         <AtomicResultLink />

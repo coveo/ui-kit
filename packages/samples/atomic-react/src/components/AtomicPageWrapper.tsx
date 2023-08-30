@@ -38,6 +38,7 @@ import {
   getOrganizationEndpoints,
   SearchEngineConfiguration,
   getSampleSearchEngineConfiguration,
+  loadAdvancedSearchQueryActions,
 } from '@coveo/atomic-react';
 import React, {FunctionComponent, useMemo} from 'react';
 
@@ -46,11 +47,13 @@ type Sample = 'service' | 'electronics';
 type Options = {
   instantResults?: boolean;
   recentQueries?: boolean;
+  advancedQuery?: string;
 };
+
 type Props = {
   sample: Sample;
-  children: React.ReactNode;
   options?: Options;
+  children: React.ReactNode;
 };
 
 function getElectronicsConfiguration(): SearchEngineConfiguration {
@@ -77,8 +80,8 @@ function getConfigurationForSample(sample: Sample) {
 
 export const AtomicPageWrapper: FunctionComponent<Props> = ({
   sample,
-  children,
   options = {},
+  children,
 }) => {
   const engine = useMemo(
     () =>
@@ -87,6 +90,15 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
       }),
     [sample]
   );
+
+  if (options.advancedQuery) {
+    const action = loadAdvancedSearchQueryActions(
+      engine
+    ).updateAdvancedSearchQueries({
+      aq: options.advancedQuery,
+    });
+    engine.dispatch(action);
+  }
 
   return (
     <AtomicSearchInterface
