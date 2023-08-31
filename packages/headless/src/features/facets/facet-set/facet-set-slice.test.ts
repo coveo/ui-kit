@@ -1,4 +1,3 @@
-// facet-slice-.test
 import {PayloadAction} from '@reduxjs/toolkit';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';

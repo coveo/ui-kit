@@ -1,4 +1,3 @@
-// facet-slice
 import {createReducer} from '@reduxjs/toolkit';
 import {WritableDraft} from 'immer/dist/internal';
 import {
