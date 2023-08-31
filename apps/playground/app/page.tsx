@@ -1,15 +1,11 @@
 "use client";
-
-import {
-  createRelay,
-  ServiceErrorResponse,
-  ValidationError,
-  ValidationReport,
-} from "@coveo/relay";
-import Editor from "@monaco-editor/react";
-import styles from "./styles.module.css";
+import { createRelay, ValidationReport } from "@coveo/relay";
+import { Editor } from "@monaco-editor/react";
 import { useState } from "react";
-import { ecPurchase } from "./events";
+import styles from "./styles.module.css";
+import { EventDropdown } from "./validator/event-dropdown";
+import { Report } from "./validator/report";
+import { getEvents } from "./events";
 
 export default function Page() {
   const { validate } = createRelay({
@@ -18,25 +14,38 @@ export default function Page() {
     host: "https://platformdev.cloud.coveo.com",
     trackingId: "playground",
   });
+
+  const events = getEvents();
+  const initialEvent = events[0];
   const prettify = (obj: Object) => JSON.stringify(obj, null, 2);
-  const defaultEvent = prettify(ecPurchase);
+  const defaultPayload = prettify(initialEvent.payload);
 
-  const [event, setEvent] = useState(defaultEvent);
+  const [selectedEventType, setSelectedEventType] = useState(initialEvent.type);
+  const [event, setEvent] = useState(defaultPayload);
   const [validationReport, setValidationReport] = useState<ValidationReport>();
+  const isResettable = event !== defaultPayload;
 
-  const modified = event !== defaultEvent;
-  const reset = () => setEvent(defaultEvent);
-  const send = async () => {
-    const response = await validate("ecPurchase", JSON.parse(event));
+  async function send() {
+    const response = await validate(selectedEventType, JSON.parse(event));
     setValidationReport(response);
-  };
+  }
+
+  function reset() {
+    setEvent(defaultPayload);
+    setValidationReport(null);
+  }
 
   return (
     <div className={styles.container}>
       <h1>Relay</h1>
+      <EventDropdown
+        events={events}
+        selectedEventType={selectedEventType}
+        onSelectEvent={setSelectedEventType}
+      />
       <div className={styles.controls}>
         <button onClick={send}>Send</button>
-        {modified ? <button onClick={reset}>Reset</button> : null}
+        {isResettable ? <button onClick={reset}>Reset</button> : null}
       </div>
       <div className={styles.main}>
         <div className={styles.section}>
@@ -49,80 +58,9 @@ export default function Page() {
           />
         </div>
         <div className={styles.section}>
-          {validationReport ? (
-            <Report validationReport={validationReport} />
-          ) : null}
+          {validationReport ? <Report report={validationReport} /> : null}
         </div>
       </div>
     </div>
-  );
-}
-
-function Report({ validationReport }: { validationReport: ValidationReport }) {
-  if (validationReport.responseType === "serviceError") {
-    return (
-      <div className={styles["validation-box"]}>
-        <h2>{`Is valid?: ${validationReport.valid}`}</h2>
-        <ServiceErrorSection serviceErrorResponse={validationReport} />
-      </div>
-    );
-  }
-
-  return (
-    <div className={styles["validation-box"]}>
-      <h2>{`Is valid?: ${validationReport.valid}`}</h2>
-      {validationReport.errors.length > 0 ? (
-        <ValidationErrorsSection errors={validationReport.errors} />
-      ) : null}
-    </div>
-  );
-}
-
-function ServiceErrorSection({
-  serviceErrorResponse,
-}: {
-  serviceErrorResponse: ServiceErrorResponse;
-}) {
-  return (
-    <>
-      <h2>Error: </h2>
-      <div className={styles["validation-box"]}>
-        <ErrorAttribute
-          type="Error Code"
-          value={serviceErrorResponse.errorCode}
-        />
-        <ErrorAttribute type="Message" value={serviceErrorResponse.message} />
-        <ErrorAttribute
-          type="Request ID"
-          value={serviceErrorResponse.requestID}
-        />
-      </div>
-    </>
-  );
-}
-
-function ValidationErrorsSection({ errors }: { errors: ValidationError[] }) {
-  return (
-    <>
-      <h2>With errors: </h2>
-      {errors.map((error: ValidationError, index: number) => (
-        <div className={styles["validation-box"]} key={`key-error-${index}`}>
-          <ErrorAttribute type="Type" value={error.type} />
-          <ErrorAttribute type="Message" value={error.message} />
-          {error.path ? (
-            <ErrorAttribute type="Path" value={error.path} />
-          ) : null}
-        </div>
-      ))}
-    </>
-  );
-}
-
-function ErrorAttribute({ type, value }: { type: string; value: string }) {
-  return (
-    <span>
-      <b>{`${type}: `}</b>
-      <p>{value}</p>
-    </span>
   );
 }
