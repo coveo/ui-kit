@@ -113,8 +113,6 @@ describe('Facet v1 Test Suites', () => {
           FacetAssertions.assertLogFacetSelect(field, secondSelectionIndex);
         });
 
-        describe('TODO: when excluding a value', () => {});
-
         describe('when selecting the "Clear" button', () => {
           function setupClearCheckboxValues() {
             setupSelectSecondCheckboxValue();
