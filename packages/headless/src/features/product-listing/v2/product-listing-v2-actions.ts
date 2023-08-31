@@ -1,4 +1,5 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {StringValue} from '@coveo/bueno';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2/product-listing-v2-request';
 import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
@@ -16,6 +17,7 @@ import {
   VersionSection,
 } from '../../../state/state-sections';
 import {sortFacets} from '../../../utils/facet-utils';
+import {validatePayload} from '../../../utils/validate-payload';
 import {
   AnalyticsType,
   PreparableAnalyticsAction,
@@ -23,6 +25,24 @@ import {
 import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
 import {logQueryError} from '../../search/search-analytics-actions';
 import {logProductListingV2Load} from './product-listing-v2-analytics';
+
+export interface SetProductListingUrlPayload {
+  /**
+   * The url used to determine which product listing to fetch.
+   */
+  url: string;
+}
+
+export const setProductListingUrl = createAction(
+  'commerce/product-listing/setUrl',
+  (payload: SetProductListingUrlPayload) =>
+    validatePayload(payload, {
+      url: new StringValue({
+        required: true,
+        url: true,
+      }),
+    })
+);
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
