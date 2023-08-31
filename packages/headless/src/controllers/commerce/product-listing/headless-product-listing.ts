@@ -24,7 +24,7 @@ const optionsSchema = new Schema({
 
 export interface ProductListingOptions {
   /**
-   * The initial URL used to retrieve the product listing.
+   * The URL used to retrieve the product listing.
    */
   url: string;
 }
@@ -41,13 +41,13 @@ export interface ProductListingProps {
  */
 export interface ProductListing extends Controller {
   /**
-   * Changes the current URL used to retrieve product listing.
+   * Changes the URL used to retrieve the product listing.
    * @param url - The new URL.
    */
   setUrl(url: string): void;
 
   /**
-   * Refreshes the product listing.
+   * Fetches the product listing.
    */
   refresh(): void;
 

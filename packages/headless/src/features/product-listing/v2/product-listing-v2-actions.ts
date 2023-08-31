@@ -28,13 +28,13 @@ import {logProductListingV2Load} from './product-listing-v2-analytics';
 
 export interface SetProductListingUrlPayload {
   /**
-   * The url used to determine which product listing to fetch.
+   * The URL used to determine which product listing to fetch.
    */
   url: string;
 }
 
 export const setProductListingUrl = createAction(
-  'commerce/product-listing/setUrl',
+  'commerce/productListing/setUrl',
   (payload: SetProductListingUrlPayload) =>
     validatePayload(payload, {
       url: new StringValue({
@@ -71,7 +71,7 @@ export const fetchProductListing = createAsyncThunk<
   void,
   AsyncThunkCommerceOptions<StateNeededByFetchProductListingV2>
 >(
-  'commerce/product-listing/fetch',
+  'commerce/productListing/fetch',
   async (_action, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     const {apiClient} = extra;
