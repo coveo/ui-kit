@@ -15,23 +15,32 @@ export default function Page() {
     trackingId: "playground",
   });
 
+  function prettify(obj: Object) {
+    return JSON.stringify(obj, null, 2);
+  }
+
   const events = getEvents();
   const initialEvent = events[0];
-  const prettify = (obj: Object) => JSON.stringify(obj, null, 2);
-  const defaultPayload = prettify(initialEvent.payload);
 
-  const [selectedEventType, setSelectedEventType] = useState(initialEvent.type);
-  const [event, setEvent] = useState(defaultPayload);
+  const [event, setEvent] = useState(initialEvent);
+  const [payload, setPayload] = useState(prettify(initialEvent.payload));
   const [validationReport, setValidationReport] = useState<ValidationReport>();
-  const isResettable = event !== defaultPayload;
+  const isResettable = prettify(event.payload) !== payload;
 
   async function send() {
-    const response = await validate(selectedEventType, JSON.parse(event));
+    const response = await validate(event.type, JSON.parse(payload));
     setValidationReport(response);
   }
 
   function reset() {
-    setEvent(defaultPayload);
+    setPayload(prettify(event.payload));
+    setValidationReport(null);
+  }
+
+  function onSelectEvent(selected: string) {
+    const selectedEvent = events.find((event) => event.type === selected);
+    setEvent(selectedEvent);
+    setPayload(prettify(selectedEvent.payload));
     setValidationReport(null);
   }
 
@@ -40,8 +49,8 @@ export default function Page() {
       <h1>Relay</h1>
       <EventDropdown
         events={events}
-        selectedEventType={selectedEventType}
-        onSelectEvent={setSelectedEventType}
+        selectedEventType={event.type}
+        onSelectEvent={onSelectEvent}
       />
       <div className={styles.controls}>
         <button onClick={send}>Send</button>
@@ -52,9 +61,9 @@ export default function Page() {
           <Editor
             language="json"
             theme="vs-dark"
-            value={event}
+            value={payload}
             options={{ minimap: { enabled: false }, contextmenu: false }}
-            onChange={setEvent}
+            onChange={setPayload}
           />
         </div>
         <div className={styles.section}>

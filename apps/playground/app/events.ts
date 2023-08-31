@@ -3,6 +3,14 @@ export interface SampleEvent {
   payload: Record<string, unknown>;
 }
 
+const itemMetadata = {
+  uniqueFieldValue: "permanentId",
+  uniqueFieldName: "item-1",
+  title: "Item 1",
+  author: "John Doe",
+  url: "https://arealshop.ca/real-brand/item-1",
+};
+
 const ecPurchase: SampleEvent = {
   type: "ecPurchase",
   payload: {
@@ -25,6 +33,22 @@ const ecPurchase: SampleEvent = {
   },
 };
 
+const itemClick: SampleEvent = {
+  type: "itemClick",
+  payload: {
+    searchUid: "search-1",
+    position: 1,
+    itemMetadata,
+  },
+};
+
+const itemView: SampleEvent = {
+  type: "itemView",
+  payload: {
+    itemMetadata,
+  },
+};
+
 export function getEvents(): SampleEvent[] {
-  return [ecPurchase];
+  return [ecPurchase, itemClick, itemView];
 }
