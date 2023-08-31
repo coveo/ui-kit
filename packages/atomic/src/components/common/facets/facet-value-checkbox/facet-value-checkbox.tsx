@@ -51,8 +51,6 @@ export const FacetValueCheckbox: FunctionalComponent<
           onClick={() => props.onExclude?.()}
           part="value-exclude"
           class="value-exclude"
-          // onMouseEnter={(e: MouseEvent) => createRipple(e, {color: 'primary'})}
-          // TODO: create ripple effect
         ></FacetValueExclude>
       );
     }
