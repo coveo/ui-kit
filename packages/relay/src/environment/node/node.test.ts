@@ -1,6 +1,10 @@
 import { currentEnvironment } from "../environment";
 import { buildNodeEnvironment } from "./node";
 
+jest.mock("uuid", () => ({
+  v4: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
+}));
+
 it("currentEnvironment returns node runtime", () => {
   expect(currentEnvironment().runtime).toBe("node");
 });
@@ -20,5 +24,11 @@ describe("buildNodeEnvironment", () => {
 
   it("getUserAgent returns null", () => {
     expect(buildNodeEnvironment().getUserAgent()).toBe(null);
+  });
+
+  it("generateUUID returns an UUID", () => {
+    expect(buildNodeEnvironment().generateUUID()).toBe(
+      "2136b353-74be-42d7-904f-ea33a8f4a43c"
+    );
   });
 });

@@ -1,4 +1,5 @@
 import replace from "@rollup/plugin-replace";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import { readFileSync } from "fs";
 
@@ -9,13 +10,30 @@ const getStringifyVersion = () => {
   return JSON.stringify(version);
 };
 
-export default {
+const commonPlugins = [
+  typescript({ tsconfig: "./config/tsconfig.base.json" }),
+  replace({
+    preventAssignment: true,
+    values: {
+      "process.env.VERSION": getStringifyVersion(),
+    },
+  }),
+];
+
+const browser = {
   input: "./src/relay.ts",
   output: [
     {
       file: "./lib/relay.js",
       format: "esm",
     },
+  ],
+  plugins: [nodeResolve({ browser: true }), ...commonPlugins],
+};
+
+const nodejs = {
+  input: "./src/relay.ts",
+  output: [
     {
       file: "./lib/relay.mjs",
       format: "esm",
@@ -25,13 +43,7 @@ export default {
       format: "cjs",
     },
   ],
-  plugins: [
-    typescript({ tsconfig: "./config/tsconfig.base.json" }),
-    replace({
-      preventAssignment: true,
-      values: {
-        "process.env.VERSION": getStringifyVersion(),
-      },
-    }),
-  ],
+  plugins: [nodeResolve({ exportConditions: ["node"] }), ...commonPlugins],
 };
+
+export default [browser, nodejs];

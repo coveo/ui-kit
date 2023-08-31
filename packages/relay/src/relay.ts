@@ -1,3 +1,4 @@
+import { createClientIdManager } from "./client-id/client-id";
 import { currentEnvironment } from "./environment/environment";
 import { createRelayEvent } from "./event/relay-event";
 import {
@@ -25,12 +26,20 @@ interface Relay {
 
 export function createRelay(options: RelayOptions): Relay {
   const environment = currentEnvironment();
+  const clientIdManager = createClientIdManager(environment);
+
   return {
     validate: (type: string, payload: RelayPayload) =>
       validate({
         options,
         environment,
-        event: createRelayEvent(type, payload, options, environment),
+        event: createRelayEvent(
+          type,
+          payload,
+          options,
+          environment,
+          clientIdManager
+        ),
       }),
     version,
   };

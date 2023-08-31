@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { Environment } from "../environment";
 
 function getReferrerUrl() {
@@ -13,5 +14,6 @@ export function buildBrowserEnvironment(): Environment {
     getReferrerUrl: () => getReferrerUrl(),
     getUrl: () => window.location.href,
     getUserAgent: () => navigator.userAgent,
+    generateUUID: () => uuidv4(),
   };
 }

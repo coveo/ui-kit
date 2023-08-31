@@ -1,3 +1,4 @@
+import { ClientIdManager } from "../../client-id/client-id";
 import { Environment } from "../../environment/environment";
 import { RelayOptions } from "../../relay";
 import { version } from "../../version";
@@ -26,25 +27,22 @@ function getSource(): string {
   return `relay@${version}`;
 }
 
-/**
- * @todo LENS-1059: the clientId is currently a static value.
- * In the future, it should be a value that is generated and persisted during the user's session.
- */
-
 export function createMeta(
   type: string,
   options: RelayOptions,
-  environment: Environment
+  environment: Environment,
+  clientIdManager: ClientIdManager
 ): Readonly<Meta> {
   const { getReferrerUrl, getUrl, getUserAgent } = environment;
   const config = getConfig(options);
+  const { clientId } = clientIdManager;
 
   return {
     type,
     config,
     ts: Date.now(),
     source: getSource(),
-    clientId: "2136b353-74be-42d7-904f-ea33a8f4a43c",
+    clientId,
     userAgent: getUserAgent(),
     referrerUrl: getReferrerUrl(),
     url: getUrl(),

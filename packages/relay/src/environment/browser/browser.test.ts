@@ -5,6 +5,10 @@
 import { currentEnvironment } from "../environment";
 import { buildBrowserEnvironment } from "./browser";
 
+jest.mock("uuid", () => ({
+  v4: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
+}));
+
 it("currentEnvironment returns the browser runtime", () => {
   expect(currentEnvironment().runtime).toBe("browser");
 });
@@ -50,5 +54,11 @@ describe("buildBrowserEnvironment", () => {
       value: "bap",
     });
     expect(buildBrowserEnvironment().getUserAgent()).toBe("bap");
+  });
+
+  it("generates a UUID when calling generateUUID", () => {
+    expect(buildBrowserEnvironment().generateUUID()).toBe(
+      "2136b353-74be-42d7-904f-ea33a8f4a43c"
+    );
   });
 });

@@ -1,3 +1,4 @@
+import { createMockClientIdManager } from "../../__mocks__/client-id";
 import { createMockEnvironment } from "../../__mocks__/environment";
 import { createMockOptions } from "../../__mocks__/relay";
 import { createMeta } from "./meta";
@@ -15,7 +16,13 @@ describe("createMeta", () => {
     getUserAgent: () => "I am userAgent",
   });
   const defaultOptions = createMockOptions();
-  const defaultMeta = createMeta("itemView", defaultOptions, mockEnv);
+  const defaultClientIdManager = createMockClientIdManager();
+  const defaultMeta = createMeta(
+    "itemView",
+    defaultOptions,
+    mockEnv,
+    defaultClientIdManager
+  );
 
   it("returns meta with the clientId field", () => {
     expect(defaultMeta.clientId).toBe("2136b353-74be-42d7-904f-ea33a8f4a43c");
@@ -32,7 +39,12 @@ describe("createMeta", () => {
   it("returns meta with the ts field, being the current timestamp", () => {
     jest.useFakeTimers().setSystemTime(new Date("2023-08-15T00:00:00.000Z"));
 
-    const specfiedtimeMeta = createMeta("itemView", defaultOptions, mockEnv);
+    const specfiedtimeMeta = createMeta(
+      "itemView",
+      defaultOptions,
+      mockEnv,
+      defaultClientIdManager
+    );
     expect(specfiedtimeMeta.ts).toBe(1692057600000);
   });
 

@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { Environment } from "../environment";
 
 export function buildNodeEnvironment(): Environment {
@@ -7,5 +8,6 @@ export function buildNodeEnvironment(): Environment {
     getReferrerUrl: () => null,
     getUrl: () => null,
     getUserAgent: () => null,
+    generateUUID: () => uuidv4(),
   };
 }

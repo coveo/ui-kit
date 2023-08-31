@@ -11,6 +11,7 @@ const defaultEnvironment: Environment = {
   getReferrerUrl: jest.fn(),
   getUrl: jest.fn(),
   getUserAgent: jest.fn(),
+  generateUUID: jest.fn(),
 };
 
 export function createMockEnvironment(

@@ -7,6 +7,7 @@ export interface Environment {
   getReferrerUrl: () => string | null;
   getUrl: () => string | null;
   getUserAgent: () => string | null;
+  generateUUID: () => string;
 }
 
 export function currentEnvironment(): Environment {
