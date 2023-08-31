@@ -82,7 +82,6 @@ export const buildProductListingRequestV2 = async (
     organizationId: state.configuration.organizationId,
     trackingId: state.productListing.trackingId,
     locale: state.productListing.locale,
-    mode: state.productListing.mode,
     clientId: state.productListing.clientId,
     context: state.productListing.context,
     selectedFacets,

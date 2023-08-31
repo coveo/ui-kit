@@ -43,7 +43,6 @@ describe('commerce api client', () => {
         view: {url: ''},
       },
       locale: req.locale ?? '',
-      mode: req.mode ?? 'sample',
     });
 
     it('should call the platform endpoint with the correct arguments', async () => {
@@ -68,7 +67,6 @@ describe('commerce api client', () => {
           clientId: request.clientId,
           context: request.context,
           locale: request.locale,
-          mode: request.mode,
         },
       });
     });
