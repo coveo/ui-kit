@@ -1,3 +1,16 @@
+## 2.42.1 (2023-08-30)
+
+### Bug Fixes
+
+- **headless:** bump coveo.analytics to fix click tracking issue on ios safari ([#3141](https://github.com/coveo/ui-kit/issues/3141)) ([402473f](https://github.com/coveo/ui-kit/commits/402473fe67709e70f27c1edfd92fa8e7227e07e7))
+- refactor focus target to prevent race condition ([#3124](https://github.com/coveo/ui-kit/issues/3124)) ([daddf5b](https://github.com/coveo/ui-kit/commits/daddf5b65532c735ff8e4673e4c7c45e2f0a404f))
+
+# 2.42.0 (2023-08-24)
+
+### Features
+
+- **atomic:** added textarea search box ([#3118](https://github.com/coveo/ui-kit/issues/3118)) ([a436d52](https://github.com/coveo/ui-kit/commits/a436d52174d03fd27d1716607492d783b39debb9))
+
 ## 2.41.1 (2023-08-23)
 
 ### Bug Fixes

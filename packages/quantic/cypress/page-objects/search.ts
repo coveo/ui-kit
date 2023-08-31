@@ -4,6 +4,7 @@ import {
   RouteMatcher,
   StaticResponse, // eslint-disable-next-line node/no-unpublished-import
 } from 'cypress/types/net-stubbing';
+import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
 import {useCaseEnum} from './use-case';
 
 type RequestParams = Record<string, string | number | boolean | undefined>;
@@ -94,10 +95,12 @@ export const routeMatchers = {
 export function interceptSearch() {
   return cy
     .intercept('POST', routeMatchers.analytics, (req) => {
-      if (req.body.actionCause) {
-        req.alias = uaAlias(req.body.actionCause).substring(1);
+      const analyticsBody = getAnalyticsBodyFromRequest(req);
+
+      if (analyticsBody.actionCause) {
+        req.alias = uaAlias(analyticsBody.actionCause as string).substring(1);
       } else if (req.body.eventType) {
-        req.alias = uaAlias(req.body.eventValue).substring(1);
+        req.alias = uaAlias(analyticsBody.eventValue as string).substring(1);
       }
     })
 

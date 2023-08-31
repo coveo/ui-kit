@@ -23,11 +23,13 @@ import {
   CategoryFacetSearchState,
   CategoryFacetState,
   CategoryFacetValue,
+  CategoryFacetValueCommon,
   CoreCategoryFacet,
   CoreCategoryFacetState,
 } from '../../../core/facets/category-facet/headless-core-category-facet';
 
 export type {
+  CategoryFacetValueCommon,
   CategoryFacetValue,
   CategoryFacetOptions,
   CategoryFacetSearchOptions,

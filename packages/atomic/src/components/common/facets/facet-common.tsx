@@ -380,7 +380,7 @@ export class FacetCommon {
         isCollapsed={isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={onToggleCollapse}
-        headerRef={headerFocus.setTarget}
+        headerRef={(el) => headerFocus.setTarget(el)}
       ></FacetHeader>
     );
   }

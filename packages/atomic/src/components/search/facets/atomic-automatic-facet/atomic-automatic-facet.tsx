@@ -1,10 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {AutomaticFacet, SearchStatus, FacetValue} from '@coveo/headless';
 import {Component, Prop, State, h, VNode} from '@stencil/core';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   InitializableComponent,
@@ -58,8 +55,14 @@ export class AtomicAutomaticFacet implements InitializableComponent {
   @Prop({reflect: true}) public searchStatus!: SearchStatus;
   @Prop({reflect: true, mutable: true}) public isCollapsed!: boolean;
 
-  @FocusTarget()
-  private headerFocus!: FocusTargetController;
+  private headerFocus?: FocusTargetController;
+
+  private get focusTarget() {
+    if (!this.headerFocus) {
+      this.headerFocus = new FocusTargetController(this);
+    }
+    return this.headerFocus;
+  }
 
   private get numberOfSelectedValues() {
     return this.facet.state.values.filter((value) => this.isSelected(value))
@@ -127,14 +130,14 @@ export class AtomicAutomaticFacet implements InitializableComponent {
         i18n={this.bindings.i18n}
         label={this.label}
         onClearFilters={() => {
-          this.headerFocus.focusAfterSearch();
+          this.focusTarget.focusAfterSearch();
           this.facet.deselectAll();
         }}
         numberOfActiveValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         headingLevel={0}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-        headerRef={this.headerFocus.setTarget}
+        headerRef={(el) => this.focusTarget.setTarget(el)}
       ></FacetHeader>
     );
   }

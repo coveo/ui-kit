@@ -1,3 +1,9 @@
+# 2.14.0 (2023-08-24)
+
+### Features
+
+- **atomic:** added textarea search box ([#3118](https://github.com/coveo/ui-kit/issues/3118)) ([a436d52](https://github.com/coveo/ui-kit/commits/a436d52174d03fd27d1716607492d783b39debb9))
+
 # 2.13.0 (2023-08-21)
 
 ### Features
