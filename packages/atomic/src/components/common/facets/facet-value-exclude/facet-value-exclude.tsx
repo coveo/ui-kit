@@ -2,7 +2,6 @@ import {FunctionalComponent, h} from '@stencil/core';
 import Tick from '../../../../images/clear.svg';
 
 export interface ExcludeProps {
-  // checked: boolean;
   onClick(): void;
   key?: string | number;
   id?: string;
@@ -19,7 +18,13 @@ export interface ExcludeProps {
 export const FacetValueExclude: FunctionalComponent<ExcludeProps> = (props) => {
   const partName = props.part ?? 'checkbox';
   const parts = [partName];
-  const classNames = [];
+  const classNames = [
+    'peer',
+    'order-last',
+    'ml-auto',
+    'group-hover:visible',
+    'invisible',
+  ];
   if (props.class) {
     classNames.push(props.class);
   }
@@ -34,7 +39,6 @@ export const FacetValueExclude: FunctionalComponent<ExcludeProps> = (props) => {
     <button
       {...attributes}
       onClick={() => props.onClick?.()}
-      class="peer order-last ml-auto group-hover:visible invisible"
       onMouseEnter={(e) => props.onMouseEnter?.(e)}
     >
       <atomic-icon

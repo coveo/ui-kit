@@ -460,9 +460,9 @@ export class FacetCommon {
               ? this.facet.facetSearch.singleSelect(value)
               : this.facet.facetSearch.select(value),
           () => {
-            this.displayValuesAs === 'link'
-              ? this.facet.facetSearch.singleExclude(value)
-              : this.facet.facetSearch.exclude(value);
+            if (this.displayValuesAs === 'checkbox') {
+              this.facet.facetSearch.exclude(value);
+            }
           },
           false,
           false,
@@ -486,10 +486,11 @@ export class FacetCommon {
             this.displayValuesAs === 'link'
               ? this.facet.toggleSingleSelect(value)
               : this.facet.toggleSelect(value),
-          () =>
-            this.displayValuesAs === 'link'
-              ? this.facet.toggleSingleExclude(value)
-              : this.facet.toggleExclude(value),
+          () => {
+            if (this.displayValuesAs === 'checkbox') {
+              this.facet.toggleExclude(value);
+            }
+          },
           i === 0,
           i ===
             (this.sortCriteria === 'automatic'
