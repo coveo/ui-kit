@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import {configure} from '../../../page-objects/configurator';
 import {
   InterceptAliases,
@@ -184,6 +185,7 @@ describe('quantic-standalone-search-box', () => {
         });
 
         scope('with custom #redirectUrl', () => {
+          const searchFromLinkRequestTimeout = 10000;
           const query = 'test';
           visitStandaloneSearchBox({
             redirectUrl: '/full-search-example',
@@ -197,7 +199,7 @@ describe('quantic-standalone-search-box', () => {
           Expect.urlContains(
             `/full-search-example#q=${encodeURIComponent(query)}`
           );
-          Expect.logSearchFromLink(query);
+          Expect.logSearchFromLink(query, searchFromLinkRequestTimeout);
         });
 
         scope('with custom #searchHub', () => {
@@ -231,6 +233,33 @@ describe('quantic-standalone-search-box', () => {
 
           Expect.fetchQuerySuggestWithParams(requestParams, interceptAlias);
         });
+      });
+    });
+  });
+
+  describe('Expandable textarea searchbox', () => {
+    it('should support the expandable textarea features', () => {
+      scope('when typing a longer text that what fits on one line', () => {
+        const longQuery =
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+        visitStandaloneSearchBox({textarea: true});
+
+        Expect.inputInitialized(true);
+        Actions.focusSearchBox(true);
+        Actions.keyboardTypeInSearchBox(longQuery, true);
+        Expect.inputStyleMatches('white-space: pre-wrap;', true);
+      });
+
+      scope('when the textarea is not in focus', () => {
+        const longQuery =
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+        visitStandaloneSearchBox({textarea: true});
+
+        Expect.inputInitialized(true);
+        Actions.focusSearchBox(true);
+        Actions.keyboardTypeInSearchBox(longQuery, true);
+        Actions.blurSearchBox(true);
+        Expect.inputStyleMatches('white-space: no-wrap;', true);
       });
     });
   });

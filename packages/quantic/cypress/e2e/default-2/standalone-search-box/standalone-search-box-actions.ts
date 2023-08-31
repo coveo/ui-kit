@@ -29,6 +29,10 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
         cy.wrap(searchbox).focus();
       });
     },
+    blurSearchBox: (textarea = false) => {
+      selector.input(textarea).focus();
+      selector.input(textarea).blur({force: true});
+    },
     clickFirstSuggestion: () => {
       selector.suggestionList().first().click({force: true});
     },
@@ -36,6 +40,12 @@ const standaloneSearchBoxActions = (selector: StandaloneSearchBoxSelector) => {
       selector.input(textarea).then((searchbox) => {
         cy.wrap(searchbox).trigger('keyup', {key: 'Enter'});
       });
+    },
+    keyboardTypeInSearchBox: (query: string, textarea = false) => {
+      selector
+        .input(textarea)
+        .type(query)
+        .logAction(`when typing with keyboard "${query}" in search box`);
     },
   };
 };

@@ -5,6 +5,8 @@ import {
   StandaloneSearchBoxSelector,
 } from './standalone-search-box-selectors';
 
+const REQUEST_TIMEOUT = 5000;
+
 function standaloneSearchBoxExpectations(
   selector: StandaloneSearchBoxSelector
 ) {
@@ -61,13 +63,22 @@ function standaloneSearchBoxExpectations(
     inputContains: (value: string, textarea = false) => {
       selector.input(textarea).invoke('attr', 'value').contains(value);
     },
+    inputStyleMatches: (expectedText: string, textarea = false) => {
+      selector
+        .input(textarea)
+        .invoke('attr', 'style', expectedText)
+        .should('have.attr', 'style', expectedText)
+        .logDetail(
+          'condition function on style of the input should return true'
+        );
+    },
     urlContains: (redirectUrl: string) => {
       cy.url()
         .should('include', redirectUrl)
         .logDetail(`URL hash should contain "${redirectUrl}"`);
     },
-    logSearchFromLink: (query: string) => {
-      cy.wait(InterceptAliases.UA.SearchFromLink)
+    logSearchFromLink: (query: string, requestTimeout = REQUEST_TIMEOUT) => {
+      cy.wait(InterceptAliases.UA.SearchFromLink, {requestTimeout})
         .then((interception) => {
           const analyticsBody = interception.request.body;
           expect(analyticsBody).to.have.property(
