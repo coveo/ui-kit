@@ -42,7 +42,7 @@ describe('product-listing-v2-slice', () => {
       type: 'type',
     };
     const action = {
-      type: 'commerce/product-listing/fetch/rejected',
+      type: 'commerce/productListing/fetch/rejected',
       payload: err,
     };
     const finalState = productListingV2Reducer(state, action);

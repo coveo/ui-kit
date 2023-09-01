@@ -13,7 +13,7 @@ import {
 
 export const logProductListingV2Load = (): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
-    'analytics/commerce/product-listing/load',
+    'analytics/commerce/productListing/load',
     AnalyticsType.Search,
     (client) => client.makeInterfaceLoad(),
     (getState) => new CommerceAnalyticsProvider(getState)
@@ -23,7 +23,7 @@ export const logProductListingV2Open = (
   productRec: ProductRecommendation
 ): ProductListingV2Action<AnalyticsType.Click> =>
   makeAnalyticsAction(
-    'analytics/commerce/product-listing/open',
+    'analytics/commerce/productListing/open',
     AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(productRec);
