@@ -35,3 +35,11 @@ export type {
   ResultListState,
 } from './controllers/result-list/headless-result-list.ssr';
 export {defineResultList} from './controllers/result-list/headless-result-list.ssr';
+
+export type {
+  SearchParameterManager,
+  SearchParameterManagerInitialState,
+  SearchParameterManagerBuildProps,
+  SearchParameterManagerState,
+} from './controllers/search-parameter-manager/headless-search-parameter-manager.ssr';
+export {defineSearchParameterManager} from './controllers/search-parameter-manager/headless-search-parameter-manager.ssr';
