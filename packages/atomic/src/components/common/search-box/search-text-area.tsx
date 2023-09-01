@@ -81,7 +81,7 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
   ...defaultInputProps
 }) => (
   <div class="grow flex overflow-hidden">
-    <div class="grow-wrap grow grid overflow-hidden">
+    <div part="textarea-wrapper" class="grow grid overflow-hidden">
       <textarea
         part="textarea"
         aria-label={ariaLabel}
