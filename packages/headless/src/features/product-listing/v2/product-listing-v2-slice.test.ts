@@ -23,7 +23,7 @@ describe('product-listing-v2-slice', () => {
     );
   });
 
-  it('should allow to set the product recommendations skus', () => {
+  it('should allow to set the product listing URL', () => {
     expect(
       productListingV2Reducer(
         state,
