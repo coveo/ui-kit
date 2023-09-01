@@ -4,7 +4,9 @@ import {didYouMeanReducer as didYouMean} from '../../features/did-you-mean/did-y
 import {queryReducer as query} from '../../features/query/query-slice';
 import {
   applyDidYouMeanCorrection,
+  disableAutomaticQueryCorrection,
   disableDidYouMean,
+  enableAutomaticQueryCorrection,
   enableDidYouMean,
 } from './did-you-mean-actions';
 
@@ -26,6 +28,20 @@ export interface DidYouMeanActionCreators {
    * @returns A dispatchable action.
    */
   disableDidYouMean(): PayloadAction;
+
+  /**
+   * Enables automatic query correction
+   *
+   * @returns A dispatchable action.
+   */
+  enableAutomaticQueryCorrection(): PayloadAction;
+
+  /**
+   * Disables automatic query correction
+   *
+   * @returns A dispatchable action.
+   */
+  disableAutomaticQueryCorrection(): PayloadAction;
 
   /**
    * Enables did-you-mean.
@@ -50,5 +66,7 @@ export function loadDidYouMeanActions(
     applyDidYouMeanCorrection,
     disableDidYouMean,
     enableDidYouMean,
+    enableAutomaticQueryCorrection,
+    disableAutomaticQueryCorrection,
   };
 }

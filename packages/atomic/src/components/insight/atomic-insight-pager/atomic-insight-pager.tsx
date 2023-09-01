@@ -7,10 +7,7 @@ import {
   InsightSearchStatus,
   InsightSearchStatusState,
 } from '../';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -52,8 +49,7 @@ export class AtomicInsightPager
    */
   @Prop({reflect: true}) numberOfPages = 5;
 
-  @FocusTarget()
-  private activePage!: FocusTargetController;
+  private activePage?: FocusTargetController;
 
   public initialize() {
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
@@ -62,12 +58,20 @@ export class AtomicInsightPager
     });
   }
 
+  private get focusTarget(): FocusTargetController {
+    if (!this.activePage) {
+      this.activePage = new FocusTargetController(this);
+    }
+
+    return this.activePage;
+  }
+
   public render() {
     return (
       <PagerCommon
         bindings={this.bindings}
         eventEmitter={this.scrollToTopEvent}
-        activePage={this.activePage}
+        activePage={this.focusTarget}
         pager={this.pager}
         pagerState={this.pagerState}
         searchStatusState={this.searchStatusState}

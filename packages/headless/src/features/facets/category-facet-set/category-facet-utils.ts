@@ -1,3 +1,4 @@
+import {CategoryFacetValueCommon} from './interfaces/commons';
 import {CategoryFacetValueRequest} from './interfaces/request';
 import {CategoryFacetValue} from './interfaces/response';
 
@@ -33,16 +34,55 @@ export function partitionIntoParentsAndValues<
   return {parents, values};
 }
 
-export function getActiveValueFromValueTree(
-  valuesAsTrees: CategoryFacetValue[]
-): CategoryFacetValue | undefined {
-  const valueToVisit = [...valuesAsTrees];
+export function findActiveValueAncestry(
+  valuesAsTress: CategoryFacetValueRequest[]
+): CategoryFacetValueRequest[];
+export function findActiveValueAncestry(
+  valuesAsTress: CategoryFacetValue[]
+): CategoryFacetValue[];
+export function findActiveValueAncestry(
+  valuesAsTree: CategoryFacetValueCommon[]
+): CategoryFacetValueCommon[] {
+  const {activeValue, ancestryMap} =
+    getActiveValueAndAncestryFromValueTree(valuesAsTree);
+  return activeValue ? getActiveValueAncestry(activeValue, ancestryMap) : [];
+}
+
+function getActiveValueAndAncestryFromValueTree(
+  valuesAsTrees: CategoryFacetValueCommon[]
+) {
+  const valueToVisit: CategoryFacetValueCommon[] = [...valuesAsTrees];
+  const ancestryMap = new Map<
+    CategoryFacetValueCommon,
+    CategoryFacetValueCommon
+  >();
   while (valueToVisit.length > 0) {
-    const currentValue = valueToVisit.shift()!;
+    const currentValue: CategoryFacetValueCommon = valueToVisit.shift()!;
     if (currentValue.state === 'selected') {
-      return currentValue;
+      return {activeValue: currentValue, ancestryMap};
+    }
+    if (ancestryMap) {
+      for (const childValue of currentValue.children) {
+        ancestryMap.set(childValue, currentValue);
+      }
     }
     valueToVisit.unshift(...currentValue.children);
   }
-  return undefined;
+  return {};
+}
+
+function getActiveValueAncestry(
+  activeValue: CategoryFacetValueCommon | undefined,
+  valueToParentMap: Map<CategoryFacetValueCommon, CategoryFacetValueCommon>
+): CategoryFacetValueCommon[] {
+  const activeValueAncestry: CategoryFacetValueCommon[] = [];
+  if (!activeValue) {
+    return [];
+  }
+  let lastParent: CategoryFacetValueCommon | undefined = activeValue;
+  do {
+    activeValueAncestry.unshift(lastParent);
+    lastParent = valueToParentMap.get(lastParent);
+  } while (lastParent);
+  return activeValueAncestry;
 }

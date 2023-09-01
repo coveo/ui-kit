@@ -78,6 +78,9 @@
       ],
       "dependsOn": ["^build"]
     },
+    "dev": {
+      "dependsOn": ["^build"]
+    },
     "prod": {
       "dependsOn": ["build"]
     },

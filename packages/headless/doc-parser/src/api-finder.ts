@@ -5,7 +5,10 @@ export function findApi(entry: ApiEntryPoint, apiName: string) {
   const [result] = entry.findMembersByName(canonicalName);
 
   if (!result) {
-    throw new Error(`No api found for ${canonicalName}`);
+    const currentUseCaseName: string = process.env['currentUseCaseName']!;
+    throw new Error(
+      `No api found for ${canonicalName} while processing ${currentUseCaseName}. Ensure ${canonicalName} is exported in the entrypoint of ${currentUseCaseName}.`
+    );
   }
 
   return result;

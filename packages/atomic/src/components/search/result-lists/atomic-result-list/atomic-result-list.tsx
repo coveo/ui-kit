@@ -9,10 +9,7 @@ import {
   buildInteractiveResult,
 } from '@coveo/headless';
 import {Component, Element, State, Prop, Method, h} from '@stencil/core';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -72,7 +69,7 @@ export class AtomicResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() private templateHasError = false;
 
-  @FocusTarget() nextNewResultTarget!: FocusTargetController;
+  private nextNewResultTarget?: FocusTargetController;
 
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
@@ -110,6 +107,13 @@ export class AtomicResultList implements InitializableComponent {
     this.resultRenderingFunction = resultRenderingFunction;
   }
 
+  public get focusTarget() {
+    if (!this.nextNewResultTarget) {
+      this.nextNewResultTarget = new FocusTargetController(this);
+    }
+    return this.nextNewResultTarget;
+  }
+
   public initialize() {
     if (this.host.innerHTML.includes('<atomic-result-children')) {
       console.warn(
@@ -144,7 +148,7 @@ export class AtomicResultList implements InitializableComponent {
       getResultDisplay: () => this.display,
       getLayoutDisplay: () => this.display,
       getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.nextNewResultTarget,
+      nextNewResultTarget: this.focusTarget,
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
