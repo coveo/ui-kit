@@ -4,12 +4,7 @@
 import {Middleware} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers';
 import {mapObject} from '../../utils/utils';
-import {
-  SearchEngine,
-  SearchEngineOptions,
-  buildSearchEngine,
-} from '../search-engine/search-engine';
-import {EngineDefinitionBuildOptionsWithProps} from './types/build';
+import {EngineDefinitionBuildOptionsWithProps} from '../ssr-engine/types/build';
 import {
   ControllerDefinitionsMap,
   ControllersMap,
@@ -17,11 +12,30 @@ import {
   InferControllerSSRStateMapFromDefinitions,
   InferControllersMapFromDefinition,
   OptionsExtender,
-} from './types/common';
+} from '../ssr-engine/types/common';
 import {
-  SearchEngineDefinition,
-  SearchEngineDefinitionOptions,
-} from './types/search-engine';
+  EngineDefinition,
+  EngineDefinitionOptions,
+} from '../ssr-engine/types/core-engine';
+import {
+  SearchEngine,
+  SearchEngineOptions,
+  buildSearchEngine,
+} from './search-engine';
+
+/**
+ * @internal
+ */
+export type SearchEngineDefinition<
+  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
+> = EngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
+
+/**
+ * @internal
+ */
+export type SearchEngineDefinitionOptions<
+  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
+> = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
 
 /**
  * @internal
