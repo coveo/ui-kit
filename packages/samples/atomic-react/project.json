@@ -1,3 +1,22 @@
 {
-  "name": "atomic-react-samples"
+  "name": "atomic-react-samples",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "namedInputs": {
+    "negativeBuildOutputs": ["!{projectRoot}/public/dist"]
+  },
+  "targets": {
+    "cached:build": {
+      "outputs": ["{projectRoot}/public/dist"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["tsc --noEmit", "tsc --module commonjs --noEmit"],
+        "parallel": true,
+        "cwd": "packages/samples/atomic-react"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
 }

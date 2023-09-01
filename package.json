@@ -5,7 +5,7 @@
     "postinstall": "husky install && patch-package && nx run-many --target=install:isolated",
     "reset:install": "git checkout origin/master package-lock.json && npm ci",
     "clean:install": "rimraf **/node_modules && npm run reset:install",
-    "dev:atomic": "concurrently \"nx run headless:dev\" \"nx run atomic:dev\"",
+    "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic dev\"",
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "e2e": "nx run-many --target=e2e",
@@ -62,7 +62,7 @@
     "husky": "5.2.0",
     "jest": "27.5.1",
     "lint-staged": "13.1.0",
-    "nx": "15.7.0",
+    "nx": "16.7.1",
     "patch-package": "8.0.0",
     "prettier": "2.7.1",
     "react": "18.2.0",
@@ -74,13 +74,7 @@
   },
   "overrides": {
     "@coveo/quantic": {
-      "@lwc/compiler": "2.11.8",
-      "@salesforce/sfdx-lwc-jest@1.1.2": {
-        "@lwc/jest-preset": "11.4.0",
-        "@lwc/jest-resolver": "11.4.0",
-        "@lwc/jest-serializer": "11.4.0",
-        "@lwc/jest-transformer": "11.4.0"
-      }
+      "@lwc/compiler": "2.11.8"
     },
     "@coveo/atomic": {
       "postcss": "8.4.27"

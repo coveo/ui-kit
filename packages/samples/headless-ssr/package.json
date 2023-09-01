@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "nx build",
+    "build:next": "next build",
     "prod": "next start",
     "lint": "next lint",
     "e2e": "cypress run --browser chrome --e2e",

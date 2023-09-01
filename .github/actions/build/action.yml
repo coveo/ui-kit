@@ -1,0 +1,16 @@
+name: 'Install, build & cache'
+description: 'Installs dependencies, builds all packages, and saves the cache of Nx'
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup
+      with:
+        load-cache: 'false'
+    - uses: actions/cache@v3
+      id: nx-cache
+      with:
+        path: node_modules/.cache/nx
+        key: nx-${{ github.sha }}
+    - if: steps.nx-cache.outputs.cache-hit != 'true'
+      run: npm run build
+      shell: bash

@@ -1,14 +1,20 @@
 {
+  "name": "atomic",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "namedInputs": {
-    "production": [
-      "sharedGlobals",
-      "sharedTypescriptSources",
+    "negativeBuildOutputs": [
+      "!{projectRoot}/dist",
+      "!{projectRoot}/www",
+      "!{projectRoot}/docs",
+      "!{projectRoot}/loader",
+      "!{projectRoot}/src/components.d.ts"
+    ],
+    "buildInputs": [
       "{projectRoot}/stencil.config.ts",
       "{projectRoot}/collection-manifest.json",
       "{projectRoot}/tailwind.config.js",
       "{projectRoot}/svg.transform.js",
       "{projectRoot}/stencil-plugin/**",
-      "!{projectRoot}/src/components.d.ts",
       "!{projectRoot}/src/external-builds/**",
       "!{projectRoot}/src/generated/**",
       "!{projectRoot}/src/components/search/atomic-search-interface/lang/**"
