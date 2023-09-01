@@ -1,14 +1,19 @@
 import {SearchBoxSelectors} from './search-box-selectors';
 
-export function assertFocusSearchBox() {
+export function assertFocusSearchBox(
+  searchBoxSelector = SearchBoxSelectors.inputBox
+) {
   it('should focus on the search box', () => {
-    SearchBoxSelectors.inputBox().should('be.focused');
+    searchBoxSelector().should('be.focused');
   });
 }
 
-export function assertHasText(text: string) {
+export function assertHasText(
+  text: string,
+  searchBoxSelector = SearchBoxSelectors.inputBox
+) {
   it(`should contain "${text}"`, () => {
-    SearchBoxSelectors.inputBox().should('have.value', text);
+    searchBoxSelector().should('have.value', text);
   });
 }
 
@@ -26,6 +31,12 @@ export function assertHasSuggestionsCount(count: number) {
     // } else {
     //   SearchBoxSelectors.querySuggestionsWrapper().should('not.be.visible');
     // }
+  });
+}
+
+export function assertNoSuggestionGenerated() {
+  it('should have no suggestions', () => {
+    SearchBoxSelectors.querySuggestions().should('not.exist');
   });
 }
 

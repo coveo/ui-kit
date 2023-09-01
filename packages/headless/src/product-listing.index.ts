@@ -25,6 +25,7 @@ export type {LogLevel} from './app/logger';
 export type {ProductRecommendation} from './api/search/search/product-recommendation';
 
 // Actions
+export * from './features/product-listing/product-listing-click-analytics-actions-loader';
 export * from './features/product-listing/product-listing-actions-loader';
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/pagination/pagination-actions-loader';
@@ -120,6 +121,7 @@ export type {
   CategoryFacetSearchState,
   CategoryFacetState,
   CategoryFacetValue,
+  CategoryFacetValueCommon,
   CategoryFacetSearchResult,
   CoreCategoryFacet,
   CoreCategoryFacetState,
@@ -189,3 +191,15 @@ export type {
   InteractiveResult,
 } from './controllers/product-listing/result-list/headless-product-listing-interactive-result';
 export {buildInteractiveResult} from './controllers/product-listing/result-list/headless-product-listing-interactive-result';
+
+export type {
+  ResultTemplate,
+  ResultTemplateCondition,
+} from './features/result-templates/result-templates';
+
+export type {Result} from './api/search/search/result';
+
+export type {
+  SearchStatus,
+  SearchStatusState,
+} from './controllers/insight/status/headless-insight-status';

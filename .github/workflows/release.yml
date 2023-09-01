@@ -1,5 +1,8 @@
 name: Create release
 on:
+  schedule:
+    # At 13:00 (UTC) every Wednesday.
+    - cron:  '0 13 * * 3'
   workflow_dispatch:
     inputs:
       version:
@@ -15,16 +18,25 @@ on:
 jobs:
   release:
     environment: 'Release'
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version-file: '.nvmrc'
+      - name: Install npm
+        run: npm i -g npm@9
+        shell: bash
+      - run: npm ci
+        shell: bash
       - name: Release
         run: npm run release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           VERSION: ${{ inputs.version }}
           DEBUG: ${{ inputs.debug && '*' || '' }}
           RELEASER_APP_ID: ${{ secrets.RELEASER_APP_ID }}

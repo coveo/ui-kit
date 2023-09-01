@@ -22,18 +22,16 @@ interface CaseClassificationOptions {
   coveoFieldName: string;
   fetchClassificationOnChange: boolean;
   fetchDocumentSuggestionOnChange: boolean;
+  fetchOnInit: boolean;
 }
 
 const incorrectSfFielNameError = (value: string) => {
   return `The Salesforce field API name "${value}" is not found.`;
 };
-const invalidMaxSuggestionsError = (value: string | number) => {
-  return `"${Number(
-    value
-  )}" is an invalid maximum number of suggestions. A positive integer was expected.`;
-};
+const invalidMaxSuggestionsError =
+  'The maximum number of suggestions must be an integer greater than 0.';
 const missingCoveoFieldNameError =
-  'coveoFieldName is required, please set its value.';
+  'The "coveoFieldName" property is required, please set its value.';
 const nonCorrespondingSuggestionWarning = (
   value: string,
   coveoFieldName: string,
@@ -93,7 +91,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -266,8 +264,9 @@ describe('quantic-case-classification', () => {
     });
 
     it('should render an error message when maxSuggestion is inferior to 0', () => {
+      const invalidValue = -1;
       visitCaseClassification({
-        maxSuggestions: -1,
+        maxSuggestions: invalidValue,
       });
 
       scope('when loading the page', () => {
@@ -276,7 +275,8 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
-        Expect.displayRenderingError(true, invalidMaxSuggestionsError(-1));
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(invalidMaxSuggestionsError);
       });
     });
   });
@@ -293,7 +293,8 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
-        Expect.displayRenderingError(true, invalidMaxSuggestionsError(NaN));
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(invalidMaxSuggestionsError);
       });
     });
   });
@@ -540,8 +541,8 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
-        Expect.displayRenderingError(
-          true,
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(
           incorrectSfFielNameError(incorrectSfField)
         );
       });
@@ -560,7 +561,8 @@ describe('quantic-case-classification', () => {
         Expect.numberOfSuggestions(0);
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
-        Expect.displayRenderingError(true, missingCoveoFieldNameError);
+        Expect.displayComponentError(true);
+        Expect.displayComponentErrorMessage(missingCoveoFieldNameError);
       });
     });
   });
@@ -590,7 +592,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -617,7 +619,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.correctValue(allOptions[clickedIndex].value);
       });
@@ -651,7 +653,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -699,7 +701,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.correctValue(allOptions[clickedIndex].value);
         }
@@ -772,7 +774,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(0);
         Expect.logClickedSuggestion(firstSuggestionIndex, true);
         Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -794,7 +796,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(true);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(
+        Expect.correctSuggestionsOrder(
           allOptions.slice(
             firstSuggestionIndex,
             firstSuggestionIndex + suggestionsCount
@@ -841,7 +843,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(false);
         Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.correctValue(allOptions[clickedIndex].value);
       });
@@ -920,7 +922,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -934,7 +936,7 @@ describe('quantic-case-classification', () => {
             clickedIndex
           );
           Expect.correctValue(allOptions[clickedIndex].value);
-          Expect.fetchClassificationsAfterValueChange();
+          Expect.fetchClassifications();
         });
       });
     });
@@ -983,7 +985,7 @@ describe('quantic-case-classification', () => {
           Expect.correctValue(
             allOptions[clickedIndex + suggestionsCount].value
           );
-          Expect.fetchClassificationsAfterValueChange();
+          Expect.fetchClassifications();
         });
       });
     });
@@ -1014,7 +1016,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -1030,7 +1032,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchClassificationsAfterValueChange();
+          Expect.fetchClassifications();
         });
       });
     });
@@ -1065,7 +1067,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -1079,7 +1081,7 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchDocumentsAfterValueChange();
+          Expect.fetchDocumentSuggestions();
         });
       });
     });
@@ -1130,7 +1132,7 @@ describe('quantic-case-classification', () => {
           Expect.correctValue(
             allOptions[clickedIndex + suggestionsCount].value
           );
-          Expect.fetchDocumentsAfterValueChange();
+          Expect.fetchDocumentSuggestions();
         });
       });
     });
@@ -1162,7 +1164,7 @@ describe('quantic-case-classification', () => {
           Expect.displaySelectTitle(true);
           Expect.displaySelectInput(false);
           Expect.numberOfSuggestions(suggestionsCount);
-          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
           Expect.numberOfInlineOptions(0);
           Expect.logClickedSuggestion(firstSuggestionIndex, true);
           Expect.correctValue(allOptions[firstSuggestionIndex].value);
@@ -1179,8 +1181,33 @@ describe('quantic-case-classification', () => {
             coveoDefaultField,
             clickedIndex
           );
-          Expect.fetchDocumentsAfterValueChange();
+          Expect.fetchDocumentSuggestions();
         });
+      });
+    });
+  });
+
+  describe('when the fetchOnInit property is set to true', () => {
+    it('should automatically fetch classifications during initialization', () => {
+      const suggestionsCount = 3;
+      const firstSuggestionIndex = 0;
+      mockCaseClassification(
+        coveoDefaultField,
+        allOptions.slice(0, suggestionsCount)
+      );
+      visitCaseClassification({
+        fetchOnInit: true,
+      });
+
+      scope('when loading the page', () => {
+        Expect.fetchClassifications();
+        Expect.displaySelectTitle(true);
+        Expect.displaySelectInput(false);
+        Expect.numberOfSuggestions(suggestionsCount);
+        Expect.correctSuggestionsOrder(allOptions.slice(0, suggestionsCount));
+        Expect.numberOfInlineOptions(0);
+        Expect.logClickedSuggestion(firstSuggestionIndex, true);
+        Expect.correctValue(allOptions[firstSuggestionIndex].value);
       });
     });
   });

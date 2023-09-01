@@ -1,6 +1,8 @@
-import {FacetRequest} from './request';
+import {FacetOptions} from '../../../../controllers/core/facets/facet/headless-core-facet-options';
 
-export type FacetOptionalParameters = Pick<
-  FacetRequest,
-  'filterFacetCount' | 'injectionDepth' | 'numberOfValues' | 'sortCriteria'
+export type FacetOptionalParameters = Required<
+  Pick<
+    FacetOptions,
+    'filterFacetCount' | 'injectionDepth' | 'numberOfValues' | 'sortCriteria'
+  >
 >;

@@ -32,6 +32,7 @@ export function buildMockResult(config: Partial<Result> = {}): Result {
     summaryHighlights: [],
     absentTerms: [],
     raw: buildMockRaw(),
+    isUserActionView: false,
     ...config,
   };
 }

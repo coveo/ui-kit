@@ -2,6 +2,9 @@ import {EventDescription} from 'coveo.analytics';
 import {SearchAppState} from '../..';
 import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
+import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request';
+import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response';
+import {FacetSetState} from '../facets/facet-set/facet-set-state';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response';
 import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet';
@@ -18,6 +21,7 @@ export const buildSearchRequest = async (
 ) => {
   const cq = buildConstantQuery(state);
   const facets = getFacets(state);
+  const automaticFacets = getAutomaticFacets(state);
   const sharedWithFoldingRequest =
     await buildSearchAndFoldingLoadCollectionRequest(state, eventDescription);
 
@@ -59,6 +63,13 @@ export const buildSearchRequest = async (
       parentField: state.folding.fields.child,
       filterFieldRange: state.folding.filterFieldRange,
     }),
+    ...(state.automaticFacetSet && {
+      generateAutomaticFacets: {
+        desiredCount: state.automaticFacetSet.desiredCount,
+        numberOfValues: state.automaticFacetSet.numberOfValues,
+        currentFacets: automaticFacets,
+      },
+    }),
   });
 };
 
@@ -66,6 +77,28 @@ function getFacets(state: StateNeededBySearchRequest) {
   return sortFacets(getAllEnabledFacets(state), state.facetOrder ?? []);
 }
 
+function getAutomaticFacets(state: StateNeededBySearchRequest) {
+  const facets = state.automaticFacetSet?.set;
+
+  return facets
+    ? Object.values(facets)
+        .map((facet) => facet.response)
+        .map(responseToAutomaticFacetRequest)
+        .filter((facetRequest) => facetRequest.currentValues.length > 0)
+    : undefined;
+}
+function responseToAutomaticFacetRequest(
+  response: AutomaticFacetResponse
+): AutomaticFacetRequest {
+  const {field, label, values} = response;
+
+  const selectedValues = values.filter((value) => value.state === 'selected');
+  return {
+    field,
+    label,
+    currentValues: selectedValues,
+  };
+}
 function getAllEnabledFacets(state: StateNeededBySearchRequest) {
   return getAllFacets(state).filter(
     ({facetId}) => state.facetOptions?.facets[facetId]?.enabled ?? true
@@ -74,21 +107,37 @@ function getAllEnabledFacets(state: StateNeededBySearchRequest) {
 
 function getAllFacets(state: StateNeededBySearchRequest) {
   return [
-    ...getFacetRequests(state.facetSet ?? {}),
+    ...getSpecificFacetRequests(state.facetSet ?? {}),
     ...getRangeFacetRequests(state.numericFacetSet ?? {}),
     ...getRangeFacetRequests(state.dateFacetSet ?? {}),
     ...getFacetRequests(state.categoryFacetSet ?? {}),
   ];
 }
 
+function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
+  return getFacetRequests(state).map((request) => {
+    /* The Search API does not support 'alphanumericDescending' as a string value and instead relies on a new sort mechanism to specify sort order.
+    At the moment, this is only supported for alphanumeric sorting, but will likely transition to this pattern for other types in the future. */
+    if (request.sortCriteria === 'alphanumericDescending') {
+      return {
+        ...request,
+        sortCriteria: {
+          type: 'alphanumeric',
+          order: 'descending',
+        },
+      };
+    }
+
+    return request;
+  });
+}
+
 function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {
     const currentValues = request.currentValues as AnyFacetValue[];
-    const hasSelectedValues = currentValues.find(
-      ({state}) => state === 'selected'
-    );
+    const hasActiveValues = currentValues.some(({state}) => state !== 'idle');
 
-    if (request.generateAutomaticRanges && !hasSelectedValues) {
+    if (request.generateAutomaticRanges && !hasActiveValues) {
       return {...request, currentValues: []};
     }
 

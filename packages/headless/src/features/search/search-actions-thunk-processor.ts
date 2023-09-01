@@ -148,7 +148,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       this.processQueryErrorOrContinue(fetched) ??
       (await this.processQueryCorrectionsOrContinue(fetched)) ??
       (await this.processQueryTriggersOrContinue(fetched)) ??
-      this.processSuccessReponse(fetched)
+      this.processSuccessResponse(fetched)
     );
   }
 
@@ -168,7 +168,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   ): Promise<ValidReturnTypeFromProcessingStep<RejectionType> | null> {
     const state = this.getState();
     const successResponse = this.getSuccessResponse(fetched);
-    if (!successResponse) {
+    if (!successResponse || !state.didYouMean) {
       return null;
     }
 
@@ -306,7 +306,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     };
   }
 
-  private processSuccessReponse(
+  private processSuccessResponse(
     fetched: FetchedResponse
   ): ValidReturnTypeFromProcessingStep<RejectionType> {
     this.dispatch(snapshot(extractHistory(this.getState())));

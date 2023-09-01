@@ -5,8 +5,10 @@ import {arrayEqual} from '../../utils/compare-utils';
 import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
 import {ContextState} from '../context/context-state';
 import {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state';
+import {AutomaticFacetSetState} from '../facets/automatic-facet-set/automatic-facet-set-state';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
-import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
+import {findActiveValueAncestry} from '../facets/category-facet-set/category-facet-utils';
+import {FacetValue} from '../facets/facet-set/interfaces/response';
 import {AnyFacetSetState} from '../facets/generic/interfaces/generic-facet-section';
 import {PaginationState} from '../pagination/pagination-state';
 import {QueryState} from '../query/query-state';
@@ -43,6 +45,7 @@ const isEqual = (current: HistoryState, next: HistoryState) => {
     isFacetsEqual(current.facetSet, next.facetSet) &&
     isFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
     isFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
+    isAutomaticFacetsEqual(current.automaticFacetSet, next.automaticFacetSet) &&
     isCategoryFacetsEqual(current.categoryFacetSet, next.categoryFacetSet) &&
     isPaginationEqual(current.pagination, next.pagination) &&
     isQueryEqual(current.query, next.query) &&
@@ -109,10 +112,10 @@ const isFacetsEqual = (current: AnyFacetSetState, next: AnyFacetSetState) => {
 
     const currentSelectedValues = (
       current[key].request.currentValues as AnyFacetValueRequest[]
-    ).filter((value) => value.state === 'selected');
+    ).filter((value) => value.state !== 'idle');
     const nextSelectedValues = (
       value.request.currentValues as AnyFacetValueRequest[]
-    ).filter((value) => value.state === 'selected');
+    ).filter((value) => value.state !== 'idle');
 
     if (
       JSON.stringify(currentSelectedValues) !==
@@ -134,12 +137,12 @@ const isCategoryFacetsEqual = (
       return false;
     }
 
-    const currentSelectedValues = partitionIntoParentsAndValues(
+    const currentSelectedValues = findActiveValueAncestry(
       current[key]?.request.currentValues
-    ).parents.map(({value}) => value);
-    const nextSelectedValues = partitionIntoParentsAndValues(
+    ).map(({value}) => value);
+    const nextSelectedValues = findActiveValueAncestry(
       value?.request.currentValues
-    ).parents.map(({value}) => value);
+    ).map(({value}) => value);
 
     if (
       JSON.stringify(currentSelectedValues) !==
@@ -152,6 +155,32 @@ const isCategoryFacetsEqual = (
   return true;
 };
 
+const isAutomaticFacetsEqual = (
+  current: AutomaticFacetSetState,
+  next: AutomaticFacetSetState
+) => {
+  for (const [key, value] of Object.entries(next.set)) {
+    if (!current.set[key]) {
+      return false;
+    }
+
+    const currentSelectedValues = (
+      current.set[key].response.values as FacetValue[]
+    ).filter((value) => value.state !== 'idle');
+    const nextSelectedValues = (value.response.values as FacetValue[]).filter(
+      (value) => value.state !== 'idle'
+    );
+
+    if (
+      JSON.stringify(currentSelectedValues) !==
+      JSON.stringify(nextSelectedValues)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
 const isPaginationEqual = (current: PaginationState, next: PaginationState) =>
   current.firstResult === next.firstResult &&
   current.numberOfResults === next.numberOfResults;

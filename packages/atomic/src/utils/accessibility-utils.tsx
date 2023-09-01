@@ -45,87 +45,84 @@ export function AriaLiveRegion(regionName: string, assertive = false) {
   };
 }
 
-export interface FocusTargetController {
-  setTarget(element: HTMLElement | undefined): void;
-  focusAfterSearch(): Promise<void>;
-  focusOnNextTarget(): Promise<void>;
-  focus(): Promise<void>;
-  disableForCurrentSearch(): void;
-}
+export class FocusTargetController {
+  private bindings: AnyBindings;
+  private lastSearchId?: string;
+  private element?: HTMLElement;
+  private onFocusCallback?: Function;
+  private doFocusAfterSearch = false;
+  private doFocusOnNextTarget = false;
 
-export function FocusTarget() {
-  return (
-    component: InitializableComponent<AnyBindings>,
-    setterName: string
-  ) => {
-    const {componentWillLoad} = component;
+  constructor(private component: InitializableComponent<AnyBindings>) {
+    this.bindings = component.bindings;
+    this.handleComponentRenderLoop();
+  }
 
-    component.componentWillLoad = function () {
-      componentWillLoad && componentWillLoad.call(this);
-      const {componentDidRender} = this;
-      let focusAfterSearch = false;
-      let focusOnNextTarget = false;
-      let onFocusCallback: Function | null = null;
-      let lastSearchId: string | undefined = undefined;
-      let element: HTMLElement | undefined = undefined;
+  public setTarget(el: HTMLElement | undefined) {
+    if (!el) {
+      return;
+    }
+    this.element = el;
+    if (this.doFocusOnNextTarget) {
+      this.doFocusOnNextTarget = false;
+      this.focus();
+    }
+  }
 
-      this.componentDidRender = function () {
-        componentDidRender && componentDidRender.call(this);
-        if (!this.bindings) {
-          return;
-        }
-        if (
-          focusAfterSearch &&
-          this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
-            lastSearchId
-        ) {
-          focusAfterSearch = false;
-          if (element) {
-            const el = element;
-            // The focus seems to be flaky without deferring, especially on iOS.
-            defer().then(() => {
-              el.focus();
-              onFocusCallback?.();
-            });
-          }
-        }
-      };
+  public async focus() {
+    await defer();
+    this.element?.focus();
+    this.onFocusCallback?.();
+  }
 
-      const focusTargetController: FocusTargetController = {
-        setTarget: (el) => {
-          if (!el) {
-            return;
-          }
-          element = el;
-          if (focusOnNextTarget) {
-            focusOnNextTarget = false;
-            focusTargetController.focus();
-          }
-        },
-        focus: async () => {
+  public focusAfterSearch() {
+    this.lastSearchId = this.bindings.store.getUniqueIDFromEngine(
+      this.bindings.engine
+    );
+    this.doFocusAfterSearch = true;
+    return new Promise((resolve) => (this.onFocusCallback = resolve));
+  }
+
+  public focusOnNextTarget() {
+    this.doFocusOnNextTarget = true;
+    return new Promise((resolve) => (this.onFocusCallback = resolve));
+  }
+
+  public disableForCurrentSearch() {
+    if (
+      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+      this.lastSearchId
+    ) {
+      this.doFocusAfterSearch = false;
+    }
+  }
+
+  private handleComponentRenderLoop() {
+    const originalComponentDidRender = this.component.componentDidRender;
+
+    this.component.componentDidRender = () => {
+      originalComponentDidRender &&
+        originalComponentDidRender.call(this.component);
+      if (!this.bindings) {
+        return;
+      }
+      if (
+        this.doFocusAfterSearch &&
+        this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+          this.lastSearchId
+      ) {
+        this.doFocusAfterSearch = false;
+        if (this.element) {
+          const el = this.element;
           // The focus seems to be flaky without deferring, especially on iOS.
-          await defer();
-          element?.focus();
-          onFocusCallback?.();
-        },
-        focusAfterSearch: () => {
-          lastSearchId = this.bindings.store.getUniqueIDFromEngine(
-            this.bindings.engine
-          );
-          focusAfterSearch = true;
-          return new Promise((resolve) => (onFocusCallback = resolve));
-        },
-        focusOnNextTarget: () => {
-          focusOnNextTarget = true;
-          return new Promise((resolve) => (onFocusCallback = resolve));
-        },
-        disableForCurrentSearch: () =>
-          this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
-            lastSearchId && (focusAfterSearch = false),
-      };
-      this[setterName] = focusTargetController;
+          defer().then(() => {
+            el.focus();
+            this.onFocusCallback?.();
+          });
+        }
+      }
     };
-  };
+  }
 }
 
 function isFocusable(element: Element) {

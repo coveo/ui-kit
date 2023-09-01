@@ -6,7 +6,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   'atomic-search-box-recent-queries',
   {},
   {
-    parentElement: () => {
+    parentElement: function () {
       return document.createElement('atomic-search-box');
     },
     additionalMarkup: () => {

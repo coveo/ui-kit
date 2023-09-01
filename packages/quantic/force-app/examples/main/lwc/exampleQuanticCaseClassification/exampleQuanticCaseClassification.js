@@ -1,7 +1,6 @@
 // @ts-ignore
-import { getCaseAssistId } from 'c/caseAssistUtils';
-import { LightningElement, track } from 'lwc';
-
+import {getCaseAssistId} from 'c/caseAssistUtils';
+import {LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticCaseClassification extends LightningElement {
   @track config = {};
@@ -73,6 +72,13 @@ export default class ExampleQuanticCaseClassification extends LightningElement {
       label: 'Fetch document suggestion on field value change',
       description:
         'Whether the QuanticCaseClassification component should automatically fetch new document suggestions when its field values changes',
+      defaultValue: false,
+    },
+    {
+      attribute: 'fetchOnInit',
+      label: 'Fetch on init',
+      description:
+        'Whether or not the component should fetch classifications during initialization.',
       defaultValue: false,
     },
   ];

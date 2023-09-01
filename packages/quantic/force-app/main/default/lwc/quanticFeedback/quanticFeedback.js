@@ -1,8 +1,8 @@
-import {LightningElement, api} from 'lwc';
-import yes from '@salesforce/label/c.quantic_Yes';
+import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
 import no from '@salesforce/label/c.quantic_No';
 import wasThisUseful from '@salesforce/label/c.quantic_WasThisUseful';
-import explainWhy from '@salesforce/label/c.quantic_ExplainWhy';
+import yes from '@salesforce/label/c.quantic_Yes';
+import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticFeedback` component displays a question and two buttons for giving positive or negative feedback.
@@ -18,7 +18,7 @@ export default class QuanticFeedback extends LightningElement {
     no,
     wasThisUseful,
     explainWhy
-  }
+  };
 
   /**
    * The question to be displayed.
@@ -45,6 +45,53 @@ export default class QuanticFeedback extends LightningElement {
    * @type {string}
    */
   @api successMessage;
+  /**
+   * The name of the like icon.
+   * @api
+   * @type {string}
+   */
+  @api likeIconName = 'utility:success';
+  /**
+   * The name of the dislike icon.
+   * @api
+   * @type {string}
+   */
+  @api dislikeIconName = 'utility:clear';
+  /**
+   * The label of the like button.
+   * @api
+   * @type {string}
+   */
+  @api likeLabel = this.labels.yes;
+  /**
+   * The label of the dislike button.
+   * @api
+   * @type {string}
+   */
+  @api dislikeLabel = this.labels.no;
+  /**
+   * Indicates whether the labels of feedback buttons should be hidden.
+   * @api
+   * @type {boolean}
+   */
+  @api hideLabels = false;
+  /**
+   * The size of the feedback icons.
+   * @api
+   * @type {'xx-small' | 'x-small' | 'small' | 'medium' | 'large'}
+   */
+  @api
+  get size() {
+    return this._size;
+  }
+  set size(value) {
+    if (['xx-small', 'x-small', 'small', 'medium', 'large'].includes(value)) {
+      this._size = value;
+    }
+  }
+
+  /** @type {'xx-small' | 'x-small' | 'small' | 'medium' | 'large'} */
+  _size = 'xx-small';
 
   /**
    * Fires the "like" event.

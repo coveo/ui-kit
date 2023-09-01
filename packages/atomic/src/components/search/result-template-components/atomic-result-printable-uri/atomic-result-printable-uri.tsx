@@ -6,10 +6,7 @@ import {
 } from '@coveo/headless';
 import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
 import Arrow from '../../../../images/arrow-right.svg';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {parseXML} from '../../../../utils/utils';
 import {getAttributesFromLinkSlot} from '../../../common/result-link/attributes-slot';
@@ -41,11 +38,17 @@ export class AtomicResultPrintableUri {
    */
   @Prop({reflect: true}) maxNumberOfParts = 5;
 
-  @FocusTarget()
-  private expandedPartFocus!: FocusTargetController;
+  private expandedPartFocus?: FocusTargetController;
 
   private interactiveResult!: InteractiveResult;
   private linkAttributes?: Attr[];
+
+  private get focusTarget() {
+    if (!this.expandedPartFocus) {
+      this.expandedPartFocus = new FocusTargetController(this);
+    }
+    return this.expandedPartFocus;
+  }
 
   public connectedCallback() {
     try {
@@ -77,8 +80,8 @@ export class AtomicResultPrintableUri {
         <button
           aria-label={this.bindings.i18n.t('collapsed-uri-parts')}
           onClick={(e) => {
-            e.preventDefault();
-            this.expandedPartFocus.focusOnNextTarget();
+            e.stopPropagation();
+            this.focusTarget.focusOnNextTarget();
             this.listExpanded = true;
           }}
         >
@@ -143,7 +146,11 @@ export class AtomicResultPrintableUri {
           this.interactiveResult.cancelPendingSelect()
         }
         attributes={this.linkAttributes}
-        ref={shouldSetTarget ? this.expandedPartFocus.setTarget : undefined}
+        ref={
+          shouldSetTarget
+            ? (el?: HTMLAnchorElement) => this.focusTarget.setTarget(el)
+            : undefined
+        }
       >
         {content}
       </LinkWithResultAnalytics>

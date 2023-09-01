@@ -9,7 +9,6 @@ import {Component, h, Listen, Prop, State} from '@stencil/core';
 import QuickviewIcon from '../../../../images/quickview.svg';
 import {
   AriaLiveRegion,
-  FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
 import {
@@ -37,7 +36,7 @@ import {ResultContext} from '../result-template-decorators';
 export class AtomicQuickview implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
-  @FocusTarget() buttonFocusTarget!: FocusTargetController;
+  private buttonFocusTarget?: FocusTargetController;
 
   @State() public error!: Error;
 
@@ -78,6 +77,13 @@ export class AtomicQuickview implements InitializableComponent {
 
   private quickviewModalRef?: HTMLAtomicQuickviewModalElement;
 
+  public get focusTarget() {
+    if (!this.buttonFocusTarget) {
+      this.buttonFocusTarget = new FocusTargetController(this);
+    }
+    return this.buttonFocusTarget;
+  }
+
   public initialize() {
     this.quickview = buildQuickview(this.bindings.engine, {
       options: {result: this.result},
@@ -114,7 +120,7 @@ export class AtomicQuickview implements InitializableComponent {
       this.quickviewModalRef.total = this.quickviewState.totalResults;
       this.quickviewModalRef.current = this.quickviewState.currentResult;
       this.quickviewModalRef.modalCloseCallback = () =>
-        this.buttonFocusTarget.focus();
+        this.focusTarget.focus();
 
       this.quickviewAriaMessage = this.quickviewState.isLoading
         ? this.bindings.i18n.t('quickview-loading')
@@ -126,7 +132,8 @@ export class AtomicQuickview implements InitializableComponent {
     }
   }
 
-  private onClick() {
+  private onClick(event?: MouseEvent) {
+    event?.stopPropagation();
     this.quickview.fetchResultContent();
   }
 
@@ -139,8 +146,8 @@ export class AtomicQuickview implements InitializableComponent {
           title={this.bindings.i18n.t('quickview')}
           style="outline-primary"
           class="p-2"
-          onClick={() => this.onClick()}
-          ref={this.buttonFocusTarget.setTarget}
+          onClick={(event) => this.onClick(event)}
+          ref={this.focusTarget.setTarget}
         >
           <atomic-icon class="w-5" icon={QuickviewIcon}></atomic-icon>
         </Button>

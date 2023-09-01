@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {getAnalyticsBodyFromInterception} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {EventExpectations} from '../../event-expectations';
 import {
@@ -78,7 +79,7 @@ function resultQuickviewExpectations(selector: ResultQuickviewSelector) {
     logDocumentQuickview: (title: string) => {
       cy.wait(InterceptAliases.UA.DocumentQuickview)
         .then((interception) => {
-          const analyticsBody = interception.request.body;
+          const analyticsBody = getAnalyticsBodyFromInterception(interception);
           expect(analyticsBody).to.have.property(
             'actionCause',
             'documentQuickview'

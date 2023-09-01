@@ -131,7 +131,7 @@ describe('Search Box Test Suites', () => {
       });
     });
 
-    describe('when changing the redirection-url prop, reinitializing the search box', () => {
+    describe('when changing the redirection-url prop, re-initializing the search box', () => {
       beforeEach(() => {
         new TestFixture()
           .with(setSuggestions(numOfSuggestions))
@@ -455,10 +455,12 @@ describe('Search Box Test Suites', () => {
   });
 
   describe('with default search box', () => {
+    const numOfSuggestions = 6;
     beforeEach(() => {
       new TestFixture()
         .with(addSearchBox())
         .with(addQuerySummary())
+        .with(setSuggestions(numOfSuggestions))
         .withoutFirstAutomaticSearch()
         .init();
       SearchBoxSelectors.inputBox().click();
@@ -469,6 +471,20 @@ describe('Search Box Test Suites', () => {
     it('search button is enabled to start with', () => {
       SearchBoxSelectors.inputBox().should('be.empty');
       SearchBoxSelectors.submitButton().should('be.enabled');
+    });
+
+    it('should provide suggestions when focusing the search box', () => {
+      SearchBoxSelectors.inputBox().focus();
+      SearchBoxSelectors.querySuggestions().should('exist');
+      SearchBoxSelectors.querySuggestions()
+        .should('have.attr', 'part')
+        .and('not.contain', 'active-suggestion');
+
+      SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
+      SearchBoxSelectors.querySuggestions()
+        .eq(0)
+        .should('have.attr', 'part')
+        .and('contain', 'active-suggestion');
     });
 
     CommonAssertions.assertConsoleError(false);
@@ -497,7 +513,7 @@ describe('Search Box Test Suites', () => {
     it('there are no search suggestions or errors on query input', () => {
       typeSearchInput('test');
       SearchBoxSelectors.submitButton().should('be.disabled');
-      SearchBoxAssertions.assertHasSuggestionsCount(0);
+      SearchBoxAssertions.assertNoSuggestionGenerated();
       QuerySummaryAssertions.assertHasPlaceholder();
       CommonAssertions.assertConsoleError(false);
     });
@@ -525,7 +541,7 @@ describe('Search Box Test Suites', () => {
     it('search button is enabled when a query with minimum length is input', () => {
       typeSearchInput(testQuery.slice(0, minimumQueryLength - 1)); // enter query less than min len
       SearchBoxSelectors.submitButton().should('be.disabled');
-      SearchBoxAssertions.assertHasSuggestionsCount(0);
+      SearchBoxAssertions.assertNoSuggestionGenerated();
 
       typeSearchInput(testQuery.slice(minimumQueryLength - 1)); // enter rest of the query
       SearchBoxSelectors.submitButton().should('not.be.disabled');

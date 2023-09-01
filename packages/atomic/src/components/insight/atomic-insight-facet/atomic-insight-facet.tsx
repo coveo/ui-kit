@@ -10,10 +10,7 @@ import {
   InsightSearchStatus,
   InsightSearchStatusState,
 } from '..';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -104,14 +101,11 @@ export class AtomicInsightFacet
    */
   @Prop() public injectionDepth = 1000;
 
-  @FocusTarget()
-  private showLessFocus!: FocusTargetController;
+  private showLessFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private showMoreFocus!: FocusTargetController;
+  private showMoreFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private headerFocus!: FocusTargetController;
+  private headerFocus?: FocusTargetController;
 
   public initialize() {
     const options: InsightFacetOptions = {
@@ -151,6 +145,27 @@ export class AtomicInsightFacet
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
 
+  private get focusTargets(): {
+    showLess: FocusTargetController;
+    showMore: FocusTargetController;
+    header: FocusTargetController;
+  } {
+    if (!this.showLessFocus) {
+      this.showLessFocus = new FocusTargetController(this);
+    }
+    if (!this.showMoreFocus) {
+      this.showMoreFocus = new FocusTargetController(this);
+    }
+    if (!this.headerFocus) {
+      this.headerFocus = new FocusTargetController(this);
+    }
+    return {
+      showLess: this.showLessFocus,
+      showMore: this.showMoreFocus,
+      header: this.headerFocus,
+    };
+  }
+
   public disconnectedCallback() {
     this.facetCommon?.disconnectedCallback();
   }
@@ -169,9 +184,9 @@ export class AtomicInsightFacet
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
       numberOfValues: this.numberOfValues,
-      headerFocus: this.headerFocus,
-      showLessFocus: this.showLessFocus,
-      showMoreFocus: this.showMoreFocus,
+      headerFocus: this.focusTargets.header,
+      showLessFocus: this.focusTargets.showLess,
+      showMoreFocus: this.focusTargets.showMore,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
     });
   }

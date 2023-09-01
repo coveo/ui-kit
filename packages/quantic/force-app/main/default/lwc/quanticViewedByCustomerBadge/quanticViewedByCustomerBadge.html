@@ -1,0 +1,17 @@
+<template>
+  <template if:true={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template if:true={shouldDisplayBadge}>
+    <div class="slds-align_absolute-center">
+      <lightning-icon
+        icon-name="utility:profile_alt"
+        class="slds-var-p-right_xx-small"
+        alternative-text={labels.viewedByCustomer}
+        size="xx-small"
+      ></lightning-icon>
+      <div class="viewed-by-customer__label">{labels.viewedByCustomer}</div>
+    </div>
+  </template>
+</template>

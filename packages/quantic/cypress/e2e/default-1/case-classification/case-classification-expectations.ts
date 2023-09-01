@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/case-assist';
+import {ComponentErrorExpectations} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {ConsoleExpectations} from '../../console-expectations';
 import {
@@ -45,14 +46,6 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail(`${should(display)} display the loading spinner`);
     },
 
-    displayRenderingError: (display: boolean, error: string) => {
-      selector
-        .renderingError()
-        .should(display ? 'exist' : 'not.exist')
-        .should(display ? 'contain' : 'not.contain', error)
-        .logDetail(`${should(display)} display a rendering error`);
-    },
-
     hideSuggestions: (hidden: boolean) => {
       selector
         .suggestedOptions()
@@ -70,7 +63,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail(`should display ${value} suggested options`);
     },
 
-    correctSugestionsOrder: (suggestions: Array<{value: string}>) => {
+    correctSuggestionsOrder: (suggestions: Array<{value: string}>) => {
       suggestions.forEach((suggestion, idx) => {
         selector
           .suggestedOption(idx)
@@ -171,15 +164,15 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail('should log the "ticket_classification_click" UA event');
     },
 
-    fetchClassificationsAfterValueChange: () => {
+    fetchClassifications: () => {
       cy.wait(InterceptAliases.CaseClassification).logDetail(
-        'should fetch new case classifications after the value changes'
+        'should fetch new case classifications'
       );
     },
 
-    fetchDocumentsAfterValueChange: () => {
+    fetchDocumentSuggestions: () => {
       cy.wait(InterceptAliases.DocumentSuggestion).logDetail(
-        'should fetch new document suggestions after the value changes'
+        'should fetch new document suggestions'
       );
     },
   };
@@ -187,6 +180,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
 
 export const CaseClassificationExpectations = {
   ...caseClassificationExpectations(CaseClassificationSelectors),
+  ...ComponentErrorExpectations(CaseClassificationSelectors),
   console: {
     ...ConsoleExpectations,
   },

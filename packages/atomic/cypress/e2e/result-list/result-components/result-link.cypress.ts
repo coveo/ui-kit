@@ -36,8 +36,7 @@ describe('Result Link Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(ResultLinkSelectors.shadow);
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when used inside a result template', () => {
@@ -72,8 +71,9 @@ describe('Result Link Component', () => {
         .find('a')
         .should('have.attr', 'href', clickUri);
     });
-
-    CommonAssertions.assertAccessibility(ResultLinkSelectors.firstInResult);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultLinkSelectors.firstInResult);
+    });
 
     describe('when there is no default slot', () => {
       beforeEach(() => {
@@ -133,7 +133,7 @@ describe('Result Link Component', () => {
     });
 
     describe('when there is a slot named "attributes" & a default slot', () => {
-      before(() => {
+      beforeEach(() => {
         const attributesSlot = generateComponentHTML('a', {
           download: 'test',
           target: '_self',
@@ -162,7 +162,7 @@ describe('Result Link Component', () => {
     });
 
     describe('when there is a slot named "attributes" & a default slot (empty string)', () => {
-      before(() => {
+      beforeEach(() => {
         const attributesSlot = generateComponentHTML('a', {
           download: 'test',
           target: '_self',

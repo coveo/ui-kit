@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
+import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions';
 import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
@@ -132,6 +133,9 @@ export const paginationReducer = createReducer(
         handlePaginationReset(state);
       })
       .addCase(selectFacetSearchResult, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(toggleSelectAutomaticFacetValue, (state) => {
         handlePaginationReset(state);
       });
   }

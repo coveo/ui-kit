@@ -26,7 +26,12 @@ import {
   logPageNumber,
   logPagePrevious,
 } from '../pagination/pagination-insight-analytics-actions';
-import {logCopyToClipboard} from '../result-actions/result-actions-insight-analytics-actions';
+import {SmartSnippetFeedback} from '../question-answering/question-answering-analytics-actions';
+import {
+  logCopyToClipboard,
+  logCaseSendEmail,
+  logFeedItemTextPost,
+} from '../result-actions/result-actions-insight-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
 import {
   LogStaticFilterToggleValueActionCreatorPayload,
@@ -48,6 +53,7 @@ export type {
   LogFacetUpdateSortActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
+  SmartSnippetFeedback,
   StaticFilterValueMetadata,
 };
 
@@ -213,6 +219,22 @@ export interface InsightAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logCopyToClipboard(result: Result): InsightAction<AnalyticsType.Click>;
+
+  /**
+   * The event to log when the Case Send As Email result action is clicked.
+   *
+   * @param result - The result.
+   * @returns A dispatchable action.
+   */
+  logCaseSendEmail(result: Result): InsightAction<AnalyticsType.Click>;
+
+  /**
+   * The event to log when the Feed Item Text Post result action is clicked.
+   *
+   * @param result - The result.
+   * @returns A dispatchable action.
+   */
+  logFeedItemTextPost(result: Result): InsightAction<AnalyticsType.Click>;
 }
 
 /**
@@ -246,5 +268,7 @@ export function loadInsightAnalyticsActions(
     logResultsSort,
     logStaticFilterDeselect: logInsightStaticFilterDeselect,
     logCopyToClipboard,
+    logCaseSendEmail,
+    logFeedItemTextPost,
   };
 }

@@ -4,18 +4,13 @@ def parseSemanticVersion(String version) {
   return [major, minor, patch, prerelease]
 }
 
-def toJSONArray(String[] values) {
-  return "[${values.collect { "\"$it\"" }.join(',')}]"
-}
-
 node('heavy && linux && docker') {
   checkout scm
   def tag = sh(script: "git tag --contains", returnStdout: true).trim()
   def isBump = !!tag
   def isOnReleaseBranch = env.BRANCH_NAME == 'master'
-  def isOnPrereleaseBranch = env.BRANCH_NAME.startsWith('prerelease/')
 
-  if (!isOnReleaseBranch && !isOnPrereleaseBranch) {
+  if (!isOnReleaseBranch) {
     return
   }
 
@@ -24,25 +19,13 @@ node('heavy && linux && docker') {
   }
 
   withEnv(['npm_config_cache=npm-cache', 'CI=true', 'NODE_OPTIONS=--max_old_space_size=8192']) {
-    withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
+    withDockerContainer(image: 'node:18', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
       stage('Setup') {
         sh 'npm ci'
       }
 
       stage('Build') {
         sh 'npm run build'
-      }
-
-      stage('Npm publish') {
-        withCredentials([
-        string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-          sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
-          if (isOnReleaseBranch) {
-            sh 'npm run publish:npm:release || true'
-          } else {
-            sh 'npm run publish:npm:prerelease || true'
-          }
-        }
       }
     }
 
@@ -58,8 +41,6 @@ node('heavy && linux && docker') {
         (atomicMajor, atomicMinor, atomicPatch) = parseSemanticVersion(atomic.version)
         (atomicReactMajor, atomicReactMinor, atomicReactPatch) = parseSemanticVersion(atomicReact.version)
         (atomicHostedPageMajor, atomicHostedPageMinor, atomicHostedPagePatch) = parseSemanticVersion(atomicHostedPage.version)
-
-        environments = (isOnReleaseBranch ? ['dev', 'stg', 'prd'] : ['dev']) as String[]
         
         sh "deployment-package package create --with-deploy \
         --resolve HEADLESS_MAJOR_VERSION=${headlessMajor} \
@@ -74,7 +55,6 @@ node('heavy && linux && docker') {
         --resolve ATOMIC_HOSTED_PAGE_MAJOR_VERSION=${atomicHostedPageMajor} \
         --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPageMinor} \
         --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPagePatch} \
-        --resolve ENVIRONMENTS=${toJSONArray(environments)} \
         || true"
       }
     }

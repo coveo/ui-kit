@@ -5,11 +5,17 @@ import {Hidden} from '../../hidden';
 import {AnyBindings} from '../../interface/bindings';
 import {SmartSnippetFeedbackBanner} from '../atomic-smart-snippet-feedback-banner';
 
+type FeedBackModalElement =
+  | HTMLAtomicSmartSnippetFeedbackModalElement
+  | HTMLAtomicInsightSmartSnippetFeedbackModalElement;
+
 interface SmartSnippetProps {
   id: string;
+  modalTagName: string;
+  getSourceAnchorAttributes?: () => Attr[] | undefined;
   getHost: () => HTMLElement;
   getBindings: () => AnyBindings;
-  getModalRef: () => HTMLAtomicSmartSnippetFeedbackModalElement | undefined;
+  getModalRef: () => FeedBackModalElement | undefined;
   getHeadingLevel: () => number;
   getCollapsedHeight: () => number;
   getMaximumHeight: () => number;
@@ -17,7 +23,7 @@ interface SmartSnippetProps {
   getSmartSnippet: () => SmartSnippet;
   getSnippetStyle: () => string | undefined;
   getFeedbackSent: () => boolean;
-  setModalRef: (ref: HTMLAtomicSmartSnippetFeedbackModalElement) => void;
+  setModalRef: (ref: HTMLElement) => void;
   setFeedbackSent: (isSent: boolean) => void;
 }
 
@@ -39,9 +45,7 @@ export class SmartSnippetCommon {
     if (this.props.getModalRef()) {
       return;
     }
-    const modalRef = document.createElement(
-      'atomic-smart-snippet-feedback-modal'
-    );
+    const modalRef = document.createElement(this.props.modalTagName);
     modalRef.addEventListener('feedbackSent', () => {
       this.props.setFeedbackSent(true);
     });
@@ -149,6 +153,7 @@ export class SmartSnippetCommon {
           >
             {source && (
               <atomic-smart-snippet-source
+                anchorAttributes={this.props.getSourceAnchorAttributes?.()}
                 source={source}
                 onSelectSource={this.props.getSmartSnippet().selectSource}
                 onBeginDelayedSelectSource={

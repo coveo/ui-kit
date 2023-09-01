@@ -1,6 +1,6 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {CoreEngine} from '../../../app/engine';
-import {partitionIntoParentsAndValues} from '../../../features/facets/category-facet-set/category-facet-utils';
+import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {getQueryInitialState} from '../../../features/query/query-state';
@@ -117,7 +117,7 @@ export function enrichParameters(
 export function validateParams(
   engine: CoreEngine,
   parameters: Required<SearchParameters>
-): Boolean {
+): boolean {
   return validateTab(engine, parameters);
 }
 
@@ -129,10 +129,12 @@ export function getCoreActiveSearchParameters(
     ...getQ(state),
     ...getTab(state),
     ...getSortCriteria(state),
-    ...getFacets(state),
+    ...getFacets(state, getSelectedValues, 'f'),
+    ...getFacets(state, getExcludedValues, 'fExcluded'),
     ...getCategoryFacets(state),
     ...getNumericFacets(state),
     ...getDateFacets(state),
+    ...getAutomaticFacets(state),
   };
 }
 
@@ -147,7 +149,7 @@ function getQ(state: Partial<SearchParametersState>) {
 }
 
 function getTab(state: Partial<SearchParametersState>) {
-  const activeTab = Object.values(state.tabSet || {}).find(
+  const activeTab = Object.values(state.tabSet ?? {}).find(
     (tab) => tab.isActive
   );
 
@@ -184,24 +186,32 @@ function getSortCriteria(state: Partial<SearchParametersState>) {
   return shouldInclude ? {sortCriteria} : {};
 }
 
-function getFacets(state: Partial<SearchParametersState>) {
+function getFacets(
+  state: Partial<SearchParametersState>,
+  valuesSelector: (currentValues: FacetValueRequest[]) => string[],
+  out: keyof SearchParameters
+) {
   if (state.facetSet === undefined) {
     return {};
   }
 
-  const f = Object.entries(state.facetSet)
+  const facets = Object.entries(state.facetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, {request}]) => {
-      const selectedValues = getSelectedValues(request.currentValues);
-      return selectedValues.length ? {[facetId]: selectedValues} : {};
+      const facetValues = valuesSelector(request.currentValues);
+      return facetValues.length ? {[facetId]: facetValues} : {};
     })
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
-  return Object.keys(f).length ? {f} : {};
+  return Object.keys(facets).length ? {[out]: facets} : {};
 }
 
 function getSelectedValues(values: FacetValueRequest[]) {
   return values.filter((fv) => fv.state === 'selected').map((fv) => fv.value);
+}
+
+function getExcludedValues(values: FacetValueRequest[]) {
+  return values.filter((fv) => fv.state === 'excluded').map((fv) => fv.value);
 }
 
 function getCategoryFacets(state: Partial<SearchParametersState>) {
@@ -212,9 +222,7 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
   const cf = Object.entries(state.categoryFacetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, slice]) => {
-      const {parents} = partitionIntoParentsAndValues(
-        slice!.request.currentValues
-      );
+      const parents = findActiveValueAncestry(slice.request.currentValues);
       const selectedValues = parents.map((p) => p.value);
 
       return selectedValues.length ? {[facetId]: selectedValues} : {};
@@ -258,4 +266,19 @@ function getDateFacets(state: Partial<SearchParametersState>) {
 
 function getSelectedRanges<T extends RangeValueRequest>(ranges: T[]) {
   return ranges.filter((range) => range.state === 'selected');
+}
+
+function getAutomaticFacets(state: Partial<SearchParametersState>) {
+  const set = state.automaticFacetSet?.set;
+  if (set === undefined) {
+    return {};
+  }
+  const af = Object.entries(set)
+    .map(([facetId, {response}]) => {
+      const selectedValues = getSelectedValues(response.values);
+      return selectedValues.length ? {[facetId]: selectedValues} : {};
+    })
+    .reduce((acc, obj) => ({...acc, ...obj}), {});
+
+  return Object.keys(af).length ? {af} : {};
 }

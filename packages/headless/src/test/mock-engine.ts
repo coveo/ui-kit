@@ -77,8 +77,8 @@ export interface MockSearchEngine
 /**
  * For internal use only.
  *
- * Returns a non-functionnal `SearchEngine`.
- * To be used only for unit testing controllers, not for functionnal tests.
+ * Returns a non-functional `SearchEngine`.
+ * To be used only for unit testing controllers, not for functional tests.
  */
 export function buildMockSearchAppEngine(
   config: Partial<SearchEngine<SearchAppState>> = {}
@@ -99,8 +99,8 @@ export interface MockRecommendationEngine
 /**
  * For internal use only.
  *
- * Returns a non-functionnal `RecommendationEngine`.
- * To be used only for unit testing controllers, not for functionnal tests.
+ * Returns a non-functional `RecommendationEngine`.
+ * To be used only for unit testing controllers, not for functional tests.
  */
 export function buildMockRecommendationAppEngine(
   config: Partial<RecommendationEngine<RecommendationAppState>> = {}
@@ -115,8 +115,8 @@ export interface MockProductRecommendationEngine
 /**
  * For internal use only.
  *
- * Returns a non-functionnal `ProductRecommendationEngine`.
- * To be used only for unit testing controllers, not for functionnal tests.
+ * Returns a non-functional `ProductRecommendationEngine`.
+ * To be used only for unit testing controllers, not for functional tests.
  */
 export function buildMockProductRecommendationsAppEngine(
   config: Partial<
@@ -133,8 +133,8 @@ export interface MockProductListingEngine
 /**
  * For internal use only.
  *
- * Returns a non-functionnal `ProductListingEngine`.
- * To be used only for unit testing controllers, not for functionnal tests.
+ * Returns a non-functional `ProductListingEngine`.
+ * To be used only for unit testing controllers, not for functional tests.
  */
 export function buildMockProductListingEngine(
   config: Partial<ProductListingEngine<ProductListingAppState>> = {}
@@ -149,8 +149,8 @@ export interface MockCaseAssistEngine
 /**
  * For internal use only.
  *
- * Returns a non-functionnal `CaseAssistEngine`.
- * To be used only for unit testing controllers, not for functionnal tests.
+ * Returns a non-functional `CaseAssistEngine`.
+ * To be used only for unit testing controllers, not for functional tests.
  */
 export function buildMockCaseAssistEngine(
   config: Partial<CaseAssistEngine<CaseAssistAppState>> = {}

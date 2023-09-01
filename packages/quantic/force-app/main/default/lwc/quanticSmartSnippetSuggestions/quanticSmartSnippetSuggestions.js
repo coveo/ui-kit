@@ -41,6 +41,8 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
   state;
   /** @type {Array<string>} */
   previousOpenedSuggestions = [];
+  /** @type {boolean} */
+  hasInitializationError = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -144,6 +146,13 @@ export default class QuanticSmartSnippetSuggestions extends LightningElement {
     }
 
     this.previousOpenedSuggestions = currentOpenedSuggestions;
+  }
+
+  /**
+   * Sets the component in the initialization error state.
+   */
+  setInitializationError() {
+    this.hasInitializationError = true;
   }
 
   /**

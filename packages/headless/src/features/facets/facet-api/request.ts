@@ -1,3 +1,4 @@
+import {FacetSortOrder} from '../facet-set/interfaces/request';
 import {FacetValueState} from './value';
 
 export interface BaseFacetRequest {
@@ -83,13 +84,20 @@ export interface SortCriteria<
   T extends
     | 'score'
     | 'alphanumeric'
+    | 'alphanumericDescending'
     | 'ascending'
     | 'descending'
     | 'occurrences'
     | 'automatic'
+    | SpecificSortCriteriaExplicitAlphanumeric
 > {
   /** The sort criterion to apply to the returned facet values. */
   sortCriteria: T;
+}
+
+export interface SpecificSortCriteriaExplicitAlphanumeric {
+  type: 'alphanumeric';
+  order: FacetSortOrder;
 }
 
 export interface RangeAlgorithm<T extends 'even' | 'equiprobable'> {
@@ -108,4 +116,18 @@ export interface AllowedValues {
     type: 'simple';
     values: string[];
   };
+}
+
+export interface CustomSort {
+  /**
+   * Identifies the facet values that must appear at the top, in this order.
+   * This parameter can be used in conjunction with the `sortCriteria` parameter.
+   *
+   * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
+   *
+   * The maximum amount of custom sort values is 25.
+   *
+   * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+   */
+  customSort?: string[];
 }

@@ -1,19 +1,21 @@
 import * as CommonAssertions from '../e2e/common-assertions';
+import {InsightPanelActions} from './insight-panel-actions';
 import {InsightPanelsSelectors} from './insight-panel-selectors';
+import {
+  insightSearchAlias,
+  interceptInsightSearch,
+  mockSearchWithSmartSnippet,
+  mockSearchWithSmartSnippetSuggestions,
+  mockSearchWithoutSmartSnippet,
+  mockSearchWithoutSmartSnippetSuggestions,
+} from './route-mocks';
 
 const host = 'http://localhost:3333/examples/insights.html';
-const insightSearchAlias = '@CoveoInsight';
-
-const interceptInsightSearch = (alias = insightSearchAlias) =>
-  cy
-    .intercept('POST', '**/rest/organizations/*/insight/v1/configs/*/search')
-    .as(alias.substring(1));
 
 describe('Insight Panel test suites', () => {
   const setupPage = () => {
     interceptInsightSearch();
     cy.visit(host);
-    cy.injectAxe();
     cy.wait(insightSearchAlias);
   };
 
@@ -22,7 +24,12 @@ describe('Insight Panel test suites', () => {
   });
 
   describe('when there is nothing written in the search box', () => {
-    before(setupPage);
+    beforeEach(setupPage);
+
+    it('should be accessible', () => {
+      cy.injectAxe();
+      CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
+    });
 
     it('should display placeholder while loading', () => {
       InsightPanelsSelectors.resultsPlaceholder()
@@ -58,6 +65,15 @@ describe('Insight Panel test suites', () => {
         .should('exist')
         .find('a')
         .should('have.attr', 'href');
+    });
+
+    it('should display result action bar', () => {
+      InsightPanelsSelectors.resultActionBar()
+        .should('exist')
+        .should('have.length.at.least', 1)
+        .find('button')
+        .find('atomic-icon')
+        .should('exist');
     });
 
     it('should display pagination', () => {
@@ -169,6 +185,22 @@ describe('Insight Panel test suites', () => {
         .should('exist');
     });
 
+    it('should display full search button', () => {
+      InsightPanelsSelectors.fullSearchButton()
+        .should('exist')
+        .should('have.attr', 'tooltip');
+
+      InsightPanelsSelectors.fullSearchButton()
+        .shadow()
+        .find('button')
+        .should('have.attr', 'title');
+      InsightPanelsSelectors.fullSearchButton()
+        .shadow()
+        .find('button')
+        .find('atomic-icon')
+        .should('exist');
+    });
+
     it('should display tabs', () => {
       InsightPanelsSelectors.tabs()
         .should('exist')
@@ -180,20 +212,20 @@ describe('Insight Panel test suites', () => {
         .find('button[aria-pressed="true"]')
         .should('have.text', 'Youtube');
     });
-
-    CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
   });
 
   describe('when there is something written in the search box', () => {
-    before(() => {
+    beforeEach(() => {
       setupPage();
       InsightPanelsSelectors.results()
         .its('length')
         .should('be.greaterThan', 0);
-      InsightPanelsSelectors.searchbox()
-        .shadow()
-        .find('input')
-        .type('test{enter}');
+      InsightPanelActions.executeQuery('test');
+    });
+
+    it('should be accessible', () => {
+      cy.injectAxe();
+      CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
     });
 
     it('displays a query summary', () => {
@@ -203,8 +235,6 @@ describe('Insight Panel test suites', () => {
         .should('contain.text', 'Results 1-5')
         .should('contain.text', 'for test');
     });
-
-    CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
   });
 
   describe('when there is a custom salesforce result template', () => {
@@ -218,7 +248,7 @@ describe('Insight Panel test suites', () => {
       InsightPanelsSelectors.tabBar()
         .find('tab-popover')
         .find('[part="popover-tab"]')
-        .eq(0)
+        .eq(1)
         .should('have.text', 'Salesforce')
         .click();
 
@@ -235,6 +265,92 @@ describe('Insight Panel test suites', () => {
         .shadow()
         .find('atomic-result-text[field="sfid"]')
         .should('exist');
+    });
+  });
+
+  describe('Smart Snippet Answer', () => {
+    const visitPage = () => {
+      cy.visit(host);
+      cy.injectAxe();
+      cy.wait(insightSearchAlias);
+    };
+
+    describe('when no smart snippet answer is returned', () => {
+      beforeEach(() => {
+        mockSearchWithoutSmartSnippet();
+        visitPage();
+      });
+
+      it('should hide the smart snippets components', () => {
+        InsightPanelsSelectors.smartSnippet().should(
+          'have.class',
+          'atomic-hidden'
+        );
+        InsightPanelsSelectors.smartSnippetExpandableAnswer().should(
+          'not.exist'
+        );
+        InsightPanelsSelectors.smartSnippetSuggestions().should(
+          'have.class',
+          'atomic-hidden'
+        );
+      });
+    });
+
+    describe('when a smart snippet answer is returned', () => {
+      beforeEach(() => {
+        mockSearchWithSmartSnippet();
+        visitPage();
+      });
+
+      it('should show the smart snippet component', () => {
+        InsightPanelsSelectors.smartSnippetExpandableAnswer().should('exist');
+      });
+
+      describe('when giving explanatory feedback', () => {
+        it('should show the feedback modal', () => {
+          InsightPanelsSelectors.smartSnippetFeedbackModal().should(
+            'not.exist'
+          );
+
+          InsightPanelsSelectors.smartSnippetFeedbackNoButton().click();
+          InsightPanelsSelectors.smartSnippetsExplainWhyButton().click();
+
+          InsightPanelsSelectors.smartSnippetFeedbackModal().should('exist');
+        });
+      });
+    });
+  });
+
+  describe('Smart Snippet Suggestions', () => {
+    const visitPage = () => {
+      cy.visit(host);
+      cy.injectAxe();
+      cy.wait(insightSearchAlias);
+    };
+
+    describe('when no smart snippet suggestions are returned', () => {
+      beforeEach(() => {
+        mockSearchWithoutSmartSnippetSuggestions();
+        visitPage();
+      });
+
+      it('should hide the suggestions components', () => {
+        InsightPanelsSelectors.smartSnippetSuggestions().should(
+          'have.class',
+          'atomic-hidden'
+        );
+      });
+    });
+
+    describe('when smart snippet suggestions are returned', () => {
+      beforeEach(() => {
+        mockSearchWithSmartSnippetSuggestions();
+        visitPage();
+      });
+
+      it('should show the smart snippets component', () => {
+        InsightPanelsSelectors.smartSnippetSuggestions().should('be.visible');
+      });
     });
   });
 });

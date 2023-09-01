@@ -73,7 +73,7 @@ describe('Result Per Page Component', () => {
 
     describe('when the prop is valid', () => {
       const choicesDisplayed = [10, 25, 50];
-      before(() => {
+      beforeEach(() => {
         setup(
           `initial-choice="${
             choicesDisplayed[1]
@@ -90,7 +90,7 @@ describe('Result Per Page Component', () => {
       });
 
       describe('then selecting another value', () => {
-        before(() => {
+        beforeEach(() => {
           ResultsPerPageSelectors.buttons().last().click();
         });
 
@@ -105,7 +105,7 @@ describe('Result Per Page Component', () => {
         });
 
         describe('then pressing the back button', () => {
-          before(() => {
+          beforeEach(() => {
             cy.go('back');
           });
 

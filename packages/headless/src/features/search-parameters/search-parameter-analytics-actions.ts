@@ -3,6 +3,7 @@ import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
+  logFacetExclude,
 } from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
@@ -38,8 +39,22 @@ export function logParametersChange(
     return logFacetAnalyticsAction(previousParameters.f, newParameters.f);
   }
 
+  if (
+    areFacetParamsEqual(previousParameters.fExcluded, newParameters.fExcluded)
+  ) {
+    return logFacetAnalyticsAction(
+      previousParameters.fExcluded,
+      newParameters.fExcluded,
+      true
+    );
+  }
+
   if (areFacetParamsEqual(previousParameters.cf, newParameters.cf)) {
     return logFacetAnalyticsAction(previousParameters.cf, newParameters.cf);
+  }
+
+  if (areFacetParamsEqual(previousParameters.af, newParameters.af)) {
+    return logFacetAnalyticsAction(previousParameters.af, newParameters.af);
   }
 
   if (areFacetParamsEqual(previousParameters.nf, newParameters.nf)) {
@@ -88,7 +103,8 @@ function parseRangeFacetParams(facetsParams: RangeFacetParameters) {
 
 function logFacetAnalyticsAction(
   previousFacets: FacetParameters = {},
-  newFacets: FacetParameters = {}
+  newFacets: FacetParameters = {},
+  excluded = false
 ): SearchAction {
   const previousIds = Object.keys(previousFacets);
   const newIds = Object.keys(newFacets);
@@ -104,10 +120,15 @@ function logFacetAnalyticsAction(
   const addedIds = newIds.filter((id) => !previousIds.includes(id));
   if (addedIds.length) {
     const facetId = addedIds[0];
-    return logFacetSelect({
-      facetId,
-      facetValue: newFacets[facetId][0],
-    });
+    return excluded
+      ? logFacetExclude({
+          facetId,
+          facetValue: newFacets[facetId][0],
+        })
+      : logFacetSelect({
+          facetId,
+          facetValue: newFacets[facetId][0],
+        });
   }
 
   const facetIdWithDifferentValues = newIds.find((key) =>
@@ -127,10 +148,15 @@ function logFacetAnalyticsAction(
   );
 
   if (addedValues.length) {
-    return logFacetSelect({
-      facetId: facetIdWithDifferentValues,
-      facetValue: addedValues[0],
-    });
+    return excluded
+      ? logFacetExclude({
+          facetId: facetIdWithDifferentValues,
+          facetValue: addedValues[0],
+        })
+      : logFacetSelect({
+          facetId: facetIdWithDifferentValues,
+          facetValue: addedValues[0],
+        });
   }
 
   const removedValues = previousValues.filter(

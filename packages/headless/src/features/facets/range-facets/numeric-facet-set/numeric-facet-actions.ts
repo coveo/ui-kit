@@ -166,6 +166,15 @@ export const toggleSelectNumericFacetValue = createAction(
     })
 );
 
+export const toggleExcludeNumericFacetValue = createAction(
+  'numericFacet/toggleExcludeValue',
+  (payload: ToggleSelectNumericFacetValueActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      selection: new RecordValue({values: numericFacetValueDefinition}),
+    })
+);
+
 export interface UpdateNumericFacetValuesActionCreatorPayload {
   /**
    * The unique identifier of the facet (e.g., `"1"`).

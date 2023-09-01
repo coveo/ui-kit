@@ -7,6 +7,8 @@ import {
 import * as BreadboxAssertions from './breadbox-assertions';
 import {breadboxComponent, BreadboxSelectors} from './breadbox-selectors';
 import * as CommonAssertions from './common-assertions';
+import {addAutomaticFacetGenerator} from './facets/automatic-facet-generator/automatic-facet-generator-actions';
+import {AutomaticFacetSelectors} from './facets/automatic-facet/automatic-facet-selectors';
 import {
   addCategoryFacet,
   canadaHierarchy,
@@ -53,22 +55,29 @@ describe('Breadbox Test Suites', () => {
       .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
       .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
       .with(addCategoryFacet())
+      .with(
+        addAutomaticFacetGenerator({
+          'desired-count': '1',
+          'are-collapsed': 'false',
+        })
+      )
 
       .init();
   }
 
-  describe('when selecting a standard facet and a numeric facet', () => {
-    const selectionIndex = 1;
+  describe('when selecting a standard facet, a numeric facet and an automatic facet', () => {
+    const selectionIndex = 2;
     function setupBreadboxWithSelectedFacetAndNumericFacet(
       props: TagProps = {}
     ) {
       setupBreadboxWithMultipleFacets(props);
       selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
+      selectIdleCheckboxValueAt(AutomaticFacetSelectors, selectionIndex);
     }
 
     describe('with i18n translated labels', () => {
-      before(() =>
+      beforeEach(() =>
         setupBreadboxWithSelectedFacetAndNumericFacet({
           label: 'a.translated.label',
         })
@@ -83,7 +92,7 @@ describe('Breadbox Test Suites', () => {
     });
 
     describe('verify rendering', () => {
-      before(() => setupBreadboxWithSelectedFacetAndNumericFacet());
+      beforeEach(() => setupBreadboxWithSelectedFacetAndNumericFacet());
       BreadboxAssertions.assertDisplayBreadcrumb(true);
       CommonAssertions.assertAccessibility(breadboxComponent);
       BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -96,7 +105,7 @@ describe('Breadbox Test Suites', () => {
         numericFacetLabel
       );
       BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
-      BreadboxAssertions.assertBreadcrumbDisplayLength(2);
+      BreadboxAssertions.assertBreadcrumbDisplayLength(3);
     });
 
     describe('when selecting "Clear all" button', () => {
@@ -106,7 +115,7 @@ describe('Breadbox Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupClearAllBreadcrumb);
+        beforeEach(setupClearAllBreadcrumb);
         BreadboxAssertions.assertDisplayBreadcrumb(false);
         CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
           FacetSelectors,
@@ -114,6 +123,10 @@ describe('Breadbox Test Suites', () => {
         );
         CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
           NumericFacetSelectors,
+          0
+        );
+        CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
+          AutomaticFacetSelectors,
           0
         );
         ColorFacetAssertions.assertNumberOfSelectedBoxValues(0);
@@ -125,7 +138,7 @@ describe('Breadbox Test Suites', () => {
       });
 
       describe('verify analytics', () => {
-        before(setupClearAllBreadcrumb);
+        beforeEach(setupClearAllBreadcrumb);
         BreadboxAssertions.assertLogBreadcrumbClearAll();
       });
     });
@@ -140,7 +153,7 @@ describe('Breadbox Test Suites', () => {
       selectColorFacetIdleBoxValueAt(selectionIndex);
     }
     describe('verify rendering', () => {
-      before(setupBreadboxWithDifferentTypeSelectedFacet);
+      beforeEach(setupBreadboxWithDifferentTypeSelectedFacet);
       const selectedPath = canadaHierarchy.slice(0, 1);
       BreadboxAssertions.assertDisplayBreadcrumb(true);
       CommonAssertions.assertAccessibility(breadboxComponent);
@@ -169,7 +182,7 @@ describe('Breadbox Test Suites', () => {
     }
 
     describe('verify rendering', () => {
-      before(setupFacetWithMultipleSelectedValues);
+      beforeEach(setupFacetWithMultipleSelectedValues);
       CommonAssertions.assertAccessibility(breadboxComponent);
       BreadboxAssertions.assertDisplayBreadcrumb(true);
       BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -188,7 +201,7 @@ describe('Breadbox Test Suites', () => {
       }
 
       describe('verify rendering', () => {
-        before(setupFacetWithMultipleSelectedValuesAndShowMore);
+        beforeEach(setupFacetWithMultipleSelectedValuesAndShowMore);
 
         BreadboxAssertions.assertRemoveBreadcrumbShowMoreInDOM();
         BreadboxAssertions.assertDisplayBreadcrumbShowLess(true);
@@ -197,7 +210,7 @@ describe('Breadbox Test Suites', () => {
     });
 
     describe('when selecting "-" show less breadcrumb', () => {
-      before(() => {
+      beforeEach(() => {
         setupFacetWithMultipleSelectedValues();
         BreadboxSelectors.breadcrumbShowMoreButton().click();
         BreadboxSelectors.breadcrumbShowLessButton().click();

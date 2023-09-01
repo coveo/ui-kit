@@ -29,8 +29,7 @@ describe('Result Icon Component', () => {
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent(() => cy.get(resultIconComponent));
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when the "filetype" field value matches user.svg', () => {
@@ -47,7 +46,9 @@ describe('Result Icon Component', () => {
       'user'
     );
 
-    CommonAssertions.assertAccessibility(ResultIconSelectors.firstInResult);
+    it('should be accessible', () => {
+      CommonAssertions.assertAccessibility(ResultIconSelectors.firstInResult);
+    });
   });
 
   describe('when the "objecttype" field value matches picklist_type.svg', () => {

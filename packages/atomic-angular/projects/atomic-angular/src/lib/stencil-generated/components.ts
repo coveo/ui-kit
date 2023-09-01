@@ -27,6 +27,48 @@ export class AtomicAriaLive {
 }
 
 
+export declare interface AtomicAutomaticFacet extends Components.AtomicAutomaticFacet {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['facet', 'facetId', 'field', 'isCollapsed', 'searchStatus']
+})
+@Component({
+  selector: 'atomic-automatic-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['facet', 'facetId', 'field', 'isCollapsed', 'searchStatus']
+})
+export class AtomicAutomaticFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicAutomaticFacetGenerator extends Components.AtomicAutomaticFacetGenerator {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['areCollapsed', 'desiredCount', 'numberOfValues']
+})
+@Component({
+  selector: 'atomic-automatic-facet-generator',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['areCollapsed', 'desiredCount', 'numberOfValues']
+})
+export class AtomicAutomaticFacetGenerator {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicBreadbox extends Components.AtomicBreadbox {}
 
 @ProxyCmp({
@@ -71,13 +113,13 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
 })
 @Component({
   selector: 'atomic-color-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
 })
 export class AtomicColorFacet {
   protected el: HTMLElement;
@@ -153,13 +195,13 @@ export declare interface AtomicFacet extends Components.AtomicFacet {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['allowedValues', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
 })
 @Component({
   selector: 'atomic-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['allowedValues', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
 })
 export class AtomicFacet {
   protected el: HTMLElement;
@@ -696,14 +738,14 @@ export declare interface AtomicRecsList extends Components.AtomicRecsList {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
   methods: ['setRenderFunction', 'previousPage', 'nextPage']
 })
 @Component({
   selector: 'atomic-recs-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation']
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation']
 })
 export class AtomicRecsList {
   protected el: HTMLElement;
@@ -996,13 +1038,13 @@ export declare interface AtomicResultImage extends Components.AtomicResultImage 
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['field']
+  inputs: ['fallback', 'field']
 })
 @Component({
   selector: 'atomic-result-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['field']
+  inputs: ['fallback', 'field']
 })
 export class AtomicResultImage {
   protected el: HTMLElement;
@@ -1038,14 +1080,14 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['density', 'display', 'imageSize'],
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['density', 'display', 'imageSize']
+  inputs: ['density', 'display', 'gridCellLinkTarget', 'imageSize']
 })
 export class AtomicResultList {
   protected el: HTMLElement;
@@ -1448,13 +1490,13 @@ Example:
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'textarea']
 })
 @Component({
   selector: 'atomic-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'textarea']
 })
 export class AtomicSearchBox {
   protected el: HTMLElement;
@@ -1577,13 +1619,13 @@ export declare interface AtomicSegmentedFacet extends Components.AtomicSegmented
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria']
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria']
 })
 @Component({
   selector: 'atomic-segmented-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria']
+  inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria']
 })
 export class AtomicSegmentedFacet {
   protected el: HTMLElement;

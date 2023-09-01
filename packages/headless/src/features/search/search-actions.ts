@@ -246,6 +246,8 @@ export const fetchInstantResults = createAsyncThunk<
         results: processed.response.results,
         searchUid: processed.response.searchUid,
         analyticsAction: processed.analyticsAction,
+        totalCountFiltered: processed.response.totalCountFiltered,
+        duration: processed.duration,
       };
     }
     return processed as ReturnType<typeof config.rejectWithValue>;

@@ -12,7 +12,6 @@ import {
   addResultList,
   buildTemplateWithSections,
 } from '../result-list-actions';
-import {ResultListSelectors} from '../result-list-selectors';
 import {
   assertShouldRenderValues,
   assertDisplaysXMoreLabel,
@@ -79,11 +78,7 @@ describe('Result MultiValueText Component', () => {
         .withElement(generateComponentHTML(resultMultiValueTextComponent))
         .init();
     });
-
-    CommonAssertions.assertRemovesComponent(() =>
-      cy.get(resultMultiValueTextComponent)
-    );
-    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertRemovesComponent();
   });
 
   describe('when used inside a result template', () => {
@@ -93,10 +88,7 @@ describe('Result MultiValueText Component', () => {
           .with(addMultiValueText({field: 'thisfielddoesnotexist'}))
           .init();
       });
-
-      CommonAssertions.assertRemovesComponent(() =>
-        ResultListSelectors.firstResult().find(resultMultiValueTextComponent)
-      );
+      CommonAssertions.assertConsoleError(false);
     });
 
     describe('when the field value is not a string nor a string array', () => {
@@ -106,10 +98,6 @@ describe('Result MultiValueText Component', () => {
           .with(addFieldValueInResponse('hello', 420))
           .init();
       });
-
-      CommonAssertions.assertRemovesComponent(() =>
-        ResultListSelectors.firstResult().find(resultMultiValueTextComponent)
-      );
       CommonAssertions.assertConsoleError();
     });
 
@@ -204,9 +192,11 @@ describe('Result MultiValueText Component', () => {
 
           assertShouldRenderValues(localizedValues.slice(0, 1));
           assertDisplaysXMoreLabel(3);
-          CommonAssertions.assertAccessibility(
-            ResultMultiValueTextSelectors.firstInResult
-          );
+          it('should be accessible', () => {
+            CommonAssertions.assertAccessibility(
+              ResultMultiValueTextSelectors.firstInResult
+            );
+          });
         });
 
         describe('with max-values-to-display=2', () => {

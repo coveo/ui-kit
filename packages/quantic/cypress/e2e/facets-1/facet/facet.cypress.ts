@@ -787,7 +787,14 @@ describe('Facet Test Suite', () => {
       });
 
       describe('with invalid sorting', () => {
-        before(() => {
+        beforeEach(() => {
+          // This error occasionally occurs with the Salesforce Lightning Modal component, although we don't know exactly why it occurs, we do know that it only occurs in this Cypress test environment and never in the production environment.
+          cy.on('uncaught:exception', (err) => {
+            expect(err.message).to.include(
+              "Cannot read properties of null (reading 'appendChild')"
+            );
+            return false;
+          });
           visitFacetPage(
             {
               sortCriteria: 'invalid',
@@ -796,8 +803,10 @@ describe('Facet Test Suite', () => {
             false
           );
         });
-        it('should render correctly', () => {
+
+        it('should render the component error', () => {
           Expect.displayLabel(false);
+          Expect.displayComponentError(true);
         });
       });
 
