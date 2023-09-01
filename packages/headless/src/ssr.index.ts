@@ -21,25 +21,4 @@ export type {
 } from './app/search-engine/search-engine.ssr';
 export {defineSearchEngine} from './app/search-engine/search-engine.ssr';
 
-export type {
-  SearchBox,
-  SearchBoxOptions,
-  SearchBoxProps,
-  SearchBoxState,
-} from './controllers/search-box/headless-search-box.ssr';
-export {defineSearchBox} from './controllers/search-box/headless-search-box.ssr';
-export type {
-  ResultList,
-  ResultListOptions,
-  ResultListProps,
-  ResultListState,
-} from './controllers/result-list/headless-result-list.ssr';
-export {defineResultList} from './controllers/result-list/headless-result-list.ssr';
-
-export type {
-  SearchParameterManager,
-  SearchParameterManagerInitialState,
-  SearchParameterManagerBuildProps,
-  SearchParameterManagerState,
-} from './controllers/search-parameter-manager/headless-search-parameter-manager.ssr';
-export {defineSearchParameterManager} from './controllers/search-parameter-manager/headless-search-parameter-manager.ssr';
+export * from './controllers/index.ssr';

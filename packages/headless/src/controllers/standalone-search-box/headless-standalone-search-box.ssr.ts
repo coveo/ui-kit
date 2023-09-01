@@ -1,0 +1,24 @@
+import {SearchEngine} from '../../app/search-engine/search-engine';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
+import {
+  StandaloneSearchBox,
+  StandaloneSearchBoxProps,
+  buildStandaloneSearchBox,
+} from './headless-standalone-search-box';
+
+export type {
+  StandaloneSearchBoxOptions,
+  StandaloneSearchBoxAnalytics,
+  StandaloneSearchBoxProps,
+  StandaloneSearchBoxState,
+  StandaloneSearchBox,
+} from './headless-standalone-search-box';
+
+/**
+ * @internal
+ */
+export const defineStandaloneSearchBox = (
+  props: StandaloneSearchBoxProps
+): ControllerDefinitionWithoutProps<SearchEngine, StandaloneSearchBox> => ({
+  build: (engine) => buildStandaloneSearchBox(engine, props),
+});

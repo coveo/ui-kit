@@ -7,6 +7,9 @@ export type {
   SearchBoxProps,
   SearchBoxState,
   SearchBox,
+  Suggestion,
+  SuggestionHighlightingOptions,
+  Delimiters,
 } from './headless-search-box';
 
 /**

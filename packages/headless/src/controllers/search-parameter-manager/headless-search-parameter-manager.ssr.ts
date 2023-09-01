@@ -10,6 +10,7 @@ export type {
   SearchParameterManagerInitialState,
   SearchParameterManagerState,
   SearchParameterManager,
+  SearchParameters,
 } from './headless-search-parameter-manager';
 
 /**

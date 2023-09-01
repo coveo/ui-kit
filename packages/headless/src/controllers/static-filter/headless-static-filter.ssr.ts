@@ -1,0 +1,28 @@
+import {SearchEngine} from '../../app/search-engine/search-engine';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
+import {
+  StaticFilter,
+  StaticFilterProps,
+  buildStaticFilter,
+} from './headless-static-filter';
+
+export type {
+  StaticFilterValueOptions,
+  StaticFilter,
+  StaticFilterOptions,
+  StaticFilterProps,
+  StaticFilterState,
+  StaticFilterValue,
+  StaticFilterValueState,
+} from './headless-static-filter';
+
+export {buildStaticFilterValue} from './headless-static-filter';
+
+/**
+ * @internal
+ */
+export const defineStaticFilter = (
+  props: StaticFilterProps
+): ControllerDefinitionWithoutProps<SearchEngine, StaticFilter> => ({
+  build: (engine) => buildStaticFilter(engine, props),
+});
