@@ -9,7 +9,7 @@
     "directory": "packages/atomic-react"
   },
   "scripts": {
-    "build": "npm run clean && npm run build:bundles && npm run build:assets",
+    "build": "nx build",
     "clean": "rimraf -rf dist",
     "build:bundles:esm": "tsc -p tsconfig.esm.json",
     "build:bundles:cjs": "tsc -p tsconfig.cjs.json",

@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "build": "nx build",
+    "build:angular": "ng build",
     "dev": "npm run build:assets && npm run dev:angular",
     "dev:angular": "ng serve --host=0.0.0.0",
     "build:assets": "ncp ../../atomic-angular/projects/atomic-angular/dist/assets src/assets && ncp ../../atomic-angular/projects/atomic-angular/dist/lang src/lang"
