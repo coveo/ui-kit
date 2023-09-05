@@ -7,7 +7,7 @@ import {
   buildAutomaticFacetGenerator,
   buildSearchStatus,
 } from '@coveo/headless';
-import {Component, Prop, State, h} from '@stencil/core';
+import {Component, Method, Prop, State, h} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -60,23 +60,14 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    * @beta - This prop is part of the automatic facets feature.
    * Automatic facets are currently in beta testing and should be available soon.
    *
-   * Using the value `0` collapses all facets.
-   * Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
-   *
-   * Note: The value of `collapseFacetsAfter` in this component can be overridden by the `collapseFacetsAfter` property in the `atomic-facet-manager` component, if this component is a child of it.
-   */
-  @Prop() public collapseFacetsAfter?: number;
-
-  /**
-   * @beta - This prop is part of the automatic facets feature.
-   * Automatic facets are currently in beta testing and should be available soon.
-   *
    * The desired number of automatically generated facet values.
    *
    * Minimum: `1`
    * @defaultValue `8`
    */
   @Prop() public numberOfValues = 8;
+
+  @State() private collapseFacetsAfter?: number;
 
   public initialize() {
     this.validateProps();
@@ -89,6 +80,21 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
           numberOfValues: this.numberOfValues,
         },
       }
+    );
+  }
+
+  @Method()
+  public async updateCollapseFacetsDependingOnFacetsVisibility(
+    collapseAfter: number,
+    numberOfVisibleFacets: number
+  ) {
+    if (collapseAfter === -1) {
+      this.collapseFacetsAfter = -1;
+      return;
+    }
+    this.collapseFacetsAfter = Math.max(
+      0,
+      collapseAfter - numberOfVisibleFacets
     );
   }
 

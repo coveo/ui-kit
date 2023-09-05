@@ -32,11 +32,8 @@ import {
 import {Button} from '../../common/button';
 import {
   BaseFacetElement,
-  getFacetsInChildren,
-  getGeneratorInChildren,
   sortFacetVisibility,
-  sortFacetsViaManager,
-  updateCollapseFacetsAfter,
+  sortFacetsUsingManager,
   collapseFacetsAfter,
 } from '../../common/facets/facet-common';
 import {isRefineModalFacet} from '../../common/interface/store';
@@ -96,9 +93,7 @@ export class AtomicRefineModal implements InitializableComponent {
   @BindStateToController('breadcrumbManager')
   @State()
   private breadcrumbManagerState!: BreadcrumbManagerState;
-  @BindStateToController('facetManager', {
-    onUpdateCallbackMethod: 'updateCollapse',
-  })
+  @BindStateToController('facetManager')
   @State()
   public facetManagerState!: FacetManagerState;
   @State() @BindStateToController('sort') public sortState!: SortState;
@@ -143,7 +138,7 @@ export class AtomicRefineModal implements InitializableComponent {
 
     const facets = this.queryCurrentFacets();
 
-    const sortedFacets = sortFacetsViaManager(facets, this.facetManager);
+    const sortedFacets = sortFacetsUsingManager(facets, this.facetManager);
 
     const {visibleFacets, invisibleFacets} = sortFacetVisibility(
       sortedFacets,
@@ -160,10 +155,9 @@ export class AtomicRefineModal implements InitializableComponent {
 
     const generator = this.makeAutomaticFacetGenerator();
     if (generator) {
-      updateCollapseFacetsAfter(
-        generator,
-        visibleFacets.length,
-        this.collapseFacetsAfter
+      generator.updateCollapseFacetsDependingOnFacetsVisibility(
+        this.collapseFacetsAfter,
+        visibleFacets.length
       );
       divSlot.append(generator);
     }
@@ -172,11 +166,14 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private cloneFacets(facets: BaseFacetElement[]): BaseFacetElement[] {
-    return facets.map((facet) => {
+    return facets.map((facet, i) => {
       facet.classList.remove(popoverClass);
       facet.setAttribute(isRefineModalFacet, '');
       const clone = facet.cloneNode(true) as BaseFacetElement;
-      clone.isCollapsed = true;
+      clone.isCollapsed =
+        this.collapseFacetsAfter === -1
+          ? false
+          : i + 1 > this.collapseFacetsAfter;
       return clone;
     });
   }
@@ -212,27 +209,6 @@ export class AtomicRefineModal implements InitializableComponent {
       }
     });
     return facetElements;
-  }
-
-  public updateCollapse() {
-    const facetContainer = this.host.querySelector('div[slot="facets"]');
-    if (!facetContainer) {
-      return;
-    }
-
-    const facets = getFacetsInChildren(facetContainer.children);
-    const {visibleFacets} = sortFacetVisibility(
-      facets,
-      this.bindings.store.getAllFacets()
-    );
-    const generator = getGeneratorInChildren(facetContainer.children);
-
-    collapseFacetsAfter(visibleFacets, this.collapseFacetsAfter);
-    updateCollapseFacetsAfter(
-      generator,
-      visibleFacets.length,
-      this.collapseFacetsAfter
-    );
   }
 
   private addElementStyle(el: HTMLElement) {

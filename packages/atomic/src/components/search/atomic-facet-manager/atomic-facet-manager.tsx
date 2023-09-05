@@ -13,10 +13,9 @@ import {
 import {
   FacetManagerElements,
   getFacetsInChildren,
-  getGeneratorInChildren,
+  getAutomaticFacetGenerator,
   sortFacetVisibility,
-  sortFacetsViaManager,
-  updateCollapseFacetsAfter,
+  sortFacetsUsingManager,
   collapseFacetsAfter,
 } from '../../common/facets/facet-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
@@ -59,29 +58,28 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   private sortFacets = () => {
-    const facets = getFacetsInChildren(this.host.children);
+    const facets = getFacetsInChildren(this.host);
 
-    const sortedFacets = sortFacetsViaManager(facets, this.facetManager);
+    const sortedFacets = sortFacetsUsingManager(facets, this.facetManager);
 
     const {visibleFacets, invisibleFacets} = sortFacetVisibility(
       sortedFacets,
       this.bindings.store.getAllFacets()
     );
 
-    const generator = getGeneratorInChildren(this.host.children);
+    const generator = getAutomaticFacetGenerator(this.host);
 
     collapseFacetsAfter(visibleFacets, this.collapseFacetsAfter);
 
-    updateCollapseFacetsAfter(
-      generator,
-      visibleFacets.length,
-      this.collapseFacetsAfter
+    generator?.updateCollapseFacetsDependingOnFacetsVisibility(
+      this.collapseFacetsAfter,
+      visibleFacets.length
     );
 
     const finalElements: FacetManagerElements = [];
     finalElements.push(...visibleFacets);
     finalElements.push(...invisibleFacets);
-    finalElements.push(generator);
+    generator && finalElements.push(generator);
 
     this.host.append(...finalElements);
   };

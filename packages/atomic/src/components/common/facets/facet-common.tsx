@@ -286,54 +286,33 @@ export function collapseFacetsAfter(
     facet.isCollapsed = index + 1 > visibleFacetsCount;
   });
 }
-export function updateCollapseFacetsAfter(
-  generator: HTMLAtomicAutomaticFacetGeneratorElement,
-  index: number,
-  collapseFacetsAfter: number
-) {
-  if (!generator) {
-    return;
-  }
-  const value = collapseFacetsAfter - index;
-  if (value > 0) {
-    generator.collapseFacetsAfter = value;
-  }
-  if (collapseFacetsAfter === -1) {
-    generator.collapseFacetsAfter = collapseFacetsAfter;
-  }
-}
 
-export function isTagNameAutomaticFacetGenerator(tagName: string) {
-  return tagName === 'ATOMIC-AUTOMATIC-FACET-GENERATOR';
+export function isAutomaticFacetGenerator(
+  element: HTMLElement
+): element is HTMLAtomicAutomaticFacetGeneratorElement {
+  return element.tagName === 'ATOMIC-AUTOMATIC-FACET-GENERATOR';
 }
 
 function isPseudoFacet(el: Element): el is BaseFacetElement {
   return 'facetId' in el;
 }
 
-export function getFacetsInChildren(
-  collection: HTMLCollection
-): BaseFacetElement[] {
-  const children = Array.from(collection);
-  const facets = children.filter((child) =>
+export function getFacetsInChildren(parent: HTMLElement): BaseFacetElement[] {
+  const facets = Array.from(parent.children).filter((child) =>
     isPseudoFacet(child)
   ) as BaseFacetElement[];
 
   return facets;
 }
-export function getGeneratorInChildren(
-  collection: HTMLCollection
-): HTMLAtomicAutomaticFacetGeneratorElement {
-  const children = Array.from(collection);
-
-  const automaticFacetGenerator = children.find((child) =>
-    isTagNameAutomaticFacetGenerator(child.tagName)
-  ) as HTMLAtomicAutomaticFacetGeneratorElement;
-
-  return automaticFacetGenerator;
+export function getAutomaticFacetGenerator(
+  parent: HTMLElement
+): HTMLAtomicAutomaticFacetGeneratorElement | undefined {
+  return (Array.from(parent.children) as HTMLElement[]).find(
+    isAutomaticFacetGenerator
+  );
 }
 
-export function sortFacetsViaManager(
+export function sortFacetsUsingManager(
   facets: BaseFacetElement[],
   facetManager: FacetManager
 ): BaseFacetElement[] {
