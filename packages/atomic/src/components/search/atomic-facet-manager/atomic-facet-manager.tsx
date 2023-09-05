@@ -11,7 +11,6 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
-  FacetManagerElements,
   getFacetsInChildren,
   getAutomaticFacetGenerator,
   sortFacetVisibility,
@@ -76,12 +75,13 @@ export class AtomicFacetManager implements InitializableComponent {
       visibleFacets.length
     );
 
-    const finalElements: FacetManagerElements = [];
-    finalElements.push(...visibleFacets);
-    finalElements.push(...invisibleFacets);
-    generator && finalElements.push(generator);
-
-    this.host.append(...finalElements);
+    this.host.append(
+      ...[
+        ...visibleFacets,
+        ...invisibleFacets,
+        ...(generator ? [generator] : []),
+      ]
+    );
   };
 
   private validateProps() {
