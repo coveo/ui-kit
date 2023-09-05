@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build": "nx build",
+    "build:vue": "vue-cli-service build",
     "dev:vue": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
     "dev": "npm run build:assets && npm run dev:vue",
