@@ -7,7 +7,8 @@ import {BaseParam} from '../../../platform-service-params';
 import {
   ClientIdParam,
   ContextParam,
-  LocaleParam,
+  LanguageParam,
+  CurrencyParam,
   SelectedFacetsParam,
   SelectedPageParam,
   SelectedSortParam,
@@ -16,7 +17,8 @@ import {
 
 export type ProductListingV2Request = BaseParam &
   TrackingIdParam &
-  LocaleParam &
+  LanguageParam &
+  CurrencyParam &
   ClientIdParam &
   ContextParam &
   SelectedFacetsParam &
@@ -31,11 +33,20 @@ export const buildProductListingV2Request = (req: ProductListingV2Request) => {
 };
 
 const prepareRequestParams = (req: ProductListingV2Request) => {
-  const {clientId, context, locale, page, selectedFacets, selectedSort} = req;
+  const {
+    clientId,
+    context,
+    language,
+    currency,
+    page,
+    selectedFacets,
+    selectedSort,
+  } = req;
   return {
     clientId,
     context,
-    locale,
+    language,
+    currency,
     page,
     selectedFacets,
     selectedSort,

@@ -7,8 +7,12 @@ export interface TrackingIdParam {
   trackingId: string;
 }
 
-export interface LocaleParam {
-  locale: string;
+export interface LanguageParam {
+  language: string;
+}
+
+export interface CurrencyParam {
+  currency: string;
 }
 
 export interface ClientIdParam {
@@ -20,21 +24,21 @@ export interface ContextParam {
 }
 
 export interface ContextParams {
-  user: UserParams;
   view: ViewParams;
+  user?: UserParams;
   cart?: CartParams[];
-}
-
-export interface UserParams {
-  userAgent: string;
-  userIp: string;
-  email?: string;
-  userId?: string;
+  labels?: Record<string, string>;
 }
 
 export interface ViewParams {
   url: string;
-  labels?: Record<string, string>;
+}
+
+export interface UserParams {
+  userAgent?: string;
+  userIp?: string;
+  email?: string;
+  userId?: string;
 }
 
 export interface CartParams {

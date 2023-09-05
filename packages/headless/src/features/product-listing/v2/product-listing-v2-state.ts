@@ -5,7 +5,8 @@ import {AnyFacetResponse} from '../../facets/generic/interfaces/generic-facet-re
 
 export interface ProductListingV2State {
   trackingId: string;
-  locale: string;
+  language: string;
+  currency: string;
   clientId: string;
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
@@ -17,7 +18,8 @@ export interface ProductListingV2State {
 
 export const getProductListingV2InitialState = (): ProductListingV2State => ({
   trackingId: '',
-  locale: '',
+  language: '',
+  currency: '',
   clientId: '',
   error: null,
   isLoading: false,
@@ -25,13 +27,8 @@ export const getProductListingV2InitialState = (): ProductListingV2State => ({
   products: [],
   facets: [],
   context: {
-    user: {
-      userIp: '',
-      userAgent: '',
-    },
     view: {
       url: '',
     },
-    cart: [],
   },
 });
