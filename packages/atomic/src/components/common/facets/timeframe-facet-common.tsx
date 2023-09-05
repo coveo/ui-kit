@@ -329,7 +329,7 @@ export class TimeframeFacetCommon {
         isCollapsed={isCollapsed}
         headingLevel={this.props.headingLevel}
         onToggleCollapse={onToggleCollapse}
-        headerRef={headerFocus.setTarget}
+        headerRef={(el) => headerFocus.setTarget(el)}
       ></FacetHeader>
     );
   }

@@ -15,10 +15,7 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -164,8 +161,14 @@ export class AtomicTimeframeFacet
    */
   @Prop({reflect: true}) public max?: string;
 
-  @FocusTarget()
-  private headerFocus!: FocusTargetController;
+  private headerFocus?: FocusTargetController;
+
+  private get focusTarget(): FocusTargetController {
+    if (!this.headerFocus) {
+      this.headerFocus = new FocusTargetController(this);
+    }
+    return this.headerFocus;
+  }
 
   public initialize() {
     this.timeframeFacetCommon = new TimeframeFacetCommon({
@@ -264,7 +267,7 @@ export class AtomicTimeframeFacet
       hasError: this.searchStatusState.hasError,
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
-      headerFocus: this.headerFocus,
+      headerFocus: this.focusTarget,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
     });
   }

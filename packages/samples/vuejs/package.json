@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build": "nx build",
+    "build:vue": "vue-cli-service build",
     "dev:vue": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
     "dev": "npm run build:assets && npm run dev:vue",
     "build:assets": "ncp ../../atomic/dist/atomic/assets public/assets && ncp ../../atomic/dist/atomic/lang public/lang"
   },
   "dependencies": {
-    "@coveo/atomic": "2.42.0",
-    "@coveo/headless": "2.28.0",
+    "@coveo/atomic": "2.42.1",
+    "@coveo/headless": "2.29.0",
     "core-js": "3.24.1",
     "vue": "3.2.37"
   },
