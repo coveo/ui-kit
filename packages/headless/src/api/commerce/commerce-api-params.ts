@@ -16,38 +16,38 @@ export interface ClientIdParam {
 }
 
 export interface ContextParam {
-  context: ContextParameters;
+  context: ContextParams;
 }
 
-export interface ContextParameters {
-  user: UserParameters;
-  view: ViewParameters;
-  cart?: CartProductParameters[];
+export interface ContextParams {
+  user: UserParams;
+  view: ViewParams;
+  cart?: CartParams[];
 }
 
-export interface UserParameters {
+export interface UserParams {
   userAgent: string;
   userIp: string;
   email?: string;
   userId?: string;
 }
 
-export interface ViewParameters {
+export interface ViewParams {
   url: string;
   labels?: Record<string, string>;
 }
 
-export interface CartProductParameters {
+export interface CartParams {
   groupId?: string;
   productId?: string;
   sku?: string;
 }
 
 export interface SelectedFacetsParam {
-  selectedFacets?: SelectedFacetParameters[];
+  selectedFacets?: SelectedFacetParams[];
 }
 
-export interface SelectedFacetParameters
+export interface SelectedFacetParams
   extends Pick<AnyFacetRequest, 'field' | 'type' | 'facetId'> {
   values?: (FacetValueRequest | RangeValueRequest)[];
 }
