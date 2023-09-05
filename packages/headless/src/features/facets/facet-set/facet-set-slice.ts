@@ -233,7 +233,7 @@ export const facetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
       })
-      // TODO: add tests
+
       .addCase(excludeFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
         const facetRequest = state[facetId]?.request;
