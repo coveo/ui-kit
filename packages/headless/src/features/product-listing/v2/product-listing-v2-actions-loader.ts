@@ -22,6 +22,8 @@ import {
 
 /**
  * The product listing action creators.
+ *
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface ProductListingActionCreators {
   /**
@@ -41,6 +43,7 @@ export interface ProductListingActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export function loadProductListingActions(
   engine: CommerceEngine
@@ -54,6 +57,8 @@ export function loadProductListingActions(
 
 /**
  * The product listing analytics action creators.
+ *
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface ProductListingAnalyticsActionCreators {
   /**
@@ -116,6 +121,7 @@ export interface ProductListingAnalyticsActionCreators {
  *
  * @param engine - The product listing engine.
  * @returns An object holding the action creators.
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export function loadProductListingAnalyticsActions(
   engine: CommerceEngine
