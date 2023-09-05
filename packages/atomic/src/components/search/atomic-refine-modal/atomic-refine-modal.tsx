@@ -134,9 +134,9 @@ export class AtomicRefineModal implements InitializableComponent {
   private createFacetSlot(): HTMLDivElement {
     const divSlot = document.createElement('div');
     divSlot.setAttribute('slot', 'facets');
-    this.addElementStyle(divSlot);
+    this.addFacetColumnStyling(divSlot);
 
-    const facets = this.queryCurrentFacets();
+    const facets = this.bindings.store.getFacetElements() as BaseFacetElement[];
 
     const sortedFacets = sortFacetsUsingManager(facets, this.facetManager);
 
@@ -190,28 +190,12 @@ export class AtomicRefineModal implements InitializableComponent {
       'desired-count',
       `${this.bindings.engine.state.automaticFacetSet?.desiredCount}`
     );
-    this.addElementStyle(generator);
+    this.addFacetColumnStyling(generator);
 
     return generator;
   }
 
-  private queryCurrentFacets(): BaseFacetElement[] {
-    const facetIds = Object.keys(this.bindings.store.getAllFacets());
-    const facetElements: BaseFacetElement[] = [];
-
-    facetIds.forEach((facetIdValue) => {
-      const matchingElement = document.querySelector(
-        `[facet-id="${facetIdValue}"]`
-      );
-      if (matchingElement) {
-        const element = matchingElement as BaseFacetElement;
-        facetElements.push(element);
-      }
-    });
-    return facetElements;
-  }
-
-  private addElementStyle(el: HTMLElement) {
+  private addFacetColumnStyling(el: HTMLElement) {
     el.style.display = 'flex';
     el.style.flexDirection = 'column';
     el.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
