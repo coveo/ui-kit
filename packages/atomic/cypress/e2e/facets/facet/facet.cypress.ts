@@ -57,6 +57,7 @@ describe('Facet v1 Test Suites', () => {
       CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
       CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, false);
       CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
+      CommonFacetAssertions.assertDisplayExcludeButton(FacetSelectors, false);
     });
 
     describe('when selecting a value', () => {
@@ -339,6 +340,16 @@ describe('Facet v1 Test Suites', () => {
             true
           );
         });
+      });
+
+      describe('with #enableExclusion to true', () => {
+        beforeEach(() => {
+          new TestFixture()
+            .with(addFacet({field, label, 'enable-exclusion': 'true'}))
+            .init();
+        });
+
+        CommonFacetAssertions.assertDisplayExcludeButton(FacetSelectors, true);
       });
     });
   });

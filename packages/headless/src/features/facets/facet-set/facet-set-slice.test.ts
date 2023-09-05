@@ -780,7 +780,7 @@ describe('facet-set slice', () => {
 
     it.each([
       {hash: 'f', facetValueState: 'selected' as FacetValueState},
-      {hash: 'f-excluded', facetValueState: 'excluded' as FacetValueState},
+      {hash: 'fExcluded', facetValueState: 'excluded' as FacetValueState},
     ])(
       `when a facet is not found in the #$hash payload,
     it deselects all values by setting the state of each facet value in #currentValues to idle`,

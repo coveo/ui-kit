@@ -275,6 +275,7 @@ interface FacetCommonOptions {
   facetId: string;
   sortCriteria: FacetSortCriterion;
   withSearch: boolean;
+  enableExclusion: boolean;
 }
 
 interface FacetCommonRenderProps {
@@ -301,6 +302,7 @@ export class FacetCommon {
   private facetId: string;
   private sortCriteria: FacetSortCriterion;
   private withSearch: boolean;
+  private enableExclusion: boolean;
 
   private resultIndexToFocusOnShowMore = 0;
 
@@ -311,6 +313,7 @@ export class FacetCommon {
     this.field = opts.field;
     this.headingLevel = opts.headingLevel;
     this.displayValuesAs = opts.displayValuesAs;
+    this.enableExclusion = opts.enableExclusion;
     this.dependsOn = opts.dependsOn;
     this.dependenciesManager = opts.dependenciesManager;
     this.facet = opts.facet;
@@ -519,17 +522,23 @@ export class FacetCommon {
     );
     const isSelected = facetValue.state === 'selected';
     const isExcluded = facetValue.state === 'excluded';
+    // TODO: test this option
+    const triStateProps = this.enableExclusion
+      ? {
+          onExclude,
+          state: facetValue.state,
+        }
+      : {};
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
           <FacetValueCheckbox
+            {...triStateProps}
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onSelect}
-            state={facetValue.state}
-            onExclude={onExclude}
             searchQuery={this.facet.state.facetSearch.query}
             buttonRef={(element) => {
               isShowLessFocusTarget && showLessFocus.setTarget(element);

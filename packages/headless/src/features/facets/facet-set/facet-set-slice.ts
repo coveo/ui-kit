@@ -74,6 +74,8 @@ export const facetSetReducer = createReducer(
           const {request} = state[id]!;
           const selectedValues = f[id] || [];
           const excludedValues = fExcluded[id] || [];
+          const activeValueCount =
+            selectedValues.length + excludedValues.length;
           const idleValues = request.currentValues.filter(
             (facetValue) =>
               !selectedValues.includes(facetValue.value) &&
@@ -85,9 +87,9 @@ export const facetSetReducer = createReducer(
             ...excludedValues.map(buildExcludedFacetValueRequest),
             ...idleValues.map(restoreFacetValueToIdleState),
           ];
-          request.preventAutoSelect = selectedValues.length > 0;
+          request.preventAutoSelect = activeValueCount > 0;
           request.numberOfValues = Math.max(
-            selectedValues.length + excludedValues.length,
+            activeValueCount,
             request.numberOfValues
           );
         });

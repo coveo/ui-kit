@@ -135,6 +135,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    */
   @Prop({reflect: true}) public filterFacetCount = true;
   /**
+   * Whether to allow excluding values from the facet.
+   */
+  @Prop({reflect: true}) public enableExclusion = false;
+  /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
@@ -235,6 +239,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       field: this.field,
       headingLevel: this.headingLevel,
       displayValuesAs: this.displayValuesAs,
+      enableExclusion: this.isExclusionAllowed(),
       dependsOn: this.dependsOn,
       dependenciesManager: buildFacetConditionsManager(this.bindings.engine, {
         facetId: this.facetId!,
@@ -309,6 +314,11 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       showLessFocus: this.focusTargets.showLess,
       showMoreFocus: this.focusTargets.showMore,
     });
+  }
+
+  private isExclusionAllowed() {
+    // TODO: disable on mobile
+    return this.enableExclusion;
   }
 
   private get facetOptions(): FacetOptions {

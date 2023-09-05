@@ -76,6 +76,16 @@ export function assertDisplayValues(
   });
 }
 
+export function assertDisplayExcludeButton(
+  facetWithCheckboxSelector: FacetWithCheckboxSelector,
+  display: boolean
+) {
+  it(`${should(display)} display exclude button on facet values`, () => {
+    // TODO: ensure this works
+    facetWithCheckboxSelector.excludeButton().should('exist');
+  });
+}
+
 export function assertNumberOfSelectedCheckboxValues(
   FacetWithCheckboxSelector: FacetWithCheckboxSelector,
   value: number
