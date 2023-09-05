@@ -5,7 +5,11 @@ import {
   updateFacetOptions,
 } from '../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {FacetResultsMustMatch} from '../../../../features/facets/facet-api/request';
+import {
+  deselectAllFacetValues,
+  updateFacetMatchCriterion,
+} from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   baseFacetResponseSelector,
   isFacetLoadingResponseSelector,
@@ -70,6 +74,12 @@ export function buildCoreRangeFacet<
 
     isSortedBy(criterion: RangeFacetSortCriterion) {
       return this.state.sortCriterion === criterion;
+    },
+
+    resultsMustMatch(criterion: FacetResultsMustMatch) {
+      // TODO: should dispatch another name
+      dispatch(updateFacetMatchCriterion({facetId, criterion}));
+      dispatch(updateFacetOptions());
     },
 
     enable() {

@@ -276,6 +276,7 @@ export const defaultFacetOptions: FacetOptionalParameters = {
   injectionDepth: 1000,
   numberOfValues: 8,
   sortCriteria: 'automatic',
+  resultsMustMatch: 'atLeastOneValue',
 };
 
 function buildFacetRequest(

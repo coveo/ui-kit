@@ -8,6 +8,7 @@ import {
 } from '../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
+import {FacetResultsMustMatch} from '../../../../features/facets/facet-api/request';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
@@ -15,6 +16,7 @@ import {
   registerFacet,
   deselectAllFacetValues,
   updateFacetSortCriterion,
+  updateFacetMatchCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
 } from '../../../../features/facets/facet-set/facet-set-actions';
@@ -150,6 +152,9 @@ export interface CoreFacet extends Controller {
    * @returns Whether the facet values are sorted according to the specified criterion.
    */
   isSortedBy(criterion: FacetSortCriterion): boolean;
+
+  // TODO: add doc
+  resultsMustMatch(criterion: FacetResultsMustMatch): void;
 
   /**
    * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
@@ -421,6 +426,11 @@ export function buildCoreFacet(
       dispatch(updateFacetOptions());
     },
 
+    resultsMustMatch(criterion: FacetResultsMustMatch) {
+      dispatch(updateFacetMatchCriterion({facetId, criterion}));
+      dispatch(updateFacetOptions());
+    },
+
     isSortedBy(criterion: FacetSortCriterion) {
       return this.state.sortCriterion === criterion;
     },
@@ -481,10 +491,13 @@ export function buildCoreFacet(
       );
       const canShowMoreValues = response ? response.moreValuesAvailable : false;
 
+      const resultsMustMatch = request.resultsMustMatch;
+
       return {
         facetId,
         values,
         sortCriterion,
+        resultsMustMatch,
         isLoading,
         hasActiveValues,
         canShowMoreValues,

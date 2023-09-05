@@ -11,6 +11,7 @@ import {
   customSort,
 } from '../../../controllers/core/facets/_common/facet-option-definitions';
 import {validatePayload} from '../../../utils/validate-payload';
+import {FacetResultsMustMatch} from '../facet-api/request';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {facetValueDefinition} from './facet-set-validate-payload';
 import {FacetSortCriterion} from './interfaces/request';
@@ -159,6 +160,27 @@ export const updateFacetSortCriterion = createAction(
     validatePayload(payload, {
       facetId: facetIdDefinition,
       criterion: new Value<FacetSortCriterion>({required: true}),
+    })
+);
+
+export interface updateFacetMatchCriterionActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The criterion by which to sort the facet.
+   */
+  criterion: FacetResultsMustMatch;
+}
+
+export const updateFacetMatchCriterion = createAction(
+  'facet/updateMatchCriterion',
+  (payload: updateFacetMatchCriterionActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      criterion: new Value<FacetResultsMustMatch>({required: true}),
     })
 );
 

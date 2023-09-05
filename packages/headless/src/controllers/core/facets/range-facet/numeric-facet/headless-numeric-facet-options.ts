@@ -128,6 +128,7 @@ export const numericFacetOptionsSchema = new Schema<
   }),
   sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
   rangeAlgorithm: new StringValue({constrainTo: rangeFacetRangeAlgorithm}),
+  // TODO: add option here
 });
 
 export function validateNumericFacetOptions(

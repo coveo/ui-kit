@@ -1,6 +1,7 @@
 import {configuration} from '../../../../../app/common-reducers';
 import {CoreEngine} from '../../../../../app/engine';
 import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
+import {FacetResultsMustMatch} from '../../../../../features/facets/facet-api/request';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
 import {
@@ -82,6 +83,9 @@ export interface NumericFacet extends Controller {
    * @param criterion - The criterion to sort values by.
    */
   sortBy(criterion: RangeFacetSortCriterion): void;
+
+  // TODO: add doc
+  resultsMustMatch(criterion: FacetResultsMustMatch): void;
 
   /**
    * Toggles the specified facet value.
@@ -188,6 +192,7 @@ export function buildCoreNumericFacet(
 
   return {
     ...rangeFacet,
+
     toggleSelect: (selection: NumericFacetValue) =>
       dispatch(executeToggleNumericFacetSelect({facetId, selection})),
 

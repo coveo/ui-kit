@@ -1,4 +1,4 @@
-import {CoreEngine} from '../../..';
+import {CoreEngine, FacetResultsMustMatch} from '../../..';
 import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
@@ -162,6 +162,10 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
       );
+    },
+
+    resultsMustMatch(_criterion: FacetResultsMustMatch) {
+      // TODO:
     },
 
     isSortedBy(criterion: FacetSortCriterion) {

@@ -33,6 +33,11 @@ export interface BaseFacetRequest {
    * @defaultValue `false`
    */
   preventAutoSelect: boolean;
+
+  /** TODO: add doc
+   * @defaultValue `false`
+   */
+  resultsMustMatch: FacetResultsMustMatch;
 }
 
 export interface BaseFacetValueRequest {
@@ -104,6 +109,13 @@ export interface RangeAlgorithm<T extends 'even' | 'equiprobable'> {
   /** The range algorithm to apply to automatically generated ranges for range facet. */
   rangeAlgorithm: T;
 }
+
+export type FacetResultsMustMatch = 'allValues' | 'atLeastOneValue';
+
+export const facetResultsMustMatch: FacetResultsMustMatch[] = [
+  'allValues',
+  'atLeastOneValue',
+];
 
 export interface AllowedValues {
   /**

@@ -1,5 +1,9 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {
+  FacetResultsMustMatch,
+  facetResultsMustMatch,
+} from '../../../features/facets/facet-api/request';
+import {
   facetSortCriteria,
   FacetSortCriterion,
 } from '../../../features/facets/facet-set/interfaces/request';
@@ -67,6 +71,11 @@ export interface FacetOptions {
   sortCriteria?: FacetSortCriterion;
 
   /**
+   * TODO: add doc
+   */
+  resultsMustMatch?: FacetResultsMustMatch;
+
+  /**
    * Specifies an explicit list of `allowedValues` in the Search API request.
    *
    * If you specify a list of values for this option, the facet uses only these values (if they are available in
@@ -123,6 +132,7 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   injectionDepth,
   numberOfValues,
   sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
+  resultsMustMatch: new StringValue({constrainTo: facetResultsMustMatch}),
   facetSearch,
   allowedValues,
   hasBreadcrumbs,
