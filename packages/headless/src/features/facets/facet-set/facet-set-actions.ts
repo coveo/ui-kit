@@ -90,7 +90,9 @@ export interface RegisterFacetActionCreatorPayload {
   customSort?: string[];
 
   /**
-   * TODO: add doc
+   * The criterion to use for specifying how results must match the selected facet values.
+   *
+   * @defaultValue `atLeastOneValue`
    */
   resultsMustMatch?: FacetResultsMustMatch;
 }

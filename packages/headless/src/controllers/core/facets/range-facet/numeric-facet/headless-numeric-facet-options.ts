@@ -103,7 +103,11 @@ export interface NumericFacetOptions {
    */
   sortCriteria?: RangeFacetSortCriterion;
 
-  // TODO: add doc
+  /**
+   * The criterion to use for specifying how results must match the selected facet values.
+   *
+   * @defaultValue `atLeastOneValue`
+   */
   resultsMustMatch?: FacetResultsMustMatch;
 
   /**
