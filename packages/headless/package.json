@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.28.0",
+  "version": "2.29.0",
   "files": [
     "dist/",
     "recommendation/",
@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "npm run build:prod && npm run build:doc",
+    "build": "nx build",
     "build:prod": "npm run build:definitions && npm run build:bundles",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
@@ -53,7 +53,7 @@
     "@types/pino": "6.3.12",
     "@types/redux-mock-store": "1.0.3",
     "abab": "2.0.6",
-    "coveo.analytics": "2.28.12",
+    "coveo.analytics": "2.28.14",
     "cross-fetch": "3.1.5",
     "dayjs": "1.11.5",
     "exponential-backoff": "3.1.0",
@@ -62,8 +62,7 @@
     "pino": "8.11.0",
     "redux-mock-store": "1.5.4",
     "redux-thunk": "2.4.1",
-    "ts-debounce": "3.0.0",
-    "web-encoding": "^1.1.4"
+    "ts-debounce": "3.0.0"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.29.3",

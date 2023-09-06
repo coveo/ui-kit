@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",
-    "build": "npm run build:bundles && npm run build:assets",
+    "build": "nx build",
     "build:bundles": "ng build",
     "build:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang"
   },
@@ -18,11 +18,11 @@
     "@angular/platform-browser": "16.0.2",
     "@angular/platform-browser-dynamic": "16.0.2",
     "@angular/router": "16.0.2",
-    "@coveo/atomic": "2.42.0",
+    "@coveo/atomic": "2.42.1",
     "rxjs": "7.5.6"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.28.0"
+    "@coveo/headless": "2.29.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "16.0.2",
@@ -39,6 +39,6 @@
     "ncp": "2.0.0",
     "ng-packagr": "16.0.1",
     "typescript": "4.9.5",
-    "@coveo/headless": "2.28.0"
+    "@coveo/headless": "2.29.0"
   }
 }

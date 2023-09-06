@@ -28,7 +28,7 @@
     "typescript": "4.6.4"
   },
   "scripts": {
-    "build": "storybook build",
+    "build": "nx build",
     "dev": "storybook dev -p 6006"
   }
 }
