@@ -25,7 +25,7 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "cypress": "12.17.3",
+    "cypress": "13.1.0",
     "cypress-web-vitals": "4.0.1"
   }
 }
