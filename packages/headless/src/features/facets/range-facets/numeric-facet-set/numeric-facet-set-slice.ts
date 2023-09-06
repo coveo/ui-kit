@@ -5,7 +5,10 @@ import {change} from '../../../history/history-actions';
 import {fetchProductListing} from '../../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../search/search-actions';
-import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
+import {
+  handleFacetMatchCriterionUpdate,
+  handleFacetSortCriterionUpdate,
+} from '../../generic/facet-reducer-helpers';
 import {
   registerRangeFacet,
   toggleSelectRangeValue,
@@ -26,6 +29,7 @@ import {
   RegisterNumericFacetActionCreatorPayload,
   updateNumericFacetValues,
   toggleExcludeNumericFacetValue,
+  updateNumericFacetMatchCriterion,
 } from './numeric-facet-actions';
 import {
   getNumericFacetSetInitialState,
@@ -71,6 +75,9 @@ export const numericFacetSetReducer = createReducer(
       })
       .addCase(updateNumericFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate(state, action.payload);
+      })
+      .addCase(updateNumericFacetMatchCriterion, (state, action) => {
+        handleFacetMatchCriterionUpdate(state, action.payload);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as NumericFacetResponse[];

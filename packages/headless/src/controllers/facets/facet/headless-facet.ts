@@ -12,6 +12,7 @@ import {
   logFacetShowLess,
   logFacetSelect,
   logFacetExclude,
+  logFacetUpdateMatch,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
@@ -164,8 +165,11 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       );
     },
 
-    resultsMustMatch(_criterion: FacetResultsMustMatch) {
-      // TODO:
+    resultsMustMatch(criterion: FacetResultsMustMatch) {
+      coreController.resultsMustMatch(criterion);
+      dispatch(
+        executeSearch(logFacetUpdateMatch({facetId: getFacetId(), criterion}))
+      );
     },
 
     isSortedBy(criterion: FacetSortCriterion) {

@@ -18,7 +18,10 @@ import {
   RangeFacetRangeAlgorithm,
   RangeFacetSortCriterion,
 } from '../generic/interfaces/request';
-import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
+import {
+  updateRangeFacetMatchCriterion,
+  updateRangeFacetSortCriterion,
+} from '../generic/range-facet-actions';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {NumericRangeRequest} from './interfaces/request';
 import {NumericFacetValue} from './interfaces/response';
@@ -218,5 +221,6 @@ export interface UpdateNumericFacetSortCriterionActionCreatorPayload {
 }
 
 export const updateNumericFacetSortCriterion = updateRangeFacetSortCriterion;
+export const updateNumericFacetMatchCriterion = updateRangeFacetMatchCriterion;
 
 export const deselectAllNumericFacetValues = deselectAllFacetValues;

@@ -6,10 +6,7 @@ import {
 } from '../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 import {FacetResultsMustMatch} from '../../../../features/facets/facet-api/request';
-import {
-  deselectAllFacetValues,
-  updateFacetMatchCriterion,
-} from '../../../../features/facets/facet-set/facet-set-actions';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   baseFacetResponseSelector,
   isFacetLoadingResponseSelector,
@@ -19,7 +16,10 @@ import {
   RangeFacetRequest,
 } from '../../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
+import {
+  updateRangeFacetMatchCriterion,
+  updateRangeFacetSortCriterion,
+} from '../../../../features/facets/range-facets/generic/range-facet-actions';
 import {
   isRangeFacetValueExcluded,
   isRangeFacetValueSelected,
@@ -77,8 +77,7 @@ export function buildCoreRangeFacet<
     },
 
     resultsMustMatch(criterion: FacetResultsMustMatch) {
-      // TODO: should dispatch another name
-      dispatch(updateFacetMatchCriterion({facetId, criterion}));
+      dispatch(updateRangeFacetMatchCriterion({facetId, criterion}));
       dispatch(updateFacetOptions());
     },
 

@@ -5,7 +5,10 @@ import {change} from '../../../history/history-actions';
 import {fetchProductListing} from '../../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../search/search-actions';
-import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
+import {
+  handleFacetMatchCriterionUpdate,
+  handleFacetSortCriterionUpdate,
+} from '../../generic/facet-reducer-helpers';
 import {
   registerRangeFacet,
   toggleSelectRangeValue,
@@ -24,6 +27,7 @@ import {
   RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
   toggleExcludeDateFacetValue,
+  updateDateFacetMatchCriterion,
 } from './date-facet-actions';
 import {
   getDateFacetSetInitialState,
@@ -71,6 +75,9 @@ export const dateFacetSetReducer = createReducer(
       })
       .addCase(updateDateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate(state, action.payload);
+      })
+      .addCase(updateDateFacetMatchCriterion, (state, action) => {
+        handleFacetMatchCriterionUpdate(state, action.payload);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as DateFacetResponse[];

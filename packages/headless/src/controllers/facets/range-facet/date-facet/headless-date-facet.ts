@@ -1,4 +1,5 @@
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import {FacetResultsMustMatch} from '../../../../features/facets/facet-api/request';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
@@ -21,6 +22,7 @@ import {
   DateRangeOptions,
 } from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
 import {DateFacetOptions} from '../../../core/facets/range-facet/date-facet/headless-date-facet-options';
+import {logFacetUpdateMatch} from './../../../../features/facets/facet-set/facet-set-analytics-actions';
 
 export type {
   DateFacetOptions,
@@ -60,6 +62,13 @@ export function buildDateFacet(
       coreController.sortBy(criterion);
       dispatch(
         executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+      );
+    },
+
+    resultsMustMatch(criterion: FacetResultsMustMatch) {
+      coreController.resultsMustMatch(criterion);
+      dispatch(
+        executeSearch(logFacetUpdateMatch({facetId: getFacetId(), criterion}))
       );
     },
 

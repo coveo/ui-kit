@@ -20,9 +20,9 @@ export function handleFacetSortCriterionUpdate<T extends AnyFacetSlice>(
   facetRequest.sortCriteria = criterion;
 }
 
-export function handleFacetMatchUpdate<T extends AnyFacetSlice>(
+export function handleFacetMatchCriterionUpdate<T extends AnyFacetSlice>(
   state: SpecificFacetState<T>,
-  payload: {facetId: string; criterion: T['request']['sortCriteria']}
+  payload: {facetId: string; criterion: T['request']['resultsMustMatch']}
 ) {
   const {facetId, criterion} = payload;
   const facetRequest = state[facetId]?.request;
@@ -31,7 +31,7 @@ export function handleFacetMatchUpdate<T extends AnyFacetSlice>(
     return;
   }
 
-  facetRequest.sortCriteria = criterion;
+  facetRequest.resultsMustMatch = criterion;
 }
 
 export function handleFacetDeselectAll(facetRequest: FacetRequest) {

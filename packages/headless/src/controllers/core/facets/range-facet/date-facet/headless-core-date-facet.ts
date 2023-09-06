@@ -1,6 +1,7 @@
 import {configuration} from '../../../../../app/common-reducers';
 import {CoreEngine} from '../../../../../app/engine';
 import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice';
+import {FacetResultsMustMatch} from '../../../../../features/facets/facet-api/request';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {
   RegisterDateFacetActionCreatorPayload,
@@ -85,6 +86,9 @@ export interface DateFacet extends Controller {
    * @param criterion - The criterion by which to sort values.
    */
   sortBy(criterion: RangeFacetSortCriterion): void;
+
+  // TODO: add doc
+  resultsMustMatch(criterion: FacetResultsMustMatch): void;
 
   /**
    * Toggles the specified facet value.
