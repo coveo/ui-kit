@@ -15,6 +15,7 @@
       <property name="withoutSubmitButton" type="Boolean" default="false" label="Display without submit button" />
       <property name="searchHub" type="String" label="Search Hub" />
       <property name="pipeline" type="String" label="Pipeline" />
+      <property name="textarea" type="Boolean" label="Expandable" />
     </targetConfig>
   </targetConfigs>
 </LightningComponentBundle>

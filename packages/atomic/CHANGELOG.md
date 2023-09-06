@@ -1,3 +1,9 @@
+## 2.42.3 (2023-09-06)
+
+### Bug Fixes
+
+- **atomic:** translation issue for zh-tw ([5ac74a9](https://github.com/coveo/ui-kit/commits/5ac74a9e344c157057d2f99c6ab31db0c618554f))
+
 ## 2.42.1 (2023-08-30)
 
 ### Bug Fixes
