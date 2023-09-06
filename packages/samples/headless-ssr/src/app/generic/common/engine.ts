@@ -6,6 +6,7 @@ import {
   InferCSRState,
   defineSearchBox,
   defineSearchParameterManager,
+  defineFacet,
 } from '@coveo/headless/ssr';
 
 const engineDefinition = defineSearchEngine({
@@ -16,6 +17,7 @@ const engineDefinition = defineSearchEngine({
   controllers: {
     searchBox: defineSearchBox(),
     resultList: defineResultList(),
+    authorFacet: defineFacet({options: {facetId: 'author-1', field: 'author'}}),
     searchParameters: defineSearchParameterManager(),
   },
 });

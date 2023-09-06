@@ -7,6 +7,7 @@ import {
 } from '@/src/app/generic/common/engine';
 import {useEffect, useState} from 'react';
 import {useSyncSearchParameters} from '../hooks/search-parameters';
+import {Facet} from './facet';
 import {HydrationMetadata} from './hydration-metadata';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';
@@ -40,6 +41,11 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
       <SearchBox
         ssrState={ssrState.controllers.searchBox.state}
         controller={csrResult?.controllers.searchBox}
+      />
+      <Facet
+        title="Author"
+        ssrState={ssrState.controllers.authorFacet.state}
+        controller={csrResult?.controllers.authorFacet}
       />
       <ResultList
         ssrState={ssrState.controllers.resultList.state}
