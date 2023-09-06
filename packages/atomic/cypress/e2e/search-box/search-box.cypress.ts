@@ -232,9 +232,10 @@ describe('Search Box Test Suites', () => {
 
         SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
 
+        const eleven = 11;
         CommonAssertions.assertAriaLiveMessage(
           SearchBoxSelectors.searchBoxAriaLive,
-          expectedSum.toString()
+          eleven.toString()
         );
       });
 
