@@ -5,18 +5,23 @@ import {
   StandaloneSearchBoxSelector,
 } from './standalone-search-box-selectors';
 
+const REQUEST_TIMEOUT = 5000;
+
 function standaloneSearchBoxExpectations(
   selector: StandaloneSearchBoxSelector
 ) {
   return {
-    displayInputSearchBox: (display: boolean) => {
+    displayInputSearchBox: (display: boolean, textarea = false) => {
       selector
-        .input()
+        .input(textarea)
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the input search box`);
     },
-    inputInitialized: () => {
-      selector.input().invoke('attr', 'is-initialized').should('eq', 'true');
+    inputInitialized: (textarea = false) => {
+      selector
+        .input(textarea)
+        .invoke('attr', 'is-initialized')
+        .should('eq', 'true');
     },
     displaySearchIcon: (display: boolean) => {
       selector
@@ -48,23 +53,32 @@ function standaloneSearchBoxExpectations(
         .should('have.length', value)
         .logDetail(`should display ${value} suggestions`);
     },
-    placeholderContains: (placeholder: string) => {
+    placeholderContains: (placeholder: string, textarea = false) => {
       selector
-        .input()
+        .input(textarea)
         .invoke('attr', 'placeholder')
         .should('eq', placeholder)
         .logDetail(`The input search placeholder contains "${placeholder}"`);
     },
-    inputContains: (value: string) => {
-      selector.input().invoke('attr', 'value').contains(value);
+    inputContains: (value: string, textarea = false) => {
+      selector.input(textarea).invoke('attr', 'value').contains(value);
+    },
+    inputStyleMatches: (expectedText: string, textarea = false) => {
+      selector
+        .input(textarea)
+        .invoke('attr', 'style', expectedText)
+        .should('have.attr', 'style', expectedText)
+        .logDetail(
+          'condition function on style of the input should return true'
+        );
     },
     urlContains: (redirectUrl: string) => {
       cy.url()
         .should('include', redirectUrl)
         .logDetail(`URL hash should contain "${redirectUrl}"`);
     },
-    logSearchFromLink: (query: string) => {
-      cy.wait(InterceptAliases.UA.SearchFromLink)
+    logSearchFromLink: (query: string, requestTimeout = REQUEST_TIMEOUT) => {
+      cy.wait(InterceptAliases.UA.SearchFromLink, {requestTimeout})
         .then((interception) => {
           const analyticsBody = interception.request.body;
           expect(analyticsBody).to.have.property(
