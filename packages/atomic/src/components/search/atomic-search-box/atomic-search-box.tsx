@@ -196,7 +196,7 @@ export class AtomicSearchBox {
    * ```css
    * <style>
    *   atomic-search-box::part(textarea),
-   *   atomic-search-box::part(textarea-container)::after,
+   *   atomic-search-box::part(textarea-expander)::after,
    *   atomic-search-box::part(textarea-spacer) {
    *     font-size: x-large;
    *   }
