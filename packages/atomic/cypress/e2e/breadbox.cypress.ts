@@ -58,7 +58,6 @@ describe('Breadbox Test Suites', () => {
       .with(
         addAutomaticFacetGenerator({
           'desired-count': '1',
-          'collapse-facets-after': '-1',
         })
       )
 

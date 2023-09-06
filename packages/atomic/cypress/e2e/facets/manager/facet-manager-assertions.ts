@@ -22,13 +22,6 @@ export function assertFacetsNoCollapsedAttribute() {
     });
 }
 
-export function assertAutomaticFacetsNoCollapsedAttribute() {
-  cy.get(automaticFacetGeneratorComponent)
-    .children()
-    .each(($child) => {
-      cy.wrap($child).should('not.have.attr', 'is-collapsed');
-    });
-}
 export function assertHasNumberOfExpandedAutomaticFacets(
   numberOfExpandedAutomaticFacets: number
 ) {

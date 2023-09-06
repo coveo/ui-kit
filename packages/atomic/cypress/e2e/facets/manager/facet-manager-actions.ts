@@ -55,13 +55,12 @@ export const addFacetManagerWithStaticFacets =
   };
 
 export const addFacetManagerWithAutomaticFacets =
-  (props: TagProps = {}, generatorCollapseFacetsAfter = 0) =>
+  (props: TagProps = {}) =>
   (env: TestFixture) => {
     const manager = generateComponentHTML(facetManagerComponent, props);
     manager.append(
       generateComponentHTML(automaticFacetGeneratorComponent, {
-        desiredCount: '3',
-        collapseFacetsAfter: generatorCollapseFacetsAfter || 3,
+        'desired-count': '3',
       })
     );
 
@@ -69,7 +68,7 @@ export const addFacetManagerWithAutomaticFacets =
   };
 
 export const addFacetManagerWithBothTypesOfFacets =
-  (props: TagProps = {}, generatorCollapseFacetsAfter = 0) =>
+  (props: TagProps = {}, generatorCollapseFacetsAfter = 3) =>
   (env: TestFixture) => {
     const manager = generateComponentHTML(facetManagerComponent, props);
 
@@ -81,14 +80,12 @@ export const addFacetManagerWithBothTypesOfFacets =
       generateComponentHTML(categoryFacetComponent, {field: hierarchicalField})
     );
 
-    if (generatorCollapseFacetsAfter) {
-      manager.append(
-        generateComponentHTML(automaticFacetGeneratorComponent, {
-          desiredCount: '3',
-          collapseFacetsAfter: generatorCollapseFacetsAfter || 3,
-        })
-      );
-    }
+    manager.append(
+      generateComponentHTML(automaticFacetGeneratorComponent, {
+        'desired-count': '3',
+        collapseFacetsAfter: generatorCollapseFacetsAfter,
+      })
+    );
 
     env.withElement(manager);
   };

@@ -67,7 +67,7 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    */
   @Prop() public numberOfValues = 8;
 
-  @State() private collapseFacetsAfter?: number;
+  @State() private collapseFacetsAfter = -1;
 
   public initialize() {
     this.validateProps();
