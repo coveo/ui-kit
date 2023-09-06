@@ -8,6 +8,10 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import {CoreEngine} from '../../../../../app/engine';
+import {
+  FacetResultsMustMatch,
+  facetResultsMustMatch,
+} from '../../../../../features/facets/facet-api/request';
 import {facetValueStates} from '../../../../../features/facets/facet-api/value';
 import {
   rangeFacetRangeAlgorithm,
@@ -99,6 +103,9 @@ export interface NumericFacetOptions {
    */
   sortCriteria?: RangeFacetSortCriterion;
 
+  // TODO: add doc
+  resultsMustMatch?: FacetResultsMustMatch;
+
   /**
    * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range.
    *
@@ -127,8 +134,8 @@ export const numericFacetOptionsSchema = new Schema<
     each: new RecordValue({values: numericRangeRequestDefinition}),
   }),
   sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
+  resultsMustMatch: new StringValue({constrainTo: facetResultsMustMatch}),
   rangeAlgorithm: new StringValue({constrainTo: rangeFacetRangeAlgorithm}),
-  // TODO: add option here
 });
 
 export function validateNumericFacetOptions(
