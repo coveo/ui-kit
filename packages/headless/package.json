@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.29.0",
+  "version": "2.30.1",
   "files": [
     "dist/",
     "recommendation/",
@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "npm run build:prod && npm run build:doc",
+    "build": "nx build",
     "build:prod": "npm run build:definitions && npm run build:bundles",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
@@ -48,7 +48,7 @@
     "pino-pretty": "^6.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "0.43.7",
+    "@coveo/bueno": "0.43.9",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "1.8.5",
     "@types/pino": "6.3.12",

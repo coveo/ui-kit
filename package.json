@@ -5,7 +5,7 @@
     "postinstall": "husky install && patch-package && nx run-many --target=install:isolated",
     "reset:install": "git checkout origin/master package-lock.json && npm ci",
     "clean:install": "rimraf **/node_modules && npm run reset:install",
-    "dev:atomic": "concurrently \"nx run headless:dev\" \"nx run atomic:dev\"",
+    "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic dev\"",
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "e2e": "nx run-many --target=e2e",
