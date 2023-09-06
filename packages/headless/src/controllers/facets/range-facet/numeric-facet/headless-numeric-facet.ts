@@ -1,9 +1,7 @@
 import {configuration} from '../../../../app/common-reducers';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {FacetResultsMustMatch} from '../../../../features/facets/facet-api/request';
 import {
   logFacetClearAll,
-  logFacetUpdateMatch,
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
@@ -71,12 +69,6 @@ export function buildNumericFacet(
       coreController.sortBy(criterion);
       dispatch(
         executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
-      );
-    },
-
-    resultsMustMatch(criterion: FacetResultsMustMatch) {
-      dispatch(
-        executeSearch(logFacetUpdateMatch({facetId: getFacetId(), criterion}))
       );
     },
 

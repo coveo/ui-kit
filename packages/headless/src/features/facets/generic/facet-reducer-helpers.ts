@@ -20,20 +20,6 @@ export function handleFacetSortCriterionUpdate<T extends AnyFacetSlice>(
   facetRequest.sortCriteria = criterion;
 }
 
-export function handleFacetMatchCriterionUpdate<T extends AnyFacetSlice>(
-  state: SpecificFacetState<T>,
-  payload: {facetId: string; criterion: T['request']['resultsMustMatch']}
-) {
-  const {facetId, criterion} = payload;
-  const facetRequest = state[facetId]?.request;
-
-  if (!facetRequest) {
-    return;
-  }
-
-  facetRequest.resultsMustMatch = criterion;
-}
-
 export function handleFacetDeselectAll(facetRequest: FacetRequest) {
   if (!facetRequest) {
     return;

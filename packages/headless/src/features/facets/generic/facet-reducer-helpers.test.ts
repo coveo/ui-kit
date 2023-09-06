@@ -6,7 +6,6 @@ import {
   handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
-  handleFacetMatchCriterionUpdate,
 } from './facet-reducer-helpers';
 
 describe('generic facet reducers', () => {
@@ -30,30 +29,6 @@ describe('generic facet reducers', () => {
 
       const method = () =>
         handleFacetSortCriterionUpdate({}, {facetId: id, criterion});
-      expect(method).not.toThrow();
-    });
-  });
-
-  describe('#handleFacetMatchCriterionUpdate', () => {
-    it('when the facet id is registered, it updates the resultsMustMatch criterion to the passed value', () => {
-      const id = '1';
-      const criterion = 'allValues';
-      const state = {[id]: buildMockFacetSlice()};
-
-      handleFacetMatchCriterionUpdate(state, {
-        facetId: id,
-        criterion,
-      });
-
-      expect(state[id]?.request.resultsMustMatch).toBe(criterion);
-    });
-
-    it('when the facet id is not registered, it does not throw', () => {
-      const id = '1';
-      const criterion = 'allValues';
-
-      const method = () =>
-        handleFacetMatchCriterionUpdate({}, {facetId: id, criterion});
       expect(method).not.toThrow();
     });
   });

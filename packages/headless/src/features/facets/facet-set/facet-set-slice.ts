@@ -15,7 +15,6 @@ import {
   handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
-  handleFacetMatchCriterionUpdate,
 } from '../generic/facet-reducer-helpers';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {
@@ -28,7 +27,6 @@ import {
   updateFacetIsFieldExpanded,
   updateFreezeCurrentValues,
   RegisterFacetActionCreatorPayload,
-  updateFacetMatchCriterion,
 } from './facet-set-actions';
 import {
   getFacetSetInitialState,
@@ -165,9 +163,6 @@ export const facetSetReducer = createReducer(
       )
       .addCase(updateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate(state, action.payload);
-      })
-      .addCase(updateFacetMatchCriterion, (state, action) => {
-        handleFacetMatchCriterionUpdate(state, action.payload);
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;

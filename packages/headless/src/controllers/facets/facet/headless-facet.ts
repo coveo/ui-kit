@@ -1,4 +1,4 @@
-import {CoreEngine, FacetResultsMustMatch} from '../../..';
+import {CoreEngine} from '../../..';
 import {configuration} from '../../../app/common-reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
@@ -12,7 +12,6 @@ import {
   logFacetShowLess,
   logFacetSelect,
   logFacetExclude,
-  logFacetUpdateMatch,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
 import {
@@ -162,13 +161,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       coreController.sortBy(criterion);
       dispatch(
         executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
-      );
-    },
-
-    resultsMustMatch(criterion: FacetResultsMustMatch) {
-      coreController.resultsMustMatch(criterion);
-      dispatch(
-        executeSearch(logFacetUpdateMatch({facetId: getFacetId(), criterion}))
       );
     },
 

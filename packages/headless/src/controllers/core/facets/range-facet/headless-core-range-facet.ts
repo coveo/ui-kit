@@ -5,7 +5,6 @@ import {
   updateFacetOptions,
 } from '../../../../features/facet-options/facet-options-actions';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
-import {FacetResultsMustMatch} from '../../../../features/facets/facet-api/request';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 import {
   baseFacetResponseSelector,
@@ -16,10 +15,7 @@ import {
   RangeFacetRequest,
 } from '../../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {
-  updateRangeFacetMatchCriterion,
-  updateRangeFacetSortCriterion,
-} from '../../../../features/facets/range-facets/generic/range-facet-actions';
+import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
 import {
   isRangeFacetValueExcluded,
   isRangeFacetValueSelected,
@@ -76,11 +72,6 @@ export function buildCoreRangeFacet<
       return this.state.sortCriterion === criterion;
     },
 
-    resultsMustMatch(criterion: FacetResultsMustMatch) {
-      dispatch(updateRangeFacetMatchCriterion({facetId, criterion}));
-      dispatch(updateFacetOptions());
-    },
-
     enable() {
       dispatch(enableFacet(facetId));
     },
@@ -96,6 +87,7 @@ export function buildCoreRangeFacet<
         | undefined;
 
       const sortCriterion = request.sortCriteria;
+      const resultsMustMatch = request.resultsMustMatch;
       const values: R['values'] = response ? response.values : [];
       const isLoading = isFacetLoadingResponseSelector(engine.state);
       const enabled = getIsEnabled();
@@ -107,6 +99,7 @@ export function buildCoreRangeFacet<
         facetId,
         values,
         sortCriterion,
+        resultsMustMatch,
         hasActiveValues,
         isLoading,
         enabled,

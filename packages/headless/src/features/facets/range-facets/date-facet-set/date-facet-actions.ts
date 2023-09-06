@@ -24,10 +24,7 @@ import {
   RangeFacetSortCriterion,
   RangeFacetRangeAlgorithm,
 } from '../generic/interfaces/request';
-import {
-  updateRangeFacetMatchCriterion,
-  updateRangeFacetSortCriterion,
-} from '../generic/range-facet-actions';
+import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {DateRangeRequest} from './interfaces/request';
 import {DateFacetValue} from './interfaces/response';
@@ -236,6 +233,5 @@ export interface UpdateDateFacetSortCriterionActionCreatorPayload {
 }
 
 export const updateDateFacetSortCriterion = updateRangeFacetSortCriterion;
-export const updateDateFacetMatchCriterion = updateRangeFacetMatchCriterion;
 
 export const deselectAllDateFacetValues = deselectAllFacetValues;

@@ -8,7 +8,6 @@ import {
   makeAnalyticsAction,
   SearchAction,
 } from '../../analytics/analytics-utils';
-import {FacetResultsMustMatch} from '../facet-api/request';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
 import {
@@ -80,44 +79,6 @@ export const logFacetUpdateSort = (
       const metadata = {...base, criteria: criterion};
 
       return client.makeFacetUpdateSort(metadata);
-    }
-  );
-
-export interface LogFacetUpdateMatchActionCreatorPayload {
-  /**
-   * The facet id.
-   */
-  facetId: string;
-
-  /**
-   * TODO: add better doc
-   * The updated match criterion.
-   */
-  criterion: FacetResultsMustMatch;
-}
-
-export const logFacetUpdateMatch = (
-  payload: LogFacetUpdateMatchActionCreatorPayload
-): SearchAction =>
-  makeAnalyticsAction(
-    'analytics/facet/matchChange',
-    AnalyticsType.Search,
-    (_client, _state) => {
-      validatePayload(payload, {
-        facetId: facetIdDefinition,
-        criterion: new Value<FacetResultsMustMatch>({
-          required: true,
-        }),
-      });
-
-      // const {facetId, criterion} = payload;
-      // const stateForAnalytics = getStateNeededForFacetMetadata(state);
-
-      // const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
-      // const metadata = {...base, criteria: criterion};
-
-      throw 'TODO: add makeFacetUpdateMatch function to library';
-      // return client.makeFacetUpdateMatch(metadata);
     }
   );
 
