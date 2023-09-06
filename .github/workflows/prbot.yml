@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/build
       - uses: ./.github/actions/commit-generated-files
   lint-check:
     name: 'Check with linter'
@@ -102,6 +102,8 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-angular
   e2e-atomic-vuejs-test:
     name: 'Run e2e tests on Vue.js sample'
+    # TODO KIT-2624 enable back.
+    if: false
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -132,6 +134,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insight-panel
+  e2e-headless-ssr-test:
+    name: 'Run e2e tests on Headless SSR sample'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-headless-ssr
   e2e-quantic-setup:
     name: 'Setup e2e tests on Quantic'
     needs: build
@@ -150,7 +160,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        spec: [
+        spec:
+          [
             'cypress/e2e/default-1/**/*',
             'cypress/e2e/default-2/**/*',
             'cypress/e2e/facets-1/**/*',

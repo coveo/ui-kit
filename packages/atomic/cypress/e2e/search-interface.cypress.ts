@@ -152,7 +152,9 @@ describe('Search Interface Component', () => {
       // - searchHub = 'testing hub'
       // - pipeline = 'testing';
       // - userDisplayname = 'Alice Smith';
+
       const accessToken =
+        // eslint-disable-next-line @cspell/spellchecker
         'eyJhbGciOiJIUzI1NiJ9.eyJwaXBlbGluZSI6InRlc3RpbmciLCJzZWFyY2hIdWIiOiJ0ZXN0aW5nIGh1YiIsInY4Ijp0cnVlLCJvcmdhbml6YXRpb24iOiJzZWFyY2h1aXNhbXBsZXMiLCJ1c2VySWRzIjpbeyJhdXRoQ29va2llIjoiIiwicHJvdmlkZXIiOiJFbWFpbCBTZWN1cml0eSBQcm92aWRlciIsIm5hbWUiOiJhc21pdGhAZXhhbXBsZS5jb20iLCJ0eXBlIjoiVXNlciIsImluZm9zIjp7fX1dLCJyb2xlcyI6WyJxdWVyeUV4ZWN1dG9yIl0sInVzZXJEaXNwbGF5TmFtZSI6IkFsaWNlIFNtaXRoIiwiZXhwIjoxNjQ2NzUzNDM0LCJpYXQiOjE2NDY2NjcwMzR9.p70UUYXKmg3sHU961G1Vmwp45qp8EgxvHisPMk-RUPw';
       const tokenPipeline = 'testing';
       const tokenSearchHub = 'testing hub';
@@ -245,7 +247,7 @@ describe('Search Interface Component', () => {
       QuerySummarySelectors.text().should('contain', 'Results');
     });
 
-    it('should default back to the non region localed (e.g., "es-ES" to "es")', () => {
+    it('should default back to the non region locale (e.g., "es-ES" to "es")', () => {
       setLanguageAndWait('es-ES');
 
       QuerySummarySelectors.text().should('contain', 'Resultados');
@@ -261,7 +263,7 @@ describe('Search Interface Component', () => {
     it('should work with lowercase regions', () => {
       setLanguageAndWait('zh-tw');
 
-      QuerySummarySelectors.text().should('contain', '结果数');
+      QuerySummarySelectors.text().should('contain', '結果數');
     });
 
     it('should support adding a non-existing language', () => {

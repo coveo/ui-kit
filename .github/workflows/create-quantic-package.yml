@@ -15,10 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version-file: '.nvmrc'
       - name: Check Out Repository
         uses: actions/checkout@v3
       - name: Create cache file
@@ -42,7 +41,7 @@ jobs:
               run_id: context.runId
             })
       - name: Setup
-        uses: ./.github/actions/setup
+        uses: ./.github/actions/build
       - name: Create package version
         working-directory: ./packages/quantic
         run: |

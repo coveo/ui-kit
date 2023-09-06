@@ -24,11 +24,13 @@ export function initialSearchParameterSelector(
       getPaginationInitialState().defaultNumberOfResults,
     sortCriteria: getSortCriteriaInitialState(),
     f: {},
+    fExcluded: {},
     cf: {},
     nf: {},
     df: {},
     debug: getDebugInitialState(),
     sf: {},
     tab: '',
+    af: {},
   };
 }

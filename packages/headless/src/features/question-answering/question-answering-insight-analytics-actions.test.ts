@@ -110,7 +110,7 @@ const exampleQuestionAnsweringState = {
 const exampleRelatedQuestionState = {
   expanded: false,
   questionAnswerId: exampleQuestionAnswerId,
-  contentIdKey: 'permanantid',
+  contentIdKey: 'permanentid',
   contentIdValue: examplePermanentId,
 };
 

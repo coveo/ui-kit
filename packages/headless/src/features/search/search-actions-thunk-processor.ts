@@ -1,4 +1,4 @@
-import {AnyAction} from 'redux';
+import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
 import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {
@@ -147,7 +147,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       this.processQueryErrorOrContinue(fetched) ??
       (await this.processQueryCorrectionsOrContinue(fetched)) ??
       (await this.processQueryTriggersOrContinue(fetched)) ??
-      this.processSuccessReponse(fetched)
+      this.processSuccessResponse(fetched)
     );
   }
 
@@ -167,19 +167,26 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   ): Promise<ValidReturnTypeFromProcessingStep<RejectionType> | null> {
     const state = this.getState();
     const successResponse = this.getSuccessResponse(fetched);
-    if (!successResponse) {
+    if (!successResponse || !state.didYouMean) {
       return null;
     }
-    if (
-      state.didYouMean?.enableDidYouMean === false ||
-      successResponse.results.length !== 0 ||
-      successResponse.queryCorrections.length === 0
-    ) {
+
+    const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
+    const {results, queryCorrections} = successResponse;
+
+    const shouldBeAutomaticallyRetried =
+      results.length === 0 &&
+      queryCorrections.length !== 0 &&
+      enableDidYouMean &&
+      automaticallyCorrectQuery;
+
+    if (!shouldBeAutomaticallyRetried) {
       return null;
     }
 
     const originalQuery = this.getCurrentQuery();
     const {correctedQuery} = successResponse.queryCorrections[0];
+
     const retried = await this.automaticallyRetryQueryWithCorrection(
       correctedQuery
     );
@@ -263,7 +270,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     };
   }
 
-  private processSuccessReponse(
+  private processSuccessResponse(
     fetched: FetchedResponse
   ): ValidReturnTypeFromProcessingStep<RejectionType> {
     this.dispatch(snapshot(extractHistory(this.getState())));

@@ -12,11 +12,11 @@ import {
   gitCommitTree,
   gitUpdateRef,
   gitPublishBranch,
-  gitSetRefOnCommit,
-  gitPush,
+  gitPull,
 } from '@coveo/semantic-monorepo-tools';
 import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
+import {randomUUID} from 'crypto';
 import {readFileSync} from 'fs';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
@@ -26,8 +26,6 @@ import {
   REPO_OWNER,
 } from './common/constants.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
-
-const GIT_SSH_REMOTE = 'deploy';
 
 // Commit, tag and push
 (async () => {
@@ -81,12 +79,13 @@ async function commitChanges(commitMessage, octokit) {
   const mainBranchCurrentSHA = await getSHA1fromRef(mainBranchName);
 
   // Create a temporary branch and check it out.
-  const tempBranchName = `release/${mainBranchCurrentSHA}`;
+  const tempBranchName = `release/${randomUUID()}`;
   await gitCreateBranch(tempBranchName);
   await gitCheckoutBranch(tempBranchName);
-  runPrecommit();
   // Stage all the changes...
   await gitAdd('.');
+  // Lint staged files
+  runPrecommit();
   //... and create a Git tree object with the changes. The Tree SHA will be used with GitHub APIs.
   const treeSHA = await gitWriteTree();
   // Create a new commit that references the Git tree object.
@@ -113,13 +112,15 @@ async function commitChanges(commitMessage, octokit) {
   /**
    * We then update the mainBranch to this new verified commit.
    */
-  await gitSetRefOnCommit(
-    GIT_SSH_REMOTE,
-    `refs/heads/${mainBranchName}`,
-    commit.data.sha,
-    true
-  );
-  await gitPush({remote: GIT_SSH_REMOTE, refs: [mainBranchName], force: true});
+  await octokit.rest.git.updateRef({
+    owner: REPO_OWNER,
+    repo: REPO_NAME,
+    ref: `heads/${mainBranchName}`,
+    sha: commit.data.sha,
+    force: true, // Needed since the remote main branch contains a "lock" commit.
+  });
+  await gitCheckoutBranch(mainBranchName);
+  await gitPull();
 
   // Delete the temp branch
   await gitDeleteRemoteBranch('origin', tempBranchName);

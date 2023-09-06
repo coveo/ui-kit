@@ -7,19 +7,26 @@ import {
   BaseFacetValueRequest,
   Expandable,
   AllowedValues,
+  CustomSort,
+  SpecificSortCriteriaExplicitAlphanumeric,
 } from '../../facet-api/request';
 
 export const facetSortCriteria: FacetSortCriterion[] = [
   'score',
   'alphanumeric',
+  'alphanumericDescending',
   'occurrences',
   'automatic',
 ];
+
 export type FacetSortCriterion =
   | 'score'
   | 'alphanumeric'
+  | 'alphanumericDescending'
   | 'occurrences'
   | 'automatic';
+
+export type FacetSortOrder = 'ascending' | 'descending';
 
 export interface FacetValueRequest extends BaseFacetValueRequest {
   value: string;
@@ -32,7 +39,10 @@ export interface FacetRequest
     Freezable,
     Type<'specific'>,
     AllowedValues,
-    SortCriteria<FacetSortCriterion> {
+    CustomSort,
+    SortCriteria<
+      FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric
+    > {
   /** @defaultValue `automatic` */
-  sortCriteria: FacetSortCriterion;
+  sortCriteria: FacetSortCriterion | SpecificSortCriteriaExplicitAlphanumeric;
 }

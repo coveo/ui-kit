@@ -4,12 +4,9 @@
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",
-    "build": "npm run build:bundles && npm run build:assets && npm run build:npm-package",
+    "build": "nx build",
     "build:bundles": "ng build",
-    "build:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
-    "publish:npm:release": "npm --prefix projects/atomic-angular/dist run publish:npm:release",
-    "publish:npm:prerelease": "npm --prefix projects/atomic-angular/dist run publish:npm:prerelease",
-    "build:npm-package": "node modify-package-json.js"
+    "build:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang"
   },
   "private": true,
   "dependencies": {
@@ -21,11 +18,11 @@
     "@angular/platform-browser": "16.0.2",
     "@angular/platform-browser-dynamic": "16.0.2",
     "@angular/router": "16.0.2",
-    "@coveo/atomic": "2.30.1",
+    "@coveo/atomic": "2.42.3",
     "rxjs": "7.5.6"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.17.1"
+    "@coveo/headless": "2.30.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "16.0.2",
@@ -42,6 +39,6 @@
     "ncp": "2.0.0",
     "ng-packagr": "16.0.1",
     "typescript": "4.9.5",
-    "@coveo/headless": "2.17.1"
+    "@coveo/headless": "2.30.1"
   }
 }

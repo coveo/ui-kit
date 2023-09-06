@@ -2,7 +2,7 @@ import {getApiRequestBodyAt, getAnalyticsAt} from '../utils/network';
 import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
 import {assertAccessibility} from './common-assertions';
 
-const sortDropdown = 'atomic-sort-dropdown';
+export const sortDropdownComponent = 'atomic-sort-dropdown';
 const searchbox = 'atomic-search-box';
 const expressions = [
   'relevancy',
@@ -12,7 +12,7 @@ const expressions = [
 ];
 
 function selectOption(value: string) {
-  return cy.get(sortDropdown).shadow().find('select').select(value);
+  return cy.get(sortDropdownComponent).shadow().find('select').select(value);
 }
 
 describe('Sort Dropdown Component', () => {
@@ -31,19 +31,19 @@ describe('Sort Dropdown Component', () => {
     setup();
   });
   it('should load', () => {
-    cy.get(sortDropdown).should('be.visible');
+    cy.get(sortDropdownComponent).should('be.visible');
   });
 
   it('passes automated accessibility', () => {
-    assertAccessibility(sortDropdown);
+    assertAccessibility(sortDropdownComponent);
   });
 
   it('should display a label', () => {
-    cy.get(sortDropdown).shadow().find('label').should('exist');
+    cy.get(sortDropdownComponent).shadow().find('label').should('exist');
   });
 
   it('should display the localized string for the option innerHTML', () => {
-    cy.get(sortDropdown)
+    cy.get(sortDropdownComponent)
       .shadow()
       .find('option[value="relevancy"]')
       .contains('Relevance');
@@ -82,7 +82,7 @@ describe('Sort Dropdown Component', () => {
       .find('[part="input"]')
       .type('lskdfjghsjdgfjsdgfhkjsdhfgkjsdgfksjdhgfkjsdgkjgdsfjh');
     cy.get(searchbox).shadow().find('[part="submit-button"]').click();
-    cy.get(sortDropdown).should('not.be.visible');
+    cy.get(sortDropdownComponent).should('not.be.visible');
   });
 });
 
@@ -92,14 +92,14 @@ describe('When sort with invalid criteria option', () => {
         <atomic-sort-dropdown>
         </atomic-sort-dropdown>
       `);
-    shouldRenderErrorComponent(sortDropdown);
+    shouldRenderErrorComponent(sortDropdownComponent);
   });
 
   it.skip('Should render an error when "atomic-sort-dropdown" is missing', () => {
     setUpPage(`
     <atomic-sort-expression label="Relevance" criteria="${expressions[0]}"></atomic-sort-expression>
       `);
-    shouldRenderErrorComponent(sortDropdown);
+    shouldRenderErrorComponent(sortDropdownComponent);
   });
 
   it('Should render an error when expression is missing', () => {
@@ -108,7 +108,7 @@ describe('When sort with invalid criteria option', () => {
           <atomic-sort-expression label="Sort"></atomic-sort-expression>
         </atomic-sort-dropdown>
       `);
-    shouldRenderErrorComponent(sortDropdown);
+    shouldRenderErrorComponent(sortDropdownComponent);
   });
 
   it('Should render an error when expression contains invalid characters', () => {
@@ -117,7 +117,7 @@ describe('When sort with invalid criteria option', () => {
           <atomic-sort-expression expression="size ascending; date ascending"></atomic-sort-expression>
         </atomic-sort-dropdown>
       `);
-    shouldRenderErrorComponent(sortDropdown);
+    shouldRenderErrorComponent(sortDropdownComponent);
   });
 });
 

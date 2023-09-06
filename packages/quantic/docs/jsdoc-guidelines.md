@@ -15,7 +15,7 @@ example:
 
 ## Components
 
-Components should be given a short but specific description explaining their role. Include relevant information about certain behaviours or limitations of the component when pertinent to developers.
+Components should be given a short but specific description explaining their role. Include relevant information about certain behaviors or limitations of the component when pertinent to developers.
 
 ### @fires
 
@@ -23,16 +23,17 @@ Events fired from this component should be defined using the `@fires` tag.
 
 ### @category
 
-Each component should be given one or more category values using the `@category` tag from one of the following cateogories:
+Each component should be given one or more category values using the `@category` tag from one of the following categories:
 
 - **Search**: Components pertaining to the Search use case.
 - **Case Assist**: Components pertaining to the Case Assist use case.
 - **Insight Panel**: Components pertaining to the Insight Panel use case
+- **Recommendation**: Components pertaining to the Recommendation use case
 - **Result Template**: Components meant to be used within result templates.
 - **Utility**: Components providing a generic utility without pertaining to any specific Coveo Headless use-case.
 - **Internal** Components that are not to be publicly documented.
   If there are more than one relevant category, each should be specified with its own tag.
-  If a new category is required it should be discussed with the code owners and adjustements must be made to the parsing script.
+  If a new category is required it should be discussed with the code owners and adjustments must be made to the parsing script.
 
 ### @example
 
@@ -56,7 +57,7 @@ export default class QuanticFacetValue extends LightningElement {
 ## Public Properties
 
 Public properties, marked using an `@api` **decorator**, should be specified via JSDoc comments following the guidelines below.
-Each public property should be given a short but specific description explaining its role. Include relevant information about certain behaviours or limitations of the component here when pertinent to developers.
+Each public property should be given a short but specific description explaining its role. Include relevant information about certain behaviors or limitations of the component here when pertinent to developers.
 
 ### @api
 

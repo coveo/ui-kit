@@ -6,10 +6,10 @@
       "sequential": ["FIRST_MAIN_REGION"]
     },
     "environments_order": {
-      "sequential": $[ENVIRONMENTS]
+      "sequential": ["dev", "stg", "prd"]
     },
     "team_jenkins": "searchuibuilds",
-    "start_environment_automatically": false,
+    "start_environment_automatically": true,
     "notifications": {
       "slack_channels": ["#searchuibuilds"]
     }
@@ -192,16 +192,6 @@
       }
     },
     {
-      "id": "stg-release",
-      "team_jenkins": {
-        "disabled": true,
-        "job_name": "ui-kit-stg-release",
-        "stg": {
-          "disabled": false
-        }
-      }
-    },
-    {
       "id": "production-release",
       "team_jenkins": {
         "disabled": true,
@@ -212,18 +202,12 @@
       }
     }
   ],
-  "snyk": {
-    "no_dependencies": true,
-    "no_container_images": true
-  },
-  "snyk_code": {
-    "no_scan": true
-  },
   "observatory": {
     "no_endpoint": true
   },
   "package_rollout": {
-    "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
+    "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba",
+    "jira_issues_discovery": {"stop_after_first_issue": true}
   },
   "deployment_config_version": 7
 }

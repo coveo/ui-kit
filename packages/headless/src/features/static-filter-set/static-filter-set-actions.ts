@@ -60,6 +60,18 @@ export const toggleSelectStaticFilterValue = createAction(
   }
 );
 
+export const toggleExcludeStaticFilterValue = createAction(
+  'staticFilter/toggleExclude',
+  (payload: ToggleSelectStaticFilterValueActionCreatorPayload) => {
+    const schema = {
+      id: staticFilterIdSchema,
+      value: staticFilterValueSchema,
+    };
+
+    return validatePayload(payload, schema);
+  }
+);
+
 export const deselectAllStaticFilterValues = createAction(
   'staticFilter/deselectAllFilterValues',
   (payload: string) => {

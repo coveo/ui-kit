@@ -19,12 +19,13 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
   RegisterCategoryFacetActionCreatorPayload,
+  updateCategoryFacetBasePath,
 } from './category-facet-set-actions';
 import {
   CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
-import {partitionIntoParentsAndValues} from './category-facet-utils';
+import {findActiveValueAncestry} from './category-facet-utils';
 import {CategoryFacetOptionalParameters} from './interfaces/options';
 import {
   CategoryFacetRequest,
@@ -72,6 +73,16 @@ export const categoryFacetSetReducer = createReducer(
         }
 
         request.sortCriteria = criterion;
+      })
+      .addCase(updateCategoryFacetBasePath, (state, action) => {
+        const {facetId, basePath} = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request) {
+          return;
+        }
+
+        request.basePath = [...basePath];
       })
       .addCase(toggleSelectCategoryFacetValue, (state, action) => {
         const {facetId, selection, retrieveCount} = action.payload;
@@ -274,11 +285,7 @@ function isRequestInvalid(
   request: CategoryFacetRequest,
   response: CategoryFacetResponse
 ) {
-  const requestParents = partitionIntoParentsAndValues(
-    request.currentValues
-  ).parents;
-  const responseParents = partitionIntoParentsAndValues(
-    response.values
-  ).parents;
+  const requestParents = findActiveValueAncestry(request.currentValues);
+  const responseParents = findActiveValueAncestry(response.values);
   return requestParents.length !== responseParents.length;
 }

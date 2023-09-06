@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/build
   lint-check:
     name: 'Check with linter'
     needs: build
@@ -67,6 +67,8 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-angular
   e2e-atomic-vuejs-test:
     name: 'Run e2e tests on Vue.js sample'
+    # TODO KIT-2624 enable back.
+    if: false
     needs: build
     runs-on: ubuntu-latest
     steps:

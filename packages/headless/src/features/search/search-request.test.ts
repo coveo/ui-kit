@@ -1,4 +1,7 @@
 import {SearchAppState} from '../../state/search-app-state';
+import {buildMockAutomaticFacetRequest} from '../../test/mock-automatic-facet-request';
+import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response';
+import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
@@ -8,6 +11,7 @@ import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
+import {buildMockFacetValue} from '../../test/mock-facet-value';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
 import {createMockState} from '../../test/mock-state';
@@ -82,6 +86,20 @@ describe('search request', () => {
     const {facets} = (await buildSearchRequest(state)).request;
 
     expect(facets).toContainEqual(request);
+  });
+
+  it('#searchRequest returns the facet state alphanumericDescending #sortCriteria', async () => {
+    const request = buildMockFacetRequest({
+      field: 'objecttype',
+      sortCriteria: 'alphanumericDescending',
+    });
+    state.facetSet[1] = buildMockFacetSlice({request});
+    const {facets} = (await buildSearchRequest(state)).request;
+
+    expect(facets?.map((f) => f.sortCriteria)).toContainEqual({
+      order: 'descending',
+      type: 'alphanumeric',
+    });
   });
 
   it('#searchRequest returns the facets in the state #numericFacetSet', async () => {
@@ -170,6 +188,60 @@ describe('search request', () => {
 
     const {facets} = (await buildSearchRequest(state)).request;
     expect(facets).toContainEqual(request);
+  });
+
+  it('#searchRequest returns the state #generateAutomaticFacets.desiredCount', async () => {
+    state.automaticFacetSet.desiredCount = 5;
+    const params = (await buildSearchRequest(state)).request;
+
+    expect(params.generateAutomaticFacets?.desiredCount).toBe(
+      state.automaticFacetSet.desiredCount
+    );
+  });
+
+  it('#searchRequest returns the state #generateAutomaticFacets.numberOfValues', async () => {
+    state.automaticFacetSet.numberOfValues = 5;
+    const params = (await buildSearchRequest(state)).request;
+
+    expect(params.generateAutomaticFacets?.numberOfValues).toBe(
+      state.automaticFacetSet.numberOfValues
+    );
+  });
+
+  it('#searchRequest strips automatic facets with no selected values', async () => {
+    const selectedValue = buildMockFacetValue({state: 'selected'});
+    const request = buildMockAutomaticFacetRequest({
+      currentValues: [selectedValue],
+    });
+
+    state.automaticFacetSet.set[1] = buildMockAutomaticFacetSlice({
+      response: buildMockAutomaticFacetResponse({}),
+    });
+    state.automaticFacetSet.set[2] = buildMockAutomaticFacetSlice({
+      response: buildMockAutomaticFacetResponse({
+        values: [selectedValue],
+      }),
+    });
+
+    const {generateAutomaticFacets} = (await buildSearchRequest(state)).request;
+    expect(generateAutomaticFacets?.currentFacets).toContainEqual(request);
+  });
+
+  it('#searchRequest strips automatic facets values that are not selected', async () => {
+    const selectedValue = buildMockFacetValue({state: 'selected'});
+    const request = buildMockAutomaticFacetRequest({
+      currentValues: [selectedValue],
+    });
+
+    const idleValue = buildMockFacetValue({state: 'idle'});
+    state.automaticFacetSet.set[1] = buildMockAutomaticFacetSlice({
+      response: buildMockAutomaticFacetResponse({
+        values: [selectedValue, idleValue],
+      }),
+    });
+
+    const {generateAutomaticFacets} = (await buildSearchRequest(state)).request;
+    expect(generateAutomaticFacets?.currentFacets).toContainEqual(request);
   });
 
   it('#searchRequestParams returns the facets in the #categoryFacetSet', async () => {

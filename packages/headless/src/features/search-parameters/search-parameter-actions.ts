@@ -44,6 +44,11 @@ export interface SearchParameters {
   f?: Record<string, string[]>;
 
   /**
+   * A record of the excluded facets, where the key is the facet id, and value is an array containing the excluded values.
+   */
+  fExcluded?: Record<string, string[]>;
+
+  /**
    * A zero-based index of the first result.
    */
   firstResult?: number;
@@ -77,6 +82,11 @@ export interface SearchParameters {
    * The active tab id.
    */
   tab?: string;
+
+  /**
+   * A record of the automatic facets, where the key is the facet id, and value is an array containing the selected values.
+   */
+  af?: Record<string, string[]>;
 }
 
 export const restoreSearchParameters = createAction(

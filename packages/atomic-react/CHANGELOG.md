@@ -1,3 +1,31 @@
+## 2.5.12 (2023-09-06)
+
+## 2.5.3 (2023-08-09)
+
+# 2.5.0 (2023-07-19)
+
+### Features
+
+- **atomic:** add the singular automatic facet component ([#3021](https://github.com/coveo/ui-kit/issues/3021)) ([ed45748](https://github.com/coveo/ui-kit/commits/ed4574841f8a130d6e78cfa80365f2129514f31c))
+
+# 2.4.0 (2023-06-29)
+
+### Features
+
+- **atomic:** mark atomic-insight-result-children as internal ([#3001](https://github.com/coveo/ui-kit/issues/3001)) ([48a95dc](https://github.com/coveo/ui-kit/commits/48a95dc823408b9a4f251510a8536b12539f38c2))
+
+# 2.3.0 (2023-06-20)
+
+### Bug Fixes
+
+- **atomic-react:** fix pjson module path ([#2985](https://github.com/coveo/ui-kit/issues/2985)) ([259d252](https://github.com/coveo/ui-kit/commits/259d2521fe1f4cc49d8b0aa9fc9bc8b92043a426))
+
+### Features
+
+- **atomic:** added folding-result-list for insight panel ([#2970](https://github.com/coveo/ui-kit/issues/2970)) ([4e5ed3b](https://github.com/coveo/ui-kit/commits/4e5ed3b479c6e71bed1add6145595cf902ab0887))
+
+## 2.2.37 (2023-06-01)
+
 # Change Log
 
 All notable changes to this project will be documented in this file.

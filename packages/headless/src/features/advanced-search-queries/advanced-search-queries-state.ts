@@ -29,7 +29,7 @@ export interface AdvancedSearchQueriesState {
   /**
    * Whether the cq filter was manually set.
    *
-   * If the cq was manually set and the cq is registered, the cq will not be overriden by the default filter.
+   * If the cq was manually set and the cq is registered, the cq will not be overridden by the default filter.
    */
   cqWasSet: boolean;
 
@@ -41,7 +41,7 @@ export interface AdvancedSearchQueriesState {
   /**
    * Whether the aq filter was manually set.
    *
-   * If the aq was manually set and the aq is registered, the aq will not be overriden by the default filter.
+   * If the aq was manually set and the aq is registered, the aq will not be overridden by the default filter.
    */
   aqWasSet: boolean;
 
@@ -56,7 +56,7 @@ export interface AdvancedSearchQueriesState {
   /**
    * Whether the lq filter was manually set.
    *
-   * If the lq was manually set and the lq is registered, the lq will not be overriden by the default filter.
+   * If the lq was manually set and the lq is registered, the lq will not be overridden by the default filter.
    */
   lqWasSet: boolean;
 
@@ -69,7 +69,7 @@ export interface AdvancedSearchQueriesState {
   /**
    * Whether the dq filter was manually set.
    *
-   * If the dq was manually set and the dq is registered, the dq will not be overriden by the default filter.
+   * If the dq was manually set and the dq is registered, the dq will not be overridden by the default filter.
    */
   dqWasSet: boolean;
 

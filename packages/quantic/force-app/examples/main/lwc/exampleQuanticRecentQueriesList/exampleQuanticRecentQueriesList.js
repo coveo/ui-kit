@@ -30,8 +30,9 @@ export default class ExampleQuanticRecentQueriesList extends LightningElement {
     {
       attribute: 'hideWhenEmpty',
       label: 'Hide when empty',
-      description: 'Indicates whether the card of the recent queries list should be completely hidden when it is empty.',
-      defaultValue: false
+      description:
+        'Indicates whether the card of the recent queries list should be completely hidden when it is empty.',
+      defaultValue: false,
     },
   ];
 

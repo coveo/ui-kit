@@ -9,10 +9,7 @@ import {
   buildInteractiveResult,
 } from '@coveo/headless';
 import {Component, Element, State, Prop, Method, h} from '@stencil/core';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -23,6 +20,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
+  ResultTarget,
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
@@ -71,7 +69,7 @@ export class AtomicResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() private templateHasError = false;
 
-  @FocusTarget() nextNewResultTarget!: FocusTargetController;
+  private nextNewResultTarget?: FocusTargetController;
 
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
@@ -81,6 +79,14 @@ export class AtomicResultList implements InitializableComponent {
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
   @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
+
+  /**
+   * The target location to open the result link (see [target](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#target)).
+   * This property is only leveraged when `display` is `grid`.
+   * @defaultValue `_self`
+   */
+  @Prop() gridCellLinkTarget: ResultTarget = '_self';
+
   /**
    * The expected size of the image displayed in the results.
    */
@@ -99,6 +105,13 @@ export class AtomicResultList implements InitializableComponent {
     resultRenderingFunction: ResultRenderingFunction
   ) {
     this.resultRenderingFunction = resultRenderingFunction;
+  }
+
+  public get focusTarget() {
+    if (!this.nextNewResultTarget) {
+      this.nextNewResultTarget = new FocusTargetController(this);
+    }
+    return this.nextNewResultTarget;
   }
 
   public initialize() {
@@ -128,13 +141,14 @@ export class AtomicResultList implements InitializableComponent {
     this.resultListCommon = new ResultListCommon({
       resultTemplateProvider,
       getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
+      gridCellLinkTarget: this.gridCellLinkTarget,
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
       getResultDisplay: () => this.display,
       getLayoutDisplay: () => this.display,
       getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.nextNewResultTarget,
+      nextNewResultTarget: this.focusTarget,
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,

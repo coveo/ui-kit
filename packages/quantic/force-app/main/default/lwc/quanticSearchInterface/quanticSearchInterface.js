@@ -29,7 +29,7 @@ import {LightningElement, api} from 'lwc';
  * Moreover, this information can be referred to in query expressions and QPL statements by using the `$locale` object.
  * @category Search
  * @example
- * <c-quantic-search-interface engine-id={engineId} search-hub="myhub" pipeine="mypipeline" disable-state-in-url skip-first-search></c-quantic-search-interface>
+ * <c-quantic-search-interface engine-id={engineId} search-hub="myhub" pipeline="mypipeline" disable-state-in-url skip-first-search></c-quantic-search-interface>
  */
 export default class QuanticSearchInterface extends LightningElement {
   /**
@@ -82,6 +82,9 @@ export default class QuanticSearchInterface extends LightningElement {
   /** @type {boolean} */
   hasRendered = false;
 
+  /** @type {boolean} */
+  ariaLiveEventsBound = false;
+
   connectedCallback() {
     loadDependencies(this).then(() => {
       if (!getHeadlessBindings(this.engineId)?.engine) {
@@ -124,6 +127,13 @@ export default class QuanticSearchInterface extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeUrlManager?.();
     window.removeEventListener('hashchange', this.onHashChange);
+    if (this.ariaLiveEventsBound) {
+      this.removeEventListener('arialivemessage', this.handleAriaLiveMessage);
+      this.removeEventListener(
+        'registerregion',
+        this.handleRegisterAriaLiveRegion
+      );
+    }
   }
 
   /**
@@ -187,6 +197,7 @@ export default class QuanticSearchInterface extends LightningElement {
       'registerregion',
       this.handleRegisterAriaLiveRegion.bind(this)
     );
+    this.ariaLiveEventsBound = true;
   }
 
   handleAriaLiveMessage(event) {

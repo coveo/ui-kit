@@ -20,6 +20,7 @@ import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {
   registerFacet,
   toggleSelectFacetValue,
+  toggleExcludeFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
@@ -63,22 +64,27 @@ export const facetSetReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const f = action.payload.f || {};
+        const fExcluded = action.payload.fExcluded || {};
         const facetIds = Object.keys(state);
 
         facetIds.forEach((id) => {
           const {request} = state[id]!;
           const selectedValues = f[id] || [];
+          const excludedValues = fExcluded[id] || [];
           const idleValues = request.currentValues.filter(
-            (facetValue) => !selectedValues.includes(facetValue.value)
+            (facetValue) =>
+              !selectedValues.includes(facetValue.value) &&
+              !excludedValues.includes(facetValue.value)
           );
 
           request.currentValues = [
             ...selectedValues.map(buildSelectedFacetValueRequest),
+            ...excludedValues.map(buildExcludedFacetValueRequest),
             ...idleValues.map(restoreFacetValueToIdleState),
           ];
           request.preventAutoSelect = selectedValues.length > 0;
           request.numberOfValues = Math.max(
-            selectedValues.length,
+            selectedValues.length + excludedValues.length,
             request.numberOfValues
           );
         });
@@ -103,6 +109,28 @@ export const facetSetReducer = createReducer(
 
         const isSelected = existingValue.state === 'selected';
         existingValue.state = isSelected ? 'idle' : 'selected';
+        facetRequest.freezeCurrentValues = true;
+      })
+      .addCase(toggleExcludeFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = facetRequest.currentValues.find(
+          (req) => req.value === selection.value
+        );
+        if (!existingValue) {
+          insertNewValue(facetRequest, selection);
+          return;
+        }
+
+        const isExcluded = existingValue.state === 'excluded';
+        existingValue.state = isExcluded ? 'idle' : 'excluded';
         facetRequest.freezeCurrentValues = true;
       })
       .addCase(updateFreezeCurrentValues, (state, action) => {
@@ -274,6 +302,10 @@ export function convertFacetValueToRequest(
 
 function buildSelectedFacetValueRequest(value: string): FacetValueRequest {
   return {value, state: 'selected'};
+}
+
+function buildExcludedFacetValueRequest(value: string): FacetValueRequest {
+  return {value, state: 'excluded'};
 }
 
 function restoreFacetValueToIdleState(

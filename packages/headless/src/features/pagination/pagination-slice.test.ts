@@ -2,6 +2,7 @@ import {Action} from '@reduxjs/toolkit';
 import {buildFetchProductListingResponse} from '../../test/mock-product-listing';
 import {buildMockSearch} from '../../test/mock-search';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
+import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions';
 import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
@@ -299,6 +300,10 @@ describe('pagination slice', () => {
 
     it('when date facet values are updated, #firstResult is set to 0', () => {
       testResetPagination(updateNumericFacetValues);
+    });
+
+    it('when automatic facet values are updated, #firstResult is set to 0', () => {
+      testResetPagination(toggleSelectAutomaticFacetValue);
     });
   });
 });

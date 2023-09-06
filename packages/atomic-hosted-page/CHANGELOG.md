@@ -1,3 +1,9 @@
+## 0.3.31 (2023-09-06)
+
+## 0.3.18 (2023-06-20)
+
+## 0.3.16 (2023-06-01)
+
 # Change Log
 
 All notable changes to this project will be documented in this file.

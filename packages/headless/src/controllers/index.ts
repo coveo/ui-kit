@@ -245,6 +245,9 @@ export type {
   BreadcrumbManagerState,
   BreadcrumbManager,
   DeselectableValue,
+  AutomaticFacetBreadcrumb,
+  CoreBreadcrumbManager,
+  CoreBreadcrumbManagerState,
 } from './breadcrumb-manager/headless-breadcrumb-manager';
 export {buildBreadcrumbManager} from './breadcrumb-manager/headless-breadcrumb-manager';
 
@@ -293,12 +296,12 @@ export type {
 export {buildQuickview} from './quickview/headless-quickview';
 
 export type {
+  FoldingOptions,
   FoldedCollection,
   FoldedResult,
-  FoldedResultList,
-  FoldingOptions,
   FoldedResultListOptions,
   FoldedResultListProps,
+  FoldedResultList,
   FoldedResultListState,
 } from './folded-result-list/headless-folded-result-list';
 export {buildFoldedResultList} from './folded-result-list/headless-folded-result-list';
@@ -403,3 +406,25 @@ export type {
 } from './field-suggestions/category-facet/headless-category-field-suggestions';
 
 export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';
+
+export type {
+  AutomaticFacet,
+  AutomaticFacetProps,
+  AutomaticFacetState,
+} from './facets/automatic-facet/headless-automatic-facet';
+export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
+
+export type {
+  AutomaticFacetGenerator,
+  AutomaticFacetGeneratorProps,
+  AutomaticFacetGeneratorState,
+  AutomaticFacetGeneratorOptions,
+} from './facets/automatic-facet-generator/headless-automatic-facet-generator';
+export {buildAutomaticFacetGenerator} from './facets/automatic-facet-generator/headless-automatic-facet-generator';
+
+export type {
+  GeneratedAnswer,
+  GeneratedAnswerState,
+  GeneratedAnswerCitation,
+} from './generated-answer/headless-generated-answer';
+export {buildGeneratedAnswer} from './generated-answer/headless-generated-answer';

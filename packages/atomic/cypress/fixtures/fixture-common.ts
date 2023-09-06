@@ -28,6 +28,7 @@ export const RouteAlias = {
   FacetSearch: '@coveoFacetSearch',
   Quickview: '@coveoQuickview',
   Locale: '@locale',
+  GenQAStream: '@genQAStream',
 };
 
 export const ConsoleAliases = {

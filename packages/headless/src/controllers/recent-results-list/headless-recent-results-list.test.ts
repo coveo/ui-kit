@@ -1,4 +1,4 @@
-import {Action} from 'redux';
+import {Action} from '@reduxjs/toolkit';
 import {
   clearRecentResults,
   registerRecentResults,
@@ -25,7 +25,7 @@ describe('recent results list', () => {
     printableUri: 'printable-uri',
     clickUri: 'click-uri',
     uniqueId: 'unique-id',
-    excerpt: 'exceprt',
+    excerpt: 'excerpt',
     firstSentences: 'first-sentences',
     flags: 'flags',
   };

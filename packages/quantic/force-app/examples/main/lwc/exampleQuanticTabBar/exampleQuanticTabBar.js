@@ -7,7 +7,7 @@ export default class ExampleQuanticTabBar extends LightningElement {
 
   pageTitle = 'Quantic Tab Bar';
   pageDescription =
-    'The QuanticTabBar component displays the Quantic Tabs in a responsive manner. When tabs are wider than the available space, the tabs that cannot fit in the space are moved in the "More" drop-down list.';
+    'The QuanticTabBar component displays the Quantic Tabs in a responsive manner. When tabs are wider than the available space, the tabs that cannot fit in the space are moved in the "More" dropdown list.';
 
   options = [
     {

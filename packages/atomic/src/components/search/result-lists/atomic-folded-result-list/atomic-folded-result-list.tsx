@@ -19,10 +19,7 @@ import {
   Method,
   h,
 } from '@stencil/core';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -36,9 +33,9 @@ import {
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {FoldedResultListStateContextEvent} from '../../../common/result-list/result-list-decorators';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {FoldedResultListStateContextEvent} from '../result-list-decorators';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
@@ -72,7 +69,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() private templateHasError = false;
 
-  @FocusTarget() nextNewResultTarget!: FocusTargetController;
+  private nextNewResultTarget?: FocusTargetController;
 
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
@@ -127,6 +124,13 @@ export class AtomicFoldedResultList implements InitializableComponent {
     this.foldedResultList.loadCollection(event.detail);
   }
 
+  private get focusTarget() {
+    if (!this.nextNewResultTarget) {
+      this.nextNewResultTarget = new FocusTargetController(this);
+    }
+    return this.nextNewResultTarget;
+  }
+
   public initialize() {
     try {
       this.foldedResultList = this.initFolding();
@@ -159,7 +163,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       getResultDisplay: () => this.display,
       getLayoutDisplay: () => this.display,
       getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.nextNewResultTarget,
+      nextNewResultTarget: this.focusTarget,
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.foldedResultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,

@@ -16,7 +16,10 @@ import {
 } from '../../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
-import {isRangeFacetValueSelected} from '../../../../features/facets/range-facets/generic/range-facet-utils';
+import {
+  isRangeFacetValueExcluded,
+  isRangeFacetValueSelected,
+} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {
   ConfigurationSection,
   FacetOptionsSection,
@@ -53,14 +56,16 @@ export function buildCoreRangeFacet<
 
     isValueSelected: isRangeFacetValueSelected,
 
+    isValueExcluded: isRangeFacetValueExcluded,
+
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {
       dispatch(updateRangeFacetSortCriterion({facetId, criterion}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     isSortedBy(criterion: RangeFacetSortCriterion) {

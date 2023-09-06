@@ -14,10 +14,7 @@ import {
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import Star from '../../../../images/star.svg';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -164,18 +161,24 @@ export class AtomicRatingRangeFacet
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
-  @FocusTarget()
-  private headerFocus!: FocusTargetController;
+  private headerFocus?: FocusTargetController;
 
   private validateProps() {
     validateDependsOn(this.dependsOn);
+  }
+
+  private get focusTarget() {
+    if (!this.headerFocus) {
+      this.headerFocus = new FocusTargetController(this);
+    }
+    return this.headerFocus;
   }
 
   public initialize() {
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initializeFacet();
-    this.inititalizeDependenciesManager();
+    this.initializeDependenciesManager();
   }
 
   public disconnectedCallback() {
@@ -224,7 +227,7 @@ export class AtomicRatingRangeFacet
       .length;
   }
 
-  private inititalizeDependenciesManager() {
+  private initializeDependenciesManager() {
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
@@ -280,14 +283,14 @@ export class AtomicRatingRangeFacet
         i18n={this.bindings.i18n}
         label={this.label}
         onClearFilters={() => {
-          this.headerFocus.focusAfterSearch();
+          this.focusTarget.focusAfterSearch();
           this.facet.deselectAll();
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-        headerRef={this.headerFocus.setTarget}
+        headerRef={(el) => this.focusTarget.setTarget(el)}
       ></FacetHeader>
     );
   }

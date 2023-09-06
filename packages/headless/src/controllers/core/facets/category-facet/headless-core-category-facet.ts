@@ -18,9 +18,15 @@ import {categoryFacetResponseSelector} from '../../../../features/facets/categor
 import {categoryFacetRequestSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
-import {partitionIntoParentsAndValues} from '../../../../features/facets/category-facet-set/category-facet-utils';
+import {
+  findActiveValueAncestry,
+  partitionIntoParentsAndValues,
+} from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
-import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
+import {
+  CategoryFacetValue,
+  CategoryFacetValueCommon,
+} from '../../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
@@ -47,6 +53,7 @@ import {
 } from './headless-core-category-facet-options';
 
 export type {
+  CategoryFacetValueCommon,
   CategoryFacetValue,
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
@@ -141,11 +148,42 @@ export interface CoreCategoryFacetState {
   /** The facet ID. */
   facetId: string;
 
-  /** The facet's parent values. */
+  /**
+   * The root facet values.
+   * Child values might be available in `valuesAsTrees[i].children[j]`
+   * @example `{value: 'foo' }
+   */
+  valuesAsTrees: CategoryFacetValue[];
+
+  /**
+   * The facet's selected value if any, undefined otherwise.
+   */
+  activeValue: CategoryFacetValue | undefined;
+
+  /**
+   * Whether `valuesAsTree` contains hierarchical values (i.e. facet values with children), or only 'flat' values (i.e. facet values without children).
+   */
+  isHierarchical: boolean;
+
+  /**
+   * The facet's parent values.
+   * @deprecated uses `valuesAsTrees` instead.
+   *
+   */
   parents: CategoryFacetValue[];
 
-  /** The facet's values. */
+  /**
+   * The facet's values.
+   * @deprecated use `selectedValueAncestry` instead.
+   */
   values: CategoryFacetValue[];
+
+  /**
+   * The selected facet values ancestry.
+   * The first element is the "root" of the selected value ancestry tree.
+   * The last element is the selected value itself.
+   */
+  selectedValueAncestry: CategoryFacetValue[];
 
   /** The facet's active `sortCriterion`. */
   sortCriteria: CategoryFacetSortCriterion;
@@ -243,7 +281,7 @@ export interface CategoryFacetSearchResult {
   count: number;
 
   /**
-   * The hierarchical path to the facet value.
+   * The hierarchical path to the selected facet value.
    */
   path: string[];
 }
@@ -306,17 +344,17 @@ export function buildCoreCategoryFacet(
       dispatch(
         toggleSelectCategoryFacetValue({facetId, selection, retrieveCount})
       );
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     deselectAll() {
       dispatch(deselectAllCategoryFacetValues(facetId));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     sortBy(criterion: CategoryFacetSortCriterion) {
       dispatch(updateCategoryFacetSortCriterion({facetId, criterion}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     isSortedBy(criterion: CategoryFacetSortCriterion) {
@@ -326,18 +364,19 @@ export function buildCoreCategoryFacet(
 
     showMoreValues() {
       const {numberOfValues: increment} = options;
-      const {values} = this.state;
-      const numberOfValues = values.length + increment;
+      const {activeValue, valuesAsTrees} = this.state;
+      const numberOfValues =
+        (activeValue?.children.length ?? valuesAsTrees.length) + increment;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     showLessValues() {
       const {numberOfValues} = options;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(updateFacetOptions());
     },
 
     enable() {
@@ -353,19 +392,31 @@ export function buildCoreCategoryFacet(
       const response = getResponse();
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();
-
+      const valuesAsTrees = response?.values ?? [];
+      const isHierarchical =
+        valuesAsTrees.some((value) => value.children.length > 0) ?? false;
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
-      const hasActiveValues = parents.length !== 0;
+      const selectedValueAncestry = findActiveValueAncestry(valuesAsTrees);
+      const activeValue = selectedValueAncestry.length
+        ? selectedValueAncestry[selectedValueAncestry.length - 1]
+        : undefined;
+      const hasActiveValues = !!activeValue;
       const canShowMoreValues =
-        parents.length > 0
-          ? parents[parents.length - 1].moreValuesAvailable
-          : response?.moreValuesAvailable || false;
-      const canShowLessValues = values.length > options.numberOfValues;
+        activeValue?.moreValuesAvailable ??
+        response?.moreValuesAvailable ??
+        false;
+      const canShowLessValues = activeValue
+        ? activeValue.children.length > options.numberOfValues
+        : valuesAsTrees.length > options.numberOfValues;
 
       return {
         facetId,
         parents,
+        selectedValueAncestry,
         values,
+        isHierarchical,
+        valuesAsTrees,
+        activeValue,
         isLoading,
         hasActiveValues,
         canShowMoreValues,
