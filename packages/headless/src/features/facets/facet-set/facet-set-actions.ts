@@ -88,6 +88,11 @@ export interface RegisterFacetActionCreatorPayload {
    * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
    */
   customSort?: string[];
+
+  /**
+   * TODO: add doc
+   */
+  resultsMustMatch?: FacetResultsMustMatch;
 }
 
 const facetRegistrationOptionsDefinition = {
@@ -97,6 +102,7 @@ const facetRegistrationOptionsDefinition = {
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),
   sortCriteria: new Value<FacetSortCriterion>({required: false}),
+  resultsMustMatch: new Value<FacetResultsMustMatch>({required: false}),
   allowedValues: allowedValues,
   customSort: customSort,
 };

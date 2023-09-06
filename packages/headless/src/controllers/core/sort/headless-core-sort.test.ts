@@ -122,3 +122,6 @@ describe('Sort', () => {
     });
   });
 });
+
+// TODO: find a way to test resultsMustMatch the same way without code duplication.
+// Search every component using this controller.
