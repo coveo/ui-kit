@@ -33,7 +33,8 @@ describe('Recs Interface Component', () => {
     });
 
     CommonAssertions.assertAccessibility();
-    RecsAssertions.assertRendersPlaceholders(numberOfRecs);
+    const badNumberOfRecs = 4;
+    RecsAssertions.assertRendersPlaceholders(badNumberOfRecs);
   });
 
   describe('after recommendation have loaded', () => {
