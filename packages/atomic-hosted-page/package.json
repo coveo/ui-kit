@@ -34,8 +34,5 @@
     "@coveo/bueno": "0.43.9",
     "@coveo/headless": "2.30.1",
     "@stencil/core": "2.17.3"
-  },
-  "devDependencies": {
-    "cypress": "13.1.0"
   }
 }
