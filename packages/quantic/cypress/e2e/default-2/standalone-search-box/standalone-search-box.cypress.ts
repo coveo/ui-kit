@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import {configure} from '../../../page-objects/configurator';
 import {
   InterceptAliases,
@@ -16,6 +17,7 @@ interface StandaloneSearchBoxOptions {
   redirectUrl: string;
   searchHub: string;
   pipeline: string;
+  textarea: boolean;
 }
 
 function mockSuggestions() {
@@ -37,6 +39,11 @@ function mockSuggestions() {
   }).as(InterceptAliases.QuerySuggestions.substring(1));
 }
 
+const variants = [
+  {variantName: 'default', textarea: false},
+  {variantName: 'expandable', textarea: true},
+];
+
 describe('quantic-standalone-search-box', () => {
   const standaloneSearchBoxUrl = 's/quantic-standalone-search-box';
 
@@ -48,175 +55,211 @@ describe('quantic-standalone-search-box', () => {
     configure(options);
   }
 
-  describe('with default option', () => {
-    it('should work as expected', () => {
-      scope('when loading standalone search box', () => {
-        visitStandaloneSearchBox();
-        mockSuggestions();
+  variants.forEach(({variantName, textarea}) => {
+    describe(`variant ${variantName} with default options`, () => {
+      it('should work as expected', () => {
+        scope('when loading standalone search box', () => {
+          visitStandaloneSearchBox({textarea});
+          mockSuggestions();
 
-        Expect.displayInputSearchBox(true);
-        Expect.displaySearchButton(true);
-        Expect.placeholderContains('Search');
-        Expect.inputInitialized();
-      });
-
-      scope('when setting suggestions', () => {
-        const interceptAlias = '@qsWithDefaultParams';
-        const params = {
-          searchHub: 'default',
-          pipeline: undefined,
-        };
-        interceptQuerySuggestWithParam(params, interceptAlias);
-
-        Actions.focusSearchBox();
-        cy.wait(interceptAlias).then(() => {
-          Expect.displaySuggestionList(true);
-          Expect.numberOfSuggestions(2);
+          Expect.displayInputSearchBox(true, textarea);
+          Expect.displaySearchButton(true);
+          Expect.placeholderContains('Search', textarea);
+          Expect.inputInitialized(textarea);
         });
-      });
 
-      scope('when selecting from suggestions', () => {
-        Actions.clickFirstSuggestion();
-        Expect.urlContains('/global-search/%40uri#q=test');
-      });
+        scope('when setting suggestions', () => {
+          const interceptAlias = '@qsWithDefaultParams';
+          const params = {
+            searchHub: 'default',
+            pipeline: undefined,
+          };
+          interceptQuerySuggestWithParam(params, interceptAlias);
 
-      scope('when submitting a search', () => {
-        const query = 'test';
-        visitStandaloneSearchBox();
+          Actions.focusSearchBox(textarea);
+          cy.wait(interceptAlias).then(() => {
+            Expect.displaySuggestionList(true);
+            Expect.numberOfSuggestions(2);
+          });
+        });
 
-        Expect.inputInitialized();
-        Actions.typeInSearchBox(query);
-        Expect.displayClearButton(true);
-        Actions.submitSearch();
-        Expect.urlContains(
-          `/global-search/%40uri#q=${encodeURIComponent(query)}`
-        );
-      });
+        scope('when selecting from suggestions', () => {
+          Actions.clickFirstSuggestion();
+          Expect.urlContains('/global-search/%40uri#q=test');
+        });
 
-      scope('when submitting using ENTER key', () => {
-        const query = 'query';
-        mockSuggestions();
-        visitStandaloneSearchBox();
+        scope('when submitting a search', () => {
+          const query = 'test';
+          visitStandaloneSearchBox({textarea});
 
-        Expect.inputInitialized();
-        Actions.typeInSearchBox(query);
-        Actions.pressEnter();
-        Expect.displayClearButton(true);
-        Expect.urlContains(
-          `/global-search/%40uri#q=${encodeURIComponent(query)}`
-        );
-      });
-
-      scope('when submitting script', () => {
-        const query = '<script>alert("test")</script>';
-        visitStandaloneSearchBox();
-
-        Expect.inputInitialized();
-        Actions.typeInSearchBox(query);
-        Expect.displayClearButton(true);
-        Actions.submitSearch();
-        Expect.urlContains(
-          `/global-search/%40uri#q=${encodeURIComponent(query)}`
-        );
-      });
-
-      scope(
-        'when submitting a search with a query containing a special character',
-        () => {
-          const query = '%test';
-          visitStandaloneSearchBox();
-
-          Expect.inputInitialized();
-          Actions.typeInSearchBox(query);
+          Expect.inputInitialized(textarea);
+          Actions.typeInSearchBox(query, textarea);
           Expect.displayClearButton(true);
           Actions.submitSearch();
           Expect.urlContains(
             `/global-search/%40uri#q=${encodeURIComponent(query)}`
           );
-        }
-      );
+        });
+
+        scope('when submitting using ENTER key', () => {
+          const query = 'query';
+          mockSuggestions();
+          visitStandaloneSearchBox({textarea});
+
+          Expect.inputInitialized(textarea);
+          Actions.typeInSearchBox(query, textarea);
+          Actions.pressEnter(textarea);
+          Expect.displayClearButton(true);
+          Expect.urlContains(
+            `/global-search/%40uri#q=${encodeURIComponent(query)}`
+          );
+        });
+
+        scope('when submitting script', () => {
+          const query = '<script>alert("test")</script>';
+          visitStandaloneSearchBox({textarea});
+
+          Expect.inputInitialized(textarea);
+          Actions.typeInSearchBox(query, textarea);
+          Expect.displayClearButton(true);
+          Actions.submitSearch();
+          Expect.urlContains(
+            `/global-search/%40uri#q=${encodeURIComponent(query)}`
+          );
+        });
+
+        scope(
+          'when submitting a search with a query containing a special character',
+          () => {
+            const query = '%test';
+            visitStandaloneSearchBox({textarea});
+
+            Expect.inputInitialized(textarea);
+            Actions.typeInSearchBox(query, textarea);
+            Expect.displayClearButton(true);
+            Actions.submitSearch();
+            Expect.urlContains(
+              `/global-search/%40uri#q=${encodeURIComponent(query)}`
+            );
+          }
+        );
+      });
+    });
+
+    describe(`variant ${variantName} with custom options`, () => {
+      it('should work as expected', () => {
+        scope('with custom #placeholder', () => {
+          visitStandaloneSearchBox({
+            placeholder: 'custom placeholder',
+            textarea,
+          });
+
+          Expect.displayInputSearchBox(true, textarea);
+          Expect.displaySearchButton(true);
+          Expect.placeholderContains('custom placeholder', textarea);
+        });
+
+        scope('with custom #withoutSubmitButton', () => {
+          visitStandaloneSearchBox({
+            withoutSubmitButton: true,
+            textarea,
+          });
+
+          Expect.displayInputSearchBox(true, textarea);
+          Expect.displaySearchButton(false);
+          Expect.displaySearchIcon(true);
+        });
+
+        scope('with custom #numberOfSuggestions', () => {
+          visitStandaloneSearchBox({
+            numberOfSuggestions: 1,
+            textarea,
+          });
+
+          Expect.inputInitialized(textarea);
+          Actions.focusSearchBox(textarea);
+          cy.wait(InterceptAliases.QuerySuggestions).then(() => {
+            Expect.displaySuggestionList(true);
+            Expect.numberOfSuggestions(1);
+          });
+        });
+
+        scope('with custom #redirectUrl', () => {
+          const searchFromLinkRequestTimeout = 10000;
+          const query = 'test';
+          visitStandaloneSearchBox({
+            redirectUrl: '/full-search-example',
+            textarea,
+          });
+
+          Expect.inputInitialized(textarea);
+          Actions.typeInSearchBox(query, textarea);
+          Expect.displayClearButton(true);
+          Actions.submitSearch();
+          Expect.urlContains(
+            `/full-search-example#q=${encodeURIComponent(query)}`
+          );
+          Expect.logSearchFromLink(query, searchFromLinkRequestTimeout);
+        });
+
+        scope('with custom #searchHub', () => {
+          const interceptAlias = '@qsWithSearchHub';
+          const searchHub = 'test-hub';
+          const requestParams = {searchHub};
+          visitStandaloneSearchBox({
+            searchHub,
+            textarea,
+          });
+          interceptQuerySuggestWithParam(requestParams, interceptAlias);
+
+          Expect.inputInitialized(textarea);
+          Actions.focusSearchBox(textarea);
+
+          Expect.fetchQuerySuggestWithParams(requestParams, interceptAlias);
+        });
+
+        scope('with custom #pipeline', () => {
+          const interceptAlias = '@qsWithPipeline';
+          const pipeline = 'test-pipeline';
+          const requestParams = {pipeline};
+          visitStandaloneSearchBox({
+            pipeline,
+            textarea,
+          });
+          interceptQuerySuggestWithParam(requestParams, interceptAlias);
+
+          Expect.inputInitialized(textarea);
+          Actions.focusSearchBox(textarea);
+
+          Expect.fetchQuerySuggestWithParams(requestParams, interceptAlias);
+        });
+      });
     });
   });
 
-  describe('with custom option', () => {
-    it('should work as expected', () => {
-      scope('with custom #placeholder', () => {
-        visitStandaloneSearchBox({
-          placeholder: 'custom placeholder',
-        });
+  describe('Expandable textarea searchbox', () => {
+    it('should support the expandable textarea features', () => {
+      scope('when typing a longer text that what fits on one line', () => {
+        const longQuery =
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+        visitStandaloneSearchBox({textarea: true});
 
-        Expect.displayInputSearchBox(true);
-        Expect.displaySearchButton(true);
-        Expect.placeholderContains('custom placeholder');
+        Expect.inputInitialized(true);
+        Actions.focusSearchBox(true);
+        Actions.keyboardTypeInSearchBox(longQuery, true);
+        Expect.inputStyleMatches('white-space: pre-wrap;', true);
       });
 
-      scope('with custom #withoutSubmitButton', () => {
-        visitStandaloneSearchBox({
-          withoutSubmitButton: true,
-        });
+      scope('when the textarea is not in focus', () => {
+        const longQuery =
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+        visitStandaloneSearchBox({textarea: true});
 
-        Expect.displayInputSearchBox(true);
-        Expect.displaySearchButton(false);
-        Expect.displaySearchIcon(true);
-      });
-
-      scope('with custom #numberOfSuggestions', () => {
-        visitStandaloneSearchBox({
-          numberOfSuggestions: 1,
-        });
-
-        Expect.inputInitialized();
-        Actions.focusSearchBox();
-        cy.wait(InterceptAliases.QuerySuggestions).then(() => {
-          Expect.displaySuggestionList(true);
-          Expect.numberOfSuggestions(1);
-        });
-      });
-
-      scope('with custom #redirectUrl', () => {
-        const query = 'test';
-        visitStandaloneSearchBox({
-          redirectUrl: '/full-search-example',
-        });
-
-        Expect.inputInitialized();
-        Actions.typeInSearchBox(query);
-        Expect.displayClearButton(true);
-        Actions.submitSearch();
-        Expect.urlContains(
-          `/full-search-example#q=${encodeURIComponent(query)}`
-        );
-        Expect.logSearchFromLink(query);
-      });
-
-      scope('with custom #searchHub', () => {
-        const interceptAlias = '@qsWithSearchHub';
-        const searchHub = 'test-hub';
-        const requestParams = {searchHub};
-        visitStandaloneSearchBox({
-          searchHub,
-        });
-        interceptQuerySuggestWithParam(requestParams, interceptAlias);
-
-        Expect.inputInitialized();
-        Actions.focusSearchBox();
-
-        Expect.fetchQuerySuggestWithParams(requestParams, interceptAlias);
-      });
-
-      scope('with custom #pipeline', () => {
-        const interceptAlias = '@qsWithPipeline';
-        const pipeline = 'test-pipeline';
-        const requestParams = {pipeline};
-        visitStandaloneSearchBox({
-          pipeline,
-        });
-        interceptQuerySuggestWithParam(requestParams, interceptAlias);
-
-        Expect.inputInitialized();
-        Actions.focusSearchBox();
-
-        Expect.fetchQuerySuggestWithParams(requestParams, interceptAlias);
+        Expect.inputInitialized(true);
+        Actions.focusSearchBox(true);
+        Actions.keyboardTypeInSearchBox(longQuery, true);
+        Actions.blurSearchBox(true);
+        Expect.inputStyleMatches('white-space: no-wrap;', true);
       });
     });
   });

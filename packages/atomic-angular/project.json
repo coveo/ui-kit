@@ -7,7 +7,7 @@
   "targets": {
     "cached:build": {
       "outputs": ["{projectRoot}/projects/atomic-angular/dist"],
-      "dependsOn": ["^build", "clean"],
+      "dependsOn": ["^build"],
       "executor": "nx:run-commands",
       "options": {
         "commands": ["npm run build:bundles", "npm run build:assets"],
@@ -34,7 +34,7 @@
           "npm link ../../../../../node_modules/@coveo/release",
           "npx -p=@coveo/release npm-publish"
         ],
-        "parallel": true,
+        "parallel": false,
         "cwd": "packages/atomic-angular/projects/atomic-angular/dist"
       }
     }
