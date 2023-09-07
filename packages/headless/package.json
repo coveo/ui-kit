@@ -22,7 +22,8 @@
     "product-listing/",
     "insight/",
     "case-assist/",
-    "ssr/"
+    "ssr/",
+    "commerce/"
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
