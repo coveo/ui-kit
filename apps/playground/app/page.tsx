@@ -5,7 +5,7 @@ import { useState } from "react";
 import styles from "./styles.module.css";
 import { EventDropdown } from "./validator/event-dropdown";
 import { Report } from "./validator/report";
-import { getEvents } from "./events";
+import { events } from "./events";
 
 export default function Page() {
   const { validate } = createRelay({
@@ -19,7 +19,6 @@ export default function Page() {
     return JSON.stringify(obj, null, 2);
   }
 
-  const events = getEvents();
   const initialEvent = events[0];
 
   const [event, setEvent] = useState(initialEvent);

@@ -11,21 +11,59 @@ const itemMetadata = {
   url: "https://arealshop.ca/real-brand/item-1",
 };
 
+const product = {
+  productId: "a",
+  name: "ski",
+  price: 10,
+  sku: "ski-large",
+};
+
+const products = [
+  { product, quantity: 1 },
+  {
+    product: {
+      productId: "b",
+      name: "snowboard",
+      price: 10,
+      sku: "snowboard-large",
+    },
+    quantity: 2,
+  },
+];
+
+const ecCartAction: SampleEvent = {
+  type: "ecCartAction",
+  payload: {
+    action: "add",
+    currency: "EUR",
+    product,
+    quantity: 1,
+  },
+};
+
+const ecProductClick: SampleEvent = {
+  type: "ecProductClick",
+  payload: {
+    position: 1,
+    responseId: "c708f376-3eba-47a6-a7b7-7934fdd2f6cd",
+    currency: "CAD",
+    product,
+  },
+};
+
+const ecProductView: SampleEvent = {
+  type: "ecProductView",
+  payload: {
+    currency: "GBP",
+    product,
+  },
+};
+
 const ecPurchase: SampleEvent = {
   type: "ecPurchase",
   payload: {
     currency: "USD",
-    products: [
-      {
-        product: {
-          productId: "a",
-          name: "ski",
-          price: 10,
-          sku: "ski-large",
-        },
-        quantity: 1,
-      },
-    ],
+    products,
     transaction: {
       id: "1234",
       revenue: 12,
@@ -49,6 +87,11 @@ const itemView: SampleEvent = {
   },
 };
 
-export function getEvents(): SampleEvent[] {
-  return [ecPurchase, itemClick, itemView];
-}
+export const events: SampleEvent[] = [
+  ecCartAction,
+  ecProductClick,
+  ecProductView,
+  ecPurchase,
+  itemClick,
+  itemView,
+];
