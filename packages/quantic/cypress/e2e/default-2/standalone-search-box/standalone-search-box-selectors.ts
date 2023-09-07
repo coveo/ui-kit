@@ -3,7 +3,7 @@ import {ComponentSelector, CypressSelector} from '../../common-selectors';
 export const standaloneSearchBoxComponent = 'c-quantic-standalone-search-box';
 
 export interface StandaloneSearchBoxSelector extends ComponentSelector {
-  input: () => CypressSelector;
+  input: (textarea?: boolean) => CypressSelector;
   suggestionList: () => CypressSelector;
   clearButton: () => CypressSelector;
   searchIcon: () => CypressSelector;
@@ -12,7 +12,10 @@ export interface StandaloneSearchBoxSelector extends ComponentSelector {
 
 export const StandaloneSearchBoxSelectors: StandaloneSearchBoxSelector = {
   get: () => cy.get(standaloneSearchBoxComponent),
-  input: () => StandaloneSearchBoxSelectors.get().find('input[type="search"]'),
+  input: (textarea = false) =>
+    StandaloneSearchBoxSelectors.get().find(
+      textarea ? 'textarea[type="search"]' : 'input[type="search"]'
+    ),
   suggestionList: () =>
     StandaloneSearchBoxSelectors.get().find(
       'c-quantic-search-box-suggestions-list li'
