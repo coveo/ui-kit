@@ -1,3 +1,5 @@
+'use client';
+
 import SearchBoxCommon from '../../common/search-box';
 import {useSearchBox} from '../common/engine';
 

@@ -9,15 +9,12 @@ import {
 } from '@/src/app/react/common/engine';
 import {useEffect, useState, PropsWithChildren} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
-import ResultList from './result-list';
-import SearchBox from './search-box';
-import SearchParameters from './search-parameters';
 
 interface SearchPageProviderProps {
   ssrState: SearchSSRState;
 }
 
-function SearchPageProvider({
+export function SearchPageProvider({
   ssrState,
   children,
 }: PropsWithChildren<SearchPageProviderProps>) {
@@ -56,14 +53,4 @@ function SearchPageProvider({
       </SSRStateProvider>
     );
   }
-}
-
-export default function SearchPage({ssrState}: SearchPageProviderProps) {
-  return (
-    <SearchPageProvider ssrState={ssrState}>
-      <SearchParameters />
-      <SearchBox />
-      <ResultList />
-    </SearchPageProvider>
-  );
 }
