@@ -37,12 +37,12 @@ describe('commerce api client', () => {
       organizationId: organizationId,
       url: platformUrl,
       trackingId: trackingId,
+      language: req.language ?? '',
+      currency: req.currency ?? '',
       clientId: req.clientId ?? '',
       context: req.context ?? {
-        user: {userAgent: '', userIp: ''},
         view: {url: ''},
       },
-      locale: req.locale ?? '',
     });
 
     it('should call the platform endpoint with the correct arguments', async () => {
@@ -66,7 +66,8 @@ describe('commerce api client', () => {
         requestParams: {
           clientId: request.clientId,
           context: request.context,
-          locale: request.locale,
+          language: request.language,
+          currency: request.currency,
         },
       });
     });

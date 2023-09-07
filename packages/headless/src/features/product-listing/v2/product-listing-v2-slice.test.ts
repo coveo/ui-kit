@@ -16,7 +16,6 @@ describe('product-listing-v2-slice', () => {
   beforeEach(() => {
     state = getProductListingV2InitialState();
   });
-
   it('should have an initial state', () => {
     expect(productListingV2Reducer(undefined, {type: 'foo'})).toEqual(
       getProductListingV2InitialState()
@@ -57,7 +56,7 @@ describe('product-listing-v2-slice', () => {
       type: 'type',
     };
     const action = {
-      type: 'commerce/product-listing/fetch/rejected',
+      type: 'commerce/productListing/fetch/rejected',
       payload: err,
     };
     const finalState = productListingV2Reducer(state, action);

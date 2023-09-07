@@ -7,6 +7,8 @@ import {
 
 /**
  * The commerce engine configuration options.
+ *
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngineConfiguration extends EngineConfiguration {}
 

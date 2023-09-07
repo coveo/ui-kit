@@ -28,6 +28,8 @@ type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &
 
 /**
  * The engine for powering commerce experiences.
+ *
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngine<
@@ -37,6 +39,8 @@ export interface CommerceEngine<State extends object = {}>
 
 /**
  * The commerce engine options.
+ *
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngineOptions
   extends ExternalEngineOptions<CommerceEngineState> {
@@ -51,6 +55,7 @@ export interface CommerceEngineOptions
  *
  * @param options - The commerce engine options.
  * @returns A commerce engine instance.
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export function buildCommerceEngine(
   options: CommerceEngineOptions

@@ -3,29 +3,79 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["cached:build:stencil"]
+        "cacheableOperations": ["cached:build", "cached:build:stencil"]
       }
     }
   },
   "plugins": ["@coveo/nx-plugin"],
   "namedInputs": {
-    "sharedGlobals": [{"runtime": "node -v"}],
-    "sharedTypescriptSources": [
+    "sharedGlobals": [
+      {
+        "runtime": "node -v"
+      }
+    ],
+    "commonConfigTypescript": [
       "{workspaceRoot}/tsconfig.json",
       "{projectRoot}/tsconfig.json",
-      "{projectRoot}/src/**",
-      "!{projectRoot}/src/**/?(*.)+({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})"
+      "{projectRoot}/tsconfig.*.json"
     ],
+    "commonScripts": [
+      "{projectRoot}/.env",
+      "{projectRoot}/*.m?js",
+      "{projectRoot}/*.ts",
+      "{projectRoot}/scripts/**"
+    ],
+    "negativeCommonNonProduction": [
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/.gitignore",
+      "!{projectRoot}/.editorconfig",
+      "!{projectRoot}/.lint-staged.config.js",
+      "!{projectRoot}/jest.{config,setup}.js",
+      "!{projectRoot}/cypress.config.ts",
+      "!{projectRoot}/cypress",
+      "!{projectRoot}/.vscode",
+      "!{projectRoot}/*.md",
+      "!{projectRoot}/*.tsbuildinfo",
+      "!{projectRoot}/LICENSE",
+      "!{projectRoot}/**/?(*.)+({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})"
+    ],
+    "negativeBuildOutputs": [
+      "!{projectRoot}/dist",
+      "!{projectRoot}/www",
+      "!{projectRoot}/temp",
+      "!{projectRoot}/build",
+      "!{projectRoot}/.angular",
+      "!{projectRoot}/.next",
+      "!{projectRoot}/next-env.d.ts"
+    ],
+    "negativeNonBuildOutputs": [],
+    "buildInputs": ["{projectRoot}/**"],
     "production": [
       "sharedGlobals",
-      "{projectRoot}/**",
-      "!{projectRoot}/**/?(*.)+({{spec.{ts,tsx},spec.{ts,tsx}.snap},{?(*([^.]).)stories.{tsx,css},mdx}})",
-      "!{projectRoot}/{dist,www,temp}/**"
+      "commonConfigTypescript",
+      "commonScripts",
+      "buildInputs",
+      "negativeNonBuildOutputs",
+      "negativeBuildOutputs",
+      "negativeCommonNonProduction"
     ]
   },
   "targetDefaults": {
     "build": {
       "inputs": ["^production", "production"],
+      "dependsOn": ["^build"]
+    },
+    "cached:build": {
+      "inputs": ["^production", "production"],
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/www",
+        "{projectRoot}/temp",
+        "{projectRoot}/build",
+        "{projectRoot}/.angular",
+        "{projectRoot}/.next",
+        "{projectRoot}/next-env.d.ts"
+      ],
       "dependsOn": ["^build"]
     },
     "dev": {
@@ -58,5 +108,6 @@
       "dependsOn": ["release:build", "release:phase1"]
     }
   },
-  "defaultBase": "master"
+  "defaultBase": "master",
+  "$schema": "./node_modules/nx/schemas/nx-schema.json"
 }

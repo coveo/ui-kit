@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/build
       - uses: ./.github/actions/commit-generated-files
   lint-check:
     name: 'Check with linter'

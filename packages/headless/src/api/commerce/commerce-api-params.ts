@@ -7,8 +7,12 @@ export interface TrackingIdParam {
   trackingId: string;
 }
 
-export interface LocaleParam {
-  locale: string;
+export interface LanguageParam {
+  language: string;
+}
+
+export interface CurrencyParam {
+  currency: string;
 }
 
 export interface ClientIdParam {
@@ -16,38 +20,38 @@ export interface ClientIdParam {
 }
 
 export interface ContextParam {
-  context: ContextParameters;
+  context: ContextParams;
 }
 
-export interface ContextParameters {
-  user: UserParameters;
-  view: ViewParameters;
-  cart?: CartProductParameters[];
+export interface ContextParams {
+  view: ViewParams;
+  user?: UserParams;
+  cart?: CartParams[];
+  labels?: Record<string, string>;
 }
 
-export interface UserParameters {
-  userAgent: string;
-  userIp: string;
+export interface ViewParams {
+  url: string;
+}
+
+export interface UserParams {
+  userAgent?: string;
+  userIp?: string;
   email?: string;
   userId?: string;
 }
 
-export interface ViewParameters {
-  url: string;
-  labels?: Record<string, string>;
-}
-
-export interface CartProductParameters {
+export interface CartParams {
   groupId?: string;
   productId?: string;
   sku?: string;
 }
 
 export interface SelectedFacetsParam {
-  selectedFacets?: SelectedFacetParameters[];
+  selectedFacets?: SelectedFacetParams[];
 }
 
-export interface SelectedFacetParameters
+export interface SelectedFacetParams
   extends Pick<AnyFacetRequest, 'field' | 'type' | 'facetId'> {
   values?: (FacetValueRequest | RangeValueRequest)[];
 }
