@@ -14,4 +14,5 @@ export const {
   CSRProvider,
 } = engineDefinition;
 
-export const {useResultList, useSearchBox} = engineDefinition.controllers;
+export const {useResultList, useSearchBox, useSearchParameters} =
+  engineDefinition.controllers;

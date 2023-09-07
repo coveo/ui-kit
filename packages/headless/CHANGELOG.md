@@ -1,3 +1,9 @@
+## 2.30.1 (2023-09-06)
+
+### Features
+
+- **headless:** added defineSearchParametersManager SSR controller ([#3117](https://github.com/coveo/ui-kit/issues/3117)) ([99cca68](https://github.com/coveo/ui-kit/commits/99cca6864d94cbd53b9f60d4b049976b6f6a6981))
+
 # 2.29.0 (2023-08-30)
 
 ### Bug Fixes

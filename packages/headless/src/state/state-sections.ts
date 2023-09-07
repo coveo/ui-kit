@@ -29,6 +29,7 @@ import {InsightInterfaceState} from '../features/insight-interface/insight-inter
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {PaginationState} from '../features/pagination/pagination-state';
 import {ProductListingState} from '../features/product-listing/product-listing-state';
+import {ProductListingV2State} from '../features/product-listing/v2/product-listing-v2-state';
 import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
 import {QuerySetState} from '../features/query-set/query-set-state';
 import {QuerySuggestSet} from '../features/query-suggest/query-suggest-state';
@@ -284,6 +285,13 @@ export interface ProductListingSection {
    * The information related to the product listing endpoint.
    */
   productListing: ProductListingState;
+}
+
+export interface ProductListingV2Section {
+  /**
+   * The information related to the product listing endpoint.
+   */
+  productListing: ProductListingV2State;
 }
 
 export interface StructuredSortSection {

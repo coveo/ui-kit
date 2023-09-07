@@ -11,6 +11,7 @@ import {useEffect, useState, PropsWithChildren} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
 import ResultList from './result-list';
 import SearchBox from './search-box';
+import SearchParameters from './search-parameters';
 
 interface SearchPageProviderProps {
   ssrState: SearchSSRState;
@@ -25,7 +26,14 @@ function SearchPageProvider({
   );
 
   useEffect(() => {
-    hydrateInitialState(ssrState).then(({engine, controllers}) => {
+    hydrateInitialState({
+      searchFulfilledAction: ssrState.searchFulfilledAction,
+      controllers: {
+        searchParameters: {
+          initialState: ssrState.controllers.searchParameters.state,
+        },
+      },
+    }).then(({engine, controllers}) => {
       setCSRResult({engine, controllers});
     });
   }, [ssrState]);
@@ -53,6 +61,7 @@ function SearchPageProvider({
 export default function SearchPage({ssrState}: SearchPageProviderProps) {
   return (
     <SearchPageProvider ssrState={ssrState}>
+      <SearchParameters />
       <SearchBox />
       <ResultList />
     </SearchPageProvider>

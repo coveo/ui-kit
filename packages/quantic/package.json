@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "2.30.4",
+  "version": "2.31.1",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -17,7 +17,7 @@
     "lint:fix:js": "eslint --fix force-app/main/default/lwc/ && eslint --fix force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --write",
     "lint:fix:apex": "prettier \"force-app/{,**}/*.{cls,trigger}\" --write",
     "build:staticresources": "node copy-static-resources.js",
-    "build": "npm run build:staticresources && npm run build:doc",
+    "build": "nx build",
     "dev": "npx rimraf .localdevserver && npm run build:staticresources && npm run dev:sfdx",
     "dev:sfdx": "sfdx force:source:deploy -p force-app/main && sfdx force:lightning:lwc:start --port 3334",
     "test:unit": "lwc-jest",
@@ -43,8 +43,8 @@
     "postinstall": "node scripts/npm/setup-quantic.js"
   },
   "dependencies": {
-    "@coveo/bueno": "0.43.7",
-    "@coveo/headless": "2.29.0"
+    "@coveo/bueno": "0.43.9",
+    "@coveo/headless": "2.30.1"
   },
   "engines": {
     "node": ">=14.0.0"

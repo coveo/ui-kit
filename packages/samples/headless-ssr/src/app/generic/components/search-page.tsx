@@ -7,6 +7,7 @@ import {
 } from '@/src/app/generic/common/engine';
 import {useEffect, useState} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
+import {useSyncSearchParameters} from '../hooks/search-parameters';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';
 
@@ -16,10 +17,22 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
   );
 
   useEffect(() => {
-    hydrateInitialState(ssrState).then(({engine, controllers}) => {
+    hydrateInitialState({
+      searchFulfilledAction: ssrState.searchFulfilledAction,
+      controllers: {
+        searchParameters: {
+          initialState: ssrState.controllers.searchParameters.state,
+        },
+      },
+    }).then(({engine, controllers}) => {
       setCSRResult({engine, controllers});
     });
   }, [ssrState]);
+
+  useSyncSearchParameters({
+    ssrState: ssrState.controllers.searchParameters.state,
+    controller: csrResult?.controllers.searchParameters,
+  });
 
   return (
     <>

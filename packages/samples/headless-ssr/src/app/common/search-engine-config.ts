@@ -1,5 +1,9 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
-import {defineResultList, defineSearchBox} from '@coveo/headless/ssr';
+import {
+  defineResultList,
+  defineSearchBox,
+  defineSearchParameterManager,
+} from '@coveo/headless/ssr';
 
 export const config = {
   configuration: {
@@ -9,5 +13,6 @@ export const config = {
   controllers: {
     searchBox: defineSearchBox(),
     resultList: defineResultList(),
+    searchParameters: defineSearchParameterManager(),
   },
 };

@@ -41,7 +41,7 @@ jobs:
               run_id: context.runId
             })
       - name: Setup
-        uses: ./.github/actions/setup
+        uses: ./.github/actions/build
       - name: Create package version
         working-directory: ./packages/quantic
         run: |

@@ -12,9 +12,8 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npm run e2e'
-        working-directory: ./packages/samples/headless-ssr
-        start: npm run prod
+        command-prefix: 'npm run -w @coveo/headless-ssr-samples e2e'
+        start: npx nx run headless-ssr-samples:prod
         wait-on: 'http://localhost:3000'
         install: false
         record: false
