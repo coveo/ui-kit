@@ -1,4 +1,5 @@
 import {InterceptAliases} from '../../../page-objects/search';
+import {getAnalyticsBodyFromInterception} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {
   SmartSnippetSelector,
@@ -130,7 +131,7 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
       const {title, uri, permanentId} = document;
       cy.wait(InterceptAliases.UA.OpenSmartSnippetSource)
         .then((interception) => {
-          const analyticsBody = interception.request.body;
+          const analyticsBody = getAnalyticsBodyFromInterception(interception);
           const customData = analyticsBody?.customData;
           expect(analyticsBody).to.have.property('documentTitle', title);
           expect(analyticsBody).to.have.property('documentUri', uri);
@@ -152,7 +153,7 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
       const {linkUrl, linkText, title, uri, permanentId} = document;
       cy.wait(InterceptAliases.UA.OpenSmartSnippetInlineLink)
         .then((interception) => {
-          const analyticsBody = interception.request.body;
+          const analyticsBody = getAnalyticsBodyFromInterception(interception);
           const customData = analyticsBody?.customData;
           expect(analyticsBody).to.have.property('documentTitle', title);
           expect(analyticsBody).to.have.property('documentUri', uri);
@@ -192,7 +193,7 @@ function smartSnippetExpectations(selector: SmartSnippetSelector) {
     }) => {
       cy.wait(InterceptAliases.UA.SendSmartSnippetReason)
         .then((interception) => {
-          const analyticsBody = interception.request.body;
+          const analyticsBody = getAnalyticsBodyFromInterception(interception);
           const customData = analyticsBody?.customData;
           expect(analyticsBody).to.have.property('eventType', 'smartSnippet');
           expect(customData).to.have.property('reason', payload.reason);

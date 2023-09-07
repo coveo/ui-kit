@@ -1,51 +1,43 @@
 name: 'Setup & build'
 description: 'Setup node, install dependencies & build'
+inputs:
+  load-cache:
+    description: "Whether to restore the Nx cache."
+    required: false
+    default: 'true'
 runs:
   using: composite
   steps:
     - uses: actions/setup-node@v3
       with:
         node-version-file: '.nvmrc'
+    - name: Ensure Nx cache can be shared between different CI environments # Source: https://nx.dev/recipes/troubleshooting/unknown-local-cache
+      run: echo "NX_REJECT_UNKNOWN_LOCAL_CACHE=0" >> $GITHUB_ENV
+      shell: bash
     - name: Install npm
       run: npm i -g npm@9
       shell: bash
     - uses: actions/cache@v3
-      id: build-cache
+      id: npm-cache
       with:
         path: |
-          packages/bueno/dist
-          packages/headless/dist
-          packages/auth/dist
-          packages/atomic/dist
-          packages/atomic/docs
-          packages/atomic/loader
-          packages/atomic/www
-          packages/atomic/src/components/search/atomic-search-interface/lang/
-          packages/atomic/src/external-builds/
-          packages/atomic/src/generated/
-          packages/quantic/docs/out
-          packages/atomic-react/dist
-          packages/atomic-hosted-page/dist
-          packages/atomic-angular/projects/atomic-angular/dist
-          packages/samples/headless-react
-          packages/samples/iife/www/cdn
-          packages/samples/headless-ssr/.next
-          packages/quantic/force-app/main/default/staticresources/coveoheadless
-          packages/quantic/force-app/main/default/staticresources/coveobueno
-          utils/atomic-storybook/storybook-static
-          !node_modules
-          !**/node_modules
-        key: ${{ github.sha }}
-    - uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: npm-${{ hashFiles('**/package-lock.json') }}
+          **/node_modules/
+          !node_modules/.cache/nx/
+        key: npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
     - uses: actions/cache@v3
       with:
         path: ~/.cache/Cypress
-        key: cy-${{ hashFiles('**/package-lock.json') }}
-    - run: npm ci
+        key: cy-${{ hashFiles('package-lock.json') }}-${{ hashFiles('utils/atomic-storybook/package-lock.json') }}
+    - if: inputs.load-cache == 'true'
+      uses: actions/cache/restore@v3
+      id: nx-cache
+      with:
+        path: node_modules/.cache/nx
+        key: nx-${{ github.sha }}
+        fail-on-cache-miss: true
+    - if: steps.npm-cache.outputs.cache-hit != 'true'
+      run: npm ci
       shell: bash
-    - if: steps.build-cache.outputs.cache-hit != 'true'
+    - if: steps.nx-cache.outputs.cache-hit != 'true'
       run: npm run build
       shell: bash

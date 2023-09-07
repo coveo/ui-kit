@@ -1,6 +1,6 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {CoreEngine} from '../../../app/engine';
-import {partitionIntoParentsAndValues} from '../../../features/facets/category-facet-set/category-facet-utils';
+import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {getQueryInitialState} from '../../../features/query/query-state';
@@ -222,9 +222,7 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
   const cf = Object.entries(state.categoryFacetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
     .map(([facetId, slice]) => {
-      const {parents} = partitionIntoParentsAndValues(
-        slice.request.currentValues
-      );
+      const parents = findActiveValueAncestry(slice.request.currentValues);
       const selectedValues = parents.map((p) => p.value);
 
       return selectedValues.length ? {[facetId]: selectedValues} : {};

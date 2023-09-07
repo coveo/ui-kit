@@ -1,26 +1,25 @@
-import {ProductListingAPIErrorStatusResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-api-client';
-import {Context} from '../../../api/commerce/product-listings/v2/product-listing-v2-params';
-import {Mode} from '../../../api/commerce/product-listings/v2/product-listing-v2-params';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
+import {ContextParams} from '../../../api/commerce/commerce-api-params';
 import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
 import {AnyFacetResponse} from '../../facets/generic/interfaces/generic-facet-response';
 
 export interface ProductListingV2State {
   trackingId: string;
-  locale: string;
-  mode: Mode;
+  language: string;
+  currency: string;
   clientId: string;
-  error: ProductListingAPIErrorStatusResponse | null;
+  error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
   products: ProductRecommendation[];
   facets: AnyFacetResponse[];
-  context: Context;
+  context: ContextParams;
 }
 
 export const getProductListingV2InitialState = (): ProductListingV2State => ({
   trackingId: '',
-  locale: '',
-  mode: Mode.Live,
+  language: '',
+  currency: '',
   clientId: '',
   error: null,
   isLoading: false,
@@ -28,13 +27,8 @@ export const getProductListingV2InitialState = (): ProductListingV2State => ({
   products: [],
   facets: [],
   context: {
-    user: {
-      userIp: '',
-      userAgent: '',
-    },
     view: {
       url: '',
     },
-    cart: [],
   },
 });

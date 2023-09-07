@@ -1,12 +1,10 @@
 import 'cypress-web-vitals';
-import {ConsoleAliases, spyOnConsole, waitForHydration} from './ssr-e2e-utils';
-
-const getResultTitles = () =>
-  (
-    cy.get('.result-list li').invoke('map', function (this: HTMLElement) {
-      return this.innerText;
-    }) as Cypress.Chainable<JQuery<string>>
-  ).invoke('toArray');
+import {
+  ConsoleAliases,
+  getResultTitles,
+  spyOnConsole,
+  waitForHydration,
+} from './ssr-e2e-utils';
 
 describe('headless ssr example', () => {
   const route = '/generic';

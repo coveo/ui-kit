@@ -12,7 +12,6 @@ import {
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
   AriaLiveRegion,
-  FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
 import {
@@ -209,14 +208,11 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({mutable: true})
   public customSort: string[] | string = '[]';
 
-  @FocusTarget()
-  private showLessFocus!: FocusTargetController;
+  private showLessFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private showMoreFocus!: FocusTargetController;
+  private showMoreFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private headerFocus!: FocusTargetController;
+  private headerFocus?: FocusTargetController;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
@@ -252,6 +248,28 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
+  private get focusTargets(): {
+    showLess: FocusTargetController;
+    showMore: FocusTargetController;
+    header: FocusTargetController;
+  } {
+    if (!this.showLessFocus) {
+      this.showLessFocus = new FocusTargetController(this);
+    }
+    if (!this.showMoreFocus) {
+      this.showMoreFocus = new FocusTargetController(this);
+    }
+    if (!this.headerFocus) {
+      this.headerFocus = new FocusTargetController(this);
+    }
+
+    return {
+      showLess: this.showLessFocus,
+      showMore: this.showMoreFocus,
+      header: this.headerFocus,
+    };
+  }
+
   public disconnectedCallback() {
     this.facetCommon?.disconnectedCallback();
   }
@@ -285,10 +303,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
       numberOfValues: this.numberOfValues,
-      headerFocus: this.headerFocus,
-      showLessFocus: this.showLessFocus,
-      showMoreFocus: this.showMoreFocus,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
+      headerFocus: this.focusTargets.header,
+      showLessFocus: this.focusTargets.showLess,
+      showMoreFocus: this.focusTargets.showMore,
     });
   }
 

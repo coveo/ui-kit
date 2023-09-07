@@ -1,8 +1,8 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkProductListingV2Options} from '../../../api/commerce/product-listings/v2/product-listing-v2-api-client';
+import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {productListingV2Reducer as productListing} from '../../../features/product-listing/v2/product-listing-v2-slice';
-import {ProductListingAction} from '../../analytics/analytics-utils';
+import {ProductListingV2Action} from '../../analytics/analytics-utils';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -13,7 +13,7 @@ import {
   LogFacetDeselectActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
-} from '../../facets/facet-set/facet-set-product-listing-analytics-actions';
+} from '../../facets/facet-set/facet-set-product-listing-v2-analytics-actions';
 import {
   FetchProductListingV2ThunkReturn,
   fetchProductListing,
@@ -22,6 +22,8 @@ import {
 
 /**
  * The product listing action creators.
+ *
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface ProductListingActionCreators {
   /**
@@ -32,7 +34,7 @@ export interface ProductListingActionCreators {
   fetchProductListing(): AsyncThunkAction<
     FetchProductListingV2ThunkReturn,
     void,
-    AsyncThunkProductListingV2Options<StateNeededByFetchProductListingV2>
+    AsyncThunkCommerceOptions<StateNeededByFetchProductListingV2>
   >;
 }
 
@@ -41,6 +43,7 @@ export interface ProductListingActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export function loadProductListingActions(
   engine: CommerceEngine
@@ -54,6 +57,8 @@ export function loadProductListingActions(
 
 /**
  * The product listing analytics action creators.
+ *
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface ProductListingAnalyticsActionCreators {
   /**
@@ -62,7 +67,7 @@ export interface ProductListingAnalyticsActionCreators {
    * @param facetId - The facet ID.
    * @returns A dispatchable action.
    */
-  logFacetClearAll(facetId: string): ProductListingAction;
+  logFacetClearAll(facetId: string): ProductListingV2Action;
 
   /**
    * The event to log when a selected facet value is deselected.
@@ -72,7 +77,7 @@ export interface ProductListingAnalyticsActionCreators {
    */
   logFacetDeselect(
     payload: LogFacetDeselectActionCreatorPayload
-  ): ProductListingAction;
+  ): ProductListingV2Action;
 
   /**
    * The event to log when an idle facet value is selected.
@@ -82,7 +87,7 @@ export interface ProductListingAnalyticsActionCreators {
    */
   logFacetSelect(
     payload: LogFacetSelectActionCreatorPayload
-  ): ProductListingAction;
+  ): ProductListingV2Action;
 
   /**
    * The event to log when collapsing a facet to show fewer values.
@@ -90,7 +95,7 @@ export interface ProductListingAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetShowLess(facetId: string): ProductListingAction;
+  logFacetShowLess(facetId: string): ProductListingV2Action;
 
   /**
    * The event to log when expanding a facet to show more values.
@@ -98,7 +103,7 @@ export interface ProductListingAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetShowMore(facetId: string): ProductListingAction;
+  logFacetShowMore(facetId: string): ProductListingV2Action;
 
   /**
    * The event to log when the facet sort criterion is changed.
@@ -108,7 +113,7 @@ export interface ProductListingAnalyticsActionCreators {
    */
   logFacetUpdateSort(
     payload: LogFacetUpdateSortActionCreatorPayload
-  ): ProductListingAction;
+  ): ProductListingV2Action;
 }
 
 /**
@@ -116,6 +121,7 @@ export interface ProductListingAnalyticsActionCreators {
  *
  * @param engine - The product listing engine.
  * @returns An object holding the action creators.
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export function loadProductListingAnalyticsActions(
   engine: CommerceEngine

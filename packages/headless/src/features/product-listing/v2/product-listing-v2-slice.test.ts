@@ -41,7 +41,10 @@ describe('product-listing-v2-slice', () => {
       statusCode: 500,
       type: 'type',
     };
-    const action = {type: 'productlisting/v2/fetch/rejected', payload: err};
+    const action = {
+      type: 'commerce/productListing/fetch/rejected',
+      payload: err,
+    };
     const finalState = productListingV2Reducer(state, action);
     expect(finalState.error).toEqual(err);
     expect(finalState.isLoading).toBe(false);
@@ -58,7 +61,7 @@ describe('product-listing-v2-slice', () => {
     expect(finalState.error).toBeNull();
   });
 
-  it('set the isLoading state to true during getProductRecommendations.pending', () => {
+  it('set the isLoading state to true during fetchProductListing.pending', () => {
     const pendingAction = fetchProductListing.pending('');
     const finalState = productListingV2Reducer(state, pendingAction);
     expect(finalState.isLoading).toBe(true);

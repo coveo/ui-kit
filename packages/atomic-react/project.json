@@ -1,1 +1,19 @@
-{}
+{
+  "name": "atomic-react",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "cached:build": {
+      "dependsOn": ["^build", "clean"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run build:bundles", "npm run build:assets"],
+        "parallel": false,
+        "cwd": "packages/atomic-react"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
+}

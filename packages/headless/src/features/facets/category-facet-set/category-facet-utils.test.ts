@@ -1,57 +1,58 @@
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {getActiveValueFromValueTree} from './category-facet-utils';
+import {findActiveValueAncestry} from './category-facet-utils';
 import {CategoryFacetValue} from './interfaces/response';
 
-describe('#getActiveValueFromValueTree', () => {
-  it("should return undefined if there's no selected values", () => {
-    expect(getActiveValueFromValueTree([])).toBeUndefined();
+describe('#findActiveValueAncestry', () => {
+  it("should return an empty array if there's no selected values", () => {
+    expect(findActiveValueAncestry([])).toEqual([]);
   });
 
-  it.each([
-    {
-      caseName: 'doubleRootValues',
-      getValues: (expectedValue: CategoryFacetValue) => [
-        expectedValue,
-        buildMockCategoryFacetValue({state: 'selected'}),
-      ],
-    },
-    {
-      caseName: 'rootAndNestedValues',
-      getValues: (expectedValue: CategoryFacetValue) => [
-        buildMockCategoryFacetValue({children: [expectedValue]}),
-        buildMockCategoryFacetValue({state: 'selected'}),
-      ],
-    },
-    {
-      caseName: 'doubleNestedValues',
-      getValues: (expectedValue: CategoryFacetValue) => [
-        buildMockCategoryFacetValue({children: [expectedValue]}),
-        buildMockCategoryFacetValue({
-          children: [buildMockCategoryFacetValue({state: 'selected'})],
-        }),
-      ],
-    },
-    {
-      caseName: 'singleNestedValue',
-      getValues: (expectedValue: CategoryFacetValue) => [
-        buildMockCategoryFacetValue({children: [expectedValue]}),
-      ],
-    },
-    {
-      caseName: 'singleRootValue',
-      getValues: (expectedValue: CategoryFacetValue) => [expectedValue],
-    },
-  ])(
-    'should return the first selected values found while doing a depth first search - $caseName',
-    ({getValues}) => {
-      const expectedValues = buildMockCategoryFacetValue({
-        state: 'selected',
-        value: 'A',
-      });
+  describe('when there is a value selected', () => {
+    const selectedValue = buildMockCategoryFacetValue({
+      state: 'selected',
+      value: 'A',
+    });
+    const notAncestorValue = buildMockCategoryFacetValue();
 
-      const values: CategoryFacetValue[] = getValues(expectedValues);
+    const buildAncestor = (children: CategoryFacetValue[]) => {
+      return buildMockCategoryFacetValue({children});
+    };
 
-      expect(getActiveValueFromValueTree(values)).toBe(expectedValues);
-    }
-  );
+    const hierarchicalTestCases = [
+      () => [notAncestorValue, buildAncestor([selectedValue])],
+      () => [buildAncestor([notAncestorValue, selectedValue])],
+      () => [
+        buildAncestor([
+          notAncestorValue,
+          buildAncestor([selectedValue, notAncestorValue]),
+        ]),
+      ],
+    ];
+
+    it('should return an array containing only the selected Value if the selected value is at the root', () => {
+      expect(findActiveValueAncestry([selectedValue])).toEqual([selectedValue]);
+    });
+
+    it.each(hierarchicalTestCases)(
+      'should return an array containing the selected value whole ancestry',
+      (generateValues) => {
+        expect(findActiveValueAncestry(generateValues())).not.toContain(
+          notAncestorValue
+        );
+      }
+    );
+
+    it.each(hierarchicalTestCases)(
+      'should return an array containing the ancestors in order, from the root to the selected value',
+      (generateValue) => {
+        const ancestry = findActiveValueAncestry(generateValue());
+
+        expect(ancestry.pop()).toBe(selectedValue);
+        expect(ancestry[ancestry.length - 1].children).toContain(selectedValue);
+        for (let i = 0; i < ancestry.length - 2; i++) {
+          expect(ancestry[i].children).toContain(ancestry[i + 1]);
+        }
+      }
+    );
+  });
 });

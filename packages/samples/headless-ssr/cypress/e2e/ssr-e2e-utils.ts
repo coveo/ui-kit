@@ -15,3 +15,10 @@ export function spyOnConsole() {
 export function waitForHydration() {
   cy.get('#hydrated-indicator').should('be.checked');
 }
+
+export const getResultTitles = () =>
+  (
+    cy.get('.result-list li').invoke('map', function (this: HTMLElement) {
+      return this.innerText;
+    }) as Cypress.Chainable<JQuery<string>>
+  ).invoke('toArray');

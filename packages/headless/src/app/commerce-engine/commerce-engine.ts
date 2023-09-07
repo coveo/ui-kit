@@ -1,9 +1,10 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {ProductListingAPIClient} from '../../api/commerce/product-listings/v2/product-listing-v2-api-client';
+import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {productListingV2Reducer} from '../../features/product-listing/v2/product-listing-v2-slice';
-import {ProductListingV2AppState} from '../../state/commerce-app-state';
+import {CommerceAppState} from '../../state/commerce-app-state';
+import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {
   buildEngine,
   CoreEngine,
@@ -11,7 +12,6 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {ProductListingV2ThunkExtraArguments} from '../product-listing-v2-thunk-extra-arguments';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   CommerceEngineConfiguration,
@@ -24,19 +24,23 @@ const commerceEngineReducers = {productListing: productListingV2Reducer};
 type CommerceEngineReducers = typeof commerceEngineReducers;
 
 type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &
-  Partial<ProductListingV2AppState>;
+  Partial<CommerceAppState>;
 
 /**
  * The engine for powering commerce experiences.
+ *
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngine<State extends object = {}>
   extends CoreEngine<
     State & CommerceEngineState,
-    ProductListingV2ThunkExtraArguments
+    CommerceThunkExtraArguments
   > {}
 
 /**
  * The commerce engine options.
+ *
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export interface CommerceEngineOptions
   extends ExternalEngineOptions<CommerceEngineState> {
@@ -51,6 +55,7 @@ export interface CommerceEngineOptions
  *
  * @param options - The commerce engine options.
  * @returns A commerce engine instance.
+ * @internal WORK IN PROGRESS. DO NOT USE IN ACTUAL IMPLEMENTATIONS.
  */
 export function buildCommerceEngine(
   options: CommerceEngineOptions
@@ -60,7 +65,7 @@ export function buildCommerceEngine(
 
   const commerceClient = createCommerceAPIClient(options.configuration, logger);
 
-  const thunkArguments: ProductListingV2ThunkExtraArguments = {
+  const thunkArguments: CommerceThunkExtraArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
     apiClient: commerceClient,
   };
@@ -88,7 +93,7 @@ function validateConfiguration(
   try {
     commerceEngineConfigurationSchema.validate(configuration);
   } catch (error) {
-    logger.error('Product Listing engine configuration error', error);
+    logger.error('Commerce engine configuration error', error);
     throw error;
   }
 }
@@ -97,7 +102,7 @@ function createCommerceAPIClient(
   configuration: CommerceEngineConfiguration,
   logger: Logger
 ) {
-  return new ProductListingAPIClient({
+  return new CommerceAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
   });

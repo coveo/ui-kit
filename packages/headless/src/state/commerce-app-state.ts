@@ -1,12 +1,8 @@
 import {
-  CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
-  ContextSection,
   DateFacetSection,
-  FacetOptionsSection,
   FacetOrderSection,
-  FacetSearchSection,
   FacetSection,
   NumericFacetSection,
   PaginationSection,
@@ -15,17 +11,13 @@ import {
   VersionSection,
 } from './state-sections';
 
-export type ProductListingV2AppState = ConfigurationSection &
+export type CommerceAppState = ConfigurationSection &
   ProductListingV2Section &
-  FacetSearchSection &
   FacetSection &
   NumericFacetSection &
   CategoryFacetSection &
-  CategoryFacetSearchSection &
   DateFacetSection &
-  FacetOptionsSection &
   FacetOrderSection &
   StructuredSortSection &
   PaginationSection &
-  VersionSection &
-  ContextSection;
+  VersionSection;

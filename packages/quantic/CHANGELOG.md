@@ -1,3 +1,17 @@
+## 2.31.1 (2023-09-06)
+
+### Features
+
+- **quantic:** Added the expandable textArea searchbox in Quantic ([#3144](https://github.com/coveo/ui-kit/issues/3144)) ([b22fcd6](https://github.com/coveo/ui-kit/commits/b22fcd60aa21a2471b1140b8d0ab1b9ccb40636a))
+
+## 2.30.4 (2023-08-30)
+
+### Bug Fixes
+
+- **headless:** bump coveo.analytics to fix click tracking issue on ios safari ([#3141](https://github.com/coveo/ui-kit/issues/3141)) ([402473f](https://github.com/coveo/ui-kit/commits/402473fe67709e70f27c1edfd92fa8e7227e07e7))
+- **quantic:** Added tooltips for quantic feedback component ([#3133](https://github.com/coveo/ui-kit/issues/3133)) ([3e74e77](https://github.com/coveo/ui-kit/commits/3e74e774123947622cda4483c098600f95025620))
+- **quantic:** Fixed the misalignment of 1px in citations titles ([#3131](https://github.com/coveo/ui-kit/issues/3131)) ([fec8cbf](https://github.com/coveo/ui-kit/commits/fec8cbfe76f985269d96e9daf1dfd8c0f9613089))
+
 ## 2.30.1 (2023-08-16)
 
 ### Bug Fixes

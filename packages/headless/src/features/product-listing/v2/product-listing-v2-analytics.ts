@@ -2,7 +2,7 @@ import {Schema} from '@coveo/bueno';
 import {DocumentIdentifier, PartialDocumentInformation} from 'coveo.analytics';
 import {CommerceAnalyticsProvider} from '../../../api/analytics/commerce-analytics';
 import {ProductRecommendation, Result} from '../../../product-listing.index';
-import {ProductListingV2AppState} from '../../../state/commerce-app-state';
+import {CommerceAppState} from '../../../state/commerce-app-state';
 import {
   AnalyticsType,
   makeAnalyticsAction,
@@ -13,7 +13,7 @@ import {
 
 export const logProductListingV2Load = (): ProductListingV2Action =>
   makeCommerceAnalyticsAction(
-    'analytics/commerce/product-listing/load',
+    'analytics/commerce/productListing/load',
     AnalyticsType.Search,
     (client) => client.makeInterfaceLoad(),
     (getState) => new CommerceAnalyticsProvider(getState)
@@ -23,7 +23,7 @@ export const logProductListingV2Open = (
   productRec: ProductRecommendation
 ): ProductListingV2Action<AnalyticsType.Click> =>
   makeAnalyticsAction(
-    'analytics/commerce/product-listing/open',
+    'analytics/commerce/productListing/open',
     AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(productRec);
@@ -80,7 +80,7 @@ const validateResultPayload = (productRecommendation: ProductRecommendation) =>
 
 const partialRecommendationInformation = (
   result: ProductRecommendation,
-  state: Partial<ProductListingV2AppState>
+  state: Partial<CommerceAppState>
 ): PartialDocumentInformation => {
   const resultIndex =
     state.productListing?.products.findIndex(

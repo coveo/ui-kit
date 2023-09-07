@@ -5,6 +5,7 @@ import {
   InferSSRState,
   InferCSRState,
   defineSearchBox,
+  defineSearchParameterManager,
 } from '@coveo/headless/ssr';
 
 const engineDefinition = defineSearchEngine({
@@ -15,6 +16,7 @@ const engineDefinition = defineSearchEngine({
   controllers: {
     searchBox: defineSearchBox(),
     resultList: defineResultList(),
+    searchParameters: defineSearchParameterManager(),
   },
 });
 
