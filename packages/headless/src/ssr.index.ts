@@ -9,13 +9,20 @@ export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
+  ControllerDefinitionsMap,
+  InferControllerFromDefinition,
+  InferControllersMapFromDefinition,
+  InferControllerSSRStateFromDefinition,
+  InferControllerSSRStateMapFromDefinitions,
 } from './app/ssr-engine/types/common';
+
+export type {SearchEngineDefinitionOptions} from './app/ssr-engine/types/search-engine';
+
 export type {
+  EngineDefinition,
   InferSSRState,
   InferCSRState,
 } from './app/ssr-engine/types/core-engine';
-
-export {defineSearchEngine} from './app/ssr-engine/ssr-engine';
 
 export type {
   SearchBox,
@@ -24,6 +31,7 @@ export type {
   SearchBoxState,
 } from './controllers/ssr/search-box/headless-ssr-search-box';
 export {defineSearchBox} from './controllers/ssr/search-box/headless-ssr-search-box';
+
 export type {
   ResultList,
   ResultListOptions,
@@ -39,3 +47,5 @@ export type {
   SearchParameterManagerState,
 } from './controllers/ssr/search-parameter-manager/headless-ssr-search-parameter-manager';
 export {defineSearchParameterManager} from './controllers/ssr/search-parameter-manager/headless-ssr-search-parameter-manager';
+
+export {defineSearchEngine} from './app/ssr-engine/ssr-engine';

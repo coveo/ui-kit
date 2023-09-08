@@ -3,6 +3,7 @@ import {
   ResultListState,
 } from '@coveo/headless';
 import {useEffect, useState, FunctionComponent} from 'react';
+import ResultListCommon from '../../common/result-list';
 
 interface ResultListProps {
   ssrState: ResultListState;
@@ -20,13 +21,5 @@ export const ResultList: FunctionComponent<ResultListProps> = ({
     [controller]
   );
 
-  return (
-    <ul className="result-list">
-      {state.results.map((result) => (
-        <li key={result.uniqueId}>
-          <h3>{result.title}</h3>
-        </li>
-      ))}
-    </ul>
-  );
+  return <ResultListCommon results={state.results} />;
 };

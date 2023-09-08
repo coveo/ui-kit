@@ -3,7 +3,7 @@ import {
   getResultTitles,
   spyOnConsole,
   waitForHydration,
-} from './ssr-e2e-utils';
+} from './utils';
 
 const searchStateKey = 'search-state';
 

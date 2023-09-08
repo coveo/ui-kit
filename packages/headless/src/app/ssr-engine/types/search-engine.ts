@@ -10,6 +10,9 @@ export type SearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
 > = EngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
 
+/**
+ * @internal
+ */
 export type SearchEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;

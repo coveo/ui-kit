@@ -1,18 +1,21 @@
 ## About
 
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-- It demonstrates usage of the `@coveo/headless/ssr` utils for Server-Side Rendering with headless.
-- Although NextJS is used to demonstrate usage for convenience, the utils are not specific to NextJS/React.
-<!-- TODO: Add note about react specific SSR utils once it is completed. -->
+- It demonstrates usage of the framework agnostic `@coveo/headless/ssr` and `@coveo/headless-react` utils for Server-Side Rendering with headless.
+- Although NextJS is used to demonstrate SSR usage for convenience, the utils are not specific to NextJS.
 
 ## Getting Started
 
-First, run the development server:
+- Run dev server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Run prod
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build && npm run start
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
