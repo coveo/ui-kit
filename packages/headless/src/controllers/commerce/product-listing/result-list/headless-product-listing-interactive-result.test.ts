@@ -10,7 +10,7 @@ import {buildMockProductRecommendation} from '../../../test/mock-product-recomme
 import {
   buildInteractiveResult,
   InteractiveResult,
-} from './headless-product-listing-v2-interactive-result';
+} from './headless-product-listing-interactive-result';
 
 describe('InteractiveResult', () => {
   let engine: MockCommerceEngine;
