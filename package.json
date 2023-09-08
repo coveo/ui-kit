@@ -86,6 +86,7 @@
     "packages/headless",
     "packages/atomic",
     "packages/quantic",
+    "packages/headless-react",
     "packages/atomic-hosted-page",
     "packages/atomic-react",
     "packages/atomic-angular",

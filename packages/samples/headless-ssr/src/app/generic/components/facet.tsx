@@ -1,6 +1,6 @@
 import {FacetState, Facet as FacetController} from '@coveo/headless';
 import {useEffect, useState, FunctionComponent} from 'react';
-import {FacetSearch} from './facet-search';
+import FacetCommon from '../../common/facet';
 
 interface FacetProps {
   title: string;
@@ -21,22 +21,20 @@ export const Facet: FunctionComponent<FacetProps> = ({
   );
 
   return (
-    <fieldset>
-      <legend>{title} facet</legend>
-      <FacetSearch ssrState={ssrState} controller={controller} />
-      <ul className="facet-values">
-        {state.values.map((value) => (
-          <li key={value.value}>
-            <input
-              type="checkbox"
-              checked={value.state === 'selected'}
-              onChange={() => controller?.toggleSelect(value)}
-              disabled={state.isLoading}
-            />
-            {value.value} ({value.numberOfResults} results)
-          </li>
-        ))}
-      </ul>
-    </fieldset>
+    <FacetCommon
+      title={title}
+      values={state.values}
+      facetSearchQuery={state.facetSearch.query}
+      facetSearchResults={state.facetSearch.values}
+      isLoading={state.isLoading}
+      onToggleValue={controller && ((value) => controller.toggleSelect(value))}
+      onUpdateSearchQuery={
+        controller && ((query) => controller.facetSearch.updateText(query))
+      }
+      onSubmitSearch={controller && (() => controller.facetSearch.search())}
+      onToggleSearchResult={
+        controller && ((result) => controller.facetSearch.select(result))
+      }
+    />
   );
 };

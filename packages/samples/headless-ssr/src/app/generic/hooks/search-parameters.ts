@@ -1,51 +1,28 @@
 'use client';
 
-import {SearchParameters} from '@coveo/headless';
 import {
   SearchParameterManager,
   SearchParameterManagerState,
 } from '@coveo/headless/ssr';
-import {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
-import {CoveoNextJsSearchParametersSerializer} from '../common/search-parameters-serializer';
+import {useEffect, useMemo, useState} from 'react';
+import {useHistoryRouter} from '../../common/search-parameters';
+import {CoveoNextJsSearchParametersSerializer} from '../../common/search-parameters-serializer';
 
 interface UseSyncSearchParametersProps {
   ssrState: SearchParameterManagerState;
   controller?: SearchParameterManager;
 }
 
-function getUrl() {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  return new URL(document.location.href);
-}
-
-function useUrlSearchParams() {
-  const [urlSearchParams, onUrlSearchParamsChanged] = useReducer(
-    () => getUrl()?.searchParams,
-    undefined as never
-  );
-  useEffect(() => {
-    window.addEventListener('popstate', onUrlSearchParamsChanged);
-    return () =>
-      window.removeEventListener('popstate', onUrlSearchParamsChanged);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return urlSearchParams;
-}
-
-function useCoveoSearchParameters(
-  initialParameters: SearchParameters,
-  controller?: SearchParameterManager
-) {
-  const [searchParameters, setSearchParameters] = useState(initialParameters);
+function useSearchParameters({
+  ssrState,
+  controller,
+}: UseSyncSearchParametersProps) {
+  const [searchParameters, setSearchParameters] = useState(ssrState);
   useEffect(() => {
     if (!controller) {
       return;
     }
-    return controller.subscribe(() =>
-      setSearchParameters(controller.state.parameters)
-    );
+    return controller.subscribe(() => setSearchParameters(controller.state));
   }, [controller]);
   return searchParameters;
 }
@@ -54,58 +31,44 @@ export function useSyncSearchParameters({
   ssrState,
   controller,
 }: UseSyncSearchParametersProps) {
-  const urlSearchParams = useUrlSearchParams();
-  const coveoSearchParameters = useCoveoSearchParameters(
-    ssrState.parameters,
-    controller
-  );
-  const urlFromCoveoSearchParameters = useMemo(() => {
-    const newUrl = getUrl();
-    if (!newUrl) {
-      return null;
-    }
-    CoveoNextJsSearchParametersSerializer.fromCoveoSearchParameters(
-      coveoSearchParameters
-    ).applyToUrlSearchParams(newUrl.searchParams);
-    return newUrl;
-  }, [coveoSearchParameters]);
+  const historyRouter = useHistoryRouter();
+  const state = useSearchParameters({ssrState, controller});
 
-  const updateCoveoSearchParameters = useCallback(
-    (coveoSearchParameters: SearchParameters) =>
-      controller?.synchronize(coveoSearchParameters),
-    [controller]
-  );
-  const updateUrlSearchParams = useCallback(
-    (options: {href: string; isInitialState: boolean}) =>
-      (options.isInitialState ? history.replaceState : history.pushState).call(
-        history,
-        null,
-        document.title,
-        options.href
-      ),
-    []
-  );
-
+  // Update the search interface.
   useEffect(
     () =>
-      urlSearchParams &&
-      updateCoveoSearchParameters(
+      controller &&
+      historyRouter.url?.searchParams &&
+      controller.synchronize(
         CoveoNextJsSearchParametersSerializer.fromClientSideUrlSearchParams(
-          urlSearchParams
+          historyRouter.url.searchParams
         ).coveoSearchParameters
       ),
-    [updateCoveoSearchParameters, urlSearchParams]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [historyRouter.url?.searchParams]
   );
+
+  // Update the URL.
+  const correctedUrl = useMemo(() => {
+    if (!historyRouter.url) {
+      return null;
+    }
+    const newURL = new URL(historyRouter.url);
+    CoveoNextJsSearchParametersSerializer.fromCoveoSearchParameters(
+      state.parameters
+    ).applyToUrlSearchParams(newURL.searchParams);
+    return newURL.href;
+  }, [historyRouter.url, state.parameters]);
   useEffect(() => {
-    if (!urlFromCoveoSearchParameters) {
+    if (!correctedUrl || correctedUrl === historyRouter.url?.href) {
       return;
     }
-    if (urlFromCoveoSearchParameters.href === document.location.href) {
-      return;
+    const isInitialState = controller === undefined;
+    if (isInitialState) {
+      historyRouter.replace(correctedUrl);
+    } else {
+      historyRouter.push(correctedUrl);
     }
-    updateUrlSearchParams({
-      isInitialState: !controller,
-      href: urlFromCoveoSearchParameters.href,
-    });
-  }, [updateUrlSearchParams, controller, urlFromCoveoSearchParameters]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [correctedUrl]);
 }

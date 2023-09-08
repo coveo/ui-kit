@@ -1,5 +1,5 @@
 import {FunctionComponent} from 'react';
-import {SearchCSRState, SearchSSRState} from '../common/engine';
+import {SearchCSRState, SearchSSRState} from '../generic/common/engine';
 
 export interface HydrationMetadataProps {
   ssrState: SearchSSRState;

@@ -6,9 +6,9 @@ import {
   hydrateInitialState,
 } from '@/src/app/generic/common/engine';
 import {useEffect, useState} from 'react';
+import {HydrationMetadata} from '../../common/hydration-metadata';
 import {useSyncSearchParameters} from '../hooks/search-parameters';
 import {Facet} from './facet';
-import {HydrationMetadata} from './hydration-metadata';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';
 
@@ -37,7 +37,6 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
 
   return (
     <>
-      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
       <SearchBox
         ssrState={ssrState.controllers.searchBox.state}
         controller={csrResult?.controllers.searchBox}
@@ -51,6 +50,7 @@ export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
         ssrState={ssrState.controllers.resultList.state}
         controller={csrResult?.controllers.resultList}
       />
+      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
     </>
   );
 }
