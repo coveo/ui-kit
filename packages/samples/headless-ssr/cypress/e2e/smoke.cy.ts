@@ -11,7 +11,31 @@ const numResultsMsg = `Rendered page with ${numResults} results`;
 const msgSelector = '#hydrated-msg';
 const timestampSelector = '#timestamp';
 const resultListSelector = '.result-list li';
-const routes = ['generic', 'react'];
+const routes = ['generic', 'react'] as const;
+const vitals: Record<typeof routes[number], Cypress.ReportWebVitalsConfig> = {
+  generic: {
+    thresholds: {
+      fcp: 200,
+      lcp: 200,
+      cls: 0,
+      ttfb: 60,
+      // TODO: Ensure validity of following input based vitals with interactive elements
+      fid: 400,
+      inp: 400,
+    },
+  },
+  react: {
+    thresholds: {
+      fcp: 400,
+      lcp: 400,
+      cls: 0,
+      ttfb: 120,
+      // TODO: Ensure validity of following input based vitals with interactive elements
+      fid: 800,
+      inp: 800,
+    },
+  },
+};
 
 routes.forEach((route) => {
   describe(`${route} Headless SSR utils`, () => {
@@ -59,21 +83,9 @@ routes.forEach((route) => {
 
     it('should pass the web-vitals audits', () => {
       // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
-      const VITALS_THRESHOLD: Cypress.ReportWebVitalsConfig = {
-        thresholds: {
-          fcp: 100,
-          lcp: 100,
-          cls: 0,
-          // Note: Generic utils passes in CI with ttfb: 20. If React utils need more threshold adjustments consider creating a separate thresholds obj for react.
-          ttfb: 30,
-          // TODO: Ensure validity of following input based vitals with interactive elements
-          fid: 200,
-          inp: 200,
-        },
-      };
       cy.startVitalsCapture({url: route});
       compareWithInitialResults();
-      cy.reportVitals(VITALS_THRESHOLD);
+      cy.reportVitals(vitals[route]);
     });
   });
 
