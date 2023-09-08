@@ -12,7 +12,7 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx -w @coveo/atomic cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        command-prefix: 'npx -w @coveo/atomic'
         config-file: cypress-insight-panel.config.ts
         start: npx nx run atomic:prod
         wait-on: 'http://localhost:3333'
