@@ -81,7 +81,7 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
   ...defaultInputProps
 }) => (
   <div class="grow flex overflow-hidden">
-    <div class="grow-wrap grow grid overflow-hidden">
+    <div part="textarea-expander" class="grow grid overflow-hidden">
       <textarea
         part="textarea"
         aria-label={ariaLabel}
@@ -119,8 +119,9 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
         }}
         onFocus={(e) => {
           onFocus?.(e);
-          syncTextWithReplica(textAreaRef);
-          expandTextArea(textAreaRef);
+          const target = e.target as HTMLTextAreaElement;
+          syncTextWithReplica(textAreaRef ?? target);
+          expandTextArea(textAreaRef ?? target);
         }}
         autocomplete="off"
         {...(popup && getPopupAttributes(popup))}
