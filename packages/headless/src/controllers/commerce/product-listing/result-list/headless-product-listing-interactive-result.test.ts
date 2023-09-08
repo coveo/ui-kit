@@ -1,12 +1,12 @@
-import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
-import {configuration} from '../../../app/common-reducers';
-import {logProductRecommendationOpen} from '../../../features/product-listing/product-listing-analytics';
-import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
+import {ProductRecommendation} from '../../../../api/search/search/product-recommendation';
+import {configuration} from '../../../../app/common-reducers';
+import {logProductRecommendationOpen} from '../../../../features/product-listing/product-listing-analytics';
+import {pushRecentResult} from '../../../../features/recent-results/recent-results-actions';
 import {
   buildMockCommerceEngine,
   MockCommerceEngine,
-} from '../../../test/mock-engine';
-import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
+} from '../../../../test/mock-engine';
+import {buildMockProductRecommendation} from '../../../../test/mock-product-recommendation';
 import {
   buildInteractiveResult,
   InteractiveResult,
