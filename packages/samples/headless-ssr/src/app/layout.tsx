@@ -1,6 +1,7 @@
 export const metadata = {
-  title: 'Headless SSR example',
-  description: 'Example of using @coveo/headless/ssr utils',
+  title: 'Headless SSR examples',
+  description:
+    'Examples of using framework agnostic @coveo/headless/ssr utils and @coveo/headless-react',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

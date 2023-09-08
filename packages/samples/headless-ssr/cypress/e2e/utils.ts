@@ -1,3 +1,6 @@
+const searchBoxSelector = '.search-box input';
+export const numResults = 10;
+
 export const ConsoleAliases = {
   error: '@consoleError',
   warn: '@consoleWarn',
@@ -16,9 +19,22 @@ export function waitForHydration() {
   cy.get('#hydrated-indicator').should('be.checked');
 }
 
-export const getResultTitles = () =>
-  (
+export function getResultTitles() {
+  return (
     cy.get('.result-list li').invoke('map', function (this: HTMLElement) {
       return this.innerText;
     }) as Cypress.Chainable<JQuery<string>>
   ).invoke('toArray');
+}
+
+export function compareWithInitialResults() {
+  getResultTitles().should('have.length', numResults).as('initial-results');
+  waitForHydration();
+  cy.get(searchBoxSelector).focus().type('abc{enter}');
+  cy.wait(1000);
+  cy.get<string>('@initial-results').then((initialResults) => {
+    getResultTitles()
+      .should('have.length', numResults)
+      .and('not.deep.equal', initialResults);
+  });
+}

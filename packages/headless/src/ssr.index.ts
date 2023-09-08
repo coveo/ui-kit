@@ -9,8 +9,15 @@ export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
+  ControllerDefinitionsMap,
+  InferControllerFromDefinition,
+  InferControllersMapFromDefinition,
+  InferControllerSSRStateFromDefinition,
+  InferControllerSSRStateMapFromDefinitions,
 } from './app/ssr-engine/types/common';
+
 export type {
+  EngineDefinition,
   InferSSRState,
   InferCSRState,
 } from './app/ssr-engine/types/core-engine';
