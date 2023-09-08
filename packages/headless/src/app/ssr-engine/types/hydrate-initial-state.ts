@@ -1,10 +1,6 @@
 import {AnyAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../engine';
-import {
-  ControllersMap,
-  ControllersPropsMap,
-  EngineAndControllers,
-} from './common';
+import {ControllersMap, ControllersPropsMap, HydratedState} from './common';
 
 export interface EngineDefinitionHydrateOptionsWithoutProps<
   TSearchFulfilledAction extends AnyAction
@@ -24,7 +20,7 @@ export type HydrateInitialStateWithoutProps<
    */
   hydrateInitialState(
     options: EngineDefinitionHydrateOptionsWithoutProps<TSearchFulfilledAction>
-  ): Promise<EngineAndControllers<TEngine, TControllers>>;
+  ): Promise<HydratedState<TEngine, TControllers>>;
 };
 
 export interface EngineDefinitionHydrateOptionsWithProps<
@@ -50,5 +46,5 @@ export type HydrateInitialStateWithProps<
       TSearchFulfilledAction,
       TControllersProps
     >
-  ): Promise<EngineAndControllers<TEngine, TControllers>>;
+  ): Promise<HydratedState<TEngine, TControllers>>;
 };

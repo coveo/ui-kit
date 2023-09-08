@@ -10,7 +10,7 @@ import {useContext, useCallback, useMemo, Context} from 'react';
 import React from 'react';
 import {useSyncMemoizedStore} from './client-utils';
 import {
-  ContextCSRState,
+  ContextHydratedState,
   ContextState,
   ControllerHook,
   InferControllerHooksMapFromDefinition,
@@ -20,7 +20,7 @@ import {SingletonGetter, capitalize, singleton, mapObject} from './utils';
 
 export class MissingEngineProviderError extends Error {
   static message =
-    'Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.';
+    'Unable to find Context. Please make sure you are wrapping your component with either `InitialStateProvider` or `CSRProvider` component that can provide the required context.';
   constructor() {
     super(MissingEngineProviderError.message);
   }
@@ -40,7 +40,7 @@ function isCSRContext<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 >(
   ctx: ContextState<TEngine, TControllers>
-): ctx is ContextCSRState<TEngine, TControllers> {
+): ctx is ContextHydratedState<TEngine, TControllers> {
   return 'engine' in ctx;
 }
 
@@ -64,8 +64,11 @@ function buildControllerHook<
         isCSRContext(ctx) ? ctx.controllers[key].subscribe(listener) : () => {},
       [ctx]
     );
-    const getSSRState = useCallback(() => ctx.controllers[key].state, [ctx]);
-    const state = useSyncMemoizedStore(subscribe, getSSRState);
+    const getInitialState = useCallback(
+      () => ctx.controllers[key].state,
+      [ctx]
+    );
+    const state = useSyncMemoizedStore(subscribe, getInitialState);
     const methods = useMemo(() => {
       if (!isCSRContext(ctx)) {
         return undefined;
@@ -108,7 +111,7 @@ export function defineSearchEngine<
           ])
         )
       : {}) as InferControllerHooksMapFromDefinition<TControllers>,
-    SSRStateProvider: ({controllers, children}) => {
+    InitialStateProvider: ({controllers, children}) => {
       const {Provider} = singletonContext.get();
       return <Provider value={{controllers}}>{children}</Provider>;
     },

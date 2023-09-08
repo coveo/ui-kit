@@ -26,7 +26,7 @@ describe('Headless react SSR utils', () => {
       build,
       useEngine,
       controllers,
-      SSRStateProvider,
+      InitialStateProvider,
       CSRProvider,
       ...rest
     } = defineSearchEngine({
@@ -38,7 +38,7 @@ describe('Headless react SSR utils', () => {
       hydrateInitialState,
       build,
       useEngine,
-      SSRStateProvider,
+      InitialStateProvider,
       CSRProvider,
     ].forEach((returnValue) => expect(typeof returnValue).toBe('function'));
 
@@ -68,7 +68,7 @@ describe('Headless react SSR utils', () => {
     const {
       fetchInitialState,
       hydrateInitialState,
-      SSRStateProvider,
+      InitialStateProvider,
       CSRProvider,
       controllers,
       useEngine,
@@ -121,19 +121,19 @@ describe('Headless react SSR utils', () => {
     });
 
     test('should render with SSRProvider', async () => {
-      const ssrState = await fetchInitialState();
+      const initialState = await fetchInitialState();
       render(
-        <SSRStateProvider controllers={ssrState.controllers}>
+        <InitialStateProvider controllers={initialState.controllers}>
           <TestResultList />
-        </SSRStateProvider>
+        </InitialStateProvider>
       );
 
       await checkRenderedResultList();
     });
 
     test('should hydrate results with CSRProvider', async () => {
-      const ssrState = await fetchInitialState();
-      const {engine, controllers} = await hydrateInitialState(ssrState);
+      const initialState = await fetchInitialState();
+      const {engine, controllers} = await hydrateInitialState(initialState);
 
       render(
         <CSRProvider engine={engine} controllers={controllers}>
@@ -153,25 +153,25 @@ describe('Headless react SSR utils', () => {
       });
 
       test('should not return engine with SSRProvider', async () => {
-        const ssrState = await fetchInitialState();
-        function ssrStateProviderWrapper({children}: PropsWithChildren) {
+        const initialState = await fetchInitialState();
+        function initialStateProviderWrapper({children}: PropsWithChildren) {
           return (
-            <SSRStateProvider controllers={ssrState.controllers}>
+            <InitialStateProvider controllers={initialState.controllers}>
               {children}
-            </SSRStateProvider>
+            </InitialStateProvider>
           );
         }
 
         const {result} = renderHook(() => useEngine(), {
-          wrapper: ssrStateProviderWrapper,
+          wrapper: initialStateProviderWrapper,
         });
         expect(result.current).toBeUndefined();
       });
 
       test('should return engine with CSRProvider', async () => {
-        const ssrState = await fetchInitialState();
-        const {engine, controllers} = await hydrateInitialState(ssrState);
-        function csrStateProviderWrapper({children}: PropsWithChildren) {
+        const initialState = await fetchInitialState();
+        const {engine, controllers} = await hydrateInitialState(initialState);
+        function hydratedStateProviderWrapper({children}: PropsWithChildren) {
           return (
             <CSRProvider controllers={controllers} engine={engine}>
               {children}
@@ -180,7 +180,7 @@ describe('Headless react SSR utils', () => {
         }
 
         const {result} = renderHook(() => useEngine(), {
-          wrapper: csrStateProviderWrapper,
+          wrapper: hydratedStateProviderWrapper,
         });
         expect(result.current).toStrictEqual(engine);
       });

@@ -25,14 +25,14 @@ describe('SSR', () => {
 
     it('fetches initial state of engine', async () => {
       const {fetchInitialState} = engineDefinition;
-      const engineSSRState = await fetchInitialState();
-      expect(engineSSRState).toBeTruthy();
+      const engineInitialState = await fetchInitialState();
+      expect(engineInitialState).toBeTruthy();
     });
 
     it('hydrates engine and fetches results using hydrated engine', async () => {
       const {fetchInitialState, hydrateInitialState} = engineDefinition;
-      const engineSSRState = await fetchInitialState();
-      const {engine} = await hydrateInitialState(engineSSRState);
+      const engineInitialState = await fetchInitialState();
+      const {engine} = await hydrateInitialState(engineInitialState);
       expect(engine.state.configuration.organizationId).toEqual(
         getSampleSearchEngineConfiguration().organizationId
       );

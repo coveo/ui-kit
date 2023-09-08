@@ -1,14 +1,17 @@
 import {FunctionComponent} from 'react';
-import {SearchCSRState, SearchSSRState} from '../generic/common/engine';
+import {
+  SearchHydratedState,
+  SearchInitialState,
+} from '../generic/common/engine';
 
 export interface HydrationMetadataProps {
-  ssrState: SearchSSRState;
-  csrResult?: SearchCSRState;
+  initialState: SearchInitialState;
+  hydratedState?: SearchHydratedState;
 }
 
 export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
-  ssrState,
-  csrResult,
+  initialState,
+  hydratedState,
 }) => (
   <>
     <div>
@@ -17,12 +20,15 @@ export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
         id="hydrated-indicator"
         type="checkbox"
         disabled
-        checked={!!csrResult}
+        checked={!!hydratedState}
       />
     </div>
     <span id="hydrated-msg">
       Rendered page with{' '}
-      {(csrResult ?? ssrState).controllers.resultList.state.results.length}{' '}
+      {
+        (hydratedState ?? initialState).controllers.resultList.state.results
+          .length
+      }{' '}
       results
     </span>
     <div>

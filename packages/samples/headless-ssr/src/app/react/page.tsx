@@ -16,7 +16,7 @@ export default async function Search(url: {
     CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
       url.searchParams
     );
-  const ssrState = await fetchInitialState({
+  const initialState = await fetchInitialState({
     controllers: {
       searchParameters: {
         initialState: {
@@ -27,7 +27,7 @@ export default async function Search(url: {
   });
 
   return (
-    <SearchPageProvider ssrState={ssrState}>
+    <SearchPageProvider initialState={initialState}>
       <SearchParameters />
       <SearchBox />
       <ResultList />

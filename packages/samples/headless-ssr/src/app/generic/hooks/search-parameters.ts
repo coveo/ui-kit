@@ -9,15 +9,15 @@ import {useHistoryRouter} from '../../common/search-parameters';
 import {CoveoNextJsSearchParametersSerializer} from '../../common/search-parameters-serializer';
 
 interface UseSyncSearchParametersProps {
-  ssrState: SearchParameterManagerState;
+  initialState: SearchParameterManagerState;
   controller?: SearchParameterManager;
 }
 
 function useSearchParameters({
-  ssrState,
+  initialState,
   controller,
 }: UseSyncSearchParametersProps) {
-  const [searchParameters, setSearchParameters] = useState(ssrState);
+  const [searchParameters, setSearchParameters] = useState(initialState);
   useEffect(() => {
     if (!controller) {
       return;
@@ -28,11 +28,11 @@ function useSearchParameters({
 }
 
 export function useSyncSearchParameters({
-  ssrState,
+  initialState,
   controller,
 }: UseSyncSearchParametersProps) {
   const historyRouter = useHistoryRouter();
-  const state = useSearchParameters({ssrState, controller});
+  const state = useSearchParameters({initialState, controller});
 
   // Update the search interface.
   useEffect(

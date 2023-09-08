@@ -1,56 +1,62 @@
 'use client';
 
 import {
-  SearchSSRState,
-  SearchCSRState,
+  SearchInitialState,
+  SearchHydratedState,
   hydrateInitialState,
   CSRProvider,
-  SSRStateProvider,
+  InitialStateProvider,
 } from '@/src/app/react/common/engine';
 import {useEffect, useState, PropsWithChildren} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
 
 interface SearchPageProviderProps {
-  ssrState: SearchSSRState;
+  initialState: SearchInitialState;
 }
 
 export function SearchPageProvider({
-  ssrState,
+  initialState,
   children,
 }: PropsWithChildren<SearchPageProviderProps>) {
-  const [csrResult, setCSRResult] = useState<SearchCSRState | undefined>(
-    undefined
-  );
+  const [hydratedState, setCSRResult] = useState<
+    SearchHydratedState | undefined
+  >(undefined);
 
   useEffect(() => {
     hydrateInitialState({
-      searchFulfilledAction: ssrState.searchFulfilledAction,
+      searchFulfilledAction: initialState.searchFulfilledAction,
       controllers: {
         searchParameters: {
-          initialState: ssrState.controllers.searchParameters.state,
+          initialState: initialState.controllers.searchParameters.state,
         },
       },
     }).then(({engine, controllers}) => {
       setCSRResult({engine, controllers});
     });
-  }, [ssrState]);
+  }, [initialState]);
 
-  if (csrResult) {
+  if (hydratedState) {
     return (
       <CSRProvider
-        engine={csrResult.engine}
-        controllers={csrResult.controllers}
+        engine={hydratedState.engine}
+        controllers={hydratedState.controllers}
       >
         {children}
-        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
+        <HydrationMetadata
+          initialState={initialState}
+          hydratedState={hydratedState}
+        />
       </CSRProvider>
     );
   } else {
     return (
-      <SSRStateProvider controllers={ssrState.controllers}>
+      <InitialStateProvider controllers={initialState.controllers}>
         {children}
-        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
-      </SSRStateProvider>
+        <HydrationMetadata
+          initialState={initialState}
+          hydratedState={hydratedState}
+        />
+      </InitialStateProvider>
     );
   }
 }

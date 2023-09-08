@@ -13,7 +13,7 @@ export default async function Search(url: {
     CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
       url.searchParams
     );
-  const ssrState = await fetchInitialState({
+  const initialState = await fetchInitialState({
     controllers: {
       searchParameters: {
         initialState: {
@@ -22,7 +22,7 @@ export default async function Search(url: {
       },
     },
   });
-  return <SearchPage ssrState={ssrState}></SearchPage>;
+  return <SearchPage initialState={initialState}></SearchPage>;
 }
 
 // A page with search parameters cannot be statically rendered, since its rendered state should look different based on the current search parameters.

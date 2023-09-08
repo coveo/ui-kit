@@ -8,9 +8,9 @@ import {
   ControllersPropsMap,
   HasKeys,
   InferControllerPropsMapFromDefinitions,
-  InferControllerSSRStateMapFromDefinitions,
+  InferControllerInitialStateMapFromDefinitions,
   InferControllersMapFromDefinition,
-  ControllerSSRStateMap,
+  ControllerInitialStateMap,
   ControllersMap,
 } from './common';
 import {
@@ -59,7 +59,7 @@ export interface EngineDefinitionWithoutProps<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions
 > extends FetchInitialStateWithoutProps<
-      InferControllerSSRStateMapFromDefinitions<TControllers>,
+      InferControllerInitialStateMapFromDefinitions<TControllers>,
       AnyAction
     >,
     HydrateInitialStateWithoutProps<
@@ -79,7 +79,7 @@ export interface EngineDefinitionWithProps<
   TEngineOptions,
   TControllerProps extends ControllersPropsMap
 > extends FetchInitialStateWithProps<
-      InferControllerSSRStateMapFromDefinitions<TControllers>,
+      InferControllerInitialStateMapFromDefinitions<TControllers>,
       AnyAction,
       TControllerProps
     >,
@@ -99,11 +99,11 @@ export interface EngineDefinitionWithProps<
 /**
  * @internal
  */
-export type InferSSRState<
+export type InferInitialState<
   T extends
-    | FetchInitialStateWithoutProps<ControllerSSRStateMap, AnyAction>
+    | FetchInitialStateWithoutProps<ControllerInitialStateMap, AnyAction>
     | FetchInitialStateWithProps<
-        ControllerSSRStateMap,
+        ControllerInitialStateMap,
         AnyAction,
         ControllersPropsMap
       >
@@ -111,7 +111,7 @@ export type InferSSRState<
 /**
  * @internal
  */
-export type InferCSRState<
+export type InferHydratedState<
   T extends
     | HydrateInitialStateWithoutProps<CoreEngine, ControllersMap, AnyAction>
     | HydrateInitialStateWithProps<

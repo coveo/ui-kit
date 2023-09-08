@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  SearchSSRState,
-  SearchCSRState,
+  SearchInitialState,
+  SearchHydratedState,
   hydrateInitialState,
 } from '@/src/app/generic/common/engine';
 import {useEffect, useState} from 'react';
@@ -11,40 +11,47 @@ import {useSyncSearchParameters} from '../hooks/search-parameters';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';
 
-export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
-  const [csrResult, setCSRResult] = useState<SearchCSRState | undefined>(
-    undefined
-  );
+export default function SearchPage({
+  initialState,
+}: {
+  initialState: SearchInitialState;
+}) {
+  const [hydratedState, setCSRResult] = useState<
+    SearchHydratedState | undefined
+  >(undefined);
 
   useEffect(() => {
     hydrateInitialState({
-      searchFulfilledAction: ssrState.searchFulfilledAction,
+      searchFulfilledAction: initialState.searchFulfilledAction,
       controllers: {
         searchParameters: {
-          initialState: ssrState.controllers.searchParameters.state,
+          initialState: initialState.controllers.searchParameters.state,
         },
       },
     }).then(({engine, controllers}) => {
       setCSRResult({engine, controllers});
     });
-  }, [ssrState]);
+  }, [initialState]);
 
   useSyncSearchParameters({
-    ssrState: ssrState.controllers.searchParameters.state,
-    controller: csrResult?.controllers.searchParameters,
+    initialState: initialState.controllers.searchParameters.state,
+    controller: hydratedState?.controllers.searchParameters,
   });
 
   return (
     <>
       <SearchBox
-        ssrState={ssrState.controllers.searchBox.state}
-        controller={csrResult?.controllers.searchBox}
+        initialState={initialState.controllers.searchBox.state}
+        controller={hydratedState?.controllers.searchBox}
       />
       <ResultList
-        ssrState={ssrState.controllers.resultList.state}
-        controller={csrResult?.controllers.resultList}
+        initialState={initialState.controllers.resultList.state}
+        controller={hydratedState?.controllers.resultList}
       />
-      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
+      <HydrationMetadata
+        initialState={initialState}
+        hydratedState={hydratedState}
+      />
     </>
   );
 }
