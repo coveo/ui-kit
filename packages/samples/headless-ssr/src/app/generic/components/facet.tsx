@@ -24,7 +24,7 @@ export const Facet: FunctionComponent<FacetProps> = ({
     <fieldset>
       <legend>{title} facet</legend>
       <FacetSearch ssrState={ssrState} controller={controller} />
-      <ul>
+      <ul className="facet-values">
         {state.values.map((value) => (
           <li key={value.value}>
             <input

@@ -66,16 +66,11 @@ describe('headless ssr example', () => {
         inp: 200,
       },
     };
-    cy.startVitalsCapture({url: route});
-    getResultTitles()
-      .should('have.length.greaterThan', 0)
-      .as('initial-results');
-    waitForHydration();
-    cy.get('.search-box input').focus().type('abc{enter}');
-    cy.get<string>('@initial-results').then((initialResults) =>
-      getResultTitles().should('not.deep.equal', initialResults)
-    );
-    cy.reportVitals(VITALS_THRESHOLD);
+    cy.vitals({
+      ...VITALS_THRESHOLD,
+      url: route,
+      firstInputSelector: '.facet-values > li:first-of-type > input',
+    });
   });
 
   describe('after hydration', () => {
