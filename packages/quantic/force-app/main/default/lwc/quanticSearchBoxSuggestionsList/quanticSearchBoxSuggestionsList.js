@@ -120,7 +120,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   }
 
   get listboxCssClass() {
-    return `slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid ${
+    return `slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid quantic-suggestions-list ${
       this.suggestions?.length ? '' : 'slds-hidden'
     }`;
   }

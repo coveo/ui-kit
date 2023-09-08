@@ -6,9 +6,15 @@ import {
   getHeadlessBindings,
   destroyEngine,
 } from 'c/quanticHeadlessLoader';
-import {STANDALONE_SEARCH_BOX_STORAGE_KEY, keys} from 'c/quanticUtils';
-import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
-import {LightningElement, api, track, wire} from 'lwc';
+import { STANDALONE_SEARCH_BOX_STORAGE_KEY, keys } from 'c/quanticUtils';
+import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
+import { LightningElement, api, track, wire } from 'lwc';
+// @ts-ignore
+import defaultStandaloneSearchBox from './templates/defaultStandaloneSearchBox.html';
+// @ts-ignore
+import expandableStandaloneSearchBox from './templates/expandableStandaloneSearchBox.html';
+// @ts-ignore
+import errorTemplate from './templates/errorTemplate.html';
 
 const CLASS_WITH_SUBMIT =
   'slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-input-has-fixed-addon';
@@ -89,6 +95,14 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * @defaultValue `undefined`
    */
   @api pipeline;
+  /**
+   * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element.
+   * The resulting component will expand to support multi-line queries.
+   * @api
+   * @type {boolean}
+   * @defaultValue false
+   */
+  @api textarea = false;
 
   /** @type {boolean} */
   @track isStandalone = true;
@@ -191,7 +205,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       })) ?? [];
 
     // Check for redirect
-    const {redirectTo, value, analytics} = this.standaloneSearchBox.state;
+    const { redirectTo, value, analytics } = this.standaloneSearchBox.state;
     if (!redirectTo) {
       return;
     }
@@ -219,9 +233,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   get searchBoxInputClass() {
-    return this.withoutSubmitButton
-      ? 'slds-input searchbox__input'
-      : 'slds-input searchbox__input searchbox__input-with-button';
+    return `slds-input searchbox__input ${this.withoutSubmitButton ? '' : 'searchbox__input-with-button'}`;
   }
 
   showSuggestions() {
@@ -252,7 +264,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   onSubmit(event) {
     event.stopPropagation();
-    if (this.standaloneSearchBox.state.value !== this.input.value) {
+    if (this.standaloneSearchBox?.state?.value !== this.input.value) {
       this.standaloneSearchBox.updateText(this.input.value);
     }
     this.standaloneSearchBox.submit();
@@ -260,12 +272,25 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   handleKeyValues() {
-    if (this.standaloneSearchBox.state.value !== this.input.value) {
+    if (this.standaloneSearchBox?.state?.value !== this.input.value) {
       this.suggestionList?.resetSelection();
-      this.standaloneSearchBox.updateText(this.input.value);
+      this.standaloneSearchBox?.updateText(this.input.value);
     }
   }
 
+  /**
+   * Prevent default behavior of enter key, on textArea, to prevent skipping a line.
+   * @param {KeyboardEvent} event 
+   */
+  onKeydown(event) {
+    if (event.key === keys.ENTER) {
+      event.preventDefault();
+    }
+  }
+
+  /**
+   * @param {KeyboardEvent} event 
+   */
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
@@ -284,16 +309,43 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   onFocus() {
     this.showSuggestions();
+    this.adjustTextAreaHeight();
   }
 
   onBlur() {
     this.hideSuggestions();
+    this.collapseTextArea();
+  }
+
+  onTextAreaInput() {
+    this.adjustTextAreaHeight();
+  };
+
+  adjustTextAreaHeight() {
+    if (!this.textarea) {
+      return;
+    }
+    this.input.value = this.input.value.replace(/\n/g, '');
+    this.input.style.height = '';
+    this.input.style.whiteSpace = 'pre-wrap';
+    this.input.style.height = this.input.scrollHeight + "px";
+  }
+
+  collapseTextArea() {
+    if (!this.textarea) {
+      return;
+    }
+    this.input.style.height = '';
+    this.input.style.whiteSpace = 'nowrap';
   }
 
   clearInput() {
     this.input.value = '';
     this.standaloneSearchBox.updateText(this.input.value);
     this.input.focus();
+    if (this.textarea) {
+      this.adjustTextAreaHeight();
+    }
   }
 
   handleSuggestionSelection(event) {
@@ -306,9 +358,9 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     if (!engine) {
       return;
     }
-    const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
+    const { updateQuery } = CoveoHeadless.loadQueryActions(engine);
 
-    engine.dispatch(updateQuery({q: ''}));
+    engine.dispatch(updateQuery({ q: '' }));
   }
 
   navigateToSearchPage() {
@@ -327,10 +379,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   /**
-   * @returns {HTMLInputElement}
+   * @returns {HTMLInputElement|HTMLTextAreaElement}
    */
   get input() {
-    return this.template.querySelector('input');
+    return this.textarea ? this.template.querySelector('textarea') : this.template.querySelector('input');
   }
 
   /**
@@ -373,5 +425,12 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   setInitializationError() {
     this.hasInitializationError = true;
+  }
+
+  render() {
+    if (this.hasInitializationError) {
+      return errorTemplate;
+    }
+    return this?.textarea ? expandableStandaloneSearchBox : defaultStandaloneSearchBox;
   }
 }
