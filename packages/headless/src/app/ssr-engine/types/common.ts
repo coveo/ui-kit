@@ -58,6 +58,9 @@ export type ControllerDefinition<
   | ControllerDefinitionWithoutProps<TEngine, TController>
   | ControllerDefinitionWithProps<TEngine, TController, unknown>;
 
+/**
+ * @internal
+ */
 export interface ControllerDefinitionsMap<
   TEngine extends CoreEngine,
   TController extends Controller
@@ -103,12 +106,18 @@ export type InferControllerPropsMapFromDefinitions<
     : K]: InferControllerPropsFromDefinition<TControllers[K]>;
 };
 
+/**
+ * @internal
+ */
 export type InferControllerFromDefinition<
   TDefinition extends ControllerDefinition<CoreEngine, Controller>
 > = TDefinition extends ControllerDefinition<infer _, infer TController>
   ? TController
   : never;
 
+/**
+ * @internal
+ */
 export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};

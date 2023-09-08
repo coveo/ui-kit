@@ -5,24 +5,28 @@
       "path": "./"
     },
     {
-      "name": "📦 Auth",
-      "path": "./packages/auth"
-    },
-    {
-      "name": "📦 Bueno",
-      "path": "./packages/bueno"
-    },
-    {
       "name": "📦 Headless",
       "path": "./packages/headless"
+    },
+    {
+      "name": "📦 Atomic",
+      "path": "./packages/atomic"
     },
     {
       "name": "📦 Quantic",
       "path": "./packages/quantic"
     },
     {
-      "name": "📦 Atomic",
-      "path": "./packages/atomic"
+      "name": "📦 Bueno",
+      "path": "./packages/bueno"
+    },
+    {
+      "name": "📦 Auth",
+      "path": "./packages/auth"
+    },
+    {
+      "name": "📦 Headless React SSR utils",
+      "path": "./packages/headless-react"
     },
     {
       "name": "📦 Atomic for React",
@@ -103,7 +107,7 @@
       "🚀 Angular samples",
       "🚀 Vue.js samples",
       "⚙️ Release utilities",
-      "⚙️ NX Adapter",
+      "⚙️ NX Adapter"
     ],
     "jest.autoRevealOutput": "off",
     "npm.packageManager": "npm",
@@ -128,6 +132,6 @@
     },
     "[postcss]": {
       "editor.formatOnSave": true
-    },
+    }
   }
 }
