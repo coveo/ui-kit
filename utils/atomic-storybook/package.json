@@ -27,6 +27,11 @@
     "storybook": "7.0.17",
     "typescript": "5.1.6"
   },
+  "overrides": {
+    "lit-analyzer": {
+      "web-component-analyzer": "2.0.0-next.5"
+    }
+  },
   "scripts": {
     "build": "nx build",
     "dev": "storybook dev -p 6006"
