@@ -1,4 +1,5 @@
 import {TestUtils} from '@coveo/headless';
+import {InteractiveResult} from '@coveo/headless';
 import {h} from '@stencil/core';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {AtomicResult} from '../atomic-result/atomic-result';
@@ -11,8 +12,10 @@ import {
 } from './result-template-decorators';
 
 // https://github.com/ionic-team/stencil/issues/3260
-global.DocumentFragment = class DocumentFragment extends Node {};
-global.ShadowRoot = class ShadowRoot extends DocumentFragment {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(global as any).DocumentFragment = class DocumentFragment extends Node {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(global as any).ShadowRoot = class ShadowRoot extends DocumentFragment {};
 
 describe('ResultContext decorator', () => {
   let page: SpecPage;
@@ -65,8 +68,8 @@ describe('resultContext method', () => {
       template: () => (
         <atomic-result
           content={document.createElement('div')}
-          engine={TestUtils.buildMockSearchAppEngine()}
           result={TestUtils.buildMockResult()}
+          interactiveResult={null as unknown as InteractiveResult}
           store={createAtomicStore()}
         ></atomic-result>
       ),
