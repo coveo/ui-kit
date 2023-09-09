@@ -75,9 +75,6 @@
   "overrides": {
     "@coveo/quantic": {
       "@lwc/compiler": "2.11.8"
-    },
-    "@coveo/atomic": {
-      "postcss": "8.4.27"
     }
   },
   "workspaces": [
