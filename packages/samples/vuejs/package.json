@@ -23,6 +23,6 @@
     "cypress": "10.8.0",
     "html-loader": "4.2.0",
     "ncp": "2.0.0",
-    "typescript": "4.6.4"
+    "typescript": "5.1.6"
   }
 }
