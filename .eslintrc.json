@@ -33,7 +33,7 @@
       "files": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs"],
       "extends": ["plugin:@cspell/recommended"],
       "rules": {
-        "@cspell/spellchecker": ["warn"]
+        "@cspell/spellchecker": ["error"]
       }
     },
     {
@@ -46,7 +46,7 @@
       },
       "rules": {
         "@typescript-eslint/no-unused-vars": [
-          "warn",
+          "error",
           {
             "ignoreRestSiblings": true,
             "argsIgnorePattern": "^_",
