@@ -54,7 +54,7 @@
       }
     },
     "build": {
-      "dependsOn": ["cached:build"],
+      "dependsOn": [""],
       "executor": "nx:noop"
     },
     "dev": {
