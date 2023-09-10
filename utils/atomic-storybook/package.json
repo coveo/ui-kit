@@ -27,6 +27,9 @@
     "storybook": "7.4.0",
     "typescript": "5.1.6"
   },
+  "devDependencies": {
+    "@types/react": "18.2.21"
+  },
   "overrides": {
     "lit-analyzer": {
       "web-component-analyzer": "2.0.0-next.5"
