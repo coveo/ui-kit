@@ -1,8 +1,23 @@
 diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
-index d4d0311..692d9a8 100644
+index d4d0311..a94d255 100644
 --- a/node_modules/@stencil/core/compiler/stencil.js
 +++ b/node_modules/@stencil/core/compiler/stencil.js
-@@ -256504,6 +256504,7 @@ const getTranspileConfig = (input) => {
+@@ -230001,6 +230001,14 @@ function handleClassFields(classNode, classMembers) {
+       // if the member has no initializer we should default to setting it to
+       // just 'undefined'
+       (_a = member.initializer) !== null && _a !== void 0 ? _a : ts.factory.createIdentifier('undefined'))));
++      const nonStencilDecorators = filterDecorators(retrieveTsDecorators(member), CONSTRUCTOR_DEFINED_MEMBER_DECORATORS);
++      const modifiers = retrieveTsModifiers(member);
++      if(nonStencilDecorators) {
++        const newMember = ts.factory.createPropertyDeclaration([...(nonStencilDecorators !== null && nonStencilDecorators !== void 0 ? nonStencilDecorators : []), ...(modifiers !== null && modifiers !== void 0 ? modifiers : [])], member.name, member.questionToken, member.type, member.initializer);
++        ts.setOriginalNode(member, newMember);
++        ts.setTextRange(member, newMember);
++        updatedClassMembers.push(newMember);
++      }
+     }
+     else {
+       // if it's not a class field that is decorated with a Stencil decorator then
+@@ -256504,6 +256512,7 @@ const getTranspileConfig = (input) => {
      target: getTranspileConfigOpt(input.target, VALID_TARGET, 'latest'),
    };
    const tsCompilerOptions = {
