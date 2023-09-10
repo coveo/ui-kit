@@ -14,7 +14,6 @@ describe('InsightResultList', () => {
     const results = new Array(10).fill(buildMockResult());
     engine.state.search.results = results;
     engine.state.search.response.totalCountFiltered = 1000;
-    jest.useFakeTimers('modern');
   });
 
   afterEach(() => {
