@@ -19,8 +19,9 @@
     "moduleResolution": "Node",
     "module": "ES2022",
     "target": "ES2022",
-    "lib": ["dom", "ES2022"]
+    "lib": ["dom", "ES2022"],
+    "types": ["jest", "react", "react-dom"]
   },
-  "exclude": ["**/*.test.ts", "**/*.test.tsx" ],
   "include": ["src/**/*.ts", "src/**/*.tsx"]
+  ,
 }
