@@ -12,3 +12,8 @@
 
 # Owners of Atomic IPX components
 /packages/atomic/src/components/ipx @coveo/service-integrations
+
+# Owners of the Commerce headless sub-package
+/packages/headless/commerce/ @coveo/commerce-routemasters
+/packages/headless/src/**/commerce/ @coveo/commerce-routemasters
+/packages/headless/src/app/commerce-engine/ @coveo/commerce-routemasters
