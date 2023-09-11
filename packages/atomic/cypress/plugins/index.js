@@ -1,3 +1,5 @@
+const cypressSplit = require('cypress-split');
+
 /// <reference types="cypress" />
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
@@ -15,7 +17,8 @@
 /**
  * @type {Cypress.PluginConfig}
  */
-module.exports = (on, _config) => {
+module.exports = (on, config) => {
+  cypressSplit(on, config);
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
   on('before:browser:launch', (browser = {}, launchOptions) => {
@@ -39,4 +42,5 @@ module.exports = (on, _config) => {
 
     return launchOptions;
   });
+  return config;
 };
