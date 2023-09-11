@@ -39,6 +39,16 @@ describe('headless product-listing', () => {
     });
   });
 
+  it('should validate if #url is missing', () => {
+    expect(() => {
+      buildProductListing(engine, {
+        options: {
+          url: '',
+        },
+      });
+    }).toThrow();
+  });
+
   it('dispatches #setProductListingUrl on load', () => {
     expectContainAction(setProductListingUrl);
   });

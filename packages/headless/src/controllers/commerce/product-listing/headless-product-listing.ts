@@ -33,7 +33,7 @@ export interface ProductListingProps {
   /**
    * The initial options that should be applied to this `ProductListing` controller.
    */
-  options?: ProductListingOptions;
+  options: ProductListingOptions;
 }
 
 /**
@@ -76,7 +76,7 @@ export type ProductListingControllerState = ProductListing['state'];
  */
 export function buildProductListing(
   engine: CommerceEngine,
-  props: ProductListingProps = {}
+  props: ProductListingProps
 ): ProductListing {
   if (!loadBaseProductListingReducers(engine)) {
     throw loadReducerError;
@@ -94,7 +94,7 @@ export function buildProductListing(
 
   dispatch(
     setProductListingUrl({
-      url: options.url!,
+      url: options.url,
     })
   );
 
