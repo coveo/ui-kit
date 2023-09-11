@@ -8,6 +8,12 @@ inputs:
   spec:
     description: Specify the spec files to run
     required: true
+  SPLIT:
+    description: Amount of split
+    required: true
+  SPLIT_INDEX:
+    description: Index of the split
+    required: true
 runs:
   using: composite
   steps:
@@ -23,6 +29,8 @@ runs:
         record: false
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
+        SPLIT: ${{ inputs.SPLIT }}
+        SPLIT_INDEX: ${{ inputs.SPLIT_INDEX }}
     - uses: actions/upload-artifact@v3
       if: failure()
       with:
