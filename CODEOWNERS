@@ -17,5 +17,6 @@
 /packages/headless/commerce/ @coveo/commerce-routemasters
 /packages/headless/src/**/commerce/ @coveo/commerce-routemasters
 /packages/headless/src/app/commerce-engine/ @coveo/commerce-routemasters
+/packages/headless/src/state/commerce-app-state.ts @coveo/commerce-routemasters
 /packages/headless/src/commerce.index.ts @coveo/commerce-routemasters
 /packages/headless/src/test/**commerce** @coveo/commerce-routemasters
