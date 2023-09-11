@@ -7,7 +7,7 @@ module.exports = {
   overrides: [
     {files: '**/*.{scss,css,pcss,html,mdx}', options: {printWidth: 120}},
     {
-      files: '**/*.js',
+      files: '**/*.{js,tsx}',
       options: {
         importOrderParserPlugins: ['jsx'],
       },
