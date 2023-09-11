@@ -70,7 +70,6 @@
     "@stencil-community/postcss": "2.2.0",
     "@stencil/angular-output-target": "0.8.2",
     "@stencil/react-output-target": "0.5.3",
-    "@stencil/vue-output-target": "0.8.6",
     "@types/dompurify": "2.3.3",
     "@types/escape-html": "1.0.2",
     "@types/jest": "27.0.3",
