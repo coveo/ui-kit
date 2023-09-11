@@ -1,13 +1,15 @@
-import React, {useRef} from 'react';
+import MonacoEditor from '@monaco-editor/react';
 import {useArgs, useParameter} from '@storybook/api';
+import {delay} from 'lodash';
+import {editor} from 'monaco-editor';
+import React, {useRef} from 'react';
+import {renderArgsToResultTemplate} from '../default-result-component-story';
 import {
   DefaultStoryAdvancedConfig,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
 } from '../default-story-shared';
-import MonacoEditor from '@monaco-editor/react';
-import {renderArgsToResultTemplate} from '../default-result-component-story';
-import {delay} from 'lodash';
+
 interface StoryParameters {
   componentTag: string;
   isResultComponent: boolean;
@@ -27,7 +29,7 @@ const addSpacingBetweenStylingAndHTML = (
 export const CodeSamplePanel = () => {
   const storyParameters = useParameter('shadowParts', null);
   const [args, _] = useArgs();
-  const monacoEditorRef = useRef(null);
+  const monacoEditorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   if (!storyParameters) {
     return '';
@@ -110,7 +112,7 @@ export const CodeSamplePanel = () => {
           cursor: 'copy',
         }}
         onClick={() => {
-          navigator.clipboard.writeText(monacoEditorRef.current.getValue());
+          navigator.clipboard.writeText(monacoEditorRef.current!.getValue());
         }}
       >
         Copy
