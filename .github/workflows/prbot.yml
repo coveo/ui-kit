@@ -53,6 +53,7 @@ jobs:
       - uses: ./.github/actions/e2e-atomic
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
           SPLIT: ${{ strategy.job-total }}
           SPLIT_INDEX: ${{ strategy.job-index }}
   e2e-atomic-screenshots:
