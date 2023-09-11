@@ -14,6 +14,8 @@ import {
 } from "@coveo/semantic-monorepo-tools";
 import angularChangelogConvention from "conventional-changelog-angular";
 import { dedent } from "ts-dedent";
+import { promisify } from "util";
+import { exec as cbExec } from "child_process";
 
 const PATH = ".";
 const REPO_OWNER = "coveo";
@@ -131,6 +133,11 @@ const runPackageBump = async (pkg) => {
   }
 };
 
+const format = async () => {
+  const exec = promisify(cbExec);
+  await exec("pnpm format");
+};
+
 const commitAndPush = async (tags) => {
   const commitMessage = dedent`
     [version bump] chore(release): relay publish
@@ -162,6 +169,7 @@ const bumpVersions = async () => {
       return;
     }
 
+    await format();
     await commitAndPush(tags);
   } catch (e) {
     console.error(e);
