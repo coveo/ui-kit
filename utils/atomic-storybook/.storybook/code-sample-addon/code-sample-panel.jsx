@@ -1,3 +1,4 @@
+//TODO: KIT-2733 | Bring back TypeScript to this file 
 import MonacoEditor from '@monaco-editor/react';
 import {useArgs, useParameter} from '@storybook/api';
 import {delay} from 'lodash';
