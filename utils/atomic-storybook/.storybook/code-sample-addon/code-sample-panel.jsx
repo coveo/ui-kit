@@ -1,24 +1,24 @@
 import MonacoEditor from '@monaco-editor/react';
 import {useArgs, useParameter} from '@storybook/api';
 import {delay} from 'lodash';
-import {editor} from 'monaco-editor';
+// import {editor} from 'monaco-editor';
 import React, {useRef} from 'react';
 import {renderArgsToResultTemplate} from '../default-result-component-story';
 import {
-  DefaultStoryAdvancedConfig,
+  // DefaultStoryAdvancedConfig,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
 } from '../default-story-shared';
 
-interface StoryParameters {
-  componentTag: string;
-  isResultComponent: boolean;
-  advancedConfig: DefaultStoryAdvancedConfig;
-}
+// interface StoryParameters {
+//   componentTag: string;
+//   isResultComponent: boolean;
+//   advancedConfig: DefaultStoryAdvancedConfig;
+// }
 
 const addSpacingBetweenStylingAndHTML = (
-  htmlString: string,
-  styleString: string
+  htmlString,
+  styleString
 ) => {
   if (styleString && htmlString) {
     return `${styleString} \n\n ${htmlString}`;
@@ -29,13 +29,13 @@ const addSpacingBetweenStylingAndHTML = (
 export const CodeSamplePanel = () => {
   const storyParameters = useParameter('shadowParts', null);
   const [args, _] = useArgs();
-  const monacoEditorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  const monacoEditorRef = useRef(null);
 
   if (!storyParameters) {
     return '';
   }
   const {componentTag, isResultComponent, advancedConfig} =
-    storyParameters as StoryParameters;
+    storyParameters
 
   const componentToHTML = renderArgsToHTMLString(
     componentTag,
@@ -112,7 +112,7 @@ export const CodeSamplePanel = () => {
           cursor: 'copy',
         }}
         onClick={() => {
-          navigator.clipboard.writeText(monacoEditorRef.current!.getValue());
+          navigator.clipboard.writeText(monacoEditorRef.current.getValue());
         }}
       >
         Copy
