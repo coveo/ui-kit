@@ -1,3 +1,4 @@
+import {FacetResultsMustMatch} from '@coveo/headless';
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
   buildInsightFacet,
@@ -75,6 +76,11 @@ export class AtomicInsightFacet
    */
   @Prop({reflect: true}) public sortCriteria: InsightFacetSortCriterion =
     'automatic';
+  /**
+   * TODO: add doc
+   */
+  @Prop({reflect: true}) public resultsMustMatch: FacetResultsMustMatch =
+    'atLeastOneValue';
   /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.

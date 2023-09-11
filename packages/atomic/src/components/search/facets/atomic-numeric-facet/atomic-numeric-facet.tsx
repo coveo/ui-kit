@@ -11,6 +11,7 @@ import {
   NumericFilterState,
   RangeFacetRangeAlgorithm,
   RangeFacetSortCriterion,
+  FacetResultsMustMatch,
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
@@ -126,6 +127,14 @@ export class AtomicNumericFacet
    */
   @Prop({reflect: true}) public sortCriteria: RangeFacetSortCriterion =
     'ascending';
+  /**
+   * Specifies how a result must match the selected facet values.
+   * Allowed values:
+   * - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected.
+   * - `allValues`: A result will match if all corresponding facet values are selected.
+   */
+  @Prop({reflect: true}) public resultsMustMatch: FacetResultsMustMatch =
+    'atLeastOneValue';
   /**
    * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
    */
@@ -245,6 +254,7 @@ export class AtomicNumericFacet
         field: this.field,
         numberOfValues: this.numberOfValues,
         sortCriteria: this.sortCriteria,
+        resultsMustMatch: this.resultsMustMatch,
         rangeAlgorithm: this.rangeAlgorithm,
         currentValues: this.manualRanges,
         generateAutomaticRanges: !this.manualRanges.length,
