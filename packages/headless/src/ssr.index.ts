@@ -16,8 +16,6 @@ export type {
   InferControllerSSRStateMapFromDefinitions,
 } from './app/ssr-engine/types/common';
 
-export type {SearchEngineDefinitionOptions} from './app/ssr-engine/types/search-engine';
-
 export type {
   EngineDefinition,
   InferSSRState,
@@ -25,27 +23,30 @@ export type {
 } from './app/ssr-engine/types/core-engine';
 
 export type {
+  SearchEngineDefinition,
+  SearchEngineDefinitionOptions,
+} from './app/search-engine/search-engine.ssr';
+export {defineSearchEngine} from './app/search-engine/search-engine.ssr';
+
+export type {
   SearchBox,
   SearchBoxOptions,
   SearchBoxProps,
   SearchBoxState,
-} from './controllers/ssr/search-box/headless-ssr-search-box';
-export {defineSearchBox} from './controllers/ssr/search-box/headless-ssr-search-box';
-
+} from './controllers/search-box/headless-search-box.ssr';
+export {defineSearchBox} from './controllers/search-box/headless-search-box.ssr';
 export type {
   ResultList,
   ResultListOptions,
   ResultListProps,
   ResultListState,
-} from './controllers/ssr/result-list/headless-ssr-result-list';
-export {defineResultList} from './controllers/ssr/result-list/headless-ssr-result-list';
+} from './controllers/result-list/headless-result-list.ssr';
+export {defineResultList} from './controllers/result-list/headless-result-list.ssr';
 
 export type {
   SearchParameterManager,
   SearchParameterManagerInitialState,
   SearchParameterManagerBuildProps,
   SearchParameterManagerState,
-} from './controllers/ssr/search-parameter-manager/headless-ssr-search-parameter-manager';
-export {defineSearchParameterManager} from './controllers/ssr/search-parameter-manager/headless-ssr-search-parameter-manager';
-
-export {defineSearchEngine} from './app/ssr-engine/ssr-engine';
+} from './controllers/search-parameter-manager/headless-search-parameter-manager.ssr';
+export {defineSearchParameterManager} from './controllers/search-parameter-manager/headless-search-parameter-manager.ssr';
