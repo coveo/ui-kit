@@ -1,5 +1,6 @@
 import {defineConfig} from 'cypress';
-import cypressSplit from 'cypress-split';
+
+const cypressSplit = require('cypress-split');
 
 export default defineConfig({
   projectId: '5ph2j4',
