@@ -133,7 +133,7 @@ const runPackageBump = async (pkg) => {
 
 const commitAndPush = async (tags) => {
   const commitMessage = dedent`
-    [version bump][skip ci] chore(release): relay publish
+    [version bump] chore(release): relay publish
 
     **/CHANGELOG.md
     **/package.json
