@@ -1,5 +1,4 @@
-import {TestUtils} from '@coveo/headless';
-import {InteractiveResult} from '@coveo/headless';
+import {buildInteractiveResult, TestUtils} from '@coveo/headless';
 import {h} from '@stencil/core';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {AtomicResult} from '../atomic-result/atomic-result';
@@ -63,13 +62,18 @@ describe('resultContext method', () => {
   });
 
   it("revolves the bindings when it's a child of an atomic-result element", async () => {
+    const mockEngine = TestUtils.buildMockSearchAppEngine();
+    const mockResult = TestUtils.buildMockResult();
+
     const page = await newSpecPage({
       components: [AtomicResult],
       template: () => (
         <atomic-result
           content={document.createElement('div')}
           result={TestUtils.buildMockResult()}
-          interactiveResult={null as unknown as InteractiveResult}
+          interactiveResult={buildInteractiveResult(mockEngine, {
+            options: {result: mockResult},
+          })}
           store={createAtomicStore()}
         ></atomic-result>
       ),
