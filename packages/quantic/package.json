@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "2.31.1",
+  "version": "2.32.0",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -43,8 +43,8 @@
     "postinstall": "node scripts/npm/setup-quantic.js"
   },
   "dependencies": {
-    "@coveo/bueno": "0.43.9",
-    "@coveo/headless": "2.30.1"
+    "@coveo/bueno": "0.44.0",
+    "@coveo/headless": "2.31.0"
   },
   "engines": {
     "node": ">=14.0.0"

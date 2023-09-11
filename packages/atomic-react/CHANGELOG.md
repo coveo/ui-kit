@@ -1,3 +1,9 @@
+# 2.6.0 (2023-09-11)
+
+### Features
+
+- **headless-react:** add headless react util defineSearchEngine ([#3107](https://github.com/coveo/ui-kit/issues/3107)) ([1d63e43](https://github.com/coveo/ui-kit/commits/1d63e431c427de9022238216cc5128b237b836b4))
+
 ## 2.5.12 (2023-09-06)
 
 ## 2.5.3 (2023-08-09)
