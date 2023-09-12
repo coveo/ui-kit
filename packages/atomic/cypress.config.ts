@@ -14,7 +14,7 @@ export default defineConfig({
     toConsole: true,
   },
   chromeWebSecurity: false,
-  video: false,
+  video: true,
   requestTimeout: 10000,
   watchForFileChanges: true,
   e2e: {
