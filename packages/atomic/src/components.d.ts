@@ -440,7 +440,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * TODO: add doc
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
          */
         "resultsMustMatch": FacetResultsMustMatch;
         /**
@@ -3460,7 +3460,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * TODO: add doc
+          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
          */
         "resultsMustMatch"?: FacetResultsMustMatch;
         /**

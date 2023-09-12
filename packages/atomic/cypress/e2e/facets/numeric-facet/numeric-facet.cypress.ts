@@ -178,6 +178,58 @@ describe('Numeric Facet V1 Test Suites', () => {
         });
       });
 
+      describe('with #resultsMustMatch set to "allValues"', () => {
+        function setupSelectCheckboxValue() {
+          new TestFixture()
+            .with(
+              addFacet({
+                'facet-id': 'abc',
+                field: 'objecttype',
+                'results-must-match': 'allValues',
+              })
+            )
+            .init();
+
+          selectIdleCheckboxValueAt(FacetSelectors, 0);
+        }
+
+        beforeEach(() => {
+          setupSelectCheckboxValue();
+        });
+
+        it('should include resultsMustMatch in the request', () => {
+          cy.wait(TestFixture.interceptAliases.Search).should((search) => {
+            expect(search.request.body.facets[0]).to.have.property(
+              'resultsMustMatch',
+              'allValues'
+            );
+          });
+        });
+      });
+
+      describe('with #resultsMustMatch set to default value', () => {
+        function setupSelectCheckboxValue() {
+          new TestFixture()
+            .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
+            .init();
+
+          selectIdleCheckboxValueAt(FacetSelectors, 0);
+        }
+
+        beforeEach(() => {
+          setupSelectCheckboxValue();
+        });
+
+        it('should include resultsMustMatch in the request', () => {
+          cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+            expect(firstSearch.request.body.facets[0]).to.have.property(
+              'resultsMustMatch',
+              'atLeastOneValue'
+            );
+          });
+        });
+      });
+
       describe('with custom #withInput', () => {
         function setupAutomaticRangesWithCheckboxValuesAndInputRange(
           inputType = 'integer'
@@ -731,7 +783,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       new TestFixture()
         .with(
           addNumericFacet({
-            field: 'dafsfs',
+            field: 'objecttype',
             label: numericFacetLabel,
           })
         )
