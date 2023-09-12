@@ -43,6 +43,7 @@ describe('facet', () => {
       facetId,
       field: 'author',
       sortCriteria: 'score',
+      resultsMustMatch: 'atLeastOneValue',
       facetSearch: {},
     };
 
@@ -64,6 +65,7 @@ describe('facet', () => {
     const action = registerFacet({
       field: 'author',
       sortCriteria: 'score',
+      resultsMustMatch: 'atLeastOneValue',
       facetId,
       filterFacetCount: true,
       injectionDepth: 1000,

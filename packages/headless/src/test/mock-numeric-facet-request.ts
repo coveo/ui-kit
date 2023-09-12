@@ -13,6 +13,7 @@ export function buildMockNumericFacetRequest(
     numberOfValues: 8,
     preventAutoSelect: false,
     sortCriteria: 'ascending',
+    resultsMustMatch: 'atLeastOneValue',
     type: 'numericalRange',
     rangeAlgorithm: 'even',
     ...config,
