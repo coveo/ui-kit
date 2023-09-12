@@ -26,13 +26,19 @@ runs:
         start: npx nx run atomic:prod
         wait-on: 'http://localhost:3333'
         install: false
-        record: false
+        record: true
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         SPLIT: ${{ inputs.SPLIT }}
         SPLIT_INDEX: ${{ inputs.SPLIT_INDEX }}
+        DEBUG: '@cypress/github-action'
     - uses: actions/upload-artifact@v3
-      if: failure()
       with:
         name: cypress-screenshots
         path: packages/atomic/cypress/screenshots
+        if-no-files-found: ignore
+    - uses: actions/upload-artifact@v3
+      with:
+        name: cypress-videos
+        path: packages/atomic/cypress/videos
+        if-no-files-found: ignore
