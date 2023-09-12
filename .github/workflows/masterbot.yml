@@ -34,20 +34,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        spec: [
-            'cypress/e2e/*',
-            'cypress/e2e/result-list/**/*',
-            'cypress/e2e/facets/**/*',
-            'cypress/e2e/search-box/**/*',
-            'cypress/e2e/recommendations/**/*',
-          ]
+        containers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          spec: ${{ matrix.spec }}
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
   e2e-atomic-screenshots:
     name: 'Run e2e screenshots tests on Atomic'
     needs: build
