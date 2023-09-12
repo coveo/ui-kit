@@ -5,7 +5,7 @@ import {
   PagerOptions,
   PagerInitialState,
   buildPager,
-} from './headless-product-listing-v2-pager';
+} from './headless-product-listing-pager';
 
 describe('Pager', () => {
   let engine: MockCommerceEngine;
