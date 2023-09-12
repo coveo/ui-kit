@@ -77,7 +77,10 @@ export class AtomicInsightFacet
   @Prop({reflect: true}) public sortCriteria: InsightFacetSortCriterion =
     'automatic';
   /**
-   * TODO: add doc
+   * Specifies how a result must match the selected facet values.
+   * Allowed values:
+   * - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected.
+   * - `allValues`: A result will match if all corresponding facet values are selected.
    */
   @Prop({reflect: true}) public resultsMustMatch: FacetResultsMustMatch =
     'atLeastOneValue';
