@@ -1,21 +1,21 @@
 'use client';
 
 import {
-  SearchInitialState,
+  SearchStaticState,
   SearchHydratedState,
-  hydrateInitialState,
+  hydrateStaticState,
   CSRProvider,
-  InitialStateProvider,
+  StaticStateProvider,
 } from '@/src/app/react/common/engine';
 import {useEffect, useState, PropsWithChildren} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
 
 interface SearchPageProviderProps {
-  initialState: SearchInitialState;
+  staticState: SearchStaticState;
 }
 
 export function SearchPageProvider({
-  initialState,
+  staticState,
   children,
 }: PropsWithChildren<SearchPageProviderProps>) {
   const [hydratedState, setCSRResult] = useState<
@@ -23,17 +23,17 @@ export function SearchPageProvider({
   >(undefined);
 
   useEffect(() => {
-    hydrateInitialState({
-      searchFulfilledAction: initialState.searchFulfilledAction,
+    hydrateStaticState({
+      searchFulfilledAction: staticState.searchFulfilledAction,
       controllers: {
         searchParameters: {
-          initialState: initialState.controllers.searchParameters.state,
+          initialState: staticState.controllers.searchParameters.state,
         },
       },
     }).then(({engine, controllers}) => {
       setCSRResult({engine, controllers});
     });
-  }, [initialState]);
+  }, [staticState]);
 
   if (hydratedState) {
     return (
@@ -43,20 +43,20 @@ export function SearchPageProvider({
       >
         {children}
         <HydrationMetadata
-          initialState={initialState}
+          staticState={staticState}
           hydratedState={hydratedState}
         />
       </CSRProvider>
     );
   } else {
     return (
-      <InitialStateProvider controllers={initialState.controllers}>
+      <StaticStateProvider controllers={staticState.controllers}>
         {children}
         <HydrationMetadata
-          initialState={initialState}
+          staticState={staticState}
           hydratedState={hydratedState}
         />
-      </InitialStateProvider>
+      </StaticStateProvider>
     );
   }
 }

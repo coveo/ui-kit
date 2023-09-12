@@ -12,13 +12,13 @@ export type {
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   InferControllersMapFromDefinition,
-  InferControllerInitialStateFromDefinition,
-  InferControllerInitialStateMapFromDefinitions,
+  InferControllerStaticStateFromDefinition,
+  InferControllerStaticStateMapFromDefinitions,
 } from './app/ssr-engine/types/common';
 
 export type {
   EngineDefinition,
-  InferInitialState,
+  InferStaticState,
   InferHydratedState,
 } from './app/ssr-engine/types/core-engine';
 

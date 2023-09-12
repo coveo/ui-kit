@@ -1,16 +1,13 @@
 import {FunctionComponent} from 'react';
-import {
-  SearchHydratedState,
-  SearchInitialState,
-} from '../generic/common/engine';
+import {SearchHydratedState, SearchStaticState} from '../generic/common/engine';
 
 export interface HydrationMetadataProps {
-  initialState: SearchInitialState;
+  staticState: SearchStaticState;
   hydratedState?: SearchHydratedState;
 }
 
 export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
-  initialState,
+  staticState,
   hydratedState,
 }) => (
   <>
@@ -26,7 +23,7 @@ export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
     <span id="hydrated-msg">
       Rendered page with{' '}
       {
-        (hydratedState ?? initialState).controllers.resultList.state.results
+        (hydratedState ?? staticState).controllers.resultList.state.results
           .length
       }{' '}
       results

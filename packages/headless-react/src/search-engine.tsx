@@ -20,7 +20,7 @@ import {SingletonGetter, capitalize, singleton, mapObject} from './utils';
 
 export class MissingEngineProviderError extends Error {
   static message =
-    'Unable to find Context. Please make sure you are wrapping your component with either `InitialStateProvider` or `CSRProvider` component that can provide the required context.';
+    'Unable to find Context. Please make sure you are wrapping your component with either `StaticStateProvider` or `CSRProvider` component that can provide the required context.';
   constructor() {
     super(MissingEngineProviderError.message);
   }
@@ -64,11 +64,8 @@ function buildControllerHook<
         isCSRContext(ctx) ? ctx.controllers[key].subscribe(listener) : () => {},
       [ctx]
     );
-    const getInitialState = useCallback(
-      () => ctx.controllers[key].state,
-      [ctx]
-    );
-    const state = useSyncMemoizedStore(subscribe, getInitialState);
+    const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
+    const state = useSyncMemoizedStore(subscribe, getStaticState);
     const methods = useMemo(() => {
       if (!isCSRContext(ctx)) {
         return undefined;
@@ -111,7 +108,7 @@ export function defineSearchEngine<
           ])
         )
       : {}) as InferControllerHooksMapFromDefinition<TControllers>,
-    InitialStateProvider: ({controllers, children}) => {
+    StaticStateProvider: ({controllers, children}) => {
       const {Provider} = singletonContext.get();
       return <Provider value={{controllers}}>{children}</Provider>;
     },

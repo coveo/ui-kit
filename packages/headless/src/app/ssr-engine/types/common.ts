@@ -20,12 +20,12 @@ export interface ControllersMap {
   [customName: string]: Controller;
 }
 
-export interface ControllerInitialState<TState> {
+export interface ControllerStaticState<TState> {
   state: TState;
 }
 
-export interface ControllerInitialStateMap {
-  [customName: string]: ControllerInitialState<unknown>;
+export interface ControllerStaticStateMap {
+  [customName: string]: ControllerStaticState<unknown>;
 }
 /**
  * @internal
@@ -68,9 +68,9 @@ export interface ControllerDefinitionsMap<
   [customName: string]: ControllerDefinition<TEngine, TController>;
 }
 
-export interface EngineInitialState<
+export interface EngineStaticState<
   TSearchFulfilledAction extends AnyAction,
-  TControllers extends ControllerInitialStateMap
+  TControllers extends ControllerStaticStateMap
 > {
   searchFulfilledAction: TSearchFulfilledAction;
   controllers: TControllers;
@@ -122,16 +122,16 @@ export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};
 
-export type InferControllerInitialStateFromDefinition<
+export type InferControllerStaticStateFromDefinition<
   TDefinition extends ControllerDefinition<CoreEngine, Controller>
 > = TDefinition extends ControllerDefinition<infer _, infer TController>
-  ? ControllerInitialState<TController['state']>
+  ? ControllerStaticState<TController['state']>
   : never;
 
-export type InferControllerInitialStateMapFromDefinitions<
+export type InferControllerStaticStateMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
 > = {
-  [K in keyof TControllers]: InferControllerInitialStateFromDefinition<
+  [K in keyof TControllers]: InferControllerStaticStateFromDefinition<
     TControllers[K]
   >;
 };

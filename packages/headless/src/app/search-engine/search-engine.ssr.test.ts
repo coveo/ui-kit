@@ -17,22 +17,22 @@ describe('SSR', () => {
     });
 
     it('returns 3 functions', () => {
-      const {build, fetchInitialState, hydrateInitialState} = engineDefinition;
+      const {build, fetchStaticState, hydrateStaticState} = engineDefinition;
       expect(typeof build).toBe('function');
-      expect(typeof fetchInitialState).toBe('function');
-      expect(typeof hydrateInitialState).toBe('function');
+      expect(typeof fetchStaticState).toBe('function');
+      expect(typeof hydrateStaticState).toBe('function');
     });
 
     it('fetches initial state of engine', async () => {
-      const {fetchInitialState} = engineDefinition;
-      const engineInitialState = await fetchInitialState();
-      expect(engineInitialState).toBeTruthy();
+      const {fetchStaticState} = engineDefinition;
+      const engineStaticState = await fetchStaticState();
+      expect(engineStaticState).toBeTruthy();
     });
 
     it('hydrates engine and fetches results using hydrated engine', async () => {
-      const {fetchInitialState, hydrateInitialState} = engineDefinition;
-      const engineInitialState = await fetchInitialState();
-      const {engine} = await hydrateInitialState(engineInitialState);
+      const {fetchStaticState, hydrateStaticState} = engineDefinition;
+      const engineStaticState = await fetchStaticState();
+      const {engine} = await hydrateStaticState(engineStaticState);
       expect(engine.state.configuration.organizationId).toEqual(
         getSampleSearchEngineConfiguration().organizationId
       );

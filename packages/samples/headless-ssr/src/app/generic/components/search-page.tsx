@@ -1,9 +1,9 @@
 'use client';
 
 import {
-  SearchInitialState,
+  SearchStaticState,
   SearchHydratedState,
-  hydrateInitialState,
+  hydrateStaticState,
 } from '@/src/app/generic/common/engine';
 import {useEffect, useState} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
@@ -12,44 +12,44 @@ import {ResultList} from './result-list';
 import {SearchBox} from './search-box';
 
 export default function SearchPage({
-  initialState,
+  staticState,
 }: {
-  initialState: SearchInitialState;
+  staticState: SearchStaticState;
 }) {
   const [hydratedState, setCSRResult] = useState<
     SearchHydratedState | undefined
   >(undefined);
 
   useEffect(() => {
-    hydrateInitialState({
-      searchFulfilledAction: initialState.searchFulfilledAction,
+    hydrateStaticState({
+      searchFulfilledAction: staticState.searchFulfilledAction,
       controllers: {
         searchParameters: {
-          initialState: initialState.controllers.searchParameters.state,
+          initialState: staticState.controllers.searchParameters.state,
         },
       },
     }).then(({engine, controllers}) => {
       setCSRResult({engine, controllers});
     });
-  }, [initialState]);
+  }, [staticState]);
 
   useSyncSearchParameters({
-    initialState: initialState.controllers.searchParameters.state,
+    staticState: staticState.controllers.searchParameters.state,
     controller: hydratedState?.controllers.searchParameters,
   });
 
   return (
     <>
       <SearchBox
-        initialState={initialState.controllers.searchBox.state}
+        staticState={staticState.controllers.searchBox.state}
         controller={hydratedState?.controllers.searchBox}
       />
       <ResultList
-        initialState={initialState.controllers.resultList.state}
+        staticState={staticState.controllers.resultList.state}
         controller={hydratedState?.controllers.resultList}
       />
       <HydrationMetadata
-        initialState={initialState}
+        staticState={staticState}
         hydratedState={hydratedState}
       />
     </>

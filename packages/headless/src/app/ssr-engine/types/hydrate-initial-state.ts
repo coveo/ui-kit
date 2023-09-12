@@ -8,17 +8,17 @@ export interface EngineDefinitionHydrateOptionsWithoutProps<
   searchFulfilledAction: TSearchFulfilledAction;
 }
 
-export type HydrateInitialStateWithoutProps<
+export type HydrateStaticStateWithoutProps<
   TEngine extends CoreEngine,
   TControllers extends ControllersMap,
   TSearchFulfilledAction extends AnyAction
 > = {
   /**
-   * Creates a new engine from the snapshot of the engine created in SSR with fetchInitialState.
+   * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
    *
    * Useful when hydrating a server-side-rendered engine in CSR.
    */
-  hydrateInitialState(
+  hydrateStaticState(
     options: EngineDefinitionHydrateOptionsWithoutProps<TSearchFulfilledAction>
   ): Promise<HydratedState<TEngine, TControllers>>;
 };
@@ -30,18 +30,18 @@ export interface EngineDefinitionHydrateOptionsWithProps<
   controllers: TControllersProps;
 }
 
-export type HydrateInitialStateWithProps<
+export type HydrateStaticStateWithProps<
   TEngine extends CoreEngine,
   TControllers extends ControllersMap,
   TSearchFulfilledAction extends AnyAction,
   TControllersProps extends ControllersPropsMap
 > = {
   /**
-   * Creates a new engine from the snapshot of the engine created in SSR with fetchInitialState.
+   * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
    *
    * Useful when hydrating a server-side-rendered engine.
    */
-  hydrateInitialState(
+  hydrateStaticState(
     options: EngineDefinitionHydrateOptionsWithProps<
       TSearchFulfilledAction,
       TControllersProps

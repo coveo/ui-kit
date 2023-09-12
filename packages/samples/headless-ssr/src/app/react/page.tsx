@@ -1,4 +1,4 @@
-import {fetchInitialState} from '@/src/app/react/common/engine';
+import {fetchStaticState} from '@/src/app/react/common/engine';
 import {SearchPageProvider} from '@/src/app/react/components/search-page';
 import {
   CoveoNextJsSearchParametersSerializer,
@@ -16,7 +16,7 @@ export default async function Search(url: {
     CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
       url.searchParams
     );
-  const initialState = await fetchInitialState({
+  const staticState = await fetchStaticState({
     controllers: {
       searchParameters: {
         initialState: {
@@ -27,7 +27,7 @@ export default async function Search(url: {
   });
 
   return (
-    <SearchPageProvider initialState={initialState}>
+    <SearchPageProvider staticState={staticState}>
       <SearchParameters />
       <SearchBox />
       <ResultList />

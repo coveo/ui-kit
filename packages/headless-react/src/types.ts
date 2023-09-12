@@ -8,15 +8,15 @@ import {InferControllerFromDefinition} from '@coveo/headless/dist/definitions/ap
 import {
   ControllerDefinitionsMap,
   InferControllersMapFromDefinition,
-  InferControllerInitialStateMapFromDefinitions,
+  InferControllerStaticStateMapFromDefinitions,
   EngineDefinition,
 } from '@coveo/headless/ssr';
 import {FunctionComponent, PropsWithChildren} from 'react';
 
-export type ContextInitialState<
+export type ContextStaticState<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-> = {controllers: InferControllerInitialStateMapFromDefinitions<TControllers>};
+> = {controllers: InferControllerStaticStateMapFromDefinitions<TControllers>};
 
 export type ContextHydratedState<
   TEngine extends CoreEngine,
@@ -30,7 +30,7 @@ export type ContextState<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 > =
-  | ContextInitialState<TEngine, TControllers>
+  | ContextStaticState<TEngine, TControllers>
   | ContextHydratedState<TEngine, TControllers>;
 
 export type ControllerHook<TController extends Controller> = () => {
@@ -53,9 +53,9 @@ export type ReactEngineDefinition<
 > = EngineDefinition<TEngine, TControllers, TEngineOptions> & {
   controllers: InferControllerHooksMapFromDefinition<TControllers>;
   useEngine(): TEngine | undefined;
-  InitialStateProvider: FunctionComponent<
+  StaticStateProvider: FunctionComponent<
     PropsWithChildren<{
-      controllers: InferControllerInitialStateMapFromDefinitions<TControllers>;
+      controllers: InferControllerStaticStateMapFromDefinitions<TControllers>;
     }>
   >;
   CSRProvider: FunctionComponent<

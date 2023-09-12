@@ -8,8 +8,8 @@ import {EngineDefinitionBuildOptionsWithProps} from '../ssr-engine/types/build';
 import {
   ControllerDefinitionsMap,
   ControllersMap,
-  EngineInitialState,
-  InferControllerInitialStateMapFromDefinitions,
+  EngineStaticState,
+  InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
   OptionsExtender,
 } from '../ssr-engine/types/common';
@@ -84,16 +84,16 @@ export function defineSearchEngine<
     };
   };
 
-  const fetchInitialState: SearchEngineDefinition<TControllerDefinitions>['fetchInitialState'] =
+  const fetchStaticState: SearchEngineDefinition<TControllerDefinitions>['fetchStaticState'] =
     (
       ...[executeOptions]: Parameters<
-        SearchEngineDefinition<TControllerDefinitions>['fetchInitialState']
+        SearchEngineDefinition<TControllerDefinitions>['fetchStaticState']
       >
     ) =>
       new Promise<
-        EngineInitialState<
+        EngineStaticState<
           {type: string},
-          InferControllerInitialStateMapFromDefinitions<TControllerDefinitions>
+          InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
         >
       >((resolve, reject) => {
         let initialControllers: ControllersMap;
@@ -103,7 +103,7 @@ export function defineSearchEngine<
             resolve({
               controllers: mapObject(initialControllers, (controller) => ({
                 state: controller.state,
-              })) as InferControllerInitialStateMapFromDefinitions<TControllerDefinitions>,
+              })) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
               searchFulfilledAction: JSON.parse(JSON.stringify(action)),
             });
           }
@@ -128,10 +128,10 @@ export function defineSearchEngine<
         });
       });
 
-  const hydrateInitialState: SearchEngineDefinition<TControllerDefinitions>['hydrateInitialState'] =
+  const hydrateStaticState: SearchEngineDefinition<TControllerDefinitions>['hydrateStaticState'] =
     async (
       ...[hydrateOptions]: Parameters<
-        SearchEngineDefinition<TControllerDefinitions>['hydrateInitialState']
+        SearchEngineDefinition<TControllerDefinitions>['hydrateStaticState']
       >
     ) => {
       const {engine, controllers} = await build(
@@ -150,7 +150,7 @@ export function defineSearchEngine<
 
   return {
     build,
-    fetchInitialState,
-    hydrateInitialState,
+    fetchStaticState,
+    hydrateStaticState,
   };
 }

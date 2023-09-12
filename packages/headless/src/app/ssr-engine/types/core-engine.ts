@@ -8,18 +8,18 @@ import {
   ControllersPropsMap,
   HasKeys,
   InferControllerPropsMapFromDefinitions,
-  InferControllerInitialStateMapFromDefinitions,
+  InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
-  ControllerInitialStateMap,
+  ControllerStaticStateMap,
   ControllersMap,
 } from './common';
 import {
-  FetchInitialStateWithProps,
-  FetchInitialStateWithoutProps,
+  FetchStaticStateWithProps,
+  FetchStaticStateWithoutProps,
 } from './fetch-initial-state';
 import {
-  HydrateInitialStateWithProps,
-  HydrateInitialStateWithoutProps,
+  HydrateStaticStateWithProps,
+  HydrateStaticStateWithoutProps,
 } from './hydrate-initial-state';
 
 export type EngineDefinitionOptions<
@@ -58,11 +58,11 @@ export interface EngineDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions
-> extends FetchInitialStateWithoutProps<
-      InferControllerInitialStateMapFromDefinitions<TControllers>,
+> extends FetchStaticStateWithoutProps<
+      InferControllerStaticStateMapFromDefinitions<TControllers>,
       AnyAction
     >,
-    HydrateInitialStateWithoutProps<
+    HydrateStaticStateWithoutProps<
       TEngine,
       InferControllersMapFromDefinition<TControllers>,
       AnyAction
@@ -78,12 +78,12 @@ export interface EngineDefinitionWithProps<
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions,
   TControllerProps extends ControllersPropsMap
-> extends FetchInitialStateWithProps<
-      InferControllerInitialStateMapFromDefinitions<TControllers>,
+> extends FetchStaticStateWithProps<
+      InferControllerStaticStateMapFromDefinitions<TControllers>,
       AnyAction,
       TControllerProps
     >,
-    HydrateInitialStateWithProps<
+    HydrateStaticStateWithProps<
       TEngine,
       InferControllersMapFromDefinition<TControllers>,
       AnyAction,
@@ -99,25 +99,25 @@ export interface EngineDefinitionWithProps<
 /**
  * @internal
  */
-export type InferInitialState<
+export type InferStaticState<
   T extends
-    | FetchInitialStateWithoutProps<ControllerInitialStateMap, AnyAction>
-    | FetchInitialStateWithProps<
-        ControllerInitialStateMap,
+    | FetchStaticStateWithoutProps<ControllerStaticStateMap, AnyAction>
+    | FetchStaticStateWithProps<
+        ControllerStaticStateMap,
         AnyAction,
         ControllersPropsMap
       >
-> = Awaited<ReturnType<T['fetchInitialState']>>;
+> = Awaited<ReturnType<T['fetchStaticState']>>;
 /**
  * @internal
  */
 export type InferHydratedState<
   T extends
-    | HydrateInitialStateWithoutProps<CoreEngine, ControllersMap, AnyAction>
-    | HydrateInitialStateWithProps<
+    | HydrateStaticStateWithoutProps<CoreEngine, ControllersMap, AnyAction>
+    | HydrateStaticStateWithProps<
         CoreEngine,
         ControllersMap,
         AnyAction,
         ControllersPropsMap
       >
-> = Awaited<ReturnType<T['hydrateInitialState']>>;
+> = Awaited<ReturnType<T['hydrateStaticState']>>;
