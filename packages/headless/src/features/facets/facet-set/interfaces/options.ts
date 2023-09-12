@@ -3,6 +3,10 @@ import {FacetOptions} from '../../../../controllers/core/facets/facet/headless-c
 export type FacetOptionalParameters = Required<
   Pick<
     FacetOptions,
-    'filterFacetCount' | 'injectionDepth' | 'numberOfValues' | 'sortCriteria'
+    | 'filterFacetCount'
+    | 'injectionDepth'
+    | 'numberOfValues'
+    | 'sortCriteria'
+    | 'resultsMustMatch'
   >
 >;
