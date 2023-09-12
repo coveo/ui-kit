@@ -17,6 +17,7 @@ import {
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {change} from '../history/history-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
+import {fetchProductListing as fetchProductListingV2} from '../product-listing/v2/product-listing-v2-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {executeSearch} from '../search/search-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
@@ -99,6 +100,10 @@ export const paginationReducer = createReducer(
         state.totalCountFiltered = response.totalCountFiltered;
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
+        const {response} = action.payload;
+        state.totalCountFiltered = response.pagination.totalCount;
+      })
+      .addCase(fetchProductListingV2.fulfilled, (state, action) => {
         const {response} = action.payload;
         state.totalCountFiltered = response.pagination.totalCount;
       })

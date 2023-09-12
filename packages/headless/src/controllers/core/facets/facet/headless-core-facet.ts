@@ -481,10 +481,13 @@ export function buildCoreFacet(
       );
       const canShowMoreValues = response ? response.moreValuesAvailable : false;
 
+      const resultsMustMatch = request.resultsMustMatch;
+
       return {
         facetId,
         values,
         sortCriterion,
+        resultsMustMatch,
         isLoading,
         hasActiveValues,
         canShowMoreValues,

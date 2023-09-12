@@ -1,4 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
+import {facetResultsMustMatch} from '../../../../features/facets/facet-api/request';
 import {facetSortCriteria} from '../../../../features/facets/facet-set/interfaces/request';
 import {
   facetId,
@@ -49,6 +50,7 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   injectionDepth,
   numberOfValues,
   sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
+  resultsMustMatch: new StringValue({constrainTo: facetResultsMustMatch}),
   facetSearch,
   allowedValues,
   customSort,
