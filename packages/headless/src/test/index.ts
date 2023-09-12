@@ -2,6 +2,7 @@ export {
   buildMockSearchAppEngine,
   buildMockCaseAssistEngine,
   buildMockProductListingEngine,
+  buildMockCommerceEngine,
   buildMockProductRecommendationsAppEngine,
   buildMockRecommendationAppEngine,
 } from './mock-engine';
@@ -9,6 +10,7 @@ export type {
   MockSearchEngine,
   MockCaseAssistEngine,
   MockProductListingEngine,
+  MockCommerceEngine,
   MockProductRecommendationEngine,
   MockRecommendationEngine,
 } from './mock-engine';

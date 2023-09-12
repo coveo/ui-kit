@@ -7,7 +7,7 @@ export const InstantResultsPage: FunctionComponent = () => {
       sample="electronics"
       options={{recentQueries: true, instantResults: true}}
     >
-      <p>No result list</p>
+      <i>👆 Focus on search box to see instant results</i>
     </AtomicPageWrapper>
   );
 };

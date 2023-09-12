@@ -4,7 +4,7 @@ import {
   FacetResponseSection,
 } from '../facet-set/facet-set-selectors';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
-import {partitionIntoParentsAndValues} from './category-facet-utils';
+import {findActiveValueAncestry} from './category-facet-utils';
 import {CategoryFacetResponse} from './interfaces/response';
 
 function isCategoryFacetResponse(
@@ -38,8 +38,7 @@ export const categoryFacetResponseSelectedValuesSelector = (
   facetId: string
 ) => {
   const facetResponse = categoryFacetResponseSelector(state, facetId);
-  const parentsAndValues = partitionIntoParentsAndValues(facetResponse?.values);
-  return parentsAndValues.parents;
+  return findActiveValueAncestry(facetResponse?.values ?? []);
 };
 
 export const categoryFacetRequestSelectedValuesSelector = (
@@ -47,8 +46,5 @@ export const categoryFacetRequestSelectedValuesSelector = (
   facetId: string
 ) => {
   const facetRequest = categoryFacetRequestSelector(state, facetId);
-  const parentsAndValues = partitionIntoParentsAndValues(
-    facetRequest?.currentValues
-  );
-  return parentsAndValues.parents;
+  return findActiveValueAncestry(facetRequest?.currentValues ?? []);
 };

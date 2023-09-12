@@ -31,9 +31,10 @@ export type {
   Subscribable,
 } from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
+
 export type {
   InteractiveResult,
   InteractiveResultOptions,
   InteractiveResultProps,
-} from './controllers/product-listing-v2/result-list/headless-product-listing-v2-interactive-result';
-export {buildInteractiveResult} from './controllers/product-listing-v2/result-list/headless-product-listing-v2-interactive-result';
+} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
+export {buildInteractiveResult} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';

@@ -1,22 +1,11 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {
   defineSearchEngine,
-  defineResultList,
   InferSSRState,
   InferCSRState,
-  defineSearchBox,
 } from '@coveo/headless/ssr';
+import {config} from '../../common/search-engine-config';
 
-const engineDefinition = defineSearchEngine({
-  configuration: {
-    ...getSampleSearchEngineConfiguration(),
-    analytics: {enabled: false},
-  },
-  controllers: {
-    searchBox: defineSearchBox(),
-    resultList: defineResultList(),
-  },
-});
+const engineDefinition = defineSearchEngine(config);
 
 export type SearchSSRState = InferSSRState<typeof engineDefinition>;
 export type SearchCSRState = InferCSRState<typeof engineDefinition>;

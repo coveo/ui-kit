@@ -13,13 +13,13 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.43.7",
+  "version": "0.44.0",
   "files": [
     "dist/"
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "npm run build:definitions && npm run build:bundles",
+    "build": "nx build",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",

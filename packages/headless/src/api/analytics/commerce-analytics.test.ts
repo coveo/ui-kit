@@ -1,4 +1,4 @@
-import {buildMockProductListingV2State} from '../../test/mock-product-listing-v2-state';
+import {buildMockCommerceState} from '../../test/mock-commerce-state';
 import {buildMockProductRecommendation} from '../../test/mock-product-recommendation';
 import {
   CommerceAnalyticsProvider,
@@ -7,7 +7,7 @@ import {
 
 describe('commerce analytics', () => {
   const getBaseState = (): StateNeededByCommerceAnalyticsProvider =>
-    buildMockProductListingV2State();
+    buildMockCommerceState();
 
   it('should properly return getSearchEventRequestPayload', () => {
     const state = getBaseState();

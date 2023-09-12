@@ -6,6 +6,7 @@ import {
   SortCriteria,
   BaseFacetValueRequest,
 } from '../../facet-api/request';
+import {CategoryFacetValueCommon} from './commons';
 
 export const categoryFacetSortCriteria: CategoryFacetSortCriterion[] = [
   'alphanumeric',
@@ -13,8 +14,9 @@ export const categoryFacetSortCriteria: CategoryFacetSortCriterion[] = [
 ];
 export type CategoryFacetSortCriterion = 'alphanumeric' | 'occurrences';
 
-export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
-  value: string;
+export interface CategoryFacetValueRequest
+  extends BaseFacetValueRequest,
+    CategoryFacetValueCommon {
   children: CategoryFacetValueRequest[];
   retrieveChildren: boolean;
   retrieveCount: number;

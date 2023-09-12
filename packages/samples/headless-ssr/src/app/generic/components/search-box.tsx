@@ -3,6 +3,7 @@ import {
   SearchBox as SearchBoxController,
 } from '@coveo/headless';
 import {useEffect, useState, FunctionComponent} from 'react';
+import SearchBoxCommon from '../../common/search-box';
 
 interface SearchBoxProps {
   ssrState: SearchBoxState;
@@ -12,7 +13,7 @@ interface SearchBoxProps {
 export const SearchBox: FunctionComponent<SearchBoxProps> = ({
   ssrState,
   controller,
-}) => {
+}: SearchBoxProps) => {
   const [state, setState] = useState(ssrState);
 
   useEffect(
@@ -20,18 +21,5 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = ({
     [controller]
   );
 
-  return (
-    <form
-      className="search-box"
-      onSubmit={(e) => {
-        e.preventDefault();
-        controller?.submit();
-      }}
-    >
-      <input
-        value={state.value}
-        onChange={(e) => controller?.updateText(e.target.value)}
-      />
-    </form>
-  );
+  return <SearchBoxCommon controller={controller} value={state.value} />;
 };

@@ -19,11 +19,14 @@ import {categoryFacetRequestSelector} from '../../../../features/facets/category
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
-  getActiveValueFromValueTree,
+  findActiveValueAncestry,
   partitionIntoParentsAndValues,
 } from '../../../../features/facets/category-facet-set/category-facet-utils';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
-import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
+import {
+  CategoryFacetValue,
+  CategoryFacetValueCommon,
+} from '../../../../features/facets/category-facet-set/interfaces/response';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
@@ -50,6 +53,7 @@ import {
 } from './headless-core-category-facet-options';
 
 export type {
+  CategoryFacetValueCommon,
   CategoryFacetValue,
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
@@ -170,9 +174,16 @@ export interface CoreCategoryFacetState {
 
   /**
    * The facet's values.
-   * @deprecated use `valuesAsTrees` instead.
+   * @deprecated use `selectedValueAncestry` instead.
    */
   values: CategoryFacetValue[];
+
+  /**
+   * The selected facet values ancestry.
+   * The first element is the "root" of the selected value ancestry tree.
+   * The last element is the selected value itself.
+   */
+  selectedValueAncestry: CategoryFacetValue[];
 
   /** The facet's active `sortCriterion`. */
   sortCriteria: CategoryFacetSortCriterion;
@@ -270,7 +281,7 @@ export interface CategoryFacetSearchResult {
   count: number;
 
   /**
-   * The hierarchical path to the facet value.
+   * The hierarchical path to the selected facet value.
    */
   path: string[];
 }
@@ -385,7 +396,10 @@ export function buildCoreCategoryFacet(
       const isHierarchical =
         valuesAsTrees.some((value) => value.children.length > 0) ?? false;
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
-      const activeValue = getActiveValueFromValueTree(valuesAsTrees);
+      const selectedValueAncestry = findActiveValueAncestry(valuesAsTrees);
+      const activeValue = selectedValueAncestry.length
+        ? selectedValueAncestry[selectedValueAncestry.length - 1]
+        : undefined;
       const hasActiveValues = !!activeValue;
       const canShowMoreValues =
         activeValue?.moreValuesAvailable ??
@@ -398,6 +412,7 @@ export function buildCoreCategoryFacet(
       return {
         facetId,
         parents,
+        selectedValueAncestry,
         values,
         isHierarchical,
         valuesAsTrees,

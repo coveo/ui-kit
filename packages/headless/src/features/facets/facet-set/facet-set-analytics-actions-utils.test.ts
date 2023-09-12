@@ -106,7 +106,7 @@ describe('facet-set-analytics-action-utils', () => {
           field,
           currentValues: [
             buildMockCategoryFacetValueRequest({
-              state: 'selected',
+              state: 'idle',
               value: 'should appear',
               children: [
                 buildMockCategoryFacetValueRequest({
