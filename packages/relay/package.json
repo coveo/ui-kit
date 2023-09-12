@@ -42,7 +42,6 @@
     "clean": "rm -rf ./lib",
     "test": "jest",
     "test:watch": "jest --watch",
-    "npm:publish": "node ./scripts/publish.mjs",
     "npm:tag": "node ./scripts/update-npm-tag.mjs"
   },
   "devDependencies": {

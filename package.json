@@ -7,7 +7,7 @@
     "format": "prettier --write \"**/*.{js,mjs,ts,tsx,json,md,yml}\"",
     "test": "turbo run test",
     "version-bump": "node ./scripts/version-bump.mjs",
-    "npm:publish:alpha": "turbo run npm:publish -- alpha",
+    "npm:publish:alpha": "pnpm publish --recursive --tag alpha",
     "npm:tag:beta": "turbo run npm:tag -- beta",
     "npm:tag:latest": "turbo run npm:tag -- latest",
     "npm:login:ci": "node ./scripts/npm-login.mjs"
