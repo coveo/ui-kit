@@ -33,6 +33,13 @@ export interface BaseFacetRequest {
    * @defaultValue `false`
    */
   preventAutoSelect: boolean;
+
+  /**
+   * The criterion to use for specifying how results must match the selected facet values.
+   *
+   * @defaultValue `atLeastOneValue`
+   */
+  resultsMustMatch: FacetResultsMustMatch;
 }
 
 export interface BaseFacetValueRequest {
@@ -104,6 +111,13 @@ export interface RangeAlgorithm<T extends 'even' | 'equiprobable'> {
   /** The range algorithm to apply to automatically generated ranges for range facet. */
   rangeAlgorithm: T;
 }
+
+export type FacetResultsMustMatch = 'allValues' | 'atLeastOneValue';
+
+export const facetResultsMustMatch: FacetResultsMustMatch[] = [
+  'allValues',
+  'atLeastOneValue',
+];
 
 export interface AllowedValues {
   /**
