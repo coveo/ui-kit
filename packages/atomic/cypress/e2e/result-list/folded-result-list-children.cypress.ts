@@ -31,7 +31,7 @@ const setSourceAndSortCriteria = () => {
   });
 };
 
-describe('Folded Result List Component', () => {
+describe('Folded Result List Component - Children results', () => {
   it('should show child results', () => {
     new TestFixture()
       .with(setSourceAndSortCriteria)
