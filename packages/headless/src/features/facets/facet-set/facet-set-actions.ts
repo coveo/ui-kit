@@ -11,6 +11,7 @@ import {
   customSort,
 } from '../../../controllers/core/facets/_common/facet-option-definitions';
 import {validatePayload} from '../../../utils/validate-payload';
+import {FacetResultsMustMatch} from '../facet-api/request';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {facetValueDefinition} from './facet-set-validate-payload';
 import {FacetSortCriterion} from './interfaces/request';
@@ -87,6 +88,13 @@ export interface RegisterFacetActionCreatorPayload {
    * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
    */
   customSort?: string[];
+
+  /**
+   * The criterion to use for specifying how results must match the selected facet values.
+   *
+   * @defaultValue `atLeastOneValue`
+   */
+  resultsMustMatch?: FacetResultsMustMatch;
 }
 
 const facetRegistrationOptionsDefinition = {
@@ -96,6 +104,7 @@ const facetRegistrationOptionsDefinition = {
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),
   sortCriteria: new Value<FacetSortCriterion>({required: false}),
+  resultsMustMatch: new Value<FacetResultsMustMatch>({required: false}),
   allowedValues: allowedValues,
   customSort: customSort,
 };
