@@ -189,14 +189,14 @@ export class AtomicSearchBox {
   /**
    * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element.
    * The resulting component will expand to support multi-line queries.
-   * When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its ::after pseudo-element as well as the `"textarea-spacer"` part.
+   * When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part.
    * The buttons within the search box are likely to need adjusting as well.
    *
    * Example:
    * ```css
    * <style>
    *   atomic-search-box::part(textarea),
-   *   atomic-search-box::part(textarea)::after,
+   *   atomic-search-box::part(textarea-expander)::after,
    *   atomic-search-box::part(textarea-spacer) {
    *     font-size: x-large;
    *   }

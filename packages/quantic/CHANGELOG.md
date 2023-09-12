@@ -1,3 +1,15 @@
+# 2.32.0 (2023-09-11)
+
+### Features
+
+- **headless-react:** add headless react util defineSearchEngine ([#3107](https://github.com/coveo/ui-kit/issues/3107)) ([1d63e43](https://github.com/coveo/ui-kit/commits/1d63e431c427de9022238216cc5128b237b836b4))
+
+## 2.31.1 (2023-09-06)
+
+### Features
+
+- **quantic:** Added the expandable textArea searchbox in Quantic ([#3144](https://github.com/coveo/ui-kit/issues/3144)) ([b22fcd6](https://github.com/coveo/ui-kit/commits/b22fcd60aa21a2471b1140b8d0ab1b9ccb40636a))
+
 ## 2.30.4 (2023-08-30)
 
 ### Bug Fixes

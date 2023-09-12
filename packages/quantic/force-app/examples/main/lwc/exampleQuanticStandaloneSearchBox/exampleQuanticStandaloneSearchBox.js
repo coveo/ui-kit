@@ -49,6 +49,13 @@ export default class ExampleQuanticStandaloneSearchBox extends LightningElement 
         'The query pipeline to use for this Standalone Search Box. This value does not affect the target search page after redirection. Setting the pipeline to be used on the target search page should be done on said search page component.',
       defaultValue: undefined,
     },
+    {
+      attribute: 'textarea',
+      label: 'Textarea',
+      description:
+        'Render the searchbox as an auto-expandable textarea instead of a HTMLInput',
+      defaultValue: false,
+    },
   ];
 
   get notConfigured() {
