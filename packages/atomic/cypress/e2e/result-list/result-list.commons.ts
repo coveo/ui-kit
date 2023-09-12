@@ -155,7 +155,7 @@ export default (
               .should('have.class', `density-${density}`);
           });
         },
-        {componentTag}
+        {componentTag, useBeforeEach: false}
       );
     });
 
