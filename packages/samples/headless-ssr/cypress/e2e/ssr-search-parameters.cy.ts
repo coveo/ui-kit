@@ -5,8 +5,6 @@ import {
   waitForHydration,
 } from './utils';
 
-const searchStateKey = 'search-state';
-
 describe('headless ssr with search parameter manager example', () => {
   const route = '/generic';
   describe('when loading a page without search parameters, after hydration', () => {
@@ -34,9 +32,7 @@ describe('headless ssr with search parameter manager example', () => {
       describe('after the url was updated', () => {
         beforeEach(() => {
           cy.url().should((href) =>
-            expect(new URL(href).searchParams.has(searchStateKey)).to.equal(
-              true
-            )
+            expect(new URL(href).searchParams.has('q')).to.equal(true)
           );
           cy.get<string>('@initial-results').then((initialResults) => {
             getResultTitles().should('not.deep.equal', initialResults);
@@ -45,10 +41,7 @@ describe('headless ssr with search parameter manager example', () => {
 
         it('should have the correct search parameters', () => {
           cy.url().should((href) => {
-            const searchState = new URL(href).searchParams.get(searchStateKey);
-            expect(searchState && JSON.parse(searchState)).to.deep.equal({
-              q: query,
-            });
+            expect(new URL(href).searchParams.get('q')).to.equal(query);
           });
         });
 
@@ -87,7 +80,7 @@ describe('headless ssr with search parameter manager example', () => {
     const query = 'def';
     function getInitialUrl() {
       const searchParams = new URLSearchParams({
-        [searchStateKey]: JSON.stringify({q: query}),
+        q: query,
       });
       return `${route}?${searchParams.toString()}`;
     }
@@ -131,7 +124,7 @@ describe('headless ssr with search parameter manager example', () => {
   describe('when loading a page with invalid search parameters', () => {
     function getInitialUrl() {
       const searchParams = new URLSearchParams({
-        [searchStateKey]: JSON.stringify({q: ''}),
+        q: '',
       });
       return `${route}?${searchParams.toString()}`;
     }
