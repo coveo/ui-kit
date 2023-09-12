@@ -33,3 +33,6 @@ src/generated
 cypress/screenshots/*
 
 headless/
+/test-results/
+/playwright-report/
+/playwright/.cache/

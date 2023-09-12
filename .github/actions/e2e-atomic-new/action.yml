@@ -1,0 +1,31 @@
+name: 'Atomic E2E tests'
+description: 'Runs Cypress tests for Atomic'
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ''
+  spec:
+    description: Specify the spec files to run
+    required: true
+  SPLIT:
+    description: Amount of split
+    default: '1'
+    required: true
+  SPLIT_INDEX:
+    description: Index of the split
+    default: '1'
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Run Playwright tests
+      shell: bash
+      run: npx -w=@coveo/atomic playwright test --shard=${{ inputs.SPLIT }}/${{ inputs.SPLIT_INDEX }}
+    - uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: playwright-report
+        path: packages/atomic/playwright-report/
+        retention-days: 30
+
