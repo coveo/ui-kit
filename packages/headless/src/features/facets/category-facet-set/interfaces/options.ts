@@ -9,4 +9,5 @@ export type CategoryFacetOptionalParameters = Pick<
   | 'sortCriteria'
   | 'basePath'
   | 'filterByBasePath'
+  | 'resultsMustMatch'
 >;

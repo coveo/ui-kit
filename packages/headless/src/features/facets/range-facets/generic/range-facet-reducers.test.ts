@@ -60,6 +60,7 @@ describe('range facet reducers', () => {
         sortCriteria: 'ascending',
         type: 'numericalRange',
         rangeAlgorithm: 'even',
+        resultsMustMatch: 'atLeastOneValue',
         ...options,
       });
     });
