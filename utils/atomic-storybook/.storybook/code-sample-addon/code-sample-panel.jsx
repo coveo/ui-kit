@@ -1,22 +1,25 @@
-import React, {useRef} from 'react';
+//TODO: KIT-2733 | Bring back TypeScript to this file 
+import MonacoEditor from '@monaco-editor/react';
 import {useArgs, useParameter} from '@storybook/api';
+import {delay} from 'lodash';
+// import {editor} from 'monaco-editor';
+import React, {useRef} from 'react';
+import {renderArgsToResultTemplate} from '../default-result-component-story';
 import {
-  DefaultStoryAdvancedConfig,
+  // DefaultStoryAdvancedConfig,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
 } from '../default-story-shared';
-import MonacoEditor from '@monaco-editor/react';
-import {renderArgsToResultTemplate} from '../default-result-component-story';
-import {delay} from 'lodash';
-interface StoryParameters {
-  componentTag: string;
-  isResultComponent: boolean;
-  advancedConfig: DefaultStoryAdvancedConfig;
-}
+
+// interface StoryParameters {
+//   componentTag: string;
+//   isResultComponent: boolean;
+//   advancedConfig: DefaultStoryAdvancedConfig;
+// }
 
 const addSpacingBetweenStylingAndHTML = (
-  htmlString: string,
-  styleString: string
+  htmlString,
+  styleString
 ) => {
   if (styleString && htmlString) {
     return `${styleString} \n\n ${htmlString}`;
@@ -33,7 +36,7 @@ export const CodeSamplePanel = () => {
     return '';
   }
   const {componentTag, isResultComponent, advancedConfig} =
-    storyParameters as StoryParameters;
+    storyParameters
 
   const componentToHTML = renderArgsToHTMLString(
     componentTag,
