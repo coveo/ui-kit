@@ -1,6 +1,6 @@
 import {
-  CoveoNextJsSearchParametersSerializer,
   NextJSServerSideSearchParams,
+  stringifyNextJSSearchParams,
 } from '@/src/app/common/search-parameters-serializer';
 import {fetchInitialState} from '@/src/app/generic/common/engine';
 import SearchPage from '@/src/app/generic/components/search-page';
@@ -9,15 +9,11 @@ import SearchPage from '@/src/app/generic/components/search-page';
 export default async function Search(url: {
   searchParams: NextJSServerSideSearchParams;
 }) {
-  const {coveoSearchParameters} =
-    CoveoNextJsSearchParametersSerializer.fromServerSideUrlSearchParams(
-      url.searchParams
-    );
   const ssrState = await fetchInitialState({
     controllers: {
       searchParameters: {
         initialState: {
-          parameters: coveoSearchParameters,
+          fragment: stringifyNextJSSearchParams(url.searchParams),
         },
       },
     },

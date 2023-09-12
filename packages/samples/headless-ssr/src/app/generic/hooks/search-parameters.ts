@@ -1,16 +1,13 @@
 'use client';
 
-import {
-  SearchParameterManager,
-  SearchParameterManagerState,
-} from '@coveo/headless/ssr';
-import {useEffect, useMemo, useState} from 'react';
-import {useHistoryRouter} from '../../common/search-parameters';
-import {CoveoNextJsSearchParametersSerializer} from '../../common/search-parameters-serializer';
+import {UrlManager, UrlManagerState} from '@coveo/headless/ssr';
+import {NavigateOptions} from 'next/dist/shared/lib/app-router-context';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {useEffect, useState} from 'react';
 
 interface UseSyncSearchParametersProps {
-  ssrState: SearchParameterManagerState;
-  controller?: SearchParameterManager;
+  ssrState: UrlManagerState;
+  controller?: UrlManager;
 }
 
 function useSearchParameters({
@@ -31,44 +28,36 @@ export function useSyncSearchParameters({
   ssrState,
   controller,
 }: UseSyncSearchParametersProps) {
-  const historyRouter = useHistoryRouter();
+  const {push, replace} = useRouter();
+  const searchParams = useSearchParams();
   const state = useSearchParameters({ssrState, controller});
 
   // Update the search interface.
   useEffect(
-    () =>
-      controller &&
-      historyRouter.url?.searchParams &&
-      controller.synchronize(
-        CoveoNextJsSearchParametersSerializer.fromClientSideUrlSearchParams(
-          historyRouter.url.searchParams
-        ).coveoSearchParameters
-      ),
+    () => {
+      if (!controller) {
+        return;
+      }
+      if (searchParams === null) {
+        return;
+      }
+      controller.synchronize(searchParams.toString());
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [historyRouter.url?.searchParams]
+    [searchParams]
   );
 
   // Update the URL.
-  const correctedUrl = useMemo(() => {
-    if (!historyRouter.url) {
-      return null;
-    }
-    const newURL = new URL(historyRouter.url);
-    CoveoNextJsSearchParametersSerializer.fromCoveoSearchParameters(
-      state.parameters
-    ).applyToUrlSearchParams(newURL.searchParams);
-    return newURL.href;
-  }, [historyRouter.url, state.parameters]);
   useEffect(() => {
-    if (!correctedUrl || correctedUrl === historyRouter.url?.href) {
+    if (state.fragment === searchParams.toString()) {
       return;
     }
     const isInitialState = controller === undefined;
     if (isInitialState) {
-      historyRouter.replace(correctedUrl);
+      replace('?' + state.fragment, {shallow: true} as NavigateOptions);
     } else {
-      historyRouter.push(correctedUrl);
+      push('?' + state.fragment, {shallow: true} as NavigateOptions);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [correctedUrl]);
+  }, [state.fragment]);
 }

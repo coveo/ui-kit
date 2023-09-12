@@ -1,51 +1,43 @@
 'use client';
 
-import {useEffect, useMemo} from 'react';
-import {useHistoryRouter} from '../../common/search-parameters';
-import {CoveoNextJsSearchParametersSerializer} from '../../common/search-parameters-serializer';
+import {NavigateOptions} from 'next/dist/shared/lib/app-router-context';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {useEffect} from 'react';
 import {useSearchParameters} from '../common/engine';
 
 export default function SearchParameters() {
-  const historyRouter = useHistoryRouter();
+  const {push, replace} = useRouter();
+  const searchParams = useSearchParams();
   const {state, methods} = useSearchParameters();
 
   // Update the search interface.
   useEffect(
-    () =>
-      methods &&
-      historyRouter.url?.searchParams &&
-      methods.synchronize(
-        CoveoNextJsSearchParametersSerializer.fromClientSideUrlSearchParams(
-          historyRouter.url.searchParams
-        ).coveoSearchParameters
-      ),
+    () => {
+      if (!methods) {
+        return;
+      }
+      if (searchParams === null) {
+        return;
+      }
+      methods.synchronize(searchParams.toString());
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [historyRouter.url?.searchParams]
+    [searchParams]
   );
 
   // Update the URL.
-  const correctedUrl = useMemo(() => {
-    if (!historyRouter.url) {
-      return null;
-    }
-    const newURL = new URL(historyRouter.url);
-    CoveoNextJsSearchParametersSerializer.fromCoveoSearchParameters(
-      state.parameters
-    ).applyToUrlSearchParams(newURL.searchParams);
-    return newURL.href;
-  }, [historyRouter.url, state.parameters]);
   useEffect(() => {
-    if (!correctedUrl || correctedUrl === historyRouter.url?.href) {
+    if (state.fragment === searchParams.toString()) {
       return;
     }
     const isInitialState = methods === undefined;
     if (isInitialState) {
-      historyRouter.replace(correctedUrl);
+      replace('?' + state.fragment, {shallow: true} as NavigateOptions);
     } else {
-      historyRouter.push(correctedUrl);
+      push('?' + state.fragment, {shallow: true} as NavigateOptions);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [correctedUrl]);
+  }, [state.fragment]);
 
   return <></>;
 }
