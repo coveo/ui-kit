@@ -253,7 +253,7 @@ export type {
 export {defineSearchParameterManager} from './search-parameter-manager/headless-search-parameter-manager.ssr';
 
 export type {
-  UrlManagerProps,
+  UrlManagerBuildProps,
   UrlManagerInitialState,
   UrlManagerState,
   UrlManager,

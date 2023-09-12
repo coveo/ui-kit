@@ -1,13 +1,12 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
+import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common';
 import {
   UrlManager,
-  UrlManagerProps,
+  UrlManagerInitialState,
   buildUrlManager,
 } from './headless-url-manager';
 
 export type {
-  UrlManagerProps,
   UrlManagerInitialState,
   UrlManagerState,
   UrlManager,
@@ -16,8 +15,18 @@ export type {
 /**
  * @internal
  */
-export const defineUrlManager = (
-  props: UrlManagerProps
-): ControllerDefinitionWithoutProps<SearchEngine, UrlManager> => ({
-  build: (engine) => buildUrlManager(engine, props),
+export interface UrlManagerBuildProps {
+  initialState: UrlManagerInitialState;
+}
+
+/**
+ * @internal
+ */
+export const defineUrlManager = (): ControllerDefinitionWithProps<
+  SearchEngine,
+  UrlManager,
+  UrlManagerBuildProps
+> => ({
+  buildWithProps: (engine, props) =>
+    buildUrlManager(engine, {initialState: props.initialState}),
 });
