@@ -1,10 +1,10 @@
-import {AnalyticsRequestClient, IAnalyticsRequestOptions, IAnalyticsClientOptions} from './analyticsRequestClient';
+import {AnalyticsRequestClient, IAnalyticsClientOptions, PreprocessAnalyticsRequest} from './analyticsRequestClient';
 import {EventType, IRequestPayload} from '../events';
 
 export class AnalyticsBeaconClient implements AnalyticsRequestClient {
     constructor(private opts: IAnalyticsClientOptions) {}
 
-    public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<void> {
+    public async sendEvent(eventType: EventType, originalPayload: IRequestPayload): Promise<void> {
         if (!this.isAvailable()) {
             throw new Error(
                 `navigator.sendBeacon is not supported in this browser. Consider adding a polyfill like "sendbeacon-polyfill".`
@@ -12,18 +12,19 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         }
 
         const {baseUrl, preprocessRequest} = this.opts;
-        const parsedRequestData = this.encodeForEventType(eventType, payload);
+
         const paramsFragments = await this.getQueryParamsForEventType(eventType);
-        const defaultOptions: IAnalyticsRequestOptions = {
-            url: `${baseUrl}/analytics/${eventType}?${paramsFragments}`,
-            body: new Blob([parsedRequestData], {
-                type: 'application/x-www-form-urlencoded',
-            }),
-        };
-        const {url, body}: IAnalyticsRequestOptions = {
-            ...defaultOptions,
-            ...(preprocessRequest ? await preprocessRequest(defaultOptions, 'analyticsBeacon') : {}),
-        };
+
+        const {url, payload} = await this.preProcessRequestAsPotentialJSONString(
+            `${baseUrl}/analytics/${eventType}?${paramsFragments}`,
+            originalPayload,
+            preprocessRequest
+        );
+
+        const parsedRequestData = this.encodeForEventType(eventType, payload);
+        const body = new Blob([parsedRequestData], {
+            type: 'application/x-www-form-urlencoded',
+        });
 
         navigator.sendBeacon(url, body as any); // https://github.com/microsoft/TypeScript/issues/38715
         return;
@@ -35,6 +36,34 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
 
     public deleteHttpCookieVisitorId() {
         return Promise.resolve();
+    }
+
+    private async preProcessRequestAsPotentialJSONString(
+        originalURL: string,
+        originalPayload: IRequestPayload,
+        preprocessRequest?: PreprocessAnalyticsRequest
+    ): Promise<{url: string; payload: IRequestPayload}> {
+        let returnedUrl = originalURL;
+        let returnedPayload = originalPayload;
+
+        if (preprocessRequest) {
+            const processedRequest = await preprocessRequest(
+                {url: originalURL, body: JSON.stringify(originalPayload)},
+                'analyticsBeacon'
+            );
+            const {url: processedURL, body: processedBody} = processedRequest;
+            returnedUrl = processedURL || originalURL;
+            try {
+                returnedPayload = JSON.parse(processedBody as string);
+            } catch (e) {
+                console.error('Unable to process the request body as a JSON string', e);
+            }
+        }
+
+        return {
+            payload: returnedPayload,
+            url: returnedUrl,
+        };
     }
 
     private encodeForEventType(eventType: EventType, payload: IRequestPayload): string {

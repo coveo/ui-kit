@@ -1,6 +1,6 @@
 import {AnalyticsBeaconClient} from './analyticsBeaconClient';
 import {EventType} from '../events';
-import {AnalyticsClientOrigin, IAnalyticsRequestOptions} from './analyticsRequestClient';
+import {AnalyticsClientOrigin, IAnalyticsRequestOptions, PreprocessAnalyticsRequest} from './analyticsRequestClient';
 
 describe('AnalyticsBeaconClient', () => {
     const baseUrl = 'https://bloup.com';
@@ -99,33 +99,94 @@ describe('AnalyticsBeaconClient', () => {
         );
     });
 
-    it('should preprocess the request with the preprocessRequest', async () => {
-        let clientOrigin: AnalyticsClientOrigin;
-        const processedRequest: IAnalyticsRequestOptions = {
-            url: 'https://www.myownanalytics.com/endpoint',
-            body: JSON.stringify({
-                test: 'custom',
-            }),
-        };
-        const client = new AnalyticsBeaconClient({
-            baseUrl,
-            token,
-            visitorIdProvider: {
-                getCurrentVisitorId: () => {
-                    return Promise.resolve(currentVisitorId);
+    describe('allows to preprocessRequest', () => {
+        const setupClient = (preprocessRequest: PreprocessAnalyticsRequest) => {
+            return new AnalyticsBeaconClient({
+                baseUrl,
+                token,
+                visitorIdProvider: {
+                    getCurrentVisitorId: () => {
+                        return Promise.resolve(currentVisitorId);
+                    },
+                    setCurrentVisitorId: () => {},
                 },
-                setCurrentVisitorId: () => {},
-            },
-            preprocessRequest: (_request, type) => {
+                preprocessRequest,
+            });
+        };
+
+        it('to modify the origin and the body of the request', async () => {
+            let clientOrigin: AnalyticsClientOrigin;
+            const processedRequest: IAnalyticsRequestOptions = {
+                url: 'https://www.myownanalytics.com/endpoint',
+                body: JSON.stringify({
+                    test: 'custom',
+                }),
+            };
+            const client = setupClient((_request, type) => {
                 clientOrigin = type;
                 return processedRequest;
-            },
+            });
+
+            await client.sendEvent(EventType.collect, {});
+
+            expect(clientOrigin!).toBe('analyticsBeacon');
+            expect(sendBeaconMock).toHaveBeenCalledWith(processedRequest.url, expect.anything());
+            expect(await getSendBeaconFirstCallBlobArgument()).toContain('test=custom');
         });
 
-        await client.sendEvent(EventType.collect, {});
+        it('to modify the request body as a JSON string for a collect event', async () => {
+            const client = setupClient((request) => {
+                const bodyShouldBeAvailableAsJSONString = JSON.parse(request.body as string);
+                expect(bodyShouldBeAvailableAsJSONString).toEqual({foo: 'bar'});
+                bodyShouldBeAvailableAsJSONString.foo = 'baz';
+                request.body = JSON.stringify(bodyShouldBeAvailableAsJSONString);
+                return request;
+            });
 
-        expect(clientOrigin!).toBe('analyticsBeacon');
-        expect(sendBeaconMock).toHaveBeenCalledWith(processedRequest.url, processedRequest.body);
+            await client.sendEvent(EventType.collect, {foo: 'bar'});
+            expect(await getSendBeaconFirstCallBlobArgument()).toContain(`foo=baz`);
+        });
+
+        it('to modify the request body as a JSON string for a click event', async () => {
+            const client = setupClient((request) => {
+                const bodyParsedAsJSON = JSON.parse(request.body as string);
+                expect(bodyParsedAsJSON).toEqual({actionCause: 'foo'});
+                bodyParsedAsJSON.actionCause = 'bar';
+                request.body = JSON.stringify(bodyParsedAsJSON);
+                return request;
+            });
+
+            await client.sendEvent(EventType.click, {actionCause: 'foo'});
+            expect(await getSendBeaconFirstCallBlobArgument()).toContain(
+                `clickEvent=${encodeURIComponent(`{"actionCause":"bar"}`)}`
+            );
+        });
+
+        it('to augment the request body as a JSON string for a click event', async () => {
+            const client = setupClient((request) => {
+                const bodyParsedAsJSON = JSON.parse(request.body as string);
+                bodyParsedAsJSON.aNewProperty = 'bar';
+                request.body = JSON.stringify(bodyParsedAsJSON);
+                return request;
+            });
+
+            await client.sendEvent(EventType.click, {actionCause: 'foo'});
+            expect(await getSendBeaconFirstCallBlobArgument()).toContain(
+                `clickEvent=${encodeURIComponent(`{"actionCause":"foo","aNewProperty":"bar"}`)}`
+            );
+        });
+
+        it('should keep original request body if preprocessRequest returns an invalid JSON string', async () => {
+            const client = setupClient((request) => {
+                request.body = 'invalid JSON string';
+                return request;
+            });
+
+            await client.sendEvent(EventType.click, {actionCause: 'bar'});
+            expect(await getSendBeaconFirstCallBlobArgument()).toContain(
+                `clickEvent=${encodeURIComponent(`{"actionCause":"bar"}`)}`
+            );
+        });
     });
 
     const getSendBeaconFirstCallBlobArgument = async () => {
