@@ -97,7 +97,7 @@ describe('Headless react SSR utils', () => {
       renderFunction: CallableFunction,
       expectedErrMsg: string
     ) {
-      let err = undefined;
+      let err: Error | undefined = undefined;
       // Prevent expected error from being thrown in console when running tests
       const consoleErrorStub = jest
         .spyOn(console, 'error')
