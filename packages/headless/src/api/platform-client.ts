@@ -50,18 +50,12 @@ export class PlatformClient {
     options: PlatformClientCallOptions
   ): Promise<Response | PlatformClientCallError> {
     const defaultRequestOptions = buildDefaultRequestOptions(options);
-    const {origin, preprocessRequest, logger, requestMetadata} = options;
+    const {logger} = options;
 
-    const requestInfo: PlatformRequestOptions = {
-      ...defaultRequestOptions,
-      ...(preprocessRequest
-        ? await preprocessRequest(
-            defaultRequestOptions,
-            origin,
-            requestMetadata
-          )
-        : {}),
-    };
+    const requestInfo = await PlatformClient.preprocessRequest(
+      defaultRequestOptions,
+      options
+    );
 
     logger.info(requestInfo, 'Platform request');
 
@@ -102,6 +96,34 @@ export class PlatformClient {
 
       return error as PlatformClientCallError;
     }
+  }
+
+  private static async preprocessRequest(
+    defaultRequestOptions: PlatformRequestOptions,
+    options: PlatformClientCallOptions
+  ) {
+    const {origin, preprocessRequest, logger, requestMetadata} = options;
+
+    let requestInfo: PlatformRequestOptions;
+
+    try {
+      const processedRequest = await preprocessRequest(
+        defaultRequestOptions,
+        origin,
+        requestMetadata
+      );
+      requestInfo = {
+        ...defaultRequestOptions,
+        ...processedRequest,
+      };
+    } catch (e) {
+      logger.error(
+        e as Error,
+        'Platform request preprocessing failed. Returning default request options.'
+      );
+      requestInfo = {...defaultRequestOptions};
+    }
+    return requestInfo;
   }
 }
 

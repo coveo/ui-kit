@@ -157,6 +157,17 @@ describe('PlatformClient call', () => {
     });
   });
 
+  it('should should recover if the preprocessRequest throws', async () => {
+    mockFetch.mockReturnValue(
+      Promise.resolve(new Response(JSON.stringify({})))
+    );
+    const preprocessRequest = () => {
+      throw 'boom';
+    };
+    await platformCall({preprocessRequest});
+    expect(mockFetch).toHaveBeenCalled();
+  });
+
   it(`when the contentType is www-url-form-encoded and the #requestParams can be encoded,
   it encodes the body as a url`, async () => {
     await platformCall({
@@ -274,7 +285,7 @@ describe('PlatformClient call', () => {
 
   it('should not throw when backOff rejects with a response', async () => {
     const spy = jest.spyOn(BackOff, 'backOff');
-    const expectedResponse = new Response(JSON.stringify({hoho: 'oups'}), {
+    const expectedResponse = new Response(JSON.stringify({foo: 'bar'}), {
       status: 429,
     });
     spy.mockRejectedValueOnce(expectedResponse);
