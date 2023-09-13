@@ -16,11 +16,11 @@ import {
 import {
   FetchStaticStateWithProps,
   FetchStaticStateWithoutProps,
-} from './fetch-initial-state';
+} from './fetch-static-state';
 import {
   HydrateStaticStateWithProps,
   HydrateStaticStateWithoutProps,
-} from './hydrate-initial-state';
+} from './hydrate-static-state';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},

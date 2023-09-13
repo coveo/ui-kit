@@ -96,12 +96,12 @@ export function defineSearchEngine<
           InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
         >
       >((resolve, reject) => {
-        let initialControllers: ControllersMap;
+        let staticControllers: ControllersMap;
         const middleware: Middleware = () => (next) => (action) => {
           next(action);
           if (action.type === 'search/executeSearch/fulfilled') {
             resolve({
-              controllers: mapObject(initialControllers, (controller) => ({
+              controllers: mapObject(staticControllers, (controller) => ({
                 state: controller.state,
               })) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
               searchFulfilledAction: JSON.parse(JSON.stringify(action)),
@@ -123,7 +123,7 @@ export function defineSearchEngine<
             controllers: executeOptions.controllers,
           }),
         }).then(({engine, controllers}) => {
-          initialControllers = controllers;
+          staticControllers = controllers;
           engine.executeFirstSearch();
         });
       });
