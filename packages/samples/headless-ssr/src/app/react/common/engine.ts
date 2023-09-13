@@ -11,7 +11,7 @@ export const {
   fetchStaticState,
   hydrateStaticState,
   StaticStateProvider,
-  CSRProvider,
+  HydratedProvider,
 } = engineDefinition;
 
 export const {useResultList, useSearchBox, useSearchParameters} =

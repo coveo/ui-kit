@@ -58,7 +58,7 @@ export type ReactEngineDefinition<
       controllers: InferControllerStaticStateMapFromDefinitions<TControllers>;
     }>
   >;
-  CSRProvider: FunctionComponent<
+  HydratedProvider: FunctionComponent<
     PropsWithChildren<{
       engine: TEngine;
       controllers: InferControllersMapFromDefinition<TControllers>;

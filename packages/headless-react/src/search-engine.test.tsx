@@ -120,7 +120,7 @@ describe('Headless react SSR utils', () => {
       );
     });
 
-    test('should render with SSRProvider', async () => {
+    test('should render with StaticProvider', async () => {
       const staticState = await fetchStaticState();
       render(
         <StaticStateProvider controllers={staticState.controllers}>
@@ -152,7 +152,7 @@ describe('Headless react SSR utils', () => {
         );
       });
 
-      test('should not return engine with SSRProvider', async () => {
+      test('should not return engine with StaticProvider', async () => {
         const staticState = await fetchStaticState();
         function staticStateProviderWrapper({children}: PropsWithChildren) {
           return (

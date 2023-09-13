@@ -75,8 +75,8 @@ routes.forEach((route) => {
         );
         expect(ssrTimestamp).to.not.be.undefined;
         cy.get(timestampSelector).should((timeStampElement) => {
-          const csrTimestamp = Date.parse(timeStampElement.text());
-          expect(csrTimestamp).to.be.greaterThan(ssrTimestamp);
+          const hydratedTimestamp = Date.parse(timeStampElement.text());
+          expect(hydratedTimestamp).to.be.greaterThan(ssrTimestamp);
         });
       });
     });
