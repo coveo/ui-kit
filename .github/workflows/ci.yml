@@ -23,3 +23,52 @@ jobs:
         uses: ./.github/actions/build-packages
       - name: Tests
         uses: ./.github/actions/test
+  my-tag:
+    name: "My tag"
+    needs: [ci]
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - id: tag
+        run: echo "tag=$(git tag --contains)" >> "$GITHUB_OUTPUT"
+  version:
+    name: Bump versions
+    needs: [my-tag]
+    if: ${{ !needs.my-tag.outputs.tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.COMMIT_TOKEN }}
+      - name: Setup
+        uses: ./.github/actions/setup
+      - name: Git Setup
+        uses: ./.github/actions/git-setup
+      - name: Version Bump
+        uses: ./.github/actions/version-bump
+  release:
+    name: Release
+    needs: [my-tag]
+    if: needs.my-tag.outputs.tag
+    runs-on: [coveo, linux, x64, ec2]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup
+        uses: ./.github/actions/setup
+      - name: Build
+        uses: ./.github/actions/build-packages
+      - name: Publish
+        uses: ./.github/actions/publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        with:
+          COMMIT_HASH: ${{ github.sha }}
