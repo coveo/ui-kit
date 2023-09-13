@@ -27,7 +27,7 @@ describe('Headless react SSR utils', () => {
       useEngine,
       controllers,
       StaticStateProvider,
-      CSRProvider,
+      HydratedStateProvider,
       ...rest
     } = defineSearchEngine({
       configuration: sampleConfig,
@@ -39,7 +39,7 @@ describe('Headless react SSR utils', () => {
       build,
       useEngine,
       StaticStateProvider,
-      CSRProvider,
+      HydratedStateProvider,
     ].forEach((returnValue) => expect(typeof returnValue).toBe('function'));
 
     expect(controllers).toEqual({});
@@ -69,7 +69,7 @@ describe('Headless react SSR utils', () => {
       fetchStaticState,
       hydrateStaticState,
       StaticStateProvider,
-      CSRProvider,
+      HydratedStateProvider,
       controllers,
       useEngine,
     } = engineDefinition;
@@ -131,14 +131,14 @@ describe('Headless react SSR utils', () => {
       await checkRenderedResultList();
     });
 
-    test('should hydrate results with CSRProvider', async () => {
+    test('should hydrate results with HydratedStateProvider', async () => {
       const staticState = await fetchStaticState();
       const {engine, controllers} = await hydrateStaticState(staticState);
 
       render(
-        <CSRProvider engine={engine} controllers={controllers}>
+        <HydratedStateProvider engine={engine} controllers={controllers}>
           <TestResultList />
-        </CSRProvider>
+        </HydratedStateProvider>
       );
 
       await checkRenderedResultList();
@@ -168,14 +168,14 @@ describe('Headless react SSR utils', () => {
         expect(result.current).toBeUndefined();
       });
 
-      test('should return engine with CSRProvider', async () => {
+      test('should return engine with HydratedStateProvider', async () => {
         const staticState = await fetchStaticState();
         const {engine, controllers} = await hydrateStaticState(staticState);
         function hydratedStateProviderWrapper({children}: PropsWithChildren) {
           return (
-            <CSRProvider controllers={controllers} engine={engine}>
+            <HydratedStateProvider controllers={controllers} engine={engine}>
               {children}
-            </CSRProvider>
+            </HydratedStateProvider>
           );
         }
 
