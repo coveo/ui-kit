@@ -392,7 +392,7 @@ describe('Color Facet Test Suites', () => {
       selectIdleBoxValueAt(0);
     });
 
-    it('should include resultsMustMatch in the request', () => {
+    it('should set resultsMustMatch to `atLeastOneValue`', () => {
       cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
         expect(firstSearch.request.body.facets[0]).to.have.property(
           'resultsMustMatch',
@@ -417,7 +417,7 @@ describe('Color Facet Test Suites', () => {
       selectIdleBoxValueAt(0);
     });
 
-    it('should include resultsMustMatch in the request', () => {
+    it('should set resultsMustMatch to `allValues`', () => {
       cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
         expect(firstSearch.request.body.facets[0]).to.have.property(
           'resultsMustMatch',

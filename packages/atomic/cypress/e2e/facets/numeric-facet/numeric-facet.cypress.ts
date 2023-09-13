@@ -197,7 +197,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           setupSelectCheckboxValue();
         });
 
-        it('should include resultsMustMatch in the request', () => {
+        it('should set resultsMustMatch to `allValues`', () => {
           cy.wait(TestFixture.interceptAliases.Search).should((search) => {
             expect(search.request.body.facets[0]).to.have.property(
               'resultsMustMatch',
@@ -220,7 +220,7 @@ describe('Numeric Facet V1 Test Suites', () => {
           setupSelectCheckboxValue();
         });
 
-        it('should include resultsMustMatch in the request', () => {
+        it('should set resultsMustMatch to `atLeastOneValue`', () => {
           cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
             expect(firstSearch.request.body.facets[0]).to.have.property(
               'resultsMustMatch',
