@@ -58,7 +58,7 @@ export type ReactEngineDefinition<
       controllers: InferControllerStaticStateMapFromDefinitions<TControllers>;
     }>
   >;
-  HydratedProvider: FunctionComponent<
+  HydratedStateProvider: FunctionComponent<
     PropsWithChildren<{
       engine: TEngine;
       controllers: InferControllersMapFromDefinition<TControllers>;

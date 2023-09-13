@@ -16,7 +16,7 @@ export default function SearchPage({
 }: {
   staticState: SearchStaticState;
 }) {
-  const [hydratedState, setHydratedResult] = useState<
+  const [hydratedState, setHydratedState] = useState<
     SearchHydratedState | undefined
   >(undefined);
 
@@ -29,7 +29,7 @@ export default function SearchPage({
         },
       },
     }).then(({engine, controllers}) => {
-      setHydratedResult({engine, controllers});
+      setHydratedState({engine, controllers});
     });
   }, [staticState]);
 

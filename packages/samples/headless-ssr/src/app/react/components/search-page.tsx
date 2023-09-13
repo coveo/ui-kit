@@ -4,7 +4,7 @@ import {
   SearchStaticState,
   SearchHydratedState,
   hydrateStaticState,
-  HydratedProvider,
+  HydratedStateProvider,
   StaticStateProvider,
 } from '@/src/app/react/common/engine';
 import {useEffect, useState, PropsWithChildren} from 'react';
@@ -18,7 +18,7 @@ export function SearchPageProvider({
   staticState,
   children,
 }: PropsWithChildren<SearchPageProviderProps>) {
-  const [hydratedState, setHydratedResult] = useState<
+  const [hydratedState, setHydratedState] = useState<
     SearchHydratedState | undefined
   >(undefined);
 
@@ -31,13 +31,13 @@ export function SearchPageProvider({
         },
       },
     }).then(({engine, controllers}) => {
-      setHydratedResult({engine, controllers});
+      setHydratedState({engine, controllers});
     });
   }, [staticState]);
 
   if (hydratedState) {
     return (
-      <HydratedProvider
+      <HydratedStateProvider
         engine={hydratedState.engine}
         controllers={hydratedState.controllers}
       >
@@ -46,7 +46,7 @@ export function SearchPageProvider({
           staticState={staticState}
           hydratedState={hydratedState}
         />
-      </HydratedProvider>
+      </HydratedStateProvider>
     );
   } else {
     return (

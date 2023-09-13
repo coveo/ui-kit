@@ -20,7 +20,7 @@ import {SingletonGetter, capitalize, singleton, mapObject} from './utils';
 
 export class MissingEngineProviderError extends Error {
   static message =
-    'Unable to find Context. Please make sure you are wrapping your component with either `StaticStateProvider` or `HydratedProvider` component that can provide the required context.';
+    'Unable to find Context. Please make sure you are wrapping your component with either `StaticStateProvider` or `HydratedStateProvider` component that can provide the required context.';
   constructor() {
     super(MissingEngineProviderError.message);
   }
@@ -35,7 +35,7 @@ export function createSingletonContext<
   );
 }
 
-function isHydratedContext<
+function isHydratedStateContext<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 >(
@@ -61,7 +61,7 @@ function buildControllerHook<
     }
     const subscribe = useCallback(
       (listener: () => void) =>
-        isHydratedContext(ctx)
+        isHydratedStateContext(ctx)
           ? ctx.controllers[key].subscribe(listener)
           : () => {},
       [ctx]
@@ -69,7 +69,7 @@ function buildControllerHook<
     const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
     const state = useSyncMemoizedStore(subscribe, getStaticState);
     const methods = useMemo(() => {
-      if (!isHydratedContext(ctx)) {
+      if (!isHydratedStateContext(ctx)) {
         return undefined;
       }
       const controller = ctx.controllers[key];
@@ -100,7 +100,7 @@ export function defineSearchEngine<
       if (ctx === null) {
         throw new MissingEngineProviderError();
       }
-      return isHydratedContext(ctx) ? ctx.engine : undefined;
+      return isHydratedStateContext(ctx) ? ctx.engine : undefined;
     },
     controllers: (options.controllers
       ? Object.fromEntries(
@@ -114,7 +114,7 @@ export function defineSearchEngine<
       const {Provider} = singletonContext.get();
       return <Provider value={{controllers}}>{children}</Provider>;
     },
-    HydratedProvider: ({controllers, engine, children}) => {
+    HydratedStateProvider: ({controllers, engine, children}) => {
       const {Provider} = singletonContext.get();
       return <Provider value={{engine, controllers}}>{children}</Provider>;
     },
