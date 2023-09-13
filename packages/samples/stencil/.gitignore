@@ -13,3 +13,4 @@ npm-debug.log*
 # Build
 dist
 www
+.stencil

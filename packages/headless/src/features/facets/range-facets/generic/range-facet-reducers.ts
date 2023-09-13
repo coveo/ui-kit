@@ -21,6 +21,7 @@ export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
   numberOfValues: 8,
   sortCriteria: 'ascending',
   rangeAlgorithm: 'even',
+  resultsMustMatch: 'atLeastOneValue',
 };
 
 export function registerRangeFacet<T extends RangeFacetSlice>(

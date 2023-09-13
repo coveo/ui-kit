@@ -7,7 +7,9 @@
     "lib": ["esnext", "dom"],
     "types": ["cypress", "cypress-axe"],
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    //https://github.com/cypress-io/cypress/issues/26203#issuecomment-1571861397
+    "sourceMap": false
   },
   "include": ["**/*.ts", "**/*.js"]
 }

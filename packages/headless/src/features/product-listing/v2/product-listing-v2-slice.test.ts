@@ -1,7 +1,10 @@
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
 import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
-import {fetchProductListing} from './product-listing-v2-actions';
+import {
+  fetchProductListing,
+  setProductListingUrl,
+} from './product-listing-v2-actions';
 import {productListingV2Reducer} from './product-listing-v2-slice';
 import {
   getProductListingV2InitialState,
@@ -17,6 +20,17 @@ describe('product-listing-v2-slice', () => {
     expect(productListingV2Reducer(undefined, {type: 'foo'})).toEqual(
       getProductListingV2InitialState()
     );
+  });
+
+  it('should allow to set the product listing URL', () => {
+    expect(
+      productListingV2Reducer(
+        state,
+        setProductListingUrl({
+          url: 'http://example.org',
+        })
+      ).context.view.url
+    ).toEqual('http://example.org');
   });
 
   it('when a fetchProductListing fulfilled is received, should set the state to the received payload', () => {
