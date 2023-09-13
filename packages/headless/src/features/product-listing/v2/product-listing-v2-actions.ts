@@ -1,4 +1,3 @@
-import {StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2/product-listing-v2-request';
@@ -17,7 +16,10 @@ import {
   VersionSection,
 } from '../../../state/state-sections';
 import {sortFacets} from '../../../utils/facet-utils';
-import {validatePayload} from '../../../utils/validate-payload';
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../../utils/validate-payload';
 import {
   AnalyticsType,
   PreparableAnalyticsAction,
@@ -37,10 +39,7 @@ export const setProductListingUrl = createAction(
   'commerce/productListing/setUrl',
   (payload: SetProductListingUrlPayload) =>
     validatePayload(payload, {
-      url: new StringValue({
-        required: true,
-        url: true,
-      }),
+      url: requiredNonEmptyString,
     })
 );
 

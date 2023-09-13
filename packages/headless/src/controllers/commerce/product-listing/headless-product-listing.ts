@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {Schema} from '@coveo/bueno';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
@@ -9,17 +9,17 @@ import {
 } from '../../../features/product-listing/v2/product-listing-v2-actions';
 import {productListingV2Reducer as productListing} from '../../../features/product-listing/v2/product-listing-v2-slice';
 import {loadReducerError} from '../../../utils/errors';
-import {validateOptions} from '../../../utils/validate-payload';
+import {
+  requiredNonEmptyString,
+  validateOptions,
+} from '../../../utils/validate-payload';
 import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
 
 const optionsSchema = new Schema({
-  url: new StringValue({
-    required: true,
-    url: true,
-  }),
+  url: requiredNonEmptyString,
 });
 
 export interface ProductListingOptions {
