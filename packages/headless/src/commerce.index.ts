@@ -33,6 +33,15 @@ export type {
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {
+  ProductListing,
+  ProductListingState,
+  ProductListingControllerState,
+  ProductListingOptions,
+  ProductListingProps,
+} from './controllers/commerce/product-listing/headless-product-listing';
+export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing';
+
+export type {
   PagerInitialState,
   PagerOptions,
   PagerProps,

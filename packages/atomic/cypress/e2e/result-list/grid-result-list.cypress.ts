@@ -1,4 +1,4 @@
-import {addResultList} from './result-list-actions';
+import {addGridResultList} from './result-list-actions';
 import {
   ResultListSelectors,
   resultListComponent,
@@ -8,6 +8,6 @@ import tests from './result-list.commons';
 tests(
   ResultListSelectors,
   resultListComponent,
-  addResultList,
-  'Result List Component'
+  addGridResultList,
+  'Grid Result List Component'
 );

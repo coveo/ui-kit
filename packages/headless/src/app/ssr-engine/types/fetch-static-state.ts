@@ -1,16 +1,16 @@
 import {AnyAction} from '@reduxjs/toolkit';
 import {
-  ControllerSSRStateMap,
+  ControllerStaticStateMap,
   ControllersPropsMap,
-  EngineSSRState,
+  EngineStaticState,
 } from './common';
 
-export type EngineDefinitionFetchInitialStateOptions<
-  TControllersSSRState extends ControllersPropsMap
-> = {controllers: TControllersSSRState};
+export type EngineDefinitionFetchStaticStateOptions<
+  TControllersStaticState extends ControllersPropsMap
+> = {controllers: TControllersStaticState};
 
-export type FetchInitialStateWithoutProps<
-  TControllersSSRState extends ControllerSSRStateMap,
+export type FetchStaticStateWithoutProps<
+  TControllersStaticState extends ControllerStaticStateMap,
   TSearchFulfilledAction extends AnyAction
 > = {
   /**
@@ -18,13 +18,13 @@ export type FetchInitialStateWithoutProps<
    *
    * Useful for static generation and server-side rendering.
    */
-  fetchInitialState(): Promise<
-    EngineSSRState<TSearchFulfilledAction, TControllersSSRState>
+  fetchStaticState(): Promise<
+    EngineStaticState<TSearchFulfilledAction, TControllersStaticState>
   >;
 };
 
-export type FetchInitialStateWithProps<
-  TControllersSSRState extends ControllerSSRStateMap,
+export type FetchStaticStateWithProps<
+  TControllersStaticState extends ControllerStaticStateMap,
   TSearchFulfilledAction extends AnyAction,
   TControllersProps extends ControllersPropsMap
 > = {
@@ -33,7 +33,9 @@ export type FetchInitialStateWithProps<
    *
    * Useful for static generation and server-side rendering.
    */
-  fetchInitialState(
-    options: EngineDefinitionFetchInitialStateOptions<TControllersProps>
-  ): Promise<EngineSSRState<TSearchFulfilledAction, TControllersSSRState>>;
+  fetchStaticState(
+    options: EngineDefinitionFetchStaticStateOptions<TControllersProps>
+  ): Promise<
+    EngineStaticState<TSearchFulfilledAction, TControllersStaticState>
+  >;
 };
