@@ -134,6 +134,12 @@ function buildMockResult(config = {}) {
 }
 
 test('when navigating from query to results', async ({page}) => {
+  await page.addInitScript(() => {
+    // mock navigator.platform to be able to test MacOS behavior
+    Object.defineProperty(navigator, 'platform', {
+      get: () => 'MacIntel',
+    });
+  });
   await page.goto('http://localhost:3333/playwright.html');
   await page.route('**/rest/search/v2?*', async (route) => {
     const response = await route.fetch();
@@ -193,21 +199,21 @@ test('when navigating from query to results', async ({page}) => {
         .getByRole('status')
         .filter({hasText: '3 search suggestions are available.'})
     ).toHaveAttribute('aria-live', 'polite');
-    // await expect(
-    //   page.getByRole('status').filter({
-    //     hasText: /^$/,
-    //   })
-    // ).toHaveAttribute('aria-live', 'assertive');
+    await expect(
+      page.getByRole('status').filter({
+        hasText: /^$/,
+      })
+    ).toHaveAttribute('aria-live', 'assertive');
   });
   await test.step('Navigate from the 1st query suggestion to the 1st instant result', async () => {
     const firstInstantResultLabel =
       'Instant Result 0, instant result. Button. 1 of 5. In Right list.';
     await zeSearchBoxEuh.press('ArrowRight');
-    // await expect(
-    //   page.getByRole('status').filter({
-    //     hasText: firstInstantResultLabel,
-    //   })
-    // ).toHaveAttribute('aria-live', 'assertive');
+    await expect(
+      page.getByRole('status').filter({
+        hasText: firstInstantResultLabel,
+      })
+    ).toHaveAttribute('aria-live', 'assertive');
     const selectedResult = page.getByLabel(firstInstantResultLabel);
     await expect(selectedResult).toHaveAttribute(
       'part',
