@@ -1,3 +1,9 @@
+## 0.1.2 (2023-09-14)
+
+### Bug Fixes
+
+- **playground:** resolve assets using relative links (#27) ([2a5592f](/commits/2a5592fece12ca2181d8435506bf1f894771dbad)), closes [#27](/issues/27)
+
 ## 0.1.1 (2023-09-12)
 
 # 0.1.0 (2023-09-11)
