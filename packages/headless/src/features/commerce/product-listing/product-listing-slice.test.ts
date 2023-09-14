@@ -4,12 +4,12 @@ import {buildMockProductRecommendation} from '../../../test/mock-product-recomme
 import {
   fetchProductListing,
   setProductListingUrl,
-} from './product-listing-v2-actions';
-import {productListingV2Reducer} from './product-listing-v2-slice';
+} from './product-listing-actions';
+import {productListingV2Reducer} from './product-listing-slice';
 import {
   getProductListingV2InitialState,
   ProductListingV2State,
-} from './product-listing-v2-state';
+} from './product-listing-state';
 
 describe('product-listing-v2-slice', () => {
   let state: ProductListingV2State;

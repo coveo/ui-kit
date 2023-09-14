@@ -1,56 +1,62 @@
 'use client';
 
 import {
-  SearchSSRState,
-  SearchCSRState,
-  hydrateInitialState,
-  CSRProvider,
-  SSRStateProvider,
+  SearchStaticState,
+  SearchHydratedState,
+  hydrateStaticState,
+  HydratedStateProvider,
+  StaticStateProvider,
 } from '@/src/app/react/common/engine';
 import {useEffect, useState, PropsWithChildren} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
 
 interface SearchPageProviderProps {
-  ssrState: SearchSSRState;
+  staticState: SearchStaticState;
 }
 
 export function SearchPageProvider({
-  ssrState,
+  staticState,
   children,
 }: PropsWithChildren<SearchPageProviderProps>) {
-  const [csrResult, setCSRResult] = useState<SearchCSRState | undefined>(
-    undefined
-  );
+  const [hydratedState, setHydratedState] = useState<
+    SearchHydratedState | undefined
+  >(undefined);
 
   useEffect(() => {
-    hydrateInitialState({
-      searchFulfilledAction: ssrState.searchFulfilledAction,
+    hydrateStaticState({
+      searchFulfilledAction: staticState.searchFulfilledAction,
       controllers: {
         searchParameters: {
-          initialState: ssrState.controllers.searchParameters.state,
+          initialState: staticState.controllers.searchParameters.state,
         },
       },
     }).then(({engine, controllers}) => {
-      setCSRResult({engine, controllers});
+      setHydratedState({engine, controllers});
     });
-  }, [ssrState]);
+  }, [staticState]);
 
-  if (csrResult) {
+  if (hydratedState) {
     return (
-      <CSRProvider
-        engine={csrResult.engine}
-        controllers={csrResult.controllers}
+      <HydratedStateProvider
+        engine={hydratedState.engine}
+        controllers={hydratedState.controllers}
       >
         {children}
-        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
-      </CSRProvider>
+        <HydrationMetadata
+          staticState={staticState}
+          hydratedState={hydratedState}
+        />
+      </HydratedStateProvider>
     );
   } else {
     return (
-      <SSRStateProvider controllers={ssrState.controllers}>
+      <StaticStateProvider controllers={staticState.controllers}>
         {children}
-        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
-      </SSRStateProvider>
+        <HydrationMetadata
+          staticState={staticState}
+          hydratedState={hydratedState}
+        />
+      </StaticStateProvider>
     );
   }
 }
