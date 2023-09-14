@@ -179,9 +179,7 @@ test('get started link', async ({page}) => {
     type: 'module',
   });
   //
-  const zeSearchBoxEuh = page.getByLabel(
-    'Search field with suggestions. To begin navigating suggestions, while focused, press Down Arrow. To send, press Enter.'
-  );
+  const zeSearchBoxEuh = page.getByPlaceholder('Search');
   await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
   await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
   await expect(page.getByLabel(/Instant Result .* In Right list./)).toHaveCount(
