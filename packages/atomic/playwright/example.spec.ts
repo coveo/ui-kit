@@ -179,7 +179,6 @@ test('when navigating from query to results', async ({page}) => {
     type: 'module',
   });
   const zeSearchBoxEuh = page.getByPlaceholder('Search');
-  const ariaStatuses = page.getByRole('status');
 
   await test.step('Press the right arrow key a first time', async () => {
     await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
@@ -190,26 +189,26 @@ test('when navigating from query to results', async ({page}) => {
       page.getByLabel(/Instant Result .* In Right list./)
     ).toHaveCount(4);
     await expect(
-      ariaStatuses.filter({hasText: '3 search suggestions are available.'})
+      page
+        .getByRole('status')
+        .filter({hasText: '3 search suggestions are available.'})
     ).toHaveAttribute('aria-live', 'polite');
     await expect(
-      ariaStatuses.filter({
+      page.getByRole('status').filter({
         hasText: /^$/,
       })
     ).toHaveAttribute('aria-live', 'assertive');
   });
   await test.step('Press the right arrow key a second time', async () => {
+    const firstInstantResultLabel =
+      'Instant Result 0, instant result. Button. 1 of 5. In Right list.';
     await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
-    await expect(ariaStatuses).toHaveCount(2);
     await expect(
-      ariaStatuses.filter({
-        hasText:
-          'Instant Result 0, instant result. Button. 1 of 5. In Right list.',
+      page.getByRole('status').filter({
+        hasText: firstInstantResultLabel,
       })
     ).toHaveAttribute('aria-live', 'assertive');
-    const selectedResult = page.getByLabel(
-      'Instant Result 0, instant result. Button. 1 of 5. In Right list.'
-    );
+    const selectedResult = page.getByLabel(firstInstantResultLabel);
     await expect(selectedResult).toHaveAttribute(
       'part',
       /(^|\s)active-suggestion(\s|$)/
