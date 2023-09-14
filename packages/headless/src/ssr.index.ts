@@ -53,7 +53,7 @@ export type {
 } from './state/search-app-state';
 
 // Controllers
-export * from './controllers/index.ssr';
+export * from './controllers/ssr.index';
 
 // Selectors
 export {

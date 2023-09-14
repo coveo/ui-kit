@@ -308,7 +308,7 @@ export type {
 } from './triggers/headless-execute-trigger.ssr';
 export {defineExecuteTrigger} from './triggers/headless-execute-trigger.ssr';
 
-export type {ExecuteTriggerParams} from './../api/search/trigger';
+export type {ExecuteTriggerParams} from '../api/search/trigger';
 
 export type {
   NotifyTrigger,
