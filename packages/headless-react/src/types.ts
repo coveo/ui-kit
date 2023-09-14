@@ -1,10 +1,10 @@
-import {InferControllerFromDefinition} from '@coveo/headless/dist/definitions/app/ssr-engine/types/common';
 import {
   Controller,
   CoreEngine,
   SearchEngine,
   SearchEngineOptions,
   ControllerDefinitionsMap,
+  InferControllerFromDefinition,
   InferControllersMapFromDefinition,
   InferControllerStaticStateMapFromDefinitions,
   EngineDefinition,
