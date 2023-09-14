@@ -1,10 +1,8 @@
-import {Controller, ControllerDefinitionsMap, SearchEngine, SearchEngineDefinitionOptions, getSampleSearchEngineConfiguration} from '@coveo/headless/ssr';
-import {
+import {Controller, ControllerDefinitionsMap, SearchEngine, SearchEngineDefinitionOptions, getSampleSearchEngineConfiguration,
   defineFacet,
   defineResultList,
   defineSearchBox,
-  defineSearchParameterManager,
-} from '@coveo/headless/ssr';
+  defineSearchParameterManager,} from '@coveo/headless/ssr';
 
 export const config = {
   configuration: {
