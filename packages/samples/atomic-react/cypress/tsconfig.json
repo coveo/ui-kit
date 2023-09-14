@@ -12,5 +12,4 @@
       "jsx": "react"
     },
     "include": ["**/*.ts"]
-  }
-  
+}
