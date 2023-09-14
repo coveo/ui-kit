@@ -5,7 +5,7 @@ import {
 } from '../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
 
-export function buildMockProductListingV2APIClient(
+export function buildMockCommerceAPIClient(
   options?: Partial<CommerceAPIClientOptions>
 ) {
   return new CommerceAPIClient({
