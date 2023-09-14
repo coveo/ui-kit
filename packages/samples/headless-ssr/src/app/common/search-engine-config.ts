@@ -1,4 +1,4 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
+import {getSampleSearchEngineConfiguration} from '@coveo/headless/ssr';
 import {
   defineFacet,
   defineResultList,

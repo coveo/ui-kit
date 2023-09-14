@@ -1,3 +1,4 @@
+export type {Controller, Subscribable} from './controller/headless-controller';
 export type {
   RelevanceInspectorInitialState,
   RelevanceInspectorProps,

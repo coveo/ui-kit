@@ -3,7 +3,7 @@ import {
   Facet,
   FacetValue,
   SpecificFacetSearchResult,
-} from '@coveo/headless';
+} from '@coveo/headless/ssr';
 import {useEffect, useState, FunctionComponent, useMemo} from 'react';
 import FacetSearchCommon from './facet-search';
 
