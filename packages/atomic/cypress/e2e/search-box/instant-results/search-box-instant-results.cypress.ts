@@ -153,13 +153,13 @@ describe('Instant Results Test Suites', () => {
       SearchBoxAssertions.assertHasSuggestionsCount(
         maxRecentQueriesWithoutQuery
       );
-      // InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
-      // CommonAssertions.assertAriaLiveMessage(
-      //   SearchBoxSelectors.searchBoxAriaLive,
-      //   maxRecentQueriesWithoutQuery.toString()
-      // );
-      // InstantResultsAssertions.assertResultIsSelected(0);
-      // SearchBoxAssertions.assertSuggestionIsHighlighted(1);
+      InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
+      CommonAssertions.assertAriaLiveMessage(
+        SearchBoxSelectors.searchBoxAriaLive,
+        maxRecentQueriesWithoutQuery.toString()
+      );
+      InstantResultsAssertions.assertResultIsSelected(0);
+      SearchBoxAssertions.assertSuggestionIsHighlighted(1);
     });
     describe('when navigating back from result to query', () => {
       before(() => {
