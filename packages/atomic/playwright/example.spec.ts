@@ -180,6 +180,7 @@ test('when navigating from query to results', async ({page}) => {
   });
   //
   const zeSearchBoxEuh = page.getByPlaceholder('Search');
+  await zeSearchBoxEuh.waitFor({state: 'visible'});
   await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
   await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
   await expect(page.getByLabel(/“Recent query .* In Left list./)).toHaveCount(
