@@ -4,9 +4,30 @@ polyfillCryptoNode();
 
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export {createAction, createAsyncThunk, createReducer} from '@reduxjs/toolkit';
+export type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 
 // Main App
 // ⚠️ NOTE: All exported SSR types, APIs should be marked as `@internal` until MVP is complete
+export type {
+  SearchEngine,
+  SearchEngineOptions,
+  SearchEngineConfiguration,
+  SearchConfigurationOptions,
+} from './app/search-engine/search-engine';
+export type {
+  SearchEngineDefinition,
+  SearchEngineDefinitionOptions,
+} from './app/search-engine/search-engine.ssr';
+export {defineSearchEngine} from './app/search-engine/search-engine.ssr';
+export {getSampleSearchEngineConfiguration} from './app/search-engine/search-engine';
+
+export type {CoreEngine, ExternalEngineOptions} from './app/engine';
+export type {
+  EngineConfiguration,
+  AnalyticsConfiguration,
+  AnalyticsRuntimeEnvironment,
+} from './app/engine-configuration';
 export type {
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
@@ -21,16 +42,8 @@ export type {
   InferStaticState,
   InferHydratedState,
 } from './app/ssr-engine/types/core-engine';
-export type {
-  SearchEngineDefinition,
-  SearchEngineDefinitionOptions,
-} from './app/search-engine/search-engine.ssr';
-export {defineSearchEngine} from './app/search-engine/search-engine.ssr';
-export {
-  buildSearchEngine,
-  getSampleSearchEngineConfiguration,
-} from './app/search-engine/search-engine';
 export type {LoggerOptions} from './app/logger';
+
 export type {LogLevel} from './app/logger';
 
 // State
