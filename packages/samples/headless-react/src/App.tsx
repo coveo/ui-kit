@@ -1,4 +1,4 @@
-import {BrowserRouter, NavLink, Switch, Route} from 'react-router-dom';
+import {BrowserRouter, NavLink, Routes, Route} from 'react-router-dom';
 import {AboutPage} from './pages/AboutPage';
 import {AnalyticsHook} from './pages/AnalyticsHook';
 import {DependentFacetPage} from './pages/DependentFacetPage';
@@ -16,47 +16,72 @@ function App(props: SearchPageProps) {
       <main className="App">
         <nav>
           <button>
-            <NavLink exact to="/" activeStyle={activeNavLink}>
+            <NavLink
+              end
+              to="/"
+              style={({isActive}) => (isActive ? activeNavLink : {})}
+            >
               Search
             </NavLink>
           </button>
           <button>
-            <NavLink to="/recommendation" activeStyle={activeNavLink}>
+            <NavLink
+              to="/recommendation"
+              style={({isActive}) => (isActive ? activeNavLink : {})}
+            >
               Recommendation
             </NavLink>
           </button>
           <button>
-            <NavLink to="/standalone-search-box" activeStyle={activeNavLink}>
+            <NavLink
+              to="/standalone-search-box"
+              style={({isActive}) => (isActive ? activeNavLink : {})}
+            >
               Standalone Search Box
             </NavLink>
           </button>
           <button>
-            <NavLink to="/about" activeStyle={activeNavLink}>
+            <NavLink
+              to="/about"
+              style={({isActive}) => (isActive ? activeNavLink : {})}
+            >
               About
             </NavLink>
           </button>
           <button>
-            <NavLink to="/saml" activeStyle={activeNavLink}>
+            <NavLink
+              to="/saml"
+              style={({isActive}) => (isActive ? activeNavLink : {})}
+            >
               Saml
             </NavLink>
           </button>
           <button>
-            <NavLink to="/dependent-facet" activeStyle={activeNavLink}>
+            <NavLink
+              to="/dependent-facet"
+              style={({isActive}) => (isActive ? activeNavLink : {})}
+            >
               Dependent facet
             </NavLink>
           </button>
           <button>
-            <NavLink to="/analyticshooks" activeStyle={activeNavLink}>
+            <NavLink
+              to="/analyticshooks"
+              style={({isActive}) => (isActive ? activeNavLink : {})}
+            >
               Analytics hook (Google Tag Manager)
             </NavLink>
           </button>
           <button>
-            <NavLink to="/product-recommendations" activeStyle={activeNavLink}>
+            <NavLink
+              to="/product-recommendations"
+              style={({isActive}) => (isActive ? activeNavLink : {})}
+            >
               Product Recommendations
             </NavLink>
           </button>
         </nav>
-        <Switch>
+        <Routes>
           <Route path="/recommendation">
             <RecommendationPage />
           </Route>
@@ -84,7 +109,7 @@ function App(props: SearchPageProps) {
           <Route path="/">
             <SearchPage {...props} />
           </Route>
-        </Switch>
+        </Routes>
       </main>
     </BrowserRouter>
   );
