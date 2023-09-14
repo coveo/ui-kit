@@ -31,6 +31,10 @@ jobs:
     outputs:
       tag: ${{ steps.tag.outputs.tag }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - id: tag
         run: echo "tag=$(git tag --contains)" >> "$GITHUB_OUTPUT"
   version:
