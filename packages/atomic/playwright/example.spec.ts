@@ -180,8 +180,9 @@ test('when navigating from query to results', async ({page}) => {
   });
   const zeSearchBoxEuh = page.getByPlaceholder('Search');
 
-  await test.step('Press the right arrow key a first time', async () => {
-    await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
+  await test.step('Navigate from the search box to the 1st query suggestion', async () => {
+    await zeSearchBoxEuh.press('ArrowDown');
+    await zeSearchBoxEuh.press('ArrowDown');
     await expect(page.getByLabel(/“Recent query .* In Left list./)).toHaveCount(
       3
     );
@@ -199,10 +200,10 @@ test('when navigating from query to results', async ({page}) => {
       })
     ).toHaveAttribute('aria-live', 'assertive');
   });
-  await test.step('Press the right arrow key a second time', async () => {
+  await test.step('Navigate from the 1st query suggestion to the 1st instant result', async () => {
     const firstInstantResultLabel =
       'Instant Result 0, instant result. Button. 1 of 5. In Right list.';
-    await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
+    await zeSearchBoxEuh.press('ArrowRight');
     await expect(
       page.getByRole('status').filter({
         hasText: firstInstantResultLabel,
