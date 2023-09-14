@@ -67,8 +67,12 @@
     "files": [
         "modules/",
         "dist/**/*.d.ts",
-        "dist/**/*.{js, mjs, cjs}",
-        "dist/**/*.{js, mjs, cjs}.map",
+        "dist/**/*.js",
+        "dist/**/*.mjs",
+        "dist/**/*.cjs",
+        "dist/**/*.js.map",
+        "dist/**/*.mjs.map",
+        "dist/**/*.cjs.map",
         "src/**/*.ts",
         "react-native/",
         "LICENSE"
