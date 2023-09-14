@@ -4,16 +4,16 @@ import FacetCommon from '../../common/facet';
 
 interface FacetProps {
   title: string;
-  ssrState: FacetState;
+  staticState: FacetState;
   controller?: FacetController;
 }
 
 export const Facet: FunctionComponent<FacetProps> = ({
   title,
-  ssrState,
+  staticState,
   controller,
 }) => {
-  const [state, setState] = useState(ssrState);
+  const [state, setState] = useState(staticState);
 
   useEffect(
     () => controller?.subscribe?.(() => setState({...controller.state})),

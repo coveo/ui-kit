@@ -6,15 +6,15 @@ import {
 import {FunctionComponent, useEffect, useState} from 'react';
 
 interface FacetSearchProps {
-  ssrState: FacetState;
+  staticState: FacetState;
   controller?: FacetController;
 }
 
 export const FacetSearch: FunctionComponent<FacetSearchProps> = ({
-  ssrState,
+  staticState,
   controller,
 }) => {
-  const [state, setState] = useState(ssrState);
+  const [state, setState] = useState(staticState);
 
   useEffect(
     () => controller?.subscribe?.(() => setState({...controller.state})),

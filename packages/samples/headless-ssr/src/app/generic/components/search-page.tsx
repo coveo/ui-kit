@@ -47,8 +47,8 @@ export default function SearchPage({
       />
       <Facet
         title="Author"
-        ssrState={ssrState.controllers.authorFacet.state}
-        controller={csrResult?.controllers.authorFacet}
+        staticState={staticState.controllers.authorFacet.state}
+        controller={hydratedState?.controllers.authorFacet}
       />
       <ResultList
         staticState={staticState.controllers.resultList.state}
