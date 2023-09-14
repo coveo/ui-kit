@@ -1,12 +1,7 @@
-import { Environment } from "../environment/environment";
-import { RelayOptions } from "../relay";
-import { RelayEvent } from "../event/relay-event";
-
-interface ValidationParams {
-  event: Readonly<RelayEvent>;
-  options: RelayOptions;
-  environment: Environment;
-}
+import {
+  callEventApi,
+  EventApiCallParams,
+} from "../event-api-call/event-api-caller";
 
 export interface ValidationError {
   type: string;
@@ -20,44 +15,11 @@ export interface ValidationResponse {
   errors: ValidationError[];
 }
 
-export interface ServiceErrorResponse {
-  valid: false;
-  responseType: "serviceError";
-  errorCode: string;
-  message: string;
-  requestID: string;
-}
-
-export type ValidationReport = ValidationResponse | ServiceErrorResponse;
-
-export async function validate({
-  event,
-  options,
-  environment,
-}: ValidationParams): Promise<Readonly<ValidationReport>> {
-  const { host, token, organizationId } = options;
-
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
-  const url = `${host}/rest/organizations/${organizationId}/events/v1/validate`;
-
-  const response = await environment.fetch(url, {
-    method: "POST",
-    body: JSON.stringify([event]),
-    headers,
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    return {
-      valid: false,
-      responseType: "serviceError",
-      ...data,
-    };
-  }
+export async function validate(
+  params: EventApiCallParams
+): Promise<Readonly<ValidationResponse>> {
+  params.validate = true;
+  const data = await callEventApi(params);
 
   const { valid, errors } = data[0];
 

@@ -1,8 +1,4 @@
-import {
-  ServiceErrorResponse,
-  ValidationError,
-  ValidationReport,
-} from "@coveo/relay";
+import { ValidationError, ValidationResponse } from "@coveo/relay";
 import styles from "../styles.module.css";
 
 interface AttributeProps {
@@ -10,16 +6,12 @@ interface AttributeProps {
   value: string;
 }
 
-interface ServiceErrorSectionProps {
-  serviceErrorResponse: ServiceErrorResponse;
-}
-
 interface ValidationErrorsSectionProps {
   errors: ValidationError[];
 }
 
 interface ReportProps {
-  report: ValidationReport;
+  report: ValidationResponse;
 }
 
 function Attribute({ type, value }: AttributeProps) {
@@ -28,21 +20,6 @@ function Attribute({ type, value }: AttributeProps) {
       <b>{`${type}: `}</b>
       <p>{value}</p>
     </span>
-  );
-}
-
-function ServiceErrorSection({
-  serviceErrorResponse,
-}: ServiceErrorSectionProps) {
-  return (
-    <>
-      <h2>Error: </h2>
-      <div className={styles["validation-box"]}>
-        <Attribute type="Error Code" value={serviceErrorResponse.errorCode} />
-        <Attribute type="Message" value={serviceErrorResponse.message} />
-        <Attribute type="Request ID" value={serviceErrorResponse.requestID} />
-      </div>
-    </>
   );
 }
 
@@ -62,15 +39,6 @@ function ValidationErrorsSection({ errors }: ValidationErrorsSectionProps) {
 }
 
 export function Report({ report }: ReportProps) {
-  if (report.responseType === "serviceError") {
-    return (
-      <div className={styles["validation-box"]}>
-        <h2>{`Is valid?: ${report.valid}`}</h2>
-        <ServiceErrorSection serviceErrorResponse={report} />
-      </div>
-    );
-  }
-
   return (
     <div className={styles["validation-box"]}>
       <h2>{`Is valid?: ${report.valid}`}</h2>

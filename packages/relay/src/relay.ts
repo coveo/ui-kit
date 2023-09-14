@@ -1,11 +1,10 @@
+import { emit } from "./emit/emit";
 import { createClientIdManager } from "./client-id/client-id";
 import { currentEnvironment } from "./environment/environment";
 import { createRelayEvent } from "./event/relay-event";
 import {
-  ServiceErrorResponse,
   validate,
   ValidationError,
-  ValidationReport,
   ValidationResponse,
 } from "./validate/validate";
 import { version } from "./version";
@@ -20,7 +19,11 @@ interface RelayOptions {
 }
 
 interface Relay {
-  validate: (type: string, payload: RelayPayload) => Promise<ValidationReport>;
+  validate: (
+    type: string,
+    payload: RelayPayload
+  ) => Promise<ValidationResponse>;
+  emit: (type: string, payload: RelayPayload) => Promise<void>;
   version: string;
 }
 
@@ -41,15 +44,20 @@ export function createRelay(options: RelayOptions): Relay {
           clientIdManager
         ),
       }),
+    emit: (type: string, payload: RelayPayload) =>
+      emit({
+        options,
+        environment,
+        event: createRelayEvent(
+          type,
+          payload,
+          options,
+          environment,
+          clientIdManager
+        ),
+      }),
     version,
   };
 }
 
-export type {
-  RelayPayload,
-  RelayOptions,
-  ServiceErrorResponse,
-  ValidationError,
-  ValidationReport,
-  ValidationResponse,
-};
+export type { RelayPayload, RelayOptions, ValidationError, ValidationResponse };

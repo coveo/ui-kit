@@ -1,5 +1,5 @@
 "use client";
-import { createRelay, ValidationReport } from "@coveo/relay";
+import { createRelay, ValidationResponse } from "@coveo/relay";
 import { Editor } from "@monaco-editor/react";
 import { useState } from "react";
 import styles from "./styles.module.css";
@@ -23,24 +23,25 @@ export default function Page() {
 
   const [event, setEvent] = useState(initialEvent);
   const [payload, setPayload] = useState(prettify(initialEvent.payload));
-  const [validationReport, setValidationReport] = useState<ValidationReport>();
+  const [validationResponse, setValidationResponse] =
+    useState<ValidationResponse>();
   const isResettable = prettify(event.payload) !== payload;
 
   async function send() {
     const response = await validate(event.type, JSON.parse(payload));
-    setValidationReport(response);
+    setValidationResponse(response);
   }
 
   function reset() {
     setPayload(prettify(event.payload));
-    setValidationReport(null);
+    setValidationResponse(null);
   }
 
   function onSelectEvent(selected: string) {
     const selectedEvent = events.find((event) => event.type === selected);
     setEvent(selectedEvent);
     setPayload(prettify(selectedEvent.payload));
-    setValidationReport(null);
+    setValidationResponse(null);
   }
 
   return (
@@ -66,7 +67,7 @@ export default function Page() {
           />
         </div>
         <div className={styles.section}>
-          {validationReport ? <Report report={validationReport} /> : null}
+          {validationResponse ? <Report report={validationResponse} /> : null}
         </div>
       </div>
     </div>
