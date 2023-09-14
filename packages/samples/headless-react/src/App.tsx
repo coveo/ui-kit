@@ -82,33 +82,21 @@ function App(props: SearchPageProps) {
           </button>
         </nav>
         <Routes>
-          <Route path="/recommendation">
-            <RecommendationPage />
-          </Route>
-          <Route path="/standalone-search-box">
-            <StandaloneSearchBoxPage />
-          </Route>
-          <Route path="/about">
-            <AboutPage />
-          </Route>
-          <Route path="/saml">
-            <SamlPage />
-          </Route>
-          <Route path="/dependent-facet">
-            <DependentFacetPage />
-          </Route>
-          <Route path="/analyticshooks">
-            <AnalyticsHook />
-          </Route>
-          <Route path="/product-recommendations">
-            <ProductRecommendationsPage />
-          </Route>
-          <Route path="/search-page">
-            <SearchPage {...props} />
-          </Route>
-          <Route path="/">
-            <SearchPage {...props} />
-          </Route>
+          <Route path="/recommendation" element={<RecommendationPage />} />
+          <Route
+            path="/standalone-search-box"
+            element={<StandaloneSearchBoxPage />}
+          />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/saml" element={<SamlPage />} />
+          <Route path="/dependent-facet" element={<DependentFacetPage />} />
+          <Route path="/analyticshooks" element={<AnalyticsHook />} />
+          <Route
+            path="/product-recommendations"
+            element={<ProductRecommendationsPage />}
+          />
+          <Route path="/search-page" element={<SearchPage {...props} />} />
+          <Route path="/" element={<SearchPage {...props} />} />
         </Routes>
       </main>
     </BrowserRouter>
