@@ -7,93 +7,12 @@
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
-    <link rel="stylesheet" href="/themes/coveo.css" />
+    <link rel="stylesheet" href="/themes/accessible.css" />
     <style>
-      /* Example on how to customize CSS variables */
-      /* :root {
-        --atomic-primary: red;
-        --atomic-font-family: "Comic Sans MS", "Comic Sans", cursive;
-      } */
-
-      /* Example on how to customize result templates CSS parts */
-      /* atomic-result::part(result-link):hover {
-        color: orange;
-      } */
-
-      /* Example on how to customize the color facet */
-      atomic-color-facet::part(default-color-value) {
-        background-image: url('/build/assets/document.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(144, 144, 144);
-      }
-
-      atomic-color-facet::part(value-dynamicscrmitem) {
-        background-image: url('/build/assets/email.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(149, 174, 197);
-      }
-
-      atomic-color-facet::part(value-lithiumuser) {
-        background-image: url('/build/assets/folder.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(139, 154, 227);
-      }
-
-      atomic-color-facet::part(value-YouTubeVideo) {
-        background-image: url('build/assets/video.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(176, 112, 230);
-      }
-
-      atomic-color-facet::part(value-lithiummessage) {
-        background-image: url('build/assets/knowledge.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(236, 148, 237);
-      }
-
-      atomic-color-facet::part(value-lithiumthread) {
-        background-image: url('build/assets/post.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(101, 202, 228);
-      }
-
-      atomic-color-facet::part(value-html) {
-        background-image: url('build/assets/html.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: transparent;
-      }
-
-      body {
-        margin: 0;
-      }
-
-      .header-bg {
-        background-color: var(--atomic-neutral-light);
-        grid-area: 1 / -1 / 1 / 1;
-      }
-
-      atomic-search-layout {
-        row-gap: var(--atomic-layout-spacing-y);
+      ::part(ripple) {
+        opacity: 10%;
       }
     </style>
   </head>
-
-  <body>
-    <atomic-search-interface data-testid="search" id="search"> </atomic-search-interface>
-    <script src="./header.js" type="text/javascript"></script>
-  </body>
+  <body></body>
 </html>
