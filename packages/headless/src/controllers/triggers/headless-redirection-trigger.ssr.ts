@@ -5,10 +5,7 @@ import {
   buildRedirectionTrigger,
 } from './headless-redirection-trigger';
 
-export type {
-  RedirectionTrigger,
-  RedirectionTriggerState,
-} from './headless-redirection-trigger';
+export * from './headless-redirection-trigger';
 
 /**
  * @internal

@@ -6,13 +6,7 @@ import {
   buildRecentResultsList,
 } from './headless-recent-results-list';
 
-export type {
-  RecentResultsListInitialState,
-  RecentResultsList,
-  RecentResultsState,
-  RecentResultsListProps,
-  RecentResultsListOptions,
-} from './headless-recent-results-list';
+export * from './headless-recent-results-list';
 
 /**
  * @internal

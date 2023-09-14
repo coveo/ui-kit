@@ -6,19 +6,7 @@ import {
   buildCategoryFacet,
 } from './headless-category-facet';
 
-export type {
-  CategoryFacetOptions,
-  CategoryFacetSearchOptions,
-  CategoryFacetProps,
-  CategoryFacetState,
-  CategoryFacet,
-  CategoryFacetValue,
-  CategoryFacetSearch,
-  CategoryFacetSearchState,
-  CategoryFacetSearchResult,
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
-} from './headless-category-facet';
+export * from './headless-category-facet';
 
 /**
  * @internal

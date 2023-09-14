@@ -6,11 +6,7 @@ import {
   buildAutomaticFacet,
 } from './headless-automatic-facet';
 
-export type {
-  AutomaticFacet,
-  AutomaticFacetProps,
-  AutomaticFacetState,
-} from './headless-automatic-facet';
+export * from './headless-automatic-facet';
 
 /**
  * @internal

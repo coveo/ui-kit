@@ -2,15 +2,7 @@ import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {ControllerDefinitionWithoutProps} from '../../../../app/ssr-engine/types/common';
 import {DateFacet, DateFacetProps, buildDateFacet} from './headless-date-facet';
 
-export type {
-  DateRangeOptions,
-  DateRangeRequest,
-  DateRangeInput,
-  DateFacetOptions,
-  DateFacetProps,
-  DateFacetState,
-  DateFacet,
-} from './headless-date-facet';
+export * from './headless-date-facet';
 
 export {buildDateRange} from './headless-date-facet';
 

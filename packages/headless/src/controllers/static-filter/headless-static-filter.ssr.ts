@@ -6,15 +6,7 @@ import {
   buildStaticFilter,
 } from './headless-static-filter';
 
-export type {
-  StaticFilterValueOptions,
-  StaticFilter,
-  StaticFilterOptions,
-  StaticFilterProps,
-  StaticFilterState,
-  StaticFilterValue,
-  StaticFilterValueState,
-} from './headless-static-filter';
+export * from './headless-static-filter';
 
 export {buildStaticFilterValue} from './headless-static-filter';
 

@@ -6,15 +6,7 @@ import {
   buildSmartSnippetQuestionsList,
 } from './headless-smart-snippet-questions-list';
 
-export type {
-  SmartSnippetQuestionsList,
-  SmartSnippetQuestionsListOptions,
-  SmartSnippetQuestionsListProps,
-  SmartSnippetQuestionsListState,
-  SmartSnippetRelatedQuestion,
-  CoreSmartSnippetQuestionsList,
-  CoreSmartSnippetQuestionsListState,
-} from './headless-smart-snippet-questions-list';
+export * from './headless-smart-snippet-questions-list';
 
 /**
  * @internal

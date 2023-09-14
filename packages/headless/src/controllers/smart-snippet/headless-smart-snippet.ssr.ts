@@ -6,14 +6,7 @@ import {
   buildSmartSnippet,
 } from './headless-smart-snippet';
 
-export type {
-  SmartSnippet,
-  SmartSnippetOptions,
-  SmartSnippetProps,
-  SmartSnippetState,
-  QuestionAnswerDocumentIdentifier,
-  SmartSnippetCore,
-} from './headless-smart-snippet';
+export * from './headless-smart-snippet';
 
 /**
  * @internal

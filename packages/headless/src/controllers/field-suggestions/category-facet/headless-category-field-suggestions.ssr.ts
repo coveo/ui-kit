@@ -6,13 +6,7 @@ import {
   buildCategoryFieldSuggestions,
 } from './headless-category-field-suggestions';
 
-export type {
-  CategoryFieldSuggestionsValue,
-  CategoryFieldSuggestionsState,
-  CategoryFieldSuggestions,
-  CategoryFieldSuggestionsOptions,
-  CategoryFieldSuggestionsProps,
-} from './headless-category-field-suggestions';
+export * from './headless-category-field-suggestions';
 
 /**
  * @internal

@@ -6,14 +6,7 @@ import {
   buildNumericFacet,
 } from './headless-numeric-facet';
 
-export type {
-  NumericRangeOptions,
-  NumericRangeRequest,
-  NumericFacetOptions,
-  NumericFacetProps,
-  NumericFacetState,
-  NumericFacet,
-} from './headless-numeric-facet';
+export * from './headless-numeric-facet';
 
 export {buildNumericRange} from './headless-numeric-facet';
 

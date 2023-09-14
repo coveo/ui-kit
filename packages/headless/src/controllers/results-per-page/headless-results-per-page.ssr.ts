@@ -6,12 +6,7 @@ import {
   buildResultsPerPage,
 } from './headless-results-per-page';
 
-export type {
-  ResultsPerPageInitialState,
-  ResultsPerPageProps,
-  ResultsPerPageState,
-  ResultsPerPage,
-} from './headless-results-per-page';
+export * from './headless-results-per-page';
 
 /**
  * @internal

@@ -6,14 +6,7 @@ import {
   buildNumericFilter,
 } from './headless-numeric-filter';
 
-export type {
-  NumericFilter,
-  NumericFilterOptions,
-  NumericFilterProps,
-  NumericFilterRange,
-  NumericFilterState,
-  NumericFilterInitialState,
-} from './headless-numeric-filter';
+export * from './headless-numeric-filter';
 
 /**
  * @internal

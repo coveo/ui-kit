@@ -6,12 +6,7 @@ import {
   buildUrlManager,
 } from './headless-url-manager';
 
-export type {
-  UrlManagerProps,
-  UrlManagerInitialState,
-  UrlManagerState,
-  UrlManager,
-} from './headless-url-manager';
+export * from './headless-url-manager';
 
 /**
  * @internal

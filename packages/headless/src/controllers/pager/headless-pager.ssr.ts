@@ -2,13 +2,7 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
 import {Pager, PagerProps, buildPager} from './headless-pager';
 
-export type {
-  PagerInitialState,
-  PagerOptions,
-  PagerProps,
-  PagerState,
-  Pager,
-} from './headless-pager';
+export * from './headless-pager';
 
 /**
  * @internal

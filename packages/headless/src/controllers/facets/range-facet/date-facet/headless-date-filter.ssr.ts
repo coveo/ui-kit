@@ -6,14 +6,7 @@ import {
   buildDateFilter,
 } from './headless-date-filter';
 
-export type {
-  DateFilter,
-  DateFilterOptions,
-  DateFilterProps,
-  DateFilterRange,
-  DateFilterState,
-  DateFilterInitialState,
-} from './headless-date-filter';
+export * from './headless-date-filter';
 
 /**
  * @internal

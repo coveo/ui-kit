@@ -6,12 +6,7 @@ import {
   buildInstantResults,
 } from './instant-results';
 
-export type {
-  InstantResults,
-  InstantResultsState,
-  InstantResultProps,
-  InstantResultOptions,
-} from './instant-results';
+export * from './instant-results';
 
 /**
  * @internal

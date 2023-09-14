@@ -6,13 +6,7 @@ import {
   buildFieldSuggestions,
 } from './headless-field-suggestions';
 
-export type {
-  FieldSuggestionsValue,
-  FieldSuggestionsState,
-  FieldSuggestions,
-  FieldSuggestionsOptions,
-  FieldSuggestionsProps,
-} from './headless-field-suggestions';
+export * from './headless-field-suggestions';
 
 /**
  * @internal

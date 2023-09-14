@@ -6,12 +6,7 @@ import {
   buildSearchParameterManager,
 } from './headless-search-parameter-manager';
 
-export type {
-  SearchParameterManagerInitialState,
-  SearchParameterManagerState,
-  SearchParameterManager,
-  SearchParameters,
-} from './headless-search-parameter-manager';
+export * from './headless-search-parameter-manager';
 
 /**
  * @internal

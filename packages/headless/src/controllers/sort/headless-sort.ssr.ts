@@ -2,12 +2,7 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
 import {Sort, SortProps, buildSort} from './headless-sort';
 
-export type {
-  SortInitialState,
-  SortProps,
-  SortState,
-  Sort,
-} from './headless-sort';
+export * from './headless-sort';
 
 /**
  * @internal

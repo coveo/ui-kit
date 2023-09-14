@@ -5,21 +5,7 @@ import {
   buildBreadcrumbManager,
 } from './headless-breadcrumb-manager';
 
-export type {
-  NumericFacetBreadcrumb,
-  FacetBreadcrumb,
-  DateFacetBreadcrumb,
-  CategoryFacetBreadcrumb,
-  StaticFilterBreadcrumb,
-  Breadcrumb,
-  BreadcrumbValue,
-  BreadcrumbManagerState,
-  BreadcrumbManager,
-  DeselectableValue,
-  AutomaticFacetBreadcrumb,
-  CoreBreadcrumbManager,
-  CoreBreadcrumbManagerState,
-} from './headless-breadcrumb-manager';
+export * from './headless-breadcrumb-manager';
 
 /**
  * @internal

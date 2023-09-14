@@ -2,12 +2,7 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
 import {Context, buildContext} from './headless-context';
 
-export type {
-  Context,
-  ContextState,
-  ContextValue,
-  ContextPayload,
-} from './headless-context';
+export * from './headless-context';
 
 /**
  * @internal

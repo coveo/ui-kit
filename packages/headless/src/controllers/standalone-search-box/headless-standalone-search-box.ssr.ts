@@ -6,13 +6,7 @@ import {
   buildStandaloneSearchBox,
 } from './headless-standalone-search-box';
 
-export type {
-  StandaloneSearchBoxOptions,
-  StandaloneSearchBoxAnalytics,
-  StandaloneSearchBoxProps,
-  StandaloneSearchBoxState,
-  StandaloneSearchBox,
-} from './headless-standalone-search-box';
+export * from './headless-standalone-search-box';
 
 /**
  * @internal

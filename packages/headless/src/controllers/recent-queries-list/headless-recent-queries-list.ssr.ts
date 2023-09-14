@@ -6,13 +6,7 @@ import {
   buildRecentQueriesList,
 } from './headless-recent-queries-list';
 
-export type {
-  RecentQueriesListInitialState,
-  RecentQueriesList,
-  RecentQueriesState,
-  RecentQueriesListProps,
-  RecentQueriesListOptions,
-} from './headless-recent-queries-list';
+export * from './headless-recent-queries-list';
 
 /**
  * @internal

@@ -6,12 +6,7 @@ import {
   buildAutomaticFacetGenerator,
 } from './headless-automatic-facet-generator';
 
-export type {
-  AutomaticFacetGenerator,
-  AutomaticFacetGeneratorProps,
-  AutomaticFacetGeneratorState,
-  AutomaticFacetGeneratorOptions,
-} from './headless-automatic-facet-generator';
+export * from './headless-automatic-facet-generator';
 
 /**
  * @internal
