@@ -79,7 +79,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-stencil
   e2e-atomic-hosted-page-test:
-    name: 'Runs Cypress tests for Atomic Hosted Page'
+    name: 'Run e2e tests for Atomic Hosted Page'
     needs: build
     runs-on: ubuntu-latest
     steps:
