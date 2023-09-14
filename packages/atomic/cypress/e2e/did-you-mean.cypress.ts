@@ -101,7 +101,7 @@ describe('Did You Mean Test Suites', () => {
       DidYouMeanAssertions.assertDisplayAutoCorrected(false);
       DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(false);
       DidYouMeanAssertions.assertDisplayQueryTriggered(false);
-      DidYouMeanAssertions.assertDisplayUndoButton(false);
+      DidYouMeanAssertions.assertDisplayUndoButton(true);
     });
   });
 
