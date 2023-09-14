@@ -135,7 +135,12 @@ function buildMockResult(config = {}) {
 
 test('when navigating from query to results', async ({page}) => {
   await page.goto('http://localhost:3333/playwright.html');
-  page.getByTestId('search').innerHTML();
+  await page.addInitScript(() => {
+    // mock navigator.platform to be able to test MacOS behavior
+    Object.defineProperty(navigator, 'platform', {
+      get: () => 'MacIntel',
+    });
+  });
   await page.route('**/rest/search/v2?*', async (route) => {
     const response = await route.fetch();
     const json = {
