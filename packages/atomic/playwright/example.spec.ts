@@ -178,37 +178,45 @@ test('when navigating from query to results', async ({page}) => {
   `,
     type: 'module',
   });
-  //
   const zeSearchBoxEuh = page.getByPlaceholder('Search');
-  await zeSearchBoxEuh.waitFor({state: 'visible'});
-  await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
-  await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
-  await expect(page.getByLabel(/“Recent query .* In Left list./)).toHaveCount(
-    3
-  );
-  await expect(page.getByLabel(/Instant Result .* In Right list./)).toHaveCount(
-    4
-  );
   const ariaStatuses = page.getByRole('status');
-  await expect(ariaStatuses).toHaveCount(2);
-  await expect(
-    ariaStatuses.filter({
-      hasText:
-        'Instant Result 0, instant result. Button. 1 of 5. In Right list.',
-    })
-  ).toHaveAttribute('aria-live', 'assertive');
-  await expect(
-    ariaStatuses.filter({hasText: '3 search suggestions are available.'})
-  ).toHaveAttribute('aria-live', 'polite');
-  const selectedResult = page.getByLabel(
-    'Instant Result 0, instant result. Button. 1 of 5. In Right list.'
-  );
-  await expect(selectedResult).toHaveAttribute(
-    'part',
-    /(^|\s)active-suggestion(\s|$)/
-  );
-  await expect(selectedResult).toHaveAttribute(
-    'class',
-    /(^|\s)bg-neutral-light(\s|$)/
-  );
+
+  await test.step('Press the right arrow key a first time', async () => {
+    await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
+    await expect(page.getByLabel(/“Recent query .* In Left list./)).toHaveCount(
+      3
+    );
+    await expect(
+      page.getByLabel(/Instant Result .* In Right list./)
+    ).toHaveCount(4);
+    await expect(
+      ariaStatuses.filter({hasText: '3 search suggestions are available.'})
+    ).toHaveAttribute('aria-live', 'polite');
+    await expect(
+      ariaStatuses.filter({
+        hasText: /^$/,
+      })
+    ).toHaveAttribute('aria-live', 'assertive');
+  });
+  await test.step('Press the right arrow key a second time', async () => {
+    await zeSearchBoxEuh.press('ArrowRight', {delay: 400});
+    await expect(ariaStatuses).toHaveCount(2);
+    await expect(
+      ariaStatuses.filter({
+        hasText:
+          'Instant Result 0, instant result. Button. 1 of 5. In Right list.',
+      })
+    ).toHaveAttribute('aria-live', 'assertive');
+    const selectedResult = page.getByLabel(
+      'Instant Result 0, instant result. Button. 1 of 5. In Right list.'
+    );
+    await expect(selectedResult).toHaveAttribute(
+      'part',
+      /(^|\s)active-suggestion(\s|$)/
+    );
+    await expect(selectedResult).toHaveAttribute(
+      'class',
+      /(^|\s)bg-neutral-light(\s|$)/
+    );
+  });
 });
