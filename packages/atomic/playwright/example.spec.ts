@@ -191,17 +191,16 @@ test('when navigating from query to results', async ({page}) => {
   const ariaStatuses = page.getByRole('status');
   await expect(ariaStatuses).toHaveCount(2);
   await expect(
-    ariaStatuses.filter({
-      hasText:
-        'Instant Result 0, instant result. Button. 1 of 5. In Right list.',
-    })
-  ).toHaveAttribute('aria-live', 'assertive');
-  await expect(
     ariaStatuses.filter({hasText: '3 search suggestions are available.'})
   ).toHaveAttribute('aria-live', 'polite');
-  const selectedResult = page.getByLabel(
-    'Instant Result 0, instant result. Button. 1 of 5. In Right list.'
-  );
+  const selectedInstantResultLabel =
+    'Instant Result 0, instant result. Button. 1 of 5. In Right list.';
+  const selectedResult = page.getByLabel(selectedInstantResultLabel);
+  await expect(
+    ariaStatuses.filter({
+      hasText: selectedInstantResultLabel,
+    })
+  ).toHaveAttribute('aria-live', 'assertive');
   await expect(selectedResult).toHaveAttribute(
     'part',
     /(^|\s)active-suggestion(\s|$)/
