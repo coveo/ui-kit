@@ -10,6 +10,7 @@
     },
     {
       "matchPackagePatterns": ["^@angular/*", "^@angular-devkit/*", "ng-packagr"],
+      "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
       "allowedVersions": "14.x"
@@ -21,7 +22,16 @@
         "react-dom",
         "@types/react"
       ],
+      "groupName": "React",
       "groupSlug": "react",
+      "rangeStrategy": "replace"
+    },
+    {
+      "matchPackagePatterns": [
+        "^@storybook/*"
+      ],
+      "groupName": "Storybook",
+      "groupSlug": "storybook",
       "rangeStrategy": "replace"
     }
   ],
