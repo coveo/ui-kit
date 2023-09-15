@@ -27,6 +27,7 @@
     ],
     "negativeCommonNonProduction": [
       "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/.eslintrc.js",
       "!{projectRoot}/.gitignore",
       "!{projectRoot}/.editorconfig",
       "!{projectRoot}/.lint-staged.config.js",
