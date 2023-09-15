@@ -6082,8 +6082,11 @@ declare namespace LocalJSX {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
+        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
         "onCollapse"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
         "onExpand"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
+        "onSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
         /**
           * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
          */
