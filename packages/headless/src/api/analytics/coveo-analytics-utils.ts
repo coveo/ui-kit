@@ -27,6 +27,7 @@ export const wrapPreprocessRequest = (
 ) => {
   return typeof preprocessRequest === 'function'
     ? (...args: Parameters<PreprocessRequest>) => {
+        const untaintedOutput = {...args[0]};
         try {
           return preprocessRequest.apply(preprocessRequest, args);
         } catch (e) {
@@ -34,7 +35,7 @@ export const wrapPreprocessRequest = (
             e as Error,
             'Error in analytics preprocessRequest. Returning original request.'
           );
-          return args[0];
+          return untaintedOutput;
         }
       }
     : undefined;
@@ -45,6 +46,7 @@ export const wrapAnalyticsClientSendEventHook = (
   hook: AnalyticsClientSendEventHook
 ) => {
   return (...args: Parameters<AnalyticsClientSendEventHook>) => {
+    const untaintedOutput = {...args[1]};
     try {
       return hook.apply(hook, args);
     } catch (e) {
@@ -52,7 +54,7 @@ export const wrapAnalyticsClientSendEventHook = (
         e as Error,
         'Error in analytics hook. Returning original request.'
       );
-      return args[1];
+      return untaintedOutput;
     }
   };
 };

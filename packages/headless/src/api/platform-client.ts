@@ -104,7 +104,7 @@ export class PlatformClient {
   ) {
     const {origin, preprocessRequest, logger, requestMetadata} = options;
 
-    let requestInfo: PlatformRequestOptions;
+    let requestInfo = {...defaultRequestOptions};
 
     try {
       const processedRequest = await preprocessRequest(
@@ -121,7 +121,6 @@ export class PlatformClient {
         e as Error,
         'Platform request preprocessing failed. Returning default request options.'
       );
-      requestInfo = {...defaultRequestOptions};
     }
     return requestInfo;
   }
