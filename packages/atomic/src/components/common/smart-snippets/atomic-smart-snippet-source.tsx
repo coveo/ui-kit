@@ -32,6 +32,7 @@ export class AtomicSmartSnippetSource
   @InitializeBindings() public bindings!: AnyBindings;
   @Prop({reflect: true, mutable: true}) source!: Result;
   @Prop() anchorAttributes?: Attr[];
+  @Prop() sourceURLMaxLength?: number;
 
   @Event() selectSource!: EventEmitter;
   @Event() beginDelayedSelectSource!: EventEmitter;
@@ -61,7 +62,9 @@ export class AtomicSmartSnippetSource
           onBeginDelayedSelect={() => this.beginDelayedSelectSource.emit()}
           onCancelPendingSelect={() => this.cancelPendingSelectSource.emit()}
         >
-          {this.source.clickUri}
+          {this.sourceURLMaxLength
+            ? this.source.clickUri.slice(0, this.sourceURLMaxLength) + '...'
+            : this.source.clickUri}
         </LinkWithResultAnalytics>
         <LinkWithResultAnalytics
           title={this.source.title}

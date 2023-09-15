@@ -101,6 +101,9 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   @State() feedbackSent = false;
 
+  @Prop({reflect: true, attribute: 'source-url-max-length'})
+  public sourceURLMaxLength?: number;
+
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
     this.smartSnippetCommon = new SmartSnippetCommon({
@@ -118,6 +121,9 @@ export class AtomicSmartSnippet implements InitializableComponent {
       getSmartSnippet: () => this.smartSnippet,
       getSnippetStyle: () => this.snippetStyle,
       getFeedbackSent: () => this.feedbackSent,
+      getSourceURLMaxLength: this.sourceURLMaxLength
+        ? () => this.sourceURLMaxLength!
+        : undefined,
       setModalRef: this.setModalRef.bind(this),
       setFeedbackSent: this.setFeedbackSent.bind(this),
     });

@@ -2269,6 +2269,7 @@ export namespace Components {
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
+        "sourceURLMaxLength"?: number;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
@@ -2301,6 +2302,7 @@ export namespace Components {
     interface AtomicSmartSnippetSource {
         "anchorAttributes"?: Attr[];
         "source": Result;
+        "sourceURLMaxLength"?: number;
     }
     /**
      * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -6040,6 +6042,7 @@ declare namespace LocalJSX {
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
+        "sourceURLMaxLength"?: number;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
@@ -6085,6 +6088,7 @@ declare namespace LocalJSX {
         "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "source": Result;
+        "sourceURLMaxLength"?: number;
     }
     /**
      * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
