@@ -1,4 +1,4 @@
-import {SearchParameters} from '@coveo/headless';
+import {SearchParameters} from '@coveo/headless/ssr';
 import {ReadonlyURLSearchParams} from 'next/navigation';
 
 export type NextJSServerSideSearchParams = Record<
