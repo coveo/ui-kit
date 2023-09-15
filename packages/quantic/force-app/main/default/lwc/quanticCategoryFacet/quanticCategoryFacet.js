@@ -42,7 +42,7 @@ import {api, LightningElement, track} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-category-facet engine-id={engineId} facet-id="myfacet" field="geographicalhierarchy" label="Country" base-path="Africa,Togo,Lome" no-filter-by-base-path delimiting-character="/" number-of-values="5" is-collapsed></c-quantic-category-facet>
+ * <c-quantic-category-facet engine-id={engineId} facet-id="myfacet" 4="geographicalhierarchy" label="Country" base-path="Africa,Togo,Lome" no-filter-by-base-path delimiting-character="/" number-of-values="5" is-collapsed></c-quantic-category-facet>
  *
  * @example
  * <c-quantic-category-facet engine-id={engineId} field="geographicalhierarchy">
@@ -435,6 +435,7 @@ export default class QuanticCategoryFacet extends LightningElement {
         path: item.path,
       });
     } else {
+      // @ts-ignore
       this.facet.toggleSelect(item);
     }
     this.clearInput();
