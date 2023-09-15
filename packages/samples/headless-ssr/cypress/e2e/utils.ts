@@ -1,4 +1,3 @@
-const searchBoxSelector = '.search-box input';
 export const numResults = 10;
 
 export const ConsoleAliases = {
@@ -25,16 +24,4 @@ export function getResultTitles() {
       return this.innerText;
     }) as Cypress.Chainable<JQuery<string>>
   ).invoke('toArray');
-}
-
-export function compareWithInitialResults() {
-  getResultTitles().should('have.length', numResults).as('initial-results');
-  waitForHydration();
-  cy.get(searchBoxSelector).focus().type('abc{enter}');
-  cy.wait(1000);
-  cy.get<string>('@initial-results').then((initialResults) => {
-    getResultTitles()
-      .should('have.length', numResults)
-      .and('not.deep.equal', initialResults);
-  });
 }

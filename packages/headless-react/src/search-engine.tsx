@@ -1,5 +1,7 @@
-import {Controller, CoreEngine, SearchEngine} from '@coveo/headless';
 import {
+  Controller,
+  CoreEngine,
+  SearchEngine,
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   SearchEngineDefinitionOptions,

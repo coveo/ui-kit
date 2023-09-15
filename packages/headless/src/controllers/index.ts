@@ -339,7 +339,7 @@ export type {
   SmartSnippetState,
   QuestionAnswerDocumentIdentifier,
   SmartSnippetCore,
-} from './core/smart-snippet/headless-core-smart-snippet';
+} from './smart-snippet/headless-smart-snippet';
 export {buildSmartSnippet} from './smart-snippet/headless-smart-snippet';
 
 export type {InlineLink} from './smart-snippet/headless-smart-snippet-interactive-inline-links';

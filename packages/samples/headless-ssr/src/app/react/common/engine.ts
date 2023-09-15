@@ -14,5 +14,9 @@ export const {
   HydratedStateProvider,
 } = engineDefinition;
 
-export const {useResultList, useSearchBox, useSearchParameters} =
-  engineDefinition.controllers;
+export const {
+  useResultList,
+  useSearchBox,
+  useAuthorFacet,
+  useSearchParameters,
+} = engineDefinition.controllers;
