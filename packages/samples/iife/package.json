@@ -19,7 +19,7 @@
     "@babel/standalone": "7.21.2"
   },
   "devDependencies": {
-    "cypress": "13.2.0",
+    "cypress": "12.17.4",
     "cypress-repeat": "2.3.3",
     "ncp": "2.0.0",
     "serve": "14.2.0",
