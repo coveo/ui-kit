@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "cypress": "12.17.4",
+    "cypress-repeat": "2.3.3",
     "cypress-web-vitals": "4.0.1"
   }
 }

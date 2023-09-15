@@ -5,6 +5,7 @@ import {CaseAssistConfigurationState} from '../features/case-assist-configuratio
 import {CaseContextState} from '../features/case-context/case-context-state';
 import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
+import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
 import {ConfigurationState} from '../features/configuration/configuration-state';
 import {ContextState} from '../features/context/context-state';
 import {DictionaryFieldContextState} from '../features/dictionary-field-context/dictionary-field-context-state';
@@ -29,7 +30,6 @@ import {InsightInterfaceState} from '../features/insight-interface/insight-inter
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {PaginationState} from '../features/pagination/pagination-state';
 import {ProductListingState} from '../features/product-listing/product-listing-state';
-import {ProductListingV2State} from '../features/product-listing/v2/product-listing-v2-state';
 import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
 import {QuerySetState} from '../features/query-set/query-set-state';
 import {QuerySuggestSet} from '../features/query-suggest/query-suggest-state';

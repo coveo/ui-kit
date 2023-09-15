@@ -2,7 +2,7 @@ import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {productListingV2Reducer} from '../../features/product-listing/v2/product-listing-v2-slice';
+import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
 import {CommerceAppState} from '../../state/commerce-app-state';
 import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
 import {

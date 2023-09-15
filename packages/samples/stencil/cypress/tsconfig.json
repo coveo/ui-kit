@@ -4,6 +4,7 @@
     "strict": true,
     "baseUrl": "../node_modules",
     "target": "es6",
+    "sourceMap": false,
     "lib": ["esnext", "dom"],
     "types": ["cypress"]
   },
