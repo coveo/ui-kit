@@ -7,7 +7,7 @@ export function assertFocusSearchBox(
     searchBoxSelector().should('be.focused');
   });
 }
-
+//TODO(a): Remove when no more references and standalone-search-box + search-box use assertHasTextWithoutIt
 export function assertHasText(
   text: string,
   searchBoxSelector = SearchBoxSelectors.inputBox
@@ -17,6 +17,14 @@ export function assertHasText(
   });
 }
 
+export function assertHasTextWithoutIt(
+  text: string,
+  searchBoxSelector = SearchBoxSelectors.inputBox
+) {
+  searchBoxSelector().should('have.value', text);
+}
+
+//TODO(a): Remove when no more references and search-box use assertHasSuggestionsCountWithoutIt
 export function assertHasSuggestionsCount(count: number) {
   it(`should display ${count} suggestions`, () => {
     SearchBoxSelectors.querySuggestions()
@@ -34,12 +42,19 @@ export function assertHasSuggestionsCount(count: number) {
   });
 }
 
+export function assertHasSuggestionsCountWithoutIt(count: number) {
+  SearchBoxSelectors.querySuggestions()
+    .filter(':visible')
+    .should('have.length', count);
+}
+
 export function assertNoSuggestionGenerated() {
   it('should have no suggestions', () => {
     SearchBoxSelectors.querySuggestions().should('not.exist');
   });
 }
 
+//TODO(a): Remove when no more references and search-box use assertSuggestionIsSelectedWithoutIt
 export function assertSuggestionIsSelected(index: number) {
   it(`should have selected suggestion ${index}`, () => {
     SearchBoxSelectors.querySuggestions()
@@ -49,21 +64,24 @@ export function assertSuggestionIsSelected(index: number) {
   });
 }
 
-export function assertSuggestionIsHighlighted(index: number) {
-  it(`should have highlighted suggestion ${index}`, () => {
-    SearchBoxSelectors.querySuggestions()
-      .eq(index)
-      .invoke('attr', 'class')
-      .should('contain', 'bg-neutral-light');
-  });
+export function assertSuggestionIsSelectedWithoutIt(index: number) {
+  SearchBoxSelectors.querySuggestions()
+    .eq(index)
+    .invoke('attr', 'part')
+    .should('contain', 'active-suggestion');
+}
+
+export function assertSuggestionIsHighlightedwithoutIt(index: number) {
+  SearchBoxSelectors.querySuggestions()
+    .eq(index)
+    .invoke('attr', 'class')
+    .should('contain', 'bg-neutral-light');
 }
 
 export function assertNoSuggestionIsSelected() {
-  it('should have no selected result', () => {
-    SearchBoxSelectors.querySuggestions().each((el) =>
-      expect(el.attr('part')).to.not.contain('active-suggestion')
-    );
-  });
+  SearchBoxSelectors.querySuggestions().each((el) =>
+    expect(el.attr('part')).to.not.contain('active-suggestion')
+  );
 }
 
 export function assertLogSearchFromLink(query: string) {

@@ -12,6 +12,7 @@ export function should(should: boolean) {
   return should ? 'should' : 'should not';
 }
 
+//TODO(a): Remove when every reference now uses assertAccessibilityWithoutIt
 export function assertAccessibility<T extends HTMLElement>(
   component?: string | (() => Cypress.Chainable<JQuery<T>>)
 ) {
@@ -167,6 +168,7 @@ export function assertRemovesComponent() {
   );
 }
 
+//TODO(a): Remove when every reference now uses assertHasTextWithoutIt
 export function assertAriaLiveMessage(
   selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
   message: string
@@ -174,4 +176,11 @@ export function assertAriaLiveMessage(
   it(`screen readers should read out "${message}".`, () => {
     selector().should('contain.text', message);
   });
+}
+
+export function assertAriaLiveMessageWithoutIt(
+  selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
+  message: string
+) {
+  selector().should('contain.text', message);
 }
