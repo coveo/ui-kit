@@ -1,3 +1,5 @@
+const sortImportsPlugin = require('@trivago/prettier-plugin-sort-imports');
+
 const decoratorPlugin = JSON.stringify([
   'decorators',
   {decoratorsBeforeExport: true},
@@ -5,6 +7,7 @@ const decoratorPlugin = JSON.stringify([
 
 /** @type {import('prettier').Config} */
 module.exports = {
+  plugins: [sortImportsPlugin],
   bracketSpacing: false,
   singleQuote: true,
   trailingComma: 'es5',
