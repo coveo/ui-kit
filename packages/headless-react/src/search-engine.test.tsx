@@ -1,5 +1,5 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {
+  getSampleSearchEngineConfiguration,
   InferStaticState,
   InferHydratedState,
   defineResultList,

@@ -3,10 +3,8 @@ import {
   CoreEngine,
   SearchEngine,
   SearchEngineOptions,
-} from '@coveo/headless';
-import {InferControllerFromDefinition} from '@coveo/headless/dist/definitions/app/ssr-engine/types/common';
-import {
   ControllerDefinitionsMap,
+  InferControllerFromDefinition,
   InferControllersMapFromDefinition,
   InferControllerStaticStateMapFromDefinitions,
   EngineDefinition,

@@ -1,7 +1,7 @@
 import {
   ResultList as ResultListController,
   ResultListState,
-} from '@coveo/headless';
+} from '@coveo/headless/ssr';
 import {useEffect, useState, FunctionComponent} from 'react';
 import ResultListCommon from '../../common/result-list';
 

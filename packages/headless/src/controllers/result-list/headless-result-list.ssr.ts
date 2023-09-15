@@ -6,12 +6,7 @@ import {
   buildResultList,
 } from './headless-result-list';
 
-export type {
-  ResultListOptions,
-  ResultListProps,
-  ResultListState,
-  ResultList,
-} from './headless-result-list';
+export * from './headless-result-list';
 
 /**
  * @internal
