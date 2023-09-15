@@ -669,9 +669,7 @@ describe('search api client', () => {
 
       PlatformClient.call = () => Promise.resolve(response);
       const res = await searchAPIClient.search(
-        (
-          await buildSearchRequest(state)
-        ).request
+        (await buildSearchRequest(state)).request
       );
       if (isErrorResponse(res)) {
         fail(

@@ -79,7 +79,11 @@ describe('url helper', () => {
         admin: 'https://foo.admin.orghipaa.coveo.com',
       },
     },
-  ] as Array<{orgId: string; env: PlatformEnvironment; organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>}>)(
+  ] as Array<{
+    orgId: string;
+    env: PlatformEnvironment;
+    organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>;
+  }>)(
     'return the correct #getOrganizationEndpoints()',
     ({orgId, env, organizationEndpoints}) => {
       expect(getOrganizationEndpoints(orgId, env)).toEqual(

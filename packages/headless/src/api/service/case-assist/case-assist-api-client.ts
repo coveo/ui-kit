@@ -22,7 +22,7 @@ import {GetDocumentSuggestionsResponse} from './get-document-suggestions/get-doc
 export interface CaseAssistAPIClientOptions extends HtmlAPIClientOptions {}
 
 export interface AsyncThunkCaseAssistOptions<
-  T extends Partial<CaseAssistAppState>
+  T extends Partial<CaseAssistAppState>,
 > extends AsyncThunkOptions<T, ClientThunkExtraArguments<CaseAssistAPIClient>> {
   rejectValue: CaseAssistAPIErrorStatusResponse;
 }

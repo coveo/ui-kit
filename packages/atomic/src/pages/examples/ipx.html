@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
@@ -143,7 +143,10 @@
         inset: unset;
       }
 
-      :is(atomic-search-interface:not(.atomic-search-interface-search-executed), atomic-search-interface:not(.atomic-search-interface-search-executed))
+      :is(
+          atomic-search-interface:not(.atomic-search-interface-search-executed),
+          atomic-search-interface:not(.atomic-search-interface-search-executed)
+        )
         > :is(atomic-ipx-modal, atomic-ipx-embedded)
         > div[slot='body']
         > atomic-layout-section

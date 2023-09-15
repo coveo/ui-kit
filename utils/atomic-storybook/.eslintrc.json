@@ -4,7 +4,5 @@
     // due to how atomic/bueno gets copied at build time for storybook instead of installed as a dep, disable this error
     "node/no-extraneous-import": ["off"]
   },
-  "extends": [
-    "plugin:react/recommended"
-  ]
+  "extends": ["plugin:react/recommended"]
 }

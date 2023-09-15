@@ -9,7 +9,11 @@
       "groupSlug": "all"
     },
     {
-      "matchPackagePatterns": ["^@angular/*", "^@angular-devkit/*", "ng-packagr"],
+      "matchPackagePatterns": [
+        "^@angular/*",
+        "^@angular-devkit/*",
+        "ng-packagr"
+      ],
       "groupSlug": "angular",
       "rangeStrategy": "replace",
       "allowedVersions": "14.x"

@@ -1,9 +1,9 @@
-import React, {useEffect, useRef} from 'react';
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {FoldedResult} from '@coveo/headless';
-import {AtomicFoldedResultList} from './stencil-generated';
-import {renderToString} from 'react-dom/server';
+import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
+import {renderToString} from 'react-dom/server';
+import {AtomicFoldedResultList} from './stencil-generated';
 
 /**
  * The properties of the AtomicFoldedResultList component
