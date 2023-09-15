@@ -6,8 +6,6 @@ polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 
 // ⚠️ NOTE: All exported SSR types, APIs should be marked as `@internal` until MVP is complete
-export {mapObject} from './utils/utils';
-
 export type {
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
