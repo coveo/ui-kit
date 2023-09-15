@@ -117,12 +117,19 @@ export function assertContainsComponentError(
   });
 }
 
+//TODO(a): Remove when every reference now uses assertConsoleErrorWithoutIt
 export function assertConsoleError(error = true) {
   it(`${should(error)} log an error to the console`, () => {
     cy.get(TestFixture.consoleAliases.error).should(
       error ? 'be.called' : 'not.be.called'
     );
   });
+}
+
+export function assertConsoleErrorWithoutIt(error = true) {
+  cy.get(TestFixture.consoleAliases.error).should(
+    error ? 'be.called' : 'not.be.called'
+  );
 }
 
 export function assertConsoleErrorMessage(msg: string) {

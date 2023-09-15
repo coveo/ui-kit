@@ -97,7 +97,7 @@ export default (
         });
       }
 
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addResultFn(
@@ -114,42 +114,36 @@ export default (
 
       withAnySectionnableResultList(
         (display, imageSize, density) => {
-          it('should be fine', () => {
-            //should expose --line-height in the title section
-            componentSelectors.sections
-              .title()
-              .find(lineHeightSelector)
-              .should('be.visible');
+          //should expose --line-height in the title section
+          componentSelectors.sections
+            .title()
+            .find(lineHeightSelector)
+            .should('be.visible');
 
-            //should expose --line-height in the excerpt section
-            componentSelectors.sections
-              .excerpt()
-              .find(lineHeightSelector)
-              .should('be.visible');
+          //should expose --line-height in the excerpt section
+          componentSelectors.sections
+            .excerpt()
+            .find(lineHeightSelector)
+            .should('be.visible');
 
-            //should expose --line-height in the bottom-metadata section
-            componentSelectors.sections
-              .bottomMetadata()
-              .find(lineHeightSelector)
-              .should('be.visible');
+          //should expose --line-height in the bottom-metadata section
+          componentSelectors.sections
+            .bottomMetadata()
+            .find(lineHeightSelector)
+            .should('be.visible');
 
-            if (!(componentTag === 'atomic-folded-result-list')) {
-              //should pass the display-${display} class to the list root
-              componentSelectors
-                .root()
-                .should('have.class', `display-${display}`);
-            }
-
-            //should pass the image-${imageSize} class to the list root
+          if (!(componentTag === 'atomic-folded-result-list')) {
+            //should pass the display-${display} class to the list root
             componentSelectors
               .root()
-              .should('have.class', `image-${imageSize}`);
+              .should('have.class', `display-${display}`);
+          }
 
-            //should pass the density-${density} class to the list root
-            componentSelectors
-              .root()
-              .should('have.class', `density-${density}`);
-          });
+          //should pass the image-${imageSize} class to the list root
+          componentSelectors.root().should('have.class', `image-${imageSize}`);
+
+          //should pass the density-${density} class to the list root
+          componentSelectors.root().should('have.class', `density-${density}`);
         },
         {componentTag}
       );
@@ -163,7 +157,7 @@ export default (
         return element;
       }
 
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addResultFn(

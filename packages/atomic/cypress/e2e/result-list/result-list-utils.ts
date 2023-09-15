@@ -30,10 +30,8 @@ export function withAnySectionnableResultList(
     layouts.forEach((layout) => {
       imageSizes.forEach((image) => {
         densities.forEach((density) => {
-          // Create a unique test name for each combination
           const testName = `Test - Viewport: ${viewport}, Layout: ${layout}, Image Size: ${image}, Density: ${density}`;
 
-          // Create a Cypress it statement for each combination
           it(testName, () => {
             const aspectRatio = 16 / 9;
             cy.viewport(width, width / aspectRatio);
@@ -45,8 +43,6 @@ export function withAnySectionnableResultList(
             });
 
             assertions(layout, image, density);
-            // Your test code here
-            // Use the values of viewport, layout, imageSize, and density in your test
           });
         });
       });
