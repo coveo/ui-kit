@@ -12,9 +12,8 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        working-directory: ./packages/samples/vuejs
-        start: npm run dev
+        command-prefix: 'npx -w @coveo/atomic-vuejs-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        start: npx nx run atomic-vuejs-samples:dev
         wait-on: 'http://localhost:8080'
         install: false
         record: false

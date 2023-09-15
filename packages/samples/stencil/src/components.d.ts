@@ -7,6 +7,8 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { SearchEngine } from "@coveo/headless";
 import { Router } from "stencil-router-v2";
+export { SearchEngine } from "@coveo/headless";
+export { Router } from "stencil-router-v2";
 export namespace Components {
     interface AppRoot {
     }

@@ -15,6 +15,8 @@ const defaultLikeLabel = 'yes';
 const defaultDislikeIconName = 'utility:clear';
 const defaultDislikeLabel = 'no';
 const defaultSize = 'xx-small';
+const specifiedLikeLabel = 'This answer was helpful';
+const specifiedDislikeLabel = 'This answer was not helpful';
 
 jest.mock(
   '@salesforce/label/c.quantic_Yes',
@@ -48,6 +50,8 @@ const defaultOptions = {
   question: exampleQuestion,
   hideExplainWhyButton: false,
   successMessage: exampleSuccessMessage,
+  likeLabel: defaultLikeLabel,
+  dislikeLabel: defaultDislikeLabel,
 };
 
 function setupEventListeners(element) {
@@ -155,6 +159,50 @@ describe('c-quantic-feedback', () => {
       expect(successMessage).toBeNull();
     });
 
+    it('should have a title attribute with the default label on the like button', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const button = element.shadowRoot.querySelector(selectors.likeButton);
+
+      expect(button.title).toEqual(defaultLikeLabel);
+    });
+
+    it('should have a title attribute with the default label on the dislike button', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const button = element.shadowRoot.querySelector(selectors.dislikeButton);
+
+      expect(button.title).toEqual(defaultDislikeLabel);
+    });
+
+    describe('When labels are specified as properties to the quanticFeedback component', () => {
+      it('should have a title attribute with the specified title on the like button', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          likeLabel: specifiedLikeLabel,
+        });
+        await flushPromises();
+
+        const button = element.shadowRoot.querySelector(selectors.likeButton);
+
+        expect(button.title).toEqual(specifiedLikeLabel);
+      });
+
+      it('should have a title attribute with the specified title on the dislike button', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          likeLabel: specifiedDislikeLabel,
+        });
+        await flushPromises();
+
+        const button = element.shadowRoot.querySelector(selectors.likeButton);
+
+        expect(button.title).toEqual(specifiedDislikeLabel);
+      });
+    });
+
     describe('when the like button is clicked', () => {
       it('should dispatch the "like" event', async () => {
         const element = createTestComponent();
@@ -204,7 +252,6 @@ describe('c-quantic-feedback', () => {
         });
         await flushPromises();
 
-
         const likeButton = element.shadowRoot.querySelector(
           selectors.likeButton
         );
@@ -241,10 +288,9 @@ describe('c-quantic-feedback', () => {
       it('should display the feedback buttons properly', async () => {
         const element = createTestComponent({
           ...defaultOptions,
-          hideLabels: true
+          hideLabels: true,
         });
         await flushPromises();
-
 
         const likeButton = element.shadowRoot.querySelector(
           selectors.likeButton

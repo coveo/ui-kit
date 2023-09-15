@@ -13,6 +13,7 @@ export function buildMockDateFacetRequest(
     numberOfValues: 8,
     preventAutoSelect: false,
     sortCriteria: 'ascending',
+    resultsMustMatch: 'atLeastOneValue',
     type: 'dateRange',
     rangeAlgorithm: 'even',
     ...config,

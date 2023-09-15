@@ -1,7 +1,7 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {
-  InferCSRState,
-  InferSSRState,
+  InferStaticState,
+  InferHydratedState,
   defineResultList,
   defineSearchBox,
 } from '@coveo/headless/ssr';
@@ -26,25 +26,25 @@ describe('Headless react SSR utils', () => {
 
   test('defines react search engine', () => {
     const {
-      fetchInitialState,
-      hydrateInitialState,
+      fetchStaticState,
+      hydrateStaticState,
       build,
       useEngine,
       controllers,
-      SSRStateProvider,
-      CSRProvider,
+      StaticStateProvider,
+      HydratedStateProvider,
       ...rest
     } = defineSearchEngine({
       configuration: sampleConfig,
     });
 
     [
-      fetchInitialState,
-      hydrateInitialState,
+      fetchStaticState,
+      hydrateStaticState,
       build,
       useEngine,
-      SSRStateProvider,
-      CSRProvider,
+      StaticStateProvider,
+      HydratedStateProvider,
     ].forEach((returnValue) => expect(typeof returnValue).toBe('function'));
 
     expect(controllers).toEqual({});
@@ -75,10 +75,10 @@ describe('Headless react SSR utils', () => {
       },
     });
     const {
-      fetchInitialState,
-      hydrateInitialState,
-      SSRStateProvider,
-      CSRProvider,
+      fetchStaticState,
+      hydrateStaticState,
+      StaticStateProvider,
+      HydratedStateProvider,
       controllers,
       useEngine,
     } = engineDefinition;
@@ -130,54 +130,54 @@ describe('Headless react SSR utils', () => {
     });
 
     test('should render with SSRProvider', async () => {
-      const ssrState = await fetchInitialState();
+      const staticState = await fetchStaticState();
       render(
-        <SSRStateProvider controllers={ssrState.controllers}>
+        <StaticStateProvider controllers={staticState.controllers}>
           <TestResultList />
-        </SSRStateProvider>
+        </StaticStateProvider>
       );
 
       await checkRenderedResultList();
     });
 
-    test('should hydrate results with CSRProvider', async () => {
-      const ssrState = await fetchInitialState();
-      const {engine, controllers} = await hydrateInitialState(ssrState);
+    test('should hydrate results with HydratedStateProvider', async () => {
+      const staticState = await fetchStaticState();
+      const {engine, controllers} = await hydrateStaticState(staticState);
 
       render(
-        <CSRProvider engine={engine} controllers={controllers}>
+        <HydratedStateProvider engine={engine} controllers={controllers}>
           <TestResultList />
-        </CSRProvider>
+        </HydratedStateProvider>
       );
 
       await checkRenderedResultList();
     });
 
     describe('hooks', () => {
-      let ssrState: InferSSRState<typeof engineDefinition>;
-      let csrState: InferCSRState<typeof engineDefinition>;
+      let staticState: InferStaticState<typeof engineDefinition>;
+      let hydratedState: InferHydratedState<typeof engineDefinition>;
 
       beforeEach(async () => {
-        ssrState = await fetchInitialState();
-        csrState = await hydrateInitialState(ssrState);
+        staticState = await fetchStaticState();
+        hydratedState = await hydrateStaticState(staticState);
       });
 
       function ssrStateProviderWrapper({children}: PropsWithChildren) {
         return (
-          <SSRStateProvider controllers={ssrState.controllers}>
+          <StaticStateProvider controllers={staticState.controllers}>
             {children}
-          </SSRStateProvider>
+          </StaticStateProvider>
         );
       }
 
       function csrStateProviderWrapper({children}: PropsWithChildren) {
         return (
-          <CSRProvider
-            controllers={csrState.controllers}
-            engine={csrState.engine}
+          <HydratedStateProvider
+            controllers={hydratedState.controllers}
+            engine={hydratedState.engine}
           >
             {children}
-          </CSRProvider>
+          </HydratedStateProvider>
         );
       }
 
@@ -196,18 +196,18 @@ describe('Headless react SSR utils', () => {
           expect(result.current).toBeUndefined();
         });
 
-        test('should return engine with CSRProvider', async () => {
+        test('should return engine with HydratedStateProvider', async () => {
           const {result} = renderHook(() => useEngine(), {
             wrapper: csrStateProviderWrapper,
           });
-          expect(result.current).toStrictEqual(csrState.engine);
+          expect(result.current).toStrictEqual(hydratedState.engine);
         });
       });
 
       describe('controller hooks', () => {
         // TODO: Generalize to loop through all defined controllers dynamically
         const {useSearchBox} = engineDefinition.controllers;
-        describe('with SSRStateProvider', () => {
+        describe('with StaticStateProvider', () => {
           test('should define state but not methods', () => {
             const {result} = renderHook(() => useSearchBox(), {
               wrapper: ssrStateProviderWrapper,
@@ -232,13 +232,13 @@ describe('Headless react SSR utils', () => {
             });
             const initialState = result.current.state;
             // const controllerSpy = jest.spyOn(
-            //   csrState.controllers.searchBox,
+            //   hydratedState.controllers.searchBox,
             //   'updateText'
             // );
             act(() => {
               result.current.methods?.updateText('foo');
             });
-            // TODO(DEBUG): csrState might need to be passed into the wrapper
+            // TODO(DEBUG): hydratedState might need to be passed into the wrapper
             // expect(controllerSpy).toBeCalledWith('foo');
             expect(initialState).not.toStrictEqual(result.current.state);
             expect(result.current.state.value).toBe('foo');

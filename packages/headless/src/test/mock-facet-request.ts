@@ -15,6 +15,7 @@ export function buildMockFacetRequest(
     numberOfValues: 8,
     preventAutoSelect: false,
     sortCriteria: 'score',
+    resultsMustMatch: 'atLeastOneValue',
     type: 'specific',
     ...config,
   };

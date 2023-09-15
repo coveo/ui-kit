@@ -6,15 +6,15 @@ import {useEffect, useState, FunctionComponent} from 'react';
 import ResultListCommon from '../../common/result-list';
 
 interface ResultListProps {
-  ssrState: ResultListState;
+  staticState: ResultListState;
   controller?: ResultListController;
 }
 
 export const ResultList: FunctionComponent<ResultListProps> = ({
-  ssrState,
+  staticState,
   controller,
 }) => {
-  const [state, setState] = useState(ssrState);
+  const [state, setState] = useState(staticState);
 
   useEffect(
     () => controller?.subscribe(() => setState({...controller.state})),

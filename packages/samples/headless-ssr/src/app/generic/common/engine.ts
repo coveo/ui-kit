@@ -1,13 +1,13 @@
 import {
   defineSearchEngine,
-  InferSSRState,
-  InferCSRState,
+  InferStaticState,
+  InferHydratedState,
 } from '@coveo/headless/ssr';
 import {config} from '../../common/search-engine-config';
 
 const engineDefinition = defineSearchEngine(config);
 
-export type SearchSSRState = InferSSRState<typeof engineDefinition>;
-export type SearchCSRState = InferCSRState<typeof engineDefinition>;
+export type SearchStaticState = InferStaticState<typeof engineDefinition>;
+export type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
 
-export const {fetchInitialState, hydrateInitialState} = engineDefinition;
+export const {fetchStaticState, hydrateStaticState} = engineDefinition;

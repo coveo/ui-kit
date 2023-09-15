@@ -1,3 +1,30 @@
+# 2.31.0 (2023-09-11)
+
+### Features
+
+- **commerce:** create basic boilerplate for commerce sub-package [CAPI-82] ([#3125](https://github.com/coveo/ui-kit/issues/3125)) ([11c216d](https://github.com/coveo/ui-kit/commits/11c216d5ae9894b1d8cca260a96f68dea2e7c526))
+- **commerce:** create PLP v2 interactive result controller ([#3129](https://github.com/coveo/ui-kit/issues/3129)) ([4d3c39d](https://github.com/coveo/ui-kit/commits/4d3c39d8a1b9910f528be0ed9c372c92e242ff9e))
+- **headless-react:** add headless react util defineSearchEngine ([#3107](https://github.com/coveo/ui-kit/issues/3107)) ([1d63e43](https://github.com/coveo/ui-kit/commits/1d63e431c427de9022238216cc5128b237b836b4))
+- **headless:** add excludeFacetSearchResult search action ([#3149](https://github.com/coveo/ui-kit/issues/3149)) ([02480f6](https://github.com/coveo/ui-kit/commits/02480f6e97e54ad97974a8a93e8d784092e06973))
+
+## 2.30.1 (2023-09-06)
+
+### Features
+
+- **headless:** added defineSearchParametersManager SSR controller ([#3117](https://github.com/coveo/ui-kit/issues/3117)) ([99cca68](https://github.com/coveo/ui-kit/commits/99cca6864d94cbd53b9f60d4b049976b6f6a6981))
+
+# 2.29.0 (2023-08-30)
+
+### Bug Fixes
+
+- **headless:** bump coveo.analytics to fix click tracking issue on ios safari ([#3141](https://github.com/coveo/ui-kit/issues/3141)) ([402473f](https://github.com/coveo/ui-kit/commits/402473fe67709e70f27c1edfd92fa8e7227e07e7))
+- **headless:** consider only selected value ancestry for analytics, history and breadcrumbs ([#3137](https://github.com/coveo/ui-kit/issues/3137)) ([fdc644b](https://github.com/coveo/ui-kit/commits/fdc644b4e8fc96385c498a5d9bc2abfa414df9ee))
+
+### Features
+
+- **headless:** add did-you-mean option to disable automatic query correction ([#3127](https://github.com/coveo/ui-kit/issues/3127)) ([242a8f9](https://github.com/coveo/ui-kit/commits/242a8f9d2a88d62ccd680f3b55e45b278f9b48f5))
+- **headless:** exposes category facet values hierarchically ([#3105](https://github.com/coveo/ui-kit/issues/3105)) ([4b6b0af](https://github.com/coveo/ui-kit/commits/4b6b0af0c8fe245a6e7e4a5c180373696faaa56a))
+
 # 2.28.0 (2023-08-24)
 
 ### Features

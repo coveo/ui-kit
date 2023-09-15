@@ -182,6 +182,7 @@ export const defaultCategoryFacetOptions: CategoryFacetOptionalParameters = {
   sortCriteria: 'occurrences',
   basePath: [],
   filterByBasePath: true,
+  resultsMustMatch: 'atLeastOneValue',
 };
 
 function ensurePathAndReturnChildren(

@@ -15,10 +15,7 @@ import {
   InsightSearchStatusState,
   loadInsightDateFacetSetActions,
 } from '..';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -124,8 +121,7 @@ export class AtomicInsightTimeframeFacet
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
-  @FocusTarget()
-  private headerFocus!: FocusTargetController;
+  private headerFocus?: FocusTargetController;
 
   public initialize() {
     this.timeframeFacetCommon = new TimeframeFacetCommon({
@@ -153,6 +149,13 @@ export class AtomicInsightTimeframeFacet
       initializeFilter: () => this.initializeFilter(),
     });
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
+  }
+
+  private get focusTarget(): FocusTargetController {
+    if (!this.headerFocus) {
+      this.headerFocus = new FocusTargetController(this);
+    }
+    return this.headerFocus;
   }
 
   public disconnectedCallback() {
@@ -223,7 +226,7 @@ export class AtomicInsightTimeframeFacet
       hasError: this.searchStatusState.hasError,
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
-      headerFocus: this.headerFocus,
+      headerFocus: this.focusTarget,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
     });
   }

@@ -5,16 +5,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "nx build",
+    "build:next": "next build",
     "prod": "next start",
     "lint": "next lint",
     "e2e": "cypress run --browser chrome --e2e",
     "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
-    "@coveo/headless": "2.28.0",
     "@types/node": "20.5.3",
     "@coveo/headless-react": "0.0.0",
+    "@coveo/headless": "2.31.0",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "eslint": "8.47.0",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "cypress": "12.17.4",
+    "cypress-repeat": "2.3.3",
     "cypress-web-vitals": "4.0.1"
   }
 }

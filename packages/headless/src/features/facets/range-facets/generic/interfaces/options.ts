@@ -13,6 +13,7 @@ export type RangeFacetOptionalParameters = Pick<
   | 'numberOfValues'
   | 'sortCriteria'
   | 'rangeAlgorithm'
+  | 'resultsMustMatch'
 >;
 
 export type ManualRangeFacetOptions<T extends RangeFacetRequest> =

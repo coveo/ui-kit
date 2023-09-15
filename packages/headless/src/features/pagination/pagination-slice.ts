@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
+import {fetchProductListing as fetchProductListingV2} from '../commerce/product-listing/product-listing-actions';
 import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions';
 import {
   deselectAllCategoryFacetValues,
@@ -99,6 +100,10 @@ export const paginationReducer = createReducer(
         state.totalCountFiltered = response.totalCountFiltered;
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
+        const {response} = action.payload;
+        state.totalCountFiltered = response.pagination.totalCount;
+      })
+      .addCase(fetchProductListingV2.fulfilled, (state, action) => {
         const {response} = action.payload;
         state.totalCountFiltered = response.pagination.totalCount;
       })

@@ -4,24 +4,23 @@ import {
   InferControllerFromDefinition,
   SearchEngineDefinitionOptions,
   defineSearchEngine as defineBaseSearchEngine,
-  mapObject,
 } from '@coveo/headless/ssr';
 import {useContext, useCallback, useMemo, Context} from 'react';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
 import {useSyncMemoizedStore} from './client-utils';
 import {
-  ContextCSRState,
+  ContextHydratedState,
   ContextState,
   ControllerHook,
   InferControllerHooksMapFromDefinition,
   ReactSearchEngineDefinition,
 } from './types';
-import {SingletonGetter, capitalize, singleton} from './utils';
+import {SingletonGetter, capitalize, singleton, mapObject} from './utils';
 
 export class MissingEngineProviderError extends Error {
   static message =
-    'Unable to find Context. Please make sure you are wrapping your component with either `SSRStateProvider` or `CSRProvider` component that can provide the required context.';
+    'Unable to find Context. Please make sure you are wrapping your component with either `StaticStateProvider` or `HydratedStateProvider` component that can provide the required context.';
   constructor() {
     super(MissingEngineProviderError.message);
   }
@@ -36,12 +35,12 @@ export function createSingletonContext<
   );
 }
 
-function isCSRContext<
+function isHydratedStateContext<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 >(
   ctx: ContextState<TEngine, TControllers>
-): ctx is ContextCSRState<TEngine, TControllers> {
+): ctx is ContextHydratedState<TEngine, TControllers> {
   return 'engine' in ctx;
 }
 
@@ -62,13 +61,15 @@ function buildControllerHook<
     }
     const subscribe = useCallback(
       (listener: () => void) =>
-        isCSRContext(ctx) ? ctx.controllers[key].subscribe(listener) : () => {},
+        isHydratedStateContext(ctx)
+          ? ctx.controllers[key].subscribe(listener)
+          : () => {},
       [ctx]
     );
-    const getSSRState = useCallback(() => ctx.controllers[key].state, [ctx]);
-    const state = useSyncMemoizedStore(subscribe, getSSRState);
+    const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
+    const state = useSyncMemoizedStore(subscribe, getStaticState);
     const methods = useMemo(() => {
-      if (!isCSRContext(ctx)) {
+      if (!isHydratedStateContext(ctx)) {
         return undefined;
       }
       const controller = ctx.controllers[key];
@@ -99,7 +100,7 @@ export function defineSearchEngine<
       if (ctx === null) {
         throw new MissingEngineProviderError();
       }
-      return isCSRContext(ctx) ? ctx.engine : undefined;
+      return isHydratedStateContext(ctx) ? ctx.engine : undefined;
     },
     controllers: (options.controllers
       ? Object.fromEntries(
@@ -109,11 +110,11 @@ export function defineSearchEngine<
           ])
         )
       : {}) as InferControllerHooksMapFromDefinition<TControllers>,
-    SSRStateProvider: ({controllers, children}) => {
+    StaticStateProvider: ({controllers, children}) => {
       const {Provider} = singletonContext.get();
       return <Provider value={{controllers}}>{children}</Provider>;
     },
-    CSRProvider: ({controllers, engine, children}) => {
+    HydratedStateProvider: ({controllers, engine, children}) => {
       const {Provider} = singletonContext.get();
       return <Provider value={{engine, controllers}}>{children}</Provider>;
     },

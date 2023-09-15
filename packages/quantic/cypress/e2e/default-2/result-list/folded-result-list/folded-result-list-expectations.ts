@@ -1,4 +1,5 @@
 import {getQueryAlias, InterceptAliases} from '../../../../page-objects/search';
+import {getAnalyticsBodyFromInterception} from '../../../common-expectations';
 import {should} from '../../../common-selectors';
 import {EventExpectations} from '../../../event-expectations';
 import {resultListExpectations} from '../result-list-expectations';
@@ -30,8 +31,8 @@ function logFoldingActionEvent(
   const {title, uri, position, documentId} = result || {};
   cy.wait(eventName)
     .then((interception) => {
-      const analyticsBody = interception.request.body;
-      const customData = analyticsBody?.customData;
+      const analyticsBody = getAnalyticsBodyFromInterception(interception);
+      const customData = analyticsBody.customData;
       if (eventType === 'click') {
         expect(analyticsBody).to.have.property('documentTitle', title);
         expect(analyticsBody).to.have.property('documentUri', uri);

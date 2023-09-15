@@ -1,0 +1,67 @@
+diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
+index d4d0311..cbe1236 100644
+--- a/node_modules/@stencil/core/compiler/stencil.js
++++ b/node_modules/@stencil/core/compiler/stencil.js
+@@ -229779,7 +229779,7 @@ const visitClassDeclaration = (config, diagnostics, typeChecker, program, classN
+   // We call the `handleClassFields` method which handles transforming any
+   // class fields, removing them from the class and adding statements to the
+   // class' constructor which instantiate them there instead.
+-  const updatedClassFields = handleClassFields(classNode, filteredMethodsAndFields);
++  const updatedClassFields = handleClassFields(classNode, decoratedMembers, filteredMethodsAndFields);
+   validateMethods(diagnostics, classMembers);
+   const currentDecorators = retrieveTsDecorators(classNode);
+   return ts.factory.updateClassDeclaration(classNode, [
+@@ -229813,19 +229813,9 @@ const removeStencilMethodDecorators = (classMembers, diagnostics) => {
+         return ts.factory.updateMethodDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...((_a = retrieveTsModifiers(member)) !== null && _a !== void 0 ? _a : [])], member.asteriskToken, member.name, member.questionToken, member.typeParameters, member.parameters, member.type, member.body);
+       }
+       else if (ts.isPropertyDeclaration(member)) {
+-        if (shouldInitializeInConstructor(member)) {
+-          // if the current class member is decorated with either 'State' or
+-          // 'Prop' we need to modify the property declaration to transform it
+-          // from a class field but we handle this in the `handleClassFields`
+-          // method below, so we just want to return the class member here
+-          // untouched.
+-          return member;
+-        }
+-        else {
+           // update the property to remove decorators
+-          const modifiers = retrieveTsModifiers(member);
+-          return ts.factory.updatePropertyDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...(modifiers !== null && modifiers !== void 0 ? modifiers : [])], member.name, member.questionToken, member.type, member.initializer);
+-        }
++        const modifiers = retrieveTsModifiers(member);
++        return ts.factory.updatePropertyDeclaration(member, [...(newDecorators !== null && newDecorators !== void 0 ? newDecorators : []), ...(modifiers !== null && modifiers !== void 0 ? modifiers : [])], member.name, member.questionToken, member.type, member.initializer);
+       }
+       else {
+         const err = buildError(diagnostics);
+@@ -229963,10 +229953,9 @@ const filterDecorators = (decorators, excludeList) => {
+  * @param classMembers the class members that we need to update
+  * @returns a list of updated class elements which can be inserted into the class
+  */
+-function handleClassFields(classNode, classMembers) {
++function handleClassFields(classNode, classMembers, updatedClassMembers) {
+   var _a;
+   const statements = [];
+-  const updatedClassMembers = [];
+   for (const member of classMembers) {
+     if (shouldInitializeInConstructor(member) && ts.isPropertyDeclaration(member)) {
+       const declarationName = ts.getNameOfDeclaration(member);
+@@ -230002,11 +229991,6 @@ function handleClassFields(classNode, classMembers) {
+       // just 'undefined'
+       (_a = member.initializer) !== null && _a !== void 0 ? _a : ts.factory.createIdentifier('undefined'))));
+     }
+-    else {
+-      // if it's not a class field that is decorated with a Stencil decorator then
+-      // we just push it onto our class member list
+-      updatedClassMembers.push(member);
+-    }
+   }
+   if (statements.length === 0) {
+     // we didn't encounter any class fields we need to update, so we can
+@@ -256504,6 +256488,7 @@ const getTranspileConfig = (input) => {
+     target: getTranspileConfigOpt(input.target, VALID_TARGET, 'latest'),
+   };
+   const tsCompilerOptions = {
++    experimentalDecorators: true,
+     // best we always set this to true
+     allowSyntheticDefaultImports: true,
+     // best we always set this to true

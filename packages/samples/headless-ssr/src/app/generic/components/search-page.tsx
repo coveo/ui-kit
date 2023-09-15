@@ -1,37 +1,57 @@
 'use client';
 
 import {
-  SearchSSRState,
-  SearchCSRState,
-  hydrateInitialState,
+  SearchStaticState,
+  SearchHydratedState,
+  hydrateStaticState,
 } from '@/src/app/generic/common/engine';
 import {useEffect, useState} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
+import {useSyncSearchParameters} from '../hooks/search-parameters';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';
 
-export default function SearchPage({ssrState}: {ssrState: SearchSSRState}) {
-  const [csrResult, setCSRResult] = useState<SearchCSRState | undefined>(
-    undefined
-  );
+export default function SearchPage({
+  staticState,
+}: {
+  staticState: SearchStaticState;
+}) {
+  const [hydratedState, setHydratedState] = useState<
+    SearchHydratedState | undefined
+  >(undefined);
 
   useEffect(() => {
-    hydrateInitialState(ssrState).then(({engine, controllers}) => {
-      setCSRResult({engine, controllers});
+    hydrateStaticState({
+      searchFulfilledAction: staticState.searchFulfilledAction,
+      controllers: {
+        searchParameters: {
+          initialState: staticState.controllers.searchParameters.state,
+        },
+      },
+    }).then(({engine, controllers}) => {
+      setHydratedState({engine, controllers});
     });
-  }, [ssrState]);
+  }, [staticState]);
+
+  useSyncSearchParameters({
+    staticState: staticState.controllers.searchParameters.state,
+    controller: hydratedState?.controllers.searchParameters,
+  });
 
   return (
     <>
       <SearchBox
-        ssrState={ssrState.controllers.searchBox.state}
-        controller={csrResult?.controllers.searchBox}
+        staticState={staticState.controllers.searchBox.state}
+        controller={hydratedState?.controllers.searchBox}
       />
       <ResultList
-        ssrState={ssrState.controllers.resultList.state}
-        controller={csrResult?.controllers.resultList}
+        staticState={staticState.controllers.resultList.state}
+        controller={hydratedState?.controllers.resultList}
       />
-      <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
+      <HydrationMetadata
+        staticState={staticState}
+        hydratedState={hydratedState}
+      />
     </>
   );
 }

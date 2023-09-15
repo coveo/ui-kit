@@ -9,7 +9,10 @@ import {change} from '../../history/history-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions';
-import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
+import {
+  excludeFacetSearchResult,
+  selectFacetSearchResult,
+} from '../facet-search-set/specific/specific-facet-search-actions';
 import {updateFacetAutoSelection} from '../generic/facet-actions';
 import {
   handleFacetSortCriterionUpdate,
@@ -230,6 +233,29 @@ export const facetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
       })
+
+      .addCase(excludeFacetSearchResult, (state, action) => {
+        const {facetId, value} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest) {
+          return;
+        }
+
+        const {rawValue} = value;
+        const {currentValues} = facetRequest;
+        const matchingValue = currentValues.find((v) => v.value === rawValue);
+
+        if (matchingValue) {
+          matchingValue.state = 'excluded';
+          return;
+        }
+
+        const searchResultValue = buildExcludedFacetValueRequest(rawValue);
+        insertNewValue(facetRequest, searchResultValue);
+        facetRequest.freezeCurrentValues = true;
+        facetRequest.preventAutoSelect = true;
+      })
       .addCase(disableFacet, (state, action) => {
         if (!(action.payload in state)) {
           return;
@@ -276,6 +302,7 @@ export const defaultFacetOptions: FacetOptionalParameters = {
   injectionDepth: 1000,
   numberOfValues: 8,
   sortCriteria: 'automatic',
+  resultsMustMatch: 'atLeastOneValue',
 };
 
 function buildFacetRequest(

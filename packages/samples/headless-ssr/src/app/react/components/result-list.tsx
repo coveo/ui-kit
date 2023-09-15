@@ -1,3 +1,5 @@
+'use client';
+
 import ResultListCommon from '../../common/result-list';
 import {useResultList} from '../common/engine';
 

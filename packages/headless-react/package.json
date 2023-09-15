@@ -20,13 +20,13 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --project ./tsconfig.build.json",
+    "build": "nx build",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
     "lint": "eslint ."
   },
   "dependencies": {
-    "@coveo/headless": "2.28.0"
+    "@coveo/headless": "2.31.0"
   },
   "devDependencies": {
     "@testing-library/react": "14.0.0",

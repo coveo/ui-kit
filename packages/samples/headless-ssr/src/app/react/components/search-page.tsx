@@ -1,60 +1,62 @@
 'use client';
 
 import {
-  SearchSSRState,
-  SearchCSRState,
-  hydrateInitialState,
-  CSRProvider,
-  SSRStateProvider,
+  SearchStaticState,
+  SearchHydratedState,
+  hydrateStaticState,
+  HydratedStateProvider,
+  StaticStateProvider,
 } from '@/src/app/react/common/engine';
 import {useEffect, useState, PropsWithChildren} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
-import ResultList from './result-list';
-import SearchBox from './search-box';
 
 interface SearchPageProviderProps {
-  ssrState: SearchSSRState;
+  staticState: SearchStaticState;
 }
 
-function SearchPageProvider({
-  ssrState,
+export function SearchPageProvider({
+  staticState,
   children,
 }: PropsWithChildren<SearchPageProviderProps>) {
-  const [csrResult, setCSRResult] = useState<SearchCSRState | undefined>(
-    undefined
-  );
+  const [hydratedState, setHydratedState] = useState<
+    SearchHydratedState | undefined
+  >(undefined);
 
   useEffect(() => {
-    hydrateInitialState(ssrState).then(({engine, controllers}) => {
-      setCSRResult({engine, controllers});
+    hydrateStaticState({
+      searchFulfilledAction: staticState.searchFulfilledAction,
+      controllers: {
+        searchParameters: {
+          initialState: staticState.controllers.searchParameters.state,
+        },
+      },
+    }).then(({engine, controllers}) => {
+      setHydratedState({engine, controllers});
     });
-  }, [ssrState]);
+  }, [staticState]);
 
-  if (csrResult) {
+  if (hydratedState) {
     return (
-      <CSRProvider
-        engine={csrResult.engine}
-        controllers={csrResult.controllers}
+      <HydratedStateProvider
+        engine={hydratedState.engine}
+        controllers={hydratedState.controllers}
       >
         {children}
-        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
-      </CSRProvider>
+        <HydrationMetadata
+          staticState={staticState}
+          hydratedState={hydratedState}
+        />
+      </HydratedStateProvider>
     );
   } else {
     return (
-      <SSRStateProvider controllers={ssrState.controllers}>
+      <StaticStateProvider controllers={staticState.controllers}>
         {children}
-        <HydrationMetadata ssrState={ssrState} csrResult={csrResult} />
-      </SSRStateProvider>
+        <HydrationMetadata
+          staticState={staticState}
+          hydratedState={hydratedState}
+        />
+      </StaticStateProvider>
     );
   }
-}
-
-export default function SearchPage({ssrState}: SearchPageProviderProps) {
-  return (
-    <SearchPageProvider ssrState={ssrState}>
-      <SearchBox />
-      <ResultList />
-    </SearchPageProvider>
-  );
 }

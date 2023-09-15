@@ -66,6 +66,7 @@ describe('numeric-facet-set slice', () => {
       sortCriteria: 'ascending',
       type: 'numericalRange',
       rangeAlgorithm: 'even',
+      resultsMustMatch: 'atLeastOneValue',
     });
   });
 
