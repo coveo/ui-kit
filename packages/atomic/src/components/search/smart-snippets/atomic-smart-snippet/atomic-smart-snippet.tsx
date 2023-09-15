@@ -101,10 +101,25 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   @State() feedbackSent = false;
 
+  @Prop({reflect: true}) public snippetMaximumHeight?: number;
+
+  @Prop({reflect: true}) public snippetCollapsedHeight?: number;
+
   @Prop({reflect: true, attribute: 'source-url-max-length'})
   public sourceURLMaxLength?: number;
 
+  private validateProps() {
+    if (
+      this.snippetMaximumHeight &&
+      (!this.snippetCollapsedHeight ||
+        this.snippetMaximumHeight < this.snippetCollapsedHeight)
+    ) {
+      throw 'snippetMaximumHeight must be equal or greater than snippetCollapsedHeight';
+    }
+  }
+
   public initialize() {
+    this.validateProps();
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
     this.smartSnippetCommon = new SmartSnippetCommon({
       id: this.id,
@@ -121,6 +136,12 @@ export class AtomicSmartSnippet implements InitializableComponent {
       getSmartSnippet: () => this.smartSnippet,
       getSnippetStyle: () => this.snippetStyle,
       getFeedbackSent: () => this.feedbackSent,
+      getSnippetMaximumHeight: this.snippetMaximumHeight
+        ? () => this.snippetMaximumHeight!
+        : undefined,
+      getSnippetCollapsedHeight: this.snippetCollapsedHeight
+        ? () => this.snippetCollapsedHeight!
+        : undefined,
       getSourceURLMaxLength: this.sourceURLMaxLength
         ? () => this.sourceURLMaxLength!
         : undefined,
