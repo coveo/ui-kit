@@ -25,29 +25,31 @@ export function withAnySectionnableResultList(
   const layouts = options.layouts ?? ['list', 'grid'];
   const imageSizes = options.imageSizes ?? ['none', 'icon', 'small', 'large'];
   const densities = options.densities ?? ['compact', 'normal', 'comfortable'];
-  Object.entries(viewports).forEach(([viewport, width]) =>
-    describe(`with a ${viewport} viewport`, () =>
-      layouts.forEach((display) =>
-        describe(`in a result ${display}`, () =>
-          imageSizes.forEach((image) =>
-            describe(`with image-size="${image}"`, () =>
-              densities.forEach((density) =>
-                describe(`with density="${density}"`, () => {
-                  (options.useBeforeEach ? beforeEach : before)(() => {
-                    const aspectRatio = 16 / 9;
-                    cy.viewport(width, width / aspectRatio);
-                    cy.get(options.componentTag).then((comp) => {
-                      const resultList = comp.get()[0];
-                      resultList.setAttribute('display', display);
-                      resultList.setAttribute('image-size', image!);
-                      resultList.setAttribute('density', density);
-                    });
-                  });
 
-                  assertions(display, image, density);
-                })
-              ))
-          ))
-      ))
-  );
+  Object.entries(viewports).forEach(([viewport, width]) => {
+    layouts.forEach((layout) => {
+      imageSizes.forEach((image) => {
+        densities.forEach((density) => {
+          // Create a unique test name for each combination
+          const testName = `Test - Viewport: ${viewport}, Layout: ${layout}, Image Size: ${image}, Density: ${density}`;
+
+          // Create a Cypress it statement for each combination
+          it(testName, () => {
+            const aspectRatio = 16 / 9;
+            cy.viewport(width, width / aspectRatio);
+            cy.get(options.componentTag).then((comp) => {
+              const resultList = comp.get()[0];
+              resultList.setAttribute('display', layout);
+              resultList.setAttribute('image-size', image!);
+              resultList.setAttribute('density', density);
+            });
+
+            assertions(layout, image, density);
+            // Your test code here
+            // Use the values of viewport, layout, imageSize, and density in your test
+          });
+        });
+      });
+    });
+  });
 }
