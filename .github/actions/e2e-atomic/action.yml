@@ -25,7 +25,7 @@ runs:
         spec: ${{ inputs.spec }}
         start: npx nx run atomic:prod
         wait-on: 'http://localhost:3333'
-        wait-on-timeout: 300
+        wait-on-timeout: 600000
         install: false
         record: false
       env:
