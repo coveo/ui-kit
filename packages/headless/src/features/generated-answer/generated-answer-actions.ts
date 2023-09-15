@@ -147,7 +147,7 @@ export const streamAnswer = createAsyncThunk<
       write: (data: GeneratedAnswerStreamEventData) => {
         if (
           request.streamId ===
-          state.search.extendedResults.generativeQuestionAnsweringId
+          config.getState().search.extendedResults.generativeQuestionAnsweringId
         ) {
           dispatch(setIsLoading(false));
           if (data.payload && data.payloadType) {
@@ -158,7 +158,7 @@ export const streamAnswer = createAsyncThunk<
       abort: (error: GeneratedAnswerErrorPayload) => {
         if (
           request.streamId ===
-          state.search.extendedResults.generativeQuestionAnsweringId
+          config.getState().search.extendedResults.generativeQuestionAnsweringId
         ) {
           dispatch(updateError(error));
         }
@@ -166,7 +166,7 @@ export const streamAnswer = createAsyncThunk<
       close: () => {
         if (
           request.streamId ===
-          state.search.extendedResults.generativeQuestionAnsweringId
+          config.getState().search.extendedResults.generativeQuestionAnsweringId
         ) {
           dispatch(setIsStreaming(false));
         }
@@ -174,7 +174,7 @@ export const streamAnswer = createAsyncThunk<
       resetAnswer: () => {
         if (
           request.streamId ===
-          state.search.extendedResults.generativeQuestionAnsweringId
+          config.getState().search.extendedResults.generativeQuestionAnsweringId
         ) {
           dispatch(resetAnswer());
         }
