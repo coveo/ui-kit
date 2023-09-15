@@ -129,7 +129,7 @@ describe('Headless react SSR utils', () => {
       );
     });
 
-    test('should render with SSRProvider', async () => {
+    test('should render with StaticStateProvider', async () => {
       const staticState = await fetchStaticState();
       render(
         <StaticStateProvider controllers={staticState.controllers}>
@@ -162,7 +162,7 @@ describe('Headless react SSR utils', () => {
         hydratedState = await hydrateStaticState(staticState);
       });
 
-      function ssrStateProviderWrapper({children}: PropsWithChildren) {
+      function staticStateProviderWrapper({children}: PropsWithChildren) {
         return (
           <StaticStateProvider controllers={staticState.controllers}>
             {children}
@@ -170,7 +170,7 @@ describe('Headless react SSR utils', () => {
         );
       }
 
-      function csrStateProviderWrapper({children}: PropsWithChildren) {
+      function hydratedStateProviderWrapper({children}: PropsWithChildren) {
         return (
           <HydratedStateProvider
             controllers={hydratedState.controllers}
@@ -189,16 +189,16 @@ describe('Headless react SSR utils', () => {
           );
         });
 
-        test('should not return engine with SSRProvider', async () => {
+        test('should not return engine with static state provider', async () => {
           const {result} = renderHook(() => useEngine(), {
-            wrapper: ssrStateProviderWrapper,
+            wrapper: staticStateProviderWrapper,
           });
           expect(result.current).toBeUndefined();
         });
 
-        test('should return engine with HydratedStateProvider', async () => {
+        test('should return engine with hydrated state provider', async () => {
           const {result} = renderHook(() => useEngine(), {
-            wrapper: csrStateProviderWrapper,
+            wrapper: hydratedStateProviderWrapper,
           });
           expect(result.current).toStrictEqual(hydratedState.engine);
         });
@@ -210,17 +210,17 @@ describe('Headless react SSR utils', () => {
         describe('with StaticStateProvider', () => {
           test('should define state but not methods', () => {
             const {result} = renderHook(() => useSearchBox(), {
-              wrapper: ssrStateProviderWrapper,
+              wrapper: staticStateProviderWrapper,
             });
             expect(result.current.state).toBeDefined();
             expect(result.current?.methods).toBeUndefined();
           });
         });
 
-        describe('with CSRStateProvider', () => {
+        describe('with HydratedStateProvider', () => {
           test('should define both state and methods', () => {
             const {result} = renderHook(() => useSearchBox(), {
-              wrapper: csrStateProviderWrapper,
+              wrapper: hydratedStateProviderWrapper,
             });
             expect(result.current.state).toBeDefined();
             expect(result.current?.methods).toBeDefined();
@@ -228,7 +228,7 @@ describe('Headless react SSR utils', () => {
 
           test('should update state when method is called', () => {
             const {result} = renderHook(() => useSearchBox(), {
-              wrapper: csrStateProviderWrapper,
+              wrapper: hydratedStateProviderWrapper,
             });
             const initialState = result.current.state;
             // const controllerSpy = jest.spyOn(
