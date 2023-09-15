@@ -29,7 +29,6 @@
     "@actions/github": "5.1.1",
     "@commitlint/config-conventional": "17.7.0",
     "@commitlint/lint": "9.1.2",
-    "@coveo/semantic-monorepo-tools": "1.7.2",
     "@cspell/dict-fr-fr": "2.2.2",
     "@cspell/eslint-plugin": "6.31.3",
     "@octokit/rest": "19.0.13",
@@ -74,6 +73,11 @@
   "overrides": {
     "@coveo/quantic": {
       "@lwc/compiler": "2.50.0"
+    },
+    "@coveo/release": {
+      "@types/async-retry": {
+        "@types/retry": "0.12.2"
+      }
     }
   },
   "workspaces": [
