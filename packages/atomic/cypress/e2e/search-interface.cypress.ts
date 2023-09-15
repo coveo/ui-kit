@@ -100,7 +100,7 @@ describe('Search Interface Component', () => {
       const engineSearchHub = 'hello';
 
       describe('when the search interface has nothing configured', () => {
-        before(() =>
+        beforeEach(() =>
           setupWithEngine({
             engine: {pipeline: enginePipeline, searchHub: engineSearchHub},
           })
@@ -121,7 +121,7 @@ describe('Search Interface Component', () => {
       });
 
       describe('when the search interface has a configured query pipeline', () => {
-        before(() =>
+        beforeEach(() =>
           setupWithEngine({
             engine: {pipeline: enginePipeline, searchHub: engineSearchHub},
             interface: {pipeline: enginePipeline + enginePipeline},
@@ -134,7 +134,7 @@ describe('Search Interface Component', () => {
       });
 
       describe('when the search interface has a configured search hub', () => {
-        before(() =>
+        beforeEach(() =>
           setupWithEngine({
             engine: {pipeline: enginePipeline, searchHub: engineSearchHub},
             interface: {searchHub: engineSearchHub + engineSearchHub},
@@ -185,7 +185,7 @@ describe('Search Interface Component', () => {
       });
 
       describe('when the search interface has the same query pipeline and search hub as the token', () => {
-        before(() =>
+        beforeEach(() =>
           setupWithEngine({
             engine: {accessToken},
             interface: {pipeline: tokenPipeline, searchHub: tokenSearchHub},
@@ -198,7 +198,7 @@ describe('Search Interface Component', () => {
       });
 
       describe('when the search interface has a configured query pipeline', () => {
-        before(() =>
+        beforeEach(() =>
           setupWithEngine({
             engine: {accessToken},
             interface: {pipeline: tokenPipeline + tokenPipeline},
@@ -211,7 +211,7 @@ describe('Search Interface Component', () => {
       });
 
       describe('when the search interface has a configured search hub', () => {
-        before(() =>
+        beforeEach(() =>
           setupWithEngine({
             engine: {accessToken},
             interface: {searchHub: tokenSearchHub + tokenSearchHub},

@@ -5,7 +5,7 @@ const atomicPackage = require('../../package.json');
  */
 
 describe('Validate Atomic components in Hosted Search Page', () => {
-  before(() => {
+  beforeEach(() => {
     cy.exec('node cypress/scripts/getHostedSearchPage.js');
   });
 

@@ -575,7 +575,7 @@ describe('Numeric Facet V1 Test Suites', () => {
         describe('with no query results', () => {
           const baseSetup = () => visibilitySetup().withNoResults();
 
-          before(() => {
+          beforeEach(() => {
             baseSetup().init();
           });
 
@@ -602,7 +602,7 @@ describe('Numeric Facet V1 Test Suites', () => {
               });
             });
 
-          before(() => {
+          beforeEach(() => {
             baseSetup().init();
           });
 
@@ -731,7 +731,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       new TestFixture()
         .with(
           addNumericFacet({
-            field: 'dafsfs',
+            field: 'NO_RESULT_FIELD_',
             label: numericFacetLabel,
           })
         )
