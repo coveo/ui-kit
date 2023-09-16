@@ -2,6 +2,8 @@ import {TestFixture} from '../fixtures/test-fixture';
 import {addScrollable, clickArrow} from './segmented-facet-scrollable-actions';
 import * as ScrollableAssertions from './segmented-facet-scrollable-assertions';
 
+// cSpell:ignore invalidd
+
 describe('Segmented Facet Scrollable Test Suites', () => {
   function setupScrollable() {
     new TestFixture()

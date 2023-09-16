@@ -10,7 +10,7 @@ type CategoryFacetValuePartition<T extends GenericCategoryFacetValue> = {
 };
 
 export function partitionIntoParentsAndValues<
-  T extends GenericCategoryFacetValue
+  T extends GenericCategoryFacetValue,
 >(nestedValues: T[] | undefined): CategoryFacetValuePartition<T> {
   if (!nestedValues) {
     return {parents: [], values: []};

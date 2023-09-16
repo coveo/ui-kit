@@ -3,7 +3,7 @@ import {AnyFacetRequest} from './interfaces/generic-facet-request';
 import {AnyFacetSlice} from './interfaces/generic-facet-section';
 
 export type SpecificFacetState<
-  SliceType extends AnyFacetSlice = AnyFacetSlice
+  SliceType extends AnyFacetSlice = AnyFacetSlice,
 > = Record<string, SliceType>;
 
 export function handleFacetSortCriterionUpdate<T extends AnyFacetSlice>(

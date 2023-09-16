@@ -8,7 +8,7 @@ import {
 import {AuthenticationParam} from './search/search-api-params';
 
 export function pickNonBaseParams<
-  Params extends BaseParam & AuthenticationParam
+  Params extends BaseParam & AuthenticationParam,
 >(req: Params) {
   // cheap version of _.omit
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
