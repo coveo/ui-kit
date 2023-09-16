@@ -10,12 +10,12 @@ function tabActions(selector: TabSelector) {
       }
     },
     findTabPressTabPressSpace: (value: string) => {
-      // .tab() is equivalent to pressing the Tab; .type(' ') is equivalent to pressing the space bar;
-      selector.tab().contains(value).tab().type(' ');
+      selector.tab().contains(value).realPress('Tab');
+      selector.tab().contains(value).type(' ');
     },
     findTabPressShiftTabPressSpace: (value: string) => {
-      // tab({shift: true}) is equivalent to pressing the Shift and the Tab; .type(' ') is equivalent to pressing the space bar;
-      selector.tab().contains(value).tab({shift: true}).type(' ');
+      selector.tab().contains(value).realPress(['Shift', 'Tab']);
+      selector.tab().contains(value).type(' ');
     },
   };
 }

@@ -1,5 +1,5 @@
-import 'cypress-plugin-tab';
 import './commands';
+import 'cypress-real-events';
 
 Cypress.on('uncaught:exception', (err) => {
   if (
