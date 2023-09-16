@@ -24,7 +24,7 @@ runs:
         spec: ${{ inputs.spec }}
         install: false
         record: false
-        config: reporter=cypress/reporters/detailed-reporter.mjs
+        config: reporter=cypress/reporters/detailed-reporter.js
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
     - uses: actions/upload-artifact@v3

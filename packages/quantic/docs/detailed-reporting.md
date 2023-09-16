@@ -10,7 +10,7 @@ To use the detailed report, run:
 npm run e2e:detailed
 ```
 
-This command invokes Cypress with the `--reporter cypress/reporters/detailed-reporter.mjs` argument to output the results using the custom reporter.
+This command invokes Cypress with the `--reporter cypress/reporters/detailed-reporter.js` argument to output the results using the custom reporter.
 
 ## Adding details to tests
 
