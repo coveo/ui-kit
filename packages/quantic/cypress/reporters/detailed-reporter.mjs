@@ -5,10 +5,10 @@
  * See this issue for details: https://github.com/cypress-io/cypress/issues/8617
  */
 
-const path = require('path');
-const net = require('net');
-const chalk = require('chalk');
-const Mocha = require('mocha');
+import {join} from 'path';
+import {createServer} from 'net';
+import {dim, green, blue, red, cyan, yellow} from 'chalk';
+import {Runner} from 'mocha';
 
 const {
   EVENT_RUN_BEGIN,
@@ -19,7 +19,7 @@ const {
   EVENT_TEST_RETRY,
   EVENT_SUITE_BEGIN,
   EVENT_SUITE_END,
-} = Mocha.Runner.constants;
+} = Runner.constants;
 
 /** @typedef {import('./detailed-collector').Message} Message */
 
@@ -48,7 +48,7 @@ class DetailedReporter {
     /** @type string[] */
     this._logBuffer = [];
 
-    const server = net.createServer(function (socket) {
+    const server = createServer(function (socket) {
       socket
         .on('data', function (data) {
           self.handleCollectorMessage(
@@ -80,7 +80,7 @@ class DetailedReporter {
     // on other platforms, a file path is used to open a local socket.
     return this._isWindows
       ? '\\\\.\\pipe\\detailed-reporter'
-      : path.join(process.cwd(), 'ipc.sock');
+      : join(process.cwd(), 'ipc.sock');
   }
 
   /**
@@ -128,7 +128,7 @@ class DetailedReporter {
    * @param {Mocha.Suite} suite The suite instance.
    */
   handleBeginSuite(suite) {
-    console.log(this.indent() + chalk.dim(suite.title));
+    console.log(this.indent() + dim(suite.title));
     this._indent++;
   }
 
@@ -137,7 +137,7 @@ class DetailedReporter {
    * @param {Message} message The message instance.
    */
   handleBeginScope(message) {
-    this._logBuffer.push(this.scopeIndent() + chalk.dim(message.content));
+    this._logBuffer.push(this.scopeIndent() + dim(message.content));
     this._scopeIndent++;
   }
 
@@ -154,7 +154,7 @@ class DetailedReporter {
    */
   handleExpectation(message) {
     this._logBuffer.push(
-      this.scopeIndent() + chalk.green('. ') + chalk.dim(message.content)
+      this.scopeIndent() + green('. ') + dim(message.content)
     );
   }
 
@@ -165,7 +165,7 @@ class DetailedReporter {
   handleAction(message) {
     const symbol = this._isWindows ? '>' : '→';
     this._logBuffer.push(
-      `${this.scopeIndent()}${chalk.blue(symbol)} ${chalk.dim(message.content)}`
+      `${this.scopeIndent()}${blue(symbol)} ${dim(message.content)}`
     );
   }
 
@@ -176,7 +176,7 @@ class DetailedReporter {
   handlePassedTest(test) {
     const symbol = this._isWindows ? '√' : '✓';
 
-    console.log(`${this.indent()}${chalk.green(symbol)} ${test.title}`);
+    console.log(`${this.indent()}${green(symbol)} ${test.title}`);
     this.flushTestLogs();
   }
 
@@ -188,7 +188,7 @@ class DetailedReporter {
   handleFailedTest(test, err) {
     const symbol = this._isWindows ? 'x' : '✗';
 
-    console.log(`${this.indent()}${chalk.red(symbol)} ${test.title}`);
+    console.log(`${this.indent()}${red(symbol)} ${test.title}`);
     this.flushTestLogs();
 
     console.log(`\nERROR:\n${err.stack}\n`);
@@ -199,7 +199,7 @@ class DetailedReporter {
    * @param {Mocha.Test} test The test instance.
    */
   handlePendingTest(test) {
-    console.log(this.indent() + chalk.cyan('- ' + test.title));
+    console.log(this.indent() + cyan('- ' + test.title));
   }
 
   /**
@@ -208,7 +208,7 @@ class DetailedReporter {
    */
   handleRetryTest(test) {
     const text = `! ${test.title} (retry)`;
-    console.log(`${this.indent()}${chalk.yellow(text)}`);
+    console.log(`${this.indent()}${yellow(text)}`);
     this.clearTestLogs();
   }
 
@@ -263,4 +263,4 @@ class DetailedReporter {
   }
 }
 
-module.exports = DetailedReporter;
+export default DetailedReporter;

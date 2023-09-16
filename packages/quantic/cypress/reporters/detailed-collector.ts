@@ -105,7 +105,7 @@ export function registerDetailedReporterPlugin(
   on: Cypress.PluginEvents,
   config: Cypress.PluginConfigOptions
 ) {
-  const enable = path.basename(config.reporter) === 'detailed-reporter.js';
+  const enable = path.basename(config.reporter) === 'detailed-reporter.mjs';
   const collector = getCollector(enable);
 
   on('task', {
