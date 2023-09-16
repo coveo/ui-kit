@@ -4,7 +4,7 @@ import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
 import {defineConfig} from 'rollup';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
-import {terser} from 'rollup-plugin-terser';
+import {terser} from '@rollup/plugin-terser';
 
 /** @type {import("rollup").GlobalsOption} */
 const globals = {
