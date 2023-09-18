@@ -28,7 +28,7 @@ import { RedirectionPayload } from "./components/search/atomic-search-box/redire
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { AutomaticFacet, CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { AutomaticFacet, CategoryFacetSortCriterion, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, PlatformEnvironment as PlatformEnvironment1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -1127,10 +1127,6 @@ export namespace Components {
           * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
          */
         "rangeAlgorithm": RangeFacetRangeAlgorithm;
-        /**
-          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
-         */
-        "resultsMustMatch": FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
@@ -4972,10 +4968,6 @@ declare namespace LocalJSX {
           * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
          */
         "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
-        /**
-          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
-         */
-        "resultsMustMatch"?: FacetResultsMustMatch;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
