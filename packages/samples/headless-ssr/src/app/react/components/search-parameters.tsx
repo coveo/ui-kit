@@ -38,8 +38,8 @@ export default function SearchParameters() {
     if (!correctedUrl || correctedUrl === historyRouter.url?.href) {
       return;
     }
-    const isInitialState = methods === undefined;
-    if (isInitialState) {
+    const isStaticState = methods === undefined;
+    if (isStaticState) {
       historyRouter.replace(correctedUrl);
     } else {
       historyRouter.push(correctedUrl);

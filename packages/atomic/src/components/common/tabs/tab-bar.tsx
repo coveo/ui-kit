@@ -14,7 +14,7 @@ export class TabBar {
   @Element() private host!: HTMLElement;
 
   @State()
-  private popoverTabs: typeof Button[] = [];
+  private popoverTabs: (typeof Button)[] = [];
 
   private resizeObserver: ResizeObserver | undefined;
 

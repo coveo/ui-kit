@@ -1,4 +1,4 @@
-import {fetchProductListing} from '../../../../features/product-listing/v2/product-listing-v2-actions';
+import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
 import {
   Pager,

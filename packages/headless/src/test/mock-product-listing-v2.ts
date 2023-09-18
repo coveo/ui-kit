@@ -1,6 +1,6 @@
 import {ProductListingV2SuccessResponse} from '../api/commerce/product-listings/v2/product-listing-v2-response';
-import {FetchProductListingV2ThunkReturn} from '../features/product-listing/v2/product-listing-v2-actions';
-import {logProductListingV2Load} from '../features/product-listing/v2/product-listing-v2-analytics';
+import {FetchProductListingV2ThunkReturn} from '../features/commerce/product-listing/product-listing-actions';
+import {logProductListingV2Load} from '../features/commerce/product-listing/product-listing-analytics';
 import {SortBy} from '../features/sort/sort';
 
 export function buildFetchProductListingV2Response(

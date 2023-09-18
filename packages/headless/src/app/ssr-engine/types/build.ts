@@ -2,7 +2,7 @@ import {CoreEngine} from '../../engine';
 import {
   ControllersMap,
   ControllersPropsMap,
-  EngineAndControllers,
+  HydratedState,
   OptionsExtender,
 } from './common';
 
@@ -12,7 +12,7 @@ export interface EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
 
 export interface EngineDefinitionBuildOptionsWithProps<
   TEngineOptions,
-  TControllersProps extends ControllersPropsMap
+  TControllersProps extends ControllersPropsMap,
 > extends EngineDefinitionBuildOptionsWithoutProps<TEngineOptions> {
   controllers: TControllersProps;
 }
@@ -21,7 +21,7 @@ export interface BuildWithProps<
   TEngine extends CoreEngine,
   TEngineOptions,
   TControllersMap extends ControllersMap,
-  TControllersProps extends ControllersPropsMap
+  TControllersProps extends ControllersPropsMap,
 > {
   /**
    * Initializes an engine and controllers from the definition.
@@ -31,18 +31,18 @@ export interface BuildWithProps<
       TEngineOptions,
       TControllersProps
     >
-  ): Promise<EngineAndControllers<TEngine, TControllersMap>>;
+  ): Promise<HydratedState<TEngine, TControllersMap>>;
 }
 
 export interface BuildWithoutProps<
   TEngine extends CoreEngine,
   TEngineOptions,
-  TControllersMap extends ControllersMap
+  TControllersMap extends ControllersMap,
 > {
   /**
    * Initializes an engine and controllers from the definition.
    */
   build(
     options?: EngineDefinitionBuildOptionsWithoutProps<TEngineOptions>
-  ): Promise<EngineAndControllers<TEngine, TControllersMap>>;
+  ): Promise<HydratedState<TEngine, TControllersMap>>;
 }

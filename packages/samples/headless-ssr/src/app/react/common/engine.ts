@@ -1,18 +1,22 @@
 import {defineSearchEngine} from '@coveo/headless-react';
-import {InferSSRState, InferCSRState} from '@coveo/headless/ssr';
+import {InferStaticState, InferHydratedState} from '@coveo/headless/ssr';
 import {config} from '../../common/search-engine-config';
 
 const engineDefinition = defineSearchEngine(config);
 
-export type SearchSSRState = InferSSRState<typeof engineDefinition>;
-export type SearchCSRState = InferCSRState<typeof engineDefinition>;
+export type SearchStaticState = InferStaticState<typeof engineDefinition>;
+export type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
 
 export const {
-  fetchInitialState,
-  hydrateInitialState,
-  SSRStateProvider,
-  CSRProvider,
+  fetchStaticState,
+  hydrateStaticState,
+  StaticStateProvider,
+  HydratedStateProvider,
 } = engineDefinition;
 
-export const {useResultList, useSearchBox, useSearchParameters} =
-  engineDefinition.controllers;
+export const {
+  useResultList,
+  useSearchBox,
+  useAuthorFacet,
+  useSearchParameters,
+} = engineDefinition.controllers;

@@ -8,8 +8,8 @@ import {EngineDefinitionBuildOptionsWithProps} from '../ssr-engine/types/build';
 import {
   ControllerDefinitionsMap,
   ControllersMap,
-  EngineSSRState,
-  InferControllerSSRStateMapFromDefinitions,
+  EngineStaticState,
+  InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
   OptionsExtender,
 } from '../ssr-engine/types/common';
@@ -27,14 +27,14 @@ import {
  * @internal
  */
 export type SearchEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
+  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 > = EngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
 
 /**
  * @internal
  */
 export type SearchEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
+  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
 
 /**
@@ -48,7 +48,7 @@ export function defineSearchEngine<
   TControllerDefinitions extends ControllerDefinitionsMap<
     SearchEngine,
     Controller
-  >
+  >,
 >({
   controllers: controllerDefinitions,
   ...engineOptions
@@ -84,26 +84,26 @@ export function defineSearchEngine<
     };
   };
 
-  const fetchInitialState: SearchEngineDefinition<TControllerDefinitions>['fetchInitialState'] =
+  const fetchStaticState: SearchEngineDefinition<TControllerDefinitions>['fetchStaticState'] =
     (
       ...[executeOptions]: Parameters<
-        SearchEngineDefinition<TControllerDefinitions>['fetchInitialState']
+        SearchEngineDefinition<TControllerDefinitions>['fetchStaticState']
       >
     ) =>
       new Promise<
-        EngineSSRState<
+        EngineStaticState<
           {type: string},
-          InferControllerSSRStateMapFromDefinitions<TControllerDefinitions>
+          InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
         >
       >((resolve, reject) => {
-        let initialControllers: ControllersMap;
+        let staticControllers: ControllersMap;
         const middleware: Middleware = () => (next) => (action) => {
           next(action);
           if (action.type === 'search/executeSearch/fulfilled') {
             resolve({
-              controllers: mapObject(initialControllers, (controller) => ({
+              controllers: mapObject(staticControllers, (controller) => ({
                 state: controller.state,
-              })) as InferControllerSSRStateMapFromDefinitions<TControllerDefinitions>,
+              })) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
               searchFulfilledAction: JSON.parse(JSON.stringify(action)),
             });
           }
@@ -123,15 +123,15 @@ export function defineSearchEngine<
             controllers: executeOptions.controllers,
           }),
         }).then(({engine, controllers}) => {
-          initialControllers = controllers;
+          staticControllers = controllers;
           engine.executeFirstSearch();
         });
       });
 
-  const hydrateInitialState: SearchEngineDefinition<TControllerDefinitions>['hydrateInitialState'] =
+  const hydrateStaticState: SearchEngineDefinition<TControllerDefinitions>['hydrateStaticState'] =
     async (
       ...[hydrateOptions]: Parameters<
-        SearchEngineDefinition<TControllerDefinitions>['hydrateInitialState']
+        SearchEngineDefinition<TControllerDefinitions>['hydrateStaticState']
       >
     ) => {
       const {engine, controllers} = await build(
@@ -150,7 +150,7 @@ export function defineSearchEngine<
 
   return {
     build,
-    fetchInitialState,
-    hydrateInitialState,
+    fetchStaticState,
+    hydrateStaticState,
   };
 }

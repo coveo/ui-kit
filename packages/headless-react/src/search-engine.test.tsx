@@ -1,5 +1,8 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
-import {defineResultList, defineSearchBox} from '@coveo/headless/ssr';
+import {
+  getSampleSearchEngineConfiguration,
+  defineResultList,
+  defineSearchBox,
+} from '@coveo/headless/ssr';
 import {render, renderHook, screen} from '@testing-library/react';
 import {PropsWithChildren} from 'react';
 import {MissingEngineProviderError, defineSearchEngine} from './search-engine';
@@ -21,25 +24,25 @@ describe('Headless react SSR utils', () => {
 
   test('defines react search engine', () => {
     const {
-      fetchInitialState,
-      hydrateInitialState,
+      fetchStaticState,
+      hydrateStaticState,
       build,
       useEngine,
       controllers,
-      SSRStateProvider,
-      CSRProvider,
+      StaticStateProvider,
+      HydratedStateProvider,
       ...rest
     } = defineSearchEngine({
       configuration: sampleConfig,
     });
 
     [
-      fetchInitialState,
-      hydrateInitialState,
+      fetchStaticState,
+      hydrateStaticState,
       build,
       useEngine,
-      SSRStateProvider,
-      CSRProvider,
+      StaticStateProvider,
+      HydratedStateProvider,
     ].forEach((returnValue) => expect(typeof returnValue).toBe('function'));
 
     expect(controllers).toEqual({});
@@ -66,10 +69,10 @@ describe('Headless react SSR utils', () => {
       controllers: {resultList: defineResultList()},
     });
     const {
-      fetchInitialState,
-      hydrateInitialState,
-      SSRStateProvider,
-      CSRProvider,
+      fetchStaticState,
+      hydrateStaticState,
+      StaticStateProvider,
+      HydratedStateProvider,
       controllers,
       useEngine,
     } = engineDefinition;
@@ -97,7 +100,7 @@ describe('Headless react SSR utils', () => {
       renderFunction: CallableFunction,
       expectedErrMsg: string
     ) {
-      let err = undefined;
+      let err: Error | undefined = undefined;
       // Prevent expected error from being thrown in console when running tests
       const consoleErrorStub = jest
         .spyOn(console, 'error')
@@ -120,25 +123,25 @@ describe('Headless react SSR utils', () => {
       );
     });
 
-    test('should render with SSRProvider', async () => {
-      const ssrState = await fetchInitialState();
+    test('should render with StaticStateProvider', async () => {
+      const staticState = await fetchStaticState();
       render(
-        <SSRStateProvider controllers={ssrState.controllers}>
+        <StaticStateProvider controllers={staticState.controllers}>
           <TestResultList />
-        </SSRStateProvider>
+        </StaticStateProvider>
       );
 
       await checkRenderedResultList();
     });
 
-    test('should hydrate results with CSRProvider', async () => {
-      const ssrState = await fetchInitialState();
-      const {engine, controllers} = await hydrateInitialState(ssrState);
+    test('should hydrate results with HydratedStateProvider', async () => {
+      const staticState = await fetchStaticState();
+      const {engine, controllers} = await hydrateStaticState(staticState);
 
       render(
-        <CSRProvider engine={engine} controllers={controllers}>
+        <HydratedStateProvider engine={engine} controllers={controllers}>
           <TestResultList />
-        </CSRProvider>
+        </HydratedStateProvider>
       );
 
       await checkRenderedResultList();
@@ -152,35 +155,35 @@ describe('Headless react SSR utils', () => {
         );
       });
 
-      test('should not return engine with SSRProvider', async () => {
-        const ssrState = await fetchInitialState();
-        function ssrStateProviderWrapper({children}: PropsWithChildren) {
+      test('should not return engine with StaticStateProvider', async () => {
+        const staticState = await fetchStaticState();
+        function staticStateProviderWrapper({children}: PropsWithChildren) {
           return (
-            <SSRStateProvider controllers={ssrState.controllers}>
+            <StaticStateProvider controllers={staticState.controllers}>
               {children}
-            </SSRStateProvider>
+            </StaticStateProvider>
           );
         }
 
         const {result} = renderHook(() => useEngine(), {
-          wrapper: ssrStateProviderWrapper,
+          wrapper: staticStateProviderWrapper,
         });
         expect(result.current).toBeUndefined();
       });
 
-      test('should return engine with CSRProvider', async () => {
-        const ssrState = await fetchInitialState();
-        const {engine, controllers} = await hydrateInitialState(ssrState);
-        function csrStateProviderWrapper({children}: PropsWithChildren) {
+      test('should return engine with HydratedStateProvider', async () => {
+        const staticState = await fetchStaticState();
+        const {engine, controllers} = await hydrateStaticState(staticState);
+        function hydratedStateProviderWrapper({children}: PropsWithChildren) {
           return (
-            <CSRProvider controllers={controllers} engine={engine}>
+            <HydratedStateProvider controllers={controllers} engine={engine}>
               {children}
-            </CSRProvider>
+            </HydratedStateProvider>
           );
         }
 
         const {result} = renderHook(() => useEngine(), {
-          wrapper: csrStateProviderWrapper,
+          wrapper: hydratedStateProviderWrapper,
         });
         expect(result.current).toStrictEqual(engine);
       });

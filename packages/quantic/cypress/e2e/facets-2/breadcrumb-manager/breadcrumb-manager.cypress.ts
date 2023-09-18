@@ -15,7 +15,7 @@ import {BreadcrumbManagerActions as Actions} from './breadcrumb-manager-actions'
 import {BreadcrumbManagerExpectations as Expect} from './breadcrumb-manager-expectations';
 
 describe('quantic-breadcrumb-manager', () => {
-  const breadcrumbManagertUrl = 's/quantic-breadcrumb-manager';
+  const breadcrumbManagerUrl = 's/quantic-breadcrumb-manager';
 
   const facetField = 'filetype';
   const numericField = 'ytlikecount';
@@ -35,7 +35,7 @@ describe('quantic-breadcrumb-manager', () => {
     waitForSearch = true
   ) {
     interceptSearch();
-    cy.visit(breadcrumbManagertUrl);
+    cy.visit(breadcrumbManagerUrl);
     configure(options);
     if (options.useCase === useCaseEnum.insight) {
       InsightInterfaceExpect.isInitialized();
@@ -48,7 +48,7 @@ describe('quantic-breadcrumb-manager', () => {
 
   function loadFromUrlHash(urlHash: string) {
     interceptSearch();
-    cy.visit(`${breadcrumbManagertUrl}#${urlHash}`);
+    cy.visit(`${breadcrumbManagerUrl}#${urlHash}`);
     configure();
   }
 
