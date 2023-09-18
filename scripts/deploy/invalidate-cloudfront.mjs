@@ -20,6 +20,7 @@ async function main() {
   ];
 
   const invalidationRequest = cloudfront.createInvalidation({
+    /* cspell:disable-next-line */
     DistributionId: 'E2VWLFSCSD1GLA',
     InvalidationBatch: {
       CallerReference: new Date().getTime().toString(),

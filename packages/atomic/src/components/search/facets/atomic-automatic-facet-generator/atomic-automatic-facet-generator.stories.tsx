@@ -35,23 +35,24 @@ const {defaultModuleExport, exportedStory} = defaultStory(
         return r;
       },
     },
-    additionalMarkup: () => html`<div>
-      <div style="text-align:center; font-size:18px; margin-top:10px;">
-        To modify the shadow parts of these automatic facets, see
-        <a
-          style="color: #399ffe;"
-          href="https://docs.coveo.com/en/atomic/latest/reference/components/atomic-automatic-facet/"
-          >documentation</a
-        >.
-      </div>
-      <style>
-        atomic-automatic-facet-generator {
-          gap: 10px;
-          display: flex;
-          flex-direction: column;
-        }
-      </style>
-    </div>`,
+    additionalMarkup: () =>
+      html`<div>
+        <div style="text-align:center; font-size:18px; margin-top:10px;">
+          To modify the shadow parts of these automatic facets, see
+          <a
+            style="color: #399ffe;"
+            href="https://docs.coveo.com/en/atomic/latest/reference/components/atomic-automatic-facet/"
+            >documentation</a
+          >.
+        </div>
+        <style>
+          atomic-automatic-facet-generator {
+            gap: 10px;
+            display: flex;
+            flex-direction: column;
+          }
+        </style>
+      </div>`,
   }
 );
 export default {

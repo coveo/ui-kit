@@ -6,12 +6,13 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   'atomic-rating-range-facet',
   {field: 'snrating'},
   {
-    additionalMarkup: () => html`<style>
-      atomic-rating-range-facet {
-        max-width: 500px;
-        margin: auto;
-      }
-    </style>`,
+    additionalMarkup: () =>
+      html`<style>
+        atomic-rating-range-facet {
+          max-width: 500px;
+          margin: auto;
+        }
+      </style>`,
   }
 );
 export default {...defaultModuleExport, title: 'Atomic/RatingRangeFacet'};

@@ -24,7 +24,7 @@ import {
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
-  TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
+  TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
 > = TOptions & {
   /**
    * The controllers to initialize with the search engine.
@@ -35,7 +35,7 @@ export type EngineDefinitionOptions<
 export type EngineDefinition<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TEngineOptions
+  TEngineOptions,
 > = HasKeys<InferControllerPropsMapFromDefinitions<TControllers>> extends true
   ? EngineDefinitionWithProps<
       TEngine,
@@ -57,7 +57,7 @@ export type EngineDefinition<
 export interface EngineDefinitionWithoutProps<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TEngineOptions
+  TEngineOptions,
 > extends FetchStaticStateWithoutProps<
       InferControllerStaticStateMapFromDefinitions<TControllers>,
       AnyAction
@@ -77,7 +77,7 @@ export interface EngineDefinitionWithProps<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions,
-  TControllerProps extends ControllersPropsMap
+  TControllerProps extends ControllersPropsMap,
 > extends FetchStaticStateWithProps<
       InferControllerStaticStateMapFromDefinitions<TControllers>,
       AnyAction,
@@ -106,7 +106,7 @@ export type InferStaticState<
         ControllerStaticStateMap,
         AnyAction,
         ControllersPropsMap
-      >
+      >,
 > = Awaited<ReturnType<T['fetchStaticState']>>;
 /**
  * @internal
@@ -119,5 +119,5 @@ export type InferHydratedState<
         ControllersMap,
         AnyAction,
         ControllersPropsMap
-      >
+      >,
 > = Awaited<ReturnType<T['hydrateStaticState']>>;

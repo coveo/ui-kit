@@ -27,14 +27,14 @@ import {
  * @internal
  */
 export type SearchEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
+  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 > = EngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
 
 /**
  * @internal
  */
 export type SearchEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>
+  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
 
 /**
@@ -48,7 +48,7 @@ export function defineSearchEngine<
   TControllerDefinitions extends ControllerDefinitionsMap<
     SearchEngine,
     Controller
-  >
+  >,
 >({
   controllers: controllerDefinitions,
   ...engineOptions

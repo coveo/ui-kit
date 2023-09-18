@@ -29,28 +29,28 @@ describe('result template helpers', () => {
     });
 
     it('should return null when the property is not defined at all', () => {
-      expect(getResultProperty(buildMockResult(), 'doesnt_exist')).toBeNull();
+      expect(getResultProperty(buildMockResult(), 'does_not_exist')).toBeNull();
     });
 
     it('should return null when the property is undefined', () => {
       const result = buildMockResult();
-      result.raw.doesnt_exist = undefined;
-      (result as unknown as Record<string, unknown>).doesnt_exist = undefined;
-      expect(getResultProperty(result, 'doesnt_exist')).toBeNull();
+      result.raw.does_not_exist = undefined;
+      (result as unknown as Record<string, unknown>).does_not_exist = undefined;
+      expect(getResultProperty(result, 'does_not_exist')).toBeNull();
     });
 
     it('should return null when the property is null', () => {
       const result = buildMockResult();
-      result.raw.doesnt_exist = null;
-      (result as unknown as Record<string, unknown>).doesnt_exist = null;
-      expect(getResultProperty(result, 'doesnt_exist')).toBeNull();
+      result.raw.does_not_exist = null;
+      (result as unknown as Record<string, unknown>).does_not_exist = null;
+      expect(getResultProperty(result, 'does_not_exist')).toBeNull();
     });
 
     it('should not return null when the property is falsy', () => {
       const result = buildMockResult();
-      result.raw.doesnt_exist = 0;
-      (result as unknown as Record<string, unknown>).doesnt_exist = false;
-      expect(getResultProperty(result, 'doesnt_exist')).not.toBeNull();
+      result.raw.does_not_exist = 0;
+      (result as unknown as Record<string, unknown>).does_not_exist = false;
+      expect(getResultProperty(result, 'does_not_exist')).not.toBeNull();
     });
   });
 

@@ -111,11 +111,9 @@ export class AtomicSearchBoxQuerySuggestions {
             ></atomic-icon>
           )}
           {hasQuery ? (
-            // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code.
             <span
               part="query-suggestion-text"
               class="break-all line-clamp-2"
-              // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code.
               innerHTML={suggestion.highlightedValue}
             ></span>
           ) : (

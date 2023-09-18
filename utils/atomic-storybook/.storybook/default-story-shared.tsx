@@ -7,7 +7,7 @@ import {resultComponentArgTypes} from './map-result-list-props-to-args';
 
 export const ADDON_PARAMETER_KEY = 'shadowParts';
 export interface DefaultStoryAdvancedConfig<
-  Config = SearchEngineConfiguration
+  Config = SearchEngineConfiguration,
 > {
   engineConfig?: Partial<Config>;
   additionalMarkup?: () => TemplateResult;

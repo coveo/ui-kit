@@ -6,12 +6,13 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   'atomic-numeric-facet',
   {field: 'ytviewcount'},
   {
-    additionalMarkup: () => html`<style>
-      atomic-numeric-facet {
-        max-width: 500px;
-        margin: auto;
-      }
-    </style>`,
+    additionalMarkup: () =>
+      html`<style>
+        atomic-numeric-facet {
+          max-width: 500px;
+          margin: auto;
+        }
+      </style>`,
   }
 );
 
