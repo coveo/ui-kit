@@ -27,14 +27,14 @@ describe('coveo-analytics-utils', () => {
   it('should properly wrap analyticsClientSendEventHook', () => {
     const analyticsClientSendEventHookThatThrows: AnalyticsClientSendEventHook =
       (_, payload) => {
-        payload.foo = 'thisShouldNotBeModified';
+        payload.foo.bar = 'thisShouldNotBeModified';
         throw 'boom';
       };
     const wrapped = wrapAnalyticsClientSendEventHook(
       pino({level: 'silent'}),
       analyticsClientSendEventHookThatThrows
     );
-    const output = wrapped('click', {foo: 'bar'});
-    expect(output.foo).toBe('bar');
+    const output = wrapped('click', {foo: {bar: 'buzz'}});
+    expect(output.foo.bar).toBe('buzz');
   });
 });

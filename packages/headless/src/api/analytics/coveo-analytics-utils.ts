@@ -27,7 +27,7 @@ export const wrapPreprocessRequest = (
 ) => {
   return typeof preprocessRequest === 'function'
     ? (...args: Parameters<PreprocessRequest>) => {
-        const untaintedOutput = {...args[0]};
+        const untaintedOutput = structuredClone(args[0]);
         try {
           return preprocessRequest.apply(preprocessRequest, args);
         } catch (e) {
@@ -46,7 +46,7 @@ export const wrapAnalyticsClientSendEventHook = (
   hook: AnalyticsClientSendEventHook
 ) => {
   return (...args: Parameters<AnalyticsClientSendEventHook>) => {
-    const untaintedOutput = {...args[1]};
+    const untaintedOutput = structuredClone(args[1]);
     try {
       return hook.apply(hook, args);
     } catch (e) {

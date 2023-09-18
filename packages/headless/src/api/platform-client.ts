@@ -103,8 +103,7 @@ export class PlatformClient {
     options: PlatformClientCallOptions
   ) {
     const {origin, preprocessRequest, logger, requestMetadata} = options;
-
-    let requestInfo = {...defaultRequestOptions};
+    const untaintedOutput = structuredClone(defaultRequestOptions);
 
     try {
       const processedRequest = await preprocessRequest(
@@ -112,7 +111,7 @@ export class PlatformClient {
         origin,
         requestMetadata
       );
-      requestInfo = {
+      return {
         ...defaultRequestOptions,
         ...processedRequest,
       };
@@ -122,7 +121,7 @@ export class PlatformClient {
         'Platform request preprocessing failed. Returning default request options.'
       );
     }
-    return requestInfo;
+    return untaintedOutput;
   }
 }
 
