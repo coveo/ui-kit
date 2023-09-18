@@ -72,7 +72,10 @@ export class AtomicSmartSnippetCollapseWrapper {
             : 'invisible'
         }
       >
-        <div part="smart-snippet-collapse-wrapper">
+        <div
+          part="smart-snippet-collapse-wrapper"
+          class="block overflow-hidden"
+        >
           <slot></slot>
         </div>
         {this.shouldRenderButton && this.renderButton()}
