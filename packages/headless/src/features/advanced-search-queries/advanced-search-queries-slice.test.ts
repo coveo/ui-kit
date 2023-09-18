@@ -252,9 +252,9 @@ describe('advanced search parameters', () => {
     const expectedQuery: AdvancedSearchQueriesState =
       buildMockAdvancedSearchQueriesState({
         cq: 'hello',
-        aq: 'hola',
+        aq: 'something',
         lq: 'hallo',
-        dq: 'oula',
+        dq: 'someStuff',
       });
     const historyChange = {
       ...getHistoryInitialState(),

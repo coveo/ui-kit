@@ -28,7 +28,7 @@ import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-int
   styleUrl: 'atomic-insight-smart-snippet-feedback-modal.pcss',
   shadow: true,
 })
-export class AtomiInsightSmartSnippetFeedbackModal
+export class AtomicInsightSmartSnippetFeedbackModal
   implements InitializableComponent<InsightBindings>
 {
   @InitializeBindings() public bindings!: InsightBindings;

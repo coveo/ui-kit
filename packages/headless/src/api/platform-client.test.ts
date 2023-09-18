@@ -80,7 +80,11 @@ describe('url helper', () => {
         admin: 'https://foo.admin.orghipaa.coveo.com',
       },
     },
-  ] as Array<{orgId: string; env: PlatformEnvironment; organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>}>)(
+  ] as Array<{
+    orgId: string;
+    env: PlatformEnvironment;
+    organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>;
+  }>)(
     'return the correct #getOrganizationEndpoints()',
     ({orgId, env, organizationEndpoints}) => {
       expect(getOrganizationEndpoints(orgId, env)).toEqual(
@@ -297,9 +301,12 @@ describe('PlatformClient call', () => {
 
   it('should not throw when backOff rejects with a response', async () => {
     const spy = jest.spyOn(BackOff, 'backOff');
-    const expectedResponse = new Response(JSON.stringify({foo: 'bar'}), {
-      status: 429,
-    });
+    const expectedResponse = new Response(
+      JSON.stringify({someProps: 'someValue'}),
+      {
+        status: 429,
+      }
+    );
     spy.mockRejectedValueOnce(expectedResponse);
 
     const response = await platformCall();

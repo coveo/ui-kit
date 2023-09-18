@@ -29,10 +29,12 @@ describe('jwt-reducer', () => {
   // - pipeline = 'testing';
   // - userDisplayname = 'Alice Smith';
   const jwtToken =
+    /* cspell:disable-next-line */
     'eyJhbGciOiJIUzI1NiJ9.eyJwaXBlbGluZSI6InRlc3RpbmciLCJzZWFyY2hIdWIiOiJ0ZXN0aW5nIGh1YiIsInY4Ijp0cnVlLCJvcmdhbml6YXRpb24iOiJzZWFyY2h1aXNhbXBsZXMiLCJ1c2VySWRzIjpbeyJhdXRoQ29va2llIjoiIiwicHJvdmlkZXIiOiJFbWFpbCBTZWN1cml0eSBQcm92aWRlciIsIm5hbWUiOiJhc21pdGhAZXhhbXBsZS5jb20iLCJ0eXBlIjoiVXNlciIsImluZm9zIjp7fX1dLCJyb2xlcyI6WyJxdWVyeUV4ZWN1dG9yIl0sInVzZXJEaXNwbGF5TmFtZSI6IkFsaWNlIFNtaXRoIiwiZXhwIjoxNjQ2NzUzNDM0LCJpYXQiOjE2NDY2NjcwMzR9.p70UUYXKmg3sHU961G1Vmwp45qp8EgxvHisPMk-RUPw';
 
   // expired search token that is "empty" and contains no search hub, pipeline, userDisplayName
   const emptyJwtToken =
+    /* cspell:disable-next-line */
     'eyJhbGciOiJIUzI1NiJ9.eyJ2OCI6dHJ1ZSwib3JnYW5pemF0aW9uIjoic2VhcmNodWlzYW1wbGVzIiwidXNlcklkcyI6W3siYXV0aENvb2tpZSI6IiIsInByb3ZpZGVyIjoiRW1haWwgU2VjdXJpdHkgUHJvdmlkZXIiLCJuYW1lIjoiYXNtaXRoQGV4YW1wbGUuY29tIiwidHlwZSI6IlVzZXIiLCJpbmZvcyI6e319XSwicm9sZXMiOlsicXVlcnlFeGVjdXRvciJdLCJleHAiOjE2NDY3NjEyODUsImlhdCI6MTY0NjY3NDg4NX0.3wikhpJzJuoMeHDpokdkbIjf92DLxdsS4zRFSqt-niY';
 
   afterEach(() => {
