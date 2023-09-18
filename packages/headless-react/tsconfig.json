@@ -16,11 +16,11 @@
     "declaration": true,
     "jsx": "react-jsx",
     "outDir": "dist/",
-    "moduleResolution": "Node",
-    "module": "ES2022",
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
     "target": "ES2022",
     "lib": ["dom", "ES2022"]
   },
-  "exclude": ["**/*.test.ts", "**/*.test.tsx" ],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"],
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

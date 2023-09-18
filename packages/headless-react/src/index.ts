@@ -1,1 +1,1 @@
-export {defineSearchEngine} from './search-engine';
+export {defineSearchEngine} from './search-engine.js';

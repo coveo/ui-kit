@@ -15,12 +15,16 @@
     "ssr"
   ],
   "license": "Apache-2.0",
-  "main": "dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "nx build",
+    "clean": "rimraf dist",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
     "lint": "eslint ."
