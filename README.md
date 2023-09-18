@@ -46,4 +46,8 @@ This means an event payload can be freely defined, with the exception of the res
 
 If you want to log information from a Coveo owned backend service, do not use Relay. Instead, log them on the appropriate server side endpoint, see [this guide](https://coveord.atlassian.net/wiki/spaces/DATA/pages/3175383082/Server+side+event+logging)
 
+## Contributing
+
+Prior to contributing to the project, kindly review the guidelines outlined in [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## API
