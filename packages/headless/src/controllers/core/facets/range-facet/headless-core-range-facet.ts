@@ -36,7 +36,7 @@ export type RangeFacetProps<T extends RangeFacetRequest> = {
 
 export function buildCoreRangeFacet<
   T extends RangeFacetRequest,
-  R extends RangeFacetResponse
+  R extends RangeFacetResponse,
 >(
   engine: CoreEngine<
     ConfigurationSection & SearchSection & FacetOptionsSection

@@ -152,6 +152,7 @@ describe('recent-queries-slice', () => {
   it('should not add new recent query on search fulfilled if there are no results', () => {
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
+        /* cspell:disable-next-line */
         queryExecuted: 'bloobloo',
         response: buildMockSearchResponse({}),
       }),

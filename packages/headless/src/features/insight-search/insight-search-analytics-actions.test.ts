@@ -133,7 +133,7 @@ describe('logFetchMoreResults', () => {
 });
 
 describe('logQueryError', () => {
-  it('should log #llogQueryError with the right payload', async () => {
+  it('should log #logQueryError with the right payload', async () => {
     const exampleErrorType = 'example error type';
     const exampleErrorMessage = 'example error message';
     const exampleQuery = 'test query';

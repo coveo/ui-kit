@@ -187,9 +187,8 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     const originalQuery = this.getCurrentQuery();
     const {correctedQuery} = successResponse.queryCorrections[0];
 
-    const retried = await this.automaticallyRetryQueryWithCorrection(
-      correctedQuery
-    );
+    const retried =
+      await this.automaticallyRetryQueryWithCorrection(correctedQuery);
 
     if (isErrorResponse(retried.response)) {
       this.dispatch(logQueryError(retried.response.error));
@@ -249,9 +248,8 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     }
 
     const originalQuery = this.getCurrentQuery();
-    const retried = await this.automaticallyRetryQueryWithTriggerModification(
-      correctedQuery
-    );
+    const retried =
+      await this.automaticallyRetryQueryWithTriggerModification(correctedQuery);
 
     if (isErrorResponse(retried.response)) {
       this.dispatch(logQueryError(retried.response.error));

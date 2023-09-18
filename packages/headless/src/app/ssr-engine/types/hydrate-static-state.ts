@@ -3,7 +3,7 @@ import {CoreEngine} from '../../engine';
 import {ControllersMap, ControllersPropsMap, HydratedState} from './common';
 
 export interface EngineDefinitionHydrateOptionsWithoutProps<
-  TSearchFulfilledAction extends AnyAction
+  TSearchFulfilledAction extends AnyAction,
 > {
   searchFulfilledAction: TSearchFulfilledAction;
 }
@@ -11,7 +11,7 @@ export interface EngineDefinitionHydrateOptionsWithoutProps<
 export type HydrateStaticStateWithoutProps<
   TEngine extends CoreEngine,
   TControllers extends ControllersMap,
-  TSearchFulfilledAction extends AnyAction
+  TSearchFulfilledAction extends AnyAction,
 > = {
   /**
    * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
@@ -25,7 +25,7 @@ export type HydrateStaticStateWithoutProps<
 
 export interface EngineDefinitionHydrateOptionsWithProps<
   TSearchFulfilledAction extends AnyAction,
-  TControllersProps extends ControllersPropsMap
+  TControllersProps extends ControllersPropsMap,
 > extends EngineDefinitionHydrateOptionsWithoutProps<TSearchFulfilledAction> {
   controllers: TControllersProps;
 }
@@ -34,7 +34,7 @@ export type HydrateStaticStateWithProps<
   TEngine extends CoreEngine,
   TControllers extends ControllersMap,
   TSearchFulfilledAction extends AnyAction,
-  TControllersProps extends ControllersPropsMap
+  TControllersProps extends ControllersPropsMap,
 > = {
   /**
    * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.

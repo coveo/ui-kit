@@ -29,13 +29,9 @@
     "release:phase2": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "cp ../../../../../.npmrc .",
-          "npm link ../../../../../node_modules/@coveo/release",
-          "npx -p=@coveo/release npm-publish"
-        ],
+        "commands": ["npm run release:phase2"],
         "parallel": false,
-        "cwd": "packages/atomic-angular/projects/atomic-angular/dist"
+        "cwd": "packages/atomic-angular"
       }
     }
   }

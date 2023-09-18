@@ -1,4 +1,4 @@
-//TODO: KIT-2733 | Bring back TypeScript to this file 
+//TODO: KIT-2733 | Bring back TypeScript to this file
 import MonacoEditor from '@monaco-editor/react';
 import {useArgs, useParameter} from '@storybook/api';
 import {delay} from 'lodash';
@@ -17,10 +17,7 @@ import {
 //   advancedConfig: DefaultStoryAdvancedConfig;
 // }
 
-const addSpacingBetweenStylingAndHTML = (
-  htmlString,
-  styleString
-) => {
+const addSpacingBetweenStylingAndHTML = (htmlString, styleString) => {
   if (styleString && htmlString) {
     return `${styleString} \n\n ${htmlString}`;
   }
@@ -35,8 +32,7 @@ export const CodeSamplePanel = () => {
   if (!storyParameters) {
     return '';
   }
-  const {componentTag, isResultComponent, advancedConfig} =
-    storyParameters
+  const {componentTag, isResultComponent, advancedConfig} = storyParameters;
 
   const componentToHTML = renderArgsToHTMLString(
     componentTag,

@@ -143,13 +143,13 @@ describe('configuration slice', () => {
         ...getConfigurationInitialState(),
         analytics: {
           enabled: false,
-          originContext: 'wizz',
+          originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
           apiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
-          deviceId: 'wozz',
-          userDisplayName: 'wazz',
+          deviceId: 'fuzz',
+          userDisplayName: 'displayName',
           documentLocation: 'http://somewhere.com',
         },
       };
@@ -158,13 +158,13 @@ describe('configuration slice', () => {
           undefined,
           updateAnalyticsConfiguration({
             enabled: false,
-            originContext: 'wizz',
+            originContext: 'fizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
             apiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
-            deviceId: 'wozz',
-            userDisplayName: 'wazz',
+            deviceId: 'fuzz',
+            userDisplayName: 'displayName',
             documentLocation: 'http://somewhere.com',
           })
         )
@@ -176,13 +176,13 @@ describe('configuration slice', () => {
         ...existingState,
         analytics: {
           enabled: true,
-          originContext: 'wizz',
+          originContext: 'fizz',
           originLevel2: 'bar',
           originLevel3: 'buzz',
           apiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
-          deviceId: 'wozz',
-          userDisplayName: 'wazz',
+          deviceId: 'fuzz',
+          userDisplayName: 'displayName',
           documentLocation: 'http://somewhere.com',
         },
       };
@@ -192,13 +192,13 @@ describe('configuration slice', () => {
           existingState,
           updateAnalyticsConfiguration({
             enabled: true,
-            originContext: 'wizz',
+            originContext: 'fizz',
             originLevel2: 'bar',
             originLevel3: 'buzz',
             apiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
-            deviceId: 'wozz',
-            userDisplayName: 'wazz',
+            deviceId: 'fuzz',
+            userDisplayName: 'displayName',
             documentLocation: 'http://somewhere.com',
           })
         )

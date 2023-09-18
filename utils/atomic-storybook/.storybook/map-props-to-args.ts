@@ -23,7 +23,7 @@ const availableControlType = [
 
 const excludedPropType = ['ResultTemplateCondition'] as const;
 
-type ControlType = typeof availableControlType[number];
+type ControlType = (typeof availableControlType)[number];
 
 export const getDocumentationFromTag = (componentTag: string) => {
   return (AtomicDocumentation as JsonDocs).components.find(
