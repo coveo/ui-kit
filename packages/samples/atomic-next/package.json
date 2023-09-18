@@ -6,17 +6,18 @@
     "@coveo/atomic": "2.43.0",
     "@coveo/atomic-react": "2.6.0",
     "@coveo/headless": "2.31.0",
-    "next": "13.2.3",
+    "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "17.0.34",
+    "@types/node": "14.18.59",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
     "cypress": "10.8.0",
+    "cypress-repeat": "2.3.3",
     "ncp": "2.0.0",
-    "typescript": "5.1.6"
+    "typescript": "5.2.2"
   },
   "scripts": {
     "build": "nx build",

@@ -9,6 +9,7 @@ export function buildMockApiInterface(
 ) {
   return new ApiInterface({
     docComment: undefined,
+    isExported: false,
     excerptTokens: [],
     extendsTokenRanges: [],
     name: 'Pager',

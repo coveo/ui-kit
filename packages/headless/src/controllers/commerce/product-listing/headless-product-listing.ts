@@ -6,8 +6,8 @@ import {ProductRecommendation} from '../../../commerce.index';
 import {
   fetchProductListing,
   setProductListingUrl,
-} from '../../../features/product-listing/v2/product-listing-v2-actions';
-import {productListingV2Reducer as productListing} from '../../../features/product-listing/v2/product-listing-v2-slice';
+} from '../../../features/commerce/product-listing/product-listing-actions';
+import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   requiredNonEmptyString,

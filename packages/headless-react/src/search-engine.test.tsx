@@ -1,5 +1,8 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
-import {defineResultList, defineSearchBox} from '@coveo/headless/ssr';
+import {
+  getSampleSearchEngineConfiguration,
+  defineResultList,
+  defineSearchBox,
+} from '@coveo/headless/ssr';
 import {render, renderHook, screen} from '@testing-library/react';
 import {PropsWithChildren} from 'react';
 import {MissingEngineProviderError, defineSearchEngine} from './search-engine';
