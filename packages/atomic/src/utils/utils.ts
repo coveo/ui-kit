@@ -226,12 +226,15 @@ export function aggregate<V, K extends PropertyKey>(
   values: readonly V[],
   getKey: (value: V, index: number) => K
 ): Record<K, V[] | undefined> {
-  return values.reduce((aggregatedValues, value, i) => {
-    const key = getKey(value, i);
-    if (!(key in aggregatedValues)) {
-      aggregatedValues[key] = [];
-    }
-    aggregatedValues[key]!.push(value);
-    return aggregatedValues;
-  }, <Record<K, V[] | undefined>>{});
+  return values.reduce(
+    (aggregatedValues, value, i) => {
+      const key = getKey(value, i);
+      if (!(key in aggregatedValues)) {
+        aggregatedValues[key] = [];
+      }
+      aggregatedValues[key]!.push(value);
+      return aggregatedValues;
+    },
+    <Record<K, V[] | undefined>>{}
+  );
 }

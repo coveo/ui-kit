@@ -81,7 +81,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
   describe('with invalid segmented facets', () => {
     function setupWithInvalidFacets() {
       new TestFixture()
-        .with(addScrollable({field: 'invalidd', 'number-of-values': 4}))
+        .with(addScrollable({field: 'invalidField', 'number-of-values': 4}))
         .init();
     }
     beforeEach(setupWithInvalidFacets);

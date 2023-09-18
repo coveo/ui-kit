@@ -1,6 +1,8 @@
 import {FoldedResultListSelectors} from './folded-result-list-selectors';
 import {resultLinkComponent} from './result-components/result-link-selectors';
 
+// cSpell:ignore Opercs
+
 export const ExpectedHierarchy = {
   rootName: 'Pyrenomycetes',
   children: [
