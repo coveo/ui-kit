@@ -9,6 +9,7 @@ export function buildMockApiTypeAlias(
 ) {
   return new ApiTypeAlias({
     name: '',
+    isExported: false,
     docComment: undefined,
     excerptTokens: [],
     releaseTag: ReleaseTag.None,

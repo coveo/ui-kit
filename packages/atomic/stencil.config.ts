@@ -84,6 +84,7 @@ export const config: Config = {
     }),
     {
       type: 'dist-custom-elements',
+      generateTypeDeclarations: false,
     },
     {
       type: 'dist',

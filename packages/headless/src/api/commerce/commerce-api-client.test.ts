@@ -1,5 +1,5 @@
 import {SortBy} from '../../product-listing.index';
-import {buildMockProductListingV2APIClient} from '../../test/mock-commerce-api-client';
+import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
 import {PlatformClient} from '../platform-client';
 import {CommerceAPIClient} from './commerce-api-client';
 import {ProductListingV2Request} from './product-listings/v2/product-listing-v2-request';
@@ -15,7 +15,7 @@ describe('commerce api client', () => {
   let platformCallMock: jest.Mock;
 
   beforeEach(() => {
-    client = buildMockProductListingV2APIClient();
+    client = buildMockCommerceAPIClient();
   });
 
   afterEach(() => {

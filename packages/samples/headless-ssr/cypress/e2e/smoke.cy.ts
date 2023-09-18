@@ -1,7 +1,7 @@
 import 'cypress-web-vitals';
 import {
   ConsoleAliases,
-  compareWithInitialResults,
+  getResultTitles,
   numResults,
   spyOnConsole,
   waitForHydration,
@@ -11,7 +11,9 @@ const numResultsMsg = `Rendered page with ${numResults} results`;
 const msgSelector = '#hydrated-msg';
 const timestampSelector = '#timestamp';
 const resultListSelector = '.result-list li';
+const searchBoxSelector = '.search-box input';
 const routes = ['generic', 'react'] as const;
+// Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
 const vitals: Record<typeof routes[number], Cypress.ReportWebVitalsConfig> = {
   generic: {
     thresholds: {
@@ -75,17 +77,18 @@ routes.forEach((route) => {
         );
         expect(ssrTimestamp).to.not.be.undefined;
         cy.get(timestampSelector).should((timeStampElement) => {
-          const csrTimestamp = Date.parse(timeStampElement.text());
-          expect(csrTimestamp).to.be.greaterThan(ssrTimestamp);
+          const hydratedTimestamp = Date.parse(timeStampElement.text());
+          expect(hydratedTimestamp).to.be.greaterThan(ssrTimestamp);
         });
       });
     });
 
     it('should pass the web-vitals audits', () => {
-      // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
-      cy.startVitalsCapture({url: route});
-      compareWithInitialResults();
-      cy.reportVitals(vitals[route]);
+      cy.vitals({
+        ...vitals[route],
+        url: route,
+        firstInputSelector: '.facet-values > li:first-of-type > input',
+      });
     });
   });
 
@@ -103,7 +106,15 @@ routes.forEach((route) => {
     });
 
     it('after submitting a query, should change search results', () => {
-      compareWithInitialResults();
+      getResultTitles().should('have.length', numResults).as('initial-results');
+      waitForHydration();
+      cy.get(searchBoxSelector).focus().type('abc{enter}');
+      cy.wait(1000);
+      cy.get<string>('@initial-results').then((initialResults) => {
+        getResultTitles()
+          .should('have.length', numResults)
+          .and('not.deep.equal', initialResults);
+      });
     });
   });
 });

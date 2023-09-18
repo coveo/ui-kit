@@ -20,7 +20,7 @@ module.exports = {
     './preset.js',
   ],
   /** @type {import('webpack')['config']['getNormalizedWebpackOptions']} */
-  webpack: async (config) => {
+  webpackFinal: async (config) => {
     return {
       ...config,
       resolve: {
