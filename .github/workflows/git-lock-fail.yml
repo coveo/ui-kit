@@ -8,6 +8,6 @@ on:
 
 jobs:
   git-locked:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - run: exit 1

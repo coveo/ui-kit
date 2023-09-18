@@ -6,7 +6,7 @@ export function createAbortController(): AbortController | null {
 
   if (typeof window === 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const nodeAbort = require('node-abort-controller');
+    const {AbortController: nodeAbort} = require('node-abort-controller');
     return new nodeAbort() as AbortController;
   }
   return typeof AbortController === 'undefined' ? null : new AbortController();
