@@ -9,6 +9,7 @@ export function buildMockApiFunction(
 ) {
   return new ApiFunction({
     name: '',
+    isExported: false,
     docComment: undefined,
     excerptTokens: [],
     overloadIndex: 0,

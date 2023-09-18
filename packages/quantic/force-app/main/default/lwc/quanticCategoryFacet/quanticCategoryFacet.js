@@ -435,6 +435,7 @@ export default class QuanticCategoryFacet extends LightningElement {
         path: item.path,
       });
     } else {
+      // @ts-ignore
       this.facet.toggleSelect(item);
     }
     this.clearInput();

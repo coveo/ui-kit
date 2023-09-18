@@ -10,14 +10,14 @@
   "dependencies": {
     "@coveo/atomic": "2.43.0",
     "@coveo/headless": "2.31.0",
-    "@stencil/core": "4.2.0",
+    "@stencil/core": "4.2.1",
     "stencil-router-v2": "0.6.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.38.0",
     "cypress": "10.8.0",
     "cypress-repeat": "2.3.3",
-    "gts": "^3.1.1",
+    "gts": "5.0.1",
     "rollup-plugin-html": "0.2.1"
   }
 }
