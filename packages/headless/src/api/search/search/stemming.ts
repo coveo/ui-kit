@@ -1,5 +1,3 @@
-// cSpell:ignore Techzample
-
 /**
  * Terms to highlight (with [stemming](https://docs.coveo.com/en/1576)) in the results.
  *

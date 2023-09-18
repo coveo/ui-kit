@@ -2,8 +2,6 @@ import {TestFixture} from '../fixtures/test-fixture';
 import {addScrollable, clickArrow} from './segmented-facet-scrollable-actions';
 import * as ScrollableAssertions from './segmented-facet-scrollable-assertions';
 
-// cSpell:ignore invalidd
-
 describe('Segmented Facet Scrollable Test Suites', () => {
   function setupScrollable() {
     new TestFixture()
@@ -83,7 +81,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
   describe('with invalid segmented facets', () => {
     function setupWithInvalidFacets() {
       new TestFixture()
-        .with(addScrollable({field: 'invalidd', 'number-of-values': 4}))
+        .with(addScrollable({field: 'invalidField', 'number-of-values': 4}))
         .init();
     }
     beforeEach(setupWithInvalidFacets);
