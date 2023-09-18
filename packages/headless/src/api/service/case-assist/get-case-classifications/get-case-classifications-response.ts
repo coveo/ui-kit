@@ -11,7 +11,7 @@ export interface GetCaseClassificationsResponse {
           id: string;
           value: string;
           confidence: number;
-        }
+        },
       ];
     };
   };

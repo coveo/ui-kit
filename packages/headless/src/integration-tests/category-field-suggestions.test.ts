@@ -175,11 +175,11 @@ describe('category field suggestions', () => {
       });
       expect(categoryFieldSuggestions.state.query).toEqual(query);
       expect(categoryFieldSuggestions.state.values.length).toBeGreaterThan(0);
-      const valuesThatDontContainQuery =
+      const valuesThatDoNotContainQuery =
         categoryFieldSuggestions.state.values.filter(
           (value) => !value.displayValue.toLowerCase().includes(query)
         );
-      expect(valuesThatDontContainQuery.length).toEqual(0);
+      expect(valuesThatDoNotContainQuery.length).toEqual(0);
     });
 
     it('can update captions', async () => {
@@ -216,6 +216,7 @@ describe('category field suggestions', () => {
 
   it('can filter by base path', async () => {
     const basePath: string[] = ['North America'];
+    /* cspell:disable-next-line */
     const query = 'queb';
     const expectedResult = 'Quebec';
     const expectedPath = ['Canada'];

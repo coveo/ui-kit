@@ -96,7 +96,7 @@ export interface SortCriteria<
     | 'descending'
     | 'occurrences'
     | 'automatic'
-    | SpecificSortCriteriaExplicitAlphanumeric
+    | SpecificSortCriteriaExplicitAlphanumeric,
 > {
   /** The sort criterion to apply to the returned facet values. */
   sortCriteria: T;

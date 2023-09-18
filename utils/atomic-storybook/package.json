@@ -32,5 +32,9 @@
   "scripts": {
     "build": "nx build",
     "dev": "storybook dev -p 6006"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "5.62.0",
+    "gts": "5.0.1"
   }
 }

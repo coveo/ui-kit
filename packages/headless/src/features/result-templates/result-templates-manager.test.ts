@@ -35,7 +35,7 @@ describe('result template manager', () => {
       );
     });
 
-    it('does not return a registered template that doesn not match', () => {
+    it('does not return a registered template that does not match', () => {
       resultTemplateManager.registerTemplates({
         content: '{{title}}',
         conditions: [() => true, () => false],
