@@ -16,7 +16,7 @@ export interface GeneratedAnswerAPIClientOptions {
 }
 
 export interface AsyncThunkGeneratedAnswerOptions<
-  T extends Partial<SearchAppState>
+  T extends Partial<SearchAppState>,
 > extends AsyncThunkOptions<
     T,
     ClientThunkExtraArguments<SearchAPIClient, GeneratedAnswerAPIClient>
