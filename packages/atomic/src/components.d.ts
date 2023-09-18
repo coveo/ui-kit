@@ -2550,12 +2550,6 @@ declare global {
         prototype: HTMLAtomicAutomaticFacetGeneratorElement;
         new (): HTMLAtomicAutomaticFacetGeneratorElement;
     };
-    interface HTMLAtomicAutomaticFacetSlotContentElement extends Components.AtomicAutomaticFacetSlotContent, HTMLStencilElement {
-    }
-    var HTMLAtomicAutomaticFacetSlotContentElement: {
-        prototype: HTMLAtomicAutomaticFacetSlotContentElement;
-        new (): HTMLAtomicAutomaticFacetSlotContentElement;
-    };
     /**
      * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
      */
@@ -3952,9 +3946,6 @@ declare namespace LocalJSX {
           * @defaultValue `8`
          */
         "numberOfValues"?: number;
-    }
-    interface AtomicAutomaticFacetSlotContent {
-        "isThereStaticFacets": boolean;
     }
     /**
      * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -6382,7 +6373,6 @@ declare module "@stencil/core" {
              * in response to the search query.
              */
             "atomic-automatic-facet-generator": LocalJSX.AtomicAutomaticFacetGenerator & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetGeneratorElement>;
-            "atomic-automatic-facet-slot-content": LocalJSX.AtomicAutomaticFacetSlotContent & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetSlotContentElement>;
             /**
              * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
              */

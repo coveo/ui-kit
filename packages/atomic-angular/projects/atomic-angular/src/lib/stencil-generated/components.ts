@@ -51,14 +51,15 @@ export declare interface AtomicAutomaticFacet extends Components.AtomicAutomatic
 
 
 @ProxyCmp({
-  inputs: ['areCollapsed', 'desiredCount', 'numberOfValues']
+  inputs: ['desiredCount', 'numberOfValues'],
+  methods: ['updateCollapseFacetsDependingOnFacetsVisibility']
 })
 @Component({
   selector: 'atomic-automatic-facet-generator',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['areCollapsed', 'desiredCount', 'numberOfValues'],
+  inputs: ['desiredCount', 'numberOfValues'],
 })
 export class AtomicAutomaticFacetGenerator {
   protected el: HTMLElement;
