@@ -25,7 +25,6 @@ interface SmartSnippetProps {
   getFeedbackSent: () => boolean;
   getSnippetMaximumHeight?: () => number;
   getSnippetCollapsedHeight?: () => number;
-  getSourceURLMaxLength?: () => number;
   setModalRef: (ref: HTMLElement) => void;
   setFeedbackSent: (isSent: boolean) => void;
 }
@@ -176,7 +175,6 @@ export class SmartSnippetCommon {
                   onCancelPendingSelectSource={
                     this.props.getSmartSnippet().cancelPendingSelectSource
                   }
-                  sourceURLMaxLength={this.props.getSourceURLMaxLength?.()}
                 ></atomic-smart-snippet-source>
               )}
               {this.renderFeedbackBanner()}

@@ -105,9 +105,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   @Prop({reflect: true}) public snippetCollapsedHeight?: number;
 
-  @Prop({reflect: true, attribute: 'source-url-max-length'})
-  public sourceURLMaxLength?: number;
-
   private validateProps() {
     if (
       this.snippetMaximumHeight &&
@@ -141,9 +138,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
         : undefined,
       getSnippetCollapsedHeight: this.snippetCollapsedHeight
         ? () => this.snippetCollapsedHeight!
-        : undefined,
-      getSourceURLMaxLength: this.sourceURLMaxLength
-        ? () => this.sourceURLMaxLength!
         : undefined,
       setModalRef: this.setModalRef.bind(this),
       setFeedbackSent: this.setFeedbackSent.bind(this),

@@ -32,7 +32,6 @@ export class AtomicSmartSnippetSource
   @InitializeBindings() public bindings!: AnyBindings;
   @Prop({reflect: true, mutable: true}) source!: Result;
   @Prop() anchorAttributes?: Attr[];
-  @Prop() sourceURLMaxLength?: number;
 
   @Event() selectSource!: EventEmitter;
   @Event() beginDelayedSelectSource!: EventEmitter;
@@ -55,16 +54,14 @@ export class AtomicSmartSnippetSource
         <LinkWithResultAnalytics
           title={this.source.clickUri}
           href={this.source.clickUri}
-          className="block"
+          className="block truncate"
           part="source-url"
           attributes={this.anchorAttributes}
           onSelect={() => this.selectSource.emit()}
           onBeginDelayedSelect={() => this.beginDelayedSelectSource.emit()}
           onCancelPendingSelect={() => this.cancelPendingSelectSource.emit()}
         >
-          {this.sourceURLMaxLength
-            ? this.source.clickUri.slice(0, this.sourceURLMaxLength) + '...'
-            : this.source.clickUri}
+          {this.source.clickUri}
         </LinkWithResultAnalytics>
         <LinkWithResultAnalytics
           title={this.source.title}
