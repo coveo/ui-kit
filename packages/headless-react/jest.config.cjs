@@ -4,12 +4,10 @@ module.exports = {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
-  extensionsToTreatAsEsm: ['.tsx', '.ts'],
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
-        useESM: true,
         tsconfig: 'tsconfig.test.json',
       },
     ],

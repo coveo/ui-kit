@@ -1,27 +1,10 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "allowUnreachableCode": false,
-    "allowSyntheticDefaultImports": true,
-    "allowJs": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "removeComments": false,
-    "sourceMap": true,
-    "declaration": true,
-    "jsx": "react-jsx",
-    "outDir": "dist/",
+    // Note: ESM config based on following official docs doesn't work
+    //  https://jestjs.io/docs/ecmascript-modules
+    //  https://kulshekhar.github.io/ts-jest/docs/guides/esm-support/
     "moduleResolution": "Node",
-    "module": "ES2022",
-    "target": "ES2022",
-    "lib": ["dom", "ES2022"],
     "types": ["jest", "react", "react-dom"]
-  },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
-  ,
+  }
 }
