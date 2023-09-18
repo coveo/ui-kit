@@ -5,6 +5,7 @@ import {CaseAssistConfigurationState} from '../features/case-assist-configuratio
 import {CaseContextState} from '../features/case-context/case-context-state';
 import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
+import { CommerceContextState } from '../features/commerce/context/context-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
 import {ConfigurationState} from '../features/configuration/configuration-state';
 import {ContextState} from '../features/context/context-state';
@@ -285,6 +286,13 @@ export interface ProductListingSection {
    * The information related to the product listing endpoint.
    */
   productListing: ProductListingState;
+}
+
+export interface CommerceContextSection {
+  /**
+   * The information related to the commerce context.
+   */
+  context: CommerceContextState;
 }
 
 export interface ProductListingV2Section {

@@ -4,7 +4,7 @@ import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2
 import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
-  CategoryFacetSection,
+  CategoryFacetSection, CommerceContextSection,
   ConfigurationSection,
   DateFacetSection,
   FacetOrderSection,
@@ -45,6 +45,7 @@ export const setProductListingUrl = createAction(
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
+  CommerceContextSection &
   Partial<
     FacetSection &
       NumericFacetSection &
@@ -99,11 +100,11 @@ export const buildProductListingRequestV2 = async (
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
-    trackingId: state.productListing.trackingId,
-    language: state.productListing.language,
-    currency: state.productListing.currency,
-    clientId: state.productListing.clientId,
-    context: state.productListing.context,
+    trackingId: state.context.trackingId || 'a',
+    language: state.context.language || 'en',
+    currency: state.context.currency || 'usd',
+    clientId: state.context.clientId || 'some-client-id',
+    context: state.context.context, // TODO: This feels weird
     selectedFacets,
     ...(state.pagination && {
       selectedPage: {
