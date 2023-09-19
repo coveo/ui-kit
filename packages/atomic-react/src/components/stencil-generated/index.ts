@@ -88,6 +88,7 @@ export const AtomicSmartSnippetFeedbackModal = /*@__PURE__*/createReactComponent
 export const AtomicSmartSnippetSuggestions = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippetSuggestions, HTMLAtomicSmartSnippetSuggestionsElement>('atomic-smart-snippet-suggestions');
 export const AtomicSortDropdown = /*@__PURE__*/createReactComponent<JSX.AtomicSortDropdown, HTMLAtomicSortDropdownElement>('atomic-sort-dropdown');
 export const AtomicSortExpression = /*@__PURE__*/createReactComponent<JSX.AtomicSortExpression, HTMLAtomicSortExpressionElement>('atomic-sort-expression');
+export const AtomicSourceCitation = /*@__PURE__*/createReactComponent<JSX.AtomicSourceCitation, HTMLAtomicSourceCitationElement>('atomic-source-citation');
 export const AtomicTableElement = /*@__PURE__*/createReactComponent<JSX.AtomicTableElement, HTMLAtomicTableElementElement>('atomic-table-element');
 export const AtomicText = /*@__PURE__*/createReactComponent<JSX.AtomicText, HTMLAtomicTextElement>('atomic-text');
 export const AtomicTimeframe = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframe, HTMLAtomicTimeframeElement>('atomic-timeframe');
