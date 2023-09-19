@@ -1,5 +1,10 @@
-import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {
+  Controller,
+  ControllerDefinitionsMap,
+  SearchEngine,
+  SearchEngineDefinitionOptions,
+  getSampleSearchEngineConfiguration,
+  defineFacet,
   defineResultList,
   defineSearchBox,
   defineSearchParameterManager,
@@ -13,6 +18,9 @@ export const config = {
   controllers: {
     searchBox: defineSearchBox(),
     resultList: defineResultList(),
+    authorFacet: defineFacet({options: {facetId: 'author-1', field: 'author'}}),
     searchParameters: defineSearchParameterManager(),
   },
-};
+} satisfies SearchEngineDefinitionOptions<
+  ControllerDefinitionsMap<SearchEngine, Controller>
+>;
