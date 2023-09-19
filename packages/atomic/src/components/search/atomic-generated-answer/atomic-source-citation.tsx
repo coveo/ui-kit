@@ -49,6 +49,7 @@ export class AtomicSourceCitation implements InitializableComponent<Bindings> {
     return (
       <LinkWithResultAnalytics
         href={this.href}
+        title={this.citation.title}
         part="citation"
         target="_blank"
         rel="noopener"
