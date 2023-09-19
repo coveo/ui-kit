@@ -60,9 +60,7 @@ export function assertSuggestionIsHighlighted(index: number) {
 
 export function assertNoSuggestionIsSelected() {
   it('should have no selected result', () => {
-    SearchBoxSelectors.querySuggestions().each((el) =>
-      expect(el.attr('part')).to.not.contain('active-suggestion')
-    );
+    SearchBoxSelectors.activeQuerySuggestion().should('not.exist');
   });
 }
 

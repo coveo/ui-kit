@@ -15,7 +15,7 @@ import {
 import {ProductListingV2SuccessResponse} from './product-listings/v2/product-listing-v2-response';
 
 export interface AsyncThunkCommerceOptions<
-  T extends Partial<CommerceAppState>
+  T extends Partial<CommerceAppState>,
 > {
   state: T;
   rejectValue: CommerceAPIErrorStatusResponse;

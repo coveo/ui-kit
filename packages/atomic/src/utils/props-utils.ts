@@ -36,7 +36,7 @@ export function ArrayProp() {
   return (component: ComponentInterface, variableName: string) => {
     const {componentWillLoad} = component;
 
-    const attributeWithBackets = camelToKebab(variableName);
+    const attributeWithBrackets = camelToKebab(variableName);
 
     component.componentWillLoad = function () {
       const value = this[variableName];
@@ -51,13 +51,13 @@ export function ArrayProp() {
           this[variableName] = valueAsArray;
         } else {
           console.error(
-            `Property ${attributeWithBackets} should be an array`,
+            `Property ${attributeWithBrackets} should be an array`,
             getElement(this)
           );
         }
       } catch (e) {
         console.error(
-          `Error while parsing attribute ${attributeWithBackets} as array`,
+          `Error while parsing attribute ${attributeWithBrackets} as array`,
           e
         );
       }

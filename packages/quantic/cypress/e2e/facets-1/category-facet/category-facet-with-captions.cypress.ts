@@ -42,7 +42,7 @@ describe('quantic-category-facet with captions', () => {
         describe('with default category facet', () => {
           it('should work as expected', () => {
             const value = 'Quebec';
-            const caption = 'Kébec';
+            const caption = 'PoutineLand';
 
             visitCategoryFacetPage({
               field,

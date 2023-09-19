@@ -34,6 +34,7 @@ module.exports = {
       },
     },
     {
+      // Note: *.md files are directly checked using cspell cli in lint-staged
       files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', '**/*.mjs'],
       extends: ['plugin:@cspell/recommended'],
       rules: {

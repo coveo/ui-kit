@@ -29,7 +29,7 @@ export interface CommonStencilStore<StoreData extends AtomicCommonStoreData> {
 export interface CommonBindings<
   Engine extends AnyEngineType,
   Store extends AtomicCommonStore<AtomicCommonStoreData>,
-  InterfaceElement extends HTMLStencilElement
+  InterfaceElement extends HTMLStencilElement,
 > {
   /**
    * A headless engine instance.
