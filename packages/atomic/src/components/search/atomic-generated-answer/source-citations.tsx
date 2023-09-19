@@ -22,22 +22,11 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
         {props.citations.map(
           (citation: GeneratedAnswerCitation, index: number) => (
             <li key={citation.id}>
-              <a
-                title={citation.title}
+              <atomic-source-citation
+                index={index}
+                citation={citation}
                 href={citation.clickUri ?? citation.uri}
-                target="_blank"
-                rel="noopener"
-                onClick={() => props.onCitationClick(citation)}
-                part="citation"
-                class="flex items-center p-1 bg-background btn-text-neutral border rounded-full border-neutral text-on-background"
-              >
-                <div class="citation-index rounded-full font-medium rounded-full flex items-center text-bg-blue shrink-0">
-                  <div class="mx-auto">{index + 1}</div>
-                </div>
-                <span class="citation-title truncate mx-1">
-                  {citation.title}
-                </span>
-              </a>
+              ></atomic-source-citation>
             </li>
           )
         )}
