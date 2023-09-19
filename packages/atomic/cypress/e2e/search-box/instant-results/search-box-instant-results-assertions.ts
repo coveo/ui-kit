@@ -17,9 +17,7 @@ export function assertResultIsSelected(index: number) {
 
 export function assertNoResultIsSelected() {
   it('should have no selected result', () => {
-    InstantResultsSelectors.results().each((el) =>
-      expect(el.attr('part')).to.not.contain('active-suggestion')
-    );
+    InstantResultsSelectors.activeResult().should('not.exist');
   });
 }
 

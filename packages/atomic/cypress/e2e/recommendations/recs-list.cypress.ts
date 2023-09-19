@@ -90,6 +90,7 @@ describe('Recs Interface Component', () => {
         componentTag: recsListComponent,
         densities: ['normal'],
         imageSizes: ['icon', 'small'],
+        useBeforeEach: true,
       }
     );
   });
