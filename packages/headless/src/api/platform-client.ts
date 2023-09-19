@@ -103,7 +103,10 @@ export class PlatformClient {
     options: PlatformClientCallOptions
   ) {
     const {origin, preprocessRequest, logger, requestMetadata} = options;
-    const untaintedOutput = structuredClone(defaultRequestOptions);
+    const {signal, ...withoutSignal} = defaultRequestOptions;
+    const untaintedOutput: PlatformRequestOptions =
+      structuredClone(withoutSignal);
+    untaintedOutput.signal = signal;
 
     try {
       const processedRequest = await preprocessRequest(
