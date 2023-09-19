@@ -1,9 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    // Note: ESM config based on following official docs doesn't work
-    //  https://jestjs.io/docs/ecmascript-modules
-    //  https://kulshekhar.github.io/ts-jest/docs/guides/esm-support/
+    // TODO: Remove override after bug is fixed https://github.com/kulshekhar/ts-jest/issues/4198
     "moduleResolution": "Node",
     "types": ["jest", "react", "react-dom"]
   }
