@@ -17,7 +17,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    "ssr": "./dist/ssr/index.js"
+    "./ssr": "./dist/ssr/index.js"
   },
   "files": [
     "dist"
