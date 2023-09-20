@@ -35,11 +35,7 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
           ref={(ref) => (inputRef = ref)}
         />
         <div class="search-icon pointer-events-none absolute inline-flex justify-center items-center left-0 w-9 h-full text-on-background">
-          <atomic-icon
-            class="w-3"
-            part="search-icon"
-            icon={SearchIcon}
-          ></atomic-icon>
+          <atomic-icon part="search-icon" icon={SearchIcon}></atomic-icon>
         </div>
         {props.query !== '' && (
           <Button
@@ -52,7 +48,6 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
             }}
           >
             <atomic-icon
-              class="w-2.5"
               part="search-clear-button"
               icon={CloseIcon}
             ></atomic-icon>
