@@ -89,8 +89,8 @@ export function buildSearchLayout(
   const horizontalFacets = () => {
     return `${mediaQuerySelector} {
       ${layoutSelector} ${sectionSelector(
-      'horizontal-facets'
-    )} > atomic-popover:not(.atomic-hidden) {
+        'horizontal-facets'
+      )} > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }`;

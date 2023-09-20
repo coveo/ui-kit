@@ -136,7 +136,7 @@ export type SuccessResponse = {
 };
 
 export function mapSearchResponse<
-  ResponseSuccess extends SearchAPIClientResponse<SearchResponseSuccess>
+  ResponseSuccess extends SearchAPIClientResponse<SearchResponseSuccess>,
 >(
   response: ResponseSuccess,
   mappings: SearchMappings

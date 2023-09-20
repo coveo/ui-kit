@@ -731,7 +731,7 @@ describe('Numeric Facet V1 Test Suites', () => {
       new TestFixture()
         .with(
           addNumericFacet({
-            field: 'objecttype',
+            field: 'thisfielddoesnotexist',
             label: numericFacetLabel,
           })
         )

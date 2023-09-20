@@ -81,7 +81,7 @@ import {
   buildInstantResults,
   buildAutomaticFacetGenerator,
 } from '@coveo/headless';
-import filesize from 'filesize';
+import {filesize} from 'filesize';
 import {Component} from 'react';
 import {AutomaticFacetGenerator} from '../components/automatic-facet-generator/automatic-facet-generator.class';
 import {AutomaticFacetGenerator as AutomaticFacetGeneratorFn} from '../components/automatic-facet-generator/automatic-facet-generator.fn';
