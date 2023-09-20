@@ -14,6 +14,7 @@ import {
   GeneratedAnswerPayloadType,
   GeneratedAnswerStreamEventData,
 } from '../../api/generated-answer/generated-answer-event-payload';
+import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request';
 import {
   ConfigurationSection,
   DebugSection,
@@ -141,14 +142,20 @@ export const streamAnswer = createAsyncThunk<
   };
 
   dispatch(setIsLoading(true));
+
+  const currentStreamRequestMatchesOriginalStreamRequest = (
+    request: GeneratedAnswerStreamRequest
+  ) => {
+    return (
+      request.streamId ===
+      config.getState().search.extendedResults.generativeQuestionAnsweringId
+    );
+  };
   const abortController = extra.streamingClient?.streamGeneratedAnswer(
     request,
     {
       write: (data: GeneratedAnswerStreamEventData) => {
-        if (
-          request.streamId ===
-          state.search.extendedResults.generativeQuestionAnsweringId
-        ) {
+        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
           dispatch(setIsLoading(false));
           if (data.payload && data.payloadType) {
             handleStreamPayload(data.payloadType, data.payload);
@@ -156,26 +163,17 @@ export const streamAnswer = createAsyncThunk<
         }
       },
       abort: (error: GeneratedAnswerErrorPayload) => {
-        if (
-          request.streamId ===
-          state.search.extendedResults.generativeQuestionAnsweringId
-        ) {
+        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
           dispatch(updateError(error));
         }
       },
       close: () => {
-        if (
-          request.streamId ===
-          state.search.extendedResults.generativeQuestionAnsweringId
-        ) {
+        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
           dispatch(setIsStreaming(false));
         }
       },
       resetAnswer: () => {
-        if (
-          request.streamId ===
-          state.search.extendedResults.generativeQuestionAnsweringId
-        ) {
+        if (currentStreamRequestMatchesOriginalStreamRequest(request)) {
           dispatch(resetAnswer());
         }
       },

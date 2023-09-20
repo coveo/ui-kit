@@ -73,7 +73,7 @@ await (async () => {
     readFileSync('package.json', {encoding: 'utf-8'})
   );
   const versionPrefix = `${packageJson.name}@`;
-  const convention = await angularChangelogConvention;
+  const convention = await angularChangelogConvention();
   const lastTag = await getLastTag(versionPrefix);
   const commits = await getCommits(PATH, lastTag);
   if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
