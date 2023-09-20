@@ -1,3 +1,19 @@
+# 2.32.0 (2023-09-20)
+
+### Bug Fixes
+
+- **headless,headless-react:** make ssr terminology more consistent ([#3159](https://github.com/coveo/ui-kit/issues/3159)) ([91755ea](https://github.com/coveo/ui-kit/commits/91755ea60dd63790ae8f47b40d13848bc289d757))
+- **headless:** bump coveo.analytics version ([#3178](https://github.com/coveo/ui-kit/issues/3178)) ([71f9c0c](https://github.com/coveo/ui-kit/commits/71f9c0c9af6b49edcec9d16bb8530bff011fe38f))
+- **headless:** updating GenAI state only when stream id corresponds to the generativeQuestionAnsweringId of the latest search query ([#3182](https://github.com/coveo/ui-kit/issues/3182)) ([1d0dc46](https://github.com/coveo/ui-kit/commits/1d0dc46c8d21cee40bb0f6d990ce2b52aa15a48f))
+
+### Features
+
+- **commerce:** create PLP v2 pager controller ([#3130](https://github.com/coveo/ui-kit/issues/3130)) ([07bf79f](https://github.com/coveo/ui-kit/commits/07bf79fb18e241ffd20460865cbd04cedccde420))
+- **commerce:** create PLP v2 product listing controller ([#3147](https://github.com/coveo/ui-kit/issues/3147)) ([d700a24](https://github.com/coveo/ui-kit/commits/d700a24de88858cea8f3c8458a0b99cb1cc5c096))
+- **commerce:** move product listing features to commerce directory ([#3171](https://github.com/coveo/ui-kit/issues/3171)) ([1e32da2](https://github.com/coveo/ui-kit/commits/1e32da2fcae5832ddf000e7a4766fe019ad1f419))
+- **headless:** added most ssr controller `define` functions ([#3157](https://github.com/coveo/ui-kit/issues/3157)) ([7c74862](https://github.com/coveo/ui-kit/commits/7c74862908ab79649ca1b2e9c1c0743eaca3d5ba))
+- **headless:** support `resultsMustMatch` parameter on facet request ([#3158](https://github.com/coveo/ui-kit/issues/3158)) ([fe40054](https://github.com/coveo/ui-kit/commits/fe400549b5d602a94c13eedc6092fb3eed12a1e9))
+
 # 2.31.0 (2023-09-11)
 
 ### Features
