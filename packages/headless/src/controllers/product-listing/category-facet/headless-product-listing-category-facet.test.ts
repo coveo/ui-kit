@@ -132,7 +132,7 @@ describe('category facet', () => {
 
   describe('#deselectAll', () => {
     it('executes a fetch product listing', () => {
-      categoryFacet.deselectAll();
+      categoryFacet.clearAll();
 
       expect(engine.actions).toContainEqual(
         expect.objectContaining({

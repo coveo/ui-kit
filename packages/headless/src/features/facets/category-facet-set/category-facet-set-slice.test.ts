@@ -19,7 +19,7 @@ import * as CategoryFacetReducers from './category-facet-reducer-helpers';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
 import {
   registerCategoryFacet,
-  toggleSelectCategoryFacetValue,
+  selectCategoryFacetValue,
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
@@ -411,7 +411,7 @@ describe('category facet slice', () => {
   describe('#toggleSelectCategoryFacetValue', () => {
     it('when the passed id is not registered, it does not throw', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
-      const action = toggleSelectCategoryFacetValue({
+      const action = selectCategoryFacetValue({
         facetId,
         selection,
         retrieveCount,
@@ -435,7 +435,7 @@ describe('category facet slice', () => {
           value: 'A',
           path: ['A'],
         });
-        const action = toggleSelectCategoryFacetValue({
+        const action = selectCategoryFacetValue({
           facetId,
           selection,
           retrieveCount,
@@ -459,7 +459,7 @@ describe('category facet slice', () => {
           value: 'B',
           path: ['A', 'B'],
         });
-        const action = toggleSelectCategoryFacetValue({
+        const action = selectCategoryFacetValue({
           facetId,
           selection,
           retrieveCount,
@@ -490,7 +490,7 @@ describe('category facet slice', () => {
           value: 'A',
           path: ['A'],
         });
-        const action = toggleSelectCategoryFacetValue({
+        const action = selectCategoryFacetValue({
           facetId,
           selection,
           retrieveCount,
@@ -521,7 +521,7 @@ describe('category facet slice', () => {
           value: 'B',
           path: ['A', 'B'],
         });
-        const action = toggleSelectCategoryFacetValue({
+        const action = selectCategoryFacetValue({
           facetId,
           selection,
           retrieveCount,
@@ -561,7 +561,7 @@ describe('category facet slice', () => {
           value: 'B',
           path: ['C', 'B'],
         });
-        const action = toggleSelectCategoryFacetValue({
+        const action = selectCategoryFacetValue({
           facetId,
           selection,
           retrieveCount,
@@ -612,7 +612,7 @@ describe('category facet slice', () => {
           value: 'C',
           path: ['A', 'B', 'C'],
         });
-        const action = toggleSelectCategoryFacetValue({
+        const action = selectCategoryFacetValue({
           facetId,
           selection,
           retrieveCount,
@@ -636,7 +636,7 @@ describe('category facet slice', () => {
           value: 'A',
           path: ['A'],
         });
-        const action = toggleSelectCategoryFacetValue({
+        const action = selectCategoryFacetValue({
           facetId,
           selection,
           retrieveCount,
@@ -680,7 +680,7 @@ describe('category facet slice', () => {
         ],
       });
 
-      const action = toggleSelectCategoryFacetValue({
+      const action = selectCategoryFacetValue({
         facetId,
         selection,
         retrieveCount,

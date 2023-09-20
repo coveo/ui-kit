@@ -88,8 +88,24 @@ export function buildCategoryFacet(
 
     facetSearch: restOfFacetSearch,
 
-    toggleSelect(selection: CategoryFacetValue) {
-      coreController.toggleSelect(selection);
+    selectValue(selection: CategoryFacetValue) {
+      coreController.selectValue(selection);
+      const analyticsAction = getToggleSelectAnalyticsAction(
+        getFacetId(),
+        selection
+      );
+      dispatch(executeSearch(analyticsAction));
+    },
+    excludeValue(selection: CategoryFacetValue) {
+      coreController.excludeValue(selection);
+      const analyticsAction = getToggleSelectAnalyticsAction(
+        getFacetId(),
+        selection
+      );
+      dispatch(executeSearch(analyticsAction));
+    },
+    clearValue(selection: CategoryFacetValue) {
+      coreController.clearValue(selection);
       const analyticsAction = getToggleSelectAnalyticsAction(
         getFacetId(),
         selection
@@ -97,8 +113,8 @@ export function buildCategoryFacet(
       dispatch(executeSearch(analyticsAction));
     },
 
-    deselectAll() {
-      coreController.deselectAll();
+    clearAll() {
+      coreController.clearAll();
       dispatch(executeSearch(logFacetClearAll(getFacetId())));
     },
 
@@ -109,13 +125,13 @@ export function buildCategoryFacet(
       );
     },
 
-    showMoreValues() {
-      coreController.showMoreValues();
+    showMoreValues(selection: CategoryFacetValue) {
+      coreController.showMoreValues(selection);
       dispatch(fetchFacetValues(logFacetShowMore(getFacetId())));
     },
 
-    showLessValues() {
-      coreController.showLessValues();
+    showLessValues(selection: CategoryFacetValue) {
+      coreController.showLessValues(selection);
       dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
     },
 

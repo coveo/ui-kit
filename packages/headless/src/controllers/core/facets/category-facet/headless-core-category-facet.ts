@@ -8,9 +8,11 @@ import {
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {
+  clearCategoryFacetValue,
   deselectAllCategoryFacetValues,
+  excludeCategoryFacetValue,
   registerCategoryFacet,
-  toggleSelectCategoryFacetValue,
+  selectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/category-facet-set-actions';
@@ -84,16 +86,30 @@ export interface CategoryFacet extends CoreCategoryFacet {
  */
 export interface CoreCategoryFacet extends Controller {
   /**
-   * Toggles the specified facet value.
+   * Select the specified facet value.
    *
    * @param selection - The facet value to toggle.
    */
-  toggleSelect(selection: CategoryFacetValue): void;
+  selectValue(selection: CategoryFacetValue): void;
+
+  /**
+   * Exclude the specified facet value.
+   *
+   * @param selection - The facet value to toggle.
+   */
+  excludeValue(selection: CategoryFacetValue): void;
+
+  /**
+   * Reset the specified facet value to idle.
+   *
+   * @param selection - The facet value to toggle.
+   */
+  clearValue(selection: CategoryFacetValue): void;
 
   /**
    * Deselects all facet values.
    * */
-  deselectAll(): void;
+  clearAll(): void;
 
   /**
    * Sorts the facet values according to the specified criterion.
@@ -113,12 +129,12 @@ export interface CoreCategoryFacet extends Controller {
   /**
    * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
    */
-  showMoreValues(): void;
+  showMoreValues(selection: CategoryFacetValue): void;
 
   /**
    * Sets the number of values displayed in the facet to the originally configured value.
    * */
-  showLessValues(): void;
+  showLessValues(selection: CategoryFacetValue): void;
 
   /**
    * Enables the facet. I.e., undoes the effects of `disable`.
@@ -339,15 +355,25 @@ export function buildCoreCategoryFacet(
   return {
     ...controller,
 
-    toggleSelect(selection: CategoryFacetValue) {
+    selectValue(selection: CategoryFacetValue) {
       const retrieveCount = options.numberOfValues;
-      dispatch(
-        toggleSelectCategoryFacetValue({facetId, selection, retrieveCount})
-      );
+      dispatch(selectCategoryFacetValue({facetId, selection, retrieveCount}));
       dispatch(updateFacetOptions());
     },
 
-    deselectAll() {
+    excludeValue(selection: CategoryFacetValue) {
+      const retrieveCount = options.numberOfValues;
+      dispatch(excludeCategoryFacetValue({facetId, selection, retrieveCount}));
+      dispatch(updateFacetOptions());
+    },
+
+    clearValue(selection: CategoryFacetValue) {
+      const retrieveCount = options.numberOfValues;
+      dispatch(clearCategoryFacetValue({facetId, selection, retrieveCount}));
+      dispatch(updateFacetOptions());
+    },
+
+    clearAll() {
       dispatch(deselectAllCategoryFacetValues(facetId));
       dispatch(updateFacetOptions());
     },
@@ -361,21 +387,22 @@ export function buildCoreCategoryFacet(
       const request = getRequest();
       return request!.sortCriteria === criterion;
     },
-
-    showMoreValues() {
+    showMoreValues(selection: CategoryFacetValue) {
       const {numberOfValues: increment} = options;
-      const {activeValue, valuesAsTrees} = this.state;
-      const numberOfValues =
-        (activeValue?.children.length ?? valuesAsTrees.length) + increment;
+      const numberOfValues = (selection.children.length ?? 0) + increment;
 
-      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      dispatch(
+        updateCategoryFacetNumberOfValues({facetId, selection, numberOfValues})
+      );
       dispatch(updateFacetOptions());
     },
 
-    showLessValues() {
+    showLessValues(selection: CategoryFacetValue) {
       const {numberOfValues} = options;
 
-      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      dispatch(
+        updateCategoryFacetNumberOfValues({facetId, selection, numberOfValues})
+      );
       dispatch(updateFacetOptions());
     },
 

@@ -38,14 +38,12 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
-import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {initializePopover} from '../atomic-popover/popover-type';
 import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
-import {FlatCategoryFacet} from './value-rendering/flat';
-import {HierarchicalCategoryFacet} from './value-rendering/hierarchical';
+import { HierarchicalFacet } from './value-rendering/true-hierarchical';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -322,7 +320,7 @@ export class AtomicCategoryFacet
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
         onClearFilters={() => {
           this.focusTargets.headerFocus.focusAfterSearch();
-          this.facet.deselectAll();
+          this.facet.clearAll();
         }}
         headerRef={(header) => {
           this.focusTargets.headerFocus.setTarget(header);
@@ -409,28 +407,31 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderShowMoreLess() {
-    return (
-      <div class={this.facetState.isHierarchical ? 'pl-9' : ''}>
-        <FacetShowMoreLess
-          label={this.label}
-          i18n={this.bindings.i18n}
-          onShowMore={() => {
-            this.resultIndexToFocusOnShowMore =
-              this.facetState.valuesAsTrees.length;
-            this.focusTargets.showMoreFocus.focusAfterSearch();
-            this.facet.showMoreValues();
-          }}
-          onShowLess={() => {
-            this.focusTargets.showLessFocus.focusAfterSearch();
-            this.facet.showLessValues();
-          }}
-          canShowLessValues={this.facetState.canShowLessValues}
-          canShowMoreValues={this.facetState.canShowMoreValues}
-        ></FacetShowMoreLess>
-      </div>
-    );
-  }
+  // private renderShowMoreLess() {
+  //   return (
+  //     <div class={this.facetState.isHierarchical ? 'pl-9' : ''}>
+  //       <FacetShowMoreLess
+  //         label={this.label}
+  //         i18n={this.bindings.i18n}
+  //         onShowMore={() => {
+  //           this.resultIndexToFocusOnShowMore =
+  //             this.facetState.valuesAsTrees.length;
+  //           this.focusTargets.showMoreFocus.focusAfterSearch();
+  //           this.facet.showMoreValues(this.facet);
+  //         }}
+  //         onShowLess={() => {
+  //           this.focusTargets.showLessFocus.focusAfterSearch();
+  //           this.facet.showLessValues();
+  //         }}
+  //         canShowLessValues={this.facetState.canShowLessValues}
+  //         canShowMoreValues={this.facetState.canShowMoreValues}
+  //       ></FacetShowMoreLess>
+  //     </div>
+  //   );
+  // }
+
+
+
 
   public render() {
     if (this.searchStatusState.hasError || !this.facet.state.enabled) {
@@ -449,9 +450,10 @@ export class AtomicCategoryFacet
     if (!this.facetState.valuesAsTrees.length) {
       return <Hidden></Hidden>;
     }
-    const CategoryFacetValueRenderer = this.facetState.isHierarchical
-      ? HierarchicalCategoryFacet
-      : FlatCategoryFacet;
+    // const CategoryFacetValueRenderer = this.facetState.isHierarchical
+    //   ? HierarchicalCategoryFacet
+    //   : FlatCategoryFacet;
+    const CategoryFacetValueRenderer = HierarchicalFacet
     return (
       <FacetContainer>
         {this.renderHeader()}
@@ -476,7 +478,7 @@ export class AtomicCategoryFacet
                   ></CategoryFacetValueRenderer>
                 }
               </FacetValuesGroup>
-              {this.renderShowMoreLess()}
+              {/* {this.renderShowMoreLess()} */}
             </Fragment>
           ),
         ]}

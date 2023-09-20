@@ -1,7 +1,7 @@
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   deselectAllCategoryFacetValues,
-  toggleSelectCategoryFacetValue,
+  selectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/category-facet-set-actions';
@@ -63,7 +63,7 @@ describe('insight category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       insightCategoryFacet.toggleSelect(selection);
 
-      const action = toggleSelectCategoryFacetValue({
+      const action = selectCategoryFacetValue({
         facetId,
         selection,
         retrieveCount: defaultCategoryFacetOptions.numberOfValues,
@@ -77,7 +77,7 @@ describe('insight category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       insightCategoryFacet.toggleSelect(selection);
 
-      const action = toggleSelectCategoryFacetValue({
+      const action = selectCategoryFacetValue({
         facetId,
         selection,
         retrieveCount: 10,
@@ -104,7 +104,7 @@ describe('insight category facet', () => {
   });
 
   describe('#deselectAll', () => {
-    beforeEach(() => insightCategoryFacet.deselectAll());
+    beforeEach(() => insightCategoryFacet.clearAll());
 
     it('dispatches #deselectAllCategoryFacetValues', () => {
       expect(engine.actions).toContainEqual(

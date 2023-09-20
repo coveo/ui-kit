@@ -30,7 +30,7 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
         part="all-categories-button"
         onClick={() => {
           focusTargets.activeValueFocus.focusAfterSearch();
-          facet.deselectAll();
+          facet.clearAll();
         }}
       >
         <atomic-icon
@@ -77,7 +77,7 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
         i18n={i18n}
         onClick={() => {
           focusTargets.activeValueFocus.focusAfterSearch();
-          facet.deselectAll();
+          facet.clearAll();
         }}
         searchQuery={facetSearchQuery}
         part={`active-parent ${getIsLeafOrNodePart(facetValue)}`}
@@ -105,7 +105,7 @@ export const HierarchicalCategoryFacet: FunctionalComponent<
         i18n={i18n}
         onClick={() => {
           focusTargets.activeValueFocus.focusAfterSearch();
-          facet.toggleSelect(facetValue);
+          facet.selectValue(facetValue);
         }}
         searchQuery={facetSearchQuery}
         part={`value-link ${getIsLeafOrNodePart(facetValue)}`}

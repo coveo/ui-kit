@@ -3,7 +3,7 @@ import {updateFacetOptions} from '../../../../features/facet-options/facet-optio
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
 import {
   registerCategoryFacet,
-  toggleSelectCategoryFacetValue,
+  selectCategoryFacetValue,
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
@@ -303,7 +303,7 @@ describe('category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
-      const action = toggleSelectCategoryFacetValue({
+      const action = selectCategoryFacetValue({
         facetId,
         selection,
         retrieveCount: defaultCategoryFacetOptions.numberOfValues,
@@ -317,7 +317,7 @@ describe('category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
-      const action = toggleSelectCategoryFacetValue({
+      const action = selectCategoryFacetValue({
         facetId,
         selection,
         retrieveCount: 10,
@@ -334,7 +334,7 @@ describe('category facet', () => {
   });
 
   describe('#deselectAll', () => {
-    beforeEach(() => categoryFacet.deselectAll());
+    beforeEach(() => categoryFacet.clearAll());
 
     it('dispatches #deselectAllCategoryFacetValues', () => {
       expect(engine.actions).toContainEqual(

@@ -119,8 +119,34 @@ export interface ToggleSelectCategoryFacetValueActionCreatorPayload {
   retrieveCount: number;
 }
 
-export const toggleSelectCategoryFacetValue = createAction(
-  'categoryFacet/toggleSelectValue',
+export const selectCategoryFacetValue = createAction(
+  'categoryFacet/selectValue',
+  (payload: ToggleSelectCategoryFacetValueActionCreatorPayload) => {
+    try {
+      validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);
+      validateCategoryFacetValue(payload.selection);
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: serializeSchemaValidationError(error as Error)};
+    }
+  }
+);
+
+export const excludeCategoryFacetValue = createAction(
+  'categoryFacet/excludeValue',
+  (payload: ToggleSelectCategoryFacetValueActionCreatorPayload) => {
+    try {
+      validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);
+      validateCategoryFacetValue(payload.selection);
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: serializeSchemaValidationError(error as Error)};
+    }
+  }
+);
+
+export const clearCategoryFacetValue = createAction(
+  'categoryFacet/clearValue',
   (payload: ToggleSelectCategoryFacetValueActionCreatorPayload) => {
     try {
       validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);
@@ -145,6 +171,11 @@ export interface UpdateCategoryFacetNumberOfValuesActionCreatorPayload {
   facetId: string;
 
   /**
+   * The target category facet value.
+   */
+  selection: CategoryFacetValue;
+
+  /**
    * The new number of facet values (e.g., `10`).
    */
   numberOfValues: number;
@@ -152,11 +183,19 @@ export interface UpdateCategoryFacetNumberOfValuesActionCreatorPayload {
 
 export const updateCategoryFacetNumberOfValues = createAction(
   'categoryFacet/updateNumberOfValues',
-  (payload: UpdateCategoryFacetNumberOfValuesActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: categoryFacetPayloadDefinition.facetId,
-      numberOfValues: categoryFacetPayloadDefinition.numberOfValues,
-    })
+  (payload: UpdateCategoryFacetNumberOfValuesActionCreatorPayload) => {
+    try {
+      validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);
+      validatePayloadAndThrow(
+        payload.numberOfValues,
+        new NumberValue({min: 0})
+      );
+      validateCategoryFacetValue(payload.selection);
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: serializeSchemaValidationError(error as Error)};
+    }
+  }
 );
 
 export interface UpdateCategoryFacetSortCriterionActionCreatorPayload {

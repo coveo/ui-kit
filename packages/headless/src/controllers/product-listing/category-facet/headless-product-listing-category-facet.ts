@@ -89,14 +89,14 @@ export function buildCategoryFacet(
 
     facetSearch: restOfFacetSearch,
 
-    toggleSelect: (selection: CategoryFacetValue) => {
-      coreController.toggleSelect(selection);
+    selectValue: (selection: CategoryFacetValue) => {
+      coreController.selectValue(selection);
       dispatch(fetchProductListing());
       dispatch(getToggleSelectAnalyticsAction(getFacetId(), selection));
     },
 
-    deselectAll: () => {
-      coreController.deselectAll();
+    clearAll: () => {
+      coreController.clearAll();
       dispatch(fetchProductListing()).then(() =>
         dispatch(logFacetClearAll(getFacetId()))
       );
@@ -109,15 +109,15 @@ export function buildCategoryFacet(
       );
     },
 
-    showMoreValues() {
-      coreController.showMoreValues();
+    showMoreValues(selection: CategoryFacetValue) {
+      coreController.showMoreValues(selection);
       dispatch(fetchProductListing()).then(() =>
         dispatch(logFacetShowMore(getFacetId()))
       );
     },
 
-    showLessValues() {
-      coreController.showLessValues();
+    showLessValues(selection: CategoryFacetValue) {
+      coreController.showLessValues(selection);
       dispatch(fetchProductListing()).then(() =>
         dispatch(logFacetShowLess(getFacetId()))
       );

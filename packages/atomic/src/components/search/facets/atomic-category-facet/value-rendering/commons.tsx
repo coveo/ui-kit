@@ -24,7 +24,7 @@ export const getOnClickForUnselectedValue =
   ) =>
   (): void => {
     activeValueFocusTarget.focusAfterSearch();
-    facet.toggleSelect(value);
+    facet.selectValue(value);
   };
 
 export const getIsLeafOrNodePart = (value: CategoryFacetValue) =>

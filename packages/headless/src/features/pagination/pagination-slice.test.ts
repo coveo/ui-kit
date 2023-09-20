@@ -7,7 +7,7 @@ import {fetchProductListing as fetchProductListingV2} from '../commerce/product-
 import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions';
 import {
   deselectAllCategoryFacetValues,
-  toggleSelectCategoryFacetValue,
+  selectCategoryFacetValue,
 } from '../facets/category-facet-set/category-facet-set-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
@@ -278,7 +278,7 @@ describe('pagination slice', () => {
     });
 
     it('when a category facet is toggled, #firstResult is set to 0', () => {
-      testResetPagination(toggleSelectCategoryFacetValue);
+      testResetPagination(selectCategoryFacetValue);
     });
 
     it('when a numeric facet is toggled, #firstResult is set to 0', () => {

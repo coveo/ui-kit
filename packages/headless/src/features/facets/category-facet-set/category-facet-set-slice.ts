@@ -6,7 +6,7 @@ import {restoreSearchParameters} from '../../search-parameters/search-parameter-
 import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
 import {updateFacetAutoSelection} from '../generic/facet-actions';
-import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers';
+// import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {
   handleCategoryFacetDeselectAll,
@@ -14,24 +14,28 @@ import {
 } from './category-facet-reducer-helpers';
 import {
   registerCategoryFacet,
-  toggleSelectCategoryFacetValue,
+  selectCategoryFacetValue,
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
   RegisterCategoryFacetActionCreatorPayload,
   updateCategoryFacetBasePath,
+  excludeCategoryFacetValue,
+  clearCategoryFacetValue,
 } from './category-facet-set-actions';
 import {
   CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
-import {findActiveValueAncestry} from './category-facet-utils';
+// import {findActiveValueAncestry} from './category-facet-utils';
 import {CategoryFacetOptionalParameters} from './interfaces/options';
 import {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
+  // CategoryFacetValueRequest,
 } from './interfaces/request';
-import {CategoryFacetResponse} from './interfaces/response';
+import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
+import {WritableDraft} from 'immer/dist/internal';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),
@@ -44,7 +48,6 @@ export const categoryFacetSetReducer = createReducer(
         if (facetId in state) {
           return;
         }
-
         const request = buildCategoryFacetRequest(options);
         const initialNumberOfValues = request.numberOfValues;
         state[facetId] = {request, initialNumberOfValues};
@@ -84,38 +87,107 @@ export const categoryFacetSetReducer = createReducer(
 
         request.basePath = [...basePath];
       })
-      .addCase(toggleSelectCategoryFacetValue, (state, action) => {
-        const {facetId, selection, retrieveCount} = action.payload;
+      .addCase(selectCategoryFacetValue, (state, action) => {
+        const {
+          facetId,
+          selection: selectedValueNewState,
+          retrieveCount,
+        } = action.payload;
         const request = state[facetId]?.request;
 
         if (!request) {
           return;
         }
 
-        const {path} = selection;
-        const pathToSelection = path.slice(0, path.length - 1);
-        const children = ensurePathAndReturnChildren(
-          request,
-          pathToSelection,
-          retrieveCount
-        );
+        const path = [...selectedValueNewState.path];
+        const selectedValueCurrentState = (() => {
+          let currentPath = path.shift();
 
-        if (children.length) {
-          const lastSelectedParent = children[0];
+          let currentNode = request.currentValues.find(
+            (facetValue) => facetValue.value === currentPath
+          );
+          while (path.length && currentNode) {
+            currentPath = path.shift();
+            currentNode = currentNode?.children.find(
+              (facetValue) => facetValue.value === currentPath
+            );
+          }
+          return currentNode;
+        })();
+        if (!selectedValueCurrentState) {
+          return;
+        }
+        selectedValueCurrentState.retrieveChildren = retrieveCount > 0;
+        selectedValueCurrentState.retrieveCount = retrieveCount;
+        selectedValueCurrentState.state = 'selected';
+      })
+      .addCase(excludeCategoryFacetValue, (state, action) => {
+        const {
+          facetId,
+          selection: selectedValueNewState,
+          retrieveCount,
+        } = action.payload;
+        const request = state[facetId]?.request;
 
-          lastSelectedParent.retrieveChildren = true;
-          lastSelectedParent.state = 'selected';
-          lastSelectedParent.children = [];
+        if (!request) {
           return;
         }
 
-        const newParent = buildCategoryFacetValueRequest(
-          selection.value,
-          retrieveCount
-        );
-        newParent.state = 'selected';
-        children.push(newParent);
-        request.numberOfValues = 1;
+        const path = [...selectedValueNewState.path];
+        const selectedValueCurrentState = (() => {
+          let currentPath = path.shift();
+
+          let currentNode = request.currentValues.find(
+            (facetValue) => facetValue.value === currentPath
+          );
+          while (path.length && currentNode) {
+            currentPath = path.shift();
+            currentNode = currentNode?.children.find(
+              (facetValue) => facetValue.value === currentPath
+            );
+          }
+          return currentNode;
+        })();
+        if (!selectedValueCurrentState) {
+          return;
+        }
+        selectedValueCurrentState.retrieveChildren = retrieveCount > 0;
+        selectedValueCurrentState.retrieveCount = retrieveCount;
+        selectedValueCurrentState.state = 'excluded';
+      })
+      .addCase(clearCategoryFacetValue, (state, action) => {
+        const {
+          facetId,
+          selection: selectedValueNewState,
+          retrieveCount,
+        } = action.payload;
+        const request = state[facetId]?.request;
+
+        if (!request) {
+          return;
+        }
+
+        const path = [...selectedValueNewState.path];
+        const selectedValueCurrentState = (() => {
+          let currentPath = path.shift();
+
+          let currentNode = request.currentValues.find(
+            (facetValue) => facetValue.value === currentPath
+          );
+          while (path.length && currentNode) {
+            currentPath = path.shift();
+            currentNode = currentNode?.children.find(
+              (facetValue) => facetValue.value === currentPath
+            );
+          }
+          return currentNode;
+        })();
+        if (!selectedValueCurrentState) {
+          return;
+        }
+        selectedValueCurrentState.retrieveChildren = retrieveCount > 0;
+        selectedValueCurrentState.retrieveCount = retrieveCount;
+        selectedValueCurrentState.state = 'idle';
       })
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
         const facetId = action.payload;
@@ -132,17 +204,6 @@ export const categoryFacetSetReducer = createReducer(
         })
       )
       .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
-        const {facetId, numberOfValues} = action.payload;
-        const request = state[facetId]?.request;
-        if (!request) {
-          return;
-        }
-        if (!request.currentValues.length) {
-          return handleFacetUpdateNumberOfValues<CategoryFacetRequest>(
-            request,
-            numberOfValues
-          );
-        }
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
       })
       .addCase(selectCategoryFacetSearchResult, (state, action) => {
@@ -185,30 +246,30 @@ export const defaultCategoryFacetOptions: CategoryFacetOptionalParameters = {
   resultsMustMatch: 'atLeastOneValue',
 };
 
-function ensurePathAndReturnChildren(
-  request: CategoryFacetRequest,
-  path: string[],
-  retrieveCount: number
-) {
-  let children = request.currentValues;
+// function ensurePathAndReturnChildren(
+//   request: CategoryFacetRequest,
+//   path: string[],
+//   retrieveCount: number
+// ) {
+//   let children = request.currentValues;
 
-  for (const segment of path) {
-    let parent = children[0];
-    const missingParent = !parent;
+//   for (const segment of path) {
+//     let parent = children[0];
+//     const missingParent = !parent;
 
-    if (missingParent || segment !== parent.value) {
-      parent = buildCategoryFacetValueRequest(segment, retrieveCount);
-      children.length = 0;
-      children.push(parent);
-    }
+//     if (missingParent || segment !== parent.value) {
+//       parent = buildCategoryFacetValueRequest(segment, retrieveCount);
+//       children.length = 0;
+//       children.push(parent);
+//     }
 
-    parent.retrieveChildren = false;
-    parent.state = 'idle';
-    children = parent.children;
-  }
+//     parent.retrieveChildren = false;
+//     parent.state = 'idle';
+//     children = parent.children;
+//   }
 
-  return children;
-}
+//   return children;
+// }
 
 function buildCategoryFacetRequest(
   config: RegisterCategoryFacetActionCreatorPayload
@@ -222,18 +283,18 @@ function buildCategoryFacetRequest(
   };
 }
 
-function buildCategoryFacetValueRequest(
-  value: string,
-  retrieveCount: number
-): CategoryFacetValueRequest {
-  return {
-    value,
-    state: 'idle',
-    children: [],
-    retrieveChildren: true,
-    retrieveCount,
-  };
-}
+// function buildCategoryFacetValueRequest(
+//   value: string,
+//   retrieveCount: number
+// ): CategoryFacetValueRequest {
+//   return {
+//     value,
+//     state: 'idle',
+//     children: [],
+//     retrieveChildren: true,
+//     retrieveCount,
+//   };
+// }
 
 function handleCategoryFacetResponseUpdate(
   state: CategoryFacetSetState,
@@ -243,35 +304,40 @@ function handleCategoryFacetResponseUpdate(
     if (!isCategoryFacetResponse(state, response)) {
       return;
     }
-
-    const id = response.facetId;
-    const request = state[id]?.request;
-
-    if (!request) {
-      return;
-    }
-
-    const requestWasInvalid = isRequestInvalid(request, response);
-
-    request.currentValues = requestWasInvalid ? [] : request.currentValues;
-    request.preventAutoSelect = false;
+    mutateStateFromFacetResponse(state[response.facetId]?.request, response);
   });
 }
 
 function handleCategoryFacetNestedNumberOfValuesUpdate(
   state: CategoryFacetSetState,
-  payload: {facetId: string; numberOfValues: number}
+  payload: {
+    facetId: string;
+    numberOfValues: number;
+    selection: CategoryFacetValue;
+  }
 ) {
-  const {facetId, numberOfValues} = payload;
-  let selectedValue = state[facetId]?.request.currentValues[0];
-  if (!selectedValue) {
+  const {facetId, numberOfValues, selection} = payload;
+  const request = state[facetId]?.request;
+  const path = [...selection.path];
+  const selectedValueCurrentState = (() => {
+    let currentPath = path.shift();
+
+    let currentNode = request.currentValues.find(
+      (facetValue) => facetValue.value === currentPath
+    );
+    while (path.length && currentNode) {
+      currentPath = path.shift();
+      currentNode = currentNode?.children.find(
+        (facetValue) => facetValue.value === currentPath
+      );
+    }
+    return currentNode;
+  })();
+  if (!selectedValueCurrentState) {
     return;
   }
-
-  while (selectedValue.children.length && selectedValue?.state !== 'selected') {
-    selectedValue = selectedValue.children[0];
-  }
-  selectedValue.retrieveCount = numberOfValues;
+  selectedValueCurrentState.retrieveCount = numberOfValues;
+  selectedValueCurrentState.retrieveChildren = numberOfValues > 0;
 }
 
 function isCategoryFacetResponse(
@@ -282,11 +348,39 @@ function isCategoryFacetResponse(
   return id in state;
 }
 
-function isRequestInvalid(
-  request: CategoryFacetRequest,
-  response: CategoryFacetResponse
+// function isRequestInvalid(
+//   request: CategoryFacetRequest,
+//   response: CategoryFacetResponse
+// ) {
+//   const requestParents = findActiveValueAncestry(request.currentValues);
+//   const responseParents = findActiveValueAncestry(response.values);
+//   return requestParents.length !== responseParents.length;
+// }
+
+function mutateStateFromFacetResponse(
+  facetRequest: WritableDraft<CategoryFacetRequest> | undefined,
+  facetResponse: AnyFacetResponse
 ) {
-  const requestParents = findActiveValueAncestry(request.currentValues);
-  const responseParents = findActiveValueAncestry(response.values);
-  return requestParents.length !== responseParents.length;
+  if (!facetRequest) {
+    return;
+  }
+
+  facetRequest.currentValues = (
+    facetResponse as CategoryFacetResponse
+  ).values.map(convertFacetValueToRequest);
+  facetRequest.preventAutoSelect = false;
+}
+
+function convertFacetValueToRequest(
+  facetValue: CategoryFacetValue
+): CategoryFacetValueRequest {
+  const {value, state, children} = facetValue;
+
+  return {
+    value,
+    state,
+    children: children.map(convertFacetValueToRequest),
+    retrieveCount: children.length,
+    retrieveChildren: false,
+  };
 }
