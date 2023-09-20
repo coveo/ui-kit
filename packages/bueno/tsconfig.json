@@ -8,8 +8,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "isolatedModules": true,
+    "types": []
   },
   "include": [
     "src"
-  ]
+  ],
+  "exclude": ["**/*.test.ts"]
 }

@@ -6,11 +6,11 @@ describe('#buildStringFacetField', () => {
       const builder = buildStringFacetField({
         field: 'author',
         operator: 'fuzzyMatch',
-        value: 'hughes',
+        value: 'someAuthor',
       });
 
       expect(builder.toQuerySyntax()).toBe(
-        '@author~= $quoteVar(value: hughes)'
+        '@author~= $quoteVar(value: someAuthor)'
       );
     });
 
@@ -18,10 +18,10 @@ describe('#buildStringFacetField', () => {
       const builder = buildStringFacetField({
         field: 'author',
         operator: 'wildcardMatch',
-        value: '*hughes',
+        value: '*someAuthor',
       });
 
-      expect(builder.toQuerySyntax()).toBe('@author*=("*hughes")');
+      expect(builder.toQuerySyntax()).toBe('@author*=("*someAuthor")');
     });
 
     it('#phoneticMatch operator', () => {
@@ -38,20 +38,20 @@ describe('#buildStringFacetField', () => {
       const builder = buildStringFacetField({
         field: 'author',
         operator: 'differentThan',
-        value: 'ehughes',
+        value: 'someAuthor',
       });
 
-      expect(builder.toQuerySyntax()).toBe('@author<>("ehughes")');
+      expect(builder.toQuerySyntax()).toBe('@author<>("someAuthor")');
     });
 
     it('#regexMatch operator', () => {
       const builder = buildStringFacetField({
         field: 'author',
         operator: 'regexMatch',
-        value: 'ehughe[a-z]+',
+        value: 'someAuthor[a-z]+',
       });
 
-      expect(builder.toQuerySyntax()).toBe('@author/=("ehughe[a-z]+")');
+      expect(builder.toQuerySyntax()).toBe('@author/=("someAuthor[a-z]+")');
     });
 
     it('with #negate set to true', () => {

@@ -168,7 +168,7 @@ describe('Result MultiValueText Component', () => {
 
         describe('with max-values-to-display=2', () => {
           beforeEach(() => {
-            prepareValuesWithMaximum(values, 2);
+            prepareValuesWithMaximum(values, 2).init();
           });
 
           assertShouldRenderValues(localizedValues.slice(0, 1));

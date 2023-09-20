@@ -64,10 +64,10 @@ describe('buildQueryExpression', () => {
     builder.addStringFacetField({
       field: 'author',
       operator: 'differentThan',
-      value: 'ehughes',
+      value: 'someAuthor',
     });
 
-    expect(builder.toQuerySyntax()).toBe('@author<>("ehughes")');
+    expect(builder.toQuerySyntax()).toBe('@author<>("someAuthor")');
   });
 
   it('#addNumericField, with one expression, #toQuerySyntax returns the expected syntax', () => {
@@ -124,7 +124,7 @@ describe('buildQueryExpression', () => {
       .addStringField({
         field: 'author',
         operator: 'contains',
-        values: ['ehughes'],
+        values: ['someAuthor'],
       })
       .addNumericField({
         field: 'size',
@@ -133,7 +133,9 @@ describe('buildQueryExpression', () => {
       })
       .joinUsing('and');
 
-    expect(builder.toQuerySyntax()).toBe('(@author="ehughes") AND (@size>100)');
+    expect(builder.toQuerySyntax()).toBe(
+      '(@author="someAuthor") AND (@size>100)'
+    );
   });
 
   it('#operator is #or, with two expressions, #toQuerySyntax joins them correctly', () => {
@@ -141,7 +143,7 @@ describe('buildQueryExpression', () => {
       .addStringField({
         field: 'author',
         operator: 'contains',
-        values: ['ehughes'],
+        values: ['someAuthor'],
       })
       .addNumericField({
         field: 'size',
@@ -150,7 +152,9 @@ describe('buildQueryExpression', () => {
       })
       .joinUsing('or');
 
-    expect(builder.toQuerySyntax()).toBe('(@author="ehughes") OR (@size>100)');
+    expect(builder.toQuerySyntax()).toBe(
+      '(@author="someAuthor") OR (@size>100)'
+    );
   });
 
   it('#addNumericRangeFieldwith one expression, #toString returns the expected syntax', () => {

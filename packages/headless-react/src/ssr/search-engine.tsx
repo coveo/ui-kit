@@ -10,15 +10,15 @@ import {
 import {useContext, useCallback, useMemo, Context} from 'react';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
-import {useSyncMemoizedStore} from './client-utils';
+import {useSyncMemoizedStore} from './client-utils.js';
 import {
   ContextHydratedState,
   ContextState,
   ControllerHook,
   InferControllerHooksMapFromDefinition,
   ReactSearchEngineDefinition,
-} from './types';
-import {SingletonGetter, capitalize, singleton, mapObject} from './utils';
+} from './types.js';
+import {SingletonGetter, capitalize, singleton, mapObject} from './utils.js';
 
 export class MissingEngineProviderError extends Error {
   static message =

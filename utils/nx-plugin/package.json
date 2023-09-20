@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "type": "commonjs",
   "dependencies": {
-    "@nrwl/devkit": "15.9.7"
+    "@nrwl/devkit": "16.8.1"
   },
   "devDependencies": {
     "typescript": "5.2.2"
