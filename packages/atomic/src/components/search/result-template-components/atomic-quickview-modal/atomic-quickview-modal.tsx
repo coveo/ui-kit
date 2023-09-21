@@ -69,7 +69,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Event({eventName: 'atomic/quickview/previous'})
   previousQuickview?: EventEmitter;
 
-  @State() private minimizeSidebar = false;
+  @State() private minimizeSidebar = this.isMobile;
   @State() private words: Record<string, QuickviewWordHighlight> = {};
   private iframeRef?: HTMLIFrameElement;
 
@@ -81,6 +81,10 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Prop() modalCloseCallback?: () => void;
 
   private interactiveResult?: InteractiveResult;
+
+  private get isMobile() {
+    return !window.matchMedia('only screen and (min-width: 1024px)').matches;
+  }
 
   @Method()
   public async reset() {
@@ -112,6 +116,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
             onCancelPendingSelect={() =>
               this.interactiveResult?.cancelPendingSelect()
             }
+            className="truncate"
           >
             {this.result.title}
           </LinkWithResultAnalytics>
@@ -186,7 +191,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
           onClick={() => this.previousQuickview?.emit()}
           text={this.bindings.i18n.t('quickview-previous')}
         ></Button>
-        <p>
+        <p class="text-center">
           {this.bindings.i18n.t('showing-results-of', {
             first: this.current,
             total: this.total,
@@ -321,6 +326,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   public render() {
     return (
       <atomic-modal
+        fullscreen={this.bindings?.store?.isMobile()}
         class={'atomic-quickview-modal'}
         isOpen={this.isOpen}
         close={() => this.onClose()}
