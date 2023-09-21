@@ -1,16 +1,15 @@
-import {GeneratedAnswerCitation} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 
 interface SourceCitationsProps {
   label: string;
-  citations: GeneratedAnswerCitation[];
-  onCitationClick: (citation: GeneratedAnswerCitation) => void;
+  isVisible: boolean;
 }
 
 export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
-  props
+  props,
+  children
 ) =>
-  props.citations.length ? (
+  props.isVisible ? (
     <div class="source-citations gap-2 mt-6 flex">
       <p
         part="citations-label"
@@ -19,17 +18,7 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
         {props.label}
       </p>
       <ol class="list-none citations-container gap-2 flex items-center flex-wrap">
-        {props.citations.map(
-          (citation: GeneratedAnswerCitation, index: number) => (
-            <li key={citation.id}>
-              <atomic-source-citation
-                index={index}
-                citation={citation}
-                href={citation.clickUri ?? citation.uri}
-              ></atomic-source-citation>
-            </li>
-          )
-        )}
+        {children}
       </ol>
     </div>
   ) : null;

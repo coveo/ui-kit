@@ -15,9 +15,11 @@ import {
 import {Heading} from '../../common/heading';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {FeedbackButton} from './feedback-button';
-import {GeneratedContent} from './generated-content';
 import {RetryPrompt} from './retry-prompt';
 import {TypingLoader} from './typing-loader';
+import {SourceCitations} from './source-citations';
+import {GeneratedAnswerCitation} from '../../../components';
+import {GeneratedContentContainer} from './generated-content-container';
 
 /**
  * @internal
@@ -110,15 +112,27 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             message={this.bindings.i18n.t('retry-stream-message')}
           />
         ) : (
-          <GeneratedContent
+          <GeneratedContentContainer
             answer={this.generatedAnswerState.answer}
-            citations={this.generatedAnswerState.citations}
             isStreaming={this.generatedAnswerState.isStreaming}
-            citationsLabel={this.bindings.i18n.t('more-info')}
-            onCitationClick={(citation) =>
-              this.generatedAnswer.logCitationClick(citation.id)
-            }
-          />
+          >
+            <SourceCitations
+              label={this.bindings.i18n.t('more-info')}
+              isVisible={!!this.generatedAnswerState.citations.length}
+            >
+              {this.generatedAnswerState.citations.map(
+                (citation: GeneratedAnswerCitation, index: number) => (
+                  <li key={citation.id}>
+                    <atomic-source-citation
+                      index={index}
+                      citation={citation}
+                      href={citation.clickUri ?? citation.uri}
+                    ></atomic-source-citation>
+                  </li>
+                )
+              )}
+            </SourceCitations>
+          </GeneratedContentContainer>
         )}
       </div>
     );

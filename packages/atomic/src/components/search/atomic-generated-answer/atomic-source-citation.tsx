@@ -12,6 +12,9 @@ import {
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
 
+/**
+ * @internal
+ */
 @Component({
   tag: 'atomic-source-citation',
   shadow: false,
