@@ -36,7 +36,7 @@ jobs:
         with:
           fetch-depth: 0
       - id: tag
-        run: echo "tag=$(git tag --contains)" >> "$GITHUB_OUTPUT"
+        run: echo "tag=$(git tag --contains | head -n 1)" >> "$GITHUB_OUTPUT"
   version:
     name: Bump versions
     needs: [my-tag]
