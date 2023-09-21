@@ -47,6 +47,7 @@ import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set
 import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
 import {TabSetState} from '../features/tab-set/tab-set-state';
 import {TriggerState} from '../features/triggers/triggers-state';
+import {CartState} from '../features/commerce/context/cart/cart-state';
 
 export interface QuerySection {
   /**
@@ -293,6 +294,13 @@ export interface CommerceContextSection {
    * The information related to the commerce context.
    */
   context: CommerceContextState;
+}
+
+export interface CartSection {
+  /**
+   * The information related to the cart.
+   */
+  cart: CartState;
 }
 
 export interface ProductListingV2Section {

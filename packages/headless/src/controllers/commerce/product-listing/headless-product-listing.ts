@@ -8,6 +8,7 @@ import {
   setProductListingUrl,
 } from '../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
+import {contextReducer as context} from '../../../features/commerce/context/context-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   requiredNonEmptyString,
@@ -127,6 +128,6 @@ export function buildProductListing(
 function loadBaseProductListingReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine {
-  engine.addReducers({productListing, configuration});
+  engine.addReducers({productListing, context, configuration});
   return true;
 }

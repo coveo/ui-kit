@@ -2,7 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {getContextInitialState} from './context-state';
 import {setContext} from './context-actions';
 
-export const commerceReducer = createReducer(
+export const contextReducer = createReducer(
   getContextInitialState(),
 
   (builder) => {

@@ -4,6 +4,7 @@ import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2
 import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
+  CartSection,
   CategoryFacetSection, CommerceContextSection,
   ConfigurationSection,
   DateFacetSection,
@@ -46,6 +47,7 @@ export const setProductListingUrl = createAction(
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
   CommerceContextSection &
+  CartSection &
   Partial<
     FacetSection &
       NumericFacetSection &

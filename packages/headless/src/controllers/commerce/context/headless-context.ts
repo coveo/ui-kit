@@ -1,44 +1,39 @@
-import { Schema } from "@coveo/bueno";
-import {requiredNonEmptyString} from '../../../utils/validate-payload';
+import {RecordValue, Schema } from "@coveo/bueno";
+import {nonEmptyString, validateOptions} from '../../../utils/validate-payload';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {buildController, Controller} from '../../controller/headless-controller';
+import {loadReducerError} from '../../../utils/errors';
+import {setContext} from '../../../features/commerce/context/context-actions';
+import {contextReducer as context} from '../../../features/commerce/context/context-slice';
 
 const optionsSchema = new Schema({
-  url: requiredNonEmptyString,
+  trackingId: nonEmptyString,
+  language: nonEmptyString,
+  currency: nonEmptyString,
+  clientId: nonEmptyString,
+  user: new RecordValue({
+    values: {
+      userId: nonEmptyString,
+      email: nonEmptyString,
+      userIp: nonEmptyString,
+      userAgent: nonEmptyString,
+    },
+  }),
 });
+
+export interface ContextOptions {
+  trackingId?: string;
+  language?: string;
+  currency?: string;
+  clientId?: string;
+  user?: User;
+}
 
 export interface User {
   userId?: string;
   email?: string;
   userIp?: string;
   userAgent?: string;
-}
-
-export interface View {
-  url: string;
-}
-
-export interface Product {
-  groupId?: string;
-  productId?: string;
-  sku?: string;
-}
-
-export interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
-export interface ContextOptions {
-  trackingId?: string;
-  language?: string;
-  currency?: string;
-  // TODO: Does it make sense for the clientId to be part of the context state?
-  clientId?: string;
-  user?: User;
-  view?: Partial<View>;
-  cart?: CartItem[];
-  labels?: Record<string, string>
 }
 
 export interface ContextProps {
@@ -85,49 +80,6 @@ export interface Context extends Controller {
   setUser(user: User): void;
 
   /**
-   * Sets the view.
-   * @param view - The new view.
-   */
-  setView(view: View): void;
-
-  /**
-   * Sets the cart.
-   * @param cart - The new cart.
-   */
-  setCart(cart: CartItem[]): void;
-
-  /**
-   * Adds a cart item.
-   * @param item - The new cart item.
-   */
-  addCartItem(item: CartItem): string;
-
-  /**
-   * Removes a cart item.
-   * @param itemId - The cart item's id to remove.
-   */
-  removeCartItem(itemId: string): void;
-
-  /**
-   * Sets the labels.
-   * @param labels - The new labels.
-   */
-  setLabels(labels: Record<string, string>): void;
-
-  /**
-   * Sets a label.
-   * @param key - The label to set.
-   * @param value - The label to set's value.
-   */
-  setLabel(key: string, value: string): string;
-
-  /**
-   * Removes a label.
-   * @param label - The label to remove.
-   */
-  removeLabel(label: string): string;
-
-  /**
    * A scoped and simplified part of the headless state that is relevant to the `Context` controller.
    */
   state: ContextState;
@@ -137,12 +89,8 @@ export interface ContextState {
   trackingId?: string;
   language?: string;
   currency?: string;
-  // TODO: Does it make sense for the clientId to be part of the context state?
   clientId?: string;
   user: User;
-  view: View;
-  cart: CartItem[];
-  labels: Record<string, string>
 }
 
 export type ContextControllerState = Context['state'];
@@ -174,7 +122,7 @@ export function buildContext(
 
   dispatch(
     setContext({
-      user: options,
+      ...options,
     })
   );
 
@@ -182,15 +130,7 @@ export function buildContext(
     ...controller,
 
     get state() {
-      const {products, error, isLoading, responseId, context} =
-        getState().productListing;
-      return {
-        products,
-        error,
-        isLoading,
-        responseId,
-        url: context.view.url,
-      };
+      return getState().context;
     },
 
     setUrl: (url: string) =>
@@ -207,6 +147,6 @@ export function buildContext(
 function loadBaseContextReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine {
-  engine.addReducers({productListing, configuration});
+  engine.addReducers({context});
   return true;
 }

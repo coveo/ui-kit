@@ -26,8 +26,7 @@ export interface ContextParam {
 export interface ContextParams {
   view: ViewParams;
   user?: UserParams;
-  cart?: CartParams[];
-  labels?: Record<string, string>;
+  cart?: CartItemParam[];
 }
 
 export interface ViewParams {
@@ -41,7 +40,12 @@ export interface UserParams {
   userId?: string;
 }
 
-export interface CartParams {
+export interface CartItemParam {
+  product: ProductParam
+  quantity: number;
+}
+
+export interface ProductParam {
   groupId?: string;
   productId?: string;
   sku?: string;

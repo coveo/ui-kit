@@ -17,10 +17,12 @@ import {
   CommerceEngineConfiguration,
   commerceEngineConfigurationSchema,
 } from './commerce-engine-configuration';
+import {contextReducer} from '../../features/commerce/context/context-slice';
+import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 
 export type {CommerceEngineConfiguration};
 
-const commerceEngineReducers = {productListing: productListingV2Reducer};
+const commerceEngineReducers = {productListing: productListingV2Reducer, context: contextReducer, cart: cartReducer};
 type CommerceEngineReducers = typeof commerceEngineReducers;
 
 type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &
