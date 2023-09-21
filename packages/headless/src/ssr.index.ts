@@ -34,7 +34,8 @@ export type {
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   InferControllersMapFromDefinition,
-  InferControllerStaticStateFromDefinition,
+  InferControllerStaticStateFromController,
+  InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateMapFromDefinitions,
 } from './app/ssr-engine/types/common';
 export type {
