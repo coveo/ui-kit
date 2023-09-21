@@ -1,3 +1,9 @@
+# 1.2.0 (2023-09-21)
+
+### Features
+
+- **relay:** add getMeta function (#36) ([cb6c7d4](/commits/cb6c7d40527cf980b81dfc87c11de42fde2b3dee)), closes [#36](/issues/36)
+
 ## 1.1.3 (2023-09-14)
 
 ## 1.1.2 (2023-09-13)
