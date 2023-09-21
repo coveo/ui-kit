@@ -8,6 +8,7 @@ import {
   ValidationResponse,
 } from "./validate/validate";
 import { version } from "./version";
+import { createMeta, Meta } from "./event/meta/meta";
 
 type RelayPayload = Record<string, unknown>;
 
@@ -24,6 +25,7 @@ interface Relay {
     payload: RelayPayload
   ) => Promise<ValidationResponse>;
   emit: (type: string, payload: RelayPayload) => Promise<void>;
+  getMeta: (type: string) => Meta;
   version: string;
 }
 
@@ -56,6 +58,8 @@ export function createRelay(options: RelayOptions): Relay {
           clientIdManager
         ),
       }),
+    getMeta: (type: string) =>
+      createMeta(type, options, environment, clientIdManager),
     version,
   };
 }
