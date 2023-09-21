@@ -76,12 +76,14 @@ export class SmartSnippetCommon {
     const state = this.props.getSmartSnippetState();
     if (this.canSnippetCollapse()) {
       return (
-        <atomic-smart-snippet-answer
-          exportparts="answer"
-          part="body"
-          htmlContent={state.answer}
-          innerStyle={this.style}
-        ></atomic-smart-snippet-answer>
+        <div part="truncated-answer">
+          <atomic-smart-snippet-answer
+            exportparts="answer"
+            part="body"
+            htmlContent={state.answer}
+            innerStyle={this.style}
+          ></atomic-smart-snippet-answer>
+        </div>
       );
     }
     return (
