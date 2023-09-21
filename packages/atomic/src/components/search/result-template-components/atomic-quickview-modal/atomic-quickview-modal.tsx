@@ -83,7 +83,13 @@ export class AtomicQuickviewModal implements InitializableComponent {
   private interactiveResult?: InteractiveResult;
 
   private get isMobile() {
-    return !window.matchMedia('only screen and (min-width: 1024px)').matches;
+    const mobileBreakpoint = document
+      .querySelector('atomic-search-layout')
+      ?.getAttribute('mobile-breakpoint');
+
+    return !window.matchMedia(
+      `only screen and (min-width: ${mobileBreakpoint})`
+    ).matches;
   }
 
   @Method()
@@ -326,7 +332,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   public render() {
     return (
       <atomic-modal
-        fullscreen={this.bindings?.store?.isMobile()}
+        fullscreen={this.isMobile}
         class={'atomic-quickview-modal'}
         isOpen={this.isOpen}
         close={() => this.onClose()}
