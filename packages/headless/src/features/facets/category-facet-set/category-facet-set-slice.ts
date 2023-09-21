@@ -337,7 +337,7 @@ function handleCategoryFacetNestedNumberOfValuesUpdate(
     return;
   }
   selectedValueCurrentState.retrieveCount = numberOfValues;
-  selectedValueCurrentState.retrieveChildren = numberOfValues > 0;
+  selectedValueCurrentState.retrieveChildren = numberOfValues !== selectedValueCurrentState.children.length;
 }
 
 function isCategoryFacetResponse(

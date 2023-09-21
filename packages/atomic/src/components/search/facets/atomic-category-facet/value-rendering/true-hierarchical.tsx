@@ -14,6 +14,7 @@ export const HierarchicalFacet: FunctionalComponent<
     return (
       <li>
         <select
+        style={{padding:'0.25em'}}
           name={`${facet.state.facetId}-value-state-${currentValue.value}`}
           id={`${facet.state.facetId}-value-state-${currentValue.value}`}
           onChange={(e) => {
@@ -41,14 +42,14 @@ export const HierarchicalFacet: FunctionalComponent<
             Excluded
           </option>
         </select>
-        <button value="+" onClick={()=>{
+        <button style={{padding:'0.25em'}} value="+" onClick={()=>{
           facet.showMoreValues(currentValue)
         }}>+</button>
-        <button value="-" onClick={()=>{
-          facet.showMoreValues(currentValue)
+        <button style={{padding:'0.25em'}} value="-" onClick={()=>{
+          facet.showLessValues(currentValue)
         }}>-</button>
-        <span>{currentValue.value}</span>
-        <ul>{currentValue.children.map((child) => renderValue(child))}</ul>
+        <span style={{padding:'0.25em'}}>{currentValue.value}</span>
+        <ul style={{"padding-left": '2em'}}>{currentValue.children.map((child) => renderValue(child))}</ul>
       </li>
     );
   }

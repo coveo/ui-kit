@@ -398,7 +398,8 @@ export function buildCoreCategoryFacet(
     },
 
     showLessValues(selection: CategoryFacetValue) {
-      const {numberOfValues} = options;
+      const {numberOfValues: increment} = options;
+      const numberOfValues = Math.max(0,(selection.children.length ?? 0) - increment);
 
       dispatch(
         updateCategoryFacetNumberOfValues({facetId, selection, numberOfValues})
