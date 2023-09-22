@@ -18,6 +18,7 @@ export type {
 export type {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
+  SearchCompletedAction,
 } from './app/search-engine/search-engine.ssr';
 export {defineSearchEngine} from './app/search-engine/search-engine.ssr';
 export {getSampleSearchEngineConfiguration} from './app/search-engine/search-engine';
