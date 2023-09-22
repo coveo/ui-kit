@@ -9,10 +9,12 @@ export type {
   ProductRecommendationEngineOptions,
   ProductRecommendationEngineConfiguration,
 } from './app/product-recommendation-engine/product-recommendation-engine';
-export {
-  buildProductRecommendationEngine,
-  getSampleProductRecommendationEngineConfiguration,
-} from './app/product-recommendation-engine/product-recommendation-engine';
+export type {
+  ProductRecommendationEngineDefinition,
+  ProductRecommendationEngineDefinitionOptions,
+} from './app/product-recommendation-engine/product-recommendation-engine.ssr';
+export {defineProductRecommendationEngine} from './app/product-recommendation-engine/product-recommendation-engine.ssr';
+export {getSampleProductRecommendationEngineConfiguration} from './app/product-recommendation-engine/product-recommendation-engine';
 
 export type {CoreEngine, ExternalEngineOptions} from './app/engine';
 export type {
@@ -20,6 +22,21 @@ export type {
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration';
+export type {
+  ControllerDefinitionWithoutProps,
+  ControllerDefinitionWithProps,
+  ControllerDefinitionsMap,
+  InferControllerFromDefinition,
+  InferControllersMapFromDefinition,
+  InferControllerStaticStateFromController,
+  InferControllerStaticStateMapFromControllers,
+  InferControllerStaticStateMapFromDefinitions,
+} from './app/ssr-engine/types/common';
+export type {
+  EngineDefinition,
+  InferStaticState,
+  InferHydratedState,
+} from './app/ssr-engine/types/core-engine';
 export type {LoggerOptions} from './app/logger';
 export type {LogLevel} from './app/logger';
 
@@ -32,4 +49,4 @@ export * from './features/dictionary-field-context/dictionary-field-context-acti
 export * from './features/search-hub/search-hub-actions-loader';
 
 // Controllers
-export * from './controllers/product-recommendations/index';
+export * from './controllers/product-recommendations/ssr.index';

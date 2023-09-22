@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "product-recommendation",
+  "description": "Server side rendering utilities for Headless Product Recommendation Module",
+  "main": "../../dist/ssr/product-recommendation/headless.js",
+  "module": "../../dist/ssr/product-recommendation/headless.esm.js",
+  "browser": "../../dist/ssr/browser/product-recommendation/headless.esm.js",
+  "types": "../../dist/definitions/product-recommendation.ssr.index.d.ts",
+  "license": "Apache-2.0"
+}

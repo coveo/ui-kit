@@ -16,8 +16,9 @@ const useCaseEntries = {
   'product-listing': 'src/product-listing.index.ts',
   'case-assist': 'src/case-assist.index.ts',
   insight: 'src/insight.index.ts',
-  ssr: 'src/ssr.index.ts',
   commerce: 'src/commerce.index.ts',
+  ssr: 'src/ssr.index.ts',
+  'ssr/product-recommendation': 'src/product-recommendation.ssr.index.ts',
 };
 
 function getUmdGlobalName(useCase) {
@@ -28,8 +29,9 @@ function getUmdGlobalName(useCase) {
     'product-listing': 'CoveoHeadlessProductListing',
     'case-assist': 'CoveoHeadlessCaseAssist',
     insight: 'CoveoHeadlessInsight',
-    ssr: 'CoveoHeadlessSSR',
     commerce: 'CoveoHeadlessCommerce',
+    ssr: 'CoveoHeadlessSSR',
+    'ssr/product-recommendation': 'CoveoHeadlessSSRProductRecommendation',
   };
 
   const globalName = map[useCase];
