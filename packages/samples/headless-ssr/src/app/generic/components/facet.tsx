@@ -1,6 +1,6 @@
 import {FacetState, Facet as FacetController} from '@coveo/headless/ssr';
 import {useEffect, useState, FunctionComponent} from 'react';
-import FacetCommon from '../../common/facet';
+import FacetCommon from '../../../common/facet';
 
 interface FacetProps {
   title: string;

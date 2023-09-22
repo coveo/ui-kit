@@ -3,7 +3,7 @@ import {SearchPageProvider} from '@/src/app/react/components/search-page';
 import {
   CoveoNextJsSearchParametersSerializer,
   NextJSServerSideSearchParams,
-} from '../common/search-parameters-serializer';
+} from '../../common/search-parameters-serializer';
 import ResultList from './components/result-list';
 import SearchBox from './components/search-box';
 import SearchParameters from './components/search-parameters';

@@ -1,7 +1,7 @@
 import {
   CoveoNextJsSearchParametersSerializer,
   NextJSServerSideSearchParams,
-} from '@/src/app/common/search-parameters-serializer';
+} from '@/src/common/search-parameters-serializer';
 import {fetchStaticState} from '@/src/app/generic/common/engine';
 import SearchPage from '@/src/app/generic/components/search-page';
 

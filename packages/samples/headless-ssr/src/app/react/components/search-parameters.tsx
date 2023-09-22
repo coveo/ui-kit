@@ -1,8 +1,8 @@
 'use client';
 
 import {useEffect, useMemo} from 'react';
-import {useHistoryRouter} from '../../common/search-parameters';
-import {CoveoNextJsSearchParametersSerializer} from '../../common/search-parameters-serializer';
+import {useHistoryRouter} from '../../../common/search-parameters';
+import {CoveoNextJsSearchParametersSerializer} from '../../../common/search-parameters-serializer';
 import {useSearchParameters} from '../common/engine';
 
 export default function SearchParameters() {

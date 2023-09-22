@@ -1,6 +1,6 @@
 'use client';
 
-import ResultListCommon from '../../common/result-list';
+import ResultListCommon from '../../../common/result-list';
 import {useResultList} from '../common/engine';
 
 export default function ResultList() {

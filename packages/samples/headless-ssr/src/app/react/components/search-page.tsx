@@ -8,7 +8,7 @@ import {
   StaticStateProvider,
 } from '@/src/app/react/common/engine';
 import {useEffect, useState, PropsWithChildren} from 'react';
-import {HydrationMetadata} from '../../common/hydration-metadata';
+import {HydrationMetadata} from '../../../common/hydration-metadata';
 
 interface SearchPageProviderProps {
   staticState: SearchStaticState;
