@@ -1746,14 +1746,14 @@ export declare interface AtomicSegmentedFacetScrollable extends Components.Atomi
 
 
 @ProxyCmp({
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetStyle']
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle']
 })
 @Component({
   selector: 'atomic-smart-snippet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetStyle'],
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle'],
 })
 export class AtomicSmartSnippet {
   protected el: HTMLElement;
@@ -1765,6 +1765,28 @@ export class AtomicSmartSnippet {
 
 
 export declare interface AtomicSmartSnippet extends Components.AtomicSmartSnippet {}
+
+
+@ProxyCmp({
+  inputs: ['collapsedHeight', 'maximumHeight']
+})
+@Component({
+  selector: 'atomic-smart-snippet-collapse-wrapper',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['collapsedHeight', 'maximumHeight'],
+})
+export class AtomicSmartSnippetCollapseWrapper {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicSmartSnippetCollapseWrapper extends Components.AtomicSmartSnippetCollapseWrapper {}
 
 
 @ProxyCmp({

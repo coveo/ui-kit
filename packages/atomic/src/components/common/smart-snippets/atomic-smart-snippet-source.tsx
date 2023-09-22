@@ -54,7 +54,7 @@ export class AtomicSmartSnippetSource
         <LinkWithResultAnalytics
           title={this.source.clickUri}
           href={this.source.clickUri}
-          className="block"
+          className="block truncate"
           part="source-url"
           attributes={this.anchorAttributes}
           onSelect={() => this.selectSource.emit()}
