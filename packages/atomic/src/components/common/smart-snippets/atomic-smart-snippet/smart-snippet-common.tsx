@@ -23,6 +23,8 @@ interface SmartSnippetProps {
   getSmartSnippet: () => SmartSnippet;
   getSnippetStyle: () => string | undefined;
   getFeedbackSent: () => boolean;
+  getSnippetMaximumHeight?: () => number;
+  getSnippetCollapsedHeight?: () => number;
   setModalRef: (ref: HTMLElement) => void;
   setFeedbackSent: (isSent: boolean) => void;
 }
@@ -66,8 +68,24 @@ export class SmartSnippetCommon {
     );
   }
 
+  private canSnippetCollapse() {
+    return this.props.getSnippetMaximumHeight?.() !== undefined;
+  }
+
   private renderContent() {
     const state = this.props.getSmartSnippetState();
+    if (this.canSnippetCollapse()) {
+      return (
+        <div part="truncated-answer">
+          <atomic-smart-snippet-answer
+            exportparts="answer"
+            part="body"
+            htmlContent={state.answer}
+            innerStyle={this.style}
+          ></atomic-smart-snippet-answer>
+        </div>
+      );
+    }
     return (
       <atomic-smart-snippet-expandable-answer
         exportparts="answer,show-more-button,show-less-button,truncated-answer"
@@ -79,15 +97,6 @@ export class SmartSnippetCommon {
         snippetStyle={this.style}
         onExpand={() => this.props.getSmartSnippet().expand()}
         onCollapse={() => this.props.getSmartSnippet().collapse()}
-        onSelectInlineLink={(e) =>
-          this.props.getSmartSnippet().selectInlineLink(e.detail)
-        }
-        onBeginDelayedSelectInlineLink={(e) =>
-          this.props.getSmartSnippet().beginDelayedSelectInlineLink(e.detail)
-        }
-        onCancelPendingSelectInlineLink={(e) =>
-          this.props.getSmartSnippet().cancelPendingSelectInlineLink(e.detail)
-        }
       ></atomic-smart-snippet-expandable-answer>
     );
   }
@@ -145,27 +154,34 @@ export class SmartSnippetCommon {
           class="bg-background border border-neutral rounded-lg p-6 pb-4 text-on-background"
           part="smart-snippet"
         >
-          {this.renderQuestion()}
-          {this.renderContent()}
-          <footer
-            part="footer"
-            aria-label={this.props.getBindings().i18n.t('smart-snippet-source')}
+          <atomic-smart-snippet-collapse-wrapper
+            maximumHeight={this.props.getSnippetMaximumHeight?.()}
+            collapsedHeight={this.props.getSnippetCollapsedHeight?.()}
           >
-            {source && (
-              <atomic-smart-snippet-source
-                anchorAttributes={this.props.getSourceAnchorAttributes?.()}
-                source={source}
-                onSelectSource={this.props.getSmartSnippet().selectSource}
-                onBeginDelayedSelectSource={
-                  this.props.getSmartSnippet().beginDelayedSelectSource
-                }
-                onCancelPendingSelectSource={
-                  this.props.getSmartSnippet().cancelPendingSelectSource
-                }
-              ></atomic-smart-snippet-source>
-            )}
-            {this.renderFeedbackBanner()}
-          </footer>
+            {this.renderQuestion()}
+            {this.renderContent()}
+            <footer
+              part="footer"
+              aria-label={this.props
+                .getBindings()
+                .i18n.t('smart-snippet-source')}
+            >
+              {source && (
+                <atomic-smart-snippet-source
+                  anchorAttributes={this.props.getSourceAnchorAttributes?.()}
+                  source={source}
+                  onSelectSource={this.props.getSmartSnippet().selectSource}
+                  onBeginDelayedSelectSource={
+                    this.props.getSmartSnippet().beginDelayedSelectSource
+                  }
+                  onCancelPendingSelectSource={
+                    this.props.getSmartSnippet().cancelPendingSelectSource
+                  }
+                ></atomic-smart-snippet-source>
+              )}
+              {this.renderFeedbackBanner()}
+            </footer>
+          </atomic-smart-snippet-collapse-wrapper>
         </article>
       </aside>
     );
