@@ -1,37 +1,25 @@
 import {
   Controller,
-  CoreEngine,
   SearchEngine,
   ControllerDefinitionsMap,
-  InferControllerFromDefinition,
   SearchEngineDefinitionOptions,
   defineSearchEngine as defineBaseSearchEngine,
   SearchEngineOptions,
 } from '@coveo/headless/ssr';
-import {useContext, useCallback, useMemo, Context} from 'react';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
-import {useSyncMemoizedStore} from './client-utils.js';
+import {ContextState, ReactEngineDefinition} from './types.js';
+import {singleton} from '../utils.js';
 import {
-  ContextHydratedState,
-  ContextState,
-  ControllerHook,
-  InferControllerHooksMapFromDefinition,
-  ReactEngineDefinition,
-} from './types.js';
-import {SingletonGetter, capitalize, singleton, mapObject} from './utils.js';
+  buildControllerHooks,
+  buildEngineHook,
+  buildHydratedStateProvider,
+  buildStaticStateProvider,
+} from './common.js';
 
 export type ReactSearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 > = ReactEngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
-
-export class MissingEngineProviderError extends Error {
-  static message =
-    'Unable to find Context. Please make sure you are wrapping your component with either `StaticStateProvider` or `HydratedStateProvider` component that can provide the required context.';
-  constructor() {
-    super(MissingEngineProviderError.message);
-  }
-}
 
 // Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
 export function createSingletonContext<
@@ -40,53 +28,6 @@ export function createSingletonContext<
   return singleton(() =>
     React.createContext<ContextState<SearchEngine, TControllers> | null>(null)
   );
-}
-
-function isHydratedStateContext<
-  TEngine extends CoreEngine,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
->(
-  ctx: ContextState<TEngine, TControllers>
-): ctx is ContextHydratedState<TEngine, TControllers> {
-  return 'engine' in ctx;
-}
-
-function buildControllerHook<
-  TEngine extends CoreEngine,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TKey extends keyof TControllers,
->(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers> | null>
-  >,
-  key: TKey
-): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
-  return () => {
-    const ctx = useContext(singletonContext.get());
-    if (ctx === null) {
-      throw new MissingEngineProviderError();
-    }
-    const subscribe = useCallback(
-      (listener: () => void) =>
-        isHydratedStateContext(ctx)
-          ? ctx.controllers[key].subscribe(listener)
-          : () => {},
-      [ctx]
-    );
-    const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
-    const state = useSyncMemoizedStore(subscribe, getStaticState);
-    const methods = useMemo(() => {
-      if (!isHydratedStateContext(ctx)) {
-        return undefined;
-      }
-      const controller = ctx.controllers[key];
-      const {state: _, subscribe: __, ...remainder} = controller;
-      return mapObject(remainder, (member) =>
-        typeof member === 'function' ? member.bind(controller) : member
-      ) as Omit<typeof controller, 'state' | 'subscribe'>;
-    }, [ctx]);
-    return {state, methods};
-  };
 }
 
 /**
@@ -99,31 +40,12 @@ export function defineSearchEngine<
 >(
   options: SearchEngineDefinitionOptions<TControllers>
 ): ReactSearchEngineDefinition<TControllers> {
-  const singletonContext = createSingletonContext();
+  const singletonContext = createSingletonContext<TControllers>();
   return {
     ...defineBaseSearchEngine({...options}),
-    useEngine() {
-      const ctx = useContext(singletonContext.get());
-      if (ctx === null) {
-        throw new MissingEngineProviderError();
-      }
-      return isHydratedStateContext(ctx) ? ctx.engine : undefined;
-    },
-    controllers: (options.controllers
-      ? Object.fromEntries(
-          Object.keys(options.controllers).map((key) => [
-            `use${capitalize(key)}`,
-            buildControllerHook(singletonContext, key),
-          ])
-        )
-      : {}) as InferControllerHooksMapFromDefinition<TControllers>,
-    StaticStateProvider: ({controllers, children}) => {
-      const {Provider} = singletonContext.get();
-      return <Provider value={{controllers}}>{children}</Provider>;
-    },
-    HydratedStateProvider: ({controllers, engine, children}) => {
-      const {Provider} = singletonContext.get();
-      return <Provider value={{engine, controllers}}>{children}</Provider>;
-    },
+    useEngine: buildEngineHook(singletonContext),
+    controllers: buildControllerHooks(singletonContext, options.controllers),
+    StaticStateProvider: buildStaticStateProvider(singletonContext),
+    HydratedStateProvider: buildHydratedStateProvider(singletonContext),
   };
 }
