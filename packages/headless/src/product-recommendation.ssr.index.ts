@@ -12,6 +12,7 @@ export type {
 export type {
   ProductRecommendationEngineDefinition,
   ProductRecommendationEngineDefinitionOptions,
+  SearchCompletedAction,
 } from './app/product-recommendation-engine/product-recommendation-engine.ssr';
 export {defineProductRecommendationEngine} from './app/product-recommendation-engine/product-recommendation-engine.ssr';
 export {getSampleProductRecommendationEngineConfiguration} from './app/product-recommendation-engine/product-recommendation-engine';

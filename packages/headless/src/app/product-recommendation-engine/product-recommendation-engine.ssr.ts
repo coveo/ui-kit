@@ -51,11 +51,13 @@ export type ProductRecommendationEngineDefinitionOptions<
   >,
 > = EngineDefinitionOptions<ProductRecommendationEngineOptions, TControllers>;
 
+export type SearchCompletedAction = ReturnType<
+  (typeof getProductRecommendations)['fulfilled' | 'rejected']
+>;
+
 function isSearchCompletedAction(
   action: AnyAction
-): action is ReturnType<
-  (typeof getProductRecommendations)['fulfilled' | 'rejected']
-> {
+): action is SearchCompletedAction {
   return /^productRecommendations\/get\/(fulfilled|rejected)$/.test(
     action.type
   );
