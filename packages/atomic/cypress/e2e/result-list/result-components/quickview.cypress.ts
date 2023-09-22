@@ -1,3 +1,4 @@
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../../../src/utils/replace-breakpoint';
 import {
   TagProps,
   generateComponentHTML,
@@ -24,7 +25,7 @@ const addQuickviewInResultList = (props: TagProps = {}) =>
   );
 
 const openModal = () => {
-  cy.wait(5000);
+  cy.wait(2000);
   QuickviewSelectors.button().click();
   cy.wait(TestFixture.interceptAliases.Quickview);
   cy.expectClickEvent('documentQuickview');
@@ -262,6 +263,48 @@ describe('Quickview Component', () => {
       QuickviewModalSelectors.keywordsSidebar()
         .should('exist')
         .should('contain.text', 'Navigate between 12 occurrences of 1 12');
+    });
+  });
+
+  describe('when used in mobile mode', () => {
+    beforeEach(() => {
+      cy.viewport(parseInt(DEFAULT_MOBILE_BREAKPOINT.slice(0, -2)) - 1, 1080);
+      new TestFixture()
+        .with(addSearchBox())
+        .withHash('q="the%20bank"&f-author=Jules%20Verne')
+        .with(addQuickviewInResultList())
+        .init();
+    });
+
+    it('should be responsive', () => {
+      openModal();
+      QuickviewModalSelectors.shadow()
+        .find('atomic-modal')
+        .should('have.class', 'fullscreen');
+      QuickviewModalSelectors.shadow()
+        .find('[part="sidebar-remove-word-container"]')
+        .should('not.exist');
+    });
+  });
+
+  describe('when used in desktop mode', () => {
+    beforeEach(() => {
+      cy.viewport(parseInt(DEFAULT_MOBILE_BREAKPOINT.slice(0, -2)), 1080);
+      new TestFixture()
+        .with(addSearchBox())
+        .withHash('q="the%20bank"&f-author=Jules%20Verne')
+        .with(addQuickviewInResultList())
+        .init();
+    });
+
+    it('should be responsive', () => {
+      openModal();
+      QuickviewModalSelectors.shadow()
+        .find('atomic-modal')
+        .should('not.have.class', 'fullscreen');
+      QuickviewModalSelectors.shadow()
+        .find('[part="sidebar-remove-word-container"]')
+        .should('exist');
     });
   });
 });

@@ -33,6 +33,7 @@ import {
   HIGHLIGHT_PREFIX,
   QuickviewWordHighlight,
 } from '../quickview-word-highlight/quickview-word-highlight';
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../../../utils/replace-breakpoint';
 
 export interface HighlightKeywords {
   highlightNone: boolean;
@@ -83,10 +84,10 @@ export class AtomicQuickviewModal implements InitializableComponent {
   private interactiveResult?: InteractiveResult;
 
   private get isMobile() {
-    const mobileBreakpoint = document
-      .querySelector('atomic-search-layout')
-      ?.getAttribute('mobile-breakpoint');
-
+    const mobileBreakpoint =
+      document
+        .querySelector('atomic-search-layout')
+        ?.getAttribute('mobile-breakpoint') ?? DEFAULT_MOBILE_BREAKPOINT;
     return !window.matchMedia(
       `only screen and (min-width: ${mobileBreakpoint})`
     ).matches;
