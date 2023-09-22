@@ -16,7 +16,6 @@ export default defineConfig({
       on('before:browser:launch', (browser, launchOptions) => {
         if (browser.name === 'chrome' && browser.isHeadless) {
           launchOptions.args = launchOptions.args.map((arg) => {
-            console.log(arg);
             if (arg === '--headless') {
               return '--headless=new';
             }
