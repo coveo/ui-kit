@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useReducer} from 'react';
+import {useEffect, useMemo, useReducer} from 'react';
 
 /**
  * Subscriber is a function that takes a single argument, which is another function `listener` that returns `void`. The Subscriber function itself returns another function that can be used to unsubscribe the `listener`.
@@ -17,8 +17,7 @@ export function useSyncMemoizedStore<T>(
   subscribe: Subscriber,
   getSnapshot: SnapshotGetter<T>
 ) {
-  let latestSnapshot = getSnapshot();
-  const getLatestSnapshot = () => latestSnapshot;
+  let latestSnapshot = useMemo(() => getSnapshot(), [getSnapshot, subscribe]);
   const [, forceRender] = useReducer((s) => s + 1, 0);
 
   useEffect(() => {
@@ -35,5 +34,5 @@ export function useSyncMemoizedStore<T>(
     };
   }, [subscribe, getSnapshot]);
 
-  return getLatestSnapshot();
+  return latestSnapshot;
 }

@@ -16,20 +16,33 @@ describe('useSyncMemoizedStore', () => {
     expect(result.current).toEqual(snapshot);
   });
 
-  test('should update the state when the store changes', () => {
+  test('should not call getSnapshot when there is a re-render with the same getSnapshot', () => {
+    const snapshot = {count: 0};
+    const unsubscribe = jest.fn();
+    const subscribe = jest.fn(() => unsubscribe);
+    const getSnapshot = jest.fn(() => snapshot);
+
+    const {rerender} = renderHook(() =>
+      useSyncMemoizedStore(subscribe, getSnapshot)
+    );
+
+    expect(getSnapshot).toHaveBeenCalledTimes(1);
+    rerender();
+    expect(getSnapshot).toHaveBeenCalledTimes(1);
+  });
+
+  test('should update the state when getSnapshot changes', () => {
     const snapshot1 = {count: 0};
     const snapshot2 = {count: 1};
     const subscribe = jest.fn(() => jest.fn());
-    const getSnapshot = jest
-      .fn()
-      .mockReturnValueOnce(snapshot1)
-      .mockReturnValueOnce(snapshot2);
+    let getSnapshot = jest.fn(() => snapshot1);
 
     const {result, rerender} = renderHook(() =>
       useSyncMemoizedStore(subscribe, getSnapshot)
     );
 
     expect(result.current).toEqual(snapshot1);
+    getSnapshot = jest.fn(() => snapshot2);
     rerender();
     expect(result.current).toEqual(snapshot2);
   });
