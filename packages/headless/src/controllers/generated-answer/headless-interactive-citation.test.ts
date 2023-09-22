@@ -17,7 +17,7 @@ describe('InteractiveCitation', () => {
   let interactiveCitation: InteractiveCitation;
   let logCitationOpenPendingActionType: string;
 
-  function initializeInteractiveResult(delay?: number) {
+  function initializeInteractiveCitation(delay?: number) {
     mockCitation = buildMockCitation({
       id: 'some-test-id',
     });
@@ -48,7 +48,7 @@ describe('InteractiveCitation', () => {
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
-    initializeInteractiveResult();
+    initializeInteractiveCitation();
   });
 
   it('it adds the correct reducers to engine', () => {
