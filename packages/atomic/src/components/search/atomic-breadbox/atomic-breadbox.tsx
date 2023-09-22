@@ -90,8 +90,7 @@ export class AtomicBreadbox implements InitializableComponent {
    * If the path size exceeds the pathLimit, it will truncate the path by
    * replacing the middle values with ellipses ('...').
    *
-   * Minimum: `3`
-   * Maximum: `10`
+   * Minimum: `1`
    * @defaultValue `3`
    */
   @Prop() public pathLimit = 3;
@@ -111,8 +110,7 @@ export class AtomicBreadbox implements InitializableComponent {
     new Schema({
       pathLimit: new NumberValue({
         default: 3,
-        min: 3,
-        max: 10,
+        min: 1,
         required: false,
       }),
     }).validate({
@@ -205,6 +203,10 @@ export class AtomicBreadbox implements InitializableComponent {
   private limitPath(path: string[]) {
     if (path.length <= this.pathLimit) {
       return path.join(SEPARATOR);
+    }
+
+    if (this.pathLimit === 1 && path.length > 1) {
+      return [ELLIPSIS, path[path.length - 1]].join(SEPARATOR);
     }
 
     const ellipsedPath = [

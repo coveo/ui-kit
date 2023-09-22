@@ -106,7 +106,7 @@ export namespace Components {
      */
     interface AtomicBreadbox {
         /**
-          * This prop allows you to control the display of a path by limiting the number of visible values in the path.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `3` Maximum: `10`
+          * This prop allows you to control the display of a path by limiting the number of visible values in the path.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
           * @defaultValue `3`
          */
         "pathLimit": number;
@@ -3990,7 +3990,7 @@ declare namespace LocalJSX {
      */
     interface AtomicBreadbox {
         /**
-          * This prop allows you to control the display of a path by limiting the number of visible values in the path.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `3` Maximum: `10`
+          * This prop allows you to control the display of a path by limiting the number of visible values in the path.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
           * @defaultValue `3`
          */
         "pathLimit"?: number;
