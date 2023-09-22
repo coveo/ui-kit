@@ -5,8 +5,10 @@ import {
   buildGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerState,
+  buildInteractiveCitation,
+  GeneratedAnswerCitation,
 } from '@coveo/headless';
-import {Component, h, State} from '@stencil/core';
+import {Component, h, State, Element} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -18,8 +20,9 @@ import {FeedbackButton} from './feedback-button';
 import {RetryPrompt} from './retry-prompt';
 import {TypingLoader} from './typing-loader';
 import {SourceCitations} from './source-citations';
-import {GeneratedAnswerCitation} from '../../../components';
 import {GeneratedContentContainer} from './generated-content-container';
+import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
+import {buildCustomEvent} from '../../../utils/event-utils';
 
 /**
  * @internal
@@ -48,9 +51,21 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @State()
   hidden = true;
 
+  @Element() private host!: HTMLElement;
+
+  private stopPropagation?: boolean;
+
   public initialize() {
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine);
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.host.dispatchEvent(
+      buildCustomEvent(
+        'atomic/resolveStopPropagation',
+        (stopPropagation: boolean) => {
+          this.stopPropagation = stopPropagation;
+        }
+      )
+    );
   }
 
   private get hasRetryableError() {
@@ -74,6 +89,46 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private get contentClasses() {
     return 'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
+  }
+
+  private renderCitations() {
+    return this.generatedAnswerState.citations.map(
+      (citation: GeneratedAnswerCitation, index: number) => {
+        const interactiveCitation = buildInteractiveCitation(
+          this.bindings.engine,
+          {
+            options: {
+              citation,
+            },
+          }
+        );
+        return (
+          <li key={citation.id}>
+            <LinkWithResultAnalytics
+              href={citation.clickUri ?? citation.uri}
+              title={citation.title}
+              part="citation"
+              target="_blank"
+              rel="noopener"
+              className="flex items-center p-1 bg-background btn-text-neutral border rounded-full border-neutral text-on-background"
+              onSelect={() => interactiveCitation.select()}
+              onBeginDelayedSelect={() =>
+                interactiveCitation.beginDelayedSelect()
+              }
+              onCancelPendingSelect={() =>
+                interactiveCitation.cancelPendingSelect()
+              }
+              stopPropagation={this.stopPropagation}
+            >
+              <div class="citation-index rounded-full font-medium rounded-full flex items-center text-bg-blue shrink-0">
+                <div class="mx-auto">{index + 1}</div>
+              </div>
+              <span class="citation-title truncate mx-1">{citation.title}</span>
+            </LinkWithResultAnalytics>
+          </li>
+        );
+      }
+    );
   }
 
   private renderContent() {
@@ -120,17 +175,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
               label={this.bindings.i18n.t('more-info')}
               isVisible={!!this.generatedAnswerState.citations.length}
             >
-              {this.generatedAnswerState.citations.map(
-                (citation: GeneratedAnswerCitation, index: number) => (
-                  <li key={citation.id}>
-                    <atomic-source-citation
-                      index={index}
-                      citation={citation}
-                      href={citation.clickUri ?? citation.uri}
-                    ></atomic-source-citation>
-                  </li>
-                )
-              )}
+              {this.renderCitations()}
             </SourceCitations>
           </GeneratedContentContainer>
         )}
