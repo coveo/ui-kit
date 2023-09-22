@@ -41,9 +41,13 @@ export type SearchEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
 
+export type SearchCompletedAction = ReturnType<
+  SearchAction['fulfilled' | 'rejected']
+>;
+
 function isSearchCompletedAction(
   action: AnyAction
-): action is ReturnType<SearchAction['fulfilled' | 'rejected']> {
+): action is SearchCompletedAction {
   return /^search\/executeSearch\/(fulfilled|rejected)$/.test(action.type);
 }
 
