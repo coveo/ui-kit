@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-ssr-samples",
-  "description": "Examples using framework agnostic @coveo/headless/ssr utils and @coveo/headless-react",
+  "description": "Examples using framework agnostic @coveo/headless/ssr utils and @coveo/headless-react/ssr",
   "version": "0.0.0",
   "private": true,
   "scripts": {

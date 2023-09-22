@@ -5,7 +5,7 @@
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc --project ./tsconfig.build.json",
+        "command": "tsc --project ./tsconfig.json",
         "cwd": "packages/headless-react"
       }
     },

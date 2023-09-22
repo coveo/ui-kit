@@ -41,24 +41,8 @@
       "path": "./packages/atomic-hosted-page"
     },
     {
-      "name": "📄 Atomic Storybook documentation",
-      "path": "./utils/atomic-storybook"
-    },
-    {
-      "name": "🚀 IIFE samples",
-      "path": "./packages/samples/iife"
-    },
-    {
-      "name": "🚀 Stencil samples",
-      "path": "./packages/samples/stencil"
-    },
-    {
       "name": "🚀 React samples (Headless)",
       "path": "./packages/samples/headless-react"
-    },
-    {
-      "name": "🚀 Next.js samples (Headless)",
-      "path": "./packages/samples/headless-next"
     },
     {
       "name": "🚀 React samples (Atomic)",
@@ -79,6 +63,18 @@
     {
       "name": "🚀 Vue.js samples",
       "path": "./packages/samples/vuejs"
+    },
+    {
+      "name": "🚀 IIFE samples",
+      "path": "./packages/samples/iife"
+    },
+    {
+      "name": "🚀 Stencil samples",
+      "path": "./packages/samples/stencil"
+    },
+    {
+      "name": "📄 Atomic Storybook documentation",
+      "path": "./utils/atomic-storybook"
     },
     {
       "name": "⚙️ Release utilities",
