@@ -20,4 +20,19 @@ export default defineConfig({
     specPattern: 'cypress/e2e/**/*.cypress.ts',
     baseUrl: 'https://speed-efficiency-308-dev-ed.my.site.com/examples',
   },
+  setupNodeEvents(on) {
+    on('before:browser:launch', (browser, launchOptions) => {
+      if (browser.name === 'chrome' && browser.isHeadless) {
+        launchOptions.args = launchOptions.args.map((arg) => {
+          if (arg === '--headless') {
+            return '--headless=new';
+          }
+
+          return arg;
+        });
+      }
+
+      return launchOptions;
+    });
+  },
 });
