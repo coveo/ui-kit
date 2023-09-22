@@ -1,5 +1,5 @@
 import {fetchStaticState} from './common/engine';
-import {PopularViewedRecommendations} from './components/recommendations';
+import {PopularBoughtRecommendations} from './components/recommendations';
 import {SearchPageProvider} from './components/search-page';
 
 // Entry point SSR function
@@ -8,7 +8,7 @@ export default async function Search() {
 
   return (
     <SearchPageProvider staticState={staticState}>
-      <PopularViewedRecommendations />
+      <PopularBoughtRecommendations />
     </SearchPageProvider>
   );
 }

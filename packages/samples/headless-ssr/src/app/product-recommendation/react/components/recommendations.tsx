@@ -1,9 +1,9 @@
 'use client';
 
-import {usePopularViewed} from '../common/engine';
+import {usePopularBought} from '../common/engine';
 
-export function PopularViewedRecommendations() {
-  const {state} = usePopularViewed();
+export function PopularBoughtRecommendations() {
+  const {state} = usePopularBought();
 
   return (
     <ul>

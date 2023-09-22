@@ -17,4 +17,4 @@ export const {
   HydratedStateProvider,
 } = engineDefinition;
 
-export const {usePopularViewed} = engineDefinition.controllers;
+export const {usePopularBought} = engineDefinition.controllers;

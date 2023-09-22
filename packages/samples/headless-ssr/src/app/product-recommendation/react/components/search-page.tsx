@@ -22,11 +22,12 @@ export function SearchPageProvider({
   >(undefined);
 
   useEffect(() => {
-    hydrateStaticState({
-      searchAction: staticState.searchAction,
-    }).then(({engine, controllers}) => {
-      setHydratedState({engine, controllers});
-    });
+    typeof window !== 'undefined' &&
+      hydrateStaticState({
+        searchAction: staticState.searchAction,
+      }).then(({engine, controllers}) => {
+        setHydratedState({engine, controllers});
+      });
   }, [staticState]);
 
   if (hydratedState) {

@@ -9,6 +9,11 @@ export default function Home() {
       <li>
         <Link href={'/react'}>React example</Link>
       </li>
+      <li>
+        <Link href={'/product-recommendation/react'}>
+          React product recommendation example
+        </Link>
+      </li>
     </ul>
   );
 }

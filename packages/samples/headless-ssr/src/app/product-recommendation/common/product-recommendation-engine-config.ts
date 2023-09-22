@@ -3,25 +3,23 @@ import {
   ControllerDefinitionsMap,
   ProductRecommendationEngine,
   ProductRecommendationEngineDefinitionOptions,
-  definePopularViewedRecommendationsList,
+  definePopularBoughtRecommendationsList,
   getSampleProductRecommendationEngineConfiguration,
 } from '@coveo/headless-react/ssr/product-recommendation';
 import {getOrganizationEndpoints} from '@coveo/headless';
 
-const organizationId = 'fashioncoveodemocomgzh7iep8';
+const organizationId = 'electronicscoveodemocomo0n2fu8v';
 export const config = {
   configuration: {
     ...getSampleProductRecommendationEngineConfiguration(),
     organizationId,
     organizationEndpoints: getOrganizationEndpoints(organizationId),
-    accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
-    searchHub: 'Listing',
-    locale: 'en-US',
-    timezone: 'America/Montreal',
+    accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+    searchHub: 'Home',
     analytics: {enabled: false},
   },
   controllers: {
-    popularViewed: definePopularViewedRecommendationsList(),
+    popularBought: definePopularBoughtRecommendationsList(),
   },
 } satisfies ProductRecommendationEngineDefinitionOptions<
   ControllerDefinitionsMap<ProductRecommendationEngine, Controller>
