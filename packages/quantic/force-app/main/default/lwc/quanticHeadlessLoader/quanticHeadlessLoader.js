@@ -102,9 +102,11 @@ const cancelInitializedCallback = (engineId) => {
  * @param {string} engineId The id of the engine.
  */
 const executeInitializedCallback = async (engineId) => {
-  window.coveoHeadless[engineId].initializedCallback(
-    await window.coveoHeadless[engineId].enginePromise
-  );
+  if(window.coveoHeadless[engineId]){
+    window.coveoHeadless[engineId].initializedCallback(
+      await window.coveoHeadless[engineId].enginePromise
+    );
+  }
 };
 
 /**
