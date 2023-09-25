@@ -55,12 +55,9 @@ export class AtomicSmartSnippetExpandableAnswer {
 
   @Event() expand!: EventEmitter;
   @Event() collapse!: EventEmitter;
-  @Event({bubbles: false})
-  private selectInlineLink!: EventEmitter<InlineLink>;
-  @Event({bubbles: false})
-  private beginDelayedSelectInlineLink!: EventEmitter<InlineLink>;
-  @Event({bubbles: false})
-  private cancelPendingSelectInlineLink!: EventEmitter<InlineLink>;
+  @Event() selectInlineLink!: EventEmitter<InlineLink>;
+  @Event() beginDelayedSelectInlineLink!: EventEmitter<InlineLink>;
+  @Event() cancelPendingSelectInlineLink!: EventEmitter<InlineLink>;
 
   private validateProps() {
     if (this.maximumHeight < this.collapsedHeight) {

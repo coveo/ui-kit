@@ -12,21 +12,24 @@ export function arrayEqual<T>(
   );
 }
 
-export const deepEqualAnyOrder = createCustomEqual(
-  (deepEqual) => (firstObject, secondObject) => {
-    if (Array.isArray(firstObject) && Array.isArray(secondObject)) {
-      if (firstObject.length !== secondObject.length) {
-        return false;
-      }
-
-      return firstObject.every(
-        (firstVal) =>
-          secondObject.findIndex((secondVal) =>
-            deepEqual(firstVal, secondVal)
-          ) !== -1
-      );
-    }
-
-    return deepEqual(firstObject, secondObject);
+function arrayEqualAnyOrder<T>(firstArray: T[], secondArray: T[]) {
+  if (firstArray.length !== secondArray.length) {
+    return false;
   }
-);
+
+  return firstArray.every(
+    (firstVal) =>
+      secondArray.findIndex((secondVal) =>
+        deepEqualAnyOrder(firstVal, secondVal)
+      ) !== -1
+  );
+}
+
+export const deepEqualAnyOrder: <T>(a: T, b: T) => boolean = createCustomEqual({
+  createCustomConfig: (config) => {
+    return {
+      ...config,
+      areArraysEqual: arrayEqualAnyOrder,
+    };
+  },
+});

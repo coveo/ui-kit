@@ -1,4 +1,4 @@
-import {defineSearchEngine} from '@coveo/headless-react';
+import {defineSearchEngine} from '@coveo/headless-react/ssr';
 import {InferStaticState, InferHydratedState} from '@coveo/headless/ssr';
 import {config} from '../../common/search-engine-config';
 

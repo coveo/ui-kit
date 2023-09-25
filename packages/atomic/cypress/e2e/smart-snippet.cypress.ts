@@ -118,6 +118,29 @@ describe('Smart Snippet Test Suites', () => {
     CommonAssertions.assertContainsComponentError(SmartSnippetSelectors, true);
   });
 
+  describe('when snippetMaximumHeight is smaller than snippetCollapsedHeight', () => {
+    beforeEach(() => {
+      const value = 50;
+      new TestFixture()
+        .with(
+          addSmartSnippet({
+            props: {
+              'snippet-maximum-height': value - 1,
+              'snippet-collapsed-height': value,
+            },
+          })
+        )
+        .init();
+    });
+    it('should render an error', () => {
+      CommonAssertions.assertConsoleError(true);
+      CommonAssertions.assertContainsComponentError(
+        SmartSnippetSelectors,
+        true
+      );
+    });
+  });
+
   describe('when the snippet height is equal to maximumHeight', () => {
     beforeEach(() => {
       const height = 300;
@@ -131,6 +154,29 @@ describe('Smart Snippet Test Suites', () => {
             props: {
               'maximum-height': height,
               'collapsed-height': 150,
+            },
+          })
+        )
+        .init();
+    });
+
+    SmartSnippetAssertions.assertShowMore(false);
+    SmartSnippetAssertions.assertShowLess(false);
+  });
+
+  describe('when the snippet height is equal to snippetMaximumHeight', () => {
+    beforeEach(() => {
+      const height = 300;
+      new TestFixture()
+        .with(
+          addSmartSnippet({
+            snippet: {
+              ...defaultSnippet,
+              answer: buildAnswerWithHeight(height),
+            },
+            props: {
+              'snippet-maximum-height': height,
+              'snippet-collapsed-height': 150,
             },
           })
         )
@@ -183,6 +229,53 @@ describe('Smart Snippet Test Suites', () => {
         SmartSnippetAssertions.assertShowMore(true);
         SmartSnippetAssertions.assertShowLess(false);
         SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
+        CommonAssertions.assertAccessibility(smartSnippetComponent);
+      });
+    });
+  });
+
+  describe('when the snippet height is greater than snippetMaximumHeight', () => {
+    const height = 300;
+    const heightWhenCollapsed = 150;
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addSmartSnippet({
+            snippet: {
+              ...defaultSnippet,
+              answer: buildAnswerWithHeight(height),
+            },
+            props: {
+              'snippet-maximum-height': height - 1,
+              'snippet-collapsed-height': heightWhenCollapsed,
+            },
+          })
+        )
+        .init();
+    });
+
+    SmartSnippetAssertions.assertShowMore(true);
+    SmartSnippetAssertions.assertShowLess(false);
+    SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
+    CommonAssertions.assertAccessibility(smartSnippetComponent);
+
+    describe('then pressing show more', () => {
+      beforeEach(() => {
+        SmartSnippetSelectors.showMoreButton().click();
+      });
+
+      SmartSnippetAssertions.assertShowMore(false);
+      SmartSnippetAssertions.assertShowLess(true);
+      SmartSnippetAssertions.assertAnswerHeight(height);
+
+      describe('then pressing show less', () => {
+        beforeEach(() => {
+          SmartSnippetSelectors.showLessButton().click();
+        });
+
+        SmartSnippetAssertions.assertShowMore(true);
+        SmartSnippetAssertions.assertShowLess(false);
+        SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
         CommonAssertions.assertAccessibility(smartSnippetComponent);
       });
     });

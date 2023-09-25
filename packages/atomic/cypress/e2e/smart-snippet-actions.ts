@@ -16,6 +16,8 @@ export interface AddSmartSnippetOptions {
     'maximum-height'?: number;
     'collapsed-height'?: number;
     'snippet-style'?: string;
+    'snippet-maximum-height'?: number;
+    'snippet-collapsed-height'?: number;
   };
   content?: HTMLElement | HTMLElement[];
   snippet?: AddSmartSnippetMockSnippet;

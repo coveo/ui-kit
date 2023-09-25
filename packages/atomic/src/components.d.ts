@@ -2259,6 +2259,8 @@ export namespace Components {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight": number;
+        "snippetCollapsedHeight"?: number;
+        "snippetMaximumHeight"?: number;
         /**
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
@@ -2267,6 +2269,10 @@ export namespace Components {
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
         "innerStyle"?: string;
+    }
+    interface AtomicSmartSnippetCollapseWrapper {
+        "collapsedHeight"?: number;
+        "maximumHeight"?: number;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**
@@ -3655,6 +3661,12 @@ declare global {
         prototype: HTMLAtomicSmartSnippetAnswerElement;
         new (): HTMLAtomicSmartSnippetAnswerElement;
     };
+    interface HTMLAtomicSmartSnippetCollapseWrapperElement extends Components.AtomicSmartSnippetCollapseWrapper, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetCollapseWrapperElement: {
+        prototype: HTMLAtomicSmartSnippetCollapseWrapperElement;
+        new (): HTMLAtomicSmartSnippetCollapseWrapperElement;
+    };
     interface HTMLAtomicSmartSnippetExpandableAnswerElement extends Components.AtomicSmartSnippetExpandableAnswer, HTMLStencilElement {
     }
     var HTMLAtomicSmartSnippetExpandableAnswerElement: {
@@ -3892,6 +3904,7 @@ declare global {
         "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
+        "atomic-smart-snippet-collapse-wrapper": HTMLAtomicSmartSnippetCollapseWrapperElement;
         "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
@@ -6016,6 +6029,8 @@ declare namespace LocalJSX {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        "snippetCollapsedHeight"?: number;
+        "snippetMaximumHeight"?: number;
         /**
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
@@ -6028,6 +6043,10 @@ declare namespace LocalJSX {
         "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
         "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
         "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+    }
+    interface AtomicSmartSnippetCollapseWrapper {
+        "collapsedHeight"?: number;
+        "maximumHeight"?: number;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**
@@ -6333,6 +6352,7 @@ declare namespace LocalJSX {
         "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
+        "atomic-smart-snippet-collapse-wrapper": AtomicSmartSnippetCollapseWrapper;
         "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
@@ -6868,6 +6888,7 @@ declare module "@stencil/core" {
              */
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
+            "atomic-smart-snippet-collapse-wrapper": LocalJSX.AtomicSmartSnippetCollapseWrapper & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetCollapseWrapperElement>;
             "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
             /**
              * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
