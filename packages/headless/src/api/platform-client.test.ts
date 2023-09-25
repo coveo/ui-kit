@@ -14,6 +14,7 @@ import {
 import {
   NoopPreprocessRequest,
   PlatformRequestOptions,
+  PreprocessRequest,
 } from './preprocess-request';
 
 jest.mock('cross-fetch');
@@ -159,6 +160,28 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
+  });
+
+  it('should recover if the preprocessRequest throws and should use an untainted request', async () => {
+    mockFetch.mockReturnValue(
+      Promise.resolve(new Response(JSON.stringify({})))
+    );
+    const preprocessRequest: PreprocessRequest = (req) => {
+      req.headers = {
+        shouldNotExistsOnTheOutgoingRequest: 'foo',
+      };
+      throw 'boom';
+    };
+    await platformCall({preprocessRequest});
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({
+        headers: {
+          Authorization: 'Bearer accessToken1',
+          'Content-Type': 'application/json',
+        },
+      })
+    );
   });
 
   it(`when the contentType is www-url-form-encoded and the #requestParams can be encoded,
