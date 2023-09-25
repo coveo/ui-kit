@@ -4,14 +4,13 @@ import { createMockOptions } from "../__mocks__/relay";
 import { callEventApi } from "./event-api-caller";
 
 describe("callEventApi", () => {
-  const options = createMockOptions();
   const event = createMockEvent();
   const environment = createMockEnvironment();
-  const validate = true;
 
-  it("sets expected url and body for the fetch function", async () => {
+  it("sets expected url and body for the fetch function for validate mode", async () => {
+    const options = createMockOptions({ mode: "validate" });
     const { host, organizationId } = options;
-    await callEventApi({ event, options, environment, validate });
+    await callEventApi({ event, options, environment });
 
     const expectedEvent = [createMockEvent()];
     const expectedHeaders = {
@@ -26,7 +25,26 @@ describe("callEventApi", () => {
     });
   });
 
+  it("sets expected url and body for the fetch function for emit mode", async () => {
+    const options = createMockOptions({ mode: "emit" });
+    const { host, organizationId } = options;
+    await callEventApi({ event, options, environment });
+
+    const expectedEvent = [createMockEvent()];
+    const expectedHeaders = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer I am token`,
+    };
+    const expectedUrl = `${host}/rest/organizations/${organizationId}/events/v1`;
+    expect(environment.fetch).toHaveBeenCalledWith(expectedUrl, {
+      body: JSON.stringify(expectedEvent),
+      headers: expectedHeaders,
+      method: "POST",
+    });
+  });
+
   it("throws the service error if one is returned", async () => {
+    const options = createMockOptions();
     const rejectedEnvironment = createMockEnvironment({
       fetch: jest.fn(() =>
         Promise.resolve({

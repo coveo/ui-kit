@@ -1,6 +1,7 @@
 import {
   callEventApi,
   EventApiCallParams,
+  RelayMode,
 } from "../event-api-call/event-api-caller";
 
 export interface ValidationError {
@@ -18,7 +19,6 @@ export interface ValidationResponse {
 export async function validate(
   params: EventApiCallParams
 ): Promise<Readonly<ValidationResponse>> {
-  params.validate = true;
   const data = await callEventApi(params);
 
   const { valid, errors } = data[0];

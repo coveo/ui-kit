@@ -6,7 +6,6 @@ import { validate, ValidationResponse } from "./validate";
 describe("validate", () => {
   const options = createMockOptions();
   const event = createMockEvent();
-  const environment = createMockEnvironment();
 
   it("returns the first event of the validation response if it's invalid", async () => {
     const environmentWithSuccessfulFetch = createMockEnvironment({

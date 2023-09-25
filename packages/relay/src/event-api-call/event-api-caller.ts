@@ -6,14 +6,14 @@ export interface EventApiCallParams {
   event: Readonly<RelayEvent>;
   options: RelayOptions;
   environment: Environment;
-  validate?: boolean;
 }
+
+export type RelayMode = "emit" | "validate";
 
 export async function callEventApi({
   event,
   options,
   environment,
-  validate,
 }: EventApiCallParams): Promise<any> {
   const { token, host, organizationId } = options;
   const headers = {
@@ -22,7 +22,7 @@ export async function callEventApi({
   };
   const response = await environment.fetch(
     `${host}/rest/organizations/${organizationId}/events/v1${
-      validate ? "/validate" : ""
+      options.mode == "validate" ? "/validate" : ""
     }`,
     {
       method: "POST",

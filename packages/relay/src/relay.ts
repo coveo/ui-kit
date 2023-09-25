@@ -8,6 +8,7 @@ import {
   ValidationResponse,
 } from "./validate/validate";
 import { version } from "./version";
+import { RelayMode } from "./event-api-call/event-api-caller";
 import { createMeta, Meta } from "./event/meta/meta";
 
 type RelayPayload = Record<string, unknown>;
@@ -17,6 +18,7 @@ interface RelayOptions {
   organizationId: string;
   token: string;
   trackingId: string;
+  mode?: RelayMode;
 }
 
 interface Relay {
