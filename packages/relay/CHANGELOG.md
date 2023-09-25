@@ -1,3 +1,9 @@
+# 0.3.0 (2023-09-25)
+
+### Features
+
+- add mode option, by default it is emit (#34) ([d15c495](/commits/d15c495ecb261028556d195fde6e9631174263aa)), closes [#34](/issues/34)
+
 # 0.2.0 (2023-09-21)
 
 ### Features
