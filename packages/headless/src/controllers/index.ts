@@ -428,3 +428,10 @@ export type {
   GeneratedAnswerCitation,
 } from './generated-answer/headless-generated-answer';
 export {buildGeneratedAnswer} from './generated-answer/headless-generated-answer';
+
+export type {
+  InteractiveCitationOptions,
+  InteractiveCitationProps,
+  InteractiveCitation,
+} from './generated-answer/headless-interactive-citation';
+export {buildInteractiveCitation} from './generated-answer/headless-interactive-citation';

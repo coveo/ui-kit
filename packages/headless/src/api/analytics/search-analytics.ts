@@ -15,7 +15,11 @@ import {SearchAppState} from '../../state/search-app-state';
 import {ConfigurationSection} from '../../state/state-sections';
 import {PreprocessRequest} from '../preprocess-request';
 import {BaseAnalyticsProvider} from './base-analytics';
-import {historyStore} from './coveo-analytics-utils';
+import {
+  historyStore,
+  wrapAnalyticsClientSendEventHook,
+  wrapPreprocessRequest,
+} from './coveo-analytics-utils';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;
@@ -142,9 +146,9 @@ export const configureAnalytics = ({
       token,
       endpoint,
       runtimeEnvironment,
-      preprocessRequest,
+      preprocessRequest: wrapPreprocessRequest(logger, preprocessRequest),
       beforeSendHooks: [
-        analyticsClientMiddleware,
+        wrapAnalyticsClientSendEventHook(logger, analyticsClientMiddleware),
         (type, payload) => {
           logger.info(
             {
