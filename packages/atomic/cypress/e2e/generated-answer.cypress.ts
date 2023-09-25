@@ -1,4 +1,5 @@
 import {TestFixture} from '../fixtures/test-fixture';
+import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {
   addGeneratedAnswer,
   getStreamInterceptAlias,
@@ -6,6 +7,7 @@ import {
   mockStreamResponse,
 } from './generated-answer-actions';
 import {GeneratedAnswerSelectors} from './generated-answer-selectors';
+import * as GeneratedAnswerAssertions from './generated-answer-assertions';
 
 describe('Generated Answer Test Suites', () => {
   describe('Generated Answer', () => {
@@ -100,6 +102,26 @@ describe('Generated Answer Test Suites', () => {
             'href',
             testCitation.clickUri
           );
+        });
+
+        describe('when a citation is clicked', () => {
+          beforeEach(() => {
+            AnalyticsTracker.reset();
+            GeneratedAnswerSelectors.citation()
+              .invoke('removeAttr', 'target') // Otherwise opens a new tab that messes with the tests
+              .click();
+          });
+
+          GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
+        });
+
+        describe('when a citation is right-clicked', () => {
+          beforeEach(() => {
+            AnalyticsTracker.reset();
+            GeneratedAnswerSelectors.citation().rightclick();
+          });
+
+          GeneratedAnswerAssertions.assertLogOpenGeneratedAnswerSource(true);
         });
       });
 
