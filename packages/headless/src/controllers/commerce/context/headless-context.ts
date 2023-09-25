@@ -1,10 +1,17 @@
 import {RecordValue, Schema } from "@coveo/bueno";
-import {nonEmptyString, validateOptions} from '../../../utils/validate-payload';
+import {nonEmptyString, requiredNonEmptyString, validateOptions} from '../../../utils/validate-payload';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {buildController, Controller} from '../../controller/headless-controller';
 import {loadReducerError} from '../../../utils/errors';
-import {setContext} from '../../../features/commerce/context/context-actions';
-import {contextReducer as context} from '../../../features/commerce/context/context-slice';
+import {
+  setClientId,
+  setContext,
+  setCurrency,
+  setLanguage,
+  setTrackingId,
+  setUser, setView
+} from '../../../features/commerce/context/context-actions';
+import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 
 const optionsSchema = new Schema({
   trackingId: nonEmptyString,
@@ -19,6 +26,12 @@ const optionsSchema = new Schema({
       userAgent: nonEmptyString,
     },
   }),
+  view: new RecordValue({
+    options: { required: true },
+    values: {
+      url: requiredNonEmptyString,
+    }
+  })
 });
 
 export interface ContextOptions {
@@ -27,6 +40,7 @@ export interface ContextOptions {
   currency?: string;
   clientId?: string;
   user?: User;
+  view: View;
 }
 
 export interface User {
@@ -36,15 +50,17 @@ export interface User {
   userAgent?: string;
 }
 
+export interface View {
+  url: string;
+}
+
 export interface ContextProps {
   /**
    * The initial options that should be applied to this `Context` controller.
    */
-  options?: ContextOptions;
+  options: ContextOptions;
 }
 
-// TODO: Does this controller do too much? Should it expose sub-controllers which allow mutating
-//  specific parts of the state?
 /**
  * The `Context` controller allows the end user to configure context data.
  */
@@ -80,6 +96,12 @@ export interface Context extends Controller {
   setUser(user: User): void;
 
   /**
+   * Sets the view.
+   * @param view - The new view.
+   */
+  setView(view: View): void;
+
+  /**
    * A scoped and simplified part of the headless state that is relevant to the `Context` controller.
    */
   state: ContextState;
@@ -90,7 +112,8 @@ export interface ContextState {
   language?: string;
   currency?: string;
   clientId?: string;
-  user: User;
+  user?: User;
+  view: View;
 }
 
 export type ContextControllerState = Context['state'];
@@ -104,7 +127,7 @@ export type ContextControllerState = Context['state'];
  */
 export function buildContext(
   engine: CommerceEngine,
-  props: ContextProps = {}
+  props: ContextProps
 ): Context {
   if (!loadBaseContextReducers(engine)) {
     throw loadReducerError;
@@ -130,23 +153,35 @@ export function buildContext(
     ...controller,
 
     get state() {
-      return getState().context;
+      const {trackingId, language, currency, clientId, user, view} = getState().commerceContext;
+      return {
+        trackingId,
+        language,
+        currency,
+        clientId,
+        user,
+        view
+      };
     },
 
-    setUrl: (url: string) =>
-      dispatch(
-        setProductListingUrl({
-          url,
-        })
-      ),
+    setTrackingId: (trackingId: string) => dispatch(setTrackingId(trackingId)),
 
-    refresh: () => dispatch(fetchProductListing()),
+    setLanguage: (language: string) => dispatch(setLanguage(language)),
+
+    setCurrency: (currency: string) => dispatch(setCurrency(currency)),
+
+    setClientId: (clientId: string) => dispatch(setClientId(clientId)),
+
+    setUser: (user: User) => dispatch(setUser(user)),
+
+    setView: (view: View) => dispatch(setView(view)),
+
   };
 }
 
 function loadBaseContextReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine {
-  engine.addReducers({context});
+  engine.addReducers({commerceContext});
   return true;
 }

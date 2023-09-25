@@ -293,7 +293,7 @@ export interface CommerceContextSection {
   /**
    * The information related to the commerce context.
    */
-  context: CommerceContextState;
+  commerceContext: CommerceContextState;
 }
 
 export interface CartSection {

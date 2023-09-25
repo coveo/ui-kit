@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
-import {nonEmptyString, validatePayload} from '../../../utils/validate-payload';
-import {UserParams} from '../../../api/commerce/commerce-api-params';
+import {nonEmptyString, requiredNonEmptyString, validatePayload} from '../../../utils/validate-payload';
+import {UserParams, ViewParams} from '../../../api/commerce/commerce-api-params';
 import { RecordValue } from '@coveo/bueno';
 
 export interface SetContextPayload {
@@ -9,6 +9,7 @@ export interface SetContextPayload {
   currency?: string;
   clientId?: string;
   user?: UserParams;
+  view: ViewParams;
 }
 
 export const setContext = createAction(
@@ -27,5 +28,44 @@ export const setContext = createAction(
           userAgent: nonEmptyString,
         },
       }),
+      view: new RecordValue({
+        options: { required: true },
+        values: {
+          url: requiredNonEmptyString
+        }
+      })
+    })
+);
+
+const nonEmptyStringAction = (type: string) => createAction(
+  type,
+  (payload: string) => validatePayload(payload, nonEmptyString)
+);
+
+export const setTrackingId = nonEmptyStringAction('commerce/setTrackingId');
+export const setLanguage = nonEmptyStringAction('commerce/setLanguage');
+export const setCurrency = nonEmptyStringAction('commerce/setCurrency');
+export const setClientId = nonEmptyStringAction('commerce/setClientId');
+
+type SetUserPayload = UserParams;
+
+export const setUser = createAction(
+  'commerce/setUser',
+  (payload: SetUserPayload) =>
+    validatePayload(payload, {
+      userId: nonEmptyString,
+      email: nonEmptyString,
+      userIp: nonEmptyString,
+      userAgent: nonEmptyString,
+    })
+);
+
+type SetViewPayload = ViewParams;
+
+export const setView = createAction(
+  'commerce/setView',
+  (payload: SetViewPayload) =>
+    validatePayload(payload, {
+      url: requiredNonEmptyString,
     })
 );
