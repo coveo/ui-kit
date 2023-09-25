@@ -252,14 +252,10 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   return true;
 }
 
-interface VisibilitySortedFacets {
-  visibleFacets: BaseFacetElement[];
-  invisibleFacets: BaseFacetElement[];
-}
 export function sortFacetVisibility(
   facetElements: BaseFacetElement[],
   facetInfoMap: FacetInfoMap
-): VisibilitySortedFacets {
+) {
   const visibleFacets: BaseFacetElement[] = [];
   const invisibleFacets: BaseFacetElement[] = [];
 
