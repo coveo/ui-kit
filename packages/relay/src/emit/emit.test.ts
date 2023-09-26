@@ -6,6 +6,7 @@ import { emit } from "./emit";
 describe("emit", () => {
   const options = createMockOptions();
   const event = createMockEvent();
+
   it("send an events and returns void", async () => {
     const environmentWithSuccessfulFetch = createMockEnvironment({
       fetch: jest.fn(() =>

@@ -4,7 +4,7 @@ import { RelayOptions, RelayPayload } from "../relay";
 import { createMeta, Meta } from "./meta/meta";
 
 export interface RelayEvent extends RelayPayload {
-  meta: Meta;
+  meta: Readonly<Meta>;
 }
 
 export function createRelayEvent(

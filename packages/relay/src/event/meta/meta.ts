@@ -37,7 +37,7 @@ export function createMeta(
   const config = getConfig(options);
   const { clientId } = clientIdManager;
 
-  return {
+  return Object.freeze({
     type,
     config,
     ts: Date.now(),
@@ -46,5 +46,5 @@ export function createMeta(
     userAgent: getUserAgent(),
     referrerUrl: getReferrerUrl(),
     url: getUrl(),
-  };
+  });
 }

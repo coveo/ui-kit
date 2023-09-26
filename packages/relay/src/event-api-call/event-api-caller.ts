@@ -3,9 +3,9 @@ import { RelayOptions } from "../relay";
 import { RelayEvent } from "../event/relay-event";
 
 export interface EventApiCallParams {
-  event: Readonly<RelayEvent>;
   options: RelayOptions;
   environment: Environment;
+  event: Readonly<RelayEvent>;
 }
 
 export type RelayMode = "emit" | "validate";

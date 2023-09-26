@@ -6,11 +6,18 @@ import { callEventApi } from "./event-api-caller";
 describe("callEventApi", () => {
   const event = createMockEvent();
   const environment = createMockEnvironment();
+  const options = createMockOptions();
 
-  it("sets expected url and body for the fetch function for validate mode", async () => {
-    const options = createMockOptions({ mode: "validate" });
+  it("sets expected url and body for the fetch function", async () => {
+    const optionsWithValidateMode = createMockOptions({
+      mode: "validate",
+    });
     const { host, organizationId } = options;
-    await callEventApi({ event, options, environment });
+    await callEventApi({
+      event,
+      options: optionsWithValidateMode,
+      environment,
+    });
 
     const expectedEvent = [createMockEvent()];
     const expectedHeaders = {
@@ -44,7 +51,6 @@ describe("callEventApi", () => {
   });
 
   it("throws the service error if one is returned", async () => {
-    const options = createMockOptions();
     const rejectedEnvironment = createMockEnvironment({
       fetch: jest.fn(() =>
         Promise.resolve({
@@ -60,7 +66,11 @@ describe("callEventApi", () => {
     });
 
     expect(() =>
-      callEventApi({ options, event, environment: rejectedEnvironment })
+      callEventApi({
+        options,
+        event,
+        environment: rejectedEnvironment,
+      })
     ).rejects.toThrow();
   });
 });
