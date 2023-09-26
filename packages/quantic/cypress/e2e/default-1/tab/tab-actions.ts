@@ -11,12 +11,14 @@ function tabActions(selector: TabSelector) {
     },
     findTabPressTabPressSpace: (value: string) => {
       // This is equivalent to pressing the Tab key twice and then pressing the Space bar.
-      cy.realPress(['Tab', 'Tab', 'Space']).contains(value);
+      selector.tab().contains(value).realPress(['Tab', 'Tab', 'Space']);
     },
     findTabPressShiftTabPressSpace: (value: string) => {
       // This is equivalent to holding the Shift key while pressing the Tab key twice and then pressing the Space bar.
-      selector;
-      cy.realPress(['Shift', 'Tab', 'Tab', 'Space']).contains(value);
+      selector
+        .tab()
+        .contains(value)
+        .realPress(['Shift', 'Tab', 'Tab', 'Space']);
     },
   };
 }
