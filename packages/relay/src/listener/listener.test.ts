@@ -36,7 +36,7 @@ describe("createListenerManager", () => {
       const type = "*";
       const event = createMockEvent();
       const spy = jest.fn();
-      const removeFn = add({type, callback: spy});
+      const removeFn = add({ type, callback: spy });
 
       call(event);
       expect(spy).toHaveBeenCalledTimes(1);

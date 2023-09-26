@@ -10,7 +10,7 @@ interface Listener {
 }
 
 interface ListenerManager {
-  add: (listener: Listener) => () => void ;
+  add: (listener: Listener) => () => void;
   call: (event: RelayEvent) => void;
   remove: (type: string, callback?: EventCallback) => void;
 }
