@@ -46,7 +46,7 @@
     "cspell": "7.3.6",
     "cz-conventional-changelog": "3.3.0",
     "detect-indent": "7.0.1",
-    "esbuild": "0.14.2",
+    "esbuild": "0.19.3",
     "esbuild-plugin-alias": "0.2.1",
     "eslint": "8.49.0",
     "eslint-config-prettier": "9.0.0",

@@ -1,14 +1,29 @@
-import {build} from 'esbuild';
+import {context as defineContext} from 'esbuild';
 import {umdWrapper} from '../../scripts/bundle/umd.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const devMode = process.argv[2] === 'dev';
 
 /**
- * @type {import('esbuild').BuildOptions}
+ * @param {import('esbuild').BuildOptions} options
+ * @param {boolean} [watch]
+ */
+async function build(options, watch = false) {
+  const context = await defineContext(options);
+  const output = await context.rebuild();
+  if (watch) {
+    await context.watch();
+  }
+  await context.dispose();
+  return output;
+}
+
+/**
+ * @satisfies {import('esbuild').BuildOptions}
  */
 const base = {
   entryPoints: ['src/index.ts'],
+  target: 'es2018',
   bundle: true,
   banner: {js: apacheLicense()},
   define: {
@@ -35,13 +50,15 @@ function nodeEsm() {
 }
 
 function browserEsm() {
-  return build({
-    ...base,
-    platform: 'browser',
-    outfile: 'dist/browser/bueno.esm.js',
-    format: 'esm',
-    watch: devMode,
-  });
+  return build(
+    {
+      ...base,
+      platform: 'browser',
+      outfile: 'dist/browser/bueno.esm.js',
+      format: 'esm',
+    },
+    true
+  );
 }
 
 function browserUmd() {

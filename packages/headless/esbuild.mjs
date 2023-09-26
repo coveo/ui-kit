@@ -1,4 +1,4 @@
-import {build} from 'esbuild';
+import {context as defineContext} from 'esbuild';
 import alias from 'esbuild-plugin-alias';
 import {readFileSync, promises, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
@@ -8,6 +8,20 @@ import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
+
+/**
+ * @param {import('esbuild').BuildOptions} options
+ * @param {boolean} [watch]
+ */
+async function build(options, watch = false) {
+  const context = await defineContext(options);
+  const output = await context.rebuild();
+  if (watch) {
+    await context.watch();
+  }
+  await context.dispose();
+  return output;
+}
 
 const useCaseEntries = {
   search: 'src/index.ts',
@@ -56,6 +70,7 @@ function getUseCaseDir(prefix, useCase) {
  */
 const base = {
   bundle: true,
+  target: 'es2018',
   tsconfig: './src/tsconfig.build.json',
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),
@@ -75,10 +90,10 @@ const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
         entryPoints: [entryPoint],
         outfile,
         format: 'esm',
-        watch: devMode,
         minify: false,
       },
-      outDir
+      outDir,
+      devMode
     );
   }
 );
@@ -136,24 +151,28 @@ function resolveEsm(moduleName) {
 
 /**
  * @param {import('esbuild').BuildOptions} options
+ * @param {boolean} [watch]
  * @returns {Promise<import('esbuild').BuildResult>}
  */
-async function buildBrowserConfig(options, outDir) {
-  const out = await build({
-    ...base,
-    platform: 'browser',
-    minify: true,
-    sourcemap: true,
-    metafile: true,
-    external: ['crypto'],
-    plugins: [
-      alias({
-        'coveo.analytics': resolveEsm('coveo.analytics'),
-        'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
-      }),
-    ],
-    ...options,
-  });
+async function buildBrowserConfig(options, outDir, watch = false) {
+  const out = await build(
+    {
+      ...base,
+      platform: 'browser',
+      minify: true,
+      sourcemap: true,
+      metafile: true,
+      external: ['crypto'],
+      plugins: [
+        alias({
+          'coveo.analytics': resolveEsm('coveo.analytics'),
+          'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
+        }),
+      ],
+      ...options,
+    },
+    watch
+  );
   outputMetafile(`browser.${options.format}`, outDir, out.metafile);
   return out;
 }

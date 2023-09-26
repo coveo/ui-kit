@@ -14,7 +14,7 @@ export function umdWrapper(globalName) {
 
     global = typeof globalThis !== 'undefined' ? globalThis : global || self;
     factory(global.${globalName} = {});
-  })(this, (function (exports) { 'use strict';`;
+  })(this, (function (exports) {`;
   const footer = `}));`;
 
   return {header, footer};
