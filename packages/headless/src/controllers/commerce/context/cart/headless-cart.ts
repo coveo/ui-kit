@@ -1,14 +1,14 @@
 import {ArrayValue, NumberValue, RecordValue, Schema } from "@coveo/bueno";
-import {validateOptions} from '../../../../utils/validate-payload';
+import {nonEmptyString, validateOptions} from '../../../../utils/validate-payload';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {buildController, Controller} from '../../../controller/headless-controller';
 import {loadReducerError} from '../../../../utils/errors';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {
-  addCartItem,
-  removeCartItem,
-  setCart,
-  updateCartItemQuantity
+  addItem,
+  removeItem,
+  setItems,
+  updateItemQuantity
 } from '../../../../features/commerce/context/cart/cart-actions';
 
 const optionsSchema = new Schema({
@@ -16,7 +16,12 @@ const optionsSchema = new Schema({
     each: new RecordValue({
       values: {
         product: new RecordValue({
-          options: {required: true}
+          options: {required: true},
+          values: {
+            groupId: nonEmptyString,
+            productId: nonEmptyString,
+            sku: nonEmptyString
+          }
         }),
         quantity: new NumberValue({
           required: true,
@@ -50,30 +55,30 @@ export interface CartProps {
 }
 
 /**
- * The `Cart` controller allows the end user to configure cart data.
+ * The `Cart` controller exposes methods for managing the cart in a commerce interface.
  */
 export interface Cart extends Controller {
 
   /**
-   * Sets the cart.
+   * Sets the cart items.
    * @param cart - The new cart.
    */
-  setCart(cart: CartItem[]): void;
+  setItems(cart: CartItem[]): void;
 
   /**
    * Adds a cart item.
    * @param item - The new cart item.
    */
-  addCartItem(item: CartItem): void;
+  addItem(item: CartItem): void;
 
   /**
    * Removes a cart item.
    * @param item - The cart item to remove
    */
-  removeCartItem(item: CartItem): void;
+  removeItem(item: CartItem): void;
 
   /**
-   * Updates a cart item's quantity.
+   * Updates the quantity of a cart item.
    * @param item - The cart item to update.
    */
   updateCartItemQuantity(item: CartItem): void;
@@ -91,11 +96,11 @@ export interface CartState {
 export type CartControllerState = Cart['state'];
 
 /**
- * Creates a `CartController` controller instance.
+ * Creates a `Cart` controller instance.
  *
  * @param engine - The headless commerce engine.
- * @param props - The configurable `CartController` properties.
- * @returns A `CartController` controller instance.
+ * @param props - The configurable `Cart` properties.
+ * @returns A `Cart` controller instance.
  */
 export function buildCart(
   engine: CommerceEngine,
@@ -117,7 +122,7 @@ export function buildCart(
 
   if (options.cart) {
     dispatch(
-      setCart({
+      setItems({
         cart: options.cart
       })
     );
@@ -133,13 +138,13 @@ export function buildCart(
       };
     },
 
-    setCart: (cart: CartItem[]) => dispatch(setCart({cart})),
+    setItems: (cart: CartItem[]) => dispatch(setItems({cart})),
 
-    addCartItem: (item: CartItem) => dispatch(addCartItem(item)),
+    addItem: (item: CartItem) => dispatch(addItem(item)),
 
-    removeCartItem: (item: CartItem) => dispatch(removeCartItem(item)),
+    removeItem: (item: CartItem) => dispatch(removeItem(item)),
 
-    updateCartItemQuantity: (item: CartItem) => dispatch(updateCartItemQuantity(item)),
+    updateCartItemQuantity: (item: CartItem) => dispatch(updateItemQuantity(item)),
   };
 }
 

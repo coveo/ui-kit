@@ -14,7 +14,7 @@ import {
 } from '../../controller/headless-controller';
 
 /**
- * The `ProductListing` controller allows the end user to retrieve product listing data.
+ * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  */
 export interface ProductListing extends Controller {
   /**
@@ -38,10 +38,10 @@ export interface ProductListingState {
 export type ProductListingControllerState = ProductListing['state'];
 
 /**
- * Creates a `ProductListingController` controller instance.
+ * Creates a `ProductListing` controller instance.
  *
  * @param engine - The headless commerce engine.
- * @returns A `ProductListingController` controller instance.
+ * @returns A `ProductListing` controller instance.
  */
 export function buildProductListing(
   engine: CommerceEngine

@@ -4,10 +4,10 @@ import {UserParams, ViewParams} from '../../../api/commerce/commerce-api-params'
 import { RecordValue } from '@coveo/bueno';
 
 export interface SetContextPayload {
-  trackingId?: string;
-  language?: string;
-  currency?: string;
-  clientId?: string;
+  trackingId: string;
+  language: string;
+  currency: string;
+  clientId: string;
   user?: UserParams;
   view: ViewParams;
 }
@@ -16,10 +16,10 @@ export const setContext = createAction(
   'commerce/setContext',
   (payload: SetContextPayload) =>
     validatePayload(payload, {
-      trackingId: nonEmptyString,
-      language: nonEmptyString,
-      currency: nonEmptyString,
-      clientId: nonEmptyString,
+      trackingId: requiredNonEmptyString,
+      language: requiredNonEmptyString,
+      currency: requiredNonEmptyString,
+      clientId: requiredNonEmptyString,
       user: new RecordValue({
         values: {
           userId: nonEmptyString,
@@ -37,15 +37,15 @@ export const setContext = createAction(
     })
 );
 
-const nonEmptyStringAction = (type: string) => createAction(
+const requiredNonEmptyStringAction = (type: string) => createAction(
   type,
-  (payload: string) => validatePayload(payload, nonEmptyString)
+  (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );
 
-export const setTrackingId = nonEmptyStringAction('commerce/setTrackingId');
-export const setLanguage = nonEmptyStringAction('commerce/setLanguage');
-export const setCurrency = nonEmptyStringAction('commerce/setCurrency');
-export const setClientId = nonEmptyStringAction('commerce/setClientId');
+export const setTrackingId = requiredNonEmptyStringAction('commerce/setTrackingId');
+export const setLanguage = requiredNonEmptyStringAction('commerce/setLanguage');
+export const setCurrency = requiredNonEmptyStringAction('commerce/setCurrency');
+export const setClientId = requiredNonEmptyStringAction('commerce/setClientId');
 
 type SetUserPayload = UserParams;
 

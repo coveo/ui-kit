@@ -7,23 +7,8 @@ export const contextReducer = createReducer(
 
   (builder) => {
     builder
-      .addCase(setContext, (state, {payload}) => {
-        if (payload.trackingId) {
-          state.trackingId = payload.trackingId;
-        }
-        if (payload.language) {
-          state.language = payload.language;
-        }
-        if (payload.currency) {
-          state.currency = payload.currency;
-        }
-        if (payload.clientId) {
-          state.clientId = payload.clientId;
-        }
-        if (payload.user) {
-          state.user = payload.user;
-        }
-        state.view = payload.view;
+      .addCase(setContext, (_, {payload}) => {
+        return payload
       })
       .addCase(setTrackingId, (state, {payload}) => {
         state.trackingId = payload;

@@ -79,17 +79,15 @@ export const buildProductListingRequestV2 = (
 ): ProductListingV2Request => {
   const selectedFacets = getFacets(state);
 
+  const {view, user, ...restOfContext} = state.commerceContext
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
-    trackingId: state.commerceContext.trackingId,
-    language: state.commerceContext.language,
-    currency: state.commerceContext.currency,
-    clientId: state.commerceContext.clientId,
+    ...restOfContext,
     context: {
-      view: state.commerceContext.view,
-      user: state.commerceContext.user,
+      user,
+      view,
       cart: state.cart.cartItems.map((id) => state.cart.cart[id])
     },
     selectedFacets,

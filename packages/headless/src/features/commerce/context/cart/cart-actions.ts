@@ -1,58 +1,57 @@
 import { createAction } from '@reduxjs/toolkit';
-import {validatePayload} from '../../../../utils/validate-payload';
+import {nonEmptyString, validatePayload} from '../../../../utils/validate-payload';
 import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 import { ArrayValue, NumberValue, RecordValue } from '@coveo/bueno';
 
-export interface SetCartPayload {
-  cart: CartItemParam[]
-}
-export const setCart = createAction(
-  'commerce/cart/set',
-  (payload: SetCartPayload) =>
-    validatePayload(payload, {
-      cart: new ArrayValue({
-        each: new RecordValue({
-          values: {
-            product: new RecordValue({
-              options: {required: true}
-            }),
-            quantity: new NumberValue({
-              required: true,
-              min: 1,
-            })
-          }
-        }),
-      })
-    })
-);
-
 const cartItemDefinition = {
   product: new RecordValue({
-    options: {required: true}
+    options: {required: true},
+    values: {
+      groupId: nonEmptyString,
+      productId: nonEmptyString,
+      sku: nonEmptyString
+    }
   }),
   quantity: new NumberValue({
     required: true,
     min: 1,
   })
 }
+export interface SetCartPayload {
+  cart: CartItemParam[]
+}
+
+export const setItems = createAction(
+  'commerce/cart/setItems',
+  (payload: SetCartPayload) =>
+    validatePayload(payload, {
+      cart: new ArrayValue({
+        each: new RecordValue({
+          values: {
+            ...cartItemDefinition
+          }
+        }),
+      })
+    })
+);
 
 export type AddCartItemPayload = CartItemParam;
 
-export const addCartItem = createAction(
+export const addItem = createAction(
   'commerce/cart/addItem',
   (payload: AddCartItemPayload) => validatePayload(payload, cartItemDefinition)
 );
 
-export type RemoveCartItemPayload = CartItemParam;
+export type RemoveItemPayload = CartItemParam;
 
-export const removeCartItem = createAction(
+export const removeItem = createAction(
   'commerce/cart/removeItem',
-  (payload: RemoveCartItemPayload) => validatePayload(payload, cartItemDefinition)
+  (payload: RemoveItemPayload) => validatePayload(payload, cartItemDefinition)
 );
 
-export type UpdateCartItemQuantity = CartItemParam;
+export type UpdateItemQuantity = CartItemParam;
 
-export const updateCartItemQuantity = createAction(
+export const updateItemQuantity = createAction(
   'commerce/cart/updateItemQuantity',
-  (payload: UpdateCartItemQuantity) => validatePayload(payload, cartItemDefinition)
+  (payload: UpdateItemQuantity) => validatePayload(payload, cartItemDefinition)
 );

@@ -14,10 +14,10 @@ import {
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 
 const optionsSchema = new Schema({
-  trackingId: nonEmptyString,
-  language: nonEmptyString,
-  currency: nonEmptyString,
-  clientId: nonEmptyString,
+  trackingId: requiredNonEmptyString,
+  language: requiredNonEmptyString,
+  currency: requiredNonEmptyString,
+  clientId: requiredNonEmptyString,
   user: new RecordValue({
     values: {
       userId: nonEmptyString,
@@ -35,10 +35,10 @@ const optionsSchema = new Schema({
 });
 
 export interface ContextOptions {
-  trackingId?: string;
-  language?: string;
-  currency?: string;
-  clientId?: string;
+  trackingId: string;
+  language: string;
+  currency: string;
+  clientId: string;
   user?: User;
   view: View;
 }
@@ -62,12 +62,12 @@ export interface ContextProps {
 }
 
 /**
- * The `Context` controller allows the end user to configure context data.
+ * The `Context` controller exposes methods for managing the global context in a commerce interface.
  */
 export interface Context extends Controller {
   /**
-   * Sets the tracking id.
-   * @param trackingId - The new tracking id.
+   * Sets the tracking ID.
+   * @param trackingId - The new tracking ID.
    */
   setTrackingId(trackingId: string): void;
 
@@ -84,8 +84,8 @@ export interface Context extends Controller {
   setCurrency(currency: string): void;
 
   /**
-   * Sets the client id.
-   * @param clientId - The new client id.
+   * Sets the client ID.
+   * @param clientId - The new client ID.
    */
   setClientId(clientId: string): void;
 
@@ -119,11 +119,11 @@ export interface ContextState {
 export type ContextControllerState = Context['state'];
 
 /**
- * Creates a `ContextController` controller instance.
+ * Creates a `Context` controller instance.
  *
  * @param engine - The headless commerce engine.
- * @param props - The configurable `ContextController` properties.
- * @returns A `ContextController` controller instance.
+ * @param props - The configurable `Context` properties.
+ * @returns A `Context` controller instance.
  */
 export function buildContext(
   engine: CommerceEngine,
@@ -153,15 +153,7 @@ export function buildContext(
     ...controller,
 
     get state() {
-      const {trackingId, language, currency, clientId, user, view} = getState().commerceContext;
-      return {
-        trackingId,
-        language,
-        currency,
-        clientId,
-        user,
-        view
-      };
+      return getState().commerceContext;
     },
 
     setTrackingId: (trackingId: string) => dispatch(setTrackingId(trackingId)),
