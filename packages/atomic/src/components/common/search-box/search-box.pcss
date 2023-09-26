@@ -30,4 +30,12 @@
       max-height: 8em;
     }
   }
+
+  &.scrollable {
+    > [part='textarea'],
+    &::after {
+      overflow: hidden;
+      resize: none;
+    }
+  }
 }
