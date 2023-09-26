@@ -15,6 +15,7 @@ runs:
         command-prefix: 'npm run -w @coveo/headless-ssr-samples e2e'
         start: npx nx run headless-ssr-samples:prod
         wait-on: 'http://localhost:3000'
+        wait-on-timeout: 600000
         install: false
         record: false
 

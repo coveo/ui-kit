@@ -8,6 +8,7 @@ import {
 import {useEffect, useState} from 'react';
 import {HydrationMetadata} from '../../common/hydration-metadata';
 import {useSyncSearchParameters} from '../hooks/search-parameters';
+import {Facet} from './facet';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';
 
@@ -22,7 +23,7 @@ export default function SearchPage({
 
   useEffect(() => {
     hydrateStaticState({
-      searchFulfilledAction: staticState.searchFulfilledAction,
+      searchAction: staticState.searchAction,
       controllers: {
         searchParameters: {
           initialState: staticState.controllers.searchParameters.state,
@@ -43,6 +44,11 @@ export default function SearchPage({
       <SearchBox
         staticState={staticState.controllers.searchBox.state}
         controller={hydratedState?.controllers.searchBox}
+      />
+      <Facet
+        title="Author"
+        staticState={staticState.controllers.authorFacet.state}
+        controller={hydratedState?.controllers.authorFacet}
       />
       <ResultList
         staticState={staticState.controllers.resultList.state}

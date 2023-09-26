@@ -7,7 +7,7 @@ import {
 } from './interfaces/range-facet';
 
 type RangeFacetSlice<
-  RequestType extends RangeFacetRequest = RangeFacetRequest
+  RequestType extends RangeFacetRequest = RangeFacetRequest,
 > = {
   request: RequestType;
 };
@@ -57,7 +57,7 @@ export function updateRangeValues<T extends RangeFacetSlice>(
 
 export function toggleSelectRangeValue<
   T extends RangeFacetSlice,
-  U extends RangeFacetValue
+  U extends RangeFacetValue,
 >(state: RangeFacetState<T>, facetId: string, selection: U) {
   const request = state[facetId]?.request;
 
@@ -79,7 +79,7 @@ export function toggleSelectRangeValue<
 
 export function toggleExcludeRangeValue<
   T extends RangeFacetSlice,
-  U extends RangeFacetValue
+  U extends RangeFacetValue,
 >(state: RangeFacetState<T>, facetId: string, selection: U) {
   const request = state[facetId]?.request;
 
@@ -113,7 +113,7 @@ export function handleRangeFacetDeselectAll<T extends RangeFacetSlice>(
 }
 
 export function handleRangeFacetSearchParameterRestoration<
-  T extends RangeFacetSlice
+  T extends RangeFacetSlice,
 >(
   state: RangeFacetState<T>,
   rangeFacets: Record<string, T['request']['currentValues']>
@@ -143,7 +143,7 @@ export function handleRangeFacetSearchParameterRestoration<
 
 export function onRangeFacetRequestFulfilled<
   T extends RangeFacetSlice,
-  U extends RangeFacetResponse
+  U extends RangeFacetResponse,
 >(
   state: RangeFacetState<T>,
   facets: U[],

@@ -3,8 +3,8 @@ import {configuration} from '../../../app/common-reducers';
 import {
   fetchProductListing,
   setProductListingUrl,
-} from '../../../features/product-listing/v2/product-listing-v2-actions';
-import {productListingV2Reducer} from '../../../features/product-listing/v2/product-listing-v2-slice';
+} from '../../../features/commerce/product-listing/product-listing-actions';
+import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
 import {
   buildProductListing,

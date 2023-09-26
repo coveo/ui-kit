@@ -13,7 +13,7 @@
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
-      "allowedVersions": "14.x"
+      "allowedVersions": "16.x"
     },
     {
       "matchPackagePatterns": [
@@ -33,6 +33,22 @@
       "groupName": "Storybook",
       "groupSlug": "storybook",
       "rangeStrategy": "replace"
+    },
+    {
+      "matchFileNames": ["packages/atomic/package.json"],
+      "matchPackagePatterns": ["^jest$", "^jest-cli$", "@types/jest"],
+      "groupSlug": "atomic-jest",
+      "rangeStrategy": "replace",
+      "allowedVersions": "27.x",
+      "description": "Stencil do not support Jest >27 https://stenciljs.com/docs/support-policy#testing-libraries"
+    },
+    {
+      "matchFileNames": ["packages/quantic/package.json"],
+      "matchPackagePatterns": ["^chalk$"],
+      "groupSlug": "quantic-chalk",
+      "rangeStrategy": "replace",
+      "allowedVersions": "4.x",
+      "description": "Cypress custom reporter are CJS, and Chalk 5.x is ESM only"
     }
   ],
   "rangeStrategy": "auto",

@@ -5,6 +5,8 @@ import {noResultsComponent, NoResultsSelectors} from './no-results-selectors';
 import {addSearchBox} from './search-box/search-box-actions';
 import {SearchBoxSelectors} from './search-box/search-box-selectors';
 
+// cSpell:ignore gahaiusdhgaiuewjfsf, asiufasfgasiufhsaiufgsa
+
 describe('No Results Test Suites', () => {
   const wait = 1000;
   let env: TestFixture;

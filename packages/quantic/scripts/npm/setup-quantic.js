@@ -27,10 +27,9 @@ function createQuanticDirectory(path) {
 
 function getPackageDirectory(projectDirectory) {
   try {
-    const sfdxProjectJson = require(pathlib.join(
-      projectDirectory,
-      'sfdx-project.json'
-    ));
+    const sfdxProjectJson = require(
+      pathlib.join(projectDirectory, 'sfdx-project.json')
+    );
     const defaultPackageDirectory =
       sfdxProjectJson.packageDirectories.find(
         (directory) => directory.default

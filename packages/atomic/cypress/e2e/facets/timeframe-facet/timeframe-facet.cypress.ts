@@ -477,7 +477,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
         .with(
           addTimeframeFacet(
             {
-              field: 'dafsfs',
+              field: 'thisfielddoesnotexist',
               label: timeframeFacetLabel,
             },
             unitFrames

@@ -7,4 +7,4 @@ const {defaultModuleExport, exportedStory} = defaultResultComponentStory(
 );
 
 export default {...defaultModuleExport, title: 'Atomic/ResultList/ResultBadge'};
-export const DefaultResultBage = exportedStory;
+export const DefaultResultBadge = exportedStory;

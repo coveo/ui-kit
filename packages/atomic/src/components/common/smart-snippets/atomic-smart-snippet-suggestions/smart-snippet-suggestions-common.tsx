@@ -197,7 +197,7 @@ export class SmartSnippetSuggestionCommon {
         <Heading
           level={this.props.getHeadingLevel()}
           part="heading"
-          class="px-6 py-4 text-2xl leading-8 border-b border-neutral"
+          class="px-6 py-4 text-xl leading-8 border-b border-neutral"
         >
           {this.props.getBindings().i18n.t('smart-snippet-people-also-ask')}
         </Heading>

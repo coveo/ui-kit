@@ -2,12 +2,7 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
 import {SearchBox, SearchBoxProps, buildSearchBox} from './headless-search-box';
 
-export type {
-  SearchBoxOptions,
-  SearchBoxProps,
-  SearchBoxState,
-  SearchBox,
-} from './headless-search-box';
+export * from './headless-search-box';
 
 /**
  * @internal
