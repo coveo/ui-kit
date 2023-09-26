@@ -9,20 +9,20 @@ import {
   GeneratedAnswerCitation,
 } from '@coveo/headless';
 import {Component, h, State, Element} from '@stencil/core';
+import {buildCustomEvent} from '../../../utils/event-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {Heading} from '../../common/heading';
+import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {FeedbackButton} from './feedback-button';
-import {RetryPrompt} from './retry-prompt';
-import {TypingLoader} from './typing-loader';
-import {SourceCitations} from './source-citations';
 import {GeneratedContentContainer} from './generated-content-container';
-import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
-import {buildCustomEvent} from '../../../utils/event-utils';
+import {RetryPrompt} from './retry-prompt';
+import {SourceCitations} from './source-citations';
+import {TypingLoader} from './typing-loader';
 
 /**
  * @internal
@@ -120,10 +120,15 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
               }
               stopPropagation={this.stopPropagation}
             >
-              <div class="citation-index rounded-full font-medium rounded-full flex items-center text-bg-blue shrink-0">
+              <div
+                part="citation-index"
+                class="citation-index rounded-full font-medium rounded-full flex items-center text-bg-blue shrink-0"
+              >
                 <div class="mx-auto">{index + 1}</div>
               </div>
-              <span class="citation-title truncate mx-1">{citation.title}</span>
+              <span part="citation-title" class="citation-title truncate mx-1">
+                {citation.title}
+              </span>
             </LinkWithResultAnalytics>
           </li>
         );

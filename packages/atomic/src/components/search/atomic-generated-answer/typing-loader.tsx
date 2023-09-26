@@ -1,9 +1,9 @@
 import {FunctionalComponent, h} from '@stencil/core';
 
 export const TypingLoader: FunctionalComponent = () => (
-  <div class="typing-indicator" aria-hidden="true">
-    <span></span>
-    <span></span>
-    <span></span>
+  <div part="container-background" class="typing-indicator" aria-hidden="true">
+    <span part="container-dot"></span>
+    <span part="container-dot"></span>
+    <span part="container-dot"></span>
   </div>
 );
