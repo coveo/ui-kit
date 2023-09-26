@@ -1,5 +1,5 @@
-import {FacetState, Facet as FacetController} from '@coveo/headless/ssr';
-import {useEffect, useState, FunctionComponent} from 'react';
+'use client';
+
 import FacetCommon from '../../common/facet';
 import {useAuthorFacet} from '../common/engine';
 

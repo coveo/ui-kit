@@ -69,10 +69,10 @@ export interface ControllerDefinitionsMap<
 }
 
 export interface EngineStaticState<
-  TSearchFulfilledAction extends AnyAction,
+  TSearchAction extends AnyAction,
   TControllers extends ControllerStaticStateMap,
 > {
-  searchFulfilledAction: TSearchFulfilledAction;
+  searchAction: TSearchAction;
   controllers: TControllers;
 }
 
@@ -122,16 +122,22 @@ export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
 > = {[K in keyof TControllers]: InferControllerFromDefinition<TControllers[K]>};
 
-export type InferControllerStaticStateFromDefinition<
-  TDefinition extends ControllerDefinition<CoreEngine, Controller>,
-> = TDefinition extends ControllerDefinition<infer _, infer TController>
-  ? ControllerStaticState<TController['state']>
-  : never;
+export type InferControllerStaticStateFromController<
+  TController extends Controller,
+> = ControllerStaticState<TController['state']>;
 
 export type InferControllerStaticStateMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
 > = {
-  [K in keyof TControllers]: InferControllerStaticStateFromDefinition<
+  [K in keyof TControllers]: InferControllerStaticStateFromController<
+    InferControllerFromDefinition<TControllers[K]>
+  >;
+};
+
+export type InferControllerStaticStateMapFromControllers<
+  TControllers extends ControllersMap,
+> = {
+  [K in keyof TControllers]: InferControllerStaticStateFromController<
     TControllers[K]
   >;
 };

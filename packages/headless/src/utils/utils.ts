@@ -1,3 +1,4 @@
+import {Middleware, AnyAction} from '@reduxjs/toolkit';
 import {btoa as btoashim} from 'abab';
 
 export const randomID = (prepend?: string, length = 5) =>
@@ -95,4 +96,44 @@ export function mapObject<TKey extends string, TInitialValue, TNewValue>(
       predicate(value as TInitialValue, key as TKey),
     ])
   ) as Record<TKey, TNewValue>;
+}
+
+// TODO: replace with `structuredClone` when upgrading the supported node version to node 17+.
+export function clone<T>(value: T): T {
+  if (typeof value !== 'object') {
+    return value;
+  }
+  if (!value) {
+    return value;
+  }
+  return JSON.parse(JSON.stringify(value));
+}
+
+function createDeferredPromise<T>(): {
+  promise: Promise<T>;
+  resolve(value: T): void;
+  reject(error: unknown): void;
+} {
+  let resolve: null | ((value: T) => void) = null;
+  let reject: null | ((error: unknown) => void) = null;
+  const promise = new Promise<T>((_resolve, _reject) => {
+    resolve = _resolve;
+    reject = _reject;
+  });
+  return {promise, resolve: resolve!, reject: reject!};
+}
+
+export function createWaitForActionMiddleware<TAction extends AnyAction>(
+  isDesiredAction: (action: AnyAction) => action is TAction
+): {promise: Promise<TAction>; middleware: Middleware} {
+  const {promise, resolve} = createDeferredPromise<TAction>();
+
+  const middleware: Middleware = () => (next) => (action) => {
+    next(action);
+    if (isDesiredAction(action)) {
+      resolve(action);
+    }
+  };
+
+  return {promise, middleware};
 }
