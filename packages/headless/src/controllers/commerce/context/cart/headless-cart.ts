@@ -48,9 +48,9 @@ export interface Cart extends Controller {
 
   /**
    * Removes a cart item.
-   * @param item - The cart item to remove
+   * @param productId - The cart item's product id to remove
    */
-  removeItem(item: CartItem): void;
+  removeItem(productId: string): void;
 
   /**
    * Updates the quantity of a cart item.
@@ -115,13 +115,15 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
     addItem: (item: CartItem) => dispatch(addItem(item)),
 
-    removeItem: (item: CartItem) => dispatch(removeItem(item)),
+    removeItem: (productId: string) => dispatch(removeItem(productId)),
 
     updateItemQuantity: (productId: string, quantity: number) =>
-      dispatch(updateItemQuantity({
-        productId,
-        quantity,
-      })),
+      dispatch(
+        updateItemQuantity({
+          productId,
+          quantity,
+        })
+      ),
   };
 }
 

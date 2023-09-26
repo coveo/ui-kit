@@ -1,8 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../utils/validate-payload';
+import {validatePayload} from '../../../utils/validate-payload';
 import {
   UserParams,
   ViewParams,
@@ -26,18 +23,6 @@ export const setContext = createAction(
   'commerce/setContext',
   (payload: SetContextPayload) => validatePayload(payload, contextDefinition)
 );
-
-const requiredNonEmptyStringAction = (type: string) =>
-  createAction(type, (payload: string) =>
-    validatePayload(payload, requiredNonEmptyString)
-  );
-
-export const setTrackingId = requiredNonEmptyStringAction(
-  'commerce/setTrackingId'
-);
-export const setLanguage = requiredNonEmptyStringAction('commerce/setLanguage');
-export const setCurrency = requiredNonEmptyStringAction('commerce/setCurrency');
-export const setClientId = requiredNonEmptyStringAction('commerce/setClientId');
 
 type SetUserPayload = UserParams;
 

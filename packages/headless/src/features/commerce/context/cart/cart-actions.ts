@@ -1,5 +1,8 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../../../utils/validate-payload';
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../../../utils/validate-payload';
 import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 import {cartItemDefinition, cartDefinition} from './cart-validation';
 
@@ -19,11 +22,9 @@ export const addItem = createAction(
   (payload: AddCartItemPayload) => validatePayload(payload, cartItemDefinition)
 );
 
-export type RemoveItemPayload = CartItemParam;
-
 export const removeItem = createAction(
   'commerce/cart/removeItem',
-  (payload: RemoveItemPayload) => validatePayload(payload, cartItemDefinition)
+  (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );
 
 export type UpdateItemQuantity = CartItemParam;

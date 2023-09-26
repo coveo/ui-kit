@@ -6,11 +6,7 @@ import {
 } from '../../controller/headless-controller';
 import {loadReducerError} from '../../../utils/errors';
 import {
-  setClientId,
   setContext,
-  setCurrency,
-  setLanguage,
-  setTrackingId,
   setUser,
   setView,
 } from '../../../features/commerce/context/context-actions';
@@ -139,13 +135,37 @@ export function buildContext(
       return getState().commerceContext;
     },
 
-    setTrackingId: (trackingId: string) => dispatch(setTrackingId(trackingId)),
+    setTrackingId: (trackingId: string) =>
+      dispatch(
+        setContext({
+          ...getState().commerceContext,
+          trackingId,
+        })
+      ),
 
-    setLanguage: (language: string) => dispatch(setLanguage(language)),
+    setLanguage: (language: string) =>
+      dispatch(
+        setContext({
+          ...getState().commerceContext,
+          language,
+        })
+      ),
 
-    setCurrency: (currency: string) => dispatch(setCurrency(currency)),
+    setCurrency: (currency: string) =>
+      dispatch(
+        setContext({
+          ...getState().commerceContext,
+          currency,
+        })
+      ),
 
-    setClientId: (clientId: string) => dispatch(setClientId(clientId)),
+    setClientId: (clientId: string) =>
+      dispatch(
+        setContext({
+          ...getState().commerceContext,
+          clientId,
+        })
+      ),
 
     setUser: (user: User) => dispatch(setUser(user)),
 
