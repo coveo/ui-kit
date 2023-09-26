@@ -1,13 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {CartState, getCartInitialState} from './cart-state';
 import {addItem, removeItem, setItems, updateItemQuantity} from './cart-actions';
-import {ProductParam} from '../../../../api/commerce/commerce-api-params';
-
-const generateId = (product: ProductParam) => [
-  product.groupId,
-  product.productId,
-  product.sku
-].filter(Boolean).join('_')
 
 export const cartReducer = createReducer(
   getCartInitialState(),
@@ -16,12 +9,11 @@ export const cartReducer = createReducer(
     builder
       .addCase(setItems, (state, {payload}) => {
         const {cart, cartItems} = payload.cart.reduce((acc, item) => {
-          const id = generateId(item.product)
           return ({
-            cartItems: [...acc.cartItems, id],
+            cartItems: [...acc.cartItems, item.productId],
             cart: {
               ...acc.cart,
-              [id]: item.product
+              [item.productId]: item
             }
           }) as CartState;
         }, getCartInitialState());
@@ -30,20 +22,15 @@ export const cartReducer = createReducer(
         state.cart = cart;
       })
       .addCase(addItem, (state, {payload}) => {
-        const id = generateId(payload.product)
-
-        state.cartItems = [...state.cartItems, id]
-        state.cart[id] = payload
+        state.cartItems = [...state.cartItems, payload.productId]
+        state.cart[payload.productId] = payload
       })
       .addCase(removeItem, (state, {payload}) => {
-        const id = generateId(payload.product)
-
-        state.cartItems = state.cartItems.filter((itemId) => itemId !== id)
-        delete state.cart[id]
+        state.cartItems = state.cartItems.filter((itemId) => itemId !== payload.productId)
+        delete state.cart[payload.productId]
       })
       .addCase(updateItemQuantity, (state, {payload}) => {
-        const id = generateId(payload.product)
-        state.cart[id].quantity = payload.quantity
+        state.cart[payload.productId].quantity = payload.quantity
       })
   }
 );

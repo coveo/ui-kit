@@ -1,50 +1,26 @@
-import {ArrayValue, NumberValue, RecordValue, Schema } from "@coveo/bueno";
-import {nonEmptyString, validateOptions} from '../../../../utils/validate-payload';
+import {validateOptions} from '../../../../utils/validate-payload';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {buildController, Controller} from '../../../controller/headless-controller';
+import {
+  buildController,
+  Controller,
+} from '../../../controller/headless-controller';
 import {loadReducerError} from '../../../../utils/errors';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {
   addItem,
   removeItem,
   setItems,
-  updateItemQuantity
+  updateItemQuantity,
 } from '../../../../features/commerce/context/cart/cart-actions';
-
-const optionsSchema = new Schema({
-  cart: new ArrayValue({
-    each: new RecordValue({
-      values: {
-        product: new RecordValue({
-          options: {required: true},
-          values: {
-            groupId: nonEmptyString,
-            productId: nonEmptyString,
-            sku: nonEmptyString
-          }
-        }),
-        quantity: new NumberValue({
-          required: true,
-          min: 1,
-        })
-      }
-    }),
-  }),
-});
+import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
 
 export interface CartOptions {
   cart?: CartItem[];
 }
 
 export interface CartItem {
-  product: Product;
+  productId: string;
   quantity: number;
-}
-
-export interface Product {
-  groupId?: string;
-  productId?: string;
-  sku?: string;
 }
 
 export interface CartProps {
@@ -58,7 +34,6 @@ export interface CartProps {
  * The `Cart` controller exposes methods for managing the cart in a commerce interface.
  */
 export interface Cart extends Controller {
-
   /**
    * Sets the cart items.
    * @param cart - The new cart.
@@ -79,9 +54,10 @@ export interface Cart extends Controller {
 
   /**
    * Updates the quantity of a cart item.
-   * @param item - The cart item to update.
+   * @param productId - The cart item's product id to update.
+   * @param quantity - The cart item's new quantity.
    */
-  updateCartItemQuantity(item: CartItem): void;
+  updateItemQuantity(productId: string, quantity: number): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Cart` controller.
@@ -102,10 +78,7 @@ export type CartControllerState = Cart['state'];
  * @param props - The configurable `Cart` properties.
  * @returns A `Cart` controller instance.
  */
-export function buildCart(
-  engine: CommerceEngine,
-  props: CartProps = {}
-): Cart {
+export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
   if (!loadBaseCartReducers(engine)) {
     throw loadReducerError;
   }
@@ -118,12 +91,12 @@ export function buildCart(
     ...props.options,
   };
 
-  validateOptions(engine, optionsSchema, options, 'buildCart');
+  validateOptions(engine, cartSchema, options, 'buildCart');
 
   if (options.cart) {
     dispatch(
       setItems({
-        cart: options.cart
+        cart: options.cart,
       })
     );
   }
@@ -132,9 +105,9 @@ export function buildCart(
     ...controller,
 
     get state() {
-      const {cart, cartItems} = getState().cart
+      const {cart, cartItems} = getState().cart;
       return {
-        cart: cartItems.map((id: string) => cart[id]) as CartItem[]
+        cart: cartItems.map((id: string) => cart[id]) as CartItem[],
       };
     },
 
@@ -144,7 +117,11 @@ export function buildCart(
 
     removeItem: (item: CartItem) => dispatch(removeItem(item)),
 
-    updateCartItemQuantity: (item: CartItem) => dispatch(updateItemQuantity(item)),
+    updateItemQuantity: (productId: string, quantity: number) =>
+      dispatch(updateItemQuantity({
+        productId,
+        quantity,
+      })),
   };
 }
 

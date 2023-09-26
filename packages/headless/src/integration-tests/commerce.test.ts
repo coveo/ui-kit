@@ -34,15 +34,11 @@ describe('commerce', () => {
 
       const cart = buildCart(engine)
       cart.addItem({
-        product: {
-          sku: 'nice shoes'
-        },
+        productId: 'nice shoes',
         quantity: 2
       })
       cart.addItem({
-        product: {
-          sku: 'small green boots'
-        },
+        productId: 'nice shoes',
         quantity: 3
       })
 

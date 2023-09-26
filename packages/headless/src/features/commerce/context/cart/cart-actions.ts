@@ -1,38 +1,15 @@
-import { createAction } from '@reduxjs/toolkit';
-import {nonEmptyString, validatePayload} from '../../../../utils/validate-payload';
+import {createAction} from '@reduxjs/toolkit';
+import {validatePayload} from '../../../../utils/validate-payload';
 import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
-import { ArrayValue, NumberValue, RecordValue } from '@coveo/bueno';
+import {cartItemDefinition, cartDefinition} from './cart-validation';
 
-const cartItemDefinition = {
-  product: new RecordValue({
-    options: {required: true},
-    values: {
-      groupId: nonEmptyString,
-      productId: nonEmptyString,
-      sku: nonEmptyString
-    }
-  }),
-  quantity: new NumberValue({
-    required: true,
-    min: 1,
-  })
-}
 export interface SetCartPayload {
-  cart: CartItemParam[]
+  cart: CartItemParam[];
 }
 
 export const setItems = createAction(
   'commerce/cart/setItems',
-  (payload: SetCartPayload) =>
-    validatePayload(payload, {
-      cart: new ArrayValue({
-        each: new RecordValue({
-          values: {
-            ...cartItemDefinition
-          }
-        }),
-      })
-    })
+  (payload: SetCartPayload) => validatePayload(payload, cartDefinition)
 );
 
 export type AddCartItemPayload = CartItemParam;

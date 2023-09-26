@@ -1,7 +1,9 @@
-import {RecordValue, Schema } from "@coveo/bueno";
-import {nonEmptyString, requiredNonEmptyString, validateOptions} from '../../../utils/validate-payload';
+import {validateOptions} from '../../../utils/validate-payload';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {buildController, Controller} from '../../controller/headless-controller';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 import {loadReducerError} from '../../../utils/errors';
 import {
   setClientId,
@@ -9,30 +11,11 @@ import {
   setCurrency,
   setLanguage,
   setTrackingId,
-  setUser, setView
+  setUser,
+  setView,
 } from '../../../features/commerce/context/context-actions';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
-
-const optionsSchema = new Schema({
-  trackingId: requiredNonEmptyString,
-  language: requiredNonEmptyString,
-  currency: requiredNonEmptyString,
-  clientId: requiredNonEmptyString,
-  user: new RecordValue({
-    values: {
-      userId: nonEmptyString,
-      email: nonEmptyString,
-      userIp: nonEmptyString,
-      userAgent: nonEmptyString,
-    },
-  }),
-  view: new RecordValue({
-    options: { required: true },
-    values: {
-      url: requiredNonEmptyString,
-    }
-  })
-});
+import {contextSchema} from '../../../features/commerce/context/context-validation';
 
 export interface ContextOptions {
   trackingId: string;
@@ -141,7 +124,7 @@ export function buildContext(
     ...props.options,
   };
 
-  validateOptions(engine, optionsSchema, options, 'buildContext');
+  validateOptions(engine, contextSchema, options, 'buildContext');
 
   dispatch(
     setContext({
@@ -167,7 +150,6 @@ export function buildContext(
     setUser: (user: User) => dispatch(setUser(user)),
 
     setView: (view: View) => dispatch(setView(view)),
-
   };
 }
 

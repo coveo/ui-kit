@@ -41,14 +41,8 @@ export interface UserParams {
 }
 
 export interface CartItemParam {
-  product: ProductParam
+  productId: string
   quantity: number;
-}
-
-export interface ProductParam {
-  groupId?: string;
-  productId?: string;
-  sku?: string;
 }
 
 export interface SelectedFacetsParam {

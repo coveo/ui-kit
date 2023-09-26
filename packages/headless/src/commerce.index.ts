@@ -69,7 +69,6 @@ export {buildInteractiveResult} from './controllers/commerce/product-listing/res
 export type {
   CartOptions,
   CartItem,
-  Product,
   CartProps,
   Cart,
   CartState,
