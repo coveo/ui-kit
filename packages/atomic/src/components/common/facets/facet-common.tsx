@@ -91,11 +91,6 @@ export type BaseFacetElement<FacetType extends AnyFacetType = AnyFacetType> =
     CollapsedProp &
     HeadingLevelProp;
 
-export type FacetManagerElements = (
-  | BaseFacetElement
-  | HTMLAtomicAutomaticFacetGeneratorElement
-)[];
-
 type StateProp<FacetType extends AnyFacetType> = FacetType extends Facet
   ? {facetState: FacetState}
   : FacetType extends NumericFacet
@@ -231,13 +226,17 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   searchStatusState: SearchStatusState;
   facetValues: Pick<FacetValue, 'numberOfResults' | 'state'>[];
 }) {
-  const {hasInput, hasInputRange, facetValues} = facetRange;
+  const {hasInput, hasInputRange, searchStatusState, facetValues} = facetRange;
   if (!hasInput) {
     return false;
   }
 
   if (hasInputRange) {
     return true;
+  }
+
+  if (!searchStatusState.hasResults) {
+    return false;
   }
 
   const onlyValuesWithResultsOrActive =

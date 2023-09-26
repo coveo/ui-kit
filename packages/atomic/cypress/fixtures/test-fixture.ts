@@ -162,7 +162,6 @@ export class TestFixture {
     return this.withCustomResponse((r) => {
       r.results = [];
       r.totalCountFiltered = 0;
-      r.facets = [];
       return r;
     });
   }
