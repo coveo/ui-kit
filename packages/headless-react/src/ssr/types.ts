@@ -1,8 +1,6 @@
 import {
   Controller,
   CoreEngine,
-  SearchEngine,
-  SearchEngineOptions,
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   InferControllersMapFromDefinition,
@@ -63,7 +61,3 @@ export type ReactEngineDefinition<
     }>
   >;
 };
-
-export type ReactSearchEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
-> = ReactEngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
