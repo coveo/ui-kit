@@ -27,6 +27,8 @@ jobs:
     needs: generated-files
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
       - uses: ./.github/actions/commit-generated-files
   lint-check:
     name: 'Check with linter'
@@ -248,6 +250,7 @@ jobs:
     if: success()
     needs:
       - 'build'
+      - 'generated-files'
       - 'lint-check'
       - 'unit-test'
       - 'e2e-atomic-test'
