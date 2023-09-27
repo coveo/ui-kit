@@ -24,7 +24,7 @@ jobs:
       - uses: ./.github/actions/build
   generated-files:
     name: 'Commit generated files'
-    needs: generated-files
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
