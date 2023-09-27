@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "ssr",
-  "description": "Server side rendering utils",
+  "description": "Server side rendering utilities",
   "main": "../dist/ssr/headless.js",
   "module": "../dist/ssr/headless.esm.js",
   "browser": "../dist/browser/ssr/headless.esm.js",
