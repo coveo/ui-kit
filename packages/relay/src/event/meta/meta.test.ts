@@ -1,6 +1,6 @@
 import { createMockClientIdManager } from "../../__mocks__/client-id";
 import { createMockEnvironment } from "../../__mocks__/environment";
-import { createMockOptions } from "../../__mocks__/relay";
+import { createMockConfig } from "../../__mocks__/config";
 import { createMeta } from "./meta";
 
 jest.mock("../../version", () => ({
@@ -15,11 +15,11 @@ describe("createMeta", () => {
     getUrl: () => "https://www.perdu.com/whoops",
     getUserAgent: () => "I am userAgent",
   });
-  const defaultOptions = createMockOptions();
+  const defaultConfig = createMockConfig();
   const defaultClientIdManager = createMockClientIdManager();
   const defaultMeta = createMeta(
     "itemView",
-    defaultOptions,
+    defaultConfig,
     mockEnv,
     defaultClientIdManager
   );
@@ -41,7 +41,7 @@ describe("createMeta", () => {
 
     const specfiedtimeMeta = createMeta(
       "itemView",
-      defaultOptions,
+      defaultConfig,
       mockEnv,
       defaultClientIdManager
     );

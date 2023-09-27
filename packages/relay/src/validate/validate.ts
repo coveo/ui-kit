@@ -1,7 +1,6 @@
 import {
   callEventApi,
   EventApiCallParams,
-  RelayMode,
 } from "../event-api-call/event-api-caller";
 
 export interface ValidationError {

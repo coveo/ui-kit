@@ -8,20 +8,12 @@ import {
   ValidationResponse,
 } from "./validate/validate";
 import { version } from "./version";
-import { RelayMode } from "./event-api-call/event-api-caller";
 import { createMeta, Meta } from "./event/meta/meta";
 import { createListenerManager, EventCallback } from "./listener/listener";
+import { createConfigManager, RelayConfig } from "./config/config";
 
 type RelayPayload = Record<string, unknown>;
 type Off = () => void;
-
-interface RelayOptions {
-  host: string;
-  organizationId: string;
-  token: string;
-  trackingId: string;
-  mode?: RelayMode;
-}
 
 interface Relay {
   validate: (
@@ -32,12 +24,14 @@ interface Relay {
   getMeta: (type: string) => Meta;
   on: (type: string, callback: EventCallback) => Off;
   off: (type: string, callback?: EventCallback) => void;
+  updateConfig: (config: Partial<RelayConfig>) => void;
   version: string;
 }
 
-export function createRelay(options: RelayOptions): Relay {
+export function createRelay(initialConfig: RelayConfig): Relay {
   const environment = currentEnvironment();
   const clientIdManager = createClientIdManager(environment);
+  const configManager = createConfigManager(initialConfig);
   const { add, call, remove } = createListenerManager();
 
   return {
@@ -45,7 +39,7 @@ export function createRelay(options: RelayOptions): Relay {
       const event = createRelayEvent(
         type,
         payload,
-        options,
+        configManager.get(),
         environment,
         clientIdManager
       );
@@ -53,22 +47,16 @@ export function createRelay(options: RelayOptions): Relay {
       call(event);
 
       return validate({
-        options,
+        config: configManager.get(),
         environment,
-        event: createRelayEvent(
-          type,
-          payload,
-          options,
-          environment,
-          clientIdManager
-        ),
+        event,
       });
     },
     emit: (type: string, payload: RelayPayload) => {
       const event = createRelayEvent(
         type,
         payload,
-        options,
+        configManager.get(),
         environment,
         clientIdManager
       );
@@ -76,17 +64,18 @@ export function createRelay(options: RelayOptions): Relay {
       call(event);
 
       return emit({
-        options,
+        config: configManager.get(),
         environment,
         event,
       });
     },
     getMeta: (type: string) =>
-      createMeta(type, options, environment, clientIdManager),
+      createMeta(type, configManager.get(), environment, clientIdManager),
     on: (type: string, callback: EventCallback) => add({ type, callback }),
     off: (type: string, callback?: EventCallback) => remove(type, callback),
+    updateConfig: (config: Partial<RelayConfig>) => configManager.update(config),
     version,
   };
 }
 
-export type { RelayPayload, RelayOptions, ValidationError, ValidationResponse };
+export type { RelayPayload, RelayConfig, ValidationError, ValidationResponse };

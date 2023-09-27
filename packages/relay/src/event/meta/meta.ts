@@ -1,15 +1,15 @@
 import { ClientIdManager } from "../../client-id/client-id";
 import { Environment } from "../../environment/environment";
-import { RelayOptions } from "../../relay";
+import { RelayConfig } from "../../config/config";
 import { version } from "../../version";
 
-interface Config {
+interface EventConfig {
   trackingId: string;
 }
 
 export interface Meta {
   type: string;
-  config: Config;
+  config: EventConfig;
   ts: number;
   source: string;
   clientId: string;
@@ -18,8 +18,8 @@ export interface Meta {
   url: string | null;
 }
 
-function getConfig(options: RelayOptions): Config {
-  const { trackingId } = options;
+function getEventConfig(config: RelayConfig): EventConfig {
+  const { trackingId } = config;
   return { trackingId };
 }
 
@@ -29,17 +29,17 @@ function getSource(): string {
 
 export function createMeta(
   type: string,
-  options: RelayOptions,
+  config: RelayConfig,
   environment: Environment,
   clientIdManager: ClientIdManager
 ): Readonly<Meta> {
   const { getReferrerUrl, getUrl, getUserAgent } = environment;
-  const config = getConfig(options);
+  const eventConfig = getEventConfig(config);
   const { clientId } = clientIdManager;
 
   return Object.freeze({
     type,
-    config,
+    config: eventConfig,
     ts: Date.now(),
     source: getSource(),
     clientId,

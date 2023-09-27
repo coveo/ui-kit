@@ -1,21 +1,22 @@
 import { createMockEnvironment } from "../__mocks__/environment";
 import { createMockEvent } from "../__mocks__/event";
-import { createMockOptions } from "../__mocks__/relay";
+import { createMockConfig } from "../__mocks__/config";
 import { callEventApi } from "./event-api-caller";
 
 describe("callEventApi", () => {
+  const config = createMockConfig({ mode: "validate" });
   const event = createMockEvent();
   const environment = createMockEnvironment();
-  const options = createMockOptions();
 
-  it("sets expected url and body for the fetch function", async () => {
-    const optionsWithValidateMode = createMockOptions({
+  it("sets expected url and body for the fetch function for validate mode", async () => {
+    const configWithValidateMode = createMockConfig({
       mode: "validate",
     });
-    const { host, organizationId } = options;
+    const { host, organizationId } = configWithValidateMode;
+
     await callEventApi({
       event,
-      options: optionsWithValidateMode,
+      config: configWithValidateMode,
       environment,
     });
 
@@ -33,9 +34,10 @@ describe("callEventApi", () => {
   });
 
   it("sets expected url and body for the fetch function for emit mode", async () => {
-    const options = createMockOptions({ mode: "emit" });
-    const { host, organizationId } = options;
-    await callEventApi({ event, options, environment });
+    const configWithEmitMode = createMockConfig({ mode: "emit" });
+    const { host, organizationId } = configWithEmitMode;
+    
+    await callEventApi({ event, config: configWithEmitMode, environment });
 
     const expectedEvent = [createMockEvent()];
     const expectedHeaders = {
@@ -66,11 +68,7 @@ describe("callEventApi", () => {
     });
 
     expect(() =>
-      callEventApi({
-        options,
-        event,
-        environment: rejectedEnvironment,
-      })
+      callEventApi({ config, event, environment: rejectedEnvironment })
     ).rejects.toThrow();
   });
 });

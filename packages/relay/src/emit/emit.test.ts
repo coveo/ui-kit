@@ -1,10 +1,10 @@
 import { createMockEnvironment } from "../__mocks__/environment";
 import { createMockEvent } from "../__mocks__/event";
-import { createMockOptions } from "../__mocks__/relay";
+import { createMockConfig } from "../__mocks__/config";
 import { emit } from "./emit";
 
 describe("emit", () => {
-  const options = createMockOptions();
+  const config = createMockConfig();
   const event = createMockEvent();
 
   it("send an events and returns void", async () => {
@@ -26,7 +26,7 @@ describe("emit", () => {
       ),
     });
     const response = await emit({
-      options,
+      config,
       event,
       environment: environmentWithSuccessfulFetch,
     });

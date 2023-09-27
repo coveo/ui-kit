@@ -1,6 +1,6 @@
 import { ClientIdManager } from "../client-id/client-id";
 import { Environment } from "../environment/environment";
-import { RelayOptions, RelayPayload } from "../relay";
+import { RelayConfig, RelayPayload } from "../relay";
 import { createMeta, Meta } from "./meta/meta";
 
 export interface RelayEvent extends RelayPayload {
@@ -10,12 +10,12 @@ export interface RelayEvent extends RelayPayload {
 export function createRelayEvent(
   type: string,
   payload: RelayPayload,
-  options: RelayOptions,
+  config: RelayConfig,
   environment: Environment,
   clientIdManager: ClientIdManager
 ): Readonly<RelayEvent> {
   return {
     ...payload,
-    meta: createMeta(type, options, environment, clientIdManager),
+    meta: createMeta(type, config, environment, clientIdManager),
   };
 }

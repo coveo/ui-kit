@@ -1,28 +1,26 @@
 import { Environment } from "../environment/environment";
-import { RelayOptions } from "../relay";
 import { RelayEvent } from "../event/relay-event";
+import { RelayConfig } from "../config/config";
 
 export interface EventApiCallParams {
-  options: RelayOptions;
+  config: RelayConfig;
   environment: Environment;
   event: Readonly<RelayEvent>;
 }
 
-export type RelayMode = "emit" | "validate";
-
 export async function callEventApi({
   event,
-  options,
+  config,
   environment,
 }: EventApiCallParams): Promise<any> {
-  const { token, host, organizationId } = options;
+  const { token, host, organizationId } = config;
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
   };
   const response = await environment.fetch(
     `${host}/rest/organizations/${organizationId}/events/v1${
-      options.mode == "validate" ? "/validate" : ""
+      config.mode == "validate" ? "/validate" : ""
     }`,
     {
       method: "POST",

@@ -1,10 +1,10 @@
 import { createMockEnvironment } from "../__mocks__/environment";
 import { createMockEvent } from "../__mocks__/event";
-import { createMockOptions } from "../__mocks__/relay";
+import { createMockConfig } from "../__mocks__/config";
 import { validate, ValidationResponse } from "./validate";
 
 describe("validate", () => {
-  const options = createMockOptions();
+  const config = createMockConfig();
   const event = createMockEvent();
 
   it("returns the first event of the validation response if it's invalid", async () => {
@@ -23,7 +23,7 @@ describe("validate", () => {
       ),
     });
     const response = (await validate({
-      options,
+      config,
       event,
       environment: environmentWithSuccessfulFetch,
     })) as Readonly<ValidationResponse>;
@@ -50,7 +50,7 @@ describe("validate", () => {
       ),
     });
     const response = (await validate({
-      options,
+      config,
       event,
       environment: environmentWithSuccessfulFetch,
     })) as Readonly<ValidationResponse>;

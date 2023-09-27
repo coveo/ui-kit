@@ -1,7 +1,9 @@
 const { createRelay } = require("@coveo/relay");
 const { readFileSync } = require("fs");
 
-assertVersion(createRelay());
+assertVersion(
+  createRelay({ host: "b", organizationId: "a", token: "c", trackingId: "d" })
+);
 
 function assertVersion(relay) {
   const { version: relayVersionInPackageJSON } = JSON.parse(
