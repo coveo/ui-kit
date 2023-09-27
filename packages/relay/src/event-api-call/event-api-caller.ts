@@ -33,7 +33,6 @@ export async function callEventApi({
 
   if (!response.ok) {
     throw new Error({
-      responseType: "serviceError",
       ...data,
     });
   }

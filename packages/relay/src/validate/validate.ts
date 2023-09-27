@@ -11,7 +11,6 @@ export interface ValidationError {
 
 export interface ValidationResponse {
   valid: boolean;
-  responseType: "validation";
   errors: ValidationError[];
 }
 
@@ -22,5 +21,5 @@ export async function validate(
 
   const { valid, errors } = data[0];
 
-  return { valid, errors: errors ?? [], responseType: "validation" };
+  return { valid, errors: errors ?? [] };
 }

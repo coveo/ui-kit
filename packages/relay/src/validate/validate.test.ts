@@ -31,7 +31,6 @@ describe("validate", () => {
     expect(response).toEqual({
       valid: false,
       errors: [{ type: "whoops", message: "uh oh", path: ".$" }],
-      responseType: "validation",
     });
   });
 
@@ -58,7 +57,6 @@ describe("validate", () => {
     expect(response).toEqual({
       valid: true,
       errors: [],
-      responseType: "validation",
     });
   });
 });

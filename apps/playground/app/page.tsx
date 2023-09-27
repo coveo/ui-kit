@@ -8,11 +8,12 @@ import { Report } from "./validator/report";
 import { events } from "./events";
 
 export default function Page() {
-  const { validate } = createRelay({
+  const { emit } = createRelay({
     token: "xx3d20bc92-afb6-4b7f-90b6-abb568085ea8",
     organizationId: "aduiorgtestdonotdeletepleaseas62tcf4",
     host: "https://platformdev.cloud.coveo.com",
     trackingId: "playground",
+    mode: "validate",
   });
 
   function prettify(obj: Object) {
@@ -28,7 +29,10 @@ export default function Page() {
   const isResettable = prettify(event.payload) !== payload;
 
   async function send() {
-    const response = await validate(event.type, JSON.parse(payload));
+    const response = (await emit(
+      event.type,
+      JSON.parse(payload)
+    )) as ValidationResponse;
     setValidationResponse(response);
   }
 
