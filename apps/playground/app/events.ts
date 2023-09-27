@@ -15,7 +15,6 @@ const product = {
   productId: "a",
   name: "ski",
   price: 10,
-  sku: "ski-large",
 };
 
 const products = [
@@ -25,7 +24,6 @@ const products = [
       productId: "b",
       name: "snowboard",
       price: 10,
-      sku: "snowboard-large",
     },
     quantity: 2,
   },
