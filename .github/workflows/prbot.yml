@@ -1,5 +1,7 @@
 name: PR Robot
-on: [pull_request]
+on:
+  - pull_request:
+  - workflow_dispatch:
 jobs:
   report-size:
     name: 'Report bundle size'
@@ -26,10 +28,28 @@ jobs:
     name: 'Commit generated files'
     needs: build
     runs-on: ubuntu-latest
+    outputs:
+      SHA: ${{ steps.commit-generated-files.outputs.SHA }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/commit-generated-files
+      - id: commit-generated-files
+        uses: ./.github/actions/commit-generated-files
+  retrigger-workflow:
+    name: 'Retrigger workflow'
+    needs: generated-files
+    runs-on: ubuntu-latest
+    if: steps.generated-files.outputs.SHA != ''
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'test.yml',
+              ref: '${{ steps.generated-files.outputs.SHA }}',
+            })
   lint-check:
     name: 'Check with linter'
     needs: generated-files

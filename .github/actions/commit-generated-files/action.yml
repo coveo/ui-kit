@@ -14,5 +14,6 @@ runs:
           git commit -m "Add generated files"
 
           git push origin ${{ github.head_ref }}
+          echo SHA=$(git rev-parse --verify HEAD) >> $GITHUB_OUTPUT
         fi
       shell: bash
