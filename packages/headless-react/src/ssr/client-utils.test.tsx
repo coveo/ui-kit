@@ -1,5 +1,4 @@
 import {renderHook} from '@testing-library/react';
-import {useEffect} from 'react';
 import {useSyncMemoizedStore} from './client-utils';
 
 describe('useSyncMemoizedStore', () => {
@@ -87,21 +86,24 @@ describe('useSyncMemoizedStore', () => {
     expect(result.current).toEqual(snapshot2);
   });
 
-  it('should re-render only when the subscribe listener is called', () => {
+  it('should call the subscribe listener on mount and unsubscribe on unmount', () => {
     const snapshot = {count: 0};
     const unsubscribe = jest.fn();
-    const subscribe = jest.fn(() => unsubscribe);
+    const listener = jest.fn();
+    const subscribe = jest.fn(() => {
+      listener();
+      return unsubscribe;
+    });
     const getSnapshot = jest.fn(() => snapshot);
-    const effect = jest.fn();
 
-    const {result} = renderHook(() => {
-      const state = useSyncMemoizedStore(subscribe, getSnapshot);
-      useEffect(effect, [state]);
-      return state;
+    const {result, unmount} = renderHook(() => {
+      return useSyncMemoizedStore(subscribe, getSnapshot);
     });
 
     expect(result.current).toEqual(snapshot);
-    subscribe();
-    expect(effect).toHaveBeenCalledTimes(1);
+    expect(listener).toHaveBeenCalledTimes(1);
+    expect(unsubscribe).not.toHaveBeenCalled();
+    unmount();
+    expect(unsubscribe).toHaveBeenCalledTimes(1);
   });
 });
