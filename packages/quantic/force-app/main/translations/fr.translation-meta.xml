@@ -691,5 +691,13 @@
   <customLabels>
     <label>Quelque chose s'est mal passé lors de la tentative de génération d'une réponse.</label>
     <name>quantic_CouldNotGenerateAnAnswer</name>
-</customLabels>
+  </customLabels>
+  <customLabels>
+    <label>Résultats affichés pour {{0}}</label>
+    <name>quantic_ShowingResultsFor</name>
+  </customLabels>
+  <customLabels>
+    <label>Rechercher à la place {{0}}</label>
+    <name>quantic_SearchInsteadFor</name>
+  </customLabels>
 </Translations>
