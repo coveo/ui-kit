@@ -73,7 +73,8 @@ export function createRelay(initialConfig: RelayConfig): Relay {
       createMeta(type, configManager.get(), environment, clientIdManager),
     on: (type: string, callback: EventCallback) => add({ type, callback }),
     off: (type: string, callback?: EventCallback) => remove(type, callback),
-    updateConfig: (config: Partial<RelayConfig>) => configManager.update(config),
+    updateConfig: (config: Partial<RelayConfig>) =>
+      configManager.update(config),
     version,
   };
 }

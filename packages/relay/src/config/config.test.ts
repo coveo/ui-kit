@@ -12,9 +12,9 @@ describe("createConfigManager", () => {
   describe("get", () => {
     it("returns an immutable config object", () => {
       const { get } = createConfigManager(initialConfig);
-      
+
       expect(get()).toEqual(initialConfig);
-      initialConfig.host = 'bap';
+      initialConfig.host = "bap";
       expect(get().host).not.toEqual(initialConfig.host);
     });
 
@@ -26,12 +26,15 @@ describe("createConfigManager", () => {
       expect(get()).toEqual(initialConfig);
     });
 
-    it('returns the config with optional parameters if set', () => {
-      const configWithOptionalParams = createMockConfig({...initialConfig, mode: "validate"});
+    it("returns the config with optional parameters if set", () => {
+      const configWithOptionalParams = createMockConfig({
+        ...initialConfig,
+        mode: "validate",
+      });
       const { get } = createConfigManager(configWithOptionalParams);
 
       expect(get()).toEqual(configWithOptionalParams);
-    })
+    });
   });
 
   describe("update", () => {

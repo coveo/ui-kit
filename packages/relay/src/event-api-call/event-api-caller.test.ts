@@ -36,7 +36,7 @@ describe("callEventApi", () => {
   it("sets expected url and body for the fetch function for emit mode", async () => {
     const configWithEmitMode = createMockConfig({ mode: "emit" });
     const { host, organizationId } = configWithEmitMode;
-    
+
     await callEventApi({ event, config: configWithEmitMode, environment });
 
     const expectedEvent = [createMockEvent()];
