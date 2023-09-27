@@ -2101,6 +2101,7 @@ export namespace Components {
     }
     /**
      * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+     * blah
      */
     interface AtomicSearchInterface {
         /**
@@ -3612,6 +3613,7 @@ declare global {
     };
     /**
      * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+     * blah
      */
     interface HTMLAtomicSearchInterfaceElement extends Components.AtomicSearchInterface, HTMLStencilElement {
     }
@@ -5903,6 +5905,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+     * blah
      */
     interface AtomicSearchInterface {
         /**
@@ -6879,6 +6882,7 @@ declare module "@stencil/core" {
             "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             /**
              * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
+             * blah
              */
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             /**
