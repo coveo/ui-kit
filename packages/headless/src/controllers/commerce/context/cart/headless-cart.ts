@@ -15,7 +15,7 @@ import {
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
 
 export interface CartOptions {
-  cart?: CartItem[];
+  items?: CartItem[];
 }
 
 export interface CartItem {
@@ -93,12 +93,8 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
 
   validateOptions(engine, cartSchema, options, 'buildCart');
 
-  if (options.cart) {
-    dispatch(
-      setItems({
-        cart: options.cart,
-      })
-    );
+  if (options.items) {
+    dispatch(setItems(options.items));
   }
 
   return {
@@ -111,7 +107,7 @@ export function buildCart(engine: CommerceEngine, props: CartProps = {}): Cart {
       };
     },
 
-    setItems: (cart: CartItem[]) => dispatch(setItems({cart})),
+    setItems: (items: CartItem[]) => dispatch(setItems(items)),
 
     addItem: (item: CartItem) => dispatch(addItem(item)),
 

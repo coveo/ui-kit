@@ -13,7 +13,7 @@ export const cartReducer = createReducer(
   (builder) => {
     builder
       .addCase(setItems, (state, {payload}) => {
-        const {cart, cartItems} = payload.cart.reduce((acc, item) => {
+        const {cart, cartItems} = payload.reduce((acc, item) => {
           return {
             cartItems: [...acc.cartItems, item.productId],
             cart: {

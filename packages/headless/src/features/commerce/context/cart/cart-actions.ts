@@ -4,15 +4,12 @@ import {
   validatePayload,
 } from '../../../../utils/validate-payload';
 import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
-import {cartItemDefinition, cartDefinition} from './cart-validation';
-
-export interface SetCartPayload {
-  cart: CartItemParam[];
-}
+import {cartItemDefinition, itemsDefinition} from './cart-validation';
 
 export const setItems = createAction(
   'commerce/cart/setItems',
-  (payload: SetCartPayload) => validatePayload(payload, cartDefinition)
+  (payload: CartItemParam[]) =>
+    validatePayload<CartItemParam[]>(payload, itemsDefinition)
 );
 
 export type AddCartItemPayload = CartItemParam;

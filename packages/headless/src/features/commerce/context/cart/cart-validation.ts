@@ -9,14 +9,16 @@ export const cartItemDefinition = {
   }),
 };
 
-export const cartDefinition = {
-  cart: new ArrayValue({
-    each: new RecordValue({
-      values: {
-        ...cartItemDefinition,
-      },
-    }),
+export const itemsDefinition = new ArrayValue({
+  each: new RecordValue({
+    values: {
+      ...cartItemDefinition,
+    },
   }),
+});
+
+export const cartDefinition = {
+  items: itemsDefinition,
 };
 
 export const cartSchema = new Schema(cartDefinition);

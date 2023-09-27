@@ -28,12 +28,7 @@ describe('cart-slice', () => {
       productId: 'a-second-product',
       quantity: 200,
     };
-    const updatedState = cartReducer(
-      state,
-      setItems({
-        cart: [someItem, secondItem],
-      })
-    );
+    const updatedState = cartReducer(state, setItems([someItem, secondItem]));
     expect(updatedState.cartItems).toEqual([
       someItem.productId,
       secondItem.productId,

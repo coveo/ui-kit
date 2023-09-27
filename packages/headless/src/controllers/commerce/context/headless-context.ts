@@ -87,10 +87,10 @@ export interface Context extends Controller {
 }
 
 export interface ContextState {
-  trackingId?: string;
-  language?: string;
-  currency?: string;
-  clientId?: string;
+  trackingId: string;
+  language: string;
+  currency: string;
+  clientId: string;
   user?: User;
   view: View;
 }
