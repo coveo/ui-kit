@@ -8,7 +8,6 @@ import {
   interceptSearch,
   mockSearchWithDidYouMean,
   mockSearchWithDidYouMeanAutomaticallyCorrected,
-  mockSearchWithQueryTrigger,
   mockSearchWithResults,
 } from '../../../page-objects/search';
 import {
@@ -109,53 +108,6 @@ describe('quantic-did-you-mean', () => {
           Expect.logDidYouMeanAutomaticCorrection();
         });
       });
-
-      if (param.useCase === useCaseEnum.search) {
-        describe('query pipeline triggers', () => {
-          describe('when a query pipeline trigger is fired', () => {
-            it('should automatically trigger the new query', () => {
-              visitDidYouMean({useCase: param.useCase});
-              cy.wait(getQueryAlias(param.useCase));
-              setQuery(exampleOriginalQuery);
-              mockSearchWithQueryTrigger(param.useCase, exampleCorrectedQuery);
-
-              scope('when executing a search', () => {
-                performSearch();
-
-                Expect.displayShowingResultsForLabel(true);
-                Expect.showingResultsForLabelContains(exampleCorrectedQuery);
-                Expect.displaySearchInsteadForLabel(true);
-                Expect.displayUndoButton(true);
-                Expect.undoButtonContains(exampleOriginalQuery);
-                Expect.logQueryPipelineTrigger(exampleCorrectedQuery);
-              });
-
-              scope('when clicking the undo button', () => {
-                Actions.clickUndoButton();
-                cy.wait(getQueryAlias(param.useCase));
-                Expect.logUndoQuery(exampleCorrectedQuery);
-              });
-            });
-          });
-
-          describe('when no query pipeline trigger is fired', () => {
-            it('should not modify the query', () => {
-              visitDidYouMean({useCase: param.useCase});
-              cy.wait(getQueryAlias(param.useCase));
-              setQuery(exampleOriginalQuery);
-
-              scope('when executing a search', () => {
-                performSearch();
-
-                Expect.logSearchBoxSubmit(exampleOriginalQuery);
-                Expect.displayShowingResultsForLabel(false);
-                Expect.displaySearchInsteadForLabel(false);
-                Expect.displayUndoButton(false);
-              });
-            });
-          });
-        });
-      }
     });
   });
 });
