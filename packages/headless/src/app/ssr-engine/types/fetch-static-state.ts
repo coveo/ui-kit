@@ -6,12 +6,12 @@ import {
 } from './common';
 
 export type EngineDefinitionFetchStaticStateOptions<
-  TControllersStaticState extends ControllersPropsMap
+  TControllersStaticState extends ControllersPropsMap,
 > = {controllers: TControllersStaticState};
 
 export type FetchStaticStateWithoutProps<
   TControllersStaticState extends ControllerStaticStateMap,
-  TSearchFulfilledAction extends AnyAction
+  TSearchAction extends AnyAction,
 > = {
   /**
    * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
@@ -19,14 +19,14 @@ export type FetchStaticStateWithoutProps<
    * Useful for static generation and server-side rendering.
    */
   fetchStaticState(): Promise<
-    EngineStaticState<TSearchFulfilledAction, TControllersStaticState>
+    EngineStaticState<TSearchAction, TControllersStaticState>
   >;
 };
 
 export type FetchStaticStateWithProps<
   TControllersStaticState extends ControllerStaticStateMap,
-  TSearchFulfilledAction extends AnyAction,
-  TControllersProps extends ControllersPropsMap
+  TSearchAction extends AnyAction,
+  TControllersProps extends ControllersPropsMap,
 > = {
   /**
    * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
@@ -35,7 +35,5 @@ export type FetchStaticStateWithProps<
    */
   fetchStaticState(
     options: EngineDefinitionFetchStaticStateOptions<TControllersProps>
-  ): Promise<
-    EngineStaticState<TSearchFulfilledAction, TControllersStaticState>
-  >;
+  ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 };

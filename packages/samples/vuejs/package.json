@@ -11,19 +11,19 @@
     "build:assets": "ncp ../../atomic/dist/atomic/assets public/assets && ncp ../../atomic/dist/atomic/lang public/lang"
   },
   "dependencies": {
-    "@coveo/atomic": "2.43.0",
-    "@coveo/headless": "2.31.0",
-    "core-js": "3.24.1",
-    "vue": "3.2.37"
+    "@coveo/atomic": "2.43.1",
+    "@coveo/headless": "2.32.0",
+    "core-js": "3.32.2",
+    "vue": "3.3.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "5.0.8",
     "@vue/cli-plugin-typescript": "5.0.8",
     "@vue/cli-service": "5.0.8",
-    "cypress": "10.8.0",
+    "cypress": "13.2.0",
     "cypress-repeat": "2.3.3",
     "html-loader": "4.2.0",
     "ncp": "2.0.0",
-    "typescript": "5.1.6"
+    "typescript": "5.2.2"
   }
 }

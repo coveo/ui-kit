@@ -97,7 +97,7 @@ export default (
         });
       }
 
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addResultFn(
@@ -151,7 +151,7 @@ export default (
               .should('have.class', `density-${density}`);
           });
         },
-        {componentTag}
+        {componentTag, useBeforeEach: true}
       );
     });
 
@@ -163,7 +163,7 @@ export default (
         return element;
       }
 
-      before(() => {
+      beforeEach(() => {
         new TestFixture()
           .with(
             addResultFn(
@@ -190,6 +190,7 @@ export default (
           densities: ['normal'],
           imageSizes: ['icon', 'small'],
           componentTag,
+          useBeforeEach: true,
         }
       );
     });

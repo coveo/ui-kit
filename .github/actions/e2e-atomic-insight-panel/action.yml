@@ -16,5 +16,6 @@ runs:
         config-file: cypress-insight-panel.config.ts
         start: npx nx run atomic:prod
         wait-on: 'http://localhost:3333'
+        wait-on-timeout: 600000
         install: false
         record: false

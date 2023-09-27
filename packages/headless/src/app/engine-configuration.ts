@@ -38,7 +38,8 @@ export interface CoreEngineOrganizationEndpoints {
  * The global headless engine configuration options.
  */
 export interface EngineConfiguration<
-  OrganizationEndpoints extends CoreEngineOrganizationEndpoints = CoreEngineOrganizationEndpoints
+  OrganizationEndpoints extends
+    CoreEngineOrganizationEndpoints = CoreEngineOrganizationEndpoints,
 > {
   /**
    * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)

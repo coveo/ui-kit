@@ -27,6 +27,14 @@ export function assertAnswerHeight(expectedHeight: number) {
   });
 }
 
+export function assertCollapseWrapperHeight(expectedHeight: number) {
+  it(`the collapse wrapper should have a displayed height of ${expectedHeight}px`, () => {
+    SmartSnippetSelectors.collapseWrapper()
+      .invoke('height')
+      .should('equal', expectedHeight);
+  });
+}
+
 export function assertAnswerTopMargin(
   margin: number,
   firstElementClass: string

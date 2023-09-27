@@ -55,7 +55,9 @@ describe('deepEqualAnyOrder', () => {
           b1: 3,
         },
       };
-      expect(deepEqualAnyOrder(objectA, objectB)).toBe(false);
+      expect(
+        deepEqualAnyOrder(objectA, objectB as unknown as typeof objectA)
+      ).toBe(false);
     });
   });
 
