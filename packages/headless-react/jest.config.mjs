@@ -1,6 +1,7 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 export default {
   testEnvironment: 'jsdom',
+  setupFiles: ['./jest.setup.structured.clone.js'],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },

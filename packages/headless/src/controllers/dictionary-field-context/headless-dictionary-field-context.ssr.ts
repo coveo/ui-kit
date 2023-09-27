@@ -1,4 +1,4 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {CoreEngine} from '../../app/engine';
 import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
 import {
   DictionaryFieldContext,
@@ -11,9 +11,6 @@ export * from './headless-dictionary-field-context';
  * @internal
  */
 export const defineDictionaryFieldContext =
-  (): ControllerDefinitionWithoutProps<
-    SearchEngine,
-    DictionaryFieldContext
-  > => ({
+  (): ControllerDefinitionWithoutProps<CoreEngine, DictionaryFieldContext> => ({
     build: (engine) => buildDictionaryFieldContext(engine),
   });

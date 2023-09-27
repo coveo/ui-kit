@@ -7,10 +7,8 @@ import {
 } from '@coveo/headless/ssr';
 import {act, render, renderHook, screen} from '@testing-library/react';
 import {PropsWithChildren} from 'react';
-import {
-  MissingEngineProviderError,
-  defineSearchEngine,
-} from './search-engine.js';
+import {defineSearchEngine} from './search-engine.js';
+import {MissingEngineProviderError} from './common.js';
 
 describe('Headless react SSR utils', () => {
   let errorSpy: jest.SpyInstance;
