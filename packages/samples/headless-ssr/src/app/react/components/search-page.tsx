@@ -24,7 +24,7 @@ export function SearchPageProvider({
 
   useEffect(() => {
     hydrateStaticState({
-      searchFulfilledAction: staticState.searchFulfilledAction,
+      searchAction: staticState.searchAction,
       controllers: {
         searchParameters: {
           initialState: staticState.controllers.searchParameters.state,

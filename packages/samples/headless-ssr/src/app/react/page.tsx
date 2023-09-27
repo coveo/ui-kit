@@ -7,6 +7,7 @@ import {
 import ResultList from './components/result-list';
 import SearchBox from './components/search-box';
 import SearchParameters from './components/search-parameters';
+import {AuthorFacet} from './components/facets';
 
 // Entry point SSR function
 export default async function Search(url: {
@@ -31,6 +32,7 @@ export default async function Search(url: {
       <SearchParameters />
       <SearchBox />
       <ResultList />
+      <AuthorFacet />
     </SearchPageProvider>
   );
 }
