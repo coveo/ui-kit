@@ -22,10 +22,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/build
+  generated-files:
+    name: 'Commit generated files'
+    needs: generated-files
+    runs-on: ubuntu-latest
+    steps:
       - uses: ./.github/actions/commit-generated-files
   lint-check:
     name: 'Check with linter'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +38,7 @@ jobs:
       - run: npm run lint:check
   unit-test:
     name: 'Run unit tests'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +46,7 @@ jobs:
       - run: npm test
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -107,7 +112,7 @@ jobs:
             57,
             58,
             59,
-            60
+            60,
           ]
     steps:
       - uses: actions/checkout@v4
@@ -119,7 +124,7 @@ jobs:
           SPLIT_INDEX: ${{ strategy.job-index }}
   e2e-atomic-screenshots:
     name: 'Run e2e screenshots tests on Atomic'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -127,7 +132,7 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-screenshots
   e2e-atomic-react-test:
     name: 'Run e2e tests on Atomic React'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -135,7 +140,7 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-react
   e2e-atomic-react-nextjs-test:
     name: 'Run e2e tests on Atomic React NextJS'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -143,7 +148,7 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-next
   e2e-iife-test:
     name: 'Run e2e tests for IIFE'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -151,7 +156,7 @@ jobs:
       - uses: ./.github/actions/e2e-iife
   e2e-atomic-angular-test:
     name: 'Run e2e tests on Atomic Angular'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -161,7 +166,7 @@ jobs:
     name: 'Run e2e tests on Vue.js sample'
     # TODO KIT-2624 enable back.
     if: false
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -169,7 +174,7 @@ jobs:
       - uses: ./.github/actions/e2e-vuejs
   e2e-atomic-stencil-test:
     name: 'Run e2e tests on Stencil.js sample'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -177,7 +182,7 @@ jobs:
       - uses: ./.github/actions/e2e-stencil
   e2e-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -185,7 +190,7 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-hosted-page
   e2e-atomic-insight-panel-test:
     name: 'Run e2e tests on Atomic insight panel'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -193,7 +198,7 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-insight-panel
   e2e-headless-ssr-test:
     name: 'Run e2e tests on Headless SSR sample'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -201,7 +206,7 @@ jobs:
       - uses: ./.github/actions/e2e-headless-ssr
   e2e-quantic-setup:
     name: 'Setup e2e tests on Quantic'
-    needs: build
+    needs: generated-files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
