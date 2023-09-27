@@ -1,3 +1,9 @@
+## 1.3.4 (2023-09-27)
+
+### Bug Fixes
+
+- remove sku from playground events (#41) ([204ea8b](/commits/204ea8be29ab049666d504e0548113b9dd37d8c3)), closes [#41](/issues/41)
+
 ## 1.3.3 (2023-09-27)
 
 ## 1.3.2 (2023-09-27)
