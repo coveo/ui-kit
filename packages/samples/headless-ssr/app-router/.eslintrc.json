@@ -3,7 +3,7 @@
   "root": true,
   "settings": {
     "next": {
-      "rootDir": "packages/samples/headless-ssr"
+      "rootDir": "packages/samples/headless-ssr/app-router/src"
     }
   }
 }
