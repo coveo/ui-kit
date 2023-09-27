@@ -1,16 +1,15 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
-import {Middleware} from '@reduxjs/toolkit';
+import {AnyAction} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers';
-import {mapObject} from '../../utils/utils';
+import {createWaitForActionMiddleware} from '../../utils/utils';
 import {EngineDefinitionBuildOptionsWithProps} from '../ssr-engine/types/build';
 import {
   ControllerDefinitionsMap,
-  ControllersMap,
   EngineStaticState,
+  InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
-  InferControllersMapFromDefinition,
   OptionsExtender,
 } from '../ssr-engine/types/common';
 import {
@@ -22,6 +21,11 @@ import {
   SearchEngineOptions,
   buildSearchEngine,
 } from './search-engine';
+import {SearchAction} from '../../features/analytics/analytics-utils';
+import {
+  buildControllerDefinitions,
+  createStaticState,
+} from '../ssr-engine/common';
 
 /**
  * @internal
@@ -36,6 +40,16 @@ export type SearchEngineDefinition<
 export type SearchEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
+
+export type SearchCompletedAction = ReturnType<
+  SearchAction['fulfilled' | 'rejected']
+>;
+
+function isSearchCompletedAction(
+  action: AnyAction
+): action is SearchCompletedAction {
+  return /^search\/executeSearch\/(fulfilled|rejected)$/.test(action.type);
+}
 
 /**
  * @internal
@@ -63,70 +77,50 @@ export function defineSearchEngine<
         ? await buildOptions.extend(engineOptions)
         : engineOptions
     );
-    const controllerOptions =
-      buildOptions && 'controllers' in buildOptions
+    const controllers = buildControllerDefinitions({
+      definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
+      engine,
+      propsMap: (buildOptions && 'controllers' in buildOptions
         ? buildOptions.controllers
-        : null;
-    const controllers = controllerDefinitions
-      ? mapObject(controllerDefinitions, (definition, key) =>
-          'build' in definition
-            ? definition.build(engine)
-            : definition.buildWithProps(
-                engine,
-                controllerOptions?.[key as keyof typeof controllerOptions]
-              )
-        )
-      : {};
+        : {}) as InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
+    });
     return {
       engine,
-      controllers:
-        controllers as InferControllersMapFromDefinition<TControllerDefinitions>,
+      controllers,
     };
   };
 
   const fetchStaticState: SearchEngineDefinition<TControllerDefinitions>['fetchStaticState'] =
-    (
+    async (
       ...[executeOptions]: Parameters<
         SearchEngineDefinition<TControllerDefinitions>['fetchStaticState']
       >
-    ) =>
-      new Promise<
-        EngineStaticState<
-          {type: string},
-          InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
-        >
-      >((resolve, reject) => {
-        let staticControllers: ControllersMap;
-        const middleware: Middleware = () => (next) => (action) => {
-          next(action);
-          if (action.type === 'search/executeSearch/fulfilled') {
-            resolve({
-              controllers: mapObject(staticControllers, (controller) => ({
-                state: controller.state,
-              })) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
-              searchFulfilledAction: JSON.parse(JSON.stringify(action)),
-            });
-          }
-          if (action.type === 'search/executeSearch/rejected') {
-            reject(JSON.parse(JSON.stringify(action)));
-          }
-        };
+    ): Promise<
+      EngineStaticState<
+        {type: string},
+        InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
+      >
+    > => {
+      const {middleware, promise: searchCompletedPromise} =
+        createWaitForActionMiddleware(isSearchCompletedAction);
 
-        const extend: OptionsExtender<SearchEngineOptions> = (options) => ({
-          ...options,
-          middlewares: [...(options.middlewares ?? []), middleware],
-        });
-
-        build({
-          extend,
-          ...(executeOptions?.controllers && {
-            controllers: executeOptions.controllers,
-          }),
-        }).then(({engine, controllers}) => {
-          staticControllers = controllers;
-          engine.executeFirstSearch();
-        });
+      const extend: OptionsExtender<SearchEngineOptions> = (options) => ({
+        ...options,
+        middlewares: [...(options.middlewares ?? []), middleware],
       });
+      const {engine, controllers} = await build({
+        extend,
+        ...(executeOptions?.controllers && {
+          controllers: executeOptions.controllers,
+        }),
+      });
+
+      engine.executeFirstSearch();
+      return createStaticState({
+        searchAction: await searchCompletedPromise,
+        controllers,
+      });
+    };
 
   const hydrateStaticState: SearchEngineDefinition<TControllerDefinitions>['hydrateStaticState'] =
     async (
@@ -144,7 +138,7 @@ export function defineSearchEngine<
             >)
           : {}
       );
-      engine.dispatch(hydrateOptions.searchFulfilledAction);
+      engine.dispatch(hydrateOptions.searchAction);
       return {engine, controllers};
     };
 

@@ -1,16 +1,15 @@
-import {GeneratedAnswerCitation} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 
 interface SourceCitationsProps {
   label: string;
-  citations: GeneratedAnswerCitation[];
-  onCitationClick: (citation: GeneratedAnswerCitation) => void;
+  isVisible: boolean;
 }
 
 export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
-  props
+  props,
+  children
 ) =>
-  props.citations.length ? (
+  props.isVisible ? (
     <div class="source-citations gap-2 mt-6 flex">
       <p
         part="citations-label"
@@ -19,28 +18,7 @@ export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
         {props.label}
       </p>
       <ol class="list-none citations-container gap-2 flex items-center flex-wrap">
-        {props.citations.map(
-          (citation: GeneratedAnswerCitation, index: number) => (
-            <li key={citation.id}>
-              <a
-                title={citation.title}
-                href={citation.clickUri ?? citation.uri}
-                target="_blank"
-                rel="noopener"
-                onClick={() => props.onCitationClick(citation)}
-                part="citation"
-                class="flex items-center p-1 bg-background btn-text-neutral border rounded-full border-neutral text-on-background"
-              >
-                <div class="citation-index rounded-full font-medium rounded-full flex items-center text-bg-blue shrink-0">
-                  <div class="mx-auto">{index + 1}</div>
-                </div>
-                <span class="citation-title truncate mx-1">
-                  {citation.title}
-                </span>
-              </a>
-            </li>
-          )
-        )}
+        {children}
       </ol>
     </div>
   ) : null;
