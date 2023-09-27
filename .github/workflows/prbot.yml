@@ -47,7 +47,7 @@ jobs:
             github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'test.yml',
+              workflow_id: 'prbot.yml',
               ref: '${{ steps.generated-files.outputs.SHA }}',
             })
   lint-check:
