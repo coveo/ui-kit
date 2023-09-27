@@ -30,7 +30,7 @@ jobs:
     name: 'Retrigger workflow'
     needs: build
     runs-on: ubuntu-latest
-    if: steps.build.outputs.SHA != ''
+    if: needs.build.outputs.SHA != ''
     steps:
       - uses: actions/github-script@v6
         with:
@@ -39,7 +39,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'prbot.yml',
-              ref: '${{ steps.build.outputs.SHA }}',
+              ref: '${{ needs.build.outputs.SHA }}',
             })
   lint-check:
     name: 'Check with linter'
