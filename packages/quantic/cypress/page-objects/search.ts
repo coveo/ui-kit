@@ -74,6 +74,9 @@ export const InterceptAliases = {
       OpenGeneratedAnswerSource: uaAlias('openGeneratedAnswerSource'),
       RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
     },
+    PipelineTriggers: {
+      notify: uaAlias('notify'),
+    },
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -440,4 +443,19 @@ export function mockStreamError(streamId: string, errorCode: number) {
       );
     }
   ).as(getStreamInterceptAlias(streamId).substring(1));
+}
+
+export function mockSearchWithNotifyTrigger(
+  useCase: string,
+  notifications: string[]
+) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.triggers = notifications.map((notification) => ({
+        type: 'notify',
+        content: notification,
+      }));
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
 }
