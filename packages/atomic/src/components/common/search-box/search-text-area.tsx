@@ -54,7 +54,6 @@ function collapseTextArea(elem: HTMLTextAreaElement) {
   const parent = elem?.parentNode as HTMLElement;
   if (parent) {
     parent.classList.remove('expanded');
-    parent.classList.add('scrollable');
   }
 }
 
@@ -62,7 +61,6 @@ function expandTextArea(elem: HTMLTextAreaElement) {
   const parent = elem?.parentNode as HTMLElement;
   if (parent) {
     parent.classList.add('expanded');
-    parent.classList.remove('scrollable');
   }
 }
 

@@ -31,7 +31,7 @@
     }
   }
 
-  &.scrollable {
+  &:not(.expanded) {
     > [part='textarea'],
     &::after {
       @apply overflow-hidden;
