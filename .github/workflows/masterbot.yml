@@ -171,11 +171,6 @@ jobs:
     name: Pre-release
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    needs:
-      - 'lint-check'
-      - 'unit-test'
-      - 'e2e-atomic-test'
-      - 'e2e-quantic-test'
     runs-on: ubuntu-latest
     environment: 'Prerelease'
     steps:

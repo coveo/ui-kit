@@ -19,10 +19,10 @@ const numericFacetActions = (selector: AllFacetSelectors) => {
       selector.searchForm().submit();
     },
     selectFirstNumericFacetValueWithKeyboardTab: () => {
-      selector.collapseButton().tab().type(' ', {force: true});
+      selector.collapseButton().realPress(['Tab', 'Space']);
     },
     selectFirstNumericFacetValueWithKeyboardEnter: () => {
-      selector.collapseButton().tab().type('{Enter}', {force: true});
+      selector.collapseButton().realPress(['Tab', 'Enter']);
     },
   };
 };
