@@ -1260,4 +1260,18 @@
       <protected>false</protected>
       <shortDescription>Something went wrong and we couldn't generate an answer.</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_ShowingResultsFor</fullName>
+      <value>Showing results for {{0}}</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Showing results for example</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_SearchInsteadFor</fullName>
+    <value>Search instead for</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Search instead for</shortDescription>
+  </labels>
 </CustomLabels>
