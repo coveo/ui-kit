@@ -1,3 +1,10 @@
+# 2.44.0 (2023-09-27)
+
+### Features
+
+- **atomic:** interactive RGA citations ([#3199](https://github.com/coveo/ui-kit/issues/3199)) ([fabdd35](https://github.com/coveo/ui-kit/commits/fabdd357c6d0625413617c66734c3b7ae81ddb62))
+- **headless:** wrap preprocess function that throws to prevent stopping the execution requests ([#3172](https://github.com/coveo/ui-kit/issues/3172)) ([8e50eb9](https://github.com/coveo/ui-kit/commits/8e50eb9cefca01034a499230696cfac04cdfca20))
+
 ## 2.43.1 (2023-09-20)
 
 # 2.43.0 (2023-09-11)
