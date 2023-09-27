@@ -47,7 +47,9 @@ export function createRelay(initialConfig: RelayConfig): Relay {
 
       const params = { config: configManager.get(), environment, event };
 
-      return configManager.get().mode === "validate" ? validate(params) : emit(params);
+      return configManager.get().mode === "validate"
+        ? validate(params)
+        : emit(params);
     },
     getMeta: (type: string) =>
       createMeta(type, configManager.get(), environment, clientIdManager),
