@@ -72,12 +72,28 @@ export function assertContainsComponentError(
   });
 }
 
+export function assertContainsComponentErrorWithoutIt(
+  componentSelector: ComponentSelector,
+  display: boolean
+) {
+  componentSelector
+    .shadow()
+    .find(ComponentErrorSelectors.component, {includeShadowDom: true})
+    .should(display ? 'be.visible' : 'not.exist');
+}
+
 export function assertConsoleError(error = true) {
   it(`${should(error)} log an error to the console`, () => {
     cy.get(TestFixture.consoleAliases.error).should(
       error ? 'be.called' : 'not.be.called'
     );
   });
+}
+
+export function assertConsoleErrorWithoutIt(error = true) {
+  cy.get(TestFixture.consoleAliases.error).should(
+    error ? 'be.called' : 'not.be.called'
+  );
 }
 
 export function assertConsoleErrorMessage(msg: string) {

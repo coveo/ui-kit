@@ -25,6 +25,21 @@ export class AtomicSmartSnippetCollapseWrapper {
 
   private shouldRenderButton = !!this.maximumHeight;
 
+  private validateProps() {
+    if (
+      this.maximumHeight &&
+      (!this.collapsedHeight || this.maximumHeight < this.collapsedHeight)
+    ) {
+      throw new Error(
+        'snippetMaximumHeight must be equal or greater than snippetCollapsedHeight'
+      );
+    }
+  }
+
+  public initialize() {
+    this.validateProps();
+  }
+
   public componentDidRender() {
     if (this.fullHeight === undefined && this.shouldRenderButton) {
       this.initializeFullHeight();
