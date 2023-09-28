@@ -222,7 +222,7 @@ describe('Smart Snippet Test Suites', () => {
       SmartSnippetSelectors.showMoreButton().click();
       SmartSnippetAssertions.assertShowMoreWithoutIt(false);
       SmartSnippetAssertions.assertShowLessWithoutIt(true);
-      //TODO: uncomment when chrome is fixed\
+      //TODO: Uncomment when chrome is fixed https://coveord.atlassian.net/browse/KIT-2780?focusedCommentId=693909
       // SmartSnippetAssertions.assertAnswerHeightWithoutIt(height);
       SmartSnippetSelectors.showLessButton().click();
       SmartSnippetAssertions.assertShowMoreWithoutIt(true);
@@ -264,7 +264,7 @@ describe('Smart Snippet Test Suites', () => {
       SmartSnippetSelectors.showMoreButton().click();
       SmartSnippetAssertions.assertShowMoreWithoutIt(false);
       SmartSnippetAssertions.assertShowLessWithoutIt(true);
-      //TODO: uncomment when chrome is fixed
+      //TODO: Uncomment when chrome is fixed https://coveord.atlassian.net/browse/KIT-2780?focusedCommentId=693909
       // SmartSnippetAssertions.assertAnswerHeightWithoutIt(height);
       SmartSnippetSelectors.showLessButton().click();
       SmartSnippetAssertions.assertShowMoreWithoutIt(true);
@@ -295,7 +295,7 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    //TODO: uncomment when chrome is fixed
+    //TODO: Uncomment when chrome is fixed https://coveord.atlassian.net/browse/KIT-2780?focusedCommentId=693909
     // SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
     // SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
@@ -318,7 +318,7 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    //TODO: uncomment when chrome is fixed
+    //TODO: Uncomment when chrome is fixed https://coveord.atlassian.net/browse/KIT-2780?focusedCommentId=693909
     // SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
     // SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
@@ -341,7 +341,7 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    //TODO: uncomment when chrome is fixed
+    //TODO: Uncomment when chrome is fixed https://coveord.atlassian.net/browse/KIT-2780?focusedCommentId=693909
     // SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
     // SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
