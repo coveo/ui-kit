@@ -1,3 +1,9 @@
+## 0.4.1 (2023-09-28)
+
+### Bug Fixes
+
+- combine host and organizationId into url option (#44) ([ad82fad](/commits/ad82fad6486ed1359a3d9f5ef200390c359b0dd2)), closes [#44](/issues/44)
+
 # 0.4.0 (2023-09-28)
 
 ### Bug Fixes
