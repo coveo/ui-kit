@@ -81,8 +81,9 @@ export class AtomicBreadbox implements InitializableComponent {
   private breadcrumbShowLessFocus?: FocusTargetController;
 
   /**
-   * This prop allows you to control the display of a path by
-   * limiting the number of visible values in the path.
+   * This prop allows you to control the display depth
+   * of the path by specifying the number of parent or ancestor
+   * breadcrumbs links relative to the currently selected value.
    *
    * If the path size is equal to or less than the pathLimit, all values in
    * the path will be displayed without truncation.
