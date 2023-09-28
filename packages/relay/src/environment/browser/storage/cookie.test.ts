@@ -51,10 +51,10 @@ describe("CookieManager", () => {
     expect(document.cookie).not.toContain("domain");
   });
 
-   const navigateTo =(url: string):void=>{
+  const navigateTo = (url: string): void => {
     // @ts-ignore
     delete window.location;
     // @ts-ignore
     window.location = new URL(url);
-  }
+  };
 });

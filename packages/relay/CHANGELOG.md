@@ -1,3 +1,13 @@
+# 0.4.0 (2023-09-28)
+
+### Bug Fixes
+
+- remove sku from playground events (#41) ([204ea8b](/commits/204ea8be29ab049666d504e0548113b9dd37d8c3)), closes [#41](/issues/41)
+
+### Features
+
+- read and persist client ID for browser environment the same way it is done for coveo.analytics.js ([3ea29b6](/commits/3ea29b69b2d2c52d430c773c3fb3b533c31f1013))
+
 ## 0.3.3 (2023-09-27)
 
 ## 0.3.2 (2023-09-27)

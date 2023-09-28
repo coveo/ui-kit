@@ -1,3 +1,9 @@
+# 1.4.0 (2023-09-28)
+
+### Features
+
+- read and persist client ID for browser environment the same way it is done for coveo.analytics.js ([3ea29b6](/commits/3ea29b69b2d2c52d430c773c3fb3b533c31f1013))
+
 ## 1.3.4 (2023-09-27)
 
 ### Bug Fixes
