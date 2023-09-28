@@ -9,7 +9,9 @@ import {waitForNextStateChange} from '../test/functional-test-utils';
 
 const accessToken = 'no';
 
-describe('commerce', () => {
+// eslint-disable-next-line @cspell/spellchecker
+// TODO CAPI-149: Skipped since we do not currently have test fixtures for commerce
+describe.skip('commerce', () => {
   it("'s working great", async () => {
     const engine = buildCommerceEngine({
       configuration: {
