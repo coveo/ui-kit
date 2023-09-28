@@ -1,6 +1,8 @@
 import didYouMean from '@salesforce/label/c.quantic_DidYouMean';
 import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
 import queryCorrectedTo from '@salesforce/label/c.quantic_QueryCorrectedTo';
+import searchInsteadFor from '@salesforce/label/c.quantic_SearchInsteadFor';
+import showingResultsFor from '@salesforce/label/c.quantic_ShowingResultsFor';
 import {
   getHeadlessBundle,
   initializeWithHeadless,
@@ -8,10 +10,18 @@ import {
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
+// @ts-ignore
+import didYouMeanTemplate from './templates/didYouMean.html';
+// @ts-ignore
+import errorTemplate from './templates/error.html';
+// @ts-ignore
+import queryTriggerTemplate from './templates/queryTrigger.html';
 
 /** @typedef {import("coveo").DidYouMean} DidYouMean */
+/** @typedef {import("coveo").QueryTrigger} QueryTrigger */
 /** @typedef {import("coveo").Unsubscribe} Unsubscribe */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").QueryTriggerState} QueryTriggerState */
 
 /**
  * The `QuanticDidYouMean` component is responsible for handling query corrections.
@@ -39,18 +49,26 @@ export default class QuanticDidYouMean extends LightningElement {
   @track correctedQuery;
 
   /** @type {Function} */
-  unsubscribe;
+  unsubscribeDidYouMean;
+  /** @type {Function} */
+  unsubscribeQueryTrigger
   /** @type {DidYouMean} */
   didYouMean;
   /** @type {AnyHeadless} */
   headless;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {QueryTrigger} */
+  queryTrigger;
+  /** @type {QueryTriggerState} */
+  queryTriggerState;
 
   labels = {
     didYouMean,
     noResultsFor,
     queryCorrectedTo,
+    showingResultsFor,
+    searchInsteadFor,
   };
 
   connectedCallback() {
@@ -67,14 +85,21 @@ export default class QuanticDidYouMean extends LightningElement {
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
     this.didYouMean = this.headless.buildDidYouMean(engine);
-    this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
+    this.queryTrigger = this.headless?.buildQueryTrigger?.(engine);
+    this.unsubscribeDidYouMean = this.didYouMean.subscribe(() =>
+      this.updateDidYouMeanState()
+    );
+    this.unsubscribeQueryTrigger = this.queryTrigger?.subscribe(() =>
+      this.updateQueryTriggerState()
+    );
   };
 
   disconnectedCallback() {
-    this.unsubscribe?.();
+    this.unsubscribeDidYouMean?.();
+    this.unsubscribeQueryTrigger?.();
   }
 
-  updateState() {
+  updateDidYouMeanState() {
     this.hasQueryCorrection = this.didYouMean.state.hasQueryCorrection;
     this.wasAutomaticallyCorrected =
       this.didYouMean.state.wasAutomaticallyCorrected;
@@ -82,8 +107,16 @@ export default class QuanticDidYouMean extends LightningElement {
     this.correctedQuery = this.didYouMean.state.queryCorrection.correctedQuery;
   }
 
+  updateQueryTriggerState() {
+    this.queryTriggerState = this.queryTrigger?.state;
+  }
+
   applyCorrection() {
     this.didYouMean.applyCorrection();
+  }
+
+  undo() {
+    this.queryTrigger?.undo();
   }
 
   get noResultsLabel() {
@@ -100,10 +133,39 @@ export default class QuanticDidYouMean extends LightningElement {
     );
   }
 
+  get showingResultsForLabel() {
+    return I18nUtils.format(
+      this.labels.showingResultsFor,
+      I18nUtils.getTextBold(I18nUtils.escapeHTML(this.newTriggeredQuery))
+    );
+  }
+
   /**
    * Sets the component in the initialization error state.
    */
   setInitializationError() {
     this.hasInitializationError = true;
+  }
+
+  get wasQueryModifierByQueryTrigger() {
+    return this?.queryTriggerState?.wasQueryModified;
+  }
+
+  get newTriggeredQuery() {
+    return this.queryTriggerState?.newQuery;
+  }
+
+  get originalTriggeredQuery() {
+    return this.queryTriggerState?.originalQuery;
+  }
+
+  render() {
+    if (this.hasInitializationError) {
+      return errorTemplate;
+    }
+    if (this.hasQueryCorrection) {
+      return didYouMeanTemplate;
+    }
+    return queryTriggerTemplate;
   }
 }
