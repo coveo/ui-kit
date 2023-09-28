@@ -3,6 +3,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {AriaLiveRegion} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -29,6 +30,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   notifyTriggerState;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  ariaLiveNotificationsRegion;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -45,6 +48,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     this.headless = getHeadlessBundle(this.engineId);
     this.notifyTrigger = this.headless.buildNotifyTrigger(engine);
     this.unsubscribe = this.notifyTrigger.subscribe(() => this.updateState());
+    this.ariaLiveNotificationsRegion = AriaLiveRegion('notifications', this);
   };
 
   disconnectedCallback() {
@@ -53,6 +57,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   updateState() {
     this.notifyTriggerState = this.notifyTrigger.state;
+    this.ariaLiveNotificationsRegion.dispatchMessage(
+      this.notifyTriggerState?.notifications.reduce(
+        (value, notification, index) => {
+          return `${value} Notification ${index + 1}: ${notification}`;
+        },
+        ''
+      )
+    );
   }
 
   get notifications() {
