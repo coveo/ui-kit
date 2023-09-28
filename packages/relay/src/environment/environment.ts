@@ -1,5 +1,6 @@
 import { buildBrowserEnvironment } from "./browser/browser";
 import { buildNodeEnvironment } from "./node/node";
+import { Storage } from "./storage";
 
 export interface Environment {
   runtime: "browser" | "node";
@@ -8,6 +9,7 @@ export interface Environment {
   getUrl: () => string | null;
   getUserAgent: () => string | null;
   generateUUID: () => string;
+  storage: Storage;
 }
 
 export function currentEnvironment(): Environment {

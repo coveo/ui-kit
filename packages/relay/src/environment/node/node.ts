@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Environment } from "../environment";
+import { createNullStorage } from "../storage";
 
 export function buildNodeEnvironment(): Environment {
   return {
@@ -9,5 +10,6 @@ export function buildNodeEnvironment(): Environment {
     getUrl: () => null,
     getUserAgent: () => null,
     generateUUID: () => uuidv4(),
+    storage: createNullStorage(),
   };
 }

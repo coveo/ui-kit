@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Environment } from "../environment";
+import { createBrowserStorage } from "./storage/storage";
 
 function getReferrerUrl() {
   const referrer = document.referrer;
@@ -15,5 +16,6 @@ export function buildBrowserEnvironment(): Environment {
     getUrl: () => window.location.href,
     getUserAgent: () => navigator.userAgent,
     generateUUID: () => uuidv4(),
+    storage: createBrowserStorage(),
   };
 }

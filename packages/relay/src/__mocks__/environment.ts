@@ -1,4 +1,5 @@
 import { Environment } from "../environment/environment";
+import { createMockStorage } from "./storage";
 
 const defaultEnvironment: Environment = {
   runtime: "node",
@@ -12,6 +13,7 @@ const defaultEnvironment: Environment = {
   getUrl: jest.fn(),
   getUserAgent: jest.fn(),
   generateUUID: jest.fn(),
+  storage: createMockStorage(),
 };
 
 export function createMockEnvironment(

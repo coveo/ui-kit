@@ -1,14 +1,21 @@
+import { validate } from "uuid";
 import { Environment } from "../environment/environment";
 
 export interface ClientIdManager {
   clientId: string;
 }
 
-/**
- * @todo LENS-1059: The clientId should be a value that is persisted over time on a device.
- */
 function getClientId(environment: Environment): string {
-  return environment.generateUUID();
+  const storage = environment.storage;
+  const key = "visitorId";
+
+  const existingClientId = storage.getItem(key);
+  const clientId =
+    existingClientId && validate(existingClientId)
+      ? existingClientId
+      : environment.generateUUID();
+  storage.setItem(key, clientId);
+  return clientId;
 }
 
 export function createClientIdManager(
