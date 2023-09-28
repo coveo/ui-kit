@@ -3,68 +3,77 @@ import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {should} from './common-assertions';
 import {SmartSnippetSelectors} from './smart-snippet-selectors';
 
-export function assertShowMoreWithoutIt(display: boolean) {
+export function assertShowMore(display: boolean) {
   SmartSnippetSelectors.showMoreButton().should(
     display ? 'be.visible' : 'not.exist'
   );
 }
 
-export function assertShowLessWithoutIt(display: boolean) {
+export function assertShowLess(display: boolean) {
   SmartSnippetSelectors.showLessButton().should(
     display ? 'be.visible' : 'not.exist'
   );
 }
 
-export function assertAnswerHeightWithoutIt(expectedHeight: number) {
+export function assertAnswerHeight(expectedHeight: number) {
   SmartSnippetSelectors.truncatedAnswer()
     .invoke('height')
-    .should('equal', expectedHeight);
+    .then((height) => {
+      const roundedHeight = Math.round(height!);
+      cy.wrap(roundedHeight).should('equal', expectedHeight);
+    });
 }
 
-export function assertCollapseWrapperHeightWithoutIt(expectedHeight: number) {
+export function assertCollapseWrapperHeight(expectedHeight: number) {
   SmartSnippetSelectors.collapseWrapper()
     .invoke('height')
     .should('equal', expectedHeight);
 }
 
 export function assertAnswerTopMargin(
-  margin: number,
+  marginValue: number,
   firstElementClass: string
 ) {
-  it(`has a ${margin}px gap between the title and the snippet`, () => {
+  it(`has a ${marginValue}px gap between the title and the snippet`, () => {
     SmartSnippetSelectors.question()
       .distanceTo(() =>
         SmartSnippetSelectors.answer().find(`.${firstElementClass}`)
       )
-      .should('have.property', 'vertical', margin);
+      .then((margin) => {
+        const roundedMargin = Math.round(margin.vertical);
+        cy.wrap(roundedMargin).should('eq', marginValue);
+      });
   });
 }
 
 export function assertAnswerBottomMargin(
-  margin: number,
+  marginValue: number,
   lastElementClass: string
 ) {
-  it(`has a ${margin}px gap between the snippet and the footer`, () => {
+  it(`has a ${marginValue}px gap between the snippet and the footer`, () => {
     SmartSnippetSelectors.answer()
       .find(`.${lastElementClass}`)
       .distanceTo(SmartSnippetSelectors.footer)
-      .should('have.property', 'vertical', margin);
+      .then((margin) => {
+        const roundedMargin = Math.round(margin.vertical);
+        cy.wrap(roundedMargin).should('eq', marginValue);
+      });
   });
 }
 
-export function assertLikeButtonCheckedWithoutIt(checked: boolean) {
+export function assertLikeButtonChecked(checked: boolean) {
   SmartSnippetSelectors.feedbackLikeButton()
     .find('input')
     .should(checked ? 'be.checked' : 'not.be.checked');
 }
 
-export function assertDislikeButtonCheckedWithoutIt(checked: boolean) {
+export function assertDislikeButtonChecked(checked: boolean) {
   SmartSnippetSelectors.feedbackDislikeButton()
     .find('input')
     .should(checked ? 'be.checked' : 'not.be.checked');
 }
 
-export function assertThankYouBannerWithoutIt(display: boolean) {
+export function assertThankYouBanner(display: boolean) {
   SmartSnippetSelectors.feedbackThankYou().should(
     display ? 'exist' : 'not.exist'
   );

@@ -61,9 +61,9 @@ describe('Smart Snippet Test Suites', () => {
         'have.text',
         defaultSourceTitle
       );
-      SmartSnippetAssertions.assertLikeButtonCheckedWithoutIt(false);
-      SmartSnippetAssertions.assertDislikeButtonCheckedWithoutIt(false);
-      SmartSnippetAssertions.assertThankYouBannerWithoutIt(false);
+      SmartSnippetAssertions.assertLikeButtonChecked(false);
+      SmartSnippetAssertions.assertDislikeButtonChecked(false);
+      SmartSnippetAssertions.assertThankYouBanner(false);
     });
   });
 
@@ -160,8 +160,8 @@ describe('Smart Snippet Test Suites', () => {
     });
 
     it('should not display show more and show less buttons', () => {
-      SmartSnippetAssertions.assertShowMoreWithoutIt(false);
-      SmartSnippetAssertions.assertShowLessWithoutIt(false);
+      SmartSnippetAssertions.assertShowMore(false);
+      SmartSnippetAssertions.assertShowLess(false);
     });
   });
 
@@ -185,8 +185,8 @@ describe('Smart Snippet Test Suites', () => {
     });
 
     it('should not display show more and show less buttons', () => {
-      SmartSnippetAssertions.assertShowMoreWithoutIt(false);
-      SmartSnippetAssertions.assertShowLessWithoutIt(false);
+      SmartSnippetAssertions.assertShowMore(false);
+      SmartSnippetAssertions.assertShowLess(false);
     });
   });
 
@@ -211,23 +211,24 @@ describe('Smart Snippet Test Suites', () => {
     });
 
     it('should render correctly', () => {
-      SmartSnippetAssertions.assertShowMoreWithoutIt(true);
-      SmartSnippetAssertions.assertShowLessWithoutIt(false);
-      SmartSnippetAssertions.assertAnswerHeightWithoutIt(heightWhenCollapsed);
+      SmartSnippetAssertions.assertShowMore(true);
+      SmartSnippetAssertions.assertShowLess(false);
+      SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
     });
 
     CommonAssertions.assertAccessibility(smartSnippetComponent);
 
     it('should work correctly when pressing show more and show less', () => {
       SmartSnippetSelectors.showMoreButton().click();
-      SmartSnippetAssertions.assertShowMoreWithoutIt(false);
-      SmartSnippetAssertions.assertShowLessWithoutIt(true);
-      //TODO: Uncomment when chrome is fixed https://coveord.atlassian.net/browse/KIT-2780?focusedCommentId=693909
-      // SmartSnippetAssertions.assertAnswerHeightWithoutIt(height);
+      cy.wait(200);
+      SmartSnippetAssertions.assertShowMore(false);
+      SmartSnippetAssertions.assertShowLess(true);
+      SmartSnippetAssertions.assertAnswerHeight(height);
       SmartSnippetSelectors.showLessButton().click();
-      SmartSnippetAssertions.assertShowMoreWithoutIt(true);
-      SmartSnippetAssertions.assertShowLessWithoutIt(false);
-      SmartSnippetAssertions.assertAnswerHeightWithoutIt(heightWhenCollapsed);
+      cy.wait(200);
+      SmartSnippetAssertions.assertShowMore(true);
+      SmartSnippetAssertions.assertShowLess(false);
+      SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
     });
   });
   describe('when the snippet height is greater than snippetMaximumHeight', () => {
@@ -251,27 +252,24 @@ describe('Smart Snippet Test Suites', () => {
     });
 
     it('should render correctly', () => {
-      SmartSnippetAssertions.assertShowMoreWithoutIt(true);
-      SmartSnippetAssertions.assertShowLessWithoutIt(false);
-      SmartSnippetAssertions.assertCollapseWrapperHeightWithoutIt(
-        heightWhenCollapsed
-      );
+      SmartSnippetAssertions.assertShowMore(true);
+      SmartSnippetAssertions.assertShowLess(false);
+      SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
     });
 
     CommonAssertions.assertAccessibility(smartSnippetComponent);
 
     it('should work correctly when pressing show more and show less', () => {
       SmartSnippetSelectors.showMoreButton().click();
-      SmartSnippetAssertions.assertShowMoreWithoutIt(false);
-      SmartSnippetAssertions.assertShowLessWithoutIt(true);
-      //TODO: Uncomment when chrome is fixed https://coveord.atlassian.net/browse/KIT-2780?focusedCommentId=693909
-      // SmartSnippetAssertions.assertAnswerHeightWithoutIt(height);
+      cy.wait(200);
+      SmartSnippetAssertions.assertShowMore(false);
+      SmartSnippetAssertions.assertShowLess(true);
+      SmartSnippetAssertions.assertAnswerHeight(height);
       SmartSnippetSelectors.showLessButton().click();
-      SmartSnippetAssertions.assertShowMoreWithoutIt(true);
-      SmartSnippetAssertions.assertShowLessWithoutIt(false);
-      SmartSnippetAssertions.assertCollapseWrapperHeightWithoutIt(
-        heightWhenCollapsed
-      );
+      cy.wait(200);
+      SmartSnippetAssertions.assertShowMore(true);
+      SmartSnippetAssertions.assertShowLess(false);
+      SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
       CommonAssertions.assertAccessibility(smartSnippetComponent);
     });
   });
@@ -295,9 +293,8 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    //TODO: Uncomment when chrome is fixed https://coveord.atlassian.net/browse/KIT-2780?focusedCommentId=693909
-    // SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
-    // SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
+    SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
+    SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
   describe('when the snippet contains elements with margins', () => {
     beforeEach(() => {
@@ -318,9 +315,8 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    //TODO: Uncomment when chrome is fixed https://coveord.atlassian.net/browse/KIT-2780?focusedCommentId=693909
-    // SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
-    // SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
+    SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
+    SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
   describe('when the snippet contains collapsing margins', () => {
     beforeEach(() => {
@@ -341,9 +337,8 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    //TODO: Uncomment when chrome is fixed https://coveord.atlassian.net/browse/KIT-2780?focusedCommentId=693909
-    // SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
-    // SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
+    SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
+    SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
   describe('after pressing the like button', () => {
     beforeEach(() => {
@@ -352,9 +347,9 @@ describe('Smart Snippet Test Suites', () => {
     });
 
     it('should render correctly', () => {
-      SmartSnippetAssertions.assertLikeButtonCheckedWithoutIt(true);
-      SmartSnippetAssertions.assertDislikeButtonCheckedWithoutIt(false);
-      SmartSnippetAssertions.assertThankYouBannerWithoutIt(true);
+      SmartSnippetAssertions.assertLikeButtonChecked(true);
+      SmartSnippetAssertions.assertDislikeButtonChecked(false);
+      SmartSnippetAssertions.assertThankYouBanner(true);
     });
 
     SmartSnippetAssertions.assertLogLikeSmartSnippet();
@@ -366,9 +361,9 @@ describe('Smart Snippet Test Suites', () => {
     });
 
     it('should render correctly', () => {
-      SmartSnippetAssertions.assertLikeButtonCheckedWithoutIt(false);
-      SmartSnippetAssertions.assertDislikeButtonCheckedWithoutIt(true);
-      SmartSnippetAssertions.assertThankYouBannerWithoutIt(true);
+      SmartSnippetAssertions.assertLikeButtonChecked(false);
+      SmartSnippetAssertions.assertDislikeButtonChecked(true);
+      SmartSnippetAssertions.assertThankYouBanner(true);
     });
 
     SmartSnippetAssertions.assertLogDislikeSmartSnippet();
