@@ -41,7 +41,11 @@ export type {
 } from './controllers/commerce/product-listing/headless-product-listing';
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing';
 
-export type {ProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
+export type {
+  ProductListingPagination,
+  ProductListingPaginationState,
+  ProductListingPaginationControllerState,
+} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
 export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
 
 export type {
