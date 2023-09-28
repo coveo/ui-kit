@@ -9,14 +9,11 @@ describe("callEventApi", () => {
   const environment = createMockEnvironment();
 
   it("sets expected url and body for the fetch function for validate mode", async () => {
-    const configWithValidateMode = createMockConfig({
-      mode: "validate",
-    });
-    const { host, organizationId } = configWithValidateMode;
+    const config = createMockConfig({ mode: "validate" });
 
     await callEventApi({
       event,
-      config: configWithValidateMode,
+      config,
       environment,
     });
 
@@ -25,7 +22,7 @@ describe("callEventApi", () => {
       "Content-Type": "application/json",
       Authorization: `Bearer I am token`,
     };
-    const expectedUrl = `${host}/rest/organizations/${organizationId}/events/v1/validate`;
+    const expectedUrl = `${config.url}/validate`;
     expect(environment.fetch).toHaveBeenCalledWith(expectedUrl, {
       body: JSON.stringify(expectedEvent),
       headers: expectedHeaders,
@@ -34,18 +31,16 @@ describe("callEventApi", () => {
   });
 
   it("sets expected url and body for the fetch function for emit mode", async () => {
-    const configWithEmitMode = createMockConfig({ mode: "emit" });
-    const { host, organizationId } = configWithEmitMode;
+    const config = createMockConfig({ mode: "emit" });
 
-    await callEventApi({ event, config: configWithEmitMode, environment });
+    await callEventApi({ event, config, environment });
 
     const expectedEvent = [createMockEvent()];
     const expectedHeaders = {
       "Content-Type": "application/json",
       Authorization: `Bearer I am token`,
     };
-    const expectedUrl = `${host}/rest/organizations/${organizationId}/events/v1`;
-    expect(environment.fetch).toHaveBeenCalledWith(expectedUrl, {
+    expect(environment.fetch).toHaveBeenCalledWith(config.url, {
       body: JSON.stringify(expectedEvent),
       headers: expectedHeaders,
       method: "POST",

@@ -1,8 +1,7 @@
 export type RelayMode = "emit" | "validate";
 
 export interface RelayConfig {
-  host: string;
-  organizationId: string;
+  url: string;
   token: string;
   trackingId: string;
   mode?: RelayMode;
@@ -14,15 +13,13 @@ export interface ConfigManager {
 }
 
 function pick({
-  host,
-  organizationId,
+  url,
   token,
   trackingId,
   ...rest
 }: RelayConfig): Readonly<RelayConfig> {
   return Object.freeze({
-    host,
-    organizationId,
+    url,
     token,
     trackingId,
     ...(!!rest.mode && { mode: rest.mode }),

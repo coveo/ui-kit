@@ -13,15 +13,13 @@ export async function callEventApi({
   config,
   environment,
 }: EventApiCallParams): Promise<any> {
-  const { token, host, organizationId } = config;
+  const { url, token } = config;
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
   };
   const response = await environment.fetch(
-    `${host}/rest/organizations/${organizationId}/events/v1${
-      config.mode == "validate" ? "/validate" : ""
-    }`,
+    `${url}${config.mode == "validate" ? "/validate" : ""}`,
     {
       method: "POST",
       body: JSON.stringify([event]),

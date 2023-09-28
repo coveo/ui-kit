@@ -4,8 +4,7 @@ import { createConfigManager, RelayConfig } from "./config";
 describe("createConfigManager", () => {
   const initialConfig = createMockConfig({
     trackingId: "initial",
-    host: "some hosts",
-    organizationId: "hello",
+    url: "url",
     token: "nope",
   });
 
@@ -14,8 +13,8 @@ describe("createConfigManager", () => {
       const { get } = createConfigManager(initialConfig);
 
       expect(get()).toEqual(initialConfig);
-      initialConfig.host = "bap";
-      expect(get().host).not.toEqual(initialConfig.host);
+      initialConfig.url = "bap";
+      expect(get().url).not.toEqual(initialConfig.url);
     });
 
     it("will omit the properties that are not from config interface from the initialConfig", () => {
@@ -40,7 +39,7 @@ describe("createConfigManager", () => {
   describe("update", () => {
     it("persists unchanged config after an update was made", () => {
       const { get, update } = createConfigManager(initialConfig);
-      update({ host: "something else" });
+      update({ url: "something else" });
 
       expect(get().trackingId).toEqual(initialConfig.trackingId);
     });
@@ -57,18 +56,12 @@ describe("createConfigManager", () => {
 
     it("will not include the properties that are not part of RelayConfig to the updated config", () => {
       const { get, update } = createConfigManager(initialConfig);
-      update({ host: "something else", patate: 1 } as unknown as RelayConfig);
+      update({ url: "something else", patate: 1 } as unknown as RelayConfig);
 
-      expect(get()).not.toEqual({
-        ...initialConfig,
-        host: "something else",
-        patate: 1,
-      });
+      const config = get();
 
-      expect(get()).toEqual({
-        ...initialConfig,
-        host: "something else",
-      });
+      expect("patate" in config).toBe(false);
+      expect(config.url).toBe("something else");
     });
   });
 });
