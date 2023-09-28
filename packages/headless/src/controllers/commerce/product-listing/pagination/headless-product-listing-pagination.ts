@@ -1,4 +1,3 @@
-import {Pagination} from '../../../../api/commerce/product-listings/v2/pagination';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {
   nextPage,
@@ -38,8 +37,18 @@ export interface ProductListingPagination extends Controller {
   /**
    * A scoped and simplified part of the headless state that is relevant to the `ProductListingPagination` controller.
    */
-  state: Pagination;
+  state: ProductListingPaginationState;
 }
+
+export interface ProductListingPaginationState {
+  page: number;
+  perPage: number;
+  totalCount: number;
+  totalPages: number;
+}
+
+export type ProductListingPaginationControllerState =
+  ProductListingPagination['state'];
 
 /**
  * Creates a `ProductListingPagination` controller instance.
