@@ -1,8 +1,8 @@
-# Next.js App router examples
+# Next.js Pages router examples
 
 ## About
 
-- Demonstrates usage of the framework agnostic `@coveo/headless/ssr` and React specific `@coveo/headless-react/ssr` utils for Server-Side Rendering with headless using [Next.js app router](https://nextjs.org/docs/app).
+- Demonstrates usage of the framework agnostic `@coveo/headless/ssr` and React specific `@coveo/headless-react/ssr` utils for Server-Side Rendering with headless using [Next.js pages router](https://nextjs.org/docs/pages).
 - Although NextJS is used to demonstrate SSR usage for convenience, the utils are not specific to NextJS.
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
