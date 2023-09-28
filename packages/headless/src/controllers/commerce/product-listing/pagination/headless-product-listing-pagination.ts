@@ -1,6 +1,5 @@
 import {Pagination} from '../../../../api/commerce/product-listings/v2/pagination';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {configuration} from '../../../../app/common-reducers';
 import {
   nextPage,
   selectPage,
@@ -77,9 +76,7 @@ export function buildProductListingPagination(
     ...controller,
 
     get state() {
-      return {
-        ...getState(),
-      };
+      return getState();
     },
 
     selectPage(page: number) {
@@ -118,7 +115,6 @@ export function buildProductListingPagination(
     engine: CommerceEngine
   ): engine is CommerceEngine {
     engine.addReducers({
-      configuration,
       productListing,
       pagination,
     });

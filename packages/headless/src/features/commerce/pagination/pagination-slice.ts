@@ -7,10 +7,10 @@ export const paginationReducer = createReducer(
   (builder) => {
     builder
       .addCase(nextPage, (state) => {
-        state.page += 1;
+        ++state.page;
       })
       .addCase(previousPage, (state) => {
-        state.page -= 1;
+        --state.page;
       })
       .addCase(selectPage, (state, action) => {
         state.page = action.payload;

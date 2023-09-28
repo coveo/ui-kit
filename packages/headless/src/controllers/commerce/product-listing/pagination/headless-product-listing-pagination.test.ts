@@ -1,4 +1,3 @@
-import {configuration} from '../../../../app/common-reducers';
 import {
   selectPage,
   nextPage,
@@ -20,18 +19,20 @@ describe('ProductListingPagination', () => {
 
   function initProductListingPagination(page = 0, totalPages = 1) {
     const mockState = buildMockCommerceState();
-    engine = buildMockCommerceEngine();
-    engine.state = {
-      ...mockState,
-      productListing: {
-        ...mockState.productListing,
-        pagination: {
-          ...mockState.productListing.pagination,
-          page: page,
-          totalPages: totalPages,
+    engine = buildMockCommerceEngine({
+      state: {
+        ...mockState,
+        productListing: {
+          ...mockState.productListing,
+          pagination: {
+            ...mockState.productListing.pagination,
+            page,
+            totalPages,
+          },
         },
       },
-    };
+    });
+
     productListingPagination = buildProductListingPagination(engine);
   }
 
@@ -43,7 +44,6 @@ describe('ProductListingPagination', () => {
   it('adds the correct reducers to engine', () => {
     initProductListingPagination(0, 1);
     expect(engine.addReducers).toBeCalledWith({
-      configuration,
       productListing,
       pagination,
     });
