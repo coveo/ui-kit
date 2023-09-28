@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "nx build",
-    "build:vue": "vue-cli-service build",
-    "dev:vue": "vue-cli-service serve",
+    "build": "exit 0",
+    "build:vue": "exit 0",
+    "dev:vue": "exit 0",
     "lint": "vue-cli-service lint",
     "dev": "npm run build:assets && npm run dev:vue",
     "build:assets": "ncp ../../atomic/dist/atomic/assets public/assets && ncp ../../atomic/dist/atomic/lang public/lang"
