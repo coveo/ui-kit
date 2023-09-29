@@ -15,7 +15,7 @@ describe('useSyncMemoizedStore', () => {
     expect(result.current).toEqual(snapshot);
   });
 
-  test('getSnapshot is called with every render', () => {
+  test('should not call getSnapshot when there is a re-render with the same getSnapshot', () => {
     const snapshot = {count: 0};
     const unsubscribe = jest.fn();
     const subscribe = jest.fn(() => unsubscribe);
@@ -27,7 +27,7 @@ describe('useSyncMemoizedStore', () => {
 
     expect(getSnapshot).toHaveBeenCalledTimes(1);
     rerender();
-    expect(getSnapshot).toHaveBeenCalledTimes(2);
+    expect(getSnapshot).toHaveBeenCalledTimes(1);
   });
 
   test('should update the state when getSnapshot changes', () => {
