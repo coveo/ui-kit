@@ -82,7 +82,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   private interactiveResult?: InteractiveResult;
 
-  public componentWillLoad(): void {
+  public componentWillRender(): void {
     this.minimizeSidebar = this.bindings.store.isMobile();
   }
 
