@@ -5,4 +5,5 @@
 **/stencil-generated/**/*
 .sfdx
 dist
-**/src/components.d.ts
+**/*.d.ts
+LICENSE.md
