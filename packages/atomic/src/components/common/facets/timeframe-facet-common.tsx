@@ -193,6 +193,10 @@ export class TimeframeFacetCommon {
     this.dependenciesManager?.stopWatching();
   }
 
+  private get isHidden() {
+    return !this.shouldRenderFacet || !this.enabled;
+  }
+
   private validateProps() {
     validateDependsOn(this.props.dependsOn);
   }
@@ -202,6 +206,7 @@ export class TimeframeFacetCommon {
       label: () => this.props.bindings.i18n.t(this.props.label),
       facetId: this.facetId!,
       element: this.props.host,
+      isHidden: () => this.isHidden,
     };
 
     this.props.bindings.store.registerFacet('dateFacets', {

@@ -212,6 +212,7 @@ export class AtomicRatingFacet
       label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
+      isHidden: () => this.isHidden,
     };
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
@@ -230,6 +231,14 @@ export class AtomicRatingFacet
       return;
     }
     this.dependenciesManager?.stopWatching();
+  }
+
+  private get isHidden() {
+    return (
+      this.searchStatusState.hasError ||
+      !this.facet.state.enabled ||
+      !this.valuesToRender.length
+    );
   }
 
   private get scaleFactor() {
@@ -358,7 +367,7 @@ export class AtomicRatingFacet
   }
 
   private get valuesToRender() {
-    return this.facetState.values.filter(
+    return this.facet.state.values.filter(
       (value) => value.numberOfResults || value.state !== 'idle'
     );
   }

@@ -1,3 +1,5 @@
+import {automaticFacetGeneratorComponent} from './facets/automatic-facet-generator/automatic-facet-generator-assertions';
+
 export const refineToggleComponent = 'atomic-refine-toggle';
 export const refineModalComponent = 'atomic-refine-modal';
 export const focusTrapComponent = 'atomic-focus-trap';
@@ -21,7 +23,10 @@ export const RefineModalSelectors = {
     RefineModalSelectors.shadow().find('[part="footer-button"]'),
   facets: () => cy.get(refineModalComponent).find('[slot="facets"]'),
   automaticFacets: () =>
-    cy.get(refineModalComponent).find('[slot="automatic-facets"]'),
+    cy
+      .get(refineModalComponent)
+      .find('[slot="facets"]')
+      .find(automaticFacetGeneratorComponent),
   filterSection: () =>
     RefineModalSelectors.shadow().find('[part="filter-section"]'),
 };
