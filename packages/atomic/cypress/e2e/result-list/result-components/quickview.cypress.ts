@@ -25,8 +25,7 @@ const addQuickviewInResultList = (props: TagProps = {}) =>
   );
 
 const openModal = () => {
-  cy.wait(2000);
-  QuickviewSelectors.button().click();
+  QuickviewSelectors.button().click({timeout: 8000});
   cy.wait(TestFixture.interceptAliases.Quickview);
   cy.expectClickEvent('documentQuickview');
 };
