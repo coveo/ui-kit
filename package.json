@@ -10,7 +10,7 @@
     "test": "nx run-many --target=test",
     "e2e": "nx run-many --target=e2e",
     "lint:spell": "cspell --no-progress '**/*.md'",
-    "lint:check": "npx eslint . ",
+    "lint:check": "node ./scripts/lint/lint-check.mjs",
     "lint:fix": "npx eslint --fix .",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
