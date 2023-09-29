@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { Environment } from "../environment";
 import { createBrowserStorage } from "./storage/storage";
+import { fetchAPI } from "../utils/fetch";
 
 function getReferrerUrl() {
   const referrer = document.referrer;
@@ -11,7 +12,7 @@ function getReferrerUrl() {
 export function buildBrowserEnvironment(): Environment {
   return {
     runtime: "browser",
-    fetch: (url: string, init?: RequestInit) => fetch(url, init),
+    fetch: (url: string, init?: RequestInit) => fetchAPI(url, init),
     getReferrerUrl: () => getReferrerUrl(),
     getUrl: () => window.location.href,
     getUserAgent: () => navigator.userAgent,
