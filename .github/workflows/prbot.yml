@@ -33,7 +33,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'prbot.yml',
-              ref: '${{ steps.commitgeneratedfiles.outputs.SHA }}',
+              ref: 'KIT-2728',
             })
   lint-check:
     name: 'Check with linter'
