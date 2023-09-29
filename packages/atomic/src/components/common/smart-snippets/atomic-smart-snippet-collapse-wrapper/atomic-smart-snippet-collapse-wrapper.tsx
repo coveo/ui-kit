@@ -16,9 +16,9 @@ export class AtomicSmartSnippetCollapseWrapper {
   public error!: Error;
   @Element() public host!: HTMLElement;
 
-  @Prop({reflect: true}) public snippetMaximumHeight?: number;
+  @Prop({reflect: true}) public maximumHeight?: number;
 
-  @Prop({reflect: true}) public snippetCollapsedHeight?: number;
+  @Prop({reflect: true}) public collapsedHeight?: number;
 
   @State() public isExpanded = true;
 
@@ -26,13 +26,12 @@ export class AtomicSmartSnippetCollapseWrapper {
 
   @State() private fullHeight?: number;
 
-  private shouldRenderButton = !!this.snippetMaximumHeight;
+  private shouldRenderButton = !!this.maximumHeight;
 
   private validateProps() {
     if (
-      this.snippetMaximumHeight &&
-      (!this.snippetCollapsedHeight ||
-        this.snippetMaximumHeight < this.snippetCollapsedHeight)
+      this.maximumHeight &&
+      (!this.collapsedHeight || this.maximumHeight < this.collapsedHeight)
     ) {
       throw new Error(
         'snippetMaximumHeight must be equal or greater than snippetCollapsedHeight'
@@ -52,12 +51,12 @@ export class AtomicSmartSnippetCollapseWrapper {
 
   private initializeFullHeight() {
     this.fullHeight = this.host.getBoundingClientRect().height;
-    this.showButton = this.fullHeight! > this.snippetMaximumHeight!;
+    this.showButton = this.fullHeight! > this.maximumHeight!;
     this.isExpanded = !this.showButton;
     this.host.style.setProperty('--full-height', `${this.fullHeight}px`);
     this.host.style.setProperty(
       '--collapsed-size',
-      `${this.showButton ? this.snippetCollapsedHeight : this.fullHeight}px`
+      `${this.showButton ? this.collapsedHeight : this.fullHeight}px`
     );
   }
 

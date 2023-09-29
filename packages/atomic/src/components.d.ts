@@ -2277,8 +2277,8 @@ export namespace Components {
         "innerStyle"?: string;
     }
     interface AtomicSmartSnippetCollapseWrapper {
-        "snippetCollapsedHeight"?: number;
-        "snippetMaximumHeight"?: number;
+        "collapsedHeight"?: number;
+        "maximumHeight"?: number;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**
@@ -6065,8 +6065,8 @@ declare namespace LocalJSX {
         "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
     }
     interface AtomicSmartSnippetCollapseWrapper {
-        "snippetCollapsedHeight"?: number;
-        "snippetMaximumHeight"?: number;
+        "collapsedHeight"?: number;
+        "maximumHeight"?: number;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**
