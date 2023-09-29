@@ -33,15 +33,28 @@ export interface ViewParams {
   url: string;
 }
 
-export interface UserParams {
-  userAgent?: string;
-  userIp?: string;
+interface UserIdRequired {
+  userId: string;
   email?: string;
-  userId?: string;
 }
 
+interface EmailRequired {
+  userId?: string;
+  email: string;
+}
+
+interface UserIdAndEmail {
+  userId: string;
+  email: string;
+}
+
+export type UserParams = (UserIdRequired | EmailRequired | UserIdAndEmail) & {
+  userIp?: string;
+  userAgent?: string;
+};
+
 export interface CartItemParam {
-  productId: string
+  productId: string;
   quantity: number;
 }
 

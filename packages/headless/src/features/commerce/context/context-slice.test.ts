@@ -1,6 +1,6 @@
 import {CommerceContextState, getContextInitialState} from './context-state';
 import {contextReducer} from './context-slice';
-import {setContext, setUser, setView} from './context-actions';
+import {setContext, setUser, SetUserPayload, setView} from './context-actions';
 
 describe('context-slice', () => {
   let state: CommerceContextState;
@@ -39,14 +39,21 @@ describe('context-slice', () => {
     });
   });
 
-  it('should allow to set the user', () => {
-    const user = {
-      userAgent: 'some-user-agent',
-      userIp: 'some-user-ip',
-      email: 'email@example.org',
-      userId: 'userId',
-    };
-    expect(contextReducer(state, setUser(user)).user).toEqual(user);
+  describe('#setUser', () => {
+    it('should allow to set the user', () => {
+      const user = {
+        userAgent: 'some-user-agent',
+        userIp: 'some-user-ip',
+        email: 'email@example.org',
+        userId: 'userId',
+      };
+      expect(contextReducer(state, setUser(user)).user).toEqual(user);
+    });
+
+    it('throws when no userId nor email are provided', () => {
+      const user = {} as SetUserPayload;
+      expect('error' in setUser(user)).toBe(true);
+    });
   });
 
   it('should allow to set the view', () => {

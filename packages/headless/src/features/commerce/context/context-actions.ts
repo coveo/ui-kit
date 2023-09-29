@@ -1,5 +1,8 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../../utils/validate-payload';
+import {
+  serializeSchemaValidationError,
+  validatePayload,
+} from '../../../utils/validate-payload';
 import {
   UserParams,
   ViewParams,
@@ -9,6 +12,7 @@ import {
   userDefinition,
   viewDefinition,
 } from './context-validation';
+import {SchemaValidationError, isNullOrUndefined} from '@coveo/bueno';
 
 export interface SetContextPayload {
   trackingId: string;
@@ -24,14 +28,27 @@ export const setContext = createAction(
   (payload: SetContextPayload) => validatePayload(payload, contextDefinition)
 );
 
-type SetUserPayload = UserParams;
+export type SetUserPayload = UserParams;
 
 export const setUser = createAction(
   'commerce/setUser',
-  (payload: SetUserPayload) => validatePayload(payload, userDefinition)
+  (payload: SetUserPayload) => {
+    if (isNullOrUndefined(payload.userId) && isNullOrUndefined(payload.email)) {
+      return {
+        payload,
+        error: serializeSchemaValidationError(
+          new SchemaValidationError(
+            'Either userId or email is required'
+          ) as Error
+        ),
+      };
+    }
+
+    return validatePayload(payload, userDefinition);
+  }
 );
 
-type SetViewPayload = ViewParams;
+export type SetViewPayload = ViewParams;
 
 export const setView = createAction(
   'commerce/setView',
