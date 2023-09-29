@@ -18,46 +18,39 @@ export function assertShowLess(display: boolean) {
 export function assertAnswerHeight(expectedHeight: number) {
   SmartSnippetSelectors.truncatedAnswer()
     .invoke('height')
-    .then((height) => {
-      const roundedHeight = Math.round(height!);
-      cy.wrap(roundedHeight).should('equal', expectedHeight);
-    });
+    .should('be.closeTo', expectedHeight, 0.1);
 }
 
 export function assertCollapseWrapperHeight(expectedHeight: number) {
   SmartSnippetSelectors.collapseWrapper()
     .invoke('height')
-    .should('equal', expectedHeight);
+    .should('be.closeTo', expectedHeight, 0.1);
 }
 
 export function assertAnswerTopMargin(
-  marginValue: number,
+  margin: number,
   firstElementClass: string
 ) {
-  it(`has a ${marginValue}px gap between the title and the snippet`, () => {
+  it(`has a ${margin}px gap between the title and the snippet`, () => {
     SmartSnippetSelectors.question()
       .distanceTo(() =>
         SmartSnippetSelectors.answer().find(`.${firstElementClass}`)
       )
-      .then((margin) => {
-        const roundedMargin = Math.round(margin.vertical);
-        cy.wrap(roundedMargin).should('eq', marginValue);
-      });
+      .should('have.property', 'vertical')
+      .and('be.closeTo', margin, 0.1);
   });
 }
 
 export function assertAnswerBottomMargin(
-  marginValue: number,
+  margin: number,
   lastElementClass: string
 ) {
-  it(`has a ${marginValue}px gap between the snippet and the footer`, () => {
+  it(`has a ${margin}px gap between the snippet and the footer`, () => {
     SmartSnippetSelectors.answer()
       .find(`.${lastElementClass}`)
       .distanceTo(SmartSnippetSelectors.footer)
-      .then((margin) => {
-        const roundedMargin = Math.round(margin.vertical);
-        cy.wrap(roundedMargin).should('eq', marginValue);
-      });
+      .should('have.property', 'vertical')
+      .and('be.closeTo', margin, 0.1);
   });
 }
 
