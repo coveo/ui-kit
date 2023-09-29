@@ -10,6 +10,7 @@
     },
     {
       "matchPackagePatterns": ["^@angular/*", "^@angular-devkit/*", "ng-packagr"],
+      "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
       "allowedVersions": "16.x"
@@ -21,12 +22,21 @@
         "react-dom",
         "@types/react"
       ],
+      "groupName": "React",
       "groupSlug": "react",
       "rangeStrategy": "replace"
     },
     {
+      "matchPackagePatterns": [
+        "^@storybook/*"
+      ],
+      "groupName": "Storybook",
+      "groupSlug": "storybook",
+      "rangeStrategy": "replace"
+    },
+    {
       "matchFileNames": ["packages/atomic/package.json"],
-      "matchPackagePatterns": ["^jest$", "^jest-cli$", "@types/jest"],
+      "matchPackagePatterns": ["^jest$", "^jest-cli$", "@types/jest", "jest-environment-node"],
       "groupSlug": "atomic-jest",
       "rangeStrategy": "replace",
       "allowedVersions": "27.x",
@@ -51,12 +61,6 @@
   },
   "ignoreDeps": [
     "esbuild",
-    "@monaco-editor/react",
-    "@storybook/addon-controls",
-    "@storybook/addon-docs",
-    "@storybook/addon-essentials",
-    "@storybook/addon-viewport",
-    "@storybook/api",
-    "@storybook/html"
+    "@monaco-editor/react"
   ]
 }

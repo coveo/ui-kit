@@ -1,3 +1,15 @@
+# 2.33.0 (2023-09-27)
+
+### Bug Fixes
+
+- **quantic:** issue related to a race condition fixed when opening/closing a quantic interface ([#3212](https://github.com/coveo/ui-kit/issues/3212)) ([1fb22bf](https://github.com/coveo/ui-kit/commits/1fb22bf53522e5719e75f3d5a2b56570ac065f21))
+- **quantic:** slot added to the Quantic No Results component ([#3211](https://github.com/coveo/ui-kit/issues/3211)) ([78708c4](https://github.com/coveo/ui-kit/commits/78708c40ac559a709b62aa90aafdadb2b5fbf54d))
+- **quantic:** spacing on expandable searchbox ([#3206](https://github.com/coveo/ui-kit/issues/3206)) ([b60a594](https://github.com/coveo/ui-kit/commits/b60a594811315d8e392c86b0f6a9535d77c1fea8))
+
+### Features
+
+- **quantic:** query pipeline trigger logic added to Quantic Did You Mean component ([#3210](https://github.com/coveo/ui-kit/issues/3210)) ([3236f23](https://github.com/coveo/ui-kit/commits/3236f233b51e9b4966a0cc725ce044c8a63b3fd9))
+
 ## 2.32.1 (2023-09-20)
 
 # 2.32.0 (2023-09-11)

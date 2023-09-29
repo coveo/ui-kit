@@ -1,4 +1,5 @@
 import {AddonPanel} from '@storybook/components';
+import {STORY_MISSING} from '@storybook/core-events';
 import {addons, types} from '@storybook/manager-api';
 import {debounce} from 'lodash';
 import React from 'react';
@@ -46,4 +47,14 @@ addons.register('A11Y_EXTENSION', (api) => {
     {leading: false, trailing: true}
   );
   api.on(A11Y_EXTENSION_EVENTS.SEARCH_EXECUTED, rerunAccessibilityTest);
+});
+
+addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
+  api.once(STORY_MISSING, () => {
+    const currentId = api.getUrlState().storyId;
+    if (!currentId) {
+      return api.selectFirstStory();
+    }
+    api.selectStory(currentId);
+  });
 });
