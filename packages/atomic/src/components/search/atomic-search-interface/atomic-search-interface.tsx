@@ -53,7 +53,7 @@ export type Bindings = CommonBindings<
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
  *
- * blah
+ * blah blah
  */
 @Component({
   tag: 'atomic-search-interface',

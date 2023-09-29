@@ -26,20 +26,15 @@ jobs:
       - uses: ./.github/actions/build
       - id: commit-generated-files
         uses: ./.github/actions/commit-generated-files
-  retrigger-workflow:
-    name: 'Retrigger workflow'
-    needs: build
-    runs-on: ubuntu-latest
-    if: needs.build.outputs.SHA != ''
-    steps:
       - uses: actions/github-script@v6
+        if: steps.commit-generated-files.outputs.SHA != ''
         with:
           script: |
             github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'prbot.yml',
-              ref: '${{ needs.build.outputs.SHA }}',
+              ref: '${{ steps.commit-generated-files.outputs.SHA }}',
             })
   lint-check:
     name: 'Check with linter'
