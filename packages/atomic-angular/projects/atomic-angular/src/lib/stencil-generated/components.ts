@@ -1767,28 +1767,6 @@ export declare interface AtomicSmartSnippet extends Components.AtomicSmartSnippe
 
 
 @ProxyCmp({
-  inputs: ['collapsedHeight', 'maximumHeight']
-})
-@Component({
-  selector: 'atomic-smart-snippet-collapse-wrapper',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['collapsedHeight', 'maximumHeight'],
-})
-export class AtomicSmartSnippetCollapseWrapper {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicSmartSnippetCollapseWrapper extends Components.AtomicSmartSnippetCollapseWrapper {}
-
-
-@ProxyCmp({
   inputs: ['isOpen', 'source']
 })
 @Component({
