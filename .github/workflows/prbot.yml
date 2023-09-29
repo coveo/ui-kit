@@ -24,17 +24,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/build
-      - id: commit-generated-files
+      - id: commitgeneratedfiles
         uses: ./.github/actions/commit-generated-files
       - uses: actions/github-script@v6
-        if: steps.commit-generated-files.outputs.SHA != ''
         with:
           script: |
             github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'prbot.yml',
-              ref: '${{ steps.commit-generated-files.outputs.SHA }}',
+              ref: '${{ steps.commitgeneratedfiles.outputs.SHA }}',
             })
   lint-check:
     name: 'Check with linter'
