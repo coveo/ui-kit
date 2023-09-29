@@ -155,8 +155,8 @@ export class SmartSnippetCommon {
           part="smart-snippet"
         >
           <atomic-smart-snippet-collapse-wrapper
-            maximumHeight={this.props.getSnippetMaximumHeight?.()}
-            collapsedHeight={this.props.getSnippetCollapsedHeight?.()}
+            snippetMaximumHeight={this.props.getSnippetMaximumHeight?.()}
+            snippetCollapsedHeight={this.props.getSnippetCollapsedHeight?.()}
           >
             {this.renderQuestion()}
             {this.renderContent()}
