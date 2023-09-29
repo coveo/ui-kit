@@ -35,17 +35,17 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture().with(addSmartSnippet()).init();
     });
     it('should work correctly', () => {
-      // should fallback to a div for the accessibility heading
+      cy.log('should fallback to a div for the accessibility heading');
       SmartSnippetSelectors.accessibilityHeading().should(
         'have.prop',
         'tagName',
         'DIV'
       );
-      // should fallback to a div for the question
+      cy.log('should fallback to a div for the question');
       SmartSnippetSelectors.question().should('have.prop', 'tagName', 'DIV');
-      // render the correct question
+      cy.log('render the correct question');
       SmartSnippetSelectors.question().should('have.text', defaultQuestion);
-      // should have links to the source
+      cy.log('should have links to the source');
       SmartSnippetSelectors.sourceUrl().should(
         'have.attr',
         'href',
