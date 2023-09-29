@@ -19,7 +19,7 @@ export interface StaticFilterValue {
   expression: string;
 
   /**
-   * The state of the static filter value.
+   * The state of the static filter value. The possible values are `idle`, `selected`, `excluded`.
    */
   state: StaticFilterValueState;
 }

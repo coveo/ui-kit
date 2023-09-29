@@ -11,6 +11,10 @@ import {
   SearchHubSection,
 } from '../../state/state-sections';
 import {PreprocessRequest} from '../preprocess-request';
+import {
+  wrapAnalyticsClientSendEventHook,
+  wrapPreprocessRequest,
+} from './coveo-analytics-utils';
 
 export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
   Partial<CaseAssistConfigurationSection> &
@@ -49,9 +53,9 @@ export const configureCaseAssistAnalytics = ({
       token,
       endpoint,
       runtimeEnvironment,
-      preprocessRequest,
+      preprocessRequest: wrapPreprocessRequest(logger, preprocessRequest),
       beforeSendHooks: [
-        analyticsClientMiddleware,
+        wrapAnalyticsClientSendEventHook(logger, analyticsClientMiddleware),
         (type, payload) => {
           logger.info(
             {

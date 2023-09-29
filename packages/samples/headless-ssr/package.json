@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-ssr-samples",
-  "description": "Examples using framework agnostic @coveo/headless/ssr utils and @coveo/headless-react",
+  "description": "Examples using framework agnostic @coveo/headless/ssr utils and @coveo/headless-react/ssr",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@types/node": "20.6.1",
-    "@coveo/headless-react": "0.0.0",
-    "@coveo/headless": "2.32.0",
+    "@coveo/headless-react": "0.1.0",
+    "@coveo/headless": "2.33.0",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "eslint": "8.49.0",

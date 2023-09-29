@@ -1,3 +1,14 @@
+# 2.33.0 (2023-09-27)
+
+### Bug Fixes
+
+- **headless,headless-react:** remove defineUrlManager SSR utility ([#3214](https://github.com/coveo/ui-kit/issues/3214)) ([7719ab4](https://github.com/coveo/ui-kit/commits/7719ab456f44dccab70d32ae8fd120ded222fc42))
+
+### Features
+
+- **atomic:** interactive RGA citations ([#3199](https://github.com/coveo/ui-kit/issues/3199)) ([fabdd35](https://github.com/coveo/ui-kit/commits/fabdd357c6d0625413617c66734c3b7ae81ddb62))
+- **headless:** wrap preprocess function that throws to prevent stopping the execution requests ([#3172](https://github.com/coveo/ui-kit/issues/3172)) ([8e50eb9](https://github.com/coveo/ui-kit/commits/8e50eb9cefca01034a499230696cfac04cdfca20))
+
 # 2.32.0 (2023-09-20)
 
 ### Bug Fixes
