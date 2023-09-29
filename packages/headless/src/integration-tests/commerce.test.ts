@@ -43,7 +43,7 @@ describe.skip('commerce', () => {
       quantity: 2,
     });
     cart.addItem({
-      productId: 'nice shoes',
+      productId: 'nicer shoes',
       quantity: 3,
     });
 
