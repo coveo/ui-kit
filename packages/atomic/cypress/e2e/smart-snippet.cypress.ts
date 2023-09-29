@@ -220,12 +220,12 @@ describe('Smart Snippet Test Suites', () => {
 
     it('should work correctly when pressing show more and show less', () => {
       SmartSnippetSelectors.showMoreButton().click();
-      cy.wait(200);
+      SmartSnippetSelectors.body().should('have.attr', 'expanded');
       SmartSnippetAssertions.assertShowMore(false);
       SmartSnippetAssertions.assertShowLess(true);
       SmartSnippetAssertions.assertAnswerHeight(height);
       SmartSnippetSelectors.showLessButton().click();
-      cy.wait(200);
+      SmartSnippetSelectors.body().should('not.have.attr', 'expanded');
       SmartSnippetAssertions.assertShowMore(true);
       SmartSnippetAssertions.assertShowLess(false);
       SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
@@ -261,12 +261,18 @@ describe('Smart Snippet Test Suites', () => {
 
     it('should work correctly when pressing show more and show less', () => {
       SmartSnippetSelectors.showMoreButton().click();
-      cy.wait(200);
+      SmartSnippetSelectors.collapseWrapperComponent().should(
+        'have.class',
+        'expanded'
+      );
       SmartSnippetAssertions.assertShowMore(false);
       SmartSnippetAssertions.assertShowLess(true);
       SmartSnippetAssertions.assertAnswerHeight(height);
       SmartSnippetSelectors.showLessButton().click();
-      cy.wait(200);
+      SmartSnippetSelectors.collapseWrapperComponent().should(
+        'not.have.class',
+        'expanded'
+      );
       SmartSnippetAssertions.assertShowMore(true);
       SmartSnippetAssertions.assertShowLess(false);
       SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
