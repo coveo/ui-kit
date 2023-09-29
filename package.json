@@ -68,9 +68,6 @@
     "typescript": "5.2.2"
   },
   "overrides": {
-    "@coveo/quantic": {
-      "@lwc/compiler": "3.4.0"
-    },
     "@coveo/release": {
       "@types/async-retry": {
         "@types/retry": "0.12.3"
