@@ -34,14 +34,16 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
 }
 
 export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
-  getAllFacets(): {
-    [facetId: string]:
-      | FacetInfo
-      | (FacetInfo & FacetValueFormat<NumericFacetValue>)
-      | (FacetInfo & FacetValueFormat<DateFacetValue>);
-  };
+  getAllFacets(): FacetInfoMap;
 
   isMobile(): boolean;
+}
+
+export interface FacetInfoMap {
+  [facetId: string]:
+    | FacetInfo
+    | (FacetInfo & FacetValueFormat<NumericFacetValue>)
+    | (FacetInfo & FacetValueFormat<DateFacetValue>);
 }
 
 export function createAtomicStore(): AtomicStore {
