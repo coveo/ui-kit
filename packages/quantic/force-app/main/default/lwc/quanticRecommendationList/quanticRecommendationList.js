@@ -40,7 +40,7 @@ export default class QuanticRecommendationList extends LightningElement {
     topDocumentsForYou,
     slide,
     invalidPositiveIntegerProperty,
-    loadingRecommendations,
+    loadingRecommendations
   };
 
   /**
@@ -200,9 +200,7 @@ export default class QuanticRecommendationList extends LightningElement {
       !this.recommendationList?.state?.recommendations?.length &&
       !this.recommendationList?.state?.error;
     if (this.showPlaceholder) {
-      this.loadingAriaLiveMessage.dispatchMessage(
-        this.labels.loadingRecommendations
-      );
+      this.loadingAriaLiveMessage.dispatchMessage(this.labels.loadingRecommendations);
     }
   }
 

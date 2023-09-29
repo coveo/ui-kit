@@ -24,8 +24,10 @@
           "no-unknown-attribute": "off"
         }
       }
-    ]
+    ],
   },
   "include": ["src", "types/jsx.d.ts"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

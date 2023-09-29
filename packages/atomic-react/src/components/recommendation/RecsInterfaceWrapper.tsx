@@ -10,8 +10,7 @@ type GetRecommendations = HTMLAtomicRecsInterfaceElement['getRecommendations'];
 /**
  * The properties of the AtomicSearchInterface component
  */
-interface WrapperProps
-  extends Omit<JSX.AtomicRecsInterface, 'i18n' | 'pipeline' | 'searchHub'> {
+interface WrapperProps extends Omit<JSX.AtomicRecsInterface, 'i18n' | 'pipeline' | 'searchHub'> {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *

@@ -1,2 +1,2 @@
 declare module '@salesforce/label/*';
-declare module '@salesforce/i18n/*';
+declare module '@salesforce/i18n/*'

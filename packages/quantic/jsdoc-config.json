@@ -1,3 +1,4 @@
+
 {
   "tags": {
     "allowUnknownTags": true
@@ -9,7 +10,9 @@
   ],
   "recurseDepth": 10,
   "source": {
-    "include": ["force-app/main/default/lwc"],
+    "include": [
+      "force-app/main/default/lwc"
+    ],
     "exclude": [
       "node_modules",
       "example.*.js$",
