@@ -1,5 +1,4 @@
-import { api, LightningElement, track } from 'lwc';
-
+import {api, LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticRefineModalContent extends LightningElement {
   @api engineId = 'quantic-refine-modal-engine';
@@ -19,7 +18,8 @@ export default class ExampleQuanticRefineModalContent extends LightningElement {
     {
       attribute: 'disableDynamicNavigation',
       label: 'Disable Dynamic Navigation',
-      description: 'Indicates whether the dynamic navigation experience should be disabled.',
+      description:
+        'Indicates whether the dynamic navigation experience should be disabled.',
       defaultValue: false,
     },
   ];

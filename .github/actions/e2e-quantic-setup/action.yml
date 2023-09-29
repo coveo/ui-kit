@@ -1,5 +1,5 @@
-name: "Setup Quantic E2E"
-description: "Setup Cypress tests for Quantic"
+name: 'Setup Quantic E2E'
+description: 'Setup Cypress tests for Quantic'
 inputs:
   clientid:
     description: The SFDX client ID

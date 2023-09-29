@@ -390,7 +390,7 @@ Then, we need to add the required dependencies in our page. You can do that like
 Once this is done, you can start using `CoveoAtomicReact` directly with an inline script tag:
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     [...]

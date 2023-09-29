@@ -1,15 +1,15 @@
 {
-    "extends": "../tsconfig.json",
-    "compilerOptions": {
-      "target": "es2016",
-      "module": "ES6",
-      "esModuleInterop": true,
-      "lib": ["DOM"],
-      "moduleResolution": "node",
-      "sourceMap": false,
-      "outDir": "./public/dist",
-      "types": ["cypress"],
-      "jsx": "react"
-    },
-    "include": ["**/*.ts"]
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "ES6",
+    "esModuleInterop": true,
+    "lib": ["DOM"],
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "outDir": "./public/dist",
+    "types": ["cypress"],
+    "jsx": "react"
+  },
+  "include": ["**/*.ts"]
 }

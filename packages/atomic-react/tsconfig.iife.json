@@ -1,9 +1,8 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-      "declaration": true,
-      "module": "es2020",
-      "outDir": "dist/iife"
-    }
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "module": "es2020",
+    "outDir": "dist/iife"
   }
-  
+}

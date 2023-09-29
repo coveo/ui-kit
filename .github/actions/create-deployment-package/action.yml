@@ -1,5 +1,5 @@
-name: "Create deployment package"
-description: "Create a deployment package for Headless and Atomic"
+name: 'Create deployment package'
+description: 'Create a deployment package for Headless and Atomic'
 runs:
   using: composite
   steps:
