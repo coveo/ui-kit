@@ -58,7 +58,6 @@ describe('Breadbox Test Suites', () => {
       .with(
         addAutomaticFacetGenerator({
           'desired-count': '1',
-          'are-collapsed': 'false',
         })
       )
 
@@ -67,9 +66,7 @@ describe('Breadbox Test Suites', () => {
 
   describe('when selecting a standard facet, a numeric facet and an automatic facet', () => {
     const selectionIndex = 2;
-    function setupBreadboxWithSelectedFacetAndNumericFacet(
-      props: TagProps = {}
-    ) {
+    function setupBreadboxWithMultipleSelectedFacets(props: TagProps = {}) {
       setupBreadboxWithMultipleFacets(props);
       selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
@@ -78,7 +75,7 @@ describe('Breadbox Test Suites', () => {
 
     describe('with i18n translated labels', () => {
       beforeEach(() =>
-        setupBreadboxWithSelectedFacetAndNumericFacet({
+        setupBreadboxWithMultipleSelectedFacets({
           label: 'a.translated.label',
         })
       );
@@ -92,7 +89,7 @@ describe('Breadbox Test Suites', () => {
     });
 
     describe('verify rendering', () => {
-      beforeEach(() => setupBreadboxWithSelectedFacetAndNumericFacet());
+      beforeEach(() => setupBreadboxWithMultipleSelectedFacets());
       BreadboxAssertions.assertDisplayBreadcrumb(true);
       CommonAssertions.assertAccessibility(breadboxComponent);
       BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
@@ -110,7 +107,7 @@ describe('Breadbox Test Suites', () => {
 
     describe('when selecting "Clear all" button', () => {
       function setupClearAllBreadcrumb() {
-        setupBreadboxWithSelectedFacetAndNumericFacet();
+        setupBreadboxWithMultipleSelectedFacets();
         deselectAllBreadcrumbs();
       }
 

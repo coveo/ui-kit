@@ -30,4 +30,11 @@
       max-height: 8em;
     }
   }
+
+  &:not(.expanded) {
+    > [part='textarea'],
+    &::after {
+      @apply overflow-hidden;
+    }
+  }
 }
