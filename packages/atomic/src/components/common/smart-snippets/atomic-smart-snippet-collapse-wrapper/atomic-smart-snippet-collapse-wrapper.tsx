@@ -3,6 +3,9 @@ import ArrowDown from '../../../../images/arrow-down.svg';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {AnyBindings} from '../../interface/bindings';
 
+/**
+ * @internal
+ */
 @Component({
   tag: 'atomic-smart-snippet-collapse-wrapper',
   styleUrl: 'atomic-smart-snippet-collapse-wrapper.pcss',
@@ -13,9 +16,9 @@ export class AtomicSmartSnippetCollapseWrapper {
   public error!: Error;
   @Element() public host!: HTMLElement;
 
-  @Prop({reflect: true}) public maximumHeight?: number;
+  @Prop({reflect: true}) public snippetMaximumHeight?: number;
 
-  @Prop({reflect: true}) public collapsedHeight?: number;
+  @Prop({reflect: true}) public snippetCollapsedHeight?: number;
 
   @State() public isExpanded = true;
 
@@ -23,12 +26,13 @@ export class AtomicSmartSnippetCollapseWrapper {
 
   @State() private fullHeight?: number;
 
-  private shouldRenderButton = !!this.maximumHeight;
+  private shouldRenderButton = !!this.snippetMaximumHeight;
 
   private validateProps() {
     if (
-      this.maximumHeight &&
-      (!this.collapsedHeight || this.maximumHeight < this.collapsedHeight)
+      this.snippetMaximumHeight &&
+      (!this.snippetCollapsedHeight ||
+        this.snippetMaximumHeight < this.snippetCollapsedHeight)
     ) {
       throw new Error(
         'snippetMaximumHeight must be equal or greater than snippetCollapsedHeight'
@@ -48,12 +52,12 @@ export class AtomicSmartSnippetCollapseWrapper {
 
   private initializeFullHeight() {
     this.fullHeight = this.host.getBoundingClientRect().height;
-    this.showButton = this.fullHeight! > this.maximumHeight!;
+    this.showButton = this.fullHeight! > this.snippetMaximumHeight!;
     this.isExpanded = !this.showButton;
     this.host.style.setProperty('--full-height', `${this.fullHeight}px`);
     this.host.style.setProperty(
       '--collapsed-size',
-      `${this.showButton ? this.collapsedHeight : this.fullHeight}px`
+      `${this.showButton ? this.snippetCollapsedHeight : this.fullHeight}px`
     );
   }
 
