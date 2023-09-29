@@ -5,7 +5,7 @@ module.exports = {
     );
     return `eslint --fix ${filteredFiles.join(' ')}`;
   },
-  '**/*.{scss,css,pcss,html,md,yml,json}': (files) => {
+  '**/*.{scss,css,pcss,html,md,yml,json,ts,tsx,js,mjs}': (files) => {
     return `prettier --write ${files.join(' ')}`;
   },
   '**/*.md': (files) => {

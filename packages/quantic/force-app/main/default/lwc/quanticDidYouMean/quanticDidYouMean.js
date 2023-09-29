@@ -51,7 +51,7 @@ export default class QuanticDidYouMean extends LightningElement {
   /** @type {Function} */
   unsubscribeDidYouMean;
   /** @type {Function} */
-  unsubscribeQueryTrigger
+  unsubscribeQueryTrigger;
   /** @type {DidYouMean} */
   didYouMean;
   /** @type {AnyHeadless} */

@@ -1,6 +1,6 @@
 import {addons} from '@storybook/addons';
-import {A11Y_EXTENSION_EVENTS} from './register';
 import CoreEvents from '@storybook/core-events';
+import {A11Y_EXTENSION_EVENTS} from './register';
 
 export const dispatchAddons = (clone: HTMLElement) => {
   addons.getChannel().emit(A11Y_EXTENSION_EVENTS.SEARCH_EXECUTED);
