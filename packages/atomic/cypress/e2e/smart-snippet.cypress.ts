@@ -43,7 +43,7 @@ describe('Smart Snippet Test Suites', () => {
       );
       // should fallback to a div for the question
       SmartSnippetSelectors.question().should('have.prop', 'tagName', 'DIV');
-      //render the correct question
+      // render the correct question
       SmartSnippetSelectors.question().should('have.text', defaultQuestion);
       // should have links to the source
       SmartSnippetSelectors.sourceUrl().should(
