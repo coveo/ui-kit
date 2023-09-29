@@ -33,7 +33,6 @@ import {
   HIGHLIGHT_PREFIX,
   QuickviewWordHighlight,
 } from '../quickview-word-highlight/quickview-word-highlight';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../../utils/replace-breakpoint';
 
 export interface HighlightKeywords {
   highlightNone: boolean;
@@ -70,7 +69,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Event({eventName: 'atomic/quickview/previous'})
   previousQuickview?: EventEmitter;
 
-  @State() private minimizeSidebar = this.isMobile;
+  @State() private minimizeSidebar = false;
   @State() private words: Record<string, QuickviewWordHighlight> = {};
   private iframeRef?: HTMLIFrameElement;
 
@@ -83,14 +82,8 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   private interactiveResult?: InteractiveResult;
 
-  private get isMobile() {
-    const mobileBreakpoint =
-      document
-        .querySelector('atomic-search-layout')
-        ?.getAttribute('mobile-breakpoint') ?? DEFAULT_MOBILE_BREAKPOINT;
-    return !window.matchMedia(
-      `only screen and (min-width: ${mobileBreakpoint})`
-    ).matches;
+  public componentWillLoad(): void {
+    this.minimizeSidebar = this.bindings.store.isMobile();
   }
 
   @Method()
@@ -333,7 +326,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   public render() {
     return (
       <atomic-modal
-        fullscreen={this.isMobile}
+        fullscreen={this.bindings.store.isMobile()}
         class={'atomic-quickview-modal'}
         isOpen={this.isOpen}
         close={() => this.onClose()}
