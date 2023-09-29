@@ -1,4 +1,4 @@
-import {BooleanValue, Schema} from '@coveo/bueno';
+import {NumberValue, Schema} from '@coveo/bueno';
 import {
   AutomaticFacetGenerator,
   AutomaticFacetGeneratorState,
@@ -7,7 +7,7 @@ import {
   buildAutomaticFacetGenerator,
   buildSearchStatus,
 } from '@coveo/headless';
-import {Component, Prop, State, h} from '@stencil/core';
+import {Component, Method, Prop, State, h} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -60,20 +60,14 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
    * @beta - This prop is part of the automatic facets feature.
    * Automatic facets are currently in beta testing and should be available soon.
    *
-   * Specifies whether the automatic facets are collapsed.
-   */
-  @Prop() public areCollapsed = true;
-
-  /**
-   * @beta - This prop is part of the automatic facets feature.
-   * Automatic facets are currently in beta testing and should be available soon.
-   *
    * The desired number of automatically generated facet values.
    *
    * Minimum: `1`
    * @defaultValue `8`
    */
   @Prop() public numberOfValues = 8;
+
+  @State() private collapseFacetsAfter = -1;
 
   public initialize() {
     this.validateProps();
@@ -89,17 +83,41 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
     );
   }
 
+  @Method()
+  public async updateCollapseFacetsDependingOnFacetsVisibility(
+    collapseAfter: number,
+    numberOfVisibleFacets: number
+  ) {
+    if (collapseAfter === -1) {
+      this.collapseFacetsAfter = -1;
+      return;
+    }
+    this.collapseFacetsAfter = Math.max(
+      0,
+      collapseAfter - numberOfVisibleFacets
+    );
+  }
+
   private validateProps() {
     new Schema({
-      areCollapsed: new BooleanValue({default: true, required: false}),
+      collapseFacetAfter: new NumberValue({min: -1, required: false}),
     }).validate({
-      areCollapsed: this.areCollapsed,
+      collapseFacetAfter: this.collapseFacetsAfter,
     });
+  }
+
+  private shouldCollapseFacet(index: number): boolean {
+    if (this.collapseFacetsAfter === -1) {
+      return false;
+    }
+    return this.collapseFacetsAfter
+      ? index + 1 > this.collapseFacetsAfter
+      : true;
   }
 
   public render() {
     const automaticFacets =
-      this.automaticFacetGeneratorState.automaticFacets.map((facet) => {
+      this.automaticFacetGeneratorState.automaticFacets.map((facet, index) => {
         return (
           <atomic-automatic-facet
             key={facet.state.field}
@@ -107,15 +125,15 @@ export class AtomicAutomaticFacetGenerator implements InitializableComponent {
             facetId={facet.state.field}
             facet={facet}
             searchStatus={this.searchStatus}
-            isCollapsed={this.areCollapsed}
+            isCollapsed={this.shouldCollapseFacet(index)}
           ></atomic-automatic-facet>
         );
       });
     if (!this.searchStatus.state.firstSearchExecuted) {
-      return Array.from({length: this.desiredCount}, () => (
+      return Array.from({length: this.desiredCount}, (_, index) => (
         <FacetPlaceholder
           numberOfValues={this.numberOfValues}
-          isCollapsed={this.areCollapsed}
+          isCollapsed={this.shouldCollapseFacet(index)}
         />
       ));
     }

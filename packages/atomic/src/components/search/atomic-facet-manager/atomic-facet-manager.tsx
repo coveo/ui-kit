@@ -3,9 +3,6 @@ import {
   FacetManager,
   buildFacetManager,
   FacetManagerState,
-  buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
 } from '@coveo/headless';
 import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
@@ -14,8 +11,11 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
-  BaseFacetElement,
-  facetShouldBeInitiallyCollapsed,
+  getFacetsInChildren,
+  getAutomaticFacetGenerator,
+  sortFacetVisibility,
+  sortFacetsUsingManager,
+  collapseFacetsAfter,
 } from '../../common/facets/facet-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
@@ -29,11 +29,6 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 export class AtomicFacetManager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private facetManager!: FacetManager;
-  public searchStatus!: SearchStatus;
-
-  @BindStateToController('searchStatus')
-  @State()
-  private searchStatusState!: SearchStatusState;
 
   @Element() private host!: HTMLDivElement;
 
@@ -55,7 +50,6 @@ export class AtomicFacetManager implements InitializableComponent {
 
   public initialize() {
     this.validateProps();
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
 
     // An update has to be forced for the facets to be visually updated, without being interacted with.
@@ -63,28 +57,32 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   private sortFacets = () => {
-    if (!this.searchStatusState.firstSearchExecuted) {
-      this.updateCollapsedState(this.facets);
-      return;
-    }
-    const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
-    const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
-    this.updateCollapsedState(sortedFacets);
-    this.host.append(...sortedFacets);
+    const facets = getFacetsInChildren(this.host);
+
+    const sortedFacets = sortFacetsUsingManager(facets, this.facetManager);
+
+    const {visibleFacets, invisibleFacets} = sortFacetVisibility(
+      sortedFacets,
+      this.bindings.store.getAllFacets()
+    );
+
+    const generator = getAutomaticFacetGenerator(this.host);
+
+    collapseFacetsAfter(visibleFacets, this.collapseFacetsAfter);
+
+    generator?.updateCollapseFacetsDependingOnFacetsVisibility(
+      this.collapseFacetsAfter,
+      visibleFacets.length
+    );
+
+    this.host.append(
+      ...[
+        ...visibleFacets,
+        ...invisibleFacets,
+        ...(generator ? [generator] : []),
+      ]
+    );
   };
-
-  private updateCollapsedState(facets: BaseFacetElement[]) {
-    if (this.collapseFacetsAfter === -1) {
-      return;
-    }
-
-    facets.forEach((facet, index) => {
-      facet.isCollapsed = facetShouldBeInitiallyCollapsed(
-        index,
-        this.collapseFacetsAfter
-      );
-    });
-  }
 
   private validateProps() {
     new Schema({
@@ -92,22 +90,6 @@ export class AtomicFacetManager implements InitializableComponent {
     }).validate({
       collapseFacetAfter: this.collapseFacetsAfter,
     });
-  }
-
-  private get facets() {
-    const children = Array.from(this.host.children);
-
-    const facets = children.filter(
-      (child) =>
-        this.isPseudoFacet(child) ||
-        child.tagName === 'ATOMIC-AUTOMATIC-FACET-GENERATOR'
-    ) as BaseFacetElement[];
-
-    return facets;
-  }
-
-  private isPseudoFacet(el: Element): el is BaseFacetElement {
-    return 'facetId' in el;
   }
 
   disconnectedCallback() {
