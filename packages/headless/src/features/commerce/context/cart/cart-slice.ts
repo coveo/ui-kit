@@ -27,6 +27,11 @@ export const cartReducer = createReducer(
         state.cart = cart;
       })
       .addCase(addItem, (state, {payload}) => {
+        if (payload.productId in state.cart) {
+          state.cart[payload.productId].quantity += payload.quantity;
+          return;
+        }
+
         state.cartItems = [...state.cartItems, payload.productId];
         state.cart[payload.productId] = payload;
       })
@@ -37,6 +42,10 @@ export const cartReducer = createReducer(
         delete state.cart[payload];
       })
       .addCase(updateItemQuantity, (state, {payload}) => {
+        if (!(payload.productId in state.cart)) {
+          return;
+        }
+
         state.cart[payload.productId].quantity = payload.quantity;
       });
   }

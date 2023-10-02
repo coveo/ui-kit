@@ -47,6 +47,27 @@ describe('cart-slice', () => {
     });
   });
 
+  it('should sum duplicate items', () => {
+    const oldQuantity = someItem.quantity;
+    const newQuantity = 4;
+    const updatedState = cartReducer(
+      {
+        cartItems: [someItem.productId],
+        cart: {
+          [someItem.productId]: someItem,
+        },
+      },
+      addItem({
+        ...someItem,
+        quantity: newQuantity,
+      })
+    );
+    expect(updatedState.cartItems).toEqual([someItem.productId]);
+    expect(updatedState.cart[someItem.productId].quantity).toEqual(
+      oldQuantity + newQuantity
+    );
+  });
+
   it('should allow to remove an item', () => {
     const updatedState = cartReducer(
       {
@@ -61,7 +82,13 @@ describe('cart-slice', () => {
     expect(updatedState.cart).toEqual({});
   });
 
-  it('should allow to remove an item', () => {
+  it('should handle removing an absent item', () => {
+    const updatedState = cartReducer(state, removeItem(someItem.productId));
+    expect(updatedState.cartItems).toEqual([]);
+    expect(updatedState.cart).toEqual({});
+  });
+
+  it('should allow to update an item', () => {
     const updatedItem = {
       productId: someItem.productId,
       quantity: 200,
@@ -82,5 +109,11 @@ describe('cart-slice', () => {
     expect(updatedState.cart).toEqual({
       [someItem.productId]: updatedItem,
     });
+  });
+
+  it('should handle updating an absent item', () => {
+    const updatedState = cartReducer(state, updateItemQuantity(someItem));
+    expect(updatedState.cartItems).toEqual([]);
+    expect(updatedState.cart).toEqual({});
   });
 });
