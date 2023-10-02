@@ -35,10 +35,10 @@ export interface CartProps {
  */
 export interface Cart extends Controller {
   /**
-   * Sets the cart items.
-   * @param cart - The new cart.
+   * Replaces the cart items.
+   * @param items - The new cart items.
    */
-  setItems(cart: CartItem[]): void;
+  setItems(items: CartItem[]): void;
 
   /**
    * Adds a cart item.
