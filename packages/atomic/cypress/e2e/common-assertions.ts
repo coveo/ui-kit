@@ -15,51 +15,60 @@ export function should(should: boolean) {
 export function assertAccessibility<T extends HTMLElement>(
   component?: string | (() => Cypress.Chainable<JQuery<T>>)
 ) {
+  it('should pass accessibility tests', () => {
+    assertAccessibilityWithoutIt(component);
+  });
+
+  it('every interactive element with innerText and an aria label passes WCAG success criterion 2.5.3', () => {
+    assertWCAG2_5_3();
+  });
+}
+
+export function assertWCAG2_5_3() {
+  function splitIntoWords(text: string) {
+    return text
+      .split(/\b/g)
+      .filter((word) => !word.match(/[^a-z]/i))
+      .map((word) => word.toLowerCase());
+  }
+
+  cy.window()
+    .then((win) =>
+      Array.from(getFocusableDescendants(win.document.body)).filter(
+        (element) => element.hasAttribute('aria-label') && element.innerText
+      )
+    )
+    .should((elements) =>
+      Array.from(elements).forEach((element) =>
+        expect(
+          splitIntoWords(element.getAttribute('aria-label')!)
+        ).to.include.all.members(
+          splitIntoWords(element.innerText),
+          'The aria-label should include the innerText. https://www.w3.org/WAI/WCAG22/Techniques/failures/F96.html'
+        )
+      )
+    );
+}
+
+export function assertAccessibilityWithoutIt<T extends HTMLElement>(
+  component?: string | (() => Cypress.Chainable<JQuery<T>>)
+) {
   const rulesToIgnore = ['landmark-one-main', 'page-has-heading-one', 'region'];
   const rules = rulesToIgnore.reduce(
     (obj, rule) => ({...obj, [rule]: {enabled: false}}),
     {}
   );
 
-  it('should pass accessibility tests', () => {
-    if (typeof component === 'string') {
-      cy.checkA11y(component, {rules});
-    } else if (typeof component === 'function') {
-      component().should(([el]) => {
-        cy.checkA11y(el, {rules});
-      });
-    } else {
-      cy.checkA11y({}, {rules});
-    }
-  });
-
-  it('every interactive element with innerText and an aria label passes WCAG success criterion 2.5.3', () => {
-    function splitIntoWords(text: string) {
-      return text
-        .split(/\b/g)
-        .filter((word) => !word.match(/[^a-z]/i))
-        .map((word) => word.toLowerCase());
-    }
-
-    cy.window()
-      .then((win) =>
-        Array.from(getFocusableDescendants(win.document.body)).filter(
-          (element) => element.hasAttribute('aria-label') && element.innerText
-        )
-      )
-      .should((elements) =>
-        Array.from(elements).forEach((element) =>
-          expect(
-            splitIntoWords(element.getAttribute('aria-label')!)
-          ).to.include.all.members(
-            splitIntoWords(element.innerText),
-            'The aria-label should include the innerText. https://www.w3.org/WAI/WCAG22/Techniques/failures/F96.html'
-          )
-        )
-      );
-  });
+  if (typeof component === 'string') {
+    cy.checkA11y(component, {rules});
+  } else if (typeof component === 'function') {
+    component().should(([el]) => {
+      cy.checkA11y(el, {rules});
+    });
+  } else {
+    cy.checkA11y({}, {rules});
+  }
 }
-
 export function assertContainsComponentError(
   componentSelector: ComponentSelector,
   display: boolean
