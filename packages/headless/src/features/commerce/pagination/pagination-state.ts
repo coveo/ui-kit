@@ -1,11 +1,11 @@
-export interface PaginationState {
+export interface CommercePaginationState {
   page: number;
   perPage: number;
   totalCount: number;
   totalPages: number;
 }
 
-export function getPaginationInitialState(): PaginationState {
+export function getCommercePaginationInitialState(): CommercePaginationState {
   return {
     page: 0,
     perPage: 0,

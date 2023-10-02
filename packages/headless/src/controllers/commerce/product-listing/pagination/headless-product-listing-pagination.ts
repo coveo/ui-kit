@@ -4,7 +4,7 @@ import {
   selectPage,
   previousPage,
 } from '../../../../features/commerce/pagination/pagination-actions';
-import {paginationReducer as pagination} from '../../../../features/commerce/pagination/pagination-slice';
+import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {loadReducerError} from '../../../../utils/errors';
@@ -66,20 +66,10 @@ export function buildProductListingPagination(
   const {dispatch} = engine;
 
   const getState = () => {
-    return engine.state.productListing.pagination;
+    return engine.state.commercePagination!;
   };
 
-  const pageExists = (page: number) => {
-    return page < getState().totalPages;
-  };
-
-  const hasNextPage = () => {
-    return getState().page < getState().totalPages - 1;
-  };
-
-  const hasPreviousPage = () => {
-    return getState().page > 0;
-  };
+  dispatch(fetchProductListing());
 
   return {
     ...controller,
@@ -89,34 +79,18 @@ export function buildProductListingPagination(
     },
 
     selectPage(page: number) {
-      if (pageExists(page)) {
-        dispatch(selectPage(page));
-        dispatch(fetchProductListing());
-      } else {
-        engine.logger.warn(
-          `Selected page ${page} does not exist; no action was dispatched.`
-        );
-      }
+      dispatch(selectPage(page));
+      dispatch(fetchProductListing());
     },
 
     nextPage() {
-      if (hasNextPage()) {
-        dispatch(nextPage());
-        dispatch(fetchProductListing());
-      } else {
-        engine.logger.warn('There is no next page; no action was dispatched.');
-      }
+      dispatch(nextPage());
+      dispatch(fetchProductListing());
     },
 
     previousPage() {
-      if (hasPreviousPage()) {
-        dispatch(previousPage());
-        dispatch(fetchProductListing());
-      } else {
-        engine.logger.warn(
-          'There is no previous page; no action was dispatched.'
-        );
-      }
+      dispatch(previousPage());
+      dispatch(fetchProductListing());
     },
   };
 
@@ -125,7 +99,7 @@ export function buildProductListingPagination(
   ): engine is CommerceEngine {
     engine.addReducers({
       productListing,
-      pagination,
+      commercePagination,
     });
     return true;
   }

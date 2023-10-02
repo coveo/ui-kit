@@ -5,12 +5,12 @@ import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-lis
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
   CategoryFacetSection,
+  CommercePaginationSection,
   ConfigurationSection,
   DateFacetSection,
   FacetOrderSection,
   FacetSection,
   NumericFacetSection,
-  PaginationSection,
   ProductListingV2Section,
   StructuredSortSection,
   VersionSection,
@@ -46,13 +46,13 @@ export const setProductListingUrl = createAction(
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
   Partial<
-    FacetSection &
+    CommercePaginationSection &
+      FacetSection &
       NumericFacetSection &
       CategoryFacetSection &
       DateFacetSection &
       FacetOrderSection &
       StructuredSortSection &
-      PaginationSection &
       VersionSection
   >;
 
@@ -105,15 +105,7 @@ export const buildProductListingRequestV2 = async (
     clientId: state.productListing.clientId,
     context: state.productListing.context,
     selectedFacets,
-    ...(state.pagination && {
-      selectedPage: {
-        page:
-          Math.ceil(
-            state.pagination.firstResult /
-              (state.pagination.numberOfResults || 1)
-          ) + 1,
-      },
-    }),
+    ...(state.commercePagination && {page: state.commercePagination.page}),
     ...(state.sort && {
       selectedSort: state.sort,
     }),

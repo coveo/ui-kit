@@ -1,12 +1,15 @@
 import {nextPage, previousPage, selectPage} from './pagination-actions';
 import {paginationReducer} from './pagination-slice';
-import {PaginationState, getPaginationInitialState} from './pagination-state';
+import {
+  CommercePaginationState,
+  getCommercePaginationInitialState,
+} from './pagination-state';
 
 describe('pagination slice', () => {
-  let state: PaginationState;
+  let state: CommercePaginationState;
 
   beforeEach(() => {
-    state = getPaginationInitialState();
+    state = getCommercePaginationInitialState();
   });
 
   it('initializes the state correctly', () => {
@@ -19,19 +22,48 @@ describe('pagination slice', () => {
     });
   });
 
-  it('#selectPage sets the current page', () => {
+  it('#selectPage does not update the current page if specified page is invalid', () => {
+    let finalState = paginationReducer(state, selectPage(1));
+
+    expect(finalState.page).toBe(0);
+
+    finalState = paginationReducer(state, selectPage(-1));
+
+    expect(finalState.page).toBe(0);
+  });
+
+  it('#selectPage updates the current page if valid', () => {
+    state.totalPages = 2;
     const finalState = paginationReducer(state, selectPage(1));
 
     expect(finalState.page).toBe(1);
   });
 
-  it('#nextPage increments the current page', () => {
+  it('#nextPage does not update the current page if already on the last page', () => {
+    state.totalPages = 2;
+    state.page = 1;
     const finalState = paginationReducer(state, nextPage());
 
     expect(finalState.page).toBe(1);
   });
 
-  it('#previousPage decrements the current page', () => {
+  it('#nextPage increments the current page if not already on last page', () => {
+    state.totalPages = 2;
+    const finalState = paginationReducer(state, nextPage());
+
+    expect(finalState.page).toBe(1);
+  });
+
+  it('#previousPage does not update the current page if already on the first page', () => {
+    state.totalPages = 2;
+    state.page = 0;
+    const finalState = paginationReducer(state, previousPage());
+
+    expect(finalState.page).toBe(0);
+  });
+
+  it('#previousPage decrements the current page if not already on first page', () => {
+    state.totalPages = 2;
     state.page = 1;
     const finalState = paginationReducer(state, previousPage());
 
