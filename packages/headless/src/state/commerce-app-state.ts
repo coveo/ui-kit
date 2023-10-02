@@ -1,5 +1,6 @@
 import {
-  CategoryFacetSection,
+  CartSection,
+  CategoryFacetSection, CommerceContextSection,
   ConfigurationSection,
   DateFacetSection,
   FacetOrderSection,
@@ -13,6 +14,8 @@ import {
 
 export type CommerceAppState = ConfigurationSection &
   ProductListingV2Section &
+  CommerceContextSection &
+  CartSection &
   FacetSection &
   NumericFacetSection &
   CategoryFacetSection &

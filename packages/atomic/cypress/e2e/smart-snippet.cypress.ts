@@ -34,24 +34,18 @@ describe('Smart Snippet Test Suites', () => {
     beforeEach(() => {
       new TestFixture().with(addSmartSnippet()).init();
     });
-
-    it('should fallback to a div for the accessibility heading', () => {
+    it('should work correctly', () => {
+      cy.log('should fallback to a div for the accessibility heading');
       SmartSnippetSelectors.accessibilityHeading().should(
         'have.prop',
         'tagName',
         'DIV'
       );
-    });
-
-    it('should fallback to a div for the question', () => {
+      cy.log('should fallback to a div for the question');
       SmartSnippetSelectors.question().should('have.prop', 'tagName', 'DIV');
-    });
-
-    it('render the correct question', () => {
+      cy.log('render the correct question');
       SmartSnippetSelectors.question().should('have.text', defaultQuestion);
-    });
-
-    it('should have links to the source', () => {
+      cy.log('should have links to the source');
       SmartSnippetSelectors.sourceUrl().should(
         'have.attr',
         'href',
@@ -67,11 +61,10 @@ describe('Smart Snippet Test Suites', () => {
         'have.text',
         defaultSourceTitle
       );
+      SmartSnippetAssertions.assertLikeButtonChecked(false);
+      SmartSnippetAssertions.assertDislikeButtonChecked(false);
+      SmartSnippetAssertions.assertThankYouBanner(false);
     });
-
-    SmartSnippetAssertions.assertLikeButtonChecked(false);
-    SmartSnippetAssertions.assertDislikeButtonChecked(false);
-    SmartSnippetAssertions.assertThankYouBanner(false);
   });
 
   describe('with a specific heading level', () => {
@@ -114,8 +107,13 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    CommonAssertions.assertConsoleError(true);
-    CommonAssertions.assertContainsComponentError(SmartSnippetSelectors, true);
+    it('should display errors', () => {
+      CommonAssertions.assertConsoleErrorWithoutIt(true);
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        SmartSnippetSelectors,
+        true
+      );
+    });
   });
 
   describe('when snippetMaximumHeight is smaller than snippetCollapsedHeight', () => {
@@ -132,9 +130,10 @@ describe('Smart Snippet Test Suites', () => {
         )
         .init();
     });
-    it('should render an error', () => {
-      CommonAssertions.assertConsoleError(true);
-      CommonAssertions.assertContainsComponentError(
+
+    it('should display errors', () => {
+      CommonAssertions.assertConsoleErrorWithoutIt(true);
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
         SmartSnippetSelectors,
         true
       );
@@ -160,8 +159,10 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    SmartSnippetAssertions.assertShowMore(false);
-    SmartSnippetAssertions.assertShowLess(false);
+    it('should not display show more and show less buttons', () => {
+      SmartSnippetAssertions.assertShowMore(false);
+      SmartSnippetAssertions.assertShowLess(false);
+    });
   });
 
   describe('when the snippet height is equal to snippetMaximumHeight', () => {
@@ -183,8 +184,10 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    SmartSnippetAssertions.assertShowMore(false);
-    SmartSnippetAssertions.assertShowLess(false);
+    it('should not display show more and show less buttons', () => {
+      SmartSnippetAssertions.assertShowMore(false);
+      SmartSnippetAssertions.assertShowLess(false);
+    });
   });
 
   describe('when the snippet height is greater than maximumHeight', () => {
@@ -207,33 +210,27 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    SmartSnippetAssertions.assertShowMore(true);
-    SmartSnippetAssertions.assertShowLess(false);
-    SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
+    it('should render correctly', () => {
+      SmartSnippetAssertions.assertShowMore(true);
+      SmartSnippetAssertions.assertShowLess(false);
+      SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
+    });
+
     CommonAssertions.assertAccessibility(smartSnippetComponent);
 
-    describe('then pressing show more', () => {
-      beforeEach(() => {
-        SmartSnippetSelectors.showMoreButton().click();
-      });
-
+    it('should work correctly when pressing show more and show less', () => {
+      SmartSnippetSelectors.showMoreButton().click();
+      SmartSnippetSelectors.body().should('have.attr', 'expanded');
       SmartSnippetAssertions.assertShowMore(false);
       SmartSnippetAssertions.assertShowLess(true);
       SmartSnippetAssertions.assertAnswerHeight(height);
-
-      describe('then pressing show less', () => {
-        beforeEach(() => {
-          SmartSnippetSelectors.showLessButton().click();
-        });
-
-        SmartSnippetAssertions.assertShowMore(true);
-        SmartSnippetAssertions.assertShowLess(false);
-        SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
-        CommonAssertions.assertAccessibility(smartSnippetComponent);
-      });
+      SmartSnippetSelectors.showLessButton().click();
+      SmartSnippetSelectors.body().should('not.have.attr', 'expanded');
+      SmartSnippetAssertions.assertShowMore(true);
+      SmartSnippetAssertions.assertShowLess(false);
+      SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
     });
   });
-
   describe('when the snippet height is greater than snippetMaximumHeight', () => {
     const height = 300;
     const heightWhenCollapsed = 150;
@@ -254,33 +251,34 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    SmartSnippetAssertions.assertShowMore(true);
-    SmartSnippetAssertions.assertShowLess(false);
-    SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
+    it('should render correctly', () => {
+      SmartSnippetAssertions.assertShowMore(true);
+      SmartSnippetAssertions.assertShowLess(false);
+      SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
+    });
+
     CommonAssertions.assertAccessibility(smartSnippetComponent);
 
-    describe('then pressing show more', () => {
-      beforeEach(() => {
-        SmartSnippetSelectors.showMoreButton().click();
-      });
-
+    it('should work correctly when pressing show more and show less', () => {
+      SmartSnippetSelectors.showMoreButton().click();
+      SmartSnippetSelectors.collapseWrapperComponent().should(
+        'have.class',
+        'expanded'
+      );
       SmartSnippetAssertions.assertShowMore(false);
       SmartSnippetAssertions.assertShowLess(true);
       SmartSnippetAssertions.assertAnswerHeight(height);
-
-      describe('then pressing show less', () => {
-        beforeEach(() => {
-          SmartSnippetSelectors.showLessButton().click();
-        });
-
-        SmartSnippetAssertions.assertShowMore(true);
-        SmartSnippetAssertions.assertShowLess(false);
-        SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
-        CommonAssertions.assertAccessibility(smartSnippetComponent);
-      });
+      SmartSnippetSelectors.showLessButton().click();
+      SmartSnippetSelectors.collapseWrapperComponent().should(
+        'not.have.class',
+        'expanded'
+      );
+      SmartSnippetAssertions.assertShowMore(true);
+      SmartSnippetAssertions.assertShowLess(false);
+      SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
+      CommonAssertions.assertAccessibility(smartSnippetComponent);
     });
   });
-
   describe('when the snippet starts and ends with inline elements', () => {
     beforeEach(() => {
       new TestFixture()
@@ -304,7 +302,6 @@ describe('Smart Snippet Test Suites', () => {
     SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
     SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
-
   describe('when the snippet contains elements with margins', () => {
     beforeEach(() => {
       new TestFixture()
@@ -327,7 +324,6 @@ describe('Smart Snippet Test Suites', () => {
     SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
     SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
-
   describe('when the snippet contains collapsing margins', () => {
     beforeEach(() => {
       new TestFixture()
@@ -350,49 +346,34 @@ describe('Smart Snippet Test Suites', () => {
     SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
     SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
-
   describe('after pressing the like button', () => {
-    function setup() {
+    beforeEach(() => {
       new TestFixture().with(addSmartSnippet()).init();
       SmartSnippetSelectors.feedbackLikeButton().click();
-    }
+    });
 
-    describe('verify rendering', () => {
-      beforeEach(setup);
-
+    it('should render correctly', () => {
       SmartSnippetAssertions.assertLikeButtonChecked(true);
       SmartSnippetAssertions.assertDislikeButtonChecked(false);
       SmartSnippetAssertions.assertThankYouBanner(true);
     });
 
-    describe('verify analytics', () => {
-      beforeEach(setup);
-
-      SmartSnippetAssertions.assertLogLikeSmartSnippet();
-    });
+    SmartSnippetAssertions.assertLogLikeSmartSnippet();
   });
-
   describe('after pressing the dislike button', () => {
-    function setup() {
+    beforeEach(() => {
       new TestFixture().with(addSmartSnippet()).init();
       SmartSnippetSelectors.feedbackDislikeButton().click();
-    }
+    });
 
-    describe('verify rendering', () => {
-      beforeEach(setup);
-
+    it('should render correctly', () => {
       SmartSnippetAssertions.assertLikeButtonChecked(false);
       SmartSnippetAssertions.assertDislikeButtonChecked(true);
       SmartSnippetAssertions.assertThankYouBanner(true);
     });
 
-    describe('verify analytics', () => {
-      beforeEach(setup);
-
-      SmartSnippetAssertions.assertLogDislikeSmartSnippet();
-    });
+    SmartSnippetAssertions.assertLogDislikeSmartSnippet();
   });
-
   describe('after clicking on the title', () => {
     let currentQuestion: string;
     beforeEach(() => {
