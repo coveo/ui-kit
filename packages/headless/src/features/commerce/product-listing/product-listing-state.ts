@@ -17,10 +17,10 @@ export interface ProductListingV2State {
 }
 
 export const getProductListingV2InitialState = (): ProductListingV2State => ({
-  trackingId: 'a',
-  language: 'a',
-  currency: 'a',
-  clientId: 'a',
+  trackingId: '',
+  language: '',
+  currency: '',
+  clientId: '',
   error: null,
   isLoading: false,
   responseId: '',
@@ -28,7 +28,7 @@ export const getProductListingV2InitialState = (): ProductListingV2State => ({
   facets: [],
   context: {
     view: {
-      url: 'a',
+      url: '',
     },
   },
 });
