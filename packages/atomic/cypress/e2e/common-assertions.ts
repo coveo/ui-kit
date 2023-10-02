@@ -60,12 +60,14 @@ function terminalLog(violations: Result[]) {
     } ${violations.length === 1 ? 'was' : 'were'} detected`
   );
   // pluck specific keys to keep the table readable
-  const violationData = violations.map(({id, impact, description, nodes}) => ({
-    id,
-    impact,
-    description,
-    nodes: nodes.length,
-  }));
+  const violationData = violations.flatMap(({id, impact, description, nodes}) =>
+    nodes.map((node) => ({
+      id,
+      impact,
+      description,
+      node: node.html,
+    }))
+  );
 
   cy.task('table', violationData);
 }
