@@ -80,13 +80,13 @@ export function assertAccessibilityWithoutIt<T extends HTMLElement>(
   );
 
   if (typeof component === 'string') {
-    cy.checkA11y(component, {rules});
+    cy.checkA11y(component, {rules}, terminalLog);
   } else if (typeof component === 'function') {
     component().should(([el]) => {
       cy.checkA11y(el, {rules}, terminalLog);
     });
   } else {
-    cy.checkA11y({}, {rules}, terminalLog);
+    cy.checkA11y(undefined, {rules}, terminalLog);
   }
 }
 export function assertContainsComponentError(
