@@ -55,22 +55,73 @@ describe('Breadbox Test Suites', () => {
       .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
       .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
       .with(addCategoryFacet())
-      .with(
-        addAutomaticFacetGenerator({
-          'desired-count': '1',
-        })
-      )
-
       .init();
   }
 
-  describe('when selecting a standard facet, a numeric facet and an automatic facet', () => {
+  // When an automatic facet generator is used with other facets, if the query is too narrow, there won't be any automatic facet.
+  describe('when selecting an automatic facet', () => {
+    const selectionIndex = 2;
+    function setupBreadboxWithMultipleSelectedFacets() {
+      new TestFixture()
+        .withTranslation({'a.translated.label': 'This is a translated label'})
+        .with(addBreadbox())
+        .with(
+          addAutomaticFacetGenerator({
+            'desired-count': '1',
+          })
+        )
+        .init();
+      selectIdleCheckboxValueAt(AutomaticFacetSelectors, selectionIndex);
+    }
+
+    describe('verify rendering', () => {
+      beforeEach(() => setupBreadboxWithMultipleSelectedFacets());
+      BreadboxAssertions.assertDisplayBreadcrumb(true);
+      CommonAssertions.assertAccessibility(breadboxComponent);
+      BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
+      BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
+      it('should display the selected checkbox facets in the breadcrumbs', () => {
+        AutomaticFacetSelectors.labelButton()
+          .invoke('text')
+          .then((facetLabel) => {
+            BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumbAssertions(
+              AutomaticFacetSelectors,
+              facetLabel
+            );
+          });
+      });
+      BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
+      BreadboxAssertions.assertBreadcrumbDisplayLength(1);
+    });
+
+    describe('when selecting "Clear all" button', () => {
+      function setupClearAllBreadcrumb() {
+        setupBreadboxWithMultipleSelectedFacets();
+        deselectAllBreadcrumbs();
+      }
+
+      describe('verify rendering', () => {
+        beforeEach(setupClearAllBreadcrumb);
+        BreadboxAssertions.assertDisplayBreadcrumb(false);
+        CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
+          AutomaticFacetSelectors,
+          0
+        );
+      });
+
+      describe('verify analytics', () => {
+        beforeEach(setupClearAllBreadcrumb);
+        BreadboxAssertions.assertLogBreadcrumbClearAll();
+      });
+    });
+  });
+
+  describe('when selecting a standard facet, a numeric facet', () => {
     const selectionIndex = 2;
     function setupBreadboxWithMultipleSelectedFacets(props: TagProps = {}) {
       setupBreadboxWithMultipleFacets(props);
       selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
-      selectIdleCheckboxValueAt(AutomaticFacetSelectors, selectionIndex);
     }
 
     describe('with i18n translated labels', () => {
@@ -102,7 +153,7 @@ describe('Breadbox Test Suites', () => {
         numericFacetLabel
       );
       BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
-      BreadboxAssertions.assertBreadcrumbDisplayLength(3);
+      BreadboxAssertions.assertBreadcrumbDisplayLength(2);
     });
 
     describe('when selecting "Clear all" button', () => {
@@ -120,10 +171,6 @@ describe('Breadbox Test Suites', () => {
         );
         CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
           NumericFacetSelectors,
-          0
-        );
-        CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
-          AutomaticFacetSelectors,
           0
         );
         ColorFacetAssertions.assertNumberOfSelectedBoxValues(0);
