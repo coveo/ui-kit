@@ -32,7 +32,7 @@ const browser = {
       sourcemap: true,
       file: "./lib/cdn/relay.min.js",
       format: "esm",
-      plugins: [terser()]
+      plugins: [terser()],
     },
   ],
   plugins: [nodeResolve({ browser: true }), ...commonPlugins],
