@@ -23,6 +23,8 @@ describe('pagination slice', () => {
   });
 
   it('#selectPage does not update the current page if specified page is invalid', () => {
+    state.totalPages = 1;
+
     let finalState = paginationReducer(state, selectPage(1));
 
     expect(finalState.page).toBe(0);

@@ -18,7 +18,7 @@ export const paginationReducer = createReducer(
         }
       })
       .addCase(selectPage, (state, action) => {
-        if (action.payload > 0 && action.payload < state.totalPages) {
+        if (action.payload >= 0 && action.payload < state.totalPages) {
           state.page = action.payload;
         }
       })
