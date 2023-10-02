@@ -1,3 +1,4 @@
+import {Result} from 'axe-core';
 import {getFocusableDescendants} from '../../src/utils/accessibility-utils';
 import {TestFixture} from '../fixtures/test-fixture';
 import {ComponentErrorSelectors} from './component-error-selectors';
@@ -50,6 +51,25 @@ export function assertWCAG2_5_3() {
     );
 }
 
+// https://github.com/component-driven/cypress-axe#in-your-spec-file
+function terminalLog(violations: Result[]) {
+  cy.task(
+    'log',
+    `${violations.length} accessibility violation${
+      violations.length === 1 ? '' : 's'
+    } ${violations.length === 1 ? 'was' : 'were'} detected`
+  );
+  // pluck specific keys to keep the table readable
+  const violationData = violations.map(({id, impact, description, nodes}) => ({
+    id,
+    impact,
+    description,
+    nodes: nodes.length,
+  }));
+
+  cy.task('table', violationData);
+}
+
 export function assertAccessibilityWithoutIt<T extends HTMLElement>(
   component?: string | (() => Cypress.Chainable<JQuery<T>>)
 ) {
@@ -63,10 +83,10 @@ export function assertAccessibilityWithoutIt<T extends HTMLElement>(
     cy.checkA11y(component, {rules});
   } else if (typeof component === 'function') {
     component().should(([el]) => {
-      cy.checkA11y(el, {rules});
+      cy.checkA11y(el, {rules}, terminalLog);
     });
   } else {
-    cy.checkA11y({}, {rules});
+    cy.checkA11y({}, {rules}, terminalLog);
   }
 }
 export function assertContainsComponentError(
