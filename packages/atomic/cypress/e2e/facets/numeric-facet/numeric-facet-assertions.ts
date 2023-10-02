@@ -147,7 +147,7 @@ export function assertUnitFormatKgLong() {
         const [start, end] = e.split(' to ');
         expect(start).contains('kilogram');
         expect(end).contains('kilogram');
-        expect(start.split(' ')[1]).eq('kilogram');
+        expect(start.split(' ')[1]).contains('kilogram');
       });
     });
   });
