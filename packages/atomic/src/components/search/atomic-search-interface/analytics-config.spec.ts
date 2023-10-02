@@ -95,6 +95,7 @@ describe('analyticsConfig', () => {
           facetId: 'some_id',
           label: () => 'This is a label',
           element: document.createElement('div'),
+          isHidden: () => false,
         });
 
         const out = resultingConfig.analyticsClientMiddleware!('an_event', {
