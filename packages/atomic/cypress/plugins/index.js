@@ -1,4 +1,7 @@
+const {Console} = require('console');
 const cypressSplit = require('cypress-split');
+const {createWriteStream} = require('fs');
+const {resolve} = require('path');
 
 /// <reference types="cypress" />
 // ***********************************************************
@@ -13,6 +16,22 @@ const cypressSplit = require('cypress-split');
 
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
+
+const accessibilityLogPath = resolve(
+  __dirname,
+  '..',
+  'screenshots',
+  'accessibilityLog.log'
+);
+
+/**
+ * @type {require('fs').WriteStream}
+ */
+let accessibilityLogStream;
+/**
+ * @type {Console}
+ */
+let accessibilityConsole;
 
 /**
  * @type {Cypress.PluginConfig}
@@ -35,15 +54,32 @@ module.exports = (on, config) => {
 
     return launchOptions;
   });
+  on('before:run', () => {
+    // Open a write stream to a file for saving accessibility errors
+    // This is done in the before:run event because this is the first event to fire
+    // that has access to the config object
+    accessibilityLogStream = createWriteStream(accessibilityLogPath);
+    accessibilityConsole = new Console(
+      accessibilityLogStream,
+      accessibilityLogStream
+    );
+  });
+  on('after:run', () => {
+    // Close the write stream for saving accessibility errors
+    // This is done in the after:run event because this is the last event to fire
+    // that has access to the config object
+    accessibilityLogStream.close();
+  });
+
   // https://github.com/component-driven/cypress-axe#in-cypress-plugins-file
   on('task', {
     log(message) {
-      console.log(message);
+      accessibilityConsole.log(message);
 
       return null;
     },
     table(message) {
-      console.table(message);
+      accessibilityConsole.table(message);
 
       return null;
     },
