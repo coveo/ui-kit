@@ -32,7 +32,7 @@ export function buildTemplateWithSections(
 ) {
   const sectionPairs = Object.entries(sections) as [
     ResultSection,
-    HTMLElement | HTMLElement[]
+    HTMLElement | HTMLElement[],
   ][];
   const sectionsEls: HTMLElement[] = [];
   for (const [section, nodes] of sectionPairs) {

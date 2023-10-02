@@ -12,7 +12,7 @@ import {
   i18nTranslationNamespace,
 } from '../../common/interface/i18n';
 import {AnyBindings, AnyEngineType} from './bindings';
-import {initi18n} from './i18n';
+import {init18n} from './i18n';
 
 export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   extends ComponentInterface {
@@ -54,7 +54,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     } = atomicInterface;
 
     atomicInterface.connectedCallback = () => {
-      this.i18nPromise = initi18n(atomicInterface);
+      this.i18nPromise = init18n(atomicInterface);
 
       return (
         originalConnectedCallback &&

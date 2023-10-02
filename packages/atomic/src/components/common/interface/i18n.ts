@@ -51,7 +51,7 @@ export function i18nBackendOptions(
   };
 }
 
-export function initi18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
+export function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
   return atomicInterface.i18n.use(Backend).init({
     debug: atomicInterface.logLevel === 'debug',
     lng: atomicInterface.language,

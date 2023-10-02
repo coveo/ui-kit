@@ -58,6 +58,7 @@ describe('quantic-aria-live', () => {
 
   describe('noresults region', () => {
     it('should match the no results title and include the query', () => {
+      /* cspell:disable-next-line */
       const queryForNoResults = 'asdfgfdfsdf';
       const url = `q=${queryForNoResults}`;
       loadFromUrlHash(url);

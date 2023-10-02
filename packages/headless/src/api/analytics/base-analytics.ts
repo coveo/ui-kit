@@ -22,7 +22,7 @@ export type StateNeededByBaseAnalyticsProvider = ConfigurationSection &
   Partial<SearchHubSection & PipelineSection & QuerySection & ContextSection>;
 
 export abstract class BaseAnalyticsProvider<
-  T extends StateNeededByBaseAnalyticsProvider
+  T extends StateNeededByBaseAnalyticsProvider,
 > implements SearchPageClientProvider
 {
   protected readonly state: T;

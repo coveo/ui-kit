@@ -18,6 +18,7 @@ export type {
 export type {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
+  SearchCompletedAction,
 } from './app/search-engine/search-engine.ssr';
 export {defineSearchEngine} from './app/search-engine/search-engine.ssr';
 export {getSampleSearchEngineConfiguration} from './app/search-engine/search-engine';
@@ -34,7 +35,8 @@ export type {
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   InferControllersMapFromDefinition,
-  InferControllerStaticStateFromDefinition,
+  InferControllerStaticStateFromController,
+  InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateMapFromDefinitions,
 } from './app/ssr-engine/types/common';
 export type {

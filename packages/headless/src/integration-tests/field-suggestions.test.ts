@@ -191,10 +191,10 @@ describe('field suggestions', () => {
       });
       expect(fieldSuggestions.state.query).toEqual(query);
       expect(fieldSuggestions.state.values.length).toBeGreaterThan(0);
-      const valuesThatDontContainQuery = fieldSuggestions.state.values.filter(
+      const valuesThatDoNotContainQuery = fieldSuggestions.state.values.filter(
         (value) => !value.displayValue.includes(query)
       );
-      expect(valuesThatDontContainQuery.length).toEqual(0);
+      expect(valuesThatDoNotContainQuery.length).toEqual(0);
     });
 
     it('can update captions', async () => {

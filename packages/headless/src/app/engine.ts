@@ -38,12 +38,12 @@ type CoreState = StateFromReducersMapObject<typeof coreReducers> &
 
 type EngineDispatch<
   State,
-  ExtraArguments extends ThunkExtraArguments
+  ExtraArguments extends ThunkExtraArguments,
 > = ThunkDispatch<State, ExtraArguments, AnyAction> & Dispatch<AnyAction>;
 
 export interface CoreEngine<
   State extends object = {},
-  ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments
+  ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments,
 > {
   /**
    * Dispatches an action directly. This is the only way to trigger a state change.
@@ -169,7 +169,7 @@ function getUpdateAnalyticsConfigurationPayload(
 
 export function buildEngine<
   Reducers extends ReducersMapObject,
-  ExtraArguments extends ThunkExtraArguments
+  ExtraArguments extends ThunkExtraArguments,
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments
@@ -222,7 +222,7 @@ export function buildEngine<
 
 function buildCoreEngine<
   Reducers extends ReducersMapObject,
-  ExtraArguments extends ThunkExtraArguments
+  ExtraArguments extends ThunkExtraArguments,
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments
@@ -272,7 +272,7 @@ function buildCoreEngine<
 
 function createStore<
   Reducers extends ReducersMapObject,
-  ExtraArguments extends ThunkExtraArguments
+  ExtraArguments extends ThunkExtraArguments,
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments,

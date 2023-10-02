@@ -63,10 +63,13 @@ describe('Result Text Component', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addResultTextInResultList({field: 'thisfielddoesnotexist'}))
+        .withoutFirstAutomaticSearch()
         .init();
     });
 
-    CommonAssertions.assertRemovesComponent();
+    it('the component should not be there', () => {
+      cy.get(resultTextComponent).should('not.exist');
+    });
   });
 
   describe('when the field value is not a string', () => {

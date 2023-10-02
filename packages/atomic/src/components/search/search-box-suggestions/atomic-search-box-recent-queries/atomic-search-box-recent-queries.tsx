@@ -180,11 +180,9 @@ export class AtomicSearchBoxRecentQueries {
               {value}
             </span>
           ) : (
-            // deepcode ignore DOMXSS: Value escaped in upstream code, deepcode ignore ReactSetInnerHtml: This is not React code.
             <span
               part="recent-query-text"
               class="break-all line-clamp-2"
-              // deepcode ignore DOMXSS: Value escaped in upstream code, deepcode ignore ReactSetInnerHtml: This is not React code.
               innerHTML={HighlightUtils.highlightString({
                 content: value,
                 openingDelimiter:
