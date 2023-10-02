@@ -1,6 +1,7 @@
 import replace from "@rollup/plugin-replace";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
+import terser from "@rollup/plugin-terser";
 import { readFileSync } from "fs";
 
 const getStringifyVersion = () => {
@@ -26,6 +27,12 @@ const browser = {
     {
       file: "./lib/relay.js",
       format: "esm",
+    },
+    {
+      sourcemap: true,
+      file: "./lib/cdn/relay.min.js",
+      format: "esm",
+      plugins: [terser()]
     },
   ],
   plugins: [nodeResolve({ browser: true }), ...commonPlugins],

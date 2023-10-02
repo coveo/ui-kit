@@ -16,6 +16,17 @@
   },
   "ordered_phases": [
     {
+      "id": "deploy-relay-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/relay/v$[RELAY_MAJOR_VERSION]",
+        "source": "packages/relay/lib/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "playground",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",

@@ -8,5 +8,7 @@ runs:
   steps:
     - uses: coveo/deployment-pipeline-actions/setup-cli@main
     - name: Create and Deploy Packages
+      env:
+        COMMIT_HASH: ${{ inputs.COMMIT_HASH }}
       shell: bash
-      run: deployment-package package create --resolve COMMIT_HASH=${{ inputs.COMMIT_HASH }} --with-deploy
+      run: node ./.github/actions/deploy/deploy.mjs
