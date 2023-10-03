@@ -35,5 +35,18 @@ module.exports = (on, config) => {
 
     return launchOptions;
   });
+  // https://github.com/component-driven/cypress-axe#in-cypress-plugins-file
+  on('task', {
+    log(message) {
+      console.log(message);
+
+      return null;
+    },
+    table(message) {
+      console.table(message);
+
+      return null;
+    },
+  });
   return config;
 };
