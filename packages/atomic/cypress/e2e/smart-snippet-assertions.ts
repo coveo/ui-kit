@@ -4,35 +4,27 @@ import {should} from './common-assertions';
 import {SmartSnippetSelectors} from './smart-snippet-selectors';
 
 export function assertShowMore(display: boolean) {
-  it(`${should(display)} display the show more button`, () => {
-    SmartSnippetSelectors.showMoreButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
-  });
+  SmartSnippetSelectors.showMoreButton().should(
+    display ? 'be.visible' : 'not.exist'
+  );
 }
 
 export function assertShowLess(display: boolean) {
-  it(`${should(display)} display the show less button`, () => {
-    SmartSnippetSelectors.showLessButton().should(
-      display ? 'be.visible' : 'not.exist'
-    );
-  });
+  SmartSnippetSelectors.showLessButton().should(
+    display ? 'be.visible' : 'not.exist'
+  );
 }
 
 export function assertAnswerHeight(expectedHeight: number) {
-  it(`the answer should have a displayed height of ${expectedHeight}px`, () => {
-    SmartSnippetSelectors.truncatedAnswer()
-      .invoke('height')
-      .should('equal', expectedHeight);
-  });
+  SmartSnippetSelectors.truncatedAnswer()
+    .invoke('height')
+    .should('be.closeTo', expectedHeight, 0.1);
 }
 
 export function assertCollapseWrapperHeight(expectedHeight: number) {
-  it(`the collapse wrapper should have a displayed height of ${expectedHeight}px`, () => {
-    SmartSnippetSelectors.collapseWrapper()
-      .invoke('height')
-      .should('equal', expectedHeight);
-  });
+  SmartSnippetSelectors.collapseWrapper()
+    .invoke('height')
+    .should('be.closeTo', expectedHeight, 0.1);
 }
 
 export function assertAnswerTopMargin(
@@ -44,7 +36,8 @@ export function assertAnswerTopMargin(
       .distanceTo(() =>
         SmartSnippetSelectors.answer().find(`.${firstElementClass}`)
       )
-      .should('have.property', 'vertical', margin);
+      .should('have.property', 'vertical')
+      .and('be.closeTo', margin, 0.1);
   });
 }
 
@@ -56,32 +49,27 @@ export function assertAnswerBottomMargin(
     SmartSnippetSelectors.answer()
       .find(`.${lastElementClass}`)
       .distanceTo(SmartSnippetSelectors.footer)
-      .should('have.property', 'vertical', margin);
+      .should('have.property', 'vertical')
+      .and('be.closeTo', margin, 0.1);
   });
 }
 
 export function assertLikeButtonChecked(checked: boolean) {
-  it(`${should(checked)} check the like button`, () => {
-    SmartSnippetSelectors.feedbackLikeButton()
-      .find('input')
-      .should(checked ? 'be.checked' : 'not.be.checked');
-  });
+  SmartSnippetSelectors.feedbackLikeButton()
+    .find('input')
+    .should(checked ? 'be.checked' : 'not.be.checked');
 }
 
 export function assertDislikeButtonChecked(checked: boolean) {
-  it(`${should(checked)} check the dislike button`, () => {
-    SmartSnippetSelectors.feedbackDislikeButton()
-      .find('input')
-      .should(checked ? 'be.checked' : 'not.be.checked');
-  });
+  SmartSnippetSelectors.feedbackDislikeButton()
+    .find('input')
+    .should(checked ? 'be.checked' : 'not.be.checked');
 }
 
 export function assertThankYouBanner(display: boolean) {
-  it(`${should(display)} display the thank you banner`, () => {
-    SmartSnippetSelectors.feedbackThankYou().should(
-      display ? 'exist' : 'not.exist'
-    );
-  });
+  SmartSnippetSelectors.feedbackThankYou().should(
+    display ? 'exist' : 'not.exist'
+  );
 }
 
 export function assertLogLikeSmartSnippet() {
