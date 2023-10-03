@@ -52,7 +52,7 @@ export function assertWCAG2_5_3() {
 }
 
 // https://github.com/component-driven/cypress-axe#in-your-spec-file
-function terminalLog(violations: Result[]) {
+function logAxeIssues(violations: Result[]) {
   cy.task(
     'log',
     `${violations.length} accessibility violation${
@@ -61,6 +61,7 @@ function terminalLog(violations: Result[]) {
   );
   // pluck specific keys to keep the table readable
   const violationData = violations.flatMap(({id, impact, description, nodes}) =>
+    // log per node so that we know which HTML element has the issue.
     nodes.map((node) => ({
       id,
       impact,
@@ -80,15 +81,16 @@ export function assertAccessibilityWithoutIt<T extends HTMLElement>(
     (obj, rule) => ({...obj, [rule]: {enabled: false}}),
     {}
   );
+  const axeOptions = {rules, retries: 3};
 
   if (typeof component === 'string') {
-    cy.checkA11y(component, {rules}, terminalLog);
+    cy.checkA11y(component, axeOptions, logAxeIssues);
   } else if (typeof component === 'function') {
     component().should(([el]) => {
-      cy.checkA11y(el, {rules}, terminalLog);
+      cy.checkA11y(el, axeOptions, logAxeIssues);
     });
   } else {
-    cy.checkA11y(undefined, {rules}, terminalLog);
+    cy.checkA11y(undefined, axeOptions, logAxeIssues);
   }
 }
 export function assertContainsComponentError(
