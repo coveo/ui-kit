@@ -59,12 +59,12 @@ export interface CartItemParam {
 }
 
 export interface SelectedFacetsParam {
-  selectedFacets?: SelectedFacetParams[];
+  facets?: SelectedFacetParams[];
 }
 
 export interface SelectedFacetParams
   extends Pick<AnyFacetRequest, 'field' | 'type' | 'facetId'> {
-  values?: (FacetValueRequest | RangeValueRequest)[];
+  currentValues?: (FacetValueRequest | RangeValueRequest)[];
 }
 
 export interface SelectedPageParam {
