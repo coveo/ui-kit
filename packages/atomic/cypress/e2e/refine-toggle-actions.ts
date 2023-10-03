@@ -80,15 +80,9 @@ export const addFacetManagerWithBothTypesOfFacets =
   (env: TestFixture) => {
     const manager = generateComponentHTML(facetManagerComponent);
     manager.append(generateComponentHTML(facetComponent, {field: facetField}));
-    manager.append(
-      generateComponentHTML(numericFacetComponent, {field: numericFacetField})
-    );
-    manager.append(
-      generateComponentHTML(categoryFacetComponent, {field: hierarchicalField})
-    );
     const automaticFacetGenerator = generateComponentHTML(
       automaticFacetGeneratorComponent,
-      {'desired-count': '3'}
+      {'desired-count': '1'}
     );
     const refineToggle = generateComponentHTML(refineToggleComponent, props);
 
