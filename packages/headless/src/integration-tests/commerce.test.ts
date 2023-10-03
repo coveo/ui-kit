@@ -1,7 +1,8 @@
 import {
   buildCart,
-  buildCommerceEngine,
   buildContext,
+  buildCommerceEngine,
+  buildFacetGenerator,
   buildProductListing,
   buildRelevanceSortCriterion,
   buildSort,
@@ -15,16 +16,18 @@ const accessToken = 'no';
 
 // eslint-disable-next-line @cspell/spellchecker
 // TODO CAPI-149: Skipped since we do not currently have test fixtures for commerce
-describe.skip('commerce', () => {
+describe('commerce', () => {
   let engine: CommerceEngine;
 
   beforeEach(() => {
+    // eslint-disable-next-line @cspell/spellchecker
+    const organizationId = 'barcasportsmcy01fvu';
     engine = buildCommerceEngine({
       configuration: {
-        organizationId: 'commercestore',
+        organizationId,
         accessToken,
         organizationEndpoints: {
-          ...getOrganizationEndpoints('commercestore', 'dev'),
+          ...getOrganizationEndpoints(organizationId, 'dev'),
           platform: 'https://platformdev.cloud.coveo.com',
         },
       },
@@ -33,12 +36,12 @@ describe.skip('commerce', () => {
 
     buildContext(engine, {
       options: {
-        trackingId: 'commercestore-tracking-id',
-        language: 'en',
-        currency: 'USD',
+        trackingId: 'barca',
+        language: 'en-gb',
+        currency: 'gbp',
         clientId: '41915baa-621c-4408-b9c0-6e59b3cde129',
         view: {
-          url: 'http://mystore.com/sales',
+          url: 'https://sports-dev.barca.group/browse/promotions/surf-with-us-this-year',
         },
       },
     });
@@ -94,5 +97,13 @@ describe.skip('commerce', () => {
     expect(sort.isSortedBy(relevance)).toBeTruthy();
     expect(sort.isAvailable(relevance)).toBeTruthy();
     expect(sort.state.availableSorts.length).toEqual(2);
+  });
+
+  it('has no facets', async () => {
+    await fetchProductListing();
+
+    const facetGenerator = buildFacetGenerator(engine);
+
+    expect(facetGenerator.state.facets).toEqual([]);
   });
 });

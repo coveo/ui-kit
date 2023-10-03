@@ -91,3 +91,16 @@ export {
   SortBy,
   SortDirection,
 } from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+
+export type {
+  Facet,
+  FacetOptions,
+  FacetProps,
+} from './controllers/commerce/product-listing/facets/headless-product-listing-facet';
+export {buildFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-facet';
+
+export type {
+  FacetGenerator,
+  FacetGeneratorState,
+} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
+export {buildFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
