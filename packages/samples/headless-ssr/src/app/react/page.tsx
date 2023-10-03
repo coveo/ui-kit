@@ -1,4 +1,7 @@
-import {fetchStaticState} from '@/src/app/react/common/engine';
+import {
+  fetchBuildResult,
+  fetchStaticState,
+} from '@/src/app/react/common/engine';
 import {SearchPageProvider} from '@/src/app/react/components/search-page';
 import {
   CoveoNextJsSearchParametersSerializer,
@@ -18,13 +21,11 @@ export default async function Search(url: {
       url.searchParams
     );
   const staticState = await fetchStaticState({
-    controllers: {
-      searchParameters: {
-        initialState: {
-          parameters: coveoSearchParameters,
-        },
+    buildResult: await fetchBuildResult({
+      searchParametersInitialState: {
+        parameters: coveoSearchParameters,
       },
-    },
+    }),
   });
 
   return (

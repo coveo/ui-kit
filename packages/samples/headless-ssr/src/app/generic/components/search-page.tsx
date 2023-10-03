@@ -3,6 +3,7 @@
 import {
   SearchStaticState,
   SearchHydratedState,
+  fetchBuildResult,
   hydrateStaticState,
 } from '@/src/app/generic/common/engine';
 import {useEffect, useState} from 'react';
@@ -22,16 +23,19 @@ export default function SearchPage({
   >(undefined);
 
   useEffect(() => {
-    hydrateStaticState({
-      searchAction: staticState.searchAction,
-      controllers: {
-        searchParameters: {
-          initialState: staticState.controllers.searchParameters.state,
-        },
-      },
-    }).then(({engine, controllers}) => {
-      setHydratedState({engine, controllers});
-    });
+    fetchBuildResult({
+      searchParametersInitialState:
+        staticState.controllers.searchParameters.state,
+    })
+      .then((buildResult) =>
+        hydrateStaticState({
+          buildResult,
+          searchAction: staticState.searchAction,
+        })
+      )
+      .then(({engine, controllers}) => {
+        setHydratedState({engine, controllers});
+      });
   }, [staticState]);
 
   useSyncSearchParameters({

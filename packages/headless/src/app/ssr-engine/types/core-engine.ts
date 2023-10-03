@@ -28,8 +28,10 @@ export interface EngineDefinition<
   TEngineOptions,
 > {
   fetchStaticState: FetchStaticState<
-    InferControllerStaticStateMapFromDefinitions<TControllers>,
+    TEngine,
+    InferControllersMapFromDefinition<TControllers>,
     AnyAction,
+    InferControllerStaticStateMapFromDefinitions<TControllers>,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   hydrateStaticState: HydrateStaticState<
