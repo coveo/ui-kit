@@ -1,6 +1,6 @@
 import {
   buildCart,
-  buildCommerceEngine,
+  buildCommerceEngine, buildFacetGenerator,
   buildProductListing,
 } from '../commerce.index';
 import {buildContext} from '../controllers/commerce/context/headless-context';
@@ -69,4 +69,54 @@ describe.skip('commerce', () => {
       ])
     );
   });
+
+  it('has working facets', async () => {
+    const engine = buildCommerceEngine({
+      configuration: {
+        organizationId: 'commercestore',
+        accessToken,
+        organizationEndpoints: {
+          ...getOrganizationEndpoints('commercestore', 'dev'),
+          platform: 'https://platformdev.cloud.coveo.com',
+        },
+      },
+    });
+
+    buildContext(engine, {
+      options: {
+        trackingId: 'commercestore-tracking-id',
+        language: 'en',
+        currency: 'USD',
+        clientId: '41915baa-621c-4408-b9c0-6e59b3cde129',
+        view: {
+          url: 'http://mystore.com/sales',
+        },
+      },
+    });
+
+    const cart = buildCart(engine);
+    cart.addItem({
+      productId: 'nice shoes',
+      quantity: 2,
+    });
+    cart.addItem({
+      productId: 'nicer shoes',
+      quantity: 3,
+    });
+
+    const productListing = buildProductListing(engine);
+    await waitForNextStateChange(engine, {
+      action: () => {
+        productListing.refresh();
+      },
+      expectedSubscriberCalls: 2,
+    });
+
+    const facetGenerator = buildFacetGenerator(engine);
+    facetGenerator.state.facets.forEach((facet) => {
+      console.log(facet.state.facetId);
+    })
+
+    expect(facetGenerator.state.facets).toEqual({});
+  })
 });
