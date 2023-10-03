@@ -54,3 +54,16 @@ export type {
   InteractiveResultProps,
 } from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
 export {buildInteractiveResult} from './controllers/commerce/product-listing/result-list/headless-product-listing-interactive-result';
+
+export type {
+  Facet,
+  FacetOptions,
+  FacetProps,
+} from './controllers/commerce/product-listing/facets/headless-product-listing-facet';
+export {buildFacet} from './controllers/commerce/product-listing/facets/headless-product-listing-facet';
+
+export type {
+  FacetGenerator,
+  FacetGeneratorState,
+} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
+export {buildFacetGenerator} from './controllers/commerce/product-listing/facets/headless-product-listing-facet-generator';
