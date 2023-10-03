@@ -1,4 +1,4 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
 import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2/product-listing-v2-request';
 import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
@@ -6,6 +6,8 @@ import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
   CategoryFacetSection,
   CommercePaginationSection,
+  CartSection,
+  CommerceContextSection,
   ConfigurationSection,
   DateFacetSection,
   FacetOrderSection,
@@ -17,10 +19,6 @@ import {
 } from '../../../state/state-sections';
 import {sortFacets} from '../../../utils/facet-utils';
 import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../utils/validate-payload';
-import {
   AnalyticsType,
   PreparableAnalyticsAction,
 } from '../../analytics/analytics-utils';
@@ -28,23 +26,10 @@ import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-re
 import {logQueryError} from '../../search/search-analytics-actions';
 import {logProductListingV2Load} from './product-listing-analytics';
 
-export interface SetProductListingUrlPayload {
-  /**
-   * The URL used to determine which product listing to fetch.
-   */
-  url: string;
-}
-
-export const setProductListingUrl = createAction(
-  'commerce/productListing/setUrl',
-  (payload: SetProductListingUrlPayload) =>
-    validatePayload(payload, {
-      url: requiredNonEmptyString,
-    })
-);
-
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &
+  CommerceContextSection &
+  CartSection &
   Partial<
     CommercePaginationSection &
       FacetSection &
@@ -75,7 +60,7 @@ export const fetchProductListing = createAsyncThunk<
     const state = getState();
     const {apiClient} = extra;
     const fetched = await apiClient.getProductListing(
-      await buildProductListingRequestV2(state)
+      buildProductListingRequestV2(state)
     );
 
     if (isErrorResponse(fetched)) {
@@ -90,20 +75,22 @@ export const fetchProductListing = createAsyncThunk<
   }
 );
 
-export const buildProductListingRequestV2 = async (
+export const buildProductListingRequestV2 = (
   state: StateNeededByFetchProductListingV2
-): Promise<ProductListingV2Request> => {
+): ProductListingV2Request => {
   const selectedFacets = getFacets(state);
 
+  const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
     organizationId: state.configuration.organizationId,
-    trackingId: state.productListing.trackingId,
-    language: state.productListing.language,
-    currency: state.productListing.currency,
-    clientId: state.productListing.clientId,
-    context: state.productListing.context,
+    ...restOfContext,
+    context: {
+      user,
+      view,
+      cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
+    },
     selectedFacets,
     ...(state.commercePagination && {page: state.commercePagination.page}),
     ...(state.sort && {

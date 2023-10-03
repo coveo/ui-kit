@@ -1,5 +1,7 @@
 import {
   CommercePaginationSection,
+  CartSection,
+  CommerceContextSection,
   ConfigurationSection,
   ProductListingV2Section,
   VersionSection,
@@ -8,4 +10,6 @@ import {
 export type CommerceAppState = ConfigurationSection &
   ProductListingV2Section &
   CommercePaginationSection &
+  CommerceContextSection &
+  CartSection &
   VersionSection;
