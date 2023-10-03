@@ -98,7 +98,8 @@ export function mapObject<TKey extends string, TInitialValue, TNewValue>(
   ) as Record<TKey, TNewValue>;
 }
 
-// TODO: replace with `structuredClone` when upgrading the supported node version to node 17+.
+// TODO: Cloud eventually be replaced with `structuredClone`.
+// However, this is not compatible with locker service.
 export function clone<T>(value: T): T {
   if (typeof value !== 'object') {
     return value;
@@ -106,7 +107,13 @@ export function clone<T>(value: T): T {
   if (!value) {
     return value;
   }
-  return JSON.parse(JSON.stringify(value));
+  // JSON parse/stringify can fail in some cases (ie: recursive objects)
+  // add defensive code to prevent the whole app from crashing
+  try {
+    return JSON.parse(JSON.stringify(value));
+  } catch (e) {
+    return value;
+  }
 }
 
 function createDeferredPromise<T>(): {
