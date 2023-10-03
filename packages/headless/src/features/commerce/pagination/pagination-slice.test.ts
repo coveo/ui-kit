@@ -58,7 +58,6 @@ describe('pagination slice', () => {
 
   it('#previousPage does not update the current page if already on the first page', () => {
     state.totalPages = 2;
-    state.page = 0;
     const finalState = paginationReducer(state, previousPage());
 
     expect(finalState.page).toBe(0);
