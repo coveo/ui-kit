@@ -32,11 +32,11 @@ function useHasDepsChanged(deps: DependencyList) {
  * Alternate for `useSyncExternalStore` which runs into infinite loops when hooks are used in `getSnapshot`
  * https://github.com/facebook/react/issues/24529
  */
-export function useSyncMemoizedStore<T extends {}>(
+export function useSyncMemoizedStore<T>(
   subscribe: Subscriber,
   getSnapshot: SnapshotGetter<T>
-) {
-  const snapshot = useRef({});
+): T {
+  const snapshot = useRef<T | null>(null);
   const [, forceRender] = useReducer((s) => s + 1, 0);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export function useSyncMemoizedStore<T extends {}>(
   // Since useRef does not take a dependencies array changes to dependencies need to be processed explicitly
   if (
     useHasDepsChanged([subscribe, getSnapshot]) ||
-    Object.keys(snapshot.current).length === 0
+    snapshot.current === null
   ) {
     snapshot.current = getSnapshot();
   }
