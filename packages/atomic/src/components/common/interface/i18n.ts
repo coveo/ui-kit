@@ -61,7 +61,6 @@ export function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
     interpolation: {
       escape: (str) => DOMPurify.sanitize(str),
     },
-    compatibilityJSON: 'v3',
   });
 }
 

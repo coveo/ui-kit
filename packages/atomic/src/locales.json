@@ -566,7 +566,7 @@
     "zh-CN": "包含{{value}}的包含过滤器; {{count}}结果",
     "zh-TW": "{{value}} 的包含濾波器; {{count}} 結果"
   },
-  "facet-value_plural": {
+  "facet-value_other": {
     "en": "Inclusion filter on {{value}}; {{count}} results",
     "fr": "Filtre d'inclusion sur {{value}}; {{count}} résultats",
     "cs": "Filtrace příslušnosti kategorie {{value}}; {{count}} výsledků",
@@ -944,7 +944,7 @@
     "zh-CN": "在{{label}}分类中找到{{count}}个值",
     "zh-TW": "在{{label}}分類中找到{{count}}個值"
   },
-  "facet-search-results-count_plural": {
+  "facet-search-results-count_other": {
     "en": "{{count}} values found in the {{label}} facet",
     "fr": "{{count}} valeurs trouvées dans la facette {{label}}",
     "cs": "{{count}} nalezených hodnot v kategorii {{label}}",
@@ -1295,7 +1295,7 @@
     "zh-CN": "清除筛选器",
     "zh-TW": "清除篩選器"
   },
-  "clear-filters_plural": {
+  "clear-filters_other": {
     "en": "Clear {{count}} filters",
     "fr": "Enlever {{count}} filtres",
     "cs": "Vymazat {{count}} filtrování",
@@ -1349,7 +1349,7 @@
     "zh-CN": "清除 {{label}} 筛选条件的 {{count}} 个筛选",
     "zh-TW": "清除 {{label}} 的 {{count}} 個篩選"
   },
-  "clear-filters-for-facet_plural": {
+  "clear-filters-for-facet_other": {
     "en": "Clear {{count}} filters for the {{label}} facet",
     "fr": "Enlever {{count}} filtres pour la facette {{label}}",
     "cs": "Vymazat {{count}} filtrů pro vlastnost {{label}}",
@@ -1457,7 +1457,7 @@
     "zh-CN": "结果数 {{first}}，总数 {{total}}",
     "zh-TW": "結果數 {{first}}，總數 {{total}}"
   },
-  "showing-results-of_plural": {
+  "showing-results-of_other": {
     "en": "Results {{first}}-{{last}} of {{total}}",
     "fr": "Résultats {{first}}-{{last}} de {{total}}",
     "cs": "Výsledky {{first}}–{{last}} ze {{total}}",
@@ -1511,7 +1511,7 @@
     "zh-CN": "结果数 {{first}}，总数 {{total}}, 搜索 {{query}}",
     "zh-TW": "結果數 {{first}}，總數 {{total}}, 搜索 {{query}}"
   },
-  "showing-results-of-with-query_plural": {
+  "showing-results-of-with-query_other": {
     "en": "Results {{first}}-{{last}} of {{total}} for {{query}}",
     "fr": "Résultats {{first}}-{{last}} de {{total}} pour {{query}}",
     "cs": "Výsledky {{first}}–{{last}} ze {{total}} za {{query}}",
@@ -1700,7 +1700,7 @@
     "zh-CN": "用时 {{count}} 秒",
     "zh-TW": "用時 {{count}} 秒"
   },
-  "in-seconds_plural": {
+  "in-seconds_other": {
     "en": "in {{count}} seconds",
     "fr": "en {{count}} secondes",
     "cs": "za dobu: {{count}}",
@@ -3159,7 +3159,7 @@
     "zh-CN": "一分钟前",
     "zh-TW": "一分鐘前"
   },
-  "past-minute_plural": {
+  "past-minute_other": {
     "en": "Past {{count}} minutes",
     "fr": "{{count}} minutes passées",
     "cs": "Před {{count}} minutami",
@@ -3213,7 +3213,7 @@
     "zh-CN": "过去小时",
     "zh-TW": "過去小時"
   },
-  "past-hour_plural": {
+  "past-hour_other": {
     "en": "Past {{count}} hours",
     "fr": "{{count}} heures passées",
     "cs": "Posledních {{count}} hodin",
@@ -3267,7 +3267,7 @@
     "zh-CN": "昨天",
     "zh-TW": "昨天"
   },
-  "past-day_plural": {
+  "past-day_other": {
     "en": "Past {{count}} days",
     "fr": "{{count}} jours passés",
     "cs": "Minulých {{count}} dní",
@@ -3321,7 +3321,7 @@
     "zh-CN": "上周",
     "zh-TW": "上週"
   },
-  "past-week_plural": {
+  "past-week_other": {
     "en": "Past {{count}} weeks",
     "fr": "{{count}} semaines passées",
     "cs": "Uplynulo {{count}} týdnů",
@@ -3375,7 +3375,7 @@
     "zh-CN": "上个月",
     "zh-TW": "上個月"
   },
-  "past-month_plural": {
+  "past-month_other": {
     "en": "Past {{count}} months",
     "fr": "{{count}} mois passés",
     "cs": "Posledních {{count}} měsíců",
@@ -3429,7 +3429,7 @@
     "zh-CN": "过去的季度",
     "zh-TW": "過去一季"
   },
-  "past-quarter_plural": {
+  "past-quarter_other": {
     "en": "Past {{count}} quarters",
     "fr": "{{count}} trimestre passés",
     "cs": "Minulých {{count}} čtvrtletí",
@@ -3483,7 +3483,7 @@
     "zh-CN": "去年",
     "zh-TW": "去年"
   },
-  "past-year_plural": {
+  "past-year_other": {
     "en": "Past {{count}} years",
     "fr": "{{count}} années passées",
     "cs": "Minulých {{count}} let",
@@ -3537,7 +3537,7 @@
     "zh-CN": "下一分钟",
     "zh-TW": "下一分鐘"
   },
-  "next-minute_plural": {
+  "next-minute_other": {
     "en": "Next {{count}} minutes",
     "fr": "{{count}} minutes prochaines",
     "cs": "V příštích {{count}} minutách",
@@ -3591,7 +3591,7 @@
     "zh-CN": "下一个小时",
     "zh-TW": "下一個小時"
   },
-  "next-hour_plural": {
+  "next-hour_other": {
     "en": "Next {{count}} hours",
     "fr": "{{count}} heures prochaines",
     "cs": "Příštích {{count}} hodin",
@@ -3645,7 +3645,7 @@
     "zh-CN": "明天",
     "zh-TW": "明日"
   },
-  "next-day_plural": {
+  "next-day_other": {
     "en": "Next {{count}} days",
     "fr": "{{count}} jours prochains",
     "cs": "Příštích {{count}} dní",
@@ -3699,7 +3699,7 @@
     "zh-CN": "下周",
     "zh-TW": "下週"
   },
-  "next-week_plural": {
+  "next-week_other": {
     "en": "Next {{count}} weeks",
     "fr": "{{count}} semaines prochaines",
     "cs": "Další {{count}} týdny",
@@ -3753,7 +3753,7 @@
     "zh-CN": "下个月",
     "zh-TW": "下個月"
   },
-  "next-month_plural": {
+  "next-month_other": {
     "en": "Next {{count}} months",
     "fr": "{{count}} mois prochains",
     "cs": "Dalších {{count}} měsíců",
@@ -3807,7 +3807,7 @@
     "zh-CN": "下个季度",
     "zh-TW": "下一季"
   },
-  "next-quarter_plural": {
+  "next-quarter_other": {
     "en": "Next {{count}} quarters",
     "fr": "{{count}} trimestre prochains",
     "cs": "Dalších {{count}} kvartálů",
@@ -3861,7 +3861,7 @@
     "zh-CN": "明年",
     "zh-TW": "明年"
   },
-  "next-year_plural": {
+  "next-year_other": {
     "en": "Next {{count}} years",
     "fr": "{{count}} années prochaines",
     "cs": "Dalších {{count}} let",
@@ -4212,7 +4212,7 @@
     "zh-CN": "{{count}} 个搜索建议可用。",
     "zh-TW": "{{count}} 個搜尋建議可用。"
   },
-  "query-suggestions-available_plural": {
+  "query-suggestions-available_other": {
     "en": "{{count}} search suggestions are available.",
     "fr": "{{count}} suggestions de recherche disponible.",
     "cs": "{{count}} dostupné návrhy hledání.",
@@ -4293,7 +4293,7 @@
     "zh-CN": "{{max}}颗星中的一颗",
     "zh-TW": "{{max}}顆星中的其中一顆"
   },
-  "stars_plural": {
+  "stars_other": {
     "en": "{{count}} stars out of {{max}}",
     "fr": "{{count}} étoiles sur {{max}}",
     "cs": "{{count}} hvězdiček z {{max}}",
@@ -5130,7 +5130,7 @@
     "zh-CN": "大约一年",
     "zh-TW": "約一年"
   },
-  "approx_year_plural": {
+  "approx_year_other": {
     "en": "About {{count}} years",
     "fr": "Environ {{count}} années",
     "cs": "Přibližně před {{count}} lety",
@@ -5184,7 +5184,7 @@
     "zh-CN": "大约一个月",
     "zh-TW": "大約一個月"
   },
-  "approx_month_plural": {
+  "approx_month_other": {
     "en": "About {{count}} months",
     "fr": "Environ {{count}} mois",
     "cs": "Přibližně {{count}} měsíce",
@@ -5238,7 +5238,7 @@
     "zh-CN": "约一天",
     "zh-TW": "大約一天"
   },
-  "day_plural": {
+  "day_other": {
     "en": "About {{count}} days",
     "fr": "Environ {{value}} jours",
     "cs": "Přibližně {{count}} dní",
