@@ -146,7 +146,10 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
     },
 
     isAvailable(criterion: SortCriterion) {
-      return this.state.availableSorts.includes(criterion);
+      return this.state.availableSorts.some(
+        (availableCriterion) =>
+          JSON.stringify(availableCriterion) === JSON.stringify(criterion)
+      );
     },
   };
 }
