@@ -35,6 +35,7 @@ import {
 } from '../../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {
+  CommerceFacetSection,
   ConfigurationSection,
   FacetOptionsSection,
   FacetSearchSection,
@@ -514,7 +515,7 @@ function loadFacetReducers(
     FacetOptionsSection &
     ConfigurationSection &
     FacetSearchSection &
-    (SearchSection | ProductListingSection),
+    (SearchSection | ProductListingSection | CommerceFacetSection),
   SearchThunkExtraArguments
 > {
   engine.addReducers({facetSet, facetOptions, configuration, facetSearchSet});

@@ -33,15 +33,25 @@ export const buildProductListingV2Request = (req: ProductListingV2Request) => {
 };
 
 const prepareRequestParams = (req: ProductListingV2Request) => {
-  const {clientId, context, language, currency, page, selectedFacets, sort} =
-    req;
+  const {clientId, context, language, currency, page, facets, sort} = req;
   return {
+    refreshCache: true,
     clientId,
     context,
     language,
     currency,
     page,
-    selectedFacets,
+    facets: (facets || [])
+      .filter((facet) => facet.currentValues && facet.currentValues.length > 0)
+      .map(({currentValues, ...facet}) => {
+        return {
+          ...facet,
+          values: currentValues,
+          // eslint-disable-next-line @cspell/spellchecker
+          // TODO CAPI-90, CAPI-91: Handle other facet types
+          type: 'regular',
+        };
+      }),
     sort,
   };
 };

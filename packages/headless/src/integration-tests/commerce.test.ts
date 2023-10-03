@@ -1,7 +1,8 @@
 import {
   buildCart,
-  buildCommerceEngine,
   buildContext,
+  buildCommerceEngine,
+  buildFacetGenerator,
   buildProductListing,
   buildRelevanceSortCriterion,
   buildSort,
@@ -19,13 +20,15 @@ describe.skip('commerce', () => {
   let engine: CommerceEngine;
 
   beforeEach(() => {
+    // eslint-disable-next-line @cspell/spellchecker
+    const organizationId = 'barcasportsmcy01fvu';
     engine = buildCommerceEngine({
       configuration: {
-        organizationId: 'commercestore',
+        organizationId,
         accessToken,
         organizationEndpoints: {
-          ...getOrganizationEndpoints('commercestore', 'dev'),
-          platform: 'https://platformdev.cloud.coveo.com',
+          ...getOrganizationEndpoints(organizationId, 'dev'),
+          platform: 'http://localhost:8100',
         },
       },
       loggerOptions: {level: 'silent'},
@@ -33,12 +36,12 @@ describe.skip('commerce', () => {
 
     buildContext(engine, {
       options: {
-        trackingId: 'commercestore-tracking-id',
-        language: 'en',
-        currency: 'USD',
+        trackingId: 'barca',
+        language: 'en-gb',
+        currency: 'gbp',
         clientId: '41915baa-621c-4408-b9c0-6e59b3cde129',
         view: {
-          url: 'http://mystore.com/sales',
+          url: 'https://sports-dev.barca.group/browse/promotions/surf-with-us-this-year',
         },
       },
     });
@@ -94,5 +97,29 @@ describe.skip('commerce', () => {
     expect(sort.isSortedBy(relevance)).toBeTruthy();
     expect(sort.isAvailable(relevance)).toBeTruthy();
     expect(sort.state.availableSorts.length).toEqual(2);
+  });
+
+  it('has selectable facets', async () => {
+    // Query the commerce api
+    await fetchProductListing();
+
+    // Generate the facets from the response
+    const facetGenerator = buildFacetGenerator(engine);
+    const controllers = facetGenerator.state.facets;
+    const facetController = controllers[0];
+
+    // Select a facet
+    await waitForNextStateChange(engine, {
+      action: () => {
+        facetController.toggleSelect({
+          ...facetController.state.values[0],
+          state: 'selected',
+        });
+      },
+      expectedSubscriberCalls: 9,
+    });
+
+    // Have it reflected on the local state
+    expect(facetController.state.values[0].state).toEqual('selected');
   });
 });
