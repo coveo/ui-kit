@@ -8,6 +8,18 @@ export type HasKeys<TObject> = TObject extends {}
     : true
   : boolean;
 
+export type ExtractRequiredOptions<TOptions> = {
+  [TKey in keyof TOptions as TOptions[TKey] extends NonNullable<TOptions[TKey]>
+    ? TKey
+    : never]: TOptions[TKey];
+};
+
+export type OptionsTuple<TOptions> = HasKeys<TOptions> extends false
+  ? []
+  : HasKeys<ExtractRequiredOptions<TOptions>> extends false
+  ? [options?: TOptions]
+  : [options: TOptions];
+
 export interface OptionsExtender<TOptions> {
   (options: TOptions): TOptions | Promise<TOptions>;
 }
@@ -68,6 +80,14 @@ export interface ControllerDefinitionsMap<
   [customName: string]: ControllerDefinition<TEngine, TController>;
 }
 
+export interface EngineDefinitionBuildResult<
+  TEngine extends CoreEngine,
+  TControllers extends ControllersMap,
+> {
+  engine: TEngine;
+  controllers: TControllers;
+}
+
 export interface EngineStaticState<
   TSearchAction extends AnyAction,
   TControllers extends ControllerStaticStateMap,
@@ -79,10 +99,7 @@ export interface EngineStaticState<
 export interface HydratedState<
   TEngine extends CoreEngine,
   TControllers extends ControllersMap,
-> {
-  engine: TEngine;
-  controllers: TControllers;
-}
+> extends EngineDefinitionBuildResult<TEngine, TControllers> {}
 
 export type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<CoreEngine, Controller>,
@@ -141,3 +158,11 @@ export type InferControllerStaticStateMapFromControllers<
     TControllers[K]
   >;
 };
+
+export type EngineDefinitionControllersPropsOption<
+  TControllersPropsMap extends ControllersPropsMap,
+> = HasKeys<TControllersPropsMap> extends false
+  ? {}
+  : {
+      controllers: TControllersPropsMap;
+    };
