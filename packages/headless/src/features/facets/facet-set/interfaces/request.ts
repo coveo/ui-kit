@@ -19,6 +19,9 @@ export const facetSortCriteria: FacetSortCriterion[] = [
   'automatic',
 ];
 
+/**
+ * @deprecated as of version 3.0.0
+ */
 export type FacetSortCriterion =
   | 'score'
   | 'alphanumeric'

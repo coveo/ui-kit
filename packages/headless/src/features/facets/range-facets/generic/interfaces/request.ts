@@ -17,6 +17,9 @@ export const rangeFacetRangeAlgorithm: RangeFacetRangeAlgorithm[] = [
   'equiprobable',
 ];
 
+/**
+ * @deprecated as of version 3.0.0
+ */
 export type RangeFacetSortCriterion = 'ascending' | 'descending';
 export type RangeFacetRangeAlgorithm = 'even' | 'equiprobable';
 
