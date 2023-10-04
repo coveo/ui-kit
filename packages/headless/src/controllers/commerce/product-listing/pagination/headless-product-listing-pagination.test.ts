@@ -3,7 +3,7 @@ import {
   nextPage,
   previousPage,
 } from '../../../../features/commerce/pagination/pagination-actions';
-import {paginationReducer as pagination} from '../../../../features/commerce/pagination/pagination-slice';
+import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
 import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
@@ -29,7 +29,7 @@ describe('ProductListingPagination', () => {
   it('adds correct reducers to engine', () => {
     expect(engine.addReducers).toBeCalledWith({
       productListing,
-      pagination,
+      commercePagination,
     });
   });
 
