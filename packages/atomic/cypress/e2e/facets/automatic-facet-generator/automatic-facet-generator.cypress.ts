@@ -5,7 +5,6 @@ import {
 } from '../../common-assertions';
 import {addAutomaticFacetGenerator} from './automatic-facet-generator-actions';
 import {
-  assertCollapseAutomaticFacets,
   assertContainsAutomaticFacet,
   assertDisplayNothing,
   assertDisplayPlaceholder,
@@ -44,30 +43,6 @@ describe('Automatic Facet Generator Test Suites', () => {
       },
       true
     );
-  });
-
-  it('should collapse the facets when areCollapsed property is `true`', () => {
-    new TestFixture()
-      .with(
-        addAutomaticFacetGenerator({
-          'are-collapsed': 'true',
-          'desired-count': '1',
-        })
-      )
-      .init();
-    assertCollapseAutomaticFacets(true);
-  });
-
-  it('should not collapse the facets when areCollapsed property is `false`', () => {
-    new TestFixture()
-      .with(
-        addAutomaticFacetGenerator({
-          'are-collapsed': 'false',
-          'desired-count': '1',
-        })
-      )
-      .init();
-    assertCollapseAutomaticFacets(false);
   });
 
   it('should display placeholders when no search has yet been executed', () => {

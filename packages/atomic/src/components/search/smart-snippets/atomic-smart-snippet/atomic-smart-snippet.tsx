@@ -121,18 +121,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     this.smartSnippet.cancelPendingSelectInlineLink(event.detail);
   }
 
-  private validateProps() {
-    if (
-      this.snippetMaximumHeight &&
-      (!this.snippetCollapsedHeight ||
-        this.snippetMaximumHeight < this.snippetCollapsedHeight)
-    ) {
-      throw 'snippetMaximumHeight must be equal or greater than snippetCollapsedHeight';
-    }
-  }
-
   public initialize() {
-    this.validateProps();
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
     this.smartSnippetCommon = new SmartSnippetCommon({
       id: this.id,
