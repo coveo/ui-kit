@@ -3,6 +3,7 @@ import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
 import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
 import {PlatformCombination, PlatformEnvironment} from '../utils/url-utils';
+import {clone} from '../utils/utils';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
 import {
   PlatformClientOrigin,
@@ -10,7 +11,6 @@ import {
   PreprocessRequest,
   RequestMetadata,
 } from './preprocess-request';
-import {clone} from '../utils/utils';
 
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentType =

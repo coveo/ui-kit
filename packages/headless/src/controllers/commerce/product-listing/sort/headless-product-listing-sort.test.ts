@@ -1,17 +1,17 @@
+import {Action} from '@reduxjs/toolkit';
+import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer} from '../../../../features/commerce/product-listing/product-listing-slice';
+import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
+import {sortReducer} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice';
+import {updatePage} from '../../../../features/pagination/pagination-actions';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 import {
   buildRelevanceSortCriterion,
   buildSort,
   Sort,
   SortBy,
 } from './headless-product-listing-sort';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
-import {sortReducer} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice';
-import {Action} from '@reduxjs/toolkit';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
-import {updatePage} from '../../../../features/pagination/pagination-actions';
-import {buildMockCommerceState} from '../../../../test/mock-commerce-state';
 
 describe('headless product-listing-sort', () => {
   let sort: Sort;

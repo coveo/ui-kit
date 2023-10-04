@@ -1,5 +1,5 @@
-import loadingRecommendations from '@salesforce/label/c.quantic_LoadingRecommendations';
 import invalidPositiveIntegerProperty from '@salesforce/label/c.quantic_InvalidPositiveIntegerProperty';
+import loadingRecommendations from '@salesforce/label/c.quantic_LoadingRecommendations';
 import slide from '@salesforce/label/c.quantic_Slide';
 import topDocumentsForYou from '@salesforce/label/c.quantic_TopDocumentsForYou';
 import xOfY from '@salesforce/label/c.quantic_XOfY';
@@ -40,7 +40,7 @@ export default class QuanticRecommendationList extends LightningElement {
     topDocumentsForYou,
     slide,
     invalidPositiveIntegerProperty,
-    loadingRecommendations
+    loadingRecommendations,
   };
 
   /**
@@ -200,7 +200,9 @@ export default class QuanticRecommendationList extends LightningElement {
       !this.recommendationList?.state?.recommendations?.length &&
       !this.recommendationList?.state?.error;
     if (this.showPlaceholder) {
-      this.loadingAriaLiveMessage.dispatchMessage(this.labels.loadingRecommendations);
+      this.loadingAriaLiveMessage.dispatchMessage(
+        this.labels.loadingRecommendations
+      );
     }
   }
 

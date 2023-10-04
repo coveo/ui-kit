@@ -1,4 +1,11 @@
+import {Schema} from '@coveo/bueno';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
 import {CoreEngine} from '../../../../app/engine';
+import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
+import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
+import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
+import {sortReducer as sort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice';
+import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {
   SortByFields,
   SortCriterion,
@@ -10,20 +17,13 @@ import {
   SortDirection,
   buildFieldsSortCriterion,
 } from '../../../../features/sort/sort';
+import {ProductListingV2Section} from '../../../../state/state-sections';
+import {loadReducerError} from '../../../../utils/errors';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
   buildController,
   Controller,
 } from '../../../controller/headless-controller';
-import {loadReducerError} from '../../../../utils/errors';
-import {ProductListingV2Section} from '../../../../state/state-sections';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {Schema} from '@coveo/bueno';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {sortReducer as sort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice';
-import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {updatePage} from '../../../../features/pagination/pagination-actions';
-import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
 
 export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
 export {

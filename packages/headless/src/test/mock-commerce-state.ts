@@ -1,3 +1,5 @@
+import {getCartInitialState} from '../features/commerce/context/cart/cart-state';
+import {getContextInitialState} from '../features/commerce/context/context-state';
 import {getProductListingV2InitialState} from '../features/commerce/product-listing/product-listing-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-state';
@@ -7,8 +9,6 @@ import {getDateFacetSetInitialState} from '../features/facets/range-facets/date-
 import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
 import {CommerceAppState} from '../state/commerce-app-state';
-import {getContextInitialState} from '../features/commerce/context/context-state';
-import {getCartInitialState} from '../features/commerce/context/cart/cart-state';
 
 export function buildMockCommerceState(
   config: Partial<CommerceAppState> = {}
