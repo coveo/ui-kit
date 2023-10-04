@@ -26,6 +26,7 @@ import {
   FacetConditionsManager,
   FacetSearchState,
   FacetSortCriterion,
+  SpecificSortCriteriaExplicit,
   FacetState,
   FacetValue,
   FacetValueRequest,
@@ -34,6 +35,7 @@ import {
   RangeFacetSortCriterion,
   SearchStatus,
   SearchStatusState,
+  //FacetSortOrder,
 } from '../types';
 import {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/facet-container';
@@ -121,7 +123,7 @@ type SortCriterionProp<FacetType extends AnyFacetType> = FacetType extends
   | CategoryFacet
   ? {
       sortCriteria: FacetType extends Facet
-        ? FacetSortCriterion
+        ? FacetSortCriterion | SpecificSortCriteriaExplicit
         : CategoryFacetSortCriterion;
     }
   : FacetType extends NumericFacet
@@ -330,6 +332,7 @@ interface FacetCommonOptions {
   facet: Facet;
   facetId: string;
   sortCriteria: FacetSortCriterion;
+  //sortOrder: FacetSortOrder;
   withSearch: boolean;
 }
 
@@ -356,6 +359,7 @@ export class FacetCommon {
   private facet: Facet;
   private facetId: string;
   private sortCriteria: FacetSortCriterion;
+  //private sortOrder: FacetSortOrder;
   private withSearch: boolean;
 
   private resultIndexToFocusOnShowMore = 0;
@@ -372,6 +376,7 @@ export class FacetCommon {
     this.facet = opts.facet;
     this.facetId = opts.facetId;
     this.sortCriteria = opts.sortCriteria;
+    //this.sortOrder = opts.sortOrder;
     this.withSearch = opts.withSearch;
 
     this.validateProps();

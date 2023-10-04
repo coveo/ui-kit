@@ -87,23 +87,23 @@ export type FacetType =
   | 'numericalRange'
   | 'hierarchical';
 
+export type SortCriteriaType =
+  | 'score'
+  | 'alphanumeric'
+  | 'ascending'
+  | 'descending'
+  | 'occurrences'
+  | 'automatic';
+
 export interface SortCriteria<
-  T extends
-    | 'score'
-    | 'alphanumeric'
-    | 'alphanumericDescending'
-    | 'ascending'
-    | 'descending'
-    | 'occurrences'
-    | 'automatic'
-    | SpecificSortCriteriaExplicitAlphanumeric,
+  T extends SortCriteriaType | SpecificSortCriteriaExplicit,
 > {
   /** The sort criterion to apply to the returned facet values. */
   sortCriteria: T;
 }
 
-export interface SpecificSortCriteriaExplicitAlphanumeric {
-  type: 'alphanumeric';
+export interface SpecificSortCriteriaExplicit {
+  type: SortCriteriaType;
   order: FacetSortOrder;
 }
 

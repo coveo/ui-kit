@@ -6,6 +6,7 @@ import {
   InsightFacet,
   InsightFacetOptions,
   InsightFacetSortCriterion,
+  InsightFacetSortOrder,
   InsightFacetState,
   InsightSearchStatus,
   InsightSearchStatusState,
@@ -76,6 +77,11 @@ export class AtomicInsightFacet
   @Prop({reflect: true}) public sortCriteria: InsightFacetSortCriterion =
     'automatic';
   /**
+   * The sort criterion to apply to the returned facet values.
+   * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+   */
+  @Prop({reflect: true}) public sortOrder: InsightFacetSortOrder = 'ascending';
+  /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.
    */
@@ -112,7 +118,10 @@ export class AtomicInsightFacet
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfValues,
-      sortCriteria: this.sortCriteria,
+      sortCriteria: {
+        type: this.sortCriteria,
+        order: this.sortOrder,
+      },
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
@@ -140,6 +149,7 @@ export class AtomicInsightFacet
       facetId: this.facetId,
       withSearch: this.withSearch,
       sortCriteria: this.sortCriteria,
+      //sortOrder: this.sortOrder,
     });
 
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);

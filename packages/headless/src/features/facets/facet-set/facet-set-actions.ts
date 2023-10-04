@@ -11,7 +11,10 @@ import {
   customSort,
 } from '../../../controllers/core/facets/_common/facet-option-definitions';
 import {validatePayload} from '../../../utils/validate-payload';
-import {FacetResultsMustMatch} from '../facet-api/request';
+import {
+  FacetResultsMustMatch,
+  SpecificSortCriteriaExplicit,
+} from '../facet-api/request';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {facetValueDefinition} from './facet-set-validate-payload';
 import {FacetSortCriterion} from './interfaces/request';
@@ -61,7 +64,7 @@ export interface RegisterFacetActionCreatorPayload {
    *
    * @defaultValue `automatic`
    */
-  sortCriteria?: FacetSortCriterion;
+  sortCriteria?: FacetSortCriterion | SpecificSortCriteriaExplicit;
 
   /**
    * Specifies an explicit list of `allowedValues` in the Search API request.
@@ -103,7 +106,9 @@ const facetRegistrationOptionsDefinition = {
   filterFacetCount: new BooleanValue({required: false}),
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),
-  sortCriteria: new Value<FacetSortCriterion>({required: false}),
+  sortCriteria: new Value<FacetSortCriterion | SpecificSortCriteriaExplicit>({
+    required: false,
+  }),
   resultsMustMatch: new Value<FacetResultsMustMatch>({required: false}),
   allowedValues: allowedValues,
   customSort: customSort,
@@ -159,7 +164,7 @@ export interface UpdateFacetSortCriterionActionCreatorPayload {
   /**
    * The criterion by which to sort the facet.
    */
-  criterion: FacetSortCriterion;
+  criterion: FacetSortCriterion | SpecificSortCriteriaExplicit;
 }
 
 export const updateFacetSortCriterion = createAction(
@@ -167,7 +172,9 @@ export const updateFacetSortCriterion = createAction(
   (payload: UpdateFacetSortCriterionActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
-      criterion: new Value<FacetSortCriterion>({required: true}),
+      criterion: new Value<FacetSortCriterion | SpecificSortCriteriaExplicit>({
+        required: true,
+      }),
     })
 );
 

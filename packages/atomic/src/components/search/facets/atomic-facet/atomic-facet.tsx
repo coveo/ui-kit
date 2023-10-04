@@ -4,6 +4,7 @@ import {
   FacetState,
   FacetOptions,
   FacetSortCriterion,
+  FacetSortOrder,
   SearchStatus,
   SearchStatusState,
   buildSearchStatus,
@@ -112,9 +113,14 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({reflect: true}) public withSearch = true;
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+   * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
+  /**
+   * The sort order to apply to the returned facet values.
+   * Possible values are 'ascending' and 'descending'.
+   */
+  @Prop({reflect: true}) public sortOrder: FacetSortOrder = 'ascending';
   /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.
@@ -243,6 +249,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetId: this.facetId,
       withSearch: this.withSearch,
       sortCriteria: this.sortCriteria,
+      //sortOrder: this.sortOrder,
     });
 
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -315,7 +322,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfValues,
-      sortCriteria: this.sortCriteria,
+      sortCriteria: {
+        type: this.sortCriteria,
+        order: this.sortOrder,
+      },
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,

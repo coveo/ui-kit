@@ -1,12 +1,10 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {Schema, StringValue, Value} from '@coveo/bueno';
 import {
   FacetResultsMustMatch,
+  SpecificSortCriteriaExplicit,
   facetResultsMustMatch,
 } from '../../../features/facets/facet-api/request';
-import {
-  facetSortCriteria,
-  FacetSortCriterion,
-} from '../../../features/facets/facet-set/interfaces/request';
+import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {
   facetId,
   field,
@@ -68,7 +66,7 @@ export interface FacetOptions {
    *
    * @defaultValue `automatic`
    */
-  sortCriteria?: FacetSortCriterion;
+  sortCriteria?: FacetSortCriterion | SpecificSortCriteriaExplicit;
 
   /**
    * The criterion to use for specifying how results must match the selected facet values.
@@ -133,7 +131,7 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-  sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
+  sortCriteria: new Value<FacetSortCriterion | SpecificSortCriteriaExplicit>(),
   resultsMustMatch: new StringValue({constrainTo: facetResultsMustMatch}),
   facetSearch,
   allowedValues,

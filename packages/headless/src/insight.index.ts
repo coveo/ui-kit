@@ -323,6 +323,7 @@ export {buildQueryError} from './controllers/insight/query-error/headless-insigh
 export type {
   FacetValueRequest,
   FacetSortCriterion,
+  FacetSortOrder,
 } from './features/facets/facet-set/interfaces/request';
 
 export type {

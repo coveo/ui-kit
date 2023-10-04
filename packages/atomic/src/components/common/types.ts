@@ -3,6 +3,8 @@ export {
   SearchStatus,
   SearchStatusState,
   FacetSortCriterion,
+  SpecificSortCriteriaExplicit,
+  FacetSortOrder,
   SpecificFacetSearchResult,
   FacetSearchState,
   FacetState,

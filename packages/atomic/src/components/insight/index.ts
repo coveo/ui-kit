@@ -48,6 +48,7 @@ export {
   buildDateFilter as buildInsightDateFilter,
   loadDateFacetSetActions as loadInsightDateFacetSetActions,
   FacetSortCriterion as InsightFacetSortCriterion,
+  FacetSortOrder as InsightFacetSortOrder,
   FacetValueRequest as InsightFacetValueRequest,
   CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
   FacetConditionsManager as InsightFacetConditionsManager,

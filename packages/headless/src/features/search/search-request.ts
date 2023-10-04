@@ -4,7 +4,7 @@ import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request';
 import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response';
-import {FacetSetState} from '../facets/facet-set/facet-set-state';
+//import {FacetSetState} from '../facets/facet-set/facet-set-state';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response';
 import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet';
@@ -107,30 +107,25 @@ function getAllEnabledFacets(state: StateNeededBySearchRequest) {
 
 function getAllFacets(state: StateNeededBySearchRequest) {
   return [
-    ...getSpecificFacetRequests(state.facetSet ?? {}),
+    ...getFacetRequests(state.facetSet ?? {}),
     ...getRangeFacetRequests(state.numericFacetSet ?? {}),
     ...getRangeFacetRequests(state.dateFacetSet ?? {}),
     ...getFacetRequests(state.categoryFacetSet ?? {}),
   ];
 }
 
-function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
+/*function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {
-    /* The Search API does not support 'alphanumericDescending' as a string value and instead relies on a new sort mechanism to specify sort order.
-    At the moment, this is only supported for alphanumeric sorting, but will likely transition to this pattern for other types in the future. */
-    if (request.sortCriteria === 'alphanumericDescending') {
-      return {
-        ...request,
-        sortCriteria: {
-          type: 'alphanumeric',
-          order: 'descending',
-        },
+    if (typeof request.sortCriteria === 'object') {
+      request.sortCriteria = {
+        type: request.sortCriteria.type,
+        order: request.sortCriteria.order ?? 'ascending',
       };
     }
 
     return request;
   });
-}
+}*/
 
 function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {

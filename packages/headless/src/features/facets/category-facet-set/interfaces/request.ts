@@ -13,9 +13,6 @@ export const categoryFacetSortCriteria: CategoryFacetSortCriterion[] = [
   'occurrences',
 ];
 
-/**
- * @deprecated as of version 3.0.0
- */
 export type CategoryFacetSortCriterion = 'alphanumeric' | 'occurrences';
 
 export interface CategoryFacetValueRequest
