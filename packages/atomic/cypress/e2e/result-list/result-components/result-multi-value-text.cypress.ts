@@ -154,7 +154,7 @@ describe('Result MultiValueText Component', () => {
 
     it('with a facet and two selected values, it should display the selected values first', () => {
       const selectedValues = [originalValues[1], originalValues[2]];
-      const facetId: 'blah';
+      const facetId = 'blah';
 
       new TestFixture()
         .with(
