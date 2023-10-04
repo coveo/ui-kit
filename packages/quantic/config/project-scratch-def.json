@@ -10,7 +10,7 @@
       "enableNetworksEnabled": true
     },
     "languageSettings": {
-      "enableTranslationWorkbench":  true,
+      "enableTranslationWorkbench": true,
       "enableEndUserLanguages": true
     }
   }
