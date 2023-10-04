@@ -74,7 +74,7 @@ describe('Result Localized Text Component', () => {
         )
         .withTranslation({
           foo: 'foo {{replace_me}}',
-          foo_plural: 'foo plural {{replace_me}}',
+          foo_other: 'foo plural {{replace_me}}',
         })
         .init();
     };
