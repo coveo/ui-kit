@@ -8,6 +8,8 @@ import {getNumericFacetSetInitialState} from '../features/facets/range-facets/nu
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
 import {getSortInitialState} from '../features/sort/sort-state';
 import {CommerceAppState} from '../state/commerce-app-state';
+import {getContextInitialState} from '../features/commerce/context/context-state';
+import {getCartInitialState} from '../features/commerce/context/cart/cart-state';
 
 export function buildMockCommerceState(
   config: Partial<CommerceAppState> = {}
@@ -15,6 +17,8 @@ export function buildMockCommerceState(
   return {
     configuration: getConfigurationInitialState(),
     productListing: getProductListingV2InitialState(),
+    commerceContext: getContextInitialState(),
+    cart: getCartInitialState(),
     sort: getSortInitialState(),
     categoryFacetSet: getCategoryFacetSetInitialState(),
     dateFacetSet: getDateFacetSetInitialState(),

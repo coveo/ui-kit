@@ -204,6 +204,7 @@ export class TestFixture {
     cy.window().then((win) => {
       Object.defineProperty(win.navigator, 'doNotTrack', {
         get: () => (this.doNotTrack ? '1' : '0'),
+        configurable: true,
       });
     });
 

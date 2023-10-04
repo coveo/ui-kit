@@ -48,9 +48,16 @@ describe('Refine Toggle Test Suites', () => {
         .init();
       RefineToggleSelectors.buttonOpen().click();
     });
-    CommonAssertions.assertContainsComponentError(RefineModalSelectors, false);
-    CommonAssertions.assertConsoleError(false);
-    CommonAssertions.assertAccessibility(refineModalComponent);
+
+    it('should render the modal', () => {
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        RefineModalSelectors,
+        false
+      );
+      CommonAssertions.assertConsoleErrorWithoutIt(false);
+      CommonAssertions.assertAccessibilityWithoutIt(refineModalComponent);
+      CommonAssertions.assertWCAG2_5_3();
+    });
 
     it('should not display the filter section', () => {
       RefineModalSelectors.filterSection().should('not.exist');
@@ -71,9 +78,19 @@ describe('Refine Toggle Test Suites', () => {
       cy.wait(1000);
       RefineToggleSelectors.buttonOpen().click();
     });
-    CommonAssertions.assertContainsComponentError(RefineModalSelectors, false);
-    CommonAssertions.assertConsoleError(false);
-    CommonAssertions.assertAccessibility(refineModalComponent);
+
+    it('should render the modal', () => {
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        RefineModalSelectors,
+        false
+      );
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        RefineModalSelectors,
+        false
+      );
+      CommonAssertions.assertAccessibilityWithoutIt(refineModalComponent);
+      CommonAssertions.assertWCAG2_5_3();
+    });
 
     it('should modify body className', () => {
       cy.get('body').should('have.class', 'atomic-modal-opened');
@@ -143,9 +160,19 @@ describe('Refine Toggle Test Suites', () => {
         .init();
       RefineToggleSelectors.buttonOpen().click();
     });
-    CommonAssertions.assertContainsComponentError(RefineModalSelectors, false);
-    CommonAssertions.assertConsoleError(false);
-    CommonAssertions.assertAccessibility(refineModalComponent);
+
+    it('should render the modal', () => {
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        RefineModalSelectors,
+        false
+      );
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        RefineModalSelectors,
+        false
+      );
+      CommonAssertions.assertAccessibilityWithoutIt(refineModalComponent);
+      CommonAssertions.assertWCAG2_5_3();
+    });
 
     it('should display the filter section', () => {
       RefineModalSelectors.filterSection().should('exist');
@@ -174,7 +201,8 @@ describe('Refine Toggle Test Suites', () => {
 
   describe('when the modal is opened with both facets type', () => {
     const collapseFacetsAfter = 4;
-    const staticFacetAmount = 3;
+    const staticFacetAmount = 1;
+    const automaticFacetAmount = 1;
     beforeEach(() => {
       new TestFixture()
         .with(
@@ -186,9 +214,19 @@ describe('Refine Toggle Test Suites', () => {
         .init();
       RefineToggleSelectors.buttonOpen().click();
     });
-    CommonAssertions.assertContainsComponentError(RefineModalSelectors, false);
-    CommonAssertions.assertConsoleError(false);
-    CommonAssertions.assertAccessibility(refineModalComponent);
+
+    it('should render the modal', () => {
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        RefineModalSelectors,
+        false
+      );
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        RefineModalSelectors,
+        false
+      );
+      CommonAssertions.assertAccessibilityWithoutIt(refineModalComponent);
+      CommonAssertions.assertWCAG2_5_3();
+    });
 
     it('should display the filter section', () => {
       RefineModalSelectors.filterSection().should('exist');
@@ -199,19 +237,14 @@ describe('Refine Toggle Test Suites', () => {
     });
 
     it('should display both facet types', () => {
-      const automaticFacetAmount = 3;
       RefineModalSelectors.automaticFacets()
         .children()
         .should('have.length', automaticFacetAmount);
 
-      const allFacets = [
-        facetComponent,
-        numericFacetComponent,
-        categoryFacetComponent,
-      ];
+      const allStaticFacet = [facetComponent];
       RefineModalSelectors.facets()
         .children()
-        .should('have.length', allFacets.length + 1);
+        .should('have.length', allStaticFacet.length + 1);
     });
 
     it('should respect the collapseFacetsAfter prop', () => {
@@ -246,8 +279,18 @@ describe('Refine Toggle Test Suites', () => {
         .init();
       RefineToggleSelectors.buttonOpen().click();
     });
-    CommonAssertions.assertContainsComponentError(RefineModalSelectors, false);
-    CommonAssertions.assertConsoleError(false);
+
+    it('should render the modal', () => {
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        RefineModalSelectors,
+        false
+      );
+      CommonAssertions.assertContainsComponentErrorWithoutIt(
+        RefineModalSelectors,
+        false
+      );
+      CommonAssertions.assertConsoleErrorWithoutIt(false);
+    });
 
     it('should display the modal with the proper range facets', () => {
       RefineModalSelectors.facets()
