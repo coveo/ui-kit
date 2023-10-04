@@ -1,7 +1,7 @@
 'use client';
 
 import FacetCommon from '../../../common/facet';
-import {useAuthorFacet} from '../../../lib/react/engine';
+import {useAuthorFacet} from '../engine';
 
 export default function AuthorFacet() {
   const {state, methods} = useAuthorFacet();
