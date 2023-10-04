@@ -6,7 +6,7 @@ import {
   hydrateStaticState,
   HydratedStateProvider,
   StaticStateProvider,
-} from '@/src/pages/react/common/engine';
+} from '@/src/lib/react/engine';
 import {useEffect, useState, PropsWithChildren} from 'react';
 import {HydrationMetadata} from '../../../common/hydration-metadata';
 
@@ -14,7 +14,7 @@ interface SearchPageProviderProps {
   staticState: SearchStaticState;
 }
 
-export function SearchPageProvider({
+export default function SearchPageProvider({
   staticState,
   children,
 }: PropsWithChildren<SearchPageProviderProps>) {

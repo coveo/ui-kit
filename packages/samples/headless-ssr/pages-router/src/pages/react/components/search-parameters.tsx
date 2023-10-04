@@ -3,7 +3,7 @@
 import {useEffect, useMemo} from 'react';
 import {useHistoryRouter} from '../../../common/search-parameters';
 import {CoveoNextJsSearchParametersSerializer} from '../../../common/search-parameters-serializer';
-import {useSearchParameters} from '../common/engine';
+import {useSearchParameters} from '../../../lib/react/engine';
 
 export default function SearchParameters() {
   const historyRouter = useHistoryRouter();

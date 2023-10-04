@@ -1,8 +1,5 @@
 import {CoveoNextJsSearchParametersSerializer} from '@/src/common/search-parameters-serializer';
-import {
-  SearchStaticState,
-  fetchStaticState,
-} from '@/src/pages/generic/common/engine';
+import {SearchStaticState, fetchStaticState} from '@/src/lib/generic/engine';
 import SearchPage from '@/src/pages/generic/components/search-page';
 
 export async function getServerSideProps() {

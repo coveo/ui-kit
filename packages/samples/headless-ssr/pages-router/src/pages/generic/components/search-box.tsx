@@ -2,7 +2,7 @@ import {
   SearchBoxState,
   SearchBox as SearchBoxController,
 } from '@coveo/headless/ssr';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {useEffect, useState} from 'react';
 import SearchBoxCommon from '../../../common/search-box';
 
 interface SearchBoxProps {
@@ -10,10 +10,7 @@ interface SearchBoxProps {
   controller?: SearchBoxController;
 }
 
-export const SearchBox: FunctionComponent<SearchBoxProps> = ({
-  staticState,
-  controller,
-}: SearchBoxProps) => {
+export default function SearchBox({staticState, controller}: SearchBoxProps) {
   const [state, setState] = useState(staticState);
 
   useEffect(
@@ -22,4 +19,4 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = ({
   );
 
   return <SearchBoxCommon controller={controller} value={state.value} />;
-};
+}

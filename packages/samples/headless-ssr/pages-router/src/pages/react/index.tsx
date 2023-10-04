@@ -1,13 +1,10 @@
-import {
-  SearchStaticState,
-  fetchStaticState,
-} from '@/src/pages/react/common/engine';
-import {SearchPageProvider} from '@/src/pages/react/components/search-page';
+import {SearchStaticState, fetchStaticState} from '@/src/lib/react/engine';
+import SearchPageProvider from '@/src/pages/react/components/search-page';
 import {CoveoNextJsSearchParametersSerializer} from '../../common/search-parameters-serializer';
 import ResultList from './components/result-list';
 import SearchBox from './components/search-box';
 import SearchParameters from './components/search-parameters';
-import {AuthorFacet} from './components/facets';
+import AuthorFacet from './components/facets';
 
 export async function getServerSideProps() {
   const {coveoSearchParameters} =

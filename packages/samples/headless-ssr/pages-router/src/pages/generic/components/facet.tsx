@@ -1,5 +1,5 @@
 import {FacetState, Facet as FacetController} from '@coveo/headless/ssr';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {useEffect, useState} from 'react';
 import FacetCommon from '../../../common/facet';
 
 interface FacetProps {
@@ -8,11 +8,7 @@ interface FacetProps {
   controller?: FacetController;
 }
 
-export const Facet: FunctionComponent<FacetProps> = ({
-  title,
-  staticState,
-  controller,
-}) => {
+export default function Facet({title, staticState, controller}: FacetProps) {
   const [state, setState] = useState(staticState);
 
   useEffect(
@@ -37,4 +33,4 @@ export const Facet: FunctionComponent<FacetProps> = ({
       }
     />
   );
-};
+}

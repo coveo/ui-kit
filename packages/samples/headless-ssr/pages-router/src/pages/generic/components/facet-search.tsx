@@ -1,19 +1,15 @@
-import {
-  FacetState,
-  Facet as FacetController,
-  Controller,
-} from '@coveo/headless/ssr';
-import {FunctionComponent, useEffect, useState} from 'react';
+import {FacetState, Facet as FacetController} from '@coveo/headless/ssr';
+import {useEffect, useState} from 'react';
 
 interface FacetSearchProps {
   staticState: FacetState;
   controller?: FacetController;
 }
 
-export const FacetSearch: FunctionComponent<FacetSearchProps> = ({
+export default function FacetSearch({
   staticState,
   controller,
-}) => {
+}: FacetSearchProps) {
   const [state, setState] = useState(staticState);
 
   useEffect(
@@ -50,4 +46,4 @@ export const FacetSearch: FunctionComponent<FacetSearchProps> = ({
       </ul>
     </>
   );
-};
+}

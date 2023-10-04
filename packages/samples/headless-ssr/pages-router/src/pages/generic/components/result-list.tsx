@@ -2,7 +2,7 @@ import {
   ResultList as ResultListController,
   ResultListState,
 } from '@coveo/headless/ssr';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {useEffect, useState} from 'react';
 import ResultListCommon from '../../../common/result-list';
 
 interface ResultListProps {
@@ -10,10 +10,7 @@ interface ResultListProps {
   controller?: ResultListController;
 }
 
-export const ResultList: FunctionComponent<ResultListProps> = ({
-  staticState,
-  controller,
-}) => {
+export default function ResultList({staticState, controller}: ResultListProps) {
   const [state, setState] = useState(staticState);
 
   useEffect(
@@ -22,4 +19,4 @@ export const ResultList: FunctionComponent<ResultListProps> = ({
   );
 
   return <ResultListCommon results={state.results} />;
-};
+}
