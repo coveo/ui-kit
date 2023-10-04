@@ -14,7 +14,7 @@ async function main() {
 
     await execute('npx', [
       'prettier',
-      '"**/*.{scss,css,pcss,html,md,**/{package,nx,project}.json}"',
+      '"**/*.{scss,css,pcss,html,md,ts,tsx,js,mjs,**/{package,nx,project}.json}"',
       '--check',
     ]);
   } catch (err) {
