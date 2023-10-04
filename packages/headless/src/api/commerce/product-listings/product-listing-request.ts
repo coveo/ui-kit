@@ -4,6 +4,7 @@ import {
   baseProductListingRequest,
   ProductListingsParam,
 } from './product-listing-params';
+import {Sort} from '../../../features/commerce/product-listing/sort/product-listing-sort';
 
 export type ProductListingRequest = ProductListingsParam;
 
@@ -34,6 +35,7 @@ export interface ProductListingSuccessResponse {
     results: AnyFacetResponse[];
   };
   products: ProductRecommendation[];
+  sort: Sort;
   pagination: {
     totalCount: number;
   };

@@ -26,25 +26,36 @@ export interface ContextParam {
 export interface ContextParams {
   view: ViewParams;
   user?: UserParams;
-  cart?: CartParams[];
-  labels?: Record<string, string>;
+  cart?: CartItemParam[];
 }
 
 export interface ViewParams {
   url: string;
 }
 
-export interface UserParams {
-  userAgent?: string;
-  userIp?: string;
+interface UserIdRequired {
+  userId: string;
   email?: string;
-  userId?: string;
 }
 
-export interface CartParams {
-  groupId?: string;
-  productId?: string;
-  sku?: string;
+interface EmailRequired {
+  userId?: string;
+  email: string;
+}
+
+interface UserIdAndEmail {
+  userId: string;
+  email: string;
+}
+
+export type UserParams = (UserIdRequired | EmailRequired | UserIdAndEmail) & {
+  userIp?: string;
+  userAgent?: string;
+};
+
+export interface CartItemParam {
+  productId: string;
+  quantity: number;
 }
 
 export interface SelectedFacetsParam {

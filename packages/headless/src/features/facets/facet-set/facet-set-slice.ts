@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {WritableDraft} from 'immer/dist/internal';
+import type {Draft as WritableDraft} from 'immer';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,

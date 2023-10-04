@@ -5,6 +5,7 @@
     "helpers:pinGitHubActionDigests",
     "schedule:earlyMondays"
   ],
+  "labels": ["dependencies"],
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
