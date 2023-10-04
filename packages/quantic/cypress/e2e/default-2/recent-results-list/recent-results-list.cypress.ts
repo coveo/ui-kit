@@ -1,8 +1,5 @@
 import {selectResults} from '../../../page-objects/actions/action-select-results';
-import {
-  clearLocalStorage,
-  setRecentResultsListLocalStorage,
-} from '../../../page-objects/actions/action-set-local-storage';
+import {setRecentResultsListLocalStorage} from '../../../page-objects/actions/action-set-local-storage';
 import {configure} from '../../../page-objects/configurator';
 import {
   interceptSearch,
@@ -45,10 +42,6 @@ describe('quantic-recent-results-list', () => {
   });
 
   describe('with default options', () => {
-    beforeEach(() => {
-      clearLocalStorage();
-    });
-
     it('should work as expected', () => {
       visitRecentResultsList({
         maxLength: 3,
