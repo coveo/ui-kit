@@ -13,6 +13,7 @@ export default {
     ],
   },
   collectCoverageFrom: ['./src/**.ts', './src/**.tsx'],
+  setupFiles: ['./jest.setup.js'],
   coverageThreshold: {
     global: {
       lines: 90,
