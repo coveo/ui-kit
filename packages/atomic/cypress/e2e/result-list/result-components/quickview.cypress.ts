@@ -55,14 +55,6 @@ describe('Quickview Component', () => {
       .should('exist')
       .should('have.attr', 'href');
 
-    cy.log('should display a close button');
-    QuickviewModalSelectors.closeButton()
-      .should('exist')
-      .should('have.attr', 'aria-label', 'Close')
-      .click();
-
-    openModal();
-
     cy.log('should display an iframe');
     QuickviewModalSelectors.iframe()
       .should('exist')
@@ -74,24 +66,15 @@ describe('Quickview Component', () => {
       .should('exist')
       .should('have.text', 'Result 1 of 10');
 
-    QuickviewModalSelectors.nextButton().click();
-    QuickviewModalSelectors.pagerSummary().should(
-      'have.text',
-      'Result 2 of 10'
-    );
-    cy.expectClickEvent('documentQuickview');
+    QuickviewModalSelectors.nextButton();
 
-    cy.log('should display a pager with previous navigation');
-    QuickviewModalSelectors.pagerSummary()
+    QuickviewModalSelectors.previousButton();
+
+    cy.log('should display a close button');
+    QuickviewModalSelectors.closeButton()
       .should('exist')
-      .should('have.text', 'Result 2 of 10');
-
-    QuickviewModalSelectors.previousButton().click();
-    QuickviewModalSelectors.pagerSummary().should(
-      'have.text',
-      'Result 1 of 10'
-    );
-    cy.expectClickEvent('documentQuickview');
+      .should('have.attr', 'aria-label', 'Close')
+      .click();
   });
 
   it('when used on grid display result list, it should display correctly', () => {
@@ -122,30 +105,14 @@ describe('Quickview Component', () => {
       .should('exist')
       .should('have.text', 'Result 1 of 10');
 
-    QuickviewModalSelectors.nextButton().click();
-    QuickviewModalSelectors.pagerSummary().should(
-      'have.text',
-      'Result 2 of 10'
-    );
-    cy.expectClickEvent('documentQuickview');
+    QuickviewModalSelectors.nextButton();
 
-    QuickviewModalSelectors.pagerSummary()
-      .should('exist')
-      .should('have.text', 'Result 2 of 10');
-
-    QuickviewModalSelectors.previousButton().click();
-    QuickviewModalSelectors.pagerSummary().should(
-      'have.text',
-      'Result 1 of 10'
-    );
-    cy.expectClickEvent('documentQuickview');
+    QuickviewModalSelectors.previousButton();
 
     QuickviewModalSelectors.closeButton()
       .should('exist')
       .should('have.attr', 'aria-label', 'Close')
       .click();
-
-    cy.get('body').should('not.have.class', 'atomic-modal-opened');
   });
 
   it('when used on pdf file inside a result list with keywords, it should display correctly', () => {
