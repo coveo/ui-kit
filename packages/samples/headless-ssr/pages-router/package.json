@@ -1,6 +1,6 @@
 {
-  "name": "pages-router-ssr-examples",
-  "version": "0.1.0",
+  "name": "pages-router-ssr-examples-pages-router",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,11 +16,14 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "typescript": "latest",
-    "@types/react": "latest",
-    "@types/node": "latest",
-    "@types/react-dom": "latest",
-    "eslint": "latest",
-    "eslint-config-next": "latest"
+    "@types/node": "20.6.1",
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.7",
+    "eslint": "8.49.0",
+    "eslint-config-next": "13.4.19",
+    "typescript": "5.2.2",
+    "cypress": "13.2.0",
+    "cypress-repeat": "2.3.3",
+    "cypress-web-vitals": "4.1.0"
   }
 }
