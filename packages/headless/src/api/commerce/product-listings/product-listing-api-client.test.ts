@@ -5,6 +5,7 @@ import {
   ProductListingRequest,
   ProductListingSuccessResponse,
 } from './product-listing-request';
+import {buildRelevanceSortCriterion} from '../../../features/sort/sort';
 
 describe('product listing api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
@@ -99,6 +100,10 @@ describe('product listing api client', () => {
         },
         pagination: {
           totalCount: 31,
+        },
+        sort: {
+          appliedSort: buildRelevanceSortCriterion(),
+          availableSorts: [buildRelevanceSortCriterion()],
         },
         responseId: 'ba7e83ac-6b54-46c1-8789-01f144cfd3b1',
       };

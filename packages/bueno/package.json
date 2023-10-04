@@ -2,7 +2,7 @@
   "name": "@coveo/bueno",
   "repository": {
     "type": "git",
-    "url": "https://github.com/coveo/ui-kit.git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/bueno"
   },
   "main": "./dist/bueno.js",
@@ -13,7 +13,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.44.1",
+  "version": "0.44.2",
   "files": [
     "dist/"
   ],

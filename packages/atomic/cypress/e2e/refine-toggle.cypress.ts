@@ -201,7 +201,8 @@ describe('Refine Toggle Test Suites', () => {
 
   describe('when the modal is opened with both facets type', () => {
     const collapseFacetsAfter = 4;
-    const staticFacetAmount = 3;
+    const staticFacetAmount = 1;
+    const automaticFacetAmount = 1;
     beforeEach(() => {
       new TestFixture()
         .with(
@@ -236,19 +237,14 @@ describe('Refine Toggle Test Suites', () => {
     });
 
     it('should display both facet types', () => {
-      const automaticFacetAmount = 3;
       RefineModalSelectors.automaticFacets()
         .children()
         .should('have.length', automaticFacetAmount);
 
-      const allFacets = [
-        facetComponent,
-        numericFacetComponent,
-        categoryFacetComponent,
-      ];
+      const allStaticFacet = [facetComponent];
       RefineModalSelectors.facets()
         .children()
-        .should('have.length', allFacets.length + 1);
+        .should('have.length', allStaticFacet.length + 1);
     });
 
     it('should respect the collapseFacetsAfter prop', () => {

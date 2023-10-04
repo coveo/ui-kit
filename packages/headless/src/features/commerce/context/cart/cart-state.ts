@@ -1,4 +1,4 @@
-import {CartItemParam,} from '../../../../api/commerce/commerce-api-params';
+import {CartItemParam} from '../../../../api/commerce/commerce-api-params';
 
 export interface CartState {
   cartItems: string[];
@@ -7,5 +7,5 @@ export interface CartState {
 
 export const getCartInitialState = (): CartState => ({
   cartItems: [],
-  cart: {}
+  cart: {},
 });

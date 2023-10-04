@@ -89,6 +89,7 @@
     "packages/atomic-angular",
     "packages/atomic-angular/projects/*",
     "packages/samples/*",
+    "packages/samples/headless-ssr/*",
     "utils/*",
     "!utils/atomic-storybook"
   ],
@@ -115,5 +116,6 @@
   },
   "dependencies": {
     "upgrade": "1.1.0"
-  }
+  },
+  "version": "0.0.0"
 }
