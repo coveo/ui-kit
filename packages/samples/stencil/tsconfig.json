@@ -6,7 +6,10 @@
     "declaration": false,
     "baseUrl": ".",
     "experimentalDecorators": true,
-    "lib": ["dom", "es2015"],
+    "lib": [
+      "dom",
+      "es2015"
+    ],
     "moduleResolution": "node",
     "module": "esnext",
     "target": "es2017",
@@ -15,9 +18,13 @@
     "jsx": "react",
     "jsxFactory": "h",
     "paths": {
-      "@/*": ["src/*"]
-    }
+      "@/*": [
+        "src/*"
+      ]
+    },
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

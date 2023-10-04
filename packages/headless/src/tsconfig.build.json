@@ -3,5 +3,7 @@
   "compilerOptions": {
     "isolatedModules": true
   },
-  "exclude": ["./**/*.test.ts"]
+  "exclude": [
+    "./**/*.test.ts"
+  ]
 }

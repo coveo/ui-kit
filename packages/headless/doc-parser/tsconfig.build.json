@@ -4,5 +4,7 @@
     "outDir": "build",
     "module": "CommonJS"
   },
-  "exclude": ["./**/*.test.ts"]
+  "exclude": [
+    "./**/*.test.ts"
+  ]
 }

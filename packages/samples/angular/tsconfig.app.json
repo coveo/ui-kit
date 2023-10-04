@@ -6,9 +6,7 @@
     "types": [],
     "paths": {
       "@angular/*": ["../../../node_modules/@angular/*"],
-      "@coveo/atomic-angular": [
-        "../../atomic-angular/projects/atomic-angular/dist/"
-      ]
+      "@coveo/atomic-angular": ["../../atomic-angular/projects/atomic-angular/dist/"]
     },
     "preserveSymlinks": true
   },
