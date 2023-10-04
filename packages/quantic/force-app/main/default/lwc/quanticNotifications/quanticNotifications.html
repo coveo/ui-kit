@@ -1,0 +1,19 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template for:each={notifications} for:item="notification">
+      <div key={notification.id} class="slds-notify_container slds-is-relative">
+        <div data-cy="notification" class="slds-notify slds-notify_toast notification" role="status">
+          <lightning-icon icon-name="utility:info_alt" alternative-text="info" title="info"
+            size="small"></lightning-icon>
+          <div class="slds-notify__content slds-var-m-left_small">
+            {notification.value}
+          </div>
+        </div>
+      </div>
+    </template>
+  </template>
+</template>
