@@ -5,7 +5,7 @@
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/coveo/ui-kit.git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic-react"
   },
   "scripts": {
