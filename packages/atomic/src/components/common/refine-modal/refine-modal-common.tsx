@@ -2,10 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
 import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 import {Button} from '../button';
-import {
-  BaseFacetElement,
-  facetShouldBeInitiallyCollapsed,
-} from '../facets/facet-common';
+import {BaseFacetElement} from '../facets/facet-common';
 import {AnyBindings} from '../interface/bindings';
 import {isRefineModalFacet} from '../interface/store';
 
@@ -32,9 +29,6 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
 
   const flushFacetElements = () => {
     props.host.querySelector('div[slot="facets"]')?.remove();
-  };
-  const flushAutomaticFacetElements = () => {
-    props.host.querySelector('atomic-automatic-facet-slot-content')?.remove();
   };
 
   const renderHeader = () => {
@@ -94,7 +88,6 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
       onAnimationEnded={() => {
         if (!props.isOpen) {
           flushFacetElements();
-          flushAutomaticFacetElements();
         }
       }}
       exportparts={exportparts}
@@ -129,10 +122,7 @@ export function getClonedFacetElements(
 
   allFacetsInOrderInDOM.forEach((facetElement, index) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
-    clone.isCollapsed = facetShouldBeInitiallyCollapsed(
-      index,
-      collapseFacetsAfter
-    );
+    clone.isCollapsed = index + 1 > collapseFacetsAfter;
     clone.classList.remove(popoverClass);
     clone.setAttribute(isRefineModalFacet, '');
     divSlot.append(clone);
