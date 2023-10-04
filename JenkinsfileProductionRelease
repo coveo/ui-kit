@@ -18,14 +18,6 @@ node('heavy && linux && docker') {
     stage('Setup') {
       sh 'npm ci'
     }
-    
-    stage('Npm publish') {
-      withCredentials([
-      string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-        sh 'echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > ~/.npmrc'
-        sh 'npm run promote:npm:latest'
-      }
-    }
 
     stage('Quantic publish') {
       withCredentials([
@@ -36,28 +28,10 @@ node('heavy && linux && docker') {
         withEnv([
           'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com'
         ]) {
-          sh 'npx --no-install nx run quantic:"promote:sfdx:ci"'
+          sh 'npx --no-install nx run quantic:"promote:sfdx:ci" > quantic_output.txt';
+          sh 'cat quantic_output.txt';
+          sh 'rm quantic_output.txt';
         }
-      }
-    }
-
-    stage('Notify Docs') {
-      withCredentials([
-        usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')
-      ]) {
-        sh 'npm run notify:docs'
-      }
-    }
-
-    stage('Cloudfront invalidation') {
-      withCredentials([
-        [
-          $class: "AmazonWebServicesCredentialsBinding",
-          credentialsId: "CloudfrontCacheInvalidation",
-        ]
-      ]) {
-          sh 'npm ci';
-          sh 'node ./scripts/deploy/invalidate-cloudfront.mjs'
       }
     }
   }
