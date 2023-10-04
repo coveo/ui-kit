@@ -22,11 +22,11 @@
     "typescript": "5.2.2"
   },
   "bin": {
-    "git-lock": "./git-lock.mjs",
-    "bump": "./bump-package.mjs",
-    "npm-publish": "./npm-publish-package.mjs",
-    "git-publish-all": "./git-publish-all.mjs",
-    "reify": "./reify.mjs"
+    "git-lock": "git-lock.mjs",
+    "bump": "bump-package.mjs",
+    "npm-publish": "npm-publish-package.mjs",
+    "git-publish-all": "git-publish-all.mjs",
+    "reify": "reify.mjs"
   },
   "scripts": {
     "test": "tsc"
