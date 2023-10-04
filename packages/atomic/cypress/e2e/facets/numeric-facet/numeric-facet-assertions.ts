@@ -140,14 +140,14 @@ export function assertCurrencyFormat() {
 }
 
 export function assertUnitFormatKgLong() {
-  it('should display correct unit format "kilograms"', () => {
+  it('should display correct unit format "kilogram"', () => {
     NumericFacetSelectors.valueLabel().as('facetAllValuesLabel');
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
       originalValues.forEach((e: string) => {
         const [start, end] = e.split(' to ');
-        expect(start).contains('kilograms');
-        expect(end).contains('kilograms');
-        expect(start.split(' ')[1]).eq('kilograms');
+        expect(start).contains('kilogram');
+        expect(end).contains('kilogram');
+        expect(start.split(' ')[1]).contains('kilogram');
       });
     });
   });
