@@ -3,7 +3,7 @@ import {
   SearchBox as SearchBoxController,
 } from '@coveo/headless/ssr';
 import {useEffect, useState, FunctionComponent} from 'react';
-import SearchBoxCommon from '../../common/search-box';
+import SearchBoxCommon from '../../../common/search-box';
 
 interface SearchBoxProps {
   staticState: SearchBoxState;

@@ -1,6 +1,6 @@
 'use client';
 
-import FacetCommon from '../../common/facet';
+import FacetCommon from '../../../common/facet';
 import {useAuthorFacet} from '../common/engine';
 
 export const AuthorFacet = () => {

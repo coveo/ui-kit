@@ -1,6 +1,7 @@
 import {
   CartSection,
-  CategoryFacetSection, CommerceContextSection,
+  CategoryFacetSection,
+  CommerceContextSection,
   ConfigurationSection,
   DateFacetSection,
   FacetOrderSection,
