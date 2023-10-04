@@ -1,5 +1,6 @@
 {
-  "name": "pages-router-ssr-examples-pages-router",
+  "name": "@coveo/headless-ssr-samples-pages-router",
+  "description": "Examples of framework agnostic @coveo/headless/ssr utils and @coveo/headless-react/ssr using Next.js pages router",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -9,8 +10,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@coveo/headless-react": "0.1.0",
-    "@coveo/headless": "2.33.0",
+    "@coveo/headless-react": "0.1.1",
+    "@coveo/headless": "2.34.0",
     "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0"
