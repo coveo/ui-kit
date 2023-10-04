@@ -37,11 +37,6 @@ describe('ProductListingPagination', () => {
     expect(productListingPagination.subscribe).toBeTruthy();
   });
 
-  it('dispatches #fetchProductListing upon initialization', () => {
-    const action = engine.findAsyncAction(fetchProductListing.pending);
-    expect(action).toBeTruthy();
-  });
-
   it('#selectPage dispatches #selectPage & #fetchProductListing', () => {
     productListingPagination.selectPage(0);
     expect(engine.actions.find((a) => a.type === selectPage.type)).toBeTruthy();

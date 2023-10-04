@@ -69,8 +69,6 @@ export function buildProductListingPagination(
     return engine.state.commercePagination!;
   };
 
-  dispatch(fetchProductListing());
-
   return {
     ...controller,
 
