@@ -78,7 +78,6 @@
     "@types/puppeteer": "5.4.7",
     "autoprefixer": "10.4.16",
     "axe-core": "4.8.2",
-    "cross-fetch": "4.0.0",
     "cypress": "13.3.0",
     "cypress-axe": "1.5.0",
     "cypress-repeat": "2.3.3",
