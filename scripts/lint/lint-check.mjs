@@ -2,19 +2,20 @@ import {execute} from '../exec.mjs';
 
 async function main() {
   try {
-    await execute('npx', ['eslint', '"**/*.{ts?(x),?(m)js}"']);
+    await execute('npx', ['eslint', '.']);
 
     await execute('npx', [
       'cspell',
+      '**/*.md',
       '--no-progress',
-      '--no-must-find-files',
-      '"**/*.md"',
+      '--show-suggestions',
+      '--show-context',
     ]);
 
     await execute('npx', [
       'prettier',
-      '--check',
       '"**/*.{scss,css,pcss,html,md,**/{package,nx,project}.json}"',
+      '--check',
     ]);
   } catch (err) {
     console.error('Error:', err);
