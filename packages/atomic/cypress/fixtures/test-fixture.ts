@@ -195,8 +195,6 @@ export class TestFixture {
     };
   }
 
-  private isAtomicSearchInterfaceComponentAlreadyInitialized() {}
-
   public init() {
     !this.redirected && cy.visit(buildTestUrl(this.hash));
     cy.injectAxe();

@@ -28,13 +28,13 @@ export interface MultiValueTextProps {
 
 const addMultiValueText = (
   props: MultiValueTextProps = {},
-  slot: HTMLElement[] = []
+  slot?: HTMLElement
 ) => {
   const multiValueTextEl = generateComponentHTML(
     resultMultiValueTextComponent,
     props as TagProps
   );
-  slot.forEach((el) => multiValueTextEl.appendChild(el));
+  slot && multiValueTextEl.appendChild(slot);
   return addResultList(
     buildTemplateWithSections({bottomMetadata: multiValueTextEl})
   );
@@ -46,36 +46,6 @@ export interface FacetWithResponseProps {
   values: string[];
   selectedValues: string[];
 }
-
-const addFacetWithResponse =
-  ({facetId, field, values, selectedValues}: FacetWithResponseProps) =>
-  (fixture: TestFixture) => {
-    fixture
-      .with(addFacet({'facet-id': facetId, field}))
-      .withCustomResponse((response) => {
-        response.facets = [
-          {
-            facetId,
-            field,
-            indexScore: 0,
-            moreValuesAvailable: false,
-            values: values.map((value) => ({
-              value,
-              numberOfResults: 1337,
-              state: selectedValues.includes(value) ? 'selected' : 'idle',
-            })),
-          },
-        ];
-      });
-  };
-
-const buildSlotElement = (value: string, text: string) => {
-  const el = generateComponentHTML('span', {
-    slot: `result-multi-value-text-value-${value}`,
-  });
-  el.innerText = text;
-  return el;
-};
 
 describe('Result MultiValueText Component', () => {
   const values = {
@@ -154,6 +124,12 @@ describe('Result MultiValueText Component', () => {
     });
 
     it('when there is a slot it should replace the correct values', () => {
+      const slotElement = generateComponentHTML('span', {
+        slot: `result-multi-value-text-value-${originalValues[1]}`,
+      });
+      slotElement.innerText =
+        'The field value in at position 1 should be replaced by this';
+
       new TestFixture()
         .with(
           addMultiValueText(
@@ -161,12 +137,7 @@ describe('Result MultiValueText Component', () => {
               field,
               'max-values-to-display': 4,
             },
-            [
-              buildSlotElement(
-                originalValues[1],
-                'The field value in at position 1 is replaced by this'
-              ),
-            ]
+            slotElement
           )
         )
         .with(addFieldValueInResponse(field, originalValues))
@@ -176,13 +147,12 @@ describe('Result MultiValueText Component', () => {
 
       assertShouldRenderValues([
         localizedValues[0],
-        'The field value in at position 1 is replaced by this',
+        'The field value in at position 1 should be replaced by this',
         localizedValues[2],
       ]);
     });
 
     it('with a facet and two selected values, it should display the selected values first', () => {
-      const facetId = 'blah';
       const selectedValues = [originalValues[1], originalValues[2]];
 
       new TestFixture()
@@ -195,14 +165,25 @@ describe('Result MultiValueText Component', () => {
         .with(addFieldValueInResponse(field, originalValues))
         .withFieldCaptions(field, values)
         .withTranslation({'n-more': '{{value}} more'})
-        .with(
-          addFacetWithResponse({
-            facetId,
-            field,
-            values: originalValues,
-            selectedValues,
-          })
-        )
+        .with((fixture: TestFixture) => {
+          fixture
+            .with(addFacet({'facet-id': 'blah', field}))
+            .withCustomResponse((response) => {
+              response.facets = [
+                {
+                  facetId,
+                  field,
+                  indexScore: 0,
+                  moreValuesAvailable: false,
+                  values: originalValues.map((v) => ({
+                    value: v,
+                    numberOfResults: 1337,
+                    state: selectedValues.includes(v) ? 'selected' : 'idle',
+                  })),
+                },
+              ];
+            });
+        })
         .init();
 
       assertShouldRenderValues([
