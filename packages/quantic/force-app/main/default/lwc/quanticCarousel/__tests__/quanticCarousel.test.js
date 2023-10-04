@@ -10,7 +10,7 @@ const selectors = {
   nextNavigation: '.carousel__next-navigation',
   indicators: '.carousel__indicator',
   error: 'c-quantic-component-error',
-  carousel: 'section[role="region"]',
+  carousel: 'section[role="region"]'
 };
 
 const exampleItemOne = document.createElement('div');
@@ -23,9 +23,10 @@ const carouselItemHiddenStyles = 'none';
 const exampleAssignedElements = [exampleItemOne, exampleItemTwo];
 const exampleLabel = 'example Label';
 
+
 const defaultOptions = {
   itemsPerPage: exampleNumberOfItemsPerPage,
-  label: exampleLabel,
+  label: exampleLabel
 };
 
 function createTestComponent(
@@ -132,7 +133,9 @@ describe('c-quantic-carousel', () => {
     const element = createTestComponent();
     await flushPromises();
 
-    const carousel = element.shadowRoot.querySelector(selectors.carousel);
+    const carousel = element.shadowRoot.querySelector(
+      selectors.carousel
+    );
 
     expect(carousel).not.toBeNull();
     expect(carousel.ariaLabel).toBe(exampleLabel);
@@ -206,14 +209,14 @@ describe('c-quantic-carousel', () => {
 
   describe('when used with invalid properties', () => {
     let consoleError;
-
+    
     beforeEach(() => {
-      consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
-    });
+      consoleError = jest.spyOn(console, "error").mockImplementation(() => {});
+    })
 
-    afterEach(() => {
+    afterEach(()=> {
       consoleError.mockReset();
-    });
+    })
 
     it('should display an error message when the property itemsPerPage is undefined', async () => {
       const element = createTestComponent({

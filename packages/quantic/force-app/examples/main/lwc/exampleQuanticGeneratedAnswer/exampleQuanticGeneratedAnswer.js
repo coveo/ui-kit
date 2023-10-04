@@ -8,7 +8,8 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
   pageTitle = 'Quantic Generated Answer';
   pageDescription =
     'The QuanticGeneratedAnswer component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.';
-  options = [];
+  options = [
+  ];
 
   handleTryItNow(evt) {
     this.config = evt.detail;
