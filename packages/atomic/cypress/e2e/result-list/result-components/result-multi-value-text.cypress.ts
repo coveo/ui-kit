@@ -154,6 +154,7 @@ describe('Result MultiValueText Component', () => {
 
     it('with a facet and two selected values, it should display the selected values first', () => {
       const selectedValues = [originalValues[1], originalValues[2]];
+      const facetId: 'blah';
 
       new TestFixture()
         .with(
@@ -167,7 +168,7 @@ describe('Result MultiValueText Component', () => {
         .withTranslation({'n-more': '{{value}} more'})
         .with((fixture: TestFixture) => {
           fixture
-            .with(addFacet({'facet-id': 'blah', field}))
+            .with(addFacet({'facet-id': facetId, field}))
             .withCustomResponse((response) => {
               response.facets = [
                 {
