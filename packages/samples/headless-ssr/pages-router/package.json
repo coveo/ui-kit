@@ -5,8 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "nx build",
+    "build:next": "next build",
+    "prod": "next start",
     "lint": "next lint"
   },
   "dependencies": {

@@ -2,7 +2,7 @@ import {FunctionComponent} from 'react';
 import {
   SearchHydratedState,
   SearchStaticState,
-} from '../app/generic/common/engine';
+} from '../pages/generic/common/engine';
 
 export interface HydrationMetadataProps {
   staticState: SearchStaticState;
