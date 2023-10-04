@@ -8,7 +8,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/coveo/ui-kit"
+    "url": "git+https://github.com/coveo/ui-kit.git"
   },
   "scripts": {
     "test": "npm run build:staticresources && npm run lint:check:tests && npm run validate:types && npm run test:unit",
