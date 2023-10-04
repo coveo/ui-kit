@@ -1,9 +1,13 @@
+import {fetchStaticState} from '@/src/app/react/common/engine';
+import {SearchPageProvider} from '@/src/app/react/components/search-page';
 import {
   CoveoNextJsSearchParametersSerializer,
   NextJSServerSideSearchParams,
-} from '@/src/app/common/search-parameters-serializer';
-import {fetchStaticState} from '@/src/app/generic/common/engine';
-import SearchPage from '@/src/app/generic/components/search-page';
+} from '../../common/search-parameters-serializer';
+import ResultList from './components/result-list';
+import SearchBox from './components/search-box';
+import SearchParameters from './components/search-parameters';
+import {AuthorFacet} from './components/facets';
 
 // Entry point SSR function
 export default async function Search(url: {
@@ -22,8 +26,17 @@ export default async function Search(url: {
       },
     },
   });
-  return <SearchPage staticState={staticState}></SearchPage>;
+
+  return (
+    <SearchPageProvider staticState={staticState}>
+      <SearchParameters />
+      <SearchBox />
+      <ResultList />
+      <AuthorFacet />
+    </SearchPageProvider>
+  );
 }
 
 // A page with search parameters cannot be statically rendered, since its rendered state should look different based on the current search parameters.
+// https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic
 export const dynamic = 'force-dynamic';

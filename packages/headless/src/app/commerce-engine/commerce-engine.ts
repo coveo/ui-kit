@@ -22,7 +22,11 @@ import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
 
 export type {CommerceEngineConfiguration};
 
-const commerceEngineReducers = {productListing: productListingV2Reducer, commerceContext: contextReducer, cart: cartReducer};
+const commerceEngineReducers = {
+  productListing: productListingV2Reducer,
+  commerceContext: contextReducer,
+  cart: cartReducer,
+};
 type CommerceEngineReducers = typeof commerceEngineReducers;
 
 type CommerceEngineState = StateFromReducersMapObject<CommerceEngineReducers> &

@@ -1,7 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  fetchProductListing,
-} from './product-listing-actions';
+import {fetchProductListing} from './product-listing-actions';
 import {getProductListingV2InitialState} from './product-listing-state';
 
 export const productListingV2Reducer = createReducer(
