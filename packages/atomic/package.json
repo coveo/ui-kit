@@ -5,7 +5,7 @@
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/coveo/ui-kit.git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic"
   },
   "main": "dist/index.cjs.js",
