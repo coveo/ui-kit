@@ -90,7 +90,7 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
           part="body-wrapper"
           class="overflow-auto grow flex flex-col w-full scrollbar"
         >
-          <div part="body" class="w-full max-w-lg">
+          <div part="body" class="w-full">
             <slot name="body"></slot>
           </div>
         </div>
@@ -99,7 +99,7 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
             part="footer-wrapper"
             class="border-neutral border-t bg-background z-10 flex flex-col items-center w-full"
           >
-            <div part="footer" class="max-w-lg">
+            <div part="footer">
               <slot name="footer"></slot>
             </div>
           </footer>
