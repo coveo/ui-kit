@@ -74,9 +74,14 @@ export const InterceptAliases = {
       OpenGeneratedAnswerSource: uaAlias('openGeneratedAnswerSource'),
       RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
     },
+    DidYouMean: uaAlias('didyoumeanAutomatic'),
+    DidyoumeanClick: uaAlias('didyoumeanClick'),
     PipelineTriggers: {
+      query: uaAlias('query'),
       notify: uaAlias('notify'),
     },
+    UndoQuery: uaAlias('undoQuery'),
+    SearchboxSubmit: uaAlias('searchboxSubmit'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
@@ -443,6 +448,77 @@ export function mockStreamError(streamId: string, errorCode: number) {
       );
     }
   ).as(getStreamInterceptAlias(streamId).substring(1));
+}
+
+export function mockSearchWithDidYouMean(
+  useCase: string,
+  originalWord: string,
+  correctedWord: string
+) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.queryCorrections = [
+        {
+          correctedQuery: correctedWord,
+          wordCorrections: [
+            {
+              correctedWord: correctedWord,
+              originalWord: originalWord,
+              length: correctedWord.length,
+              offset: 0,
+            },
+          ],
+        },
+      ];
+      res.body.results = [
+        {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
+      ];
+      res.body.totalCount = 1;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithDidYouMeanAutomaticallyCorrected(
+  useCase: string,
+  originalWord: string,
+  correctedWord: string
+) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.queryCorrections = [
+        {
+          correctedQuery: correctedWord,
+          wordCorrections: [
+            {
+              correctedWord: correctedWord,
+              originalWord: originalWord,
+              length: correctedWord.length,
+              offset: 0,
+            },
+          ],
+        },
+      ];
+
+      res.body.results = [];
+      res.body.totalCount = 0;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithQueryTrigger(useCase: string, query: string) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.triggers = [
+        {
+          type: 'query',
+          content: query,
+        },
+      ];
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
 }
 
 export function mockSearchWithNotifyTrigger(

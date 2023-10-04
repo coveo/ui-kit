@@ -21,7 +21,15 @@ import {createTimeframeElements} from './facets/timeframe-facet/timeframe-facet-
 import {timeframeFacetComponent} from './facets/timeframe-facet/timeframe-facet-selectors';
 import {refineToggleComponent} from './refine-toggle-selectors';
 
-export const addRefineToggle =
+export const addRefineToggleWithoutFacets =
+  (props: TagProps = {}) =>
+  (env: TestFixture) => {
+    const refineToggle = generateComponentHTML(refineToggleComponent, props);
+
+    env.withElement(refineToggle);
+  };
+
+export const addRefineToggleWithStaticFacets =
   (props: TagProps = {}) =>
   (env: TestFixture) => {
     const manager = generateComponentHTML(facetManagerComponent);
@@ -55,14 +63,6 @@ export const addRefineToggle =
     env.withElement(manager).withElement(refineToggle);
   };
 
-export const addRefineToggleWithoutFacets =
-  (props: TagProps = {}) =>
-  (env: TestFixture) => {
-    const refineToggle = generateComponentHTML(refineToggleComponent, props);
-
-    env.withElement(refineToggle);
-  };
-
 export const addRefineToggleWithAutomaticFacets =
   (props: TagProps = {}) =>
   (env: TestFixture) => {
@@ -73,6 +73,23 @@ export const addRefineToggleWithAutomaticFacets =
     const refineToggle = generateComponentHTML(refineToggleComponent, props);
 
     env.withElement(automaticFacetGenerator).withElement(refineToggle);
+  };
+
+export const addFacetManagerWithBothTypesOfFacets =
+  (props: TagProps = {}) =>
+  (env: TestFixture) => {
+    const manager = generateComponentHTML(facetManagerComponent);
+    manager.append(generateComponentHTML(facetComponent, {field: facetField}));
+    const automaticFacetGenerator = generateComponentHTML(
+      automaticFacetGeneratorComponent,
+      {'desired-count': '1'}
+    );
+    const refineToggle = generateComponentHTML(refineToggleComponent, props);
+
+    env
+      .withElement(manager)
+      .withElement(automaticFacetGenerator)
+      .withElement(refineToggle);
   };
 
 export const addRefineToggleRangeVariations =

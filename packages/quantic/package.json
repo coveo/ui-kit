@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "2.32.1",
+  "version": "2.33.1",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -8,7 +8,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/coveo/ui-kit"
+    "url": "git+https://github.com/coveo/ui-kit.git"
   },
   "scripts": {
     "test": "npm run build:staticresources && npm run lint:check:tests && npm run validate:types && npm run test:unit",
@@ -43,8 +43,8 @@
     "postinstall": "node scripts/npm/setup-quantic.js"
   },
   "dependencies": {
-    "@coveo/bueno": "0.44.1",
-    "@coveo/headless": "2.32.0"
+    "@coveo/bueno": "0.44.2",
+    "@coveo/headless": "2.34.0"
   },
   "engines": {
     "node": ">=14.0.0"
@@ -62,7 +62,7 @@
     "chalk": "4.1.2",
     "change-case": "4.1.2",
     "cypress": "10.8.0",
-    "cypress-plugin-tab": "1.0.5",
+    "cypress-real-events": "1.10.3",
     "cypress-repeat": "2.3.3",
     "dotenv": "16.3.1",
     "eslint-plugin-jest": "27.2.3",

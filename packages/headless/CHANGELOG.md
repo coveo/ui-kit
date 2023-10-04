@@ -1,3 +1,25 @@
+# 2.34.0 (2023-10-04)
+
+### Bug Fixes
+
+- **headless:** fix structuredClone for locker service ([#3238](https://github.com/coveo/ui-kit/issues/3238)) ([b836e01](https://github.com/coveo/ui-kit/commits/b836e013a6a5d630dddb29fd9640fe40a211d09f))
+
+### Features
+
+- **atomic,headless:** ga release for automatic-facets feature ([#3224](https://github.com/coveo/ui-kit/issues/3224)) ([4decff2](https://github.com/coveo/ui-kit/commits/4decff2d91f415d392177b94dfd10e4c3f8566e8))
+- **commerce:** create context & cart controllers ([#3190](https://github.com/coveo/ui-kit/issues/3190)) ([2a51106](https://github.com/coveo/ui-kit/commits/2a511068f8b7e780a4b442e655f84ca41faf65dd))
+
+# 2.33.0 (2023-09-27)
+
+### Bug Fixes
+
+- **headless,headless-react:** remove defineUrlManager SSR utility ([#3214](https://github.com/coveo/ui-kit/issues/3214)) ([7719ab4](https://github.com/coveo/ui-kit/commits/7719ab456f44dccab70d32ae8fd120ded222fc42))
+
+### Features
+
+- **atomic:** interactive RGA citations ([#3199](https://github.com/coveo/ui-kit/issues/3199)) ([fabdd35](https://github.com/coveo/ui-kit/commits/fabdd357c6d0625413617c66734c3b7ae81ddb62))
+- **headless:** wrap preprocess function that throws to prevent stopping the execution requests ([#3172](https://github.com/coveo/ui-kit/issues/3172)) ([8e50eb9](https://github.com/coveo/ui-kit/commits/8e50eb9cefca01034a499230696cfac04cdfca20))
+
 # 2.32.0 (2023-09-20)
 
 ### Bug Fixes

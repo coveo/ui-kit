@@ -261,6 +261,7 @@ export class AtomicColorFacet
       label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
+      isHidden: () => this.isHidden,
     };
     this.bindings.store.registerFacet('facets', facetInfo);
     initializePopover(this.host, {
@@ -294,6 +295,14 @@ export class AtomicColorFacet
       return;
     }
     this.dependenciesManager?.stopWatching();
+  }
+
+  private get isHidden() {
+    return (
+      this.searchStatusState.hasError ||
+      !this.facet.state.enabled ||
+      !this.facet.state.values.length
+    );
   }
 
   public componentShouldUpdate(

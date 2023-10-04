@@ -1,11 +1,11 @@
 {
   "name": "@coveo/atomic",
-  "version": "2.43.1",
+  "version": "2.45.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/coveo/ui-kit.git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/atomic"
   },
   "main": "dist/index.cjs.js",
@@ -47,7 +47,7 @@
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
-    "@coveo/bueno": "0.44.1",
+    "@coveo/bueno": "0.44.2",
     "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/core": "4.2.1",
@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.22.19",
-    "@coveo/headless": "2.32.0",
+    "@coveo/headless": "2.34.0",
     "@fullhuman/postcss-purgecss": "5.0.0",
     "@rollup/plugin-alias": "5.0.0",
     "@rollup/plugin-replace": "5.0.2",
@@ -72,7 +72,7 @@
     "@stencil/react-output-target": "0.5.3",
     "@types/dompurify": "3.0.2",
     "@types/escape-html": "1.0.2",
-    "@types/jest": "27.0.3",
+    "@types/jest": "27.5.2",
     "@types/lodash": "4.14.198",
     "@types/postcss-import": "14.0.0",
     "@types/puppeteer": "5.4.7",
@@ -101,7 +101,7 @@
     "typescript": "5.1.6"
   },
   "peerDependencies": {
-    "@coveo/headless": "2.32.0"
+    "@coveo/headless": "2.34.0"
   },
   "license": "Apache-2.0",
   "engines": {
