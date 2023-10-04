@@ -1,6 +1,6 @@
 import {JsonDocsProp} from '@stencil/core/internal';
-import {renderArgsToHTMLString} from './default-story-shared';
 import {getDocumentationFromTag} from './map-props-to-args';
+import {renderArgsToHTMLString} from './default-story-shared';
 
 function generateSampleValue(property: JsonDocsProp) {
   if (property.default) {
