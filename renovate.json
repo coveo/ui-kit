@@ -1,7 +1,10 @@
 {
   "enabled": true,
-  "extends": [":semanticPrefixFixDepsChoreOthers"],
-  "schedule": ["before 2am"],
+  "extends": [
+    ":semanticPrefixFixDepsChoreOthers",
+    "helpers:pinGitHubActionDigests",
+    "schedule:earlyMondays"
+  ],
   "labels": ["dependencies"],
   "packageRules": [
     {
