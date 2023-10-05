@@ -5,7 +5,9 @@ import {CaseAssistConfigurationState} from '../features/case-assist-configuratio
 import {CaseContextState} from '../features/case-context/case-context-state';
 import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
-import { CommerceContextState } from '../features/commerce/context/context-state';
+import {CartState} from '../features/commerce/context/cart/cart-state';
+import {CommerceContextState} from '../features/commerce/context/context-state';
+import {CommercePaginationState} from '../features/commerce/pagination/pagination-state';
 import {ProductListingV2State} from '../features/commerce/product-listing/product-listing-state';
 import {ConfigurationState} from '../features/configuration/configuration-state';
 import {ContextState} from '../features/context/context-state';
@@ -47,7 +49,6 @@ import {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set
 import {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state';
 import {TabSetState} from '../features/tab-set/tab-set-state';
 import {TriggerState} from '../features/triggers/triggers-state';
-import {CartState} from '../features/commerce/context/cart/cart-state';
 
 export interface QuerySection {
   /**
@@ -287,6 +288,13 @@ export interface ProductListingSection {
    * The information related to the product listing endpoint.
    */
   productListing: ProductListingState;
+}
+
+export interface CommercePaginationSection {
+  /**
+   * The information related to the product listing endpoint.
+   */
+  commercePagination: CommercePaginationState;
 }
 
 export interface CommerceContextSection {

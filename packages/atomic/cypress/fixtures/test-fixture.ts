@@ -13,7 +13,7 @@ import {
   SearchResponseModifier,
   SearchResponseModifierPredicate,
   setupIntercept,
-  stubConsole,
+  spyConsole,
   UrlParts,
   TestFeature,
   configureI18n,
@@ -208,7 +208,7 @@ export class TestFixture {
     !this.redirected && cy.visit(buildTestUrl(this.hash));
     cy.injectAxe();
     setupIntercept();
-    stubConsole();
+    spyConsole();
 
     cy.window().then((win) => {
       Object.defineProperty(win.navigator, 'doNotTrack', {
@@ -259,24 +259,26 @@ export class TestFixture {
         return;
       }
 
-      searchInterfaceComponent.initialize(sampleConfig).then(() => {
-        configureI18n(
-          searchInterfaceComponent.i18n,
-          this.translations,
-          this.fieldCaptions
-        );
-        if (this.execFirstSearch) {
-          searchInterfaceComponent.executeFirstSearch();
-        }
-      });
-    });
+      if (!searchInterfaceComponent.classList.contains('hydrated')) {
+        searchInterfaceComponent.initialize(sampleConfig).then(() => {
+          configureI18n(
+            searchInterfaceComponent.i18n,
+            this.translations,
+            this.fieldCaptions
+          );
+          if (this.execFirstSearch) {
+            searchInterfaceComponent.executeFirstSearch();
+          }
+        });
 
-    if (this.execFirstSearch && this.firstIntercept) {
-      cy.wait(TestFixture.interceptAliases.Search);
-      if (!(this.disabledAnalytics || this.doNotTrack)) {
-        cy.wait(TestFixture.interceptAliases.UA);
+        if (this.execFirstSearch && this.firstIntercept) {
+          cy.wait(TestFixture.interceptAliases.Search);
+          if (!(this.disabledAnalytics || this.doNotTrack)) {
+            cy.wait(TestFixture.interceptAliases.UA);
+          }
+        }
       }
-    }
+    });
 
     this.aliases.forEach((alias) => alias(this));
 
