@@ -88,11 +88,11 @@ describe('quantic-recent-results-list', () => {
     });
 
     it('should retrieve recent result list from localStorage', () => {
-      setRecentResultsListLocalStorage();
-
       visitRecentResultsList({
         maxLength: 2,
       });
+
+      setRecentResultsListLocalStorage();
 
       Expect.displayResults(true);
       Expect.numberOfResults(2);
