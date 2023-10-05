@@ -6,7 +6,7 @@ import {
   hydrateStaticState,
 } from '@/src/lib/generic/engine';
 import {useEffect, useState} from 'react';
-import {HydrationMetadata} from '../../../common/hydration-metadata';
+import {HydrationMetadata} from '../common/hydration-metadata';
 // import {useSyncSearchParameters} from '../hooks/search-parameters';
 import Facet from './facet';
 import ResultList from './result-list';
