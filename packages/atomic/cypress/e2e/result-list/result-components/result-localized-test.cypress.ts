@@ -75,6 +75,7 @@ describe('Result Localized Text Component', () => {
         .withTranslation({
           foo: 'foo {{replace_me}}',
           foo_plural: 'foo plural {{replace_me}}',
+          foo_other: 'foo v4 plural {{replace_me}}',
         });
 
     it('output the singular key', () => {
@@ -98,16 +99,12 @@ describe('Result Localized Text Component', () => {
     describe('using jsonCompatibility v4', () => {
       it('output the plural key', () => {
         setup({'field-count': 'countplural'})
-          .withTranslation({
-            foo: 'foo {{replace_me}}',
-            foo_other: 'foo plural {{replace_me}}',
-          })
           .withCompatibilityJSON('v4')
           .init();
 
         ResultLocalizedTextSelectors.firstInResult().should(
           'have.text',
-          'foo plural somevalue'
+          'foo v4 plural somevalue'
         );
       });
     });
