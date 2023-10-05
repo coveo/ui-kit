@@ -120,7 +120,14 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
   }
 
   public onLanguageChange() {
-    const {i18n, language} = this.atomicInterface;
+    const {i18n, language, compatibilityJson} = this.atomicInterface;
+
+    if (this.atomicInterface.engine && compatibilityJson !== 'v4') {
+      this.atomicInterface.engine.logger.warn(
+        `As of Atomic version 3.0.0, support for JSON compatibility ${compatibilityJson} will be deprecated. Please update the JSON compatibility to v4: <atomic-search-interface compatibility-json="v4" ...></atomic-search-interface>
+        `
+      );
+    }
 
     loadDayjsLocale(language);
     new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
