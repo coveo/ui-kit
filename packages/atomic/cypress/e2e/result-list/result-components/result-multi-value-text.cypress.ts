@@ -128,7 +128,7 @@ describe('Result MultiValueText Component', () => {
         slot: `result-multi-value-text-value-${originalValues[1]}`,
       });
       slotElement.innerText =
-        'The field value in at position 1 should be replaced by this';
+        'The field value at position 1 should be replaced by this';
 
       new TestFixture()
         .with(
@@ -147,7 +147,7 @@ describe('Result MultiValueText Component', () => {
 
       assertShouldRenderValues([
         localizedValues[0],
-        'The field value in at position 1 should be replaced by this',
+        'The field value at position 1 should be replaced by this',
         localizedValues[2],
       ]);
     });
