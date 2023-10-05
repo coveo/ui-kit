@@ -26,7 +26,7 @@ describe('SSR', () => {
       expect(typeof hydrateStaticState.fromBuildResult).toBe('function');
     });
 
-    it('get build result', async () => {
+    it('gets build result', async () => {
       const {build} = engineDefinition;
       const buildResult = await build();
       expect(buildResult.engine).toBeTruthy();
@@ -39,7 +39,7 @@ describe('SSR', () => {
       expect(engineStaticState).toBeTruthy();
     });
 
-    it('from build result, fetches initial state of engine', async () => {
+    it('fetches initial state of engine from build result', async () => {
       const {build, fetchStaticState} = engineDefinition;
       const buildResult = await build();
       const engineStaticState = await fetchStaticState.fromBuildResult({
@@ -60,7 +60,7 @@ describe('SSR', () => {
       expect(resultList.state.results.length).toBe(10);
     });
 
-    it('from build result, hydrates engine and fetches results using hydrated engine', async () => {
+    it('hydrates engine and fetches results using hydrated engine from build result', async () => {
       const {build, fetchStaticState, hydrateStaticState} = engineDefinition;
       const buildResult = await build();
       const engineStaticState = await fetchStaticState.fromBuildResult({
