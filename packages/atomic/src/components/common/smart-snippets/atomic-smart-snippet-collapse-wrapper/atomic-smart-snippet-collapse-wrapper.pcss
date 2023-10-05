@@ -8,7 +8,8 @@
   &::part(smart-snippet-collapse-wrapper) {
     @mixin set-font-size var(--atomic-text-lg);
 
-    height: var(--collapsed-size);
+    height: auto;
+    max-height: var(--collapsed-size);
 
     --gradient-start: var(
       --atomic-smart-snippet-gradient-start,
@@ -17,7 +18,7 @@
     color: var(--atomic-on-background);
     mask-image: linear-gradient(black, black var(--gradient-start), transparent 100%);
 
-    transition: height ease-in-out 0.25s;
+    transition: max-height ease-in-out 0.25s;
   }
 
   button atomic-icon {
@@ -27,7 +28,8 @@
 
 :host(.expanded) {
   &::part(smart-snippet-collapse-wrapper) {
-    height: var(--full-height);
+    height: auto;
+    max-height: calc(var(--full-height) + 200px);
     mask-image: none;
   }
 
