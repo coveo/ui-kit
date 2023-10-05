@@ -33,6 +33,10 @@ if (!name || !version) {
 if (!(await isPublished(name, version))) {
   const tagToPublish = isPrerelease ? 'alpha' : 'beta';
   await npmPublish('.', {tag: tagToPublish});
+  await npmPublish('.', {
+    tag: tagToPublish,
+    registry: 'https://npm.pkg.github.com',
+  });
   await retry(
     async () => {
       if (!(await isPublished(name, version, tagToPublish))) {
@@ -41,4 +45,6 @@ if (!(await isPublished(name, version))) {
     },
     {retries: 30}
   );
+} else {
+  console.log(`Version ${version} is already published.`);
 }
