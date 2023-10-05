@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@ckeditor/jsdoc-plugins": "39.1.0",
-    "@lwc/compiler": "2.50.0",
+    "@lwc/compiler": "3.6.0",
     "@lwc/eslint-plugin-lwc": "1.6.3",
     "@octokit/graphql": "7.0.2",
     "@octokit/graphql-schema": "14.33.0",
