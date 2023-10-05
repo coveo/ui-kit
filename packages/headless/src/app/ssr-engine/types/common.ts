@@ -9,7 +9,9 @@ export type HasKeys<TObject> = TObject extends {}
   : boolean;
 
 export type ExtractRequiredOptions<TOptions> = {
-  [TKey in keyof TOptions as TOptions[TKey] extends NonNullable<TOptions[TKey]>
+  [TKey in keyof TOptions as Pick<TOptions, TKey> extends Required<
+    Pick<TOptions, TKey>
+  >
     ? TKey
     : never]: TOptions[TKey];
 };

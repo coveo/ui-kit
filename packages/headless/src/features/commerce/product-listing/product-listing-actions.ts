@@ -5,7 +5,8 @@ import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-lis
 import {isErrorResponse} from '../../../api/search/search-api-client';
 import {
   CartSection,
-  CategoryFacetSection, CommerceContextSection,
+  CategoryFacetSection,
+  CommerceContextSection,
   ConfigurationSection,
   DateFacetSection,
   FacetOrderSection,
@@ -79,7 +80,7 @@ export const buildProductListingRequestV2 = (
 ): ProductListingV2Request => {
   const selectedFacets = getFacets(state);
 
-  const {view, user, ...restOfContext} = state.commerceContext
+  const {view, user, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url: state.configuration.platformUrl,
@@ -88,7 +89,7 @@ export const buildProductListingRequestV2 = (
     context: {
       user,
       view,
-      cart: state.cart.cartItems.map((id) => state.cart.cart[id])
+      cart: state.cart.cartItems.map((id) => state.cart.cart[id]),
     },
     selectedFacets,
     ...(state.pagination && {
