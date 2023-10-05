@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
@@ -47,6 +47,11 @@
           '.html': 'html',
         });
       })();
+
+      const onButtonClick = () => {
+        const searchInterface = document.querySelector('atomic-search-interface');
+        searchInterface.language = 'fr';
+      };
     </script>
     <style>
       /* Example on how to customize CSS variables */
@@ -138,6 +143,7 @@
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
           <atomic-search-box></atomic-search-box>
+          <button onclick="onButtonClick()">Change language!</button>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>

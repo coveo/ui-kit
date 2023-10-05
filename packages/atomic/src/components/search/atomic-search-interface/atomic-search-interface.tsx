@@ -41,6 +41,7 @@ import {
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicStore, createAtomicStore} from './store';
+import {i18nCompatibilityJSON} from '../../../components';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -118,6 +119,11 @@ export class AtomicSearchInterface
    * The severity level of the messages to log in the console.
    */
   @Prop({reflect: true}) public logLevel?: LogLevel;
+
+  /**
+   * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
+   */
+  @Prop() public compatibilityJSON: i18nCompatibilityJSON = 'v3';
 
   /**
    * The search interface i18next instance.

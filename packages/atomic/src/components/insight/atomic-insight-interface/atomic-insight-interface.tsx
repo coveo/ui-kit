@@ -28,6 +28,7 @@ import {
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicInsightStore, createAtomicInsightStore} from './store';
+import {i18nCompatibilityJSON} from '../../common/interface/i18n';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 export type InsightInitializationOptions = InsightEngineConfiguration;
@@ -69,6 +70,10 @@ export class AtomicInsightInterface
    * The severity level of the messages to log in the console.
    */
   @Prop({reflect: true}) public logLevel?: InsightLogLevel;
+  /**
+   * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
+   */
+  @Prop() public compatibilityJSON: i18nCompatibilityJSON = 'v3';
   /**
    * The service insight interface language.
    */

@@ -26,6 +26,7 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   host: HTMLStencilElement;
   bindings: AnyBindings;
   error?: Error;
+  compatibilityJSON: 'v1' | 'v2' | 'v3' | 'v4';
 
   updateIconAssetsPath(): void;
   registerFieldsToInclude(): void;
