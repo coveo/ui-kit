@@ -86,7 +86,7 @@ export function assertAccessibilityWithoutIt<T extends HTMLElement>(
   if (typeof component === 'string') {
     cy.checkA11y(component, axeOptions, logAxeIssues);
   } else if (typeof component === 'function') {
-    component().should(([el]) => {
+    component().then(([el]) => {
       cy.checkA11y(el, axeOptions, logAxeIssues);
     });
   } else {
