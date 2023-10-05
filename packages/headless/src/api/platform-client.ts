@@ -10,6 +10,7 @@ import {
   PreprocessRequest,
   RequestMetadata,
 } from './preprocess-request';
+import {clone} from '../utils/utils';
 
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentType =
@@ -104,9 +105,7 @@ export class PlatformClient {
   ) {
     const {origin, preprocessRequest, logger, requestMetadata} = options;
     const {signal, ...withoutSignal} = defaultRequestOptions;
-    const untaintedOutput: PlatformRequestOptions =
-      structuredClone(withoutSignal);
-    untaintedOutput.signal = signal;
+    const untaintedOutput: PlatformRequestOptions = clone(withoutSignal);
 
     try {
       const processedRequest = await preprocessRequest(

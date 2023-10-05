@@ -1,3 +1,4 @@
+import {Result} from 'axe-core';
 import {getFocusableDescendants} from '../../src/utils/accessibility-utils';
 import {TestFixture} from '../fixtures/test-fixture';
 import {ComponentErrorSelectors} from './component-error-selectors';
@@ -50,6 +51,28 @@ export function assertWCAG2_5_3() {
     );
 }
 
+// https://github.com/component-driven/cypress-axe#in-your-spec-file
+function logAxeIssues(violations: Result[]) {
+  cy.task(
+    'log',
+    `${violations.length} accessibility violation${
+      violations.length === 1 ? '' : 's'
+    } ${violations.length === 1 ? 'was' : 'were'} detected`
+  );
+  // pluck specific keys to keep the table readable
+  const violationData = violations.flatMap(({id, impact, description, nodes}) =>
+    // log per node so that we know which HTML element has the issue.
+    nodes.map((node) => ({
+      id,
+      impact,
+      description,
+      node: node.html,
+    }))
+  );
+
+  cy.task('table', violationData);
+}
+
 export function assertAccessibilityWithoutIt<T extends HTMLElement>(
   component?: string | (() => Cypress.Chainable<JQuery<T>>)
 ) {
@@ -58,15 +81,16 @@ export function assertAccessibilityWithoutIt<T extends HTMLElement>(
     (obj, rule) => ({...obj, [rule]: {enabled: false}}),
     {}
   );
+  const axeOptions = {rules, retries: 3};
 
   if (typeof component === 'string') {
-    cy.checkA11y(component, {rules});
+    cy.checkA11y(component, axeOptions, logAxeIssues);
   } else if (typeof component === 'function') {
-    component().should(([el]) => {
-      cy.checkA11y(el, {rules});
+    component().then(([el]) => {
+      cy.checkA11y(el, axeOptions, logAxeIssues);
     });
   } else {
-    cy.checkA11y({}, {rules});
+    cy.checkA11y(undefined, axeOptions, logAxeIssues);
   }
 }
 export function assertContainsComponentError(
@@ -148,6 +172,9 @@ export function assertRemovesComponent() {
   );
 }
 
+/**
+ * @deprecated
+ */
 export function assertAriaLiveMessage(
   selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
   message: string
@@ -155,4 +182,11 @@ export function assertAriaLiveMessage(
   it(`screen readers should read out "${message}".`, () => {
     selector().should('contain.text', message);
   });
+}
+
+export function assertAriaLiveMessageWithoutIt(
+  selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
+  message: string
+) {
+  selector().should('contain.text', message);
 }

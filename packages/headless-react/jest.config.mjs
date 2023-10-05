@@ -1,7 +1,6 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 export default {
   testEnvironment: 'jsdom',
-  setupFiles: ['./jest.setup.structured.clone.js'],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
@@ -13,7 +12,8 @@ export default {
       },
     ],
   },
-  collectCoverageFrom: ['./src/**.ts', './src/**.tsx'],
+  collectCoverage: true,
+  collectCoverageFrom: ['./src/**/**.ts', './src/**/**.tsx'],
   coverageThreshold: {
     global: {
       lines: 90,
