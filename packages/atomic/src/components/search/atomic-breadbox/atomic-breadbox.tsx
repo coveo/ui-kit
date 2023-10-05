@@ -1,3 +1,4 @@
+import {NumberValue, Schema} from '@coveo/bueno';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
@@ -6,7 +7,7 @@ import {
   FacetManagerState,
   buildFacetManager,
 } from '@coveo/headless';
-import {Component, h, State, Element, VNode} from '@stencil/core';
+import {Component, h, State, Element, VNode, Prop} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
@@ -79,7 +80,24 @@ export class AtomicBreadbox implements InitializableComponent {
 
   private breadcrumbShowLessFocus?: FocusTargetController;
 
+  /**
+   * This prop allows you to control the display depth
+   * of the path by specifying the number of parent or ancestor
+   * breadcrumbs links relative to the currently selected value.
+   *
+   * If the path size is equal to or less than the pathLimit, all values in
+   * the path will be displayed without truncation.
+   *
+   * If the path size exceeds the pathLimit, it will truncate the path by
+   * replacing the middle values with ellipses ('...').
+   *
+   * Minimum: `1`
+   * @defaultValue `3`
+   */
+  @Prop() public pathLimit = 3;
+
   public initialize() {
+    this.validateProps();
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
 
@@ -87,6 +105,18 @@ export class AtomicBreadbox implements InitializableComponent {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
       this.resizeObserver.observe(this.host.parentElement!);
     }
+  }
+
+  private validateProps() {
+    new Schema({
+      pathLimit: new NumberValue({
+        default: 3,
+        min: 1,
+        required: false,
+      }),
+    }).validate({
+      pathLimit: this.pathLimit,
+    });
   }
 
   public disconnectedCallback() {
@@ -172,11 +202,19 @@ export class AtomicBreadbox implements InitializableComponent {
   }
 
   private limitPath(path: string[]) {
-    if (path.length <= 3) {
+    if (path.length <= this.pathLimit) {
       return path.join(SEPARATOR);
     }
 
-    const ellipsedPath = [path[0], ELLIPSIS, ...path.slice(-2)];
+    if (this.pathLimit === 1 && path.length > 1) {
+      return [ELLIPSIS, path[path.length - 1]].join(SEPARATOR);
+    }
+
+    const ellipsedPath = [
+      path[0],
+      ELLIPSIS,
+      ...path.slice(-(this.pathLimit - 1)),
+    ];
     return ellipsedPath.join(SEPARATOR);
   }
 

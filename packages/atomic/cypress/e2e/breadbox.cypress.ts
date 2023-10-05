@@ -267,4 +267,61 @@ describe('Breadbox Test Suites', () => {
       });
     });
   });
+
+  describe('when using path-limit', () => {
+    const SEPARATOR = ' / ';
+    const ELLIPSIS = '...';
+
+    function setupBreadboxWithPathLimit(props: TagProps = {}) {
+      new TestFixture()
+        .with(addBreadbox(props))
+        .with(addCategoryFacet())
+        .init();
+      selectCategoryFacetChildValueAt(canadaHierarchyIndex[0]);
+      selectCategoryFacetChildValueAt(canadaHierarchyIndex[1]);
+      selectCategoryFacetChildValueAt(canadaHierarchyIndex[2]);
+      selectCategoryFacetChildValueAt(canadaHierarchyIndex[3]);
+    }
+
+    describe('when path-limit is lower than min', () => {
+      const pathLimit = 1;
+      beforeEach(() => {
+        setupBreadboxWithPathLimit({'path-limit': pathLimit});
+      });
+      CommonAssertions.assertConsoleError();
+    });
+
+    describe('when path-limit is higher than max', () => {
+      const pathLimit = 11;
+      beforeEach(() => {
+        setupBreadboxWithPathLimit({'path-limit': pathLimit});
+      });
+      CommonAssertions.assertConsoleError();
+    });
+
+    describe('when path-limit is low enough to truncate the path', () => {
+      const pathLimit = 3;
+      beforeEach(() => {
+        setupBreadboxWithPathLimit({'path-limit': pathLimit});
+      });
+
+      const ellipsedPath = [
+        canadaHierarchy[0],
+        ELLIPSIS,
+        ...canadaHierarchy.slice(-(3 - 1)),
+      ];
+      const value = ellipsedPath.join(SEPARATOR);
+      BreadboxAssertions.assertBreadcrumbButtonValue(value);
+    });
+
+    describe('when path-limit is high enough to not truncate path', () => {
+      const pathLimit = 5;
+      beforeEach(() => {
+        setupBreadboxWithPathLimit({'path-limit': pathLimit});
+      });
+
+      const value = canadaHierarchy.join(SEPARATOR);
+      BreadboxAssertions.assertBreadcrumbButtonValue(value);
+    });
+  });
 });
