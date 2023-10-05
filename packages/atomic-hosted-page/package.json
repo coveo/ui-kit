@@ -33,10 +33,10 @@
   "dependencies": {
     "@coveo/bueno": "0.44.2",
     "@coveo/headless": "2.34.0",
-    "@stencil/core": "4.2.1"
+    "@stencil/core": "4.3.0"
   },
   "devDependencies": {
-    "cypress": "13.2.0",
+    "cypress": "13.3.0",
     "cypress-repeat": "2.3.3"
   }
 }

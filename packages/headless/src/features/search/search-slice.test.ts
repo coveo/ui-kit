@@ -1,4 +1,3 @@
-import {Response} from 'cross-fetch';
 import {PlatformClient} from '../../api/platform-client';
 import {Result} from '../../api/search/search/result';
 import {
