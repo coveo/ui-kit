@@ -8,6 +8,9 @@ export function assertFocusSearchBox(
   });
 }
 
+/**
+ * @deprecated
+ */
 export function assertHasText(
   text: string,
   searchBoxSelector = SearchBoxSelectors.inputBox
@@ -17,6 +20,22 @@ export function assertHasText(
   });
 }
 
+export function assertHasTextWithoutIt(
+  text: string,
+  searchBoxSelector = SearchBoxSelectors.inputBox
+) {
+  searchBoxSelector().should('have.value', text);
+}
+
+export function assertHasSuggestionsCountWithoutIt(count: number) {
+  SearchBoxSelectors.querySuggestions()
+    .filter(':visible')
+    .should('have.length', count);
+}
+
+/**
+ * @deprecated
+ */
 export function assertHasSuggestionsCount(count: number) {
   it(`should display ${count} suggestions`, () => {
     SearchBoxSelectors.querySuggestions()
@@ -40,6 +59,9 @@ export function assertNoSuggestionGenerated() {
   });
 }
 
+/**
+ * @deprecated
+ */
 export function assertSuggestionIsSelected(index: number) {
   it(`should have selected suggestion ${index}`, () => {
     SearchBoxSelectors.querySuggestions()
@@ -49,19 +71,22 @@ export function assertSuggestionIsSelected(index: number) {
   });
 }
 
+export function assertSuggestionIsSelectedWithoutIt(index: number) {
+  SearchBoxSelectors.querySuggestions()
+    .eq(index)
+    .invoke('attr', 'part')
+    .should('contain', 'active-suggestion');
+}
+
 export function assertSuggestionIsHighlighted(index: number) {
-  it(`should have highlighted suggestion ${index}`, () => {
-    SearchBoxSelectors.querySuggestions()
-      .eq(index)
-      .invoke('attr', 'class')
-      .should('contain', 'bg-neutral-light');
-  });
+  SearchBoxSelectors.querySuggestions()
+    .eq(index)
+    .invoke('attr', 'class')
+    .should('contain', 'bg-neutral-light');
 }
 
 export function assertNoSuggestionIsSelected() {
-  it('should have no selected result', () => {
-    SearchBoxSelectors.activeQuerySuggestion().should('not.exist');
-  });
+  SearchBoxSelectors.activeQuerySuggestion().should('not.exist');
 }
 
 export function assertLogSearchFromLink(query: string) {

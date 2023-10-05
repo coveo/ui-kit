@@ -51,13 +51,11 @@ export type {
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing';
 
 export type {
-  PagerInitialState,
-  PagerOptions,
-  PagerProps,
-  Pager,
-  PagerState,
-} from './controllers/commerce/product-listing/pager/headless-product-listing-pager';
-export {buildPager} from './controllers/commerce/product-listing/pager/headless-product-listing-pager';
+  ProductListingPagination,
+  ProductListingPaginationState,
+  ProductListingPaginationControllerState,
+} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
+export {buildProductListingPagination} from './controllers/commerce/product-listing/pagination/headless-product-listing-pagination';
 
 export type {
   InteractiveResult,
