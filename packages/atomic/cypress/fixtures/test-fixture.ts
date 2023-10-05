@@ -20,6 +20,7 @@ import {
   interceptAnalytics,
   TagProps as CommonTagProps,
 } from './fixture-common';
+import {i18nCompatibilityJSONVersion} from '../../src/components';
 
 interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;
@@ -55,6 +56,7 @@ export class TestFixture {
   private hash = '';
   private style = document.createElement('style');
   private language?: string;
+  private compatibilityJSON: i18nCompatibilityJSONVersion = 'v3';
   private disabledAnalytics = false;
   private doNotTrack = false;
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
@@ -119,6 +121,13 @@ export class TestFixture {
 
   public withLanguage(lang: string) {
     this.language = lang;
+    return this;
+  }
+
+  public withCompatibilityJSON(
+    compatibilityJSON: i18nCompatibilityJSONVersion
+  ) {
+    this.compatibilityJSON = compatibilityJSON;
     return this;
   }
 
@@ -223,6 +232,13 @@ export class TestFixture {
 
       if (this.language) {
         searchInterfaceComponent.setAttribute('language', this.language);
+      }
+
+      if (this.compatibilityJSON) {
+        searchInterfaceComponent.setAttribute(
+          'compatibility-json',
+          this.compatibilityJSON
+        );
       }
 
       if (this.disabledAnalytics) {

@@ -586,7 +586,7 @@ export namespace Components {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON": i18nCompatibilityJSONVersion;
+        "compatibilityJson": i18nCompatibilityJSONVersion;
         /**
           * The service insight interface headless engine.
          */
@@ -1331,7 +1331,7 @@ export namespace Components {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON": i18nCompatibilityJSONVersion1;
+        "compatibilityJson": i18nCompatibilityJSONVersion1;
         /**
           * The recommendation interface headless engine.
          */
@@ -2117,7 +2117,7 @@ export namespace Components {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON": i18nCompatibilityJSONVersion1;
+        "compatibilityJson": i18nCompatibilityJSONVersion1;
         /**
           * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
          */
@@ -4461,7 +4461,7 @@ declare namespace LocalJSX {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON"?: i18nCompatibilityJSONVersion;
+        "compatibilityJson"?: i18nCompatibilityJSONVersion;
         /**
           * The service insight interface headless engine.
          */
@@ -5175,7 +5175,7 @@ declare namespace LocalJSX {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON"?: i18nCompatibilityJSONVersion1;
+        "compatibilityJson"?: i18nCompatibilityJSONVersion1;
         /**
           * The recommendation interface headless engine.
          */
@@ -5919,7 +5919,7 @@ declare namespace LocalJSX {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON"?: i18nCompatibilityJSONVersion1;
+        "compatibilityJson"?: i18nCompatibilityJSONVersion1;
         /**
           * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
          */

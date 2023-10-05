@@ -123,7 +123,7 @@ export class AtomicSearchInterface
   /**
    * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
    */
-  @Prop() public compatibilityJSON: i18nCompatibilityJSONVersion = 'v3';
+  @Prop() public compatibilityJson: i18nCompatibilityJSONVersion = 'v3';
 
   /**
    * The search interface i18next instance.
