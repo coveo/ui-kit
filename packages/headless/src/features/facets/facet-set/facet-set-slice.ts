@@ -1,6 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
-// eslint-disable-next-line node/no-extraneous-import
-import type {Draft as WritableDraft} from 'immer';
+import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
