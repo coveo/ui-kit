@@ -6,7 +6,7 @@ import {AnyEngineType} from './bindings';
 import {BaseAtomicInterface} from './interface-common';
 
 export const i18nTranslationNamespace = 'translation';
-export type i18nCompatibilityJSON = 'v1' | 'v2' | 'v3' | 'v4';
+export type i18nCompatibilityJSONVersion = 'v1' | 'v2' | 'v3' | 'v4';
 
 function isI18nLocaleAvailable(locale: string) {
   return availableLocales.includes(locale.toLowerCase());

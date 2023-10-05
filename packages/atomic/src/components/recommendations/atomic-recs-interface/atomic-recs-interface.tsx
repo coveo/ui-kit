@@ -31,7 +31,7 @@ import {
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
 import {createAtomicRecsStore, AtomicRecsStore} from './store';
-import {i18nCompatibilityJSON} from '../../../components';
+import {i18nCompatibilityJSONVersion} from '../../../components';
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
 export type RecsInitializationOptions = RecommendationEngineConfiguration;
@@ -104,7 +104,7 @@ export class AtomicRecsInterface
   /**
    * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
    */
-  @Prop() public compatibilityJSON: i18nCompatibilityJSON = 'v3';
+  @Prop() public compatibilityJSON: i18nCompatibilityJSONVersion = 'v3';
 
   /**
    * The recommendation interface language.

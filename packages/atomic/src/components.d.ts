@@ -14,14 +14,14 @@ import { ResultRenderingFunction } from "./components/common/result-list/result-
 import { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
-import { i18nCompatibilityJSON } from "./components/common/interface/i18n";
+import { i18nCompatibilityJSONVersion } from "./components/common/interface/i18n";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
-import { i18nCompatibilityJSON as i18nCompatibilityJSON1 } from "./components";
+import { i18nCompatibilityJSONVersion as i18nCompatibilityJSONVersion1 } from "./components";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -39,14 +39,14 @@ export { ResultRenderingFunction } from "./components/common/result-list/result-
 export { InsightEngine, InsightFacetSortCriterion, InsightFoldedResult, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition, PlatformEnvironmentInsight } from "./components/insight";
 export { FacetDisplayValues } from "./components/common/facets/facet-common";
 export { i18n } from "i18next";
-export { i18nCompatibilityJSON } from "./components/common/interface/i18n";
+export { i18nCompatibilityJSONVersion } from "./components/common/interface/i18n";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { PlatformEnvironment, RecommendationEngine } from "@coveo/headless/recommendation";
 export { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
-export { i18nCompatibilityJSON as i18nCompatibilityJSON1 } from "./components";
+export { i18nCompatibilityJSONVersion as i18nCompatibilityJSONVersion1 } from "./components";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -586,7 +586,7 @@ export namespace Components {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON": i18nCompatibilityJSON;
+        "compatibilityJSON": i18nCompatibilityJSONVersion;
         /**
           * The service insight interface headless engine.
          */
@@ -1331,7 +1331,7 @@ export namespace Components {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON": i18nCompatibilityJSON1;
+        "compatibilityJSON": i18nCompatibilityJSONVersion1;
         /**
           * The recommendation interface headless engine.
          */
@@ -2117,7 +2117,7 @@ export namespace Components {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON": i18nCompatibilityJSON1;
+        "compatibilityJSON": i18nCompatibilityJSONVersion1;
         /**
           * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
          */
@@ -4461,7 +4461,7 @@ declare namespace LocalJSX {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON"?: i18nCompatibilityJSON;
+        "compatibilityJSON"?: i18nCompatibilityJSONVersion;
         /**
           * The service insight interface headless engine.
          */
@@ -5175,7 +5175,7 @@ declare namespace LocalJSX {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON"?: i18nCompatibilityJSON1;
+        "compatibilityJSON"?: i18nCompatibilityJSONVersion1;
         /**
           * The recommendation interface headless engine.
          */
@@ -5919,7 +5919,7 @@ declare namespace LocalJSX {
         /**
           * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
          */
-        "compatibilityJSON"?: i18nCompatibilityJSON1;
+        "compatibilityJSON"?: i18nCompatibilityJSONVersion1;
         /**
           * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
          */
