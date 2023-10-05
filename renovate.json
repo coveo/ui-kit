@@ -10,7 +10,11 @@
       "groupSlug": "all"
     },
     {
-      "matchPackagePatterns": ["^@angular/*", "^@angular-devkit/*", "ng-packagr"],
+      "matchPackagePatterns": [
+        "^@angular/*",
+        "^@angular-devkit/*",
+        "ng-packagr"
+      ],
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
@@ -28,16 +32,19 @@
       "rangeStrategy": "replace"
     },
     {
-      "matchPackagePatterns": [
-        "^@storybook/*"
-      ],
+      "matchPackagePatterns": ["^@storybook/*"],
       "groupName": "Storybook",
       "groupSlug": "storybook",
       "rangeStrategy": "replace"
     },
     {
       "matchFileNames": ["packages/atomic/package.json"],
-      "matchPackagePatterns": ["^jest$", "^jest-cli$", "@types/jest", "jest-environment-node"],
+      "matchPackagePatterns": [
+        "^jest$",
+        "^jest-cli$",
+        "@types/jest",
+        "jest-environment-node"
+      ],
       "groupSlug": "atomic-jest",
       "rangeStrategy": "replace",
       "allowedVersions": "27.x",
@@ -58,6 +65,13 @@
       "rangeStrategy": "replace",
       "allowedVersions": "4.x",
       "description": "Quantic uses JSDOC that does not support ESM modules for template"
+    },
+    {
+      "matchPackagePatterns": ["^nx$"],
+      "groupName": "nx",
+      "groupSlug": "nx",
+      "rangeStrategy": "replace",
+      "allowedVersions": "15.x"
     }
   ],
   "rangeStrategy": "auto",
@@ -68,8 +82,5 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
-  "ignoreDeps": [
-    "esbuild",
-    "@monaco-editor/react"
-  ]
+  "ignoreDeps": ["esbuild", "@monaco-editor/react"]
 }
