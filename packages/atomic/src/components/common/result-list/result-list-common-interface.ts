@@ -19,14 +19,14 @@ export interface ResultListRenderer {
 }
 
 export interface ResultListCommonProps<
-  SpecificResult extends AnyResult = AnyResult
+  SpecificResult extends AnyResult = AnyResult,
 > {
   bindings: AnyBindings;
   host: HTMLElement;
   loadingFlag: string;
   resultTemplateProvider: ResultTemplateProvider;
   nextNewResultTarget: FocusTargetController;
-  gridCellLinkTarget: ResultTarget;
+  gridCellLinkTarget?: ResultTarget;
   getLayoutDisplay(): ResultDisplayLayout;
   getResultDisplay(): ResultDisplayLayout;
   getDensity(): ResultDisplayDensity;
@@ -52,7 +52,7 @@ export interface ResultListDisplayProps
     ResultListCommonProps {}
 
 export interface ResultRendererProps<
-  SpecificResult extends AnyResult = AnyResult
+  SpecificResult extends AnyResult = AnyResult,
 > {
   key?: string;
   part?: string;
@@ -69,5 +69,5 @@ export interface ResultRendererProps<
 }
 
 export type ResultRenderingFunction<
-  SpecificResult extends AnyResult = AnyResult
+  SpecificResult extends AnyResult = AnyResult,
 > = ((result: SpecificResult, root: HTMLElement) => string) | undefined;

@@ -9,11 +9,10 @@ import {
   buildSort,
   SortState,
   buildQuerySummary,
-  AutomaticFacetBuilder,
-  AutomaticFacetBuilderState,
-  buildAutomaticFacetBuilder,
   buildSearchStatus,
   SearchStatus,
+  FacetManager,
+  buildFacetManager,
 } from '@coveo/headless';
 import {
   Component,
@@ -32,11 +31,16 @@ import {
 } from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
 import {
-  getClonedFacetElements,
-  RefineModalCommon,
-} from '../../common/refine-modal/refine-modal-common';
+  BaseFacetElement,
+  sortFacetVisibility,
+  sortFacetsUsingManager,
+  collapseFacetsAfter,
+} from '../../common/facets/facet-common';
+import {isRefineModalFacet} from '../../common/interface/store';
+import {RefineModalCommon} from '../../common/refine-modal/refine-modal-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {SortDropdownOption} from '../atomic-search-interface/store';
+import {popoverClass} from '../facets/atomic-popover/popover-type';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -78,8 +82,8 @@ export class AtomicRefineModal implements InitializableComponent {
   private sort!: Sort;
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
-  public automaticFacetBuilder!: AutomaticFacetBuilder;
   public searchStatus!: SearchStatus;
+  public facetManager!: FacetManager;
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
@@ -92,9 +96,6 @@ export class AtomicRefineModal implements InitializableComponent {
   @BindStateToController('facetManager')
   @State()
   public facetManagerState!: FacetManagerState;
-  @BindStateToController('automaticFacetBuilder')
-  @State()
-  private automaticFacetBuilderState!: AutomaticFacetBuilderState;
   @State() @BindStateToController('sort') public sortState!: SortState;
   @State() public error!: Error;
 
@@ -117,13 +118,7 @@ export class AtomicRefineModal implements InitializableComponent {
         return;
       }
 
-      this.host.append(
-        getClonedFacetElements(
-          this.bindings.store.getFacetElements(),
-          this.collapseFacetsAfter,
-          this.bindings.interfaceElement
-        )
-      );
+      this.host.append(this.createFacetSlot());
     }
   }
 
@@ -131,16 +126,79 @@ export class AtomicRefineModal implements InitializableComponent {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
-    const desiredCount =
-      this.bindings.engine.state.automaticFacetSet?.desiredCount;
-    if (desiredCount) {
-      this.automaticFacetBuilder = buildAutomaticFacetBuilder(
-        this.bindings.engine,
-        {desiredCount}
-      );
-    }
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.facetManager = buildFacetManager(this.bindings.engine);
     this.watchEnabled(this.isOpen);
+  }
+
+  private createFacetSlot(): HTMLDivElement {
+    const divSlot = document.createElement('div');
+    divSlot.setAttribute('slot', 'facets');
+    this.addFacetColumnStyling(divSlot);
+
+    const facets = this.bindings.store.getFacetElements() as BaseFacetElement[];
+
+    const sortedFacets = sortFacetsUsingManager(facets, this.facetManager);
+
+    const {visibleFacets, invisibleFacets} = sortFacetVisibility(
+      sortedFacets,
+      this.bindings.store.getAllFacets()
+    );
+
+    const visibleFacetsClone = this.cloneFacets(visibleFacets);
+    const invisibleFacetsClone = this.cloneFacets(invisibleFacets);
+
+    collapseFacetsAfter(visibleFacetsClone, this.collapseFacetsAfter);
+
+    divSlot.append(...visibleFacetsClone);
+    divSlot.append(...invisibleFacetsClone);
+
+    const generator = this.makeAutomaticFacetGenerator();
+    if (generator) {
+      generator.updateCollapseFacetsDependingOnFacetsVisibility(
+        this.collapseFacetsAfter,
+        visibleFacets.length
+      );
+      divSlot.append(generator);
+    }
+
+    return divSlot;
+  }
+
+  private cloneFacets(facets: BaseFacetElement[]): BaseFacetElement[] {
+    return facets.map((facet, i) => {
+      facet.classList.remove(popoverClass);
+      facet.setAttribute(isRefineModalFacet, '');
+      const clone = facet.cloneNode(true) as BaseFacetElement;
+      clone.isCollapsed =
+        this.collapseFacetsAfter === -1
+          ? false
+          : i + 1 > this.collapseFacetsAfter;
+      return clone;
+    });
+  }
+
+  private makeAutomaticFacetGenerator() {
+    if (!this.bindings.engine.state.automaticFacetSet?.desiredCount) {
+      return;
+    }
+    const generator = document.createElement(
+      'atomic-automatic-facet-generator'
+    );
+
+    generator.setAttribute(
+      'desired-count',
+      `${this.bindings.engine.state.automaticFacetSet?.desiredCount}`
+    );
+    this.addFacetColumnStyling(generator);
+
+    return generator;
+  }
+
+  private addFacetColumnStyling(el: HTMLElement) {
+    el.style.display = 'flex';
+    el.style.flexDirection = 'column';
+    el.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
   }
 
   private get options() {
@@ -201,30 +259,13 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private renderFilters() {
-    const isFacetElements = this.bindings.store.getFacetElements().length > 0;
-    const isAutomaticFacets =
-      this.automaticFacetBuilderState?.automaticFacets?.length > 0;
+    const hasFacetElements = this.bindings.store.getFacetElements().length > 0;
+    const hasAutomaticFacets =
+      this.bindings.engine.state.automaticFacetSet?.set !== undefined;
 
-    if (!isFacetElements && !isAutomaticFacets) {
+    if (!hasFacetElements && !hasAutomaticFacets) {
       return;
     }
-    const amountToCollapseNext =
-      this.collapseFacetsAfter - this.bindings.store.getFacetElements().length;
-    const automaticFacets = isAutomaticFacets
-      ? this.automaticFacetBuilderState.automaticFacets.map((facet, index) => {
-          const isCollapsed = index >= amountToCollapseNext;
-          return (
-            <atomic-automatic-facet
-              key={facet.state.field}
-              field={facet.state.field}
-              facetId={facet.state.field}
-              facet={facet}
-              searchStatus={this.searchStatus}
-              isCollapsed={isCollapsed}
-            ></atomic-automatic-facet>
-          );
-        })
-      : [];
 
     return (
       <Fragment>
@@ -249,17 +290,7 @@ export class AtomicRefineModal implements InitializableComponent {
           )}
         </div>
         <slot name="facets"></slot>
-        <div
-          class="flex flex-col"
-          style={{
-            gap: 'var(--atomic-refine-modal-facet-margin, 20px)',
-            marginTop: isFacetElements
-              ? 'var(--atomic-refine-modal-facet-margin, 20px)'
-              : '',
-          }}
-        >
-          {automaticFacets}
-        </div>
+        <slot name="automatic-facets"></slot>
       </Fragment>
     );
   }

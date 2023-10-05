@@ -1,3 +1,4 @@
+import {Middleware, AnyAction} from '@reduxjs/toolkit';
 import {btoa as btoashim} from 'abab';
 
 export const randomID = (prepend?: string, length = 5) =>
@@ -83,4 +84,63 @@ export function resetTimeout(
 ) {
   clearTimeout(timeoutId);
   return setTimeout(callback, ms);
+}
+
+export function mapObject<TKey extends string, TInitialValue, TNewValue>(
+  obj: Record<TKey, TInitialValue>,
+  predicate: (value: TInitialValue, key: TKey) => TNewValue
+): Record<TKey, TNewValue> {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [
+      key,
+      predicate(value as TInitialValue, key as TKey),
+    ])
+  ) as Record<TKey, TNewValue>;
+}
+
+// TODO: Could eventually be replaced with `structuredClone`.
+// However, this is not compatible with salesforce locker service.
+export function clone<T>(value: T): T {
+  if (typeof value !== 'object') {
+    return value;
+  }
+  if (!value) {
+    return value;
+  }
+  // JSON parse/stringify can fail in some cases (ie: recursive objects)
+  // add defensive code to prevent the whole app from crashing
+  try {
+    return JSON.parse(JSON.stringify(value));
+  } catch (e) {
+    return value;
+  }
+}
+
+function createDeferredPromise<T>(): {
+  promise: Promise<T>;
+  resolve(value: T): void;
+  reject(error: unknown): void;
+} {
+  let resolve: null | ((value: T) => void) = null;
+  let reject: null | ((error: unknown) => void) = null;
+  const promise = new Promise<T>((_resolve, _reject) => {
+    resolve = _resolve;
+    reject = _reject;
+  });
+  return {promise, resolve: resolve!, reject: reject!};
+}
+
+export function createWaitForActionMiddleware<TAction extends AnyAction>(
+  isDesiredAction: (action: AnyAction) => action is TAction
+): {promise: Promise<TAction>; middleware: Middleware} {
+  const {promise, resolve} = createDeferredPromise<TAction>();
+
+  const middleware: Middleware = () => (next) => (action) => {
+    next(action);
+    if (isDesiredAction(action)) {
+      resolve(action);
+    }
+  };
+
+  return {promise, middleware};
 }

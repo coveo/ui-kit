@@ -1,5 +1,10 @@
 {
+  "name": "atomic-storybook",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "implicitDependencies": ["atomic"],
+  "namedInputs": {
+    "negativeBuildOutputs": ["!{projectRoot}/storybook-static"]
+  },
   "targets": {
     "install:isolated": {
       "dependsOn": [],
@@ -39,15 +44,18 @@
       ],
       "executor": "nx:noop"
     },
-    "build": {
+    "cached:build": {
       "dependsOn": ["prepare-and-validate"],
-      "inputs": [],
-      "outputs": [],
+      "outputs": ["{projectRoot}/storybook-static"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "npm run build",
+        "command": "npx storybook build",
         "cwd": "utils/atomic-storybook"
       }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
     },
     "dev": {
       "dependsOn": ["prepare-and-validate"],

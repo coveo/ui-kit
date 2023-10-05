@@ -1,3 +1,68 @@
+## 2.33.1 (2023-10-04)
+
+# 2.33.0 (2023-09-27)
+
+### Bug Fixes
+
+- **quantic:** issue related to a race condition fixed when opening/closing a quantic interface ([#3212](https://github.com/coveo/ui-kit/issues/3212)) ([1fb22bf](https://github.com/coveo/ui-kit/commits/1fb22bf53522e5719e75f3d5a2b56570ac065f21))
+- **quantic:** slot added to the Quantic No Results component ([#3211](https://github.com/coveo/ui-kit/issues/3211)) ([78708c4](https://github.com/coveo/ui-kit/commits/78708c40ac559a709b62aa90aafdadb2b5fbf54d))
+- **quantic:** spacing on expandable searchbox ([#3206](https://github.com/coveo/ui-kit/issues/3206)) ([b60a594](https://github.com/coveo/ui-kit/commits/b60a594811315d8e392c86b0f6a9535d77c1fea8))
+
+### Features
+
+- **quantic:** query pipeline trigger logic added to Quantic Did You Mean component ([#3210](https://github.com/coveo/ui-kit/issues/3210)) ([3236f23](https://github.com/coveo/ui-kit/commits/3236f233b51e9b4966a0cc725ce044c8a63b3fd9))
+
+## 2.32.1 (2023-09-20)
+
+# 2.32.0 (2023-09-11)
+
+### Features
+
+- **headless-react:** add headless react util defineSearchEngine ([#3107](https://github.com/coveo/ui-kit/issues/3107)) ([1d63e43](https://github.com/coveo/ui-kit/commits/1d63e431c427de9022238216cc5128b237b836b4))
+
+## 2.31.1 (2023-09-06)
+
+### Features
+
+- **quantic:** Added the expandable textArea searchbox in Quantic ([#3144](https://github.com/coveo/ui-kit/issues/3144)) ([b22fcd6](https://github.com/coveo/ui-kit/commits/b22fcd60aa21a2471b1140b8d0ab1b9ccb40636a))
+
+## 2.30.4 (2023-08-30)
+
+### Bug Fixes
+
+- **headless:** bump coveo.analytics to fix click tracking issue on ios safari ([#3141](https://github.com/coveo/ui-kit/issues/3141)) ([402473f](https://github.com/coveo/ui-kit/commits/402473fe67709e70f27c1edfd92fa8e7227e07e7))
+- **quantic:** Added tooltips for quantic feedback component ([#3133](https://github.com/coveo/ui-kit/issues/3133)) ([3e74e77](https://github.com/coveo/ui-kit/commits/3e74e774123947622cda4483c098600f95025620))
+- **quantic:** Fixed the misalignment of 1px in citations titles ([#3131](https://github.com/coveo/ui-kit/issues/3131)) ([fec8cbf](https://github.com/coveo/ui-kit/commits/fec8cbfe76f985269d96e9daf1dfd8c0f9613089))
+
+## 2.30.1 (2023-08-16)
+
+### Bug Fixes
+
+- **quantic:** js doc comment of the new quantic generated answer component fixed ([#3106](https://github.com/coveo/ui-kit/issues/3106)) ([38e1735](https://github.com/coveo/ui-kit/commits/38e1735f028f694fd921d142306c333e378d3342))
+
+### Features
+
+- **quantic:** retry prompt added to the quantic generated answer component ([#3095](https://github.com/coveo/ui-kit/issues/3095)) ([545aa53](https://github.com/coveo/ui-kit/commits/545aa533f51f80fa4425a43b9a754c8273848d1e))
+
+# 2.29.0 (2023-08-10)
+
+### Bug Fixes
+
+- **headless:** make the generated answer interface extend from the controller interface ([#3085](https://github.com/coveo/ui-kit/issues/3085)) ([62b6709](https://github.com/coveo/ui-kit/commits/62b6709f8d363886883f26a7aa7d0b6c748437db))
+- **quantic:** Fix some styling issues for the source citations component ([#3087](https://github.com/coveo/ui-kit/issues/3087)) ([5756285](https://github.com/coveo/ui-kit/commits/575628522c4eaac4c61dc84b36841338dd7728a5))
+
+### Features
+
+- **quantic:** Replace quanticResultLabel by quanticColoredResultBadge in ExampleInsightPanel ([#3092](https://github.com/coveo/ui-kit/issues/3092)) ([a9ac7b3](https://github.com/coveo/ui-kit/commits/a9ac7b36450504886ae57b3619fc33e94ecbbd13))
+
+# 2.28.0 (2023-08-09)
+
+### Features
+
+- **quantic:** GEN AI source citations component created for quantic ([#3063](https://github.com/coveo/ui-kit/issues/3063)) ([399dca8](https://github.com/coveo/ui-kit/commits/399dca8c347b854e502e7a3531246e9fc1b46737))
+- **quantic:** origin context added to analytics of the recommendations components ([#3041](https://github.com/coveo/ui-kit/issues/3041)) ([f50febd](https://github.com/coveo/ui-kit/commits/f50febd894f320116ff9a7ea0874455dcb296301))
+- **quantic:** quantic generated answer component created ([#3068](https://github.com/coveo/ui-kit/issues/3068)) ([8aa4c5e](https://github.com/coveo/ui-kit/commits/8aa4c5e22418078e3b931a882861af0cdec0370a))
+
 ## 2.27.2 (2023-07-27)
 
 ### Bug Fixes

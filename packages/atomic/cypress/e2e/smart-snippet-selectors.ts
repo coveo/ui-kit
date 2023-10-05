@@ -14,6 +14,17 @@ export const SmartSnippetSelectors = {
     SmartSnippetSelectors.shadow().find('[part="truncated-answer"]', {
       includeShadowDom: true,
     }),
+  collapseWrapperComponent: () =>
+    SmartSnippetSelectors.shadow().find(
+      'atomic-smart-snippet-collapse-wrapper'
+    ),
+  collapseWrapper: () =>
+    SmartSnippetSelectors.shadow().find(
+      '[part="smart-snippet-collapse-wrapper"]',
+      {
+        includeShadowDom: true,
+      }
+    ),
   showMoreButton: () =>
     SmartSnippetSelectors.shadow().find('[part="show-more-button"]', {
       includeShadowDom: true,

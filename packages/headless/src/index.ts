@@ -116,13 +116,17 @@ export type {
   CategoryFacetValueRequest,
   CategoryFacetSortCriterion,
 } from './features/facets/category-facet-set/interfaces/request';
-export type {CategoryFacetValue} from './features/facets/category-facet-set/interfaces/response';
 export type {DateRangeRequest} from './features/facets/range-facets/date-facet-set/interfaces/request';
+export type {
+  CategoryFacetValue,
+  CategoryFacetValueCommon,
+} from './features/facets/category-facet-set/interfaces/response';
 export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
 export type {
   FacetValueRequest,
   FacetSortCriterion,
 } from './features/facets/facet-set/interfaces/request';
+export type {FacetResultsMustMatch} from './features/facets/facet-api/request';
 export type {NumericRangeRequest} from './features/facets/range-facets/numeric-facet-set/interfaces/request';
 export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 export type {AnyFacetValueRequest} from './features/facets/generic/interfaces/generic-facet-request';

@@ -17,7 +17,7 @@ import {
 } from './product-listing-request';
 
 export interface AsyncThunkProductListingOptions<
-  T extends Partial<ProductListingAppState>
+  T extends Partial<ProductListingAppState>,
 > {
   state: T;
   rejectValue: ProductListingAPIErrorStatusResponse;

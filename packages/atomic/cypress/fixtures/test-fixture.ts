@@ -166,6 +166,15 @@ export class TestFixture {
     });
   }
 
+  public withoutAutomaticFacets() {
+    return this.withCustomResponse((r) => {
+      r.generateAutomaticFacets = {
+        facets: [],
+      };
+      return r;
+    });
+  }
+
   public withError() {
     this.returnError = true;
     return this;
@@ -195,6 +204,7 @@ export class TestFixture {
     cy.window().then((win) => {
       Object.defineProperty(win.navigator, 'doNotTrack', {
         get: () => (this.doNotTrack ? '1' : '0'),
+        configurable: true,
       });
     });
 
@@ -233,24 +243,26 @@ export class TestFixture {
         return;
       }
 
-      searchInterfaceComponent.initialize(sampleConfig).then(() => {
-        configureI18n(
-          searchInterfaceComponent.i18n,
-          this.translations,
-          this.fieldCaptions
-        );
-        if (this.execFirstSearch) {
-          searchInterfaceComponent.executeFirstSearch();
-        }
-      });
-    });
+      if (!searchInterfaceComponent.classList.contains('hydrated')) {
+        searchInterfaceComponent.initialize(sampleConfig).then(() => {
+          configureI18n(
+            searchInterfaceComponent.i18n,
+            this.translations,
+            this.fieldCaptions
+          );
+          if (this.execFirstSearch) {
+            searchInterfaceComponent.executeFirstSearch();
+          }
+        });
 
-    if (this.execFirstSearch && this.firstIntercept) {
-      cy.wait(TestFixture.interceptAliases.Search);
-      if (!(this.disabledAnalytics || this.doNotTrack)) {
-        cy.wait(TestFixture.interceptAliases.UA);
+        if (this.execFirstSearch && this.firstIntercept) {
+          cy.wait(TestFixture.interceptAliases.Search);
+          if (!(this.disabledAnalytics || this.doNotTrack)) {
+            cy.wait(TestFixture.interceptAliases.UA);
+          }
+        }
       }
-    }
+    });
 
     this.aliases.forEach((alias) => alias(this));
 

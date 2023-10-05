@@ -36,7 +36,7 @@ export type RangeFacetProps<T extends RangeFacetRequest> = {
 
 export function buildCoreRangeFacet<
   T extends RangeFacetRequest,
-  R extends RangeFacetResponse
+  R extends RangeFacetResponse,
 >(
   engine: CoreEngine<
     ConfigurationSection & SearchSection & FacetOptionsSection
@@ -87,6 +87,7 @@ export function buildCoreRangeFacet<
         | undefined;
 
       const sortCriterion = request.sortCriteria;
+      const resultsMustMatch = request.resultsMustMatch;
       const values: R['values'] = response ? response.values : [];
       const isLoading = isFacetLoadingResponseSelector(engine.state);
       const enabled = getIsEnabled();
@@ -98,6 +99,7 @@ export function buildCoreRangeFacet<
         facetId,
         values,
         sortCriterion,
+        resultsMustMatch,
         hasActiveValues,
         isLoading,
         enabled,

@@ -1,5 +1,6 @@
 {
   "name": "atomic-angular",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "implicitDependencies": ["atomic-angular-builder"],
   "targets": {
     "promote:npm:latest": {

@@ -9,7 +9,7 @@ async function setup() {
 
 async function buildFiles() {
   console.log('building files');
-  await execute('npm', ['run', 'build']);
+  await execute('npx', ['nx', 'run', 'headless:build']);
 }
 
 function readFileSizes() {

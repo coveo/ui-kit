@@ -3,24 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build": "nx build",
+    "build:vue": "vue-cli-service build",
     "dev:vue": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
     "dev": "npm run build:assets && npm run dev:vue",
     "build:assets": "ncp ../../atomic/dist/atomic/assets public/assets && ncp ../../atomic/dist/atomic/lang public/lang"
   },
   "dependencies": {
-    "@coveo/atomic": "2.38.0",
-    "@coveo/headless": "2.24.0",
-    "core-js": "3.24.1",
-    "vue": "3.2.37"
+    "@coveo/atomic": "2.45.0",
+    "@coveo/headless": "2.34.0",
+    "core-js": "3.32.2",
+    "vue": "3.3.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "5.0.8",
     "@vue/cli-plugin-typescript": "5.0.8",
     "@vue/cli-service": "5.0.8",
-    "cypress": "10.11.0",
+    "cypress": "13.2.0",
+    "cypress-repeat": "2.3.3",
     "html-loader": "4.2.0",
     "ncp": "2.0.0",
-    "typescript": "4.6.4"
+    "typescript": "5.2.2"
   }
 }

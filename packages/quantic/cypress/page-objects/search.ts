@@ -4,6 +4,7 @@ import {
   RouteMatcher,
   StaticResponse, // eslint-disable-next-line node/no-unpublished-import
 } from 'cypress/types/net-stubbing';
+import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
 import {useCaseEnum} from './use-case';
 
 type RequestParams = Record<string, string | number | boolean | undefined>;
@@ -66,12 +67,28 @@ export const InterceptAliases = {
     ShowMoreFoldedResults: uaAlias('showMoreFoldedResults'),
     RecommendationInterfaceLoad: uaAlias('recommendationInterfaceLoad'),
     RecommendationOpen: uaAlias('recommendationOpen'),
+    GeneratedAnswer: {
+      LikeGeneratedAnswer: uaAlias('likeGeneratedAnswer'),
+      DislikeGeneratedAnswer: uaAlias('dislikeGeneratedAnswer'),
+      GeneratedAnswerStreamEnd: uaAlias('generatedAnswerStreamEnd'),
+      OpenGeneratedAnswerSource: uaAlias('openGeneratedAnswerSource'),
+      RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
+    },
+    DidYouMean: uaAlias('didyoumeanAutomatic'),
+    DidyoumeanClick: uaAlias('didyoumeanClick'),
+    PipelineTriggers: {
+      query: uaAlias('query'),
+      notify: uaAlias('notify'),
+    },
+    UndoQuery: uaAlias('undoQuery'),
+    SearchboxSubmit: uaAlias('searchboxSubmit'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
   ResultHtml: '@coveoResultHtml',
   Insight: '@CoveoInsight',
+  GenQAStream: '@genQAStream',
 };
 
 export const routeMatchers = {
@@ -86,10 +103,12 @@ export const routeMatchers = {
 export function interceptSearch() {
   return cy
     .intercept('POST', routeMatchers.analytics, (req) => {
-      if (req.body.actionCause) {
-        req.alias = uaAlias(req.body.actionCause).substring(1);
+      const analyticsBody = getAnalyticsBodyFromRequest(req);
+
+      if (analyticsBody.actionCause) {
+        req.alias = uaAlias(analyticsBody.actionCause as string).substring(1);
       } else if (req.body.eventType) {
-        req.alias = uaAlias(req.body.eventValue).substring(1);
+        req.alias = uaAlias(analyticsBody.eventValue as string).substring(1);
       }
     })
 
@@ -371,6 +390,147 @@ export function mockSearchWithoutSmartSnippetSuggestions(useCase?: string) {
       res.body.questionAnswer = {
         relatedQuestions: [],
       };
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithGeneratedAnswer(streamId: string) {
+  cy.intercept(getRoute(), (req) => {
+    req.continue((res) => {
+      res.body.extendedResults = {
+        generativeQuestionAnsweringId: streamId,
+      };
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithoutGeneratedAnswer() {
+  cy.intercept(getRoute(), (req) => {
+    req.continue((res) => {
+      res.body.extendedResults = {};
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export const getStreamInterceptAlias = (streamId: string) =>
+  `${InterceptAliases.GenQAStream}-${streamId}`;
+
+export function mockStreamResponse(streamId: string, body: unknown) {
+  cy.intercept(
+    {
+      method: 'GET',
+      url: `**/machinelearning/streaming/${streamId}`,
+    },
+    (request) => {
+      request.reply(200, `data: ${JSON.stringify(body)} \n\n`, {
+        'content-type': 'text/event-stream',
+      });
+    }
+  ).as(getStreamInterceptAlias(streamId).substring(1));
+}
+
+export function mockStreamError(streamId: string, errorCode: number) {
+  cy.intercept(
+    {
+      method: 'GET',
+      url: `**/machinelearning/streaming/${streamId}`,
+    },
+    (request) => {
+      request.reply(
+        errorCode,
+        {},
+        {
+          'content-type': 'text/event-stream',
+        }
+      );
+    }
+  ).as(getStreamInterceptAlias(streamId).substring(1));
+}
+
+export function mockSearchWithDidYouMean(
+  useCase: string,
+  originalWord: string,
+  correctedWord: string
+) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.queryCorrections = [
+        {
+          correctedQuery: correctedWord,
+          wordCorrections: [
+            {
+              correctedWord: correctedWord,
+              originalWord: originalWord,
+              length: correctedWord.length,
+              offset: 0,
+            },
+          ],
+        },
+      ];
+      res.body.results = [
+        {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
+      ];
+      res.body.totalCount = 1;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithDidYouMeanAutomaticallyCorrected(
+  useCase: string,
+  originalWord: string,
+  correctedWord: string
+) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.queryCorrections = [
+        {
+          correctedQuery: correctedWord,
+          wordCorrections: [
+            {
+              correctedWord: correctedWord,
+              originalWord: originalWord,
+              length: correctedWord.length,
+              offset: 0,
+            },
+          ],
+        },
+      ];
+
+      res.body.results = [];
+      res.body.totalCount = 0;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithQueryTrigger(useCase: string, query: string) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.triggers = [
+        {
+          type: 'query',
+          content: query,
+        },
+      ];
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
+export function mockSearchWithNotifyTrigger(
+  useCase: string,
+  notifications: string[]
+) {
+  cy.intercept(getRoute(useCase), (req) => {
+    req.continue((res) => {
+      res.body.triggers = notifications.map((notification) => ({
+        type: 'notify',
+        content: notification,
+      }));
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));

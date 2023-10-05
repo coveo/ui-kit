@@ -32,8 +32,10 @@ describe('Recs Interface Component', () => {
         .init();
     });
 
-    CommonAssertions.assertAccessibility();
-    RecsAssertions.assertRendersPlaceholders(numberOfRecs);
+    it('verify accessibility and placeholders', () => {
+      CommonAssertions.assertAccessibility();
+      RecsAssertions.assertRendersPlaceholders(numberOfRecs);
+    });
   });
 
   describe('after recommendation have loaded', () => {
@@ -43,9 +45,11 @@ describe('Recs Interface Component', () => {
         .init();
     });
 
-    CommonAssertions.assertConsoleError(false);
-    CommonAssertions.assertAccessibility();
-    RecsAssertions.assertRendersRecommendations(numberOfRecs);
+    it('verify accessibility and recommendations', () => {
+      CommonAssertions.assertConsoleError(false);
+      CommonAssertions.assertAccessibility();
+      RecsAssertions.assertRendersRecommendations(numberOfRecs);
+    });
   });
 
   describe('with a full result template', () => {
@@ -55,7 +59,6 @@ describe('Recs Interface Component', () => {
         'I will not use meaningless placeholder text for testing';
       return element;
     }
-
     beforeEach(() => {
       new TestRecsFixture()
         .with(
@@ -79,7 +82,6 @@ describe('Recs Interface Component', () => {
         )
         .init();
     });
-
     withAnySectionnableResultList(
       () => {
         CommonAssertions.assertAccessibility(recsListComponent);
@@ -88,6 +90,7 @@ describe('Recs Interface Component', () => {
         componentTag: recsListComponent,
         densities: ['normal'],
         imageSizes: ['icon', 'small'],
+        useBeforeEach: true,
       }
     );
   });
@@ -105,13 +108,13 @@ describe('Recs Interface Component', () => {
         )
         .init();
     });
-
-    RecsAssertions.assertRendersPlaceholders(numberOfRecsPerPage);
+    it('verify placeholders', () => {
+      RecsAssertions.assertRendersPlaceholders(numberOfRecsPerPage);
+    });
   });
 
   describe('with a loaded carousel', () => {
     beforeEach(() => {
-      // Setup Carousel
       new TestRecsFixture()
         .with(
           addRecsList({
@@ -128,42 +131,25 @@ describe('Recs Interface Component', () => {
         .init();
     });
 
-    describe('verify rendering', () => {
+    it('verify rendering and going forward/backward', () => {
       CommonAssertions.assertConsoleError(false);
       CommonAssertions.assertAccessibility();
-      RecsAssertions.assertRendersRecommendations(numberOfRecsPerPage);
       RecsAssertions.assertRendersIndicators(
         numberOfRecs / numberOfRecsPerPage
       );
       RecsAssertions.assertIndicatorsActiveAtIndex(0);
       RecsAssertions.assertFirstRecommendationsContainsText('0');
-    });
-
-    describe('when going forwards', () => {
-      beforeEach(() => {
-        RecsSelectors.nextButton().click();
-      });
-
+      // Going forward
+      RecsSelectors.nextButton().click();
       RecsAssertions.assertIndicatorsActiveAtIndex(1);
       RecsAssertions.assertFirstRecommendationsContainsText('1');
-    });
-
-    describe('when going backwards', () => {
-      beforeEach(() => {
-        RecsSelectors.previousButton().click();
-      });
-
+      // Going backward full loop
+      RecsSelectors.previousButton().click();
+      RecsSelectors.previousButton().click();
       RecsAssertions.assertIndicatorsActiveAtIndex(2);
       RecsAssertions.assertFirstRecommendationsContainsText('2');
-    });
-
-    describe('when going forward a full loop', () => {
-      beforeEach(() => {
-        RecsSelectors.nextButton().click();
-        RecsSelectors.nextButton().click();
-        RecsSelectors.nextButton().click();
-      });
-
+      // Going forward full loop
+      RecsSelectors.nextButton().click();
       RecsAssertions.assertIndicatorsActiveAtIndex(0);
       RecsAssertions.assertFirstRecommendationsContainsText('0');
     });

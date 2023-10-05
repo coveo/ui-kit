@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {WritableDraft} from 'immer/dist/internal';
+import type {Draft as WritableDraft} from 'immer';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
@@ -9,7 +9,10 @@ import {change} from '../../history/history-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions';
-import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
+import {
+  excludeFacetSearchResult,
+  selectFacetSearchResult,
+} from '../facet-search-set/specific/specific-facet-search-actions';
 import {updateFacetAutoSelection} from '../generic/facet-actions';
 import {
   handleFacetSortCriterionUpdate,
@@ -64,22 +67,27 @@ export const facetSetReducer = createReducer(
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const f = action.payload.f || {};
+        const fExcluded = action.payload.fExcluded || {};
         const facetIds = Object.keys(state);
 
         facetIds.forEach((id) => {
           const {request} = state[id]!;
           const selectedValues = f[id] || [];
+          const excludedValues = fExcluded[id] || [];
           const idleValues = request.currentValues.filter(
-            (facetValue) => !selectedValues.includes(facetValue.value)
+            (facetValue) =>
+              !selectedValues.includes(facetValue.value) &&
+              !excludedValues.includes(facetValue.value)
           );
 
           request.currentValues = [
             ...selectedValues.map(buildSelectedFacetValueRequest),
+            ...excludedValues.map(buildExcludedFacetValueRequest),
             ...idleValues.map(restoreFacetValueToIdleState),
           ];
           request.preventAutoSelect = selectedValues.length > 0;
           request.numberOfValues = Math.max(
-            selectedValues.length,
+            selectedValues.length + excludedValues.length,
             request.numberOfValues
           );
         });
@@ -225,6 +233,29 @@ export const facetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
       })
+
+      .addCase(excludeFacetSearchResult, (state, action) => {
+        const {facetId, value} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest) {
+          return;
+        }
+
+        const {rawValue} = value;
+        const {currentValues} = facetRequest;
+        const matchingValue = currentValues.find((v) => v.value === rawValue);
+
+        if (matchingValue) {
+          matchingValue.state = 'excluded';
+          return;
+        }
+
+        const searchResultValue = buildExcludedFacetValueRequest(rawValue);
+        insertNewValue(facetRequest, searchResultValue);
+        facetRequest.freezeCurrentValues = true;
+        facetRequest.preventAutoSelect = true;
+      })
       .addCase(disableFacet, (state, action) => {
         if (!(action.payload in state)) {
           return;
@@ -271,6 +302,7 @@ export const defaultFacetOptions: FacetOptionalParameters = {
   injectionDepth: 1000,
   numberOfValues: 8,
   sortCriteria: 'automatic',
+  resultsMustMatch: 'atLeastOneValue',
 };
 
 function buildFacetRequest(
@@ -297,6 +329,10 @@ export function convertFacetValueToRequest(
 
 function buildSelectedFacetValueRequest(value: string): FacetValueRequest {
   return {value, state: 'selected'};
+}
+
+function buildExcludedFacetValueRequest(value: string): FacetValueRequest {
+  return {value, state: 'excluded'};
 }
 
 function restoreFacetValueToIdleState(

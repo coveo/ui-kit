@@ -1,3 +1,102 @@
+# 2.45.0 (2023-10-04)
+
+### Bug Fixes
+
+- **atomic:** css part and css variable for facet-search-icon / facet-search-clear-icon ([#3200](https://github.com/coveo/ui-kit/issues/3200)) ([426f9e2](https://github.com/coveo/ui-kit/commits/426f9e268d0aa55e39a46987d0856f0c53b06b21))
+- **atomic:** search text area scroll ([#3219](https://github.com/coveo/ui-kit/issues/3219)) ([f998f63](https://github.com/coveo/ui-kit/commits/f998f63ee5dacddad77c2fbdc7c5a6801d975862))
+- **atomic:** support facet-manager collapse-facets-after for automatic facets ([#3213](https://github.com/coveo/ui-kit/issues/3213)) ([0f88e94](https://github.com/coveo/ui-kit/commits/0f88e94b7a1758dd13d9c1aeb3a9d175fb88b744))
+- **genAI:** set loading dots to atomic-primary ([#3225](https://github.com/coveo/ui-kit/issues/3225)) ([f8e4993](https://github.com/coveo/ui-kit/commits/f8e4993d6a58b6b3431adaecf7936620d78bfa9c))
+- **IPX:** remove max width of ipx body and footer ([#3235](https://github.com/coveo/ui-kit/issues/3235)) ([44cbb35](https://github.com/coveo/ui-kit/commits/44cbb3579f262c2797946843b04e0958d0f54123))
+
+### Features
+
+- **atomic,headless:** ga release for automatic-facets feature ([#3224](https://github.com/coveo/ui-kit/issues/3224)) ([4decff2](https://github.com/coveo/ui-kit/commits/4decff2d91f415d392177b94dfd10e4c3f8566e8))
+
+# 2.44.0 (2023-09-27)
+
+### Features
+
+- **atomic:** interactive RGA citations ([#3199](https://github.com/coveo/ui-kit/issues/3199)) ([fabdd35](https://github.com/coveo/ui-kit/commits/fabdd357c6d0625413617c66734c3b7ae81ddb62))
+- **headless:** wrap preprocess function that throws to prevent stopping the execution requests ([#3172](https://github.com/coveo/ui-kit/issues/3172)) ([8e50eb9](https://github.com/coveo/ui-kit/commits/8e50eb9cefca01034a499230696cfac04cdfca20))
+
+## 2.43.1 (2023-09-20)
+
+# 2.43.0 (2023-09-11)
+
+### Bug Fixes
+
+- **atomic:** added part to access ::after ([#3151](https://github.com/coveo/ui-kit/issues/3151)) ([9b960e5](https://github.com/coveo/ui-kit/commits/9b960e585a2d52832d866d31a6e6150e8a18b03f))
+
+### Features
+
+- **commerce:** create PLP v2 interactive result controller ([#3129](https://github.com/coveo/ui-kit/issues/3129)) ([4d3c39d](https://github.com/coveo/ui-kit/commits/4d3c39d8a1b9910f528be0ed9c372c92e242ff9e))
+- **headless-react:** add headless react util defineSearchEngine ([#3107](https://github.com/coveo/ui-kit/issues/3107)) ([1d63e43](https://github.com/coveo/ui-kit/commits/1d63e431c427de9022238216cc5128b237b836b4))
+
+## 2.42.3 (2023-09-06)
+
+### Bug Fixes
+
+- **atomic:** translation issue for zh-tw ([5ac74a9](https://github.com/coveo/ui-kit/commits/5ac74a9e344c157057d2f99c6ab31db0c618554f))
+
+## 2.42.1 (2023-08-30)
+
+### Bug Fixes
+
+- **headless:** bump coveo.analytics to fix click tracking issue on ios safari ([#3141](https://github.com/coveo/ui-kit/issues/3141)) ([402473f](https://github.com/coveo/ui-kit/commits/402473fe67709e70f27c1edfd92fa8e7227e07e7))
+- refactor focus target to prevent race condition ([#3124](https://github.com/coveo/ui-kit/issues/3124)) ([daddf5b](https://github.com/coveo/ui-kit/commits/daddf5b65532c735ff8e4673e4c7c45e2f0a404f))
+
+# 2.42.0 (2023-08-24)
+
+### Features
+
+- **atomic:** added textarea search box ([#3118](https://github.com/coveo/ui-kit/issues/3118)) ([a436d52](https://github.com/coveo/ui-kit/commits/a436d52174d03fd27d1716607492d783b39debb9))
+
+## 2.41.1 (2023-08-23)
+
+### Bug Fixes
+
+- **atomic:** change language code for region specific languages ([#3121](https://github.com/coveo/ui-kit/issues/3121)) ([c75c586](https://github.com/coveo/ui-kit/commits/c75c58661a4b6b497fd815aa09d697ba0b0fb6de))
+
+# 2.41.0 (2023-08-21)
+
+### Features
+
+- **atomic, headless:** add numberOfValues property in automatic facet generator ([#3101](https://github.com/coveo/ui-kit/issues/3101)) ([8fcd1ed](https://github.com/coveo/ui-kit/commits/8fcd1edba96c2226ddc9fca6c3774e9842f3bca2))
+
+## 2.40.2 (2023-08-16)
+
+### Bug Fixes
+
+- **atomic:** address search box suggestion accessibility problem ([#3086](https://github.com/coveo/ui-kit/issues/3086)) ([0e03273](https://github.com/coveo/ui-kit/commits/0e032731f99db688a3a49406e3e90360973d45c6))
+- **atomic:** automatic facets not showing in refine modal when no static facets ([#3104](https://github.com/coveo/ui-kit/issues/3104)) ([69f2db5](https://github.com/coveo/ui-kit/commits/69f2db5f4ec9ddee61b1b0a411940f7359b79c2e))
+
+# 2.40.0 (2023-08-10)
+
+### Bug Fixes
+
+- **atomic,headless:** add maximum value of 10 for 'desiredCount' ([#3089](https://github.com/coveo/ui-kit/issues/3089)) ([35bb410](https://github.com/coveo/ui-kit/commits/35bb4104eb9e31ec3e398f3b3fedc7ff714e4f9b))
+- **atomic:** fix grid result breadcrumbs ([#3100](https://github.com/coveo/ui-kit/issues/3100)) ([6fc30f4](https://github.com/coveo/ui-kit/commits/6fc30f43a97cb1742e8810f4149b3acf0edc024c))
+- **atomic:** make automatic facet placholders disappear when empty response ([#3091](https://github.com/coveo/ui-kit/issues/3091)) ([397e8ba](https://github.com/coveo/ui-kit/commits/397e8bae361a713d41867a2e3c59abe0da2920d4))
+- **atomic:** Make gridCellLinkTarget optional ([#3097](https://github.com/coveo/ui-kit/issues/3097)) ([7b1eed3](https://github.com/coveo/ui-kit/commits/7b1eed38ddc0dbf760920a7b35263775acd15b7b))
+
+### Features
+
+- **atomic:** change default label to the field for automatic facets ([#3090](https://github.com/coveo/ui-kit/issues/3090)) ([a3060ca](https://github.com/coveo/ui-kit/commits/a3060ca818712830d3f6def708da2e3449dd4041))
+
+# 2.39.0 (2023-08-09)
+
+### Bug Fixes
+
+- **atomic:** add automatic facets to atomic refine modal ([#3069](https://github.com/coveo/ui-kit/issues/3069)) ([9b422ce](https://github.com/coveo/ui-kit/commits/9b422ce8865e4923e4df2fbe16c28f8639bc2170))
+- **atomic:** css parts not working for automatic facets in refine modal ([#3071](https://github.com/coveo/ui-kit/issues/3071)) ([3f899fd](https://github.com/coveo/ui-kit/commits/3f899fdf6fa670360b5e126a0125abba3a1ca140))
+- **atomic:** fix DOM exception when using refine modal with no facets ([#3072](https://github.com/coveo/ui-kit/issues/3072)) ([0a29cf3](https://github.com/coveo/ui-kit/commits/0a29cf39f1c82c40de56da86ea9fc40cd75148f6))
+- **atomic:** fixed styling of insight folded results when children ar… ([#3075](https://github.com/coveo/ui-kit/issues/3075)) ([b12d67d](https://github.com/coveo/ui-kit/commits/b12d67d90aaf77070e41c84e021d1a4a440f8c85))
+- remove `{{variable}}` from GPT translated locales ([#3073](https://github.com/coveo/ui-kit/issues/3073)) ([3410d93](https://github.com/coveo/ui-kit/commits/3410d9353233965a22efbbc0ddc9bffda895cc09))
+
+### Features
+
+- **atomic:** add skip link to grid results ([#3045](https://github.com/coveo/ui-kit/issues/3045)) ([049b420](https://github.com/coveo/ui-kit/commits/049b4201e72b91a49b2ec63ea2577fe3bed6a9e9))
+
 # 2.38.0 (2023-08-02)
 
 ### Bug Fixes

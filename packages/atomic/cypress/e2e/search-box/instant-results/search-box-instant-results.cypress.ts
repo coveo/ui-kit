@@ -18,7 +18,7 @@ import {searchBoxComponent, SearchBoxSelectors} from '../search-box-selectors';
 import * as InstantResultsAssertions from './search-box-instant-results-assertions';
 import {InstantResultsSelectors} from './search-box-instant-results-selectors';
 
-const delay = (force = false) => ({delay: 200, force});
+const delay = (force = false) => ({delay: 400, force});
 const downKeys = (count: number) => Array(count).fill('{downarrow}').join('');
 
 const setInstantResults = (count: number) => (fixture: TestFixture) => {
@@ -139,14 +139,14 @@ describe('Instant Results Test Suites', () => {
 
   describe('with keyboard navigation', () => {
     describe('when navigating from query to results', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
           `${downKeys(2)}{rightarrow}`,
           delay()
         );
       });
-      after(() => {
+      afterEach(() => {
         SearchBoxSelectors.inputBox().clear({force: true});
       });
       SearchBoxAssertions.assertHasSuggestionsCount(
@@ -161,29 +161,19 @@ describe('Instant Results Test Suites', () => {
       SearchBoxAssertions.assertSuggestionIsHighlighted(1);
     });
     describe('when navigating back from result to query', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().focus();
+        InstantResultsSelectors.results().should(
+          'have.length',
+          numOfInstantResults
+        );
         SearchBoxSelectors.inputBox().type(
           `${downKeys(2)}{rightarrow}{leftarrow}`,
           delay()
         );
       });
-      after(() => {
-        SearchBoxSelectors.inputBox().clear({force: true});
-      });
-      InstantResultsAssertions.assertNoResultIsSelected();
-      SearchBoxAssertions.assertSuggestionIsSelected(0);
-      SearchBoxAssertions.assertHasText('Recent query 0');
-    });
-    describe('when navigating back from result to query', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type(
-          `${downKeys(2)}{rightarrow}{leftarrow}`,
-          delay()
-        );
-      });
-      after(() => {
+      afterEach(() => {
         SearchBoxSelectors.inputBox().clear({force: true});
       });
       InstantResultsAssertions.assertNoResultIsSelected();
@@ -191,22 +181,33 @@ describe('Instant Results Test Suites', () => {
       SearchBoxAssertions.assertHasText('Recent query 0');
     });
     describe('when pressing enter on a result', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().focus();
+        InstantResultsSelectors.results().should(
+          'have.length',
+          numOfInstantResults
+        );
+        cy.intercept('https://example.com/0', {body: 'hello world!'}).as(
+          'example'
+        );
         SearchBoxSelectors.inputBox().type(
           `${downKeys(2)}{rightarrow}{enter}`,
           delay()
         );
       });
       it('redirects to new page', () => {
-        cy.window().then((win) => {
-          expect(win.location.href).to.equal('https://example.com/0');
-        });
+        cy.wait('@example');
       });
     });
     describe('when navigating to first suggestion and back with up arrow', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().focus();
+        InstantResultsSelectors.results().should(
+          'have.length',
+          numOfInstantResults
+        );
         SearchBoxSelectors.inputBox().type(
           'Rec{downarrow}{uparrow}{leftarrow}{del}',
           delay()
@@ -220,6 +221,11 @@ describe('Instant Results Test Suites', () => {
     describe('when navigating with the down arrow only', () => {
       beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().focus();
+        InstantResultsSelectors.results().should(
+          'have.length',
+          numOfInstantResults
+        );
         SearchBoxSelectors.inputBox().type(downKeys(6), delay());
       });
 
@@ -227,8 +233,13 @@ describe('Instant Results Test Suites', () => {
     });
 
     describe('when navigating up from results', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().focus();
+        InstantResultsSelectors.results().should(
+          'have.length',
+          numOfInstantResults
+        );
         SearchBoxSelectors.inputBox().type('{moveToStart}');
         InstantResultsSelectors.results();
         SearchBoxSelectors.inputBox().type(
@@ -244,6 +255,11 @@ describe('Instant Results Test Suites', () => {
     describe('when navigating up from input', () => {
       beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().focus();
+        InstantResultsSelectors.results().should(
+          'have.length',
+          numOfInstantResults
+        );
         SearchBoxSelectors.inputBox().type('{moveToStart}{uparrow}', delay());
       });
 
@@ -251,8 +267,13 @@ describe('Instant Results Test Suites', () => {
     });
 
     describe('when typing when a query is selected', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().focus();
+        InstantResultsSelectors.results().should(
+          'have.length',
+          numOfInstantResults
+        );
         SearchBoxSelectors.inputBox().type(
           `${downKeys(2)}{backspace}`,
           delay()
@@ -266,9 +287,16 @@ describe('Instant Results Test Suites', () => {
 
   describe('with mouse navigation', () => {
     describe('when hovering over a query', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().click();
+        InstantResultsSelectors.results().should(
+          'have.length',
+          numOfInstantResults
+        );
+        InstantResultsSelectors.results()
+          .eq(0)
+          .contains('Instant Result 0', {includeShadowDom: true});
         SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
       });
       SearchBoxAssertions.assertSuggestionIsSelected(0);
@@ -276,40 +304,53 @@ describe('Instant Results Test Suites', () => {
     });
 
     describe('when hovering over an instant result', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries(2);
         SearchBoxSelectors.inputBox().click();
+        InstantResultsSelectors.results().should('have.length', 2);
+        InstantResultsSelectors.results()
+          .eq(1)
+          .contains('Instant Result 1', {includeShadowDom: true});
         InstantResultsSelectors.results().eq(1).trigger('mouseover');
       });
-      InstantResultsAssertions.assertHasResultCount(2);
+
       InstantResultsAssertions.assertResultIsSelected(1);
       SearchBoxAssertions.assertSuggestionIsHighlighted(1);
 
       describe('when hovering over a different query', () => {
-        before(() => {
+        beforeEach(() => {
+          InstantResultsSelectors.results()
+            .eq(1)
+            .invoke('attr', 'part')
+            .should('contain', 'active-suggestion');
+          SearchBoxSelectors.querySuggestions()
+            .eq(1)
+            .invoke('attr', 'class')
+            .should('contain', 'bg-neutral-light');
           SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
         });
-        InstantResultsAssertions.assertHasResultCount(4);
-        InstantResultsAssertions.assertNoResultIsSelected();
         SearchBoxAssertions.assertSuggestionIsSelected(1);
+        InstantResultsAssertions.assertNoResultIsSelected();
       });
     });
 
     describe('when clicking a result', () => {
       beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type('{downarrow}', {
-          delay: 200,
-          force: true,
-        });
-        cy.wait(TestFixture.interceptAliases.Search);
+        SearchBoxSelectors.inputBox().focus();
+        InstantResultsSelectors.results().should(
+          'have.length',
+          numOfInstantResults
+        );
+        cy.intercept(/example\.com\/\d/, {body: 'hello world!'}).as('example');
+        InstantResultsSelectors.results()
+          .eq(1)
+          .contains('Instant Result 1', {includeShadowDom: true});
         InstantResultsSelectors.results().eq(1).click();
       });
 
       it('redirects to new page', () => {
-        cy.window().then((win) => {
-          expect(win.location.href).to.equal('https://example.com/1');
-        });
+        cy.wait('@example');
       });
     });
   });

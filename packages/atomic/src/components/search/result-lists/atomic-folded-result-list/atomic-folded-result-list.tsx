@@ -19,10 +19,7 @@ import {
   Method,
   h,
 } from '@stencil/core';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -33,7 +30,6 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
-  ResultTarget,
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
@@ -60,7 +56,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
   private resultRenderingFunction: ResultRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
   private display: ResultDisplayLayout = 'list';
-  private gridCellLinkTarget: ResultTarget = '_self';
 
   @Element() public host!: HTMLDivElement;
 
@@ -74,7 +69,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() private templateHasError = false;
 
-  @FocusTarget() nextNewResultTarget!: FocusTargetController;
+  private nextNewResultTarget?: FocusTargetController;
 
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
@@ -129,6 +124,13 @@ export class AtomicFoldedResultList implements InitializableComponent {
     this.foldedResultList.loadCollection(event.detail);
   }
 
+  private get focusTarget() {
+    if (!this.nextNewResultTarget) {
+      this.nextNewResultTarget = new FocusTargetController(this);
+    }
+    return this.nextNewResultTarget;
+  }
+
   public initialize() {
     try {
       this.foldedResultList = this.initFolding();
@@ -161,9 +163,8 @@ export class AtomicFoldedResultList implements InitializableComponent {
       getResultDisplay: () => this.display,
       getLayoutDisplay: () => this.display,
       getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.nextNewResultTarget,
+      nextNewResultTarget: this.focusTarget,
       loadingFlag: this.loadingFlag,
-      gridCellLinkTarget: this.gridCellLinkTarget,
       getResultListState: () => this.foldedResultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
       renderResult: (props) => <atomic-result {...props}></atomic-result>,

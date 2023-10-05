@@ -668,4 +668,36 @@
         <label>Slide</label>
         <name>quantic_Slide</name>
     </customLabels>
+    <customLabels>
+      <label>Réponse générée pour vous</label>
+      <name>quantic_GeneratedAnswerForYou</name>
+    </customLabels>
+    <customLabels>
+      <label>Cette réponse ne m'a pas été utile</label>
+      <name>quantic_ThisAnswerWasNotHelpful</name>
+    </customLabels>
+    <customLabels>
+      <label>Cette réponse m'a été utile</label>
+      <name>quantic_ThisAnswerWasHelpful</name>
+    </customLabels>
+    <customLabels>
+        <label>En savoir plus</label>
+        <name>quantic_LearnMore</name>
+    </customLabels>
+    <customLabels>
+      <label>Réessayer</label>
+      <name>quantic_TryAgain</name>
+  </customLabels>
+  <customLabels>
+    <label>Quelque chose s'est mal passé lors de la tentative de génération d'une réponse.</label>
+    <name>quantic_CouldNotGenerateAnAnswer</name>
+  </customLabels>
+  <customLabels>
+    <label>Résultats affichés pour {{0}}</label>
+    <name>quantic_ShowingResultsFor</name>
+  </customLabels>
+  <customLabels>
+    <label>Rechercher à la place {{0}}</label>
+    <name>quantic_SearchInsteadFor</name>
+  </customLabels>
 </Translations>

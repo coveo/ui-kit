@@ -12,10 +12,10 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        working-directory: ./packages/samples/atomic-react
-        start: npm run dev
+        command-prefix: 'npx -w @coveo/atomic-react-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        start: npx nx run atomic-react-samples:dev
         wait-on: 'http://localhost:3000'
+        wait-on-timeout: 600000
         install: false
         record: false
     - uses: actions/upload-artifact@v3

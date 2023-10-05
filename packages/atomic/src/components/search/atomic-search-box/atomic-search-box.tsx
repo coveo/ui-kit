@@ -20,6 +20,7 @@ import {
   Element,
   Event,
   EventEmitter,
+  Host,
 } from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {isMacOS} from '../../../utils/device-utils';
@@ -38,7 +39,9 @@ import {once, randomID} from '../../../utils/utils';
 import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchInput} from '../../common/search-box/search-input';
+import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
+import {TextAreaSubmitButton} from '../../common/search-box/text-area-submit-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {
   SearchBoxSuggestionElement,
@@ -105,6 +108,7 @@ export class AtomicSearchBox {
   private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
+  private textAreaRef!: HTMLTextAreaElement;
   private leftPanelRef: HTMLElement | undefined;
   private rightPanelRef: HTMLElement | undefined;
   private querySetActions!: QuerySetActionCreators;
@@ -181,6 +185,30 @@ export class AtomicSearchBox {
    * When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
    */
   @Prop({reflect: true}) public enableQuerySyntax = false;
+
+  /**
+   * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element.
+   * The resulting component will expand to support multi-line queries.
+   * When customizing the dimensions of the textarea element using the `"textarea"` CSS part, it is important to also apply the styling to its container's ::after pseudo-element as well as the `"textarea-spacer"` part.
+   * The buttons within the search box are likely to need adjusting as well.
+   *
+   * Example:
+   * ```css
+   * <style>
+   *   atomic-search-box::part(textarea),
+   *   atomic-search-box::part(textarea-expander)::after,
+   *   atomic-search-box::part(textarea-spacer) {
+   *     font-size: x-large;
+   *   }
+   *
+   *   atomic-search-box::part(submit-button-wrapper),
+   *   atomic-search-box::part(clear-button-wrapper) {
+   *     padding-top: 0.75rem;
+   *   }
+   * </style>
+   * ```
+   */
+  @Prop({reflect: true}) public textarea = false;
 
   /**
    * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
@@ -613,6 +641,11 @@ export class AtomicSearchBox {
     }
   }
 
+  private triggerTextAreaChange(value: string) {
+    this.textAreaRef.value = value;
+    this.textAreaRef.dispatchEvent(new window.Event('change'));
+  }
+
   private renderSuggestion(
     item: SearchBoxSuggestionElement,
     index: number,
@@ -621,10 +654,7 @@ export class AtomicSearchBox {
   ) {
     const id = `${this.id}-${side}-suggestion-${item.key}`;
 
-    const isSelected =
-      id === this.activeDescendant ||
-      (this.suggestedQuery === item.query &&
-        !this.panelInFocus?.getAttribute('part')?.includes(side));
+    const isSelected = id === this.activeDescendant;
 
     if (index === lastIndex && item.hideIfLast) {
       return null;
@@ -658,6 +688,9 @@ export class AtomicSearchBox {
         isDoubleList={this.isDoubleList}
         onClick={(e: Event) => {
           this.searchBoxCommon.onSuggestionClick(item, e);
+          if (this.textarea) {
+            this.triggerTextAreaChange(item.query ?? '');
+          }
         }}
         onMouseOver={() => {
           this.onSuggestionMouseOver(item, side, id);
@@ -750,51 +783,96 @@ export class AtomicSearchBox {
     );
   }
 
+  private renderTextBox = (searchLabel: string) => {
+    const props = {
+      loading: this.searchBoxState.isLoading,
+      bindings: this.bindings,
+      value: this.searchBoxState.value,
+      title: searchLabel,
+      ariaLabel: searchLabel,
+      onFocus: () => this.onFocus(),
+      onInput: (e: Event) =>
+        this.onInput(
+          (e.target as HTMLInputElement | HTMLTextAreaElement).value
+        ),
+      onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
+      onClear: () => this.searchBox.clear(),
+      popup: {
+        id: this.searchBoxCommon.popupId,
+        activeDescendant: this.activeDescendant,
+        expanded: this.isExpanded,
+        hasSuggestions: this.searchBoxCommon.hasSuggestions,
+      },
+    };
+
+    return this.textarea ? (
+      <SearchTextArea
+        textAreaRef={this.textAreaRef}
+        ref={(el) => (this.textAreaRef = el as HTMLTextAreaElement)}
+        {...props}
+        onClear={() => {
+          props.onClear();
+          this.triggerTextAreaChange('');
+        }}
+      />
+    ) : (
+      <SearchInput
+        inputRef={this.inputRef}
+        ref={(el) => (this.inputRef = el as HTMLInputElement)}
+        {...props}
+      />
+    );
+  };
+
+  private renderAbsolutePositionSpacer() {
+    return (
+      <textarea
+        aria-hidden
+        part="textarea-spacer"
+        class="invisible text-lg py-3.5 px-4 w-full"
+        rows={1}
+      ></textarea>
+    );
+  }
+
   public render() {
     this.updateBreakpoints();
+
     const searchLabel = this.searchBoxCommon.getSearchInputLabel(
       this.minimumQueryLength
     );
-    return [
-      <SearchBoxWrapper disabled={this.isSearchDisabled}>
-        <atomic-focus-detector
-          style={{display: 'contents'}}
-          onFocusExit={() => this.clearSuggestions()}
-        >
-          <SearchInput
-            inputRef={this.inputRef}
-            loading={this.searchBoxState.isLoading}
-            ref={(el) => (this.inputRef = el as HTMLInputElement)}
-            bindings={this.bindings}
-            value={this.searchBoxState.value}
-            title={searchLabel}
-            ariaLabel={searchLabel}
-            onFocus={() => this.onFocus()}
-            onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
-            onKeyDown={(e) => this.onKeyDown(e)}
-            onClear={() => this.searchBox.clear()}
-            popup={{
-              id: this.searchBoxCommon.popupId,
-              activeDescendant: this.activeDescendant,
-              expanded: this.isExpanded,
-              hasSuggestions: this.searchBoxCommon.hasSuggestions,
-            }}
-          />
-          {this.renderSuggestions()}
-          <SubmitButton
-            bindings={this.bindings}
+    const Submit = this.textarea ? TextAreaSubmitButton : SubmitButton;
+
+    return (
+      <Host>
+        {this.textarea ? this.renderAbsolutePositionSpacer() : null}
+        {[
+          <SearchBoxWrapper
             disabled={this.isSearchDisabled}
-            onClick={() => this.searchBox.submit()}
-            title={searchLabel}
-          />
-        </atomic-focus-detector>
-      </SearchBoxWrapper>,
-      !this.suggestions.length && (
-        <slot>
-          <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
-          <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
-        </slot>
-      ),
-    ];
+            textArea={this.textarea}
+          >
+            <atomic-focus-detector
+              style={{display: 'contents'}}
+              onFocusExit={() => this.clearSuggestions()}
+            >
+              {this.renderTextBox(searchLabel)}
+              <Submit
+                bindings={this.bindings}
+                disabled={this.isSearchDisabled}
+                onClick={() => this.searchBox.submit()}
+                title={searchLabel}
+              />
+              {this.renderSuggestions()}
+            </atomic-focus-detector>
+          </SearchBoxWrapper>,
+          !this.suggestions.length && (
+            <slot>
+              <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+              <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+            </slot>
+          ),
+        ]}
+      </Host>
+    );
   }
 }

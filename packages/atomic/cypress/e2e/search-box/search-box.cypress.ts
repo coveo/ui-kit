@@ -455,10 +455,12 @@ describe('Search Box Test Suites', () => {
   });
 
   describe('with default search box', () => {
+    const numOfSuggestions = 6;
     beforeEach(() => {
       new TestFixture()
         .with(addSearchBox())
         .with(addQuerySummary())
+        .with(setSuggestions(numOfSuggestions))
         .withoutFirstAutomaticSearch()
         .init();
       SearchBoxSelectors.inputBox().click();
@@ -469,6 +471,20 @@ describe('Search Box Test Suites', () => {
     it('search button is enabled to start with', () => {
       SearchBoxSelectors.inputBox().should('be.empty');
       SearchBoxSelectors.submitButton().should('be.enabled');
+    });
+
+    it('should provide suggestions when focusing the search box', () => {
+      SearchBoxSelectors.inputBox().focus();
+      SearchBoxSelectors.querySuggestions().should('exist');
+      SearchBoxSelectors.querySuggestions()
+        .should('have.attr', 'part')
+        .and('not.contain', 'active-suggestion');
+
+      SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
+      SearchBoxSelectors.querySuggestions()
+        .eq(0)
+        .should('have.attr', 'part')
+        .and('contain', 'active-suggestion');
     });
 
     CommonAssertions.assertConsoleError(false);

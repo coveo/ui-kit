@@ -1,3 +1,39 @@
+## 2.15.3 (2023-10-04)
+
+### Bug Fixes
+
+- **atomic:** support facet-manager collapse-facets-after for automatic facets ([#3213](https://github.com/coveo/ui-kit/issues/3213)) ([0f88e94](https://github.com/coveo/ui-kit/commits/0f88e94b7a1758dd13d9c1aeb3a9d175fb88b744))
+
+## 2.15.2 (2023-09-27)
+
+## 2.15.1 (2023-09-20)
+
+# 2.15.0 (2023-09-11)
+
+### Features
+
+- **headless-react:** add headless react util defineSearchEngine ([#3107](https://github.com/coveo/ui-kit/issues/3107)) ([1d63e43](https://github.com/coveo/ui-kit/commits/1d63e431c427de9022238216cc5128b237b836b4))
+
+## 2.14.2 (2023-09-06)
+
+# 2.14.0 (2023-08-24)
+
+### Features
+
+- **atomic:** added textarea search box ([#3118](https://github.com/coveo/ui-kit/issues/3118)) ([a436d52](https://github.com/coveo/ui-kit/commits/a436d52174d03fd27d1716607492d783b39debb9))
+
+# 2.13.0 (2023-08-21)
+
+### Features
+
+- **atomic, headless:** add numberOfValues property in automatic facet generator ([#3101](https://github.com/coveo/ui-kit/issues/3101)) ([8fcd1ed](https://github.com/coveo/ui-kit/commits/8fcd1edba96c2226ddc9fca6c3774e9842f3bca2))
+
+# 2.12.0 (2023-08-09)
+
+### Features
+
+- **atomic:** add skip link to grid results ([#3045](https://github.com/coveo/ui-kit/issues/3045)) ([049b420](https://github.com/coveo/ui-kit/commits/049b4201e72b91a49b2ec63ea2577fe3bed6a9e9))
+
 # 2.11.0 (2023-07-19)
 
 ### Features

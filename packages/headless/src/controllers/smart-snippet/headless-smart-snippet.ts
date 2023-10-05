@@ -2,12 +2,22 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions';
 import {
   SmartSnippet,
+  SmartSnippetCore,
+  SmartSnippetOptions,
   SmartSnippetProps,
+  SmartSnippetState,
   buildCoreSmartSnippet,
 } from '../core/smart-snippet/headless-core-smart-snippet';
 import {buildSmartSnippetInteractiveInlineLinks} from './headless-smart-snippet-interactive-inline-links';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+export type {
+  SmartSnippet,
+  SmartSnippetOptions,
+  SmartSnippetProps,
+  SmartSnippetState,
+  SmartSnippetCore,
+};
 
 /**
  * Creates a `SmartSnippet` controller instance.

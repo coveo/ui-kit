@@ -29,6 +29,11 @@ import {
   StateNeededByCaseAssistAnalytics,
 } from '../../api/analytics/case-assist-analytics';
 import {
+  StateNeededByCommerceAnalyticsProvider,
+  CommerceAnalyticsProvider,
+  configureCommerceAnalytics,
+} from '../../api/analytics/commerce-analytics';
+import {
   configureInsightAnalytics,
   InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
@@ -68,7 +73,7 @@ export enum AnalyticsType {
 }
 
 export interface PreparableAnalyticsActionOptions<
-  StateNeeded extends ConfigurationSection
+  StateNeeded extends ConfigurationSection,
 > {
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   preprocessRequest: PreprocessRequest | undefined;
@@ -82,7 +87,8 @@ type WrappedAnalyticsType<T extends AnalyticsType = AnalyticsType> = {
 
 export type AnalyticsAsyncThunk<
   EventType extends WrappedAnalyticsType | void,
-  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider
+  StateNeeded extends
+    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > = AsyncThunk<
   EventType extends void ? void : EventType,
   void,
@@ -91,7 +97,8 @@ export type AnalyticsAsyncThunk<
 
 export interface PreparedAnalyticsAction<
   EventType extends WrappedAnalyticsType | void,
-  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider
+  StateNeeded extends
+    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > {
   description?: EventDescription;
   action: AnalyticsAsyncThunk<EventType, StateNeeded>;
@@ -99,14 +106,16 @@ export interface PreparedAnalyticsAction<
 
 type PrepareAnalyticsFunction<
   EventType extends WrappedAnalyticsType | void,
-  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider
+  StateNeeded extends
+    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > = (
   options: PreparableAnalyticsActionOptions<StateNeeded>
 ) => Promise<PreparedAnalyticsAction<EventType, StateNeeded>>;
 
 export interface PreparableAnalyticsAction<
   EventType extends WrappedAnalyticsType | void,
-  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider
+  StateNeeded extends
+    ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > extends AnalyticsAsyncThunk<EventType, StateNeeded> {
   prepare: PrepareAnalyticsFunction<EventType, StateNeeded>;
 }
@@ -148,28 +157,35 @@ export type CaseAssistAction = PreparableAnalyticsAction<
 >;
 
 export type ProductRecommendationAction<
-  T extends AnalyticsType = AnalyticsType.Search
+  T extends AnalyticsType = AnalyticsType.Search,
 > = PreparableAnalyticsAction<
   {analyticsType: T},
   StateNeededByProductRecommendationsAnalyticsProvider
 >;
 
 export type ProductListingAction<
-  T extends AnalyticsType = AnalyticsType.Search
+  T extends AnalyticsType = AnalyticsType.Search,
 > = PreparableAnalyticsAction<
   {analyticsType: T},
   StateNeededByProductListingAnalyticsProvider
 >;
 
+export type ProductListingV2Action<
+  T extends AnalyticsType = AnalyticsType.Search,
+> = PreparableAnalyticsAction<
+  {analyticsType: T},
+  StateNeededByCommerceAnalyticsProvider
+>;
+
 export interface AsyncThunkAnalyticsOptions<
-  T extends StateNeededBySearchAnalyticsProvider
+  T extends StateNeededBySearchAnalyticsProvider,
 > {
   state: T;
   extra: ThunkExtraArguments;
 }
 
 export interface AsyncThunkInsightAnalyticsOptions<
-  T extends Partial<StateNeededByInsightAnalyticsProvider>
+  T extends Partial<StateNeededByInsightAnalyticsProvider>,
 > {
   state: T;
   extra: ThunkExtraArguments;
@@ -181,7 +197,7 @@ function makeInstantlyCallable<T extends object>(action: T) {
 
 function makePreparableAnalyticsAction<
   EventType extends WrappedAnalyticsType | void,
-  StateNeeded extends ConfigurationSection
+  StateNeeded extends ConfigurationSection,
 >(
   prefix: string,
   buildEvent: (
@@ -251,7 +267,8 @@ function makePreparableAnalyticsAction<
 
 export const makeAnalyticsAction = <
   EventType extends AnalyticsType,
-  StateNeeded extends StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider
+  StateNeeded extends
+    StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
 >(
   prefix: string,
   analyticsType: EventType,
@@ -542,7 +559,8 @@ export const validateProductRecommendationPayload = (
 
 export const makeProductListingAnalyticsAction = <
   EventType extends AnalyticsType,
-  StateNeeded extends StateNeededByProductListingAnalyticsProvider = StateNeededByProductListingAnalyticsProvider
+  StateNeeded extends
+    StateNeededByProductListingAnalyticsProvider = StateNeededByProductListingAnalyticsProvider,
 >(
   prefix: string,
   analyticsType: EventType,
@@ -564,6 +582,55 @@ export const makeProductListingAnalyticsAction = <
       logger,
     }) => {
       const client = configureProductListingAnalytics({
+        getState,
+        logger,
+        analyticsClientMiddleware,
+        preprocessRequest,
+        provider: provider(getState),
+      });
+      const builder = await getBuilder(client, getState());
+      return {
+        description: builder?.description,
+        log: async ({state}) => {
+          const response = await builder?.log({
+            searchUID: provider(() => state).getSearchUID(),
+          });
+          logger.info(
+            {client: client.coveoAnalyticsClient, response},
+            'Analytics response'
+          );
+          return {analyticsType};
+        },
+      };
+    }
+  );
+};
+
+export const makeCommerceAnalyticsAction = <
+  EventType extends AnalyticsType,
+  StateNeeded extends
+    StateNeededByCommerceAnalyticsProvider = StateNeededByCommerceAnalyticsProvider,
+>(
+  prefix: string,
+  analyticsType: EventType,
+  getBuilder: (
+    client: CoveoSearchPageClient,
+    state: StateNeeded
+  ) => Promise<EventBuilder | null> | null,
+  provider: (
+    getState: () => StateNeededByCommerceAnalyticsProvider
+  ) => SearchPageClientProvider = (getState) =>
+    new CommerceAnalyticsProvider(getState)
+): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded> => {
+  return makePreparableAnalyticsAction(
+    prefix,
+    async ({
+      getState,
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    }) => {
+      const client = configureCommerceAnalytics({
         getState,
         logger,
         analyticsClientMiddleware,

@@ -339,7 +339,7 @@ export type {
   SmartSnippetState,
   QuestionAnswerDocumentIdentifier,
   SmartSnippetCore,
-} from './core/smart-snippet/headless-core-smart-snippet';
+} from './smart-snippet/headless-smart-snippet';
 export {buildSmartSnippet} from './smart-snippet/headless-smart-snippet';
 
 export type {InlineLink} from './smart-snippet/headless-smart-snippet-interactive-inline-links';
@@ -415,11 +415,12 @@ export type {
 export {buildAutomaticFacet} from './facets/automatic-facet/headless-automatic-facet';
 
 export type {
-  AutomaticFacetBuilder,
-  AutomaticFacetBuilderProps,
-  AutomaticFacetBuilderState,
-} from './facets/automatic-facet-builder/headless-automatic-facet-builder';
-export {buildAutomaticFacetBuilder} from './facets/automatic-facet-builder/headless-automatic-facet-builder';
+  AutomaticFacetGenerator,
+  AutomaticFacetGeneratorProps,
+  AutomaticFacetGeneratorState,
+  AutomaticFacetGeneratorOptions,
+} from './facets/automatic-facet-generator/headless-automatic-facet-generator';
+export {buildAutomaticFacetGenerator} from './facets/automatic-facet-generator/headless-automatic-facet-generator';
 
 export type {
   GeneratedAnswer,
@@ -427,3 +428,10 @@ export type {
   GeneratedAnswerCitation,
 } from './generated-answer/headless-generated-answer';
 export {buildGeneratedAnswer} from './generated-answer/headless-generated-answer';
+
+export type {
+  InteractiveCitationOptions,
+  InteractiveCitationProps,
+  InteractiveCitation,
+} from './generated-answer/headless-interactive-citation';
+export {buildInteractiveCitation} from './generated-answer/headless-interactive-citation';

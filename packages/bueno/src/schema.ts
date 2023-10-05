@@ -66,6 +66,6 @@ type InferValuesFromSchema<T> = T extends Schema<infer P> ? P : never;
 
 export type SchemaValues<
   Schema,
-  RequiredValues extends keyof InferValuesFromSchema<Schema> = never
+  RequiredValues extends keyof InferValuesFromSchema<Schema> = never,
 > = Partial<InferValuesFromSchema<Schema>> &
   Pick<InferValuesFromSchema<Schema>, RequiredValues>;

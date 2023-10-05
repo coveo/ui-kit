@@ -1,8 +1,8 @@
 import alias from '@rollup/plugin-alias';
 import replacePlugin from '@rollup/plugin-replace';
+import {postcss} from '@stencil-community/postcss';
 import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import {Config} from '@stencil/core';
-import {postcss} from '@stencil/postcss';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import autoprefixer from 'autoprefixer';
 import {readFileSync} from 'fs';
@@ -84,6 +84,7 @@ export const config: Config = {
     }),
     {
       type: 'dist-custom-elements',
+      generateTypeDeclarations: false,
     },
     {
       type: 'dist',

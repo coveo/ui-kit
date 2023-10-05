@@ -1,0 +1,37 @@
+@import '../../../../global/global.pcss';
+@import '../../../../global/mixins.pcss';
+
+/**
+ * @prop --atomic-smart-snippet-gradient-start: At which height to start fading out a truncated answer.
+ */
+:host {
+  &::part(smart-snippet-collapse-wrapper) {
+    @mixin set-font-size var(--atomic-text-lg);
+
+    height: var(--collapsed-size);
+
+    --gradient-start: var(
+      --atomic-smart-snippet-gradient-start,
+      calc(max(var(--collapsed-size) - (var(--line-height) * 1.5), var(--collapsed-size) * 0.5))
+    );
+    color: var(--atomic-on-background);
+    mask-image: linear-gradient(black, black var(--gradient-start), transparent 100%);
+
+    transition: height ease-in-out 0.25s;
+  }
+
+  button atomic-icon {
+    @apply relative top-0.5;
+  }
+}
+
+:host(.expanded) {
+  &::part(smart-snippet-collapse-wrapper) {
+    height: var(--full-height);
+    mask-image: none;
+  }
+
+  button atomic-icon {
+    @apply -scale-y-100 top-0;
+  }
+}

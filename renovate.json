@@ -2,6 +2,7 @@
   "enabled": true,
   "extends": [":semanticPrefixFixDepsChoreOthers"],
   "schedule": ["before 2am"],
+  "labels": ["dependencies"],
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
@@ -10,9 +11,10 @@
     },
     {
       "matchPackagePatterns": ["^@angular/*", "^@angular-devkit/*", "ng-packagr"],
+      "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
-      "allowedVersions": "14.x"
+      "allowedVersions": "16.x"
     },
     {
       "matchPackagePatterns": [
@@ -21,8 +23,33 @@
         "react-dom",
         "@types/react"
       ],
+      "groupName": "React",
       "groupSlug": "react",
       "rangeStrategy": "replace"
+    },
+    {
+      "matchPackagePatterns": [
+        "^@storybook/*"
+      ],
+      "groupName": "Storybook",
+      "groupSlug": "storybook",
+      "rangeStrategy": "replace"
+    },
+    {
+      "matchFileNames": ["packages/atomic/package.json"],
+      "matchPackagePatterns": ["^jest$", "^jest-cli$", "@types/jest", "jest-environment-node"],
+      "groupSlug": "atomic-jest",
+      "rangeStrategy": "replace",
+      "allowedVersions": "27.x",
+      "description": "Stencil do not support Jest >27 https://stenciljs.com/docs/support-policy#testing-libraries"
+    },
+    {
+      "matchFileNames": ["packages/quantic/package.json"],
+      "matchPackagePatterns": ["^chalk$"],
+      "groupSlug": "quantic-chalk",
+      "rangeStrategy": "replace",
+      "allowedVersions": "4.x",
+      "description": "Cypress custom reporter are CJS, and Chalk 5.x is ESM only"
     }
   ],
   "rangeStrategy": "auto",
@@ -35,12 +62,6 @@
   },
   "ignoreDeps": [
     "esbuild",
-    "@monaco-editor/react",
-    "@storybook/addon-controls",
-    "@storybook/addon-docs",
-    "@storybook/addon-essentials",
-    "@storybook/addon-viewport",
-    "@storybook/api",
-    "@storybook/html"
+    "@monaco-editor/react"
   ]
 }

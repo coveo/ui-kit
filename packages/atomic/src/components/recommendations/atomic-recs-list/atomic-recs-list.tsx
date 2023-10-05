@@ -16,10 +16,7 @@ import {
   Watch,
 } from '@stencil/core';
 import {buildRecsInteractiveResult, RecsResult} from '..';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -77,8 +74,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   @State()
   public recommendationListState!: RecommendationListState;
 
-  @FocusTarget()
-  private nextNewResultTarget!: FocusTargetController;
+  private nextNewResultTarget?: FocusTargetController;
 
   /**
    * The Recommendation identifier used by the Coveo platform to retrieve recommended documents.
@@ -202,7 +198,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       getLayoutDisplay: () => 'grid',
       getResultDisplay: () => this.display,
       getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.nextNewResultTarget,
+      nextNewResultTarget: this.focusTarget,
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListCommonState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
@@ -214,6 +210,13 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
           options: {result},
         }),
     });
+  }
+
+  private get focusTarget() {
+    if (!this.nextNewResultTarget) {
+      this.nextNewResultTarget = new FocusTargetController(this);
+    }
+    return this.nextNewResultTarget;
   }
 
   private get resultListCommonState(): ResultListCommonState<RecsResult> {

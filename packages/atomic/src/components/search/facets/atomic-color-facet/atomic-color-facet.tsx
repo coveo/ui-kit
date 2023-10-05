@@ -14,7 +14,6 @@ import {
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
   AriaLiveRegion,
-  FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
 import {
@@ -234,14 +233,11 @@ export class AtomicColorFacet
   @Prop({mutable: true})
   public customSort: string[] | string = '[]';
 
-  @FocusTarget()
-  private showLessFocus!: FocusTargetController;
+  private showLessFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private showMoreFocus!: FocusTargetController;
+  private showMoreFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private headerFocus!: FocusTargetController;
+  private headerFocus?: FocusTargetController;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
@@ -265,6 +261,7 @@ export class AtomicColorFacet
       label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
+      isHidden: () => this.isHidden,
     };
     this.bindings.store.registerFacet('facets', facetInfo);
     initializePopover(this.host, {
@@ -275,11 +272,37 @@ export class AtomicColorFacet
     this.initializeDependenciesManager();
   }
 
+  private get focusTargets() {
+    if (!this.showLessFocus) {
+      this.showLessFocus = new FocusTargetController(this);
+    }
+    if (!this.showMoreFocus) {
+      this.showMoreFocus = new FocusTargetController(this);
+    }
+    if (!this.headerFocus) {
+      this.headerFocus = new FocusTargetController(this);
+    }
+
+    return {
+      showLessFocus: this.showLessFocus,
+      showMoreFocus: this.showMoreFocus,
+      headerFocus: this.headerFocus,
+    };
+  }
+
   public disconnectedCallback() {
     if (this.host.isConnected) {
       return;
     }
     this.dependenciesManager?.stopWatching();
+  }
+
+  private get isHidden() {
+    return (
+      this.searchStatusState.hasError ||
+      !this.facet.state.enabled ||
+      !this.facet.state.values.length
+    );
   }
 
   public componentShouldUpdate(
@@ -318,14 +341,14 @@ export class AtomicColorFacet
         i18n={this.bindings.i18n}
         label={this.label}
         onClearFilters={() => {
-          this.headerFocus.focusAfterSearch();
+          this.focusTargets.headerFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-        headerRef={this.headerFocus.setTarget}
+        headerRef={(el) => this.focusTargets.headerFocus.setTarget(el)}
       ></FacetHeader>
     );
   }
@@ -381,8 +404,10 @@ export class AtomicColorFacet
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
             buttonRef={(element) => {
-              isShowLessFocusTarget && this.showLessFocus.setTarget(element);
-              isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
+              isShowLessFocusTarget &&
+                this.focusTargets.showLessFocus.setTarget(element);
+              isShowMoreFocusTarget &&
+                this.focusTargets.showMoreFocus.setTarget(element);
             }}
           >
             <FacetValueLabelHighlight
@@ -402,8 +427,10 @@ export class AtomicColorFacet
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
             buttonRef={(element) => {
-              isShowLessFocusTarget && this.showLessFocus.setTarget(element);
-              isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
+              isShowLessFocusTarget &&
+                this.focusTargets.showLessFocus.setTarget(element);
+              isShowMoreFocusTarget &&
+                this.focusTargets.showMoreFocus.setTarget(element);
             }}
           >
             <div
@@ -489,11 +516,11 @@ export class AtomicColorFacet
         i18n={this.bindings.i18n}
         onShowMore={() => {
           this.resultIndexToFocusOnShowMore = this.facet.state.values.length;
-          this.showMoreFocus.focusAfterSearch();
+          this.focusTargets.showMoreFocus.focusAfterSearch();
           this.facet.showMoreValues();
         }}
         onShowLess={() => {
-          this.showLessFocus.focusAfterSearch();
+          this.focusTargets.showLessFocus.focusAfterSearch();
           this.facet.showLessValues();
         }}
         canShowLessValues={this.facetState.canShowLessValues}

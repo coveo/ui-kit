@@ -1,5 +1,9 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {
+  FacetResultsMustMatch,
+  facetResultsMustMatch,
+} from '../../../../features/facets/facet-api/request';
+import {
   facetSortCriteria,
   FacetSortCriterion,
 } from '../../../../features/facets/facet-set/interfaces/request';
@@ -62,6 +66,13 @@ export interface FacetOptions {
    * @defaultValue `automatic`
    */
   sortCriteria?: FacetSortCriterion;
+
+  /**
+   * The criterion to use for specifying how results must match the selected facet values.
+   *
+   * @defaultValue `atLeastOneValue`
+   */
+  resultsMustMatch?: FacetResultsMustMatch;
 }
 
 export interface FacetSearchOptions {
@@ -90,5 +101,6 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   injectionDepth,
   numberOfValues,
   sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
+  resultsMustMatch: new StringValue({constrainTo: facetResultsMustMatch}),
   facetSearch,
 });

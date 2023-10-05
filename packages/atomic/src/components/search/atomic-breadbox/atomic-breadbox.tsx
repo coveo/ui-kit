@@ -6,12 +6,9 @@ import {
   FacetManagerState,
   buildFacetManager,
 } from '@coveo/headless';
-import {Component, h, State, Element, VNode} from '@stencil/core';
+import {Component, h, State, Element, VNode, Prop} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {
   InitializableComponent,
@@ -21,6 +18,7 @@ import {
 import {Button} from '../../common/button';
 import {Hidden} from '../../common/hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {NumberValue, Schema} from '@coveo/bueno';
 
 interface Breadcrumb {
   facetId: string;
@@ -76,16 +74,30 @@ export class AtomicBreadbox implements InitializableComponent {
   @State() public error!: Error;
   @State() private isCollapsed = true;
 
-  @FocusTarget()
-  private breadcrumbRemovedFocus!: FocusTargetController;
+  private breadcrumbRemovedFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private breadcrumbShowMoreFocus!: FocusTargetController;
+  private breadcrumbShowMoreFocus?: FocusTargetController;
 
-  @FocusTarget()
-  private breadcrumbShowLessFocus!: FocusTargetController;
+  private breadcrumbShowLessFocus?: FocusTargetController;
+
+  /**
+   * This prop allows you to control the display depth
+   * of the path by specifying the number of parent or ancestor
+   * breadcrumbs links relative to the currently selected value.
+   *
+   * If the path size is equal to or less than the pathLimit, all values in
+   * the path will be displayed without truncation.
+   *
+   * If the path size exceeds the pathLimit, it will truncate the path by
+   * replacing the middle values with ellipses ('...').
+   *
+   * Minimum: `1`
+   * @defaultValue `3`
+   */
+  @Prop() public pathLimit = 3;
 
   public initialize() {
+    this.validateProps();
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
 
@@ -95,8 +107,37 @@ export class AtomicBreadbox implements InitializableComponent {
     }
   }
 
+  private validateProps() {
+    new Schema({
+      pathLimit: new NumberValue({
+        default: 3,
+        min: 1,
+        required: false,
+      }),
+    }).validate({
+      pathLimit: this.pathLimit,
+    });
+  }
+
   public disconnectedCallback() {
     this.resizeObserver?.disconnect();
+  }
+
+  private get focusTargets() {
+    if (!this.breadcrumbRemovedFocus) {
+      this.breadcrumbRemovedFocus = new FocusTargetController(this);
+    }
+    if (!this.breadcrumbShowLessFocus) {
+      this.breadcrumbShowLessFocus = new FocusTargetController(this);
+    }
+    if (!this.breadcrumbShowMoreFocus) {
+      this.breadcrumbShowMoreFocus = new FocusTargetController(this);
+    }
+    return {
+      breadcrumbRemovedFocus: this.breadcrumbRemovedFocus,
+      breadcrumbShowLessFocus: this.breadcrumbShowLessFocus,
+      breadcrumbShowMoreFocus: this.breadcrumbShowMoreFocus,
+    };
   }
 
   private get breadcrumbs() {
@@ -161,11 +202,19 @@ export class AtomicBreadbox implements InitializableComponent {
   }
 
   private limitPath(path: string[]) {
-    if (path.length <= 3) {
+    if (path.length <= this.pathLimit) {
       return path.join(SEPARATOR);
     }
 
-    const ellipsedPath = [path[0], ELLIPSIS, ...path.slice(-2)];
+    if (this.pathLimit === 1 && path.length > 1) {
+      return [ELLIPSIS, path[path.length - 1]].join(SEPARATOR);
+    }
+
+    const ellipsedPath = [
+      path[0],
+      ELLIPSIS,
+      ...path.slice(-(this.pathLimit - 1)),
+    ];
     return ellipsedPath.join(SEPARATOR);
   }
 
@@ -197,7 +246,7 @@ export class AtomicBreadbox implements InitializableComponent {
             if (isLastBreadcrumb) {
               this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
             } else if (this.numberOfBreadcrumbs > 1) {
-              this.breadcrumbRemovedFocus.focusAfterSearch();
+              this.focusTargets.breadcrumbRemovedFocus.focusAfterSearch();
             }
 
             this.lastRemovedBreadcrumbIndex = index;
@@ -205,10 +254,10 @@ export class AtomicBreadbox implements InitializableComponent {
           }}
           ref={(ref) => {
             if (this.lastRemovedBreadcrumbIndex === index) {
-              this.breadcrumbRemovedFocus.setTarget(ref);
+              this.focusTargets.breadcrumbRemovedFocus.setTarget(ref);
             }
             if (this.firstExpandedBreadcrumbIndex === index) {
-              this.breadcrumbShowMoreFocus.setTarget(ref);
+              this.focusTargets.breadcrumbShowMoreFocus.setTarget(ref);
             }
           }}
         >
@@ -259,7 +308,7 @@ export class AtomicBreadbox implements InitializableComponent {
       <li key="show-more">
         <Button
           ref={(ref) => {
-            this.breadcrumbShowLessFocus.setTarget(ref!);
+            this.focusTargets.breadcrumbShowLessFocus.setTarget(ref!);
             this.showMore = ref!;
           }}
           part="show-more"
@@ -268,7 +317,7 @@ export class AtomicBreadbox implements InitializableComponent {
           onClick={() => {
             this.firstExpandedBreadcrumbIndex =
               this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
-            this.breadcrumbShowMoreFocus.focusOnNextTarget();
+            this.focusTargets.breadcrumbShowMoreFocus.focusOnNextTarget();
             this.isCollapsed = false;
           }}
         ></Button>
@@ -286,7 +335,7 @@ export class AtomicBreadbox implements InitializableComponent {
           text={this.bindings.i18n.t('show-less')}
           class="p-2 btn-pill"
           onClick={() => {
-            this.breadcrumbShowLessFocus.focusOnNextTarget();
+            this.focusTargets.breadcrumbShowLessFocus.focusOnNextTarget();
             this.isCollapsed = true;
           }}
         ></Button>
@@ -310,7 +359,9 @@ export class AtomicBreadbox implements InitializableComponent {
             this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
           }}
           ref={
-            isFocusTarget ? this.breadcrumbRemovedFocus.setTarget : undefined
+            isFocusTarget
+              ? this.focusTargets.breadcrumbRemovedFocus.setTarget
+              : undefined
           }
         ></Button>
       </li>
@@ -389,7 +440,7 @@ export class AtomicBreadbox implements InitializableComponent {
       )
       .map(({value, facetId, field, label}) => ({
         facetId,
-        label: this.bindings.i18n.t(label ? label : 'no-label'),
+        label: label ? label : field,
         deselect: value.deselect,
         formattedValue: [
           getFieldValueCaption(field, value.value.value, this.bindings.i18n),

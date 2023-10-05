@@ -47,7 +47,7 @@ export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
 export const isRefineModalFacet = 'is-refine-modal';
 
 export function createAtomicCommonStore<
-  StoreData extends AtomicCommonStoreData
+  StoreData extends AtomicCommonStoreData,
 >(initialStoreData: StoreData): AtomicCommonStore<StoreData> {
   const stencilStore = createStore(
     initialStoreData

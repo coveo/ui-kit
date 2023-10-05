@@ -11,10 +11,7 @@ import {
   InsightResult,
   buildInsightInteractiveResult,
 } from '../..';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -25,7 +22,6 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
-  ResultTarget,
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
@@ -49,7 +45,6 @@ export class AtomicInsightResultList
   private resultListCommon!: ResultListCommon;
   private loadingFlag = randomID('firstInsightResultLoaded-');
   private display: ResultDisplayLayout = 'list';
-  private gridCellLinkTarget: ResultTarget = '_self';
   private resultRenderingFunction: ResultRenderingFunction;
 
   @Element() public host!: HTMLDivElement;
@@ -64,7 +59,7 @@ export class AtomicInsightResultList
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
 
-  @FocusTarget() nextNewResultTarget!: FocusTargetController;
+  private nextNewResultTarget?: FocusTargetController;
 
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
@@ -117,12 +112,11 @@ export class AtomicInsightResultList
       getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
       host: this.host,
       bindings: this.bindings,
-      gridCellLinkTarget: this.gridCellLinkTarget,
       getDensity: () => this.density,
       getResultDisplay: () => this.display,
       getLayoutDisplay: () => this.display,
       getImageSize: () => this.imageSize,
-      nextNewResultTarget: this.nextNewResultTarget,
+      nextNewResultTarget: this.focusTarget,
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
@@ -134,6 +128,13 @@ export class AtomicInsightResultList
           options: {result},
         }),
     });
+  }
+
+  private get focusTarget(): FocusTargetController {
+    if (!this.nextNewResultTarget) {
+      this.nextNewResultTarget = new FocusTargetController(this);
+    }
+    return this.nextNewResultTarget;
   }
 
   public render() {

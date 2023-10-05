@@ -1,9 +1,10 @@
 import {
   buildSmartSnippet,
+  InlineLink,
   SmartSnippet,
   SmartSnippetState,
 } from '@coveo/headless';
-import {Component, Prop, State, Element} from '@stencil/core';
+import {Component, Prop, State, Element, Listen} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -101,6 +102,25 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   @State() feedbackSent = false;
 
+  @Prop({reflect: true}) public snippetMaximumHeight?: number;
+
+  @Prop({reflect: true}) public snippetCollapsedHeight?: number;
+
+  @Listen('selectInlineLink')
+  onSelectInlineLink(event: CustomEvent<InlineLink>) {
+    this.smartSnippet.selectInlineLink(event.detail);
+  }
+
+  @Listen('beginDelayedSelectInlineLink')
+  onBeginDelayedSelectInlineLink(event: CustomEvent<InlineLink>) {
+    this.smartSnippet.beginDelayedSelectInlineLink(event.detail);
+  }
+
+  @Listen('cancelPendingSelectInlineLink')
+  onCancelPendingSelectInlineLink(event: CustomEvent<InlineLink>) {
+    this.smartSnippet.cancelPendingSelectInlineLink(event.detail);
+  }
+
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
     this.smartSnippetCommon = new SmartSnippetCommon({
@@ -118,6 +138,12 @@ export class AtomicSmartSnippet implements InitializableComponent {
       getSmartSnippet: () => this.smartSnippet,
       getSnippetStyle: () => this.snippetStyle,
       getFeedbackSent: () => this.feedbackSent,
+      getSnippetMaximumHeight: this.snippetMaximumHeight
+        ? () => this.snippetMaximumHeight!
+        : undefined,
+      getSnippetCollapsedHeight: this.snippetCollapsedHeight
+        ? () => this.snippetCollapsedHeight!
+        : undefined,
       setModalRef: this.setModalRef.bind(this),
       setFeedbackSent: this.setFeedbackSent.bind(this),
     });

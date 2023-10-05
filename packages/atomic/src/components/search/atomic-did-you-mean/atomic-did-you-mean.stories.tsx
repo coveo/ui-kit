@@ -1,5 +1,7 @@
 import defaultStory from 'atomic-storybook/default-story';
 
+// cSpell:ignore testt
+
 const {defaultModuleExport, exportedStory} = defaultStory(
   'Atomic/DidYouMean',
   'atomic-did-you-mean',
