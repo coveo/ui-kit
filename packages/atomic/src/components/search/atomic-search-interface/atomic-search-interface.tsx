@@ -121,7 +121,7 @@ export class AtomicSearchInterface
   @Prop({reflect: true}) public logLevel?: LogLevel;
 
   /**
-   * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
+   * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
    */
   @Prop() public compatibilityJson: i18nCompatibilityJSONVersion = 'v3';
 

@@ -584,7 +584,7 @@ export namespace Components {
          */
         "analytics": boolean;
         /**
-          * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
         "compatibilityJson": i18nCompatibilityJSONVersion;
         /**
@@ -1329,7 +1329,7 @@ export namespace Components {
          */
         "analytics": boolean;
         /**
-          * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
         "compatibilityJson": i18nCompatibilityJSONVersion1;
         /**
@@ -2115,7 +2115,7 @@ export namespace Components {
          */
         "analytics": boolean;
         /**
-          * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
         "compatibilityJson": i18nCompatibilityJSONVersion1;
         /**
@@ -4459,7 +4459,7 @@ declare namespace LocalJSX {
          */
         "analytics"?: boolean;
         /**
-          * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
         "compatibilityJson"?: i18nCompatibilityJSONVersion;
         /**
@@ -5173,7 +5173,7 @@ declare namespace LocalJSX {
          */
         "analytics"?: boolean;
         /**
-          * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
         "compatibilityJson"?: i18nCompatibilityJSONVersion1;
         /**
@@ -5917,7 +5917,7 @@ declare namespace LocalJSX {
          */
         "analytics"?: boolean;
         /**
-          * The compatibility JSON version that should be used by i18next (see [i18next migration guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0))
+          * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
          */
         "compatibilityJson"?: i18nCompatibilityJSONVersion1;
         /**
