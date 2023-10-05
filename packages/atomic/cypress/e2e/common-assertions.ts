@@ -172,6 +172,9 @@ export function assertRemovesComponent() {
   );
 }
 
+/**
+ * @deprecated
+ */
 export function assertAriaLiveMessage(
   selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
   message: string
@@ -179,4 +182,11 @@ export function assertAriaLiveMessage(
   it(`screen readers should read out "${message}".`, () => {
     selector().should('contain.text', message);
   });
+}
+
+export function assertAriaLiveMessageWithoutIt(
+  selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
+  message: string
+) {
+  selector().should('contain.text', message);
 }
