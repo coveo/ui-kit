@@ -1,11 +1,15 @@
 import {
+  closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
+  openGeneratedAnswerFeedbackModal,
   resetAnswer,
   streamAnswer,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
+  logGenerativeQuestionDetailedFeedback,
+  logGenerativeQuestionFeedback,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
@@ -76,6 +80,44 @@ describe('generated answer', () => {
     const action = findAction(dislikeGeneratedAnswer.type);
     const analyticsAction = engine.findAsyncAction(
       logDislikeGeneratedAnswer().pending
+    );
+
+    expect(action).toBeTruthy();
+    expect(analyticsAction).toBeTruthy();
+  });
+
+  it('#openFeedbackModal dispatches the right actions', () => {
+    generatedAnswer.openFeedbackModal();
+    const action = findAction(openGeneratedAnswerFeedbackModal.type);
+
+    expect(action).toBeTruthy();
+  });
+
+  it('#closeFeedbackModal dispatches the right actions', () => {
+    generatedAnswer.closeFeedbackModal();
+    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+
+    expect(action).toBeTruthy();
+  });
+
+  it('#sendFeedback dispatches the right actions', () => {
+    const exampleFeedback = 'notAccurate';
+    generatedAnswer.sendFeedback(exampleFeedback);
+    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+    const analyticsAction = engine.findAsyncAction(
+      logGenerativeQuestionFeedback(exampleFeedback).pending
+    );
+
+    expect(action).toBeTruthy();
+    expect(analyticsAction).toBeTruthy();
+  });
+
+  it('#sendDetailedFeedback dispatches the right actions', () => {
+    const exampleDetails = 'Example details';
+    generatedAnswer.sendDetailedFeedback(exampleDetails);
+    const action = findAction(closeGeneratedAnswerFeedbackModal.type);
+    const analyticsAction = engine.findAsyncAction(
+      logGenerativeQuestionDetailedFeedback(exampleDetails).pending
     );
 
     expect(action).toBeTruthy();

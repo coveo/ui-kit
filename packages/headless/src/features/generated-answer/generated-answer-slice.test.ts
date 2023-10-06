@@ -9,6 +9,8 @@ import {
   updateCitations,
   updateError,
   updateMessage,
+  openGeneratedAnswerFeedbackModal,
+  closeGeneratedAnswerFeedbackModal,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
@@ -19,6 +21,7 @@ const baseState = {
   citations: [],
   liked: false,
   disliked: false,
+  feedbackModalOpen: false,
 };
 
 describe('generated answer slice', () => {
@@ -220,6 +223,30 @@ describe('generated answer slice', () => {
       ...getGeneratedAnswerInitialState(),
       liked: false,
       disliked: true,
+    });
+  });
+
+  it('#openGeneratedAnswerFeedbackModal should set the feedbackModalOpen attribute in the state to true', () => {
+    const finalState = generatedAnswerReducer(
+      baseState,
+      openGeneratedAnswerFeedbackModal()
+    );
+
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      feedbackModalOpen: true,
+    });
+  });
+
+  it('#closeGeneratedAnswerFeedbackModal should set the feedbackModalOpen attribute in the state to false', () => {
+    const finalState = generatedAnswerReducer(
+      {...baseState, feedbackModalOpen: true},
+      closeGeneratedAnswerFeedbackModal()
+    );
+
+    expect(finalState).toEqual({
+      ...getGeneratedAnswerInitialState(),
+      feedbackModalOpen: false,
     });
   });
 

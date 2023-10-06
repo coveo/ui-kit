@@ -9,6 +9,12 @@ import {
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors';
 
+export type GeneratedAnswerFeedback =
+  | 'irrelevant'
+  | 'notAccurate'
+  | 'outOfDate'
+  | 'harmful';
+
 export const logRetryGeneratedAnswer = (): SearchAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/retry',
@@ -65,6 +71,45 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
       }
       return client.makeDislikeGeneratedAnswer({
         generativeQuestionAnsweringId,
+      });
+    }
+  );
+
+export const logGenerativeQuestionFeedback = (
+  feedback: GeneratedAnswerFeedback
+): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/sendFeedback',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGenerativeQuestionFeedbackSubmit({
+        generativeQuestionAnsweringId,
+        reason: feedback,
+      });
+    }
+  );
+
+export const logGenerativeQuestionDetailedFeedback = (
+  details: string
+): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/sendFeedback',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGenerativeQuestionFeedbackSubmit({
+        generativeQuestionAnsweringId,
+        reason: 'other',
+        details,
       });
     }
   );
