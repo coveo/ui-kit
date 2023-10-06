@@ -190,7 +190,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insight-panel
   e2e-headless-ssr-test-dev:
-    name: 'Run e2e tests on Headless SSR sample in prod'
+    name: 'Run e2e tests on Headless SSR sample in dev'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -198,7 +198,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-headless-ssr-dev
   e2e-headless-ssr-test-prod:
-    name: 'Run e2e tests on Headless SSR sample in dev'
+    name: 'Run e2e tests on Headless SSR sample in prod'
     needs: build
     runs-on: ubuntu-latest
     steps:
