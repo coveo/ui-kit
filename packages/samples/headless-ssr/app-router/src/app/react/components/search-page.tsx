@@ -3,7 +3,6 @@
 import {
   SearchStaticState,
   SearchHydratedState,
-  fetchBuildResult,
   hydrateStaticState,
   HydratedStateProvider,
   StaticStateProvider,
@@ -24,19 +23,16 @@ export function SearchPageProvider({
   >(undefined);
 
   useEffect(() => {
-    fetchBuildResult({
-      searchParametersInitialState:
-        staticState.controllers.searchParameters.state,
-    })
-      .then((buildResult) =>
-        hydrateStaticState({
-          buildResult,
-          searchAction: staticState.searchAction,
-        })
-      )
-      .then(({engine, controllers}) => {
-        setHydratedState({engine, controllers});
-      });
+    hydrateStaticState({
+      searchAction: staticState.searchAction,
+      controllers: {
+        searchParameters: {
+          initialState: staticState.controllers.searchParameters.state,
+        },
+      },
+    }).then(({engine, controllers}) => {
+      setHydratedState({engine, controllers});
+    });
   }, [staticState]);
 
   if (hydratedState) {
