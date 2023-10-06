@@ -6,7 +6,8 @@ import {nodeResolve} from '@rollup/plugin-node-resolve';
 import alias from '@rollup/plugin-alias';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
-import {resolve} from 'path';
+import copy from 'rollup-plugin-copy';
+import {parse, resolve} from 'path';
 import packageJson from './package.json' assert {type: 'json'};
 import * as url from 'url';
 
@@ -36,6 +37,14 @@ const versionReplace = () =>
         preventAssignment: true,
         'process.env.PKG_VERSION': JSON.stringify(packageJson.version),
     });
+
+/**
+ * @param {{sourceFileName: string, aliasFileName: string}} options
+ */
+const aliasFile = ({sourceFileName, aliasFileName}) => {
+    const {dir: dest, base: rename} = parse(aliasFileName);
+    return copy({hook: 'writeBundle', targets: [{src: sourceFileName, dest, rename}]});
+};
 
 /**
  * @satisfies {RollupOptions}
@@ -87,16 +96,23 @@ const coveouaConfig = {
  */
 const nodeModulesConfig = {
     input: './src/coveoua/library.ts',
-    output: /** @type {const} */ (['cjs', 'es']).map((format) => ({
-        file: `./dist/library.${format === 'cjs' ? 'cjs' : 'mjs'}`,
-        format,
-    })),
+    output: [
+        {
+            file: `./dist/library.cjs`,
+            format: 'cjs',
+        },
+        {
+            file: `./dist/library.mjs`,
+            format: 'es',
+        },
+    ],
     plugins: [
         nodeResolve({mainFields: ['main'], preferBuiltins: true}),
         versionReplace(),
         commonjs(),
         tsPlugin(),
         json(),
+        aliasFile({sourceFileName: './dist/library.cjs', aliasFileName: './dist/library.js'}),
     ],
 };
 
@@ -117,6 +133,7 @@ const browserModulesConfig = {
             useTsconfigDeclarationDir: true,
             tsconfigOverride: {compilerOptions: {target: 'es6'}},
         }),
+        aliasFile({sourceFileName: './dist/browser.mjs', aliasFileName: './dist/library.es.js'}),
     ],
 };
 
