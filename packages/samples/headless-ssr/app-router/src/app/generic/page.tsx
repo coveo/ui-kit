@@ -1,9 +1,9 @@
 import {
   CoveoNextJsSearchParametersSerializer,
   NextJSServerSideSearchParams,
-} from '@/components/common/search-parameters-serializer';
-import {fetchStaticState} from '@/lib/generic/engine';
-import SearchPage from '@/components/generic/search-page';
+} from '@/common/components/common/search-parameters-serializer';
+import {fetchStaticState} from '@/common/lib/generic/engine';
+import SearchPage from '@/common/components/generic/search-page';
 
 // Entry point SSR function
 export default async function Search(url: {
