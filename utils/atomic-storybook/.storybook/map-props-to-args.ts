@@ -3,8 +3,6 @@ import {isNullOrUndefined} from '@coveo/bueno';
 import {ArgTypes} from '@storybook/html';
 import {JsonDocsValue} from '@stencil/core/internal';
 
-type foo = ArgTypes['controls']['type'];
-
 const availableControlType = [
   'object',
   'boolean',
@@ -21,6 +19,7 @@ const availableControlType = [
   'date',
   'text',
 ] as const;
+type ControlType = (typeof availableControlType)[number];
 
 const excludedPropType = ['ResultTemplateCondition'] as const;
 
@@ -66,7 +65,7 @@ export const mapPropsToArgTypes = (componentTag: string): ArgTypes => {
 
 const determineControlTypeFromJsonValues = (
   jsonValues: JsonDocsValue[]
-): {control: any; options?: any} => {
+): {control: ControlType; options?: (string | undefined)[]} => {
   const noNullOrUndefinedJsonValue = jsonValues.filter(
     (val) => val.type !== 'null' && val.type !== 'undefined'
   );
@@ -86,9 +85,8 @@ const determineControlTypeFromJsonValues = (
 
   // TODO: Might want to handle some corner case eventually.
   // eg: Date picker might be more suited in specific cases VS text.
-  return availableControlType.find(
+  const controlType = availableControlType.find(
     (controlType) => controlType === noNullOrUndefinedJsonValue[0].type
-  )
-    ? {control: noNullOrUndefinedJsonValue[0].type}
-    : {control: 'text'};
+  );
+  return controlType ? {control: controlType} : {control: 'text'};
 };
