@@ -3,7 +3,7 @@ import {
   ResultListState,
 } from '@coveo/headless/ssr';
 import {useEffect, useState, FunctionComponent} from 'react';
-import ResultListCommon from '../../../common/result-list';
+import ResultListCommon from '../common/result-list';
 
 interface ResultListProps {
   staticState: ResultListState;

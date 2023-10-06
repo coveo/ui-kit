@@ -1,13 +1,13 @@
-import {fetchStaticState} from '@/src/app/react/common/engine';
-import {SearchPageProvider} from '@/src/app/react/components/search-page';
+import {fetchStaticState} from '@/lib/react/engine';
+import {SearchPageProvider} from '@/components/react/search-page';
 import {
   CoveoNextJsSearchParametersSerializer,
   NextJSServerSideSearchParams,
-} from '../../common/search-parameters-serializer';
-import ResultList from './components/result-list';
-import SearchBox from './components/search-box';
-import SearchParameters from './components/search-parameters';
-import {AuthorFacet} from './components/facets';
+} from '@/components/common/search-parameters-serializer';
+import ResultList from '@/components/react/result-list';
+import SearchBox from '@/components/react/search-box';
+import SearchParameters from '@/components/react/search-parameters';
+import {AuthorFacet} from '@/components/react/facets';
 
 // Entry point SSR function
 export default async function Search(url: {

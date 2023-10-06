@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  experimental: {
+    // Enable reuse of components outside `src/`
+    externalDir: true,
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

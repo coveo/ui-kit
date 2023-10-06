@@ -4,10 +4,10 @@ import {
   SearchStaticState,
   SearchHydratedState,
   hydrateStaticState,
-} from '@/src/app/generic/common/engine';
+} from '../../lib/generic/engine';
 import {useEffect, useState} from 'react';
-import {HydrationMetadata} from '../../../common/hydration-metadata';
-import {useSyncSearchParameters} from '../hooks/search-parameters';
+import {HydrationMetadata} from '../common/hydration-metadata';
+import {useSyncSearchParameters} from '../../hooks/generic/search-parameters';
 import {Facet} from './facet';
 import {ResultList} from './result-list';
 import {SearchBox} from './search-box';

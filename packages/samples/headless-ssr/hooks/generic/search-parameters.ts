@@ -5,8 +5,8 @@ import {
   SearchParameterManagerState,
 } from '@coveo/headless/ssr';
 import {useEffect, useMemo, useState} from 'react';
-import {useHistoryRouter} from '../../../common/search-parameters';
-import {CoveoNextJsSearchParametersSerializer} from '../../../common/search-parameters-serializer';
+import {useHistoryRouter} from '../../components/common/search-parameters';
+import {CoveoNextJsSearchParametersSerializer} from '../../components/common/search-parameters-serializer';
 
 interface UseSyncSearchParametersProps {
   staticState: SearchParameterManagerState;
