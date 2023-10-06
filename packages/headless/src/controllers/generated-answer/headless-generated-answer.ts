@@ -5,6 +5,7 @@ import {
   resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
+  setEnabled,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
@@ -46,12 +47,28 @@ export interface GeneratedAnswer extends Controller {
    * @param id The ID of the clicked citation.
    */
   logCitationClick(id: string): void;
+  /**
+   * Enables generated answers. This has no effect when generated answers are already enabled.
+   */
+  enable(): void;
+  /**
+   * Disables generated answers. This has no effect when generated answers are already disabled.
+   */
+  disable(): void;
+}
+
+export interface GeneratedAnswerProps {
+  initialState?: {enabled: boolean};
+  persistEnabled?: (enabled: boolean) => void;
 }
 
 /**
  * @internal
  */
-export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
+export function buildGeneratedAnswer(
+  engine: SearchEngine,
+  props: GeneratedAnswerProps = {}
+): GeneratedAnswer {
   if (!loadGeneratedAnswerReducer(engine)) {
     throw loadReducerError;
   }
@@ -102,6 +119,10 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     return engine.subscribe(strictListener);
   };
 
+  const isEnabled = props?.initialState?.enabled;
+  if (isEnabled !== undefined) {
+    dispatch(setEnabled(isEnabled));
+  }
   subscribeToSearchRequests();
 
   return {
@@ -127,6 +148,19 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
 
     logCitationClick(citationId: string) {
       dispatch(logOpenGeneratedAnswerSource(citationId));
+    },
+
+    enable() {
+      if (!this.state.enabled) {
+        props?.persistEnabled?.(true);
+        dispatch(setEnabled(true));
+      }
+    },
+    disable() {
+      if (this.state.enabled) {
+        props?.persistEnabled?.(false);
+        dispatch(setEnabled(false));
+      }
     },
   };
 }

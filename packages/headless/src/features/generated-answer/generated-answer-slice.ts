@@ -4,6 +4,7 @@ import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   resetAnswer,
+  setEnabled,
   setIsLoading,
   setIsStreaming,
   updateCitations,
@@ -16,6 +17,9 @@ export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
   (builder) =>
     builder
+      .addCase(setEnabled, (state, {payload}) => {
+        state.enabled = payload;
+      })
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
@@ -49,8 +53,11 @@ export const generatedAnswerReducer = createReducer(
         state.liked = false;
         state.disliked = true;
       })
-      .addCase(resetAnswer, () => {
-        return getGeneratedAnswerInitialState();
+      .addCase(resetAnswer, (state) => {
+        return {
+          ...getGeneratedAnswerInitialState(),
+          enabled: state.enabled,
+        };
       })
       .addCase(setIsLoading, (state, {payload}) => {
         state.isLoading = payload;

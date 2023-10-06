@@ -5,6 +5,7 @@ import {
 } from '../../test';
 import {buildMockCitation} from '../../test/mock-citation';
 import {
+  setEnabled,
   setIsLoading,
   updateCitations,
   updateError,
@@ -104,6 +105,17 @@ describe('generated answer', () => {
         payload: {
           citations: testCitations,
         },
+        type: actionType,
+      });
+    });
+  });
+
+  describe('#setEnabled', () => {
+    const actionType = 'generatedAnswer/setEnabled';
+
+    it('should accept a valid payload', () => {
+      expect(e.dispatch(setEnabled(true))).toEqual({
+        payload: true,
         type: actionType,
       });
     });

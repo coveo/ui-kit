@@ -1,7 +1,9 @@
+import {TestUtils} from '../..';
 import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   resetAnswer,
+  setEnabled,
   streamAnswer,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
@@ -10,7 +12,10 @@ import {
   logOpenGeneratedAnswerSource,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer} from '../../features/generated-answer/generated-answer-slice';
-import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
+import {
+  GeneratedAnswerState,
+  getGeneratedAnswerInitialState,
+} from '../../features/generated-answer/generated-answer-state';
 import {executeSearch} from '../../features/search/search-actions';
 import {buildMockCitation} from '../../test/mock-citation';
 import {
@@ -20,23 +25,43 @@ import {
 import {
   buildGeneratedAnswer,
   GeneratedAnswer,
+  GeneratedAnswerProps,
 } from './headless-generated-answer';
 
 describe('generated answer', () => {
   let generatedAnswer: GeneratedAnswer;
   let engine: MockSearchEngine;
 
-  function initGeneratedAnswer() {
-    generatedAnswer = buildGeneratedAnswer(engine);
+  function initGeneratedAnswer(props: GeneratedAnswerProps = {}) {
+    generatedAnswer = buildGeneratedAnswer(engine, props);
   }
 
   function findAction(actionType: string) {
     return engine.actions.find((a) => a.type === actionType);
   }
 
+  function buildEngineWithGeneratedAnswer(
+    initialState: Partial<GeneratedAnswerState> = {}
+  ) {
+    const mockState = TestUtils.createMockState();
+    return buildMockSearchAppEngine({
+      state: {
+        ...mockState,
+        generatedAnswer: {
+          ...mockState.generatedAnswer,
+          ...initialState,
+        },
+      },
+    });
+  }
+
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
     initGeneratedAnswer();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('it adds the correct reducers to engine', () => {
@@ -45,12 +70,12 @@ describe('generated answer', () => {
     });
   });
 
-  it('should return the state', () => {
-    expect(generatedAnswer.state).toEqual(getGeneratedAnswerInitialState());
-  });
-
   it('should subscribe to state updates', () => {
     expect(engine.subscribe).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return the state', () => {
+    expect(generatedAnswer.state).toEqual(getGeneratedAnswerInitialState());
   });
 
   it('#retry dispatches #executeSearch', () => {
@@ -93,6 +118,24 @@ describe('generated answer', () => {
     expect(action).toBeTruthy();
   });
 
+  describe('when passing initial state', () => {
+    it('should dispatch setEnabled action when set to true', () => {
+      initGeneratedAnswer({initialState: {enabled: true}});
+
+      const action = findAction(setEnabled.type);
+      expect(action).toBeDefined();
+      expect(action).toHaveProperty('payload', true);
+    });
+
+    it('should dispatch setEnabled action when set to false', () => {
+      initGeneratedAnswer({initialState: {enabled: false}});
+
+      const action = findAction(setEnabled.type);
+      expect(action).toBeDefined();
+      expect(action).toHaveProperty('payload', false);
+    });
+  });
+
   describe('subscription to changes', () => {
     function callListener() {
       return (engine.subscribe as jest.Mock).mock.calls.map(
@@ -128,6 +171,80 @@ describe('generated answer', () => {
       const action = findAction(streamAnswer.pending.type);
 
       expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#enable', () => {
+    describe('when already enabled', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({enabled: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.enable();
+
+        const action = findAction(setEnabled.type);
+        expect(action).toBeUndefined();
+      });
+    });
+
+    describe('when not enabled', () => {
+      it('should persist the enabled value', () => {
+        const accessor = jest.fn();
+        engine = buildEngineWithGeneratedAnswer({enabled: false});
+        initGeneratedAnswer({persistEnabled: accessor});
+
+        generatedAnswer.enable();
+
+        expect(accessor).toHaveBeenCalledWith(true);
+      });
+
+      it('should dispatch the setEnabled action', () => {
+        engine = buildEngineWithGeneratedAnswer({enabled: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.enable();
+
+        const action = findAction(setEnabled.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', true);
+      });
+    });
+  });
+
+  describe('#disable', () => {
+    describe('when already disabled', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({enabled: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.disable();
+
+        const action = findAction(setEnabled.type);
+        expect(action).toBeUndefined();
+      });
+    });
+
+    describe('when enabled', () => {
+      it('should persist the enabled value', () => {
+        const accessor = jest.fn();
+        engine = buildEngineWithGeneratedAnswer({enabled: true});
+        initGeneratedAnswer({persistEnabled: accessor});
+
+        generatedAnswer.disable();
+
+        expect(accessor).toHaveBeenCalledWith(false);
+      });
+
+      it('should dispatch the setEnabled action', () => {
+        engine = buildEngineWithGeneratedAnswer({enabled: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.disable();
+
+        const action = findAction(setEnabled.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', false);
+      });
     });
   });
 });

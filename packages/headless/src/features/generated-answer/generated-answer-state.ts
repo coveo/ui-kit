@@ -1,6 +1,7 @@
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 
 export interface GeneratedAnswerState {
+  enabled: boolean;
   isLoading: boolean;
   isStreaming: boolean;
   answer?: string;
@@ -16,6 +17,7 @@ export interface GeneratedAnswerState {
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
+    enabled: true,
     isLoading: false,
     isStreaming: false,
     citations: [],
