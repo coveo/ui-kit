@@ -539,14 +539,14 @@ export interface GeneratedAnswerCitationMeta {
 
 export type GeneratedAnswerFeedbackReason = 'irrelevant' | 'notAccurate' | 'outOfDate' | 'harmful' | 'other';
 
-export type GeneratedAnswerRephraseStrategy = 'stepByStep' | 'bulletPoints' | 'summarize';
+export type GeneratedAnswerRephraseFormat = 'stepByStep' | 'bulletPoints' | 'summarize';
 
 export interface GeneratedAnswerSourceHoverMeta extends GeneratedAnswerCitationMeta {
     citationHoverTime: number;
 }
 
 export interface GeneratedAnswerRephraseMeta extends GeneratedAnswerBaseMeta {
-    rephraseStrategy: GeneratedAnswerRephraseStrategy;
+    rephraseFormat: GeneratedAnswerRephraseFormat;
 }
 
 export interface GeneratedAnswerFeedbackMeta extends GeneratedAnswerBaseMeta {

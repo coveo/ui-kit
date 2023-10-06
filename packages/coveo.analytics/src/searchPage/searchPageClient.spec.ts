@@ -6,7 +6,7 @@ import {
     OmniboxSuggestionsMetadata,
     StaticFilterToggleValueMetadata,
     GeneratedAnswerFeedbackReason,
-    GeneratedAnswerRephraseStrategy,
+    GeneratedAnswerRephraseFormat,
 } from './searchPageEvents';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
@@ -1565,7 +1565,7 @@ describe('SearchPageClient', () => {
     it('should send proper payload for #logRephraseGeneratedAnswer', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
-            rephraseStrategy: <GeneratedAnswerRephraseStrategy>'stepByStep',
+            rephraseFormat: <GeneratedAnswerRephraseFormat>'stepByStep',
         };
         await client.logRephraseGeneratedAnswer(meta);
         expectMatchPayload(SearchPageEvents.rephraseGeneratedAnswer, meta);
@@ -1574,7 +1574,7 @@ describe('SearchPageClient', () => {
     it('should send proper payload for #makeRephraseGeneratedAnswer', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
-            rephraseStrategy: <GeneratedAnswerRephraseStrategy>'stepByStep',
+            rephraseFormat: <GeneratedAnswerRephraseFormat>'stepByStep',
         };
         const built = await client.makeRephraseGeneratedAnswer(meta);
         await built.log({searchUID: provider.getSearchUID()});
