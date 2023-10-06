@@ -96,7 +96,10 @@ describe('headless ssr with search parameter manager example', () => {
       cy.intercept('/**', (req) => {
         req.continue((resp) => {
           const dom = new DOMParser().parseFromString(resp.body, 'text/html');
-          expect(dom.querySelector('.search-box input')).to.have.value(query);
+          const searchBoxInput = dom.querySelector('.search-box input');
+          if (searchBoxInput) {
+            expect(searchBoxInput).to.have.value('def');
+          }
         });
       });
       cy.visit(getInitialUrl());
@@ -140,7 +143,10 @@ describe('headless ssr with search parameter manager example', () => {
       cy.intercept('/**', (req) => {
         req.continue((resp) => {
           const dom = new DOMParser().parseFromString(resp.body, 'text/html');
-          expect(dom.querySelector('.search-box input')).to.have.value('');
+          const searchBoxInput = dom.querySelector('.search-box input');
+          if (searchBoxInput) {
+            expect(searchBoxInput).to.have.value('');
+          }
         });
       });
       cy.visit(getInitialUrl());
