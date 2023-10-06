@@ -317,7 +317,7 @@ export enum SearchPageEvents {
     /**
      * Identifies the custom event that gets logged when a user hovers over a generated answer citation.
      */
-    generatedAnswerCitationHover = 'generatedAnswerCitationHover',
+    generatedAnswerSourceHover = 'generatedAnswerSourceHover',
     /**
      * Identifies the custom event that gets logged when a user clicks the copy to clip board button of a generated answer.
      */
@@ -384,7 +384,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.dislikeGeneratedAnswer]: 'generatedAnswer',
     [SearchPageEvents.openGeneratedAnswerSource]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerStreamEnd]: 'generatedAnswer',
-    [SearchPageEvents.generatedAnswerCitationHover]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerSourceHover]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerCopyToClipboard]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerHideAnswers]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerShowAnswers]: 'generatedAnswer',
@@ -541,7 +541,7 @@ export type GeneratedAnswerFeedbackReason = 'irrelevant' | 'notAccurate' | 'outO
 
 export type GeneratedAnswerRephraseStrategy = 'stepByStep' | 'bulletPoints' | 'summarize';
 
-export interface GeneratedAnswerCitationHoverMeta extends GeneratedAnswerCitationMeta {
+export interface GeneratedAnswerSourceHoverMeta extends GeneratedAnswerCitationMeta {
     citationHoverTime: number;
 }
 

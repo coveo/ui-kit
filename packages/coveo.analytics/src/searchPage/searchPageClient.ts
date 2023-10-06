@@ -39,7 +39,7 @@ import {
     GeneratedAnswerFeedbackMeta,
     GeneratedAnswerCitationMeta,
     GeneratedAnswerStreamEndMeta,
-    GeneratedAnswerCitationHoverMeta,
+    GeneratedAnswerSourceHoverMeta,
     GeneratedAnswerBaseMeta,
     GeneratedAnswerRephraseMeta,
 } from './searchPageEvents';
@@ -914,12 +914,12 @@ export class CoveoSearchPageClient {
         });
     }
 
-    public makeGeneratedAnswerCitationHover(metadata: GeneratedAnswerCitationHoverMeta) {
-        return this.makeCustomEvent(SearchPageEvents.generatedAnswerCitationHover, metadata);
+    public makeGeneratedAnswerSourceHover(metadata: GeneratedAnswerSourceHoverMeta) {
+        return this.makeCustomEvent(SearchPageEvents.generatedAnswerSourceHover, metadata);
     }
 
-    public async logGeneratedAnswerCitationHover(metadata: GeneratedAnswerCitationHoverMeta) {
-        return (await this.makeGeneratedAnswerCitationHover(metadata)).log({
+    public async logGeneratedAnswerSourceHover(metadata: GeneratedAnswerSourceHoverMeta) {
+        return (await this.makeGeneratedAnswerSourceHover(metadata)).log({
             searchUID: this.provider.getSearchUID(),
         });
     }

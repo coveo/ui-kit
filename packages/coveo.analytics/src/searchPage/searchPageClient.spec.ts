@@ -1474,28 +1474,28 @@ describe('SearchPageClient', () => {
         expectMatchDescription(built.description, SearchPageEvents.generatedAnswerStreamEnd, meta);
     });
 
-    it('should send proper payload for #logGeneratedAnswerCitationHover', async () => {
+    it('should send proper payload for #logGeneratedAnswerSourceHover', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
             id: 'some-document-id',
             permanentId: 'perm-id',
             citationHoverTime: 100,
         };
-        await client.logGeneratedAnswerCitationHover(meta);
-        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCitationHover, meta);
+        await client.logGeneratedAnswerSourceHover(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerSourceHover, meta);
     });
 
-    it('should send proper payload for #makeGeneratedAnswerCitationHover', async () => {
+    it('should send proper payload for #makeGeneratedAnswerSourceHover', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
             id: 'some-document-id',
             permanentId: 'perm-id',
             citationHoverTime: 100,
         };
-        const built = await client.makeGeneratedAnswerCitationHover(meta);
+        const built = await client.makeGeneratedAnswerSourceHover(meta);
         await built.log({searchUID: provider.getSearchUID()});
-        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCitationHover, meta);
-        expectMatchDescription(built.description, SearchPageEvents.generatedAnswerCitationHover, meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerSourceHover, meta);
+        expectMatchDescription(built.description, SearchPageEvents.generatedAnswerSourceHover, meta);
     });
 
     it('should send proper payload for #logGeneratedAnswerCopyToClipboard', async () => {
