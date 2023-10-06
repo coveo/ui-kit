@@ -73,3 +73,19 @@ export type {
   CartControllerState,
 } from './controllers/commerce/context/cart/headless-cart';
 export {buildCart} from './controllers/commerce/context/cart/headless-cart';
+
+export type {
+  SortByRelevance,
+  SortByFields,
+  SortByFieldsFields,
+  SortCriterion,
+  SortBy,
+  SortDirection,
+  buildRelevanceSortCriterion,
+  buildFieldsSortCriterion,
+  SortProps,
+  SortInitialState,
+  Sort,
+  SortState,
+} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
+export {buildSort} from './controllers/commerce/product-listing/sort/headless-product-listing-sort';
