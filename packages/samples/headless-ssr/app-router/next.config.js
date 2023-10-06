@@ -6,6 +6,7 @@ const nextConfig = {
     //  Since readability is more important for the samples, this setting is used instead.
     externalDir: true,
   },
+  reactStrictMode: true,
 };
 
 module.exports = nextConfig;
