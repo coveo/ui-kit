@@ -100,6 +100,11 @@ export namespace Components {
      * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
      */
     interface AtomicBreadbox {
+        /**
+          * This prop allows you to control the display depth of the path by specifying the number of parent or ancestor breadcrumbs links relative to the currently selected value.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
+          * @defaultValue `3`
+         */
+        "pathLimit": number;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -3967,6 +3972,11 @@ declare namespace LocalJSX {
      * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
      */
     interface AtomicBreadbox {
+        /**
+          * This prop allows you to control the display depth of the path by specifying the number of parent or ancestor breadcrumbs links relative to the currently selected value.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
+          * @defaultValue `3`
+         */
+        "pathLimit"?: number;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
