@@ -542,7 +542,7 @@ export type GeneratedAnswerFeedbackReason = 'irrelevant' | 'notAccurate' | 'outO
 export type GeneratedAnswerRephraseFormat = 'stepByStep' | 'bulletPoints' | 'summarize';
 
 export interface GeneratedAnswerSourceHoverMeta extends GeneratedAnswerCitationMeta {
-    citationHoverTime: number;
+    citationHoverTimeMs: number;
 }
 
 export interface GeneratedAnswerRephraseMeta extends GeneratedAnswerBaseMeta {

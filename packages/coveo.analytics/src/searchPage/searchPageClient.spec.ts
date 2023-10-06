@@ -1479,7 +1479,7 @@ describe('SearchPageClient', () => {
             generativeQuestionAnsweringId: fakeStreamId,
             id: 'some-document-id',
             permanentId: 'perm-id',
-            citationHoverTime: 100,
+            citationHoverTimeMs: 100,
         };
         await client.logGeneratedAnswerSourceHover(meta);
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerSourceHover, meta);
@@ -1490,7 +1490,7 @@ describe('SearchPageClient', () => {
             generativeQuestionAnsweringId: fakeStreamId,
             id: 'some-document-id',
             permanentId: 'perm-id',
-            citationHoverTime: 100,
+            citationHoverTimeMs: 100,
         };
         const built = await client.makeGeneratedAnswerSourceHover(meta);
         await built.log({searchUID: provider.getSearchUID()});
