@@ -1,9 +1,7 @@
 import {Action} from '@reduxjs/toolkit';
 import {buildFetchProductListingResponse} from '../../test/mock-product-listing';
-import {buildFetchProductListingV2Response} from '../../test/mock-product-listing-v2';
 import {buildMockSearch} from '../../test/mock-search';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
-import {fetchProductListing as fetchProductListingV2} from '../commerce/product-listing/product-listing-actions';
 import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions';
 import {
   deselectAllCategoryFacetValues,
@@ -189,23 +187,6 @@ describe('pagination slice', () => {
       },
     });
     const action = fetchProductListing.fulfilled(response, '');
-
-    const finalState = paginationReducer(state, action);
-    expect(finalState.totalCountFiltered).toBe(
-      response.response.pagination.totalCount
-    );
-  });
-
-  it('fetchProductListingV2.fulfilled updates totalCountFiltered to the response value', () => {
-    const response = buildFetchProductListingV2Response({
-      pagination: {
-        page: 0,
-        perPage: 100,
-        totalCount: 100,
-        totalPages: 1,
-      },
-    });
-    const action = fetchProductListingV2.fulfilled(response, '');
 
     const finalState = paginationReducer(state, action);
     expect(finalState.totalCountFiltered).toBe(
