@@ -19,7 +19,7 @@ npm run dev
 - Run prod
 
 ```bash
-npm run build && npm run start
+npm run build && npm run prod
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

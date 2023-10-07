@@ -253,6 +253,16 @@ jobs:
       - 'unit-test'
       - 'e2e-atomic-test'
       - 'e2e-quantic-test'
+      - 'e2e-atomic-screenshots'
+      - 'e2e-atomic-react-test'
+      - 'e2e-atomic-react-nextjs-test'
+      - 'e2e-iife-test'
+      - 'e2e-atomic-angular-test'
+      - 'e2e-atomic-vuejs-test'
+      - 'e2e-atomic-stencil-test'
+      - 'e2e-atomic-hosted-page-test'
+      - 'e2e-atomic-insight-panel-test'
+      - 'e2e-headless-ssr-test'
     runs-on: ubuntu-latest
     steps:
       - run: echo 'All required jobs have passed'
