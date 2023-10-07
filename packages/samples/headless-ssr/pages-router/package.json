@@ -8,7 +8,9 @@
     "build": "nx build",
     "build:next": "next build",
     "prod": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "e2e": "cypress run --browser chrome --e2e --project ../",
+    "e2e:watch": "cypress open --browser chrome --e2e --project ../"
   },
   "dependencies": {
     "@coveo/headless-react": "0.1.1",
@@ -24,9 +26,6 @@
     "@types/react-dom": "18.2.7",
     "eslint": "8.50.0",
     "eslint-config-next": "13.5.4",
-    "typescript": "5.2.2",
-    "cypress": "13.3.0",
-    "cypress-repeat": "2.3.3",
-    "cypress-web-vitals": "4.1.0"
+    "typescript": "5.2.2"
   }
 }

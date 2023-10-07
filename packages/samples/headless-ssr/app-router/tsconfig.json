@@ -30,11 +30,4 @@
     ".next/types/**/*.ts",
   ],
   "exclude": ["node_modules"],
-  "ts-node": {
-    // For Cypress https://github.com/cypress-io/cypress/issues/27448
-    "compilerOptions": {
-      "module": "es2015",
-      "moduleResolution": "node"
-    }
-  }
 }
