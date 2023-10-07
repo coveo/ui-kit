@@ -20,7 +20,7 @@
       }
     ],
     "paths": {
-      "@/*": ["../*"]
+      "@/common/*": ["../common/*"]
     }
   },
   "include": [
@@ -28,9 +28,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "../lib/**/*.ts*",
-    "../components/**/*.ts*",
-    "../hooks/**/*.ts*"
   ],
   "exclude": ["node_modules"],
   "ts-node": {
