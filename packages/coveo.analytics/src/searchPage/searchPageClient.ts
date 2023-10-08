@@ -39,6 +39,9 @@ import {
     GeneratedAnswerFeedbackMeta,
     GeneratedAnswerCitationMeta,
     GeneratedAnswerStreamEndMeta,
+    GeneratedAnswerSourceHoverMeta,
+    GeneratedAnswerBaseMeta,
+    GeneratedAnswerRephraseMeta,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
@@ -885,19 +888,19 @@ export class CoveoSearchPageClient {
         };
     }
 
-    public makeLikeGeneratedAnswer(metadata: GeneratedAnswerFeedbackMeta) {
+    public makeLikeGeneratedAnswer(metadata: GeneratedAnswerBaseMeta) {
         return this.makeCustomEvent(SearchPageEvents.likeGeneratedAnswer, metadata);
     }
 
-    public async logLikeGeneratedAnswer(metadata: GeneratedAnswerFeedbackMeta) {
+    public async logLikeGeneratedAnswer(metadata: GeneratedAnswerBaseMeta) {
         return (await this.makeLikeGeneratedAnswer(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 
-    public makeDislikeGeneratedAnswer(metadata: GeneratedAnswerFeedbackMeta) {
+    public makeDislikeGeneratedAnswer(metadata: GeneratedAnswerBaseMeta) {
         return this.makeCustomEvent(SearchPageEvents.dislikeGeneratedAnswer, metadata);
     }
 
-    public async logDislikeGeneratedAnswer(metadata: GeneratedAnswerFeedbackMeta) {
+    public async logDislikeGeneratedAnswer(metadata: GeneratedAnswerBaseMeta) {
         return (await this.makeDislikeGeneratedAnswer(metadata)).log({searchUID: this.provider.getSearchUID()});
     }
 
@@ -909,6 +912,64 @@ export class CoveoSearchPageClient {
         return (await this.makeOpenGeneratedAnswerSource(metadata)).log({
             searchUID: this.provider.getSearchUID(),
         });
+    }
+
+    public makeGeneratedAnswerSourceHover(metadata: GeneratedAnswerSourceHoverMeta) {
+        return this.makeCustomEvent(SearchPageEvents.generatedAnswerSourceHover, metadata);
+    }
+
+    public async logGeneratedAnswerSourceHover(metadata: GeneratedAnswerSourceHoverMeta) {
+        return (await this.makeGeneratedAnswerSourceHover(metadata)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
+    }
+
+    public makeGeneratedAnswerCopyToClipboard(metadata: GeneratedAnswerBaseMeta) {
+        return this.makeCustomEvent(SearchPageEvents.generatedAnswerCopyToClipboard, metadata);
+    }
+
+    public async logGeneratedAnswerCopyToClipboard(metadata: GeneratedAnswerBaseMeta) {
+        return (await this.makeGeneratedAnswerCopyToClipboard(metadata)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
+    }
+
+    public makeGeneratedAnswerHideAnswers(metadata: GeneratedAnswerBaseMeta) {
+        return this.makeCustomEvent(SearchPageEvents.generatedAnswerHideAnswers, metadata);
+    }
+
+    public async logGeneratedAnswerHideAnswers(metadata: GeneratedAnswerBaseMeta) {
+        return (await this.makeGeneratedAnswerHideAnswers(metadata)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
+    }
+
+    public makeGeneratedAnswerShowAnswers(metadata: GeneratedAnswerBaseMeta) {
+        return this.makeCustomEvent(SearchPageEvents.generatedAnswerShowAnswers, metadata);
+    }
+
+    public async logGeneratedAnswerShowAnswers(metadata: GeneratedAnswerBaseMeta) {
+        return (await this.makeGeneratedAnswerShowAnswers(metadata)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
+    }
+
+    public makeGenerativeQuestionFeedbackSubmit(meta: GeneratedAnswerFeedbackMeta) {
+        return this.makeCustomEvent(SearchPageEvents.generativeQuestionFeedbackSubmit, meta);
+    }
+
+    public async logGenerativeQuestionFeedbackSubmit(meta: GeneratedAnswerFeedbackMeta) {
+        return (await this.makeGenerativeQuestionFeedbackSubmit(meta)).log({
+            searchUID: this.provider.getSearchUID(),
+        });
+    }
+
+    public makeRephraseGeneratedAnswer(meta: GeneratedAnswerRephraseMeta) {
+        return this.makeSearchEvent(SearchPageEvents.rephraseGeneratedAnswer, meta);
+    }
+
+    public async logRephraseGeneratedAnswer(meta: GeneratedAnswerRephraseMeta) {
+        return (await this.makeRephraseGeneratedAnswer(meta)).log({searchUID: this.provider.getSearchUID()});
     }
 
     public makeRetryGeneratedAnswer() {

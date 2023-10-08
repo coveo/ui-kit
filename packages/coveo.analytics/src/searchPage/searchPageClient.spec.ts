@@ -5,6 +5,8 @@ import {
     CustomEventsTypes,
     OmniboxSuggestionsMetadata,
     StaticFilterToggleValueMetadata,
+    GeneratedAnswerFeedbackReason,
+    GeneratedAnswerRephraseFormat,
 } from './searchPageEvents';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
@@ -1470,5 +1472,113 @@ describe('SearchPageClient', () => {
         await built.log({searchUID: provider.getSearchUID()});
         expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerStreamEnd, meta);
         expectMatchDescription(built.description, SearchPageEvents.generatedAnswerStreamEnd, meta);
+    });
+
+    it('should send proper payload for #logGeneratedAnswerSourceHover', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            id: 'some-document-id',
+            permanentId: 'perm-id',
+            citationHoverTimeMs: 100,
+        };
+        await client.logGeneratedAnswerSourceHover(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerSourceHover, meta);
+    });
+
+    it('should send proper payload for #makeGeneratedAnswerSourceHover', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            id: 'some-document-id',
+            permanentId: 'perm-id',
+            citationHoverTimeMs: 100,
+        };
+        const built = await client.makeGeneratedAnswerSourceHover(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerSourceHover, meta);
+        expectMatchDescription(built.description, SearchPageEvents.generatedAnswerSourceHover, meta);
+    });
+
+    it('should send proper payload for #logGeneratedAnswerCopyToClipboard', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        await client.logGeneratedAnswerCopyToClipboard(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCopyToClipboard, meta);
+    });
+
+    it('should send proper payload for #makeGeneratedAnswerCopyToClipboard', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        const built = await client.makeGeneratedAnswerCopyToClipboard(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerCopyToClipboard, meta);
+        expectMatchDescription(built.description, SearchPageEvents.generatedAnswerCopyToClipboard, meta);
+    });
+
+    it('should send proper payload for #logGeneratedAnswerHideAnswers', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        await client.logGeneratedAnswerHideAnswers(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerHideAnswers, meta);
+    });
+
+    it('should send proper payload for #makeGeneratedAnswerHideAnswers', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        const built = await client.makeGeneratedAnswerHideAnswers(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerHideAnswers, meta);
+        expectMatchDescription(built.description, SearchPageEvents.generatedAnswerHideAnswers, meta);
+    });
+
+    it('should send proper payload for #logGeneratedAnswerShowAnswers', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        await client.logGeneratedAnswerShowAnswers(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, meta);
+    });
+
+    it('should send proper payload for #makeGeneratedAnswerShowAnswers', async () => {
+        const meta = {generativeQuestionAnsweringId: fakeStreamId};
+        const built = await client.makeGeneratedAnswerShowAnswers(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, meta);
+        expectMatchDescription(built.description, SearchPageEvents.generatedAnswerShowAnswers, meta);
+    });
+
+    it('should send proper payload for #logGenerativeQuestionFeedbackSubmit', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            reason: <GeneratedAnswerFeedbackReason>'other',
+            details: 'a few additional details',
+        };
+        await client.logGenerativeQuestionFeedbackSubmit(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generativeQuestionFeedbackSubmit, meta);
+    });
+
+    it('should send proper payload for #makeGenerativeQuestionFeedbackSubmit', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            reason: <GeneratedAnswerFeedbackReason>'other',
+            details: 'a few additional details',
+        };
+        const built = await client.makeGenerativeQuestionFeedbackSubmit(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchCustomEventPayload(SearchPageEvents.generativeQuestionFeedbackSubmit, meta);
+        expectMatchDescription(built.description, SearchPageEvents.generativeQuestionFeedbackSubmit, meta);
+    });
+
+    it('should send proper payload for #logRephraseGeneratedAnswer', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            rephraseFormat: <GeneratedAnswerRephraseFormat>'stepByStep',
+        };
+        await client.logRephraseGeneratedAnswer(meta);
+        expectMatchPayload(SearchPageEvents.rephraseGeneratedAnswer, meta);
+    });
+
+    it('should send proper payload for #makeRephraseGeneratedAnswer', async () => {
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            rephraseFormat: <GeneratedAnswerRephraseFormat>'stepByStep',
+        };
+        const built = await client.makeRephraseGeneratedAnswer(meta);
+        await built.log({searchUID: provider.getSearchUID()});
+        expectMatchPayload(SearchPageEvents.rephraseGeneratedAnswer, meta);
+        expectMatchDescription(built.description, SearchPageEvents.rephraseGeneratedAnswer, meta);
     });
 });
