@@ -1,19 +1,125 @@
-import {buildResultList} from '../../controllers';
-import {loadPaginationActions} from '../../product-listing.index';
+import {AnyAction} from '@reduxjs/toolkit';
+import {buildController} from '../../controllers';
+import {
+  defineResultList,
+  loadPaginationActions,
+  InferStaticState,
+  InferHydratedState,
+  ControllerDefinitionWithoutProps,
+  Controller,
+  Middleware,
+} from '../../ssr.index';
+import {buildMockResult} from '../../test';
+import {InferBuildResult} from '../ssr-engine/types/core-engine';
 import {getSampleSearchEngineConfiguration} from './search-engine';
-import {SearchEngineDefinition, defineSearchEngine} from './search-engine.ssr';
+import {
+  SSRSearchEngine,
+  SearchEngineDefinition,
+  defineSearchEngine,
+} from './search-engine.ssr';
+import {executeSearch} from '../../features/search/search-actions';
+
+interface CustomQuerySummary extends Controller {
+  state: {resultsPerPage?: number};
+}
+
+function defineCustomQuerySummary(): ControllerDefinitionWithoutProps<
+  SSRSearchEngine,
+  CustomQuerySummary
+> {
+  return {
+    build(engine) {
+      return {
+        ...buildController(engine),
+        get state() {
+          return {resultsPerPage: engine.state.pagination?.numberOfResults};
+        },
+      };
+    },
+  };
+}
+
+function isSearchPendingAction(
+  action: AnyAction
+): action is ReturnType<(typeof executeSearch)['pending']> {
+  return action.type === 'search/executeSearch/pending';
+}
+
+function isSearchFulfilledAction(
+  action: AnyAction
+): action is ReturnType<(typeof executeSearch)['fulfilled']> {
+  return action.type === 'search/executeSearch/fulfilled';
+}
+
+function createMockResultsMiddleware(options: {
+  defaultNumberOfResults: number;
+}): Middleware {
+  const numberOfResultsPerRequestId: {[requestId: string]: number | undefined} =
+    {};
+  return (api) => (next) => (action) => {
+    if (isSearchPendingAction(action)) {
+      const state = api.getState() as SSRSearchEngine['state'];
+      numberOfResultsPerRequestId[action.meta.requestId] =
+        state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
+      return next(action);
+    }
+    if (isSearchFulfilledAction(action)) {
+      const newAction = JSON.parse(JSON.stringify(action)) as typeof action;
+      newAction.payload.response.results = Array.from(
+        {
+          length: numberOfResultsPerRequestId[action.meta.requestId]!,
+        },
+        (_, index) => buildMockResult({title: `Result #${index}`})
+      );
+      return next(newAction);
+    }
+    return next(action);
+  };
+}
 
 describe('SSR', () => {
   describe('define search engine', () => {
-    const controllers = {};
-    let engineDefinition: SearchEngineDefinition<typeof controllers>;
+    type StaticState = InferStaticState<typeof engineDefinition>;
+    type HydratedState = InferHydratedState<typeof engineDefinition>;
+    type BuildResult = InferBuildResult<typeof engineDefinition>;
+    type AnyState = StaticState | HydratedState | BuildResult;
+
+    const defaultNumberOfResults = 10;
+    let engineDefinition: SearchEngineDefinition<{
+      querySummary: ReturnType<typeof defineCustomQuerySummary>;
+      resultList: ReturnType<typeof defineResultList>;
+    }>;
+
+    function setResultsPerPage(
+      engine: SSRSearchEngine,
+      numberOfResults: number
+    ) {
+      const {registerNumberOfResults} = loadPaginationActions(engine);
+      engine.dispatch(registerNumberOfResults(numberOfResults));
+    }
+
+    function getResultsPerPage(state: AnyState) {
+      return (
+        state.controllers.querySummary.state.resultsPerPage ??
+        defaultNumberOfResults
+      );
+    }
+
+    function getResultsCount(state: AnyState) {
+      return state.controllers.resultList.state.results.length;
+    }
+
     beforeEach(() => {
       engineDefinition = defineSearchEngine({
         configuration: {
           ...getSampleSearchEngineConfiguration(),
           analytics: {enabled: false},
         },
-        controllers,
+        controllers: {
+          querySummary: defineCustomQuerySummary(),
+          resultList: defineResultList(),
+        },
+        middlewares: [createMockResultsMiddleware({defaultNumberOfResults})],
       });
     });
 
@@ -35,70 +141,71 @@ describe('SSR', () => {
 
     it('fetches initial state of engine', async () => {
       const {fetchStaticState} = engineDefinition;
-      const engineStaticState = await fetchStaticState();
-      expect(engineStaticState).toBeTruthy();
+      const staticState = await fetchStaticState();
+      expect(staticState).toBeTruthy();
+      expect(getResultsCount(staticState)).toBe(defaultNumberOfResults);
+      expect(getResultsPerPage(staticState)).toBe(defaultNumberOfResults);
     });
 
-    it('fetches initial state of engine from build result', async () => {
-      const {build, fetchStaticState} = engineDefinition;
-      const buildResult = await build();
-      const engineStaticState = await fetchStaticState.fromBuildResult({
-        buildResult,
+    describe('with a static state', () => {
+      let staticState: StaticState;
+      beforeEach(async () => {
+        const {fetchStaticState} = engineDefinition;
+        staticState = await fetchStaticState();
       });
-      expect(engineStaticState).toBeTruthy();
-    });
 
-    it('hydrates engine and fetches results using hydrated engine', async () => {
-      const {fetchStaticState, hydrateStaticState} = engineDefinition;
-      const engineStaticState = await fetchStaticState();
-      const {engine} = await hydrateStaticState(engineStaticState);
-      expect(engine.state.configuration.organizationId).toEqual(
-        getSampleSearchEngineConfiguration().organizationId
-      );
-
-      const resultList = buildResultList(engine);
-      expect(resultList.state.results.length).toBe(10);
-    });
-
-    it('hydrates engine and fetches results using hydrated engine from build result', async () => {
-      const {build, fetchStaticState, hydrateStaticState} = engineDefinition;
-      const buildResult = await build();
-      const engineStaticState = await fetchStaticState.fromBuildResult({
-        buildResult,
-      });
-      const {engine} = await hydrateStaticState.fromBuildResult({
-        buildResult,
-        searchAction: engineStaticState.searchAction,
-      });
-      expect(engine.state.configuration.organizationId).toEqual(
-        getSampleSearchEngineConfiguration().organizationId
-      );
-
-      const resultList = buildResultList(engine);
-      expect(resultList.state.results.length).toBe(10);
-    });
-
-    it('can dispatch an action on both the server side and client side engine', async () => {
-      const numberOfResults = 6;
-      const {build, fetchStaticState, hydrateStaticState} = engineDefinition;
-      async function fetchBuildResult() {
-        const buildResult = await build();
-        const {registerNumberOfResults} = loadPaginationActions(
-          buildResult.engine
+      it('hydrates engine and fetches results using hydrated engine', async () => {
+        const {hydrateStaticState} = engineDefinition;
+        const hydratedState = await hydrateStaticState(staticState);
+        expect(hydratedState.engine.state.configuration.organizationId).toEqual(
+          getSampleSearchEngineConfiguration().organizationId
         );
-        buildResult.engine.dispatch(registerNumberOfResults(numberOfResults));
+        expect(getResultsCount(hydratedState)).toBe(defaultNumberOfResults);
+        expect(getResultsPerPage(hydratedState)).toBe(defaultNumberOfResults);
+      });
+    });
+
+    describe('with a buildResult that has a customized numberOfResults', () => {
+      const newNumberOfResults = 6;
+      async function fetchBuildResultWithNewNumberOfResults() {
+        const {build} = engineDefinition;
+        const buildResult = await build();
+        setResultsPerPage(buildResult.engine, newNumberOfResults);
+        expect(getResultsPerPage(buildResult)).toBe(newNumberOfResults);
         return buildResult;
       }
 
-      const engineStaticState = await fetchStaticState.fromBuildResult({
-        buildResult: await fetchBuildResult(),
+      it('fetches initial state of engine from build result', async () => {
+        const {fetchStaticState} = engineDefinition;
+        const staticState = await fetchStaticState.fromBuildResult({
+          buildResult: await fetchBuildResultWithNewNumberOfResults(),
+        });
+        expect(staticState).toBeTruthy();
+        expect(getResultsCount(staticState)).toBe(newNumberOfResults);
+        expect(getResultsPerPage(staticState)).toBe(newNumberOfResults);
       });
-      const {engine} = await hydrateStaticState.fromBuildResult({
-        buildResult: await fetchBuildResult(),
-        searchAction: engineStaticState.searchAction,
+
+      describe('with the default static state', () => {
+        let staticState: StaticState;
+        beforeEach(async () => {
+          const {fetchStaticState} = engineDefinition;
+          staticState = await fetchStaticState();
+        });
+
+        it('hydrates engine from build result', async () => {
+          const {hydrateStaticState} = engineDefinition;
+          const buildResult = await fetchBuildResultWithNewNumberOfResults();
+          const hydratedState = await hydrateStaticState.fromBuildResult({
+            buildResult: buildResult,
+            searchAction: staticState.searchAction,
+          });
+          expect(getResultsCount(staticState)).toBe(defaultNumberOfResults);
+          expect(getResultsCount(hydratedState)).toBe(
+            getResultsCount(staticState)
+          );
+          expect(getResultsPerPage(hydratedState)).toBe(newNumberOfResults);
+        });
       });
-      expect(engine.state.pagination!.numberOfResults).toBe(numberOfResults);
-      expect(engine.state.search.results.length).toBe(numberOfResults);
     });
   });
 });
