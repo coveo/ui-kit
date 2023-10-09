@@ -19,20 +19,20 @@ import {
 } from './search-engine.ssr';
 import {executeSearch} from '../../features/search/search-actions';
 
-interface CustomQuerySummary extends Controller {
-  state: {resultsPerPage?: number};
+interface CustomEngineStateReader<TState extends {}> extends Controller {
+  state: TState;
 }
 
-function defineCustomQuerySummary(): ControllerDefinitionWithoutProps<
+function defineCustomEngineStateReader(): ControllerDefinitionWithoutProps<
   SSRSearchEngine,
-  CustomQuerySummary
+  CustomEngineStateReader<SSRSearchEngine['state']>
 > {
   return {
     build(engine) {
       return {
         ...buildController(engine),
         get state() {
-          return {resultsPerPage: engine.state.pagination?.numberOfResults};
+          return engine.state;
         },
       };
     },
@@ -86,21 +86,13 @@ describe('SSR', () => {
 
     const defaultNumberOfResults = 10;
     let engineDefinition: SearchEngineDefinition<{
-      querySummary: ReturnType<typeof defineCustomQuerySummary>;
+      engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
       resultList: ReturnType<typeof defineResultList>;
     }>;
 
-    function setResultsPerPage(
-      engine: SSRSearchEngine,
-      numberOfResults: number
-    ) {
-      const {registerNumberOfResults} = loadPaginationActions(engine);
-      engine.dispatch(registerNumberOfResults(numberOfResults));
-    }
-
     function getResultsPerPage(state: AnyState) {
       return (
-        state.controllers.querySummary.state.resultsPerPage ??
+        state.controllers.engineStateReader.state.pagination?.numberOfResults ??
         defaultNumberOfResults
       );
     }
@@ -116,7 +108,7 @@ describe('SSR', () => {
           analytics: {enabled: false},
         },
         controllers: {
-          querySummary: defineCustomQuerySummary(),
+          engineStateReader: defineCustomEngineStateReader(),
           resultList: defineResultList(),
         },
         middlewares: [createMockResultsMiddleware({defaultNumberOfResults})],
@@ -167,10 +159,16 @@ describe('SSR', () => {
 
     describe('with a buildResult that has a customized numberOfResults', () => {
       const newNumberOfResults = 6;
+
       async function fetchBuildResultWithNewNumberOfResults() {
         const {build} = engineDefinition;
         const buildResult = await build();
-        setResultsPerPage(buildResult.engine, newNumberOfResults);
+        const {registerNumberOfResults} = loadPaginationActions(
+          buildResult.engine
+        );
+        buildResult.engine.dispatch(
+          registerNumberOfResults(newNumberOfResults)
+        );
         expect(getResultsPerPage(buildResult)).toBe(newNumberOfResults);
         return buildResult;
       }
