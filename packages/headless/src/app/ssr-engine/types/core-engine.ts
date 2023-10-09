@@ -65,3 +65,12 @@ export type InferHydratedState<
     hydrateStaticState(...args: unknown[]): Promise<unknown>;
   },
 > = Awaited<ReturnType<T['hydrateStaticState']>>;
+
+/**
+ * @internal
+ */
+export type InferBuildResult<
+  T extends {
+    build(...args: unknown[]): Promise<unknown>;
+  },
+> = Awaited<ReturnType<T['build']>>;

@@ -43,6 +43,7 @@ export type {
   EngineDefinition,
   InferStaticState,
   InferHydratedState,
+  InferBuildResult,
 } from './app/ssr-engine/types/core-engine';
 export type {LoggerOptions} from './app/logger';
 
