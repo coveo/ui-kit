@@ -23,7 +23,8 @@
     "release:phase0": "npx -p=@coveo/release git-lock",
     "release:phase1-3": "npm run release:phase2 && npx -p=@coveo/release reify",
     "release:phase2": "nx run-many --targets=release:phase2 --all --parallel=false --output-style=stream",
-    "release:phase4": "npx -p=@coveo/release git-publish-all"
+    "release:phase4": "npx -p=@coveo/release git-publish-all",
+    "release:phase5": "nx run-many --targets=release:phase5 --all"
   },
   "devDependencies": {
     "@actions/core": "1.10.1",
