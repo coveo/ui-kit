@@ -84,7 +84,7 @@ describe('SSR', () => {
     type BuildResult = InferBuildResult<typeof engineDefinition>;
     type AnyState = StaticState | HydratedState | BuildResult;
 
-    const defaultNumberOfResults = 10;
+    const defaultNumberOfResults = 12;
     let engineDefinition: SearchEngineDefinition<{
       engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
       resultList: ReturnType<typeof defineResultList>;
