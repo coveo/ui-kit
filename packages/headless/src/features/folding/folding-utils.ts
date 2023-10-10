@@ -9,11 +9,18 @@ export function getAllIncludedResultsFrom(relevantResult: ResultWithFolding) {
     .map((result) => result.parentResult!);
 
   const resultsInCollection = removeDuplicates(
-    [relevantResult, ...foldedResults, ...parentResults],
+    [...foldedResults, ...parentResults],
     (result) => result.uniqueId
   );
 
-  return resultsInCollection;
+  const includedResults = [
+    {...relevantResult, parentResult: null},
+    ...resultsInCollection.filter(
+      (r) => r.uniqueId !== relevantResult.uniqueId
+    ),
+  ];
+
+  return includedResults;
 }
 
 function getChildResultsRecursively(
