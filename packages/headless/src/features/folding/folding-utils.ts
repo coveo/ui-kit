@@ -8,14 +8,14 @@ export function getAllIncludedResultsFrom(relevantResult: ResultWithFolding) {
     .filter((result) => result.parentResult)
     .map((result) => result.parentResult!);
 
-  const resultsInCollection = removeDuplicates(
+  const uniqueFoldedResults = removeDuplicates(
     [...foldedResults, ...parentResults],
     (result) => result.uniqueId
   );
 
   const includedResults = [
     {...relevantResult, parentResult: null},
-    ...resultsInCollection.filter(
+    ...uniqueFoldedResults.filter(
       (r) => r.uniqueId !== relevantResult.uniqueId
     ),
   ];
