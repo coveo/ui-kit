@@ -81,17 +81,11 @@
       "groupSlug": "nx",
       "rangeStrategy": "replace",
       "allowedVersions": "15.x"
-    },
-    {
-      "groupName": "nvm",
-      "groupSlug": "NVM",
-      "fileMatch": [
-        "(^|/)\\.nvmrc$"
-      ],
-      "versioning": "node",
-      "pinDigests": false
     }
   ],
+  "nvm": {
+    "groupName": "NVM"
+  },
   "rangeStrategy": "auto",
   "lockFileMaintenance": {
     "enabled": false
