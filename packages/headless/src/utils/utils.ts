@@ -17,16 +17,22 @@ export function isEmptyString(str: string) {
 
 export function removeDuplicates<T>(
   arr: T[],
-  getIdentifier: (value: T, index: number) => string
+  getIdentifier: (value: T, index: number) => string,
+  rightToLeft: boolean
 ) {
+  const reduceFunction = (
+    existingValues: Record<string, T>,
+    value: T,
+    index: number
+  ) => ({
+    ...existingValues,
+    [getIdentifier(value, index)]: value,
+  });
+
   return Object.values(
-    arr.reduce(
-      (existingValues, value, index) => ({
-        ...existingValues,
-        [getIdentifier(value, index)]: value,
-      }),
-      <Record<string, T>>{}
-    )
+    rightToLeft
+      ? arr.reduceRight(reduceFunction, <Record<string, T>>{})
+      : arr.reduce(reduceFunction, <Record<string, T>>{})
   );
 }
 

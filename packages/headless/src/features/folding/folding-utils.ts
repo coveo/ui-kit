@@ -8,19 +8,17 @@ export function getAllIncludedResultsFrom(relevantResult: ResultWithFolding) {
     .filter((result) => result.parentResult)
     .map((result) => result.parentResult!);
 
-  const uniqueFoldedResults = removeDuplicates(
-    [...foldedResults, ...parentResults],
-    (result) => result.uniqueId
+  const resultsInCollection = removeDuplicates(
+    [
+      ...foldedResults,
+      ...parentResults,
+      {...relevantResult, parentResult: null},
+    ],
+    (result) => result.uniqueId,
+    false
   );
 
-  const includedResults = [
-    {...relevantResult, parentResult: null},
-    ...uniqueFoldedResults.filter(
-      (r) => r.uniqueId !== relevantResult.uniqueId
-    ),
-  ];
-
-  return includedResults;
+  return resultsInCollection;
 }
 
 function getChildResultsRecursively(
