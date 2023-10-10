@@ -1,7 +1,7 @@
 import {ProductListingV2SuccessResponse} from '../api/commerce/product-listings/v2/product-listing-v2-response';
 import {FetchProductListingV2ThunkReturn} from '../features/commerce/product-listing/product-listing-actions';
 import {logProductListingV2Load} from '../features/commerce/product-listing/product-listing-analytics';
-import {SortBy} from '../features/sort/sort';
+import {buildRelevanceSortCriterion} from '../features/commerce/product-listing/sort/product-listing-sort';
 
 export function buildFetchProductListingV2Response(
   response: Partial<ProductListingV2SuccessResponse> = {}
@@ -9,8 +9,8 @@ export function buildFetchProductListingV2Response(
   return {
     response: {
       sort: response.sort ?? {
-        appliedSort: {by: SortBy.Relevance},
-        availableSorts: [{by: SortBy.Relevance}],
+        appliedSort: buildRelevanceSortCriterion(),
+        availableSorts: [buildRelevanceSortCriterion()],
       },
       pagination: response.pagination ?? {
         page: 0,

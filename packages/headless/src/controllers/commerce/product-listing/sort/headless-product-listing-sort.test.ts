@@ -52,8 +52,8 @@ describe('headless product-listing-sort', () => {
 
   describe('when sort is populated', () => {
     const appliedSort = {
-      by: SortBy.Fields,
-      fields: [{name: 'some_field'}],
+      sortCriteria: SortBy.Fields,
+      fields: [{field: 'some_field'}],
     };
 
     beforeEach(() => {
@@ -78,8 +78,8 @@ describe('headless product-listing-sort', () => {
 
     it('calling #isSortedBy with a criterion different to the one in state returns false', () => {
       const notAppliedSort = {
-        by: SortBy.Fields,
-        fields: [{name: 'some_field'}],
+        sortCriteria: SortBy.Fields,
+        fields: [{field: 'some_field'}],
       };
       expect(sort.isSortedBy(notAppliedSort)).toBe(false);
     });
@@ -90,8 +90,8 @@ describe('headless product-listing-sort', () => {
 
     it('calling #isAvailable with an unavailable criterion returns false', () => {
       const unavailableSort = {
-        by: SortBy.Fields,
-        fields: [{name: 'some_other_field'}],
+        sortCriteria: SortBy.Fields,
+        fields: [{field: 'some_other_field'}],
       };
       expect(sort.isAvailable(unavailableSort)).toBe(false);
     });

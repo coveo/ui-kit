@@ -1,15 +1,4 @@
 import {CoreEngine} from '../../../../app/engine';
-import {
-  SortByFields,
-  SortCriterion,
-  sortCriterionDefinition,
-  SortByFieldsFields,
-  SortByRelevance,
-  SortBy,
-  buildRelevanceSortCriterion,
-  SortDirection,
-  buildFieldsSortCriterion,
-} from '../../../../features/sort/sort';
 import {validateInitialState} from '../../../../utils/validate-payload';
 import {
   buildController,
@@ -24,6 +13,17 @@ import {sortReducer as sort} from '../../../../features/commerce/product-listing
 import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
 import {updatePage} from '../../../../features/pagination/pagination-actions';
 import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
+import {
+  buildFieldsSortCriterion,
+  buildRelevanceSortCriterion,
+  SortByFields,
+  SortByRelevance,
+  SortBy,
+  SortCriterion,
+  SortDirection,
+  SortByFieldsFields,
+  sortCriterionDefinition,
+} from '../../../../features/commerce/product-listing/sort/product-listing-sort';
 
 export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
 export {
@@ -142,7 +142,9 @@ export function buildSort(engine: CommerceEngine, props: SortProps = {}): Sort {
     },
 
     isSortedBy(criterion: SortCriterion) {
-      return this.state.appliedSort === criterion;
+      return (
+        JSON.stringify(this.state.appliedSort) === JSON.stringify(criterion)
+      );
     },
 
     isAvailable(criterion: SortCriterion) {

@@ -7,7 +7,7 @@ import {
   getProductListingV2InitialState,
   ProductListingV2State,
 } from './product-listing-state';
-import {buildRelevanceSortCriterion} from '../../sort/sort';
+import {buildRelevanceSortCriterion} from './sort/product-listing-sort';
 
 describe('product-listing-v2-slice', () => {
   let state: ProductListingV2State;

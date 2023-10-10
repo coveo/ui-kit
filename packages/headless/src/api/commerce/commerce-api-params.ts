@@ -1,7 +1,7 @@
 import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
-import {SortCriterion} from '../../features/sort/sort';
+import {SortCriterion} from '../../features/commerce/product-listing/sort/product-listing-sort';
 
 export interface TrackingIdParam {
   trackingId: string;
@@ -72,5 +72,5 @@ export interface SelectedPageParam {
 }
 
 export interface SelectedSortParam {
-  selectedSort?: SortCriterion;
+  sort?: SortCriterion;
 }
