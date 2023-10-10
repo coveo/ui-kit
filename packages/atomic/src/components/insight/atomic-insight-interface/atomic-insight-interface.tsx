@@ -28,7 +28,7 @@ import {
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicInsightStore, createAtomicInsightStore} from './store';
-import {i18nCompatibilityJSONVersion} from '../../common/interface/i18n';
+import {i18nCompatibilityVersion} from '../../common/interface/i18n';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 export type InsightInitializationOptions = InsightEngineConfiguration;
@@ -73,7 +73,8 @@ export class AtomicInsightInterface
   /**
    * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
    */
-  @Prop() public compatibilityJson: i18nCompatibilityJSONVersion = 'v3';
+  @Prop() public localizationCompatibilityVersion: i18nCompatibilityVersion =
+    'v3';
   /**
    * The service insight interface language.
    */

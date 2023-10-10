@@ -41,7 +41,7 @@ import {
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicStore, createAtomicStore} from './store';
-import {i18nCompatibilityJSONVersion} from '../../../components';
+import {i18nCompatibilityVersion} from '../../../components';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -123,7 +123,8 @@ export class AtomicSearchInterface
   /**
    * The compatibility JSON version for i18next to use (see [i18next Migration Guide](https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0)).
    */
-  @Prop() public compatibilityJson: i18nCompatibilityJSONVersion = 'v3';
+  @Prop() public localizationCompatibilityVersion: i18nCompatibilityVersion =
+    'v3';
 
   /**
    * The search interface i18next instance.
@@ -325,6 +326,12 @@ export class AtomicSearchInterface
         this.host
       );
       return;
+    }
+
+    if (this.localizationCompatibilityVersion !== 'v4') {
+      this.engine.logger.warn(
+        `As of Atomic version 3.0.0, support for JSON compatibility ${this.localizationCompatibilityVersion} will be deprecated. Please update the JSON compatibility to v4: <atomic-search-interface localization-compatibility-version="v4" ...></atomic-search-interface> For more information, see i18next Migration Guide: https://www.i18next.com/misc/migration-guide#v20.x.x-to-v21.0.0.`
+      );
     }
 
     const safeStorage = new SafeStorage();
