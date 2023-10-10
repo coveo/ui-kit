@@ -77,3 +77,24 @@ export function createStaticState<
     searchAction: clone(searchAction),
   };
 }
+
+export function composeFunction<
+  TParameters extends Array<unknown>,
+  TReturn,
+  TChildren extends {},
+>(
+  parentFunction: (...params: TParameters) => TReturn,
+  children: TChildren
+): TChildren & {
+  (...params: TParameters): TReturn;
+} {
+  const newFunction = function (...params: TParameters) {
+    return parentFunction(...params);
+  } as {
+    (...params: TParameters): TReturn;
+  } & TChildren;
+  for (const [key, value] of Object.entries(children)) {
+    (newFunction as unknown as Record<typeof key, typeof value>)[key] = value;
+  }
+  return newFunction;
+}
