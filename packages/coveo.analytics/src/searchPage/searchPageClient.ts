@@ -61,6 +61,7 @@ export interface SearchPageClientProvider {
     getFacetState?: () => FacetStateMetadata[];
     getSplitTestRunName?: () => string | undefined;
     getSplitTestRunVersion?: () => string | undefined;
+    getGeneratedAnswerMetadata?: () => Record<string, any>;
 }
 
 export interface SearchPageClientOptions extends ClientOptions {
@@ -844,7 +845,7 @@ export class CoveoSearchPageClient {
         metadata?: Record<string, any>
     ): Promise<PreparedSearchEventRequest> {
         return {
-            ...(await this.getBaseEventRequest(metadata)),
+            ...(await this.getBaseEventRequest({...metadata, ...this.provider.getGeneratedAnswerMetadata?.()})),
             ...this.provider.getSearchEventRequestPayload(),
             queryPipeline: this.provider.getPipeline(),
             actionCause: event,
