@@ -47,10 +47,6 @@
           '.html': 'html',
         });
       })();
-      const onButtonClick = () => {
-        const searchInterface = document.querySelector('atomic-search-interface');
-        searchInterface.language = 'fr';
-      };
     </script>
     <style>
       /* Example on how to customize CSS variables */
@@ -137,12 +133,11 @@
   </head>
 
   <body>
-    <atomic-search-interface fields-to-include='["snrating", "sncost"]' localization-compatibility-version="v3">
+    <atomic-search-interface fields-to-include='["snrating", "sncost"]'>
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
           <atomic-search-box></atomic-search-box>
-          <button onclick="onButtonClick()">Bonjour!</button>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
