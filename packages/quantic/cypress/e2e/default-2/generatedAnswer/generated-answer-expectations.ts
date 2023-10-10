@@ -194,7 +194,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
             'generativeQuestionAnsweringId',
             streamId
           );
-          expect(customData).to.have.property('id', citation.id);
+          expect(customData).to.have.property('citationId', citation.id);
           expect(customData).to.have.property(
             'permanentId',
             citation.permanentid
