@@ -41,6 +41,12 @@
       "rangeStrategy": "replace"
     },
     {
+      "matchPackagePatterns": ["^@stencil/*"],
+      "groupName": "Stencil",
+      "groupSlug": "stencil",
+      "rangeStrategy": "replace"
+    },
+    {
       "matchFileNames": ["packages/atomic/package.json"],
       "matchPackagePatterns": [
         "^jest$",
