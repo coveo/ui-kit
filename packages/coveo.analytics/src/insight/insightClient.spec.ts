@@ -535,7 +535,7 @@ describe('InsightClient', () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
                 permanentId: 'foo',
-                id: 'bar',
+                citationId: 'bar',
             };
 
             await client.logOpenGeneratedAnswerSource(exampleGeneratedAnswerMetadata);
@@ -546,7 +546,7 @@ describe('InsightClient', () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
                 permanentId: 'foo',
-                id: 'bar',
+                citationId: 'bar',
                 citationHoverTimeMs: 100,
             };
 
@@ -1263,7 +1263,7 @@ describe('InsightClient', () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
                 permanentId: 'foo',
-                id: 'bar',
+                citationId: 'bar',
             };
             const expectedMetadata = {
                 ...exampleGeneratedAnswerMetadata,
@@ -1278,7 +1278,7 @@ describe('InsightClient', () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
                 permanentId: 'foo',
-                id: 'bar',
+                citationId: 'bar',
                 citationHoverTimeMs: 100,
             };
             const expectedMetadata = {
