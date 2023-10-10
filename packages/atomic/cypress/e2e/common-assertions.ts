@@ -86,7 +86,7 @@ export function assertAccessibilityWithoutIt<T extends HTMLElement>(
   if (typeof component === 'string') {
     cy.checkA11y(component, axeOptions, logAxeIssues);
   } else if (typeof component === 'function') {
-    component().should(([el]) => {
+    component().then(([el]) => {
       cy.checkA11y(el, axeOptions, logAxeIssues);
     });
   } else {
@@ -172,6 +172,9 @@ export function assertRemovesComponent() {
   );
 }
 
+/**
+ * @deprecated
+ */
 export function assertAriaLiveMessage(
   selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
   message: string
@@ -179,4 +182,11 @@ export function assertAriaLiveMessage(
   it(`screen readers should read out "${message}".`, () => {
     selector().should('contain.text', message);
   });
+}
+
+export function assertAriaLiveMessageWithoutIt(
+  selector: () => Cypress.Chainable<JQuery<HTMLElement>>,
+  message: string
+) {
+  selector().should('contain.text', message);
 }

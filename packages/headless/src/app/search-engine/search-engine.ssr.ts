@@ -4,12 +4,9 @@
 import {AnyAction} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers';
 import {createWaitForActionMiddleware} from '../../utils/utils';
-import {EngineDefinitionBuildOptionsWithProps} from '../ssr-engine/types/build';
 import {
   ControllerDefinitionsMap,
-  EngineStaticState,
   InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromDefinitions,
   OptionsExtender,
 } from '../ssr-engine/types/common';
 import {
@@ -67,11 +64,15 @@ export function defineSearchEngine<
   controllers: controllerDefinitions,
   ...engineOptions
 }: SearchEngineDefinitionOptions<TControllerDefinitions>): SearchEngineDefinition<TControllerDefinitions> {
-  const build: SearchEngineDefinition<TControllerDefinitions>['build'] = async (
-    ...[buildOptions]: Parameters<
-      SearchEngineDefinition<TControllerDefinitions>['build']
-    >
-  ) => {
+  type Definition = SearchEngineDefinition<TControllerDefinitions>;
+  type BuildFunction = Definition['build'];
+  type FetchStaticStateFunction = Definition['fetchStaticState'];
+  type HydrateStaticStateFunction = Definition['hydrateStaticState'];
+  type BuildParameters = Parameters<BuildFunction>;
+  type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>;
+  type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>;
+
+  const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
     const engine = buildSearchEngine(
       buildOptions?.extend
         ? await buildOptions.extend(engineOptions)
@@ -90,57 +91,50 @@ export function defineSearchEngine<
     };
   };
 
-  const fetchStaticState: SearchEngineDefinition<TControllerDefinitions>['fetchStaticState'] =
-    async (
-      ...[executeOptions]: Parameters<
-        SearchEngineDefinition<TControllerDefinitions>['fetchStaticState']
-      >
-    ): Promise<
-      EngineStaticState<
-        {type: string},
-        InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
-      >
-    > => {
-      const {middleware, promise: searchCompletedPromise} =
-        createWaitForActionMiddleware(isSearchCompletedAction);
+  const fetchStaticState: FetchStaticStateFunction = async (
+    ...[fetchOptions]: FetchStaticStateParameters
+  ) => {
+    const {middleware, promise: searchCompletedPromise} =
+      createWaitForActionMiddleware(isSearchCompletedAction);
 
-      const extend: OptionsExtender<SearchEngineOptions> = (options) => ({
-        ...options,
-        middlewares: [...(options.middlewares ?? []), middleware],
-      });
-      const {engine, controllers} = await build({
-        extend,
-        ...(executeOptions?.controllers && {
-          controllers: executeOptions.controllers,
-        }),
-      });
+    const extend: OptionsExtender<SearchEngineOptions> = (options) => ({
+      ...options,
+      middlewares: [...(options.middlewares ?? []), middleware],
+    });
+    const {engine, controllers} = await build(
+      ...([
+        {
+          extend,
+          ...(fetchOptions &&
+            'controllers' in fetchOptions && {
+              controllers: fetchOptions.controllers,
+            }),
+        },
+      ] as BuildParameters)
+    );
 
-      engine.executeFirstSearch();
-      return createStaticState({
-        searchAction: await searchCompletedPromise,
-        controllers,
-      });
-    };
+    engine.executeFirstSearch();
+    return createStaticState({
+      searchAction: await searchCompletedPromise,
+      controllers,
+    });
+  };
 
-  const hydrateStaticState: SearchEngineDefinition<TControllerDefinitions>['hydrateStaticState'] =
-    async (
-      ...[hydrateOptions]: Parameters<
-        SearchEngineDefinition<TControllerDefinitions>['hydrateStaticState']
-      >
-    ) => {
-      const {engine, controllers} = await build(
-        'controllers' in hydrateOptions
-          ? ({
+  const hydrateStaticState: HydrateStaticStateFunction = async (
+    ...[hydrateOptions]: HydrateStaticStateParameters
+  ) => {
+    const {engine, controllers} = await build(
+      ...(('controllers' in hydrateOptions!
+        ? [
+            {
               controllers: hydrateOptions.controllers,
-            } as EngineDefinitionBuildOptionsWithProps<
-              SearchEngineOptions,
-              TControllerDefinitions
-            >)
-          : {}
-      );
-      engine.dispatch(hydrateOptions.searchAction);
-      return {engine, controllers};
-    };
+            },
+          ]
+        : []) as BuildParameters)
+    );
+    engine.dispatch(hydrateOptions!.searchAction);
+    return {engine, controllers};
+  };
 
   return {
     build,
