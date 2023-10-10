@@ -314,6 +314,30 @@ export enum SearchPageEvents {
      * Identified the custom event that gets logged when a generated answer stream is completed.
      */
     generatedAnswerStreamEnd = 'generatedAnswerStreamEnd',
+    /**
+     * Identifies the custom event that gets logged when a user hovers over a generated answer citation.
+     */
+    generatedAnswerSourceHover = 'generatedAnswerSourceHover',
+    /**
+     * Identifies the custom event that gets logged when a user clicks the copy to clip board button of a generated answer.
+     */
+    generatedAnswerCopyToClipboard = 'generatedAnswerCopyToClipboard',
+    /**
+     * Identifies the custom event that gets logged when a user deactivates the genQA feature.
+     */
+    generatedAnswerHideAnswers = 'generatedAnswerHideAnswers',
+    /**
+     * Identifies the custom event that gets logged when a user activates the genQA feature.
+     */
+    generatedAnswerShowAnswers = 'generatedAnswerShowAnswers',
+    /**
+     * Identifies the custom event that gets logged when a user submits a feedback of a generated answer.
+     */
+    generativeQuestionFeedbackSubmit = 'generativeQuestionFeedbackSubmit',
+    /**
+     * Identifies the search event that gets logged when a user clicks the rephrase button in a generated answer.
+     */
+    rephraseGeneratedAnswer = 'rephraseGeneratedAnswer',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
@@ -360,6 +384,11 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.dislikeGeneratedAnswer]: 'generatedAnswer',
     [SearchPageEvents.openGeneratedAnswerSource]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerStreamEnd]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerSourceHover]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerCopyToClipboard]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerHideAnswers]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerShowAnswers]: 'generatedAnswer',
+    [SearchPageEvents.generativeQuestionFeedbackSubmit]: 'generatedAnswer',
 };
 
 export interface StaticFilterMetadata {
@@ -494,11 +523,9 @@ export interface SmartSnippetDocumentIdentifier {
 
 export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause' | 'searchQueryUid'>;
 
-interface GeneratedAnswerBaseMeta {
+export interface GeneratedAnswerBaseMeta {
     generativeQuestionAnsweringId: string;
 }
-
-export interface GeneratedAnswerFeedbackMeta extends GeneratedAnswerBaseMeta {}
 
 export interface GeneratedAnswerStreamEndMeta extends GeneratedAnswerBaseMeta {
     answerGenerated: boolean;
@@ -507,5 +534,22 @@ export interface GeneratedAnswerStreamEndMeta extends GeneratedAnswerBaseMeta {
 export interface GeneratedAnswerCitationMeta {
     generativeQuestionAnsweringId: string;
     permanentId: string;
-    id: string;
+    citationId: string;
+}
+
+export type GeneratedAnswerFeedbackReason = 'irrelevant' | 'notAccurate' | 'outOfDate' | 'harmful' | 'other';
+
+export type GeneratedAnswerRephraseFormat = 'step' | 'bullet' | 'concise' | 'default';
+
+export interface GeneratedAnswerSourceHoverMeta extends GeneratedAnswerCitationMeta {
+    citationHoverTimeMs: number;
+}
+
+export interface GeneratedAnswerRephraseMeta extends GeneratedAnswerBaseMeta {
+    rephraseFormat: GeneratedAnswerRephraseFormat;
+}
+
+export interface GeneratedAnswerFeedbackMeta extends GeneratedAnswerBaseMeta {
+    reason: GeneratedAnswerFeedbackReason;
+    details?: string;
 }
