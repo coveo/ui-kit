@@ -1498,7 +1498,7 @@ describe('SearchPageClient', () => {
     it('should send proper payload for #logGeneratedAnswerSourceHover', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
-            id: 'some-document-id',
+            citationId: 'some-document-id',
             permanentId: 'perm-id',
             citationHoverTimeMs: 100,
         };
@@ -1509,7 +1509,7 @@ describe('SearchPageClient', () => {
     it('should send proper payload for #makeGeneratedAnswerSourceHover', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
-            id: 'some-document-id',
+            citationId: 'some-document-id',
             permanentId: 'perm-id',
             citationHoverTimeMs: 100,
         };
