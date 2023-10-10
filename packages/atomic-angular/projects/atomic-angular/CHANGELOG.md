@@ -1,3 +1,21 @@
+## 2.15.3 (2023-10-04)
+
+### Bug Fixes
+
+- **atomic:** support facet-manager collapse-facets-after for automatic facets ([#3213](https://github.com/coveo/ui-kit/issues/3213)) ([0f88e94](https://github.com/coveo/ui-kit/commits/0f88e94b7a1758dd13d9c1aeb3a9d175fb88b744))
+
+## 2.15.2 (2023-09-27)
+
+## 2.15.1 (2023-09-20)
+
+# 2.15.0 (2023-09-11)
+
+### Features
+
+- **headless-react:** add headless react util defineSearchEngine ([#3107](https://github.com/coveo/ui-kit/issues/3107)) ([1d63e43](https://github.com/coveo/ui-kit/commits/1d63e431c427de9022238216cc5128b237b836b4))
+
+## 2.14.2 (2023-09-06)
+
 # 2.14.0 (2023-08-24)
 
 ### Features

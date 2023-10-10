@@ -63,7 +63,7 @@ export class MissingInterfaceParentError extends Error {
  * Necessary interface an Atomic Component must have to initialize itself correctly.
  */
 export interface InitializableComponent<
-  SpecificBindings extends AnyBindings = Bindings
+  SpecificBindings extends AnyBindings = Bindings,
 > extends ComponentInterface {
   /**
    * Bindings passed from the `AtomicSearchInterface` to its children components.
@@ -288,8 +288,7 @@ export function BindStateToController(
     };
 
     component.disconnectedCallback = function () {
-      !getElement(this).isConnected &&
-        this.unsubscribeController?.();
+      !getElement(this).isConnected && this.unsubscribeController?.();
       disconnectedCallback && disconnectedCallback.call(this);
     };
   };

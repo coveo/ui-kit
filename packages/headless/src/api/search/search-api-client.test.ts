@@ -1,4 +1,3 @@
-import {Response} from 'cross-fetch';
 import pino from 'pino';
 import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
 import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
@@ -669,9 +668,7 @@ describe('search api client', () => {
 
       PlatformClient.call = () => Promise.resolve(response);
       const res = await searchAPIClient.search(
-        (
-          await buildSearchRequest(state)
-        ).request
+        (await buildSearchRequest(state)).request
       );
       if (isErrorResponse(res)) {
         fail(

@@ -2,12 +2,12 @@ import {buildMockInsightEngine} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {logInsightStaticFilterDeselect} from './static-filter-set-insight-analytics-actions';
 
-const mockogStaticFilterDeselect = jest.fn();
+const mockOriginalStaticFilterDeselect = jest.fn();
 
 jest.mock('coveo.analytics', () => {
   const mockCoveoInsightClient = jest.fn(() => ({
     disable: () => {},
-    logStaticFilterDeselect: mockogStaticFilterDeselect,
+    logStaticFilterDeselect: mockOriginalStaticFilterDeselect,
   }));
 
   return {
@@ -56,8 +56,8 @@ describe('logStaticFilterDeselect', () => {
       staticFilterId: examplestaticFilterId,
     };
 
-    expect(mockogStaticFilterDeselect).toBeCalledTimes(1);
-    expect(mockogStaticFilterDeselect.mock.calls[0][0]).toStrictEqual(
+    expect(mockOriginalStaticFilterDeselect).toBeCalledTimes(1);
+    expect(mockOriginalStaticFilterDeselect.mock.calls[0][0]).toStrictEqual(
       expectedPayload
     );
   });

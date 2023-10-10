@@ -1,5 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
-import {WritableDraft} from 'immer/dist/internal';
+import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
@@ -235,7 +234,6 @@ export const facetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
       })
-      // TODO: add tests
       .addCase(excludeFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
         const facetRequest = state[facetId]?.request;
@@ -304,6 +302,7 @@ export const defaultFacetOptions: FacetOptionalParameters = {
   injectionDepth: 1000,
   numberOfValues: 8,
   sortCriteria: 'automatic',
+  resultsMustMatch: 'atLeastOneValue',
 };
 
 function buildFacetRequest(

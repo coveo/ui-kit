@@ -3,6 +3,7 @@ import {
   AnyFacetValuesCondition,
   AnyFacetValueRequest,
   FacetValueState,
+  FacetManager,
 } from '@coveo/headless';
 import {VNode, h} from '@stencil/core';
 import {i18n} from 'i18next';
@@ -11,6 +12,7 @@ import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../utils/field-utils';
+import {FacetInfoMap} from '../../search/atomic-search-interface/store';
 import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {Hidden} from '../hidden';
 import {AnyBindings} from '../interface/bindings';
@@ -255,11 +257,71 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   return true;
 }
 
-export function facetShouldBeInitiallyCollapsed(
-  facetIndex: number,
-  collapseFacetsAfter: number
+export function sortFacetVisibility(
+  facetElements: BaseFacetElement[],
+  facetInfoMap: FacetInfoMap
 ) {
-  return facetIndex + 1 > collapseFacetsAfter;
+  const visibleFacets: BaseFacetElement[] = [];
+  const invisibleFacets: BaseFacetElement[] = [];
+
+  facetElements.forEach((facet) => {
+    if (facetInfoMap[facet.facetId] && facetInfoMap[facet.facetId].isHidden()) {
+      invisibleFacets.push(facet);
+    } else {
+      visibleFacets.push(facet);
+    }
+  });
+
+  return {visibleFacets, invisibleFacets};
+}
+
+export function collapseFacetsAfter(
+  facets: BaseFacetElement[],
+  visibleFacetsCount: number
+) {
+  if (visibleFacetsCount === -1) {
+    return;
+  }
+
+  facets.forEach((facet, index) => {
+    facet.isCollapsed = index + 1 > visibleFacetsCount;
+  });
+}
+
+export function isAutomaticFacetGenerator(
+  element: HTMLElement
+): element is HTMLAtomicAutomaticFacetGeneratorElement {
+  return element.tagName === 'ATOMIC-AUTOMATIC-FACET-GENERATOR';
+}
+
+function isPseudoFacet(el: Element): el is BaseFacetElement {
+  return 'facetId' in el;
+}
+
+export function getFacetsInChildren(parent: HTMLElement): BaseFacetElement[] {
+  const facets = Array.from(parent.children).filter((child) =>
+    isPseudoFacet(child)
+  ) as BaseFacetElement[];
+
+  return facets;
+}
+export function getAutomaticFacetGenerator(
+  parent: HTMLElement
+): HTMLAtomicAutomaticFacetGeneratorElement | undefined {
+  return (Array.from(parent.children) as HTMLElement[]).find(
+    isAutomaticFacetGenerator
+  );
+}
+
+export function sortFacetsUsingManager(
+  facets: BaseFacetElement[],
+  facetManager: FacetManager
+): BaseFacetElement[] {
+  const payload = facets.map((f) => ({
+    facetId: f.facetId,
+    payload: f,
+  }));
+  return facetManager.sort(payload).map((f) => f.payload);
 }
 
 interface FacetCommonOptions {
@@ -327,6 +389,7 @@ export class FacetCommon {
       label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
+      isHidden: () => this.isHidden,
     };
     this.bindings.store.registerFacet('facets', facetInfo);
     initializePopover(this.host, {
@@ -352,6 +415,10 @@ export class FacetCommon {
       return;
     }
     this.dependenciesManager?.stopWatching();
+  }
+
+  private get isHidden() {
+    return !this.facet.state.enabled || !this.facet.state.values.length;
   }
 
   public componentShouldUpdate(

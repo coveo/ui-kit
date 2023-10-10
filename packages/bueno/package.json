@@ -2,7 +2,7 @@
   "name": "@coveo/bueno",
   "repository": {
     "type": "git",
-    "url": "https://github.com/coveo/ui-kit.git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/bueno"
   },
   "main": "./dist/bueno.js",
@@ -13,13 +13,13 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.43.7",
+  "version": "0.44.2",
   "files": [
     "dist/"
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "npm run build:definitions && npm run build:bundles",
+    "build": "nx build",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
@@ -28,5 +28,9 @@
     "release:phase1": "npx -p=@coveo/release bump",
     "release:phase2": "npx -p=@coveo/release npm-publish",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest"
+  },
+  "devDependencies": {
+    "jest": "29.7.0",
+    "ts-jest": "29.1.1"
   }
 }

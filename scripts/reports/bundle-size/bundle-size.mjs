@@ -5,7 +5,7 @@ import {buildReport} from './report.mjs';
 
 async function deleteNodeModules() {
   console.log('deleting node_modules');
-  await execute('rm', ['-rf', 'packages/headless/node_modules']);
+  await execute('git', ['clean', '-fdx']);
 }
 
 async function discardChanges() {

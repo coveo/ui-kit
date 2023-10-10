@@ -2,29 +2,19 @@ import {AnyAction} from '@reduxjs/toolkit';
 import {Controller} from '../../../controllers';
 import {CoreEngine} from '../../engine';
 import {EngineConfiguration} from '../../engine-configuration';
-import {BuildWithProps, BuildWithoutProps} from './build';
+import {Build} from './build';
 import {
   ControllerDefinitionsMap,
-  ControllersPropsMap,
-  HasKeys,
   InferControllerPropsMapFromDefinitions,
-  InferControllerSSRStateMapFromDefinitions,
+  InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
-  ControllerSSRStateMap,
-  ControllersMap,
 } from './common';
-import {
-  FetchInitialStateWithProps,
-  FetchInitialStateWithoutProps,
-} from './fetch-initial-state';
-import {
-  HydrateInitialStateWithProps,
-  HydrateInitialStateWithoutProps,
-} from './hydrate-initial-state';
+import {FetchStaticState} from './fetch-static-state';
+import {HydrateStaticState} from './hydrate-static-state';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
-  TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>
+  TControllers extends ControllerDefinitionsMap<CoreEngine, Controller>,
 > = TOptions & {
   /**
    * The controllers to initialize with the search engine.
@@ -32,92 +22,55 @@ export type EngineDefinitionOptions<
   controllers?: TControllers;
 };
 
-export type EngineDefinition<
-  TEngine extends CoreEngine,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TEngineOptions
-> = HasKeys<InferControllerPropsMapFromDefinitions<TControllers>> extends true
-  ? EngineDefinitionWithProps<
-      TEngine,
-      TControllers,
-      TEngineOptions,
-      InferControllerPropsMapFromDefinitions<TControllers>
-    >
-  : HasKeys<InferControllerPropsMapFromDefinitions<TControllers>> extends false
-  ? EngineDefinitionWithoutProps<TEngine, TControllers, TEngineOptions>
-  :
-      | EngineDefinitionWithProps<
-          TEngine,
-          TControllers,
-          TEngineOptions,
-          ControllersPropsMap
-        >
-      | EngineDefinitionWithoutProps<TEngine, TControllers, TEngineOptions>;
-
-export interface EngineDefinitionWithoutProps<
-  TEngine extends CoreEngine,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TEngineOptions
-> extends FetchInitialStateWithoutProps<
-      InferControllerSSRStateMapFromDefinitions<TControllers>,
-      AnyAction
-    >,
-    HydrateInitialStateWithoutProps<
-      TEngine,
-      InferControllersMapFromDefinition<TControllers>,
-      AnyAction
-    >,
-    BuildWithoutProps<
-      TEngine,
-      TEngineOptions,
-      InferControllersMapFromDefinition<TControllers>
-    > {}
-
-export interface EngineDefinitionWithProps<
+export interface EngineDefinition<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions,
-  TControllerProps extends ControllersPropsMap
-> extends FetchInitialStateWithProps<
-      InferControllerSSRStateMapFromDefinitions<TControllers>,
-      AnyAction,
-      TControllerProps
-    >,
-    HydrateInitialStateWithProps<
-      TEngine,
-      InferControllersMapFromDefinition<TControllers>,
-      AnyAction,
-      TControllerProps
-    >,
-    BuildWithProps<
-      TEngine,
-      TEngineOptions,
-      InferControllersMapFromDefinition<TControllers>,
-      TControllerProps
-    > {}
+> {
+  fetchStaticState: FetchStaticState<
+    TEngine,
+    InferControllersMapFromDefinition<TControllers>,
+    AnyAction,
+    InferControllerStaticStateMapFromDefinitions<TControllers>,
+    InferControllerPropsMapFromDefinitions<TControllers>
+  >;
+  hydrateStaticState: HydrateStaticState<
+    TEngine,
+    InferControllersMapFromDefinition<TControllers>,
+    AnyAction,
+    InferControllerPropsMapFromDefinitions<TControllers>
+  >;
+  build: Build<
+    TEngine,
+    TEngineOptions,
+    InferControllersMapFromDefinition<TControllers>,
+    InferControllerPropsMapFromDefinitions<TControllers>
+  >;
+}
 
 /**
  * @internal
  */
-export type InferSSRState<
-  T extends
-    | FetchInitialStateWithoutProps<ControllerSSRStateMap, AnyAction>
-    | FetchInitialStateWithProps<
-        ControllerSSRStateMap,
-        AnyAction,
-        ControllersPropsMap
-      >
-> = Awaited<ReturnType<T['fetchInitialState']>>;
+export type InferStaticState<
+  T extends {
+    fetchStaticState(...args: unknown[]): Promise<unknown>;
+  },
+> = Awaited<ReturnType<T['fetchStaticState']>>;
+
 /**
  * @internal
  */
-export type InferCSRState<
-  T extends
-    | HydrateInitialStateWithoutProps<CoreEngine, ControllersMap, AnyAction>
-    | HydrateInitialStateWithProps<
-        CoreEngine,
-        ControllersMap,
-        AnyAction,
-        ControllersPropsMap
-      >
-> = Awaited<ReturnType<T['hydrateInitialState']>>;
+export type InferHydratedState<
+  T extends {
+    hydrateStaticState(...args: unknown[]): Promise<unknown>;
+  },
+> = Awaited<ReturnType<T['hydrateStaticState']>>;
+
+/**
+ * @internal
+ */
+export type InferBuildResult<
+  T extends {
+    build(...args: unknown[]): Promise<unknown>;
+  },
+> = Awaited<ReturnType<T['build']>>;

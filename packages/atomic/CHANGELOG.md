@@ -1,3 +1,43 @@
+# 2.45.0 (2023-10-04)
+
+### Bug Fixes
+
+- **atomic:** css part and css variable for facet-search-icon / facet-search-clear-icon ([#3200](https://github.com/coveo/ui-kit/issues/3200)) ([426f9e2](https://github.com/coveo/ui-kit/commits/426f9e268d0aa55e39a46987d0856f0c53b06b21))
+- **atomic:** search text area scroll ([#3219](https://github.com/coveo/ui-kit/issues/3219)) ([f998f63](https://github.com/coveo/ui-kit/commits/f998f63ee5dacddad77c2fbdc7c5a6801d975862))
+- **atomic:** support facet-manager collapse-facets-after for automatic facets ([#3213](https://github.com/coveo/ui-kit/issues/3213)) ([0f88e94](https://github.com/coveo/ui-kit/commits/0f88e94b7a1758dd13d9c1aeb3a9d175fb88b744))
+- **genAI:** set loading dots to atomic-primary ([#3225](https://github.com/coveo/ui-kit/issues/3225)) ([f8e4993](https://github.com/coveo/ui-kit/commits/f8e4993d6a58b6b3431adaecf7936620d78bfa9c))
+- **IPX:** remove max width of ipx body and footer ([#3235](https://github.com/coveo/ui-kit/issues/3235)) ([44cbb35](https://github.com/coveo/ui-kit/commits/44cbb3579f262c2797946843b04e0958d0f54123))
+
+### Features
+
+- **atomic,headless:** ga release for automatic-facets feature ([#3224](https://github.com/coveo/ui-kit/issues/3224)) ([4decff2](https://github.com/coveo/ui-kit/commits/4decff2d91f415d392177b94dfd10e4c3f8566e8))
+
+# 2.44.0 (2023-09-27)
+
+### Features
+
+- **atomic:** interactive RGA citations ([#3199](https://github.com/coveo/ui-kit/issues/3199)) ([fabdd35](https://github.com/coveo/ui-kit/commits/fabdd357c6d0625413617c66734c3b7ae81ddb62))
+- **headless:** wrap preprocess function that throws to prevent stopping the execution requests ([#3172](https://github.com/coveo/ui-kit/issues/3172)) ([8e50eb9](https://github.com/coveo/ui-kit/commits/8e50eb9cefca01034a499230696cfac04cdfca20))
+
+## 2.43.1 (2023-09-20)
+
+# 2.43.0 (2023-09-11)
+
+### Bug Fixes
+
+- **atomic:** added part to access ::after ([#3151](https://github.com/coveo/ui-kit/issues/3151)) ([9b960e5](https://github.com/coveo/ui-kit/commits/9b960e585a2d52832d866d31a6e6150e8a18b03f))
+
+### Features
+
+- **commerce:** create PLP v2 interactive result controller ([#3129](https://github.com/coveo/ui-kit/issues/3129)) ([4d3c39d](https://github.com/coveo/ui-kit/commits/4d3c39d8a1b9910f528be0ed9c372c92e242ff9e))
+- **headless-react:** add headless react util defineSearchEngine ([#3107](https://github.com/coveo/ui-kit/issues/3107)) ([1d63e43](https://github.com/coveo/ui-kit/commits/1d63e431c427de9022238216cc5128b237b836b4))
+
+## 2.42.3 (2023-09-06)
+
+### Bug Fixes
+
+- **atomic:** translation issue for zh-tw ([5ac74a9](https://github.com/coveo/ui-kit/commits/5ac74a9e344c157057d2f99c6ab31db0c618554f))
+
 ## 2.42.1 (2023-08-30)
 
 ### Bug Fixes

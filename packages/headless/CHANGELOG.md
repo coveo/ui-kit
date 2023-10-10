@@ -1,3 +1,56 @@
+# 2.34.0 (2023-10-04)
+
+### Bug Fixes
+
+- **headless:** fix structuredClone for locker service ([#3238](https://github.com/coveo/ui-kit/issues/3238)) ([b836e01](https://github.com/coveo/ui-kit/commits/b836e013a6a5d630dddb29fd9640fe40a211d09f))
+
+### Features
+
+- **atomic,headless:** ga release for automatic-facets feature ([#3224](https://github.com/coveo/ui-kit/issues/3224)) ([4decff2](https://github.com/coveo/ui-kit/commits/4decff2d91f415d392177b94dfd10e4c3f8566e8))
+- **commerce:** create context & cart controllers ([#3190](https://github.com/coveo/ui-kit/issues/3190)) ([2a51106](https://github.com/coveo/ui-kit/commits/2a511068f8b7e780a4b442e655f84ca41faf65dd))
+
+# 2.33.0 (2023-09-27)
+
+### Bug Fixes
+
+- **headless,headless-react:** remove defineUrlManager SSR utility ([#3214](https://github.com/coveo/ui-kit/issues/3214)) ([7719ab4](https://github.com/coveo/ui-kit/commits/7719ab456f44dccab70d32ae8fd120ded222fc42))
+
+### Features
+
+- **atomic:** interactive RGA citations ([#3199](https://github.com/coveo/ui-kit/issues/3199)) ([fabdd35](https://github.com/coveo/ui-kit/commits/fabdd357c6d0625413617c66734c3b7ae81ddb62))
+- **headless:** wrap preprocess function that throws to prevent stopping the execution requests ([#3172](https://github.com/coveo/ui-kit/issues/3172)) ([8e50eb9](https://github.com/coveo/ui-kit/commits/8e50eb9cefca01034a499230696cfac04cdfca20))
+
+# 2.32.0 (2023-09-20)
+
+### Bug Fixes
+
+- **headless,headless-react:** make ssr terminology more consistent ([#3159](https://github.com/coveo/ui-kit/issues/3159)) ([91755ea](https://github.com/coveo/ui-kit/commits/91755ea60dd63790ae8f47b40d13848bc289d757))
+- **headless:** bump coveo.analytics version ([#3178](https://github.com/coveo/ui-kit/issues/3178)) ([71f9c0c](https://github.com/coveo/ui-kit/commits/71f9c0c9af6b49edcec9d16bb8530bff011fe38f))
+- **headless:** updating GenAI state only when stream id corresponds to the generativeQuestionAnsweringId of the latest search query ([#3182](https://github.com/coveo/ui-kit/issues/3182)) ([1d0dc46](https://github.com/coveo/ui-kit/commits/1d0dc46c8d21cee40bb0f6d990ce2b52aa15a48f))
+
+### Features
+
+- **commerce:** create PLP v2 pager controller ([#3130](https://github.com/coveo/ui-kit/issues/3130)) ([07bf79f](https://github.com/coveo/ui-kit/commits/07bf79fb18e241ffd20460865cbd04cedccde420))
+- **commerce:** create PLP v2 product listing controller ([#3147](https://github.com/coveo/ui-kit/issues/3147)) ([d700a24](https://github.com/coveo/ui-kit/commits/d700a24de88858cea8f3c8458a0b99cb1cc5c096))
+- **commerce:** move product listing features to commerce directory ([#3171](https://github.com/coveo/ui-kit/issues/3171)) ([1e32da2](https://github.com/coveo/ui-kit/commits/1e32da2fcae5832ddf000e7a4766fe019ad1f419))
+- **headless:** added most ssr controller `define` functions ([#3157](https://github.com/coveo/ui-kit/issues/3157)) ([7c74862](https://github.com/coveo/ui-kit/commits/7c74862908ab79649ca1b2e9c1c0743eaca3d5ba))
+- **headless:** support `resultsMustMatch` parameter on facet request ([#3158](https://github.com/coveo/ui-kit/issues/3158)) ([fe40054](https://github.com/coveo/ui-kit/commits/fe400549b5d602a94c13eedc6092fb3eed12a1e9))
+
+# 2.31.0 (2023-09-11)
+
+### Features
+
+- **commerce:** create basic boilerplate for commerce sub-package [CAPI-82] ([#3125](https://github.com/coveo/ui-kit/issues/3125)) ([11c216d](https://github.com/coveo/ui-kit/commits/11c216d5ae9894b1d8cca260a96f68dea2e7c526))
+- **commerce:** create PLP v2 interactive result controller ([#3129](https://github.com/coveo/ui-kit/issues/3129)) ([4d3c39d](https://github.com/coveo/ui-kit/commits/4d3c39d8a1b9910f528be0ed9c372c92e242ff9e))
+- **headless-react:** add headless react util defineSearchEngine ([#3107](https://github.com/coveo/ui-kit/issues/3107)) ([1d63e43](https://github.com/coveo/ui-kit/commits/1d63e431c427de9022238216cc5128b237b836b4))
+- **headless:** add excludeFacetSearchResult search action ([#3149](https://github.com/coveo/ui-kit/issues/3149)) ([02480f6](https://github.com/coveo/ui-kit/commits/02480f6e97e54ad97974a8a93e8d784092e06973))
+
+## 2.30.1 (2023-09-06)
+
+### Features
+
+- **headless:** added defineSearchParametersManager SSR controller ([#3117](https://github.com/coveo/ui-kit/issues/3117)) ([99cca68](https://github.com/coveo/ui-kit/commits/99cca6864d94cbd53b9f60d4b049976b6f6a6981))
+
 # 2.29.0 (2023-08-30)
 
 ### Bug Fixes

@@ -64,7 +64,6 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
 
   private async fetchIcon(url: string) {
     try {
-      // deepcode ignore Ssrf: client side code
       const response = await fetch(url).catch((e) => {
         throw IconFetchError.fromError(url, e);
       });

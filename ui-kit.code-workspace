@@ -5,24 +5,28 @@
       "path": "./"
     },
     {
-      "name": "📦 Auth",
-      "path": "./packages/auth"
-    },
-    {
-      "name": "📦 Bueno",
-      "path": "./packages/bueno"
-    },
-    {
       "name": "📦 Headless",
       "path": "./packages/headless"
+    },
+    {
+      "name": "📦 Atomic",
+      "path": "./packages/atomic"
     },
     {
       "name": "📦 Quantic",
       "path": "./packages/quantic"
     },
     {
-      "name": "📦 Atomic",
-      "path": "./packages/atomic"
+      "name": "📦 Bueno",
+      "path": "./packages/bueno"
+    },
+    {
+      "name": "📦 Auth",
+      "path": "./packages/auth"
+    },
+    {
+      "name": "📦 Headless React SSR utils",
+      "path": "./packages/headless-react"
     },
     {
       "name": "📦 Atomic for React",
@@ -37,24 +41,8 @@
       "path": "./packages/atomic-hosted-page"
     },
     {
-      "name": "📄 Atomic Storybook documentation",
-      "path": "./utils/atomic-storybook"
-    },
-    {
-      "name": "🚀 IIFE samples",
-      "path": "./packages/samples/iife"
-    },
-    {
-      "name": "🚀 Stencil samples",
-      "path": "./packages/samples/stencil"
-    },
-    {
       "name": "🚀 React samples (Headless)",
       "path": "./packages/samples/headless-react"
-    },
-    {
-      "name": "🚀 Next.js samples (Headless)",
-      "path": "./packages/samples/headless-next"
     },
     {
       "name": "🚀 React samples (Atomic)",
@@ -75,6 +63,18 @@
     {
       "name": "🚀 Vue.js samples",
       "path": "./packages/samples/vuejs"
+    },
+    {
+      "name": "🚀 IIFE samples",
+      "path": "./packages/samples/iife"
+    },
+    {
+      "name": "🚀 Stencil samples",
+      "path": "./packages/samples/stencil"
+    },
+    {
+      "name": "📄 Atomic Storybook documentation",
+      "path": "./utils/atomic-storybook"
     },
     {
       "name": "⚙️ Release utilities",
@@ -103,7 +103,7 @@
       "🚀 Angular samples",
       "🚀 Vue.js samples",
       "⚙️ Release utilities",
-      "⚙️ NX Adapter",
+      "⚙️ NX Adapter"
     ],
     "jest.autoRevealOutput": "off",
     "npm.packageManager": "npm",
@@ -128,6 +128,6 @@
     },
     "[postcss]": {
       "editor.formatOnSave": true
-    },
+    }
   }
 }

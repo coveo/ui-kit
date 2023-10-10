@@ -13,6 +13,7 @@ export function buildMockCategoryFacetRequest(
     numberOfValues: 5,
     preventAutoSelect: false,
     sortCriteria: 'occurrences',
+    resultsMustMatch: 'atLeastOneValue',
     type: 'hierarchical',
     basePath: [],
     filterByBasePath: false,

@@ -5,8 +5,14 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {keys} from 'c/quanticUtils';
-import {LightningElement, api, track} from 'lwc';
+import { keys } from 'c/quanticUtils';
+import { LightningElement, api, track } from 'lwc';
+// @ts-ignore
+import defaultSearchBox from './templates/defaultSearchBox.html';
+// @ts-ignore
+import expandableSearchBox from './templates/expandableSearchBox.html';
+// @ts-ignore
+import errorTemplate from './templates/errorTemplate.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
@@ -58,6 +64,14 @@ export default class QuanticSearchBox extends LightningElement {
    * @defaultValue 5
    */
   @api numberOfSuggestions = 5;
+  /**
+   * Whether to render the search box using a [textarea](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea) element.
+   * The resulting component will expand to support multi-line queries.
+   * @api
+   * @type {boolean}
+   * @defaultValue false
+   */
+  @api textarea = false;
 
   /** @type {SearchBoxState} */
   @track state;
@@ -134,10 +148,10 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   /**
-   * @returns {HTMLInputElement}
+   * @returns {HTMLInputElement|HTMLTextAreaElement}
    */
   get input() {
-    return this.template.querySelector('input');
+    return this.textarea ? this.template.querySelector('textarea') : this.template.querySelector('input');
   }
 
   /**
@@ -160,9 +174,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   get searchBoxInputClass() {
-    return this.withoutSubmitButton
-      ? 'slds-input searchbox__input'
-      : 'slds-input searchbox__input searchbox__input-with-button';
+    return `slds-input searchbox__input ${this.withoutSubmitButton ? '' : 'searchbox__input-with-button'}`;
   }
 
   get suggestionsOpen() {
@@ -211,12 +223,25 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   handleKeyValues() {
-    if (this.searchBox.state.value !== this.input.value) {
+    if (this.searchBox?.state?.value !== this.input.value) {
       this.suggestionList?.resetSelection();
       this.searchBox.updateText(this.input.value);
     }
   }
 
+  /**
+   * Prevent default behavior of enter key, on textArea, to prevent skipping a line.
+   * @param {KeyboardEvent} event 
+   */
+  onKeydown(event) {
+    if (event.key === keys.ENTER) {
+      event.preventDefault();
+    }
+  }
+
+  /**
+   * @param {KeyboardEvent} event 
+   */
   onKeyup(event) {
     switch (event.key) {
       case keys.ENTER:
@@ -235,16 +260,43 @@ export default class QuanticSearchBox extends LightningElement {
 
   onFocus() {
     this.showSuggestions();
+    this.adjustTextAreaHeight();
   }
 
   onBlur() {
     this.hideSuggestions();
+    this.collapseTextArea();
+  }
+
+  onTextAreaInput() {
+    this.adjustTextAreaHeight();
+  };
+
+  adjustTextAreaHeight() {
+    if (!this.textarea) {
+      return;
+    }
+    this.input.value = this.input.value.replace(/\n/g, '');
+    this.input.style.height = '';
+    this.input.style.whiteSpace = 'pre-wrap';
+    this.input.style.height = this.input.scrollHeight + "px";
+  }
+
+  collapseTextArea() {
+    if (!this.textarea) {
+      return;
+    }
+    this.input.style.height = '';
+    this.input.style.whiteSpace = 'nowrap';
   }
 
   clearInput() {
     this.input.value = '';
     this.searchBox.updateText(this.input.value);
     this.input.focus();
+    if (this.textarea) {
+      this.adjustTextAreaHeight();
+    }
   }
 
   handleSuggestionSelection(event) {
@@ -264,5 +316,12 @@ export default class QuanticSearchBox extends LightningElement {
    */
   setInitializationError() {
     this.hasInitializationError = true;
+  }
+
+  render() {
+    if (this.hasInitializationError) {
+      return errorTemplate;
+    }
+    return this?.textarea ? expandableSearchBox : defaultSearchBox;
   }
 }

@@ -1,4 +1,6 @@
-import fetch from 'cross-fetch';
+//TODO V3: remove this import, global fetch is a requirement now.
+//@ts-expect-error package is just an alias.
+import fetch from '@coveo/please-give-me-fetch';
 import * as BackOff from 'exponential-backoff';
 import pino from 'pino';
 import {PlatformEnvironment} from '../recommendation.index';
@@ -14,9 +16,10 @@ import {
 import {
   NoopPreprocessRequest,
   PlatformRequestOptions,
+  PreprocessRequest,
 } from './preprocess-request';
 
-jest.mock('cross-fetch');
+jest.mock('@coveo/please-give-me-fetch');
 
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
@@ -79,7 +82,11 @@ describe('url helper', () => {
         admin: 'https://foo.admin.orghipaa.coveo.com',
       },
     },
-  ] as Array<{orgId: string; env: PlatformEnvironment; organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>}>)(
+  ] as Array<{
+    orgId: string;
+    env: PlatformEnvironment;
+    organizationEndpoints: ReturnType<typeof getOrganizationEndpoints>;
+  }>)(
     'return the correct #getOrganizationEndpoints()',
     ({orgId, env, organizationEndpoints}) => {
       expect(getOrganizationEndpoints(orgId, env)).toEqual(
@@ -155,6 +162,28 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
+  });
+
+  it('should recover if the preprocessRequest throws and should use an untainted request', async () => {
+    mockFetch.mockReturnValue(
+      Promise.resolve(new Response(JSON.stringify({})))
+    );
+    const preprocessRequest: PreprocessRequest = (req) => {
+      req.headers = {
+        shouldNotExistsOnTheOutgoingRequest: 'foo',
+      };
+      throw 'boom';
+    };
+    await platformCall({preprocessRequest});
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({
+        headers: {
+          Authorization: 'Bearer accessToken1',
+          'Content-Type': 'application/json',
+        },
+      })
+    );
   });
 
   it(`when the contentType is www-url-form-encoded and the #requestParams can be encoded,
@@ -274,9 +303,12 @@ describe('PlatformClient call', () => {
 
   it('should not throw when backOff rejects with a response', async () => {
     const spy = jest.spyOn(BackOff, 'backOff');
-    const expectedResponse = new Response(JSON.stringify({hoho: 'oups'}), {
-      status: 429,
-    });
+    const expectedResponse = new Response(
+      JSON.stringify({someProps: 'someValue'}),
+      {
+        status: 429,
+      }
+    );
     spy.mockRejectedValueOnce(expectedResponse);
 
     const response = await platformCall();

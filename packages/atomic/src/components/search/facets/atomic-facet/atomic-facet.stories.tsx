@@ -6,12 +6,13 @@ const {defaultModuleExport, exportedStory} = defaultStory(
   'atomic-facet',
   {field: 'objecttype'},
   {
-    additionalMarkup: () => html`<style>
-      atomic-facet {
-        max-width: 500px;
-        margin: auto;
-      }
-    </style>`,
+    additionalMarkup: () =>
+      html`<style>
+        atomic-facet {
+          max-width: 500px;
+          margin: auto;
+        }
+      </style>`,
   }
 );
 

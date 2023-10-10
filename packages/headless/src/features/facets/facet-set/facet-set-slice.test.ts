@@ -86,15 +86,18 @@ describe('facet-set slice', () => {
       numberOfValues: 8,
       preventAutoSelect: false,
       sortCriteria: 'automatic',
+      resultsMustMatch: 'atLeastOneValue',
     };
 
     expect(finalState[facetId]?.request).toEqual(expectedFacet);
   });
 
   it('registers a facet request with the passed optional values', () => {
-    const criterion = 'alphanumeric';
+    const matchCriterion = 'allValues';
+    const sortCriterion = 'alphanumeric';
     const options = buildRegistrationOptions({
-      sortCriteria: criterion,
+      sortCriteria: sortCriterion,
+      resultsMustMatch: matchCriterion,
       allowedValues: {type: 'simple', values: ['foo', 'bar']},
       customSort: ['bar', 'buzz', 'foo'],
     });
@@ -103,7 +106,8 @@ describe('facet-set slice', () => {
     const finalState = facetSetReducer(state, action);
     const {request: facetRequest} = finalState[options.facetId];
 
-    expect(facetRequest.sortCriteria).toBe(criterion);
+    expect(facetRequest.resultsMustMatch).toBe(matchCriterion);
+    expect(facetRequest.sortCriteria).toBe(sortCriterion);
     expect(facetRequest.allowedValues?.values).toEqual(['foo', 'bar']);
     expect(facetRequest.customSort).toEqual(['bar', 'buzz', 'foo']);
   });

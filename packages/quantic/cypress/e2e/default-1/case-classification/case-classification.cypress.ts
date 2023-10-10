@@ -25,7 +25,7 @@ interface CaseClassificationOptions {
   fetchOnInit: boolean;
 }
 
-const incorrectSfFielNameError = (value: string) => {
+const incorrectSfFieldNameError = (value: string) => {
   return `The Salesforce field API name "${value}" is not found.`;
 };
 const invalidMaxSuggestionsError =
@@ -543,7 +543,7 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectInput(false);
         Expect.displayComponentError(true);
         Expect.displayComponentErrorMessage(
-          incorrectSfFielNameError(incorrectSfField)
+          incorrectSfFieldNameError(incorrectSfField)
         );
       });
     });

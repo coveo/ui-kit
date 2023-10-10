@@ -1,9 +1,10 @@
-import React from 'react';
-import {addons, types} from '@storybook/manager-api';
 import {AddonPanel} from '@storybook/components';
-import {ShadowPartPanel} from './shadow-parts-addon/shadow-parts-panel';
-import {CodeSamplePanel} from './code-sample-addon/code-sample-panel';
+import {STORY_MISSING} from '@storybook/core-events';
+import {addons, types} from '@storybook/manager-api';
 import {debounce} from 'lodash';
+import React from 'react';
+import {CodeSamplePanel} from './code-sample-addon/code-sample-panel';
+import {ShadowPartPanel} from './shadow-parts-addon/shadow-parts-panel';
 
 const ADDON_ID_SHADOW_PARTS = 'shadow_parts';
 const PANEL_ID_SHADOW_PARTS = `${ADDON_ID_SHADOW_PARTS}/panel`;
@@ -46,4 +47,14 @@ addons.register('A11Y_EXTENSION', (api) => {
     {leading: false, trailing: true}
   );
   api.on(A11Y_EXTENSION_EVENTS.SEARCH_EXECUTED, rerunAccessibilityTest);
+});
+
+addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
+  api.once(STORY_MISSING, () => {
+    const currentId = api.getUrlState().storyId;
+    if (!currentId) {
+      return api.selectFirstStory();
+    }
+    api.selectStory(currentId);
+  });
 });

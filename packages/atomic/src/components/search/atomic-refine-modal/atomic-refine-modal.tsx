@@ -11,6 +11,8 @@ import {
   buildQuerySummary,
   buildSearchStatus,
   SearchStatus,
+  FacetManager,
+  buildFacetManager,
 } from '@coveo/headless';
 import {
   Component,
@@ -29,11 +31,16 @@ import {
 } from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
 import {
-  getClonedFacetElements,
-  RefineModalCommon,
-} from '../../common/refine-modal/refine-modal-common';
+  BaseFacetElement,
+  sortFacetVisibility,
+  sortFacetsUsingManager,
+  collapseFacetsAfter,
+} from '../../common/facets/facet-common';
+import {isRefineModalFacet} from '../../common/interface/store';
+import {RefineModalCommon} from '../../common/refine-modal/refine-modal-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {SortDropdownOption} from '../atomic-search-interface/store';
+import {popoverClass} from '../facets/atomic-popover/popover-type';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -76,6 +83,7 @@ export class AtomicRefineModal implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
   public searchStatus!: SearchStatus;
+  public facetManager!: FacetManager;
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
@@ -110,14 +118,7 @@ export class AtomicRefineModal implements InitializableComponent {
         return;
       }
 
-      this.host.append(
-        getClonedFacetElements(
-          this.bindings.store.getFacetElements(),
-          this.collapseFacetsAfter,
-          this.bindings.interfaceElement
-        )
-      );
-      this.host.append(this.getAutomaticFacetSlotContent());
+      this.host.append(this.createFacetSlot());
     }
   }
 
@@ -126,7 +127,78 @@ export class AtomicRefineModal implements InitializableComponent {
     this.sort = buildSort(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.facetManager = buildFacetManager(this.bindings.engine);
     this.watchEnabled(this.isOpen);
+  }
+
+  private createFacetSlot(): HTMLDivElement {
+    const divSlot = document.createElement('div');
+    divSlot.setAttribute('slot', 'facets');
+    this.addFacetColumnStyling(divSlot);
+
+    const facets = this.bindings.store.getFacetElements() as BaseFacetElement[];
+
+    const sortedFacets = sortFacetsUsingManager(facets, this.facetManager);
+
+    const {visibleFacets, invisibleFacets} = sortFacetVisibility(
+      sortedFacets,
+      this.bindings.store.getAllFacets()
+    );
+
+    const visibleFacetsClone = this.cloneFacets(visibleFacets);
+    const invisibleFacetsClone = this.cloneFacets(invisibleFacets);
+
+    collapseFacetsAfter(visibleFacetsClone, this.collapseFacetsAfter);
+
+    divSlot.append(...visibleFacetsClone);
+    divSlot.append(...invisibleFacetsClone);
+
+    const generator = this.makeAutomaticFacetGenerator();
+    if (generator) {
+      generator.updateCollapseFacetsDependingOnFacetsVisibility(
+        this.collapseFacetsAfter,
+        visibleFacets.length
+      );
+      divSlot.append(generator);
+    }
+
+    return divSlot;
+  }
+
+  private cloneFacets(facets: BaseFacetElement[]): BaseFacetElement[] {
+    return facets.map((facet, i) => {
+      facet.classList.remove(popoverClass);
+      facet.setAttribute(isRefineModalFacet, '');
+      const clone = facet.cloneNode(true) as BaseFacetElement;
+      clone.isCollapsed =
+        this.collapseFacetsAfter === -1
+          ? false
+          : i + 1 > this.collapseFacetsAfter;
+      return clone;
+    });
+  }
+
+  private makeAutomaticFacetGenerator() {
+    if (!this.bindings.engine.state.automaticFacetSet?.desiredCount) {
+      return;
+    }
+    const generator = document.createElement(
+      'atomic-automatic-facet-generator'
+    );
+
+    generator.setAttribute(
+      'desired-count',
+      `${this.bindings.engine.state.automaticFacetSet?.desiredCount}`
+    );
+    this.addFacetColumnStyling(generator);
+
+    return generator;
+  }
+
+  private addFacetColumnStyling(el: HTMLElement) {
+    el.style.display = 'flex';
+    el.style.flexDirection = 'column';
+    el.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
   }
 
   private get options() {
@@ -221,17 +293,6 @@ export class AtomicRefineModal implements InitializableComponent {
         <slot name="automatic-facets"></slot>
       </Fragment>
     );
-  }
-
-  private getAutomaticFacetSlotContent() {
-    const isFacetElements = this.bindings.store.getFacetElements().length > 0;
-
-    const divSlot = document.createElement(
-      'atomic-automatic-facet-slot-content'
-    );
-    divSlot.setAttribute('is-there-static-facets', `${isFacetElements}`);
-
-    return divSlot;
   }
 
   private renderBody() {

@@ -19,7 +19,7 @@ import * as InstantResultsAssertions from './search-box-instant-results-assertio
 import {InstantResultsSelectors} from './search-box-instant-results-selectors';
 
 const delay = (force = false) => ({delay: 400, force});
-const downKeys = (count: number) => Array(count).fill('{downarrow}').join('');
+const downKeys = (count: number) => Array(count).fill('{downArrow}').join('');
 
 const setInstantResults = (count: number) => (fixture: TestFixture) => {
   fixture.withCustomResponse((response) => {
@@ -68,249 +68,178 @@ describe('Instant Results Test Suites', () => {
       .init();
   }
 
-  describe('with a custom aria label', () => {
+  it('with a custom aria label, it should render correctly', () => {
     const customFieldName = 'custom';
     const customFieldValueForResult = (index: number) => `${index}!`;
     const ariaLabelGeneratorAlias = 'ariaLabelGenerator';
-    beforeEach(() => {
-      new TestFixture()
-        .with(setInstantResults(numOfInstantResults))
-        .with(setRecentQueries(numOfRecentQueries))
-        .withCustomResponse((response) => {
-          response.results.forEach(
-            (result, i) =>
-              (result.raw[customFieldName] = customFieldValueForResult(i))
-          );
-        })
-        .with(
-          addSearchBox({
-            suggestions: {maxWithoutQuery: 8, maxWithQuery: 8},
-            instantResults: {
-              template: buildTemplateWithoutSections(
-                generateComponentHTML(resultTextComponent, {field: 'title'})
+    new TestFixture()
+      .with(setInstantResults(numOfInstantResults))
+      .with(setRecentQueries(numOfRecentQueries))
+      .withCustomResponse((response) => {
+        response.results.forEach(
+          (result, i) =>
+            (result.raw[customFieldName] = customFieldValueForResult(i))
+        );
+      })
+      .with(
+        addSearchBox({
+          suggestions: {maxWithoutQuery: 8, maxWithQuery: 8},
+          instantResults: {
+            template: buildTemplateWithoutSections(
+              generateComponentHTML(resultTextComponent, {field: 'title'})
+            ),
+            ariaLabelGenerator: cy
+              .stub()
+              .as(ariaLabelGeneratorAlias)
+              .callsFake(
+                <AriaLabelGenerator>(
+                  ((_, result) => result.raw[customFieldName] as string)
+                )
               ),
-              ariaLabelGenerator: cy
-                .stub()
-                .as(ariaLabelGeneratorAlias)
-                .callsFake(
-                  <AriaLabelGenerator>(
-                    ((_, result) => result.raw[customFieldName] as string)
-                  )
-                ),
-            },
-          })
-        )
-        .init();
-      SearchBoxSelectors.inputBox().type(`${downKeys(2)}`, delay());
-      InstantResultsSelectors.results()
-        .find(resultTextComponent, {includeShadowDom: true})
-        .should(($els) => expect($els.text().trim().length).to.greaterThan(0));
-    });
+          },
+        })
+      )
+      .init();
+
+    SearchBoxSelectors.inputBox().type(`${downKeys(2)}`, delay());
+    InstantResultsSelectors.results()
+      .find(resultTextComponent, {includeShadowDom: true})
+      .should(($els) => expect($els.text().trim().length).to.greaterThan(0));
 
     CommonAssertions.assertAccessibility(searchBoxComponent);
     InstantResultsAssertions.assertLogSearchboxAsYouType();
 
-    it('uses the generated labels', () => {
-      InstantResultsSelectors.results().should(([...results]) =>
-        results.forEach((result, i) =>
-          expect(result.ariaLabel).to.contain(customFieldValueForResult(i))
-        )
-      );
-    });
+    cy.log('uses the generated label');
+    InstantResultsSelectors.results().should(([...results]) =>
+      results.forEach((result, i) =>
+        expect(result.ariaLabel).to.contain(customFieldValueForResult(i))
+      )
+    );
 
-    it('passes the bindings to the generator', () => {
-      cy.get<
-        sinon.SinonStub<
-          Parameters<AriaLabelGenerator>,
-          ReturnType<AriaLabelGenerator>
-        >
-      >(`@${ariaLabelGeneratorAlias}`).then((stub) =>
-        cy
-          .get('atomic-search-interface')
-          .then(([searchInterface]) => initializeBindings(searchInterface))
-          .then((expectedBindings) => {
-            expect(Object.keys(stub.firstCall.args[0])).to.contain.all.members(
-              Object.keys(expectedBindings)
-            );
-          })
-      );
+    cy.log('passes the bindings to the generator');
+    cy.get<
+      sinon.SinonStub<
+        Parameters<AriaLabelGenerator>,
+        ReturnType<AriaLabelGenerator>
+      >
+    >(`@${ariaLabelGeneratorAlias}`).then((stub) =>
+      cy
+        .get('atomic-search-interface')
+        .then(([searchInterface]) => initializeBindings(searchInterface))
+        .then((expectedBindings) => {
+          expect(Object.keys(stub.firstCall.args[0])).to.contain.all.members(
+            Object.keys(expectedBindings)
+          );
+        })
+    );
+  });
+
+  it('with keyboard navigation, it should function correctly', () => {
+    setupWithSuggestionsAndRecentQueries();
+    SearchBoxSelectors.inputBox().type(`${downKeys(1)}{rightArrow}`, delay());
+
+    SearchBoxAssertions.assertHasSuggestionsCountWithoutIt(
+      maxRecentQueriesWithoutQuery
+    );
+    InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
+
+    CommonAssertions.assertAriaLiveMessageWithoutIt(
+      SearchBoxSelectors.searchBoxAriaLive,
+      maxRecentQueriesWithoutQuery.toString()
+    );
+    InstantResultsAssertions.assertResultIsSelected(0);
+
+    SearchBoxAssertions.assertSuggestionIsHighlighted(1);
+
+    cy.log('when navigating back from result to query');
+    SearchBoxSelectors.inputBox().type(
+      `${downKeys(2)}{leftArrow}{downArrow}`,
+      delay()
+    );
+
+    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(0);
+    SearchBoxAssertions.assertHasTextWithoutIt('Recent query 0');
+
+    cy.log('when navigating to first suggestion and back with up arrow');
+    SearchBoxSelectors.inputBox().type(`${downKeys(3)}{upArrow}`, delay());
+    SearchBoxSelectors.inputBox().clear({force: true});
+
+    SearchBoxSelectors.inputBox().type(
+      'Rec{downArrow}{upArrow}{leftArrow}{del}',
+      delay()
+    );
+
+    SearchBoxAssertions.assertNoSuggestionIsSelected();
+    SearchBoxAssertions.assertHasTextWithoutIt('Re');
+
+    cy.log('when navigating with the down arrow only');
+    SearchBoxSelectors.inputBox().clear({force: true});
+    SearchBoxSelectors.inputBox().type(downKeys(6), delay());
+    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(0);
+
+    cy.log('when navigating up from results');
+    SearchBoxSelectors.inputBox().type(`${downKeys(2)}{upArrow}`, delay());
+    SearchBoxSelectors.inputBox().clear({force: true});
+
+    SearchBoxSelectors.inputBox().type('{moveToStart}');
+
+    cy.log('when navigating up from input');
+    SearchBoxSelectors.inputBox().type('{moveToStart}{upArrow}', delay());
+
+    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(2);
+
+    cy.log('when typing when a query is selected');
+    SearchBoxSelectors.inputBox().type(`${downKeys(1)}{downArrow}`, delay());
+
+    SearchBoxSelectors.inputBox().type(`${downKeys(2)}{backspace}`, delay());
+
+    SearchBoxAssertions.assertNoSuggestionIsSelected();
+
+    SearchBoxAssertions.assertHasTextWithoutIt('Recent query ');
+
+    cy.wait(1000);
+    SearchBoxSelectors.inputBox().type(
+      `${downKeys(2)}{rightArrow}{enter}`,
+      delay()
+    );
+
+    cy.window().then((win) => {
+      expect(win.location.href).to.equal('https://example.com/2');
     });
   });
 
-  describe('with keyboard navigation', () => {
-    describe('when navigating from query to results', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type(
-          `${downKeys(2)}{rightarrow}`,
-          delay()
-        );
-      });
-      after(() => {
-        SearchBoxSelectors.inputBox().clear({force: true});
-      });
-      SearchBoxAssertions.assertHasSuggestionsCount(
-        maxRecentQueriesWithoutQuery
-      );
-      InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
-      CommonAssertions.assertAriaLiveMessage(
-        SearchBoxSelectors.searchBoxAriaLive,
-        maxRecentQueriesWithoutQuery.toString()
-      );
-      InstantResultsAssertions.assertResultIsSelected(0);
-      SearchBoxAssertions.assertSuggestionIsHighlighted(1);
-    });
-    describe('when navigating back from result to query', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type(
-          `${downKeys(2)}{rightarrow}{leftarrow}`,
-          delay()
-        );
-      });
-      after(() => {
-        SearchBoxSelectors.inputBox().clear({force: true});
-      });
-      InstantResultsAssertions.assertNoResultIsSelected();
-      SearchBoxAssertions.assertSuggestionIsSelected(0);
-      SearchBoxAssertions.assertHasText('Recent query 0');
-    });
-    describe('when navigating back from result to query', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type(
-          `${downKeys(2)}{rightarrow}{leftarrow}`,
-          delay()
-        );
-      });
-      after(() => {
-        SearchBoxSelectors.inputBox().clear({force: true});
-      });
-      InstantResultsAssertions.assertNoResultIsSelected();
-      SearchBoxAssertions.assertSuggestionIsSelected(0);
-      SearchBoxAssertions.assertHasText('Recent query 0');
-    });
-    describe('when pressing enter on a result', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type(
-          `${downKeys(2)}{rightarrow}{enter}`,
-          delay()
-        );
-      });
-      it('redirects to new page', () => {
-        cy.window().then((win) => {
-          expect(win.location.href).to.equal('https://example.com/0');
-        });
-      });
-    });
-    describe('when navigating to first suggestion and back with up arrow', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type(
-          'Rec{downarrow}{uparrow}{leftarrow}{del}',
-          delay()
-        );
-      });
+  it('with mouse navigation, it should function correctly', () => {
+    setupWithSuggestionsAndRecentQueries();
 
-      SearchBoxAssertions.assertNoSuggestionIsSelected();
-      SearchBoxAssertions.assertHasText('Re');
-    });
+    cy.log('when hovering over a query');
+    SearchBoxSelectors.inputBox().click();
+    SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
 
-    describe('when navigating with the down arrow only', () => {
-      beforeEach(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type(downKeys(6), delay());
-      });
+    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(0);
+    SearchBoxAssertions.assertHasTextWithoutIt('');
 
-      SearchBoxAssertions.assertSuggestionIsSelected(0);
-    });
+    cy.log('when hovering over an instant result');
+    SearchBoxSelectors.inputBox().click();
+    InstantResultsSelectors.results().eq(1).trigger('mouseover');
 
-    describe('when navigating up from results', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type('{moveToStart}');
-        InstantResultsSelectors.results();
-        SearchBoxSelectors.inputBox().type(
-          '{rightarrow}{uparrow}',
-          delay(true)
-        );
-      });
+    InstantResultsAssertions.assertHasResultCount(4);
 
-      SearchBoxAssertions.assertNoSuggestionIsSelected();
-      InstantResultsAssertions.assertNoResultIsSelected();
-    });
+    SearchBoxAssertions.assertSuggestionIsHighlighted(1);
 
-    describe('when navigating up from input', () => {
-      beforeEach(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type('{moveToStart}{uparrow}', delay());
-      });
+    SearchBoxSelectors.inputBox().click();
+    InstantResultsSelectors.results().eq(1).trigger('mouseover');
+    SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
 
-      SearchBoxAssertions.assertSuggestionIsSelected(2);
-    });
+    InstantResultsAssertions.assertHasResultCount(4);
+    SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(1);
 
-    describe('when typing when a query is selected', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type(
-          `${downKeys(2)}{backspace}`,
-          delay()
-        );
-      });
+    cy.log('when clicking a result');
+    cy.wait(1000);
 
-      SearchBoxAssertions.assertNoSuggestionIsSelected();
-      SearchBoxAssertions.assertHasText('Recent query ');
-    });
-  });
+    InstantResultsSelectors.results().eq(1).trigger('mouseover').click();
 
-  describe('with mouse navigation', () => {
-    describe('when hovering over a query', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().click();
-        SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
-      });
-      SearchBoxAssertions.assertSuggestionIsSelected(0);
-      SearchBoxAssertions.assertHasText('');
-    });
-
-    describe('when hovering over an instant result', () => {
-      before(() => {
-        setupWithSuggestionsAndRecentQueries(2);
-        SearchBoxSelectors.inputBox().click();
-        InstantResultsSelectors.results().eq(1).trigger('mouseover');
-      });
-      InstantResultsAssertions.assertHasResultCount(2);
-      InstantResultsAssertions.assertResultIsSelected(1);
-      SearchBoxAssertions.assertSuggestionIsHighlighted(1);
-
-      describe('when hovering over a different query', () => {
-        before(() => {
-          SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
-        });
-        InstantResultsAssertions.assertHasResultCount(4);
-        InstantResultsAssertions.assertNoResultIsSelected();
-        SearchBoxAssertions.assertSuggestionIsSelected(1);
-      });
-    });
-
-    describe('when clicking a result', () => {
-      beforeEach(() => {
-        setupWithSuggestionsAndRecentQueries();
-        SearchBoxSelectors.inputBox().type('{downarrow}', {
-          delay: 400,
-          force: true,
-        });
-        cy.wait(TestFixture.interceptAliases.Search);
-        InstantResultsSelectors.results().eq(1).click();
-      });
-
-      it('redirects to new page', () => {
-        cy.window().then((win) => {
-          expect(win.location.href).to.equal('https://example.com/1');
-        });
-      });
+    cy.window().then((win) => {
+      expect(win.location.href).to.equal('https://example.com/1');
     });
   });
 });

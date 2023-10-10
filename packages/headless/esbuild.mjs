@@ -17,6 +17,7 @@ const useCaseEntries = {
   'case-assist': 'src/case-assist.index.ts',
   insight: 'src/insight.index.ts',
   ssr: 'src/ssr.index.ts',
+  commerce: 'src/commerce.index.ts',
 };
 
 function getUmdGlobalName(useCase) {
@@ -28,6 +29,7 @@ function getUmdGlobalName(useCase) {
     'case-assist': 'CoveoHeadlessCaseAssist',
     insight: 'CoveoHeadlessInsight',
     ssr: 'CoveoHeadlessSSR',
+    commerce: 'CoveoHeadlessCommerce',
   };
 
   const globalName = map[useCase];
@@ -147,7 +149,7 @@ async function buildBrowserConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
-        'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
+        '@coveo/please-give-me-fetch': resolve('.', 'fetch-ponyfill.js'),
       }),
     ],
     ...options,
@@ -198,6 +200,7 @@ async function buildNodeConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': require.resolve('coveo.analytics'),
+        '@coveo/please-give-me-fetch': resolve('.', 'fetch-ponyfill-node.js'),
       }),
     ],
     ...options,

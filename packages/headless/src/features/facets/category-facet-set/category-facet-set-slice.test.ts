@@ -150,6 +150,7 @@ describe('category facet slice', () => {
         numberOfValues: 5,
         preventAutoSelect: false,
         sortCriteria: 'occurrences',
+        resultsMustMatch: 'atLeastOneValue',
         delimitingCharacter: ';',
         type: 'hierarchical',
         basePath: [],

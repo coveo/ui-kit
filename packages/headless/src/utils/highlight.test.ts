@@ -17,6 +17,7 @@ describe('highlight', () => {
     ];
     const highlightParams: HighlightParams = {
       content:
+        /* cspell:disable-next-line */
         'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut',
       highlights: highlights,
       openingDelimiter: '<span>',
@@ -25,6 +26,7 @@ describe('highlight', () => {
 
     it('should wrap the passed highlights with tags using the specified class name', () => {
       const expectedHighlight =
+        /* cspell:disable-next-line */
         'Lor<span>em ip</span>su<span>m do</span>lor <span>sit amet, conse</span>ctetur adipi<span>sicing eli</span>t, sed do eiusmod tempor incididunt ut';
       expect(highlightString(highlightParams)).toBe(expectedHighlight);
     });
@@ -49,6 +51,7 @@ describe('highlight', () => {
       const testCases = [
         {
           input: 'malicious <script/> string',
+          /* cspell:disable-next-line */
           output: 'mal<span>iciou</span>s &lt;script/&gt; <span>str</span>ing',
           highlights: [
             {offset: 3, length: 5},
@@ -155,6 +158,7 @@ describe('highlight', () => {
       };
       const formatted = getHighlightedSuggestion(suggestion, options);
       const expected =
+        /* cspell:disable-next-line */
         'openthiclose<strong>s</strong> openiclose<strong>s</strong> <i>high</i>openlightclose<strong>ed</strong>';
       expect(formatted).toEqual(expected);
     });
@@ -168,9 +172,12 @@ describe('highlight', () => {
 
   describe('escape', () => {
     it('should replace special characters', () => {
+      /* cspell:disable-next-line */
       expect(escape("an'es'caped&<str&>ing`\"`")).toBe(
+        /* cspell:disable-next-line */
         'an&#x27;es&#x27;caped&amp;&lt;str&amp;&gt;ing&#x60;&quot;&#x60;'
       );
+      /* cspell:disable-next-line */
       expect(escape("constante d'acidité")).toBe('constante d&#x27;acidité');
     });
   });

@@ -9,7 +9,7 @@
   @apply absolute w-5/6 h-5/6 bg-background rounded-full;
 }
 
-.grow-wrap {
+[part='textarea-expander'] {
   &::after {
     /* Space needed to prevent jumpy behavior */
     content: attr(data-replicated-value) ' ';
@@ -28,6 +28,13 @@
     &::after {
       @apply whitespace-pre-wrap;
       max-height: 8em;
+    }
+  }
+
+  &:not(.expanded) {
+    > [part='textarea'],
+    &::after {
+      @apply overflow-hidden;
     }
   }
 }

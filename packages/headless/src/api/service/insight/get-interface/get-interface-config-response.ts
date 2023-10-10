@@ -24,7 +24,7 @@ interface InsightResultTemplate {
 }
 
 type Condition<
-  ConditionType = 'isDefined' | 'isNotDefined' | 'mustMatch' | 'mustNotMatch'
+  ConditionType = 'isDefined' | 'isNotDefined' | 'mustMatch' | 'mustNotMatch',
 > = {
   field: string;
   conditionType: ConditionType;
