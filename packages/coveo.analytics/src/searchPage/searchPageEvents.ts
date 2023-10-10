@@ -539,7 +539,7 @@ export interface GeneratedAnswerCitationMeta {
 
 export type GeneratedAnswerFeedbackReason = 'irrelevant' | 'notAccurate' | 'outOfDate' | 'harmful' | 'other';
 
-export type GeneratedAnswerRephraseFormat = 'stepByStep' | 'bulletPoints' | 'summarize';
+export type GeneratedAnswerRephraseFormat = 'step' | 'bullet' | 'concise' | 'default';
 
 export interface GeneratedAnswerSourceHoverMeta extends GeneratedAnswerCitationMeta {
     citationHoverTimeMs: number;
