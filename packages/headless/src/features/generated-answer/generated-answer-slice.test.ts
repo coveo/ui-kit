@@ -4,7 +4,7 @@ import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   resetAnswer,
-  setEnabled,
+  setIsVisible,
   setIsLoading,
   setIsStreaming,
   updateCitations,
@@ -15,7 +15,7 @@ import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
 const baseState = {
-  enabled: true,
+  isVisible: true,
   isLoading: false,
   isStreaming: false,
   citations: [],
@@ -265,23 +265,23 @@ describe('generated answer slice', () => {
     });
   });
 
-  describe('#setEnabled', () => {
+  describe('#setIsVisible', () => {
     it('should set enabled to true when given true', () => {
       const finalState = generatedAnswerReducer(
-        {...baseState, enabled: false},
-        setEnabled(true)
+        {...baseState, isVisible: false},
+        setIsVisible(true)
       );
 
-      expect(finalState.enabled).toEqual(true);
+      expect(finalState.isVisible).toEqual(true);
     });
 
     it('should set enabled to false when given false', () => {
       const finalState = generatedAnswerReducer(
-        {...baseState, enabled: true},
-        setEnabled(false)
+        {...baseState, isVisible: true},
+        setIsVisible(false)
       );
 
-      expect(finalState.enabled).toEqual(false);
+      expect(finalState.isVisible).toEqual(false);
     });
   });
 });

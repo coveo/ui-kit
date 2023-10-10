@@ -3,7 +3,7 @@ import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   resetAnswer,
-  setEnabled,
+  setIsVisible,
   streamAnswer,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
@@ -119,18 +119,18 @@ describe('generated answer', () => {
   });
 
   describe('when passing initial state', () => {
-    it('should dispatch setEnabled action when set to true', () => {
-      initGeneratedAnswer({initialState: {enabled: true}});
+    it('should dispatch setIsVisible action when set to true', () => {
+      initGeneratedAnswer({initialState: {isVisible: true}});
 
-      const action = findAction(setEnabled.type);
+      const action = findAction(setIsVisible.type);
       expect(action).toBeDefined();
       expect(action).toHaveProperty('payload', true);
     });
 
-    it('should dispatch setEnabled action when set to false', () => {
-      initGeneratedAnswer({initialState: {enabled: false}});
+    it('should dispatch setIsVisible action when set to false', () => {
+      initGeneratedAnswer({initialState: {isVisible: false}});
 
-      const action = findAction(setEnabled.type);
+      const action = findAction(setIsVisible.type);
       expect(action).toBeDefined();
       expect(action).toHaveProperty('payload', false);
     });
@@ -174,74 +174,74 @@ describe('generated answer', () => {
     });
   });
 
-  describe('#enable', () => {
-    describe('when already enabled', () => {
+  describe('#show', () => {
+    describe('when already visible', () => {
       it('should not make any changes', () => {
-        engine = buildEngineWithGeneratedAnswer({enabled: true});
+        engine = buildEngineWithGeneratedAnswer({isVisible: true});
         initGeneratedAnswer();
 
-        generatedAnswer.enable();
+        generatedAnswer.show();
 
-        const action = findAction(setEnabled.type);
+        const action = findAction(setIsVisible.type);
         expect(action).toBeUndefined();
       });
     });
 
-    describe('when not enabled', () => {
-      it('should persist the enabled value', () => {
+    describe('when not visible', () => {
+      it('should persist the isVisible value', () => {
         const accessor = jest.fn();
-        engine = buildEngineWithGeneratedAnswer({enabled: false});
-        initGeneratedAnswer({persistEnabled: accessor});
+        engine = buildEngineWithGeneratedAnswer({isVisible: false});
+        initGeneratedAnswer({persistIsVisible: accessor});
 
-        generatedAnswer.enable();
+        generatedAnswer.show();
 
         expect(accessor).toHaveBeenCalledWith(true);
       });
 
-      it('should dispatch the setEnabled action', () => {
-        engine = buildEngineWithGeneratedAnswer({enabled: false});
+      it('should dispatch the setIsVisible action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: false});
         initGeneratedAnswer();
 
-        generatedAnswer.enable();
+        generatedAnswer.show();
 
-        const action = findAction(setEnabled.type);
+        const action = findAction(setIsVisible.type);
         expect(action).toBeDefined();
         expect(action).toHaveProperty('payload', true);
       });
     });
   });
 
-  describe('#disable', () => {
-    describe('when already disabled', () => {
+  describe('#hide', () => {
+    describe('when not visible', () => {
       it('should not make any changes', () => {
-        engine = buildEngineWithGeneratedAnswer({enabled: false});
+        engine = buildEngineWithGeneratedAnswer({isVisible: false});
         initGeneratedAnswer();
 
-        generatedAnswer.disable();
+        generatedAnswer.hide();
 
-        const action = findAction(setEnabled.type);
+        const action = findAction(setIsVisible.type);
         expect(action).toBeUndefined();
       });
     });
 
-    describe('when enabled', () => {
-      it('should persist the enabled value', () => {
+    describe('when visible', () => {
+      it('should persist the isVisible value', () => {
         const accessor = jest.fn();
-        engine = buildEngineWithGeneratedAnswer({enabled: true});
-        initGeneratedAnswer({persistEnabled: accessor});
+        engine = buildEngineWithGeneratedAnswer({isVisible: true});
+        initGeneratedAnswer({persistIsVisible: accessor});
 
-        generatedAnswer.disable();
+        generatedAnswer.hide();
 
         expect(accessor).toHaveBeenCalledWith(false);
       });
 
-      it('should dispatch the setEnabled action', () => {
-        engine = buildEngineWithGeneratedAnswer({enabled: true});
+      it('should dispatch the setIsVisible action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: true});
         initGeneratedAnswer();
 
-        generatedAnswer.disable();
+        generatedAnswer.hide();
 
-        const action = findAction(setEnabled.type);
+        const action = findAction(setIsVisible.type);
         expect(action).toBeDefined();
         expect(action).toHaveProperty('payload', false);
       });

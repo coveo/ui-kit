@@ -5,7 +5,7 @@ import {
   resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
-  setEnabled,
+  setIsVisible,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
@@ -48,18 +48,18 @@ export interface GeneratedAnswer extends Controller {
    */
   logCitationClick(id: string): void;
   /**
-   * Enables generated answers. This has no effect when generated answers are already enabled.
+   * Displays the generated answer.
    */
-  enable(): void;
+  show(): void;
   /**
-   * Disables generated answers. This has no effect when generated answers are already disabled.
+   * Hides the generated answer.
    */
-  disable(): void;
+  hide(): void;
 }
 
 export interface GeneratedAnswerProps {
-  initialState?: {enabled: boolean};
-  persistEnabled?: (enabled: boolean) => void;
+  initialState?: {isVisible: boolean};
+  persistIsVisible?: (isVisible: boolean) => void;
 }
 
 /**
@@ -119,9 +119,9 @@ export function buildGeneratedAnswer(
     return engine.subscribe(strictListener);
   };
 
-  const isEnabled = props?.initialState?.enabled;
-  if (isEnabled !== undefined) {
-    dispatch(setEnabled(isEnabled));
+  const isVisible = props?.initialState?.isVisible;
+  if (isVisible !== undefined) {
+    dispatch(setIsVisible(isVisible));
   }
   subscribeToSearchRequests();
 
@@ -150,16 +150,16 @@ export function buildGeneratedAnswer(
       dispatch(logOpenGeneratedAnswerSource(citationId));
     },
 
-    enable() {
-      if (!this.state.enabled) {
-        props?.persistEnabled?.(true);
-        dispatch(setEnabled(true));
+    show() {
+      if (!this.state.isVisible) {
+        props?.persistIsVisible?.(true);
+        dispatch(setIsVisible(true));
       }
     },
-    disable() {
-      if (this.state.enabled) {
-        props?.persistEnabled?.(false);
-        dispatch(setEnabled(false));
+    hide() {
+      if (this.state.isVisible) {
+        props?.persistIsVisible?.(false);
+        dispatch(setIsVisible(false));
       }
     },
   };

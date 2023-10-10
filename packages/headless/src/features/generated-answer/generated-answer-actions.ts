@@ -46,8 +46,8 @@ export interface GeneratedAnswerErrorPayload {
   code?: number;
 }
 
-export const setEnabled = createAction(
-  'generatedAnswer/setEnabled',
+export const setIsVisible = createAction(
+  'generatedAnswer/setIsVisible',
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
