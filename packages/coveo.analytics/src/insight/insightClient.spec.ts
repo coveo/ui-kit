@@ -600,7 +600,7 @@ describe('InsightClient', () => {
         it('should send proper payload for #rephraseGeneratedAnswer', async () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
-                rephraseFormat: <GeneratedAnswerRephraseFormat>'stepByStep',
+                rephraseFormat: <GeneratedAnswerRephraseFormat>'step',
             };
 
             await client.logRephraseGeneratedAnswer(exampleGeneratedAnswerMetadata);
@@ -1346,7 +1346,7 @@ describe('InsightClient', () => {
         it('should send proper payload for #rephraseGeneratedAnswer', async () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
-                rephraseFormat: <GeneratedAnswerRephraseFormat>'stepByStep',
+                rephraseFormat: <GeneratedAnswerRephraseFormat>'step',
             };
             const expectedMetadata = {
                 ...exampleGeneratedAnswerMetadata,
