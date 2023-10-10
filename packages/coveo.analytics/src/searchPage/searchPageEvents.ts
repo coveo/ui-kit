@@ -534,7 +534,7 @@ export interface GeneratedAnswerStreamEndMeta extends GeneratedAnswerBaseMeta {
 export interface GeneratedAnswerCitationMeta {
     generativeQuestionAnsweringId: string;
     permanentId: string;
-    id: string;
+    citationId: string;
 }
 
 export type GeneratedAnswerFeedbackReason = 'irrelevant' | 'notAccurate' | 'outOfDate' | 'harmful' | 'other';

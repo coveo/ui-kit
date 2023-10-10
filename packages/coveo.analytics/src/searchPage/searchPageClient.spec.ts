@@ -1460,13 +1460,21 @@ describe('SearchPageClient', () => {
     });
 
     it('should send proper payload for #logOpenGeneratedAnswerSource', async () => {
-        const meta = {generativeQuestionAnsweringId: fakeStreamId, id: 'some-document-id', permanentId: 'perm-id'};
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            citationId: 'some-document-id',
+            permanentId: 'perm-id',
+        };
         await client.logOpenGeneratedAnswerSource(meta);
         expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, meta);
     });
 
     it('should send proper payload for #makeOpenGeneratedAnswerSource', async () => {
-        const meta = {generativeQuestionAnsweringId: fakeStreamId, id: 'some-document-id', permanentId: 'perm-id'};
+        const meta = {
+            generativeQuestionAnsweringId: fakeStreamId,
+            citationId: 'some-document-id',
+            permanentId: 'perm-id',
+        };
         const built = await client.makeOpenGeneratedAnswerSource(meta);
         await built.log({searchUID: provider.getSearchUID()});
         expectMatchCustomEventPayload(SearchPageEvents.openGeneratedAnswerSource, meta);
