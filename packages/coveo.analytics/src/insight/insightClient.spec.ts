@@ -65,6 +65,7 @@ describe('InsightClient', () => {
         getLanguage: () => 'en',
         getFacetState: () => fakeFacetState,
         getIsAnonymous: () => false,
+        getGeneratedAnswerMetadata: () => ({genratedAnswerMetadata: 'foo'}),
     };
 
     const initClient = () => {
@@ -80,7 +81,7 @@ describe('InsightClient', () => {
 
     const expectMatchPayload = (actionCause: SearchPageEvents | InsightEvents, meta = {}) => {
         const body: string = lastCallBody(fetchMock);
-        const customData = {foo: 'bar', ...meta};
+        const customData = {foo: 'bar', genratedAnswerMetadata: 'foo', ...meta};
         expect(JSON.parse(body)).toMatchObject({
             queryText: 'queryText',
             responseTime: 123,

@@ -49,6 +49,7 @@ export interface InsightClientProvider {
     getLanguage: () => string;
     getIsAnonymous: () => boolean;
     getFacetState?: () => FacetStateMetadata[];
+    getGeneratedAnswerMetadata?: () => Record<string, any>;
 }
 
 export interface InsightClientOptions extends ClientOptions {
@@ -662,7 +663,7 @@ export class CoveoInsightClient {
         metadata?: Record<string, any>
     ): Promise<SearchEventRequest> {
         return {
-            ...(await this.getBaseEventRequest(metadata)),
+            ...(await this.getBaseEventRequest({...metadata, ...this.provider.getGeneratedAnswerMetadata?.()})),
             ...this.provider.getSearchEventRequestPayload(),
             searchQueryUid: this.provider.getSearchUID(),
             queryPipeline: this.provider.getPipeline(),
