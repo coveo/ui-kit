@@ -93,7 +93,7 @@ describe('headless ssr with search parameter manager example', () => {
     }
 
     it('renders page in SSR as expected', () => {
-      cy.intercept('/**', (req) => {
+      cy.intercept('/generic/**', (req) => {
         req.continue((resp) => {
           const dom = new DOMParser().parseFromString(resp.body, 'text/html');
           expect(dom.querySelector('.search-box input')).to.have.value(query);
@@ -137,7 +137,7 @@ describe('headless ssr with search parameter manager example', () => {
     }
 
     it('renders page in SSR as expected', () => {
-      cy.intercept('/**', (req) => {
+      cy.intercept('/generic/**', (req) => {
         req.continue((resp) => {
           const dom = new DOMParser().parseFromString(resp.body, 'text/html');
           expect(dom.querySelector('.search-box input')).to.have.value('');
