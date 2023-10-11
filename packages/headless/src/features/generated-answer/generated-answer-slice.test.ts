@@ -266,7 +266,7 @@ describe('generated answer slice', () => {
   });
 
   describe('#setIsVisible', () => {
-    it('should set enabled to true when given true', () => {
+    it('should set isVisible to true when given true', () => {
       const finalState = generatedAnswerReducer(
         {...baseState, isVisible: false},
         setIsVisible(true)
@@ -275,7 +275,7 @@ describe('generated answer slice', () => {
       expect(finalState.isVisible).toEqual(true);
     });
 
-    it('should set enabled to false when given false', () => {
+    it('should set isVisible to false when given false', () => {
       const finalState = generatedAnswerReducer(
         {...baseState, isVisible: true},
         setIsVisible(false)
