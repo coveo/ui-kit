@@ -4,7 +4,8 @@ export function createMockClientIdManager(
   clientIdManager?: Partial<ClientIdManager>
 ): ClientIdManager {
   return {
-    clientId: "2136b353-74be-42d7-904f-ea33a8f4a43c",
+    getClientId: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
+    clear: () => {},
     ...clientIdManager,
   };
 }

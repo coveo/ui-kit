@@ -35,7 +35,7 @@ export function createMeta(
 ): Readonly<Meta> {
   const { getReferrerUrl, getUrl, getUserAgent } = environment;
   const eventConfig = getEventConfig(config);
-  const { clientId } = clientIdManager;
+  const clientId = clientIdManager.getClientId();
 
   return Object.freeze({
     type,

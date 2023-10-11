@@ -25,6 +25,7 @@ interface Relay {
   off: (type: string, callback?: EventCallback) => void;
   updateConfig: (config: Partial<RelayConfig>) => void;
   version: string;
+  clearStorage: () => void;
 }
 
 export function createRelay(initialConfig: RelayConfig): Relay {
@@ -58,6 +59,9 @@ export function createRelay(initialConfig: RelayConfig): Relay {
     updateConfig: (config: Partial<RelayConfig>) =>
       configManager.update(config),
     version,
+    clearStorage: () => {
+      clientIdManager.clear();
+    },
   };
 }
 
