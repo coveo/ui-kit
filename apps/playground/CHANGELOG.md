@@ -1,3 +1,9 @@
+# 1.5.0 (2023-10-11)
+
+### Features
+
+- add disabled mode ([808baee](/commits/808baee3f59aac4ff1937e8e33c7eff1262c0409))
+
 ## 1.4.4 (2023-10-11)
 
 ## 1.4.3 (2023-10-02)
