@@ -4,6 +4,7 @@ import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   resetAnswer,
+  updateAnswerStyle,
   setIsLoading,
   setIsStreaming,
   updateCitations,
@@ -57,5 +58,8 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setIsStreaming, (state, {payload}) => {
         state.isStreaming = payload;
+      })
+      .addCase(updateAnswerStyle, (state, {payload}) => {
+        state.responseFormat.answerStyle = payload.answerStyle;
       })
 );

@@ -9,6 +9,7 @@ import {
   PlatformClientCallOptions,
 } from '../platform-client';
 import {BaseParam} from '../platform-service-params';
+import {GeneratedAnswerStyle} from '../../features/generated-answer/generated-response-format';
 
 export interface QueryParam {
   q?: string;
@@ -130,6 +131,16 @@ export interface AutomaticFacetsParams {
     desiredCount: number;
     numberOfValues?: number;
     currentFacets?: AutomaticFacetRequest[];
+  };
+}
+
+export interface PipelineRuleParams {
+  pipelineRuleParameters?: {
+    genqa?: {
+      responseFormat: {
+        answerStyle: GeneratedAnswerStyle;
+      };
+    };
   };
 }
 

@@ -6,6 +6,7 @@ import {
   resetAnswer,
   setIsLoading,
   setIsStreaming,
+  updateAnswerStyle,
   updateCitations,
   updateError,
   updateMessage,
@@ -13,13 +14,7 @@ import {
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
-const baseState = {
-  isLoading: false,
-  isStreaming: false,
-  citations: [],
-  liked: false,
-  disliked: false,
-};
+const baseState = getGeneratedAnswerInitialState();
 
 describe('generated answer slice', () => {
   it('initializes the state correctly', () => {
@@ -260,6 +255,25 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isStreaming).toEqual(false);
+    });
+  });
+
+  describe('#updateAnswerStyle', () => {
+    it('concatenates the given string with the answer previously in the state', () => {
+      const style = 'step';
+      const finalState = generatedAnswerReducer(
+        {
+          ...getGeneratedAnswerInitialState(),
+          responseFormat: {
+            answerStyle: 'default',
+          },
+        },
+        updateAnswerStyle({
+          answerStyle: style,
+        })
+      );
+
+      expect(finalState.responseFormat.answerStyle).toBe(style);
     });
   });
 });

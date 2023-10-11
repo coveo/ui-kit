@@ -1,4 +1,5 @@
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
+import {GeneratedResponseFormat} from './generated-response-format';
 
 export interface GeneratedAnswerState {
   isLoading: boolean;
@@ -7,6 +8,7 @@ export interface GeneratedAnswerState {
   citations: GeneratedAnswerCitation[];
   liked: boolean;
   disliked: boolean;
+  responseFormat: GeneratedResponseFormat;
   error?: {
     message?: string;
     code?: number;
@@ -21,5 +23,8 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     citations: [],
     liked: false,
     disliked: false,
+    responseFormat: {
+      answerStyle: 'default',
+    },
   };
 }

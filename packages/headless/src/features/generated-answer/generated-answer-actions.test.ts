@@ -6,6 +6,7 @@ import {
 import {buildMockCitation} from '../../test/mock-citation';
 import {
   setIsLoading,
+  updateAnswerStyle,
   updateCitations,
   updateError,
   updateMessage,
@@ -103,6 +104,26 @@ describe('generated answer', () => {
       ).toEqual({
         payload: {
           citations: testCitations,
+        },
+        type: actionType,
+      });
+    });
+  });
+
+  describe('#updateAnswerStyle', () => {
+    const actionType = 'generatedAnswer/updateAnswerStyle';
+
+    it('should accept a valid payload', () => {
+      const style = 'bullet';
+      expect(
+        e.dispatch(
+          updateAnswerStyle({
+            answerStyle: style,
+          })
+        )
+      ).toEqual({
+        payload: {
+          answerStyle: style,
         },
         type: actionType,
       });

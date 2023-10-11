@@ -70,6 +70,13 @@ export const buildSearchRequest = async (
         currentFacets: automaticFacets,
       },
     }),
+    ...(state.generatedAnswer?.responseFormat && {
+      pipelineRuleParameters: {
+        genqa: {
+          responseFormat: state.generatedAnswer.responseFormat,
+        },
+      },
+    }),
   });
 };
 
