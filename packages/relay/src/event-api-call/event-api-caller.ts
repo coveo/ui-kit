@@ -1,6 +1,7 @@
 import { Environment } from "../environment/environment";
 import { RelayEvent } from "../event/relay-event";
 import { RelayConfig } from "../config/config";
+import { ValidationResponse } from "../relay";
 
 export interface EventApiCallParams {
   config: RelayConfig;
@@ -8,11 +9,11 @@ export interface EventApiCallParams {
   event: Readonly<RelayEvent>;
 }
 
-export async function callEventApi({
+export async function callEventApi<T>({
   event,
   config,
   environment,
-}: EventApiCallParams): Promise<any> {
+}: EventApiCallParams): Promise<T> {
   const { url, token } = config;
   const headers = {
     "Content-Type": "application/json",

@@ -59,4 +59,20 @@ describe("validate", () => {
       errors: [],
     });
   });
+
+  it("returns disabled as error message if no data is returned", async () => {
+    const environmentWithSuccessfulFetch = createMockEnvironment({
+      fetch: jest.fn(() => Promise.resolve(new Response(JSON.stringify("")))),
+    });
+    const response = await validate({
+      config,
+      event,
+      environment: environmentWithSuccessfulFetch,
+    });
+
+    expect(response).toEqual({
+      valid: false,
+      errors: [{ type: "", message: "disabled", path: "" }],
+    });
+  });
 });

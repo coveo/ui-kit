@@ -1,4 +1,4 @@
-export type RelayMode = "emit" | "validate";
+export type RelayMode = "emit" | "validate" | "disabled";
 
 export interface RelayConfig {
   url: string;

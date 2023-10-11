@@ -17,7 +17,14 @@ export interface ValidationResponse {
 export async function validate(
   params: EventApiCallParams
 ): Promise<Readonly<ValidationResponse>> {
-  const data = await callEventApi(params);
+  const data = await callEventApi<ValidationResponse[] | "">(params);
+
+  if (!data) {
+    return {
+      valid: false,
+      errors: [{ type: "", message: "disabled", path: "" }],
+    };
+  }
 
   const { valid, errors } = data[0];
 

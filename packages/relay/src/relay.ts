@@ -11,6 +11,7 @@ import {
   ValidationError,
   ValidationResponse,
 } from "./validate/validate";
+import { buildNullEnvironment } from "./environment/null/null";
 
 type RelayPayload = Record<string, unknown>;
 type Off = () => void;
@@ -29,9 +30,13 @@ interface Relay {
 }
 
 export function createRelay(initialConfig: RelayConfig): Relay {
-  const environment = currentEnvironment();
-  const clientIdManager = createClientIdManager(environment);
   const configManager = createConfigManager(initialConfig);
+  const getEnvironment = () =>
+    configManager.get().mode == "disabled"
+      ? buildNullEnvironment()
+      : currentEnvironment();
+  const clientIdManager = createClientIdManager(getEnvironment());
+
   const { add, call, remove } = createListenerManager();
 
   return {
@@ -40,20 +45,24 @@ export function createRelay(initialConfig: RelayConfig): Relay {
         type,
         payload,
         configManager.get(),
-        environment,
+        getEnvironment(),
         clientIdManager
       );
 
       call(event);
 
-      const params = { config: configManager.get(), environment, event };
+      const params = {
+        config: configManager.get(),
+        environment: getEnvironment(),
+        event,
+      };
 
       return configManager.get().mode === "validate"
         ? validate(params)
         : emit(params);
     },
     getMeta: (type: string) =>
-      createMeta(type, configManager.get(), environment, clientIdManager),
+      createMeta(type, configManager.get(), getEnvironment(), clientIdManager),
     on: (type: string, callback: EventCallback) => add({ type, callback }),
     off: (type: string, callback?: EventCallback) => remove(type, callback),
     updateConfig: (config: Partial<RelayConfig>) =>

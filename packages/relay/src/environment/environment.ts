@@ -3,7 +3,7 @@ import { buildNodeEnvironment } from "./node/node";
 import { Storage } from "./storage";
 
 export interface Environment {
-  runtime: "browser" | "node";
+  runtime: "browser" | "node" | "null";
   fetch: (url: string, init?: RequestInit) => Promise<Response>;
   getReferrerUrl: () => string | null;
   getUrl: () => string | null;
