@@ -7,7 +7,7 @@ import {Trigger} from './../trigger';
 import {AutomaticFacets} from './automatic-facets';
 import {ExecutionReport} from './execution-report';
 import {ExtendedResults} from './extended-results';
-import {QueryCorrection} from './query-corrections';
+import {ChangedQuery, QueryCorrection} from './query-corrections';
 import {QueryRankingExpression} from './query-ranking-expression';
 import {QuestionsAnswers} from './question-answering';
 import {Result} from './result';
@@ -23,6 +23,7 @@ export interface SearchResponseSuccess {
   totalCountFiltered: number;
   facets: AnyFacetResponse[];
   queryCorrections: QueryCorrection[];
+  changedQuery?: ChangedQuery;
   triggers: Trigger[];
   questionAnswer: QuestionsAnswers;
   pipeline: string;

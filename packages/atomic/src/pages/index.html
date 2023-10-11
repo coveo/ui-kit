@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
@@ -212,7 +212,10 @@
               <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
               <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
             </atomic-sort-dropdown>
-            <atomic-did-you-mean></atomic-did-you-mean>
+            <atomic-did-you-mean
+              enable-fallback-search-on-empty-query-results="false"
+              automatically-correct-query="true"
+            ></atomic-did-you-mean>
             <atomic-notifications></atomic-notifications>
           </atomic-layout-section>
           <atomic-layout-section section="results">

@@ -8,6 +8,7 @@ import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   enableDidYouMean,
+  enableFallbackSearchOnEmptyQueryResults,
 } from '../../../features/did-you-mean/did-you-mean-actions';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
 import {
@@ -19,10 +20,15 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
+import {Logger} from 'pino';
 
 export type {QueryCorrection, WordCorrection};
 
 export interface DidYouMeanProps {
+  options?: DidYouMeanOptions;
+}
+
+export interface DidYouMeanOptions {
   /**
    * Whether to automatically apply corrections for queries that would otherwise return no results.
    * When `automaticallyCorrectQuery` is `true`, the controller automatically triggers a new query using the suggested term.
@@ -31,6 +37,19 @@ export interface DidYouMeanProps {
    * The default value is `true`.
    */
   automaticallyCorrectQuery?: boolean;
+  // TODO: V3: Change the default to true
+  /**
+   * Whether to use machine learning powered query suggestions model as a fallback to provide query corrections.
+   * This system requires a working and properly configured query suggestions model in the Coveo platform.
+   *
+   * This option is off by default. As such, the Coveo platform will use an older query correction system, powered solely by the index.
+   * By opting in this new system, the Coveo Search API will stop returning the `queryCorrections` field in the response.
+   * Instead, it will start returning a `changedQuery` field.
+   * This implies that the usage of this option introduce a breaking change in the way query corrections are handled, both at the Search API and Headless level.
+   *
+   * The default value is `false`.
+   */
+  enableFallbackSearchOnEmptyQueryResults?: boolean;
 }
 export interface DidYouMean extends Controller {
   /**
@@ -89,12 +108,19 @@ export function buildCoreDidYouMean(
   }
 
   const controller = buildController(engine);
-  const {dispatch} = engine;
+  const {dispatch, logger} = engine;
 
   dispatch(enableDidYouMean());
+  warnAboutMismatchBetweenQuerySuggestionFallbackAndAutomaticQueryCorrection(
+    logger,
+    props
+  );
 
-  if (props.automaticallyCorrectQuery === false) {
+  if (props.options?.automaticallyCorrectQuery === false) {
     dispatch(disableAutomaticQueryCorrection());
+  }
+  if (props.options?.enableFallbackSearchOnEmptyQueryResults === true) {
+    dispatch(enableFallbackSearchOnEmptyQueryResults());
   }
 
   const getState = () => engine.state;
@@ -129,4 +155,18 @@ function loadDidYouMeanReducers(
 ): engine is CoreEngine<ConfigurationSection & DidYouMeanSection> {
   engine.addReducers({configuration, didYouMean});
   return true;
+}
+
+function warnAboutMismatchBetweenQuerySuggestionFallbackAndAutomaticQueryCorrection(
+  logger: Logger,
+  props: DidYouMeanProps
+) {
+  if (
+    props.options?.automaticallyCorrectQuery === false &&
+    props.options.enableFallbackSearchOnEmptyQueryResults === true
+  ) {
+    logger.warn(
+      '#automaticallyCorrectQuery is set to false, but #useQuerySuggestionsForQueryCorrections is set to true. This is a mismatch. Please disable the query suggestions fallback if you want to disable the automatic query correction. #useQuerySuggestionsForQueryCorrections will be ignored.'
+    );
+  }
 }

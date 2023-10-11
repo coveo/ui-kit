@@ -496,4 +496,30 @@ describe('search request', () => {
     });
     expect((await buildSearchRequest(state)).request.cq).toBe('a');
   });
+
+  it('#enableFallbackSearchOnEmptyQueryResults should be set to false if disabled', async () => {
+    state.didYouMean.enableFallbackSearchOnEmptyQueryResults = false;
+    expect(
+      (await buildSearchRequest(state)).request
+        .enableFallbackSearchOnEmptyQueryResults
+    ).toBe(false);
+  });
+
+  it('#enableFallbackSearchOnEmptyQueryResults should be enforced to false if #automaticallyCorrectQuery is set to false', async () => {
+    state.didYouMean.enableFallbackSearchOnEmptyQueryResults = true;
+    state.didYouMean.automaticallyCorrectQuery = false;
+    expect(
+      (await buildSearchRequest(state)).request
+        .enableFallbackSearchOnEmptyQueryResults
+    ).toBe(false);
+  });
+
+  it('#enableFallbackSearchOnEmptyQueryResults should be set to true if enabled and #automaticallyCorrectQuery is set to true', async () => {
+    state.didYouMean.enableFallbackSearchOnEmptyQueryResults = true;
+    state.didYouMean.automaticallyCorrectQuery = true;
+    expect(
+      (await buildSearchRequest(state)).request
+        .enableFallbackSearchOnEmptyQueryResults
+    ).toBe(true);
+  });
 });

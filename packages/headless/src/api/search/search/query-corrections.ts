@@ -1,5 +1,5 @@
 /**
- * Describe correction for a query
+ * Describe correction for a query, using the older index based system.
  */
 export interface QueryCorrection {
   /**
@@ -29,4 +29,18 @@ export interface WordCorrection {
    * The new corrected word
    */
   correctedWord: string;
+}
+
+/**
+ * Describe correction for a query, using the advanced machine learning based system.
+ */
+export interface ChangedQuery {
+  /**
+   * The original query that was performed, without any automatic correction applied.
+   */
+  originalQuery: string;
+  /**
+   * The correction that was applied to the query.
+   */
+  correctedQuery: string;
 }

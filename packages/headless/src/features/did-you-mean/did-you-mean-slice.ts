@@ -6,6 +6,8 @@ import {
   applyDidYouMeanCorrection,
   enableAutomaticQueryCorrection,
   disableAutomaticQueryCorrection,
+  disableFallbackSearchOnEmptyQueryResults,
+  enableFallbackSearchOnEmptyQueryResults,
 } from './did-you-mean-actions';
 import {emptyCorrection, getDidYouMeanInitialState} from './did-you-mean-state';
 
@@ -24,6 +26,12 @@ export const didYouMeanReducer = createReducer(
       })
       .addCase(disableAutomaticQueryCorrection, (state) => {
         state.automaticallyCorrectQuery = false;
+      })
+      .addCase(disableFallbackSearchOnEmptyQueryResults, (state) => {
+        state.enableFallbackSearchOnEmptyQueryResults = false;
+      })
+      .addCase(enableFallbackSearchOnEmptyQueryResults, (state) => {
+        state.enableFallbackSearchOnEmptyQueryResults = true;
       })
       .addCase(executeSearch.pending, (state) => {
         state.queryCorrection = emptyCorrection();

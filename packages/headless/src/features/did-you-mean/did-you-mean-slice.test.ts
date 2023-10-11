@@ -7,6 +7,8 @@ import {
   disableDidYouMean,
   disableAutomaticQueryCorrection,
   enableAutomaticQueryCorrection,
+  enableFallbackSearchOnEmptyQueryResults,
+  disableFallbackSearchOnEmptyQueryResults,
 } from './did-you-mean-actions';
 import {didYouMeanReducer} from './did-you-mean-slice';
 import {getDidYouMeanInitialState, DidYouMeanState} from './did-you-mean-state';
@@ -110,6 +112,22 @@ describe('did you mean slice', () => {
     expect(
       didYouMeanReducer(state, disableAutomaticQueryCorrection)
         .automaticallyCorrectQuery
+    ).toBe(false);
+  });
+
+  it('should handle #enableFallbackSearchOnEmptyQueryResults', () => {
+    state.enableFallbackSearchOnEmptyQueryResults = false;
+    expect(
+      didYouMeanReducer(state, enableFallbackSearchOnEmptyQueryResults())
+        .enableFallbackSearchOnEmptyQueryResults
+    ).toBe(true);
+  });
+
+  it('should handle #disableFallbackSearchOnEmptyQueryResults', () => {
+    state.enableFallbackSearchOnEmptyQueryResults = true;
+    expect(
+      didYouMeanReducer(state, disableFallbackSearchOnEmptyQueryResults())
+        .enableFallbackSearchOnEmptyQueryResults
     ).toBe(false);
   });
 });

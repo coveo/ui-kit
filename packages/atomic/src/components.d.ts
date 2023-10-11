@@ -241,6 +241,14 @@ export namespace Components {
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
+        /**
+          * Whether to automatically apply corrections for queries that would otherwise return no results. When `automaticallyCorrectQuery` is `true`, the component automatically triggers a new query using the suggested term. When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.  The default value is `true`.
+         */
+        "automaticallyCorrectQuery": boolean;
+        /**
+          * Whether to use machine learning powered query suggestions model as a fallback to provide query corrections. This system requires a working and properly configured query suggestions model in the Coveo platform.  This option is off by default. As such, the Coveo platform will use an older query correction system, powered solely by the index. By opting in this new system, the Coveo Search API will stop returning the `queryCorrections` field in the response. Instead, it will start returning a `changedQuery` field. This implies that the usage of this option introduce a breaking change in the way query corrections are handled, both at Search API and Coveo Headless level.  Note that in the next major version of Headless, this system will be enabled by default.  * The default value is `false`.
+         */
+        "enableFallbackSearchOnEmptyQueryResults": boolean;
     }
     /**
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
@@ -4113,6 +4121,14 @@ declare namespace LocalJSX {
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
+        /**
+          * Whether to automatically apply corrections for queries that would otherwise return no results. When `automaticallyCorrectQuery` is `true`, the component automatically triggers a new query using the suggested term. When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.  The default value is `true`.
+         */
+        "automaticallyCorrectQuery"?: boolean;
+        /**
+          * Whether to use machine learning powered query suggestions model as a fallback to provide query corrections. This system requires a working and properly configured query suggestions model in the Coveo platform.  This option is off by default. As such, the Coveo platform will use an older query correction system, powered solely by the index. By opting in this new system, the Coveo Search API will stop returning the `queryCorrections` field in the response. Instead, it will start returning a `changedQuery` field. This implies that the usage of this option introduce a breaking change in the way query corrections are handled, both at Search API and Coveo Headless level.  Note that in the next major version of Headless, this system will be enabled by default.  * The default value is `false`.
+         */
+        "enableFallbackSearchOnEmptyQueryResults"?: boolean;
     }
     /**
      * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.

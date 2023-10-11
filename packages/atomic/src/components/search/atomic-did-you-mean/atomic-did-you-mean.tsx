@@ -6,7 +6,7 @@ import {
   buildQueryTrigger,
   QueryTriggerState,
 } from '@coveo/headless';
-import {Component, Fragment, h, State} from '@stencil/core';
+import {Component, Fragment, h, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -46,8 +46,38 @@ export class AtomicDidYouMean implements InitializableComponent {
   private queryTriggerState?: QueryTriggerState;
   @State() public error!: Error;
 
+  /**
+   * Whether to automatically apply corrections for queries that would otherwise return no results.
+   * When `automaticallyCorrectQuery` is `true`, the component automatically triggers a new query using the suggested term.
+   * When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.
+   *
+   * The default value is `true`.
+   */
+  @Prop({reflect: true}) public automaticallyCorrectQuery = true;
+  // TODO: V3: Change the default to true
+  /**
+   * Whether to use machine learning powered query suggestions model as a fallback to provide query corrections.
+   * This system requires a working and properly configured query suggestions model in the Coveo platform.
+   *
+   * This option is off by default. As such, the Coveo platform will use an older query correction system, powered solely by the index.
+   * By opting in this new system, the Coveo Search API will stop returning the `queryCorrections` field in the response.
+   * Instead, it will start returning a `changedQuery` field.
+   * This implies that the usage of this option introduce a breaking change in the way query corrections are handled, both at Search API and Coveo Headless level.
+   *
+   * Note that in the next major version of Headless, this system will be enabled by default.
+   *
+   * * The default value is `false`.
+   */
+  @Prop({reflect: true}) public enableFallbackSearchOnEmptyQueryResults = false;
+
   public initialize() {
-    this.didYouMean = buildDidYouMean(this.bindings.engine);
+    this.didYouMean = buildDidYouMean(this.bindings.engine, {
+      options: {
+        automaticallyCorrectQuery: this.automaticallyCorrectQuery,
+        enableFallbackSearchOnEmptyQueryResults:
+          this.enableFallbackSearchOnEmptyQueryResults,
+      },
+    });
     this.queryTrigger = buildQueryTrigger(this.bindings.engine);
   }
 

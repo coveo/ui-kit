@@ -20,3 +20,11 @@ export const applyDidYouMeanCorrection = createAction(
   'didYouMean/correction',
   (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );
+
+export const enableFallbackSearchOnEmptyQueryResults = createAction(
+  'didYouMean/fallbackSearchOnEmptyResults/enable'
+);
+
+export const disableFallbackSearchOnEmptyQueryResults = createAction(
+  'didYouMean/fallbackSearchOnEmptyResults/disable'
+);

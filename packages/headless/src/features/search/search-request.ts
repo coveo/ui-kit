@@ -47,6 +47,9 @@ export const buildSearchRequest = async (
     ...sharedWithFoldingRequest,
     ...(state.didYouMean && {
       enableDidYouMean: state.didYouMean.enableDidYouMean,
+      enableFallbackSearchOnEmptyQueryResults:
+        state.didYouMean.enableFallbackSearchOnEmptyQueryResults &&
+        state.didYouMean.automaticallyCorrectQuery,
     }),
     ...(cq && {cq}),
     ...(facets.length && {facets}),

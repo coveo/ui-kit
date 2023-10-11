@@ -3,6 +3,7 @@ import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   enableDidYouMean,
+  enableFallbackSearchOnEmptyQueryResults,
 } from '../../../features/did-you-mean/did-you-mean-actions';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
 import {
@@ -14,6 +15,17 @@ import {
   DidYouMean,
   DidYouMeanProps,
 } from './headless-core-did-you-mean';
+
+jest.mock('pino', () => ({
+  ...jest.requireActual('pino'),
+  __esModule: true,
+  default: () => ({
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  }),
+}));
 
 describe('did you mean', () => {
   let dym: DidYouMean;
@@ -48,16 +60,36 @@ describe('did you mean', () => {
   });
 
   it('should dispatch disableAutomaticQueryCorrection at initialization when specified', () => {
-    initDidYouMean({automaticallyCorrectQuery: false});
+    initDidYouMean({options: {automaticallyCorrectQuery: false}});
 
-    dym.applyCorrection();
     expect(engine.actions).toContainEqual(disableAutomaticQueryCorrection());
   });
 
-  it('should not dispatch disableAutomaticQueryCorrection at initialization when specified', () => {
-    initDidYouMean({automaticallyCorrectQuery: true});
+  it('should dispatch enableFallbackSearchOnEmptyQueryResults at initialization when specified', () => {
+    initDidYouMean({options: {enableFallbackSearchOnEmptyQueryResults: true}});
 
-    dym.applyCorrection();
+    expect(engine.actions).toContainEqual(
+      enableFallbackSearchOnEmptyQueryResults()
+    );
+  });
+
+  it('should warn when enableFallbackSearchOnEmptyQueryResults is true and automaticallyCorrectQuery is false', () => {
+    initDidYouMean({
+      options: {
+        enableFallbackSearchOnEmptyQueryResults: true,
+        automaticallyCorrectQuery: false,
+      },
+    });
+    expect(engine.logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining(
+        '#automaticallyCorrectQuery is set to false, but #useQuerySuggestionsForQueryCorrections is set to true.'
+      )
+    );
+  });
+
+  it('should not dispatch disableAutomaticQueryCorrection at initialization when specified', () => {
+    initDidYouMean({options: {automaticallyCorrectQuery: true}});
+
     expect(engine.actions).not.toContainEqual(
       disableAutomaticQueryCorrection()
     );
@@ -65,7 +97,7 @@ describe('did you mean', () => {
 
   it('should allow to update query correction when automatic correction is disabled', () => {
     engine.state.didYouMean.queryCorrection.correctedQuery = 'bar';
-    initDidYouMean({automaticallyCorrectQuery: false});
+    initDidYouMean({options: {automaticallyCorrectQuery: false}});
 
     dym.applyCorrection();
     expect(engine.actions).toContainEqual(applyDidYouMeanCorrection('bar'));

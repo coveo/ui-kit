@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {AnyAction} from '@reduxjs/toolkit';
 import {ThunkDispatch} from 'redux-thunk';
 import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
@@ -172,28 +173,28 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     }
 
     const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
-    const {results, queryCorrections} = successResponse;
+    const {results, queryCorrections, changedQuery} = successResponse;
 
-    const shouldBeAutomaticallyRetried =
+    const shouldExecuteClassicDidYouMeanAutoCorrection =
+      enableDidYouMean === true &&
+      automaticallyCorrectQuery === true &&
       results.length === 0 &&
-      queryCorrections.length !== 0 &&
-      enableDidYouMean &&
-      automaticallyCorrectQuery;
+      queryCorrections.length !== 0;
 
-    if (!shouldBeAutomaticallyRetried) {
+    const shouldExecuteFallbackQueryResultsDidYouMeanAutoCorrection =
+      !isNullOrUndefined(changedQuery);
+
+    const shouldExitWithNoCorrection =
+      !shouldExecuteClassicDidYouMeanAutoCorrection &&
+      !shouldExecuteFallbackQueryResultsDidYouMeanAutoCorrection;
+
+    if (shouldExitWithNoCorrection) {
       return null;
     }
 
-    const originalQuery = this.getCurrentQuery();
-    const {correctedQuery} = successResponse.queryCorrections[0];
-
-    const retried =
-      await this.automaticallyRetryQueryWithCorrection(correctedQuery);
-
-    if (isErrorResponse(retried.response)) {
-      this.dispatch(logQueryError(retried.response.error));
-      return this.rejectWithValue(retried.response.error) as RejectionType;
-    }
+    const ret = shouldExecuteClassicDidYouMeanAutoCorrection
+      ? await this.processClassicDidYouMeanAutoCorrection(successResponse)
+      : this.processFallbackQueryResultsDidYouMeanAutoCorrection(fetched);
 
     this.analyticsAction &&
       this.analyticsAction()(
@@ -209,16 +210,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       );
     this.dispatch(snapshot(extractHistory(this.getState())));
 
-    return {
-      ...retried,
-      response: {
-        ...retried.response.success,
-        queryCorrections: successResponse.queryCorrections,
-      },
-      automaticallyCorrected: true,
-      originalQuery,
-      analyticsAction: logDidYouMeanAutomatic(),
-    };
+    return ret;
   }
 
   private async processQueryTriggersOrContinue(
@@ -265,6 +257,54 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       automaticallyCorrected: false,
       originalQuery,
       analyticsAction: logTriggerQuery(),
+    };
+  }
+
+  private async processClassicDidYouMeanAutoCorrection(
+    originalSearchSuccessResponse: SearchResponseSuccess
+  ): Promise<ExecuteSearchThunkReturn | RejectionType> {
+    const originalQuery = this.getCurrentQuery();
+
+    const {correctedQuery} = originalSearchSuccessResponse.queryCorrections[0];
+
+    const retried =
+      await this.automaticallyRetryQueryWithCorrection(correctedQuery);
+
+    if (isErrorResponse(retried.response)) {
+      this.dispatch(logQueryError(retried.response.error));
+      return this.rejectWithValue(retried.response.error) as RejectionType;
+    }
+
+    return {
+      ...retried,
+      response: {
+        ...retried.response.success,
+        queryCorrections: originalSearchSuccessResponse.queryCorrections,
+      },
+      automaticallyCorrected: true,
+      originalQuery,
+      analyticsAction: logDidYouMeanAutomatic(),
+    };
+  }
+
+  private processFallbackQueryResultsDidYouMeanAutoCorrection(
+    originalFetchedResponse: FetchedResponse
+  ): ExecuteSearchThunkReturn {
+    const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
+    const {correctedQuery, originalQuery} = successResponse.changedQuery!;
+
+    this.onUpdateQueryForCorrection(correctedQuery);
+    this.dispatch(applyDidYouMeanCorrection(correctedQuery));
+
+    return {
+      ...originalFetchedResponse,
+      response: {
+        ...successResponse,
+      },
+      queryExecuted: correctedQuery,
+      automaticallyCorrected: true,
+      originalQuery,
+      analyticsAction: logDidYouMeanAutomatic(),
     };
   }
 

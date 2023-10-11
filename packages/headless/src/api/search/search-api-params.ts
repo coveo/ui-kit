@@ -54,6 +54,10 @@ export interface EnableDidYouMeanParam {
   enableDidYouMean?: boolean;
 }
 
+export interface EnableFallbackSearchOnEmptyQueryResultsParam {
+  enableFallbackSearchOnEmptyQueryResults?: boolean;
+}
+
 export interface EnableQuerySyntaxParam {
   enableQuerySyntax?: boolean;
 }
