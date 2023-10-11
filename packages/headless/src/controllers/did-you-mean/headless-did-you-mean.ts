@@ -10,9 +10,17 @@ import {
   DidYouMean,
   DidYouMeanProps,
   DidYouMeanState,
+  DidYouMeanOptions,
 } from '../core/did-you-mean/headless-core-did-you-mean';
 
-export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
+export type {
+  QueryCorrection,
+  WordCorrection,
+  DidYouMean,
+  DidYouMeanState,
+  DidYouMeanProps,
+  DidYouMeanOptions,
+};
 
 /**
  * The DidYouMean controller is responsible for handling query corrections.
@@ -20,6 +28,7 @@ export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
  * automatically triggers a new query with the suggested term.
  *
  * @param engine - The headless engine.
+ * @param props - The configurable `DidYouMean` properties.
  */
 export function buildDidYouMean(
   engine: SearchEngine,
