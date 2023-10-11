@@ -98,6 +98,10 @@ This task will create a new "version bump" commit, which will contain:
 
 This task will also revert the changes from `release:phase0` to allow merging new features and fixes.
 
+## `release:phase5` (publish to GitHub Packages)
+
+This task will do the same thing as `release:phase2`, but is intended to publish the NPM package to GitHub Packages instead.
+
 # Deploying
 
 Whenever a new version bump is pushed to the main branch by the scheduled release process, the Jenkins CI will run the `Jenkinsfile` on it.

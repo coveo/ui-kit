@@ -7,7 +7,9 @@
     "build": "nx build",
     "build:bundles": "ng build",
     "build:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
-    "release:phase2": "node ./scripts/release-phase2.mjs"
+    "release:phase2": "npm run publish:npm",
+    "release:phase5": "npm run publish:npm",
+    "publish:npm": "node ./scripts/publish-npm.mjs"
   },
   "private": true,
   "dependencies": {

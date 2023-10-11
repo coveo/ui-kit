@@ -141,6 +141,10 @@ Does the same thing as the `test` script, except:
 
 - Does the same thing as the `test:watch` script, but runs end-to-end tests instead.
 
+### `publish:npm` script
+
+- Publishes the package to NPM.
+
 ### `publish:sfdx` script
 
 - Publishes the package to the current Salesforce dev hub.
