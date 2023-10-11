@@ -35,8 +35,6 @@ module.exports = {
   overrides: [
     {
       files: ['**/*.ts', '**/*.tsx'],
-      parser: '@typescript-eslint/parser',
-      plugins: ['@typescript-eslint'],
       extends: [gtsPath],
       parserOptions: {
         jsxPragma: 'h',
