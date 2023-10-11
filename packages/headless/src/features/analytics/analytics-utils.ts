@@ -359,8 +359,7 @@ const internalLegacyMakeAnalyticsAction = <
   WrappedAnalyticsType<EventType>,
   StateNeeded
 > => {
-  __legacy__provider =
-    __legacy__provider ?? ((getState) => new SearchAnalyticsProvider(getState));
+  __legacy__provider ??= (getState) => new SearchAnalyticsProvider(getState);
   return makePreparableAnalyticsAction(
     prefix,
     async ({
