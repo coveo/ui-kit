@@ -120,6 +120,7 @@ export function assertExcludedCheckboxFacetsInBreadcrumb(
       .as('facetAllValuesLabel');
     assertBreadcrumbValueText('@facetAllValuesLabel', facetLabelValue);
   });
+}
 
 export function assertSelectedCheckboxFacetsInBreadcrumbAssertions(
   BaseFacetSelector: FacetWithCheckboxSelector,
