@@ -4,6 +4,7 @@ import Backend, {HttpBackendOptions} from 'i18next-http-backend';
 import availableLocales from '../../../generated/availableLocales.json';
 import {AnyEngineType} from './bindings';
 import {BaseAtomicInterface} from './interface-common';
+import 'intl-pluralrules';
 
 export const i18nTranslationNamespace = 'translation';
 export type i18nCompatibilityVersion = 'v3' | 'v4';
