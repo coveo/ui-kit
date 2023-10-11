@@ -11,9 +11,7 @@ describe("createClientIdManager", () => {
 
     const clientIdManager = createClientIdManager(environmentWithoutStorage);
 
-    expect(clientIdManager.getClientId()).toBe(
-      "UUID-generated"
-    );
+    expect(clientIdManager.getClientId()).toBe("UUID-generated");
   });
   it("returns a clientId from storage if it already exists", () => {
     const uuidStored = "2136b353-74be-42d7-904f-ea33a8f4a43c";
@@ -26,9 +24,7 @@ describe("createClientIdManager", () => {
     });
 
     const clientIdManager = createClientIdManager(environmentWithStorage);
-    expect(clientIdManager.getClientId()).toBe(
-      uuidStored
-    );
+    expect(clientIdManager.getClientId()).toBe(uuidStored);
   });
 
   it("generates a clientId if the one in storage is corrupted", () => {
@@ -41,9 +37,7 @@ describe("createClientIdManager", () => {
     });
 
     const clientIdManager = createClientIdManager(environmentWithStorage);
-    expect(clientIdManager.getClientId()).toBe(
-      "UUID-generated"
-    );
+    expect(clientIdManager.getClientId()).toBe("UUID-generated");
   });
 
   it("clears clientId from storage", () => {
@@ -59,9 +53,7 @@ describe("createClientIdManager", () => {
 
     const clientIdManager = createClientIdManager(environmentWithStorage);
 
-    expect(clientIdManager.getClientId()).toBe(
-      "UUID-generated-0"
-    );
+    expect(clientIdManager.getClientId()).toBe("UUID-generated-0");
 
     clientIdManager.clear();
 
