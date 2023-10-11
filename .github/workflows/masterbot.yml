@@ -34,7 +34,29 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        containers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+        containers:
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+          ]
     steps:
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
       - uses: ./.github/actions/setup
@@ -142,7 +164,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        spec: [
+        spec:
+          [
             'cypress/e2e/default-1/**/*',
             'cypress/e2e/default-2/**/*',
             'cypress/e2e/facets-1/**/*',
