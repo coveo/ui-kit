@@ -19,8 +19,8 @@ describe('product-listing-sort-slice', () => {
 
   it('sets the applied sort', () => {
     const sort = {
-      by: SortBy.Fields,
-      fields: [{name: 'some_field'}],
+      sortCriteria: SortBy.Fields,
+      fields: [{field: 'some_field'}],
     };
     expect(sortReducer(state, applySort(sort)).sort.appliedSort).toEqual(sort);
   });

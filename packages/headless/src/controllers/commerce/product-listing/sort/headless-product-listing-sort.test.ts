@@ -79,7 +79,7 @@ describe('headless product-listing-sort', () => {
     it('calling #isSortedBy with a criterion different to the one in state returns false', () => {
       const notAppliedSort = {
         sortCriteria: SortBy.Fields,
-        fields: [{field: 'some_field'}],
+        fields: [{field: 'some_other_field'}],
       };
       expect(sort.isSortedBy(notAppliedSort)).toBe(false);
     });
