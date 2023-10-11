@@ -14,7 +14,7 @@ export interface GeneratedAnswerState {
    */
   answer?: string;
   /**
-   * The citations used to generate the answer.
+   * The document snippets retrieved to generate the answer.
    */
   citations: GeneratedAnswerCitation[];
   /**
@@ -26,7 +26,7 @@ export interface GeneratedAnswerState {
    */
   disliked: boolean;
   /**
-   * Determines if the feedback modal with the purpose of explaining why the end user disliked the generated answer is currently opened.
+   * Determines if the feedback modal is currently opened.
    */
   feedbackModalOpen: boolean;
   /**
