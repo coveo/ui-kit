@@ -17,19 +17,23 @@ export const FacetSelectors = {
   placeholder() {
     return this.shadow().find('[part="placeholder"]');
   },
-  selectedCheckboxValue() {
+  selectedCheckboxValue(triStateCheckbox = false) {
     return this.shadow().find(
-      '[part~="value-checkbox"][part~="value-checkbox-checked"][aria-pressed="true"]'
+      `[part~="value-checkbox"][part~="value-checkbox-checked"][aria-${
+        triStateCheckbox ? 'pressed' : 'checked'
+      }="true"]`
+    );
+  },
+  idleCheckboxValue(triStateCheckbox = false) {
+    return this.shadow().find(
+      `[part~="value-checkbox"]:not([part~="value-checkbox-checked"])[aria-${
+        triStateCheckbox ? 'pressed' : 'checked'
+      }="false"]`
     );
   },
   excludedCheckboxValue() {
     return this.shadow().find(
       '[part~="value-checkbox"][part~="value-checkbox-checked"][aria-pressed="mixed"]'
-    );
-  },
-  idleCheckboxValue() {
-    return this.shadow().find(
-      '[part~="value-checkbox"]:not([part~="value-checkbox-checked"])[aria-pressed="false"]'
     );
   },
   checkboxValueWithText(text: string) {
@@ -44,7 +48,7 @@ export const FacetSelectors = {
     return this.idleCheckboxValue().parent().find('[part="value-label"]');
   },
   excludeButton() {
-    return this.idleCheckboxValue()
+    return this.idleCheckboxValue(true)
       .parent()
       .find('[part="value-exclude-button"]');
   },

@@ -269,14 +269,13 @@ describe('Breadbox Test Suites', () => {
     });
   });
 
-
   describe('when excluding from a standard facet', () => {
     const selectionIndex = 2;
 
     function setupFacetWithMultipleExcludedValues() {
       new TestFixture()
         .with(addBreadbox())
-        .with(addFacet({field: 'author', label}))
+        .with(addFacet({field: 'author', label, 'enable-exclusion': 'true'}))
         .init();
       excludeIdleCheckboxValueAt(FacetSelectors, selectionIndex);
     }
@@ -294,7 +293,7 @@ describe('Breadbox Test Suites', () => {
       BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
     });
   });
-      
+
   describe('when using path-limit', () => {
     const SEPARATOR = ' / ';
     const ELLIPSIS = '...';
