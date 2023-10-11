@@ -1,3 +1,9 @@
+# 2.16.0 (2023-10-11)
+
+### Features
+
+- **atomic:** add pathLimit prop to atomic-breadbox ([#3205](https://github.com/coveo/ui-kit/issues/3205)) ([62d83e6](https://github.com/coveo/ui-kit/commits/62d83e6ff7c4b83a3b86d88c1a52b1ddd8272ab0))
+
 ## 2.15.3 (2023-10-04)
 
 ### Bug Fixes
