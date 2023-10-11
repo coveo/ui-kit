@@ -15,19 +15,19 @@
   "dependencies": {
     "@coveo/headless-react": "0.1.1",
     "@coveo/headless": "2.34.0",
-    "next": "13.4.19",
+    "next": "13.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20.6.1",
+    "@types/node": "20.8.4",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "eslint": "8.49.0",
-    "eslint-config-next": "13.4.19",
+    "eslint": "8.51.0",
+    "eslint-config-next": "13.5.4",
     "typescript": "5.2.2",
-    "cypress": "13.2.0",
-    "cypress-repeat": "2.3.3",
+    "cypress": "13.3.0",
+    "cypress-repeat": "2.3.4",
     "cypress-web-vitals": "4.1.0"
   }
 }

@@ -1,4 +1,6 @@
-import fetch from 'cross-fetch';
+//TODO V3: remove this import, global fetch is a requirement now.
+//@ts-expect-error package is just an alias.
+import fetch from '@coveo/please-give-me-fetch';
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
 import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
