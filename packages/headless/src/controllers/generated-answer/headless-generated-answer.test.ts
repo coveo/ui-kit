@@ -8,6 +8,8 @@ import {
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
+  logGeneratedAnswerHideAnswers,
+  logGeneratedAnswerShowAnswers,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
@@ -208,6 +210,18 @@ describe('generated answer', () => {
         expect(action).toBeDefined();
         expect(action).toHaveProperty('payload', true);
       });
+
+      it('should dispatch the analytics action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.show();
+
+        const analyticsAction = findAction(
+          logGeneratedAnswerShowAnswers().pending.type
+        );
+        expect(analyticsAction).toBeDefined();
+      });
     });
   });
 
@@ -244,6 +258,18 @@ describe('generated answer', () => {
         const action = findAction(setIsVisible.type);
         expect(action).toBeDefined();
         expect(action).toHaveProperty('payload', false);
+      });
+
+      it('should dispatch the analytics action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.hide();
+
+        const analyticsAction = findAction(
+          logGeneratedAnswerHideAnswers().pending.type
+        );
+        expect(analyticsAction).toBeDefined();
       });
     });
   });

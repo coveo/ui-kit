@@ -12,6 +12,8 @@ import {
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
+  logGeneratedAnswerShowAnswers,
+  logGeneratedAnswerHideAnswers,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -154,12 +156,14 @@ export function buildGeneratedAnswer(
       if (!this.state.isVisible) {
         props?.persistIsVisible?.(true);
         dispatch(setIsVisible(true));
+        dispatch(logGeneratedAnswerShowAnswers());
       }
     },
     hide() {
       if (this.state.isVisible) {
         props?.persistIsVisible?.(false);
         dispatch(setIsVisible(false));
+        dispatch(logGeneratedAnswerHideAnswers());
       }
     },
   };
