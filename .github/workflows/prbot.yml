@@ -262,7 +262,8 @@ jobs:
       - 'e2e-atomic-stencil-test'
       - 'e2e-atomic-hosted-page-test'
       - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test'
+      - 'e2e-headless-ssr-test-dev'
+      - 'e2e-headless-ssr-test-prod'
     runs-on: ubuntu-latest
     steps:
       - run: echo 'All required jobs have passed'
