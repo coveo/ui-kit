@@ -39,7 +39,7 @@
   "homepage": "https://github.com/coveo/relay#readme",
   "scripts": {
     "build": "npm run clean && rollup --config ./config/rollup.config.mjs",
-    "clean": "rm -rf ./lib",
+    "clean": "rimraf -rf ./lib",
     "test": "jest",
     "test:watch": "jest --watch",
     "npm:tag": "node ./scripts/update-npm-tag.mjs"
@@ -54,6 +54,7 @@
     "eslint-config-custom": "workspace:*",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "rimraf": "5.0.5",
     "rollup": "^3.28.0",
     "ts-jest": "^29.1.1",
     "tsconfig": "workspace:*",

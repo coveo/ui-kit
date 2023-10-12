@@ -20,7 +20,7 @@ describe("null environment", () => {
     expect(buildNullEnvironment().generateUUID()).toBe("");
   });
   it("does not call fetch ", async () => {
-    global.fetch = jest.fn(() =>
+    globalThis.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
         json: () =>
