@@ -700,4 +700,24 @@
     <label>Rechercher à la place {{0}}</label>
     <name>quantic_SearchInsteadFor</name>
   </customLabels>
+  <customLabels>
+    <label>Non pertinent</label>
+    <name>quantic_Irrelevant</name>
+  </customLabels>
+  <customLabels>
+    <label>pas précis</label>
+    <name>quantic_NotAccurate</name>
+  </customLabels>
+  <customLabels>
+    <label>Pas à jour</label>
+    <name>quantic_OutOfDate</name>
+  </customLabels>
+  <customLabels>
+    <label>Nocif</label>
+    <name>quantic_Harmful</name>
+  </customLabels>
+  <customLabels>
+    <label>Commentaires</label>
+    <name>quantic_Feedback</name>
+  </customLabels>
 </Translations>

@@ -73,6 +73,9 @@ export const InterceptAliases = {
       GeneratedAnswerStreamEnd: uaAlias('generatedAnswerStreamEnd'),
       OpenGeneratedAnswerSource: uaAlias('openGeneratedAnswerSource'),
       RetryGeneratedAnswer: uaAlias('retryGeneratedAnswer'),
+      generatedAnswerFeedbackSubmit: uaAlias(
+        'generativeQuestionFeedbackSubmit'
+      ),
     },
     DidYouMean: uaAlias('didyoumeanAutomatic'),
     DidyoumeanClick: uaAlias('didyoumeanClick'),

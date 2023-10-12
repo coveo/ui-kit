@@ -1274,4 +1274,39 @@
     <protected>false</protected>
     <shortDescription>Search instead for</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_Irrelevant</fullName>
+    <value>Irrelevant</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Irrelevant</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NotAccurate</fullName>
+    <value>Not accurate</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Not accurate</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_OutOfDate</fullName>
+    <value>Out-of-date</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Out-of-date</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Harmful</fullName>
+    <value>Harmful</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Harmful</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_Feedback</fullName>
+    <value>Feedback</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Feedback</shortDescription>
+  </labels>
 </CustomLabels>
