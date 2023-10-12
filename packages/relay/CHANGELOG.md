@@ -1,3 +1,9 @@
+# 0.6.0 (2023-10-12)
+
+### Features
+
+- use native uuid gen (#47) ([583d9ea](/commits/583d9ea4229943b235d869a621e7441104a20829)), closes [#47](/issues/47)
+
 # 0.5.0 (2023-10-11)
 
 ### Features
