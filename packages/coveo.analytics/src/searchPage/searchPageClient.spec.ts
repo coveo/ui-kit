@@ -1561,26 +1561,26 @@ describe('SearchPageClient', () => {
         expectMatchDescription(built.description, SearchPageEvents.generatedAnswerShowAnswers, meta);
     });
 
-    it('should send proper payload for #logGenerativeQuestionFeedbackSubmit', async () => {
+    it('should send proper payload for #logGeneratedAnswerFeedbackSubmit', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
             reason: <GeneratedAnswerFeedbackReason>'other',
             details: 'a few additional details',
         };
-        await client.logGenerativeQuestionFeedbackSubmit(meta);
-        expectMatchCustomEventPayload(SearchPageEvents.generativeQuestionFeedbackSubmit, meta);
+        await client.logGeneratedAnswerFeedbackSubmit(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFeedbackSubmit, meta);
     });
 
-    it('should send proper payload for #makeGenerativeQuestionFeedbackSubmit', async () => {
+    it('should send proper payload for #makeGeneratedAnswerFeedbackSubmit', async () => {
         const meta = {
             generativeQuestionAnsweringId: fakeStreamId,
             reason: <GeneratedAnswerFeedbackReason>'other',
             details: 'a few additional details',
         };
-        const built = await client.makeGenerativeQuestionFeedbackSubmit(meta);
+        const built = await client.makeGeneratedAnswerFeedbackSubmit(meta);
         await built.log({searchUID: provider.getSearchUID()});
-        expectMatchCustomEventPayload(SearchPageEvents.generativeQuestionFeedbackSubmit, meta);
-        expectMatchDescription(built.description, SearchPageEvents.generativeQuestionFeedbackSubmit, meta);
+        expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFeedbackSubmit, meta);
+        expectMatchDescription(built.description, SearchPageEvents.generatedAnswerFeedbackSubmit, meta);
     });
 
     it('should send proper payload for #logRephraseGeneratedAnswer', async () => {

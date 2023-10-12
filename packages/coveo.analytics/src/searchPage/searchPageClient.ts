@@ -955,12 +955,12 @@ export class CoveoSearchPageClient {
         });
     }
 
-    public makeGenerativeQuestionFeedbackSubmit(meta: GeneratedAnswerFeedbackMeta) {
-        return this.makeCustomEvent(SearchPageEvents.generativeQuestionFeedbackSubmit, meta);
+    public makeGeneratedAnswerFeedbackSubmit(meta: GeneratedAnswerFeedbackMeta) {
+        return this.makeCustomEvent(SearchPageEvents.generatedAnswerFeedbackSubmit, meta);
     }
 
-    public async logGenerativeQuestionFeedbackSubmit(meta: GeneratedAnswerFeedbackMeta) {
-        return (await this.makeGenerativeQuestionFeedbackSubmit(meta)).log({
+    public async logGeneratedAnswerFeedbackSubmit(meta: GeneratedAnswerFeedbackMeta) {
+        return (await this.makeGeneratedAnswerFeedbackSubmit(meta)).log({
             searchUID: this.provider.getSearchUID(),
         });
     }

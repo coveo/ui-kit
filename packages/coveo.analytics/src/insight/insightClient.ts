@@ -6,6 +6,12 @@ import {
     CustomEventsTypes,
     DocumentIdentifier,
     FacetStateMetadata,
+    GeneratedAnswerBaseMeta,
+    GeneratedAnswerCitationMeta,
+    GeneratedAnswerFeedbackMeta,
+    GeneratedAnswerRephraseMeta,
+    GeneratedAnswerSourceHoverMeta,
+    GeneratedAnswerStreamEndMeta,
     PartialDocumentInformation,
     SearchPageEvents,
     SmartSnippetDocumentIdentifier,
@@ -43,6 +49,7 @@ export interface InsightClientProvider {
     getLanguage: () => string;
     getIsAnonymous: () => boolean;
     getFacetState?: () => FacetStateMetadata[];
+    getGeneratedAnswerMetadata?: () => Record<string, any>;
 }
 
 export interface InsightClientOptions extends ClientOptions {
@@ -476,6 +483,121 @@ export class CoveoInsightClient {
         );
     }
 
+    public logLikeGeneratedAnswer(generatedAnswerMetadata: GeneratedAnswerBaseMeta, metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.likeGeneratedAnswer,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
+                : generatedAnswerMetadata
+        );
+    }
+
+    public logDislikeGeneratedAnswer(generatedAnswerMetadata: GeneratedAnswerBaseMeta, metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.dislikeGeneratedAnswer,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
+                : generatedAnswerMetadata
+        );
+    }
+
+    public logOpenGeneratedAnswerSource(
+        generatedAnswerSourceMetadata: GeneratedAnswerCitationMeta,
+        metadata?: CaseMetadata
+    ) {
+        return this.logCustomEvent(
+            SearchPageEvents.openGeneratedAnswerSource,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerSourceMetadata}
+                : generatedAnswerSourceMetadata
+        );
+    }
+
+    public logGeneratedAnswerSourceHover(
+        generatedAnswerSourceMetadata: GeneratedAnswerSourceHoverMeta,
+        metadata?: CaseMetadata
+    ) {
+        return this.logCustomEvent(
+            SearchPageEvents.generatedAnswerSourceHover,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerSourceMetadata}
+                : generatedAnswerSourceMetadata
+        );
+    }
+
+    public logGeneratedAnswerCopyToClipboard(
+        generatedAnswerMetadata: GeneratedAnswerBaseMeta,
+        metadata?: CaseMetadata
+    ) {
+        return this.logCustomEvent(
+            SearchPageEvents.generatedAnswerCopyToClipboard,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
+                : generatedAnswerMetadata
+        );
+    }
+
+    public logGeneratedAnswerHideAnswers(generatedAnswerMetadata: GeneratedAnswerBaseMeta, metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.generatedAnswerHideAnswers,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
+                : generatedAnswerMetadata
+        );
+    }
+
+    public logGeneratedAnswerShowAnswers(generatedAnswerMetadata: GeneratedAnswerBaseMeta, metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.generatedAnswerShowAnswers,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
+                : generatedAnswerMetadata
+        );
+    }
+
+    public logGeneratedAnswerFeedbackSubmit(
+        generatedAnswerFeedbackMetadata: GeneratedAnswerFeedbackMeta,
+        metadata?: CaseMetadata
+    ) {
+        return this.logCustomEvent(
+            SearchPageEvents.generatedAnswerFeedbackSubmit,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerFeedbackMetadata}
+                : generatedAnswerFeedbackMetadata
+        );
+    }
+
+    public logRephraseGeneratedAnswer(
+        generatedAnswerRephraseMetadata: GeneratedAnswerRephraseMeta,
+        metadata?: CaseMetadata
+    ) {
+        return this.logSearchEvent(
+            SearchPageEvents.rephraseGeneratedAnswer,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerRephraseMetadata}
+                : generatedAnswerRephraseMetadata
+        );
+    }
+
+    public logRetryGeneratedAnswer(metadata?: CaseMetadata) {
+        return this.logSearchEvent(
+            SearchPageEvents.retryGeneratedAnswer,
+            metadata ? {...generateMetadataToSend(metadata, false)} : {}
+        );
+    }
+
+    public logGeneratedAnswerStreamEnd(
+        generatedAnswerStreamEndMetadata: GeneratedAnswerStreamEndMeta,
+        metadata?: CaseMetadata
+    ) {
+        return this.logCustomEvent(
+            SearchPageEvents.generatedAnswerStreamEnd,
+            metadata
+                ? {...generateMetadataToSend(metadata, false), ...generatedAnswerStreamEndMetadata}
+                : generatedAnswerStreamEndMetadata
+        );
+    }
+
     public async logCustomEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
@@ -541,7 +663,7 @@ export class CoveoInsightClient {
         metadata?: Record<string, any>
     ): Promise<SearchEventRequest> {
         return {
-            ...(await this.getBaseEventRequest(metadata)),
+            ...(await this.getBaseEventRequest({...metadata, ...this.provider.getGeneratedAnswerMetadata?.()})),
             ...this.provider.getSearchEventRequestPayload(),
             searchQueryUid: this.provider.getSearchUID(),
             queryPipeline: this.provider.getPipeline(),

@@ -333,7 +333,7 @@ export enum SearchPageEvents {
     /**
      * Identifies the custom event that gets logged when a user submits a feedback of a generated answer.
      */
-    generativeQuestionFeedbackSubmit = 'generativeQuestionFeedbackSubmit',
+    generatedAnswerFeedbackSubmit = 'generatedAnswerFeedbackSubmit',
     /**
      * Identifies the search event that gets logged when a user clicks the rephrase button in a generated answer.
      */
@@ -388,7 +388,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.generatedAnswerCopyToClipboard]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerHideAnswers]: 'generatedAnswer',
     [SearchPageEvents.generatedAnswerShowAnswers]: 'generatedAnswer',
-    [SearchPageEvents.generativeQuestionFeedbackSubmit]: 'generatedAnswer',
+    [SearchPageEvents.generatedAnswerFeedbackSubmit]: 'generatedAnswer',
 };
 
 export interface StaticFilterMetadata {
