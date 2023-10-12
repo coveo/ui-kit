@@ -178,22 +178,38 @@ describe('generated answer slice', () => {
     });
   });
 
-  it('#resetAnswer should reset the state to the initial state', () => {
-    const state = {
-      ...baseState,
-      isStreaming: true,
-      isLoading: true,
-      answer: 'Tomato Tomato',
-      citations: [],
-      error: {
-        message: 'Execute order',
-        error: 66,
-      },
-    };
+  describe('#resetAnswer', () => {
+    it('should reset the answer', () => {
+      const state = {
+        ...baseState,
+        isStreaming: true,
+        isLoading: true,
+        answer: 'Tomato Tomato',
+        citations: [],
+        error: {
+          message: 'Execute order',
+          error: 66,
+        },
+      };
 
-    const finalState = generatedAnswerReducer(state, resetAnswer());
+      const finalState = generatedAnswerReducer(state, resetAnswer());
 
-    expect(finalState).toEqual(getGeneratedAnswerInitialState());
+      expect(finalState).toEqual(getGeneratedAnswerInitialState());
+    });
+
+    it('should not reset the response format', () => {
+      const responseFormat: GeneratedResponseFormat = {
+        answerStyle: 'step',
+      };
+      const state = {
+        ...baseState,
+        responseFormat: responseFormat,
+      };
+
+      const finalState = generatedAnswerReducer(state, resetAnswer());
+
+      expect(finalState.responseFormat).toEqual(responseFormat);
+    });
   });
 
   it('#likeGeneratedAnswer should set the answer as liked in the state', () => {

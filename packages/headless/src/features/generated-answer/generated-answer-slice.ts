@@ -51,11 +51,10 @@ export const generatedAnswerReducer = createReducer(
         state.disliked = true;
       })
       .addCase(resetAnswer, (state) => {
-        state.isLoading = false;
-        state.isStreaming = false;
-        state.citations = [];
-        state.liked = false;
-        state.disliked = false;
+        return {
+          ...getGeneratedAnswerInitialState(),
+          responseFormat: state.responseFormat,
+        };
       })
       .addCase(setIsLoading, (state, {payload}) => {
         state.isLoading = payload;
