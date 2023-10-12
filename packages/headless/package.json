@@ -1,5 +1,6 @@
 {
   "name": "@coveo/headless",
+  "type": "module",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
     "type": "git",
