@@ -6,10 +6,10 @@ import {
 import {buildMockCitation} from '../../test/mock-citation';
 import {
   setIsLoading,
-  updateAnswerStyle,
   updateCitations,
   updateError,
   updateMessage,
+  updateResponseFormat,
 } from './generated-answer-actions';
 
 describe('generated answer', () => {
@@ -110,14 +110,14 @@ describe('generated answer', () => {
     });
   });
 
-  describe('#updateAnswerStyle', () => {
-    const actionType = 'generatedAnswer/updateAnswerStyle';
+  describe('#updateResponseFormat', () => {
+    const actionType = 'generatedAnswer/updateResponseFormat';
 
     it('should accept a valid payload', () => {
       const style = 'bullet';
       expect(
         e.dispatch(
-          updateAnswerStyle({
+          updateResponseFormat({
             answerStyle: style,
           })
         )

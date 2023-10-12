@@ -8,12 +8,32 @@ import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors';
+import {GeneratedResponseFormat} from './generated-response-format';
 
 export const logRetryGeneratedAnswer = (): SearchAction =>
   makeAnalyticsAction(
     'analytics/generatedAnswer/retry',
     AnalyticsType.Search,
     (client) => client.makeRetryGeneratedAnswer()
+  );
+
+export const logRephraseGeneratedAnswer = (
+  responseFormat: GeneratedResponseFormat
+): SearchAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/rephrase',
+    AnalyticsType.Search,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeRephraseGeneratedAnswer({
+        generativeQuestionAnsweringId,
+        rephraseFormat: responseFormat.answerStyle,
+      });
+    }
   );
 
 export const logOpenGeneratedAnswerSource = (

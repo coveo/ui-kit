@@ -24,7 +24,10 @@ import {
 import {validatePayload} from '../../utils/validate-payload';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions';
 import {buildStreamingRequest} from './generated-answer-request';
-import {GeneratedAnswerStyle} from './generated-response-format';
+import {
+  GeneratedAnswerStyle,
+  GeneratedResponseFormat,
+} from './generated-response-format';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
@@ -93,9 +96,9 @@ export const setIsStreaming = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
-export const updateAnswerStyle = createAction(
-  'generatedAnswer/updateAnswerStyle',
-  (payload: {answerStyle: GeneratedAnswerStyle}) =>
+export const updateResponseFormat = createAction(
+  'generatedAnswer/updateResponseFormat',
+  (payload: GeneratedResponseFormat) =>
     validatePayload(payload, {
       answerStyle: new StringValue<GeneratedAnswerStyle>({
         required: true,

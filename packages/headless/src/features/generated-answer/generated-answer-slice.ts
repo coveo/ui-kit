@@ -4,12 +4,12 @@ import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   resetAnswer,
-  updateAnswerStyle,
   setIsLoading,
   setIsStreaming,
   updateCitations,
   updateError,
   updateMessage,
+  updateResponseFormat,
 } from './generated-answer-actions';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
 
@@ -59,7 +59,7 @@ export const generatedAnswerReducer = createReducer(
       .addCase(setIsStreaming, (state, {payload}) => {
         state.isStreaming = payload;
       })
-      .addCase(updateAnswerStyle, (state, {payload}) => {
-        state.responseFormat.answerStyle = payload.answerStyle;
+      .addCase(updateResponseFormat, (state, {payload}) => {
+        state.responseFormat = payload;
       })
 );

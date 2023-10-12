@@ -6,13 +6,14 @@ import {
   resetAnswer,
   setIsLoading,
   setIsStreaming,
-  updateAnswerStyle,
   updateCitations,
   updateError,
   updateMessage,
+  updateResponseFormat,
 } from './generated-answer-actions';
 import {generatedAnswerReducer} from './generated-answer-slice';
 import {getGeneratedAnswerInitialState} from './generated-answer-state';
+import {GeneratedResponseFormat} from './generated-response-format';
 
 const baseState = getGeneratedAnswerInitialState();
 
@@ -258,9 +259,11 @@ describe('generated answer slice', () => {
     });
   });
 
-  describe('#updateAnswerStyle', () => {
+  describe('#updateResponseFormat', () => {
     it('concatenates the given string with the answer previously in the state', () => {
-      const style = 'step';
+      const newResponseFormat: GeneratedResponseFormat = {
+        answerStyle: 'step',
+      };
       const finalState = generatedAnswerReducer(
         {
           ...getGeneratedAnswerInitialState(),
@@ -268,12 +271,10 @@ describe('generated answer slice', () => {
             answerStyle: 'default',
           },
         },
-        updateAnswerStyle({
-          answerStyle: style,
-        })
+        updateResponseFormat(newResponseFormat)
       );
 
-      expect(finalState.responseFormat.answerStyle).toBe(style);
+      expect(finalState.responseFormat).toBe(newResponseFormat);
     });
   });
 });

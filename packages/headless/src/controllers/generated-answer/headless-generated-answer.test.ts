@@ -3,6 +3,7 @@ import {
   likeGeneratedAnswer,
   resetAnswer,
   streamAnswer,
+  updateResponseFormat,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
@@ -11,6 +12,7 @@ import {
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer} from '../../features/generated-answer/generated-answer-slice';
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
+import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
 import {executeSearch} from '../../features/search/search-actions';
 import {buildMockCitation} from '../../test/mock-citation';
 import {
@@ -91,6 +93,28 @@ describe('generated answer', () => {
     );
 
     expect(action).toBeTruthy();
+  });
+
+  describe('#rephrase', () => {
+    const responseFormat: GeneratedResponseFormat = {
+      answerStyle: 'concise',
+    };
+
+    it('dispatches analytics action', () => {
+      generatedAnswer.rephrase(responseFormat);
+
+      expect(engine.actions).toContainEqual(
+        updateResponseFormat(responseFormat)
+      );
+    });
+
+    it('dispatches #executeSearch', () => {
+      generatedAnswer.rephrase(responseFormat);
+
+      const action = engine.findAsyncAction(executeSearch.pending);
+
+      expect(action).toBeTruthy();
+    });
   });
 
   describe('subscription to changes', () => {

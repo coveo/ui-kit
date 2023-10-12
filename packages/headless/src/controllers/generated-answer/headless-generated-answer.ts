@@ -5,15 +5,18 @@ import {
   resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
+  updateResponseFormat,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
+  logRephraseGeneratedAnswer,
   logRetryGeneratedAnswer,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
+import {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format';
 import {executeSearch} from '../../features/search/search-actions';
 import {GeneratedAnswerSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -41,6 +44,10 @@ export interface GeneratedAnswer extends Controller {
    * Determines if the generated answer was disliked, or downvoted by the end user.
    */
   dislike(): void;
+  /**
+   * Re-executes the query to generate the answer in the specified format.
+   */
+  rephrase(responseFormat: GeneratedResponseFormat): void;
   /**
    * Logs a custom event indicating a cited source link was clicked.
    * @param id The ID of the clicked citation.
@@ -127,6 +134,11 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
 
     logCitationClick(citationId: string) {
       dispatch(logOpenGeneratedAnswerSource(citationId));
+    },
+
+    rephrase(responseFormat: GeneratedResponseFormat) {
+      dispatch(updateResponseFormat(responseFormat));
+      dispatch(executeSearch(logRephraseGeneratedAnswer(responseFormat)));
     },
   };
 }
