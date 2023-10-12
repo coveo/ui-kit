@@ -62,10 +62,6 @@ describe('generated answer', () => {
     initGeneratedAnswer();
   });
 
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
-
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       generatedAnswer: generatedAnswerReducer,

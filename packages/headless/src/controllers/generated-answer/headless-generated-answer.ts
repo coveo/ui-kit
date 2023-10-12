@@ -120,7 +120,7 @@ export function buildGeneratedAnswer(
     return engine.subscribe(strictListener);
   };
 
-  const isVisible = props?.initialState?.isVisible;
+  const isVisible = props.initialState?.isVisible;
   if (isVisible !== undefined) {
     dispatch(setIsVisible(isVisible));
   }
