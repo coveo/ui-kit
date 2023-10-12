@@ -432,6 +432,8 @@ describe('folding slice', () => {
         raw: {
           urihash: '',
           collection: 'duplicates_test',
+          id: 'a',
+          parent: 'a',
         },
       };
       const rootResult = buildMockResultWithFolding({
@@ -632,11 +634,11 @@ describe('folding slice', () => {
     it('creates a collection when a result has a parentResult', () => {
       const childResult = buildMockResultWithFolding({
         uniqueId: 'child',
-        raw: {urihash: 'foo', parent: 'parentID', id: 'childID'},
+        raw: {urihash: '', parent: 'a', id: 'b'},
       });
       childResult.parentResult = buildMockResultWithFolding({
         uniqueId: 'parent',
-        raw: {urihash: 'bar', parent: '', id: 'parentID'},
+        raw: {urihash: '', parent: '', id: 'a'},
       });
       childResult.raw.collection = childResult.parentResult.raw.collection =
         'the_collection';
