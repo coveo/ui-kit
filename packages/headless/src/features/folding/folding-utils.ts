@@ -9,9 +9,8 @@ export function getAllIncludedResultsFrom(relevantResult: ResultWithFolding) {
     .map((result) => result.parentResult!);
 
   const resultsInCollection = removeDuplicates(
-    [...foldedResults, ...parentResults, relevantResult],
-    (result) => result.uniqueId,
-    false
+    [relevantResult, ...foldedResults, ...parentResults],
+    (result) => result.uniqueId
   );
 
   return resultsInCollection;
