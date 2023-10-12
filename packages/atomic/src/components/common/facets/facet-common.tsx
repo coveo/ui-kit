@@ -589,7 +589,6 @@ export class FacetCommon {
     );
     const isSelected = facetValue.state === 'selected';
     const isExcluded = facetValue.state === 'excluded';
-    // TODO: test this option
     const triStateProps = this.enableExclusion
       ? {
           onExclude,
