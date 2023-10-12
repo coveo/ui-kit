@@ -8,8 +8,8 @@ import {
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
-  logGenerativeQuestionDetailedFeedback,
-  logGenerativeQuestionFeedback,
+  logGeneratedAnswerDetailedFeedback,
+  logGeneratedAnswerFeedback,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
@@ -105,7 +105,7 @@ describe('generated answer', () => {
     generatedAnswer.sendFeedback(exampleFeedback);
     const action = findAction(closeGeneratedAnswerFeedbackModal.type);
     const analyticsAction = engine.findAsyncAction(
-      logGenerativeQuestionFeedback(exampleFeedback).pending
+      logGeneratedAnswerFeedback(exampleFeedback).pending
     );
 
     expect(action).toBeTruthy();
@@ -117,7 +117,7 @@ describe('generated answer', () => {
     generatedAnswer.sendDetailedFeedback(exampleDetails);
     const action = findAction(closeGeneratedAnswerFeedbackModal.type);
     const analyticsAction = engine.findAsyncAction(
-      logGenerativeQuestionDetailedFeedback(exampleDetails).pending
+      logGeneratedAnswerDetailedFeedback(exampleDetails).pending
     );
 
     expect(action).toBeTruthy();

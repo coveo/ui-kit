@@ -75,7 +75,7 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
     }
   );
 
-export const logGenerativeQuestionFeedback = (
+export const logGeneratedAnswerFeedback = (
   feedback: GeneratedAnswerFeedback
 ): CustomAction =>
   makeAnalyticsAction(
@@ -87,14 +87,14 @@ export const logGenerativeQuestionFeedback = (
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.makeGenerativeQuestionFeedbackSubmit({
+      return client.makeGeneratedAnswerFeedbackSubmit({
         generativeQuestionAnsweringId,
         reason: feedback,
       });
     }
   );
 
-export const logGenerativeQuestionDetailedFeedback = (
+export const logGeneratedAnswerDetailedFeedback = (
   details: string
 ): CustomAction =>
   makeAnalyticsAction(
@@ -106,7 +106,7 @@ export const logGenerativeQuestionDetailedFeedback = (
       if (!generativeQuestionAnsweringId) {
         return null;
       }
-      return client.makeGenerativeQuestionFeedbackSubmit({
+      return client.makeGeneratedAnswerFeedbackSubmit({
         generativeQuestionAnsweringId,
         reason: 'other',
         details,

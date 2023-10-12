@@ -11,8 +11,8 @@ import {
 import {
   GeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
-  logGenerativeQuestionDetailedFeedback,
-  logGenerativeQuestionFeedback,
+  logGeneratedAnswerDetailedFeedback,
+  logGeneratedAnswerFeedback,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
@@ -47,21 +47,21 @@ export interface GeneratedAnswer extends Controller {
    */
   dislike(): void;
   /**
-   * Allows the user to open the modal used to send feedback about why a particular generated answer was not relevant.
+   * Opens the modal to provide feedback about why the generated answer was not relevant.
    */
   openFeedbackModal(): void;
   /**
-   * Allows the user to close the modal used to send feedback about why a particular generated answer was not relevant.
+   * Closes the modal to provide feedback about why the generated answer was not relevant.
    */
   closeFeedbackModal(): void;
   /**
-   * Allows the user to send feedback about why a particular generated answer was not relevant.
+   * Sends feedback about why the generated answer was not relevant.
    * @param feedback - The feedback that the end user wishes to send.
    */
   sendFeedback(feedback: GeneratedAnswerFeedback): void;
   /**
-   * Allows the user to send detailed feedback about why a particular generated answer was not relevant.
-   * @param details - A personalized message from the end user about the relevance of the answer.
+   * Sends detailed feedback about why the generated answer was not relevant.
+   * @param details - Details on why the generated answer was not relevant.
    */
   sendDetailedFeedback(details: string): void;
   /**
@@ -157,12 +157,12 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     },
 
     sendFeedback(feedback) {
-      dispatch(logGenerativeQuestionFeedback(feedback));
+      dispatch(logGeneratedAnswerFeedback(feedback));
       dispatch(closeGeneratedAnswerFeedbackModal());
     },
 
     sendDetailedFeedback(details) {
-      dispatch(logGenerativeQuestionDetailedFeedback(details));
+      dispatch(logGeneratedAnswerDetailedFeedback(details));
       dispatch(closeGeneratedAnswerFeedbackModal());
     },
 

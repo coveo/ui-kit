@@ -16,8 +16,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Check Out Repository
-        uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
+      - uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3
         with:
           node-version-file: '.nvmrc'
       - name: Create cache file
@@ -26,13 +26,13 @@ jobs:
           echo ${{ github.sha }} > github-sha.txt
       - name: Check SHA
         id: check_sha
-        uses: actions/cache@v3
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3
         with:
           path: check-SHA
           key: check-SHA-${{ github.sha }}
       - name: Cancel current workflow run if no changes made
         if: steps.check_sha.outputs.cache-hit == 'true'
-        uses: actions/github-script@v6
+        uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
         with:
           script: |
             github.actions.cancelWorkflowRun({
