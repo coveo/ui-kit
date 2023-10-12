@@ -630,9 +630,13 @@ describe('folding slice', () => {
     });
 
     it('creates a collection when a result has a parentResult', () => {
-      const childResult = buildMockResultWithFolding({uniqueId: 'child'});
+      const childResult = buildMockResultWithFolding({
+        uniqueId: 'child',
+        raw: {urihash: 'foo', parent: 'parentID', id: 'childID'},
+      });
       childResult.parentResult = buildMockResultWithFolding({
         uniqueId: 'parent',
+        raw: {urihash: 'bar', parent: '', id: 'parentID'},
       });
       childResult.raw.collection = childResult.parentResult.raw.collection =
         'the_collection';
