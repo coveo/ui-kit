@@ -144,15 +144,10 @@ export class AtomicInsightFacet
       facetId: this.facetId,
       withSearch: this.withSearch,
       sortCriteria: this.sortCriteria,
-      enableExclusion: this.isExclusionAllowed(),
+      enableExclusion: this.enableExclusion,
     });
 
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
-  }
-
-  private isExclusionAllowed() {
-    // TODO: disable on mobile
-    return this.enableExclusion;
   }
 
   private get focusTargets(): {

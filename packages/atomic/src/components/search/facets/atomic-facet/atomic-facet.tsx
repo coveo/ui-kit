@@ -239,7 +239,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       field: this.field,
       headingLevel: this.headingLevel,
       displayValuesAs: this.displayValuesAs,
-      enableExclusion: this.isExclusionAllowed(),
+      enableExclusion: this.enableExclusion,
       dependsOn: this.dependsOn,
       dependenciesManager: buildFacetConditionsManager(this.bindings.engine, {
         facetId: this.facetId!,
@@ -314,11 +314,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       showLessFocus: this.focusTargets.showLess,
       showMoreFocus: this.focusTargets.showMore,
     });
-  }
-
-  private isExclusionAllowed() {
-    // TODO: disable on mobile
-    return this.enableExclusion;
   }
 
   private get facetOptions(): FacetOptions {

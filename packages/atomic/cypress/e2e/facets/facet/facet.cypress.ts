@@ -932,12 +932,23 @@ describe('Facet v1 Test Suites', () => {
   });
 
   describe('with breadbox', () => {
-    function setupBreadboxWithFacet() {
+    function breadboxFactory(enableExclusion: boolean) {
       new TestFixture()
         .with(addBreadbox())
-        .with(addFacet({field, label}))
+        .with(
+          addFacet({field, label, 'enable-exclusion': String(enableExclusion)})
+        )
         .init();
     }
+
+    function setupBreadboxWithFacet() {
+      breadboxFactory(false);
+    }
+
+    function setupBreadboxWithFacetWithExclusionEnabled() {
+      breadboxFactory(true);
+    }
+
     describe('verify rendering', () => {
       beforeEach(setupBreadboxWithFacet);
       BreadboxAssertions.assertDisplayBreadcrumb(false);
@@ -1023,7 +1034,7 @@ describe('Facet v1 Test Suites', () => {
     describe('when excluding 3 values', () => {
       const index = [0, 1, 2];
       function setupSelectedMultipleFacets() {
-        setupBreadboxWithFacet();
+        setupBreadboxWithFacetWithExclusionEnabled();
         index.forEach((position, i) => {
           excludeIdleCheckboxValueAt(FacetSelectors, position);
           cy.wait(TestFixture.interceptAliases.Search);
