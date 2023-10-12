@@ -64,24 +64,24 @@ const base = {
   banner: {js: apacheLicense()},
 };
 
-const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
-  (entry) => {
-    const [useCase, entryPoint] = entry;
-    const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
-    const outfile = `${outDir}/headless.esm.js`;
+// const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
+//   (entry) => {
+//     const [useCase, entryPoint] = entry;
+//     const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
+//     const outfile = `${outDir}/headless.esm.js`;
 
-    return buildBrowserConfig(
-      {
-        entryPoints: [entryPoint],
-        outfile,
-        format: 'esm',
-        watch: devMode,
-        minify: false,
-      },
-      outDir
-    );
-  }
-);
+//     return buildBrowserConfig(
+//       {
+//         entryPoints: [entryPoint],
+//         outfile,
+//         format: 'esm',
+//         watch: devMode,
+//         minify: false,
+//       },
+//       outDir
+//     );
+//   }
+// );
 
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
@@ -196,11 +196,19 @@ async function buildNodeConfig(options, outDir) {
     ...base,
     metafile: true,
     platform: 'node',
+    packages: 'external',
     treeShaking: true,
     plugins: [
       alias({
-        'coveo.analytics': require.resolve('coveo.analytics'),
-        '@coveo/please-give-me-fetch': resolve('.', 'fetch-ponyfill-node.js'),
+        'coveo.analytics': require.resolve(
+          `coveo.analytics/dist/library${
+            options.format === 'esm' ? '.mjs' : '.cjs'
+          }`
+        ),
+        '@coveo/please-give-me-fetch': resolve(
+          '.',
+          `fetch-ponyfill-node${options.format === 'esm' ? '.mjs' : '.cjs'}`
+        ),
       }),
     ],
     ...options,
@@ -244,7 +252,7 @@ async function main() {
   await Promise.all([
     ...browserEsm,
     ...browserUmd,
-    ...browserEsmForAtomicDevelopment,
+    // ...browserEsmForAtomicDevelopment,
     ...nodeEsm,
     ...nodeCjs,
   ]);

@@ -1,4 +1,3 @@
-import {polyfillCryptoNode} from './api/analytics/analytics-crypto-polyfill';
 import {
   getResultProperty as getResultPropertyAlias,
   fieldsMustBeDefined as fieldsMustBeDefinedAlias,
@@ -7,7 +6,6 @@ import {
   fieldMustNotMatch as fieldMustNotMatchAlias,
 } from './features/result-templates/result-templates-helpers';
 
-polyfillCryptoNode();
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 
 export type {

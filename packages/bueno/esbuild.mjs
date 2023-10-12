@@ -40,7 +40,7 @@ function browserEsm() {
     platform: 'browser',
     outfile: 'dist/browser/bueno.esm.js',
     format: 'esm',
-    watch: devMode,
+    // watch: devMode,
   });
 }
 
