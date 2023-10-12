@@ -13,7 +13,7 @@
         "clickUri": "#2",
         "raw": {
           "foldingcollection": "Example Collection",
-          "foldingchild": ["parent1"],
+          "foldingchild": ["parent0"],
           "urihash": "#2",
           "permanentid": "2"
         }
