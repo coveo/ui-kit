@@ -50,8 +50,12 @@ export const generatedAnswerReducer = createReducer(
         state.liked = false;
         state.disliked = true;
       })
-      .addCase(resetAnswer, () => {
-        return getGeneratedAnswerInitialState();
+      .addCase(resetAnswer, (state) => {
+        state.isLoading = false;
+        state.isStreaming = false;
+        state.citations = [];
+        state.liked = false;
+        state.disliked = false;
       })
       .addCase(setIsLoading, (state, {payload}) => {
         state.isLoading = payload;

@@ -58,7 +58,20 @@ export interface GeneratedAnswer extends Controller {
 /**
  * @internal
  */
-export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
+export interface GeneratedAnswerProps {
+  /**
+   * The desired format to apply to generated answers when the controller first loads.
+   */
+  responseFormat: GeneratedResponseFormat;
+}
+
+/**
+ * @internal
+ */
+export function buildGeneratedAnswer(
+  engine: SearchEngine,
+  props?: GeneratedAnswerProps
+): GeneratedAnswer {
   if (!loadGeneratedAnswerReducer(engine)) {
     throw loadReducerError;
   }
@@ -110,6 +123,10 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
   };
 
   subscribeToSearchRequests();
+
+  if (props?.responseFormat) {
+    dispatch(updateResponseFormat(props.responseFormat));
+  }
 
   return {
     ...controller,
