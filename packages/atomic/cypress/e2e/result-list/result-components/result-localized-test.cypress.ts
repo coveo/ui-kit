@@ -89,6 +89,7 @@ describe('Result Localized Text Component', () => {
     describe('using jsonCompatibility v3', () => {
       it('output the plural key', () => {
         setup({'field-count': 'countplural'}).init();
+
         ResultLocalizedTextSelectors.firstInResult().should(
           'have.text',
           'foo plural somevalue'
@@ -99,7 +100,7 @@ describe('Result Localized Text Component', () => {
     describe('using jsonCompatibility v4', () => {
       it('output the plural key', () => {
         setup({'field-count': 'countplural'})
-          .withCompatibilityJSON('v4')
+          .withLocalizationCompatibilityVersion('v4')
           .init();
 
         ResultLocalizedTextSelectors.firstInResult().should(
