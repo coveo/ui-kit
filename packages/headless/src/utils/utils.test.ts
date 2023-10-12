@@ -1,37 +1,77 @@
 import {removeDuplicates} from './utils';
 
 describe('removeDuplicates', () => {
-  it('should return reduced array based on received getIdentifier function', () => {
+  it('should return reduced array based on received predicate', () => {
     const objectToProcess = [
-      {discriminator: 'a'},
       {discriminator: 'a'},
       {discriminator: 'b'},
+      {discriminator: 'a'},
     ];
 
-    expect(
-      removeDuplicates(objectToProcess, (v) => v.discriminator, false)
-    ).toEqual([{discriminator: 'a'}, {discriminator: 'b'}]);
+    expect(removeDuplicates(objectToProcess, (v) => v.discriminator)).toEqual([
+      {discriminator: 'a'},
+      {discriminator: 'b'},
+    ]);
   });
 
-  it('should reduce array from left to right if specified', () => {
-    const objectToProcess = [
-      {discriminator: 'a', otherValue: 1},
-      {discriminator: 'a', otherValue: 2},
+  it('should keep left-most element when duplicates are found', () => {
+    const arr = [
+      {discriminator: 'a', otherProperty: 1},
+      {discriminator: 'a', otherProperty: 2},
+      {discriminator: 'a', otherProperty: 3},
+      {discriminator: 'b', otherProperty: 1},
+      {discriminator: 'c', otherProperty: 1},
+      {discriminator: 'b', otherProperty: 2},
+      {discriminator: 'd', otherProperty: 1},
     ];
 
-    expect(
-      removeDuplicates(objectToProcess, (v) => v.discriminator, false)
-    ).toEqual([{discriminator: 'a', otherValue: 2}]);
+    expect(removeDuplicates(arr, (v) => v.discriminator)).toEqual([
+      {discriminator: 'a', otherProperty: 1},
+      {discriminator: 'b', otherProperty: 1},
+      {discriminator: 'c', otherProperty: 1},
+      {discriminator: 'd', otherProperty: 1},
+    ]);
   });
 
-  it('should reduce array from right to left if specified', () => {
-    const objectToProcess = [
-      {discriminator: 'a', otherValue: 1},
-      {discriminator: 'a', otherValue: 2},
+  it('should preserve original order', () => {
+    const arr = [
+      {discriminator: 'h'},
+      {discriminator: 'e'},
+      {discriminator: 'h'},
+      {discriminator: 'l'},
+      {discriminator: 'l'},
+      {discriminator: 'L'},
+      {discriminator: 'o'},
+      {discriminator: 'o'},
+      {discriminator: ' '},
+      {discriminator: 'o'},
+      {discriminator: 'w'},
+      {discriminator: ' '},
+      {discriminator: 'O'},
+      {discriminator: 'O'},
+      {discriminator: 'w'},
+      {discriminator: 'r'},
+      {discriminator: 'w'},
+      {discriminator: 'r'},
+      {discriminator: '7'},
+      {discriminator: 'd'},
+      {discriminator: '!'},
+      {discriminator: '7'},
     ];
 
-    expect(
-      removeDuplicates(objectToProcess, (v) => v.discriminator, true)
-    ).toEqual([{discriminator: 'a', otherValue: 1}]);
+    expect(removeDuplicates(arr, (v) => v.discriminator)).toEqual([
+      {discriminator: 'h'},
+      {discriminator: 'e'},
+      {discriminator: 'l'},
+      {discriminator: 'L'},
+      {discriminator: 'o'},
+      {discriminator: ' '},
+      {discriminator: 'w'},
+      {discriminator: 'O'},
+      {discriminator: 'r'},
+      {discriminator: '7'},
+      {discriminator: 'd'},
+      {discriminator: '!'},
+    ]);
   });
 });

@@ -15,25 +15,18 @@ export function isEmptyString(str: string) {
   return str.trim() === '';
 }
 
-export function removeDuplicates<T>(
-  arr: T[],
-  getIdentifier: (value: T, index: number) => string,
-  rightToLeft: boolean
-) {
-  const reduceFunction = (
-    existingValues: Record<string, T>,
-    value: T,
-    index: number
-  ) => ({
-    ...existingValues,
-    [getIdentifier(value, index)]: value,
-  });
+export function removeDuplicates<T>(arr: T[], predicate: (value: T) => string) {
+  return [
+    ...arr
+      .reduce((map, item) => {
+        const key = predicate(item);
 
-  return Object.values(
-    rightToLeft
-      ? arr.reduceRight(reduceFunction, <Record<string, T>>{})
-      : arr.reduce(reduceFunction, <Record<string, T>>{})
-  );
+        map.has(key) || map.set(key, item);
+
+        return map;
+      }, new Map())
+      .values(),
+  ];
 }
 
 export function encodedBtoa(stringToEncode: string) {
