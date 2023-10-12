@@ -130,7 +130,7 @@
     }
   },
   "license": "Apache-2.0",
-  "version": "0.0.0-baguette.3",
+  "version": "0.0.0-baguette.4",
   "files": [
     "dist/"
   ],
@@ -148,7 +148,7 @@
     "release:phase1": "npx -p=@coveo/release bump",
     "release:phase2": "npx -p=@coveo/release npm-publish",
     "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
-    "build:doc": "npm run build:doc:extract && npm run build:doc:parse",
+    "build:doc": "exit 0",
     "build:doc:extract": "node ./scripts/extract-documentation.mjs",
     "build:doc:parse": "exit 0"
   },
