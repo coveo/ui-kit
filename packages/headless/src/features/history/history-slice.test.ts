@@ -1,21 +1,21 @@
 import {Reducer} from '@reduxjs/toolkit';
-import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
-import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
-import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
-import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../test/mock-facet-slice';
-import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
-import {buildMockQueryState} from '../../test/mock-query-state';
-import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
-import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
-import {buildMockTabSlice} from '../../test/mock-tab-state';
-import {redo, snapshot, undo} from './history-actions';
-import {historyReducer} from './history-slice';
-import {getHistoryInitialState, HistoryState} from './history-state';
+import {undoable, StateWithHistory, makeHistory} from '../../app/undoable.js';
+import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state.js';
+import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice.js';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice.js';
+import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request.js';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice.js';
+import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
+import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice.js';
+import {buildMockQueryState} from '../../test/mock-query-state.js';
+import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice.js';
+import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value.js';
+import {buildMockTabSlice} from '../../test/mock-tab-state.js';
+import {redo, snapshot, undo} from './history-actions.js';
+import {historyReducer} from './history-slice.js';
+import {getHistoryInitialState, HistoryState} from './history-state.js';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<HistoryState>>;

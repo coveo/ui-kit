@@ -1,11 +1,11 @@
 import {
   buildMockProductRecommendationsAppEngine,
   MockProductRecommendationEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine.js';
 import {
   buildContext,
   Context,
-} from './headless-product-recommendations-context';
+} from './headless-product-recommendations-context.js';
 
 describe('Context', () => {
   let context: Context;

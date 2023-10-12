@@ -1,4 +1,4 @@
-import {deepEqualAnyOrder} from './compare-utils';
+import {deepEqualAnyOrder} from './compare-utils.js';
 
 describe('deepEqualAnyOrder', () => {
   describe('with an object containing primitive values', () => {

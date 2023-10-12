@@ -1,21 +1,21 @@
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
-import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
-import {NumericFacetRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
-import {SearchAppState} from '../../../../state/search-app-state';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions.js';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions.js';
+import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions.js';
+import {NumericFacetRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import {SearchAppState} from '../../../../state/search-app-state.js';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
-} from '../../../../test/mock-engine';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
-import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {createMockState} from '../../../../test/mock-state';
+} from '../../../../test/mock-engine.js';
+import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request.js';
+import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import {createMockState} from '../../../../test/mock-state.js';
 import {
   buildCoreRangeFacet,
   RangeFacet,
   RangeFacetProps,
-} from './headless-core-range-facet';
+} from './headless-core-range-facet.js';
 
 describe('range facet', () => {
   const facetId = '1';

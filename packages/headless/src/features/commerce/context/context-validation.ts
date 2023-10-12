@@ -2,7 +2,7 @@ import {RecordValue, Schema} from '@coveo/bueno';
 import {
   nonEmptyString,
   requiredNonEmptyString,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 
 export const viewDefinition = {
   url: requiredNonEmptyString,

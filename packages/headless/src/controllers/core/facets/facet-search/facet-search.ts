@@ -1,20 +1,20 @@
-import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
-import {CoreEngine} from '../../../../app/engine';
-import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
-import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state';
-import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
+import {FacetSearchAPIClient} from '../../../../api/search/search-api-client.js';
+import {CoreEngine} from '../../../../app/engine.js';
+import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
+import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state.js';
+import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options.js';
 import {
   clearFacetSearch,
   executeFacetSearch,
   executeFieldSuggest,
-} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
+} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
 import {
   CategoryFacetSearchSection,
   ConfigurationSection,
   FacetSearchSection,
-} from '../../../../state/state-sections';
+} from '../../../../state/state-sections.js';
 
 type FacetSearchState = SpecificFacetSearchState | CategoryFacetSearchState;
 

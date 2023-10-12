@@ -1,9 +1,9 @@
 import {Schema} from '@coveo/bueno';
-import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {requiredNonEmptyString} from '../../utils/validate-payload.js';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
-} from '../engine-configuration';
+} from '../engine-configuration.js';
 
 /**
  * The insight engine configuration.

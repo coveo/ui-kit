@@ -1,4 +1,4 @@
-import {ResultPreviewState} from '../features/result-preview/result-preview-state';
+import {ResultPreviewState} from '../features/result-preview/result-preview-state.js';
 
 export function buildMockResultPreviewState(
   config: Partial<ResultPreviewState> = {}

@@ -1,10 +1,10 @@
 import {Schema} from '@coveo/bueno';
-import {nonEmptyString} from '../../utils/validate-payload';
+import {nonEmptyString} from '../../utils/validate-payload.js';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
   getSampleEngineConfiguration,
-} from '../engine-configuration';
+} from '../engine-configuration.js';
 
 /**
  * The product recommendation engine configuration.

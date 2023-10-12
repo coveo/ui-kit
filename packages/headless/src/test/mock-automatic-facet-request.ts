@@ -1,4 +1,4 @@
-import {AutomaticFacetRequest} from '../features/facets/automatic-facet-set/interfaces/request';
+import {AutomaticFacetRequest} from '../features/facets/automatic-facet-set/interfaces/request.js';
 
 export function buildMockAutomaticFacetRequest(
   config: Partial<AutomaticFacetRequest> = {}

@@ -1,13 +1,13 @@
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine.js';
 import {
   ContextPayload,
   ContextValue,
-} from '../../../features/context/context-state';
+} from '../../../features/context/context-state.js';
 import {
   buildCoreContext,
   Context,
   ContextState,
-} from '../../core/context/headless-core-context';
+} from '../../core/context/headless-core-context.js';
 
 export type {Context, ContextState, ContextPayload, ContextValue};
 

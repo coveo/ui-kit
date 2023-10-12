@@ -1,22 +1,22 @@
-import {SearchAppState} from '../../..';
-import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
-import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
+import {SearchAppState} from '../../../index.js';
+import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions.js';
+import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice.js';
+import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
 import {
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
-} from '../../../test';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
+} from '../../../test.js';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
 import {
   buildFieldSuggestions,
   FieldSuggestions,
   FieldSuggestionsOptions,
-} from './headless-field-suggestions';
+} from './headless-field-suggestions.js';
 
 describe('fieldSuggestions', () => {
   const field = 'author';

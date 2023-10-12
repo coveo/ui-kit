@@ -1,52 +1,52 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../..';
-import {configuration} from '../../../app/common-reducers';
+import {CoreEngine} from '../../../index.js';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   InsightAction,
   SearchAction,
-} from '../../../features/analytics/analytics-utils';
+} from '../../../features/analytics/analytics-utils.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
-} from '../../../features/query-set/query-set-actions';
-import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice';
+} from '../../../features/query-set/query-set-actions.js';
+import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice.js';
 import {
   clearQuerySuggest,
   FetchQuerySuggestionsActionCreatorPayload,
   registerQuerySuggest,
   selectQuerySuggestion,
-} from '../../../features/query-suggest/query-suggest-actions';
-import {logQuerySuggestionClick} from '../../../features/query-suggest/query-suggest-analytics-actions';
-import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice';
-import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
-import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
-import {queryReducer as query} from '../../../features/query/query-slice';
-import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
-import {searchReducer as search} from '../../../features/search/search-slice';
+} from '../../../features/query-suggest/query-suggest-actions.js';
+import {logQuerySuggestionClick} from '../../../features/query-suggest/query-suggest-analytics-actions.js';
+import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
+import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state.js';
+import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions.js';
+import {queryReducer as query} from '../../../features/query/query-slice.js';
+import {prepareForSearchWithQuery} from '../../../features/search/search-actions.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   ConfigurationSection,
   QuerySection,
   QuerySetSection,
   QuerySuggestionSection,
   SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   SuggestionHighlightingOptions,
   Delimiters,
   getHighlightedSuggestion,
-} from '../../../utils/highlight';
-import {randomID} from '../../../utils/utils';
-import {validateOptions} from '../../../utils/validate-payload';
+} from '../../../utils/highlight.js';
+import {randomID} from '../../../utils/utils.js';
+import {validateOptions} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 import {
   defaultSearchBoxOptions,
   SearchBoxOptions,
   searchBoxOptionsSchema,
-} from './headless-core-search-box-options';
+} from './headless-core-search-box-options.js';
 
 export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 

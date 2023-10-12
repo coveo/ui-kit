@@ -1,12 +1,12 @@
 import {
   buildMockProductRecommendationsAppEngine,
   MockProductRecommendationEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildFrequentlyBoughtTogetherList,
   FrequentlyBoughtTogetherList,
   FrequentlyBoughtTogetherListOptions,
-} from './headless-frequently-bought-together';
+} from './headless-frequently-bought-together.js';
 
 describe('headless frequently-bought-together', () => {
   let frequentlyBoughtTogether: FrequentlyBoughtTogetherList;

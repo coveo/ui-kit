@@ -7,7 +7,7 @@ import {
   SortCriterion,
   SortOrder,
   SortBy,
-} from './criteria';
+} from './criteria.js';
 
 function parseCriterion(criterion: {
   by: string;

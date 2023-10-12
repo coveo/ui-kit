@@ -1,4 +1,4 @@
-import {buildDateRangeField} from './date-range-field';
+import {buildDateRangeField} from './date-range-field.js';
 
 describe('#buildDateRangeField', () => {
   describe('#toQuerySyntax', () => {

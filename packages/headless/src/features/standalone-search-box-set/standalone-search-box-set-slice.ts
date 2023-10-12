@@ -5,11 +5,11 @@ import {
   resetStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
-} from './standalone-search-box-set-actions';
+} from './standalone-search-box-set-actions.js';
 import {
   getStandaloneSearchBoxSetInitialState,
   StandaloneSearchBoxEntry,
-} from './standalone-search-box-set-state';
+} from './standalone-search-box-set-state.js';
 
 export const standaloneSearchBoxSetReducer = createReducer(
   getStandaloneSearchBoxSetInitialState(),

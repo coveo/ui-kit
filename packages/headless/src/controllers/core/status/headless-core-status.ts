@@ -1,12 +1,12 @@
-import {CoreEngine} from '../../../app/engine';
-import {firstSearchExecutedSelector} from '../../../features/search/search-selectors';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {SearchSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+import {CoreEngine} from '../../../app/engine.js';
+import {firstSearchExecutedSelector} from '../../../features/search/search-selectors.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {SearchSection} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export interface SearchStatus extends Controller {
   /**

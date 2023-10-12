@@ -1,6 +1,6 @@
-import {buildMockInsightEngine} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {logSearchboxSubmit} from './query-insight-analytics-actions';
+import {buildMockInsightEngine} from '../../test/mock-engine.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {logSearchboxSubmit} from './query-insight-analytics-actions.js';
 
 const mockLogSearchboxSubmit = jest.fn();
 

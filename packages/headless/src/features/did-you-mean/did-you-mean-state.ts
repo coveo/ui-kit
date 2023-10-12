@@ -1,4 +1,4 @@
-import {QueryCorrection} from '../../api/search/search/query-corrections';
+import {QueryCorrection} from '../../api/search/search/query-corrections.js';
 
 export interface DidYouMeanState {
   /**

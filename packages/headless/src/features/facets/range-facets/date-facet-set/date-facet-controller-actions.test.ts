@@ -1,9 +1,9 @@
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
 import {
   executeToggleDateFacetExclude,
   executeToggleDateFacetSelect,
-} from './date-facet-controller-actions';
+} from './date-facet-controller-actions.js';
 
 describe('date facet controller actions', () => {
   let engine: MockSearchEngine;

@@ -1,17 +1,17 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {fetchInstantResults} from '../search/search-actions';
+import {fetchInstantResults} from '../search/search-actions.js';
 import {
   clearExpiredResults,
   FetchInstantResultsActionCreatorPayload,
   registerInstantResults,
   updateInstantResultsQuery,
-} from './instant-results-actions';
+} from './instant-results-actions.js';
 import {
   getInstantResultsInitialState,
   hasExpired,
   InstantResultCache,
   InstantResultsState,
-} from './instant-results-state';
+} from './instant-results-state.js';
 
 export const instantResultsReducer = createReducer(
   getInstantResultsInitialState(),

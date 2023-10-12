@@ -2,16 +2,16 @@ import {createAction} from '@reduxjs/toolkit';
 import {
   serializeSchemaValidationError,
   validatePayload,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   UserParams,
   ViewParams,
-} from '../../../api/commerce/commerce-api-params';
+} from '../../../api/commerce/commerce-api-params.js';
 import {
   contextDefinition,
   userDefinition,
   viewDefinition,
-} from './context-validation';
+} from './context-validation.js';
 import {SchemaValidationError, isNullOrUndefined} from '@coveo/bueno';
 
 export interface SetContextPayload {

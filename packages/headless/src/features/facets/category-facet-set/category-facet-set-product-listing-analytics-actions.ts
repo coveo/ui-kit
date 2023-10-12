@@ -1,16 +1,16 @@
 import {ArrayValue} from '@coveo/bueno';
 import {CategoryFacetMetadata} from 'coveo.analytics';
-import {ProductListingAppState} from '../../../state/product-listing-app-state';
+import {ProductListingAppState} from '../../../state/product-listing-app-state.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   AnalyticsType,
   makeProductListingAnalyticsAction,
   ProductListingAction,
-} from '../../analytics/analytics-utils';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
+} from '../../analytics/analytics-utils.js';
+import {facetIdDefinition} from '../generic/facet-actions-validation.js';
 
 export interface LogCategoryFacetBreadcrumbActionCreatorPayload {
   /**

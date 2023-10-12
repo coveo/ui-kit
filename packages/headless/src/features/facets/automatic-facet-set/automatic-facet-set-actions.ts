@@ -1,20 +1,20 @@
 import {NumberValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options';
+import {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../../utils/validate-payload';
-import {facetValueDefinition} from '../facet-set/facet-set-validate-payload';
-import {FacetValue} from '../facet-set/interfaces/response';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
+} from '../../../utils/validate-payload.js';
+import {facetValueDefinition} from '../facet-set/facet-set-validate-payload.js';
+import {FacetValue} from '../facet-set/interfaces/response.js';
+import {facetIdDefinition} from '../generic/facet-actions-validation.js';
 import {
   DESIRED_COUNT_DEFAULT,
   DESIRED_COUNT_MAXIMUM,
   DESIRED_COUNT_MINIMUM,
   NUMBER_OF_VALUE_DEFAULT,
   NUMBER_OF_VALUE_MINIMUM,
-} from './automatic-facet-set-constants';
+} from './automatic-facet-set-constants.js';
 
 export interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
   /**

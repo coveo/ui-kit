@@ -1,13 +1,13 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
-import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils';
-import {getOrganizationEndpoints} from '../../api/platform-client';
+import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils.js';
+import {getOrganizationEndpoints} from '../../api/platform-client.js';
 import {
   matchCoveoOrganizationEndpointUrl,
   isCoveoPlatformURL,
-} from '../../utils/url-utils';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {updateActiveTab} from '../tab-set/tab-set-actions';
+} from '../../utils/url-utils.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -16,12 +16,12 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel2,
   setOriginLevel3,
-} from './configuration-actions';
+} from './configuration-actions.js';
 import {
   getConfigurationInitialState,
   searchAPIEndpoint,
   analyticsAPIEndpoint,
-} from './configuration-state';
+} from './configuration-state.js';
 
 function analyticsUrlFromPlatformUrl(
   platformUrl: string,

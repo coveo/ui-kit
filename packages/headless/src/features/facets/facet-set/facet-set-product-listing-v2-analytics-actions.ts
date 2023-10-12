@@ -2,21 +2,21 @@ import {Value} from '@coveo/bueno';
 import {
   validatePayload,
   requiredNonEmptyString,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   AnalyticsType,
   ProductListingV2Action,
   makeCommerceAnalyticsAction,
-} from '../../analytics/analytics-utils';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
-import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
-import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions';
+} from '../../analytics/analytics-utils.js';
+import {facetIdDefinition} from '../generic/facet-actions-validation.js';
+import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request.js';
+import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions.js';
 import {
   buildFacetBaseMetadata,
   getStateNeededForFacetMetadata,
   buildFacetSelectionChangeMetadata,
-} from './facet-set-analytics-actions-utils';
-import {FacetSortCriterion} from './interfaces/request';
+} from './facet-set-analytics-actions-utils.js';
+import {FacetSortCriterion} from './interfaces/request.js';
 
 export const logFacetShowMore = (facetId: string): ProductListingV2Action =>
   makeCommerceAnalyticsAction(

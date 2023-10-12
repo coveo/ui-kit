@@ -1,13 +1,13 @@
-import {buildMockSearch} from '../../test/mock-search';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute';
-import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify';
-import {buildMockQueryTrigger} from '../../test/mock-trigger-query';
-import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {executeSearch} from '../search/search-actions';
-import {triggerReducer} from './triggers-slice';
-import {getTriggerInitialState} from './triggers-state';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute.js';
+import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify.js';
+import {buildMockQueryTrigger} from '../../test/mock-trigger-query.js';
+import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect.js';
+import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
+import {executeSearch} from '../search/search-actions.js';
+import {triggerReducer} from './triggers-slice.js';
+import {getTriggerInitialState} from './triggers-state.js';
 
 describe('trigger slice', () => {
   it('should have initial state', () => {

@@ -1,14 +1,14 @@
-import {createMockAttachedResult} from '../../test/mock-attached-results';
+import {createMockAttachedResult} from '../../test/mock-attached-results.js';
 import {
   attachResult,
   detachResult,
   setAttachedResults,
-} from './attached-results-actions';
-import {attachedResultsReducer} from './attached-results-slice';
+} from './attached-results-actions.js';
+import {attachedResultsReducer} from './attached-results-slice.js';
 import {
   AttachedResultsState,
   getAttachedResultsInitialState,
-} from './attached-results-state';
+} from './attached-results-state.js';
 
 describe('attached results slice', () => {
   let state: AttachedResultsState;

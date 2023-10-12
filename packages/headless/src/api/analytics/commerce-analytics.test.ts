@@ -1,9 +1,9 @@
-import {buildMockCommerceState} from '../../test/mock-commerce-state';
-import {buildMockProductRecommendation} from '../../test/mock-product-recommendation';
+import {buildMockCommerceState} from '../../test/mock-commerce-state.js';
+import {buildMockProductRecommendation} from '../../test/mock-product-recommendation.js';
 import {
   CommerceAnalyticsProvider,
   StateNeededByCommerceAnalyticsProvider,
-} from './commerce-analytics';
+} from './commerce-analytics.js';
 
 describe('commerce analytics', () => {
   const getBaseState = (): StateNeededByCommerceAnalyticsProvider =>

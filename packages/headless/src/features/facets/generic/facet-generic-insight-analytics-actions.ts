@@ -2,8 +2,8 @@ import {
   AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from '../../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
+} from '../../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state.js';
 
 export const logClearBreadcrumbs = (): InsightAction =>
   makeInsightAnalyticsAction(

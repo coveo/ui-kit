@@ -1,16 +1,16 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload.js';
 import {
   AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 import {
   staticFilterIdSchema,
   staticFilterValueSchema,
   staticFilterValuesSchema,
-} from './static-filter-set-schema';
-import {StaticFilterValue} from './static-filter-set-state';
+} from './static-filter-set-schema.js';
+import {StaticFilterValue} from './static-filter-set-state.js';
 
 export interface RegisterStaticFilterActionCreatorPayload {
   /**

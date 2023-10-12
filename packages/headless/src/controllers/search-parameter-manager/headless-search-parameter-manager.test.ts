@@ -1,31 +1,31 @@
-import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
-import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
-import {executeSearch} from '../../features/search/search-actions';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
-import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response';
-import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
-import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../test/mock-facet-value';
-import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
-import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
-import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
-import {buildMockSearchParameters} from '../../test/mock-search-parameters';
-import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
-import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
-import {buildMockTabSlice} from '../../test/mock-tab-state';
+import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
+import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../test.js';
+import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response.js';
+import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice.js';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice.js';
+import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request.js';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request.js';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../test/mock-date-facet-value.js';
+import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
+import {buildMockFacetValue} from '../../test/mock-facet-value.js';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request.js';
+import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request.js';
+import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value.js';
+import {buildMockSearchParameters} from '../../test/mock-search-parameters.js';
+import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice.js';
+import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value.js';
+import {buildMockTabSlice} from '../../test/mock-tab-state.js';
 import {
   buildSearchParameterManager,
   SearchParameterManager,
   SearchParameterManagerProps,
-} from './headless-search-parameter-manager';
+} from './headless-search-parameter-manager.js';
 
 describe('search parameter manager', () => {
   let engine: MockSearchEngine;

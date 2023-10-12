@@ -1,9 +1,9 @@
-import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import {
   AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logNavigateForward = (): SearchAction =>
   makeAnalyticsAction(

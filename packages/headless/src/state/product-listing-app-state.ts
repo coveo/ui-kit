@@ -13,7 +13,7 @@ import {
   ProductListingSection,
   StructuredSortSection,
   VersionSection,
-} from './state-sections';
+} from './state-sections.js';
 
 export type ProductListingAppState = ConfigurationSection &
   ProductListingSection &

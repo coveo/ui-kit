@@ -1,9 +1,9 @@
-import {nextPage, previousPage, selectPage} from './pagination-actions';
-import {paginationReducer} from './pagination-slice';
+import {nextPage, previousPage, selectPage} from './pagination-actions.js';
+import {paginationReducer} from './pagination-slice.js';
 import {
   CommercePaginationState,
   getCommercePaginationInitialState,
-} from './pagination-state';
+} from './pagination-state.js';
 
 describe('pagination slice', () => {
   let state: CommercePaginationState;

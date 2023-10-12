@@ -1,4 +1,4 @@
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 import {
   AnalyticsType,
   ClickAction,
@@ -6,7 +6,7 @@ import {
   makeAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logDocumentQuickview = (result: Result): ClickAction => {
   return makeAnalyticsAction(

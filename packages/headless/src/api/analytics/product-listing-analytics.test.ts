@@ -1,9 +1,9 @@
-import {buildMockProductListingState} from '../../test/mock-product-listing-state';
-import {buildMockProductRecommendation} from '../../test/mock-product-recommendation';
+import {buildMockProductListingState} from '../../test/mock-product-listing-state.js';
+import {buildMockProductRecommendation} from '../../test/mock-product-recommendation.js';
 import {
   ProductListingAnalyticsProvider,
   StateNeededByProductListingAnalyticsProvider,
-} from './product-listing-analytics';
+} from './product-listing-analytics.js';
 
 describe('listing analytics', () => {
   const getBaseState = (): StateNeededByProductListingAnalyticsProvider =>

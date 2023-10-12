@@ -8,9 +8,9 @@ import {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
 } from 'coveo.analytics';
-import {getOrganizationEndpoints} from '../api/platform-client';
-import {PreprocessRequest} from '../api/preprocess-request';
-import {requiredNonEmptyString} from '../utils/validate-payload';
+import {getOrganizationEndpoints} from '../api/platform-client.js';
+import {PreprocessRequest} from '../api/preprocess-request.js';
+import {requiredNonEmptyString} from '../utils/validate-payload.js';
 
 /**
  * The endpoints to use.

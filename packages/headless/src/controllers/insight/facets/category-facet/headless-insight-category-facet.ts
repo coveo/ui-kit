@@ -1,5 +1,5 @@
-import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
-import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
+import {InsightEngine} from '../../../../app/insight-engine/insight-engine.js';
+import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request.js';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -7,11 +7,11 @@ import {
   logFacetShowLess,
   logFacetShowMore,
   logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions.js';
 import {
   executeSearch,
   fetchFacetValues,
-} from '../../../../features/insight-search/insight-search-actions';
+} from '../../../../features/insight-search/insight-search-actions.js';
 import {
   buildCoreCategoryFacet,
   CategoryFacet,
@@ -26,7 +26,7 @@ import {
   CategoryFacetValueCommon,
   CoreCategoryFacet,
   CoreCategoryFacetState,
-} from '../../../core/facets/category-facet/headless-core-category-facet';
+} from '../../../core/facets/category-facet/headless-core-category-facet.js';
 
 export type {
   CategoryFacetValueCommon,

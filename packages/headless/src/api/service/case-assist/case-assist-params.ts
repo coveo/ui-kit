@@ -2,8 +2,8 @@ import {
   HTTPContentType,
   HttpMethods,
   PlatformClientCallOptions,
-} from '../../platform-client';
-import {BaseParam} from '../../platform-service-params';
+} from '../../platform-client.js';
+import {BaseParam} from '../../platform-service-params.js';
 
 export interface CaseAssistIdParam {
   caseAssistId: string;

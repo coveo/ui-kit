@@ -5,13 +5,13 @@ import {
   DebugParam,
   LocaleParam,
   NumberOfResultsParam,
-} from '../../../platform-service-params';
+} from '../../../platform-service-params.js';
 import {
   baseCaseAssistRequest,
   CaseAssistIdParam,
   FieldsParam,
   prepareSuggestionRequestFields,
-} from '../case-assist-params';
+} from '../case-assist-params.js';
 
 export type GetDocumentSuggestionsRequest = BaseParam &
   CaseAssistIdParam &

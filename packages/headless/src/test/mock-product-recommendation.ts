@@ -1,4 +1,4 @@
-import {ProductRecommendation} from '../api/search/search/product-recommendation';
+import {ProductRecommendation} from '../api/search/search/product-recommendation.js';
 
 export function buildMockProductRecommendation(
   config: Partial<ProductRecommendation> = {}

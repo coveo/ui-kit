@@ -1,8 +1,8 @@
-import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils';
-import {platformUrl} from '../../api/platform-client';
-import {allValidPlatformCombination} from '../../test/platform-url';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {updateActiveTab} from '../tab-set/tab-set-actions';
+import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils.js';
+import {platformUrl} from '../../api/platform-client.js';
+import {allValidPlatformCombination} from '../../test/platform-url.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -11,12 +11,12 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel3,
   setOriginLevel2,
-} from './configuration-actions';
-import {configurationReducer} from './configuration-slice';
+} from './configuration-actions.js';
+import {configurationReducer} from './configuration-slice.js';
 import {
   ConfigurationState,
   getConfigurationInitialState,
-} from './configuration-state';
+} from './configuration-state.js';
 
 jest.mock('../../api/analytics/coveo-analytics-utils');
 

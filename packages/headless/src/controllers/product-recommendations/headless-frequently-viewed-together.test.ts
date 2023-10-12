@@ -1,12 +1,12 @@
 import {
   buildMockProductRecommendationsAppEngine,
   MockProductRecommendationEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildFrequentlyViewedTogetherList,
   FrequentlyViewedTogetherList,
   FrequentlyViewedTogetherListOptions,
-} from './headless-frequently-viewed-together';
+} from './headless-frequently-viewed-together.js';
 
 describe('headless frequently-viewed-together', () => {
   let frequentlyViewedTogether: FrequentlyViewedTogetherList;

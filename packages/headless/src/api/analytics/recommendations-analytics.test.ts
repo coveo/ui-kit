@@ -1,9 +1,9 @@
-import {buildMockResult} from '../../test';
-import {createMockRecommendationState} from '../../test/mock-recommendation-state';
+import {buildMockResult} from '../../test.js';
+import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
 import {
   RecommendationAnalyticsProvider,
   StateNeededByRecommendationAnalyticsProvider,
-} from './recommendations-analytics';
+} from './recommendations-analytics.js';
 
 describe('recommendations analytics', () => {
   const getBaseState = (): StateNeededByRecommendationAnalyticsProvider =>

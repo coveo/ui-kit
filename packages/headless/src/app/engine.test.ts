@@ -3,12 +3,12 @@ import {
   createAction,
   createReducer,
 } from '@reduxjs/toolkit';
-import {getOrganizationEndpoints} from '../api/platform-client';
-import * as Store from '../app/store';
-import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
-import {configuration} from './common-reducers';
-import {buildEngine, CoreEngine, EngineOptions} from './engine';
-import {getSampleEngineConfiguration} from './engine-configuration';
+import {getOrganizationEndpoints} from '../api/platform-client.js';
+import * as Store from '../app/store.js';
+import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments.js';
+import {configuration} from './common-reducers.js';
+import {buildEngine, CoreEngine, EngineOptions} from './engine.js';
+import {getSampleEngineConfiguration} from './engine-configuration.js';
 
 jest.mock('pino', () => ({
   ...jest.requireActual('pino'),

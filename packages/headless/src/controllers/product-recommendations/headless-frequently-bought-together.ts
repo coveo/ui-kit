@@ -1,13 +1,13 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
-import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
-import {validateOptions} from '../../utils/validate-payload';
-import {Controller} from '../controller/headless-controller';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation.js';
+import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine.js';
+import {validateOptions} from '../../utils/validate-payload.js';
+import {Controller} from '../controller/headless-controller.js';
 import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
-} from './headless-base-product-recommendations';
+} from './headless-base-product-recommendations.js';
 
 const optionsSchema = new Schema({
   sku: new StringValue({required: true, emptyAllowed: false}),

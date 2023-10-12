@@ -1,22 +1,22 @@
-import {configuration} from '../../../../app/common-reducers';
-import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice';
-import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
-import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {searchReducer as search} from '../../../../features/search/search-slice';
-import {ProductListingAppState} from '../../../../state/product-listing-app-state';
-import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {configuration} from '../../../../app/common-reducers.js';
+import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice.js';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
+import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions.js';
+import {searchReducer as search} from '../../../../features/search/search-slice.js';
+import {ProductListingAppState} from '../../../../state/product-listing-app-state.js';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
 import {
   MockProductListingEngine,
   buildMockProductListingEngine,
-} from '../../../../test/mock-engine';
-import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
+} from '../../../../test/mock-engine.js';
+import {buildMockProductListingState} from '../../../../test/mock-product-listing-state.js';
 import {
   DateFacet,
   buildDateFacet,
   DateFacetOptions,
-} from './headless-product-listing-date-facet';
+} from './headless-product-listing-date-facet.js';
 
 describe('date facet', () => {
   const facetId = '1';

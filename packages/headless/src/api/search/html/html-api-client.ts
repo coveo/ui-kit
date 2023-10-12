@@ -1,11 +1,11 @@
 import {Logger} from 'pino';
-import {URLPath} from '../../../utils/url-utils';
-import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
-import {PlatformClient} from '../../platform-client';
-import {PreprocessRequest, RequestMetadata} from '../../preprocess-request';
-import {SearchAPIErrorWithStatusCode} from '../search-api-error-response';
-import {baseSearchRequest} from '../search-api-params';
-import {HtmlRequest} from './html-request';
+import {URLPath} from '../../../utils/url-utils.js';
+import {pickNonBaseParams, unwrapError} from '../../api-client-utils.js';
+import {PlatformClient} from '../../platform-client.js';
+import {PreprocessRequest, RequestMetadata} from '../../preprocess-request.js';
+import {SearchAPIErrorWithStatusCode} from '../search-api-error-response.js';
+import {baseSearchRequest} from '../search-api-params.js';
+import {HtmlRequest} from './html-request.js';
 
 export interface HtmlApiClient {
   html: (req: HtmlRequest) => Promise<

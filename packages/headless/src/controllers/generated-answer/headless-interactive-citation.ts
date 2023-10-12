@@ -1,12 +1,12 @@
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logOpenGeneratedAnswerSource} from '../../features/generated-answer/generated-answer-analytics-actions';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {logOpenGeneratedAnswerSource} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
-} from '../core/interactive-result/headless-core-interactive-result';
+} from '../core/interactive-result/headless-core-interactive-result.js';
 
 export interface InteractiveCitationOptions
   extends InteractiveResultCoreOptions {

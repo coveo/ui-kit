@@ -1,15 +1,15 @@
-import {logProductRecommendationOpen} from '../../../features/product-listing/product-listing-analytics';
-import {pushRecentResult} from '../../../features/product-listing/product-listing-recent-results';
+import {logProductRecommendationOpen} from '../../../features/product-listing/product-listing-analytics.js';
+import {pushRecentResult} from '../../../features/product-listing/product-listing-recent-results.js';
 import {
   ProductListingEngine,
   ProductRecommendation,
-} from '../../../product-listing.index';
+} from '../../../product-listing.index.js';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
-} from '../../core/interactive-result/headless-core-interactive-result';
+} from '../../core/interactive-result/headless-core-interactive-result.js';
 
 export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
   /**

@@ -3,24 +3,24 @@ import {
   likeGeneratedAnswer,
   resetAnswer,
   streamAnswer,
-} from '../../features/generated-answer/generated-answer-actions';
+} from '../../features/generated-answer/generated-answer-actions.js';
 import {
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
-} from '../../features/generated-answer/generated-answer-analytics-actions';
-import {generatedAnswerReducer} from '../../features/generated-answer/generated-answer-slice';
-import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
-import {executeSearch} from '../../features/search/search-actions';
-import {buildMockCitation} from '../../test/mock-citation';
+} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import {generatedAnswerReducer} from '../../features/generated-answer/generated-answer-slice.js';
+import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildGeneratedAnswer,
   GeneratedAnswer,
-} from './headless-generated-answer';
+} from './headless-generated-answer.js';
 
 describe('generated answer', () => {
   let generatedAnswer: GeneratedAnswer;

@@ -1,8 +1,8 @@
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
-import {buildController, Controller} from './headless-controller';
+} from '../../test/mock-engine.js';
+import {buildController, Controller} from './headless-controller.js';
 
 describe('Controller', () => {
   let engine: MockSearchEngine;

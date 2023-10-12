@@ -1,22 +1,22 @@
-import {configuration} from '../../app/common-reducers';
+import {configuration} from '../../app/common-reducers.js';
 import {
   fetchResultContent,
   preparePreviewPagination,
-} from '../../features/result-preview/result-preview-actions';
-import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
-import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
-import {searchReducer as search} from '../../features/search/search-slice';
+} from '../../features/result-preview/result-preview-actions.js';
+import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions.js';
+import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test';
-import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
+} from '../../test.js';
+import {buildMockResultPreviewState} from '../../test/mock-result-preview-state.js';
 import {
   buildQuickview,
   QuickviewOptions,
   Quickview,
-} from './headless-quickview';
+} from './headless-quickview.js';
 
 describe('Quickview', () => {
   let engine: MockSearchEngine;

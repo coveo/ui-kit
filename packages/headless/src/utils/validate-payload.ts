@@ -7,7 +7,7 @@ import {
   RecordValue,
 } from '@coveo/bueno';
 import {SerializedError} from '@reduxjs/toolkit';
-import {CoreEngine} from '../app/engine';
+import {CoreEngine} from '../app/engine.js';
 
 export const requiredNonEmptyString = new StringValue({
   required: true,

@@ -1,16 +1,16 @@
 import {ArrayValue} from '@coveo/bueno';
-import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAppState} from '../../../state/search-app-state';
+import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
-} from '../../analytics/analytics-utils';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
+} from '../../analytics/analytics-utils.js';
+import {facetIdDefinition} from '../generic/facet-actions-validation.js';
 
 export interface LogCategoryFacetBreadcrumbActionCreatorPayload {
   /**

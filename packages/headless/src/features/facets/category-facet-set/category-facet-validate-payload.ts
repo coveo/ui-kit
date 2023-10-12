@@ -8,9 +8,9 @@ import {
 import {
   validatePayloadAndThrow,
   requiredNonEmptyString,
-} from '../../../utils/validate-payload';
-import {FacetValueState} from '../facet-api/value';
-import {CategoryFacetValue} from './interfaces/response';
+} from '../../../utils/validate-payload.js';
+import {FacetValueState} from '../facet-api/value.js';
+import {CategoryFacetValue} from './interfaces/response.js';
 
 export const categoryFacetValueDefinition = {
   state: new Value<FacetValueState>({required: true}),

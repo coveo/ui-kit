@@ -1,26 +1,26 @@
-import {configuration} from '../../app/common-reducers';
-import {disableDebug, enableDebug} from '../../features/debug/debug-actions';
-import {rankingInformationSelector} from '../../features/debug/debug-selectors';
-import {debugReducer as debug} from '../../features/debug/debug-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {disableDebug, enableDebug} from '../../features/debug/debug-actions.js';
+import {rankingInformationSelector} from '../../features/debug/debug-selectors.js';
+import {debugReducer as debug} from '../../features/debug/debug-slice.js';
 import {
   disableFetchAllFields,
   enableFetchAllFields,
   fetchFieldsDescription,
-} from '../../features/fields/fields-actions';
-import {fieldsReducer as fields} from '../../features/fields/fields-slice';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {createMockState} from '../../test';
+} from '../../features/fields/fields-actions.js';
+import {fieldsReducer as fields} from '../../features/fields/fields-slice.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {createMockState} from '../../test.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
-import {buildMockFieldDescription} from '../../test/mock-field-description';
-import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
+} from '../../test/mock-engine.js';
+import {buildMockFieldDescription} from '../../test/mock-field-description.js';
+import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response.js';
 import {
   buildRelevanceInspector,
   RelevanceInspector,
   RelevanceInspectorProps,
-} from './headless-relevance-inspector';
+} from './headless-relevance-inspector.js';
 
 describe('RelevanceInspector', () => {
   let engine: MockSearchEngine;

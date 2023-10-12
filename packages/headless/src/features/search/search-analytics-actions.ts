@@ -1,11 +1,11 @@
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state.js';
 import {
   makeAnalyticsAction,
   AnalyticsType,
   SearchAction,
-} from '../analytics/analytics-utils';
-import {getQueryInitialState} from '../query/query-state';
+} from '../analytics/analytics-utils.js';
+import {getQueryInitialState} from '../query/query-state.js';
 
 export const logFetchMoreResults = (): SearchAction =>
   makeAnalyticsAction(

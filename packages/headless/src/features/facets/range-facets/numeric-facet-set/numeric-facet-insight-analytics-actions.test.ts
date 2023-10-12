@@ -1,9 +1,9 @@
-import {buildMockInsightEngine} from '../../../../test/mock-engine';
-import {buildMockInsightState} from '../../../../test/mock-insight-state';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actions';
+import {buildMockInsightEngine} from '../../../../test/mock-engine.js';
+import {buildMockInsightState} from '../../../../test/mock-insight-state.js';
+import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request.js';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actions.js';
 
 const mockLogBreadcrumbFacet = jest.fn();
 

@@ -1,24 +1,24 @@
-import {validatePayload} from '../../utils/validate-payload';
-import {SmartSnippetFeedback} from '../analytics';
+import {validatePayload} from '../../utils/validate-payload.js';
+import {SmartSnippetFeedback} from '../analytics/index.js';
 import {
   AnalyticsType,
   InsightAction,
   documentIdentifier,
   makeInsightAnalyticsAction,
   partialDocumentInformation,
-} from '../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+} from '../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 import {
   inlineLinkPayloadDefinition,
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   uniqueIdentifierPayloadDefinition,
   validateQuestionAnsweringActionCreatorPayload,
-} from './question-answering-document-id';
+} from './question-answering-document-id.js';
 import {
   answerSourceSelector,
   relatedQuestionSelector,
-} from './question-answering-selectors';
+} from './question-answering-selectors.js';
 
 export const logExpandSmartSnippet = (): InsightAction<AnalyticsType.Custom> =>
   makeInsightAnalyticsAction(

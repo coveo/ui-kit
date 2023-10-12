@@ -1,12 +1,12 @@
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 import {
   partialDocumentInformation,
   documentIdentifier,
   validateResultPayload,
   AnalyticsType,
   makeInsightAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+} from '../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 
 export const logDocumentOpen = (result: Result) =>
   makeInsightAnalyticsAction(

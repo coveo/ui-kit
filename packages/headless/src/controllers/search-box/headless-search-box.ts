@@ -1,15 +1,15 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions';
-import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
-import {executeSearch} from '../../features/search/search-actions';
-import {SuggestionHighlightingOptions, Delimiters} from '../../utils/highlight';
-import {Controller} from '../controller/headless-controller';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions.js';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {SuggestionHighlightingOptions, Delimiters} from '../../utils/highlight.js';
+import {Controller} from '../controller/headless-controller.js';
 import {
   buildCoreSearchBox,
   SearchBoxState,
   Suggestion,
-} from '../core/search-box/headless-core-search-box';
-import {SearchBoxOptions} from '../core/search-box/headless-core-search-box-options';
+} from '../core/search-box/headless-core-search-box.js';
+import {SearchBoxOptions} from '../core/search-box/headless-core-search-box-options.js';
 
 export type {
   SearchBoxOptions,

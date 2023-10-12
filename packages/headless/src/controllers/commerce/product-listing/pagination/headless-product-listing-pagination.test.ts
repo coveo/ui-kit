@@ -2,15 +2,15 @@ import {
   selectPage,
   nextPage,
   previousPage,
-} from '../../../../features/commerce/pagination/pagination-actions';
-import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test';
+} from '../../../../features/commerce/pagination/pagination-actions.js';
+import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
+import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions.js';
+import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice.js';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../../test.js';
 import {
   buildProductListingPagination,
   ProductListingPagination,
-} from './headless-product-listing-pagination';
+} from './headless-product-listing-pagination.js';
 
 describe('ProductListingPagination', () => {
   let engine: MockCommerceEngine;

@@ -1,13 +1,13 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   ContextPayload,
   ContextValue,
-} from '../../features/context/context-state';
+} from '../../features/context/context-state.js';
 import {
   buildCoreContext,
   Context,
   ContextState,
-} from '../core/context/headless-core-context';
+} from '../core/context/headless-core-context.js';
 
 export type {Context, ContextState, ContextPayload, ContextValue};
 

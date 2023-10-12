@@ -1,7 +1,7 @@
 import {BooleanValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload';
-import {facetIdDefinition} from '../facets/generic/facet-actions-validation';
+import {validatePayload} from '../../utils/validate-payload.js';
+import {facetIdDefinition} from '../facets/generic/facet-actions-validation.js';
 
 export interface UpdateFacetOptionsActionCreatorPayload {
   /**

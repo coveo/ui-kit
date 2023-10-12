@@ -1,6 +1,6 @@
-import {buildDateRange} from '../../../../controllers';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {validateManualDateRanges} from './date-facet-actions';
+import {buildDateRange} from '../../../../controllers.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
+import {validateManualDateRanges} from './date-facet-actions.js';
 
 describe('validateManualDateRanges', () => {
   it('should not throw when the start is lower or equal than the end', () => {

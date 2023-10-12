@@ -1,17 +1,17 @@
-import {validateOptions} from '../../../utils/validate-payload';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
+import {validateOptions} from '../../../utils/validate-payload.js';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../controller/headless-controller.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   setContext,
   setUser,
   setView,
-} from '../../../features/commerce/context/context-actions';
-import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
-import {contextSchema} from '../../../features/commerce/context/context-validation';
+} from '../../../features/commerce/context/context-actions.js';
+import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
+import {contextSchema} from '../../../features/commerce/context/context-validation.js';
 
 export interface ContextOptions {
   trackingId: string;

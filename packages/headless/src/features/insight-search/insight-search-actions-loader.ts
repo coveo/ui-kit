@@ -1,13 +1,13 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {InsightEngine} from '../../insight.index';
-import {InsightAction} from '../analytics/analytics-utils';
+import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {InsightEngine} from '../../insight.index.js';
+import {InsightAction} from '../analytics/analytics-utils.js';
 import {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
-} from '../query-suggest/query-suggest-actions';
-import {ExecuteSearchThunkReturn} from '../search/search-actions';
+} from '../query-suggest/query-suggest-actions.js';
+import {ExecuteSearchThunkReturn} from '../search/search-actions.js';
 import {
   executeSearch,
   fetchFacetValues,
@@ -16,7 +16,7 @@ import {
   fetchQuerySuggestions,
   StateNeededByExecuteSearch,
   StateNeededByQuerySuggest,
-} from './insight-search-actions';
+} from './insight-search-actions.js';
 
 export type {FetchQuerySuggestionsActionCreatorPayload};
 

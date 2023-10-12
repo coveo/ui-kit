@@ -1,6 +1,6 @@
-import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
-import {AnyFacetResponse} from '../facets/generic/interfaces/generic-facet-response';
+import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client.js';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation.js';
+import {AnyFacetResponse} from '../facets/generic/interfaces/generic-facet-response.js';
 
 export interface ProductListingState {
   url: string;

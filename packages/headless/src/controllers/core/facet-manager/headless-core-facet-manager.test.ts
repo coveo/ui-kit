@@ -1,12 +1,12 @@
-import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test.js';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
 import {
   buildCoreFacetManager,
   FacetManager,
   FacetManagerPayload,
-} from './headless-core-facet-manager';
+} from './headless-core-facet-manager.js';
 
 describe('facet manager', () => {
   let engine: MockSearchEngine;

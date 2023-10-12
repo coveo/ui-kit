@@ -1,7 +1,7 @@
-import {buildMockInsightEngine} from '../../../test/mock-engine';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
+import {buildMockInsightEngine} from '../../../test/mock-engine.js';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   logFacetBreadcrumb,
   logFacetClearAll,
@@ -10,7 +10,7 @@ import {
   logFacetUpdateSort,
   logFacetShowMore,
   logFacetShowLess,
-} from './facet-set-insight-analytics-actions';
+} from './facet-set-insight-analytics-actions.js';
 
 const mockLogBreadcrumbFacet = jest.fn();
 const mockLogFacetSelect = jest.fn();

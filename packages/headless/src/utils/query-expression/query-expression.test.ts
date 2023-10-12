@@ -1,4 +1,4 @@
-import {buildQueryExpression, QueryExpression} from './query-expression';
+import {buildQueryExpression, QueryExpression} from './query-expression.js';
 
 describe('buildQueryExpression', () => {
   let builder: QueryExpression;

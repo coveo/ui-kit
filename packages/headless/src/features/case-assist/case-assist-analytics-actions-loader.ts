@@ -1,5 +1,5 @@
-import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {CaseAssistAction} from '../analytics/analytics-utils';
+import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
+import {CaseAssistAction} from '../analytics/analytics-utils.js';
 import {
   logAbandonCase,
   logCaseNextStage,
@@ -11,7 +11,7 @@ import {
   logSolveCase,
   logUpdateCaseField,
   logQuickviewDocumentSuggestionClick,
-} from './case-assist-analytics-actions';
+} from './case-assist-analytics-actions.js';
 
 export interface NextStageOptions {
   stageName?: string;

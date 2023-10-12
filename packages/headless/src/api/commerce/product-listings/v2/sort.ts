@@ -1,4 +1,4 @@
-import {SortCriterion} from '../../../../features/sort/sort';
+import {SortCriterion} from '../../../../features/sort/sort.js';
 
 export interface Sort {
   appliedSort: SortCriterion;

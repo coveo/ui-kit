@@ -1,6 +1,6 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {Controller} from '../../../controllers';
-import {CoreEngine} from '../../engine';
+import {Controller} from '../../../controllers/index.js';
+import {CoreEngine} from '../../engine.js';
 
 export type HasKeys<TObject> = TObject extends {}
   ? keyof TObject extends never

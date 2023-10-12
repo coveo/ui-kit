@@ -1,12 +1,12 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildMockSearch} from '../../../test/mock-search';
-import {buildMockSearchResponse} from '../../../test/mock-search-response';
-import {change} from '../../history/history-actions';
-import {getHistoryInitialState} from '../../history/history-state';
-import {executeSearch} from '../../search/search-actions';
-import {facetOrderReducer} from './facet-order-slice';
-import {FacetOrderState, getFacetOrderInitialState} from './facet-order-state';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
+import {buildMockSearch} from '../../../test/mock-search.js';
+import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
+import {change} from '../../history/history-actions.js';
+import {getHistoryInitialState} from '../../history/history-state.js';
+import {executeSearch} from '../../search/search-actions.js';
+import {facetOrderReducer} from './facet-order-slice.js';
+import {FacetOrderState, getFacetOrderInitialState} from './facet-order-state.js';
 
 describe('facet-order slice', () => {
   let state: FacetOrderState;

@@ -1,11 +1,11 @@
-import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
-import {buildMockInsightEngine} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
+import {buildMockInsightEngine} from '../../test/mock-engine.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
-} from './insight-analytics-actions';
+} from './insight-analytics-actions.js';
 
 const mockLogInterfaceLoad = jest.fn();
 const mockLogInterfaceChange = jest.fn();

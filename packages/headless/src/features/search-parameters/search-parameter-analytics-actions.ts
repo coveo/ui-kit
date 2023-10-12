@@ -1,19 +1,19 @@
-import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
+import {DateRangeRequest, NumericRangeRequest} from '../../controllers/index.js';
 import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
   logFacetExclude,
-} from '../../features/facets/facet-set/facet-set-analytics-actions';
-import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
-import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
-import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
-import {logInterfaceChange} from '../analytics/analytics-actions';
-import {SearchAction} from '../analytics/analytics-utils';
+} from '../../features/facets/facet-set/facet-set-analytics-actions.js';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions.js';
+import {SearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
+import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions.js';
+import {logInterfaceChange} from '../analytics/analytics-actions.js';
+import {SearchAction} from '../analytics/analytics-utils.js';
 import {
   logPageNumber,
   logPagerResize,
-} from '../pagination/pagination-analytics-actions';
+} from '../pagination/pagination-analytics-actions.js';
 
 export function logParametersChange(
   previousParameters: SearchParameters,

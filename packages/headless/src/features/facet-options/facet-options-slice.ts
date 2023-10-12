@@ -1,20 +1,20 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {registerCategoryFacet} from '../facets/category-facet-set/category-facet-set-actions';
-import {registerFacet} from '../facets/facet-set/facet-set-actions';
-import {registerDateFacet} from '../facets/range-facets/date-facet-set/date-facet-actions';
-import {registerNumericFacet} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {change} from '../history/history-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {executeSearch} from '../search/search-actions';
+import {registerCategoryFacet} from '../facets/category-facet-set/category-facet-set-actions.js';
+import {registerFacet} from '../facets/facet-set/facet-set-actions.js';
+import {registerDateFacet} from '../facets/range-facets/date-facet-set/date-facet-actions.js';
+import {registerNumericFacet} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import {change} from '../history/history-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../search/search-actions.js';
 import {
   disableFacet,
   enableFacet,
   updateFacetOptions,
-} from './facet-options-actions';
+} from './facet-options-actions.js';
 import {
   getFacetOptionsSliceInitialState,
   getFacetOptionsInitialState,
-} from './facet-options-state';
+} from './facet-options-state.js';
 
 export const facetOptionsReducer = createReducer(
   getFacetOptionsInitialState(),

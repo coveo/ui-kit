@@ -1,11 +1,11 @@
 import {
   buildMockProductRecommendationsAppEngine,
   MockProductRecommendationEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildPopularBoughtRecommendationsList,
   PopularBoughtRecommendationsList,
-} from './headless-popular-bought-recommendations';
+} from './headless-popular-bought-recommendations.js';
 
 describe('headless popular-bought-recommendations', () => {
   let popularBought: PopularBoughtRecommendationsList;

@@ -1,4 +1,4 @@
-import {buildDateField} from './date-field';
+import {buildDateField} from './date-field.js';
 
 describe('#buildDateField', () => {
   describe('#toQuerySyntax', () => {

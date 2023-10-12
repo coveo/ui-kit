@@ -1,14 +1,14 @@
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions.js';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine.js';
 import {
   Pager,
   PagerOptions,
   PagerInitialState,
   buildPager,
-} from './headless-product-listing-pager';
+} from './headless-product-listing-pager.js';
 
 describe('Pager', () => {
   let engine: MockProductListingEngine;

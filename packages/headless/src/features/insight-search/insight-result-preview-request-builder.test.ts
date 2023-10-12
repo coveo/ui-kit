@@ -1,11 +1,11 @@
-import {HtmlRequestOptions} from '../../api/search/html/html-request';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
-import {getQueryInitialState} from '../query/query-state';
-import {getResultPreviewInitialState} from '../result-preview/result-preview-state';
+import {HtmlRequestOptions} from '../../api/search/html/html-request.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {getQueryInitialState} from '../query/query-state.js';
+import {getResultPreviewInitialState} from '../result-preview/result-preview-state.js';
 import {
   buildInsightResultPreviewRequest,
   StateNeededByInsightHtmlEndpoint,
-} from './insight-result-preview-request-builder';
+} from './insight-result-preview-request-builder.js';
 
 describe('ResultPreviewRequestBuilder', () => {
   let state: StateNeededByInsightHtmlEndpoint;

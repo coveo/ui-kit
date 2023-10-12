@@ -1,22 +1,22 @@
-import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {ProductListingAppState} from '../../../state/product-listing-app-state';
+import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request.js';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions.js';
+import {ProductListingAppState} from '../../../state/product-listing-app-state.js';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
-} from '../../../test';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
-import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
-import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
+} from '../../../test.js';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response.js';
+import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice.js';
+import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value.js';
+import {buildMockProductListingState} from '../../../test/mock-product-listing-state.js';
+import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search.js';
 import {
   buildCategoryFacet,
   CategoryFacet,
   CategoryFacetOptions,
-} from './headless-product-listing-category-facet';
+} from './headless-product-listing-category-facet.js';
 
 describe('category facet', () => {
   const facetId = '1';

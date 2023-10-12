@@ -1,8 +1,8 @@
 import {EventDescription} from 'coveo.analytics';
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
-import {getPageID} from '../../api/analytics/search-analytics';
-import {AnalyticsParam} from '../../api/search/search-api-params';
-import {AnalyticsState} from './configuration-state';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
+import {getPageID} from '../../api/analytics/search-analytics.js';
+import {AnalyticsParam} from '../../api/search/search-api-params.js';
+import {AnalyticsState} from './configuration-state.js';
 
 export const fromAnalyticsStateToAnalyticsParams = async (
   s: AnalyticsState,

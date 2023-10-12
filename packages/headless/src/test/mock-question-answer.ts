@@ -1,7 +1,7 @@
 import {
   QuestionAnswer,
   QuestionsAnswers,
-} from '../api/search/search/question-answering';
+} from '../api/search/search/question-answering.js';
 
 export function buildMockQuestionAnswer(
   config: Partial<QuestionAnswer> = {}

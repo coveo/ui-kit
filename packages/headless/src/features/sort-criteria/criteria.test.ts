@@ -6,7 +6,7 @@ import {
   buildFieldSortCriterion,
   buildCriterionExpression,
   SortOrder,
-} from './criteria';
+} from './criteria.js';
 
 describe('sort-criterion functions', () => {
   it('#buildRelevanceSortCriterion returns the correct value', () => {

@@ -1,5 +1,5 @@
-import {RecommendationAnalyticsProvider} from '../../api/analytics/recommendations-analytics';
-import {Result} from '../../api/search/search/result';
+import {RecommendationAnalyticsProvider} from '../../api/analytics/recommendations-analytics.js';
+import {Result} from '../../api/search/search/result.js';
 import {
   AnalyticsType,
   ClickAction,
@@ -8,7 +8,7 @@ import {
   partialRecommendationInformation,
   SearchAction,
   validateResultPayload,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logRecommendationUpdate = (): SearchAction =>
   makeAnalyticsAction(

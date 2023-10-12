@@ -1,7 +1,7 @@
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockInsightEngine} from '../../../test/mock-engine';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
-import {logCategoryFacetBreadcrumb} from './category-facet-set-insight-analytics-actions';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
+import {buildMockInsightEngine} from '../../../test/mock-engine.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
+import {logCategoryFacetBreadcrumb} from './category-facet-set-insight-analytics-actions.js';
 
 const mockLogBreadcrumbFacet = jest.fn();
 

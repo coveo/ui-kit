@@ -5,8 +5,8 @@ import {
   Middleware,
   Reducer,
 } from '@reduxjs/toolkit';
-import {logActionMiddleware} from './logger-middlewares';
-import {ThunkExtraArguments} from './thunk-extra-arguments';
+import {logActionMiddleware} from './logger-middlewares.js';
+import {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   reducer: Reducer;

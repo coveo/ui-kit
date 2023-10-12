@@ -1,14 +1,14 @@
-import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
-import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code';
+import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response.js';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
+import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion.js';
+import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code.js';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
   registerQuerySuggest,
-} from './query-suggest-actions';
-import {querySuggestReducer} from './query-suggest-slice';
-import {QuerySuggestSet} from './query-suggest-state';
+} from './query-suggest-actions.js';
+import {querySuggestReducer} from './query-suggest-slice.js';
+import {QuerySuggestSet} from './query-suggest-state.js';
 
 describe('querySuggest slice', () => {
   let state: QuerySuggestSet;

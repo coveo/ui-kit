@@ -2,27 +2,27 @@
  * Utility functions to be used for Server Side Rendering.
  */
 import {AnyAction} from '@reduxjs/toolkit';
-import {Controller} from '../../controllers';
-import {createWaitForActionMiddleware} from '../../utils/utils';
+import {Controller} from '../../controllers/index.js';
+import {createWaitForActionMiddleware} from '../../utils/utils.js';
 import {
   ControllerDefinitionsMap,
   InferControllerPropsMapFromDefinitions,
-} from '../ssr-engine/types/common';
+} from '../ssr-engine/types/common.js';
 import {
   EngineDefinition,
   EngineDefinitionOptions,
-} from '../ssr-engine/types/core-engine';
+} from '../ssr-engine/types/core-engine.js';
 import {
   SearchEngine,
   SearchEngineOptions,
   buildSearchEngine,
-} from './search-engine';
-import {SearchAction} from '../../features/analytics/analytics-utils';
+} from './search-engine.js';
+import {SearchAction} from '../../features/analytics/analytics-utils.js';
 import {
   buildControllerDefinitions,
   composeFunction,
   createStaticState,
-} from '../ssr-engine/common';
+} from '../ssr-engine/common.js';
 
 /**
  * @internal

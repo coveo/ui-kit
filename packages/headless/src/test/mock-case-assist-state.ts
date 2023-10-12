@@ -1,12 +1,12 @@
-import {getCaseAssistConfigurationInitialState} from '../features/case-assist-configuration/case-assist-configuration-state';
-import {getCaseFieldInitialState} from '../features/case-field/case-field-state';
-import {getCaseInputInitialState} from '../features/case-input/case-input-state';
-import {getConfigurationInitialState} from '../features/configuration/configuration-state';
-import {getDebugInitialState} from '../features/debug/debug-state';
-import {getDocumentSuggestionInitialState} from '../features/document-suggestion/document-suggestion-state';
-import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state';
-import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
-import {CaseAssistAppState} from '../state/case-assist-app-state';
+import {getCaseAssistConfigurationInitialState} from '../features/case-assist-configuration/case-assist-configuration-state.js';
+import {getCaseFieldInitialState} from '../features/case-field/case-field-state.js';
+import {getCaseInputInitialState} from '../features/case-input/case-input-state.js';
+import {getConfigurationInitialState} from '../features/configuration/configuration-state.js';
+import {getDebugInitialState} from '../features/debug/debug-state.js';
+import {getDocumentSuggestionInitialState} from '../features/document-suggestion/document-suggestion-state.js';
+import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state.js';
+import {getSearchHubInitialState} from '../features/search-hub/search-hub-state.js';
+import {CaseAssistAppState} from '../state/case-assist-app-state.js';
 
 export function buildMockCaseAssistState(
   config: Partial<CaseAssistAppState> = {}

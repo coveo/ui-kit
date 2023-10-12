@@ -1,15 +1,15 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {FieldDescription} from '../../api/search/fields/fields-response';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {CoreEngine} from '../../app/engine';
-import {fieldsReducer as fields} from '../../features/fields/fields-slice';
-import {ConfigurationSection} from '../../state/state-sections';
+import {FieldDescription} from '../../api/search/fields/fields-response.js';
+import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
+import {CoreEngine} from '../../app/engine.js';
+import {fieldsReducer as fields} from '../../features/fields/fields-slice.js';
+import {ConfigurationSection} from '../../state/state-sections.js';
 import {
   registerFieldsToInclude,
   enableFetchAllFields,
   disableFetchAllFields,
   fetchFieldsDescription,
-} from './fields-actions';
+} from './fields-actions.js';
 
 /**
  * The field action creators.

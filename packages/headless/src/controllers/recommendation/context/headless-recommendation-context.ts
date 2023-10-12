@@ -1,13 +1,13 @@
-import {RecommendationEngine} from '../../../app/recommendation-engine/recommendation-engine';
+import {RecommendationEngine} from '../../../app/recommendation-engine/recommendation-engine.js';
 import {
   ContextPayload,
   ContextValue,
-} from '../../../features/context/context-state';
+} from '../../../features/context/context-state.js';
 import {
   buildCoreContext,
   Context,
   ContextState,
-} from '../../core/context/headless-core-context';
+} from '../../core/context/headless-core-context.js';
 
 export type {Context, ContextState, ContextPayload, ContextValue};
 

@@ -1,5 +1,5 @@
-import {getNegationPrefix, Negatable} from '../common/negatable';
-import {Part} from '../common/part';
+import {getNegationPrefix, Negatable} from '../common/negatable.js';
+import {Part} from '../common/part.js';
 
 export interface ExactMatchExpression extends Negatable {
   /**

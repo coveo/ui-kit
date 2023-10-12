@@ -1,12 +1,12 @@
 import {SearchPageClientProvider} from 'coveo.analytics';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
-import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
+import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state.js';
 import {
   ConfigurationSection,
   ProductRecommendationsSection,
   SearchHubSection,
-} from '../../state/state-sections';
-import {BaseAnalyticsProvider} from './base-analytics';
+} from '../../state/state-sections.js';
+import {BaseAnalyticsProvider} from './base-analytics.js';
 
 export type StateNeededByProductRecommendationsAnalyticsProvider =
   ConfigurationSection &

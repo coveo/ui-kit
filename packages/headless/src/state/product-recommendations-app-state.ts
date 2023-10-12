@@ -5,7 +5,7 @@ import {
   ProductRecommendationsSection,
   SearchHubSection,
   VersionSection,
-} from './state-sections';
+} from './state-sections.js';
 
 export type ProductRecommendationsAppState = ConfigurationSection &
   ProductRecommendationsSection &

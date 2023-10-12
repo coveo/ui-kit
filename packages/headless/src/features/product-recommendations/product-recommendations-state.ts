@@ -1,5 +1,5 @@
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation.js';
 
 export type ProductRecommendationsState = {
   id: string;

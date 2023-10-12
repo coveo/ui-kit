@@ -1,16 +1,16 @@
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {buildFetchProductListingResponse} from '../../test/mock-product-listing';
-import {buildMockProductRecommendation} from '../../test/mock-product-recommendation';
+import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
+import {buildFetchProductListingResponse} from '../../test/mock-product-listing.js';
+import {buildMockProductRecommendation} from '../../test/mock-product-recommendation.js';
 import {
   fetchProductListing,
   setAdditionalFields,
   setProductListingUrl,
-} from './product-listing-actions';
-import {productListingReducer} from './product-listing-slice';
+} from './product-listing-actions.js';
+import {productListingReducer} from './product-listing-slice.js';
 import {
   getProductListingInitialState,
   ProductListingState,
-} from './product-listing-state';
+} from './product-listing-state.js';
 
 describe('product-listing-slice', () => {
   let state: ProductListingState;

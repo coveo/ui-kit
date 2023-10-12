@@ -2,8 +2,8 @@ import {
   AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
-} from '../analytics/analytics-utils';
-import {getSortCriteriaInitialState} from './sort-criteria-state';
+} from '../analytics/analytics-utils.js';
+import {getSortCriteriaInitialState} from './sort-criteria-state.js';
 
 export const logResultsSort = (): SearchAction =>
   makeAnalyticsAction(

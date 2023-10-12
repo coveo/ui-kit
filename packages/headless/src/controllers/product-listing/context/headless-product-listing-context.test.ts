@@ -1,8 +1,8 @@
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
-} from '../../../test/mock-engine';
-import {buildContext, Context} from './headless-product-listing-context';
+} from '../../../test/mock-engine.js';
+import {buildContext, Context} from './headless-product-listing-context.js';
 
 describe('Context', () => {
   let context: Context;

@@ -1,8 +1,8 @@
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {ProductRecommendation} from '../../../api/search/search/product-recommendation';
-import {AnyFacetResponse} from '../../facets/generic/interfaces/generic-facet-response';
-import {buildRelevanceSortCriterion} from '../../sort/sort';
-import {Sort} from './sort/product-listing-sort';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import {ProductRecommendation} from '../../../api/search/search/product-recommendation.js';
+import {AnyFacetResponse} from '../../facets/generic/interfaces/generic-facet-response.js';
+import {buildRelevanceSortCriterion} from '../../sort/sort.js';
+import {Sort} from './sort/product-listing-sort.js';
 
 export interface ProductListingV2State {
   error: CommerceAPIErrorStatusResponse | null;

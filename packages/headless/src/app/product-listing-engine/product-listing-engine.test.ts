@@ -2,8 +2,8 @@ import {
   buildProductListingEngine,
   ProductListingEngine,
   ProductListingEngineOptions,
-} from './product-listing-engine';
-import {getSampleProductListingEngineConfiguration} from './product-listing-engine-configuration';
+} from './product-listing-engine.js';
+import {getSampleProductListingEngineConfiguration} from './product-listing-engine-configuration.js';
 
 describe('buildProductListingEngine', () => {
   let options: ProductListingEngineOptions;

@@ -3,8 +3,8 @@ import {
   fetchProductListing,
   setAdditionalFields,
   setProductListingUrl,
-} from './product-listing-actions';
-import {getProductListingInitialState} from './product-listing-state';
+} from './product-listing-actions.js';
+import {getProductListingInitialState} from './product-listing-state.js';
 
 export const productListingReducer = createReducer(
   getProductListingInitialState(),

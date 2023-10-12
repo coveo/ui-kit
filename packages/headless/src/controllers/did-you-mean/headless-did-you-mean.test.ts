@@ -1,13 +1,13 @@
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
-} from '../../features/did-you-mean/did-you-mean-actions';
-import {executeSearch} from '../../features/search/search-actions';
+} from '../../features/did-you-mean/did-you-mean-actions.js';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
-import {buildDidYouMean, DidYouMean} from './headless-did-you-mean';
+} from '../../test/mock-engine.js';
+import {buildDidYouMean, DidYouMean} from './headless-did-you-mean.js';
 
 describe('did you mean', () => {
   let dym: DidYouMean;

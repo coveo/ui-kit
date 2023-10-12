@@ -1,11 +1,11 @@
-import {buildMockProductListingAPIClient} from '../../../test/mock-product-listing-api-client';
-import {PlatformClient} from '../../platform-client';
-import {ProductListingAPIClient} from './product-listing-api-client';
+import {buildMockProductListingAPIClient} from '../../../test/mock-product-listing-api-client.js';
+import {PlatformClient} from '../../platform-client.js';
+import {ProductListingAPIClient} from './product-listing-api-client.js';
 import {
   ProductListingRequest,
   ProductListingSuccessResponse,
-} from './product-listing-request';
-import {buildRelevanceSortCriterion} from '../../../features/sort/sort';
+} from './product-listing-request.js';
+import {buildRelevanceSortCriterion} from '../../../features/sort/sort.js';
 
 describe('product listing api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';

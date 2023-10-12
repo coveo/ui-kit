@@ -1,23 +1,23 @@
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   streamAnswer,
   resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
-} from '../../features/generated-answer/generated-answer-actions';
+} from '../../features/generated-answer/generated-answer-actions.js';
 import {
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
-} from '../../features/generated-answer/generated-answer-analytics-actions';
-import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
-import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
-import {executeSearch} from '../../features/search/search-actions';
-import {GeneratedAnswerSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {Controller, buildController} from '../controller/headless-controller';
+} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice.js';
+import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {GeneratedAnswerSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {Controller, buildController} from '../controller/headless-controller.js';
 
 export type {GeneratedAnswerState, GeneratedAnswerCitation};
 

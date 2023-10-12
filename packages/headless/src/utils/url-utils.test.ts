@@ -1,4 +1,4 @@
-import {matchCoveoOrganizationEndpointUrl, URLPath} from './url-utils';
+import {matchCoveoOrganizationEndpointUrl, URLPath} from './url-utils.js';
 
 describe('URLPath', () => {
   const testBasePath = 'https://www.test.com';

@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {questionAnsweringReducer as questionAnswering} from '../../features/question-answering/question-answering-slice';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {questionAnsweringReducer as questionAnswering} from '../../features/question-answering/question-answering-slice.js';
 import {
   collapseSmartSnippet,
   dislikeSmartSnippet,
@@ -10,8 +10,8 @@ import {
   closeFeedbackModal,
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
-} from './question-answering-actions';
-import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-answering-document-id';
+} from './question-answering-actions.js';
+import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-answering-document-id.js';
 
 /**
  * The question answering action creators.

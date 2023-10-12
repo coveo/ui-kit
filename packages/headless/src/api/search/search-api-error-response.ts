@@ -1,5 +1,5 @@
-import {DisconnectedError} from '../../utils/errors';
-import {QueryException} from './search/query-exception';
+import {DisconnectedError} from '../../utils/errors.js';
+import {QueryException} from './search/query-exception.js';
 
 export interface SearchAPIErrorWithStatusCode {
   statusCode: number;

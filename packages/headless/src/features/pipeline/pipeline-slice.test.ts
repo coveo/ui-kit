@@ -1,9 +1,9 @@
-import {updateSearchConfiguration} from '../configuration/configuration-actions';
-import {change} from '../history/history-actions';
-import {getHistoryInitialState} from '../history/history-state';
-import {setPipeline} from './pipeline-actions';
-import {pipelineReducer} from './pipeline-slice';
-import {getPipelineInitialState} from './pipeline-state';
+import {updateSearchConfiguration} from '../configuration/configuration-actions.js';
+import {change} from '../history/history-actions.js';
+import {getHistoryInitialState} from '../history/history-state.js';
+import {setPipeline} from './pipeline-actions.js';
+import {pipelineReducer} from './pipeline-slice.js';
+import {getPipelineInitialState} from './pipeline-state.js';
 
 describe('pipeline slice', () => {
   it('should have initial state', () => {

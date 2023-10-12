@@ -1,7 +1,7 @@
-import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request';
-import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
-import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
-import {SortCriterion} from '../../features/sort/sort';
+import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request.js';
+import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request.js';
+import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet.js';
+import {SortCriterion} from '../../features/sort/sort.js';
 
 export interface TrackingIdParam {
   trackingId: string;

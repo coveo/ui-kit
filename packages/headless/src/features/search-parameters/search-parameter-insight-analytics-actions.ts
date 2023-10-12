@@ -1,14 +1,14 @@
-import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
-import {InsightAction} from '../analytics/analytics-utils';
-import {logInsightInterfaceChange} from '../analytics/insight-analytics-actions';
+import {DateRangeRequest, NumericRangeRequest} from '../../controllers/index.js';
+import {InsightAction} from '../analytics/analytics-utils.js';
+import {logInsightInterfaceChange} from '../analytics/insight-analytics-actions.js';
 import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
-} from '../facets/facet-set/facet-set-insight-analytics-actions';
-import {logSearchboxSubmit} from '../query/query-insight-analytics-actions';
-import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
-import {SearchParameters} from './search-parameter-actions';
+} from '../facets/facet-set/facet-set-insight-analytics-actions.js';
+import {logSearchboxSubmit} from '../query/query-insight-analytics-actions.js';
+import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions.js';
+import {SearchParameters} from './search-parameter-actions.js';
 
 export function logParametersChange(
   previousParameters: SearchParameters,

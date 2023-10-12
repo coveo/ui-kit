@@ -1,23 +1,23 @@
-import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {ProductListingAppState} from '../../../state/product-listing-app-state';
+import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions.js';
+import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions.js';
+import {ProductListingAppState} from '../../../state/product-listing-app-state.js';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
-} from '../../../test/mock-engine';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
-import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search';
+} from '../../../test/mock-engine.js';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
+import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
+import {buildMockProductListingState} from '../../../test/mock-product-listing-state.js';
+import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search.js';
 import {
   buildFacet,
   Facet,
   FacetOptions,
-} from './headless-product-listing-facet';
+} from './headless-product-listing-facet.js';
 
 describe('facet', () => {
   const facetId = '1';

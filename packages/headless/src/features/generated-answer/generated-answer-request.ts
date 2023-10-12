@@ -1,9 +1,9 @@
-import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request';
+import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import {
   ConfigurationSection,
   GeneratedAnswerSection,
   SearchSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &

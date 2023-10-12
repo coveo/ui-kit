@@ -1,14 +1,14 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {didYouMeanReducer as didYouMean} from '../../features/did-you-mean/did-you-mean-slice';
-import {queryReducer as query} from '../../features/query/query-slice';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {didYouMeanReducer as didYouMean} from '../../features/did-you-mean/did-you-mean-slice.js';
+import {queryReducer as query} from '../../features/query/query-slice.js';
 import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   disableDidYouMean,
   enableAutomaticQueryCorrection,
   enableDidYouMean,
-} from './did-you-mean-actions';
+} from './did-you-mean-actions.js';
 
 /**
  * The DidYouMean action creators.

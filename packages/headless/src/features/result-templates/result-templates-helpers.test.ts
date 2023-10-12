@@ -1,12 +1,12 @@
-import {buildMockRaw} from '../../test/mock-raw';
-import {buildMockResult} from '../../test/mock-result';
+import {buildMockRaw} from '../../test/mock-raw.js';
+import {buildMockResult} from '../../test/mock-result.js';
 import {
   fieldMustMatch,
   fieldMustNotMatch,
   fieldsMustBeDefined,
   fieldsMustNotBeDefined,
   getResultProperty,
-} from './result-templates-helpers';
+} from './result-templates-helpers.js';
 
 describe('result template helpers', () => {
   function buildResult(fieldName: string, fieldValues: unknown) {

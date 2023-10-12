@@ -1,6 +1,6 @@
 import {SchemaValidationError} from '@coveo/bueno';
-import {buildMockSearchAppEngine} from '../test';
-import {serializeSchemaValidationError} from '../utils/validate-payload';
+import {buildMockSearchAppEngine} from '../test.js';
+import {serializeSchemaValidationError} from '../utils/validate-payload.js';
 
 describe('logActionErrorMiddleware', () => {
   it(`when a action has no error parameter

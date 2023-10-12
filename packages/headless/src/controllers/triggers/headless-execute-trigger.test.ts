@@ -1,11 +1,11 @@
-import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
-import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
-import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state';
+import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions.js';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
+import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
-import {ExecuteTrigger, buildExecuteTrigger} from './headless-execute-trigger';
+} from '../../test/mock-engine.js';
+import {ExecuteTrigger, buildExecuteTrigger} from './headless-execute-trigger.js';
 
 describe('ExecuteTrigger', () => {
   let engine: MockSearchEngine;

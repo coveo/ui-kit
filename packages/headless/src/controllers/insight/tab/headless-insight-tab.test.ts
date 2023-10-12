@@ -1,14 +1,14 @@
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine.js';
 import {
   buildTab,
   Tab,
   TabInitialState,
   TabOptions,
-} from './headless-insight-tab';
+} from './headless-insight-tab.js';
 
 describe('insight Tab', () => {
   let engine: MockInsightEngine;

@@ -1,15 +1,15 @@
-import {buildMockRaw, buildMockResult} from '../../test';
+import {buildMockRaw, buildMockResult} from '../../test.js';
 import {
   MockInsightEngine,
   buildMockInsightEngine,
-} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockSearchState} from '../../test/mock-search-state';
+} from '../../test/mock-engine.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {
   logShowMoreFoldedResults,
   logShowLessFoldedResults,
-} from './folding-insight-analytics-actions';
-import {getFoldingInitialState} from './folding-state';
+} from './folding-insight-analytics-actions.js';
+import {getFoldingInitialState} from './folding-state.js';
 
 const mockLogShowMoreFoldedResults = jest.fn();
 const mockLogShowLessFoldedResults = jest.fn();

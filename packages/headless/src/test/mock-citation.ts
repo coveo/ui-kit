@@ -1,4 +1,4 @@
-import {GeneratedAnswerCitation} from '../controllers';
+import {GeneratedAnswerCitation} from '../controllers/index.js';
 
 /**
  * For internal use only.

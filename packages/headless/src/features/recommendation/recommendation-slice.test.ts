@@ -1,14 +1,14 @@
-import {buildMockResult} from '../../test';
-import {buildMockRecommendation} from '../../test/mock-recommendation';
+import {buildMockResult} from '../../test.js';
+import {buildMockRecommendation} from '../../test/mock-recommendation.js';
 import {
   getRecommendations,
   setRecommendationId,
-} from './recommendation-actions';
-import {recommendationReducer} from './recommendation-slice';
+} from './recommendation-actions.js';
+import {recommendationReducer} from './recommendation-slice.js';
 import {
   getRecommendationInitialState,
   RecommendationState,
-} from './recommendation-state';
+} from './recommendation-state.js';
 
 describe('recommendation slice', () => {
   let state: RecommendationState;

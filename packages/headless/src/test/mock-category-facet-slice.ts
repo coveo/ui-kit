@@ -1,5 +1,5 @@
-import {CategoryFacetSlice} from '../features/facets/category-facet-set/category-facet-set-state';
-import {buildMockCategoryFacetRequest} from './mock-category-facet-request';
+import {CategoryFacetSlice} from '../features/facets/category-facet-set/category-facet-set-state.js';
+import {buildMockCategoryFacetRequest} from './mock-category-facet-request.js';
 
 export function buildMockCategoryFacetSlice(
   config: Partial<CategoryFacetSlice> = {}

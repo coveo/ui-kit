@@ -1,7 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine';
-import {debugReducer as debug} from '../../features/debug/debug-slice';
-import {disableDebug, enableDebug} from './debug-actions';
+import {CoreEngine} from '../../app/engine.js';
+import {debugReducer as debug} from '../../features/debug/debug-slice.js';
+import {disableDebug, enableDebug} from './debug-actions.js';
 
 /**
  * The debug action creators.

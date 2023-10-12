@@ -3,7 +3,7 @@ import {
   AnalyticsType,
   CustomAction,
   SearchAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logClearRecentQueries = (): CustomAction =>
   makeAnalyticsAction(

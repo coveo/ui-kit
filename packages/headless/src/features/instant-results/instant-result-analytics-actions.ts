@@ -1,5 +1,5 @@
-import {InstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
-import {Result} from '../../api/search/search/result';
+import {InstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics.js';
+import {Result} from '../../api/search/search/result.js';
 import {
   partialDocumentInformation,
   documentIdentifier,
@@ -8,7 +8,7 @@ import {
   AnalyticsType,
   InstantResultsSearchAction,
   InstantResultsClickAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logInstantResultOpen = (
   result: Result

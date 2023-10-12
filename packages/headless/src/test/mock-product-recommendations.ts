@@ -1,6 +1,6 @@
-import {logInterfaceLoad} from '../features/analytics/analytics-actions';
-import {GetProductRecommendationsThunkReturn} from '../features/product-recommendations/product-recommendations-actions';
-import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
+import {logInterfaceLoad} from '../features/analytics/analytics-actions.js';
+import {GetProductRecommendationsThunkReturn} from '../features/product-recommendations/product-recommendations-actions.js';
+import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state.js';
 
 export function buildMockProductRecommendations(
   config: Partial<ProductRecommendationsState> = {}

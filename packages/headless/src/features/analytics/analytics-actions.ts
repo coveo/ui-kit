@@ -1,11 +1,11 @@
-import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {Result} from '../../api/search/search/result';
+import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
+import {Result} from '../../api/search/search/result.js';
 import {
   validatePayload,
   requiredNonEmptyString,
   nonEmptyString,
-} from '../../utils/validate-payload';
-import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
+} from '../../utils/validate-payload.js';
+import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
 import {
   AnalyticsType,
   ClickAction,
@@ -15,7 +15,7 @@ import {
   partialDocumentInformation,
   SearchAction,
   validateResultPayload,
-} from './analytics-utils';
+} from './analytics-utils.js';
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */

@@ -4,7 +4,7 @@ import {
   LocaleParam,
   NumberOfResultsParam,
   VisitorIDParam,
-} from '../../platform-service-params';
+} from '../../platform-service-params.js';
 import {
   ActionsHistoryParam,
   FieldsToIncludeParam,
@@ -12,7 +12,7 @@ import {
   RecommendationParam,
   SearchHubParam,
   TimezoneParam,
-} from '../search-api-params';
+} from '../search-api-params.js';
 
 export type ProductRecommendationsRequest = BaseParam &
   FieldsToIncludeParam &

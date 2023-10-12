@@ -1,4 +1,4 @@
-import {Result} from '../../insight.index';
+import {Result} from '../../insight.index.js';
 import {
   AnalyticsType,
   documentIdentifier,
@@ -6,8 +6,8 @@ import {
   makeInsightAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
-} from '../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+} from '../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 
 export const logCopyToClipboard = (
   result: Result

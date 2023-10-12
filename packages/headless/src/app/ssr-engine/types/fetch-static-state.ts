@@ -6,9 +6,9 @@ import {
   EngineDefinitionControllersPropsOption,
   EngineStaticState,
   OptionsTuple,
-} from './common';
-import {CoreEngine} from '../../engine';
-import {FromBuildResult} from './from-build-result';
+} from './common.js';
+import {CoreEngine} from '../../engine.js';
+import {FromBuildResult} from './from-build-result.js';
 
 export type FetchStaticStateOptions = {};
 

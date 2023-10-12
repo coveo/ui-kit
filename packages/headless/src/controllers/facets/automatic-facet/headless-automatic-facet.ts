@@ -1,16 +1,16 @@
-import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
-} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {logFacetClearAll} from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
-import {executeSearch} from '../../../features/search/search-actions';
+} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
+import {logFacetClearAll} from '../../../features/facets/facet-set/facet-set-analytics-actions.js';
+import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils.js';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
+import {executeSearch} from '../../../features/search/search-actions.js';
 import {
   Controller,
   buildController,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Automatic Facet` controller.

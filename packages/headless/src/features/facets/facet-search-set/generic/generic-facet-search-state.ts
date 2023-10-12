@@ -4,7 +4,7 @@ import {
   ConfigurationSection,
   FacetSearchSection,
   FacetSection,
-} from '../../../../state/state-sections';
+} from '../../../../state/state-sections.js';
 
 export type StateNeededForSpecificFacetSearch = ConfigurationSection &
   FacetSearchSection &

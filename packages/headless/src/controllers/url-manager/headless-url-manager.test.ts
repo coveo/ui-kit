@@ -1,12 +1,12 @@
-import {configuration} from '../../app/common-reducers';
+import {configuration} from '../../app/common-reducers.js';
 import {
   restoreSearchParameters,
   SearchParameters,
-} from '../../features/search-parameters/search-parameter-actions';
-import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
-import {executeSearch} from '../../features/search/search-actions';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
-import {UrlManager, buildUrlManager} from './headless-url-manager';
+} from '../../features/search-parameters/search-parameter-actions.js';
+import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../test.js';
+import {UrlManager, buildUrlManager} from './headless-url-manager.js';
 
 describe('url manager', () => {
   let engine: MockSearchEngine;

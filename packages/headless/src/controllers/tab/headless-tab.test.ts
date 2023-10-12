@@ -1,9 +1,9 @@
-import {executeSearch} from '../../features/search/search-actions';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
-} from '../../test/mock-engine';
-import {buildTab, Tab, TabProps} from './headless-tab';
+} from '../../test/mock-engine.js';
+import {buildTab, Tab, TabProps} from './headless-tab.js';
 
 describe('Tab', () => {
   const expression = 'abc123';

@@ -1,7 +1,7 @@
-import {BaseFacetResponse} from '../../facet-api/response';
-import {CategoryFacetValueCommon} from './commons';
+import {BaseFacetResponse} from '../../facet-api/response.js';
+import {CategoryFacetValueCommon} from './commons.js';
 
-export type {CategoryFacetValueCommon} from './commons';
+export type {CategoryFacetValueCommon} from './commons.js';
 export interface CategoryFacetValue extends CategoryFacetValueCommon {
   /**
    * The number of results that match the facet value.

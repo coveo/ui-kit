@@ -1,4 +1,4 @@
-import {CategoryFacetSearchResponse} from '../api/search/facet-search/category-facet-search/category-facet-search-response';
+import {CategoryFacetSearchResponse} from '../api/search/facet-search/category-facet-search/category-facet-search-response.js';
 
 export function buildMockCategoryFacetSearchResponse(
   config: Partial<CategoryFacetSearchResponse> = {}

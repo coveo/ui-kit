@@ -1,6 +1,6 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {loadCollection} from '../../features/folding/folding-actions';
-import {foldedResultAnalyticsClient} from '../../features/folding/folding-analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {loadCollection} from '../../features/folding/folding-actions.js';
+import {foldedResultAnalyticsClient} from '../../features/folding/folding-analytics-actions.js';
 import {
   buildCoreFoldedResultList,
   FoldingOptions,
@@ -9,7 +9,7 @@ import {
   FoldedResultListState,
   FoldedCollection,
   FoldedResult,
-} from '../core/folded-result-list/headless-core-folded-result-list';
+} from '../core/folded-result-list/headless-core-folded-result-list.js';
 
 export type {
   FoldedResultListOptions,

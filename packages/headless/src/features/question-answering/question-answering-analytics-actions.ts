@@ -1,4 +1,4 @@
-import {validatePayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload.js';
 import {
   AnalyticsType,
   ClickAction,
@@ -6,18 +6,18 @@ import {
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 import {
   inlineLinkPayloadDefinition,
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   uniqueIdentifierPayloadDefinition,
   validateQuestionAnsweringActionCreatorPayload,
-} from './question-answering-document-id';
+} from './question-answering-document-id.js';
 import {
   answerSourceSelector,
   relatedQuestionSelector,
-} from './question-answering-selectors';
+} from './question-answering-selectors.js';
 
 export type SmartSnippetFeedback =
   | 'does_not_answer'

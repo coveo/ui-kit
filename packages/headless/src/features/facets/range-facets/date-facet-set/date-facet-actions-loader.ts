@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../../../app/engine';
-import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice';
+import {CoreEngine} from '../../../../app/engine.js';
+import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
 import {
   deselectAllDateFacetValues,
   registerDateFacet,
@@ -12,7 +12,7 @@ import {
   UpdateDateFacetValuesActionCreatorPayload,
   updateDateFacetValues,
   toggleExcludeDateFacetValue,
-} from './date-facet-actions';
+} from './date-facet-actions.js';
 
 export type {
   RegisterDateFacetActionCreatorPayload,

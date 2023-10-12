@@ -1,11 +1,11 @@
 import {
   buildMockProductRecommendationsAppEngine,
   MockProductRecommendationEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildCartRecommendationsList,
   CartRecommendationsList,
-} from './headless-cart-recommendations';
+} from './headless-cart-recommendations.js';
 
 describe('headless cart-recommendations', () => {
   let cartRecommender: CartRecommendationsList;

@@ -1,18 +1,18 @@
-import {PlatformClient} from '../../api/platform-client';
+import {PlatformClient} from '../../api/platform-client.js';
 import {
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
-} from '../../test';
-import {buildMockFieldDescription} from '../../test/mock-field-description';
+} from '../../test.js';
+import {buildMockFieldDescription} from '../../test/mock-field-description.js';
 import {
   disableFetchAllFields,
   enableFetchAllFields,
   fetchFieldsDescription,
   registerFieldsToInclude,
-} from './fields-actions';
-import {fieldsReducer} from './fields-slice';
-import {FieldsState, getFieldsInitialState} from './fields-state';
+} from './fields-actions.js';
+import {fieldsReducer} from './fields-slice.js';
+import {FieldsState, getFieldsInitialState} from './fields-state.js';
 
 describe('fields slice', () => {
   it('should have initial state', () => {

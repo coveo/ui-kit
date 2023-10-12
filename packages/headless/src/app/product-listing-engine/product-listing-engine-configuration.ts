@@ -3,7 +3,7 @@ import {
   EngineConfiguration,
   engineConfigurationDefinitions,
   getSampleEngineConfiguration,
-} from '../engine-configuration';
+} from '../engine-configuration.js';
 
 /**
  * The product listing engine configuration.

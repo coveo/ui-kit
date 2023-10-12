@@ -1,16 +1,16 @@
-import {AutomaticFacet, SearchAppState, buildAutomaticFacet} from '../../..';
+import {AutomaticFacet, SearchAppState, buildAutomaticFacet} from '../../../index.js';
 import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
-} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
-import {executeSearch} from '../../../features/search/search-actions';
+} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
+import {executeSearch} from '../../../features/search/search-actions.js';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
   createMockState,
-} from '../../../test';
-import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
+} from '../../../test.js';
+import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice.js';
+import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
 
 describe('automatic facet', () => {
   const field = 'field';

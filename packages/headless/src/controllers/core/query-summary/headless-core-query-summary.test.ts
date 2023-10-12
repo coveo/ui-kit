@@ -1,16 +1,16 @@
-import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {SearchAppState} from '../../../state/search-app-state';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
-} from '../../../test';
+} from '../../../test.js';
 import {
   buildCoreQuerySummary,
   QuerySummary,
-} from './headless-core-query-summary';
+} from './headless-core-query-summary.js';
 
 describe('CoreQuerySummary', () => {
   let engine: MockSearchEngine;

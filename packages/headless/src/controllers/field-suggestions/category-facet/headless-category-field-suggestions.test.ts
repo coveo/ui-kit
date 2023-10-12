@@ -1,20 +1,20 @@
-import {SearchAppState} from '../../..';
-import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
-import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {SearchAppState} from '../../../index.js';
+import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request.js';
+import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
-} from '../../../test';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+} from '../../../test.js';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
+import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice.js';
 import {
   buildCategoryFieldSuggestions,
   CategoryFieldSuggestions,
   CategoryFieldSuggestionsOptions,
-} from './headless-category-field-suggestions';
+} from './headless-category-field-suggestions.js';
 
 describe('categoryFieldSuggestions', () => {
   const facetId = 'id';

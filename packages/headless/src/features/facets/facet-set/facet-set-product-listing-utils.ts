@@ -1,10 +1,10 @@
-import {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils';
+import {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils.js';
 import {
   logFacetDeselect,
   logFacetSelect,
   logFacetExclude,
-} from './facet-set-product-listing-analytics-actions';
-import {FacetValue} from './interfaces/response';
+} from './facet-set-product-listing-analytics-actions.js';
+import {FacetValue} from './interfaces/response.js';
 
 export const isFacetValueSelected = (value: FacetValue) => {
   return value.state === 'selected';

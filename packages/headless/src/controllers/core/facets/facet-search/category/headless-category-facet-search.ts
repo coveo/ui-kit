@@ -1,16 +1,16 @@
-import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
-import {CoreEngine} from '../../../../../app/engine';
+import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import {CoreEngine} from '../../../../../app/engine.js';
 import {
   registerCategoryFacetSearch,
   selectCategoryFacetSearchResult,
-} from '../../../../../features/facets/facet-search-set/category/category-facet-search-actions';
-import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
-import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
+} from '../../../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
+import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers.js';
+import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options.js';
 import {
   CategoryFacetSearchSection,
   ConfigurationSection,
-} from '../../../../../state/state-sections';
-import {buildGenericFacetSearch} from '../facet-search';
+} from '../../../../../state/state-sections.js';
+import {buildGenericFacetSearch} from '../facet-search.js';
 
 export interface CategoryFacetSearchProps {
   options: FacetSearchOptions;

@@ -1,7 +1,7 @@
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
-import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config';
-import {determineFacetId} from './facet-id-determinor';
-import * as FacetIdGenerator from './facet-id-generator';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test.js';
+import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config.js';
+import {determineFacetId} from './facet-id-determinor.js';
+import * as FacetIdGenerator from './facet-id-generator.js';
 
 describe('#determineFacetId', () => {
   let engine: MockSearchEngine;

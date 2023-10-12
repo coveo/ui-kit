@@ -1,14 +1,14 @@
-import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
-import {SearchAppState} from '../../../state/search-app-state';
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
 import {
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
-} from '../../../test';
+} from '../../../test.js';
 import {
   BreadcrumbManager,
   buildCoreBreadcrumbManager,
-} from './headless-core-breadcrumb-manager';
+} from './headless-core-breadcrumb-manager.js';
 
 describe('headless breadcrumb manager', () => {
   let engine: MockSearchEngine;

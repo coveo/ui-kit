@@ -1,21 +1,21 @@
-import {configuration} from '../../../../app/common-reducers';
-import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {searchReducer as search} from '../../../../features/search/search-slice';
-import {ProductListingAppState} from '../../../../state/product-listing-app-state';
+import {configuration} from '../../../../app/common-reducers.js';
+import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions.js';
+import {searchReducer as search} from '../../../../features/search/search-slice.js';
+import {ProductListingAppState} from '../../../../state/product-listing-app-state.js';
 import {
   MockProductListingEngine,
   buildMockProductListingEngine,
-} from '../../../../test/mock-engine';
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
+} from '../../../../test/mock-engine.js';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import {buildMockProductListingState} from '../../../../test/mock-product-listing-state.js';
 import {
   NumericFacet,
   buildNumericFacet,
   NumericFacetOptions,
-} from './headless-product-listing-numeric-facet';
+} from './headless-product-listing-numeric-facet.js';
 
 describe('numeric facet', () => {
   const facetId = '1';

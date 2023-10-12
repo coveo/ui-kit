@@ -7,8 +7,8 @@ import {
   setProductRecommendationsMaxNumberOfRecommendations,
   setProductRecommendationsAdditionalFields,
   setProductRecommendationsRecommenderId,
-} from './product-recommendations-actions';
-import {getProductRecommendationsInitialState} from './product-recommendations-state';
+} from './product-recommendations-actions.js';
+import {getProductRecommendationsInitialState} from './product-recommendations-state.js';
 
 export const productRecommendationsReducer = createReducer(
   getProductRecommendationsInitialState(),

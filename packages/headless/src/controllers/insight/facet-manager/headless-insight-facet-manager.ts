@@ -1,10 +1,10 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
   buildCoreFacetManager,
   FacetManagerState,
   FacetManagerPayload,
   FacetManager,
-} from '../../core/facet-manager/headless-core-facet-manager';
+} from '../../core/facet-manager/headless-core-facet-manager.js';
 
 export type {FacetManagerState, FacetManagerPayload, FacetManager};
 

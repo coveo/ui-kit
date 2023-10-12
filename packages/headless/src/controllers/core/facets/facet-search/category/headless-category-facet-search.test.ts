@@ -1,19 +1,19 @@
 import {
   registerCategoryFacetSearch,
   selectCategoryFacetSearchResult,
-} from '../../../../../features/facets/facet-search-set/category/category-facet-search-actions';
-import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
-import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search';
-import {buildMockCategoryFacetSearchResult} from '../../../../../test/mock-category-facet-search-result';
+} from '../../../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
+import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers.js';
+import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
+import {buildMockCategoryFacetSearchResult} from '../../../../../test/mock-category-facet-search-result.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../../../test/mock-engine';
+} from '../../../../../test/mock-engine.js';
 import {
   CategoryFacetSearchProps,
   CategoryFacetSearch,
   buildCoreCategoryFacetSearch,
-} from './headless-category-facet-search';
+} from './headless-category-facet-search.js';
 
 describe('CategoryFacetSearch', () => {
   const facetId = '1';

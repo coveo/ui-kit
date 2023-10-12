@@ -1,15 +1,15 @@
 import {fetchEventSource} from '@microsoft/fetch-event-source';
 import {Logger} from 'pino';
-import {SearchAppState} from '../..';
-import {AsyncThunkOptions} from '../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {GeneratedAnswerErrorPayload} from '../../features/generated-answer/generated-answer-actions';
-import {createAbortController} from '../../utils/abort-controller-polyfill';
-import {URLPath} from '../../utils/url-utils';
-import {resetTimeout} from '../../utils/utils';
-import {SearchAPIClient} from '../search/search-api-client';
-import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload';
-import {GeneratedAnswerStreamRequest} from './generated-answer-request';
+import {SearchAppState} from '../../index.js';
+import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {GeneratedAnswerErrorPayload} from '../../features/generated-answer/generated-answer-actions.js';
+import {createAbortController} from '../../utils/abort-controller-polyfill.js';
+import {URLPath} from '../../utils/url-utils.js';
+import {resetTimeout} from '../../utils/utils.js';
+import {SearchAPIClient} from '../search/search-api-client.js';
+import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload.js';
+import {GeneratedAnswerStreamRequest} from './generated-answer-request.js';
 
 export interface GeneratedAnswerAPIClientOptions {
   logger: Logger;

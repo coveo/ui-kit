@@ -1,11 +1,11 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
-import {change} from '../history/history-actions';
-import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {executeSearch} from '../search/search-actions';
-import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
-import {getQuerySetInitialState, QuerySetState} from './query-set-state';
+import {change} from '../history/history-actions.js';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../search/search-actions.js';
+import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions.js';
+import {getQuerySetInitialState, QuerySetState} from './query-set-state.js';
 
 export const querySetReducer = createReducer(
   getQuerySetInitialState(),

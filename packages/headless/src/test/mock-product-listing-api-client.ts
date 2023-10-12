@@ -1,10 +1,10 @@
-import pino from 'pino';
+import {pino} from 'pino';
 import {
   ProductListingAPIClient,
   ProductListingAPIClientOptions,
-} from '../api/commerce/product-listings/product-listing-api-client';
-import {NoopPreprocessRequest} from '../api/preprocess-request';
-import {buildMockSearchAPIClient} from './mock-search-api-client';
+} from '../api/commerce/product-listings/product-listing-api-client.js';
+import {NoopPreprocessRequest} from '../api/preprocess-request.js';
+import {buildMockSearchAPIClient} from './mock-search-api-client.js';
 
 export function buildMockProductListingAPIClient(
   options?: Partial<ProductListingAPIClientOptions>

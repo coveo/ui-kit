@@ -1,15 +1,15 @@
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {configuration} from '../../../app/common-reducers';
-import {ProductRecommendation} from '../../../commerce.index';
-import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
-import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
-import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
-import {loadReducerError} from '../../../utils/errors';
+import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {ProductRecommendation} from '../../../commerce.index.js';
+import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions.js';
+import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice.js';
+import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.

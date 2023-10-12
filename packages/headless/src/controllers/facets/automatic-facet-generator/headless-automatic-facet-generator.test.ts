@@ -1,20 +1,20 @@
-import {configuration} from '../../../app/common-reducers';
-import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions';
+import {configuration} from '../../../app/common-reducers.js';
+import {setOptions} from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
 import {
   DESIRED_COUNT_MAXIMUM,
   DESIRED_COUNT_MINIMUM,
   NUMBER_OF_VALUE_DEFAULT,
   NUMBER_OF_VALUE_MINIMUM,
-} from '../../../features/facets/automatic-facet-set/automatic-facet-set-constants';
-import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {MockSearchEngine, buildMockSearchAppEngine} from '../../../test';
+} from '../../../features/facets/automatic-facet-set/automatic-facet-set-constants.js';
+import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {MockSearchEngine, buildMockSearchAppEngine} from '../../../test.js';
 import {
   AutomaticFacetGeneratorProps,
   AutomaticFacetGenerator,
   buildAutomaticFacetGenerator,
   AutomaticFacetGeneratorOptions,
-} from './headless-automatic-facet-generator';
+} from './headless-automatic-facet-generator.js';
 
 describe('automatic facets', () => {
   let engine: MockSearchEngine;

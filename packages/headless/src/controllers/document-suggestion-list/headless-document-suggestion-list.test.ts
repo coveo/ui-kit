@@ -1,18 +1,18 @@
-import {configuration} from '../../app/common-reducers';
-import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
-import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice';
-import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice';
-import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
-import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
-import {getDocumentSuggestionInitialState} from '../../features/document-suggestion/document-suggestion-state';
+import {configuration} from '../../app/common-reducers.js';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
+import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice.js';
+import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice.js';
+import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions.js';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
+import {getDocumentSuggestionInitialState} from '../../features/document-suggestion/document-suggestion-state.js';
 import {
   buildMockCaseAssistEngine,
   MockCaseAssistEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   DocumentSuggestionList,
   buildDocumentSuggestionList,
-} from './headless-document-suggestion-list';
+} from './headless-document-suggestion-list.js';
 
 describe('Document Suggestion List', () => {
   let engine: MockCaseAssistEngine;

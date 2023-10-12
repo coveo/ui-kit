@@ -1,13 +1,13 @@
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
 import {
   HtmlRequest,
   HtmlRequestOptions,
-} from '../../api/search/html/html-request';
+} from '../../api/search/html/html-request.js';
 import {
   ConfigurationSection,
   QuerySection,
   ResultPreviewSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 
 export type StateNeededByHtmlEndpoint = ConfigurationSection &
   ResultPreviewSection &

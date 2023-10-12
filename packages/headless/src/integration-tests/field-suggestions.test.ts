@@ -7,8 +7,8 @@ import {
   buildFacet,
   Facet,
   FieldSuggestionsValue,
-} from '..';
-import {waitForNextStateChange} from '../test/functional-test-utils';
+} from '../index.js';
+import {waitForNextStateChange} from '../test/functional-test-utils.js';
 
 describe('field suggestions', () => {
   let engine: SearchEngine;

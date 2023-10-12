@@ -1,21 +1,21 @@
 import {NumberValue} from '@coveo/bueno';
 import {Action} from '@reduxjs/toolkit';
-import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
-import {updatePage} from '../../features/pagination/pagination-actions';
-import {updateQuery} from '../../features/query/query-actions';
+import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions.js';
+import {updatePage} from '../../features/pagination/pagination-actions.js';
+import {updateQuery} from '../../features/query/query-actions.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from '../../features/recent-queries/recent-queries-actions';
-import {logClearRecentQueries} from '../../features/recent-queries/recent-queries-analytics-actions';
-import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice';
-import {executeSearch} from '../../features/search/search-actions';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+} from '../../features/recent-queries/recent-queries-actions.js';
+import {logClearRecentQueries} from '../../features/recent-queries/recent-queries-analytics-actions.js';
+import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../test.js';
 import {
   buildRecentQueriesList,
   RecentQueriesList,
-} from './headless-recent-queries-list';
+} from './headless-recent-queries-list.js';
 
 describe('recent queries list', () => {
   let engine: MockSearchEngine;

@@ -1,12 +1,12 @@
-import {configuration} from '../../app/common-reducers';
-import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice';
-import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice';
-import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice.js';
+import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice.js';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
-} from '../../test/mock-engine';
-import {buildInsightInterface, InsightInterface} from './insight-interface';
+} from '../../test/mock-engine.js';
+import {buildInsightInterface, InsightInterface} from './insight-interface.js';
 
 describe('Insight Interface', () => {
   let engine: MockInsightEngine;

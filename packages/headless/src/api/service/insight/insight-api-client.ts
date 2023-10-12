@@ -1,33 +1,33 @@
 import {Logger} from 'pino';
-import {AsyncThunkOptions} from '../../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
-import {InsightAppState} from '../../../state/insight-app-state';
-import {PlatformClient} from '../../platform-client';
-import {PreprocessRequest} from '../../preprocess-request';
-import {QuerySuggestSuccessResponse} from '../../search/query-suggest/query-suggest-response';
+import {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import {InsightAppState} from '../../../state/insight-app-state.js';
+import {PlatformClient} from '../../platform-client.js';
+import {PreprocessRequest} from '../../preprocess-request.js';
+import {QuerySuggestSuccessResponse} from '../../search/query-suggest/query-suggest-response.js';
 import {
   isSuccessSearchResponse,
   SearchOptions,
   shimResponse,
-} from '../../search/search-api-client';
-import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
-import {SearchResponseSuccess} from '../../search/search/search-response';
+} from '../../search/search-api-client.js';
+import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response.js';
+import {SearchResponseSuccess} from '../../search/search/search-response.js';
 import {
   buildGetInsightInterfaceConfigRequest,
   GetInsightInterfaceConfigRequest,
-} from './get-interface/get-interface-config-request';
-import {GetInsightInterfaceConfigResponse} from './get-interface/get-interface-config-response';
-import {InsightQuerySuggestRequest} from './query-suggest/query-suggest-request';
+} from './get-interface/get-interface-config-request.js';
+import {GetInsightInterfaceConfigResponse} from './get-interface/get-interface-config-response.js';
+import {InsightQuerySuggestRequest} from './query-suggest/query-suggest-request.js';
 import {
   buildInsightQueryRequest,
   buildInsightQuerySuggestRequest,
   InsightQueryRequest,
-} from './query/query-request';
+} from './query/query-request.js';
 import {
   buildInsightUserActionsRequest,
   InsightUserActionsRequest,
-} from './user-actions/user-actions-request';
-import {InsightUserActionsResponse} from './user-actions/user-actions-response';
+} from './user-actions/user-actions-request.js';
+import {InsightUserActionsResponse} from './user-actions/user-actions-response.js';
 
 /**
  * Initialization options for the `InsightAPIClient`.

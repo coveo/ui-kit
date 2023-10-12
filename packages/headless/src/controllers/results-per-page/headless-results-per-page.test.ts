@@ -1,21 +1,21 @@
-import {configuration} from '../../app/common-reducers';
+import {configuration} from '../../app/common-reducers.js';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
-} from '../../features/pagination/pagination-actions';
-import {paginationReducer as pagination} from '../../features/pagination/pagination-slice';
-import {fetchPage} from '../../features/search/search-actions';
+} from '../../features/pagination/pagination-actions.js';
+import {paginationReducer as pagination} from '../../features/pagination/pagination-slice.js';
+import {fetchPage} from '../../features/search/search-actions.js';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
-} from '../../test/mock-engine';
-import {buildMockPagination} from '../../test/mock-pagination';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine.js';
+import {buildMockPagination} from '../../test/mock-pagination.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   ResultsPerPage,
   ResultsPerPageProps,
   buildResultsPerPage,
-} from './headless-results-per-page';
+} from './headless-results-per-page.js';
 
 describe('ResultsPerPage', () => {
   let engine: MockSearchEngine;

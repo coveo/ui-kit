@@ -1,10 +1,10 @@
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
-import {FacetValueState} from '../../../features/facets/facet-api/value';
-import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine.js';
+import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments.js';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
+import {FacetValueState} from '../../../features/facets/facet-api/value.js';
+import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import {
   logFacetClearAll,
   logFacetExclude,
@@ -12,21 +12,21 @@ import {
   logFacetShowLess,
   logFacetShowMore,
   logFacetUpdateSort,
-} from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
+} from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions.js';
 import {
   getProductListingAnalyticsActionForToggleFacetExclude,
   getProductListingAnalyticsActionForToggleFacetSelect,
-} from '../../../features/facets/facet-set/facet-set-product-listing-utils';
-import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice';
-import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+} from '../../../features/facets/facet-set/facet-set-product-listing-utils.js';
+import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice.js';
+import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request.js';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions.js';
 import {
   ConfigurationSection,
   FacetSearchSection,
   FacetSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search.js';
 import {
   buildCoreFacet,
   Facet,
@@ -39,7 +39,7 @@ import {
   SpecificFacetSearchResult,
   CoreFacet,
   CoreFacetState,
-} from '../../core/facets/facet/headless-core-facet';
+} from '../../core/facets/facet/headless-core-facet.js';
 
 export type {
   FacetOptions,

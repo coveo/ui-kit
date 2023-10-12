@@ -3,7 +3,7 @@ import {
   SortCriteria,
   BaseFacetValueRequest,
   RangeAlgorithm,
-} from '../../../facet-api/request';
+} from '../../../facet-api/request.js';
 
 export const rangeFacetSortCriteria: RangeFacetSortCriterion[] = [
   'ascending',

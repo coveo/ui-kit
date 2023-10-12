@@ -2,9 +2,9 @@ import {
   AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
-import {LogStaticFilterToggleValueActionCreatorPayload} from './static-filter-set-actions';
+} from '../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
+import {LogStaticFilterToggleValueActionCreatorPayload} from './static-filter-set-actions.js';
 
 export const logInsightStaticFilterDeselect = (
   metadata: LogStaticFilterToggleValueActionCreatorPayload

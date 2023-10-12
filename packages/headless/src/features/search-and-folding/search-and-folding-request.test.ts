@@ -1,7 +1,7 @@
-import {SearchAppState} from '../..';
-import {createMockState} from '../../test';
-import {buildMockTabSlice} from '../../test/mock-tab-state';
-import {buildSearchAndFoldingLoadCollectionRequest} from './search-and-folding-request';
+import {SearchAppState} from '../../index.js';
+import {createMockState} from '../../test.js';
+import {buildMockTabSlice} from '../../test/mock-tab-state.js';
+import {buildSearchAndFoldingLoadCollectionRequest} from './search-and-folding-request.js';
 
 describe('buildSearchAndFoldingLoadCollectionRequest', () => {
   describe('#aq', () => {

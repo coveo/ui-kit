@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
+import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
 import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
@@ -9,8 +9,8 @@ import {
   updateCitations,
   updateError,
   updateMessage,
-} from './generated-answer-actions';
-import {getGeneratedAnswerInitialState} from './generated-answer-state';
+} from './generated-answer-actions.js';
+import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
 export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),

@@ -1,25 +1,25 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {CommerceAPIClient} from '../../api/commerce/commerce-api-client';
-import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {cartReducer} from '../../features/commerce/context/cart/cart-slice';
-import {contextReducer} from '../../features/commerce/context/context-slice';
-import {paginationReducer} from '../../features/commerce/pagination/pagination-slice';
-import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice';
-import {CommerceAppState} from '../../state/commerce-app-state';
-import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments';
+import {CommerceAPIClient} from '../../api/commerce/commerce-api-client.js';
+import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
+import {cartReducer} from '../../features/commerce/context/cart/cart-slice.js';
+import {contextReducer} from '../../features/commerce/context/context-slice.js';
+import {paginationReducer} from '../../features/commerce/pagination/pagination-slice.js';
+import {productListingV2Reducer} from '../../features/commerce/product-listing/product-listing-slice.js';
+import {CommerceAppState} from '../../state/commerce-app-state.js';
+import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments.js';
 import {
   buildEngine,
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
-} from '../engine';
-import {buildLogger} from '../logger';
-import {buildThunkExtraArguments} from '../thunk-extra-arguments';
+} from '../engine.js';
+import {buildLogger} from '../logger.js';
+import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
   CommerceEngineConfiguration,
   commerceEngineConfigurationSchema,
-} from './commerce-engine-configuration';
+} from './commerce-engine-configuration.js';
 
 export type {CommerceEngineConfiguration};
 

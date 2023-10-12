@@ -1,9 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logDidYouMeanClick} from '../did-you-mean/did-you-mean-analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {logDidYouMeanClick} from '../did-you-mean/did-you-mean-analytics-actions.js';
 import {
   logCategoryFacetBreadcrumb,
   LogCategoryFacetBreadcrumbActionCreatorPayload,
-} from '../facets/category-facet-set/category-facet-set-analytics-actions';
+} from '../facets/category-facet-set/category-facet-set-analytics-actions.js';
 import {
   logFacetBreadcrumb,
   logFacetClearAll,
@@ -16,33 +16,33 @@ import {
   LogFacetDeselectActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
-} from '../facets/facet-set/facet-set-analytics-actions';
-import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions';
+} from '../facets/facet-set/facet-set-analytics-actions.js';
+import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions.js';
 import {
   logDateFacetBreadcrumb,
   LogDateFacetBreadcrumbActionCreatorPayload,
-} from '../facets/range-facets/date-facet-set/date-facet-analytics-actions';
+} from '../facets/range-facets/date-facet-set/date-facet-analytics-actions.js';
 import {
   logNumericFacetBreadcrumb,
   LogNumericFacetBreadcrumbActionCreatorPayload,
-} from '../facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
+} from '../facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions.js';
 import {
   logNavigateBackward,
   logNavigateForward,
   logNoResultsBack,
-} from '../history/history-analytics-actions';
+} from '../history/history-analytics-actions.js';
 import {
   logPageNext,
   logPageNumber,
   logPagePrevious,
   logPagerResize,
-} from '../pagination/pagination-analytics-actions';
+} from '../pagination/pagination-analytics-actions.js';
 import {
   logQuerySuggestionClick,
   LogQuerySuggestionClickActionCreatorPayload,
   OmniboxSuggestionMetadata,
-} from '../query-suggest/query-suggest-analytics-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
+} from '../query-suggest/query-suggest-analytics-actions.js';
+import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
 import {
   logCollapseSmartSnippet,
   logExpandSmartSnippet,
@@ -55,12 +55,12 @@ import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
   SmartSnippetFeedback,
-} from '../question-answering/question-answering-analytics-actions';
+} from '../question-answering/question-answering-analytics-actions.js';
 import {
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
-} from '../question-answering/question-answering-document-id';
-import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
+} from '../question-answering/question-answering-document-id.js';
+import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions.js';
 import {
   logStaticFilterSelect,
   logStaticFilterDeselect,
@@ -68,7 +68,7 @@ import {
   LogStaticFilterToggleValueActionCreatorPayload,
   LogStaticFilterClearAllActionCreatorPayload,
   StaticFilterValueMetadata,
-} from '../static-filter-set/static-filter-set-actions';
+} from '../static-filter-set/static-filter-set-actions.js';
 import {
   logNotifyTrigger,
   logTriggerExecute,
@@ -76,14 +76,14 @@ import {
   logTriggerRedirect,
   logUndoTriggerQuery,
   LogUndoTriggerQueryActionCreatorPayload,
-} from '../triggers/trigger-analytics-actions';
+} from '../triggers/trigger-analytics-actions.js';
 import {
   logInterfaceChange,
   logInterfaceLoad,
   logSearchFromLink,
   logOmniboxFromLink,
-} from './analytics-actions';
-import {CustomAction, SearchAction} from './analytics-utils';
+} from './analytics-actions.js';
+import {CustomAction, SearchAction} from './analytics-utils.js';
 
 export type {
   LogCategoryFacetBreadcrumbActionCreatorPayload,

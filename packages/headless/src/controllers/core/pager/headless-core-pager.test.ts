@@ -1,21 +1,21 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   updatePage,
   registerPage,
   nextPage,
   previousPage,
-} from '../../../features/pagination/pagination-actions';
-import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
+} from '../../../features/pagination/pagination-actions.js';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine.js';
 import {
   Pager,
   PagerOptions,
   PagerInitialState,
   buildCorePager,
-} from './headless-core-pager';
+} from './headless-core-pager.js';
 
 describe('Pager', () => {
   let engine: MockSearchEngine;

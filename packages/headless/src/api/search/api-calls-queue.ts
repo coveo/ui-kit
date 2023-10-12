@@ -1,5 +1,5 @@
 import {Logger} from 'pino';
-import {createAbortController} from '../../utils/abort-controller-polyfill';
+import {createAbortController} from '../../utils/abort-controller-polyfill.js';
 
 export class APICallsQueue {
   private currentAbortController: AbortController | null = null;

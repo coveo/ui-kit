@@ -2,25 +2,25 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   getVisitorID,
   historyStore,
-} from '../../api/analytics/coveo-analytics-utils';
-import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request';
+} from '../../api/analytics/coveo-analytics-utils.js';
+import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request.js';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
-} from '../../api/search/search-api-client';
-import {Result} from '../../api/search/search/result';
-import {RecommendationAppState} from '../../state/recommendation-app-state';
+} from '../../api/search/search-api-client.js';
+import {Result} from '../../api/search/search/result.js';
+import {RecommendationAppState} from '../../state/recommendation-app-state.js';
 import {
   ConfigurationSection,
   RecommendationSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 import {
   validatePayload,
   requiredNonEmptyString,
-} from '../../utils/validate-payload';
-import {AnalyticsAsyncThunk, AnalyticsType} from '../analytics/analytics-utils';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
-import {logRecommendationUpdate} from './recommendation-analytics-actions';
+} from '../../utils/validate-payload.js';
+import {AnalyticsAsyncThunk, AnalyticsType} from '../analytics/analytics-utils.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';
+import {logRecommendationUpdate} from './recommendation-analytics-actions.js';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &

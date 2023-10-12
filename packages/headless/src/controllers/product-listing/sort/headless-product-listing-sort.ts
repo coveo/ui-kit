@@ -1,9 +1,9 @@
 import {Schema} from '@coveo/bueno';
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {updatePage} from '../../../features/pagination/pagination-actions';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine.js';
+import {updatePage} from '../../../features/pagination/pagination-actions.js';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions.js';
 import {
   sortCriterionDefinition,
   SortDirection,
@@ -14,22 +14,22 @@ import {
   SortCriterion,
   buildRelevanceSortCriterion,
   buildFieldsSortCriterion,
-} from '../../../features/sort/sort';
+} from '../../../features/sort/sort.js';
 import {
   registerSortCriterion,
   updateSortCriterion,
-} from '../../../features/sort/sort-actions';
-import {sortReducer as sort} from '../../../features/sort/sort-slice';
+} from '../../../features/sort/sort-actions.js';
+import {sortReducer as sort} from '../../../features/sort/sort-slice.js';
 import {
   ConfigurationSection,
   StructuredSortSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {validateInitialState} from '../../../utils/validate-payload';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
 export {

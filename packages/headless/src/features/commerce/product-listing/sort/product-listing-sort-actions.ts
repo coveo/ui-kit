@@ -1,5 +1,5 @@
-import {SortBy, SortCriterion} from '../../../sort/sort';
-import {validatePayload} from '../../../../utils/validate-payload';
+import {SortBy, SortCriterion} from '../../../sort/sort.js';
+import {validatePayload} from '../../../../utils/validate-payload.js';
 import {SchemaDefinition} from '@coveo/bueno';
 import {EnumValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';

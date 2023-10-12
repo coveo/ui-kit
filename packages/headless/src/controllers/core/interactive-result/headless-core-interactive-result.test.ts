@@ -1,12 +1,12 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine.js';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
-} from './headless-core-interactive-result';
+} from './headless-core-interactive-result.js';
 
 describe('InteractiveResultCore', () => {
   let engine: MockSearchEngine;

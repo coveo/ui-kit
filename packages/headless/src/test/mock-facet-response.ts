@@ -1,4 +1,4 @@
-import {FacetResponse} from '../features/facets/facet-set/interfaces/response';
+import {FacetResponse} from '../features/facets/facet-set/interfaces/response.js';
 
 export function buildMockFacetResponse(
   config: Partial<FacetResponse> = {}

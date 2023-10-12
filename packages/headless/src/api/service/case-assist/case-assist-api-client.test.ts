@@ -1,8 +1,8 @@
-import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client';
-import {PlatformClient} from '../../platform-client';
-import {CaseAssistAPIClient} from './case-assist-api-client';
-import {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request';
-import {GetDocumentSuggestionsRequest} from './get-document-suggestions/get-document-suggestions-request';
+import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client.js';
+import {PlatformClient} from '../../platform-client.js';
+import {CaseAssistAPIClient} from './case-assist-api-client.js';
+import {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request.js';
+import {GetDocumentSuggestionsRequest} from './get-document-suggestions/get-document-suggestions-request.js';
 
 describe('case assist api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';

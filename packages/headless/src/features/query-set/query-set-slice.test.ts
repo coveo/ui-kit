@@ -1,13 +1,13 @@
-import {buildMockSearch} from '../../test/mock-search';
-import {change} from '../history/history-actions';
-import {getHistoryInitialState} from '../history/history-state';
-import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {executeSearch} from '../search/search-actions';
-import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
-import {querySetReducer} from './query-set-slice';
-import {getQuerySetInitialState, QuerySetState} from './query-set-state';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {change} from '../history/history-actions.js';
+import {getHistoryInitialState} from '../history/history-state.js';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
+import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../search/search-actions.js';
+import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions.js';
+import {querySetReducer} from './query-set-slice.js';
+import {getQuerySetInitialState, QuerySetState} from './query-set-state.js';
 
 describe('querySet slice', () => {
   let state: QuerySetState;

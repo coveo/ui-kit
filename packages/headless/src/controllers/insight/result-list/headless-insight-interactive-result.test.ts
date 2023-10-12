@@ -1,16 +1,16 @@
-import {Result} from '../../../api/search/search/result';
-import {configuration} from '../../../app/common-reducers';
-import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions';
-import {buildMockResult} from '../../../test';
+import {Result} from '../../../api/search/search/result.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
+import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions.js';
+import {buildMockResult} from '../../../test.js';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine.js';
 import {
   buildInteractiveResult,
   InteractiveResult,
-} from './headless-insight-interactive-result';
+} from './headless-insight-interactive-result.js';
 
 describe('InsightInteractiveResult', () => {
   let engine: MockInsightEngine;

@@ -1,9 +1,9 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
   buildCoreQueryError,
   QueryError,
   QueryErrorState,
-} from '../../core/query-error/headless-core-query-error';
+} from '../../core/query-error/headless-core-query-error.js';
 
 export type {QueryError, QueryErrorState};
 /**

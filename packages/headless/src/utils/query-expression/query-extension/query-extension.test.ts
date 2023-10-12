@@ -1,5 +1,5 @@
-import {buildQueryExpression} from '../query-expression';
-import {buildQueryExtension} from './query-extension';
+import {buildQueryExpression} from '../query-expression.js';
+import {buildQueryExtension} from './query-extension.js';
 
 describe('#buildQueryExtension', () => {
   describe('#toQuerySyntax', () => {

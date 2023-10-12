@@ -1,13 +1,13 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {logPagerResize} from '../../../features/pagination/pagination-analytics-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
+import {logPagerResize} from '../../../features/pagination/pagination-analytics-actions.js';
 import {
   ResultsPerPage,
   ResultsPerPageProps,
   ResultsPerPageInitialState,
   ResultsPerPageState,
   buildCoreResultsPerPage,
-} from '../../core/results-per-page/headless-core-results-per-page';
+} from '../../core/results-per-page/headless-core-results-per-page.js';
 
 export type {
   ResultsPerPage,

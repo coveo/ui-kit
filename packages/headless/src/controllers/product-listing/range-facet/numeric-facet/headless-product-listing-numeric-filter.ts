@@ -1,18 +1,18 @@
-import {configuration} from '../../../../app/common-reducers';
-import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
+import {configuration} from '../../../../app/common-reducers.js';
+import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine.js';
 import {
   logFacetClearAll,
   logFacetSelect,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
-import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {searchReducer as search} from '../../../../features/search/search-slice';
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions.js';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions.js';
+import {searchReducer as search} from '../../../../features/search/search-slice.js';
 import {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
-} from '../../../../state/state-sections';
-import {loadReducerError} from '../../../../utils/errors';
+} from '../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../utils/errors.js';
 import {
   NumericFilterOptions,
   NumericFilterInitialState,
@@ -21,7 +21,7 @@ import {
   NumericFilterState,
   NumericFilter,
   buildCoreNumericFilter,
-} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter';
+} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter.js';
 
 export type {
   NumericFilterOptions,

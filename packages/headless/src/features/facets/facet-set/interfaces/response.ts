@@ -1,4 +1,4 @@
-import {BaseFacetValue, BaseFacetResponse} from '../../facet-api/response';
+import {BaseFacetValue, BaseFacetResponse} from '../../facet-api/response.js';
 
 export interface FacetValue extends BaseFacetValue {
   value: string;

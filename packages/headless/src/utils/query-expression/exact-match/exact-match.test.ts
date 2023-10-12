@@ -1,4 +1,4 @@
-import {buildExactMatch} from './exact-match';
+import {buildExactMatch} from './exact-match.js';
 
 describe('#buildExactMatch', () => {
   describe('#toQuerySyntax', () => {

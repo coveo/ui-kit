@@ -1,10 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {change} from '../history/history-actions';
-import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {updateQuery} from './query-actions';
-import {getQueryInitialState} from './query-state';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions.js';
+import {change} from '../history/history-actions.js';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {updateQuery} from './query-actions.js';
+import {getQueryInitialState} from './query-state.js';
 
 export const queryReducer = createReducer(getQueryInitialState(), (builder) =>
   builder

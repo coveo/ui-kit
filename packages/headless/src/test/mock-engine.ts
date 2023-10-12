@@ -4,44 +4,44 @@ import {
   getDefaultMiddleware,
   ActionCreatorWithPreparedPayload,
 } from '@reduxjs/toolkit';
-import pino, {Logger} from 'pino';
+import {Logger, pino} from 'pino';
 import configureStore, {MockStoreCreator} from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {SearchAPIClient} from '../api/search/search-api-client';
-import {InsightAPIClient} from '../api/service/insight/insight-api-client';
-import {analyticsMiddleware} from '../app/analytics-middleware';
-import {CommerceEngine} from '../app/commerce-engine/commerce-engine';
-import {CoreEngine} from '../app/engine';
-import {InsightEngine} from '../app/insight-engine/insight-engine';
-import {InsightThunkExtraArguments} from '../app/insight-thunk-extra-arguments';
-import {instantlyCallableThunkActionMiddleware} from '../app/instantly-callable-middleware';
+import {SearchAPIClient} from '../api/search/search-api-client.js';
+import {InsightAPIClient} from '../api/service/insight/insight-api-client.js';
+import {analyticsMiddleware} from '../app/analytics-middleware.js';
+import {CommerceEngine} from '../app/commerce-engine/commerce-engine.js';
+import {CoreEngine} from '../app/engine.js';
+import {InsightEngine} from '../app/insight-engine/insight-engine.js';
+import {InsightThunkExtraArguments} from '../app/insight-thunk-extra-arguments.js';
+import {instantlyCallableThunkActionMiddleware} from '../app/instantly-callable-middleware.js';
 import {
   logActionErrorMiddleware,
   logActionMiddleware,
-} from '../app/logger-middlewares';
-import {ProductListingEngine} from '../app/product-listing-engine/product-listing-engine';
-import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
-import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
-import {SearchEngine} from '../app/search-engine/search-engine';
-import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments';
-import {CaseAssistEngine} from '../case-assist.index';
-import {CaseAssistAppState} from '../state/case-assist-app-state';
-import {CommerceAppState} from '../state/commerce-app-state';
-import {InsightAppState} from '../state/insight-app-state';
-import {ProductListingAppState} from '../state/product-listing-app-state';
-import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
-import {RecommendationAppState} from '../state/recommendation-app-state';
-import {SearchAppState} from '../state/search-app-state';
-import {validatePayloadAndThrow} from '../utils/validate-payload';
-import {buildMockCaseAssistState} from './mock-case-assist-state';
-import {buildMockCommerceState} from './mock-commerce-state';
-import {buildMockInsightAPIClient} from './mock-insight-api-client';
-import {buildMockInsightState} from './mock-insight-state';
-import {buildMockProductListingState} from './mock-product-listing-state';
-import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
-import {createMockRecommendationState} from './mock-recommendation-state';
-import {buildMockSearchAPIClient} from './mock-search-api-client';
-import {createMockState} from './mock-state';
+} from '../app/logger-middlewares.js';
+import {ProductListingEngine} from '../app/product-listing-engine/product-listing-engine.js';
+import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine.js';
+import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine.js';
+import {SearchEngine} from '../app/search-engine/search-engine.js';
+import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments.js';
+import {CaseAssistEngine} from '../case-assist.index.js';
+import {CaseAssistAppState} from '../state/case-assist-app-state.js';
+import {CommerceAppState} from '../state/commerce-app-state.js';
+import {InsightAppState} from '../state/insight-app-state.js';
+import {ProductListingAppState} from '../state/product-listing-app-state.js';
+import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state.js';
+import {RecommendationAppState} from '../state/recommendation-app-state.js';
+import {SearchAppState} from '../state/search-app-state.js';
+import {validatePayloadAndThrow} from '../utils/validate-payload.js';
+import {buildMockCaseAssistState} from './mock-case-assist-state.js';
+import {buildMockCommerceState} from './mock-commerce-state.js';
+import {buildMockInsightAPIClient} from './mock-insight-api-client.js';
+import {buildMockInsightState} from './mock-insight-state.js';
+import {buildMockProductListingState} from './mock-product-listing-state.js';
+import {buildMockProductRecommendationsState} from './mock-product-recommendations-state.js';
+import {createMockRecommendationState} from './mock-recommendation-state.js';
+import {buildMockSearchAPIClient} from './mock-search-api-client.js';
+import {createMockState} from './mock-state.js';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -252,10 +252,12 @@ const configureMockStore = (logger: Logger) => {
     logger,
   };
   return {
+    //@ts-ignore redux&co don't play ball with Node ESM types
     store: configureStore<AppState, DispatchExts>([
       instantlyCallableThunkActionMiddleware,
       logActionErrorMiddleware(logger),
       analyticsMiddleware,
+      //@ts-ignore redux&co don't play ball with Node ESM types
       thunk.withExtraArgument(thunkExtraArguments),
       ...getDefaultMiddleware(),
       logActionMiddleware(logger),
@@ -274,10 +276,12 @@ const configureInsightMockStore = (logger: Logger) => {
     logger,
   };
   return {
+    //@ts-ignore redux&co don't play ball with Node ESM types
     store: configureStore<AppState, DispatchExts>([
       instantlyCallableThunkActionMiddleware,
       logActionErrorMiddleware(logger),
       analyticsMiddleware,
+      //@ts-ignore redux&co don't play ball with Node ESM types
       thunk.withExtraArgument(thunkExtraArguments),
       ...getDefaultMiddleware(),
       logActionMiddleware(logger),

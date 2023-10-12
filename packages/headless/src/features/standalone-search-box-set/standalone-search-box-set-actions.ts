@@ -1,30 +1,30 @@
 import {StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
-import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
-import {PlanRequest} from '../../api/search/plan/plan-request';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
+import {ExecutionPlan} from '../../api/search/plan/plan-endpoint.js';
+import {PlanRequest} from '../../api/search/plan/plan-request.js';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
-} from '../../api/search/search-api-client';
+} from '../../api/search/search-api-client.js';
 import {
   ConfigurationSection,
   ContextSection,
   PipelineSection,
   QuerySection,
   SearchHubSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 import {
   AnalyticsType,
   CustomAction,
   makeAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
-import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
+} from '../analytics/analytics-utils.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';
+import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
 
 export interface RegisterStandaloneSearchBoxActionCreatorPayload {
   /**

@@ -1,13 +1,13 @@
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2';
-import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation';
-import {fetchProductListing} from './product-listing-actions';
-import {productListingV2Reducer} from './product-listing-slice';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
+import {buildFetchProductListingV2Response} from '../../../test/mock-product-listing-v2.js';
+import {buildMockProductRecommendation} from '../../../test/mock-product-recommendation.js';
+import {fetchProductListing} from './product-listing-actions.js';
+import {productListingV2Reducer} from './product-listing-slice.js';
 import {
   getProductListingV2InitialState,
   ProductListingV2State,
-} from './product-listing-state';
-import {buildRelevanceSortCriterion} from '../../sort/sort';
+} from './product-listing-state.js';
+import {buildRelevanceSortCriterion} from '../../sort/sort.js';
 
 describe('product-listing-v2-slice', () => {
   let state: ProductListingV2State;

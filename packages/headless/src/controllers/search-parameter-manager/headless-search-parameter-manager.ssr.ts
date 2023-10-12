@@ -1,12 +1,12 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
 import {
   SearchParameterManager,
   SearchParameterManagerInitialState,
   buildSearchParameterManager,
-} from './headless-search-parameter-manager';
+} from './headless-search-parameter-manager.js';
 
-export * from './headless-search-parameter-manager';
+export * from './headless-search-parameter-manager.js';
 
 /**
  * @internal

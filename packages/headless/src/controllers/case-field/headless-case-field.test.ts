@@ -1,25 +1,25 @@
-import {configuration} from '../../app/common-reducers';
-import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
 import {
   fetchCaseClassifications,
   registerCaseField,
   updateCaseField,
-} from '../../features/case-field/case-field-actions';
-import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice';
-import {getCaseFieldInitialState} from '../../features/case-field/case-field-state';
-import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice';
-import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
-import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
-import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
+} from '../../features/case-field/case-field-actions.js';
+import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice.js';
+import {getCaseFieldInitialState} from '../../features/case-field/case-field-state.js';
+import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice.js';
+import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions.js';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
+import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
   buildMockCaseAssistEngine,
   MockCaseAssistEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildCaseField,
   CaseField,
   CaseFieldOptions,
-} from './headless-case-field';
+} from './headless-case-field.js';
 
 describe('Case Field', () => {
   let engine: MockCaseAssistEngine;

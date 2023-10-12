@@ -1,6 +1,6 @@
-import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {findActiveValueAncestry} from './category-facet-utils';
-import {CategoryFacetValue} from './interfaces/response';
+import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value.js';
+import {findActiveValueAncestry} from './category-facet-utils.js';
+import {CategoryFacetValue} from './interfaces/response.js';
 
 describe('#findActiveValueAncestry', () => {
   it("should return an empty array if there's no selected values", () => {

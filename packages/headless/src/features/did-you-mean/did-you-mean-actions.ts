@@ -2,7 +2,7 @@ import {createAction} from '@reduxjs/toolkit';
 import {
   validatePayload,
   requiredNonEmptyString,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 
 export const enableDidYouMean = createAction('didYouMean/enable');
 

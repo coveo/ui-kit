@@ -3,29 +3,29 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   historyStore,
   getVisitorID,
-} from '../../api/analytics/coveo-analytics-utils';
-import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request';
+} from '../../api/analytics/coveo-analytics-utils.js';
+import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request.js';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
-} from '../../api/search/search-api-client';
+} from '../../api/search/search-api-client.js';
 import {
   ProductRecommendation,
   ProductRecommendationDefaultFields,
-} from '../../api/search/search/product-recommendation';
-import {Result} from '../../api/search/search/result';
-import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
+} from '../../api/search/search/product-recommendation.js';
+import {Result} from '../../api/search/search/result.js';
+import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state.js';
 import {
   ConfigurationSection,
   ProductRecommendationsSection,
-} from '../../state/state-sections';
+} from '../../state/state-sections.js';
 import {
   validatePayload,
   requiredNonEmptyString,
   nonEmptyString,
-} from '../../utils/validate-payload';
-import {SearchAction} from '../analytics/analytics-utils';
-import {logProductRecommendations} from './product-recommendations-analytics.actions';
+} from '../../utils/validate-payload.js';
+import {SearchAction} from '../analytics/analytics-utils.js';
+import {logProductRecommendations} from './product-recommendations-analytics.actions.js';
 
 interface ResultWithChildren extends Result {
   childResults: ResultWithChildren[];

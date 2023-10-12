@@ -1,10 +1,10 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   buildCoreFacetManager,
   FacetManager,
   FacetManagerState,
   FacetManagerPayload,
-} from '../core/facet-manager/headless-core-facet-manager';
+} from '../core/facet-manager/headless-core-facet-manager.js';
 
 export type {FacetManagerState, FacetManagerPayload, FacetManager};
 

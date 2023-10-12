@@ -5,7 +5,7 @@ import {
   AnyAction,
   StateFromReducersMapObject,
 } from '@reduxjs/toolkit';
-import {fromEntries} from '../utils/utils';
+import {fromEntries} from '../utils/utils.js';
 
 export interface ReducerManager {
   combinedReducer: Reducer;

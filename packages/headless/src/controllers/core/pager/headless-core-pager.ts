@@ -1,32 +1,32 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
 import {
   nextPage,
   previousPage,
   registerPage,
   updatePage,
-} from '../../../features/pagination/pagination-actions';
-import {minimumPage} from '../../../features/pagination/pagination-constants';
+} from '../../../features/pagination/pagination-actions.js';
+import {minimumPage} from '../../../features/pagination/pagination-constants.js';
 import {
   currentPageSelector,
   currentPagesSelector,
   maxPageSelector,
-} from '../../../features/pagination/pagination-selectors';
-import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
+} from '../../../features/pagination/pagination-selectors.js';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
 import {
   ConfigurationSection,
   PaginationSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   validateInitialState,
   validateOptions,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export interface PagerInitialState {
   /**

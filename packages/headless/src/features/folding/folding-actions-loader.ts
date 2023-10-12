@@ -1,14 +1,14 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {foldingReducer as folding} from '../../features/folding/folding-slice';
+import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {foldingReducer as folding} from '../../features/folding/folding-slice.js';
 import {
   registerFolding,
   RegisterFoldingActionCreatorPayload,
   loadCollection,
   LoadCollectionFulfilledReturn,
   StateNeededByLoadCollection,
-} from './folding-actions';
+} from './folding-actions.js';
 
 export type {RegisterFoldingActionCreatorPayload};
 

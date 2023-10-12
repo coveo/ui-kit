@@ -2,17 +2,17 @@ import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer, Reducer} from '@reduxjs/toolkit';
 import {atob as atobShim} from 'abab';
 import P, {Logger} from 'pino';
-import {SearchAppState} from '../..';
+import {SearchAppState} from '../../index.js';
 import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
   updateSearchConfiguration,
-} from '../../features/configuration/configuration-actions';
-import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-import {setPipeline} from '../../features/pipeline/pipeline-actions';
-import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
-import {setSearchHub} from '../../features/search-hub/search-hub-actions';
-import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
+} from '../../features/configuration/configuration-actions.js';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
+import {setPipeline} from '../../features/pipeline/pipeline-actions.js';
+import {getPipelineInitialState} from '../../features/pipeline/pipeline-state.js';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
+import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 
 export interface CoveoJSONWebToken {
   searchHub?: string;

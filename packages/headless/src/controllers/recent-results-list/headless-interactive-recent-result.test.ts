@@ -1,15 +1,15 @@
-import {Result} from '../../api/search/search/result';
-import {configuration} from '../../app/common-reducers';
-import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions';
-import {buildMockResult} from '../../test';
+import {Result} from '../../api/search/search/result.js';
+import {configuration} from '../../app/common-reducers.js';
+import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions.js';
+import {buildMockResult} from '../../test.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildInteractiveRecentResult,
   InteractiveRecentResult,
-} from './headless-interactive-recent-result';
+} from './headless-interactive-recent-result.js';
 
 describe('InteractiveRecentResult', () => {
   let engine: MockSearchEngine;

@@ -1,7 +1,7 @@
 import {
   FoldingParam,
   NumberOfResultsParam,
-} from '../../../platform-service-params';
+} from '../../../platform-service-params.js';
 import {
   ConstantQueryParam,
   EnableDidYouMeanParam,
@@ -11,13 +11,13 @@ import {
   QueryParam,
   SortCriteriaParam,
   TabParam,
-} from '../../../search/search-api-params';
+} from '../../../search/search-api-params.js';
 import {
   baseInsightRequest,
   InsightParam,
   pickNonInsightParams,
-} from '../insight-params';
-import {InsightQuerySuggestRequest} from '../query-suggest/query-suggest-request';
+} from '../insight-params.js';
+import {InsightQuerySuggestRequest} from '../query-suggest/query-suggest-request.js';
 
 export type InsightQueryRequest = InsightParam &
   CaseContextParam &

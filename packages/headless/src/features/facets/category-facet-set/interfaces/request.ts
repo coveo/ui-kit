@@ -5,8 +5,8 @@ import {
   Type,
   SortCriteria,
   BaseFacetValueRequest,
-} from '../../facet-api/request';
-import {CategoryFacetValueCommon} from './commons';
+} from '../../facet-api/request.js';
+import {CategoryFacetValueCommon} from './commons.js';
 
 export const categoryFacetSortCriteria: CategoryFacetSortCriterion[] = [
   'alphanumeric',

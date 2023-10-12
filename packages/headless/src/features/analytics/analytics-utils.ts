@@ -18,53 +18,53 @@ import {
   EventDescription,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
-import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
+import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events.js';
 import {
   PartialDocumentInformation,
   DocumentIdentifier,
-} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import {Logger} from 'pino';
 import {
   configureCaseAssistAnalytics,
   StateNeededByCaseAssistAnalytics,
-} from '../../api/analytics/case-assist-analytics';
+} from '../../api/analytics/case-assist-analytics.js';
 import {
   StateNeededByCommerceAnalyticsProvider,
   CommerceAnalyticsProvider,
   configureCommerceAnalytics,
-} from '../../api/analytics/commerce-analytics';
+} from '../../api/analytics/commerce-analytics.js';
 import {
   configureInsightAnalytics,
   InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
-} from '../../api/analytics/insight-analytics';
-import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics';
+} from '../../api/analytics/insight-analytics.js';
+import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics.js';
 import {
   configureProductListingAnalytics,
   ProductListingAnalyticsProvider,
   StateNeededByProductListingAnalyticsProvider,
-} from '../../api/analytics/product-listing-analytics';
-import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
+} from '../../api/analytics/product-listing-analytics.js';
+import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics.js';
 import {
   configureAnalytics,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
-} from '../../api/analytics/search-analytics';
-import {PreprocessRequest} from '../../api/preprocess-request';
-import {Raw} from '../../api/search/search/raw';
-import {Result} from '../../api/search/search/result';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {ProductRecommendation} from '../../product-listing.index';
-import {RecommendationAppState} from '../../state/recommendation-app-state';
-import {SearchAppState} from '../../state/search-app-state';
+} from '../../api/analytics/search-analytics.js';
+import {PreprocessRequest} from '../../api/preprocess-request.js';
+import {Raw} from '../../api/search/search/raw.js';
+import {Result} from '../../api/search/search/result.js';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {ProductRecommendation} from '../../product-listing.index.js';
+import {RecommendationAppState} from '../../state/recommendation-app-state.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   ConfigurationSection,
   PipelineSection,
-} from '../../state/state-sections';
-import {requiredNonEmptyString} from '../../utils/validate-payload';
-import {ResultWithFolding} from '../folding/folding-slice';
-import {getAllIncludedResultsFrom} from '../folding/folding-utils';
-import {getPipelineInitialState} from '../pipeline/pipeline-state';
+} from '../../state/state-sections.js';
+import {requiredNonEmptyString} from '../../utils/validate-payload.js';
+import {ResultWithFolding} from '../folding/folding-slice.js';
+import {getAllIncludedResultsFrom} from '../folding/folding-utils.js';
+import {getPipelineInitialState} from '../pipeline/pipeline-state.js';
 
 export enum AnalyticsType {
   Search,

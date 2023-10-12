@@ -1,4 +1,4 @@
-import {buildNear} from './near';
+import {buildNear} from './near.js';
 
 describe('#buildNear', () => {
   describe('#toQuerySyntax', () => {

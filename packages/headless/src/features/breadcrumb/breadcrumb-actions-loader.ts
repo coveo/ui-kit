@@ -1,9 +1,9 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
-} from './breadcrumb-actions';
+} from './breadcrumb-actions.js';
 
 /**
  * The breadcrumb action creators.

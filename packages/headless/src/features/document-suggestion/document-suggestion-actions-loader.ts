@@ -1,12 +1,12 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
-import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
+import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client.js';
+import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
 import {
   fetchDocumentSuggestions,
   FetchDocumentSuggestionsThunkReturn,
   StateNeededByFetchDocumentSuggestions,
-} from './document-suggestion-actions';
+} from './document-suggestion-actions.js';
 
 /**
  * The document suggestion action creators.

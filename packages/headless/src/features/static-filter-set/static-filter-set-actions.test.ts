@@ -1,6 +1,6 @@
-import {buildMockInsightEngine} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {logInsightStaticFilterDeselect} from './static-filter-set-insight-analytics-actions';
+import {buildMockInsightEngine} from '../../test/mock-engine.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {logInsightStaticFilterDeselect} from './static-filter-set-insight-analytics-actions.js';
 
 const mockOriginalStaticFilterDeselect = jest.fn();
 

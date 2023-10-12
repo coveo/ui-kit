@@ -1,9 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   buildCoreStatus,
   SearchStatusState,
   SearchStatus,
-} from '../core/status/headless-core-status';
+} from '../core/status/headless-core-status.js';
 
 export type {SearchStatusState, SearchStatus};
 

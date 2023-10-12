@@ -1,4 +1,4 @@
-import {CaseAssistAppState} from '../../state/case-assist-app-state';
+import {CaseAssistAppState} from '../../state/case-assist-app-state.js';
 
 export enum KnownCaseFields {
   id = 'id',

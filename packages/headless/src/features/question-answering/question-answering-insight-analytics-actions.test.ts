@@ -1,12 +1,12 @@
 import {
   buildMockInsightEngine,
   MockInsightEngine,
-} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockRaw} from '../../test/mock-raw';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {emptyQuestionAnswer} from '../search/search-state';
+} from '../../test/mock-engine.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockRaw} from '../../test/mock-raw.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {emptyQuestionAnswer} from '../search/search-state.js';
 import {
   logExpandSmartSnippet,
   logExpandSmartSnippetSuggestion,
@@ -22,8 +22,8 @@ import {
   logCloseSmartSnippetFeedbackModal,
   logSmartSnippetFeedback,
   logSmartSnippetDetailedFeedback,
-} from './question-answering-insight-analytics-actions';
-import {getQuestionAnsweringInitialState} from './question-answering-state';
+} from './question-answering-insight-analytics-actions.js';
+import {getQuestionAnsweringInitialState} from './question-answering-state.js';
 
 const mockLogExpandSmartSnippet = jest.fn();
 const mockLogCollapseSmartSnippet = jest.fn();

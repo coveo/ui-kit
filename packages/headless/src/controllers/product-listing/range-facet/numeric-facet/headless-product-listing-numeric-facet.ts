@@ -1,22 +1,22 @@
-import {configuration} from '../../../../app/common-reducers';
-import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
+import {configuration} from '../../../../app/common-reducers.js';
+import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine.js';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
-import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
-import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {searchReducer as search} from '../../../../features/search/search-slice';
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions.js';
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request.js';
+import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils.js';
+import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions.js';
+import {searchReducer as search} from '../../../../features/search/search-slice.js';
 import {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
-} from '../../../../state/state-sections';
-import {loadReducerError} from '../../../../utils/errors';
+} from '../../../../state/state-sections.js';
+import {loadReducerError} from '../../../../utils/errors.js';
 import {
   buildCoreNumericFacet,
   buildNumericRange,
@@ -25,7 +25,7 @@ import {
   NumericFacetProps,
   NumericFacetState,
   NumericRangeOptions,
-} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
+} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
 
 export type {
   NumericRangeOptions,

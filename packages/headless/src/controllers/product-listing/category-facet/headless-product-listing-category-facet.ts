@@ -1,12 +1,12 @@
-import {configuration} from '../../../app/common-reducers';
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice';
-import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {configuration} from '../../../app/common-reducers.js';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine.js';
+import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
+import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request.js';
 import {
   CategoryFacetValue,
   CategoryFacetValueCommon,
-} from '../../../features/facets/category-facet-set/interfaces/response';
-import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+} from '../../../features/facets/category-facet-set/interfaces/response.js';
+import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -14,16 +14,16 @@ import {
   logFacetShowLess,
   logFacetShowMore,
   logFacetUpdateSort,
-} from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {productListingReducer as productListing} from '../../../features/product-listing/product-listing-slice';
+} from '../../../features/facets/facet-set/facet-set-product-listing-analytics-actions.js';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions.js';
+import {productListingReducer as productListing} from '../../../features/product-listing/product-listing-slice.js';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
   ProductListingSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildCoreCategoryFacet,
   CategoryFacet,
@@ -34,12 +34,12 @@ import {
   CategoryFacetSearchResult,
   CoreCategoryFacet,
   CoreCategoryFacetState,
-} from '../../core/facets/category-facet/headless-core-category-facet';
+} from '../../core/facets/category-facet/headless-core-category-facet.js';
 import {
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
-} from '../../core/facets/category-facet/headless-core-category-facet-options';
-import {buildCategoryFacetSearch} from './headless-product-listing-category-facet-search';
+} from '../../core/facets/category-facet/headless-core-category-facet-options.js';
+import {buildCategoryFacetSearch} from './headless-product-listing-category-facet-search.js';
 
 export type {
   CategoryFacetValue,

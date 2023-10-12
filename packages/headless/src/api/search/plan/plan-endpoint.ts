@@ -1,5 +1,5 @@
-import {isRedirectTrigger} from '../trigger';
-import {PlanResponseSuccess} from './plan-response';
+import {isRedirectTrigger} from '../trigger.js';
+import {PlanResponseSuccess} from './plan-response.js';
 
 /**
  * The plan of execution of a search request.

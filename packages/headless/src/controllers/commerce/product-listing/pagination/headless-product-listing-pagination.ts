@@ -1,17 +1,17 @@
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {
   nextPage,
   selectPage,
   previousPage,
-} from '../../../../features/commerce/pagination/pagination-actions';
-import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {loadReducerError} from '../../../../utils/errors';
+} from '../../../../features/commerce/pagination/pagination-actions.js';
+import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
+import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions.js';
+import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice.js';
+import {loadReducerError} from '../../../../utils/errors.js';
 import {
   Controller,
   buildController,
-} from '../../../controller/headless-controller';
+} from '../../../controller/headless-controller.js';
 
 /**
  * The `ProductListingPagination` controller is responsible for navigating between pages of results in a commerce product listing interface.

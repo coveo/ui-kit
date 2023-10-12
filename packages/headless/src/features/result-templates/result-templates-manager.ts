@@ -5,14 +5,14 @@ import {
   SchemaValidationError,
   Value,
 } from '@coveo/bueno';
-import {Result} from '../../api/search/search/result';
-import {CoreEngine} from '../../app/engine';
-import {fieldsReducer as fields} from '../../features/fields/fields-slice';
-import {FieldsSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {requiredNonEmptyString} from '../../utils/validate-payload';
-import {registerFieldsToInclude} from '../fields/fields-actions';
-import {ResultTemplate} from './result-templates';
+import {Result} from '../../api/search/search/result.js';
+import {CoreEngine} from '../../app/engine.js';
+import {fieldsReducer as fields} from '../../features/fields/fields-slice.js';
+import {FieldsSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {requiredNonEmptyString} from '../../utils/validate-payload.js';
+import {registerFieldsToInclude} from '../fields/fields-actions.js';
+import {ResultTemplate} from './result-templates.js';
 
 const resultTemplateSchema = new Schema<ResultTemplate>({
   content: new Value({required: true}),

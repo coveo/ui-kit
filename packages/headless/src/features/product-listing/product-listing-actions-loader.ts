@@ -1,8 +1,8 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkProductListingOptions} from '../../api/commerce/product-listings/product-listing-api-client';
-import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine';
-import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice';
-import {ProductListingAction} from '../analytics/analytics-utils';
+import {AsyncThunkProductListingOptions} from '../../api/commerce/product-listings/product-listing-api-client.js';
+import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine.js';
+import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice.js';
+import {ProductListingAction} from '../analytics/analytics-utils.js';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -13,14 +13,14 @@ import {
   LogFacetDeselectActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
-} from '../facets/facet-set/facet-set-product-listing-analytics-actions';
+} from '../facets/facet-set/facet-set-product-listing-analytics-actions.js';
 import {
   SetProductListingUrlPayload,
   FetchProductListingThunkReturn,
   fetchProductListing,
   setProductListingUrl,
   StateNeededByFetchProductListing,
-} from './product-listing-actions';
+} from './product-listing-actions.js';
 
 export type {SetProductListingUrlPayload};
 

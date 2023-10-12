@@ -1,10 +1,10 @@
-import {setSearchHub} from '../../features/search-hub/search-hub-actions';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
 import {
   buildProductRecommendationEngine,
   ProductRecommendationEngine,
   ProductRecommendationEngineOptions,
-} from './product-recommendation-engine';
-import {getSampleProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration';
+} from './product-recommendation-engine.js';
+import {getSampleProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration.js';
 
 describe('buildProductRecommendationEngine', () => {
   let options: ProductRecommendationEngineOptions;

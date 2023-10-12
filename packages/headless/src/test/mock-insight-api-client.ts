@@ -1,9 +1,9 @@
-import pino from 'pino';
-import {NoopPreprocessRequest} from '../api/preprocess-request';
+import {pino} from 'pino';
+import {NoopPreprocessRequest} from '../api/preprocess-request.js';
 import {
   InsightAPIClient,
   InsightAPIClientOptions,
-} from '../api/service/insight/insight-api-client';
+} from '../api/service/insight/insight-api-client.js';
 
 export function buildMockInsightAPIClient(
   options?: Partial<InsightAPIClientOptions>

@@ -1,20 +1,20 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions.js';
 import {
   SmartSnippet,
   SmartSnippetProps,
   buildCoreSmartSnippet,
-} from '../../core/smart-snippet/headless-core-smart-snippet';
-import {buildSmartSnippetInteractiveInlineLinks} from './headless-insight-smart-snippet-interactive-inline-links';
+} from '../../core/smart-snippet/headless-core-smart-snippet.js';
+import {buildSmartSnippetInteractiveInlineLinks} from './headless-insight-smart-snippet-interactive-inline-links.js';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
+export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
 export type {
   SmartSnippetOptions,
   SmartSnippetProps,
   SmartSnippetState,
   SmartSnippet,
   SmartSnippetCore,
-} from '../../core/smart-snippet/headless-core-smart-snippet';
+} from '../../core/smart-snippet/headless-core-smart-snippet.js';
 
 /**
  * Creates an insight `SmartSnippet` controller instance.

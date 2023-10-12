@@ -1,4 +1,4 @@
-import {buildStringField} from './string-field';
+import {buildStringField} from './string-field.js';
 
 describe('#buildStringField', () => {
   describe('#toQuerySyntax', () => {

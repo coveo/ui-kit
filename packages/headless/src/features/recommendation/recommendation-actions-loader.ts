@@ -1,14 +1,14 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
-import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice';
+import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
+import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';
+import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice.js';
 import {
   getRecommendations,
   GetRecommendationsThunkReturn,
   StateNeededByGetRecommendations,
   setRecommendationId,
   SetRecommendationIdActionCreatorPayload,
-} from './recommendation-actions';
+} from './recommendation-actions.js';
 
 export type {SetRecommendationIdActionCreatorPayload};
 

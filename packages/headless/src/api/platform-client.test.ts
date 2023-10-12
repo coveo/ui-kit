@@ -3,21 +3,21 @@
 import fetch from '@coveo/please-give-me-fetch';
 import * as BackOff from 'exponential-backoff';
 import pino from 'pino';
-import {PlatformEnvironment} from '../recommendation.index';
-import {allValidPlatformCombination} from '../test/platform-url';
-import {ExpiredTokenError} from '../utils/errors';
+import {PlatformEnvironment} from '../recommendation.index.js';
+import {allValidPlatformCombination} from '../test/platform-url.js';
+import {ExpiredTokenError} from '../utils/errors.js';
 import {
   platformUrl,
   PlatformClient,
   PlatformClientCallOptions,
   analyticsUrl,
   getOrganizationEndpoints,
-} from './platform-client';
+} from './platform-client.js';
 import {
   NoopPreprocessRequest,
   PlatformRequestOptions,
   PreprocessRequest,
-} from './preprocess-request';
+} from './preprocess-request.js';
 
 jest.mock('@coveo/please-give-me-fetch');
 

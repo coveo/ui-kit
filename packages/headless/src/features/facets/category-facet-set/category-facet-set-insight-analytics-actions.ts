@@ -1,18 +1,18 @@
 import {ArrayValue} from '@coveo/bueno';
-import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {InsightAppState} from '../../../state/insight-app-state';
+import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
+import {InsightAppState} from '../../../state/insight-app-state.js';
 import {
   requiredNonEmptyString,
   validatePayload,
-} from '../../../utils/validate-payload';
+} from '../../../utils/validate-payload.js';
 import {
   AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from '../../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
-import {LogCategoryFacetBreadcrumbActionCreatorPayload} from './category-facet-set-analytics-actions';
+} from '../../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state.js';
+import {facetIdDefinition} from '../generic/facet-actions-validation.js';
+import {LogCategoryFacetBreadcrumbActionCreatorPayload} from './category-facet-set-analytics-actions.js';
 
 const categoryFacetBreadcrumbPayloadDefinition = {
   categoryFacetId: facetIdDefinition,

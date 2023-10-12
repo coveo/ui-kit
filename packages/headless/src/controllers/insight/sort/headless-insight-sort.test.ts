@@ -1,14 +1,14 @@
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildDateSortCriterion,
   SortOrder,
-} from '../../../features/sort-criteria/criteria';
-import {updateSortCriterion} from '../../../features/sort-criteria/sort-criteria-actions';
+} from '../../../features/sort-criteria/criteria.js';
+import {updateSortCriterion} from '../../../features/sort-criteria/sort-criteria-actions.js';
 import {
   MockInsightEngine,
   buildMockInsightEngine,
-} from '../../../test/mock-engine';
-import {Sort, SortProps, buildSort} from './headless-insight-sort';
+} from '../../../test/mock-engine.js';
+import {Sort, SortProps, buildSort} from './headless-insight-sort.js';
 
 describe('InsightSort', () => {
   let engine: MockInsightEngine;

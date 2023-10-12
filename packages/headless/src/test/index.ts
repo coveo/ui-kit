@@ -5,7 +5,7 @@ export {
   buildMockCommerceEngine,
   buildMockProductRecommendationsAppEngine,
   buildMockRecommendationAppEngine,
-} from './mock-engine';
+} from './mock-engine.js';
 export type {
   MockSearchEngine,
   MockCaseAssistEngine,
@@ -13,7 +13,7 @@ export type {
   MockCommerceEngine,
   MockProductRecommendationEngine,
   MockRecommendationEngine,
-} from './mock-engine';
-export {createMockState} from './mock-state';
-export {buildMockResult} from './mock-result';
-export {buildMockRaw} from './mock-raw';
+} from './mock-engine.js';
+export {createMockState} from './mock-state.js';
+export {buildMockResult} from './mock-result.js';
+export {buildMockRaw} from './mock-raw.js';

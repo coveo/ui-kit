@@ -1,23 +1,23 @@
 import {
   SearchEngine,
   buildSearchEngine,
-} from '../app/search-engine/search-engine';
+} from '../app/search-engine/search-engine.js';
 import {
   getSampleSearchEngineConfiguration,
   SearchEngineConfiguration,
-} from '../app/search-engine/search-engine-configuration';
+} from '../app/search-engine/search-engine-configuration.js';
 import {
   CategoryFacet,
   Facet,
   ResultList,
   SearchBox,
   Sort,
-} from '../controllers';
+} from '../controllers.js';
 import {
   buildDateSortCriterion,
   buildRelevanceSortCriterion,
   SortOrder,
-} from '../features/sort-criteria/criteria';
+} from '../features/sort-criteria/criteria.js';
 import {
   buildSearchBox,
   buildResultList,
@@ -26,7 +26,7 @@ import {
   buildCategoryFacet,
   Result,
   FacetValue,
-} from '../index';
+} from '../index.js';
 
 const sleep = (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));

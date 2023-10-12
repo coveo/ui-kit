@@ -4,11 +4,11 @@ import {
   fetchQuerySuggestions,
   registerQuerySuggest,
   unregisterQuerySuggest,
-} from './query-suggest-actions';
+} from './query-suggest-actions.js';
 import {
   getQuerySuggestSetInitialState,
   QuerySuggestState,
-} from './query-suggest-state';
+} from './query-suggest-state.js';
 
 export const querySuggestReducer = createReducer(
   getQuerySuggestSetInitialState(),

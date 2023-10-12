@@ -1,17 +1,17 @@
 import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
-import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client';
-import {configuration} from '../../app/common-reducers';
-import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine';
+import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client.js';
+import {configuration} from '../../app/common-reducers.js';
+import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine.js';
 import {
   fetchProductListing,
   setAdditionalFields,
   setProductListingUrl,
-} from '../../features/product-listing/product-listing-actions';
-import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice';
-import {ProductRecommendation} from '../../product-listing.index';
-import {loadReducerError} from '../../utils/errors';
-import {validateOptions} from '../../utils/validate-payload';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../features/product-listing/product-listing-actions.js';
+import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice.js';
+import {ProductRecommendation} from '../../product-listing.index.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {validateOptions} from '../../utils/validate-payload.js';
+import {buildController, Controller} from '../controller/headless-controller.js';
 
 const optionsSchema = new Schema({
   url: new StringValue({

@@ -1,4 +1,4 @@
-import {CoreEngine} from '../../../../app/engine';
+import {CoreEngine} from '../../../../app/engine.js';
 import {
   SortByFields,
   SortCriterion,
@@ -9,21 +9,21 @@ import {
   buildRelevanceSortCriterion,
   SortDirection,
   buildFieldsSortCriterion,
-} from '../../../../features/sort/sort';
-import {validateInitialState} from '../../../../utils/validate-payload';
+} from '../../../../features/sort/sort.js';
+import {validateInitialState} from '../../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../../controller/headless-controller';
-import {loadReducerError} from '../../../../utils/errors';
-import {ProductListingV2Section} from '../../../../state/state-sections';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+} from '../../../controller/headless-controller.js';
+import {loadReducerError} from '../../../../utils/errors.js';
+import {ProductListingV2Section} from '../../../../state/state-sections.js';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {Schema} from '@coveo/bueno';
-import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions';
-import {sortReducer as sort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice';
-import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice';
-import {updatePage} from '../../../../features/pagination/pagination-actions';
-import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions';
+import {fetchProductListing} from '../../../../features/commerce/product-listing/product-listing-actions.js';
+import {sortReducer as sort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-slice.js';
+import {productListingV2Reducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice.js';
+import {updatePage} from '../../../../features/pagination/pagination-actions.js';
+import {applySort} from '../../../../features/commerce/product-listing/sort/product-listing-sort-actions.js';
 
 export type {SortByRelevance, SortByFields, SortByFieldsFields, SortCriterion};
 export {

@@ -16,21 +16,21 @@ import {
   updateAnalyticsConfiguration,
   UpdateAnalyticsConfigurationActionCreatorPayload,
   updateBasicConfiguration,
-} from '../features/configuration/configuration-actions';
-import {versionReducer as version} from '../features/debug/version-slice';
-import {SearchParametersState} from '../state/search-app-state';
-import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../utils/url-utils';
-import {doNotTrack} from '../utils/utils';
-import {analyticsMiddleware} from './analytics-middleware';
-import {configuration} from './common-reducers';
-import {EngineConfiguration} from './engine-configuration';
-import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware';
-import {LoggerOptions} from './logger';
-import {logActionErrorMiddleware} from './logger-middlewares';
-import {createReducerManager, ReducerManager} from './reducer-manager';
-import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
-import {Store, configureStore} from './store';
-import {ThunkExtraArguments} from './thunk-extra-arguments';
+} from '../features/configuration/configuration-actions.js';
+import {versionReducer as version} from '../features/debug/version-slice.js';
+import {SearchParametersState} from '../state/search-app-state.js';
+import {matchCoveoOrganizationEndpointUrlAnyOrganization} from '../utils/url-utils.js';
+import {doNotTrack} from '../utils/utils.js';
+import {analyticsMiddleware} from './analytics-middleware.js';
+import {configuration} from './common-reducers.js';
+import {EngineConfiguration} from './engine-configuration.js';
+import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware.js';
+import {LoggerOptions} from './logger.js';
+import {logActionErrorMiddleware} from './logger-middlewares.js';
+import {createReducerManager, ReducerManager} from './reducer-manager.js';
+import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';
+import {Store, configureStore} from './store.js';
+import {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 const coreReducers = {configuration, version};
 type CoreState = StateFromReducersMapObject<typeof coreReducers> &

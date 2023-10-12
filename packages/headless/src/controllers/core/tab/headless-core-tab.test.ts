@@ -1,13 +1,13 @@
-import {configuration} from '../../../app/common-reducers';
-import {getConfigurationInitialState} from '../../../features/configuration/configuration-state';
+import {configuration} from '../../../app/common-reducers.js';
+import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {
   registerTab,
   updateActiveTab,
-} from '../../../features/tab-set/tab-set-actions';
-import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
-import {buildMockTabSlice} from '../../../test/mock-tab-state';
-import {buildCoreTab, Tab, TabProps} from './headless-core-tab';
+} from '../../../features/tab-set/tab-set-actions.js';
+import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice.js';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test.js';
+import {buildMockTabSlice} from '../../../test/mock-tab-state.js';
+import {buildCoreTab, Tab, TabProps} from './headless-core-tab.js';
 
 describe('Core Tab', () => {
   let engine: MockSearchEngine;

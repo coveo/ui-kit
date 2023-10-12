@@ -1,18 +1,18 @@
-import {validateOptions} from '../../../../utils/validate-payload';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
+import {validateOptions} from '../../../../utils/validate-payload.js';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {
   buildController,
   Controller,
-} from '../../../controller/headless-controller';
-import {loadReducerError} from '../../../../utils/errors';
-import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
+} from '../../../controller/headless-controller.js';
+import {loadReducerError} from '../../../../utils/errors.js';
+import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice.js';
 import {
   addItem,
   removeItem,
   setItems,
   updateItemQuantity,
-} from '../../../../features/commerce/context/cart/cart-actions';
-import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
+} from '../../../../features/commerce/context/cart/cart-actions.js';
+import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation.js';
 
 export interface CartOptions {
   items?: CartItem[];

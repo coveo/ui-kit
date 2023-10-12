@@ -1,8 +1,8 @@
-import {PlatformClient} from '../../api/platform-client';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
-import {buildMockProductRecommendationsAppEngine} from '../../test/mock-engine';
-import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
-import {getProductRecommendations} from './product-recommendations-actions';
+import {PlatformClient} from '../../api/platform-client.js';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation.js';
+import {buildMockProductRecommendationsAppEngine} from '../../test/mock-engine.js';
+import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state.js';
+import {getProductRecommendations} from './product-recommendations-actions.js';
 
 describe('product-recommendations', () => {
   it('correctly parses a response with childResults', async () => {

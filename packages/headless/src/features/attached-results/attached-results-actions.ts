@@ -11,8 +11,8 @@ import {
   requiredNonEmptyString,
   nonEmptyString,
   serializeSchemaValidationError,
-} from '../../utils/validate-payload';
-import {AttachedResult} from './attached-results-state';
+} from '../../utils/validate-payload.js';
+import {AttachedResult} from './attached-results-state.js';
 
 export interface SetAttachedResultsActionCreatorPayload {
   /**

@@ -5,7 +5,7 @@ import {
   NumberValue,
   RecordValue,
 } from '@coveo/bueno';
-import {SearchParameters} from './search-parameter-actions';
+import {SearchParameters} from './search-parameter-actions.js';
 
 export const searchParametersDefinition: SchemaDefinition<
   Required<SearchParameters>

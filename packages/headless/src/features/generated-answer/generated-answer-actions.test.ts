@@ -2,14 +2,14 @@ import {
   MockSearchEngine,
   buildMockSearchAppEngine,
   createMockState,
-} from '../../test';
-import {buildMockCitation} from '../../test/mock-citation';
+} from '../../test.js';
+import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   setIsLoading,
   updateCitations,
   updateError,
   updateMessage,
-} from './generated-answer-actions';
+} from './generated-answer-actions.js';
 
 describe('generated answer', () => {
   let e: MockSearchEngine;

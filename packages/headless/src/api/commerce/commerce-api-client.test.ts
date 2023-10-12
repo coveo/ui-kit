@@ -1,9 +1,9 @@
-import {SortBy} from '../../product-listing.index';
-import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client';
-import {PlatformClient} from '../platform-client';
-import {CommerceAPIClient} from './commerce-api-client';
-import {ProductListingV2Request} from './product-listings/v2/product-listing-v2-request';
-import {ProductListingV2} from './product-listings/v2/product-listing-v2-response';
+import {SortBy} from '../../product-listing.index.js';
+import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client.js';
+import {PlatformClient} from '../platform-client.js';
+import {CommerceAPIClient} from './commerce-api-client.js';
+import {ProductListingV2Request} from './product-listings/v2/product-listing-v2-request.js';
+import {ProductListingV2} from './product-listings/v2/product-listing-v2-response.js';
 
 describe('commerce api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';

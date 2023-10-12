@@ -1,18 +1,18 @@
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {restoreSearchParameters} from '../../../features/search-parameters/search-parameter-actions';
-import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
+import {restoreSearchParameters} from '../../../features/search-parameters/search-parameter-actions.js';
+import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
-} from '../../../test/mock-engine';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
+} from '../../../test/mock-engine.js';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
+import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request.js';
 import {
   buildSearchParameterManager,
   SearchParameterManager,
   SearchParameterManagerProps,
-} from './headless-insight-search-parameter-manager';
+} from './headless-insight-search-parameter-manager.js';
 
 describe('insight search parameter manager', () => {
   let engine: MockInsightEngine;

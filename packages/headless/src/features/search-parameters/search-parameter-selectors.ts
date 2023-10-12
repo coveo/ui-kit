@@ -1,10 +1,10 @@
-import {SearchParameters} from '../../controllers';
-import {SearchParametersState} from '../../state/search-app-state';
-import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
-import {getDebugInitialState} from '../debug/debug-state';
-import {getPaginationInitialState} from '../pagination/pagination-state';
-import {getQueryInitialState} from '../query/query-state';
-import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state';
+import {SearchParameters} from '../../controllers/index.js';
+import {SearchParametersState} from '../../state/search-app-state.js';
+import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state.js';
+import {getDebugInitialState} from '../debug/debug-state.js';
+import {getPaginationInitialState} from '../pagination/pagination-state.js';
+import {getQueryInitialState} from '../query/query-state.js';
+import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state.js';
 
 export function initialSearchParameterSelector(
   state: Partial<SearchParametersState>

@@ -1,15 +1,15 @@
-import {buildMockProductRecommendation} from '../../test/mock-product-recommendation';
-import {buildMockProductRecommendations} from '../../test/mock-product-recommendations';
+import {buildMockProductRecommendation} from '../../test/mock-product-recommendation.js';
+import {buildMockProductRecommendations} from '../../test/mock-product-recommendations.js';
 import {
   getProductRecommendations,
   setProductRecommendationsAdditionalFields,
   setProductRecommendationsSkus,
-} from './product-recommendations-actions';
-import {productRecommendationsReducer} from './product-recommendations-slice';
+} from './product-recommendations-actions.js';
+import {productRecommendationsReducer} from './product-recommendations-slice.js';
 import {
   getProductRecommendationsInitialState,
   ProductRecommendationsState,
-} from './product-recommendations-state';
+} from './product-recommendations-state.js';
 
 describe('product-recommendations-slice', () => {
   let state: ProductRecommendationsState;

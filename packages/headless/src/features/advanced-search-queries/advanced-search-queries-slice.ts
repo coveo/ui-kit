@@ -1,12 +1,12 @@
 import {isUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
-import {change} from '../history/history-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {change} from '../history/history-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {
   registerAdvancedSearchQueries,
   updateAdvancedSearchQueries,
-} from './advanced-search-queries-actions';
-import {getAdvancedSearchQueriesInitialState} from './advanced-search-queries-state';
+} from './advanced-search-queries-actions.js';
+import {getAdvancedSearchQueriesInitialState} from './advanced-search-queries-state.js';
 
 export const advancedSearchQueriesReducer = createReducer(
   getAdvancedSearchQueriesInitialState(),

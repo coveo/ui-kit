@@ -1,19 +1,19 @@
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {
   buildCriterionExpression,
   buildFieldSortCriterion,
   buildRelevanceSortCriterion,
   SortOrder,
-} from './criteria';
+} from './criteria.js';
 import {
   registerSortCriterion,
   updateSortCriterion,
-} from './sort-criteria-actions';
-import {sortCriteriaReducer} from './sort-criteria-slice';
+} from './sort-criteria-actions.js';
+import {sortCriteriaReducer} from './sort-criteria-slice.js';
 import {
   getSortCriteriaInitialState,
   SortCriteriaState,
-} from './sort-criteria-state';
+} from './sort-criteria-state.js';
 
 describe('sortCriteria', () => {
   let state: SortCriteriaState;

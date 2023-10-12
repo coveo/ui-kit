@@ -1,9 +1,9 @@
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 import {
   AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from './analytics-utils';
+} from './analytics-utils.js';
 
 export const logInsightInterfaceLoad = (): InsightAction =>
   makeInsightAnalyticsAction(

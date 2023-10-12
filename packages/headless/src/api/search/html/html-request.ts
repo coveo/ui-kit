@@ -1,5 +1,5 @@
-import {BaseParam, VisitorIDParam} from '../../platform-service-params';
-import {AuthenticationParam} from '../search-api-params';
+import {BaseParam, VisitorIDParam} from '../../platform-service-params.js';
+import {AuthenticationParam} from '../search-api-params.js';
 
 export interface HtmlRequestOptions {
   uniqueId: string;

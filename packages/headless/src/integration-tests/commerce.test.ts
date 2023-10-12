@@ -2,10 +2,10 @@ import {
   buildCart,
   buildCommerceEngine,
   buildProductListing,
-} from '../commerce.index';
-import {getOrganizationEndpoints} from '../insight.index';
-import {buildContext} from '../controllers/commerce/context/headless-context';
-import {waitForNextStateChange} from '../test/functional-test-utils';
+} from '../commerce.index.js';
+import {getOrganizationEndpoints} from '../insight.index.js';
+import {buildContext} from '../controllers/commerce/context/headless-context.js';
+import {waitForNextStateChange} from '../test/functional-test-utils.js';
 
 const accessToken = 'no';
 

@@ -3,7 +3,7 @@ import {
   formatDateForSearchApi,
   validateAbsoluteDate,
   parseDate,
-} from './date-format';
+} from './date-format.js';
 
 describe('#parseDate', () => {
   it('can parse the search API format', () => {

@@ -1,11 +1,11 @@
-import {buildMockInsightEngine} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockPagination} from '../../test/mock-pagination';
+import {buildMockInsightEngine} from '../../test/mock-engine.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockPagination} from '../../test/mock-pagination.js';
 import {
   logPageNext,
   logPageNumber,
   logPagePrevious,
-} from './pagination-insight-analytics-actions';
+} from './pagination-insight-analytics-actions.js';
 
 const mockLogPagerNumber = jest.fn();
 const mockLogPagerNext = jest.fn();

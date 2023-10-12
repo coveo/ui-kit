@@ -1,9 +1,9 @@
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
-import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildMockInsightEngine} from '../../../../test/mock-engine';
-import {buildMockInsightState} from '../../../../test/mock-insight-state';
-import {logDateFacetBreadcrumb} from './date-facet-insight-analytics-actions';
+import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request.js';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
+import {buildMockInsightEngine} from '../../../../test/mock-engine.js';
+import {buildMockInsightState} from '../../../../test/mock-insight-state.js';
+import {logDateFacetBreadcrumb} from './date-facet-insight-analytics-actions.js';
 
 const mockLogBreadcrumbFacet = jest.fn();
 

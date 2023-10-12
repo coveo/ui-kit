@@ -1,14 +1,14 @@
 import {history} from 'coveo.analytics';
-import {FacetOptions} from '../../features/facet-options/facet-options';
-import {AutomaticFacetRequest} from '../../features/facets/automatic-facet-set/interfaces/request';
-import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
-import {URLPath} from '../../utils/url-utils';
+import {FacetOptions} from '../../features/facet-options/facet-options.js';
+import {AutomaticFacetRequest} from '../../features/facets/automatic-facet-set/interfaces/request.js';
+import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request.js';
+import {URLPath} from '../../utils/url-utils.js';
 import {
   HTTPContentType,
   HttpMethods,
   PlatformClientCallOptions,
-} from '../platform-client';
-import {BaseParam} from '../platform-service-params';
+} from '../platform-client.js';
+import {BaseParam} from '../platform-service-params.js';
 
 export interface QueryParam {
   q?: string;

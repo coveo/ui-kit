@@ -1,34 +1,34 @@
-import {PlatformClient} from '../../api/platform-client';
-import {Result} from '../../api/search/search/result';
+import {PlatformClient} from '../../api/platform-client.js';
+import {Result} from '../../api/search/search/result.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {buildMockQuestionsAnswers} from '../../test/mock-question-answer';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearch} from '../../test/mock-search';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {createMockState} from '../../test/mock-state';
-import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
-import {logPageNext} from '../pagination/pagination-analytics-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
+} from '../../test/mock-engine.js';
+import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
+import {buildMockQuestionsAnswers} from '../../test/mock-question-answer.js';
+import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearch} from '../../test/mock-search.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {createMockState} from '../../test/mock-state.js';
+import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils.js';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions.js';
+import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions.js';
+import {logPageNext} from '../pagination/pagination-analytics-actions.js';
+import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
-} from './search-actions';
-import {searchReducer} from './search-slice';
+} from './search-actions.js';
+import {searchReducer} from './search-slice.js';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,
   SearchState,
-} from './search-state';
+} from './search-state.js';
 
 jest.mock('../../api/platform-client');
 

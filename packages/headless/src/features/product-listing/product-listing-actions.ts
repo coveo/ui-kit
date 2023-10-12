@@ -1,12 +1,12 @@
 import {ArrayValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils';
-import {AsyncThunkProductListingOptions} from '../../api/commerce/product-listings/product-listing-api-client';
+import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
+import {AsyncThunkProductListingOptions} from '../../api/commerce/product-listings/product-listing-api-client.js';
 import {
   ProductListingRequest,
   ProductListingSuccessResponse,
-} from '../../api/commerce/product-listings/product-listing-request';
-import {isErrorResponse} from '../../api/search/search-api-client';
+} from '../../api/commerce/product-listings/product-listing-request.js';
+import {isErrorResponse} from '../../api/search/search-api-client.js';
 import {
   CategoryFacetSection,
   ConfigurationSection,
@@ -19,18 +19,18 @@ import {
   PaginationSection,
   ProductListingSection,
   StructuredSortSection,
-} from '../../state/state-sections';
-import {sortFacets} from '../../utils/facet-utils';
-import {validatePayload} from '../../utils/validate-payload';
+} from '../../state/state-sections.js';
+import {sortFacets} from '../../utils/facet-utils.js';
+import {validatePayload} from '../../utils/validate-payload.js';
 import {
   AnalyticsType,
   PreparableAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
-import {logQueryError} from '../search/search-analytics-actions';
-import {SortBy} from '../sort/sort';
-import {logProductListing} from './product-listing-analytics';
-import {ProductListingState} from './product-listing-state';
+} from '../analytics/analytics-utils.js';
+import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request.js';
+import {logQueryError} from '../search/search-analytics-actions.js';
+import {SortBy} from '../sort/sort.js';
+import {logProductListing} from './product-listing-analytics.js';
+import {ProductListingState} from './product-listing-state.js';
 
 export interface SetProductListingUrlPayload {
   /**

@@ -1,9 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions';
-import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
-import {TriggerSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {buildController, Controller} from '../controller/headless-controller';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions.js';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
+import {TriggerSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
+import {buildController, Controller} from '../controller/headless-controller.js';
 
 /**
  * The `RedirectionTrigger` controller handles redirection actions.

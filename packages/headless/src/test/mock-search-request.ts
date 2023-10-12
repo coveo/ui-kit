@@ -1,4 +1,4 @@
-import {SearchRequest} from '../api/search/search/search-request';
+import {SearchRequest} from '../api/search/search/search-request.js';
 
 export function buildMockSearchRequest(config?: Partial<SearchRequest>) {
   return {

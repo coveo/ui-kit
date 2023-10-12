@@ -1,23 +1,23 @@
-import {configuration} from '../../app/common-reducers';
-import {DocumentSuggestionResponse} from '../../case-assist.index';
-import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
-import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {DocumentSuggestionResponse} from '../../case-assist.index.js';
+import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions.js';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
 import {
   fetchResultContent,
   preparePreviewPagination,
-} from '../../features/result-preview/result-preview-actions';
-import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice';
-import {buildMockResult} from '../../test';
+} from '../../features/result-preview/result-preview-actions.js';
+import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice.js';
+import {buildMockResult} from '../../test.js';
 import {
   buildMockCaseAssistEngine,
   MockCaseAssistEngine,
-} from '../../test/mock-engine';
-import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
+} from '../../test/mock-engine.js';
+import {buildMockResultPreviewState} from '../../test/mock-result-preview-state.js';
 import {
   buildCaseAssistQuickview,
   CaseAssistQuickviewOptions,
   CaseAssistQuickview,
-} from './case-assist-headless-quickview';
+} from './case-assist-headless-quickview.js';
 
 describe('CaseAssistQuickview', () => {
   let engine: MockCaseAssistEngine;

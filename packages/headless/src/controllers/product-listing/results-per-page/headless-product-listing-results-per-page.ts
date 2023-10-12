@@ -1,20 +1,20 @@
-import {configuration} from '../../../app/common-reducers';
-import {logPagerResize} from '../../../features/pagination/pagination-analytics-actions';
-import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {ProductListingEngine} from '../../../product-listing.index';
+import {configuration} from '../../../app/common-reducers.js';
+import {logPagerResize} from '../../../features/pagination/pagination-analytics-actions.js';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions.js';
+import {ProductListingEngine} from '../../../product-listing.index.js';
 import {
   ConfigurationSection,
   PaginationSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildCoreResultsPerPage,
   ResultsPerPage,
   ResultsPerPageInitialState,
   ResultsPerPageProps,
   ResultsPerPageState,
-} from '../../core/results-per-page/headless-core-results-per-page';
+} from '../../core/results-per-page/headless-core-results-per-page.js';
 
 export type {
   ResultsPerPage,

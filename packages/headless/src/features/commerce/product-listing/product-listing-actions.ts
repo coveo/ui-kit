@@ -1,8 +1,8 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2/product-listing-v2-request';
-import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response';
-import {isErrorResponse} from '../../../api/search/search-api-client';
+import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
+import {ProductListingV2Request} from '../../../api/commerce/product-listings/v2/product-listing-v2-request.js';
+import {ProductListingV2SuccessResponse} from '../../../api/commerce/product-listings/v2/product-listing-v2-response.js';
+import {isErrorResponse} from '../../../api/search/search-api-client.js';
 import {
   CategoryFacetSection,
   CommercePaginationSection,
@@ -16,15 +16,15 @@ import {
   ProductListingV2Section,
   StructuredSortSection,
   VersionSection,
-} from '../../../state/state-sections';
-import {sortFacets} from '../../../utils/facet-utils';
+} from '../../../state/state-sections.js';
+import {sortFacets} from '../../../utils/facet-utils.js';
 import {
   AnalyticsType,
   PreparableAnalyticsAction,
-} from '../../analytics/analytics-utils';
-import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request';
-import {logQueryError} from '../../search/search-analytics-actions';
-import {logProductListingV2Load} from './product-listing-analytics';
+} from '../../analytics/analytics-utils.js';
+import {getFacetRequests} from '../../facets/generic/interfaces/generic-facet-request.js';
+import {logQueryError} from '../../search/search-analytics-actions.js';
+import {logProductListingV2Load} from './product-listing-analytics.js';
 
 export type StateNeededByFetchProductListingV2 = ConfigurationSection &
   ProductListingV2Section &

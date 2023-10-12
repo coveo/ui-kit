@@ -1,21 +1,21 @@
 import {ArrayValue, NumberValue, Schema, SchemaValues} from '@coveo/bueno';
-import {configuration} from '../../app/common-reducers';
-import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
+import {configuration} from '../../app/common-reducers.js';
+import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine.js';
 import {
   getProductRecommendations as updateProductRecommendations,
   setProductRecommendationsSkus,
   setProductRecommendationsMaxNumberOfRecommendations,
   setProductRecommendationsRecommenderId,
   setProductRecommendationsAdditionalFields,
-} from '../../features/product-recommendations/product-recommendations-actions';
-import {productRecommendationsReducer as productRecommendations} from '../../features/product-recommendations/product-recommendations-slice';
-import {loadReducerError} from '../../utils/errors';
+} from '../../features/product-recommendations/product-recommendations-actions.js';
+import {productRecommendationsReducer as productRecommendations} from '../../features/product-recommendations/product-recommendations-slice.js';
+import {loadReducerError} from '../../utils/errors.js';
 import {
   nonEmptyString,
   requiredNonEmptyString,
   validateOptions,
-} from '../../utils/validate-payload';
-import {buildController} from '../controller/headless-controller';
+} from '../../utils/validate-payload.js';
+import {buildController} from '../controller/headless-controller.js';
 
 export const baseProductRecommendationsOptionsSchema = {
   additionalFields: new ArrayValue<string>({

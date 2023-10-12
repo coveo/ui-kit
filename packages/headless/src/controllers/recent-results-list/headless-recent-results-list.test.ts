@@ -2,18 +2,18 @@ import {Action} from '@reduxjs/toolkit';
 import {
   clearRecentResults,
   registerRecentResults,
-} from '../../features/recent-results/recent-results-actions';
-import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
-import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice';
+} from '../../features/recent-results/recent-results-actions.js';
+import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions.js';
+import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice.js';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test';
+} from '../../test.js';
 import {
   buildRecentResultsList,
   RecentResultsList,
-} from './headless-recent-results-list';
+} from './headless-recent-results-list.js';
 
 describe('recent results list', () => {
   let engine: MockSearchEngine;

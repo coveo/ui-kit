@@ -1,19 +1,19 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   enableDidYouMean,
-} from '../../../features/did-you-mean/did-you-mean-actions';
-import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice';
+} from '../../../features/did-you-mean/did-you-mean-actions.js';
+import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine.js';
 import {
   buildCoreDidYouMean,
   DidYouMean,
   DidYouMeanProps,
-} from './headless-core-did-you-mean';
+} from './headless-core-did-you-mean.js';
 
 describe('did you mean', () => {
   let dym: DidYouMean;

@@ -1,19 +1,19 @@
-import {configuration} from '../../../app/common-reducers';
-import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice';
-import {updateContentURL} from '../../../features/result-preview/result-preview-actions';
-import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
-import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
-import {buildMockResult} from '../../../test';
+import {configuration} from '../../../app/common-reducers.js';
+import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice.js';
+import {updateContentURL} from '../../../features/result-preview/result-preview-actions.js';
+import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions.js';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
+import {buildMockResult} from '../../../test.js';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
-} from '../../../test/mock-engine';
-import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
+} from '../../../test/mock-engine.js';
+import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state.js';
 import {
   buildQuickview,
   QuickviewOptions,
   Quickview,
-} from './headless-insight-quickview';
+} from './headless-insight-quickview.js';
 
 describe('Insight Quickview', () => {
   let engine: MockInsightEngine;

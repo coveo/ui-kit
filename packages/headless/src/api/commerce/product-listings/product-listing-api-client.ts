@@ -1,20 +1,20 @@
 import {Logger} from 'pino';
-import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
-import {ProductListingAppState} from '../../../state/product-listing-app-state';
-import {PlatformClient} from '../../platform-client';
-import {PreprocessRequest} from '../../preprocess-request';
-import {FacetSearchRequest} from '../../search/facet-search/facet-search-request';
-import {FacetSearchResponse} from '../../search/facet-search/facet-search-response';
+import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments.js';
+import {ProductListingAppState} from '../../../state/product-listing-app-state.js';
+import {PlatformClient} from '../../platform-client.js';
+import {PreprocessRequest} from '../../preprocess-request.js';
+import {FacetSearchRequest} from '../../search/facet-search/facet-search-request.js';
+import {FacetSearchResponse} from '../../search/facet-search/facet-search-response.js';
 import {
   FacetSearchAPIClient,
   SearchAPIClient,
-} from '../../search/search-api-client';
-import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
+} from '../../search/search-api-client.js';
+import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response.js';
 import {
   buildProductListingRequest,
   ProductListingRequest,
   ProductListingSuccessResponse,
-} from './product-listing-request';
+} from './product-listing-request.js';
 
 export interface AsyncThunkProductListingOptions<
   T extends Partial<ProductListingAppState>,

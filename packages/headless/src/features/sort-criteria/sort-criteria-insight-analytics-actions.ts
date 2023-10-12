@@ -2,9 +2,9 @@ import {
   AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
-import {getSortCriteriaInitialState} from './sort-criteria-state';
+} from '../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
+import {getSortCriteriaInitialState} from './sort-criteria-state.js';
 
 export const logResultsSort = (): InsightAction =>
   makeInsightAnalyticsAction(

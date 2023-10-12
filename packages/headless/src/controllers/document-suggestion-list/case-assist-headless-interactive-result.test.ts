@@ -1,15 +1,15 @@
-import {Result} from '../../api/search/search/result';
-import {configuration} from '../../app/common-reducers';
-import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions';
-import {buildMockResult} from '../../test';
+import {Result} from '../../api/search/search/result.js';
+import {configuration} from '../../app/common-reducers.js';
+import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions.js';
+import {buildMockResult} from '../../test.js';
 import {
   buildMockCaseAssistEngine,
   MockCaseAssistEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildCaseAssistInteractiveResult,
   CaseAssistInteractiveResult,
-} from './case-assist-headless-interactive-result';
+} from './case-assist-headless-interactive-result.js';
 
 describe('InteractiveResult', () => {
   let engine: MockCaseAssistEngine;

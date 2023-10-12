@@ -1,23 +1,23 @@
-import {configuration} from '../../../app/common-reducers';
+import {configuration} from '../../../app/common-reducers.js';
 import {
   fetchResultContent,
   nextPreview,
   previousPreview,
   updateContentURL,
-} from '../../../features/result-preview/result-preview-actions';
-import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice';
+} from '../../../features/result-preview/result-preview-actions.js';
+import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../test';
-import {buildMockResultPreviewRequest} from '../../../test/mock-result-preview-request-builder';
-import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
+} from '../../../test.js';
+import {buildMockResultPreviewRequest} from '../../../test/mock-result-preview-request-builder.js';
+import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state.js';
 import {
   buildCoreQuickview,
   QuickviewOptions,
   Quickview,
-} from './headless-core-quickview';
+} from './headless-core-quickview.js';
 
 describe('QuickviewCore', () => {
   let engine: MockSearchEngine;

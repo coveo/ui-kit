@@ -1,12 +1,12 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {fetchMoreResults} from '../../features/search/search-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {fetchMoreResults} from '../../features/search/search-actions.js';
 import {
   buildCoreResultList,
   ResultList,
   ResultListOptions,
   ResultListProps,
   ResultListState,
-} from '../core/result-list/headless-core-result-list';
+} from '../core/result-list/headless-core-result-list.js';
 
 export type {ResultListOptions, ResultListProps, ResultListState, ResultList};
 

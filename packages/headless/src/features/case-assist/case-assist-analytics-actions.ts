@@ -1,13 +1,13 @@
 import {
   CaseAssistAction,
   makeCaseAssistAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {NextStageOptions} from './case-assist-analytics-actions-loader';
+} from '../analytics/analytics-utils.js';
+import {NextStageOptions} from './case-assist-analytics-actions-loader.js';
 import {
   caseAssistCaseSelector,
   caseAssistCaseClassificationSelector,
   caseAssistDocumentSuggestionSelector,
-} from './case-assist-analytics-selectors';
+} from './case-assist-analytics-selectors.js';
 
 export const logCaseStart = (): CaseAssistAction =>
   makeCaseAssistAnalyticsAction(

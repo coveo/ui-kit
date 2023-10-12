@@ -1,12 +1,12 @@
 import {
   buildMockProductRecommendationsAppEngine,
   MockProductRecommendationEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildFrequentlyViewedSameCategoryList,
   FrequentlyViewedSameCategoryList,
   FrequentlyViewedSameCategoryListOptions,
-} from './headless-frequently-viewed-same-category';
+} from './headless-frequently-viewed-same-category.js';
 
 describe('headless frequently-viewed-together-same-category', () => {
   let frequentlyViewedTogether: FrequentlyViewedSameCategoryList;

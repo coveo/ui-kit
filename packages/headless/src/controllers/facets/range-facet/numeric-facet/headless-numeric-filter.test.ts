@@ -1,29 +1,29 @@
-import {configuration} from '../../../../app/common-reducers';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {configuration} from '../../../../app/common-reducers.js';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions.js';
 import {
   registerNumericFacet,
   updateNumericFacetValues,
-} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {executeSearch} from '../../../../features/search/search-actions';
-import {searchReducer as search} from '../../../../features/search/search-slice';
-import {SearchAppState} from '../../../../state/search-app-state';
+} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
+import {executeSearch} from '../../../../features/search/search-actions.js';
+import {searchReducer as search} from '../../../../features/search/search-slice.js';
+import {SearchAppState} from '../../../../state/search-app-state.js';
 import {
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
-} from '../../../../test';
-import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
-import {buildNumericRange} from '../../../core/facets/range-facet/numeric-facet/numeric-range';
+} from '../../../../test.js';
+import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response.js';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor.js';
+import {buildNumericRange} from '../../../core/facets/range-facet/numeric-facet/numeric-range.js';
 import {
   buildNumericFilter,
   NumericFilter,
   NumericFilterInitialState,
   NumericFilterOptions,
-} from './headless-numeric-filter';
+} from './headless-numeric-filter.js';
 
 describe('numeric filter', () => {
   const facetId = '1';

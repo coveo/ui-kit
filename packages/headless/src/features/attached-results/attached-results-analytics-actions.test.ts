@@ -1,11 +1,11 @@
-import {buildMockRaw, buildMockResult} from '../../test';
-import {buildMockInsightEngine} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockSearchState} from '../../test/mock-search-state';
+import {buildMockRaw, buildMockResult} from '../../test.js';
+import {buildMockInsightEngine} from '../../test/mock-engine.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {
   logCaseAttach,
   logCaseDetach,
-} from './attached-results-analytics-actions';
+} from './attached-results-analytics-actions.js';
 
 const mockLogCaseAttach = jest.fn();
 const mockLogCaseDetach = jest.fn();

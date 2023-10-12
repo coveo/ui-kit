@@ -1,22 +1,22 @@
 import {RecordValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
 import {
   ConfigurationSection,
   NumericFacetSection,
-} from '../../../../state/state-sections';
-import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
-import {facetIdDefinition} from '../../generic/facet-actions-validation';
+} from '../../../../state/state-sections.js';
+import {updateFacetOptions} from '../../../facet-options/facet-options-actions.js';
+import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import {
   executeToggleRangeFacetExclude,
   executeToggleRangeFacetSelect,
-} from '../generic/range-facet-controller-actions';
-import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
-import {NumericFacetValue} from './interfaces/response';
+} from '../generic/range-facet-controller-actions.js';
+import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload.js';
+import {NumericFacetValue} from './interfaces/response.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
-} from './numeric-facet-actions';
+} from './numeric-facet-actions.js';
 
 const definition = {
   facetId: facetIdDefinition,

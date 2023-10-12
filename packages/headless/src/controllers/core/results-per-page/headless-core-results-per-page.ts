@@ -1,21 +1,21 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {configuration} from '../../../app/common-reducers';
-import {CoreEngine} from '../../../app/engine';
+import {configuration} from '../../../app/common-reducers.js';
+import {CoreEngine} from '../../../app/engine.js';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
-} from '../../../features/pagination/pagination-actions';
-import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice';
+} from '../../../features/pagination/pagination-actions.js';
+import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
 import {
   ConfigurationSection,
   PaginationSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {validateInitialState} from '../../../utils/validate-payload';
+} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 const initialStateSchema = new Schema({
   numberOfResults: new NumberValue({min: 0}),

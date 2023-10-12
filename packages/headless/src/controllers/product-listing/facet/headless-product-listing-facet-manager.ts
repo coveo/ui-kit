@@ -1,15 +1,15 @@
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice';
-import {productListingReducer as productListing} from '../../../features/product-listing/product-listing-slice';
-import {ProductListingSection} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {sortFacets} from '../../../utils/facet-utils';
-import {buildController} from '../../controller/headless-controller';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine.js';
+import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice.js';
+import {productListingReducer as productListing} from '../../../features/product-listing/product-listing-slice.js';
+import {ProductListingSection} from '../../../state/state-sections.js';
+import {loadReducerError} from '../../../utils/errors.js';
+import {sortFacets} from '../../../utils/facet-utils.js';
+import {buildController} from '../../controller/headless-controller.js';
 import {
   FacetManager,
   FacetManagerPayload,
   FacetManagerState,
-} from '../../core/facet-manager/headless-core-facet-manager';
+} from '../../core/facet-manager/headless-core-facet-manager.js';
 
 export type {FacetManager, FacetManagerState, FacetManagerPayload};
 

@@ -3,11 +3,11 @@ import {
   CustomAction,
   SearchAction,
   makeAnalyticsAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
-} from './generated-answer-selectors';
+} from './generated-answer-selectors.js';
 
 export const logRetryGeneratedAnswer = (): SearchAction =>
   makeAnalyticsAction(

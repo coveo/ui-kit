@@ -1,12 +1,12 @@
-import {validatePayload} from '../../../../utils/validate-payload';
+import {validatePayload} from '../../../../utils/validate-payload.js';
 import {
   AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
-} from '../../../analytics/analytics-utils';
-import {getRangeFacetMetadata} from '../generic/range-facet-analytics-actions';
-import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
-import {DateFacetValue} from './interfaces/response';
+} from '../../../analytics/analytics-utils.js';
+import {getRangeFacetMetadata} from '../generic/range-facet-analytics-actions.js';
+import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload.js';
+import {DateFacetValue} from './interfaces/response.js';
 
 export interface LogDateFacetBreadcrumbActionCreatorPayload {
   /**

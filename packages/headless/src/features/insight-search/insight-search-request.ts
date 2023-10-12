@@ -1,13 +1,13 @@
-import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
-import {InsightAppState} from '../../state/insight-app-state';
+import {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
+import {InsightAppState} from '../../state/insight-app-state.js';
 import {
   ConfigurationSection,
   InsightConfigurationSection,
-} from '../../state/state-sections';
-import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
-import {CollectionId} from '../folding/folding-state';
-import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
-import {MappedSearchRequest, mapSearchRequest} from '../search/search-mappings';
+} from '../../state/state-sections.js';
+import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request.js';
+import {CollectionId} from '../folding/folding-state.js';
+import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
+import {MappedSearchRequest, mapSearchRequest} from '../search/search-mappings.js';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   InsightConfigurationSection &

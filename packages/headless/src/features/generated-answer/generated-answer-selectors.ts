@@ -1,5 +1,5 @@
-import {SearchAppState} from '../../state/search-app-state';
-import {GeneratedAnswerSection} from '../../state/state-sections';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {GeneratedAnswerSection} from '../../state/state-sections.js';
 
 export function citationSourceSelector(
   state: Partial<GeneratedAnswerSection>,

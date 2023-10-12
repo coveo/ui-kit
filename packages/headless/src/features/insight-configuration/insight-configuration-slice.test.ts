@@ -1,9 +1,9 @@
-import {setInsightConfiguration} from './insight-configuration-actions';
-import {insightConfigurationReducer} from './insight-configuration-slice';
+import {setInsightConfiguration} from './insight-configuration-actions.js';
+import {insightConfigurationReducer} from './insight-configuration-slice.js';
 import {
   getInsightConfigurationInitialState,
   InsightConfigurationState,
-} from './insight-configuration-state';
+} from './insight-configuration-state.js';
 
 describe('insight configuration slice', () => {
   let state: InsightConfigurationState;

@@ -3,17 +3,17 @@ import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
-} from '../../api/search/search-api-client-middleware';
+} from '../../api/search/search-api-client-middleware.js';
 import {
   nonEmptyString,
   requiredNonEmptyString,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 import {
   engineConfigurationDefinitions,
   EngineConfiguration,
   getSampleEngineConfiguration,
   CoreEngineOrganizationEndpoints,
-} from '../engine-configuration';
+} from '../engine-configuration.js';
 
 export interface SearchEngineOrganizationEndpoints
   extends CoreEngineOrganizationEndpoints {

@@ -1,9 +1,9 @@
 import {Schema} from '@coveo/bueno';
-import {getOrganizationEndpoints} from '../..';
+import {getOrganizationEndpoints} from '../../index.js';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
-} from '../engine-configuration';
+} from '../engine-configuration.js';
 
 /**
  * The commerce engine configuration options.

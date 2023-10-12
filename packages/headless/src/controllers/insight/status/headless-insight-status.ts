@@ -1,9 +1,9 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
   SearchStatusState,
   buildCoreStatus,
   SearchStatus,
-} from '../../core/status/headless-core-status';
+} from '../../core/status/headless-core-status.js';
 
 export type {SearchStatus, SearchStatusState};
 

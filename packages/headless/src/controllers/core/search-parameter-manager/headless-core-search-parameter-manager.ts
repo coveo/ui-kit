@@ -1,22 +1,22 @@
 import {RecordValue, Schema} from '@coveo/bueno';
-import {CoreEngine} from '../../../app/engine';
-import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils';
-import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
-import {getQueryInitialState} from '../../../features/query/query-state';
+import {CoreEngine} from '../../../app/engine.js';
+import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils.js';
+import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request.js';
+import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet.js';
+import {getQueryInitialState} from '../../../features/query/query-state.js';
 import {
   restoreSearchParameters,
   SearchParameters,
-} from '../../../features/search-parameters/search-parameter-actions';
-import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema';
-import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
-import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-criteria-state';
-import {SearchParametersState} from '../../../state/search-app-state';
-import {validateInitialState} from '../../../utils/validate-payload';
+} from '../../../features/search-parameters/search-parameter-actions.js';
+import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema.js';
+import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
+import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-criteria-state.js';
+import {SearchParametersState} from '../../../state/search-app-state.js';
+import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
   Controller,
-} from '../../controller/headless-controller';
+} from '../../controller/headless-controller.js';
 
 export type {SearchParameters};
 

@@ -3,23 +3,23 @@ import {
   SearchPageClientProvider,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
 import {Logger} from 'pino';
 import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
-} from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
-import {getQueryInitialState} from '../../features/query/query-state';
-import {getSearchInitialState} from '../../features/search/search-state';
-import {SearchAppState} from '../../state/search-app-state';
-import {ConfigurationSection} from '../../state/state-sections';
-import {PreprocessRequest} from '../preprocess-request';
-import {BaseAnalyticsProvider} from './base-analytics';
+} from '../../features/facets/facet-set/facet-set-analytics-actions-utils.js';
+import {getQueryInitialState} from '../../features/query/query-state.js';
+import {getSearchInitialState} from '../../features/search/search-state.js';
+import {SearchAppState} from '../../state/search-app-state.js';
+import {ConfigurationSection} from '../../state/state-sections.js';
+import {PreprocessRequest} from '../preprocess-request.js';
+import {BaseAnalyticsProvider} from './base-analytics.js';
 import {
   historyStore,
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
-} from './coveo-analytics-utils';
+} from './coveo-analytics-utils.js';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;

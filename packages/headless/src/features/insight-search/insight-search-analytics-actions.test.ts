@@ -1,13 +1,13 @@
-import {buildMockInsightEngine} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {getCaseContextInitialState} from '../case-context/case-context-state';
-import {getQueryInitialState} from '../query/query-state';
+import {buildMockInsightEngine} from '../../test/mock-engine.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {getCaseContextInitialState} from '../case-context/case-context-state.js';
+import {getQueryInitialState} from '../query/query-state.js';
 import {
   logContextChanged,
   logExpandToFullUI,
   logFetchMoreResults,
   logQueryError,
-} from './insight-search-analytics-actions';
+} from './insight-search-analytics-actions.js';
 
 const mockLogContextChanged = jest.fn();
 const mockLogExpandtoFullUI = jest.fn();

@@ -6,8 +6,8 @@ import {
   buildFieldSortCriterion,
   SortOrder,
   SortBy,
-} from './criteria';
-import {parseCriterionExpression} from './criteria-parser';
+} from './criteria.js';
+import {parseCriterionExpression} from './criteria-parser.js';
 
 describe('#parseCriterionExpression', () => {
   it('when criterion expression is empty, throws an error', () => {

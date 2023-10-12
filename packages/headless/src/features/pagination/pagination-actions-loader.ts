@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../..';
-import {paginationReducer as pagination} from '../../features/pagination/pagination-slice';
+import {CoreEngine} from '../../index.js';
+import {paginationReducer as pagination} from '../../features/pagination/pagination-slice.js';
 import {
   nextPage,
   previousPage,
@@ -8,7 +8,7 @@ import {
   registerPage,
   updateNumberOfResults,
   updatePage,
-} from './pagination-actions';
+} from './pagination-actions.js';
 
 /**
  * The pagination action creators.

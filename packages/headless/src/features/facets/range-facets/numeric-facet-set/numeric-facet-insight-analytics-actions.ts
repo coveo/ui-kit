@@ -1,13 +1,13 @@
-import {validatePayload} from '../../../../utils/validate-payload';
+import {validatePayload} from '../../../../utils/validate-payload.js';
 import {
   AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from '../../../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../../../case-context/case-context-state';
-import {getRangeFacetMetadata} from '../generic/range-facet-insight-analytics-actions';
-import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
-import {LogNumericFacetBreadcrumbActionCreatorPayload} from './numeric-facet-analytics-actions';
+} from '../../../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../../../case-context/case-context-state.js';
+import {getRangeFacetMetadata} from '../generic/range-facet-insight-analytics-actions.js';
+import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload.js';
+import {LogNumericFacetBreadcrumbActionCreatorPayload} from './numeric-facet-analytics-actions.js';
 
 export const logNumericFacetBreadcrumb = (
   payload: LogNumericFacetBreadcrumbActionCreatorPayload

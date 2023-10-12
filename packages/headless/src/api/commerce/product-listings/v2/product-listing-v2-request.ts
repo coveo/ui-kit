@@ -2,8 +2,8 @@ import {
   HTTPContentType,
   HttpMethods,
   PlatformClientCallOptions,
-} from '../../../platform-client';
-import {BaseParam} from '../../../platform-service-params';
+} from '../../../platform-client.js';
+import {BaseParam} from '../../../platform-service-params.js';
 import {
   ClientIdParam,
   ContextParam,
@@ -13,7 +13,7 @@ import {
   SelectedPageParam,
   SelectedSortParam,
   TrackingIdParam,
-} from '../../commerce-api-params';
+} from '../../commerce-api-params.js';
 
 export type ProductListingV2Request = BaseParam &
   TrackingIdParam &

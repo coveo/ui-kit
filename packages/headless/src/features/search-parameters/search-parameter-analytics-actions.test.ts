@@ -1,19 +1,19 @@
-import {buildMockSearchAppEngine} from '../../test';
-import {logInterfaceChange} from '../analytics/analytics-actions';
-import {SearchAction} from '../analytics/analytics-utils';
+import {buildMockSearchAppEngine} from '../../test.js';
+import {logInterfaceChange} from '../analytics/analytics-actions.js';
+import {SearchAction} from '../analytics/analytics-utils.js';
 import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
   logFacetExclude,
-} from '../facets/facet-set/facet-set-analytics-actions';
+} from '../facets/facet-set/facet-set-analytics-actions.js';
 import {
   logPageNumber,
   logPagerResize,
-} from '../pagination/pagination-analytics-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
-import {logParametersChange} from './search-parameter-analytics-actions';
+} from '../pagination/pagination-analytics-actions.js';
+import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
+import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions.js';
+import {logParametersChange} from './search-parameter-analytics-actions.js';
 
 describe('logParametersChange', () => {
   function expectIdenticalActionType(

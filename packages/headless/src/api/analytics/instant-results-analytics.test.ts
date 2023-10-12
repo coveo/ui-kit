@@ -1,14 +1,14 @@
-import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
 import {
   getInstantResultsInitialState,
   InstantResultCache,
-} from '../../features/instant-results/instant-results-state';
-import {buildMockResult} from '../../test';
-import {getObjectHash} from '../../utils/utils';
+} from '../../features/instant-results/instant-results-state.js';
+import {buildMockResult} from '../../test.js';
+import {getObjectHash} from '../../utils/utils.js';
 import {
   InstantResultsAnalyticsProvider,
   StateNeededByInstantResultsAnalyticsProvider,
-} from './instant-result-analytics';
+} from './instant-result-analytics.js';
 
 describe('instant results analytics provider', () => {
   const getBaseState = (): StateNeededByInstantResultsAnalyticsProvider => ({

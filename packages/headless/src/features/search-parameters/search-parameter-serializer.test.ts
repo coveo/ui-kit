@@ -1,8 +1,8 @@
-import {serializeRelativeDate} from '../../api/search/date/relative-date';
-import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
-import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
-import {buildMockSearchParameters} from '../../test/mock-search-parameters';
-import {buildSearchParameterSerializer} from './search-parameter-serializer';
+import {serializeRelativeDate} from '../../api/search/date/relative-date.js';
+import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
+import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
+import {buildMockSearchParameters} from '../../test/mock-search-parameters.js';
+import {buildSearchParameterSerializer} from './search-parameter-serializer.js';
 
 const someSpecialCharactersThatNeedsEncoding = [
   '&',

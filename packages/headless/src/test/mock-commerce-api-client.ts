@@ -1,9 +1,9 @@
-import pino from 'pino';
+import {pino} from 'pino';
 import {
   CommerceAPIClient,
   CommerceAPIClientOptions,
-} from '../api/commerce/commerce-api-client';
-import {NoopPreprocessRequest} from '../api/preprocess-request';
+} from '../api/commerce/commerce-api-client.js';
+import {NoopPreprocessRequest} from '../api/preprocess-request.js';
 
 export function buildMockCommerceAPIClient(
   options?: Partial<CommerceAPIClientOptions>

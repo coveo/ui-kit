@@ -1,6 +1,6 @@
-import {fetchInterface} from './insight-interface-actions';
-import {insightInterfaceReducer} from './insight-interface-slice';
-import {getInsightInterfaceInitialState} from './insight-interface-state';
+import {fetchInterface} from './insight-interface-actions.js';
+import {insightInterfaceReducer} from './insight-interface-slice.js';
+import {getInsightInterfaceInitialState} from './insight-interface-state.js';
 
 describe('insight interface slice', () => {
   const requestId = 'some-request-id';

@@ -1,10 +1,10 @@
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
-import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation.js';
+import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine.js';
 import {
   AnalyticsType,
   ProductListingAction,
-} from '../analytics/analytics-utils';
-import {logProductRecommendationOpen} from './product-listing-analytics';
+} from '../analytics/analytics-utils.js';
+import {logProductRecommendationOpen} from './product-listing-analytics.js';
 
 /**
  * The click analytics action creators.

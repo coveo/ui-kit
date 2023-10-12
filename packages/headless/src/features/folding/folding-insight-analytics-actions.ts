@@ -1,4 +1,4 @@
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/search/search/result.js';
 import {
   AnalyticsType,
   documentIdentifier,
@@ -6,8 +6,8 @@ import {
   makeInsightAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
-} from '../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
+} from '../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 
 export const logShowMoreFoldedResults = (
   result: Result

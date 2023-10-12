@@ -1,11 +1,11 @@
 import {
   buildMockProductRecommendationsAppEngine,
   MockProductRecommendationEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildUserInterestRecommendationsList,
   UserInterestRecommendationsList,
-} from './headless-user-interest-recommendations';
+} from './headless-user-interest-recommendations.js';
 
 describe('headless user-interest-recommendations', () => {
   let userInterestRecommender: UserInterestRecommendationsList;

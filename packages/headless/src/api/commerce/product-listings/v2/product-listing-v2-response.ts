@@ -1,11 +1,11 @@
-import {AnyFacetResponse} from '../../../../features/facets/generic/interfaces/generic-facet-response';
+import {AnyFacetResponse} from '../../../../features/facets/generic/interfaces/generic-facet-response.js';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
-} from '../../../search/search-api-error-response';
-import {ProductRecommendation} from '../../../search/search/product-recommendation';
-import {Pagination} from './pagination';
-import {Sort} from './sort';
+} from '../../../search/search-api-error-response.js';
+import {ProductRecommendation} from '../../../search/search/product-recommendation.js';
+import {Pagination} from './pagination.js';
+import {Sort} from './sort.js';
 
 export interface ProductListingV2SuccessResponse {
   responseId: string;

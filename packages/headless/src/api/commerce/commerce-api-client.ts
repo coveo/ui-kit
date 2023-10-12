@@ -1,18 +1,18 @@
 import {Logger} from 'pino';
-import {CommerceThunkExtraArguments} from '../../app/commerce-thunk-extra-arguments';
-import {CommerceAppState} from '../../state/commerce-app-state';
-import {PlatformClient} from '../platform-client';
-import {PreprocessRequest} from '../preprocess-request';
-import {buildAPIResponseFromErrorOrThrow} from '../search/search-api-error-response';
+import {CommerceThunkExtraArguments} from '../../app/commerce-thunk-extra-arguments.js';
+import {CommerceAppState} from '../../state/commerce-app-state.js';
+import {PlatformClient} from '../platform-client.js';
+import {PreprocessRequest} from '../preprocess-request.js';
+import {buildAPIResponseFromErrorOrThrow} from '../search/search-api-error-response.js';
 import {
   CommerceAPIErrorResponse,
   CommerceAPIErrorStatusResponse,
-} from './commerce-api-error-response';
+} from './commerce-api-error-response.js';
 import {
   buildProductListingV2Request,
   ProductListingV2Request,
-} from './product-listings/v2/product-listing-v2-request';
-import {ProductListingV2SuccessResponse} from './product-listings/v2/product-listing-v2-response';
+} from './product-listings/v2/product-listing-v2-request.js';
+import {ProductListingV2SuccessResponse} from './product-listings/v2/product-listing-v2-response.js';
 
 export interface AsyncThunkCommerceOptions<
   T extends Partial<CommerceAppState>,

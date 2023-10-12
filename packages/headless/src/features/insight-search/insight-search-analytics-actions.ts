@@ -1,11 +1,11 @@
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
 import {
   AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
-} from '../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
-import {getQueryInitialState} from '../query/query-state';
+} from '../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
+import {getQueryInitialState} from '../query/query-state.js';
 
 export const logFetchMoreResults = (): InsightAction =>
   makeInsightAnalyticsAction(

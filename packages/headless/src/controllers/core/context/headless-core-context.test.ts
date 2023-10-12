@@ -3,13 +3,13 @@ import {
   setContext,
   addContext,
   removeContext,
-} from '../../../features/context/context-actions';
-import {contextReducer} from '../../../features/context/context-slice';
+} from '../../../features/context/context-actions.js';
+import {contextReducer} from '../../../features/context/context-slice.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../test/mock-engine';
-import {buildCoreContext, Context} from './headless-core-context';
+} from '../../../test/mock-engine.js';
+import {buildCoreContext, Context} from './headless-core-context.js';
 
 describe('Context', () => {
   let context: Context;

@@ -3,29 +3,29 @@ import {
   InsightClientProvider,
   CoveoInsightClient,
 } from 'coveo.analytics';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
 import {Logger} from 'pino';
 import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
   SectionNeededForFacetMetadata,
-} from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
-import {getQueryInitialState} from '../../features/query/query-state';
-import {getSearchInitialState} from '../../features/search/search-state';
-import {InsightAppState} from '../../state/insight-app-state';
+} from '../../features/facets/facet-set/facet-set-analytics-actions-utils.js';
+import {getQueryInitialState} from '../../features/query/query-state.js';
+import {getSearchInitialState} from '../../features/search/search-state.js';
+import {InsightAppState} from '../../state/insight-app-state.js';
 import {
   ConfigurationSection,
   PipelineSection,
   QuerySection,
   SearchHubSection,
   SearchSection,
-} from '../../state/state-sections';
-import {PreprocessRequest} from '../preprocess-request';
-import {BaseAnalyticsProvider} from './base-analytics';
+} from '../../state/state-sections.js';
+import {PreprocessRequest} from '../preprocess-request.js';
+import {BaseAnalyticsProvider} from './base-analytics.js';
 import {
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
-} from './coveo-analytics-utils';
+} from './coveo-analytics-utils.js';
 
 export type StateNeededByInsightAnalyticsProvider = ConfigurationSection &
   Partial<InsightAppState> &

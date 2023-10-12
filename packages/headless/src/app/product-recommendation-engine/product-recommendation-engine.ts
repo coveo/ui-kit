@@ -1,34 +1,34 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {SearchAPIClient} from '../../api/search/search-api-client';
+import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
+import {SearchAPIClient} from '../../api/search/search-api-client.js';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
-} from '../../api/search/search-api-client-middleware';
-import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
-import {productRecommendationsReducer as productRecommendations} from '../../features/product-recommendations/product-recommendations-slice';
-import {setSearchHub} from '../../features/search-hub/search-hub-actions';
-import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
-import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
+} from '../../api/search/search-api-client-middleware.js';
+import {updateSearchConfiguration} from '../../features/configuration/configuration-actions.js';
+import {productRecommendationsReducer as productRecommendations} from '../../features/product-recommendations/product-recommendations-slice.js';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
+import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state.js';
 import {
   buildEngine,
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
-} from '../engine';
-import {buildLogger} from '../logger';
-import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
-import {buildThunkExtraArguments} from '../thunk-extra-arguments';
+} from '../engine.js';
+import {buildLogger} from '../logger.js';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments.js';
+import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
   ProductRecommendationEngineConfiguration,
   productRecommendationEngineConfigurationSchema,
-} from './product-recommendation-engine-configuration';
+} from './product-recommendation-engine-configuration.js';
 
-export type {ProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration';
-export {getSampleProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration';
+export type {ProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration.js';
+export {getSampleProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration.js';
 
 const productRecommendationEngineReducers = {searchHub, productRecommendations};
 type ProductRecommendationEngineReducers =

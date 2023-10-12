@@ -3,21 +3,21 @@ import {
   CoveoSearchPageClient,
   SearchPageClientProvider,
 } from 'coveo.analytics';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
 import {Logger} from 'pino';
-import {SectionNeededForFacetMetadata} from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
+import {SectionNeededForFacetMetadata} from '../../features/facets/facet-set/facet-set-analytics-actions-utils.js';
 import {
   ConfigurationSection,
   ProductListingV2Section,
   SearchHubSection,
-} from '../../state/state-sections';
-import {PreprocessRequest} from '../preprocess-request';
-import {getProductListingInitialState} from './../../features/product-listing/product-listing-state';
-import {BaseAnalyticsProvider} from './base-analytics';
+} from '../../state/state-sections.js';
+import {PreprocessRequest} from '../preprocess-request.js';
+import {getProductListingInitialState} from './../../features/product-listing/product-listing-state.js';
+import {BaseAnalyticsProvider} from './base-analytics.js';
 import {
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
-} from './coveo-analytics-utils';
+} from './coveo-analytics-utils.js';
 
 export type StateNeededByCommerceAnalyticsProvider = ConfigurationSection &
   ProductListingV2Section &

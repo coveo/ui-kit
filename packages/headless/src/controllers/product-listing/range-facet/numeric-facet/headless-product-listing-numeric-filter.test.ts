@@ -1,18 +1,18 @@
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {ProductListingAppState} from '../../../../state/product-listing-app-state';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions.js';
+import {ProductListingAppState} from '../../../../state/product-listing-app-state.js';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
-} from '../../../../test';
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
+} from '../../../../test.js';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
+import {buildMockProductListingState} from '../../../../test/mock-product-listing-state.js';
 import {
   buildNumericFilter,
   NumericFilter,
   NumericFilterInitialState,
   NumericFilterOptions,
-} from './headless-product-listing-numeric-filter';
+} from './headless-product-listing-numeric-filter.js';
 
 describe('numeric filter', () => {
   const facetId = '1';

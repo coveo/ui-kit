@@ -1,21 +1,21 @@
-import {CoreEngine} from '../../../app/engine';
-import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
-import {registerCategoryFacetSearch} from '../../../features/facets/facet-search-set/category/category-facet-search-actions';
-import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
-import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {CoreEngine} from '../../../app/engine.js';
+import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments.js';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
+import {registerCategoryFacetSearch} from '../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
+import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers.js';
+import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions.js';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions.js';
 import {
   CategoryFacetSearchSection,
   ConfigurationSection,
   ProductListingSection,
-} from '../../../state/state-sections';
-import {CategoryFacetSearchResult} from '../../core/facets/category-facet/headless-core-category-facet';
+} from '../../../state/state-sections.js';
+import {CategoryFacetSearchResult} from '../../core/facets/category-facet/headless-core-category-facet.js';
 import {
   buildCoreCategoryFacetSearch,
   CategoryFacetSearchProps,
-} from '../../core/facets/facet-search/category/headless-category-facet-search';
-import {buildGenericFacetSearch} from '../../core/facets/facet-search/facet-search';
+} from '../../core/facets/facet-search/category/headless-category-facet-search.js';
+import {buildGenericFacetSearch} from '../../core/facets/facet-search/facet-search.js';
 
 export function buildCategoryFacetSearch(
   engine: CoreEngine<

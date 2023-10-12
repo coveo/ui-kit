@@ -1,12 +1,12 @@
-import {createMockState} from '../../test';
-import {buildMockResult} from '../../test';
-import {createMockRecommendationState} from '../../test/mock-recommendation-state';
-import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
+import {createMockState} from '../../test.js';
+import {buildMockResult} from '../../test.js';
+import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
+import {buildMockResultWithFolding} from '../../test/mock-result-with-folding.js';
 import {
   documentIdentifier,
   partialDocumentInformation,
   partialRecommendationInformation,
-} from './analytics-utils';
+} from './analytics-utils.js';
 
 describe('analytics-utils', () => {
   describe('#partialDocumentInformation', () => {

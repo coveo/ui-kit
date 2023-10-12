@@ -1,21 +1,21 @@
 import {
   clearFacetSearch,
   executeFacetSearch,
-} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
-import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
+} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
+import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../../test/mock-engine';
-import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
-import {buildMockFacetSearchRequestOptions} from '../../../../test/mock-facet-search-request-options';
-import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
+} from '../../../../test/mock-engine.js';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search.js';
+import {buildMockFacetSearchRequestOptions} from '../../../../test/mock-facet-search-request-options.js';
+import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response.js';
 import {
   buildGenericFacetSearch,
   GenericFacetSearch,
   GenericFacetSearchProps,
-} from './facet-search';
+} from './facet-search.js';
 
 describe('FacetSearch', () => {
   const facetId = '1';

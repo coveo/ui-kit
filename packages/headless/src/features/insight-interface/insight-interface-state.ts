@@ -1,5 +1,5 @@
-import {InsightInterface} from '../../api/service/insight/get-interface/get-interface-config-response';
-import {InsightAPIErrorStatusResponse} from '../../api/service/insight/insight-api-client';
+import {InsightInterface} from '../../api/service/insight/get-interface/get-interface-config-response.js';
+import {InsightAPIErrorStatusResponse} from '../../api/service/insight/insight-api-client.js';
 
 export const getInsightInterfaceInitialState = (): InsightInterfaceState => ({
   loading: false,

@@ -1,16 +1,16 @@
 import {EventDescription} from 'coveo.analytics';
-import {SearchAppState} from '../..';
-import {ConfigurationSection} from '../../state/state-sections';
-import {sortFacets} from '../../utils/facet-utils';
-import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request';
-import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response';
-import {FacetSetState} from '../facets/facet-set/facet-set-state';
-import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
-import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response';
-import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet';
-import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
-import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
-import {mapSearchRequest} from './search-mappings';
+import {SearchAppState} from '../../index.js';
+import {ConfigurationSection} from '../../state/state-sections.js';
+import {sortFacets} from '../../utils/facet-utils.js';
+import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request.js';
+import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response.js';
+import {FacetSetState} from '../facets/facet-set/facet-set-state.js';
+import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request.js';
+import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response.js';
+import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet.js';
+import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request.js';
+import {mapSearchRequest} from './search-mappings.js';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   Partial<SearchAppState>;

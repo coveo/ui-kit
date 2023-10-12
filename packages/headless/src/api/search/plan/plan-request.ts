@@ -3,7 +3,7 @@ import {
   ContextParam,
   LocaleParam,
   VisitorIDParam,
-} from '../../platform-service-params';
+} from '../../platform-service-params.js';
 import {
   AnalyticsParam,
   AuthenticationParam,
@@ -11,7 +11,7 @@ import {
   QueryParam,
   SearchHubParam,
   TimezoneParam,
-} from '../search-api-params';
+} from '../search-api-params.js';
 
 export type PlanRequest = BaseParam &
   SearchHubParam &

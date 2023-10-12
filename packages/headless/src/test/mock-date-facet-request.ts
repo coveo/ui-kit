@@ -1,4 +1,4 @@
-import {DateFacetRequest} from '../features/facets/range-facets/date-facet-set/interfaces/request';
+import {DateFacetRequest} from '../features/facets/range-facets/date-facet-set/interfaces/request.js';
 
 export function buildMockDateFacetRequest(
   config: Partial<DateFacetRequest> = {}

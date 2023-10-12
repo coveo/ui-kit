@@ -1,12 +1,12 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {change} from '../history/history-actions';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {buildCriterionExpression} from './criteria';
+import {change} from '../history/history-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {buildCriterionExpression} from './criteria.js';
 import {
   registerSortCriterion,
   updateSortCriterion,
-} from './sort-criteria-actions';
-import {getSortCriteriaInitialState} from './sort-criteria-state';
+} from './sort-criteria-actions.js';
+import {getSortCriteriaInitialState} from './sort-criteria-state.js';
 
 export const sortCriteriaReducer = createReducer(
   getSortCriteriaInitialState(),

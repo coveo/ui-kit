@@ -1,4 +1,4 @@
-import {QuestionsAnswers} from '../../../api/search/search/question-answering';
+import {QuestionsAnswers} from '../../../api/search/search/question-answering.js';
 import {
   closeFeedbackModal,
   collapseSmartSnippet,
@@ -6,27 +6,27 @@ import {
   expandSmartSnippet,
   likeSmartSnippet,
   openFeedbackModal,
-} from '../../../features/question-answering/question-answering-actions';
+} from '../../../features/question-answering/question-answering-actions.js';
 import {
   SmartSnippetFeedback,
   smartSnippetAnalyticsClient,
-} from '../../../features/question-answering/question-answering-analytics-actions';
-import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
-import {emptyQuestionAnswer} from '../../../features/search/search-state';
-import {SearchAppState} from '../../../state/search-app-state';
+} from '../../../features/question-answering/question-answering-analytics-actions.js';
+import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
+import {emptyQuestionAnswer} from '../../../features/search/search-state.js';
+import {SearchAppState} from '../../../state/search-app-state.js';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
   createMockState,
-} from '../../../test';
-import {buildMockSearchResponse} from '../../../test/mock-search-response';
-import {buildMockSearchState} from '../../../test/mock-search-state';
+} from '../../../test.js';
+import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
+import {buildMockSearchState} from '../../../test/mock-search-state.js';
 import {
   SmartSnippetCore,
   SmartSnippetState,
   buildCoreSmartSnippet,
-} from './headless-core-smart-snippet';
+} from './headless-core-smart-snippet.js';
 
 describe('SmartSnippet', () => {
   let state: SearchAppState;

@@ -1,4 +1,4 @@
-import {buildStringFacetField} from './string-facet-field';
+import {buildStringFacetField} from './string-facet-field.js';
 
 describe('#buildStringFacetField', () => {
   describe('#toQuerySyntax', () => {

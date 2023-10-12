@@ -2,20 +2,20 @@ import {
   excludeFacetSearchResult,
   registerFacetSearch,
   selectFacetSearchResult,
-} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
+} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../../../test/mock-engine';
-import {buildMockFacetSearch} from '../../../../../test/mock-facet-search';
-import {buildMockFacetSearchResult} from '../../../../../test/mock-facet-search-result';
-import {CategoryFacetSearchResult} from '../../../../facets/category-facet/headless-category-facet';
+} from '../../../../../test/mock-engine.js';
+import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
+import {buildMockFacetSearchResult} from '../../../../../test/mock-facet-search-result.js';
+import {CategoryFacetSearchResult} from '../../../../facets/category-facet/headless-category-facet.js';
 import {
   buildFacetSearch,
   FacetSearch,
   FacetSearchProps,
-} from './headless-facet-search';
+} from './headless-facet-search.js';
 
 describe('FacetSearch', () => {
   const facetId = '1';

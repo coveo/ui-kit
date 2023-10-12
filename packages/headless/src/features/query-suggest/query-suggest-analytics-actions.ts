@@ -1,10 +1,10 @@
-import type {OmniboxSuggestionsMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAppState} from '../../state/search-app-state';
+import type {OmniboxSuggestionsMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export interface LogQuerySuggestionClickActionCreatorPayload {
   /**

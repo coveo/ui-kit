@@ -1,8 +1,8 @@
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {ExtendedResults} from '../../api/search/search/extended-results';
-import {QuestionsAnswers} from '../../api/search/search/question-answering';
-import {Result} from '../../api/search/search/result';
-import {SearchResponseSuccess} from '../../api/search/search/search-response';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import {ExtendedResults} from '../../api/search/search/extended-results.js';
+import {QuestionsAnswers} from '../../api/search/search/question-answering.js';
+import {Result} from '../../api/search/search/result.js';
+import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
 
 export interface SearchState {
   /** The search response. For a full description, refer to {@link https://docs.coveo.com/en/13/cloud-v2-api-reference/search-api#operation/searchUsingPost}*/

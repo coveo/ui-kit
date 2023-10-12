@@ -1,16 +1,16 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {Controller} from '../../../controllers';
-import {CoreEngine} from '../../engine';
-import {EngineConfiguration} from '../../engine-configuration';
-import {Build} from './build';
+import {Controller} from '../../../controllers/index.js';
+import {CoreEngine} from '../../engine.js';
+import {EngineConfiguration} from '../../engine-configuration.js';
+import {Build} from './build.js';
 import {
   ControllerDefinitionsMap,
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
-} from './common';
-import {FetchStaticState} from './fetch-static-state';
-import {HydrateStaticState} from './hydrate-static-state';
+} from './common.js';
+import {FetchStaticState} from './fetch-static-state.js';
+import {HydrateStaticState} from './hydrate-static-state.js';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},

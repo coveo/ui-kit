@@ -1,10 +1,10 @@
-import {fetchMoreResults} from '../../features/search/search-actions';
-import {buildMockResult} from '../../test';
+import {fetchMoreResults} from '../../features/search/search-actions.js';
+import {buildMockResult} from '../../test.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
-import {buildResultList} from './headless-result-list';
+} from '../../test/mock-engine.js';
+import {buildResultList} from './headless-result-list.js';
 
 describe('ResultList', () => {
   let engine: MockSearchEngine;

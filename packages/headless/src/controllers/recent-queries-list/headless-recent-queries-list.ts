@@ -1,26 +1,26 @@
 import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from '../../features/recent-queries/recent-queries-actions';
+} from '../../features/recent-queries/recent-queries-actions.js';
 import {
   logClearRecentQueries,
   logRecentQueryClick,
-} from '../../features/recent-queries/recent-queries-analytics-actions';
-import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice';
+} from '../../features/recent-queries/recent-queries-analytics-actions.js';
+import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice.js';
 import {
   executeSearch,
   prepareForSearchWithQuery,
-} from '../../features/search/search-actions';
-import {searchReducer as search} from '../../features/search/search-slice';
-import {RecentQueriesSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
+} from '../../features/search/search-actions.js';
+import {searchReducer as search} from '../../features/search/search-slice.js';
+import {RecentQueriesSection} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
 import {
   validateInitialState,
   validateOptions,
-} from '../../utils/validate-payload';
-import {buildController, Controller} from '../controller/headless-controller';
+} from '../../utils/validate-payload.js';
+import {buildController, Controller} from '../controller/headless-controller.js';
 
 export interface RecentQueriesListProps {
   /**

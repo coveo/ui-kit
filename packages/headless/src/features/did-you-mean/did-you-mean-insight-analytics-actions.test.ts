@@ -1,10 +1,10 @@
 //import {CoveoInsightClient} from 'coveo.analytics';
-import {buildMockInsightEngine} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
+import {buildMockInsightEngine} from '../../test/mock-engine.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {
   logDidYouMeanAutomatic,
   logDidYouMeanClick,
-} from './did-you-mean-insight-analytics-actions';
+} from './did-you-mean-insight-analytics-actions.js';
 
 const mockLogDidYouMeanClick = jest.fn();
 const mockLogDidYouMeanAutomatic = jest.fn();

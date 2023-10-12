@@ -1,10 +1,10 @@
-import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
-import {ProductRecommendation} from '../../search/search/product-recommendation';
+import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response.js';
+import {ProductRecommendation} from '../../search/search/product-recommendation.js';
 import {
   baseProductListingRequest,
   ProductListingsParam,
-} from './product-listing-params';
-import {Sort} from '../../../features/commerce/product-listing/sort/product-listing-sort';
+} from './product-listing-params.js';
+import {Sort} from '../../../features/commerce/product-listing/sort/product-listing-sort.js';
 
 export type ProductListingRequest = ProductListingsParam;
 

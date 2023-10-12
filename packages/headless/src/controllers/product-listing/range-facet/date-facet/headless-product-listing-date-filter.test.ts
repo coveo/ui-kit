@@ -1,18 +1,18 @@
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {ProductListingAppState} from '../../../../state/product-listing-app-state';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions.js';
+import {ProductListingAppState} from '../../../../state/product-listing-app-state.js';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
-} from '../../../../test';
-import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
+} from '../../../../test.js';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
+import {buildMockProductListingState} from '../../../../test/mock-product-listing-state.js';
 import {
   buildDateFilter,
   DateFilter,
   DateFilterInitialState,
   DateFilterOptions,
-} from './headless-product-listing-date-filter';
+} from './headless-product-listing-date-filter.js';
 
 describe('date filter', () => {
   const facetId = '1';

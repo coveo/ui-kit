@@ -1,16 +1,16 @@
-import {Result} from '../../api/search/search/result';
-import {configuration} from '../../app/common-reducers';
-import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
-import {logDocumentOpen} from '../../features/result/result-analytics-actions';
-import {buildMockResult} from '../../test';
+import {Result} from '../../api/search/search/result.js';
+import {configuration} from '../../app/common-reducers.js';
+import {pushRecentResult} from '../../features/recent-results/recent-results-actions.js';
+import {logDocumentOpen} from '../../features/result/result-analytics-actions.js';
+import {buildMockResult} from '../../test.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildInteractiveResult,
   InteractiveResult,
-} from './headless-interactive-result';
+} from './headless-interactive-result.js';
 
 describe('InteractiveResult', () => {
   let engine: MockSearchEngine;

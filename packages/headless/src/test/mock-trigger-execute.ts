@@ -1,4 +1,4 @@
-import {TriggerExecute} from '../../src/api/search/trigger';
+import {TriggerExecute} from '../../src/api/search/trigger.js';
 
 export function buildMockExecuteTrigger(
   config: Partial<TriggerExecute> = {}

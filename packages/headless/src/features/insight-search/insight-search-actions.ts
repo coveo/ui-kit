@@ -1,17 +1,17 @@
 import {createAsyncThunk, ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
-import {historyStore} from '../../api/analytics/coveo-analytics-utils';
-import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
+import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
+import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics.js';
 import {
   SearchOptions,
   isErrorResponse,
-} from '../../api/search/search-api-client';
-import {SearchResponseSuccess} from '../../api/search/search/search-response';
+} from '../../api/search/search-api-client.js';
+import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
 import {
   AsyncThunkInsightOptions,
   InsightAPIClient,
-} from '../../api/service/insight/insight-api-client';
-import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+} from '../../api/service/insight/insight-api-client.js';
+import {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   CategoryFacetSection,
   ConfigurationSection,
@@ -30,36 +30,36 @@ import {
   SearchSection,
   SortSection,
   TabSection,
-} from '../../state/state-sections';
-import {requiredNonEmptyString} from '../../utils/validate-payload';
-import {InsightAction} from '../analytics/analytics-utils';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analytics-actions';
-import {snapshot} from '../history/history-actions';
-import {extractHistory} from '../history/history-state';
+} from '../../state/state-sections.js';
+import {requiredNonEmptyString} from '../../utils/validate-payload.js';
+import {InsightAction} from '../analytics/analytics-utils.js';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions.js';
+import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analytics-actions.js';
+import {snapshot} from '../history/history-actions.js';
+import {extractHistory} from '../history/history-state.js';
 import {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
-} from '../query-suggest/query-suggest-actions';
-import {updateQuery} from '../query/query-actions';
-import {getQueryInitialState} from '../query/query-state';
-import {ExecuteSearchThunkReturn} from '../search/search-actions';
+} from '../query-suggest/query-suggest-actions.js';
+import {updateQuery} from '../query/query-actions.js';
+import {getQueryInitialState} from '../query/query-state.js';
+import {ExecuteSearchThunkReturn} from '../search/search-actions.js';
 import {
   MappedSearchRequest,
   mapSearchResponse,
   SuccessResponse,
-} from '../search/search-mappings';
-import {getSearchInitialState} from '../search/search-state';
-import {buildInsightQuerySuggestRequest} from './insight-query-suggest-request';
+} from '../search/search-mappings.js';
+import {getSearchInitialState} from '../search/search-state.js';
+import {buildInsightQuerySuggestRequest} from './insight-query-suggest-request.js';
 import {
   logFetchMoreResults,
   logQueryError,
-} from './insight-search-analytics-actions';
+} from './insight-search-analytics-actions.js';
 import {
   buildInsightFetchFacetValuesRequest,
   buildInsightFetchMoreResultsRequest,
   buildInsightSearchRequest,
-} from './insight-search-request';
+} from './insight-search-request.js';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   InsightConfigurationSection &

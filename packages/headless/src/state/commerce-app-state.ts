@@ -5,7 +5,7 @@ import {
   ConfigurationSection,
   ProductListingV2Section,
   VersionSection,
-} from './state-sections';
+} from './state-sections.js';
 
 export type CommerceAppState = ConfigurationSection &
   ProductListingV2Section &

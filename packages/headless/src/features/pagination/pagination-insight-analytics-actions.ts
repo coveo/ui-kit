@@ -1,11 +1,11 @@
-import {PaginationSection} from '../../state/state-sections';
+import {PaginationSection} from '../../state/state-sections.js';
 import {
   AnalyticsType,
   makeInsightAnalyticsAction,
   InsightAction,
-} from '../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
-import {currentPageSelector} from './pagination-selectors';
+} from '../analytics/analytics-utils.js';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
+import {currentPageSelector} from './pagination-selectors.js';
 
 export const logPageNumber = (): InsightAction =>
   makeInsightAnalyticsAction(

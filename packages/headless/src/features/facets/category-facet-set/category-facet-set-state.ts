@@ -1,4 +1,4 @@
-import {CategoryFacetRequest} from './interfaces/request';
+import {CategoryFacetRequest} from './interfaces/request.js';
 
 export type CategoryFacetSlice = {
   request: CategoryFacetRequest;

@@ -1,22 +1,22 @@
-import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
+import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response.js';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
-} from '../../../search/search-actions';
-import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers';
+} from '../../../search/search-actions.js';
+import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers.js';
 import {
   clearFacetSearch,
   executeFacetSearch,
-} from '../generic/generic-facet-search-actions';
+} from '../generic/generic-facet-search-actions.js';
 import {
   registerFacetSearch,
   updateFacetSearch,
-} from './specific-facet-search-actions';
-import {specificFacetSearchSetReducer} from './specific-facet-search-set-slice';
+} from './specific-facet-search-actions.js';
+import {specificFacetSearchSetReducer} from './specific-facet-search-set-slice.js';
 import {
   getFacetSearchSetInitialState,
   SpecificFacetSearchSetState,
-} from './specific-facet-search-set-state';
+} from './specific-facet-search-set-state.js';
 
 describe('FacetSearch slice', () => {
   const facetId = '1';

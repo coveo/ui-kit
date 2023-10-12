@@ -1,27 +1,27 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client';
-import {setCaseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-actions';
-import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
-import {debugReducer as debug} from '../../features/debug/debug-slice';
-import {setSearchHub} from '../../features/search-hub/search-hub-actions';
-import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
-import {CaseAssistAppState} from '../../state/case-assist-app-state';
-import {CaseAssistThunkExtraArguments} from '../case-assist-thunk-extra-arguments';
+import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
+import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client.js';
+import {setCaseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-actions.js';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
+import {debugReducer as debug} from '../../features/debug/debug-slice.js';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
+import {CaseAssistAppState} from '../../state/case-assist-app-state.js';
+import {CaseAssistThunkExtraArguments} from '../case-assist-thunk-extra-arguments.js';
 import {
   buildEngine,
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
-} from '../engine';
-import {buildLogger} from '../logger';
-import {buildThunkExtraArguments} from '../thunk-extra-arguments';
+} from '../engine.js';
+import {buildLogger} from '../logger.js';
+import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
   CaseAssistEngineConfiguration,
   caseAssistEngineConfigurationSchema,
-} from './case-assist-engine-configuration';
+} from './case-assist-engine-configuration.js';
 
 export type {CaseAssistEngineConfiguration};
 

@@ -3,8 +3,8 @@ import {
   registerRecentResults,
   clearRecentResults,
   pushRecentResult,
-} from './recent-results-actions';
-import {getRecentResultsInitialState} from './recent-results-state';
+} from './recent-results-actions.js';
+import {getRecentResultsInitialState} from './recent-results-state.js';
 
 export const recentResultsReducer = createReducer(
   getRecentResultsInitialState(),

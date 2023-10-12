@@ -1,6 +1,6 @@
-import {buildMockInsightEngine} from '../../../test/mock-engine';
-import {buildMockInsightState} from '../../../test/mock-insight-state';
-import {logClearBreadcrumbs} from './facet-generic-insight-analytics-actions';
+import {buildMockInsightEngine} from '../../../test/mock-engine.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
+import {logClearBreadcrumbs} from './facet-generic-insight-analytics-actions.js';
 
 const mockLogBreadcrumbResetAll = jest.fn();
 

@@ -1,10 +1,10 @@
 import {Action} from '@reduxjs/toolkit';
-import {configuration} from '../../../app/common-reducers';
-import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
-import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice';
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
-import {buildProductListing, ProductListing} from './headless-product-listing';
-import {contextReducer} from '../../../features/commerce/context/context-slice';
+import {configuration} from '../../../app/common-reducers.js';
+import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions.js';
+import {productListingV2Reducer} from '../../../features/commerce/product-listing/product-listing-slice.js';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test.js';
+import {buildProductListing, ProductListing} from './headless-product-listing.js';
+import {contextReducer} from '../../../features/commerce/context/context-slice.js';
 
 describe('headless product-listing', () => {
   let productListing: ProductListing;

@@ -1,19 +1,19 @@
-import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions';
-import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
-import {executeSearch} from '../../features/search/search-actions';
-import {SearchAppState} from '../../state/search-app-state';
+import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions.js';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {SearchAppState} from '../../state/search-app-state.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {createMockState} from '../../test/mock-state';
+} from '../../test/mock-engine.js';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
+import {createMockState} from '../../test/mock-state.js';
 import {
   SearchBox,
   SearchBoxProps,
   SearchBoxOptions,
   buildSearchBox,
-} from './headless-search-box';
+} from './headless-search-box.js';
 
 jest.mock('../../features/query/query-analytics-actions', () => ({
   logSearchboxSubmit: jest.fn(() => () => {}),

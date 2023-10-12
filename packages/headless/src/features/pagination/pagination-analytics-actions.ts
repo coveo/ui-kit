@@ -1,11 +1,11 @@
-import {PaginationSection} from '../../state/state-sections';
+import {PaginationSection} from '../../state/state-sections.js';
 import {
   AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
-} from '../analytics/analytics-utils';
-import {currentPageSelector} from './pagination-selectors';
-import {getPaginationInitialState} from './pagination-state';
+} from '../analytics/analytics-utils.js';
+import {currentPageSelector} from './pagination-selectors.js';
+import {getPaginationInitialState} from './pagination-state.js';
 
 export const logPagerResize = (): SearchAction =>
   makeAnalyticsAction(

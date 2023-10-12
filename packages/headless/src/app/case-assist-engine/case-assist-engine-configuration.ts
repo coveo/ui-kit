@@ -2,11 +2,11 @@ import {Schema} from '@coveo/bueno';
 import {
   nonEmptyString,
   requiredNonEmptyString,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 import {
   EngineConfiguration,
   engineConfigurationDefinitions,
-} from '../engine-configuration';
+} from '../engine-configuration.js';
 
 /**
  * The case assist engine configuration.

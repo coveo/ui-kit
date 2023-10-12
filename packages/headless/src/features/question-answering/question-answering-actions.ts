@@ -2,7 +2,7 @@ import {createAction} from '@reduxjs/toolkit';
 import {
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   validateQuestionAnsweringActionCreatorPayload,
-} from './question-answering-document-id';
+} from './question-answering-document-id.js';
 
 export const expandSmartSnippet = createAction('smartSnippet/expand');
 

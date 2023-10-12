@@ -1,15 +1,15 @@
 import {Schema} from '@coveo/bueno';
 import {DocumentIdentifier, PartialDocumentInformation} from 'coveo.analytics';
-import {CommerceAnalyticsProvider} from '../../../api/analytics/commerce-analytics';
-import {ProductRecommendation, Result} from '../../../product-listing.index';
-import {CommerceAppState} from '../../../state/commerce-app-state';
+import {CommerceAnalyticsProvider} from '../../../api/analytics/commerce-analytics.js';
+import {ProductRecommendation, Result} from '../../../product-listing.index.js';
+import {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {
   AnalyticsType,
   makeAnalyticsAction,
   resultPartialDefinition,
   ProductListingV2Action,
   makeCommerceAnalyticsAction,
-} from '../../analytics/analytics-utils';
+} from '../../analytics/analytics-utils.js';
 
 export const logProductListingV2Load = (): ProductListingV2Action =>
   makeCommerceAnalyticsAction(

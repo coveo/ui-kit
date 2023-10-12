@@ -1,27 +1,27 @@
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions.js';
 import {
   toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
-} from '../../../../features/facets/facet-set/facet-set-actions';
-import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
-import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
+} from '../../../../features/facets/facet-set/facet-set-actions.js';
+import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request.js';
+import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response.js';
 import {
   executeSearch,
   fetchFacetValues,
-} from '../../../../features/insight-search/insight-search-actions';
-import {InsightAppState} from '../../../../state/insight-app-state';
+} from '../../../../features/insight-search/insight-search-actions.js';
+import {InsightAppState} from '../../../../state/insight-app-state.js';
 import {
   MockInsightEngine,
   buildMockInsightEngine,
-} from '../../../../test/mock-engine';
-import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
-import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
-import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../../../test/mock-facet-value';
-import {buildMockInsightState} from '../../../../test/mock-insight-state';
-import {buildFacet, Facet, FacetOptions} from './headless-insight-facet';
+} from '../../../../test/mock-engine.js';
+import {buildMockFacetRequest} from '../../../../test/mock-facet-request.js';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search.js';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice.js';
+import {buildMockFacetValue} from '../../../../test/mock-facet-value.js';
+import {buildMockInsightState} from '../../../../test/mock-insight-state.js';
+import {buildFacet, Facet, FacetOptions} from './headless-insight-facet.js';
 
 describe('InsightFacet', () => {
   const facetId = '1';

@@ -1,22 +1,22 @@
 import {Action} from '@reduxjs/toolkit';
-import {configuration} from '../../app/common-reducers';
+import {configuration} from '../../app/common-reducers.js';
 import {
   getProductRecommendations,
   setProductRecommendationsAdditionalFields,
   setProductRecommendationsMaxNumberOfRecommendations,
   setProductRecommendationsRecommenderId,
   setProductRecommendationsSkus,
-} from '../../features/product-recommendations/product-recommendations-actions';
-import {productRecommendationsReducer} from '../../features/product-recommendations/product-recommendations-slice';
+} from '../../features/product-recommendations/product-recommendations-actions.js';
+import {productRecommendationsReducer} from '../../features/product-recommendations/product-recommendations-slice.js';
 import {
   buildMockProductRecommendationsAppEngine,
   MockProductRecommendationEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildBaseProductRecommendationsList,
   ProductRecommendationsList,
   ProductRecommendationsListOptions,
-} from './headless-base-product-recommendations';
+} from './headless-base-product-recommendations.js';
 
 describe('headless product-recommendations', () => {
   let productRecommendations: ProductRecommendationsList;

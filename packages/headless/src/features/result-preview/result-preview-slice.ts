@@ -1,21 +1,21 @@
 import {createReducer} from '@reduxjs/toolkit';
-import type {Result} from '../../api/search/search/result';
+import type {Result} from '../../api/search/search/result.js';
 import {
   fetchMoreResults,
   executeSearch,
   fetchPage,
-} from '../search/search-actions';
+} from '../search/search-actions.js';
 import {
   fetchResultContent,
   nextPreview,
   preparePreviewPagination,
   previousPreview,
   updateContentURL,
-} from './result-preview-actions';
+} from './result-preview-actions.js';
 import {
   ResultPreviewState,
   getResultPreviewInitialState,
-} from './result-preview-state';
+} from './result-preview-state.js';
 
 const resetPreviewContentState = (state: ResultPreviewState) => {
   const {content, isLoading, uniqueId, contentURL} =

@@ -1,14 +1,14 @@
-import pino from 'pino';
-import {NoopPreprocessRequest} from '../api/preprocess-request';
+import {pino} from 'pino';
+import {NoopPreprocessRequest} from '../api/preprocess-request.js';
 import {
   SearchAPIClient,
   SearchAPIClientOptions,
-} from '../api/search/search-api-client';
+} from '../api/search/search-api-client.js';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
-} from '../api/search/search-api-client-middleware';
+} from '../api/search/search-api-client-middleware.js';
 
 export function buildMockSearchAPIClient(
   options?: Partial<SearchAPIClientOptions>

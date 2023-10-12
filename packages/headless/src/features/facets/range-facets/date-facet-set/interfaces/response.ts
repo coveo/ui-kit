@@ -1,5 +1,5 @@
-import {BaseFacetResponse} from '../../../facet-api/response';
-import {FacetValueState} from '../../../facet-api/value';
+import {BaseFacetResponse} from '../../../facet-api/response.js';
+import {FacetValueState} from '../../../facet-api/value.js';
 
 export interface DateFacetValue {
   /**

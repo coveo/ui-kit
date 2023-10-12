@@ -1,0 +1,25 @@
+diff --git a/node_modules/fast-equals/dist/esm/types/index.d.ts b/node_modules/fast-equals/dist/esm/types/index.d.ts
+index 7ca27d5..adfc6c3 100644
+--- a/node_modules/fast-equals/dist/esm/types/index.d.ts
++++ b/node_modules/fast-equals/dist/esm/types/index.d.ts
+@@ -1,7 +1,7 @@
+-import type { CustomEqualCreatorOptions } from './internalTypes';
+-import { sameValueZeroEqual } from './utils';
++import type { CustomEqualCreatorOptions } from './internalTypes.js';
++import { sameValueZeroEqual } from './utils.js';
+ export { sameValueZeroEqual };
+-export * from './internalTypes';
++export * from './internalTypes.js';
+ /**
+  * Whether the items passed are deeply-equal in value.
+  */
+diff --git a/node_modules/fast-equals/dist/esm/types/utils.d.ts b/node_modules/fast-equals/dist/esm/types/utils.d.ts
+index 47b9144..388c537 100644
+--- a/node_modules/fast-equals/dist/esm/types/utils.d.ts
++++ b/node_modules/fast-equals/dist/esm/types/utils.d.ts
+@@ -1,4 +1,4 @@
+-import { AnyEqualityComparator, Dictionary, State, TypeEqualityComparator } from './internalTypes';
++import { AnyEqualityComparator, Dictionary, State, TypeEqualityComparator } from './internalTypes.js';
+ /**
+  * Combine two comparators into a single comparators.
+  */

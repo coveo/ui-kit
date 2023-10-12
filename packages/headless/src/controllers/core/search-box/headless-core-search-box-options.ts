@@ -5,8 +5,8 @@ import {
   StringValue,
   RecordValue,
 } from '@coveo/bueno';
-import {SuggestionHighlightingOptions} from '../../../utils/highlight';
-import {requiredNonEmptyString} from '../../../utils/validate-payload';
+import {SuggestionHighlightingOptions} from '../../../utils/highlight.js';
+import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 
 export interface SearchBoxOptions {
   /**

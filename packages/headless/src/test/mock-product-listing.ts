@@ -1,7 +1,7 @@
-import {ProductListingSuccessResponse} from '../api/commerce/product-listings/product-listing-request';
-import {logInterfaceLoad} from '../features/analytics/analytics-actions';
-import {FetchProductListingThunkReturn} from '../features/product-listing/product-listing-actions';
-import {buildRelevanceSortCriterion} from '../features/sort/sort';
+import {ProductListingSuccessResponse} from '../api/commerce/product-listings/product-listing-request.js';
+import {logInterfaceLoad} from '../features/analytics/analytics-actions.js';
+import {FetchProductListingThunkReturn} from '../features/product-listing/product-listing-actions.js';
+import {buildRelevanceSortCriterion} from '../features/sort/sort.js';
 
 export function buildFetchProductListingResponse(
   response: Partial<ProductListingSuccessResponse> = {}

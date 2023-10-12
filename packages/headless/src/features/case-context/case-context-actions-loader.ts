@@ -1,7 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../..';
-import {caseContextReducer as insightCaseContext} from '../../features/case-context/case-context-slice';
-import {setCaseContext, setCaseId, setCaseNumber} from './case-context-actions';
+import {CoreEngine} from '../../index.js';
+import {caseContextReducer as insightCaseContext} from '../../features/case-context/case-context-slice.js';
+import {setCaseContext, setCaseId, setCaseNumber} from './case-context-actions.js';
 
 /**
  * The case context action creators.

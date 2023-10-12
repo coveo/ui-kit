@@ -3,7 +3,7 @@ import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
   validatePayload,
-} from '../../utils/validate-payload';
+} from '../../utils/validate-payload.js';
 
 /**
  * Set case context action

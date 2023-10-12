@@ -1,12 +1,12 @@
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
-import {FacetRequest} from '../facet-set/interfaces/request';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
+import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request.js';
+import {FacetRequest} from '../facet-set/interfaces/request.js';
 import {
   handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
-} from './facet-reducer-helpers';
+} from './facet-reducer-helpers.js';
 
 describe('generic facet reducers', () => {
   describe('#handleFacetSortCriterionUpdate', () => {

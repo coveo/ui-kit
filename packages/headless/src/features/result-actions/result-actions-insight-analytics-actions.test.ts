@@ -1,12 +1,12 @@
-import {buildMockRaw, buildMockResult} from '../../test';
-import {buildMockInsightEngine} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {buildMockSearchState} from '../../test/mock-search-state';
+import {buildMockRaw, buildMockResult} from '../../test.js';
+import {buildMockInsightEngine} from '../../test/mock-engine.js';
+import {buildMockInsightState} from '../../test/mock-insight-state.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {
   logCaseSendEmail,
   logCopyToClipboard,
   logFeedItemTextPost,
-} from './result-actions-insight-analytics-actions';
+} from './result-actions-insight-analytics-actions.js';
 
 const mockLogCopyToClipboard = jest.fn();
 const mockLogCaseSendEmail = jest.fn();

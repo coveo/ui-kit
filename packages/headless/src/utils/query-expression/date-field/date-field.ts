@@ -1,6 +1,6 @@
-import {getNegationPrefix, Negatable} from '../common/negatable';
-import {getOperatorSymbol, NumericOperator} from '../common/operator';
-import {Part} from '../common/part';
+import {getNegationPrefix, Negatable} from '../common/negatable.js';
+import {getOperatorSymbol, NumericOperator} from '../common/operator.js';
+import {Part} from '../common/part.js';
 
 export interface DateFieldExpression extends Negatable {
   /**

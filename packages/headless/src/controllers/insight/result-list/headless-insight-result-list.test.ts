@@ -1,10 +1,10 @@
-import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
-import {buildMockResult} from '../../../test';
+import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions.js';
+import {buildMockResult} from '../../../test.js';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
-} from '../../../test/mock-engine';
-import {buildResultList} from './headless-insight-result-list';
+} from '../../../test/mock-engine.js';
+import {buildResultList} from './headless-insight-result-list.js';
 
 describe('InsightResultList', () => {
   let engine: MockInsightEngine;

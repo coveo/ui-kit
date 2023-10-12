@@ -1,21 +1,21 @@
-import {configuration} from '../../app/common-reducers';
-import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice';
-import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
-import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice';
-import {updateCaseInput} from '../../features/case-input/case-input-actions';
-import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice';
-import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
-import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice';
-import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
+import {configuration} from '../../app/common-reducers.js';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
+import {fetchCaseClassifications} from '../../features/case-field/case-field-actions.js';
+import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice.js';
+import {updateCaseInput} from '../../features/case-input/case-input-actions.js';
+import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice.js';
+import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions.js';
+import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
+import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
   buildMockCaseAssistEngine,
   MockCaseAssistEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   CaseInput,
   CaseInputOptions,
   buildCaseInput,
-} from './headless-case-input';
+} from './headless-case-input.js';
 
 describe('Case Input', () => {
   let engine: MockCaseAssistEngine;

@@ -1,11 +1,11 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
 import {
   RedirectionTrigger,
   buildRedirectionTrigger,
-} from './headless-redirection-trigger';
+} from './headless-redirection-trigger.js';
 
-export * from './headless-redirection-trigger';
+export * from './headless-redirection-trigger.js';
 
 /**
  * @internal

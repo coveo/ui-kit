@@ -1,13 +1,13 @@
-import {ProductRecommendation} from '../../../../api/search/search/product-recommendation';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {logProductRecommendationOpen} from '../../../../features/product-listing/product-listing-analytics';
-import {pushRecentResult} from '../../../../features/product-listing/product-listing-recent-results';
+import {ProductRecommendation} from '../../../../api/search/search/product-recommendation.js';
+import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {logProductRecommendationOpen} from '../../../../features/product-listing/product-listing-analytics.js';
+import {pushRecentResult} from '../../../../features/product-listing/product-listing-recent-results.js';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
-} from '../../../core/interactive-result/headless-core-interactive-result';
+} from '../../../core/interactive-result/headless-core-interactive-result.js';
 
 export interface InteractiveResultOptions extends InteractiveResultCoreOptions {
   /**

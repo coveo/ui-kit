@@ -8,7 +8,7 @@ import {
   VersionSection,
   ResultPreviewSection,
   SearchHubSection,
-} from './state-sections';
+} from './state-sections.js';
 
 export type CaseAssistAppState = ConfigurationSection &
   CaseAssistConfigurationSection &

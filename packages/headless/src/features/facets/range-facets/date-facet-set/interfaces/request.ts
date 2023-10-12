@@ -1,7 +1,7 @@
-import {CurrentValues, Type} from '../../../facet-api/request';
-import {FacetValueState} from '../../../facet-api/value';
-import {AnyFacetRequest} from '../../../generic/interfaces/generic-facet-request';
-import {BaseRangeFacetRequest} from '../../generic/interfaces/request';
+import {CurrentValues, Type} from '../../../facet-api/request.js';
+import {FacetValueState} from '../../../facet-api/value.js';
+import {AnyFacetRequest} from '../../../generic/interfaces/generic-facet-request.js';
+import {BaseRangeFacetRequest} from '../../generic/interfaces/request.js';
 
 /**
  * The options defining a value to display in a `DateFacet`.

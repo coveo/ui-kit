@@ -1,20 +1,20 @@
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
-import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-import {buildMockResult, createMockState} from '../../test';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {buildMockFacetSlice} from '../../test/mock-facet-slice';
-import {buildMockFacetValue} from '../../test/mock-facet-value';
-import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
-import {buildMockQueryState} from '../../test/mock-query-state';
-import {buildMockSearchState} from '../../test/mock-search-state';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
+import {buildMockResult, createMockState} from '../../test.js';
+import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
+import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
+import {buildMockFacetValue} from '../../test/mock-facet-value.js';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request.js';
+import {buildMockQueryState} from '../../test/mock-query-state.js';
+import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {
   configureAnalytics,
   getPageID,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
-} from './search-analytics';
+} from './search-analytics.js';
 
 const mockGetHistory = jest.fn();
 

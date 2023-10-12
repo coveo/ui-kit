@@ -1,13 +1,13 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {configuration} from '../../app/common-reducers';
-import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice';
-import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice.js';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
 import {
   updateSearchConfiguration,
   UpdateSearchConfigurationActionCreatorPayload,
-} from './configuration-actions';
+} from './configuration-actions.js';
 
 export type {UpdateSearchConfigurationActionCreatorPayload};
 

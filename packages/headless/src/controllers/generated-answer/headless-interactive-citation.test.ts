@@ -1,15 +1,15 @@
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
-import {configuration} from '../../app/common-reducers';
-import {logOpenGeneratedAnswerSource} from '../../features/generated-answer/generated-answer-analytics-actions';
-import {buildMockCitation} from '../../test/mock-citation';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
+import {configuration} from '../../app/common-reducers.js';
+import {logOpenGeneratedAnswerSource} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
+} from '../../test/mock-engine.js';
 import {
   buildInteractiveCitation,
   InteractiveCitation,
-} from './headless-interactive-citation';
+} from './headless-interactive-citation.js';
 
 describe('InteractiveCitation', () => {
   let engine: MockSearchEngine;

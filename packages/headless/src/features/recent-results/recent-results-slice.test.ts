@@ -1,14 +1,14 @@
-import {buildMockResult} from '../../test';
+import {buildMockResult} from '../../test.js';
 import {
   clearRecentResults,
   pushRecentResult,
   registerRecentResults,
-} from './recent-results-actions';
-import {recentResultsReducer} from './recent-results-slice';
+} from './recent-results-actions.js';
+import {recentResultsReducer} from './recent-results-slice.js';
 import {
   getRecentResultsInitialState,
   RecentResultsState,
-} from './recent-results-state';
+} from './recent-results-state.js';
 
 describe('recent-results slice', () => {
   let state: RecentResultsState;

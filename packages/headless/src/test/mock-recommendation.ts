@@ -1,6 +1,6 @@
-import {logInterfaceLoad} from '../features/analytics/analytics-actions';
-import {GetRecommendationsThunkReturn} from '../features/recommendation/recommendation-actions';
-import {RecommendationState} from '../features/recommendation/recommendation-state';
+import {logInterfaceLoad} from '../features/analytics/analytics-actions.js';
+import {GetRecommendationsThunkReturn} from '../features/recommendation/recommendation-actions.js';
+import {RecommendationState} from '../features/recommendation/recommendation-state.js';
 
 export function buildMockRecommendation(
   config: Partial<RecommendationState> = {}

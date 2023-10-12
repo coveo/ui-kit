@@ -1,5 +1,5 @@
-import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client';
-import {buildMockCitation} from '../../test/mock-citation';
+import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
+import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
@@ -9,9 +9,9 @@ import {
   updateCitations,
   updateError,
   updateMessage,
-} from './generated-answer-actions';
-import {generatedAnswerReducer} from './generated-answer-slice';
-import {getGeneratedAnswerInitialState} from './generated-answer-state';
+} from './generated-answer-actions.js';
+import {generatedAnswerReducer} from './generated-answer-slice.js';
+import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
 const baseState = {
   isLoading: false,

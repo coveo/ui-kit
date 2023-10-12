@@ -3,8 +3,8 @@ import {createAction} from '@reduxjs/toolkit';
 import {
   requiredEmptyAllowedString,
   validatePayload,
-} from '../../utils/validate-payload';
-import {DictionaryFieldContextPayload} from './dictionary-field-context-state';
+} from '../../utils/validate-payload.js';
+import {DictionaryFieldContextPayload} from './dictionary-field-context-state.js';
 
 export const setContext = createAction(
   'dictionaryFieldContext/set',

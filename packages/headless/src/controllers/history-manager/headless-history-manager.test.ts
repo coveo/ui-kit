@@ -1,21 +1,21 @@
-import {configuration} from '../../app/common-reducers';
-import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice';
+import {configuration} from '../../app/common-reducers.js';
+import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice.js';
 import {
   back,
   forward,
   redo,
   undo,
-} from '../../features/history/history-actions';
-import {history} from '../../features/history/history-slice';
+} from '../../features/history/history-actions.js';
+import {history} from '../../features/history/history-slice.js';
 import {
   extractHistory,
   getHistoryInitialState,
-} from '../../features/history/history-state';
+} from '../../features/history/history-state.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
-import {buildHistoryManager, HistoryManager} from './headless-history-manager';
+} from '../../test/mock-engine.js';
+import {buildHistoryManager, HistoryManager} from './headless-history-manager.js';
 
 describe('History Manager', () => {
   let engine: MockSearchEngine;

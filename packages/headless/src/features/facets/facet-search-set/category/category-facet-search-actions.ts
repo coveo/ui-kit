@@ -1,14 +1,14 @@
 import {NumberValue, RecordValue, ArrayValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {CategoryFacetSearchResult} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
+import {CategoryFacetSearchResult} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
 import {
   validatePayload,
   requiredNonEmptyString,
   requiredEmptyAllowedString,
-} from '../../../../utils/validate-payload';
-import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {FacetSearchOptions} from '../facet-search-request-options';
-import {facetSearchOptionsDefinition} from '../generic/generic-facet-search-validate-payload';
+} from '../../../../utils/validate-payload.js';
+import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
+import {FacetSearchOptions} from '../facet-search-request-options.js';
+import {facetSearchOptionsDefinition} from '../generic/generic-facet-search-validate-payload.js';
 
 const categoryFacetSearchResultDefinition = {
   path: new ArrayValue({

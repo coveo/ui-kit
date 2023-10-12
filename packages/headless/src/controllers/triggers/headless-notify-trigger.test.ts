@@ -1,10 +1,10 @@
-import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
-import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
+import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions.js';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
-import {NotifyTrigger, buildNotifyTrigger} from './headless-notify-trigger';
+} from '../../test/mock-engine.js';
+import {NotifyTrigger, buildNotifyTrigger} from './headless-notify-trigger.js';
 
 describe('NotifyTrigger', () => {
   let engine: MockSearchEngine;

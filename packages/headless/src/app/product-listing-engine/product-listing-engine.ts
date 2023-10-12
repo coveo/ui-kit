@@ -1,30 +1,30 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
-import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
-import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {SearchAPIClient} from '../../api/search/search-api-client';
+import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client.js';
+import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
+import {SearchAPIClient} from '../../api/search/search-api-client.js';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
-} from '../../api/search/search-api-client-middleware';
-import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice';
-import {ProductListingAppState} from '../../state/product-listing-app-state';
+} from '../../api/search/search-api-client-middleware.js';
+import {productListingReducer as productListing} from '../../features/product-listing/product-listing-slice.js';
+import {ProductListingAppState} from '../../state/product-listing-app-state.js';
 import {
   buildEngine,
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
-} from '../engine';
-import {buildLogger} from '../logger';
-import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
-import {SearchEngineConfiguration} from '../search-engine/search-engine-configuration';
-import {buildThunkExtraArguments} from '../thunk-extra-arguments';
+} from '../engine.js';
+import {buildLogger} from '../logger.js';
+import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments.js';
+import {SearchEngineConfiguration} from '../search-engine/search-engine-configuration.js';
+import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
   ProductListingEngineConfiguration,
   productListingEngineConfigurationSchema,
   getSampleProductListingEngineConfiguration,
-} from './product-listing-engine-configuration';
+} from './product-listing-engine-configuration.js';
 
 export type {ProductListingEngineConfiguration};
 export {getSampleProductListingEngineConfiguration};

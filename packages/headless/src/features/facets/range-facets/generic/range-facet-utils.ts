@@ -2,9 +2,9 @@ import {
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
-} from '../../facet-set/facet-set-analytics-actions';
-import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils';
-import {RangeFacetValue} from './interfaces/range-facet';
+} from '../../facet-set/facet-set-analytics-actions.js';
+import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils.js';
+import {RangeFacetValue} from './interfaces/range-facet.js';
 
 export const isRangeFacetValueSelected = (selection: RangeFacetValue) => {
   return selection.state === 'selected';

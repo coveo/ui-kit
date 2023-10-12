@@ -1,15 +1,15 @@
-import {Result} from '../../../api/search/search/result';
-import {configuration} from '../../../app/common-reducers';
-import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions';
-import {buildMockResult} from '../../../test';
+import {Result} from '../../../api/search/search/result.js';
+import {configuration} from '../../../app/common-reducers.js';
+import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions.js';
+import {buildMockResult} from '../../../test.js';
 import {
   buildMockRecommendationAppEngine,
   MockRecommendationEngine,
-} from '../../../test/mock-engine';
+} from '../../../test/mock-engine.js';
 import {
   buildInteractiveResult,
   InteractiveResult,
-} from './headless-recommendation-interactive-result';
+} from './headless-recommendation-interactive-result.js';
 
 describe('RecommendationInteractiveResult', () => {
   let engine: MockRecommendationEngine;

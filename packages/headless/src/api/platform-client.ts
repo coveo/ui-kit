@@ -3,16 +3,16 @@
 import fetch from '@coveo/please-give-me-fetch';
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
-import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
-import {PlatformCombination, PlatformEnvironment} from '../utils/url-utils';
-import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
+import {DisconnectedError, ExpiredTokenError} from '../utils/errors.js';
+import {PlatformCombination, PlatformEnvironment} from '../utils/url-utils.js';
+import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder.js';
 import {
   PlatformClientOrigin,
   PlatformRequestOptions,
   PreprocessRequest,
   RequestMetadata,
-} from './preprocess-request';
-import {clone} from '../utils/utils';
+} from './preprocess-request.js';
+import {clone} from '../utils/utils.js';
 
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentType =

@@ -8,8 +8,8 @@ import {
   CategoryFacet,
   Facet,
   buildFacet,
-} from '..';
-import {waitForNextStateChange} from '../test/functional-test-utils';
+} from '../index.js';
+import {waitForNextStateChange} from '../test/functional-test-utils.js';
 
 describe('category field suggestions', () => {
   let engine: SearchEngine;

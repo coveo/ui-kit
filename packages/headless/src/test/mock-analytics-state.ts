@@ -1,4 +1,4 @@
-import {AnalyticsState} from '../features/configuration/configuration-state';
+import {AnalyticsState} from '../features/configuration/configuration-state.js';
 
 export function buildMockAnalyticsState(
   config: Partial<AnalyticsState> = {}

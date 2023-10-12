@@ -1,11 +1,11 @@
-import {CaseAssistEngine, Result} from '../../case-assist.index';
-import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions';
+import {CaseAssistEngine, Result} from '../../case-assist.index.js';
+import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions.js';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
-} from '../core/interactive-result/headless-core-interactive-result';
+} from '../core/interactive-result/headless-core-interactive-result.js';
 
 export interface CaseAssistInteractiveResultOptions
   extends InteractiveResultCoreOptions {

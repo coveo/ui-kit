@@ -1,13 +1,13 @@
 import {AnyAction} from '@reduxjs/toolkit';
-import {updateQuery} from '../../features/query/query-actions';
-import {queryReducer as query} from '../../features/query/query-slice';
-import {executeSearch} from '../../features/search/search-actions';
-import {triggerReducer as triggers} from '../../features/triggers/triggers-slice';
+import {updateQuery} from '../../features/query/query-actions.js';
+import {queryReducer as query} from '../../features/query/query-slice.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
-import {QueryTrigger, buildQueryTrigger} from './headless-query-trigger';
+} from '../../test/mock-engine.js';
+import {QueryTrigger, buildQueryTrigger} from './headless-query-trigger.js';
 
 describe('QueryTrigger', () => {
   let engine: MockSearchEngine;

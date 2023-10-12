@@ -1,17 +1,17 @@
-import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
-import {CoreEngine} from '../../../../../app/engine';
-import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
+import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import {CoreEngine} from '../../../../../app/engine.js';
+import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options.js';
 import {
   excludeFacetSearchResult,
   registerFacetSearch,
   selectFacetSearchResult,
-} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
+} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
 import {
   ConfigurationSection,
   FacetSearchSection,
-} from '../../../../../state/state-sections';
-import {buildGenericFacetSearch} from '../facet-search';
+} from '../../../../../state/state-sections.js';
+import {buildGenericFacetSearch} from '../facet-search.js';
 
 export interface FacetSearchProps {
   options: FacetSearchOptions;

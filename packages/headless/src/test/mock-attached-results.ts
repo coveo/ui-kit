@@ -1,4 +1,4 @@
-import {AttachedResult} from '../features/attached-results/attached-results-state';
+import {AttachedResult} from '../features/attached-results/attached-results-state.js';
 
 export function createMockAttachedResult(
   config: Partial<AttachedResult> = {}

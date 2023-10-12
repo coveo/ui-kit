@@ -1,5 +1,5 @@
-import {SearchSection} from '../../state/state-sections';
-import {parseRankingInfo} from './ranking-info-parser';
+import {SearchSection} from '../../state/state-sections.js';
+import {parseRankingInfo} from './ranking-info-parser.js';
 
 export function rankingInformationSelector(state: SearchSection) {
   const results = state.search.response.results;

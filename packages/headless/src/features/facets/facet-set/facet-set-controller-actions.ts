@@ -1,18 +1,18 @@
 import {RecordValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkOptions} from '../../../app/async-thunk-options';
+import {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
 import {
   ConfigurationSection,
   FacetSection,
-} from '../../../state/state-sections';
-import {updateFacetOptions} from '../../facet-options/facet-options-actions';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
+} from '../../../state/state-sections.js';
+import {updateFacetOptions} from '../../facet-options/facet-options-actions.js';
+import {facetIdDefinition} from '../generic/facet-actions-validation.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
-} from './facet-set-actions';
-import {facetValueDefinition} from './facet-set-validate-payload';
-import {FacetValue} from './interfaces/response';
+} from './facet-set-actions.js';
+import {facetValueDefinition} from './facet-set-validate-payload.js';
+import {FacetValue} from './interfaces/response.js';
 
 const definition = {
   facetId: facetIdDefinition,

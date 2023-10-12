@@ -1,9 +1,9 @@
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../../test.js';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
 import {
   executeToggleRangeFacetExclude,
   executeToggleRangeFacetSelect,
-} from './range-facet-controller-actions';
+} from './range-facet-controller-actions.js';
 
 describe('range facet controller actions', () => {
   let engine: MockSearchEngine;

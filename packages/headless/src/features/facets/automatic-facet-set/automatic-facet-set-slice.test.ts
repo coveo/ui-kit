@@ -1,25 +1,25 @@
-import {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options';
-import {buildMockAutomaticFacetResponse} from '../../../test/mock-automatic-facet-response';
-import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {buildMockSearch} from '../../../test/mock-search';
-import {logSearchEvent} from '../../analytics/analytics-actions';
-import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
-import {executeSearch} from '../../search/search-actions';
-import {FacetValueState} from '../facet-api/value';
+import {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options.js';
+import {buildMockAutomaticFacetResponse} from '../../../test/mock-automatic-facet-response.js';
+import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice.js';
+import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
+import {buildMockSearch} from '../../../test/mock-search.js';
+import {logSearchEvent} from '../../analytics/analytics-actions.js';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../../search/search-actions.js';
+import {FacetValueState} from '../facet-api/value.js';
 import {
   deselectAllAutomaticFacetValues,
   setOptions,
   toggleSelectAutomaticFacetValue,
-} from './automatic-facet-set-actions';
-import {automaticFacetSetReducer} from './automatic-facet-set-slice';
+} from './automatic-facet-set-actions.js';
+import {automaticFacetSetReducer} from './automatic-facet-set-slice.js';
 import {
   AutomaticFacetSetState,
   AutomaticFacetSlice,
   getAutomaticFacetSetInitialState,
-} from './automatic-facet-set-state';
-import {AutomaticFacetResponse} from './interfaces/response';
+} from './automatic-facet-set-state.js';
+import {AutomaticFacetResponse} from './interfaces/response.js';
 
 describe('automatic-facet-set slice', () => {
   let state: AutomaticFacetSetState;

@@ -7,26 +7,26 @@ import {
   SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {CoreEngine} from '../../../../../app/engine';
+import {CoreEngine} from '../../../../../app/engine.js';
 import {
   FacetResultsMustMatch,
   facetResultsMustMatch,
-} from '../../../../../features/facets/facet-api/request';
-import {facetValueStates} from '../../../../../features/facets/facet-api/value';
+} from '../../../../../features/facets/facet-api/request.js';
+import {facetValueStates} from '../../../../../features/facets/facet-api/value.js';
 import {
   rangeFacetRangeAlgorithm,
   RangeFacetRangeAlgorithm,
   rangeFacetSortCriteria,
   RangeFacetSortCriterion,
-} from '../../../../../features/facets/range-facets/generic/interfaces/request';
-import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
-import {validateManualNumericRanges} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
+import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import {validateManualNumericRanges} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
-} from '../../../../../state/state-sections';
-import {validateOptions} from '../../../../../utils/validate-payload';
+} from '../../../../../state/state-sections.js';
+import {validateOptions} from '../../../../../utils/validate-payload.js';
 import {
   facetId,
   field,
@@ -34,7 +34,7 @@ import {
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-} from '../../../../core/facets/_common/facet-option-definitions';
+} from '../../../../core/facets/_common/facet-option-definitions.js';
 
 /**
  * The options defining a `NumericFacet`.

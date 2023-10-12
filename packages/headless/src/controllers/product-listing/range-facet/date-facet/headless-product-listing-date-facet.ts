@@ -1,13 +1,13 @@
-import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
+import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine.js';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
-import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions.js';
+import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
+import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request.js';
+import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils.js';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions.js';
 import {
   buildCoreDateFacet,
   buildDateRange,
@@ -16,8 +16,8 @@ import {
   DateFacetState,
   DateRangeInput,
   DateRangeOptions,
-} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet';
-import {DateFacetOptions} from '../../../core/facets/range-facet/date-facet/headless-date-facet-options';
+} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet.js';
+import {DateFacetOptions} from '../../../core/facets/range-facet/date-facet/headless-date-facet-options.js';
 
 export type {
   DateFacetOptions,

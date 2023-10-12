@@ -3,7 +3,7 @@ import {
   ContextParam,
   LocaleParam,
   VisitorIDParam,
-} from '../../platform-service-params';
+} from '../../platform-service-params.js';
 import {
   ActionsHistoryParam,
   AnalyticsParam,
@@ -12,7 +12,7 @@ import {
   QueryParam,
   SearchHubParam,
   TimezoneParam,
-} from '../search-api-params';
+} from '../search-api-params.js';
 
 export type QuerySuggestRequest = BaseParam &
   QueryParam &

@@ -2,8 +2,8 @@ import {
   buildCommerceEngine,
   CommerceEngine,
   CommerceEngineOptions,
-} from './commerce-engine';
-import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration';
+} from './commerce-engine.js';
+import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration.js';
 
 describe('buildCommerceEngine', () => {
   let options: CommerceEngineOptions;

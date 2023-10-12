@@ -1,7 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {fetchProductListing} from '../product-listing/product-listing-actions';
-import {nextPage, previousPage, selectPage} from './pagination-actions';
-import {getCommercePaginationInitialState} from './pagination-state';
+import {fetchProductListing} from '../product-listing/product-listing-actions.js';
+import {nextPage, previousPage, selectPage} from './pagination-actions.js';
+import {getCommercePaginationInitialState} from './pagination-state.js';
 
 export const paginationReducer = createReducer(
   getCommercePaginationInitialState(),

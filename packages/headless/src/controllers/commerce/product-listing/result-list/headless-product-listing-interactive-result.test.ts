@@ -1,16 +1,16 @@
-import {ProductRecommendation} from '../../../../api/search/search/product-recommendation';
-import {configuration} from '../../../../app/common-reducers';
-import {logProductRecommendationOpen} from '../../../../features/product-listing/product-listing-analytics';
-import {pushRecentResult} from '../../../../features/recent-results/recent-results-actions';
+import {ProductRecommendation} from '../../../../api/search/search/product-recommendation.js';
+import {configuration} from '../../../../app/common-reducers.js';
+import {logProductRecommendationOpen} from '../../../../features/product-listing/product-listing-analytics.js';
+import {pushRecentResult} from '../../../../features/recent-results/recent-results-actions.js';
 import {
   buildMockCommerceEngine,
   MockCommerceEngine,
-} from '../../../../test/mock-engine';
-import {buildMockProductRecommendation} from '../../../../test/mock-product-recommendation';
+} from '../../../../test/mock-engine.js';
+import {buildMockProductRecommendation} from '../../../../test/mock-product-recommendation.js';
 import {
   buildInteractiveResult,
   InteractiveResult,
-} from './headless-product-listing-interactive-result';
+} from './headless-product-listing-interactive-result.js';
 
 describe('InteractiveResult', () => {
   let engine: MockCommerceEngine;

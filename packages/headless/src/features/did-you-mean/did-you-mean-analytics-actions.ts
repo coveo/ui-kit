@@ -2,7 +2,7 @@ import {
   AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
-} from '../analytics/analytics-utils';
+} from '../analytics/analytics-utils.js';
 
 export const logDidYouMeanClick = (): SearchAction =>
   makeAnalyticsAction(

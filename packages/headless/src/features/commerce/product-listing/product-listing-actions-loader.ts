@@ -1,8 +1,8 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
-import {ProductListingV2Action} from '../../analytics/analytics-utils';
+import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
+import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice.js';
+import {ProductListingV2Action} from '../../analytics/analytics-utils.js';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -13,12 +13,12 @@ import {
   LogFacetDeselectActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
-} from '../../facets/facet-set/facet-set-product-listing-v2-analytics-actions';
+} from '../../facets/facet-set/facet-set-product-listing-v2-analytics-actions.js';
 import {
   FetchProductListingV2ThunkReturn,
   fetchProductListing,
   StateNeededByFetchProductListingV2,
-} from './product-listing-actions';
+} from './product-listing-actions.js';
 
 /**
  * The product listing action creators.

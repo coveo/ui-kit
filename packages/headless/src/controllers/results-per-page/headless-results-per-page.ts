@@ -1,20 +1,20 @@
-import {configuration} from '../../app/common-reducers';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logPagerResize} from '../../features/pagination/pagination-analytics-actions';
-import {paginationReducer as pagination} from '../../features/pagination/pagination-slice';
-import {fetchPage} from '../../features/search/search-actions';
+import {configuration} from '../../app/common-reducers.js';
+import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {logPagerResize} from '../../features/pagination/pagination-analytics-actions.js';
+import {paginationReducer as pagination} from '../../features/pagination/pagination-slice.js';
+import {fetchPage} from '../../features/search/search-actions.js';
 import {
   ConfigurationSection,
   PaginationSection,
-} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
+} from '../../state/state-sections.js';
+import {loadReducerError} from '../../utils/errors.js';
 import {
   buildCoreResultsPerPage,
   ResultsPerPage,
   ResultsPerPageInitialState,
   ResultsPerPageProps,
   ResultsPerPageState,
-} from '../core/results-per-page/headless-core-results-per-page';
+} from '../core/results-per-page/headless-core-results-per-page.js';
 
 export type {
   ResultsPerPage,

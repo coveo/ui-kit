@@ -1,26 +1,26 @@
-import {Raw} from '../../../api/search/search/raw';
-import {Result} from '../../../api/search/search/result';
-import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice';
-import {loadCollection} from '../../../features/folding/folding-actions';
-import {foldedResultAnalyticsClient} from '../../../features/folding/folding-analytics-actions';
-import {foldingReducer as folding} from '../../../features/folding/folding-slice';
+import {Raw} from '../../../api/search/search/raw.js';
+import {Result} from '../../../api/search/search/result.js';
+import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice.js';
+import {loadCollection} from '../../../features/folding/folding-actions.js';
+import {foldedResultAnalyticsClient} from '../../../features/folding/folding-analytics-actions.js';
+import {foldingReducer as folding} from '../../../features/folding/folding-slice.js';
 import {
   FoldedCollection,
   getFoldingInitialState,
-} from '../../../features/folding/folding-state';
-import {queryReducer as query} from '../../../features/query/query-slice';
-import {searchReducer as search} from '../../../features/search/search-slice';
+} from '../../../features/folding/folding-state.js';
+import {queryReducer as query} from '../../../features/query/query-slice.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../../test';
+} from '../../../test.js';
 import {
   buildCoreFoldedResultList,
   FoldedResultList,
   CoreFoldedResultListProps,
   FoldedResultListOptions,
-} from './headless-core-folded-result-list';
+} from './headless-core-folded-result-list.js';
 
 describe('FoldedResultList', () => {
   let engine: MockSearchEngine;

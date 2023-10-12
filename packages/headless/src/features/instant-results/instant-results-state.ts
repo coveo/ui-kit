@@ -1,6 +1,6 @@
 import {SerializedError} from '@reduxjs/toolkit';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {Result} from '../../index';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import {Result} from '../../index.js';
 
 export type InstantResultCache = {
   expiresAt: number;

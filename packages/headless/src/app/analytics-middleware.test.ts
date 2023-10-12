@@ -1,10 +1,10 @@
-import {logSearchboxSubmit} from '../features/query/query-analytics-actions';
+import {logSearchboxSubmit} from '../features/query/query-analytics-actions.js';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
-} from '../features/search/search-actions';
-import {buildMockSearchAppEngine} from '../test/mock-engine';
-import {buildMockSearch} from '../test/mock-search';
+} from '../features/search/search-actions.js';
+import {buildMockSearchAppEngine} from '../test/mock-engine.js';
+import {buildMockSearch} from '../test/mock-search.js';
 
 describe('analytics middleware', () => {
   beforeEach(() => {

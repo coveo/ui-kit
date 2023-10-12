@@ -1,23 +1,23 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions.js';
 import {
   buildCoreSmartSnippetQuestionsList,
   CoreSmartSnippetQuestionsList,
   SmartSnippetQuestionsListProps,
   CoreSmartSnippetQuestionsListState,
-} from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
-import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links';
-import {buildSmartSnippetInteractiveInlineLinks} from '../smart-snippet/headless-insight-smart-snippet-interactive-inline-links';
-import {buildInsightSmartSnippetInteractiveQuestions} from './headless-insight-smart-snippet-interactive-questions';
+} from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
+import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
+import {buildSmartSnippetInteractiveInlineLinks} from '../smart-snippet/headless-insight-smart-snippet-interactive-inline-links.js';
+import {buildInsightSmartSnippetInteractiveQuestions} from './headless-insight-smart-snippet-interactive-questions.js';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering';
+export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
 export type {
   SmartSnippetQuestionsListOptions,
   SmartSnippetQuestionsListProps,
   CoreSmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
   CoreSmartSnippetQuestionsList,
-} from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list';
+} from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SmartSnippetQuestionsList` controller.
