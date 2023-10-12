@@ -56,7 +56,7 @@ export class TestFixture {
   private hash = '';
   private style = document.createElement('style');
   private language?: string;
-  private localizationCompatibilityVersion: i18nCompatibilityVersion = 'v3';
+  private localizationCompatibilityVersion: i18nCompatibilityVersion = 'v4';
   private disabledAnalytics = false;
   private doNotTrack = false;
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
