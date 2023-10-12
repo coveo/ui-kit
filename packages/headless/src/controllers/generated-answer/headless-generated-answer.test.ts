@@ -190,16 +190,6 @@ describe('generated answer', () => {
     });
 
     describe('when not visible', () => {
-      it('should persist the isVisible value', () => {
-        const accessor = jest.fn();
-        engine = buildEngineWithGeneratedAnswer({isVisible: false});
-        initGeneratedAnswer({persistIsVisible: accessor});
-
-        generatedAnswer.show();
-
-        expect(accessor).toHaveBeenCalledWith(true);
-      });
-
       it('should dispatch the setIsVisible action', () => {
         engine = buildEngineWithGeneratedAnswer({isVisible: false});
         initGeneratedAnswer();
@@ -239,16 +229,6 @@ describe('generated answer', () => {
     });
 
     describe('when visible', () => {
-      it('should persist the isVisible value', () => {
-        const accessor = jest.fn();
-        engine = buildEngineWithGeneratedAnswer({isVisible: true});
-        initGeneratedAnswer({persistIsVisible: accessor});
-
-        generatedAnswer.hide();
-
-        expect(accessor).toHaveBeenCalledWith(false);
-      });
-
       it('should dispatch the setIsVisible action', () => {
         engine = buildEngineWithGeneratedAnswer({isVisible: true});
         initGeneratedAnswer();

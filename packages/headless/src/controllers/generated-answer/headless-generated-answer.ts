@@ -61,7 +61,6 @@ export interface GeneratedAnswer extends Controller {
 
 export interface GeneratedAnswerProps {
   initialState?: {isVisible: boolean};
-  persistIsVisible?: (isVisible: boolean) => void;
 }
 
 /**
@@ -154,14 +153,12 @@ export function buildGeneratedAnswer(
 
     show() {
       if (!this.state.isVisible) {
-        props?.persistIsVisible?.(true);
         dispatch(setIsVisible(true));
         dispatch(logGeneratedAnswerShowAnswers());
       }
     },
     hide() {
       if (this.state.isVisible) {
-        props?.persistIsVisible?.(false);
         dispatch(setIsVisible(false));
         dispatch(logGeneratedAnswerHideAnswers());
       }
