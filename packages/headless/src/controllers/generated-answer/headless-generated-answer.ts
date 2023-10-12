@@ -11,8 +11,8 @@ import {
 import {
   GeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
-  logGenerativeQuestionDetailedFeedback,
-  logGenerativeQuestionFeedback,
+  logGeneratedAnswerDetailedFeedback,
+  logGeneratedAnswerFeedback,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
@@ -157,12 +157,12 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     },
 
     sendFeedback(feedback) {
-      dispatch(logGenerativeQuestionFeedback(feedback));
+      dispatch(logGeneratedAnswerFeedback(feedback));
       dispatch(closeGeneratedAnswerFeedbackModal());
     },
 
     sendDetailedFeedback(details) {
-      dispatch(logGenerativeQuestionDetailedFeedback(details));
+      dispatch(logGeneratedAnswerDetailedFeedback(details));
       dispatch(closeGeneratedAnswerFeedbackModal());
     },
 

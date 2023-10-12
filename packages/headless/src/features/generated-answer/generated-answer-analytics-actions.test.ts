@@ -6,17 +6,16 @@ import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {createMockState} from '../../test/mock-state';
 import {
-  logGenerativeQuestionDetailedFeedback,
-  logGenerativeQuestionFeedback,
+  logGeneratedAnswerDetailedFeedback,
+  logGeneratedAnswerFeedback,
 } from './generated-answer-analytics-actions';
 
-const mockMakeGenerativeQuestionFeedbackSubmit = jest.fn();
+const mockMakeGeneratedAnswerFeedbackSubmit = jest.fn();
 
 jest.mock('coveo.analytics', () => {
   const mockCoveoSearchPageClient = jest.fn(() => ({
     disable: jest.fn(),
-    makeGenerativeQuestionFeedbackSubmit:
-      mockMakeGenerativeQuestionFeedbackSubmit,
+    makeGeneratedAnswerFeedbackSubmit: mockMakeGeneratedAnswerFeedbackSubmit,
   }));
 
   return {
@@ -51,10 +50,10 @@ describe('the analytics related to the generated answer feature', () => {
     jest.clearAllMocks();
   });
 
-  it('should log #logGenerativeQuestionFeedback with the right payload', async () => {
-    await engine.dispatch(logGenerativeQuestionFeedback(exampleFeedback));
+  it('should log #logGeneratedAnswerFeedback with the right payload', async () => {
+    await engine.dispatch(logGeneratedAnswerFeedback(exampleFeedback));
 
-    const mockToUse = mockMakeGenerativeQuestionFeedbackSubmit;
+    const mockToUse = mockMakeGeneratedAnswerFeedbackSubmit;
     const expectedMetadata = {
       generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
       reason: exampleFeedback,
@@ -65,11 +64,9 @@ describe('the analytics related to the generated answer feature', () => {
   });
 
   it('should log #logGenerativeQuestionDetailedFeedback with the right payload', async () => {
-    await engine.dispatch(
-      logGenerativeQuestionDetailedFeedback(exampleDetails)
-    );
+    await engine.dispatch(logGeneratedAnswerDetailedFeedback(exampleDetails));
 
-    const mockToUse = mockMakeGenerativeQuestionFeedbackSubmit;
+    const mockToUse = mockMakeGeneratedAnswerFeedbackSubmit;
     const expectedMetadata = {
       generativeQuestionAnsweringId: exampleGenerativeQuestionAnsweringId,
       reason: 'other',
