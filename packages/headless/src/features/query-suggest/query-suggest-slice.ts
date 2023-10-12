@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
@@ -7,10 +7,11 @@ import {
 } from './query-suggest-actions.js';
 import {
   getQuerySuggestSetInitialState,
+  QuerySuggestSet,
   QuerySuggestState,
 } from './query-suggest-state.js';
 
-export const querySuggestReducer = createReducer(
+export const querySuggestReducer : Reducer<QuerySuggestSet> = createReducer(
   getQuerySuggestSetInitialState(),
   (builder) =>
     builder

@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {
@@ -7,9 +7,9 @@ import {
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from './static-filter-set-actions.js';
-import {getStaticFilterSetInitialState} from './static-filter-set-state.js';
+import {StaticFilterSetState, getStaticFilterSetInitialState} from './static-filter-set-state.js';
 
-export const staticFilterSetReducer = createReducer(
+export const staticFilterSetReducer :Reducer<StaticFilterSetState>= createReducer(
   getStaticFilterSetInitialState(),
   (builder) =>
     builder

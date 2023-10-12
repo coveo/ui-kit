@@ -1,8 +1,8 @@
-import {getProductListingV2InitialState} from '../product-listing-state.js';
-import {createReducer} from '@reduxjs/toolkit';
+import {ProductListingV2State, getProductListingV2InitialState} from '../product-listing-state.js';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {applySort} from './product-listing-sort-actions.js';
 
-export const sortReducer = createReducer(
+export const sortReducer: Reducer<ProductListingV2State> = createReducer(
   getProductListingV2InitialState(),
 
   (builder) => {

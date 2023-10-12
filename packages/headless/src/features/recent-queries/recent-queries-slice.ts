@@ -1,12 +1,12 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {executeSearch} from '../search/search-actions.js';
 import {
   registerRecentQueries,
   clearRecentQueries,
 } from './recent-queries-actions.js';
-import {getRecentQueriesInitialState} from './recent-queries-state.js';
+import {getRecentQueriesInitialState,RecentQueriesState} from './recent-queries-state.js';
 
-export const recentQueriesReducer = createReducer(
+export const recentQueriesReducer : Reducer<RecentQueriesState> = createReducer(
   getRecentQueriesInitialState(),
   (builder) => {
     builder

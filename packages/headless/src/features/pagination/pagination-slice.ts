@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions.js';
 import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions.js';
 import {
@@ -38,7 +38,7 @@ import {
 } from './pagination-constants.js';
 import {getPaginationInitialState, PaginationState} from './pagination-state.js';
 
-export const paginationReducer = createReducer(
+export const paginationReducer: Reducer<PaginationState> = createReducer(
   getPaginationInitialState(),
   (builder) => {
     builder

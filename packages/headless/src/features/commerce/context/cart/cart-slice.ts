@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {CartState, getCartInitialState} from './cart-state.js';
 import {
   addItem,
@@ -7,7 +7,7 @@ import {
   updateItemQuantity,
 } from './cart-actions.js';
 
-export const cartReducer = createReducer(
+export const cartReducer: Reducer<CartState> = createReducer(
   getCartInitialState(),
 
   (builder) => {

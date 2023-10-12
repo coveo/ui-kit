@@ -1,13 +1,13 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions.js';
 import {
   addContext,
   removeContext,
   setContext,
 } from './dictionary-field-context-actions.js';
-import {getDictionaryFieldContextInitialState} from './dictionary-field-context-state.js';
+import {DictionaryFieldContextState, getDictionaryFieldContextInitialState} from './dictionary-field-context-state.js';
 
-export const dictionaryFieldContextReducer = createReducer(
+export const dictionaryFieldContextReducer: Reducer<DictionaryFieldContextState> = createReducer(
   getDictionaryFieldContextInitialState(),
   (builder) => {
     builder

@@ -1,10 +1,10 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {updateSearchConfiguration} from '../configuration/configuration-actions.js';
 import {change} from '../history/history-actions.js';
 import {setSearchHub} from './search-hub-actions.js';
 import {getSearchHubInitialState} from './search-hub-state.js';
 
-export const searchHubReducer = createReducer(
+export const searchHubReducer: Reducer<string> = createReducer(
   getSearchHubInitialState(),
   (builder) => {
     builder

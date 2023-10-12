@@ -1,5 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {clearAnalyticsClient} from '../../api/analytics/coveo-analytics-utils.js';
 import {getOrganizationEndpoints} from '../../api/platform-client.js';
 import {
@@ -21,6 +21,7 @@ import {
   getConfigurationInitialState,
   searchAPIEndpoint,
   analyticsAPIEndpoint,
+  ConfigurationState,
 } from './configuration-state.js';
 
 function analyticsUrlFromPlatformUrl(
@@ -50,7 +51,7 @@ function analyticsUrlFromPlatformUrl(
   return platformUrl;
 }
 
-export const configurationReducer = createReducer(
+export const configurationReducer: Reducer<ConfigurationState> = createReducer(
   getConfigurationInitialState(),
   (builder) =>
     builder

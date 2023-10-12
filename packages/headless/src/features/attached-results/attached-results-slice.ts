@@ -1,5 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {
   setAttachedResults,
   attachResult,
@@ -7,10 +7,11 @@ import {
 } from './attached-results-actions.js';
 import {
   AttachedResult,
+  AttachedResultsState,
   getAttachedResultsInitialState,
 } from './attached-results-state.js';
 
-export const attachedResultsReducer = createReducer(
+export const attachedResultsReducer: Reducer<AttachedResultsState> = createReducer(
   getAttachedResultsInitialState(),
   (builder) => {
     builder

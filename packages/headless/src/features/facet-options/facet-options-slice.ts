@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {registerCategoryFacet} from '../facets/category-facet-set/category-facet-set-actions.js';
 import {registerFacet} from '../facets/facet-set/facet-set-actions.js';
 import {registerDateFacet} from '../facets/range-facets/date-facet-set/date-facet-actions.js';
@@ -14,9 +14,10 @@ import {
 import {
   getFacetOptionsSliceInitialState,
   getFacetOptionsInitialState,
+  FacetOptionsState,
 } from './facet-options-state.js';
 
-export const facetOptionsReducer = createReducer(
+export const facetOptionsReducer: Reducer<FacetOptionsState> = createReducer(
   getFacetOptionsInitialState(),
   (builder) => {
     builder

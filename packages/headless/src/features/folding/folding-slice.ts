@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {Result} from '../../api/search/search/result.js';
 import {isArray} from '../../utils/utils.js';
 import {
@@ -160,7 +160,7 @@ function tryGetCollectionFromStateOrThrow(
   return state.collections[collectionId];
 }
 
-export const foldingReducer = createReducer(
+export const foldingReducer: Reducer<FoldingState> = createReducer(
   getFoldingInitialState(),
   (builder) =>
     builder

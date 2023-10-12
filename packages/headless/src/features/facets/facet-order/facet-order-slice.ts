@@ -1,9 +1,9 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {change} from '../../history/history-actions.js';
 import {executeSearch} from '../../search/search-actions.js';
-import {getFacetOrderInitialState} from './facet-order-state.js';
+import {FacetOrderState, getFacetOrderInitialState} from './facet-order-state.js';
 
-export const facetOrderReducer = createReducer(
+export const facetOrderReducer: Reducer<FacetOrderState> = createReducer(
   getFacetOrderInitialState(),
   (builder) => {
     builder

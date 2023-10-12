@@ -1,7 +1,6 @@
 import {
   AnyAction,
   ThunkDispatch,
-  getDefaultMiddleware,
   ActionCreatorWithPreparedPayload,
 } from '@reduxjs/toolkit';
 import {Logger, pino} from 'pino';
@@ -259,7 +258,6 @@ const configureMockStore = (logger: Logger) => {
       analyticsMiddleware,
       //@ts-ignore redux&co don't play ball with Node ESM types
       thunk.withExtraArgument(thunkExtraArguments),
-      ...getDefaultMiddleware(),
       logActionMiddleware(logger),
     ]),
     apiClient: thunkExtraArguments.apiClient,
@@ -283,7 +281,6 @@ const configureInsightMockStore = (logger: Logger) => {
       analyticsMiddleware,
       //@ts-ignore redux&co don't play ball with Node ESM types
       thunk.withExtraArgument(thunkExtraArguments),
-      ...getDefaultMiddleware(),
       logActionMiddleware(logger),
     ]),
     apiClient: thunkExtraArguments.apiClient,

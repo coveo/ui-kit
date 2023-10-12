@@ -1,9 +1,9 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {enableDebug, disableDebug} from './debug-actions.js';
 import {getDebugInitialState} from './debug-state.js';
 
-export const debugReducer = createReducer(getDebugInitialState(), (builder) => {
+export const debugReducer: Reducer<boolean> = createReducer(getDebugInitialState(), (builder) => {
   builder
     .addCase(enableDebug, () => true)
     .addCase(disableDebug, () => false)

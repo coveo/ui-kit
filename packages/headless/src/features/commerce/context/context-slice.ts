@@ -1,8 +1,8 @@
-import {createReducer} from '@reduxjs/toolkit';
-import {getContextInitialState} from './context-state.js';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
+import {CommerceContextState, getContextInitialState} from './context-state.js';
 import {setContext, setUser, setView} from './context-actions.js';
 
-export const contextReducer = createReducer(
+export const contextReducer: Reducer<CommerceContextState> = createReducer(
   getContextInitialState(),
 
   (builder) => {

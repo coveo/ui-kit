@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {registerFolding} from '../folding/folding-actions.js';
 import {getFoldingInitialState} from '../folding/folding-state.js';
 import {
@@ -7,9 +7,9 @@ import {
   fetchFieldsDescription,
   registerFieldsToInclude,
 } from './fields-actions.js';
-import {getFieldsInitialState} from './fields-state.js';
+import {FieldsState, getFieldsInitialState} from './fields-state.js';
 
-export const fieldsReducer = createReducer(getFieldsInitialState(), (builder) =>
+export const fieldsReducer : Reducer<FieldsState> = createReducer(getFieldsInitialState(), (builder) =>
   builder
     .addCase(registerFieldsToInclude, (state, action) => {
       state.fieldsToInclude = [

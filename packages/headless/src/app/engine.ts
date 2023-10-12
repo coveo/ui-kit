@@ -1,6 +1,5 @@
 import {isNullOrUndefined, isUndefined} from '@coveo/bueno';
 import {
-  AnyAction,
   Dispatch,
   ThunkDispatch,
   Unsubscribe,
@@ -8,6 +7,7 @@ import {
   StateFromReducersMapObject,
   Middleware,
   Reducer,
+  UnknownAction,
 } from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {
@@ -39,7 +39,8 @@ type CoreState = StateFromReducersMapObject<typeof coreReducers> &
 type EngineDispatch<
   State,
   ExtraArguments extends ThunkExtraArguments,
-> = ThunkDispatch<State, ExtraArguments, AnyAction> & Dispatch<AnyAction>;
+> = ThunkDispatch<State, ExtraArguments, UnknownAction> &
+  Dispatch<UnknownAction>;
 
 export interface CoreEngine<
   State extends object = {},
@@ -142,8 +143,10 @@ export interface ExternalEngineOptions<State extends object> {
   loggerOptions?: LoggerOptions;
 }
 
-function getUpdateAnalyticsConfigurationPayload(
-  options: EngineOptions<ReducersMapObject>,
+function getUpdateAnalyticsConfigurationPayload<
+  T extends ReducersMapObject = ReducersMapObject,
+>(
+  options: EngineOptions<T>,
   logger: Logger
 ): UpdateAnalyticsConfigurationActionCreatorPayload | null {
   const apiBaseUrl =
@@ -309,22 +312,24 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   ].concat(options.middlewares || []);
 }
 
-function shouldWarnAboutOrganizationEndpoints(
-  options: EngineOptions<ReducersMapObject>
-) {
+function shouldWarnAboutOrganizationEndpoints<
+  T extends ReducersMapObject = ReducersMapObject,
+>(options: EngineOptions<T>) {
   return isUndefined(options.configuration.organizationEndpoints);
 }
 
-function shouldWarnAboutPlatformURL(options: EngineOptions<ReducersMapObject>) {
+function shouldWarnAboutPlatformURL<
+  T extends ReducersMapObject = ReducersMapObject,
+>(options: EngineOptions<T>) {
   return (
     !isNullOrUndefined(options.configuration.platformUrl) ||
     isNullOrUndefined(options.configuration.organizationEndpoints?.platform)
   );
 }
 
-function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints(
-  options: EngineOptions<ReducersMapObject>
-) {
+function shouldWarnAboutMismatchBetweenOrganizationIDAndOrganizationEndpoints<
+  T extends ReducersMapObject = ReducersMapObject,
+>(options: EngineOptions<T>) {
   const {platform} = options.configuration.organizationEndpoints!;
 
   if (isUndefined(platform)) {

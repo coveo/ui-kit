@@ -1,12 +1,12 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {
   registerRecentResults,
   clearRecentResults,
   pushRecentResult,
 } from './recent-results-actions.js';
-import {getRecentResultsInitialState} from './recent-results-state.js';
+import {RecentResultsState, getRecentResultsInitialState} from './recent-results-state.js';
 
-export const recentResultsReducer = createReducer(
+export const recentResultsReducer : Reducer<RecentResultsState> = createReducer(
   getRecentResultsInitialState(),
   (builder) => {
     builder

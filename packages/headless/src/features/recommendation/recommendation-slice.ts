@@ -1,11 +1,11 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {
   getRecommendations,
   setRecommendationId,
 } from './recommendation-actions.js';
 import {getRecommendationInitialState} from './recommendation-state.js';
 
-export const recommendationReducer = createReducer(
+export const recommendationReducer:Reducer = createReducer(
   getRecommendationInitialState(),
 
   (builder) => {

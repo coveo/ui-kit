@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {undoable} from '../../app/undoable.js';
 import {SortState} from '../../controllers/sort/headless-sort.js';
 import {arrayEqual} from '../../utils/compare-utils.js';
@@ -20,7 +20,7 @@ import {TabSetState} from '../tab-set/tab-set-state.js';
 import {snapshot, redo, undo} from './history-actions.js';
 import {getHistoryInitialState, HistoryState} from './history-state.js';
 
-export const historyReducer = createReducer(
+export const historyReducer : Reducer<HistoryState> = createReducer(
   getHistoryInitialState(),
   (builder) => {
     builder.addCase(snapshot, (state, action) =>

@@ -1,6 +1,6 @@
 import {Middleware} from '@reduxjs/toolkit';
 
-export const analyticsMiddleware: Middleware = (api) => (next) => (action) => {
+export const analyticsMiddleware: Middleware = (api) => (next) => (action:any) => {
   // Why all these shenanigans ?
   // https://redux.js.org/style-guide/style-guide#do-not-put-non-serializable-values-in-state-or-actions
   // analyticsAction is returned as a function in some action payload. A function is non serializable.

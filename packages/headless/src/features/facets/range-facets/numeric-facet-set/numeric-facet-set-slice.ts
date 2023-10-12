@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions.js';
 import {disableFacet} from '../../../facet-options/facet-options-actions.js';
 import {change} from '../../../history/history-actions.js';
@@ -30,9 +30,10 @@ import {
 import {
   getNumericFacetSetInitialState,
   getNumericFacetSetSliceInitialState,
+  NumericFacetSetState
 } from './numeric-facet-set-state.js';
 
-export const numericFacetSetReducer = createReducer(
+export const numericFacetSetReducer : Reducer<NumericFacetSetState> = createReducer(
   getNumericFacetSetInitialState(),
   (builder) => {
     builder

@@ -1,12 +1,12 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {
   fetchCaseClassifications,
   registerCaseField,
   updateCaseField,
 } from './case-field-actions.js';
-import {getCaseFieldInitialState} from './case-field-state.js';
+import {CaseFieldState, getCaseFieldInitialState} from './case-field-state.js';
 
-export const caseFieldReducer = createReducer(
+export const caseFieldReducer: Reducer<CaseFieldState> = createReducer(
   getCaseFieldInitialState(),
 
   (builder) => {

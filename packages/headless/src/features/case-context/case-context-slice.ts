@@ -1,8 +1,8 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {setCaseContext, setCaseId, setCaseNumber} from './case-context-actions.js';
-import {getCaseContextInitialState} from './case-context-state.js';
+import {CaseContextState, getCaseContextInitialState} from './case-context-state.js';
 
-export const caseContextReducer = createReducer(
+export const caseContextReducer: Reducer<CaseContextState> = createReducer(
   getCaseContextInitialState(),
   (builder) => {
     builder

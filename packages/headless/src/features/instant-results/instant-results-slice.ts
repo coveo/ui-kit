@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {createReducer, Reducer} from '@reduxjs/toolkit';
 import {fetchInstantResults} from '../search/search-actions.js';
 import {
   clearExpiredResults,
@@ -13,7 +13,7 @@ import {
   InstantResultsState,
 } from './instant-results-state.js';
 
-export const instantResultsReducer = createReducer(
+export const instantResultsReducer : Reducer<InstantResultsState> = createReducer(
   getInstantResultsInitialState(),
   (builder) => {
     builder.addCase(registerInstantResults, (state, action) => {

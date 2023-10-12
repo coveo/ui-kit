@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
@@ -9,9 +9,10 @@ import {
 import {
   getStandaloneSearchBoxSetInitialState,
   StandaloneSearchBoxEntry,
+  StandaloneSearchBoxSetState,
 } from './standalone-search-box-set-state.js';
 
-export const standaloneSearchBoxSetReducer = createReducer(
+export const standaloneSearchBoxSetReducer: Reducer<StandaloneSearchBoxSetState> = createReducer(
   getStandaloneSearchBoxSetInitialState(),
   (builder) =>
     builder

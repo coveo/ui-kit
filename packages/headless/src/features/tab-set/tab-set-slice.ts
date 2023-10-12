@@ -1,10 +1,10 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {registerTab, updateActiveTab} from './tab-set-actions.js';
 import {getTabSetInitialState, TabSetState} from './tab-set-state.js';
 
-export const tabSetReducer = createReducer(
+export const tabSetReducer : Reducer<TabSetState>= createReducer(
   getTabSetInitialState(),
   (builder) => {
     builder

@@ -1,7 +1,7 @@
 import {Middleware} from '@reduxjs/toolkit';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isInstantlyCallableThunkAction(action: any): boolean {
+function isInstantlyCallableThunkAction(action: any): action is Function {
   return action.instantlyCallable;
 }
 

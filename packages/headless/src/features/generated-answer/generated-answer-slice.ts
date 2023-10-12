@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
 import {
   dislikeGeneratedAnswer,
@@ -10,9 +10,9 @@ import {
   updateError,
   updateMessage,
 } from './generated-answer-actions.js';
-import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
+import {GeneratedAnswerState, getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
-export const generatedAnswerReducer = createReducer(
+export const generatedAnswerReducer :Reducer<GeneratedAnswerState> = createReducer(
   getGeneratedAnswerInitialState(),
   (builder) =>
     builder

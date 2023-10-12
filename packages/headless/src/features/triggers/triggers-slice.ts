@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {executeSearch} from '../search/search-actions.js';
 import {
   applyQueryTriggerModification,
@@ -6,10 +6,11 @@ import {
 } from './triggers-actions.js';
 import {
   FunctionExecutionTrigger,
+  TriggerState,
   getTriggerInitialState,
 } from './triggers-state.js';
 
-export const triggerReducer = createReducer(
+export const triggerReducer : Reducer<TriggerState> = createReducer(
   getTriggerInitialState(),
   (builder) =>
     builder

@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
 import {
   fetchMoreResults,
@@ -30,7 +30,7 @@ const getUniqueIdsOfResultsWithHTMLVersion = (
   results: Pick<Result, 'hasHtmlVersion' | 'uniqueId'>[]
 ) => results.filter((r) => r.hasHtmlVersion).map((r) => r.uniqueId);
 
-export const resultPreviewReducer = createReducer(
+export const resultPreviewReducer:Reducer = createReducer(
   getResultPreviewInitialState(),
   (builder) => {
     builder

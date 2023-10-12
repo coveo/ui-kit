@@ -14,7 +14,7 @@ export function createRenewAccessTokenMiddleware(
     500
   );
 
-  return (store) => (next) => async (action) => {
+  return (store) => (next) => async (action:any) => {
     const isThunk = typeof action === 'function';
 
     if (!isThunk) {
@@ -47,6 +47,7 @@ export function createRenewAccessTokenMiddleware(
     const accessToken = await attempt(renewToken);
     store.dispatch(updateBasicConfiguration({accessToken}));
     store.dispatch(action);
+    return;
   };
 }
 

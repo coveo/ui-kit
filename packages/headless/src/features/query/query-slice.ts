@@ -1,12 +1,12 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions.js';
 import {change} from '../history/history-actions.js';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {updateQuery} from './query-actions.js';
-import {getQueryInitialState} from './query-state.js';
+import {QueryState, getQueryInitialState} from './query-state.js';
 
-export const queryReducer = createReducer(getQueryInitialState(), (builder) =>
+export const queryReducer: Reducer<QueryState> = createReducer(getQueryInitialState(), (builder) =>
   builder
     .addCase(updateQuery, (state, action) => ({...state, ...action.payload}))
     .addCase(applyDidYouMeanCorrection, (state, action) => {

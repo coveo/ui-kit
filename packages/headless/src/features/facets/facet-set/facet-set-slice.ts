@@ -1,4 +1,4 @@
-import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
+import {createReducer, Reducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
@@ -31,6 +31,7 @@ import {
   RegisterFacetActionCreatorPayload,
 } from './facet-set-actions.js';
 import {
+  FacetSetState,
   getFacetSetInitialState,
   getFacetSetSliceInitialState,
 } from './facet-set-state.js';
@@ -38,7 +39,7 @@ import {FacetOptionalParameters} from './interfaces/options.js';
 import {FacetRequest, FacetValueRequest} from './interfaces/request.js';
 import {FacetValue, FacetResponse} from './interfaces/response.js';
 
-export const facetSetReducer = createReducer(
+export const facetSetReducer : Reducer<FacetSetState> = createReducer(
   getFacetSetInitialState(),
   (builder) => {
     builder

@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions.js';
 import {disableFacet} from '../../facet-options/facet-options-actions.js';
 import {change} from '../../history/history-actions.js';
@@ -33,7 +33,7 @@ import {
 } from './interfaces/request.js';
 import {CategoryFacetResponse} from './interfaces/response.js';
 
-export const categoryFacetSetReducer = createReducer(
+export const categoryFacetSetReducer: Reducer<CategoryFacetSetState> = createReducer(
   getCategoryFacetSetInitialState(),
   (builder) => {
     builder

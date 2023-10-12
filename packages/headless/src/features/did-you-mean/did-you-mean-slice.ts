@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {executeSearch} from '../search/search-actions.js';
 import {
   enableDidYouMean,
@@ -7,9 +7,9 @@ import {
   enableAutomaticQueryCorrection,
   disableAutomaticQueryCorrection,
 } from './did-you-mean-actions.js';
-import {emptyCorrection, getDidYouMeanInitialState} from './did-you-mean-state.js';
+import {DidYouMeanState, emptyCorrection, getDidYouMeanInitialState} from './did-you-mean-state.js';
 
-export const didYouMeanReducer = createReducer(
+export const didYouMeanReducer: Reducer<DidYouMeanState> = createReducer(
   getDidYouMeanInitialState(),
   (builder) => {
     builder

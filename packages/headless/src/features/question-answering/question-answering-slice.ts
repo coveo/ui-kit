@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {QuestionAnswer} from '../../api/search/search/question-answering.js';
 import {getObjectHash} from '../../utils/utils.js';
 import {executeSearch} from '../search/search-actions.js';
@@ -16,6 +16,7 @@ import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-
 import {
   getQuestionAnsweringInitialState,
   QuestionAnsweringRelatedQuestionState,
+  QuestionAnsweringState,
 } from './question-answering-state.js';
 
 const findRelatedQuestionIdx = (
@@ -56,7 +57,7 @@ function buildQuestionAnsweringRelatedQuestionState(
   };
 }
 
-export const questionAnsweringReducer = createReducer(
+export const questionAnsweringReducer: Reducer<QuestionAnsweringState> = createReducer(
   getQuestionAnsweringInitialState(),
   (builder) =>
     builder

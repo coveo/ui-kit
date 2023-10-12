@@ -1,4 +1,4 @@
-import {createReducer, PayloadAction} from '@reduxjs/toolkit';
+import {createReducer, PayloadAction, Reducer} from '@reduxjs/toolkit';
 import {
   executeSearch,
   fetchFacetValues,
@@ -64,7 +64,7 @@ function handlePendingSearch(
   state.requestId = action.meta.requestId;
 }
 
-export const searchReducer = createReducer(
+export const searchReducer:Reducer<SearchState> = createReducer(
   getSearchInitialState(),
   (builder) => {
     builder.addCase(executeSearch.rejected, (state, action) =>

@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
 import {executeSearch} from '../../../search/search-actions.js';
 import {
@@ -16,9 +16,9 @@ import {
 } from '../generic/generic-facet-search-actions.js';
 import {updateFacetSearch} from '../specific/specific-facet-search-actions.js';
 import {registerCategoryFacetSearch} from './category-facet-search-actions.js';
-import {getCategoryFacetSearchSetInitialState} from './category-facet-search-set-state.js';
+import {CategoryFacetSearchSetState, getCategoryFacetSearchSetInitialState} from './category-facet-search-set-state.js';
 
-export const categoryFacetSearchSetReducer = createReducer(
+export const categoryFacetSearchSetReducer : Reducer<CategoryFacetSearchSetState> = createReducer(
   getCategoryFacetSearchSetInitialState(),
   (builder) => {
     builder

@@ -1,8 +1,8 @@
-import {AnyAction, Reducer} from '@reduxjs/toolkit';
+import {UnknownAction, Reducer} from '@reduxjs/toolkit';
 import {makeHistory, undoable} from './undoable.js';
 
 describe('undoable', () => {
-  const reducer: Reducer = (state: string, action: AnyAction) =>
+  const reducer: Reducer = (state: string, action: UnknownAction) =>
     action.payload ?? state;
   const undo = () => ({type: 'undo'});
   const redo = () => ({type: 'redo'});

@@ -2,7 +2,7 @@ import {Middleware, SerializedError} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 
 export const logActionErrorMiddleware: (logger: Logger) => Middleware =
-  (logger) => () => (next) => (action) => {
+  (logger) => () => (next) => (action: any) => {
     if (!action.error) {
       return next(action);
     }
@@ -26,7 +26,7 @@ export const logActionErrorMiddleware: (logger: Logger) => Middleware =
   };
 
 export const logActionMiddleware: (logger: Logger) => Middleware =
-  (logger) => (api) => (next) => (action) => {
+  (logger) => (api) => (next) => (action: any) => {
     logger.debug(
       {
         action,

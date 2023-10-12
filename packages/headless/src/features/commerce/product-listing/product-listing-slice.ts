@@ -1,8 +1,8 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {fetchProductListing} from './product-listing-actions.js';
-import {getProductListingV2InitialState} from './product-listing-state.js';
+import {ProductListingV2State, getProductListingV2InitialState} from './product-listing-state.js';
 
-export const productListingV2Reducer = createReducer(
+export const productListingV2Reducer: Reducer<ProductListingV2State> = createReducer(
   getProductListingV2InitialState(),
 
   (builder) => {

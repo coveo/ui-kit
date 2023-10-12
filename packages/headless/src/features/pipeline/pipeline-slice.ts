@@ -1,10 +1,10 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {updateSearchConfiguration} from '../configuration/configuration-actions.js';
 import {change} from '../history/history-actions.js';
 import {setPipeline} from './pipeline-actions.js';
 import {getPipelineInitialState} from './pipeline-state.js';
 
-export const pipelineReducer = createReducer(
+export const pipelineReducer:Reducer = createReducer(
   getPipelineInitialState(),
   (builder) => {
     builder

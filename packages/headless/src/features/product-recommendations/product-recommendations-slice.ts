@@ -1,4 +1,4 @@
-import {createReducer} from '@reduxjs/toolkit';
+import {Reducer, createReducer} from '@reduxjs/toolkit';
 import {
   getProductRecommendations,
   setProductRecommendationsSkus,
@@ -8,9 +8,9 @@ import {
   setProductRecommendationsAdditionalFields,
   setProductRecommendationsRecommenderId,
 } from './product-recommendations-actions.js';
-import {getProductRecommendationsInitialState} from './product-recommendations-state.js';
+import {getProductRecommendationsInitialState, ProductRecommendationsState} from './product-recommendations-state.js';
 
-export const productRecommendationsReducer = createReducer(
+export const productRecommendationsReducer: Reducer<ProductRecommendationsState> = createReducer(
   getProductRecommendationsInitialState(),
 
   (builder) => {
