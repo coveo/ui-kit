@@ -82,12 +82,26 @@ export function assertDisplayValues(
   });
 }
 
-export function assertDisplayExcludeButton(
-  facetWithCheckboxSelector: FacetWithCheckboxSelector,
-  display: boolean
+export function assertDisplayTwoStateCheckbox(
+  facetWithCheckboxSelector: FacetWithCheckboxSelector
 ) {
-  it(`${should(display)} display exclude button on facet values`, () => {
-    // TODO: ensure this works
+  it('Should display two state checkbox', () => {
+    facetWithCheckboxSelector.idleCheckboxValue(false);
+  });
+}
+
+export function assertDisplayTriStateCheckbox(
+  facetWithCheckboxSelector: FacetWithCheckboxSelector
+) {
+  it('Should display tri state checkbox', () => {
+    facetWithCheckboxSelector.idleCheckboxValue(true);
+  });
+}
+
+export function assertDisplayExcludeButton(
+  facetWithCheckboxSelector: FacetWithCheckboxSelector
+) {
+  it('Should display exclude button on facet values', () => {
     facetWithCheckboxSelector.excludeButton().should('exist');
   });
 }

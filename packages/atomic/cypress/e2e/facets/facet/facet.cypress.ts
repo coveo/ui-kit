@@ -57,7 +57,7 @@ describe('Facet v1 Test Suites', () => {
       CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
       CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, false);
       CommonFacetAssertions.assertDisplaySearchInput(FacetSelectors, true);
-      CommonFacetAssertions.assertDisplayExcludeButton(FacetSelectors, false);
+      CommonFacetAssertions.assertDisplayTwoStateCheckbox(FacetSelectors);
     });
 
     describe('when selecting a value', () => {
@@ -349,7 +349,8 @@ describe('Facet v1 Test Suites', () => {
             .init();
         });
 
-        CommonFacetAssertions.assertDisplayExcludeButton(FacetSelectors, true);
+        CommonFacetAssertions.assertDisplayTriStateCheckbox(FacetSelectors);
+        CommonFacetAssertions.assertDisplayExcludeButton(FacetSelectors);
       });
     });
   });
