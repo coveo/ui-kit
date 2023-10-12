@@ -555,12 +555,12 @@ export class CoveoInsightClient {
         );
     }
 
-    public logGenerativeQuestionFeedbackSubmit(
+    public logGeneratedAnswerFeedbackSubmit(
         generatedAnswerFeedbackMetadata: GeneratedAnswerFeedbackMeta,
         metadata?: CaseMetadata
     ) {
         return this.logCustomEvent(
-            SearchPageEvents.generativeQuestionFeedbackSubmit,
+            SearchPageEvents.generatedAnswerFeedbackSubmit,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerFeedbackMetadata}
                 : generatedAnswerFeedbackMetadata

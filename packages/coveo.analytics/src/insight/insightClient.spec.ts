@@ -584,16 +584,16 @@ describe('InsightClient', () => {
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, exampleGeneratedAnswerMetadata);
         });
 
-        it('should send proper payload for #generativeQuestionFeedbackSubmit', async () => {
+        it('should send proper payload for #generatedAnswerFeedbackSubmit', async () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
                 reason: <GeneratedAnswerFeedbackReason>'other',
                 details: 'foo',
             };
 
-            await client.logGenerativeQuestionFeedbackSubmit(exampleGeneratedAnswerMetadata);
+            await client.logGeneratedAnswerFeedbackSubmit(exampleGeneratedAnswerMetadata);
             expectMatchCustomEventPayload(
-                SearchPageEvents.generativeQuestionFeedbackSubmit,
+                SearchPageEvents.generatedAnswerFeedbackSubmit,
                 exampleGeneratedAnswerMetadata
             );
         });
@@ -1329,7 +1329,7 @@ describe('InsightClient', () => {
             expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerShowAnswers, expectedMetadata);
         });
 
-        it('should send proper payload for #generativeQuestionFeedbackSubmit', async () => {
+        it('should send proper payload for #generatedAnswerFeedbackSubmit', async () => {
             const exampleGeneratedAnswerMetadata = {
                 generativeQuestionAnsweringId: '123',
                 reason: <GeneratedAnswerFeedbackReason>'other',
@@ -1340,8 +1340,8 @@ describe('InsightClient', () => {
                 ...expectedBaseCaseMetadata,
             };
 
-            await client.logGenerativeQuestionFeedbackSubmit(exampleGeneratedAnswerMetadata, baseCaseMetadata);
-            expectMatchCustomEventPayload(SearchPageEvents.generativeQuestionFeedbackSubmit, expectedMetadata);
+            await client.logGeneratedAnswerFeedbackSubmit(exampleGeneratedAnswerMetadata, baseCaseMetadata);
+            expectMatchCustomEventPayload(SearchPageEvents.generatedAnswerFeedbackSubmit, expectedMetadata);
         });
 
         it('should send proper payload for #rephraseGeneratedAnswer', async () => {
