@@ -1,7 +1,7 @@
-import {buildMockEntity} from '../../mocks/mock-entity';
-import {buildMockFuncEntity} from '../../mocks/mock-func-entity';
-import {buildMockObjEntity} from '../../mocks/mock-obj-entity';
-import {extractTypesFromConfiguration} from './configuration-type-extractor';
+import {buildMockEntity} from '../../mocks/mock-entity.js';
+import {buildMockFuncEntity} from '../../mocks/mock-func-entity.js';
+import {buildMockObjEntity} from '../../mocks/mock-obj-entity.js';
+import {extractTypesFromConfiguration} from './configuration-type-extractor.js';
 
 describe('#extractTypesFromConfiguration', () => {
   it('extracts object entities on a controller #options interface', () => {

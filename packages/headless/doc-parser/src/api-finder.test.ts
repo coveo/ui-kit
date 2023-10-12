@@ -1,7 +1,7 @@
-import {buildMockApiFunction} from '../mocks/mock-api-function';
-import {buildMockApiInterface} from '../mocks/mock-api-interface';
-import {buildMockEntryPoint} from '../mocks/mock-entry-point';
-import {findApi} from './api-finder';
+import {buildMockApiFunction} from '../mocks/mock-api-function.js';
+import {buildMockApiInterface} from '../mocks/mock-api-interface.js';
+import {buildMockEntryPoint} from '../mocks/mock-entry-point.js';
+import {findApi} from './api-finder.js';
 
 describe('#findApi', () => {
   it('retrieves an existing api by name', () => {

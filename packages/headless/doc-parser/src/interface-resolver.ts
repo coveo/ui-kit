@@ -12,16 +12,16 @@ import {
   Parameter,
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
-import {findApi} from './api-finder';
-import {AnyEntity, Entity, EntityWithTypeAlias} from './entity';
+import {findApi} from './api-finder.js';
+import {AnyEntity, Entity, EntityWithTypeAlias} from './entity.js';
 import {
   buildEntity,
   buildFuncEntity,
   buildObjEntity,
   buildParamEntity,
   buildReturnTypeEntity,
-} from './entity-builder';
-import {sortEntities} from './entity-sorter';
+} from './entity-builder.js';
+import {sortEntities} from './entity-sorter.js';
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,

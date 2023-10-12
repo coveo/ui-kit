@@ -1,7 +1,7 @@
 import {ApiEntryPoint} from '@microsoft/api-extractor-model';
-import {FuncEntity, ObjEntity} from '../entity';
-import {extractTypesFromConfiguration} from './configuration-type-extractor';
-import {resolveEngineInitializer} from './initializer-resolver';
+import {FuncEntity, ObjEntity} from '../entity.js';
+import {extractTypesFromConfiguration} from './configuration-type-extractor.js';
+import {resolveEngineInitializer} from './initializer-resolver.js';
 
 export interface EngineConfiguration {
   initializer: string;

@@ -1,7 +1,9 @@
 import {readFileSync} from 'fs';
-import {resolve} from 'path';
-import {resolveCodeSamplePaths} from './code-sample-resolver';
-
+import {dirname, resolve} from 'path';
+import {resolveCodeSamplePaths} from './code-sample-resolver.js';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 describe('#resolveCodeSamplePaths', () => {
   it("#github.owner is 'coveo'", () => {
     const config = resolveCodeSamplePaths({});

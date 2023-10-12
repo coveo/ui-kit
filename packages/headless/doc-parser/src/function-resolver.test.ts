@@ -1,16 +1,16 @@
-import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
-import {buildMockApiFunction} from '../mocks/mock-api-function';
-import {buildMockApiInterface} from '../mocks/mock-api-interface';
-import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
-import {buildMockEntity} from '../mocks/mock-entity';
-import {buildMockEntryPoint} from '../mocks/mock-entry-point';
+import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment.js';
+import {buildMockApiFunction} from '../mocks/mock-api-function.js';
+import {buildMockApiInterface} from '../mocks/mock-api-interface.js';
+import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature.js';
+import {buildMockEntity} from '../mocks/mock-entity.js';
+import {buildMockEntryPoint} from '../mocks/mock-entry-point.js';
 import {
   buildContentExcerptToken,
   buildReferenceExcerptToken,
-} from '../mocks/mock-excerpt-token';
-import {buildMockFuncEntity} from '../mocks/mock-func-entity';
-import {buildMockObjEntity} from '../mocks/mock-obj-entity';
-import {resolveFunction} from './function-resolver';
+} from '../mocks/mock-excerpt-token.js';
+import {buildMockFuncEntity} from '../mocks/mock-func-entity.js';
+import {buildMockObjEntity} from '../mocks/mock-obj-entity.js';
+import {resolveFunction} from './function-resolver.js';
 
 describe('#resolveFunction', () => {
   it('resolves function with a an interface return type', () => {

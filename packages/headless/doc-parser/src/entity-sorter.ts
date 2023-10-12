@@ -1,5 +1,5 @@
-import {AnyEntity, isFunctionEntity} from './entity';
-import {inverseTypeGuard} from './utils';
+import {AnyEntity, isFunctionEntity} from './entity.js';
+import {inverseTypeGuard} from './utils.js';
 
 export function sortEntities(entities: AnyEntity[]) {
   const methods = entities.filter(isFunctionEntity);

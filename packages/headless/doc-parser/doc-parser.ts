@@ -3,25 +3,25 @@ import {writeFileSync} from 'fs';
 import {
   ActionLoader,
   resolveActionLoader,
-} from './src/headless-export-resolvers/action-loader-resolver';
+} from './src/headless-export-resolvers/action-loader-resolver.js';
 import {
   Controller,
   resolveController,
-} from './src/headless-export-resolvers/controller-resolver';
+} from './src/headless-export-resolvers/controller-resolver.js';
 import {
   Engine,
   resolveEngine,
-} from './src/headless-export-resolvers/engine-resolver';
-import {caseAssistUseCase} from './use-cases/case-assist';
+} from './src/headless-export-resolvers/engine-resolver.js';
+import {caseAssistUseCase} from './use-cases/case-assist.js';
 // eslint-disable-next-line @cspell/spellchecker
 // TODO CAPI-89: Uncomment when we're ready to make the Commerce sub-package public.
-//import {commerceUseCase} from './use-cases/commerce';
-import {insightUseCase} from './use-cases/insight';
-import {productListingUseCase} from './use-cases/product-listing';
-import {productRecommendationUseCase} from './use-cases/product-recommendation';
-import {recommendationUseCase} from './use-cases/recommendation';
-import {searchUseCase} from './use-cases/search';
-import {UseCaseConfiguration} from './use-cases/use-case-configuration';
+//import {commerceUseCase} from './use-cases/commerce.js';
+import {insightUseCase} from './use-cases/insight.js';
+import {productListingUseCase} from './use-cases/product-listing.js';
+import {productRecommendationUseCase} from './use-cases/product-recommendation.js';
+import {recommendationUseCase} from './use-cases/recommendation.js';
+import {searchUseCase} from './use-cases/search.js';
+import {UseCaseConfiguration} from './use-cases/use-case-configuration.js';
 
 interface UseCase {
   name: string;

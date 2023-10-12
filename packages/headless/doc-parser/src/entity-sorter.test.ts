@@ -1,6 +1,6 @@
-import {buildMockEntity} from '../mocks/mock-entity';
-import {buildMockFuncEntity} from '../mocks/mock-func-entity';
-import {sortEntities} from './entity-sorter';
+import {buildMockEntity} from '../mocks/mock-entity.js';
+import {buildMockFuncEntity} from '../mocks/mock-func-entity.js';
+import {sortEntities} from './entity-sorter.js';
 
 describe('#sortEntities', () => {
   it('sorts entities correctly', () => {

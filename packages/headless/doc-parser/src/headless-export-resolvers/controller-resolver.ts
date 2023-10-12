@@ -1,14 +1,14 @@
 import {ApiEntryPoint, ApiFunction} from '@microsoft/api-extractor-model';
-import {findApi} from '../api-finder';
+import {findApi} from '../api-finder.js';
 import {
   resolveCodeSamplePaths,
   SamplePaths,
   CodeSampleInfo,
-} from '../code-sample-resolver';
-import {FuncEntity, ObjEntity} from '../entity';
-import {resolveFunction} from '../function-resolver';
-import {extractTypesFromConfiguration} from './configuration-type-extractor';
-import {resolveInitializer} from './initializer-resolver';
+} from '../code-sample-resolver.js';
+import {FuncEntity, ObjEntity} from '../entity.js';
+import {resolveFunction} from '../function-resolver.js';
+import {extractTypesFromConfiguration} from './configuration-type-extractor.js';
+import {resolveInitializer} from './initializer-resolver.js';
 
 export interface ControllerConfiguration {
   initializer: string;

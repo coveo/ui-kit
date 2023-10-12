@@ -1,4 +1,4 @@
-import {ObjEntity} from '../src/entity';
+import {ObjEntity} from '../src/entity.js';
 
 export function buildMockObjEntity(config: Partial<ObjEntity> = {}): ObjEntity {
   return {

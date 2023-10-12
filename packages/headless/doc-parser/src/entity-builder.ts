@@ -1,7 +1,7 @@
 import {ApiMethodSignature, Parameter} from '@microsoft/api-extractor-model';
 import {DocComment, DocNode} from '@microsoft/tsdoc';
-import {AnyEntity, Entity, FuncEntity, ObjEntity} from './entity';
-import {emitAsTsDoc} from './tsdoc-emitter';
+import {AnyEntity, Entity, FuncEntity, ObjEntity} from './entity.js';
+import {emitAsTsDoc} from './tsdoc-emitter.js';
 
 interface Comment {
   comment: DocComment | undefined;

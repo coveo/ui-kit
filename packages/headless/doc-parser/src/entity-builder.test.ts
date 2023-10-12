@@ -1,5 +1,5 @@
 import {TSDocParser} from '@microsoft/tsdoc';
-import {buildEntity} from './entity-builder';
+import {buildEntity} from './entity-builder.js';
 
 describe('#buildEntity', () => {
   it('when the docComment contains a summary, it sets the description to the text', () => {

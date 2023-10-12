@@ -1,4 +1,4 @@
-import {EntityWithTypeAlias} from '../src/entity';
+import {EntityWithTypeAlias} from '../src/entity.js';
 
 export function buildMockEntityWithTypeAlias(
   config: Partial<EntityWithTypeAlias> = {}

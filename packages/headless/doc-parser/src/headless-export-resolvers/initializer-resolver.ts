@@ -3,8 +3,8 @@ import {
   ApiFunction,
   ApiItem,
 } from '@microsoft/api-extractor-model';
-import {findApi} from '../api-finder';
-import {resolveFunction} from '../function-resolver';
+import {findApi} from '../api-finder.js';
+import {resolveFunction} from '../function-resolver.js';
 
 export function resolveInitializer(entry: ApiEntryPoint, name: string) {
   const fn = findInitializer(entry, name);

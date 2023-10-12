@@ -1,5 +1,5 @@
-import {FuncEntity} from '../src/entity';
-import {buildMockEntity} from './mock-entity';
+import {FuncEntity} from '../src/entity.js';
+import {buildMockEntity} from './mock-entity.js';
 
 export function buildMockFuncEntity(
   config: Partial<FuncEntity> = {}

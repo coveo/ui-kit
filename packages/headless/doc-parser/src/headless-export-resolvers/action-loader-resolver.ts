@@ -1,7 +1,7 @@
 import {ApiEntryPoint} from '@microsoft/api-extractor-model';
-import {FuncEntity, ObjEntity} from '../entity';
-import {extractTypesFromConfiguration} from './configuration-type-extractor';
-import {resolveInitializer} from './initializer-resolver';
+import {FuncEntity, ObjEntity} from '../entity.js';
+import {extractTypesFromConfiguration} from './configuration-type-extractor.js';
+import {resolveInitializer} from './initializer-resolver.js';
 
 export interface ActionLoaderConfiguration {
   initializer: string;

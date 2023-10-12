@@ -4,14 +4,14 @@ import {
   ApiInterface,
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
-import {findApi} from './api-finder';
+import {findApi} from './api-finder.js';
 import {
   buildEntity,
   buildFuncEntity,
   buildObjEntity,
   buildParamEntity,
-} from './entity-builder';
-import {resolveParameter, resolveInterfaceMembers} from './interface-resolver';
+} from './entity-builder.js';
+import {resolveParameter, resolveInterfaceMembers} from './interface-resolver.js';
 
 export function resolveFunction(
   entry: ApiEntryPoint,

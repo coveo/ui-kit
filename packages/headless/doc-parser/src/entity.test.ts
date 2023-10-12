@@ -1,6 +1,6 @@
-import {buildMockFuncEntity} from '../mocks/mock-func-entity';
-import {buildMockObjEntity} from '../mocks/mock-obj-entity';
-import {isFunctionEntity, isObjectEntity} from './entity';
+import {buildMockFuncEntity} from '../mocks/mock-func-entity.js';
+import {buildMockObjEntity} from '../mocks/mock-obj-entity.js';
+import {isFunctionEntity, isObjectEntity} from './entity.js';
 
 describe('#isObjectEntity', () => {
   it('given an object entity, it returns true', () => {

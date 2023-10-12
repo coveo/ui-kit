@@ -1,5 +1,5 @@
 import {TSDocParser} from '@microsoft/tsdoc';
-import {emitAsTsDoc} from './tsdoc-emitter';
+import {emitAsTsDoc} from './tsdoc-emitter.js';
 
 describe('#emitAsTsDoc', () => {
   it('when the summary is plain text, it emits a string', () => {

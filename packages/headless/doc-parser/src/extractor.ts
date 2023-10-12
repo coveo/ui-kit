@@ -1,5 +1,5 @@
-import {AnyEntity, isFunctionEntity, isObjectEntity, ObjEntity} from './entity';
-import {buildEntity, buildObjEntity} from './entity-builder';
+import {AnyEntity, isFunctionEntity, isObjectEntity, ObjEntity} from './entity.js';
+import {buildEntity, buildObjEntity} from './entity-builder.js';
 
 interface Extraction {
   types: ObjEntity[];
