@@ -12,7 +12,7 @@
       "clickUri": "#2",
       "raw": {
         "foldingcollection": "Example Collection",
-        "foldingchild": ["parent0"],
+        "foldingchild": ["node1"],
         "urihash": "#2",
         "permanentid": "2"
       }
@@ -30,21 +30,23 @@
           "clickUri": "#4",
           "raw": {
             "foldingcollection": "Example Collection",
-            "foldingchild": ["parent2"],
-            "foldingparent": "parent1",
+            "foldingchild": ["node2"],
+            "foldingparent": "node1",
             "urihash": "#4"
           }
         },
         "raw": {
           "foldingcollection": "Example Collection",
-          "foldingparent": "parent2",
+          "foldingchild": ["leaf2"],
+          "foldingparent": "node2",
           "urihash": "#3"
         }
       }
     ],
     "raw": {
       "foldingcollection": "Example Collection",
-      "foldingparent": "parent1",
+      "foldingparent": "node1",
+      "foldingchild": ["leaf1"],
       "urihash": "#1"
     }
   }],
