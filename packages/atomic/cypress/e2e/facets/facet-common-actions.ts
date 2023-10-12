@@ -32,12 +32,14 @@ export function excludeIdleCheckboxValueAt(
   FacetWithCheckboxSelector: FacetWithCheckboxSelector,
   index: number
 ) {
-  FacetWithCheckboxSelector.idleCheckboxValueLabel()
+  const exclusionEnabled = true;
+  FacetWithCheckboxSelector.idleCheckboxValueLabel(exclusionEnabled)
     .eq(index)
     .then((idleCheckboxValueLabel) => {
       const text = ensureLabelUniqueness(
         FacetWithCheckboxSelector,
-        idleCheckboxValueLabel
+        idleCheckboxValueLabel,
+        exclusionEnabled
       );
 
       FacetWithCheckboxSelector.excludeButton()
@@ -152,14 +154,15 @@ export function pressClearSearchButton(
 
 function ensureLabelUniqueness(
   FacetWithCheckboxSelector: FacetWithCheckboxSelector,
-  idleCheckboxValueLabel: JQuery<HTMLElement>
+  idleCheckboxValueLabel: JQuery<HTMLElement>,
+  isExclusionEnabled = false
 ) {
   const hasAriaLabel = !!idleCheckboxValueLabel.attr('aria-label');
   const text = hasAriaLabel
     ? idleCheckboxValueLabel.attr('aria-label')!
     : idleCheckboxValueLabel.text();
 
-  FacetWithCheckboxSelector.idleCheckboxValueLabel()
+  FacetWithCheckboxSelector.idleCheckboxValueLabel(isExclusionEnabled)
     .filter(hasAriaLabel ? `[aria-label="${text}"]` : `:contains("${text}")`)
     .its('length')
     .should(

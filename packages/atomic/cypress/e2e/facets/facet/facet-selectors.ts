@@ -17,17 +17,17 @@ export const FacetSelectors = {
   placeholder() {
     return this.shadow().find('[part="placeholder"]');
   },
-  selectedCheckboxValue(triStateCheckbox = false) {
+  selectedCheckboxValue(exclusionEnabled = false) {
     return this.shadow().find(
       `[part~="value-checkbox"][part~="value-checkbox-checked"][aria-${
-        triStateCheckbox ? 'pressed' : 'checked'
+        exclusionEnabled ? 'pressed' : 'checked'
       }="true"]`
     );
   },
-  idleCheckboxValue(triStateCheckbox = false) {
+  idleCheckboxValue(exclusionEnabled = false) {
     return this.shadow().find(
       `[part~="value-checkbox"]:not([part~="value-checkbox-checked"])[aria-${
-        triStateCheckbox ? 'pressed' : 'checked'
+        exclusionEnabled ? 'pressed' : 'checked'
       }="false"]`
     );
   },
@@ -44,8 +44,10 @@ export const FacetSelectors = {
       .parent()
       .find('[part~="value-checkbox"]');
   },
-  idleCheckboxValueLabel() {
-    return this.idleCheckboxValue().parent().find('[part="value-label"]');
+  idleCheckboxValueLabel(exclusionEnabled = false) {
+    return this.idleCheckboxValue(exclusionEnabled)
+      .parent()
+      .find('[part="value-label"]');
   },
   excludeButton() {
     return this.idleCheckboxValue(true)
