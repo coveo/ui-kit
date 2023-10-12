@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import { Environment } from "../environment";
 import { createBrowserStorage } from "./storage/storage";
 import { fetchAPI } from "../utils/fetch";
@@ -16,7 +15,7 @@ export function buildBrowserEnvironment(): Environment {
     getReferrerUrl: () => getReferrerUrl(),
     getUrl: () => window.location.href,
     getUserAgent: () => navigator.userAgent,
-    generateUUID: () => uuidv4(),
+    generateUUID: () => crypto.randomUUID(),
     storage: createBrowserStorage(),
   };
 }

@@ -2,7 +2,7 @@ import { fetchAPI } from "./fetch";
 
 describe("fetchAPI", () => {
   it("returns the response when fetch api request is resolved", async () => {
-    global.fetch = jest.fn(() => Promise.resolve({ ok: true } as Response));
+    globalThis.fetch = jest.fn(() => Promise.resolve({ ok: true } as Response));
 
     const response = await fetchAPI("boup");
 
@@ -10,7 +10,7 @@ describe("fetchAPI", () => {
   });
 
   it("throws the default error message if the promise is rejected", () => {
-    global.fetch = jest.fn(() => Promise.reject({ message: "whoops" }));
+    globalThis.fetch = jest.fn(() => Promise.reject({ message: "whoops" }));
 
     expect(fetchAPI("boup")).rejects.toThrow(
       'whoops: The "host" value is invalid or a network error occured, according to the FetchAPI\'s response.'
