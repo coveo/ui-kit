@@ -26,6 +26,42 @@ describe('Generated Answer Test Suites', () => {
     });
 
     describe('when a stream ID is returned', () => {
+      describe('when component is deactivated', () => {
+        const streamId = crypto.randomUUID();
+        const testTextDelta = 'Some text';
+        const testMessagePayload = {
+          payloadType: 'genqa.messageType',
+          payload: JSON.stringify({
+            textDelta: testTextDelta,
+          }),
+          finishReason: 'COMPLETED',
+        };
+
+        beforeEach(() => {
+          mockStreamResponse(streamId, testMessagePayload);
+          setupGeneratedAnswer(streamId);
+          cy.wait(getStreamInterceptAlias(streamId));
+
+          GeneratedAnswerSelectors.toggle().click();
+        });
+
+        GeneratedAnswerAssertions.assertAnswerVisibility(false);
+        GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(false);
+        GeneratedAnswerAssertions.assertToggleValue(false);
+        GeneratedAnswerAssertions.assertLocalStorageData({isVisible: false});
+
+        describe('when component is re-activated', () => {
+          beforeEach(() => {
+            GeneratedAnswerSelectors.toggle().click();
+          });
+
+          GeneratedAnswerAssertions.assertAnswerVisibility(true);
+          GeneratedAnswerAssertions.assertFeedbackButtonsVisibility(true);
+          GeneratedAnswerAssertions.assertToggleValue(true);
+          GeneratedAnswerAssertions.assertLocalStorageData({isVisible: true});
+        });
+      });
+
       describe('when a message event is received', () => {
         const streamId = crypto.randomUUID();
 

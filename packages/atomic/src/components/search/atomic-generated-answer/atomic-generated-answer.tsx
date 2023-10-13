@@ -202,6 +202,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
             )}
 
             <Switch
+              part="toggle"
               checked={this.isAnswerVisible}
               onToggle={(checked) => {
                 checked

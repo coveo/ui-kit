@@ -4,6 +4,7 @@ export interface SwitchProps {
   checked?: boolean;
   onToggle?(checked: boolean): void;
   ariaLabel?: string;
+  part?: string;
   tabIndex?: number;
   title?: string;
 }
@@ -13,6 +14,7 @@ export const Switch: FunctionalComponent<SwitchProps> = (props) => {
     onClick: () => props.onToggle?.(!props.checked),
     'arial-label': props.ariaLabel,
     'aria-checked': props.checked,
+    part: props.part,
     tabIndex: props.tabIndex,
     title: props.title,
   };
