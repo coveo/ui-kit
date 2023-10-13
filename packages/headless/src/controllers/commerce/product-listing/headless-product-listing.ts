@@ -2,9 +2,9 @@ import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
 import {configuration} from '../../../app/common-reducers';
 import {ProductRecommendation} from '../../../commerce.index';
+import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {fetchProductListing} from '../../../features/commerce/product-listing/product-listing-actions';
 import {productListingV2Reducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice';
-import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,

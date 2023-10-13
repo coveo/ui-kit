@@ -1,3 +1,4 @@
+import {NumberValue, Schema} from '@coveo/bueno';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
@@ -18,7 +19,6 @@ import {
 import {Button} from '../../common/button';
 import {Hidden} from '../../common/hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {NumberValue, Schema} from '@coveo/bueno';
 
 interface Breadcrumb {
   facetId: string;
