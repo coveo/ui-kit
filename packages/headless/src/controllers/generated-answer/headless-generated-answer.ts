@@ -5,12 +5,15 @@ import {
   resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
+  setIsVisible,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
+  logGeneratedAnswerShowAnswers,
+  logGeneratedAnswerHideAnswers,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -46,12 +49,27 @@ export interface GeneratedAnswer extends Controller {
    * @param id The ID of the clicked citation.
    */
   logCitationClick(id: string): void;
+  /**
+   * Displays the generated answer.
+   */
+  show(): void;
+  /**
+   * Hides the generated answer.
+   */
+  hide(): void;
+}
+
+export interface GeneratedAnswerProps {
+  initialState?: {isVisible: boolean};
 }
 
 /**
  * @internal
  */
-export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
+export function buildGeneratedAnswer(
+  engine: SearchEngine,
+  props: GeneratedAnswerProps = {}
+): GeneratedAnswer {
   if (!loadGeneratedAnswerReducer(engine)) {
     throw loadReducerError;
   }
@@ -102,6 +120,10 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     return engine.subscribe(strictListener);
   };
 
+  const isVisible = props.initialState?.isVisible;
+  if (isVisible !== undefined) {
+    dispatch(setIsVisible(isVisible));
+  }
   subscribeToSearchRequests();
 
   return {
@@ -127,6 +149,19 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
 
     logCitationClick(citationId: string) {
       dispatch(logOpenGeneratedAnswerSource(citationId));
+    },
+
+    show() {
+      if (!this.state.isVisible) {
+        dispatch(setIsVisible(true));
+        dispatch(logGeneratedAnswerShowAnswers());
+      }
+    },
+    hide() {
+      if (this.state.isVisible) {
+        dispatch(setIsVisible(false));
+        dispatch(logGeneratedAnswerHideAnswers());
+      }
     },
   };
 }
