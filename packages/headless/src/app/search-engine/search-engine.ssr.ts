@@ -3,7 +3,13 @@
  */
 import {AnyAction} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers';
+import {SearchAction} from '../../features/analytics/analytics-utils';
 import {createWaitForActionMiddleware} from '../../utils/utils';
+import {
+  buildControllerDefinitions,
+  composeFunction,
+  createStaticState,
+} from '../ssr-engine/common';
 import {
   ControllerDefinitionsMap,
   InferControllerPropsMapFromDefinitions,
@@ -17,12 +23,6 @@ import {
   SearchEngineOptions,
   buildSearchEngine,
 } from './search-engine';
-import {SearchAction} from '../../features/analytics/analytics-utils';
-import {
-  buildControllerDefinitions,
-  composeFunction,
-  createStaticState,
-} from '../ssr-engine/common';
 
 /**
  * @internal

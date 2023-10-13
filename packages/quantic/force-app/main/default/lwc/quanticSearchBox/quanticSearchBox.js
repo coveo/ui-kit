@@ -5,14 +5,14 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import { keys } from 'c/quanticUtils';
-import { LightningElement, api, track } from 'lwc';
+import {keys} from 'c/quanticUtils';
+import {LightningElement, api, track} from 'lwc';
 // @ts-ignore
 import defaultSearchBox from './templates/defaultSearchBox.html';
 // @ts-ignore
-import expandableSearchBox from './templates/expandableSearchBox.html';
-// @ts-ignore
 import errorTemplate from './templates/errorTemplate.html';
+// @ts-ignore
+import expandableSearchBox from './templates/expandableSearchBox.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
@@ -151,7 +151,9 @@ export default class QuanticSearchBox extends LightningElement {
    * @returns {HTMLInputElement|HTMLTextAreaElement}
    */
   get input() {
-    return this.textarea ? this.template.querySelector('textarea') : this.template.querySelector('input');
+    return this.textarea
+      ? this.template.querySelector('textarea')
+      : this.template.querySelector('input');
   }
 
   /**
@@ -174,7 +176,9 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   get searchBoxInputClass() {
-    return `slds-input searchbox__input ${this.withoutSubmitButton ? '' : 'searchbox__input-with-button'}`;
+    return `slds-input searchbox__input ${
+      this.withoutSubmitButton ? '' : 'searchbox__input-with-button'
+    }`;
   }
 
   get suggestionsOpen() {
@@ -231,7 +235,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   /**
    * Prevent default behavior of enter key, on textArea, to prevent skipping a line.
-   * @param {KeyboardEvent} event 
+   * @param {KeyboardEvent} event
    */
   onKeydown(event) {
     if (event.key === keys.ENTER) {
@@ -240,7 +244,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   /**
-   * @param {KeyboardEvent} event 
+   * @param {KeyboardEvent} event
    */
   onKeyup(event) {
     switch (event.key) {
@@ -270,7 +274,7 @@ export default class QuanticSearchBox extends LightningElement {
 
   onTextAreaInput() {
     this.adjustTextAreaHeight();
-  };
+  }
 
   adjustTextAreaHeight() {
     if (!this.textarea) {
@@ -279,7 +283,7 @@ export default class QuanticSearchBox extends LightningElement {
     this.input.value = this.input.value.replace(/\n/g, '');
     this.input.style.height = '';
     this.input.style.whiteSpace = 'pre-wrap';
-    this.input.style.height = this.input.scrollHeight + "px";
+    this.input.style.height = this.input.scrollHeight + 'px';
   }
 
   collapseTextArea() {
