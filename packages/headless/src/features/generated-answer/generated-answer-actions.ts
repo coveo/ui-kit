@@ -87,6 +87,14 @@ export const likeGeneratedAnswer = createAction('generatedAnswer/like');
 
 export const dislikeGeneratedAnswer = createAction('generatedAnswer/dislike');
 
+export const openGeneratedAnswerFeedbackModal = createAction(
+  'generatedAnswer/feedbackModal/open'
+);
+
+export const closeGeneratedAnswerFeedbackModal = createAction(
+  'generatedAnswer/feedbackModal/close'
+);
+
 export const setIsLoading = createAction(
   'generatedAnswer/setIsLoading',
   (payload: boolean) => validatePayload(payload, booleanValue)

@@ -5,10 +5,15 @@ import {
   resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
+  openGeneratedAnswerFeedbackModal,
+  closeGeneratedAnswerFeedbackModal,
   setIsVisible,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
+  GeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
+  logGeneratedAnswerDetailedFeedback,
+  logGeneratedAnswerFeedback,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
@@ -44,6 +49,24 @@ export interface GeneratedAnswer extends Controller {
    * Determines if the generated answer was disliked, or downvoted by the end user.
    */
   dislike(): void;
+  /**
+   * Opens the modal to provide feedback about why the generated answer was not relevant.
+   */
+  openFeedbackModal(): void;
+  /**
+   * Closes the modal to provide feedback about why the generated answer was not relevant.
+   */
+  closeFeedbackModal(): void;
+  /**
+   * Sends feedback about why the generated answer was not relevant.
+   * @param feedback - The feedback that the end user wishes to send.
+   */
+  sendFeedback(feedback: GeneratedAnswerFeedback): void;
+  /**
+   * Sends detailed feedback about why the generated answer was not relevant.
+   * @param details - Details on why the generated answer was not relevant.
+   */
+  sendDetailedFeedback(details: string): void;
   /**
    * Logs a custom event indicating a cited source link was clicked.
    * @param id The ID of the clicked citation.
@@ -145,6 +168,24 @@ export function buildGeneratedAnswer(
     dislike() {
       dispatch(dislikeGeneratedAnswer());
       dispatch(logDislikeGeneratedAnswer());
+    },
+
+    openFeedbackModal() {
+      dispatch(openGeneratedAnswerFeedbackModal());
+    },
+
+    closeFeedbackModal() {
+      dispatch(closeGeneratedAnswerFeedbackModal());
+    },
+
+    sendFeedback(feedback) {
+      dispatch(logGeneratedAnswerFeedback(feedback));
+      dispatch(closeGeneratedAnswerFeedbackModal());
+    },
+
+    sendDetailedFeedback(details) {
+      dispatch(logGeneratedAnswerDetailedFeedback(details));
+      dispatch(closeGeneratedAnswerFeedbackModal());
     },
 
     logCitationClick(citationId: string) {
