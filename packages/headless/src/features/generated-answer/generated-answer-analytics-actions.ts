@@ -87,3 +87,35 @@ export const logGeneratedAnswerStreamEnd = (
       });
     }
   );
+
+export const logGeneratedAnswerShowAnswers = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/show',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerShowAnswers({
+        generativeQuestionAnsweringId,
+      });
+    }
+  );
+
+export const logGeneratedAnswerHideAnswers = (): CustomAction =>
+  makeAnalyticsAction(
+    'analytics/generatedAnswer/hide',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      if (!generativeQuestionAnsweringId) {
+        return null;
+      }
+      return client.makeGeneratedAnswerHideAnswers({
+        generativeQuestionAnsweringId,
+      });
+    }
+  );

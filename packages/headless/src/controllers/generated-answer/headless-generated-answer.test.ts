@@ -1,16 +1,23 @@
+import {TestUtils} from '../..';
 import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   resetAnswer,
+  setIsVisible,
   streamAnswer,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
+  logGeneratedAnswerHideAnswers,
+  logGeneratedAnswerShowAnswers,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer} from '../../features/generated-answer/generated-answer-slice';
-import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state';
+import {
+  GeneratedAnswerState,
+  getGeneratedAnswerInitialState,
+} from '../../features/generated-answer/generated-answer-state';
 import {executeSearch} from '../../features/search/search-actions';
 import {buildMockCitation} from '../../test/mock-citation';
 import {
@@ -20,18 +27,34 @@ import {
 import {
   buildGeneratedAnswer,
   GeneratedAnswer,
+  GeneratedAnswerProps,
 } from './headless-generated-answer';
 
 describe('generated answer', () => {
   let generatedAnswer: GeneratedAnswer;
   let engine: MockSearchEngine;
 
-  function initGeneratedAnswer() {
-    generatedAnswer = buildGeneratedAnswer(engine);
+  function initGeneratedAnswer(props: GeneratedAnswerProps = {}) {
+    generatedAnswer = buildGeneratedAnswer(engine, props);
   }
 
   function findAction(actionType: string) {
     return engine.actions.find((a) => a.type === actionType);
+  }
+
+  function buildEngineWithGeneratedAnswer(
+    initialState: Partial<GeneratedAnswerState> = {}
+  ) {
+    const mockState = TestUtils.createMockState();
+    return buildMockSearchAppEngine({
+      state: {
+        ...mockState,
+        generatedAnswer: {
+          ...mockState.generatedAnswer,
+          ...initialState,
+        },
+      },
+    });
   }
 
   beforeEach(() => {
@@ -45,12 +68,12 @@ describe('generated answer', () => {
     });
   });
 
-  it('should return the state', () => {
-    expect(generatedAnswer.state).toEqual(getGeneratedAnswerInitialState());
-  });
-
   it('should subscribe to state updates', () => {
     expect(engine.subscribe).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return the state', () => {
+    expect(generatedAnswer.state).toEqual(getGeneratedAnswerInitialState());
   });
 
   it('#retry dispatches #executeSearch', () => {
@@ -93,6 +116,24 @@ describe('generated answer', () => {
     expect(action).toBeTruthy();
   });
 
+  describe('when passing initial state', () => {
+    it('should dispatch setIsVisible action when set to true', () => {
+      initGeneratedAnswer({initialState: {isVisible: true}});
+
+      const action = findAction(setIsVisible.type);
+      expect(action).toBeDefined();
+      expect(action).toHaveProperty('payload', true);
+    });
+
+    it('should dispatch setIsVisible action when set to false', () => {
+      initGeneratedAnswer({initialState: {isVisible: false}});
+
+      const action = findAction(setIsVisible.type);
+      expect(action).toBeDefined();
+      expect(action).toHaveProperty('payload', false);
+    });
+  });
+
   describe('subscription to changes', () => {
     function callListener() {
       return (engine.subscribe as jest.Mock).mock.calls.map(
@@ -128,6 +169,84 @@ describe('generated answer', () => {
       const action = findAction(streamAnswer.pending.type);
 
       expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#show', () => {
+    describe('when already visible', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.show();
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeUndefined();
+      });
+    });
+
+    describe('when not visible', () => {
+      it('should dispatch the setIsVisible action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.show();
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', true);
+      });
+
+      it('should dispatch the analytics action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.show();
+
+        const analyticsAction = findAction(
+          logGeneratedAnswerShowAnswers().pending.type
+        );
+        expect(analyticsAction).toBeDefined();
+      });
+    });
+  });
+
+  describe('#hide', () => {
+    describe('when not visible', () => {
+      it('should not make any changes', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: false});
+        initGeneratedAnswer();
+
+        generatedAnswer.hide();
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeUndefined();
+      });
+    });
+
+    describe('when visible', () => {
+      it('should dispatch the setIsVisible action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.hide();
+
+        const action = findAction(setIsVisible.type);
+        expect(action).toBeDefined();
+        expect(action).toHaveProperty('payload', false);
+      });
+
+      it('should dispatch the analytics action', () => {
+        engine = buildEngineWithGeneratedAnswer({isVisible: true});
+        initGeneratedAnswer();
+
+        generatedAnswer.hide();
+
+        const analyticsAction = findAction(
+          logGeneratedAnswerHideAnswers().pending.type
+        );
+        expect(analyticsAction).toBeDefined();
+      });
     });
   });
 });
