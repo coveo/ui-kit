@@ -1,10 +1,10 @@
+import {SortBy} from '../../../sort/sort';
 import {
   getProductListingV2InitialState,
   ProductListingV2State,
 } from '../product-listing-state';
-import {sortReducer} from './product-listing-sort-slice';
 import {applySort} from './product-listing-sort-actions';
-import {SortBy} from '../../../sort/sort';
+import {sortReducer} from './product-listing-sort-slice';
 
 describe('product-listing-sort-slice', () => {
   let state: ProductListingV2State;

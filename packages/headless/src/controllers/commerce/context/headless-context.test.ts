@@ -1,13 +1,13 @@
-import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
-import {contextReducer} from '../../../features/commerce/context/context-slice';
-import {buildContext, Context} from './headless-context';
+import {Action} from '@reduxjs/toolkit';
 import {
   setContext,
   setUser,
   setView,
 } from '../../../features/commerce/context/context-actions';
-import {Action} from '@reduxjs/toolkit';
+import {contextReducer} from '../../../features/commerce/context/context-slice';
+import {buildMockCommerceEngine, MockCommerceEngine} from '../../../test';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state';
+import {buildContext, Context} from './headless-context';
 
 describe('headless commerce context', () => {
   const options = {

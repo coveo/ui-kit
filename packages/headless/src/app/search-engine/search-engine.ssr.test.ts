@@ -1,5 +1,6 @@
 import {AnyAction} from '@reduxjs/toolkit';
 import {buildController} from '../../controllers';
+import {executeSearch} from '../../features/search/search-actions';
 import {
   defineResultList,
   loadPaginationActions,
@@ -17,7 +18,6 @@ import {
   SearchEngineDefinition,
   defineSearchEngine,
 } from './search-engine.ssr';
-import {executeSearch} from '../../features/search/search-actions';
 
 interface CustomEngineStateReader<TState extends {}> extends Controller {
   state: TState;

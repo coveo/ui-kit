@@ -5,12 +5,20 @@ import {
   resetAnswer,
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
+  openGeneratedAnswerFeedbackModal,
+  closeGeneratedAnswerFeedbackModal,
+  setIsVisible,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
+  GeneratedAnswerFeedback,
   logDislikeGeneratedAnswer,
+  logGeneratedAnswerDetailedFeedback,
+  logGeneratedAnswerFeedback,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
+  logGeneratedAnswerShowAnswers,
+  logGeneratedAnswerHideAnswers,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -42,16 +50,49 @@ export interface GeneratedAnswer extends Controller {
    */
   dislike(): void;
   /**
+   * Opens the modal to provide feedback about why the generated answer was not relevant.
+   */
+  openFeedbackModal(): void;
+  /**
+   * Closes the modal to provide feedback about why the generated answer was not relevant.
+   */
+  closeFeedbackModal(): void;
+  /**
+   * Sends feedback about why the generated answer was not relevant.
+   * @param feedback - The feedback that the end user wishes to send.
+   */
+  sendFeedback(feedback: GeneratedAnswerFeedback): void;
+  /**
+   * Sends detailed feedback about why the generated answer was not relevant.
+   * @param details - Details on why the generated answer was not relevant.
+   */
+  sendDetailedFeedback(details: string): void;
+  /**
    * Logs a custom event indicating a cited source link was clicked.
    * @param id The ID of the clicked citation.
    */
   logCitationClick(id: string): void;
+  /**
+   * Displays the generated answer.
+   */
+  show(): void;
+  /**
+   * Hides the generated answer.
+   */
+  hide(): void;
+}
+
+export interface GeneratedAnswerProps {
+  initialState?: {isVisible: boolean};
 }
 
 /**
  * @internal
  */
-export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
+export function buildGeneratedAnswer(
+  engine: SearchEngine,
+  props: GeneratedAnswerProps = {}
+): GeneratedAnswer {
   if (!loadGeneratedAnswerReducer(engine)) {
     throw loadReducerError;
   }
@@ -102,6 +143,10 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
     return engine.subscribe(strictListener);
   };
 
+  const isVisible = props.initialState?.isVisible;
+  if (isVisible !== undefined) {
+    dispatch(setIsVisible(isVisible));
+  }
   subscribeToSearchRequests();
 
   return {
@@ -125,8 +170,39 @@ export function buildGeneratedAnswer(engine: SearchEngine): GeneratedAnswer {
       dispatch(logDislikeGeneratedAnswer());
     },
 
+    openFeedbackModal() {
+      dispatch(openGeneratedAnswerFeedbackModal());
+    },
+
+    closeFeedbackModal() {
+      dispatch(closeGeneratedAnswerFeedbackModal());
+    },
+
+    sendFeedback(feedback) {
+      dispatch(logGeneratedAnswerFeedback(feedback));
+      dispatch(closeGeneratedAnswerFeedbackModal());
+    },
+
+    sendDetailedFeedback(details) {
+      dispatch(logGeneratedAnswerDetailedFeedback(details));
+      dispatch(closeGeneratedAnswerFeedbackModal());
+    },
+
     logCitationClick(citationId: string) {
       dispatch(logOpenGeneratedAnswerSource(citationId));
+    },
+
+    show() {
+      if (!this.state.isVisible) {
+        dispatch(setIsVisible(true));
+        dispatch(logGeneratedAnswerShowAnswers());
+      }
+    },
+    hide() {
+      if (this.state.isVisible) {
+        dispatch(setIsVisible(false));
+        dispatch(logGeneratedAnswerHideAnswers());
+      }
     },
   };
 }

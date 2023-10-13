@@ -5,8 +5,8 @@ import {
   history,
 } from 'coveo.analytics';
 import {Logger} from 'pino';
-import {PreprocessRequest} from '../preprocess-request';
 import {clone} from '../../utils/utils';
+import {PreprocessRequest} from '../preprocess-request';
 
 export const getVisitorID = (options: {
   runtimeEnvironment?: IRuntimeEnvironment;
