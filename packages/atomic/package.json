@@ -83,7 +83,6 @@
     "cypress-repeat": "2.3.4",
     "cypress-split": "1.5.0",
     "html-loader-jest": "0.2.1",
-    "intl-pluralrules": "2.0.1",
     "jest": "27.5.1",
     "jest-cli": "27.5.1",
     "jest-environment-node": "27.5.1",
