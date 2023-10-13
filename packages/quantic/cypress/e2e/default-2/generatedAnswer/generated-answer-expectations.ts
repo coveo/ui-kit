@@ -231,7 +231,7 @@ function generatedAnswerExpectations(selector: GeneratedAnswerSelector) {
       }
     ) {
       logCustomGeneratedAnswerEvent(
-        InterceptAliases.UA.GeneratedAnswer.generatedAnswerFeedbackSubmit,
+        InterceptAliases.UA.GeneratedAnswer.GeneratedAnswerFeedbackSubmit,
         (analyticsBody: {customData: object; eventType: string}) => {
           const customData = analyticsBody?.customData;
           expect(analyticsBody).to.have.property(
