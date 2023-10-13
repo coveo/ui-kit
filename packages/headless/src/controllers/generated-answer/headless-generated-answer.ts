@@ -88,10 +88,8 @@ export interface GeneratedAnswer extends Controller {
    */
   hide(): void;
 }
-/**
- * @internal
- */
-export interface GeneratedAnswerProps {
+
+interface GeneratedAnswerProps {
   initialState?: {
     /**
      * Sets the component visibility state on load.
