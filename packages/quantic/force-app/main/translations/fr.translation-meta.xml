@@ -720,4 +720,8 @@
     <label>Commentaires</label>
     <name>quantic_Feedback</name>
   </customLabels>
+  <customLabels>
+    <label>Pourquoi la réponse générée n'a-t-elle pas été utile ?</label>
+    <name>quantic_WhyGeneratedAnswerWasNotHelpful</name>
+  </customLabels>
 </Translations>

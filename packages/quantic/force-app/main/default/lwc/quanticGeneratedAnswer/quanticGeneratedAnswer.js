@@ -1,9 +1,16 @@
 import couldNotGenerateAnAnswer from '@salesforce/label/c.quantic_CouldNotGenerateAnAnswer';
+import feedback from '@salesforce/label/c.quantic_Feedback';
 import generatedAnswerForYou from '@salesforce/label/c.quantic_GeneratedAnswerForYou';
+import harmful from '@salesforce/label/c.quantic_Harmful';
+import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
 import loading from '@salesforce/label/c.quantic_Loading';
+import notAccurate from '@salesforce/label/c.quantic_NotAccurate';
+import other from '@salesforce/label/c.quantic_Other';
+import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
 import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpful';
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
+import whyGeneratedAnswerWasNotHelpful from '@salesforce/label/c.quantic_WhyGeneratedAnswerWasNotHelpful';
 import FeedbackModal from 'c/quanticFeedbackModal';
 import {
   registerComponentForInit,
@@ -17,12 +24,6 @@ import generatedAnswerTemplate from './templates/generatedAnswer.html';
 import loadingTemplate from './templates/loading.html';
 // @ts-ignore
 import retryPromptTemplate from './templates/retryPrompt.html';
-import other from '@salesforce/label/c.quantic_Other';
-import harmful from '@salesforce/label/c.quantic_Harmful';
-import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
-import notAccurate from '@salesforce/label/c.quantic_NotAccurate';
-import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
-import feedback from '@salesforce/label/c.quantic_Feedback';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").GeneratedAnswer} GeneratedAnswer */
@@ -63,6 +64,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     notAccurate,
     outOfDate,
     feedback,
+    whyGeneratedAnswerWasNotHelpful,
   };
 
   /** @type {GeneratedAnswer} */
@@ -157,6 +159,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         description: this.labels.feedback,
         options: this.options,
         handleSubmit: this.submitFeedback.bind(this),
+        optionsLabel: this.labels.whyGeneratedAnswerWasNotHelpful,
       });
       this.generatedAnswer.closeFeedbackModal();
     }
