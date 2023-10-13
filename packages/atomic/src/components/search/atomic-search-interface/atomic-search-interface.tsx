@@ -26,6 +26,7 @@ import {
   State,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
+import {i18nCompatibilityVersion} from '../../../components';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {
   SafeStorage,
@@ -41,7 +42,6 @@ import {
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
 import {AtomicStore, createAtomicStore} from './store';
-import {i18nCompatibilityVersion} from '../../../components';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;

@@ -1,6 +1,7 @@
 import {Result} from '@coveo/headless';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
+import {i18nCompatibilityVersion} from '../../src/components';
 import {buildTestUrl} from '../utils/setupComponent';
 import {
   ConsoleAliases,
@@ -20,7 +21,6 @@ import {
   interceptAnalytics,
   TagProps as CommonTagProps,
 } from './fixture-common';
-import {i18nCompatibilityVersion} from '../../src/components';
 
 interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;

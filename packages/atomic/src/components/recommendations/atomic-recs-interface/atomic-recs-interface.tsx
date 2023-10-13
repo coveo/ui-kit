@@ -21,6 +21,7 @@ import {
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {RecsLogLevel} from '..';
+import {i18nCompatibilityVersion} from '../../../components';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
@@ -31,7 +32,6 @@ import {
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
 import {createAtomicRecsStore, AtomicRecsStore} from './store';
-import {i18nCompatibilityVersion} from '../../../components';
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
 export type RecsInitializationOptions = RecommendationEngineConfiguration;
