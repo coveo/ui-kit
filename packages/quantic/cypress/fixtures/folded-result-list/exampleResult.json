@@ -47,7 +47,7 @@
       "raw": {
         "foldingcollection": "Example Collection",
         "foldingchild": ["leaf2"],
-        "foldingparent": "parent1",
+        "foldingparent": "node1",
         "urihash": "#1"
       }
     }
