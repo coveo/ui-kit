@@ -5,6 +5,7 @@ import {
 } from '../../test';
 import {buildMockCitation} from '../../test/mock-citation';
 import {
+  setIsVisible,
   setIsLoading,
   updateCitations,
   updateError,
@@ -125,6 +126,17 @@ describe('generated answer', () => {
         payload: {
           answerStyle: style,
         },
+        type: actionType,
+      });
+    });
+  });
+
+  describe('#setIsVisible', () => {
+    const actionType = 'generatedAnswer/setIsVisible';
+
+    it('should accept a valid payload', () => {
+      expect(e.dispatch(setIsVisible(true))).toEqual({
+        payload: true,
         type: actionType,
       });
     });

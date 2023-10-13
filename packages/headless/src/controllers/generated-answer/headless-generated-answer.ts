@@ -6,6 +6,7 @@ import {
   likeGeneratedAnswer,
   dislikeGeneratedAnswer,
   updateResponseFormat,
+  setIsVisible,
 } from '../../features/generated-answer/generated-answer-actions';
 import {
   logDislikeGeneratedAnswer,
@@ -13,6 +14,8 @@ import {
   logOpenGeneratedAnswerSource,
   logRephraseGeneratedAnswer,
   logRetryGeneratedAnswer,
+  logGeneratedAnswerShowAnswers,
+  logGeneratedAnswerHideAnswers,
 } from '../../features/generated-answer/generated-answer-analytics-actions';
 import {generatedAnswerReducer as generatedAnswer} from '../../features/generated-answer/generated-answer-slice';
 import {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state';
@@ -53,16 +56,27 @@ export interface GeneratedAnswer extends Controller {
    * @param id The ID of the clicked citation.
    */
   logCitationClick(id: string): void;
+  /**
+   * Displays the generated answer.
+   */
+  show(): void;
+  /**
+   * Hides the generated answer.
+   */
+  hide(): void;
 }
 
-/**
- * @internal
- */
 export interface GeneratedAnswerProps {
-  /**
-   * The desired format to apply to generated answers when the controller first loads.
-   */
-  responseFormat: GeneratedResponseFormat;
+  initialState?: {
+    /**
+     * Sets the component visibility state on load.
+     */
+    isVisible?: boolean;
+    /**
+     * The desired format to apply to generated answers when the controller first loads.
+     */
+    responseFormat?: GeneratedResponseFormat;
+  };
 }
 
 /**
@@ -70,7 +84,7 @@ export interface GeneratedAnswerProps {
  */
 export function buildGeneratedAnswer(
   engine: SearchEngine,
-  props?: GeneratedAnswerProps
+  props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
   if (!loadGeneratedAnswerReducer(engine)) {
     throw loadReducerError;
@@ -122,11 +136,16 @@ export function buildGeneratedAnswer(
     return engine.subscribe(strictListener);
   };
 
-  subscribeToSearchRequests();
-
-  if (props?.responseFormat) {
-    dispatch(updateResponseFormat(props.responseFormat));
+  const isVisible = props.initialState?.isVisible;
+  if (isVisible !== undefined) {
+    dispatch(setIsVisible(isVisible));
   }
+  const initialResponseFormat = props.initialState?.responseFormat;
+  if (initialResponseFormat) {
+    dispatch(updateResponseFormat(initialResponseFormat));
+  }
+
+  subscribeToSearchRequests();
 
   return {
     ...controller,
@@ -156,6 +175,20 @@ export function buildGeneratedAnswer(
     rephrase(responseFormat: GeneratedResponseFormat) {
       dispatch(updateResponseFormat(responseFormat));
       dispatch(executeSearch(logRephraseGeneratedAnswer(responseFormat)));
+    },
+
+    show() {
+      if (!this.state.isVisible) {
+        dispatch(setIsVisible(true));
+        dispatch(logGeneratedAnswerShowAnswers());
+      }
+    },
+
+    hide() {
+      if (this.state.isVisible) {
+        dispatch(setIsVisible(false));
+        dispatch(logGeneratedAnswerHideAnswers());
+      }
     },
   };
 }

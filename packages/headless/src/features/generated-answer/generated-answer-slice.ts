@@ -4,6 +4,7 @@ import {
   dislikeGeneratedAnswer,
   likeGeneratedAnswer,
   resetAnswer,
+  setIsVisible,
   setIsLoading,
   setIsStreaming,
   updateCitations,
@@ -17,6 +18,9 @@ export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
   (builder) =>
     builder
+      .addCase(setIsVisible, (state, {payload}) => {
+        state.isVisible = payload;
+      })
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
@@ -54,6 +58,7 @@ export const generatedAnswerReducer = createReducer(
         return {
           ...getGeneratedAnswerInitialState(),
           responseFormat: state.responseFormat,
+          isVisible: state.isVisible,
         };
       })
       .addCase(setIsLoading, (state, {payload}) => {
