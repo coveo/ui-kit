@@ -1,18 +1,18 @@
-import {validateOptions} from '../../../../utils/validate-payload';
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine';
-import {
-  buildController,
-  Controller,
-} from '../../../controller/headless-controller';
-import {loadReducerError} from '../../../../utils/errors';
-import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {
   addItem,
   removeItem,
   setItems,
   updateItemQuantity,
 } from '../../../../features/commerce/context/cart/cart-actions';
+import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation';
+import {loadReducerError} from '../../../../utils/errors';
+import {validateOptions} from '../../../../utils/validate-payload';
+import {
+  buildController,
+  Controller,
+} from '../../../controller/headless-controller';
 
 export interface CartOptions {
   items?: CartItem[];

@@ -9,25 +9,25 @@ import {
   GeneratedAnswerCitation,
 } from '@coveo/headless';
 import {Component, h, State, Element} from '@stencil/core';
+import {buildCustomEvent} from '../../../utils/event-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Heading} from '../../common/heading';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {FeedbackButton} from './feedback-button';
-import {RetryPrompt} from './retry-prompt';
-import {SourceCitations} from './source-citations';
-import {GeneratedContentContainer} from './generated-content-container';
-import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
-import {buildCustomEvent} from '../../../utils/event-utils';
-import {Switch} from '../../common/switch';
 import {
   GeneratedAnswerData,
   SafeStorage,
   StorageItems,
 } from '../../../utils/local-storage-utils';
+import {Heading} from '../../common/heading';
+import {LinkWithResultAnalytics} from '../../common/result-link/result-link';
+import {Switch} from '../../common/switch';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {FeedbackButton} from './feedback-button';
+import {GeneratedContentContainer} from './generated-content-container';
+import {RetryPrompt} from './retry-prompt';
+import {SourceCitations} from './source-citations';
 import {TypingLoader} from './typing-loader';
 
 /**

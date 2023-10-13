@@ -6,8 +6,8 @@ import {
   mockStreamError,
   mockStreamResponse,
 } from './generated-answer-actions';
-import {GeneratedAnswerSelectors} from './generated-answer-selectors';
 import * as GeneratedAnswerAssertions from './generated-answer-assertions';
+import {GeneratedAnswerSelectors} from './generated-answer-selectors';
 
 describe('Generated Answer Test Suites', () => {
   describe('Generated Answer', () => {

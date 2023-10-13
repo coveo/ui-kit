@@ -1,141 +1,89 @@
 {
-    "compilerOptions": {
-        "experimentalDecorators": true,
-        "baseUrl": ".",
-        "checkJs": true,
-        "target": "es2016",
-        "module": "esnext",
-        "paths": {
-            "c/exampleSearch": [
-                "exampleSearch/exampleSearch"
-            ],
-            "c/quanticDateFacet": [
-                "quanticDateFacet/quanticDateFacet.js"
-            ],
-            "c/quanticHeadlessLoader": [
-                "quanticHeadlessLoader/quanticHeadlessLoader.js"
-            ],
-            "c/quanticNoResults": [
-                "quanticNoResults/quanticNoResults.js"
-            ],
-            "c/quanticDateFacetValue": [
-                "quanticDateFacetValue/quanticDateFacetValue.js"
-            ],
-            "c/quanticDidYouMean": [
-                "quanticDidYouMean/quanticDidYouMean.js"
-            ],
-            "c/quanticCategoryFacet": [
-                "quanticCategoryFacet/quanticCategoryFacet.js"
-            ],
-            "c/quanticCategoryFacetParent": [
-                "quanticCategoryFacetParent/quanticCategoryFacetParent.js"
-            ],
-            "c/quanticCategoryFacetValue": [
-                "quanticCategoryFacetValue/quanticCategoryFacetValue.js"
-            ],
-            "c/quanticFacet": [
-                "quanticFacet/quanticFacet.js"
-            ],
-            "c/quanticPager": [
-                "quanticPager/quanticPager.js"
-            ],
-            "c/quanticPlaceholder": [
-                "quanticPlaceholder/quanticPlaceholder.js"
-            ],
-            "c/quanticQueryError": [
-                "quanticQueryError/quanticQueryError.js"
-            ],
-            "c/quanticResult": [
-                "quanticResult/quanticResult.js"
-            ],
-            "c/quanticResultBadge": [
-                "quanticResultBadge/quanticResultBadge.js"
-            ],
-            "c/quanticResultLabel": [
-                "quanticResultLabel/quanticResultLabel.js"
-            ],
-            "c/quanticResultPrintableUri": [
-                "quanticResultPrintableUri/quanticResultPrintableUri.js"
-            ],
-            "c/quanticResultList": [
-                "quanticResultList/quanticResultList.js"
-            ],
-            "c/quanticResultLink": [
-                "quanticResultLink/quanticResultLink.js"
-            ],
-            "c/quanticSort": [
-                "quanticSort/quanticSort.js"
-            ],
-            "c/quanticSummary": [
-                "quanticSummary/quanticSummary.js"
-            ],
-            "c/quanticFacetValue": [
-                "quanticFacetValue/quanticFacetValue.js"
-            ],
-            "c/quanticNumericFacet": [
-                "quanticNumericFacet/quanticNumericFacet.js"
-            ],
-            "c/quanticNumericFacetValue": [
-                "quanticNumericFacetValue/quanticNumericFacetValue.js"
-            ],
-            "c/quanticResultQuickview": [
-                "quanticResultQuickview/quanticResultQuickview.js"
-            ],
-            "c/quanticRecentQueriesList": [
-                "quanticRecentQueriesList/quanticRecentQueriesList.js"
-            ],
-            "c/quanticRecentResultsList": [
-                "quanticRecentResultsList/quanticRecentResultsList.js"
-            ],
-            "c/quanticResultsPerPage": [
-                "quanticResultsPerPage/quanticResultsPerPage.js"
-            ],
-            "c/quanticSearchBox": [
-                "quanticSearchBox/quanticSearchBox.js"
-            ],
-            "c/quanticSearchBoxSuggestionsList": [
-                "quanticSearchBoxSuggestionsList/quanticSearchBoxSuggestionsList.js"
-            ],
-            "c/quanticSearchInterface": [
-                "quanticSearchInterface/quanticSearchInterface.js"
-            ],
-            "c/quanticNumberButton": [
-                "quanticNumberButton/quanticNumberButton.js"
-            ],
-            "c/quanticPill": [
-                "quanticPill/quanticPill.js"
-            ],
-            "c/quanticSvg": [
-                "quanticSvg/quanticSvg.js"
-            ],
-            "c/quanticUtils": [
-                "quanticUtils/quanticUtils.js"
-            ],
-            "c/testUtils": [
-                "testUtils/testUtils.js"
-            ],
-            "c/quanticTimeframeFacet": [
-              "quanticTimeframeFacet/quanticTimeframeFacet.js"
-            ],
-            "c/quanticFeedbackModal": [
-              "quanticFeedbackModal/quanticFeedbackModal.js"
-            ],
-        }
-    },
-    "include": [
-        "**/*",
-        "../../../../.sfdx/typings/lwc/**/*.d.ts",
-        "../../../../typings/lwc/**/*.d.ts",
-        "../../../../coveo.d.ts"
-    ],
-    "typeAcquisition": {
-        "include": [
-            "jest"
-        ]
-    },
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "checkJs": true,
+    "target": "es2016",
+    "module": "esnext",
     "paths": {
-        "c/*": [
-            "*"
-        ],
+      "c/exampleSearch": ["exampleSearch/exampleSearch"],
+      "c/quanticDateFacet": ["quanticDateFacet/quanticDateFacet.js"],
+      "c/quanticHeadlessLoader": [
+        "quanticHeadlessLoader/quanticHeadlessLoader.js"
+      ],
+      "c/quanticNoResults": ["quanticNoResults/quanticNoResults.js"],
+      "c/quanticDateFacetValue": [
+        "quanticDateFacetValue/quanticDateFacetValue.js"
+      ],
+      "c/quanticDidYouMean": ["quanticDidYouMean/quanticDidYouMean.js"],
+      "c/quanticCategoryFacet": [
+        "quanticCategoryFacet/quanticCategoryFacet.js"
+      ],
+      "c/quanticCategoryFacetParent": [
+        "quanticCategoryFacetParent/quanticCategoryFacetParent.js"
+      ],
+      "c/quanticCategoryFacetValue": [
+        "quanticCategoryFacetValue/quanticCategoryFacetValue.js"
+      ],
+      "c/quanticFacet": ["quanticFacet/quanticFacet.js"],
+      "c/quanticPager": ["quanticPager/quanticPager.js"],
+      "c/quanticPlaceholder": ["quanticPlaceholder/quanticPlaceholder.js"],
+      "c/quanticQueryError": ["quanticQueryError/quanticQueryError.js"],
+      "c/quanticResult": ["quanticResult/quanticResult.js"],
+      "c/quanticResultBadge": ["quanticResultBadge/quanticResultBadge.js"],
+      "c/quanticResultLabel": ["quanticResultLabel/quanticResultLabel.js"],
+      "c/quanticResultPrintableUri": [
+        "quanticResultPrintableUri/quanticResultPrintableUri.js"
+      ],
+      "c/quanticResultList": ["quanticResultList/quanticResultList.js"],
+      "c/quanticResultLink": ["quanticResultLink/quanticResultLink.js"],
+      "c/quanticSort": ["quanticSort/quanticSort.js"],
+      "c/quanticSummary": ["quanticSummary/quanticSummary.js"],
+      "c/quanticFacetValue": ["quanticFacetValue/quanticFacetValue.js"],
+      "c/quanticNumericFacet": ["quanticNumericFacet/quanticNumericFacet.js"],
+      "c/quanticNumericFacetValue": [
+        "quanticNumericFacetValue/quanticNumericFacetValue.js"
+      ],
+      "c/quanticResultQuickview": [
+        "quanticResultQuickview/quanticResultQuickview.js"
+      ],
+      "c/quanticRecentQueriesList": [
+        "quanticRecentQueriesList/quanticRecentQueriesList.js"
+      ],
+      "c/quanticRecentResultsList": [
+        "quanticRecentResultsList/quanticRecentResultsList.js"
+      ],
+      "c/quanticResultsPerPage": [
+        "quanticResultsPerPage/quanticResultsPerPage.js"
+      ],
+      "c/quanticSearchBox": ["quanticSearchBox/quanticSearchBox.js"],
+      "c/quanticSearchBoxSuggestionsList": [
+        "quanticSearchBoxSuggestionsList/quanticSearchBoxSuggestionsList.js"
+      ],
+      "c/quanticSearchInterface": [
+        "quanticSearchInterface/quanticSearchInterface.js"
+      ],
+      "c/quanticNumberButton": ["quanticNumberButton/quanticNumberButton.js"],
+      "c/quanticPill": ["quanticPill/quanticPill.js"],
+      "c/quanticSvg": ["quanticSvg/quanticSvg.js"],
+      "c/quanticUtils": ["quanticUtils/quanticUtils.js"],
+      "c/testUtils": ["testUtils/testUtils.js"],
+      "c/quanticTimeframeFacet": [
+        "quanticTimeframeFacet/quanticTimeframeFacet.js"
+      ],
+      "c/quanticFeedbackModal": ["quanticFeedbackModal/quanticFeedbackModal.js"]
     }
+  },
+  "include": [
+    "**/*",
+    "../../../../.sfdx/typings/lwc/**/*.d.ts",
+    "../../../../typings/lwc/**/*.d.ts",
+    "../../../../coveo.d.ts"
+  ],
+  "typeAcquisition": {
+    "include": ["jest"]
+  },
+  "paths": {
+    "c/*": ["*"]
+  }
 }

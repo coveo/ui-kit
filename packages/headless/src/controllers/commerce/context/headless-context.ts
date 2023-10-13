@@ -1,10 +1,4 @@
-import {validateOptions} from '../../../utils/validate-payload';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine';
-import {
-  buildController,
-  Controller,
-} from '../../controller/headless-controller';
-import {loadReducerError} from '../../../utils/errors';
 import {
   setContext,
   setUser,
@@ -12,6 +6,12 @@ import {
 } from '../../../features/commerce/context/context-actions';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice';
 import {contextSchema} from '../../../features/commerce/context/context-validation';
+import {loadReducerError} from '../../../utils/errors';
+import {validateOptions} from '../../../utils/validate-payload';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 
 export interface ContextOptions {
   trackingId: string;
