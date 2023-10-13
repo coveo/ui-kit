@@ -1,6 +1,9 @@
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload';
 
 export interface GeneratedAnswerState {
+  /**
+   * Determines if the generated answer is visible.
+   */
   isVisible: boolean;
   isLoading: boolean;
   isStreaming: boolean;
