@@ -63,7 +63,7 @@ describe('the analytics related to the generated answer feature', () => {
     expect(mockToUse).toBeCalledWith(expectedMetadata);
   });
 
-  it('should log #logGenerativeQuestionDetailedFeedback with the right payload', async () => {
+  it('should log #logGeneratedAnswerDetailedFeedback with the right payload', async () => {
     await engine.dispatch(logGeneratedAnswerDetailedFeedback(exampleDetails));
 
     const mockToUse = mockMakeGeneratedAnswerFeedbackSubmit;
