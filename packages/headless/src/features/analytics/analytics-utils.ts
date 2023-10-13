@@ -292,24 +292,22 @@ export interface LegacyAnalyticsOptions<
 }
 
 export function makeAnalyticsAction<
-  EventType extends AnalyticsType,
-  StateNeeded extends
+  LegacyEventType extends AnalyticsType,
+  LegacyStateNeeded extends
     StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
+  ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
+    LegacyEventType,
+    LegacyStateNeeded
+  > = LegacyAnalyticsOptions<LegacyEventType, LegacyStateNeeded>,
 >(
   prefix: string,
-  __legacy__analyticsType: LegacyAnalyticsOptions<
-    EventType,
-    StateNeeded
-  >['__legacy__analyticsType'],
-  __legacy__getBuilder: LegacyAnalyticsOptions<
-    EventType,
-    StateNeeded
-  >['__legacy__getBuilder'],
-  __legacy__provider?: LegacyAnalyticsOptions<
-    EventType,
-    StateNeeded
-  >['__legacy__provider']
-): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded>;
+  __legacy__analyticsType: ComputedLegacyAnalyticsOptions['__legacy__analyticsType'],
+  __legacy__getBuilder: ComputedLegacyAnalyticsOptions['__legacy__getBuilder'],
+  __legacy__provider?: ComputedLegacyAnalyticsOptions['__legacy__provider']
+): PreparableAnalyticsAction<
+  WrappedAnalyticsType<LegacyEventType>,
+  LegacyStateNeeded
+>;
 export function makeAnalyticsAction<
   LegacyEventType extends AnalyticsType,
   LegacyStateNeeded extends
@@ -330,22 +328,17 @@ export function makeAnalyticsAction<
   LegacyEventType extends AnalyticsType,
   LegacyStateNeeded extends
     StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
+  ComputedLegacyAnalyticsOptions extends LegacyAnalyticsOptions<
+    LegacyEventType,
+    LegacyStateNeeded
+  > = LegacyAnalyticsOptions<LegacyEventType, LegacyStateNeeded>,
 >(
   ...params:
     | [
-        LegacyAnalyticsOptions<LegacyEventType, LegacyStateNeeded>['prefix'],
-        LegacyAnalyticsOptions<
-          LegacyEventType,
-          LegacyStateNeeded
-        >['__legacy__analyticsType'],
-        LegacyAnalyticsOptions<
-          LegacyEventType,
-          LegacyStateNeeded
-        >['__legacy__getBuilder'],
-        LegacyAnalyticsOptions<
-          LegacyEventType,
-          LegacyStateNeeded
-        >['__legacy__provider']?,
+        ComputedLegacyAnalyticsOptions['prefix'],
+        ComputedLegacyAnalyticsOptions['__legacy__analyticsType'],
+        ComputedLegacyAnalyticsOptions['__legacy__getBuilder'],
+        ComputedLegacyAnalyticsOptions['__legacy__provider']?,
       ]
     | [AnalyticsActionOptions<LegacyEventType, LegacyStateNeeded>]
 ): PreparableAnalyticsAction<
@@ -414,7 +407,7 @@ const internalLegacyMakeAnalyticsAction = <
 
 export const makeNoopAnalyticsAction = <T extends AnalyticsType>(
   analyticsType: T
-) => makeAnalyticsAction('analytics/noop', analyticsType, () => null);
+) => makeAnalyticsAction<T>('analytics/noop', analyticsType, () => null);
 
 export const noopSearchAnalyticsAction = (): SearchAction =>
   makeNoopAnalyticsAction(AnalyticsType.Search);
