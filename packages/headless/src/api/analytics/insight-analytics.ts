@@ -110,7 +110,7 @@ export const configureInsightAnalytics = ({
 }: ConfigureInsightAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
-  const apiBaseUrl = state.configuration.analytics.apiBaseUrl;
+  const apiBaseUrl = state.configuration.analytics.legacyApiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const enabled = state.configuration.analytics.enabled;
 

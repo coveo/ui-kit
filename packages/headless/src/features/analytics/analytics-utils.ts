@@ -46,7 +46,7 @@ import {
 } from '../../api/analytics/product-listing-analytics';
 import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {
-  configureAnalytics,
+  configureLegacyAnalytics,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
 } from '../../api/analytics/search-analytics';
@@ -266,12 +266,13 @@ function makePreparableAnalyticsAction<
 }
 
 export type AnalyticsActionOptions<
-  EventType extends AnalyticsType,
-  StateNeeded extends
+  LegacyEventType extends AnalyticsType,
+  LegacyStateNeeded extends
     StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
-> = LegacyAnalyticsOptions<EventType, StateNeeded> & NextLegacyOptions;
+> = LegacyAnalyticsOptions<LegacyEventType, LegacyStateNeeded> &
+  NextAnalyticsOptions;
 
-export interface NextLegacyOptions {
+export interface NextAnalyticsOptions {
   todo?: never; //Remove when we have at least one property in this interface
 }
 export interface LegacyAnalyticsOptions<
@@ -280,7 +281,7 @@ export interface LegacyAnalyticsOptions<
     StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
 > {
   prefix: string;
-  analyticsType: EventType;
+  __legacy__analyticsType: EventType;
   __legacy__getBuilder: (
     client: CoveoSearchPageClient,
     state: StateNeeded
@@ -296,10 +297,10 @@ export function makeAnalyticsAction<
     StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
 >(
   prefix: string,
-  analyticsType: LegacyAnalyticsOptions<
+  __legacy__analyticsType: LegacyAnalyticsOptions<
     EventType,
     StateNeeded
-  >['analyticsType'],
+  >['__legacy__analyticsType'],
   __legacy__getBuilder: LegacyAnalyticsOptions<
     EventType,
     StateNeeded
@@ -310,54 +311,72 @@ export function makeAnalyticsAction<
   >['__legacy__provider']
 ): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded>;
 export function makeAnalyticsAction<
-  EventType extends AnalyticsType,
-  StateNeeded extends
+  LegacyEventType extends AnalyticsType,
+  LegacyStateNeeded extends
     StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
 >({
   prefix,
-  analyticsType,
+  __legacy__analyticsType,
   __legacy__getBuilder,
   __legacy__provider,
-}: AnalyticsActionOptions<EventType, StateNeeded>): PreparableAnalyticsAction<
-  WrappedAnalyticsType<EventType>,
-  StateNeeded
+}: AnalyticsActionOptions<
+  LegacyEventType,
+  LegacyStateNeeded
+>): PreparableAnalyticsAction<
+  WrappedAnalyticsType<LegacyEventType>,
+  LegacyStateNeeded
 >;
 export function makeAnalyticsAction<
-  EventType extends AnalyticsType,
-  StateNeeded extends
+  LegacyEventType extends AnalyticsType,
+  LegacyStateNeeded extends
     StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
 >(
   ...params:
     | [
-        LegacyAnalyticsOptions<EventType, StateNeeded>['prefix'],
-        LegacyAnalyticsOptions<EventType, StateNeeded>['analyticsType'],
-        LegacyAnalyticsOptions<EventType, StateNeeded>['__legacy__getBuilder'],
-        LegacyAnalyticsOptions<EventType, StateNeeded>['__legacy__provider']?,
+        LegacyAnalyticsOptions<LegacyEventType, LegacyStateNeeded>['prefix'],
+        LegacyAnalyticsOptions<
+          LegacyEventType,
+          LegacyStateNeeded
+        >['__legacy__analyticsType'],
+        LegacyAnalyticsOptions<
+          LegacyEventType,
+          LegacyStateNeeded
+        >['__legacy__getBuilder'],
+        LegacyAnalyticsOptions<
+          LegacyEventType,
+          LegacyStateNeeded
+        >['__legacy__provider']?,
       ]
-    | [AnalyticsActionOptions<EventType, StateNeeded>]
-): PreparableAnalyticsAction<WrappedAnalyticsType<EventType>, StateNeeded> {
+    | [AnalyticsActionOptions<LegacyEventType, LegacyStateNeeded>]
+): PreparableAnalyticsAction<
+  WrappedAnalyticsType<LegacyEventType>,
+  LegacyStateNeeded
+> {
   return params.length === 1
     ? internalLegacyMakeAnalyticsAction(params[0])
     : internalLegacyMakeAnalyticsAction({
         prefix: params[0],
-        analyticsType: params[1],
+        __legacy__analyticsType: params[1],
         __legacy__getBuilder: params[2],
         __legacy__provider: params[3],
       });
 }
 
 const internalLegacyMakeAnalyticsAction = <
-  EventType extends AnalyticsType,
-  StateNeeded extends
+  LegacyEventType extends AnalyticsType,
+  LegacyStateNeeded extends
     StateNeededBySearchAnalyticsProvider = StateNeededBySearchAnalyticsProvider,
 >({
   prefix,
-  analyticsType,
+  __legacy__analyticsType,
   __legacy__getBuilder,
   __legacy__provider,
-}: AnalyticsActionOptions<EventType, StateNeeded>): PreparableAnalyticsAction<
-  WrappedAnalyticsType<EventType>,
-  StateNeeded
+}: AnalyticsActionOptions<
+  LegacyEventType,
+  LegacyStateNeeded
+>): PreparableAnalyticsAction<
+  WrappedAnalyticsType<LegacyEventType>,
+  LegacyStateNeeded
 > => {
   __legacy__provider ??= (getState) => new SearchAnalyticsProvider(getState);
   return makePreparableAnalyticsAction(
@@ -368,7 +387,7 @@ const internalLegacyMakeAnalyticsAction = <
       preprocessRequest,
       logger,
     }) => {
-      const client = configureAnalytics({
+      const client = configureLegacyAnalytics({
         getState,
         logger,
         analyticsClientMiddleware,
@@ -386,7 +405,7 @@ const internalLegacyMakeAnalyticsAction = <
             {client: client.coveoAnalyticsClient, response},
             'Analytics response'
           );
-          return {analyticsType};
+          return {analyticsType: __legacy__analyticsType};
         },
       };
     }
@@ -517,7 +536,6 @@ export const partialRecommendationInformation = (
 
   return buildPartialDocumentInformation(result, resultIndex, state);
 };
-
 function buildPartialDocumentInformation(
   result: Result,
   resultIndex: number,
