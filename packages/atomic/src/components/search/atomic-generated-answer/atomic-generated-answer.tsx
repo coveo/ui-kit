@@ -83,6 +83,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
+  // @ts-expect-error: This function is used by BindStateToController.
   private onGeneratedAnswerStateUpdate = () => {
     if (this.generatedAnswerState.isVisible !== this.data?.isVisible) {
       this.data = {
