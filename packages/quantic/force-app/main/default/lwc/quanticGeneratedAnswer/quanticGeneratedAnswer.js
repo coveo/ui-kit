@@ -222,7 +222,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
-   * Resturns the options displayed in the Quantic Feedback Modal.
+   * Returns the options displayed in the Quantic Feedback Modal.
    */
   get options() {
     return [
