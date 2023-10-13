@@ -1,6 +1,6 @@
-import {CommerceContextState, getContextInitialState} from './context-state';
-import {contextReducer} from './context-slice';
 import {setContext, setUser, SetUserPayload, setView} from './context-actions';
+import {contextReducer} from './context-slice';
+import {CommerceContextState, getContextInitialState} from './context-state';
 
 describe('context-slice', () => {
   let state: CommerceContextState;

@@ -2,7 +2,6 @@ const {resolve} = require('path');
 const gtsPkgJsonPath = require.resolve('gts/package.json');
 const gtsPath = resolve(gtsPkgJsonPath, '..');
 
-
 module.exports = {
   root: true,
   ignorePatterns: ['storybook-static/**/*'],
@@ -36,8 +35,6 @@ module.exports = {
   overrides: [
     {
       files: ['**/*.ts', '**/*.tsx'],
-      parser: '@typescript-eslint/parser',
-      plugins: ['@typescript-eslint'],
       extends: [gtsPath],
       parserOptions: {
         jsxPragma: 'h',

@@ -1,4 +1,6 @@
 /* eslint-disable jest/expect-expect */
+// @ts-ignore
+import LightningAlert from 'lightning/alert';
 import {Deferred} from '../../quanticUtils/quanticUtils';
 import {
   setInitializedCallback,
@@ -12,8 +14,6 @@ import {
   getFromStore,
 } from '../quanticHeadlessLoader';
 
-// @ts-ignore
-import LightningAlert from 'lightning/alert';
 jest.mock('lightning/alert');
 
 describe('c/quanticHeadlessLoader', () => {
